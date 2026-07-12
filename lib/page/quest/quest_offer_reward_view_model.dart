@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,22 +14,31 @@ class QuestOfferRewardViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = TextEditingController();
-  final emote1Controller = TextEditingController();
-  final emote2Controller = TextEditingController();
-  final emote3Controller = TextEditingController();
-  final emote4Controller = TextEditingController();
-  final emoteDelay1Controller = TextEditingController();
-  final emoteDelay2Controller = TextEditingController();
-  final emoteDelay3Controller = TextEditingController();
-  final emoteDelay4Controller = TextEditingController();
-  final rewardTextController = TextEditingController();
+  final idController = IntFieldController();
+  final emote1Controller = IntFieldController();
+  final emote2Controller = IntFieldController();
+  final emote3Controller = IntFieldController();
+  final emote4Controller = IntFieldController();
+  final emoteDelay1Controller = IntFieldController();
+  final emoteDelay2Controller = IntFieldController();
+  final emoteDelay3Controller = IntFieldController();
+  final emoteDelay4Controller = IntFieldController();
+  final rewardTextController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    emote1Controller,
+    emote2Controller,
+    emote3Controller,
+    emote4Controller,
+    emoteDelay1Controller,
+    emoteDelay2Controller,
+    emoteDelay3Controller,
+    emoteDelay4Controller,
+    rewardTextController,
+  ];
 
   int _originalId = 0;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({required int questId}) async {
     try {
@@ -43,7 +51,7 @@ class QuestOfferRewardViewModel {
         final blank = await _repository.createQuestOfferReward(questId);
         _initSignals(blank);
       }
-      idController.text = _fmt(questId);
+      idController.init(questId);
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -75,42 +83,35 @@ class QuestOfferRewardViewModel {
   }
 
   void _initSignals(QuestOfferRewardEntity model) {
-    emote1Controller.text = _fmt(model.emote1);
-    emote2Controller.text = _fmt(model.emote2);
-    emote3Controller.text = _fmt(model.emote3);
-    emote4Controller.text = _fmt(model.emote4);
-    emoteDelay1Controller.text = _fmt(model.emoteDelay1);
-    emoteDelay2Controller.text = _fmt(model.emoteDelay2);
-    emoteDelay3Controller.text = _fmt(model.emoteDelay3);
-    emoteDelay4Controller.text = _fmt(model.emoteDelay4);
-    rewardTextController.text = model.rewardText;
+    emote1Controller.init(model.emote1);
+    emote2Controller.init(model.emote2);
+    emote3Controller.init(model.emote3);
+    emote4Controller.init(model.emote4);
+    emoteDelay1Controller.init(model.emoteDelay1);
+    emoteDelay2Controller.init(model.emoteDelay2);
+    emoteDelay3Controller.init(model.emoteDelay3);
+    emoteDelay4Controller.init(model.emoteDelay4);
+    rewardTextController.init(model.rewardText);
   }
 
   QuestOfferRewardEntity _collect() {
     return QuestOfferRewardEntity(
       id: questId.value,
-      emote1: _pi(emote1Controller.text),
-      emote2: _pi(emote2Controller.text),
-      emote3: _pi(emote3Controller.text),
-      emote4: _pi(emote4Controller.text),
-      emoteDelay1: _pi(emoteDelay1Controller.text),
-      emoteDelay2: _pi(emoteDelay2Controller.text),
-      emoteDelay3: _pi(emoteDelay3Controller.text),
-      emoteDelay4: _pi(emoteDelay4Controller.text),
-      rewardText: rewardTextController.text,
+      emote1: emote1Controller.collect(),
+      emote2: emote2Controller.collect(),
+      emote3: emote3Controller.collect(),
+      emote4: emote4Controller.collect(),
+      emoteDelay1: emoteDelay1Controller.collect(),
+      emoteDelay2: emoteDelay2Controller.collect(),
+      emoteDelay3: emoteDelay3Controller.collect(),
+      emoteDelay4: emoteDelay4Controller.collect(),
+      rewardText: rewardTextController.collect(),
     );
   }
 
   void dispose() {
-    emote1Controller.dispose();
-    emote2Controller.dispose();
-    emote3Controller.dispose();
-    emote4Controller.dispose();
-    emoteDelay1Controller.dispose();
-    emoteDelay2Controller.dispose();
-    emoteDelay3Controller.dispose();
-    emoteDelay4Controller.dispose();
-    idController.dispose();
-    rewardTextController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

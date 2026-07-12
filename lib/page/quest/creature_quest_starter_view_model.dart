@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -13,18 +12,15 @@ class CreatureQuestStarterViewModel {
   final questId = signal(0);
   final items = signal<List<BriefCreatureQuestStarterEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idController = TextEditingController();
-  final questController = TextEditingController();
+  final idController = IntFieldController();
+  final questController = IntFieldController();
+
+  late final _controllers = <FieldController>[idController, questController];
 
   int _originalId = 0;
   int _originalQuest = 0;
 
   final _repository = GetIt.instance.get<CreatureQuestStarterRepository>();
-
-  /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefCreatureQuestStarters(questId.value);
@@ -34,21 +30,21 @@ class CreatureQuestStarterViewModel {
 
   /// 重置表单
   void resetForm() {
-    idController.text = _fmt(0);
-    questController.text = _fmt(0);
+    idController.init(0);
+    questController.init(0);
   }
 
   /// 填充表单
   void fillForm(CreatureQuestStarterEntity model) {
-    idController.text = _fmt(model.id);
-    questController.text = _fmt(model.quest);
+    idController.init(model.id);
+    questController.init(model.quest);
   }
 
   /// 从表单收集数据
   CreatureQuestStarterEntity collectFromForm() {
     return CreatureQuestStarterEntity(
-      id: _pi(idController.text),
-      quest: _pi(questController.text),
+      id: idController.collect(),
+      quest: questController.collect(),
     );
   }
 
@@ -222,7 +218,8 @@ class CreatureQuestStarterViewModel {
 
   /// 清理资源
   void dispose() {
-    idController.dispose();
-    questController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

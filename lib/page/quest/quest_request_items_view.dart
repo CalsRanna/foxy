@@ -43,7 +43,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
             child: FoxyFormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
-                controller: vm.idController,
+                fieldController: vm.idController,
                 readOnly: true,
               ),
             ),
@@ -53,7 +53,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               label: '完成表情',
               placeholder: 'EmoteOnComplete',
               child: FoxyNumberInput<int>(
-                controller: vm.emoteOnCompleteController,
+                fieldController: vm.emoteOnCompleteController,
               ),
             ),
           ),
@@ -62,7 +62,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               label: '未完成表情',
               placeholder: 'EmoteOnIncomplete',
               child: FoxyNumberInput<int>(
-                controller: vm.emoteOnIncompleteController,
+                fieldController: vm.emoteOnIncompleteController,
               ),
             ),
           ),
@@ -77,7 +77,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               label: '完成文本',
               child: FoxyLocalePicker(
                 entry: widget.questId,
-                controller: vm.completionTextController,
+                fieldController: vm.completionTextController,
                 delegate: FoxyLocalePickerDelegates.questRequestItems,
                 placeholder: 'CompletionText',
                 title: '完成文本',

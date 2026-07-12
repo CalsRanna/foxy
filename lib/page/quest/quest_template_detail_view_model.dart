@@ -1,12 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -20,143 +19,245 @@ class QuestTemplateDetailViewModel {
   final template = signal(QuestTemplateEntity());
 
   /// Basic (ints)
-  final idController = TextEditingController();
-  final questTypeController = TextEditingController();
-  final questLevelController = TextEditingController();
-  final minLevelController = TextEditingController();
-  final suggestedGroupNumController = TextEditingController();
-  final requiredFactionId1Controller = TextEditingController();
-  final requiredFactionId2Controller = TextEditingController();
-  final requiredFactionValue1Controller = TextEditingController();
-  final requiredFactionValue2Controller = TextEditingController();
+  final idController = IntFieldController();
+  final questTypeController = IntFieldController();
+  final questLevelController = IntFieldController();
+  final minLevelController = IntFieldController();
+  final suggestedGroupNumController = IntFieldController();
+  final requiredFactionId1Controller = IntFieldController();
+  final requiredFactionId2Controller = IntFieldController();
+  final requiredFactionValue1Controller = IntFieldController();
+  final requiredFactionValue2Controller = IntFieldController();
 
-  /// Basic (selector controllers — KEEP)
-  final questSortIdController = TextEditingController();
-  final questInfoIdController = TextEditingController();
+  /// Basic (selector controllers)
+  final questSortIdController = IntFieldController();
+  final questInfoIdController = IntFieldController();
 
-  /// Reward (ints)
-  final rewardNextQuestController = TextEditingController();
-  final rewardXpDifficultyController = TextEditingController();
-  final rewardMoneyController = TextEditingController();
-  final rewardMoneyDifficultyController = TextEditingController();
-  final rewardDisplaySpellController = TextEditingController();
-  final rewardSpellController = TextEditingController();
-  final rewardHonorController = TextEditingController();
-  final rewardKillHonorController = TextEditingController();
-  final startItemController = TextEditingController();
-  final flagsController = TextEditingController();
-  final requiredPlayerKillsController = TextEditingController();
+  /// Reward (ints + double)
+  final rewardNextQuestController = IntFieldController();
+  final rewardXpDifficultyController = IntFieldController();
+  final rewardMoneyController = IntFieldController();
+  final rewardMoneyDifficultyController = IntFieldController();
+  final rewardDisplaySpellController = IntFieldController();
+  final rewardSpellController = IntFieldController();
+  final rewardHonorController = IntFieldController();
+  final rewardKillHonorController = DoubleFieldController();
+  final startItemController = IntFieldController();
+  final flagsController = IntFieldController();
+  final requiredPlayerKillsController = IntFieldController();
 
   /// RewardItem (ints)
-  final rewardItem1Controller = TextEditingController();
-  final rewardAmount1Controller = TextEditingController();
-  final rewardItem2Controller = TextEditingController();
-  final rewardAmount2Controller = TextEditingController();
-  final rewardItem3Controller = TextEditingController();
-  final rewardAmount3Controller = TextEditingController();
-  final rewardItem4Controller = TextEditingController();
-  final rewardAmount4Controller = TextEditingController();
+  final rewardItem1Controller = IntFieldController();
+  final rewardAmount1Controller = IntFieldController();
+  final rewardItem2Controller = IntFieldController();
+  final rewardAmount2Controller = IntFieldController();
+  final rewardItem3Controller = IntFieldController();
+  final rewardAmount3Controller = IntFieldController();
+  final rewardItem4Controller = IntFieldController();
+  final rewardAmount4Controller = IntFieldController();
 
   /// ItemDrop (ints)
-  final itemDrop1Controller = TextEditingController();
-  final itemDropQuantity1Controller = TextEditingController();
-  final itemDrop2Controller = TextEditingController();
-  final itemDropQuantity2Controller = TextEditingController();
-  final itemDrop3Controller = TextEditingController();
-  final itemDropQuantity3Controller = TextEditingController();
-  final itemDrop4Controller = TextEditingController();
-  final itemDropQuantity4Controller = TextEditingController();
+  final itemDrop1Controller = IntFieldController();
+  final itemDropQuantity1Controller = IntFieldController();
+  final itemDrop2Controller = IntFieldController();
+  final itemDropQuantity2Controller = IntFieldController();
+  final itemDrop3Controller = IntFieldController();
+  final itemDropQuantity3Controller = IntFieldController();
+  final itemDrop4Controller = IntFieldController();
+  final itemDropQuantity4Controller = IntFieldController();
 
   /// RewardChoiceItem (ints)
-  final rewardChoiceItemId1Controller = TextEditingController();
-  final rewardChoiceItemQuantity1Controller = TextEditingController();
-  final rewardChoiceItemId2Controller = TextEditingController();
-  final rewardChoiceItemQuantity2Controller = TextEditingController();
-  final rewardChoiceItemId3Controller = TextEditingController();
-  final rewardChoiceItemQuantity3Controller = TextEditingController();
-  final rewardChoiceItemId4Controller = TextEditingController();
-  final rewardChoiceItemQuantity4Controller = TextEditingController();
-  final rewardChoiceItemId5Controller = TextEditingController();
-  final rewardChoiceItemQuantity5Controller = TextEditingController();
-  final rewardChoiceItemId6Controller = TextEditingController();
-  final rewardChoiceItemQuantity6Controller = TextEditingController();
+  final rewardChoiceItemId1Controller = IntFieldController();
+  final rewardChoiceItemQuantity1Controller = IntFieldController();
+  final rewardChoiceItemId2Controller = IntFieldController();
+  final rewardChoiceItemQuantity2Controller = IntFieldController();
+  final rewardChoiceItemId3Controller = IntFieldController();
+  final rewardChoiceItemQuantity3Controller = IntFieldController();
+  final rewardChoiceItemId4Controller = IntFieldController();
+  final rewardChoiceItemQuantity4Controller = IntFieldController();
+  final rewardChoiceItemId5Controller = IntFieldController();
+  final rewardChoiceItemQuantity5Controller = IntFieldController();
+  final rewardChoiceItemId6Controller = IntFieldController();
+  final rewardChoiceItemQuantity6Controller = IntFieldController();
 
   /// POI (ints + doubles)
-  final poiContinentController = TextEditingController();
-  final poiXController = TextEditingController();
-  final poiYController = TextEditingController();
-  final poiPriorityController = TextEditingController();
+  final poiContinentController = IntFieldController();
+  final poiXController = DoubleFieldController();
+  final poiYController = DoubleFieldController();
+  final poiPriorityController = IntFieldController();
 
-  /// RewardTitle (selector signal) / Talents (ints)
-  final rewardTitleController = TextEditingController();
-  final rewardTalentsController = TextEditingController();
-  final rewardArenaPointsController = TextEditingController();
+  /// RewardTitle / Talents (ints)
+  final rewardTitleController = IntFieldController();
+  final rewardTalentsController = IntFieldController();
+  final rewardArenaPointsController = IntFieldController();
 
   /// RewardFaction (ints)
-  final rewardFactionId1Controller = TextEditingController();
-  final rewardFactionValue1Controller = TextEditingController();
-  final rewardFactionOverride1Controller = TextEditingController();
-  final rewardFactionId2Controller = TextEditingController();
-  final rewardFactionValue2Controller = TextEditingController();
-  final rewardFactionOverride2Controller = TextEditingController();
-  final rewardFactionId3Controller = TextEditingController();
-  final rewardFactionValue3Controller = TextEditingController();
-  final rewardFactionOverride3Controller = TextEditingController();
-  final rewardFactionId4Controller = TextEditingController();
-  final rewardFactionValue4Controller = TextEditingController();
-  final rewardFactionOverride4Controller = TextEditingController();
-  final rewardFactionId5Controller = TextEditingController();
-  final rewardFactionValue5Controller = TextEditingController();
-  final rewardFactionOverride5Controller = TextEditingController();
+  final rewardFactionId1Controller = IntFieldController();
+  final rewardFactionValue1Controller = IntFieldController();
+  final rewardFactionOverride1Controller = IntFieldController();
+  final rewardFactionId2Controller = IntFieldController();
+  final rewardFactionValue2Controller = IntFieldController();
+  final rewardFactionOverride2Controller = IntFieldController();
+  final rewardFactionId3Controller = IntFieldController();
+  final rewardFactionValue3Controller = IntFieldController();
+  final rewardFactionOverride3Controller = IntFieldController();
+  final rewardFactionId4Controller = IntFieldController();
+  final rewardFactionValue4Controller = IntFieldController();
+  final rewardFactionOverride4Controller = IntFieldController();
+  final rewardFactionId5Controller = IntFieldController();
+  final rewardFactionValue5Controller = IntFieldController();
+  final rewardFactionOverride5Controller = IntFieldController();
 
   /// Other int
-  final timeAllowedController = TextEditingController();
-  final allowableRacesController = TextEditingController();
+  final timeAllowedController = IntFieldController();
+  final allowableRacesController = IntFieldController();
 
-  /// Text (string controllers — KEEP)
-  final logTitleController = TextEditingController();
-  final logDescriptionController = TextEditingController();
-  final questDescriptionController = TextEditingController();
-  final areaDescriptionController = TextEditingController();
-  final questCompletionLogController = TextEditingController();
+  /// Text (string controllers)
+  final logTitleController = StringFieldController();
+  final logDescriptionController = StringFieldController();
+  final questDescriptionController = StringFieldController();
+  final areaDescriptionController = StringFieldController();
+  final questCompletionLogController = StringFieldController();
 
   /// RequiredNpcOrGo (ints)
-  final requiredNpcOrGo1Controller = TextEditingController();
-  final requiredNpcOrGo2Controller = TextEditingController();
-  final requiredNpcOrGo3Controller = TextEditingController();
-  final requiredNpcOrGo4Controller = TextEditingController();
-  final requiredNpcOrGoCount1Controller = TextEditingController();
-  final requiredNpcOrGoCount2Controller = TextEditingController();
-  final requiredNpcOrGoCount3Controller = TextEditingController();
-  final requiredNpcOrGoCount4Controller = TextEditingController();
+  final requiredNpcOrGo1Controller = IntFieldController();
+  final requiredNpcOrGo2Controller = IntFieldController();
+  final requiredNpcOrGo3Controller = IntFieldController();
+  final requiredNpcOrGo4Controller = IntFieldController();
+  final requiredNpcOrGoCount1Controller = IntFieldController();
+  final requiredNpcOrGoCount2Controller = IntFieldController();
+  final requiredNpcOrGoCount3Controller = IntFieldController();
+  final requiredNpcOrGoCount4Controller = IntFieldController();
 
   /// RequiredItem (ints)
-  final requiredItemId1Controller = TextEditingController();
-  final requiredItemId2Controller = TextEditingController();
-  final requiredItemId3Controller = TextEditingController();
-  final requiredItemId4Controller = TextEditingController();
-  final requiredItemId5Controller = TextEditingController();
-  final requiredItemId6Controller = TextEditingController();
-  final requiredItemCount1Controller = TextEditingController();
-  final requiredItemCount2Controller = TextEditingController();
-  final requiredItemCount3Controller = TextEditingController();
-  final requiredItemCount4Controller = TextEditingController();
-  final requiredItemCount5Controller = TextEditingController();
-  final requiredItemCount6Controller = TextEditingController();
+  final requiredItemId1Controller = IntFieldController();
+  final requiredItemId2Controller = IntFieldController();
+  final requiredItemId3Controller = IntFieldController();
+  final requiredItemId4Controller = IntFieldController();
+  final requiredItemId5Controller = IntFieldController();
+  final requiredItemId6Controller = IntFieldController();
+  final requiredItemCount1Controller = IntFieldController();
+  final requiredItemCount2Controller = IntFieldController();
+  final requiredItemCount3Controller = IntFieldController();
+  final requiredItemCount4Controller = IntFieldController();
+  final requiredItemCount5Controller = IntFieldController();
+  final requiredItemCount6Controller = IntFieldController();
 
   /// Misc
-  final unknown0Controller = TextEditingController();
-  final objectiveText1Controller = TextEditingController();
-  final objectiveText2Controller = TextEditingController();
-  final objectiveText3Controller = TextEditingController();
-  final objectiveText4Controller = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final unknown0Controller = IntFieldController();
+  final objectiveText1Controller = StringFieldController();
+  final objectiveText2Controller = StringFieldController();
+  final objectiveText3Controller = StringFieldController();
+  final objectiveText4Controller = StringFieldController();
+  final verifiedBuildController = IntFieldController();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
+  late final _controllers = <FieldController>[
+    idController,
+    questTypeController,
+    questLevelController,
+    minLevelController,
+    suggestedGroupNumController,
+    requiredFactionId1Controller,
+    requiredFactionId2Controller,
+    requiredFactionValue1Controller,
+    requiredFactionValue2Controller,
+    questSortIdController,
+    questInfoIdController,
+    rewardNextQuestController,
+    rewardXpDifficultyController,
+    rewardMoneyController,
+    rewardMoneyDifficultyController,
+    rewardDisplaySpellController,
+    rewardSpellController,
+    rewardHonorController,
+    rewardKillHonorController,
+    startItemController,
+    flagsController,
+    requiredPlayerKillsController,
+    rewardItem1Controller,
+    rewardAmount1Controller,
+    rewardItem2Controller,
+    rewardAmount2Controller,
+    rewardItem3Controller,
+    rewardAmount3Controller,
+    rewardItem4Controller,
+    rewardAmount4Controller,
+    itemDrop1Controller,
+    itemDropQuantity1Controller,
+    itemDrop2Controller,
+    itemDropQuantity2Controller,
+    itemDrop3Controller,
+    itemDropQuantity3Controller,
+    itemDrop4Controller,
+    itemDropQuantity4Controller,
+    rewardChoiceItemId1Controller,
+    rewardChoiceItemQuantity1Controller,
+    rewardChoiceItemId2Controller,
+    rewardChoiceItemQuantity2Controller,
+    rewardChoiceItemId3Controller,
+    rewardChoiceItemQuantity3Controller,
+    rewardChoiceItemId4Controller,
+    rewardChoiceItemQuantity4Controller,
+    rewardChoiceItemId5Controller,
+    rewardChoiceItemQuantity5Controller,
+    rewardChoiceItemId6Controller,
+    rewardChoiceItemQuantity6Controller,
+    poiContinentController,
+    poiXController,
+    poiYController,
+    poiPriorityController,
+    rewardTitleController,
+    rewardTalentsController,
+    rewardArenaPointsController,
+    rewardFactionId1Controller,
+    rewardFactionValue1Controller,
+    rewardFactionOverride1Controller,
+    rewardFactionId2Controller,
+    rewardFactionValue2Controller,
+    rewardFactionOverride2Controller,
+    rewardFactionId3Controller,
+    rewardFactionValue3Controller,
+    rewardFactionOverride3Controller,
+    rewardFactionId4Controller,
+    rewardFactionValue4Controller,
+    rewardFactionOverride4Controller,
+    rewardFactionId5Controller,
+    rewardFactionValue5Controller,
+    rewardFactionOverride5Controller,
+    timeAllowedController,
+    allowableRacesController,
+    logTitleController,
+    logDescriptionController,
+    questDescriptionController,
+    areaDescriptionController,
+    questCompletionLogController,
+    requiredNpcOrGo1Controller,
+    requiredNpcOrGo2Controller,
+    requiredNpcOrGo3Controller,
+    requiredNpcOrGo4Controller,
+    requiredNpcOrGoCount1Controller,
+    requiredNpcOrGoCount2Controller,
+    requiredNpcOrGoCount3Controller,
+    requiredNpcOrGoCount4Controller,
+    requiredItemId1Controller,
+    requiredItemId2Controller,
+    requiredItemId3Controller,
+    requiredItemId4Controller,
+    requiredItemId5Controller,
+    requiredItemId6Controller,
+    requiredItemCount1Controller,
+    requiredItemCount2Controller,
+    requiredItemCount3Controller,
+    requiredItemCount4Controller,
+    requiredItemCount5Controller,
+    requiredItemCount6Controller,
+    unknown0Controller,
+    objectiveText1Controller,
+    objectiveText2Controller,
+    objectiveText3Controller,
+    objectiveText4Controller,
+    verifiedBuildController,
+  ];
 
   Future<void> save(BuildContext context) async {
     try {
@@ -164,7 +265,7 @@ class QuestTemplateDetailViewModel {
       final existed = await _repository.getQuestTemplate(t.id);
       if (existed == null) {
         final id = await _repository.storeQuestTemplate(t);
-        idController.text = '$id';
+        idController.init(id);
         template.value = t.copyWith(id: id);
         entry.value = id;
         _logActivity(ActivityActionType.create, template.value);
@@ -209,252 +310,233 @@ class QuestTemplateDetailViewModel {
   }
 
   void _initSignals(QuestTemplateEntity t) {
-    idController.text = _fmt(t.id);
-    questTypeController.text = _fmt(t.questType);
-    questLevelController.text = _fmt(t.questLevel);
-    minLevelController.text = _fmt(t.minLevel);
-    questSortIdController.text = t.questSortId.toString();
-    questInfoIdController.text = _fmt(t.questInfoId);
-    suggestedGroupNumController.text = _fmt(t.suggestedGroupNum);
-    requiredFactionId1Controller.text = _fmt(t.requiredFactionId1);
-    requiredFactionId2Controller.text = _fmt(t.requiredFactionId2);
-    requiredFactionValue1Controller.text = _fmt(t.requiredFactionValue1);
-    requiredFactionValue2Controller.text = _fmt(t.requiredFactionValue2);
+    idController.init(t.id);
+    questTypeController.init(t.questType);
+    questLevelController.init(t.questLevel);
+    minLevelController.init(t.minLevel);
+    questSortIdController.init(t.questSortId);
+    questInfoIdController.init(t.questInfoId);
+    suggestedGroupNumController.init(t.suggestedGroupNum);
+    requiredFactionId1Controller.init(t.requiredFactionId1);
+    requiredFactionId2Controller.init(t.requiredFactionId2);
+    requiredFactionValue1Controller.init(t.requiredFactionValue1);
+    requiredFactionValue2Controller.init(t.requiredFactionValue2);
 
-    rewardNextQuestController.text = _fmt(t.rewardNextQuest);
-    rewardXpDifficultyController.text = _fmt(t.rewardXpDifficulty);
-    rewardMoneyController.text = _fmt(t.rewardMoney);
-    rewardMoneyDifficultyController.text = _fmt(t.rewardMoneyDifficulty);
-    rewardDisplaySpellController.text = _fmt(t.rewardDisplaySpell);
-    rewardSpellController.text = _fmt(t.rewardSpell);
-    rewardHonorController.text = _fmt(t.rewardHonor);
-    rewardKillHonorController.text = _fmt(t.rewardKillHonor);
-    startItemController.text = _fmt(t.startItem);
-    flagsController.text = _fmt(t.flags);
-    requiredPlayerKillsController.text = _fmt(t.requiredPlayerKills);
+    rewardNextQuestController.init(t.rewardNextQuest);
+    rewardXpDifficultyController.init(t.rewardXpDifficulty);
+    rewardMoneyController.init(t.rewardMoney);
+    rewardMoneyDifficultyController.init(t.rewardMoneyDifficulty);
+    rewardDisplaySpellController.init(t.rewardDisplaySpell);
+    rewardSpellController.init(t.rewardSpell);
+    rewardHonorController.init(t.rewardHonor);
+    rewardKillHonorController.init(t.rewardKillHonor);
+    startItemController.init(t.startItem);
+    flagsController.init(t.flags);
+    requiredPlayerKillsController.init(t.requiredPlayerKills);
 
-    rewardItem1Controller.text = _fmt(t.rewardItem1);
-    rewardAmount1Controller.text = _fmt(t.rewardAmount1);
-    rewardItem2Controller.text = _fmt(t.rewardItem2);
-    rewardAmount2Controller.text = _fmt(t.rewardAmount2);
-    rewardItem3Controller.text = _fmt(t.rewardItem3);
-    rewardAmount3Controller.text = _fmt(t.rewardAmount3);
-    rewardItem4Controller.text = _fmt(t.rewardItem4);
-    rewardAmount4Controller.text = _fmt(t.rewardAmount4);
+    rewardItem1Controller.init(t.rewardItem1);
+    rewardAmount1Controller.init(t.rewardAmount1);
+    rewardItem2Controller.init(t.rewardItem2);
+    rewardAmount2Controller.init(t.rewardAmount2);
+    rewardItem3Controller.init(t.rewardItem3);
+    rewardAmount3Controller.init(t.rewardAmount3);
+    rewardItem4Controller.init(t.rewardItem4);
+    rewardAmount4Controller.init(t.rewardAmount4);
 
-    itemDrop1Controller.text = _fmt(t.itemDrop1);
-    itemDropQuantity1Controller.text = _fmt(t.itemDropQuantity1);
-    itemDrop2Controller.text = _fmt(t.itemDrop2);
-    itemDropQuantity2Controller.text = _fmt(t.itemDropQuantity2);
-    itemDrop3Controller.text = _fmt(t.itemDrop3);
-    itemDropQuantity3Controller.text = _fmt(t.itemDropQuantity3);
-    itemDrop4Controller.text = _fmt(t.itemDrop4);
-    itemDropQuantity4Controller.text = _fmt(t.itemDropQuantity4);
+    itemDrop1Controller.init(t.itemDrop1);
+    itemDropQuantity1Controller.init(t.itemDropQuantity1);
+    itemDrop2Controller.init(t.itemDrop2);
+    itemDropQuantity2Controller.init(t.itemDropQuantity2);
+    itemDrop3Controller.init(t.itemDrop3);
+    itemDropQuantity3Controller.init(t.itemDropQuantity3);
+    itemDrop4Controller.init(t.itemDrop4);
+    itemDropQuantity4Controller.init(t.itemDropQuantity4);
 
-    rewardChoiceItemId1Controller.text = _fmt(t.rewardChoiceItemId1);
-    rewardChoiceItemQuantity1Controller.text = _fmt(
-      t.rewardChoiceItemQuantity1,
-    );
-    rewardChoiceItemId2Controller.text = _fmt(t.rewardChoiceItemId2);
-    rewardChoiceItemQuantity2Controller.text = _fmt(
-      t.rewardChoiceItemQuantity2,
-    );
-    rewardChoiceItemId3Controller.text = _fmt(t.rewardChoiceItemId3);
-    rewardChoiceItemQuantity3Controller.text = _fmt(
-      t.rewardChoiceItemQuantity3,
-    );
-    rewardChoiceItemId4Controller.text = _fmt(t.rewardChoiceItemId4);
-    rewardChoiceItemQuantity4Controller.text = _fmt(
-      t.rewardChoiceItemQuantity4,
-    );
-    rewardChoiceItemId5Controller.text = _fmt(t.rewardChoiceItemId5);
-    rewardChoiceItemQuantity5Controller.text = _fmt(
-      t.rewardChoiceItemQuantity5,
-    );
-    rewardChoiceItemId6Controller.text = _fmt(t.rewardChoiceItemId6);
-    rewardChoiceItemQuantity6Controller.text = _fmt(
-      t.rewardChoiceItemQuantity6,
-    );
+    rewardChoiceItemId1Controller.init(t.rewardChoiceItemId1);
+    rewardChoiceItemQuantity1Controller.init(t.rewardChoiceItemQuantity1);
+    rewardChoiceItemId2Controller.init(t.rewardChoiceItemId2);
+    rewardChoiceItemQuantity2Controller.init(t.rewardChoiceItemQuantity2);
+    rewardChoiceItemId3Controller.init(t.rewardChoiceItemId3);
+    rewardChoiceItemQuantity3Controller.init(t.rewardChoiceItemQuantity3);
+    rewardChoiceItemId4Controller.init(t.rewardChoiceItemId4);
+    rewardChoiceItemQuantity4Controller.init(t.rewardChoiceItemQuantity4);
+    rewardChoiceItemId5Controller.init(t.rewardChoiceItemId5);
+    rewardChoiceItemQuantity5Controller.init(t.rewardChoiceItemQuantity5);
+    rewardChoiceItemId6Controller.init(t.rewardChoiceItemId6);
+    rewardChoiceItemQuantity6Controller.init(t.rewardChoiceItemQuantity6);
 
-    poiContinentController.text = _fmt(t.poiContinent);
-    poiXController.text = _fmt(t.poiX);
-    poiYController.text = _fmt(t.poiY);
-    poiPriorityController.text = _fmt(t.poiPriority);
+    poiContinentController.init(t.poiContinent);
+    poiXController.init(t.poiX);
+    poiYController.init(t.poiY);
+    poiPriorityController.init(t.poiPriority);
 
-    rewardTitleController.text = _fmt(t.rewardTitle);
-    rewardTalentsController.text = _fmt(t.rewardTalents);
-    rewardArenaPointsController.text = _fmt(t.rewardArenaPoints);
+    rewardTitleController.init(t.rewardTitle);
+    rewardTalentsController.init(t.rewardTalents);
+    rewardArenaPointsController.init(t.rewardArenaPoints);
 
-    rewardFactionId1Controller.text = _fmt(t.rewardFactionId1);
-    rewardFactionValue1Controller.text = _fmt(t.rewardFactionValue1);
-    rewardFactionOverride1Controller.text = _fmt(t.rewardFactionOverride1);
-    rewardFactionId2Controller.text = _fmt(t.rewardFactionId2);
-    rewardFactionValue2Controller.text = _fmt(t.rewardFactionValue2);
-    rewardFactionOverride2Controller.text = _fmt(t.rewardFactionOverride2);
-    rewardFactionId3Controller.text = _fmt(t.rewardFactionId3);
-    rewardFactionValue3Controller.text = _fmt(t.rewardFactionValue3);
-    rewardFactionOverride3Controller.text = _fmt(t.rewardFactionOverride3);
-    rewardFactionId4Controller.text = _fmt(t.rewardFactionId4);
-    rewardFactionValue4Controller.text = _fmt(t.rewardFactionValue4);
-    rewardFactionOverride4Controller.text = _fmt(t.rewardFactionOverride4);
-    rewardFactionId5Controller.text = _fmt(t.rewardFactionId5);
-    rewardFactionValue5Controller.text = _fmt(t.rewardFactionValue5);
-    rewardFactionOverride5Controller.text = _fmt(t.rewardFactionOverride5);
+    rewardFactionId1Controller.init(t.rewardFactionId1);
+    rewardFactionValue1Controller.init(t.rewardFactionValue1);
+    rewardFactionOverride1Controller.init(t.rewardFactionOverride1);
+    rewardFactionId2Controller.init(t.rewardFactionId2);
+    rewardFactionValue2Controller.init(t.rewardFactionValue2);
+    rewardFactionOverride2Controller.init(t.rewardFactionOverride2);
+    rewardFactionId3Controller.init(t.rewardFactionId3);
+    rewardFactionValue3Controller.init(t.rewardFactionValue3);
+    rewardFactionOverride3Controller.init(t.rewardFactionOverride3);
+    rewardFactionId4Controller.init(t.rewardFactionId4);
+    rewardFactionValue4Controller.init(t.rewardFactionValue4);
+    rewardFactionOverride4Controller.init(t.rewardFactionOverride4);
+    rewardFactionId5Controller.init(t.rewardFactionId5);
+    rewardFactionValue5Controller.init(t.rewardFactionValue5);
+    rewardFactionOverride5Controller.init(t.rewardFactionOverride5);
 
-    timeAllowedController.text = _fmt(t.timeAllowed);
-    allowableRacesController.text = _fmt(t.allowableRaces);
+    timeAllowedController.init(t.timeAllowed);
+    allowableRacesController.init(t.allowableRaces);
 
-    logTitleController.text = t.logTitle;
-    logDescriptionController.text = t.logDescription;
-    questDescriptionController.text = t.questDescription;
-    areaDescriptionController.text = t.areaDescription;
-    questCompletionLogController.text = t.questCompletionLog;
+    logTitleController.init(t.logTitle);
+    logDescriptionController.init(t.logDescription);
+    questDescriptionController.init(t.questDescription);
+    areaDescriptionController.init(t.areaDescription);
+    questCompletionLogController.init(t.questCompletionLog);
 
-    requiredNpcOrGo1Controller.text = _fmt(t.requiredNpcOrGo1);
-    requiredNpcOrGo2Controller.text = _fmt(t.requiredNpcOrGo2);
-    requiredNpcOrGo3Controller.text = _fmt(t.requiredNpcOrGo3);
-    requiredNpcOrGo4Controller.text = _fmt(t.requiredNpcOrGo4);
-    requiredNpcOrGoCount1Controller.text = _fmt(t.requiredNpcOrGoCount1);
-    requiredNpcOrGoCount2Controller.text = _fmt(t.requiredNpcOrGoCount2);
-    requiredNpcOrGoCount3Controller.text = _fmt(t.requiredNpcOrGoCount3);
-    requiredNpcOrGoCount4Controller.text = _fmt(t.requiredNpcOrGoCount4);
+    requiredNpcOrGo1Controller.init(t.requiredNpcOrGo1);
+    requiredNpcOrGo2Controller.init(t.requiredNpcOrGo2);
+    requiredNpcOrGo3Controller.init(t.requiredNpcOrGo3);
+    requiredNpcOrGo4Controller.init(t.requiredNpcOrGo4);
+    requiredNpcOrGoCount1Controller.init(t.requiredNpcOrGoCount1);
+    requiredNpcOrGoCount2Controller.init(t.requiredNpcOrGoCount2);
+    requiredNpcOrGoCount3Controller.init(t.requiredNpcOrGoCount3);
+    requiredNpcOrGoCount4Controller.init(t.requiredNpcOrGoCount4);
 
-    requiredItemId1Controller.text = _fmt(t.requiredItemId1);
-    requiredItemId2Controller.text = _fmt(t.requiredItemId2);
-    requiredItemId3Controller.text = _fmt(t.requiredItemId3);
-    requiredItemId4Controller.text = _fmt(t.requiredItemId4);
-    requiredItemId5Controller.text = _fmt(t.requiredItemId5);
-    requiredItemId6Controller.text = _fmt(t.requiredItemId6);
-    requiredItemCount1Controller.text = _fmt(t.requiredItemCount1);
-    requiredItemCount2Controller.text = _fmt(t.requiredItemCount2);
-    requiredItemCount3Controller.text = _fmt(t.requiredItemCount3);
-    requiredItemCount4Controller.text = _fmt(t.requiredItemCount4);
-    requiredItemCount5Controller.text = _fmt(t.requiredItemCount5);
-    requiredItemCount6Controller.text = _fmt(t.requiredItemCount6);
+    requiredItemId1Controller.init(t.requiredItemId1);
+    requiredItemId2Controller.init(t.requiredItemId2);
+    requiredItemId3Controller.init(t.requiredItemId3);
+    requiredItemId4Controller.init(t.requiredItemId4);
+    requiredItemId5Controller.init(t.requiredItemId5);
+    requiredItemId6Controller.init(t.requiredItemId6);
+    requiredItemCount1Controller.init(t.requiredItemCount1);
+    requiredItemCount2Controller.init(t.requiredItemCount2);
+    requiredItemCount3Controller.init(t.requiredItemCount3);
+    requiredItemCount4Controller.init(t.requiredItemCount4);
+    requiredItemCount5Controller.init(t.requiredItemCount5);
+    requiredItemCount6Controller.init(t.requiredItemCount6);
 
-    unknown0Controller.text = _fmt(t.unknown0);
-    objectiveText1Controller.text = t.objectiveText1;
-    objectiveText2Controller.text = t.objectiveText2;
-    objectiveText3Controller.text = t.objectiveText3;
-    objectiveText4Controller.text = t.objectiveText4;
-    verifiedBuildController.text = t.verifiedBuild.toString();
+    unknown0Controller.init(t.unknown0);
+    objectiveText1Controller.init(t.objectiveText1);
+    objectiveText2Controller.init(t.objectiveText2);
+    objectiveText3Controller.init(t.objectiveText3);
+    objectiveText4Controller.init(t.objectiveText4);
+    verifiedBuildController.init(t.verifiedBuild);
   }
 
   QuestTemplateEntity _collect() {
     return QuestTemplateEntity(
-      id: _pi(idController.text),
-      questType: _pi(questTypeController.text),
-      questLevel: _pi(questLevelController.text),
-      minLevel: _pi(minLevelController.text),
-      questSortId: _parseInt(questSortIdController.text),
-      questInfoId: _pi(questInfoIdController.text),
-      suggestedGroupNum: _pi(suggestedGroupNumController.text),
-      requiredFactionId1: _pi(requiredFactionId1Controller.text),
-      requiredFactionId2: _pi(requiredFactionId2Controller.text),
-      requiredFactionValue1: _pi(requiredFactionValue1Controller.text),
-      requiredFactionValue2: _pi(requiredFactionValue2Controller.text),
-      rewardNextQuest: _pi(rewardNextQuestController.text),
-      rewardXpDifficulty: _pi(rewardXpDifficultyController.text),
-      rewardMoney: _pi(rewardMoneyController.text),
-      rewardMoneyDifficulty: _pi(rewardMoneyDifficultyController.text),
-      rewardDisplaySpell: _pi(rewardDisplaySpellController.text),
-      rewardSpell: _pi(rewardSpellController.text),
-      rewardHonor: _pi(rewardHonorController.text),
-      rewardKillHonor: _pd(rewardKillHonorController.text),
-      startItem: _pi(startItemController.text),
-      flags: _pi(flagsController.text),
-      requiredPlayerKills: _pi(requiredPlayerKillsController.text),
-      rewardItem1: _pi(rewardItem1Controller.text),
-      rewardAmount1: _pi(rewardAmount1Controller.text),
-      rewardItem2: _pi(rewardItem2Controller.text),
-      rewardAmount2: _pi(rewardAmount2Controller.text),
-      rewardItem3: _pi(rewardItem3Controller.text),
-      rewardAmount3: _pi(rewardAmount3Controller.text),
-      rewardItem4: _pi(rewardItem4Controller.text),
-      rewardAmount4: _pi(rewardAmount4Controller.text),
-      itemDrop1: _pi(itemDrop1Controller.text),
-      itemDropQuantity1: _pi(itemDropQuantity1Controller.text),
-      itemDrop2: _pi(itemDrop2Controller.text),
-      itemDropQuantity2: _pi(itemDropQuantity2Controller.text),
-      itemDrop3: _pi(itemDrop3Controller.text),
-      itemDropQuantity3: _pi(itemDropQuantity3Controller.text),
-      itemDrop4: _pi(itemDrop4Controller.text),
-      itemDropQuantity4: _pi(itemDropQuantity4Controller.text),
-      rewardChoiceItemId1: _pi(rewardChoiceItemId1Controller.text),
-      rewardChoiceItemQuantity1: _pi(rewardChoiceItemQuantity1Controller.text),
-      rewardChoiceItemId2: _pi(rewardChoiceItemId2Controller.text),
-      rewardChoiceItemQuantity2: _pi(rewardChoiceItemQuantity2Controller.text),
-      rewardChoiceItemId3: _pi(rewardChoiceItemId3Controller.text),
-      rewardChoiceItemQuantity3: _pi(rewardChoiceItemQuantity3Controller.text),
-      rewardChoiceItemId4: _pi(rewardChoiceItemId4Controller.text),
-      rewardChoiceItemQuantity4: _pi(rewardChoiceItemQuantity4Controller.text),
-      rewardChoiceItemId5: _pi(rewardChoiceItemId5Controller.text),
-      rewardChoiceItemQuantity5: _pi(rewardChoiceItemQuantity5Controller.text),
-      rewardChoiceItemId6: _pi(rewardChoiceItemId6Controller.text),
-      rewardChoiceItemQuantity6: _pi(rewardChoiceItemQuantity6Controller.text),
-      poiContinent: _pi(poiContinentController.text),
-      poiX: _pd(poiXController.text),
-      poiY: _pd(poiYController.text),
-      poiPriority: _pi(poiPriorityController.text),
-      rewardTitle: _pi(rewardTitleController.text),
-      rewardTalents: _pi(rewardTalentsController.text),
-      rewardArenaPoints: _pi(rewardArenaPointsController.text),
-      rewardFactionId1: _pi(rewardFactionId1Controller.text),
-      rewardFactionValue1: _pi(rewardFactionValue1Controller.text),
-      rewardFactionOverride1: _pi(rewardFactionOverride1Controller.text),
-      rewardFactionId2: _pi(rewardFactionId2Controller.text),
-      rewardFactionValue2: _pi(rewardFactionValue2Controller.text),
-      rewardFactionOverride2: _pi(rewardFactionOverride2Controller.text),
-      rewardFactionId3: _pi(rewardFactionId3Controller.text),
-      rewardFactionValue3: _pi(rewardFactionValue3Controller.text),
-      rewardFactionOverride3: _pi(rewardFactionOverride3Controller.text),
-      rewardFactionId4: _pi(rewardFactionId4Controller.text),
-      rewardFactionValue4: _pi(rewardFactionValue4Controller.text),
-      rewardFactionOverride4: _pi(rewardFactionOverride4Controller.text),
-      rewardFactionId5: _pi(rewardFactionId5Controller.text),
-      rewardFactionValue5: _pi(rewardFactionValue5Controller.text),
-      rewardFactionOverride5: _pi(rewardFactionOverride5Controller.text),
-      timeAllowed: _pi(timeAllowedController.text),
-      allowableRaces: _pi(allowableRacesController.text),
-      logTitle: logTitleController.text,
-      logDescription: logDescriptionController.text,
-      questDescription: questDescriptionController.text,
-      areaDescription: areaDescriptionController.text,
-      questCompletionLog: questCompletionLogController.text,
-      requiredNpcOrGo1: _pi(requiredNpcOrGo1Controller.text),
-      requiredNpcOrGo2: _pi(requiredNpcOrGo2Controller.text),
-      requiredNpcOrGo3: _pi(requiredNpcOrGo3Controller.text),
-      requiredNpcOrGo4: _pi(requiredNpcOrGo4Controller.text),
-      requiredNpcOrGoCount1: _pi(requiredNpcOrGoCount1Controller.text),
-      requiredNpcOrGoCount2: _pi(requiredNpcOrGoCount2Controller.text),
-      requiredNpcOrGoCount3: _pi(requiredNpcOrGoCount3Controller.text),
-      requiredNpcOrGoCount4: _pi(requiredNpcOrGoCount4Controller.text),
-      requiredItemId1: _pi(requiredItemId1Controller.text),
-      requiredItemId2: _pi(requiredItemId2Controller.text),
-      requiredItemId3: _pi(requiredItemId3Controller.text),
-      requiredItemId4: _pi(requiredItemId4Controller.text),
-      requiredItemId5: _pi(requiredItemId5Controller.text),
-      requiredItemId6: _pi(requiredItemId6Controller.text),
-      requiredItemCount1: _pi(requiredItemCount1Controller.text),
-      requiredItemCount2: _pi(requiredItemCount2Controller.text),
-      requiredItemCount3: _pi(requiredItemCount3Controller.text),
-      requiredItemCount4: _pi(requiredItemCount4Controller.text),
-      requiredItemCount5: _pi(requiredItemCount5Controller.text),
-      requiredItemCount6: _pi(requiredItemCount6Controller.text),
-      unknown0: _pi(unknown0Controller.text),
-      objectiveText1: objectiveText1Controller.text,
-      objectiveText2: objectiveText2Controller.text,
-      objectiveText3: objectiveText3Controller.text,
-      objectiveText4: objectiveText4Controller.text,
-      verifiedBuild: _pi(verifiedBuildController.text, 'VerifiedBuild'),
+      id: idController.collect(),
+      questType: questTypeController.collect(),
+      questLevel: questLevelController.collect(),
+      minLevel: minLevelController.collect(),
+      questSortId: questSortIdController.collect(),
+      questInfoId: questInfoIdController.collect(),
+      suggestedGroupNum: suggestedGroupNumController.collect(),
+      requiredFactionId1: requiredFactionId1Controller.collect(),
+      requiredFactionId2: requiredFactionId2Controller.collect(),
+      requiredFactionValue1: requiredFactionValue1Controller.collect(),
+      requiredFactionValue2: requiredFactionValue2Controller.collect(),
+      rewardNextQuest: rewardNextQuestController.collect(),
+      rewardXpDifficulty: rewardXpDifficultyController.collect(),
+      rewardMoney: rewardMoneyController.collect(),
+      rewardMoneyDifficulty: rewardMoneyDifficultyController.collect(),
+      rewardDisplaySpell: rewardDisplaySpellController.collect(),
+      rewardSpell: rewardSpellController.collect(),
+      rewardHonor: rewardHonorController.collect(),
+      rewardKillHonor: rewardKillHonorController.collect(),
+      startItem: startItemController.collect(),
+      flags: flagsController.collect(),
+      requiredPlayerKills: requiredPlayerKillsController.collect(),
+      rewardItem1: rewardItem1Controller.collect(),
+      rewardAmount1: rewardAmount1Controller.collect(),
+      rewardItem2: rewardItem2Controller.collect(),
+      rewardAmount2: rewardAmount2Controller.collect(),
+      rewardItem3: rewardItem3Controller.collect(),
+      rewardAmount3: rewardAmount3Controller.collect(),
+      rewardItem4: rewardItem4Controller.collect(),
+      rewardAmount4: rewardAmount4Controller.collect(),
+      itemDrop1: itemDrop1Controller.collect(),
+      itemDropQuantity1: itemDropQuantity1Controller.collect(),
+      itemDrop2: itemDrop2Controller.collect(),
+      itemDropQuantity2: itemDropQuantity2Controller.collect(),
+      itemDrop3: itemDrop3Controller.collect(),
+      itemDropQuantity3: itemDropQuantity3Controller.collect(),
+      itemDrop4: itemDrop4Controller.collect(),
+      itemDropQuantity4: itemDropQuantity4Controller.collect(),
+      rewardChoiceItemId1: rewardChoiceItemId1Controller.collect(),
+      rewardChoiceItemQuantity1: rewardChoiceItemQuantity1Controller.collect(),
+      rewardChoiceItemId2: rewardChoiceItemId2Controller.collect(),
+      rewardChoiceItemQuantity2: rewardChoiceItemQuantity2Controller.collect(),
+      rewardChoiceItemId3: rewardChoiceItemId3Controller.collect(),
+      rewardChoiceItemQuantity3: rewardChoiceItemQuantity3Controller.collect(),
+      rewardChoiceItemId4: rewardChoiceItemId4Controller.collect(),
+      rewardChoiceItemQuantity4: rewardChoiceItemQuantity4Controller.collect(),
+      rewardChoiceItemId5: rewardChoiceItemId5Controller.collect(),
+      rewardChoiceItemQuantity5: rewardChoiceItemQuantity5Controller.collect(),
+      rewardChoiceItemId6: rewardChoiceItemId6Controller.collect(),
+      rewardChoiceItemQuantity6: rewardChoiceItemQuantity6Controller.collect(),
+      poiContinent: poiContinentController.collect(),
+      poiX: poiXController.collect(),
+      poiY: poiYController.collect(),
+      poiPriority: poiPriorityController.collect(),
+      rewardTitle: rewardTitleController.collect(),
+      rewardTalents: rewardTalentsController.collect(),
+      rewardArenaPoints: rewardArenaPointsController.collect(),
+      rewardFactionId1: rewardFactionId1Controller.collect(),
+      rewardFactionValue1: rewardFactionValue1Controller.collect(),
+      rewardFactionOverride1: rewardFactionOverride1Controller.collect(),
+      rewardFactionId2: rewardFactionId2Controller.collect(),
+      rewardFactionValue2: rewardFactionValue2Controller.collect(),
+      rewardFactionOverride2: rewardFactionOverride2Controller.collect(),
+      rewardFactionId3: rewardFactionId3Controller.collect(),
+      rewardFactionValue3: rewardFactionValue3Controller.collect(),
+      rewardFactionOverride3: rewardFactionOverride3Controller.collect(),
+      rewardFactionId4: rewardFactionId4Controller.collect(),
+      rewardFactionValue4: rewardFactionValue4Controller.collect(),
+      rewardFactionOverride4: rewardFactionOverride4Controller.collect(),
+      rewardFactionId5: rewardFactionId5Controller.collect(),
+      rewardFactionValue5: rewardFactionValue5Controller.collect(),
+      rewardFactionOverride5: rewardFactionOverride5Controller.collect(),
+      timeAllowed: timeAllowedController.collect(),
+      allowableRaces: allowableRacesController.collect(),
+      logTitle: logTitleController.collect(),
+      logDescription: logDescriptionController.collect(),
+      questDescription: questDescriptionController.collect(),
+      areaDescription: areaDescriptionController.collect(),
+      questCompletionLog: questCompletionLogController.collect(),
+      requiredNpcOrGo1: requiredNpcOrGo1Controller.collect(),
+      requiredNpcOrGo2: requiredNpcOrGo2Controller.collect(),
+      requiredNpcOrGo3: requiredNpcOrGo3Controller.collect(),
+      requiredNpcOrGo4: requiredNpcOrGo4Controller.collect(),
+      requiredNpcOrGoCount1: requiredNpcOrGoCount1Controller.collect(),
+      requiredNpcOrGoCount2: requiredNpcOrGoCount2Controller.collect(),
+      requiredNpcOrGoCount3: requiredNpcOrGoCount3Controller.collect(),
+      requiredNpcOrGoCount4: requiredNpcOrGoCount4Controller.collect(),
+      requiredItemId1: requiredItemId1Controller.collect(),
+      requiredItemId2: requiredItemId2Controller.collect(),
+      requiredItemId3: requiredItemId3Controller.collect(),
+      requiredItemId4: requiredItemId4Controller.collect(),
+      requiredItemId5: requiredItemId5Controller.collect(),
+      requiredItemId6: requiredItemId6Controller.collect(),
+      requiredItemCount1: requiredItemCount1Controller.collect(),
+      requiredItemCount2: requiredItemCount2Controller.collect(),
+      requiredItemCount3: requiredItemCount3Controller.collect(),
+      requiredItemCount4: requiredItemCount4Controller.collect(),
+      requiredItemCount5: requiredItemCount5Controller.collect(),
+      requiredItemCount6: requiredItemCount6Controller.collect(),
+      unknown0: unknown0Controller.collect(),
+      objectiveText1: objectiveText1Controller.collect(),
+      objectiveText2: objectiveText2Controller.collect(),
+      objectiveText3: objectiveText3Controller.collect(),
+      objectiveText4: objectiveText4Controller.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, QuestTemplateEntity t) {
@@ -469,110 +551,8 @@ class QuestTemplateDetailViewModel {
   }
 
   void dispose() {
-    allowableRacesController.dispose();
-    areaDescriptionController.dispose();
-    flagsController.dispose();
-    idController.dispose();
-    itemDrop1Controller.dispose();
-    itemDrop2Controller.dispose();
-    itemDrop3Controller.dispose();
-    itemDrop4Controller.dispose();
-    itemDropQuantity1Controller.dispose();
-    itemDropQuantity2Controller.dispose();
-    itemDropQuantity3Controller.dispose();
-    itemDropQuantity4Controller.dispose();
-    logDescriptionController.dispose();
-    logTitleController.dispose();
-    minLevelController.dispose();
-    objectiveText1Controller.dispose();
-    objectiveText2Controller.dispose();
-    objectiveText3Controller.dispose();
-    objectiveText4Controller.dispose();
-    poiContinentController.dispose();
-    poiPriorityController.dispose();
-    poiXController.dispose();
-    poiYController.dispose();
-    questCompletionLogController.dispose();
-    questDescriptionController.dispose();
-    questInfoIdController.dispose();
-    questLevelController.dispose();
-    questSortIdController.dispose();
-    questTypeController.dispose();
-    requiredFactionId1Controller.dispose();
-    requiredFactionId2Controller.dispose();
-    requiredFactionValue1Controller.dispose();
-    requiredFactionValue2Controller.dispose();
-    requiredItemCount1Controller.dispose();
-    requiredItemCount2Controller.dispose();
-    requiredItemCount3Controller.dispose();
-    requiredItemCount4Controller.dispose();
-    requiredItemCount5Controller.dispose();
-    requiredItemCount6Controller.dispose();
-    requiredItemId1Controller.dispose();
-    requiredItemId2Controller.dispose();
-    requiredItemId3Controller.dispose();
-    requiredItemId4Controller.dispose();
-    requiredItemId5Controller.dispose();
-    requiredItemId6Controller.dispose();
-    requiredNpcOrGo1Controller.dispose();
-    requiredNpcOrGo2Controller.dispose();
-    requiredNpcOrGo3Controller.dispose();
-    requiredNpcOrGo4Controller.dispose();
-    requiredNpcOrGoCount1Controller.dispose();
-    requiredNpcOrGoCount2Controller.dispose();
-    requiredNpcOrGoCount3Controller.dispose();
-    requiredNpcOrGoCount4Controller.dispose();
-    requiredPlayerKillsController.dispose();
-    rewardAmount1Controller.dispose();
-    rewardAmount2Controller.dispose();
-    rewardAmount3Controller.dispose();
-    rewardAmount4Controller.dispose();
-    rewardArenaPointsController.dispose();
-    rewardChoiceItemId1Controller.dispose();
-    rewardChoiceItemId2Controller.dispose();
-    rewardChoiceItemId3Controller.dispose();
-    rewardChoiceItemId4Controller.dispose();
-    rewardChoiceItemId5Controller.dispose();
-    rewardChoiceItemId6Controller.dispose();
-    rewardChoiceItemQuantity1Controller.dispose();
-    rewardChoiceItemQuantity2Controller.dispose();
-    rewardChoiceItemQuantity3Controller.dispose();
-    rewardChoiceItemQuantity4Controller.dispose();
-    rewardChoiceItemQuantity5Controller.dispose();
-    rewardChoiceItemQuantity6Controller.dispose();
-    rewardDisplaySpellController.dispose();
-    rewardFactionId1Controller.dispose();
-    rewardFactionId2Controller.dispose();
-    rewardFactionId3Controller.dispose();
-    rewardFactionId4Controller.dispose();
-    rewardFactionId5Controller.dispose();
-    rewardFactionOverride1Controller.dispose();
-    rewardFactionOverride2Controller.dispose();
-    rewardFactionOverride3Controller.dispose();
-    rewardFactionOverride4Controller.dispose();
-    rewardFactionOverride5Controller.dispose();
-    rewardFactionValue1Controller.dispose();
-    rewardFactionValue2Controller.dispose();
-    rewardFactionValue3Controller.dispose();
-    rewardFactionValue4Controller.dispose();
-    rewardFactionValue5Controller.dispose();
-    rewardHonorController.dispose();
-    rewardItem1Controller.dispose();
-    rewardItem2Controller.dispose();
-    rewardItem3Controller.dispose();
-    rewardItem4Controller.dispose();
-    rewardKillHonorController.dispose();
-    rewardMoneyController.dispose();
-    rewardMoneyDifficultyController.dispose();
-    rewardNextQuestController.dispose();
-    rewardSpellController.dispose();
-    rewardTalentsController.dispose();
-    rewardTitleController.dispose();
-    rewardXpDifficultyController.dispose();
-    startItemController.dispose();
-    suggestedGroupNumController.dispose();
-    timeAllowedController.dispose();
-    unknown0Controller.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

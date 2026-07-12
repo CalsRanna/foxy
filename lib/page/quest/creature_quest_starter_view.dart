@@ -156,7 +156,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
             label: '生物编号',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.creatureTemplate,
-              controller: viewModel.idController,
+              fieldController: viewModel.idController,
               placeholder: 'CreatureId',
             ),
           ),
@@ -164,7 +164,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
           FoxyFormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
-              controller: viewModel.questController,
+              fieldController: viewModel.questController,
               readOnly: true,
             ),
           ),
