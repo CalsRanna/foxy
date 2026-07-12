@@ -47,16 +47,43 @@ class DialogUtil {
     await Navigator.maybePop(router.navigatorKey.currentContext!);
   }
 
+  /// 显示阻塞式提示对话框，用户点「确定」后返回。
+  ///
+  /// 不隐式 pop 栈顶；调用方应先自行关闭 loading 等临时对话框。
+  Future<void> alert({
+    required String title,
+    required String message,
+  }) async {
+    final context = router.navigatorKey.currentContext!;
+    if (!context.mounted) return;
+
+    await showShadDialog<void>(
+      context: context,
+      builder: (context) {
+        return ShadDialog.alert(
+          title: Text(title),
+          description: Text(message),
+          actions: [
+            ShadButton(
+              child: const Text('确定'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void error(String error) {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
-    // 先关闭所有现有对话框
+    // 兼容旧调用：若栈顶是 loading 等可 pop 路由则先关掉。
+    // 新代码应显式 dismiss loading 后再调用，避免依赖此隐式副作用。
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
 
-    // 然后显示错误对话框
     showShadDialog(
       context: context,
       builder: (context) {

@@ -33,7 +33,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
         (join) => join
             .on('gmo.MenuID', 'gmol.MenuID')
             .on('gmo.OptionID', 'gmol.OptionID')
-            .on('gmol.Locale', '"zhCN"'),
+            .where('gmol.Locale', 'zhCN'),
       );
     }
     builder = builder.where('gmo.MenuID', menuId);

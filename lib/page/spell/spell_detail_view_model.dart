@@ -582,7 +582,7 @@ class SpellDetailViewModel {
       entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   void dispose() {

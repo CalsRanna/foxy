@@ -378,5 +378,5 @@ flutter test
 - **默认 locale**：locale join 固定使用 `'zhCN'`
 - **避免 `delete` 关键词**：删除操作用 `destroy`，因为 `delete` 在某些上下文中是保留字
 - **`get{s}()` vs `getBrief*`**：全量方法仅在导出场景使用。列表页和 Picker 必须走 `getBrief*` + `count*`
-- **测试**：目前只有一个占位 widget_test.dart（默认 Flutter 模板），尚未建立实际测试体系
+- **测试**：已有 DBC 导出/定义/locale、工具函数等测试；普通业务 Repository / ViewModel 覆盖仍偏少。PR 会经 CI 跑 `flutter analyze` 与 `flutter test`
 - **拼写检查配置**：`codebook.toml` 包含项目专有词汇（Azeroth、DBC、NPC 等），避免被拼写检查误报

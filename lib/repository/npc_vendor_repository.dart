@@ -21,7 +21,7 @@ class NpcVendorRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(

@@ -25,7 +25,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'gameobject_template_locale AS gtl',
-        (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
+        (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
       );
     }
     builder = _applyFilter(builder, filter);
@@ -66,7 +66,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS gt');
     builder = builder.leftJoin(
       'gameobject_template_locale AS gtl',
-      (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
+      (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
     return builder.count();
