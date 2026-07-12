@@ -423,6 +423,7 @@ flutter test
 - 该模块目录内已不存在裸 `TextEditingController`、`ShadSelectController`、直接 `ShadInput`、`FoxyFormItem.legacy` 或 Page 层内部 Controller 访问。
 - `quest_sort` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、4 个 FieldController。
 - `quest_info` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、4 个 FieldController。
+- `glyph_property` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、5 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -434,6 +435,7 @@ flutter test
 | `creature_template` | 列表、主详情、装备、掉落、击杀声望、任务物品、Addon、抗性、法术、训练师、商人、偷窃掉落、剥皮掉落 | 137 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `quest_sort` | 列表筛选、详情编辑、DBC 名称本地化 | 4 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `quest_info` | 列表筛选、详情编辑、DBC 名称本地化 | 4 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `glyph_property` | 列表筛选、详情编辑、雕文数值属性 | 5 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 

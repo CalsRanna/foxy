@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,19 +15,21 @@ class GlyphPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final idController = IntFieldController();
 
   /// Property
-  final spellIdController = TextEditingController();
-  final glyphSlotFlagsController = TextEditingController();
-  final spellIconIdController = TextEditingController();
+  final spellIdController = IntFieldController();
+  final glyphSlotFlagsController = IntFieldController();
+  final spellIconIdController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    spellIdController,
+    glyphSlotFlagsController,
+    spellIconIdController,
+  ];
 
   final property = signal(GlyphPropertyEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -36,7 +37,7 @@ class GlyphPropertyDetailViewModel {
       final existed = await _repository.getGlyphProperty(t.id);
       if (existed == null) {
         final id = await _repository.storeGlyphProperty(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateGlyphProperty(t);
       }
@@ -63,10 +64,10 @@ class GlyphPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GlyphProperty
   GlyphPropertyEntity _collectFromControllers() {
     return GlyphPropertyEntity(
-      id: _pi(idController.text),
-      spellId: _pi(spellIdController.text),
-      glyphSlotFlags: _pi(glyphSlotFlagsController.text),
-      spellIconId: _pi(spellIconIdController.text),
+      id: idController.collect(),
+      spellId: spellIdController.collect(),
+      glyphSlotFlags: glyphSlotFlagsController.collect(),
+      spellIconId: spellIconIdController.collect(),
     );
   }
 
@@ -82,10 +83,9 @@ class GlyphPropertyDetailViewModel {
   }
 
   void dispose() {
-    glyphSlotFlagsController.dispose();
-    idController.dispose();
-    spellIconIdController.dispose();
-    spellIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -105,11 +105,11 @@ class GlyphPropertyDetailViewModel {
 
   void _initControllers(GlyphPropertyEntity glyphProperty) {
     /// Basic
-    idController.text = _fmt(glyphProperty.id);
+    idController.init(glyphProperty.id);
 
     /// Property
-    spellIdController.text = _fmt(glyphProperty.spellId);
-    glyphSlotFlagsController.text = _fmt(glyphProperty.glyphSlotFlags);
-    spellIconIdController.text = _fmt(glyphProperty.spellIconId);
+    spellIdController.init(glyphProperty.spellId);
+    glyphSlotFlagsController.init(glyphProperty.glyphSlotFlags);
+    spellIconIdController.init(glyphProperty.spellIconId);
   }
 }
