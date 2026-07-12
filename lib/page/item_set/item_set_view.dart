@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -65,7 +66,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '编号',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ID',
-                  controller: viewModel.idController,
+                  fieldController: viewModel.idController,
                   readOnly: true,
                 ),
               ),
@@ -75,7 +76,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '需求技能',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkill',
-                  controller: viewModel.requiredSkillController,
+                  fieldController: viewModel.requiredSkillController,
                 ),
               ),
             ),
@@ -84,7 +85,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '需求技能等级',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkillRank',
-                  controller: viewModel.requiredSkillRankController,
+                  fieldController: viewModel.requiredSkillRankController,
                 ),
               ),
             ),
@@ -109,7 +110,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                   final id = viewModel.itemSet.value.id;
                   return FoxyLocalePicker(
                     entry: id == 0 ? null : id,
-                    controller: viewModel.nameLangZhCNController,
+                    fieldController: viewModel.nameLangZhCNController,
                     title: '套装名称本地化',
                     placeholder: 'Name_lang_zhCN',
                     delegate: FoxyLocalePickerDelegates.dbcItemSetName,
@@ -154,7 +155,7 @@ class _ItemSetViewState extends State<ItemSetView> {
     required String title,
     required int count,
     required FoxyEntityPickerDelegate<T> delegate,
-    required List<TextEditingController> controllers,
+    required List<IntFieldController> controllers,
     required String labelPrefix,
     required String placeholderPrefix,
   }) {
@@ -173,7 +174,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                           label: '$labelPrefix${r * 4 + c}',
                           child: FoxyEntityPicker<T>(
                             delegate: delegate,
-                            controller: controllers[r * 4 + c],
+                            fieldController: controllers[r * 4 + c],
                             placeholder: '$placeholderPrefix${r * 4 + c}',
                           ),
                         )
@@ -187,7 +188,7 @@ class _ItemSetViewState extends State<ItemSetView> {
 
   Widget _buildSetThresholds() {
     return FoxyFormSection(
-      title: '触发阈值',
+      title: '触发门槛',
       children: [
         Row(
           spacing: 8,
@@ -197,7 +198,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛0',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold0',
-                  controller: viewModel.setThreshold0Controller,
+                  fieldController: viewModel.setThreshold0Controller,
                 ),
               ),
             ),
@@ -206,7 +207,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛1',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold1',
-                  controller: viewModel.setThreshold1Controller,
+                  fieldController: viewModel.setThreshold1Controller,
                 ),
               ),
             ),
@@ -215,7 +216,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛2',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold2',
-                  controller: viewModel.setThreshold2Controller,
+                  fieldController: viewModel.setThreshold2Controller,
                 ),
               ),
             ),
@@ -224,7 +225,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛3',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold3',
-                  controller: viewModel.setThreshold3Controller,
+                  fieldController: viewModel.setThreshold3Controller,
                 ),
               ),
             ),
@@ -238,7 +239,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛4',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold4',
-                  controller: viewModel.setThreshold4Controller,
+                  fieldController: viewModel.setThreshold4Controller,
                 ),
               ),
             ),
@@ -247,7 +248,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛5',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold5',
-                  controller: viewModel.setThreshold5Controller,
+                  fieldController: viewModel.setThreshold5Controller,
                 ),
               ),
             ),
@@ -256,7 +257,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛6',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold6',
-                  controller: viewModel.setThreshold6Controller,
+                  fieldController: viewModel.setThreshold6Controller,
                 ),
               ),
             ),
@@ -265,7 +266,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛7',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold7',
-                  controller: viewModel.setThreshold7Controller,
+                  fieldController: viewModel.setThreshold7Controller,
                 ),
               ),
             ),
