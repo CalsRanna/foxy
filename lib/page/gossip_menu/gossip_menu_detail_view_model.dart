@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
@@ -9,6 +7,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -18,17 +17,18 @@ class GossipMenuDetailViewModel {
   final _repository = GetIt.instance.get<GossipMenuRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final menuIdController = TextEditingController();
+  final menuIdController = IntFieldController();
+  final textIdController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    menuIdController,
+    textIdController,
+  ];
 
   final menuId = signal(0);
-  final textIdController = TextEditingController();
   final menu = signal(GossipMenuEntity());
   int? _originalMenuId;
   int? _originalTextId;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
@@ -38,8 +38,8 @@ class GossipMenuDetailViewModel {
         menu.value = blank;
         _originalMenuId = null;
         _originalTextId = null;
-        menuIdController.text = _fmt(blank.menuId);
-        textIdController.text = _fmt(blank.textId);
+        menuIdController.init(blank.menuId);
+        textIdController.init(blank.textId);
         return;
       }
       _originalMenuId = menuId;
@@ -47,9 +47,9 @@ class GossipMenuDetailViewModel {
       final existing = await _repository.getGossipMenu(menuId, textId ?? 0);
       if (existing == null) return;
       this.menuId.value = existing.menuId;
-      textIdController.text = _fmt(existing.textId);
+      textIdController.init(existing.textId);
       menu.value = existing;
-      menuIdController.text = this.menuId.value.toString();
+      menuIdController.init(this.menuId.value);
     } catch (e) {
       LoggerUtil.instance.e('加载对话菜单详情失败: $e');
       DialogUtil.instance.error('加载对话菜单详情失败: $e');
@@ -63,7 +63,7 @@ class GossipMenuDetailViewModel {
       final prevTextId = _originalTextId;
       if (wasNew) {
         final id = await _repository.storeGossipMenu(t);
-        menuIdController.text = '$id';
+        menuIdController.init(id);
         menuId.value = id;
         menu.value = t.copyWith(menuId: id);
         _logActivity(ActivityActionType.create, menu.value);
@@ -81,7 +81,7 @@ class GossipMenuDetailViewModel {
       }
       final saved = menu.value;
       menuId.value = saved.menuId;
-      textIdController.text = _fmt(saved.textId);
+      textIdController.init(saved.textId);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -110,8 +110,8 @@ class GossipMenuDetailViewModel {
 
   GossipMenuEntity _collectFromControllers() {
     return GossipMenuEntity(
-      menuId: _pi(menuIdController.text, 'MenuID'),
-      textId: _pi(textIdController.text, 'TextID'),
+      menuId: menuIdController.collect(),
+      textId: textIdController.collect(),
     );
   }
 
@@ -127,7 +127,8 @@ class GossipMenuDetailViewModel {
   }
 
   void dispose() {
-    menuIdController.dispose();
-    textIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

@@ -1,47 +1,42 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
 /// Tab 2 (npc_text) ViewModel
-/// 用 `Map<String, TextEditingController>` 管理约 114 个字段的 controller
+/// 用惰性 Map 管理约 114 个类型化 FieldController
 class NpcTextViewModel {
   final _repository = GetIt.instance.get<NpcTextRepository>();
   final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
-
-  final _controllers = <String, TextEditingController>{};
-  final _emoteControllers = <String, TextEditingController>{};
-  final _broadcastControllers = <int, TextEditingController>{};
+  final _stringControllers = <String, StringFieldController>{};
+  final _intControllers = <String, IntFieldController>{};
+  final _doubleControllers = <String, DoubleFieldController>{};
 
   final creating = signal(false);
   final currentTextId = signal(0);
   final localeExists = signal(false);
 
-  /// 按需获取字段 controller（惰性初始化）
-  TextEditingController controllerOf(String key) {
-    return _controllers.putIfAbsent(key, () => TextEditingController());
+  StringFieldController stringOf(String key) {
+    return _stringControllers.putIfAbsent(key, () => StringFieldController());
   }
 
-  TextEditingController emoteControllerOf(String key) {
-    return _emoteControllers.putIfAbsent(key, () => TextEditingController());
+  IntFieldController intOf(String key) {
+    return _intControllers.putIfAbsent(key, () => IntFieldController());
   }
 
-  TextEditingController broadcastControllerOf(int n) {
-    return _broadcastControllers.putIfAbsent(n, () => TextEditingController());
+  DoubleFieldController doubleOf(String key) {
+    return _doubleControllers.putIfAbsent(key, () => DoubleFieldController());
   }
+
+  IntFieldController broadcastOf(int n) => intOf('BroadcastTextID$n');
+
+  IntFieldController emoteOf(String key) => intOf(key);
 
   /// 加载指定 textId 的数据到所有 controller
   Future<void> load(int textId) async {
@@ -49,8 +44,8 @@ class NpcTextViewModel {
       _clearAll();
       creating.value = true;
       currentTextId.value = 0;
-      controllerOf('ID').text = '0';
-      controllerOf('VerifiedBuild').text = '0';
+      intOf('ID').init(0);
+      intOf('VerifiedBuild').init(0);
       return;
     }
     try {
@@ -111,89 +106,97 @@ class NpcTextViewModel {
   }
 
   void dispose() {
-    for (final c in _controllers.values) {
+    for (final c in _stringControllers.values) {
       c.dispose();
     }
-    _controllers.clear();
-    for (final c in _emoteControllers.values) {
+    _stringControllers.clear();
+    for (final c in _intControllers.values) {
       c.dispose();
     }
-    _emoteControllers.clear();
-    for (final c in _broadcastControllers.values) {
+    _intControllers.clear();
+    for (final c in _doubleControllers.values) {
       c.dispose();
     }
-    _broadcastControllers.clear();
+    _doubleControllers.clear();
   }
 
   void _clearAll() {
-    for (final c in _controllers.values) {
-      c.text = '';
+    for (final c in _stringControllers.values) {
+      c.init('');
     }
-    for (final c in _emoteControllers.values) {
-      c.text = '';
+    for (final c in _intControllers.values) {
+      c.init(0);
     }
-    for (final c in _broadcastControllers.values) {
-      c.text = '';
+    for (final c in _doubleControllers.values) {
+      c.init(0.0);
     }
   }
 
   void _applyMainToControllers(NpcTextEntity m) {
-    controllerOf('ID').text = m.id.toString();
-    controllerOf('VerifiedBuild').text = m.verifiedBuild.toString();
+    intOf('ID').init(m.id);
+    intOf('VerifiedBuild').init(m.verifiedBuild);
     for (var n = 0; n < 8; n++) {
-      final e = m.entries[n];
-      controllerOf('lang$n').text = e.lang;
-      controllerOf('Probability$n').text = e.probability.toString();
-      controllerOf('text${n}_0').text = e.text0;
-      controllerOf('text${n}_1').text = e.text1;
-      controllerOf('BroadcastTextID$n').text = e.broadcastTextId.toString();
+      final e = m.entries.isNotEmpty && n < m.entries.length
+          ? m.entries[n]
+          : const NpcTextEntryEntity();
+      stringOf('lang$n').init(e.lang);
+      doubleOf('Probability$n').init(e.probability);
+      stringOf('text${n}_0').init(e.text0);
+      stringOf('text${n}_1').init(e.text1);
+      broadcastOf(n).init(e.broadcastTextId);
       for (var i = 0; i < 6; i++) {
-        emoteControllerOf('em${n}_$i').text = _fmt(e.emotes[i]);
+        final emote = e.emotes.isNotEmpty && i < e.emotes.length
+            ? e.emotes[i]
+            : 0;
+        emoteOf('em${n}_$i').init(emote);
       }
     }
   }
 
   void _applyLocaleToControllers(NpcTextLocaleEntity l) {
-    controllerOf('locale.Locale').text = l.locale.isEmpty ? 'zhCN' : l.locale;
+    stringOf('locale.Locale').init(l.locale.isEmpty ? 'zhCN' : l.locale);
     for (var n = 0; n < 8; n++) {
-      controllerOf('locale.Text${n}_0').text = l.texts[n][0];
-      controllerOf('locale.Text${n}_1').text = l.texts[n][1];
+      final t0 =
+          l.texts.isNotEmpty && n < l.texts.length && l.texts[n].isNotEmpty
+          ? l.texts[n][0]
+          : '';
+      final t1 =
+          l.texts.isNotEmpty && n < l.texts.length && l.texts[n].length > 1
+          ? l.texts[n][1]
+          : '';
+      stringOf('locale.Text${n}_0').init(t0);
+      stringOf('locale.Text${n}_1').init(t1);
     }
   }
 
   NpcTextEntity _collectMainFromControllers() {
     return NpcTextEntity(
-      id: _pi(controllerOf('ID').text, 'ID'),
-      verifiedBuild: _pi(controllerOf('VerifiedBuild').text, 'VerifiedBuild'),
+      id: intOf('ID').collect(),
+      verifiedBuild: intOf('VerifiedBuild').collect(),
       entries: List.generate(8, (n) {
+        final lang = stringOf('lang$n').collect();
         return NpcTextEntryEntity(
-          lang: controllerOf('lang$n').text.isEmpty
-              ? '0'
-              : controllerOf('lang$n').text,
-          probability: _pd(controllerOf('Probability$n').text, 'Probability$n'),
-          text0: controllerOf('text${n}_0').text,
-          text1: controllerOf('text${n}_1').text,
-          broadcastTextId: _pi(broadcastControllerOf(n).text),
-          emotes: List.generate(
-            6,
-            (i) => _pi(emoteControllerOf('em${n}_$i').text),
-          ),
+          lang: lang.isEmpty ? '0' : lang,
+          probability: doubleOf('Probability$n').collect(),
+          text0: stringOf('text${n}_0').collect(),
+          text1: stringOf('text${n}_1').collect(),
+          broadcastTextId: broadcastOf(n).collect(),
+          emotes: List.generate(6, (i) => emoteOf('em${n}_$i').collect()),
         );
       }),
     );
   }
 
   NpcTextLocaleEntity _collectLocaleFromControllers(int id) {
+    final locale = stringOf('locale.Locale').collect();
     return NpcTextLocaleEntity(
       id: id,
-      locale: controllerOf('locale.Locale').text.isEmpty
-          ? 'zhCN'
-          : controllerOf('locale.Locale').text,
+      locale: locale.isEmpty ? 'zhCN' : locale,
       texts: List.generate(
         8,
         (n) => [
-          controllerOf('locale.Text${n}_0').text,
-          controllerOf('locale.Text${n}_1').text,
+          stringOf('locale.Text${n}_0').collect(),
+          stringOf('locale.Text${n}_1').collect(),
         ],
       ),
     );

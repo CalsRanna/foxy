@@ -1,12 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
@@ -19,28 +15,40 @@ class GossipMenuOptionViewModel {
   final editing = signal(false);
   final creating = signal(false);
 
-  /// 表单 controllers
-  final menuIdController = TextEditingController();
-  final optionIdController = TextEditingController();
-  final optionIconController = ShadSelectController<int>();
-  final optionTextController = TextEditingController();
-  final optionBroadcastTextIdController = TextEditingController();
-  final optionTypeController = ShadSelectController<int>();
-  final optionNpcFlagController = TextEditingController();
-  final boxCodedController = TextEditingController();
-  final boxMoneyController = TextEditingController();
-  final boxTextController = TextEditingController();
-  final boxBroadcastTextIdController = TextEditingController();
-  final actionMenuIdController = TextEditingController();
-  final actionPoiIdController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final menuIdController = IntFieldController();
+  final optionIdController = IntFieldController();
+  final optionIconController = SelectFieldController<int>(fallback: 0);
+  final optionTextController = StringFieldController();
+  final optionBroadcastTextIdController = IntFieldController();
+  final optionTypeController = SelectFieldController<int>(fallback: 0);
+  final optionNpcFlagController = FlagFieldController();
+  final boxCodedController = IntFieldController();
+  final boxMoneyController = IntFieldController();
+  final boxTextController = StringFieldController();
+  final boxBroadcastTextIdController = IntFieldController();
+  final actionMenuIdController = IntFieldController();
+  final actionPoiIdController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    menuIdController,
+    optionIdController,
+    optionIconController,
+    optionTextController,
+    optionBroadcastTextIdController,
+    optionTypeController,
+    optionNpcFlagController,
+    boxCodedController,
+    boxMoneyController,
+    boxTextController,
+    boxBroadcastTextIdController,
+    actionMenuIdController,
+    actionPoiIdController,
+    verifiedBuildController,
+  ];
 
   int _originalMenuId = 0;
   int _originalOptionId = 0;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> search(int menuId) async {
     currentMenuId.value = menuId;
@@ -141,69 +149,44 @@ class GossipMenuOptionViewModel {
   }
 
   void dispose() {
-    actionMenuIdController.dispose();
-    actionPoiIdController.dispose();
-    boxBroadcastTextIdController.dispose();
-    boxCodedController.dispose();
-    boxMoneyController.dispose();
-    boxTextController.dispose();
-    menuIdController.dispose();
-    optionBroadcastTextIdController.dispose();
-    optionIconController.dispose();
-    optionIdController.dispose();
-    optionTextController.dispose();
-    optionTypeController.dispose();
-    optionNpcFlagController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   void _applyToControllers(GossipMenuOptionEntity o) {
-    menuIdController.text = o.menuId.toString();
-    optionIdController.text = o.optionId.toString();
-    optionIconController.value = {o.optionIcon};
-    optionTextController.text = o.optionText;
-    optionBroadcastTextIdController.text = _fmt(o.optionBroadcastTextId);
-    optionTypeController.value = {o.optionType};
-    optionNpcFlagController.text = FlagFieldController.formatFlagValue(
-      o.optionNpcFlag,
-    );
-    boxCodedController.text = o.boxCoded.toString();
-    boxMoneyController.text = o.boxMoney.toString();
-    boxTextController.text = o.boxText;
-    boxBroadcastTextIdController.text = _fmt(o.boxBroadcastTextId);
-    actionMenuIdController.text = _fmt(o.actionMenuId);
-    actionPoiIdController.text = o.actionPoiId.toString();
-    verifiedBuildController.text = o.verifiedBuild.toString();
+    menuIdController.init(o.menuId);
+    optionIdController.init(o.optionId);
+    optionIconController.init(o.optionIcon);
+    optionTextController.init(o.optionText);
+    optionBroadcastTextIdController.init(o.optionBroadcastTextId);
+    optionTypeController.init(o.optionType);
+    optionNpcFlagController.init(o.optionNpcFlag);
+    boxCodedController.init(o.boxCoded);
+    boxMoneyController.init(o.boxMoney);
+    boxTextController.init(o.boxText);
+    boxBroadcastTextIdController.init(o.boxBroadcastTextId);
+    actionMenuIdController.init(o.actionMenuId);
+    actionPoiIdController.init(o.actionPoiId);
+    verifiedBuildController.init(o.verifiedBuild);
   }
 
   GossipMenuOptionEntity _collectFromControllers() {
     return GossipMenuOptionEntity(
-      menuId: _pi(menuIdController.text, 'MenuID'),
-      optionId: _pi(optionIdController.text, 'OptionID'),
-      optionIcon: optionIconController.value.isNotEmpty
-          ? optionIconController.value.first
-          : 0,
-      optionText: optionTextController.text,
-      optionBroadcastTextId: _pi(
-        optionBroadcastTextIdController.text,
-        'OptionBroadcastTextID',
-      ),
-      optionType: optionTypeController.value.isNotEmpty
-          ? optionTypeController.value.first
-          : 0,
-      optionNpcFlag: FlagFieldController.parseFlagValue(
-        optionNpcFlagController.text,
-      ),
-      boxCoded: _pi(boxCodedController.text, 'BoxCoded'),
-      boxMoney: _pi(boxMoneyController.text, 'BoxMoney'),
-      boxText: boxTextController.text,
-      boxBroadcastTextId: _pi(
-        boxBroadcastTextIdController.text,
-        'BoxBroadcastTextID',
-      ),
-      actionMenuId: _pi(actionMenuIdController.text, 'ActionMenuID'),
-      actionPoiId: _pi(actionPoiIdController.text, 'ActionPoiID'),
-      verifiedBuild: _pi(verifiedBuildController.text, 'VerifiedBuild'),
+      menuId: menuIdController.collect(),
+      optionId: optionIdController.collect(),
+      optionIcon: optionIconController.collect(),
+      optionText: optionTextController.collect(),
+      optionBroadcastTextId: optionBroadcastTextIdController.collect(),
+      optionType: optionTypeController.collect(),
+      optionNpcFlag: optionNpcFlagController.collect(),
+      boxCoded: boxCodedController.collect(),
+      boxMoney: boxMoneyController.collect(),
+      boxText: boxTextController.collect(),
+      boxBroadcastTextId: boxBroadcastTextIdController.collect(),
+      actionMenuId: actionMenuIdController.collect(),
+      actionPoiId: actionPoiIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 }
