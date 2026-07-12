@@ -5,8 +5,7 @@ import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -17,85 +16,142 @@ class AchievementDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final factionController = TextEditingController();
-  final instanceIdController = TextEditingController();
-  final supercedesController = TextEditingController();
+  final idController = IntFieldController();
+  final factionController = IntFieldController();
+  final instanceIdController = IntFieldController();
+  final supercedesController = IntFieldController();
 
   /// Title languages
-  final titleLangEnUSController = TextEditingController();
-  final titleLangKoKRController = TextEditingController();
-  final titleLangFrFRController = TextEditingController();
-  final titleLangDeDEController = TextEditingController();
-  final titleLangZhCNController = TextEditingController();
-  final titleLangZhTWController = TextEditingController();
-  final titleLangEsESController = TextEditingController();
-  final titleLangEsMXController = TextEditingController();
-  final titleLangRuRUController = TextEditingController();
-  final titleLangJaJPController = TextEditingController();
-  final titleLangPtPTController = TextEditingController();
-  final titleLangPtBRController = TextEditingController();
-  final titleLangItITController = TextEditingController();
-  final titleLangUnk1Controller = TextEditingController();
-  final titleLangUnk2Controller = TextEditingController();
-  final titleLangUnk3Controller = TextEditingController();
+  final titleLangEnUSController = StringFieldController();
+  final titleLangKoKRController = StringFieldController();
+  final titleLangFrFRController = StringFieldController();
+  final titleLangDeDEController = StringFieldController();
+  final titleLangZhCNController = StringFieldController();
+  final titleLangZhTWController = StringFieldController();
+  final titleLangEsESController = StringFieldController();
+  final titleLangEsMXController = StringFieldController();
+  final titleLangRuRUController = StringFieldController();
+  final titleLangJaJPController = StringFieldController();
+  final titleLangPtPTController = StringFieldController();
+  final titleLangPtBRController = StringFieldController();
+  final titleLangItITController = StringFieldController();
+  final titleLangUnk1Controller = StringFieldController();
+  final titleLangUnk2Controller = StringFieldController();
+  final titleLangUnk3Controller = StringFieldController();
   final titleLangFlags = signal<int>(0);
 
   /// Description languages
-  final descriptionLangEnUSController = TextEditingController();
-  final descriptionLangKoKRController = TextEditingController();
-  final descriptionLangFrFRController = TextEditingController();
-  final descriptionLangDeDEController = TextEditingController();
-  final descriptionLangZhCNController = TextEditingController();
-  final descriptionLangZhTWController = TextEditingController();
-  final descriptionLangEsESController = TextEditingController();
-  final descriptionLangEsMXController = TextEditingController();
-  final descriptionLangRuRUController = TextEditingController();
-  final descriptionLangJaJPController = TextEditingController();
-  final descriptionLangPtPTController = TextEditingController();
-  final descriptionLangPtBRController = TextEditingController();
-  final descriptionLangItITController = TextEditingController();
-  final descriptionLangUnk1Controller = TextEditingController();
-  final descriptionLangUnk2Controller = TextEditingController();
-  final descriptionLangUnk3Controller = TextEditingController();
+  final descriptionLangEnUSController = StringFieldController();
+  final descriptionLangKoKRController = StringFieldController();
+  final descriptionLangFrFRController = StringFieldController();
+  final descriptionLangDeDEController = StringFieldController();
+  final descriptionLangZhCNController = StringFieldController();
+  final descriptionLangZhTWController = StringFieldController();
+  final descriptionLangEsESController = StringFieldController();
+  final descriptionLangEsMXController = StringFieldController();
+  final descriptionLangRuRUController = StringFieldController();
+  final descriptionLangJaJPController = StringFieldController();
+  final descriptionLangPtPTController = StringFieldController();
+  final descriptionLangPtBRController = StringFieldController();
+  final descriptionLangItITController = StringFieldController();
+  final descriptionLangUnk1Controller = StringFieldController();
+  final descriptionLangUnk2Controller = StringFieldController();
+  final descriptionLangUnk3Controller = StringFieldController();
   final descriptionLangFlags = signal<int>(0);
 
   /// Category / Points / UI / Flags / Icon
-  final categoryController = TextEditingController();
-  final pointsController = TextEditingController();
-  final uiOrderController = TextEditingController();
-  final flagsController = TextEditingController();
-  final iconIdController = TextEditingController();
+  final categoryController = IntFieldController();
+  final pointsController = IntFieldController();
+  final uiOrderController = IntFieldController();
+  final flagsController = IntFieldController();
+  final iconIdController = IntFieldController();
 
   /// Reward languages
-  final rewardLangEnUSController = TextEditingController();
-  final rewardLangKoKRController = TextEditingController();
-  final rewardLangFrFRController = TextEditingController();
-  final rewardLangDeDEController = TextEditingController();
-  final rewardLangZhCNController = TextEditingController();
-  final rewardLangZhTWController = TextEditingController();
-  final rewardLangEsESController = TextEditingController();
-  final rewardLangEsMXController = TextEditingController();
-  final rewardLangRuRUController = TextEditingController();
-  final rewardLangJaJPController = TextEditingController();
-  final rewardLangPtPTController = TextEditingController();
-  final rewardLangPtBRController = TextEditingController();
-  final rewardLangItITController = TextEditingController();
-  final rewardLangUnk1Controller = TextEditingController();
-  final rewardLangUnk2Controller = TextEditingController();
-  final rewardLangUnk3Controller = TextEditingController();
+  final rewardLangEnUSController = StringFieldController();
+  final rewardLangKoKRController = StringFieldController();
+  final rewardLangFrFRController = StringFieldController();
+  final rewardLangDeDEController = StringFieldController();
+  final rewardLangZhCNController = StringFieldController();
+  final rewardLangZhTWController = StringFieldController();
+  final rewardLangEsESController = StringFieldController();
+  final rewardLangEsMXController = StringFieldController();
+  final rewardLangRuRUController = StringFieldController();
+  final rewardLangJaJPController = StringFieldController();
+  final rewardLangPtPTController = StringFieldController();
+  final rewardLangPtBRController = StringFieldController();
+  final rewardLangItITController = StringFieldController();
+  final rewardLangUnk1Controller = StringFieldController();
+  final rewardLangUnk2Controller = StringFieldController();
+  final rewardLangUnk3Controller = StringFieldController();
   final rewardLangFlags = signal<int>(0);
 
   /// Minimum / Shares
-  final minimumCriteriaController = TextEditingController();
-  final sharesCriteriaController = TextEditingController();
+  final minimumCriteriaController = IntFieldController();
+  final sharesCriteriaController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    factionController,
+    instanceIdController,
+    supercedesController,
+    titleLangEnUSController,
+    titleLangKoKRController,
+    titleLangFrFRController,
+    titleLangDeDEController,
+    titleLangZhCNController,
+    titleLangZhTWController,
+    titleLangEsESController,
+    titleLangEsMXController,
+    titleLangRuRUController,
+    titleLangJaJPController,
+    titleLangPtPTController,
+    titleLangPtBRController,
+    titleLangItITController,
+    titleLangUnk1Controller,
+    titleLangUnk2Controller,
+    titleLangUnk3Controller,
+    descriptionLangEnUSController,
+    descriptionLangKoKRController,
+    descriptionLangFrFRController,
+    descriptionLangDeDEController,
+    descriptionLangZhCNController,
+    descriptionLangZhTWController,
+    descriptionLangEsESController,
+    descriptionLangEsMXController,
+    descriptionLangRuRUController,
+    descriptionLangJaJPController,
+    descriptionLangPtPTController,
+    descriptionLangPtBRController,
+    descriptionLangItITController,
+    descriptionLangUnk1Controller,
+    descriptionLangUnk2Controller,
+    descriptionLangUnk3Controller,
+    categoryController,
+    pointsController,
+    uiOrderController,
+    flagsController,
+    iconIdController,
+    rewardLangEnUSController,
+    rewardLangKoKRController,
+    rewardLangFrFRController,
+    rewardLangDeDEController,
+    rewardLangZhCNController,
+    rewardLangZhTWController,
+    rewardLangEsESController,
+    rewardLangEsMXController,
+    rewardLangRuRUController,
+    rewardLangJaJPController,
+    rewardLangPtPTController,
+    rewardLangPtBRController,
+    rewardLangItITController,
+    rewardLangUnk1Controller,
+    rewardLangUnk2Controller,
+    rewardLangUnk3Controller,
+    minimumCriteriaController,
+    sharesCriteriaController,
+  ];
 
   final achievement = signal(AchievementEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -104,7 +160,7 @@ class AchievementDetailViewModel {
       if (isCreate) {
         final id = await _repository.storeAchievement(t);
         t = t.copyWith(id: id);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateAchievement(t);
       }
@@ -194,39 +250,39 @@ class AchievementDetailViewModel {
 
   void _applyLangControllers(
     List<DbcLocaleFieldValue> values, {
-    required TextEditingController enUS,
-    required TextEditingController koKR,
-    required TextEditingController frFR,
-    required TextEditingController deDE,
-    required TextEditingController zhCN,
-    required TextEditingController zhTW,
-    required TextEditingController esES,
-    required TextEditingController esMX,
-    required TextEditingController ruRU,
-    required TextEditingController jaJP,
-    required TextEditingController ptPT,
-    required TextEditingController ptBR,
-    required TextEditingController itIT,
-    required TextEditingController unk1,
-    required TextEditingController unk2,
-    required TextEditingController unk3,
+    required StringFieldController enUS,
+    required StringFieldController koKR,
+    required StringFieldController frFR,
+    required StringFieldController deDE,
+    required StringFieldController zhCN,
+    required StringFieldController zhTW,
+    required StringFieldController esES,
+    required StringFieldController esMX,
+    required StringFieldController ruRU,
+    required StringFieldController jaJP,
+    required StringFieldController ptPT,
+    required StringFieldController ptBR,
+    required StringFieldController itIT,
+    required StringFieldController unk1,
+    required StringFieldController unk2,
+    required StringFieldController unk3,
   }) {
-    enUS.text = values.valueOf('enUS');
-    koKR.text = values.valueOf('koKR');
-    frFR.text = values.valueOf('frFR');
-    deDE.text = values.valueOf('deDE');
-    zhCN.text = values.valueOf('zhCN');
-    zhTW.text = values.valueOf('zhTW');
-    esES.text = values.valueOf('esES');
-    esMX.text = values.valueOf('esMX');
-    ruRU.text = values.valueOf('ruRU');
-    jaJP.text = values.valueOf('jaJP');
-    ptPT.text = values.valueOf('ptPT');
-    ptBR.text = values.valueOf('ptBR');
-    itIT.text = values.valueOf('itIT');
-    unk1.text = values.valueOf('unk1');
-    unk2.text = values.valueOf('unk2');
-    unk3.text = values.valueOf('unk3');
+    enUS.init(values.valueOf('enUS'));
+    koKR.init(values.valueOf('koKR'));
+    frFR.init(values.valueOf('frFR'));
+    deDE.init(values.valueOf('deDE'));
+    zhCN.init(values.valueOf('zhCN'));
+    zhTW.init(values.valueOf('zhTW'));
+    esES.init(values.valueOf('esES'));
+    esMX.init(values.valueOf('esMX'));
+    ruRU.init(values.valueOf('ruRU'));
+    jaJP.init(values.valueOf('jaJP'));
+    ptPT.init(values.valueOf('ptPT'));
+    ptBR.init(values.valueOf('ptBR'));
+    itIT.init(values.valueOf('itIT'));
+    unk1.init(values.valueOf('unk1'));
+    unk2.init(values.valueOf('unk2'));
+    unk3.init(values.valueOf('unk3'));
   }
 
   /// 退出页面
@@ -237,68 +293,68 @@ class AchievementDetailViewModel {
   /// 从所有 Controller 收集数据构建 AchievementEntity
   AchievementEntity _collectFromControllers() {
     return AchievementEntity(
-      id: _pi(idController.text),
-      faction: _pi(factionController.text),
-      instanceId: _pi(instanceIdController.text),
-      supercedes: _pi(supercedesController.text),
-      titleLangEnUS: titleLangEnUSController.text,
-      titleLangKoKR: titleLangKoKRController.text,
-      titleLangFrFR: titleLangFrFRController.text,
-      titleLangDeDE: titleLangDeDEController.text,
-      titleLangZhCN: titleLangZhCNController.text,
-      titleLangZhTW: titleLangZhTWController.text,
-      titleLangEsES: titleLangEsESController.text,
-      titleLangEsMX: titleLangEsMXController.text,
-      titleLangRuRU: titleLangRuRUController.text,
-      titleLangJaJP: titleLangJaJPController.text,
-      titleLangPtPT: titleLangPtPTController.text,
-      titleLangPtBR: titleLangPtBRController.text,
-      titleLangItIT: titleLangItITController.text,
-      titleLangUnk1: titleLangUnk1Controller.text,
-      titleLangUnk2: titleLangUnk2Controller.text,
-      titleLangUnk3: titleLangUnk3Controller.text,
+      id: idController.collect(),
+      faction: factionController.collect(),
+      instanceId: instanceIdController.collect(),
+      supercedes: supercedesController.collect(),
+      titleLangEnUS: titleLangEnUSController.collect(),
+      titleLangKoKR: titleLangKoKRController.collect(),
+      titleLangFrFR: titleLangFrFRController.collect(),
+      titleLangDeDE: titleLangDeDEController.collect(),
+      titleLangZhCN: titleLangZhCNController.collect(),
+      titleLangZhTW: titleLangZhTWController.collect(),
+      titleLangEsES: titleLangEsESController.collect(),
+      titleLangEsMX: titleLangEsMXController.collect(),
+      titleLangRuRU: titleLangRuRUController.collect(),
+      titleLangJaJP: titleLangJaJPController.collect(),
+      titleLangPtPT: titleLangPtPTController.collect(),
+      titleLangPtBR: titleLangPtBRController.collect(),
+      titleLangItIT: titleLangItITController.collect(),
+      titleLangUnk1: titleLangUnk1Controller.collect(),
+      titleLangUnk2: titleLangUnk2Controller.collect(),
+      titleLangUnk3: titleLangUnk3Controller.collect(),
       titleLangFlags: titleLangFlags.value,
-      descriptionLangEnUS: descriptionLangEnUSController.text,
-      descriptionLangKoKR: descriptionLangKoKRController.text,
-      descriptionLangFrFR: descriptionLangFrFRController.text,
-      descriptionLangDeDE: descriptionLangDeDEController.text,
-      descriptionLangZhCN: descriptionLangZhCNController.text,
-      descriptionLangZhTW: descriptionLangZhTWController.text,
-      descriptionLangEsES: descriptionLangEsESController.text,
-      descriptionLangEsMX: descriptionLangEsMXController.text,
-      descriptionLangRuRU: descriptionLangRuRUController.text,
-      descriptionLangJaJP: descriptionLangJaJPController.text,
-      descriptionLangPtPT: descriptionLangPtPTController.text,
-      descriptionLangPtBR: descriptionLangPtBRController.text,
-      descriptionLangItIT: descriptionLangItITController.text,
-      descriptionLangUnk1: descriptionLangUnk1Controller.text,
-      descriptionLangUnk2: descriptionLangUnk2Controller.text,
-      descriptionLangUnk3: descriptionLangUnk3Controller.text,
+      descriptionLangEnUS: descriptionLangEnUSController.collect(),
+      descriptionLangKoKR: descriptionLangKoKRController.collect(),
+      descriptionLangFrFR: descriptionLangFrFRController.collect(),
+      descriptionLangDeDE: descriptionLangDeDEController.collect(),
+      descriptionLangZhCN: descriptionLangZhCNController.collect(),
+      descriptionLangZhTW: descriptionLangZhTWController.collect(),
+      descriptionLangEsES: descriptionLangEsESController.collect(),
+      descriptionLangEsMX: descriptionLangEsMXController.collect(),
+      descriptionLangRuRU: descriptionLangRuRUController.collect(),
+      descriptionLangJaJP: descriptionLangJaJPController.collect(),
+      descriptionLangPtPT: descriptionLangPtPTController.collect(),
+      descriptionLangPtBR: descriptionLangPtBRController.collect(),
+      descriptionLangItIT: descriptionLangItITController.collect(),
+      descriptionLangUnk1: descriptionLangUnk1Controller.collect(),
+      descriptionLangUnk2: descriptionLangUnk2Controller.collect(),
+      descriptionLangUnk3: descriptionLangUnk3Controller.collect(),
       descriptionLangFlags: descriptionLangFlags.value,
-      category: _pi(categoryController.text),
-      points: _pi(pointsController.text),
-      uiOrder: _pi(uiOrderController.text),
-      flags: _pi(flagsController.text),
-      iconId: _pi(iconIdController.text),
-      rewardLangEnUS: rewardLangEnUSController.text,
-      rewardLangKoKR: rewardLangKoKRController.text,
-      rewardLangFrFR: rewardLangFrFRController.text,
-      rewardLangDeDE: rewardLangDeDEController.text,
-      rewardLangZhCN: rewardLangZhCNController.text,
-      rewardLangZhTW: rewardLangZhTWController.text,
-      rewardLangEsES: rewardLangEsESController.text,
-      rewardLangEsMX: rewardLangEsMXController.text,
-      rewardLangRuRU: rewardLangRuRUController.text,
-      rewardLangJaJP: rewardLangJaJPController.text,
-      rewardLangPtPT: rewardLangPtPTController.text,
-      rewardLangPtBR: rewardLangPtBRController.text,
-      rewardLangItIT: rewardLangItITController.text,
-      rewardLangUnk1: rewardLangUnk1Controller.text,
-      rewardLangUnk2: rewardLangUnk2Controller.text,
-      rewardLangUnk3: rewardLangUnk3Controller.text,
+      category: categoryController.collect(),
+      points: pointsController.collect(),
+      uiOrder: uiOrderController.collect(),
+      flags: flagsController.collect(),
+      iconId: iconIdController.collect(),
+      rewardLangEnUS: rewardLangEnUSController.collect(),
+      rewardLangKoKR: rewardLangKoKRController.collect(),
+      rewardLangFrFR: rewardLangFrFRController.collect(),
+      rewardLangDeDE: rewardLangDeDEController.collect(),
+      rewardLangZhCN: rewardLangZhCNController.collect(),
+      rewardLangZhTW: rewardLangZhTWController.collect(),
+      rewardLangEsES: rewardLangEsESController.collect(),
+      rewardLangEsMX: rewardLangEsMXController.collect(),
+      rewardLangRuRU: rewardLangRuRUController.collect(),
+      rewardLangJaJP: rewardLangJaJPController.collect(),
+      rewardLangPtPT: rewardLangPtPTController.collect(),
+      rewardLangPtBR: rewardLangPtBRController.collect(),
+      rewardLangItIT: rewardLangItITController.collect(),
+      rewardLangUnk1: rewardLangUnk1Controller.collect(),
+      rewardLangUnk2: rewardLangUnk2Controller.collect(),
+      rewardLangUnk3: rewardLangUnk3Controller.collect(),
       rewardLangFlags: rewardLangFlags.value,
-      minimumCriteria: _pi(minimumCriteriaController.text),
-      sharesCriteria: _pi(sharesCriteriaController.text),
+      minimumCriteria: minimumCriteriaController.collect(),
+      sharesCriteria: sharesCriteriaController.collect(),
     );
   }
 
@@ -314,65 +370,9 @@ class AchievementDetailViewModel {
   }
 
   void dispose() {
-    categoryController.dispose();
-    descriptionLangDeDEController.dispose();
-    descriptionLangEnUSController.dispose();
-    descriptionLangEsESController.dispose();
-    descriptionLangEsMXController.dispose();
-    descriptionLangFrFRController.dispose();
-    descriptionLangItITController.dispose();
-    descriptionLangJaJPController.dispose();
-    descriptionLangKoKRController.dispose();
-    descriptionLangPtBRController.dispose();
-    descriptionLangPtPTController.dispose();
-    descriptionLangRuRUController.dispose();
-    descriptionLangUnk1Controller.dispose();
-    descriptionLangUnk2Controller.dispose();
-    descriptionLangUnk3Controller.dispose();
-    descriptionLangZhCNController.dispose();
-    descriptionLangZhTWController.dispose();
-    factionController.dispose();
-    flagsController.dispose();
-    iconIdController.dispose();
-    idController.dispose();
-    instanceIdController.dispose();
-    minimumCriteriaController.dispose();
-    pointsController.dispose();
-    rewardLangDeDEController.dispose();
-    rewardLangEnUSController.dispose();
-    rewardLangEsESController.dispose();
-    rewardLangEsMXController.dispose();
-    rewardLangFrFRController.dispose();
-    rewardLangItITController.dispose();
-    rewardLangJaJPController.dispose();
-    rewardLangKoKRController.dispose();
-    rewardLangPtBRController.dispose();
-    rewardLangPtPTController.dispose();
-    rewardLangRuRUController.dispose();
-    rewardLangUnk1Controller.dispose();
-    rewardLangUnk2Controller.dispose();
-    rewardLangUnk3Controller.dispose();
-    rewardLangZhCNController.dispose();
-    rewardLangZhTWController.dispose();
-    sharesCriteriaController.dispose();
-    supercedesController.dispose();
-    titleLangDeDEController.dispose();
-    titleLangEnUSController.dispose();
-    titleLangEsESController.dispose();
-    titleLangEsMXController.dispose();
-    titleLangFrFRController.dispose();
-    titleLangItITController.dispose();
-    titleLangJaJPController.dispose();
-    titleLangKoKRController.dispose();
-    titleLangPtBRController.dispose();
-    titleLangPtPTController.dispose();
-    titleLangRuRUController.dispose();
-    titleLangUnk1Controller.dispose();
-    titleLangUnk2Controller.dispose();
-    titleLangUnk3Controller.dispose();
-    titleLangZhCNController.dispose();
-    titleLangZhTWController.dispose();
-    uiOrderController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -391,67 +391,67 @@ class AchievementDetailViewModel {
   }
 
   void _initControllers(AchievementEntity achievement) {
-    idController.text = _fmt(achievement.id);
-    factionController.text = _fmt(achievement.faction);
-    instanceIdController.text = _fmt(achievement.instanceId);
-    supercedesController.text = _fmt(achievement.supercedes);
-    titleLangEnUSController.text = achievement.titleLangEnUS;
-    titleLangKoKRController.text = achievement.titleLangKoKR;
-    titleLangFrFRController.text = achievement.titleLangFrFR;
-    titleLangDeDEController.text = achievement.titleLangDeDE;
-    titleLangZhCNController.text = achievement.titleLangZhCN;
-    titleLangZhTWController.text = achievement.titleLangZhTW;
-    titleLangEsESController.text = achievement.titleLangEsES;
-    titleLangEsMXController.text = achievement.titleLangEsMX;
-    titleLangRuRUController.text = achievement.titleLangRuRU;
-    titleLangJaJPController.text = achievement.titleLangJaJP;
-    titleLangPtPTController.text = achievement.titleLangPtPT;
-    titleLangPtBRController.text = achievement.titleLangPtBR;
-    titleLangItITController.text = achievement.titleLangItIT;
-    titleLangUnk1Controller.text = achievement.titleLangUnk1;
-    titleLangUnk2Controller.text = achievement.titleLangUnk2;
-    titleLangUnk3Controller.text = achievement.titleLangUnk3;
+    idController.init(achievement.id);
+    factionController.init(achievement.faction);
+    instanceIdController.init(achievement.instanceId);
+    supercedesController.init(achievement.supercedes);
+    titleLangEnUSController.init(achievement.titleLangEnUS);
+    titleLangKoKRController.init(achievement.titleLangKoKR);
+    titleLangFrFRController.init(achievement.titleLangFrFR);
+    titleLangDeDEController.init(achievement.titleLangDeDE);
+    titleLangZhCNController.init(achievement.titleLangZhCN);
+    titleLangZhTWController.init(achievement.titleLangZhTW);
+    titleLangEsESController.init(achievement.titleLangEsES);
+    titleLangEsMXController.init(achievement.titleLangEsMX);
+    titleLangRuRUController.init(achievement.titleLangRuRU);
+    titleLangJaJPController.init(achievement.titleLangJaJP);
+    titleLangPtPTController.init(achievement.titleLangPtPT);
+    titleLangPtBRController.init(achievement.titleLangPtBR);
+    titleLangItITController.init(achievement.titleLangItIT);
+    titleLangUnk1Controller.init(achievement.titleLangUnk1);
+    titleLangUnk2Controller.init(achievement.titleLangUnk2);
+    titleLangUnk3Controller.init(achievement.titleLangUnk3);
     titleLangFlags.value = achievement.titleLangFlags;
-    descriptionLangEnUSController.text = achievement.descriptionLangEnUS;
-    descriptionLangKoKRController.text = achievement.descriptionLangKoKR;
-    descriptionLangFrFRController.text = achievement.descriptionLangFrFR;
-    descriptionLangDeDEController.text = achievement.descriptionLangDeDE;
-    descriptionLangZhCNController.text = achievement.descriptionLangZhCN;
-    descriptionLangZhTWController.text = achievement.descriptionLangZhTW;
-    descriptionLangEsESController.text = achievement.descriptionLangEsES;
-    descriptionLangEsMXController.text = achievement.descriptionLangEsMX;
-    descriptionLangRuRUController.text = achievement.descriptionLangRuRU;
-    descriptionLangJaJPController.text = achievement.descriptionLangJaJP;
-    descriptionLangPtPTController.text = achievement.descriptionLangPtPT;
-    descriptionLangPtBRController.text = achievement.descriptionLangPtBR;
-    descriptionLangItITController.text = achievement.descriptionLangItIT;
-    descriptionLangUnk1Controller.text = achievement.descriptionLangUnk1;
-    descriptionLangUnk2Controller.text = achievement.descriptionLangUnk2;
-    descriptionLangUnk3Controller.text = achievement.descriptionLangUnk3;
+    descriptionLangEnUSController.init(achievement.descriptionLangEnUS);
+    descriptionLangKoKRController.init(achievement.descriptionLangKoKR);
+    descriptionLangFrFRController.init(achievement.descriptionLangFrFR);
+    descriptionLangDeDEController.init(achievement.descriptionLangDeDE);
+    descriptionLangZhCNController.init(achievement.descriptionLangZhCN);
+    descriptionLangZhTWController.init(achievement.descriptionLangZhTW);
+    descriptionLangEsESController.init(achievement.descriptionLangEsES);
+    descriptionLangEsMXController.init(achievement.descriptionLangEsMX);
+    descriptionLangRuRUController.init(achievement.descriptionLangRuRU);
+    descriptionLangJaJPController.init(achievement.descriptionLangJaJP);
+    descriptionLangPtPTController.init(achievement.descriptionLangPtPT);
+    descriptionLangPtBRController.init(achievement.descriptionLangPtBR);
+    descriptionLangItITController.init(achievement.descriptionLangItIT);
+    descriptionLangUnk1Controller.init(achievement.descriptionLangUnk1);
+    descriptionLangUnk2Controller.init(achievement.descriptionLangUnk2);
+    descriptionLangUnk3Controller.init(achievement.descriptionLangUnk3);
     descriptionLangFlags.value = achievement.descriptionLangFlags;
-    categoryController.text = _fmt(achievement.category);
-    pointsController.text = _fmt(achievement.points);
-    uiOrderController.text = _fmt(achievement.uiOrder);
-    flagsController.text = _fmt(achievement.flags);
-    iconIdController.text = _fmt(achievement.iconId);
-    rewardLangEnUSController.text = achievement.rewardLangEnUS;
-    rewardLangKoKRController.text = achievement.rewardLangKoKR;
-    rewardLangFrFRController.text = achievement.rewardLangFrFR;
-    rewardLangDeDEController.text = achievement.rewardLangDeDE;
-    rewardLangZhCNController.text = achievement.rewardLangZhCN;
-    rewardLangZhTWController.text = achievement.rewardLangZhTW;
-    rewardLangEsESController.text = achievement.rewardLangEsES;
-    rewardLangEsMXController.text = achievement.rewardLangEsMX;
-    rewardLangRuRUController.text = achievement.rewardLangRuRU;
-    rewardLangJaJPController.text = achievement.rewardLangJaJP;
-    rewardLangPtPTController.text = achievement.rewardLangPtPT;
-    rewardLangPtBRController.text = achievement.rewardLangPtBR;
-    rewardLangItITController.text = achievement.rewardLangItIT;
-    rewardLangUnk1Controller.text = achievement.rewardLangUnk1;
-    rewardLangUnk2Controller.text = achievement.rewardLangUnk2;
-    rewardLangUnk3Controller.text = achievement.rewardLangUnk3;
+    categoryController.init(achievement.category);
+    pointsController.init(achievement.points);
+    uiOrderController.init(achievement.uiOrder);
+    flagsController.init(achievement.flags);
+    iconIdController.init(achievement.iconId);
+    rewardLangEnUSController.init(achievement.rewardLangEnUS);
+    rewardLangKoKRController.init(achievement.rewardLangKoKR);
+    rewardLangFrFRController.init(achievement.rewardLangFrFR);
+    rewardLangDeDEController.init(achievement.rewardLangDeDE);
+    rewardLangZhCNController.init(achievement.rewardLangZhCN);
+    rewardLangZhTWController.init(achievement.rewardLangZhTW);
+    rewardLangEsESController.init(achievement.rewardLangEsES);
+    rewardLangEsMXController.init(achievement.rewardLangEsMX);
+    rewardLangRuRUController.init(achievement.rewardLangRuRU);
+    rewardLangJaJPController.init(achievement.rewardLangJaJP);
+    rewardLangPtPTController.init(achievement.rewardLangPtPT);
+    rewardLangPtBRController.init(achievement.rewardLangPtBR);
+    rewardLangItITController.init(achievement.rewardLangItIT);
+    rewardLangUnk1Controller.init(achievement.rewardLangUnk1);
+    rewardLangUnk2Controller.init(achievement.rewardLangUnk2);
+    rewardLangUnk3Controller.init(achievement.rewardLangUnk3);
     rewardLangFlags.value = achievement.rewardLangFlags;
-    minimumCriteriaController.text = _fmt(achievement.minimumCriteria);
-    sharesCriteriaController.text = _fmt(achievement.sharesCriteria);
+    minimumCriteriaController.init(achievement.minimumCriteria);
+    sharesCriteriaController.init(achievement.sharesCriteria);
   }
 }
