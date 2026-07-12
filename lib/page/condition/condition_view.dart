@@ -50,7 +50,7 @@ class _ConditionViewState extends State<ConditionView> {
     final sourceTypeInput = FoxyFormItem(
       label: '源类型/关联',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.sourceTypeOrReferenceIdController,
+        controller: viewModel.sourceTypeOrReferenceIdController,
         options: kConditionSourceTypeLabels,
         placeholder: const Text('SourceTypeOrReferenceId'),
         enabled: !pkReadOnly,
@@ -60,7 +60,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '来源组',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceGroup',
-        fieldController: viewModel.sourceGroupController,
+        controller: viewModel.sourceGroupController,
         readOnly: pkReadOnly,
       ),
     );
@@ -68,7 +68,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '来源条目',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceEntry',
-        fieldController: viewModel.sourceEntryController,
+        controller: viewModel.sourceEntryController,
         readOnly: pkReadOnly,
       ),
     );
@@ -76,7 +76,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '来源ID',
       child: FoxyNumberInput<int>(
         placeholder: 'SourceId',
-        fieldController: viewModel.sourceIdController,
+        controller: viewModel.sourceIdController,
         readOnly: pkReadOnly,
       ),
     );
@@ -84,7 +84,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '否则组',
       child: FoxyNumberInput<int>(
         placeholder: 'ElseGroup',
-        fieldController: viewModel.elseGroupController,
+        controller: viewModel.elseGroupController,
         readOnly: pkReadOnly,
       ),
     );
@@ -93,7 +93,7 @@ class _ConditionViewState extends State<ConditionView> {
     final conditionTypeInput = FoxyFormItem(
       label: '条件类型/关联',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.conditionTypeOrReferenceController,
+        controller: viewModel.conditionTypeOrReferenceController,
         options: kConditionTypeLabels,
         placeholder: const Text('ConditionTypeOrReference'),
         maxHeight: 320,
@@ -104,7 +104,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '条件目标',
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionTarget',
-        fieldController: viewModel.conditionTargetController,
+        controller: viewModel.conditionTargetController,
         readOnly: pkReadOnly,
       ),
     );
@@ -112,7 +112,7 @@ class _ConditionViewState extends State<ConditionView> {
       label: '否定条件',
       child: FoxyNumberInput<int>(
         placeholder: 'NegativeCondition',
-        fieldController: viewModel.negativeConditionController,
+        controller: viewModel.negativeConditionController,
       ),
     );
 
@@ -126,7 +126,7 @@ class _ConditionViewState extends State<ConditionView> {
         label: cfg.displayLabel2,
         child: FoxyNumberInput<int>(
           placeholder: 'ConditionValue2',
-          fieldController: viewModel.conditionValue2Controller,
+          controller: viewModel.conditionValue2Controller,
           readOnly: pkLocked,
         ),
       );
@@ -134,7 +134,7 @@ class _ConditionViewState extends State<ConditionView> {
         label: cfg.displayLabel3,
         child: FoxyNumberInput<int>(
           placeholder: 'ConditionValue3',
-          fieldController: viewModel.conditionValue3Controller,
+          controller: viewModel.conditionValue3Controller,
           readOnly: pkLocked,
         ),
       );
@@ -154,14 +154,14 @@ class _ConditionViewState extends State<ConditionView> {
       label: '错误类型',
       child: FoxyNumberInput<int>(
         placeholder: 'ErrorType',
-        fieldController: viewModel.errorTypeController,
+        controller: viewModel.errorTypeController,
       ),
     );
     final errorTextIdInput = FoxyFormItem(
       label: '错误文本编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ErrorTextId',
-        fieldController: viewModel.errorTextIdController,
+        controller: viewModel.errorTextIdController,
       ),
     );
     final scriptNameInput = FoxyFormItem(
@@ -265,7 +265,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.questTemplate,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -275,7 +275,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.spell,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -285,7 +285,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.itemTemplate,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -295,7 +295,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.map,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -305,7 +305,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.areaTable,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -315,7 +315,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.dbcFaction,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -325,7 +325,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.charTitle,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -335,7 +335,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyEntityPicker(
             delegate: FoxyEntityPickerDelegates.creatureTemplate,
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             placeholder: 'ConditionValue1',
             readOnly: readOnly,
           ),
@@ -345,7 +345,7 @@ class _ConditionViewState extends State<ConditionView> {
           label: cfg.label1,
           child: FoxyNumberInput<int>(
             placeholder: 'ConditionValue1',
-            fieldController: viewModel.conditionValue1Controller,
+            controller: viewModel.conditionValue1Controller,
             readOnly: readOnly,
           ),
         );

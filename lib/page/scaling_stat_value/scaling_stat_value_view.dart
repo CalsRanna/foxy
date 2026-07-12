@@ -36,7 +36,7 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -44,7 +44,7 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       label: '角色等级',
       child: FoxyNumberInput<int>(
         placeholder: 'Charlevel',
-        fieldController: viewModel.charlevelController,
+        controller: viewModel.charlevelController,
       ),
     );
 
@@ -53,49 +53,49 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       label: '肩部预算',
       child: FoxyNumberInput<int>(
         placeholder: 'ShoulderBudget',
-        fieldController: viewModel.shoulderBudgetController,
+        controller: viewModel.shoulderBudgetController,
       ),
     );
     final trinketBudgetInput = FoxyFormItem(
       label: '饰品预算',
       child: FoxyNumberInput<int>(
         placeholder: 'TrinketBudget',
-        fieldController: viewModel.trinketBudgetController,
+        controller: viewModel.trinketBudgetController,
       ),
     );
     final weaponBudget1HInput = FoxyFormItem(
       label: '单手武器预算',
       child: FoxyNumberInput<int>(
         placeholder: 'WeaponBudget1H',
-        fieldController: viewModel.weaponBudget1HController,
+        controller: viewModel.weaponBudget1HController,
       ),
     );
     final rangedBudgetInput = FoxyFormItem(
       label: '远程预算',
       child: FoxyNumberInput<int>(
         placeholder: 'RangedBudget',
-        fieldController: viewModel.rangedBudgetController,
+        controller: viewModel.rangedBudgetController,
       ),
     );
     final primaryBudgetInput = FoxyFormItem(
       label: '主属性预算',
       child: FoxyNumberInput<int>(
         placeholder: 'PrimaryBudget',
-        fieldController: viewModel.primaryBudgetController,
+        controller: viewModel.primaryBudgetController,
       ),
     );
     final tertiaryBudgetInput = FoxyFormItem(
       label: '第三属性预算',
       child: FoxyNumberInput<int>(
         placeholder: 'TertiaryBudget',
-        fieldController: viewModel.tertiaryBudgetController,
+        controller: viewModel.tertiaryBudgetController,
       ),
     );
     final spellPowerInput = FoxyFormItem(
       label: '法术强度',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellPower',
-        fieldController: viewModel.spellPowerController,
+        controller: viewModel.spellPowerController,
       ),
     );
 
@@ -104,63 +104,63 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       label: '布甲肩部',
       child: FoxyNumberInput<int>(
         placeholder: 'ClothShoulderArmor',
-        fieldController: viewModel.clothShoulderArmorController,
+        controller: viewModel.clothShoulderArmorController,
       ),
     );
     final leatherShoulderArmorInput = FoxyFormItem(
       label: '皮甲肩部',
       child: FoxyNumberInput<int>(
         placeholder: 'LeatherShoulderArmor',
-        fieldController: viewModel.leatherShoulderArmorController,
+        controller: viewModel.leatherShoulderArmorController,
       ),
     );
     final mailShoulderArmorInput = FoxyFormItem(
       label: '锁甲肩部',
       child: FoxyNumberInput<int>(
         placeholder: 'MailShoulderArmor',
-        fieldController: viewModel.mailShoulderArmorController,
+        controller: viewModel.mailShoulderArmorController,
       ),
     );
     final plateShoulderArmorInput = FoxyFormItem(
       label: '板甲肩部',
       child: FoxyNumberInput<int>(
         placeholder: 'PlateShoulderArmor',
-        fieldController: viewModel.plateShoulderArmorController,
+        controller: viewModel.plateShoulderArmorController,
       ),
     );
     final clothCloakArmorInput = FoxyFormItem(
       label: '布甲披风',
       child: FoxyNumberInput<int>(
         placeholder: 'ClothCloakArmor',
-        fieldController: viewModel.clothCloakArmorController,
+        controller: viewModel.clothCloakArmorController,
       ),
     );
     final clothChestArmorInput = FoxyFormItem(
       label: '布甲胸甲',
       child: FoxyNumberInput<int>(
         placeholder: 'ClothChestArmor',
-        fieldController: viewModel.clothChestArmorController,
+        controller: viewModel.clothChestArmorController,
       ),
     );
     final leatherChestArmorInput = FoxyFormItem(
       label: '皮甲胸甲',
       child: FoxyNumberInput<int>(
         placeholder: 'LeatherChestArmor',
-        fieldController: viewModel.leatherChestArmorController,
+        controller: viewModel.leatherChestArmorController,
       ),
     );
     final mailChestArmorInput = FoxyFormItem(
       label: '锁甲胸甲',
       child: FoxyNumberInput<int>(
         placeholder: 'MailChestArmor',
-        fieldController: viewModel.mailChestArmorController,
+        controller: viewModel.mailChestArmorController,
       ),
     );
     final plateChestArmorInput = FoxyFormItem(
       label: '板甲胸甲',
       child: FoxyNumberInput<int>(
         placeholder: 'PlateChestArmor',
-        fieldController: viewModel.plateChestArmorController,
+        controller: viewModel.plateChestArmorController,
       ),
     );
 
@@ -169,42 +169,42 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       label: '单手DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'WeaponDPS1H',
-        fieldController: viewModel.weaponDPS1HController,
+        controller: viewModel.weaponDPS1HController,
       ),
     );
     final weaponDPS2HInput = FoxyFormItem(
       label: '双手DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'WeaponDPS2H',
-        fieldController: viewModel.weaponDPS2HController,
+        controller: viewModel.weaponDPS2HController,
       ),
     );
     final spellcasterDPS1HInput = FoxyFormItem(
       label: '法系单手DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellcasterDPS1H',
-        fieldController: viewModel.spellcasterDPS1HController,
+        controller: viewModel.spellcasterDPS1HController,
       ),
     );
     final spellcasterDPS2HInput = FoxyFormItem(
       label: '法系双手DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellcasterDPS2H',
-        fieldController: viewModel.spellcasterDPS2HController,
+        controller: viewModel.spellcasterDPS2HController,
       ),
     );
     final rangedDPSInput = FoxyFormItem(
       label: '远程DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'RangedDPS',
-        fieldController: viewModel.rangedDPSController,
+        controller: viewModel.rangedDPSController,
       ),
     );
     final wandDPSInput = FoxyFormItem(
       label: '魔杖DPS',
       child: FoxyNumberInput<int>(
         placeholder: 'WandDPS',
-        fieldController: viewModel.wandDPSController,
+        controller: viewModel.wandDPSController,
       ),
     );
 

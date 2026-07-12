@@ -15,11 +15,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// re-allocate the entire option widget list — wasteful on detail forms that
 /// hold dozens of selects.
 class FoxyShadSelect<T> extends StatefulWidget {
-  /// 迁移完成后的类型化入口。
-  final SelectFieldController<T>? fieldController;
-
-  /// 其他模块迁移期间保留的原始入口。
-  final ShadSelectController<T>? controller;
+  final SelectFieldController<T> controller;
 
   /// The options map where key is the value and value is the display text
   final Map<T, String> options;
@@ -38,17 +34,13 @@ class FoxyShadSelect<T> extends StatefulWidget {
 
   const FoxyShadSelect({
     super.key,
-    this.fieldController,
-    this.controller,
+    required this.controller,
     required this.options,
     required this.placeholder,
     this.enabled = true,
     this.minWidth,
     this.maxHeight,
-  }) : assert(
-         (fieldController == null) != (controller == null),
-         'fieldController 与 controller 必须且只能提供一个',
-       );
+  });
 
   @override
   State<FoxyShadSelect<T>> createState() => _FoxyShadSelectState<T>();
@@ -79,7 +71,7 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
   @override
   Widget build(BuildContext context) {
     return ShadSelect<T>(
-      controller: widget.fieldController?.controller ?? widget.controller,
+      controller: widget.controller.controller,
       options: _shadOptions,
       selectedOptionBuilder: (context, value) => Text(
         widget.options[value] ?? '',

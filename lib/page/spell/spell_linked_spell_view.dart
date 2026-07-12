@@ -154,7 +154,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
           FoxyFormItem(
             label: '触发技能',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.spellIdController,
+              controller: viewModel.spellIdController,
               placeholder: 'spell_trigger',
               readOnly: true,
             ),
@@ -167,7 +167,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                 child: FoxyFormItem(
                   label: '链接技能',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.spellEffectController,
+                    controller: viewModel.spellEffectController,
                     placeholder: 'spell_effect',
                   ),
                 ),
@@ -176,7 +176,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
                 child: FoxyFormItem(
                   label: '类型',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.typeController,
+                    controller: viewModel.typeController,
                     placeholder: 'type',
                   ),
                 ),

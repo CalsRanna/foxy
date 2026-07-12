@@ -6,31 +6,18 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 数字输入框。
 ///
-/// 传入 VM 持有的 [controller]，与文本框/下拉框保持一致的 Listenable 模式：
-/// VM 在 `_initControllers` 里写入 `.text`，在 `save` 时用 [parseIntField]/
-/// [parseDoubleField] 读取。输入不会实时回传 VM。
-///
-/// 类型参数 [T] 标识该字段的数值类型。键盘与输入过滤尽量约束为数字，
-/// 但最终合法性仍由 ViewModel 在保存时校验（非法输入必须阻止保存）。
+/// 传入 ViewModel 持有的 [NumberFieldController]。类型参数 [T] 标识字段数值类型。
 class FoxyNumberInput<T extends num> extends StatelessWidget {
-  /// 迁移完成后的类型化入口。
-  final NumberFieldController<T>? fieldController;
-
-  /// 其他模块迁移期间保留的原始入口。
-  final TextEditingController? controller;
+  final NumberFieldController<T> controller;
   final String? placeholder;
   final bool readOnly;
 
   const FoxyNumberInput({
     super.key,
-    this.fieldController,
-    this.controller,
+    required this.controller,
     this.placeholder,
     this.readOnly = false,
-  }) : assert(
-         (fieldController == null) != (controller == null),
-         'fieldController 与 controller 必须且只能提供一个',
-       );
+  });
 
   bool get _isFloat => T == double;
 
@@ -39,7 +26,7 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
     final readonly = FoxyReadonlyInput.resolve(context, readOnly: readOnly);
     return readonly.wrap(
       ShadInput(
-        controller: fieldController?.controller ?? controller,
+        controller: controller.controller,
         placeholder: Text(placeholder ?? ''),
         readOnly: readOnly,
         style: readonly.style,

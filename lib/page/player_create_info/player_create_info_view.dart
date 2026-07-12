@@ -58,7 +58,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: '种族',
                       child: FoxyNumberInput<int>(
                         placeholder: 'race',
-                        fieldController: viewModel.raceController,
+                        controller: viewModel.raceController,
                         readOnly: pkReadOnly,
                       ),
                     ),
@@ -68,7 +68,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: '职业',
                       child: FoxyNumberInput<int>(
                         placeholder: 'class',
-                        fieldController: viewModel.playerClassController,
+                        controller: viewModel.playerClassController,
                         readOnly: pkReadOnly,
                       ),
                     ),
@@ -78,7 +78,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: '地图',
                       child: FoxyNumberInput<int>(
                         placeholder: 'map',
-                        fieldController: viewModel.mapController,
+                        controller: viewModel.mapController,
                       ),
                     ),
                   ),
@@ -87,7 +87,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: '区域',
                       child: FoxyNumberInput<int>(
                         placeholder: 'zone',
-                        fieldController: viewModel.zoneController,
+                        controller: viewModel.zoneController,
                       ),
                     ),
                   ),
@@ -101,7 +101,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: 'X坐标',
                       child: FoxyNumberInput<double>(
                         placeholder: 'position_x',
-                        fieldController: viewModel.positionXController,
+                        controller: viewModel.positionXController,
                       ),
                     ),
                   ),
@@ -110,7 +110,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: 'Y坐标',
                       child: FoxyNumberInput<double>(
                         placeholder: 'position_y',
-                        fieldController: viewModel.positionYController,
+                        controller: viewModel.positionYController,
                       ),
                     ),
                   ),
@@ -119,7 +119,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: 'Z坐标',
                       child: FoxyNumberInput<double>(
                         placeholder: 'position_z',
-                        fieldController: viewModel.positionZController,
+                        controller: viewModel.positionZController,
                       ),
                     ),
                   ),
@@ -128,7 +128,7 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                       label: '朝向',
                       child: FoxyNumberInput<double>(
                         placeholder: 'orientation',
-                        fieldController: viewModel.orientationController,
+                        controller: viewModel.orientationController,
                       ),
                     ),
                   ),

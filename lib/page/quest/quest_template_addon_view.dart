@@ -41,7 +41,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
             child: FoxyFormItem(
               label: '编号',
               child: FoxyNumberInput<int>(
-                fieldController: vm.idController,
+                controller: vm.idController,
                 readOnly: true,
               ),
             ),
@@ -49,27 +49,27 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '最大等级',
-              placeholder: 'MaxLevel',
               child: FoxyNumberInput<int>(
-                fieldController: vm.maxLevelController,
+                controller: vm.maxLevelController,
+                placeholder: 'MaxLevel',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '允许职业',
-              placeholder: 'AllowableClasses',
               child: FoxyNumberInput<int>(
-                fieldController: vm.allowableClassesController,
+                controller: vm.allowableClassesController,
+                placeholder: 'AllowableClasses',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '来源法术',
-              placeholder: 'SourceSpellId',
               child: FoxyNumberInput<int>(
-                fieldController: vm.sourceSpellIdController,
+                controller: vm.sourceSpellIdController,
+                placeholder: 'SourceSpellId',
               ),
             ),
           ),
@@ -81,27 +81,27 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '前置任务',
-              placeholder: 'PrevQuestID',
               child: FoxyNumberInput<int>(
-                fieldController: vm.prevQuestIdController,
+                controller: vm.prevQuestIdController,
+                placeholder: 'PrevQuestID',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '后续任务',
-              placeholder: 'NextQuestID',
               child: FoxyNumberInput<int>(
-                fieldController: vm.nextQuestIdController,
+                controller: vm.nextQuestIdController,
+                placeholder: 'NextQuestID',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '互斥组',
-              placeholder: 'ExclusiveGroup',
               child: FoxyNumberInput<int>(
-                fieldController: vm.exclusiveGroupController,
+                controller: vm.exclusiveGroupController,
+                placeholder: 'ExclusiveGroup',
               ),
             ),
           ),
@@ -114,36 +114,36 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励邮件模板',
-              placeholder: 'RewardMailTemplateId',
               child: FoxyNumberInput<int>(
-                fieldController: vm.rewardMailTemplateIdController,
+                controller: vm.rewardMailTemplateIdController,
+                placeholder: 'RewardMailTemplateId',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '奖励邮件延迟',
-              placeholder: 'RewardMailDelay',
               child: FoxyNumberInput<int>(
-                fieldController: vm.rewardMailDelayController,
+                controller: vm.rewardMailDelayController,
+                placeholder: 'RewardMailDelay',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '需要技能',
-              placeholder: 'RequiredSkillId',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredSkillIdController,
+                controller: vm.requiredSkillIdController,
+                placeholder: 'RequiredSkillId',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '需要技能点数',
-              placeholder: 'RequiredSkillPoints',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredSkillPointsController,
+                controller: vm.requiredSkillPointsController,
+                placeholder: 'RequiredSkillPoints',
               ),
             ),
           ),
@@ -155,36 +155,36 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '最低声望阵营',
-              placeholder: 'RequiredMinRepFaction',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredMinRepFactionController,
+                controller: vm.requiredMinRepFactionController,
+                placeholder: 'RequiredMinRepFaction',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '最高声望阵营',
-              placeholder: 'RequiredMaxRepFaction',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredMaxRepFactionController,
+                controller: vm.requiredMaxRepFactionController,
+                placeholder: 'RequiredMaxRepFaction',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '最低声望值',
-              placeholder: 'RequiredMinRepValue',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredMinRepValueController,
+                controller: vm.requiredMinRepValueController,
+                placeholder: 'RequiredMinRepValue',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '最高声望值',
-              placeholder: 'RequiredMaxRepValue',
               child: FoxyNumberInput<int>(
-                fieldController: vm.requiredMaxRepValueController,
+                controller: vm.requiredMaxRepValueController,
+                placeholder: 'RequiredMaxRepValue',
               ),
             ),
           ),
@@ -196,18 +196,18 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '提供物品数量',
-              placeholder: 'ProvidedItemCount',
               child: FoxyNumberInput<int>(
-                fieldController: vm.providedItemCountController,
+                controller: vm.providedItemCountController,
+                placeholder: 'ProvidedItemCount',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '特殊标志',
-              placeholder: 'SpecialFlags',
               child: FoxyNumberInput<int>(
-                fieldController: vm.specialFlagsController,
+                controller: vm.specialFlagsController,
+                placeholder: 'SpecialFlags',
               ),
             ),
           ),

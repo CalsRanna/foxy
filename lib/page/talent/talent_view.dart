@@ -35,7 +35,7 @@ class _TalentViewState extends State<TalentView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -43,35 +43,35 @@ class _TalentViewState extends State<TalentView> {
       label: '标签页',
       child: FoxyNumberInput<int>(
         placeholder: 'TabID',
-        fieldController: viewModel.tabIdController,
+        controller: viewModel.tabIdController,
       ),
     );
     final tierIdInput = FoxyFormItem(
       label: '层',
       child: FoxyNumberInput<int>(
         placeholder: 'TierID',
-        fieldController: viewModel.tierIdController,
+        controller: viewModel.tierIdController,
       ),
     );
     final columnIndexInput = FoxyFormItem(
       label: '列',
       child: FoxyNumberInput<int>(
         placeholder: 'ColumnIndex',
-        fieldController: viewModel.columnIndexController,
+        controller: viewModel.columnIndexController,
       ),
     );
     final flagsInput = FoxyFormItem(
       label: '标志',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
-        fieldController: viewModel.flagsController,
+        controller: viewModel.flagsController,
       ),
     );
     final requiredSpellIdInput = FoxyFormItem(
       label: '必需法术',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSpellID',
-        fieldController: viewModel.requiredSpellIdController,
+        controller: viewModel.requiredSpellIdController,
       ),
     );
 
@@ -79,63 +79,63 @@ class _TalentViewState extends State<TalentView> {
       label: '法术等级0',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank0',
-        fieldController: viewModel.spellRank0Controller,
+        controller: viewModel.spellRank0Controller,
       ),
     );
     final spellRank1Input = FoxyFormItem(
       label: '法术等级1',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank1',
-        fieldController: viewModel.spellRank1Controller,
+        controller: viewModel.spellRank1Controller,
       ),
     );
     final spellRank2Input = FoxyFormItem(
       label: '法术等级2',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank2',
-        fieldController: viewModel.spellRank2Controller,
+        controller: viewModel.spellRank2Controller,
       ),
     );
     final spellRank3Input = FoxyFormItem(
       label: '法术等级3',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank3',
-        fieldController: viewModel.spellRank3Controller,
+        controller: viewModel.spellRank3Controller,
       ),
     );
     final spellRank4Input = FoxyFormItem(
       label: '法术等级4',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank4',
-        fieldController: viewModel.spellRank4Controller,
+        controller: viewModel.spellRank4Controller,
       ),
     );
     final spellRank5Input = FoxyFormItem(
       label: '法术等级5',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank5',
-        fieldController: viewModel.spellRank5Controller,
+        controller: viewModel.spellRank5Controller,
       ),
     );
     final spellRank6Input = FoxyFormItem(
       label: '法术等级6',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank6',
-        fieldController: viewModel.spellRank6Controller,
+        controller: viewModel.spellRank6Controller,
       ),
     );
     final spellRank7Input = FoxyFormItem(
       label: '法术等级7',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank7',
-        fieldController: viewModel.spellRank7Controller,
+        controller: viewModel.spellRank7Controller,
       ),
     );
     final spellRank8Input = FoxyFormItem(
       label: '法术等级8',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellRank8',
-        fieldController: viewModel.spellRank8Controller,
+        controller: viewModel.spellRank8Controller,
       ),
     );
 
@@ -143,21 +143,21 @@ class _TalentViewState extends State<TalentView> {
       label: '前置天赋0',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent0',
-        fieldController: viewModel.prereqTalent0Controller,
+        controller: viewModel.prereqTalent0Controller,
       ),
     );
     final prereqTalent1Input = FoxyFormItem(
       label: '前置天赋1',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent1',
-        fieldController: viewModel.prereqTalent1Controller,
+        controller: viewModel.prereqTalent1Controller,
       ),
     );
     final prereqTalent2Input = FoxyFormItem(
       label: '前置天赋2',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqTalent2',
-        fieldController: viewModel.prereqTalent2Controller,
+        controller: viewModel.prereqTalent2Controller,
       ),
     );
 
@@ -165,21 +165,21 @@ class _TalentViewState extends State<TalentView> {
       label: '前置等级0',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank0',
-        fieldController: viewModel.prereqRank0Controller,
+        controller: viewModel.prereqRank0Controller,
       ),
     );
     final prereqRank1Input = FoxyFormItem(
       label: '前置等级1',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank1',
-        fieldController: viewModel.prereqRank1Controller,
+        controller: viewModel.prereqRank1Controller,
       ),
     );
     final prereqRank2Input = FoxyFormItem(
       label: '前置等级2',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank2',
-        fieldController: viewModel.prereqRank2Controller,
+        controller: viewModel.prereqRank2Controller,
       ),
     );
 
@@ -187,14 +187,14 @@ class _TalentViewState extends State<TalentView> {
       label: '掩码0',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask0',
-        fieldController: viewModel.categoryMask0Controller,
+        controller: viewModel.categoryMask0Controller,
       ),
     );
     final categoryMask1Input = FoxyFormItem(
       label: '掩码1',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask1',
-        fieldController: viewModel.categoryMask1Controller,
+        controller: viewModel.categoryMask1Controller,
       ),
     );
 

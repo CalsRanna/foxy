@@ -173,7 +173,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '编号',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.spellIdController,
+                    controller: viewModel.spellIdController,
                     placeholder: 'Entry',
                     readOnly: true,
                   ),
@@ -183,7 +183,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '物品',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.itemController,
+                    controller: viewModel.itemController,
                     placeholder: 'Item',
                   ),
                 ),
@@ -198,7 +198,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '关联',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.referenceController,
+                    controller: viewModel.referenceController,
                     placeholder: 'Reference',
                   ),
                 ),
@@ -207,7 +207,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '几率',
                   child: FoxyNumberInput<double>(
-                    fieldController: viewModel.chanceController,
+                    controller: viewModel.chanceController,
                     placeholder: 'Chance',
                   ),
                 ),
@@ -216,7 +216,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '需要任务',
                   child: FoxyShadSelect<int>(
-                    fieldController: viewModel.questRequiredController,
+                    controller: viewModel.questRequiredController,
                     options: kBooleanOptions,
                     placeholder: Text('QuestRequired'),
                   ),
@@ -232,7 +232,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '掉落模式',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.lootModeController,
+                    controller: viewModel.lootModeController,
                     placeholder: 'LootMode',
                   ),
                 ),
@@ -241,7 +241,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '组ID',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.groupIdController,
+                    controller: viewModel.groupIdController,
                     placeholder: 'GroupId',
                   ),
                 ),
@@ -250,7 +250,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '最小数量',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.minCountController,
+                    controller: viewModel.minCountController,
                     placeholder: 'MinCount',
                   ),
                 ),
@@ -259,7 +259,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '最大数量',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.maxCountController,
+                    controller: viewModel.maxCountController,
                     placeholder: 'MaxCount',
                   ),
                 ),

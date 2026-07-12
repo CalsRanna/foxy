@@ -52,7 +52,7 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
       label: 'Entry',
       child: FoxyNumberInput<int>(
         placeholder: 'Entry',
-        fieldController: viewModel.entryController,
+        controller: viewModel.entryController,
         readOnly: pkReadOnly,
       ),
     );
@@ -60,7 +60,7 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
       label: '物品ID',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.itemTemplate,
-        fieldController: viewModel.itemController,
+        controller: viewModel.itemController,
         placeholder: 'Item',
         readOnly: pkReadOnly,
       ),
@@ -69,20 +69,20 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
       label: '关联ID',
       child: FoxyNumberInput<int>(
         placeholder: 'Reference',
-        fieldController: viewModel.referenceController,
+        controller: viewModel.referenceController,
       ),
     );
     final chanceInput = FoxyFormItem(
       label: '掉落几率',
       child: FoxyNumberInput<double>(
         placeholder: 'Chance (%)',
-        fieldController: viewModel.chanceController,
+        controller: viewModel.chanceController,
       ),
     );
     final questRequiredInput = FoxyFormItem(
       label: '需要任务',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.questRequiredController,
+        controller: viewModel.questRequiredController,
         options: kBooleanOptions,
         placeholder: Text('QuestRequired'),
       ),
@@ -91,28 +91,28 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
       label: '掉落模式',
       child: FoxyNumberInput<int>(
         placeholder: 'LootMode',
-        fieldController: viewModel.lootModeController,
+        controller: viewModel.lootModeController,
       ),
     );
     final groupIdInput = FoxyFormItem(
       label: '组ID',
       child: FoxyNumberInput<int>(
         placeholder: 'GroupId',
-        fieldController: viewModel.groupIdController,
+        controller: viewModel.groupIdController,
       ),
     );
     final minCountInput = FoxyFormItem(
       label: '最小数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MinCount',
-        fieldController: viewModel.minCountController,
+        controller: viewModel.minCountController,
       ),
     );
     final maxCountInput = FoxyFormItem(
       label: '最大数量',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxCount',
-        fieldController: viewModel.maxCountController,
+        controller: viewModel.maxCountController,
       ),
     );
     final commentInput = FoxyFormItem(

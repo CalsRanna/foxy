@@ -55,7 +55,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
-                            fieldController: viewModel.spellIdController,
+                            controller: viewModel.spellIdController,
                             placeholder: 'entry',
                             readOnly: true,
                           ),
@@ -81,7 +81,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '法术强度',
                           child: FoxyNumberInput<double>(
-                            fieldController: viewModel.directBonusController,
+                            controller: viewModel.directBonusController,
                             placeholder: 'direct_bonus',
                           ),
                         ),
@@ -90,7 +90,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '法术强度(dot)',
                           child: FoxyNumberInput<double>(
-                            fieldController: viewModel.dotBonusController,
+                            controller: viewModel.dotBonusController,
                             placeholder: 'dot_bonus',
                           ),
                         ),
@@ -99,7 +99,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '攻击强度',
                           child: FoxyNumberInput<double>(
-                            fieldController: viewModel.apBonusController,
+                            controller: viewModel.apBonusController,
                             placeholder: 'ap_bonus',
                           ),
                         ),
@@ -108,7 +108,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '攻击强度(dot)',
                           child: FoxyNumberInput<double>(
-                            fieldController: viewModel.apDotBonusController,
+                            controller: viewModel.apDotBonusController,
                             placeholder: 'ap_dot_bonus',
                           ),
                         ),

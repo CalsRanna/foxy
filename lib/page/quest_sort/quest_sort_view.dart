@@ -38,7 +38,7 @@ class _QuestSortViewState extends State<QuestSortView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -48,7 +48,7 @@ class _QuestSortViewState extends State<QuestSortView> {
         final id = viewModel.sort.value.id;
         return FoxyLocalePicker(
           entry: id == 0 ? null : id,
-          fieldController: viewModel.nameController,
+          controller: viewModel.nameController,
           title: '任务分类名称本地化',
           placeholder: 'SortName_lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcQuestSortSortName,

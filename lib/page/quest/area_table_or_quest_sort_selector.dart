@@ -16,13 +16,13 @@ import 'package:get_it/get_it.dart';
 
 /// 区域或任务排序选择器，通过 [mode] 切换数据源
 class AreaTableOrQuestSortSelector extends StatefulWidget {
-  final IntFieldController fieldController;
+  final IntFieldController controller;
   final String? placeholder;
   final String mode;
 
   const AreaTableOrQuestSortSelector({
     super.key,
-    required this.fieldController,
+    required this.controller,
     this.placeholder,
     this.mode = 'AreaTable',
   });
@@ -45,21 +45,21 @@ class _AreaTableOrQuestSortSelectorState
     );
     // Widget implementation may access FieldController.controller.
     return ShadInput(
-      controller: widget.fieldController.controller,
+      controller: widget.controller.controller,
       placeholder: Text(widget.placeholder ?? ''),
       trailing: shadButton,
     );
   }
 
   Future<void> _openDialog() async {
-    final currentValue = widget.fieldController.collect();
+    final currentValue = widget.controller.collect();
     final result = await showFoxyDialog<int>(
       context: context,
       builder: (context) =>
           _Dialog(initialValue: currentValue, mode: widget.mode),
     );
     if (result == null) return;
-    widget.fieldController.init(result);
+    widget.controller.init(result);
   }
 }
 

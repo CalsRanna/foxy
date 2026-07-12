@@ -198,7 +198,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.creatureIdController,
+              controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -209,7 +209,7 @@ class _PickpocketingLootTemplateViewState
             label: '物品ID',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemController,
+              controller: viewModel.itemController,
               placeholder: 'Item',
             ),
           ),
@@ -218,7 +218,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '关联ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.referenceController,
+              controller: viewModel.referenceController,
               placeholder: 'Reference (0=直接掉落)',
             ),
           ),
@@ -227,7 +227,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '掉落几率',
             child: FoxyNumberInput<double>(
-              fieldController: viewModel.chanceController,
+              controller: viewModel.chanceController,
               placeholder: 'Chance (%)',
             ),
           ),
@@ -236,7 +236,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
-              fieldController: viewModel.questRequiredController,
+              controller: viewModel.questRequiredController,
               options: kBooleanOptions,
               placeholder: Text('QuestRequired'),
             ),
@@ -246,7 +246,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '掉落模式',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.lootModeController,
+              controller: viewModel.lootModeController,
               placeholder: 'LootMode',
             ),
           ),
@@ -255,7 +255,7 @@ class _PickpocketingLootTemplateViewState
           FoxyFormItem(
             label: '组ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.groupIdController,
+              controller: viewModel.groupIdController,
               placeholder: 'GroupId',
             ),
           ),
@@ -268,7 +268,7 @@ class _PickpocketingLootTemplateViewState
                 child: FoxyFormItem(
                   label: '最小数量',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.minCountController,
+                    controller: viewModel.minCountController,
                     placeholder: 'MinCount',
                   ),
                 ),
@@ -277,7 +277,7 @@ class _PickpocketingLootTemplateViewState
                 child: FoxyFormItem(
                   label: '最大数量',
                   child: FoxyNumberInput<int>(
-                    fieldController: viewModel.maxCountController,
+                    controller: viewModel.maxCountController,
                     placeholder: 'MaxCount',
                   ),
                 ),

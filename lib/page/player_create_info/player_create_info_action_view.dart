@@ -132,21 +132,21 @@ class _PlayerCreateInfoActionViewState
               label: '按钮',
               child: FoxyNumberInput<int>(
                 placeholder: 'button',
-                fieldController: viewModel.buttonController,
+                controller: viewModel.buttonController,
               ),
             ),
             FoxyFormItem(
               label: '动作',
               child: FoxyNumberInput<int>(
                 placeholder: 'action',
-                fieldController: viewModel.actionController,
+                controller: viewModel.actionController,
               ),
             ),
             FoxyFormItem(
               label: '类型',
               child: FoxyNumberInput<int>(
                 placeholder: 'type',
-                fieldController: viewModel.typeController,
+                controller: viewModel.typeController,
               ),
             ),
             Row(

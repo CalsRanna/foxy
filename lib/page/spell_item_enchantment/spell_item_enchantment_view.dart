@@ -40,7 +40,7 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -50,7 +50,7 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
         final id = viewModel.enchantment.value.id;
         return FoxyLocalePicker(
           entry: id == 0 ? null : id,
-          fieldController: viewModel.nameController,
+          controller: viewModel.nameController,
           title: '附魔名称本地化',
           placeholder: 'Name_lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcSpellItemEnchantmentName,
@@ -62,7 +62,7 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: '充能次数',
       child: FoxyNumberInput<int>(
         placeholder: 'Charges',
-        fieldController: viewModel.chargesController,
+        controller: viewModel.chargesController,
       ),
     );
 
@@ -71,28 +71,28 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: 'Effect0',
       child: FoxyNumberInput<int>(
         placeholder: 'Effect0',
-        fieldController: viewModel.effect0Controller,
+        controller: viewModel.effect0Controller,
       ),
     );
     final effectPointsMin0Input = FoxyFormItem(
       label: 'EffectPointsMin0',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMin0',
-        fieldController: viewModel.effectPointsMin0Controller,
+        controller: viewModel.effectPointsMin0Controller,
       ),
     );
     final effectPointsMax0Input = FoxyFormItem(
       label: 'EffectPointsMax0',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMax0',
-        fieldController: viewModel.effectPointsMax0Controller,
+        controller: viewModel.effectPointsMax0Controller,
       ),
     );
     final effectArg0Input = FoxyFormItem(
       label: 'EffectArg0',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectArg0',
-        fieldController: viewModel.effectArg0Controller,
+        controller: viewModel.effectArg0Controller,
       ),
     );
 
@@ -101,28 +101,28 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: 'Effect1',
       child: FoxyNumberInput<int>(
         placeholder: 'Effect1',
-        fieldController: viewModel.effect1Controller,
+        controller: viewModel.effect1Controller,
       ),
     );
     final effectPointsMin1Input = FoxyFormItem(
       label: 'EffectPointsMin1',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMin1',
-        fieldController: viewModel.effectPointsMin1Controller,
+        controller: viewModel.effectPointsMin1Controller,
       ),
     );
     final effectPointsMax1Input = FoxyFormItem(
       label: 'EffectPointsMax1',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMax1',
-        fieldController: viewModel.effectPointsMax1Controller,
+        controller: viewModel.effectPointsMax1Controller,
       ),
     );
     final effectArg1Input = FoxyFormItem(
       label: 'EffectArg1',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectArg1',
-        fieldController: viewModel.effectArg1Controller,
+        controller: viewModel.effectArg1Controller,
       ),
     );
 
@@ -131,28 +131,28 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: 'Effect2',
       child: FoxyNumberInput<int>(
         placeholder: 'Effect2',
-        fieldController: viewModel.effect2Controller,
+        controller: viewModel.effect2Controller,
       ),
     );
     final effectPointsMin2Input = FoxyFormItem(
       label: 'EffectPointsMin2',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMin2',
-        fieldController: viewModel.effectPointsMin2Controller,
+        controller: viewModel.effectPointsMin2Controller,
       ),
     );
     final effectPointsMax2Input = FoxyFormItem(
       label: 'EffectPointsMax2',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMax2',
-        fieldController: viewModel.effectPointsMax2Controller,
+        controller: viewModel.effectPointsMax2Controller,
       ),
     );
     final effectArg2Input = FoxyFormItem(
       label: 'EffectArg2',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectArg2',
-        fieldController: viewModel.effectArg2Controller,
+        controller: viewModel.effectArg2Controller,
       ),
     );
 
@@ -161,49 +161,49 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       label: 'ItemVisual',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemVisual',
-        fieldController: viewModel.itemVisualController,
+        controller: viewModel.itemVisualController,
       ),
     );
     final flagsInput = FoxyFormItem(
       label: 'Flags',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
-        fieldController: viewModel.flagsController,
+        controller: viewModel.flagsController,
       ),
     );
     final srcItemIdInput = FoxyFormItem(
       label: 'Src_itemID',
       child: FoxyNumberInput<int>(
         placeholder: 'Src_itemID',
-        fieldController: viewModel.srcItemIdController,
+        controller: viewModel.srcItemIdController,
       ),
     );
     final conditionIdInput = FoxyFormItem(
       label: 'Condition_ID',
       child: FoxyNumberInput<int>(
         placeholder: 'Condition_ID',
-        fieldController: viewModel.conditionIdController,
+        controller: viewModel.conditionIdController,
       ),
     );
     final requiredSkillIdInput = FoxyFormItem(
       label: 'RequiredSkillID',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkillID',
-        fieldController: viewModel.requiredSkillIdController,
+        controller: viewModel.requiredSkillIdController,
       ),
     );
     final requiredSkillRankInput = FoxyFormItem(
       label: 'RequiredSkillRank',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkillRank',
-        fieldController: viewModel.requiredSkillRankController,
+        controller: viewModel.requiredSkillRankController,
       ),
     );
     final minLevelInput = FoxyFormItem(
       label: 'MinLevel',
       child: FoxyNumberInput<int>(
         placeholder: 'MinLevel',
-        fieldController: viewModel.minLevelController,
+        controller: viewModel.minLevelController,
       ),
     );
 

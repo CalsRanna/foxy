@@ -18,10 +18,7 @@ class FoxyStringInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final readonly = FoxyReadonlyInput.resolve(
-      context,
-      readOnly: readOnly,
-    );
+    final readonly = FoxyReadonlyInput.resolve(context, readOnly: readOnly);
     return readonly.wrap(
       ShadInput(
         controller: controller.controller,

@@ -39,7 +39,7 @@ class _ScalingStatDistributionViewState
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        fieldController: viewModel.idController,
+        controller: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -49,70 +49,70 @@ class _ScalingStatDistributionViewState
       label: 'StatID0',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID0',
-        fieldController: viewModel.statId0Controller,
+        controller: viewModel.statId0Controller,
       ),
     );
     final statId1Input = FoxyFormItem(
       label: 'StatID1',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID1',
-        fieldController: viewModel.statId1Controller,
+        controller: viewModel.statId1Controller,
       ),
     );
     final statId2Input = FoxyFormItem(
       label: 'StatID2',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID2',
-        fieldController: viewModel.statId2Controller,
+        controller: viewModel.statId2Controller,
       ),
     );
     final statId3Input = FoxyFormItem(
       label: 'StatID3',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID3',
-        fieldController: viewModel.statId3Controller,
+        controller: viewModel.statId3Controller,
       ),
     );
     final statId4Input = FoxyFormItem(
       label: 'StatID4',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID4',
-        fieldController: viewModel.statId4Controller,
+        controller: viewModel.statId4Controller,
       ),
     );
     final statId5Input = FoxyFormItem(
       label: 'StatID5',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID5',
-        fieldController: viewModel.statId5Controller,
+        controller: viewModel.statId5Controller,
       ),
     );
     final statId6Input = FoxyFormItem(
       label: 'StatID6',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID6',
-        fieldController: viewModel.statId6Controller,
+        controller: viewModel.statId6Controller,
       ),
     );
     final statId7Input = FoxyFormItem(
       label: 'StatID7',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID7',
-        fieldController: viewModel.statId7Controller,
+        controller: viewModel.statId7Controller,
       ),
     );
     final statId8Input = FoxyFormItem(
       label: 'StatID8',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID8',
-        fieldController: viewModel.statId8Controller,
+        controller: viewModel.statId8Controller,
       ),
     );
     final statId9Input = FoxyFormItem(
       label: 'StatID9',
       child: FoxyNumberInput<int>(
         placeholder: 'StatID9',
-        fieldController: viewModel.statId9Controller,
+        controller: viewModel.statId9Controller,
       ),
     );
 
@@ -121,70 +121,70 @@ class _ScalingStatDistributionViewState
       label: 'Bonus0',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus0',
-        fieldController: viewModel.bonus0Controller,
+        controller: viewModel.bonus0Controller,
       ),
     );
     final bonus1Input = FoxyFormItem(
       label: 'Bonus1',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus1',
-        fieldController: viewModel.bonus1Controller,
+        controller: viewModel.bonus1Controller,
       ),
     );
     final bonus2Input = FoxyFormItem(
       label: 'Bonus2',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus2',
-        fieldController: viewModel.bonus2Controller,
+        controller: viewModel.bonus2Controller,
       ),
     );
     final bonus3Input = FoxyFormItem(
       label: 'Bonus3',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus3',
-        fieldController: viewModel.bonus3Controller,
+        controller: viewModel.bonus3Controller,
       ),
     );
     final bonus4Input = FoxyFormItem(
       label: 'Bonus4',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus4',
-        fieldController: viewModel.bonus4Controller,
+        controller: viewModel.bonus4Controller,
       ),
     );
     final bonus5Input = FoxyFormItem(
       label: 'Bonus5',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus5',
-        fieldController: viewModel.bonus5Controller,
+        controller: viewModel.bonus5Controller,
       ),
     );
     final bonus6Input = FoxyFormItem(
       label: 'Bonus6',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus6',
-        fieldController: viewModel.bonus6Controller,
+        controller: viewModel.bonus6Controller,
       ),
     );
     final bonus7Input = FoxyFormItem(
       label: 'Bonus7',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus7',
-        fieldController: viewModel.bonus7Controller,
+        controller: viewModel.bonus7Controller,
       ),
     );
     final bonus8Input = FoxyFormItem(
       label: 'Bonus8',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus8',
-        fieldController: viewModel.bonus8Controller,
+        controller: viewModel.bonus8Controller,
       ),
     );
     final bonus9Input = FoxyFormItem(
       label: 'Bonus9',
       child: FoxyNumberInput<int>(
         placeholder: 'Bonus9',
-        fieldController: viewModel.bonus9Controller,
+        controller: viewModel.bonus9Controller,
       ),
     );
 
@@ -193,7 +193,7 @@ class _ScalingStatDistributionViewState
       label: 'Maxlevel',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxlevel',
-        fieldController: viewModel.maxlevelController,
+        controller: viewModel.maxlevelController,
       ),
     );
 

@@ -66,7 +66,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '编号',
                 child: FoxyNumberInput<int>(
                   placeholder: 'ID',
-                  fieldController: viewModel.idController,
+                  controller: viewModel.idController,
                   readOnly: true,
                 ),
               ),
@@ -76,7 +76,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '需求技能',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkill',
-                  fieldController: viewModel.requiredSkillController,
+                  controller: viewModel.requiredSkillController,
                 ),
               ),
             ),
@@ -85,7 +85,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '需求技能等级',
                 child: FoxyNumberInput<int>(
                   placeholder: 'RequiredSkillRank',
-                  fieldController: viewModel.requiredSkillRankController,
+                  controller: viewModel.requiredSkillRankController,
                 ),
               ),
             ),
@@ -110,7 +110,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                   final id = viewModel.itemSet.value.id;
                   return FoxyLocalePicker(
                     entry: id == 0 ? null : id,
-                    fieldController: viewModel.nameLangZhCNController,
+                    controller: viewModel.nameLangZhCNController,
                     title: '套装名称本地化',
                     placeholder: 'Name_lang_zhCN',
                     delegate: FoxyLocalePickerDelegates.dbcItemSetName,
@@ -174,7 +174,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                           label: '$labelPrefix${r * 4 + c}',
                           child: FoxyEntityPicker<T>(
                             delegate: delegate,
-                            fieldController: controllers[r * 4 + c],
+                            controller: controllers[r * 4 + c],
                             placeholder: '$placeholderPrefix${r * 4 + c}',
                           ),
                         )
@@ -198,7 +198,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛0',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold0',
-                  fieldController: viewModel.setThreshold0Controller,
+                  controller: viewModel.setThreshold0Controller,
                 ),
               ),
             ),
@@ -207,7 +207,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛1',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold1',
-                  fieldController: viewModel.setThreshold1Controller,
+                  controller: viewModel.setThreshold1Controller,
                 ),
               ),
             ),
@@ -216,7 +216,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛2',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold2',
-                  fieldController: viewModel.setThreshold2Controller,
+                  controller: viewModel.setThreshold2Controller,
                 ),
               ),
             ),
@@ -225,7 +225,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛3',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold3',
-                  fieldController: viewModel.setThreshold3Controller,
+                  controller: viewModel.setThreshold3Controller,
                 ),
               ),
             ),
@@ -239,7 +239,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛4',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold4',
-                  fieldController: viewModel.setThreshold4Controller,
+                  controller: viewModel.setThreshold4Controller,
                 ),
               ),
             ),
@@ -248,7 +248,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛5',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold5',
-                  fieldController: viewModel.setThreshold5Controller,
+                  controller: viewModel.setThreshold5Controller,
                 ),
               ),
             ),
@@ -257,7 +257,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛6',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold6',
-                  fieldController: viewModel.setThreshold6Controller,
+                  controller: viewModel.setThreshold6Controller,
                 ),
               ),
             ),
@@ -266,7 +266,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 label: '门槛7',
                 child: FoxyNumberInput<int>(
                   placeholder: 'SetThreshold7',
-                  fieldController: viewModel.setThreshold7Controller,
+                  controller: viewModel.setThreshold7Controller,
                 ),
               ),
             ),

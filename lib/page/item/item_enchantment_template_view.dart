@@ -165,7 +165,7 @@ class _ItemEnchantmentTemplateViewState
           FoxyFormItem(
             label: '物品ID',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.entryController,
+              controller: viewModel.entryController,
               placeholder: 'Entry',
               readOnly: true,
             ),
@@ -175,7 +175,7 @@ class _ItemEnchantmentTemplateViewState
             label: '附魔ID',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemEnchantmentTemplate,
-              fieldController: viewModel.enchController,
+              controller: viewModel.enchController,
               placeholder: 'Ench',
             ),
           ),
@@ -183,7 +183,7 @@ class _ItemEnchantmentTemplateViewState
           FoxyFormItem(
             label: '几率',
             child: FoxyNumberInput<double>(
-              fieldController: viewModel.chanceController,
+              controller: viewModel.chanceController,
               placeholder: 'Chance (%)',
             ),
           ),

@@ -64,11 +64,8 @@ class FoxyLocalePicker extends StatefulWidget {
   /// 所属记录的主键。为 null 时禁用地球按钮。
   final int? entry;
 
-  /// 主输入框的 controller（通常由 ViewModel 持有，回填主语言值）。
-  final TextEditingController? controller;
-
-  /// 迁移完成后的类型化入口。
-  final StringFieldController? fieldController;
+  /// 主输入框的 controller（由 ViewModel 持有，回填主语言值）。
+  final StringFieldController controller;
 
   /// 多语言编辑弹窗的标题。
   final String title;
@@ -90,20 +87,13 @@ class FoxyLocalePicker extends StatefulWidget {
   const FoxyLocalePicker({
     super.key,
     required this.entry,
-    this.controller,
-    this.fieldController,
+    required this.controller,
     required this.title,
     required this.delegate,
     this.placeholder,
     this.readOnly = false,
     this.onSaved,
-  }) : assert(
-         fieldController == null || controller == null,
-         'fieldController 与 controller 不能同时提供',
-       );
-
-  TextEditingController? get textController =>
-      fieldController?.controller ?? controller;
+  });
 
   @override
   State<FoxyLocalePicker> createState() => _FoxyLocalePickerState();
@@ -120,7 +110,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
     );
     return readonly.wrap(
       ShadInput(
-        controller: widget.textController,
+        controller: widget.controller.controller,
         placeholder: Text(widget.placeholder ?? ''),
         readOnly: widget.readOnly,
         style: readonly.style,
@@ -173,9 +163,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
           // → 把库里旧 zhCN 写回并冲掉主框」的丢失。
           onLoad: () async {
             final loaded = await onLoad(entry);
-            final controller = widget.textController;
-            if (controller == null) return loaded;
-            return loaded.withPrimaryDraft(controller.text);
+            return loaded.withPrimaryDraft(widget.controller.collect());
           },
           onSave: (values) => onSave(entry, values),
         );

@@ -167,7 +167,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           FoxyFormItem(
             label: '游戏对象编号',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.gameObjectIdController,
+              controller: viewModel.gameObjectIdController,
               placeholder: 'GameObjectEntry',
               readOnly: true,
             ),
@@ -176,7 +176,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.idxController,
+              controller: viewModel.idxController,
               placeholder: 'Idx',
               readOnly: true,
             ),
@@ -186,7 +186,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
             label: '物品',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              fieldController: viewModel.itemIdController,
+              controller: viewModel.itemIdController,
               placeholder: 'ItemId',
             ),
           ),
@@ -194,7 +194,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              fieldController: viewModel.verifiedBuildController,
+              controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

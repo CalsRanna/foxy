@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/util/dbc_locale_field_codec.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
@@ -27,7 +28,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: 1,
-          controller: TextEditingController(text: '测试'),
+          controller: StringFieldController()..init('测试'),
           title: '名称',
           delegate: delegate,
         ),
@@ -57,7 +58,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: 12,
-          controller: TextEditingController(text: '艾尔文森林'),
+          controller: StringFieldController()..init('艾尔文森林'),
           title: '区域名称本地化',
           delegate: delegate,
         ),
@@ -89,7 +90,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: null,
-          controller: TextEditingController(),
+          controller: StringFieldController(),
           title: '法术名称本地化',
           delegate: delegate,
         ),
@@ -141,7 +142,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: 133,
-          controller: TextEditingController(),
+          controller: StringFieldController(),
           title: '法术名称本地化',
           delegate: delegate,
           onSaved: (values) => saved = values,
@@ -176,7 +177,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: 1,
-          controller: TextEditingController(),
+          controller: StringFieldController(),
           title: '法术名称本地化',
           delegate: delegate,
         ),
@@ -202,7 +203,7 @@ void main() {
       _wrap(
         FoxyLocalePicker(
           entry: 1,
-          controller: TextEditingController(text: '草稿'),
+          controller: StringFieldController()..init('草稿'),
           title: '法术名称本地化',
           delegate: delegate,
         ),
@@ -242,7 +243,7 @@ void main() {
       },
     );
 
-    final controller = TextEditingController(text: '主框草稿');
+    final controller = StringFieldController()..init('主框草稿');
 
     await tester.pumpWidget(
       _wrap(
@@ -252,7 +253,7 @@ void main() {
           title: '法术名称本地化',
           delegate: delegate,
           onSaved: (values) {
-            controller.text = values.zhCN;
+            controller.init(values.zhCN);
           },
         ),
       ),
@@ -279,6 +280,6 @@ void main() {
     expect(persisted!.zhCN, '主框草稿');
     expect(persisted!.valueOf('enUS'), 'Fireball');
     // 主输入框保持草稿，未被库中旧值冲掉
-    expect(controller.text, '主框草稿');
+    expect(controller.collect(), '主框草稿');
   });
 }

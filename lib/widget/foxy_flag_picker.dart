@@ -9,37 +9,21 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// 这是可交互的编辑入口，**不**使用 [FoxyReadonlyInput] 的 muted/禁用外观。
 /// `ShadInput.readOnly` 仅用于禁止手改 `"123 (0x…)"` 格式串，编辑一律走弹窗。
 ///
-/// [controller] 的文本由调用方在初始化时设置（通过
-/// [FlagFieldController.formatFlagValue]），
-/// 弹窗确认后组件自动写回 [controller]（格式化文本）。VM 在 save 时
-/// 用 [FlagFieldController.parseFlagValue] 从 controller 文本读取原始 int 值。
-///
-/// 与 [FoxyEntityPicker]/[FoxyNumberInput] 对齐：纯 controller 模式，
-/// 无 onChanged 双向绑定。
+/// [controller] 由 ViewModel 初始化（[FlagFieldController.init]）；
+/// 弹窗确认后写回格式化文本。VM 在 save 时用 [FlagFieldController.collect] 读取。
 class FoxyFlagPicker extends StatefulWidget {
-  /// 迁移完成后的类型化入口。
-  final FlagFieldController? fieldController;
-
-  /// 其他模块迁移期间保留的原始入口。
-  final TextEditingController? controller;
+  final FlagFieldController controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;
 
   const FoxyFlagPicker({
     super.key,
-    this.fieldController,
-    this.controller,
+    required this.controller,
     required this.flags,
     required this.title,
     this.placeholder,
-  }) : assert(
-         (fieldController == null) != (controller == null),
-         'fieldController 与 controller 必须且只能提供一个',
-       );
-
-  TextEditingController get textController =>
-      fieldController?.controller ?? controller!;
+  });
 
   @override
   State<FoxyFlagPicker> createState() => _FoxyFlagPickerState();
@@ -53,7 +37,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: ShadInput(
-        controller: widget.textController,
+        controller: widget.controller.controller,
         placeholder: Text(widget.placeholder ?? ''),
         readOnly: true,
         showCursor: false,
@@ -69,10 +53,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
     );
   }
 
-  int get _currentValue {
-    final text = widget.textController.text;
-    return int.tryParse(text.split(' ').first) ?? 0;
-  }
+  int get _currentValue => widget.controller.collect();
 
   Future<void> _openDialog() async {
     final result = await showFoxyDialog<int>(
@@ -86,7 +67,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
       },
     );
     if (result != null) {
-      widget.textController.text = FlagFieldController.formatFlagValue(result);
+      widget.controller.init(result);
     }
   }
 }

@@ -69,7 +69,7 @@ class _NpcTextViewState extends State<NpcTextView> {
               child: FoxyFormItem(
                 label: '编号',
                 child: FoxyNumberInput<int>(
-                  fieldController: viewModel.intOf('ID'),
+                  controller: viewModel.intOf('ID'),
                   placeholder: 'ID',
                 ),
               ),
@@ -78,7 +78,7 @@ class _NpcTextViewState extends State<NpcTextView> {
               child: FoxyFormItem(
                 label: 'VerifiedBuild',
                 child: FoxyNumberInput<int>(
-                  fieldController: viewModel.intOf('VerifiedBuild'),
+                  controller: viewModel.intOf('VerifiedBuild'),
                   placeholder: 'VerifiedBuild',
                 ),
               ),
@@ -111,7 +111,7 @@ class _NpcTextViewState extends State<NpcTextView> {
               child: FoxyFormItem(
                 label: '几率',
                 child: FoxyNumberInput<double>(
-                  fieldController: viewModel.doubleOf('Probability$n'),
+                  controller: viewModel.doubleOf('Probability$n'),
                   placeholder: 'Probability$n',
                 ),
               ),
@@ -130,7 +130,7 @@ class _NpcTextViewState extends State<NpcTextView> {
                 label: '广播文本',
                 child: FoxyEntityPicker(
                   delegate: FoxyEntityPickerDelegates.broadcastText,
-                  fieldController: viewModel.broadcastOf(n),
+                  controller: viewModel.broadcastOf(n),
                   placeholder: 'BroadcastTextID$n',
                 ),
               ),
@@ -147,7 +147,7 @@ class _NpcTextViewState extends State<NpcTextView> {
                   label: '表演',
                   child: FoxyEntityPicker(
                     delegate: FoxyEntityPickerDelegates.emote,
-                    fieldController: viewModel.emoteOf('em${n}_$i'),
+                    controller: viewModel.emoteOf('em${n}_$i'),
                     placeholder: 'em${n}_$i',
                   ),
                 ),

@@ -70,7 +70,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final entryInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
-        fieldController: viewModel.entryController,
+        controller: viewModel.entryController,
         placeholder: 'entry',
         readOnly: true,
       ),
@@ -79,7 +79,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '名称',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        fieldController: viewModel.nameController,
+        controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.itemName,
         placeholder: 'name',
         title: '名称',
@@ -89,7 +89,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '描述',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        fieldController: viewModel.descriptionController,
+        controller: viewModel.descriptionController,
         delegate: FoxyLocalePickerDelegates.itemDescription,
         placeholder: 'description',
         title: '描述',
@@ -98,7 +98,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final qualityInput = FoxyFormItem(
       label: '品质',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.qualityController,
+        controller: viewModel.qualityController,
         options: kItemQualityOptions,
         placeholder: const Text('Quality'),
       ),
@@ -106,7 +106,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final classInput = FoxyFormItem(
       label: '类别',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.classNameController,
+        controller: viewModel.classNameController,
         options: _itemClassOptions,
         placeholder: const Text('class'),
       ),
@@ -115,7 +115,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '子类别',
       child: Watch(
         (_) => FoxyShadSelect<int>(
-          fieldController: viewModel.subclassController,
+          controller: viewModel.subclassController,
           options: _currentSubclassOptions,
           placeholder: const Text('subclass'),
         ),
@@ -125,13 +125,13 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '声音覆盖',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundOverrideSubclass',
-        fieldController: viewModel.soundOverrideSubclassController,
+        controller: viewModel.soundOverrideSubclassController,
       ),
     );
     final materialInput = FoxyFormItem(
       label: '材质',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.materialController,
+        controller: viewModel.materialController,
         options: kItemMaterialOptions,
         placeholder: const Text('Material'),
       ),
@@ -140,14 +140,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '外观模型',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.itemDisplayInfo,
-        fieldController: viewModel.displayIdController,
+        controller: viewModel.displayIdController,
         placeholder: 'displayid',
       ),
     );
     final inventoryTypeInput = FoxyFormItem(
       label: '佩戴位置',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.inventoryTypeController,
+        controller: viewModel.inventoryTypeController,
         options: _inventoryTypeOptions,
         placeholder: const Text('InventoryType'),
       ),
@@ -155,7 +155,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final sheathInput = FoxyFormItem(
       label: '挂载类型',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.sheathController,
+        controller: viewModel.sheathController,
         options: kItemSheathOptions,
         placeholder: const Text('sheath'),
       ),
@@ -163,7 +163,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final bondingInput = FoxyFormItem(
       label: '绑定类型',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.bondingController,
+        controller: viewModel.bondingController,
         options: kItemBondingOptions,
         placeholder: const Text('bonding'),
       ),
@@ -204,14 +204,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '套装',
       child: FoxyNumberInput<int>(
         placeholder: 'itemset',
-        fieldController: viewModel.itemsetController,
+        controller: viewModel.itemsetController,
       ),
     );
     final randomPropertyInput = FoxyFormItem(
       label: '随机属性',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.itemRandomProperties,
-        fieldController: viewModel.randomPropertyController,
+        controller: viewModel.randomPropertyController,
         placeholder: 'RandomProperty',
       ),
     );
@@ -219,7 +219,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '随机后缀',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.itemRandomSuffix,
-        fieldController: viewModel.randomSuffixController,
+        controller: viewModel.randomSuffixController,
         placeholder: 'RandomSuffix',
       ),
     );
@@ -227,55 +227,55 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最大耐久',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxDurability',
-        fieldController: viewModel.maxDurabilityController,
+        controller: viewModel.maxDurabilityController,
       ),
     );
     final buyPriceInput = FoxyFormItem(
       label: '购买价格',
       child: FoxyNumberInput<int>(
         placeholder: 'BuyPrice',
-        fieldController: viewModel.buyPriceController,
+        controller: viewModel.buyPriceController,
       ),
     );
     final sellPriceInput = FoxyFormItem(
       label: '出售价格',
       child: FoxyNumberInput<int>(
         placeholder: 'SellPrice',
-        fieldController: viewModel.sellPriceController,
+        controller: viewModel.sellPriceController,
       ),
     );
     final buyCountInput = FoxyFormItem(
       label: '购买数量',
       child: FoxyNumberInput<int>(
         placeholder: 'BuyCount',
-        fieldController: viewModel.buyCountController,
+        controller: viewModel.buyCountController,
       ),
     );
     final maxcountInput = FoxyFormItem(
       label: '最大数量',
       child: FoxyNumberInput<int>(
         placeholder: 'maxcount',
-        fieldController: viewModel.maxcountController,
+        controller: viewModel.maxcountController,
       ),
     );
     final stackableInput = FoxyFormItem(
       label: '堆叠数',
       child: FoxyNumberInput<int>(
         placeholder: 'stackable',
-        fieldController: viewModel.stackableController,
+        controller: viewModel.stackableController,
       ),
     );
     final totemCategoryInput = FoxyFormItem(
       label: '图腾类别',
       child: FoxyNumberInput<int>(
         placeholder: 'TotemCategory',
-        fieldController: viewModel.totemCategoryController,
+        controller: viewModel.totemCategoryController,
       ),
     );
     final foodTypeInput = FoxyFormItem(
       label: '食物类型',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.foodTypeController,
+        controller: viewModel.foodTypeController,
         options: kItemFoodTypeOptions,
         placeholder: const Text('FoodType'),
       ),
@@ -283,7 +283,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final bagFamilyInput = FoxyFormItem(
       label: '背包类别',
       child: FoxyFlagPicker(
-        fieldController: viewModel.bagFamilyController,
+        controller: viewModel.bagFamilyController,
         flags: kItemBagFamilyOptions,
         title: '背包类别',
         placeholder: 'BagFamily',
@@ -293,21 +293,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '容器槽位',
       child: FoxyNumberInput<int>(
         placeholder: 'ContainerSlots',
-        fieldController: viewModel.containerSlotsController,
+        controller: viewModel.containerSlotsController,
       ),
     );
     final itemLimitCategoryInput = FoxyFormItem(
       label: '限制类别',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemLimitCategory',
-        fieldController: viewModel.itemLimitCategoryController,
+        controller: viewModel.itemLimitCategoryController,
       ),
     );
     final startquestInput = FoxyFormItem(
       label: '起始任务',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.questTemplate,
-        fieldController: viewModel.startquestController,
+        controller: viewModel.startquestController,
         placeholder: 'startquest',
       ),
     );
@@ -315,28 +315,28 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '持续时间',
       child: FoxyNumberInput<int>(
         placeholder: 'duration',
-        fieldController: viewModel.durationController,
+        controller: viewModel.durationController,
       ),
     );
     final disenchantIdInput = FoxyFormItem(
       label: '分解ID',
       child: FoxyNumberInput<int>(
         placeholder: 'DisenchantID',
-        fieldController: viewModel.disenchantIdController,
+        controller: viewModel.disenchantIdController,
       ),
     );
     final minMoneyLootInput = FoxyFormItem(
       label: '最小金钱',
       child: FoxyNumberInput<int>(
         placeholder: 'minMoneyLoot',
-        fieldController: viewModel.minMoneyLootController,
+        controller: viewModel.minMoneyLootController,
       ),
     );
     final maxMoneyLootInput = FoxyFormItem(
       label: '最大金钱',
       child: FoxyNumberInput<int>(
         placeholder: 'maxMoneyLoot',
-        fieldController: viewModel.maxMoneyLootController,
+        controller: viewModel.maxMoneyLootController,
       ),
     );
 
@@ -392,7 +392,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsInput = FoxyFormItem(
       label: '物品标识',
       child: FoxyFlagPicker(
-        fieldController: viewModel.flagsController,
+        controller: viewModel.flagsController,
         flags: kItemFlagOptions,
         title: '物品标识',
         placeholder: 'flags',
@@ -401,7 +401,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsExtraInput = FoxyFormItem(
       label: '额外标识',
       child: FoxyFlagPicker(
-        fieldController: viewModel.flagsExtraController,
+        controller: viewModel.flagsExtraController,
         flags: kItemFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flagsExtra',
@@ -410,7 +410,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final flagsCustomInput = FoxyFormItem(
       label: '自定义标识',
       child: FoxyFlagPicker(
-        fieldController: viewModel.flagsCustomController,
+        controller: viewModel.flagsCustomController,
         flags: kItemFlagsCustomOptions,
         title: '自定义标识',
         placeholder: 'flagsCustom',
@@ -434,27 +434,27 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '攻击延迟',
       child: FoxyNumberInput<int>(
         placeholder: 'delay',
-        fieldController: viewModel.delayController,
+        controller: viewModel.delayController,
       ),
     );
     final rangedModRangeInput = FoxyFormItem(
       label: '远程修正',
       child: FoxyNumberInput<int>(
         placeholder: 'RangedModRange',
-        fieldController: viewModel.rangedModRangeController,
+        controller: viewModel.rangedModRangeController,
       ),
     );
     final armorDamageModifierInput = FoxyFormItem(
       label: '护甲修正',
       child: FoxyNumberInput<double>(
         placeholder: 'ArmorDamageModifier',
-        fieldController: viewModel.armorDamageModifierController,
+        controller: viewModel.armorDamageModifierController,
       ),
     );
     final ammoTypeInput = FoxyFormItem(
       label: '弹药类型',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.ammoTypeController,
+        controller: viewModel.ammoTypeController,
         options: _ammoTypeOptions,
         placeholder: const Text('ammo_type'),
       ),
@@ -462,7 +462,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final dmgType1Input = FoxyFormItem(
       label: '伤害类型1',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.dmgType1Controller,
+        controller: viewModel.dmgType1Controller,
         options: kDamageSchoolOptions,
         placeholder: const Text('dmg_type1'),
       ),
@@ -471,20 +471,20 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最小伤害1',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_min1',
-        fieldController: viewModel.dmgMin1Controller,
+        controller: viewModel.dmgMin1Controller,
       ),
     );
     final dmgMax1Input = FoxyFormItem(
       label: '最大伤害1',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_max1',
-        fieldController: viewModel.dmgMax1Controller,
+        controller: viewModel.dmgMax1Controller,
       ),
     );
     final dmgType2Input = FoxyFormItem(
       label: '伤害类型2',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.dmgType2Controller,
+        controller: viewModel.dmgType2Controller,
         options: kDamageSchoolOptions,
         placeholder: const Text('dmg_type2'),
       ),
@@ -493,28 +493,28 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '最小伤害2',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_min2',
-        fieldController: viewModel.dmgMin2Controller,
+        controller: viewModel.dmgMin2Controller,
       ),
     );
     final dmgMax2Input = FoxyFormItem(
       label: '最大伤害2',
       child: FoxyNumberInput<double>(
         placeholder: 'dmg_max2',
-        fieldController: viewModel.dmgMax2Controller,
+        controller: viewModel.dmgMax2Controller,
       ),
     );
     final armorInput = FoxyFormItem(
       label: '护甲',
       child: FoxyNumberInput<int>(
         placeholder: 'armor',
-        fieldController: viewModel.armorController,
+        controller: viewModel.armorController,
       ),
     );
     final blockInput = FoxyFormItem(
       label: '格挡',
       child: FoxyNumberInput<int>(
         placeholder: 'block',
-        fieldController: viewModel.blockController,
+        controller: viewModel.blockController,
       ),
     );
 
@@ -553,14 +553,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '缩放分布',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.scalingStatDistribution,
-        fieldController: viewModel.scalingStatDistributionController,
+        controller: viewModel.scalingStatDistributionController,
         placeholder: 'ScalingStatDistribution',
       ),
     );
     final scalingStatValueInput = FoxyFormItem(
       label: '缩放值',
       child: FoxyFlagPicker(
-        fieldController: viewModel.scalingStatValueController,
+        controller: viewModel.scalingStatValueController,
         flags: kItemScalingStatValueOptions,
         title: '缩放值',
         placeholder: 'ScalingStatValue',
@@ -584,7 +584,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '属性数量',
       child: FoxyNumberInput<int>(
         placeholder: 'StatsCount',
-        fieldController: viewModel.statsCountController,
+        controller: viewModel.statsCountController,
       ),
     );
 
@@ -593,42 +593,42 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '神圣抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'holy_res',
-        fieldController: viewModel.holyResController,
+        controller: viewModel.holyResController,
       ),
     );
     final fireResInput = FoxyFormItem(
       label: '火焰抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'fire_res',
-        fieldController: viewModel.fireResController,
+        controller: viewModel.fireResController,
       ),
     );
     final natureResInput = FoxyFormItem(
       label: '自然抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'nature_res',
-        fieldController: viewModel.natureResController,
+        controller: viewModel.natureResController,
       ),
     );
     final shadowResInput = FoxyFormItem(
       label: '暗影抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'shadow_res',
-        fieldController: viewModel.shadowResController,
+        controller: viewModel.shadowResController,
       ),
     );
     final frostResInput = FoxyFormItem(
       label: '冰霜抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'frost_res',
-        fieldController: viewModel.frostResController,
+        controller: viewModel.frostResController,
       ),
     );
     final arcaneResInput = FoxyFormItem(
       label: '奥术抗性',
       child: FoxyNumberInput<int>(
         placeholder: 'arcane_res',
-        fieldController: viewModel.arcaneResController,
+        controller: viewModel.arcaneResController,
       ),
     );
 
@@ -655,7 +655,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final allowableClassInput = FoxyFormItem(
       label: '允许职业',
       child: FoxyFlagPicker(
-        fieldController: viewModel.allowableClassController,
+        controller: viewModel.allowableClassController,
         flags: kAllowableClassOptions,
         title: '允许职业',
         placeholder: 'AllowableClass',
@@ -664,7 +664,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final allowableRaceInput = FoxyFormItem(
       label: '允许种族',
       child: FoxyFlagPicker(
-        fieldController: viewModel.allowableRaceController,
+        controller: viewModel.allowableRaceController,
         flags: kAllowableRaceOptions,
         title: '允许种族',
         placeholder: 'AllowableRace',
@@ -674,35 +674,35 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '物品等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemLevel',
-        fieldController: viewModel.itemLevelController,
+        controller: viewModel.itemLevelController,
       ),
     );
     final requiredLevelInput = FoxyFormItem(
       label: '需求等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredLevel',
-        fieldController: viewModel.requiredLevelController,
+        controller: viewModel.requiredLevelController,
       ),
     );
     final requiredSkillInput = FoxyFormItem(
       label: '需求技能',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkill',
-        fieldController: viewModel.requiredSkillController,
+        controller: viewModel.requiredSkillController,
       ),
     );
     final requiredSkillRankInput = FoxyFormItem(
       label: '技能等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkillRank',
-        fieldController: viewModel.requiredSkillRankController,
+        controller: viewModel.requiredSkillRankController,
       ),
     );
     final requiredSpellInput = FoxyFormItem(
       label: '需求法术',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spell,
-        fieldController: viewModel.requiredSpellController,
+        controller: viewModel.requiredSpellController,
         placeholder: 'requiredspell',
       ),
     );
@@ -710,42 +710,42 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '荣誉等级',
       child: FoxyNumberInput<int>(
         placeholder: 'requiredhonorrank',
-        fieldController: viewModel.requiredHonorRankController,
+        controller: viewModel.requiredHonorRankController,
       ),
     );
     final requiredCityRankInput = FoxyFormItem(
       label: '城市等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredCityRank',
-        fieldController: viewModel.requiredCityRankController,
+        controller: viewModel.requiredCityRankController,
       ),
     );
     final requiredReputationFactionInput = FoxyFormItem(
       label: '声望阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredReputationFaction',
-        fieldController: viewModel.requiredReputationFactionController,
+        controller: viewModel.requiredReputationFactionController,
       ),
     );
     final requiredReputationRankInput = FoxyFormItem(
       label: '声望等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredReputationRank',
-        fieldController: viewModel.requiredReputationRankController,
+        controller: viewModel.requiredReputationRankController,
       ),
     );
     final requiredDisenchantSkillInput = FoxyFormItem(
       label: '分解技能',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredDisenchantSkill',
-        fieldController: viewModel.requiredDisenchantSkillController,
+        controller: viewModel.requiredDisenchantSkillController,
       ),
     );
     final mapIdInput = FoxyFormItem(
       label: '地图',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.map,
-        fieldController: viewModel.mapIdController,
+        controller: viewModel.mapIdController,
         placeholder: 'Map',
       ),
     );
@@ -753,7 +753,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '区域',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.areaTable,
-        fieldController: viewModel.areaController,
+        controller: viewModel.areaController,
         placeholder: 'area',
       ),
     );
@@ -761,14 +761,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '节日ID',
       child: FoxyNumberInput<int>(
         placeholder: 'HolidayId',
-        fieldController: viewModel.holidayIdController,
+        controller: viewModel.holidayIdController,
       ),
     );
     final lockidInput = FoxyFormItem(
       label: '锁定ID',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.lock,
-        fieldController: viewModel.lockidController,
+        controller: viewModel.lockidController,
         placeholder: 'lockid',
       ),
     );
@@ -817,20 +817,20 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '宝石属性',
       child: FoxyNumberInput<int>(
         placeholder: 'GemProperties',
-        fieldController: viewModel.gemPropertiesController,
+        controller: viewModel.gemPropertiesController,
       ),
     );
     final socketBonusInput = FoxyFormItem(
       label: '插槽奖励',
       child: FoxyNumberInput<int>(
         placeholder: 'socketBonus',
-        fieldController: viewModel.socketBonusController,
+        controller: viewModel.socketBonusController,
       ),
     );
     final socketColor1Input = FoxyFormItem(
       label: '插槽颜色1',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.socketColorControllers[0],
+        controller: viewModel.socketColorControllers[0],
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_1'),
       ),
@@ -838,7 +838,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final socketColor2Input = FoxyFormItem(
       label: '插槽颜色2',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.socketColorControllers[1],
+        controller: viewModel.socketColorControllers[1],
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_2'),
       ),
@@ -846,7 +846,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final socketColor3Input = FoxyFormItem(
       label: '插槽颜色3',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.socketColorControllers[2],
+        controller: viewModel.socketColorControllers[2],
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_3'),
       ),
@@ -855,21 +855,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '插槽内容1',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_1',
-        fieldController: viewModel.socketContents[0],
+        controller: viewModel.socketContents[0],
       ),
     );
     final socketContent2Input = FoxyFormItem(
       label: '插槽内容2',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_2',
-        fieldController: viewModel.socketContents[1],
+        controller: viewModel.socketContents[1],
       ),
     );
     final socketContent3Input = FoxyFormItem(
       label: '插槽内容3',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_3',
-        fieldController: viewModel.socketContents[2],
+        controller: viewModel.socketContents[2],
       ),
     );
 
@@ -899,14 +899,14 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '页面文本',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.pageText,
-        fieldController: viewModel.pageTextController,
+        controller: viewModel.pageTextController,
         placeholder: 'PageText',
       ),
     );
     final pageMaterialInput = FoxyFormItem(
       label: '页面材质',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.pageMaterialController,
+        controller: viewModel.pageMaterialController,
         options: _pageMaterialOptions,
         placeholder: const Text('PageMaterial'),
       ),
@@ -914,7 +914,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final languageIdInput = FoxyFormItem(
       label: '语言',
       child: FoxyShadSelect<int>(
-        fieldController: viewModel.languageIdController,
+        controller: viewModel.languageIdController,
         options: _languageOptions,
         placeholder: const Text('LanguageID'),
       ),
@@ -930,7 +930,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
-        fieldController: viewModel.verifiedBuildController,
+        controller: viewModel.verifiedBuildController,
       ),
     );
 
@@ -982,7 +982,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                           child: FoxyFormItem(
                             label: '属性类型${i + 1}',
                             child: FoxyShadSelect<int>(
-                              fieldController: viewModel.statTypeControllers[i],
+                              controller: viewModel.statTypeControllers[i],
                               options: kItemStatTypeOptions,
                               placeholder: Text('stat_type_${i + 1}'),
                             ),
@@ -993,7 +993,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             label: '属性值${i + 1}',
                             child: FoxyNumberInput<int>(
                               placeholder: 'stat_value_${i + 1}',
-                              fieldController: viewModel.statValues[i],
+                              controller: viewModel.statValues[i],
                             ),
                           ),
                         ),
@@ -1023,7 +1023,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '法术${i + 1}',
                               child: FoxyEntityPicker(
                                 delegate: FoxyEntityPickerDelegates.spell,
-                                fieldController: viewModel.spellIds[i],
+                                controller: viewModel.spellIds[i],
                                 placeholder: 'spellid_${i + 1}',
                               ),
                             ),
@@ -1032,7 +1032,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             child: FoxyFormItem(
                               label: '触发类型',
                               child: FoxyShadSelect<int>(
-                                fieldController:
+                                controller:
                                     viewModel.spellTriggerControllers[i],
                                 options: kItemSpellTriggerOptions,
                                 placeholder: Text('spelltrigger_${i + 1}'),
@@ -1044,7 +1044,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '充能',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcharges_${i + 1}',
-                                fieldController: viewModel.spellCharges[i],
+                                controller: viewModel.spellCharges[i],
                               ),
                             ),
                           ),
@@ -1053,7 +1053,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: 'PPM率',
                               child: FoxyNumberInput<double>(
                                 placeholder: 'spellppmRate_${i + 1}',
-                                fieldController: viewModel.spellPpmRates[i],
+                                controller: viewModel.spellPpmRates[i],
                               ),
                             ),
                           ),
@@ -1067,7 +1067,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcooldown_${i + 1}',
-                                fieldController: viewModel.spellCooldowns[i],
+                                controller: viewModel.spellCooldowns[i],
                               ),
                             ),
                           ),
@@ -1076,7 +1076,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategory_${i + 1}',
-                                fieldController: viewModel.spellCategories[i],
+                                controller: viewModel.spellCategories[i],
                               ),
                             ),
                           ),
@@ -1085,7 +1085,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategorycooldown_${i + 1}',
-                                fieldController:
+                                controller:
                                     viewModel.spellCategoryCooldowns[i],
                               ),
                             ),
