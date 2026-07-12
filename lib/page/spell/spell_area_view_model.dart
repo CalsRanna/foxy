@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,21 +15,32 @@ class SpellAreaViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final areaController = TextEditingController();
-  final questStartController = TextEditingController();
-  final questEndController = TextEditingController();
-  final auraSpellController = TextEditingController();
-  final racemaskController = TextEditingController();
-  final genderController = TextEditingController();
-  final autocastController = TextEditingController();
-  final questStartStatusController = TextEditingController();
-  final questEndStatusController = TextEditingController();
+
+  final spellIdController = IntFieldController();
+  final areaController = IntFieldController();
+  final questStartController = IntFieldController();
+  final questEndController = IntFieldController();
+  final auraSpellController = IntFieldController();
+  final racemaskController = IntFieldController();
+  final genderController = IntFieldController();
+  final autocastController = IntFieldController();
+  final questStartStatusController = IntFieldController();
+  final questEndStatusController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    areaController,
+    questStartController,
+    questEndController,
+    auraSpellController,
+    racemaskController,
+    genderController,
+    autocastController,
+    questStartStatusController,
+    questEndStatusController,
+  ];
 
   final _repository = GetIt.instance.get<SpellAreaRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellAreas(spellId.value);
@@ -39,41 +49,41 @@ class SpellAreaViewModel {
   }
 
   void resetForm() {
-    areaController.text = _fmt(0);
-    questStartController.text = _fmt(0);
-    questEndController.text = _fmt(0);
-    auraSpellController.text = _fmt(0);
-    racemaskController.text = _fmt(0);
-    genderController.text = _fmt(0);
-    autocastController.text = _fmt(0);
-    questStartStatusController.text = _fmt(0);
-    questEndStatusController.text = _fmt(0);
+    areaController.init(0);
+    questStartController.init(0);
+    questEndController.init(0);
+    auraSpellController.init(0);
+    racemaskController.init(0);
+    genderController.init(0);
+    autocastController.init(0);
+    questStartStatusController.init(0);
+    questEndStatusController.init(0);
   }
 
   void fillForm(SpellAreaEntity data) {
-    areaController.text = _fmt(data.area);
-    questStartController.text = _fmt(data.questStart);
-    questEndController.text = _fmt(data.questEnd);
-    auraSpellController.text = _fmt(data.auraSpell);
-    racemaskController.text = _fmt(data.racemask);
-    genderController.text = _fmt(data.gender);
-    autocastController.text = _fmt(data.autocast);
-    questStartStatusController.text = _fmt(data.questStartStatus);
-    questEndStatusController.text = _fmt(data.questEndStatus);
+    areaController.init(data.area);
+    questStartController.init(data.questStart);
+    questEndController.init(data.questEnd);
+    auraSpellController.init(data.auraSpell);
+    racemaskController.init(data.racemask);
+    genderController.init(data.gender);
+    autocastController.init(data.autocast);
+    questStartStatusController.init(data.questStartStatus);
+    questEndStatusController.init(data.questEndStatus);
   }
 
   SpellAreaEntity collectFromForm() {
     return SpellAreaEntity(
       spell: spellId.value,
-      area: _pi(areaController.text),
-      questStart: _pi(questStartController.text),
-      questEnd: _pi(questEndController.text),
-      auraSpell: _pi(auraSpellController.text),
-      racemask: _pi(racemaskController.text),
-      gender: _pi(genderController.text),
-      autocast: _pi(autocastController.text),
-      questStartStatus: _pi(questStartStatusController.text),
-      questEndStatus: _pi(questEndStatusController.text),
+      area: areaController.collect(),
+      questStart: questStartController.collect(),
+      questEnd: questEndController.collect(),
+      auraSpell: auraSpellController.collect(),
+      racemask: racemaskController.collect(),
+      gender: genderController.collect(),
+      autocast: autocastController.collect(),
+      questStartStatus: questStartStatusController.collect(),
+      questEndStatus: questEndStatusController.collect(),
     );
   }
 
@@ -211,6 +221,7 @@ class SpellAreaViewModel {
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术区域-初始化失败: $e');
@@ -223,14 +234,8 @@ class SpellAreaViewModel {
   }
 
   void dispose() {
-    areaController.dispose();
-    auraSpellController.dispose();
-    autocastController.dispose();
-    genderController.dispose();
-    questEndController.dispose();
-    questEndStatusController.dispose();
-    questStartController.dispose();
-    questStartStatusController.dispose();
-    racemaskController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

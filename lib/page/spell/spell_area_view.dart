@@ -160,21 +160,21 @@ class _SpellAreaViewState extends State<SpellAreaView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FoxyFormItem.legacy(
-                  controller: TextEditingController(
-                    text: widget.spellId.toString(),
-                  ),
+                child: FoxyFormItem(
                   label: '法术ID',
-                  placeholder: 'spell',
-                  readOnly: true,
+                  child: FoxyNumberInput<int>(
+                    fieldController: viewModel.spellIdController,
+                    placeholder: 'spell',
+                    readOnly: true,
+                  ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '区域',
-                  placeholder: 'area',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.areaController,
+                    fieldController: viewModel.areaController,
+                    placeholder: 'area',
                   ),
                 ),
               ),
@@ -187,36 +187,36 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '开始任务',
-                  placeholder: 'quest_start',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.questStartController,
+                    fieldController: viewModel.questStartController,
+                    placeholder: 'quest_start',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '结束任务',
-                  placeholder: 'quest_end',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.questEndController,
+                    fieldController: viewModel.questEndController,
+                    placeholder: 'quest_end',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '开始任务掩码',
-                  placeholder: 'quest_start_status',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.questStartStatusController,
+                    fieldController: viewModel.questStartStatusController,
+                    placeholder: 'quest_start_status',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '结束任务掩码',
-                  placeholder: 'quest_end_status',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.questEndStatusController,
+                    fieldController: viewModel.questEndStatusController,
+                    placeholder: 'quest_end_status',
                   ),
                 ),
               ),
@@ -229,36 +229,36 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '光环',
-                  placeholder: 'aura_spell',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.auraSpellController,
+                    fieldController: viewModel.auraSpellController,
+                    placeholder: 'aura_spell',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '种族掩码',
-                  placeholder: 'racemask',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.racemaskController,
+                    fieldController: viewModel.racemaskController,
+                    placeholder: 'racemask',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '性别',
-                  placeholder: 'gender',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.genderController,
+                    fieldController: viewModel.genderController,
+                    placeholder: 'gender',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '自动施放',
-                  placeholder: 'autocast',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.autocastController,
+                    fieldController: viewModel.autocastController,
+                    placeholder: 'autocast',
                   ),
                 ),
               ),

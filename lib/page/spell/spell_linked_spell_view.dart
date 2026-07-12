@@ -4,6 +4,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -150,11 +151,13 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem.legacy(
-            controller: TextEditingController(text: widget.spellId.toString()),
+          FoxyFormItem(
             label: '触发技能',
-            placeholder: 'spell_trigger',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.spellIdController,
+              placeholder: 'spell_trigger',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           Row(
@@ -163,28 +166,30 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '链接技能',
-                  placeholder: 'spell_effect',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.spellEffectController,
+                    fieldController: viewModel.spellEffectController,
+                    placeholder: 'spell_effect',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '类型',
-                  placeholder: 'type',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.typeController,
+                    fieldController: viewModel.typeController,
+                    placeholder: 'type',
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          FoxyFormItem.legacy(
-            controller: viewModel.commentController,
+          FoxyFormItem(
             label: '注解',
-            placeholder: 'comment',
+            child: FoxyStringInput(
+              controller: viewModel.commentController,
+              placeholder: 'comment',
+            ),
           ),
           SizedBox(height: 24),
           Row(

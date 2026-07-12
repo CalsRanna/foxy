@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -167,21 +170,21 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FoxyFormItem.legacy(
-                  controller: TextEditingController(
-                    text: widget.spellId.toString(),
-                  ),
+                child: FoxyFormItem(
                   label: '编号',
-                  placeholder: 'Entry',
-                  readOnly: true,
+                  child: FoxyNumberInput<int>(
+                    fieldController: viewModel.spellIdController,
+                    placeholder: 'Entry',
+                    readOnly: true,
+                  ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '物品',
-                  placeholder: 'Item',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.itemController,
+                    fieldController: viewModel.itemController,
+                    placeholder: 'Item',
                   ),
                 ),
               ),
@@ -194,27 +197,28 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '关联',
-                  placeholder: 'Reference',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.referenceController,
+                    fieldController: viewModel.referenceController,
+                    placeholder: 'Reference',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '几率',
-                  placeholder: 'Chance',
                   child: FoxyNumberInput<double>(
-                    controller: viewModel.chanceController,
+                    fieldController: viewModel.chanceController,
+                    placeholder: 'Chance',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '需要任务',
-                  placeholder: 'QuestRequired',
-                  child: FoxyNumberInput<int>(
-                    controller: viewModel.questRequiredController,
+                  child: FoxyShadSelect<int>(
+                    fieldController: viewModel.questRequiredController,
+                    options: kBooleanOptions,
+                    placeholder: Text('QuestRequired'),
                   ),
                 ),
               ),
@@ -227,46 +231,48 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '掉落模式',
-                  placeholder: 'LootMode',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.lootModeController,
+                    fieldController: viewModel.lootModeController,
+                    placeholder: 'LootMode',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '组ID',
-                  placeholder: 'GroudId',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.groupIdController,
+                    fieldController: viewModel.groupIdController,
+                    placeholder: 'GroupId',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '最小数量',
-                  placeholder: 'MinCount',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.minCountController,
+                    fieldController: viewModel.minCountController,
+                    placeholder: 'MinCount',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '最大数量',
-                  placeholder: 'MaxCount',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.maxCountController,
+                    fieldController: viewModel.maxCountController,
+                    placeholder: 'MaxCount',
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          FoxyFormItem.legacy(
-            controller: viewModel.commentController,
+          FoxyFormItem(
             label: '注解',
-            placeholder: 'Comment',
+            child: FoxyStringInput(
+              controller: viewModel.commentController,
+              placeholder: 'Comment',
+            ),
           ),
           SizedBox(height: 24),
           Row(

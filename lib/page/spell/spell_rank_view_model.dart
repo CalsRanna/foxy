@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,15 +15,18 @@ class SpellRankViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final firstSpellIdController = TextEditingController();
-  final rankSpellIdController = TextEditingController();
-  final rankController = TextEditingController();
+
+  final firstSpellIdController = IntFieldController();
+  final rankSpellIdController = IntFieldController();
+  final rankController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    firstSpellIdController,
+    rankSpellIdController,
+    rankController,
+  ];
 
   final _repository = GetIt.instance.get<SpellRankRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellRanks(spellId.value);
@@ -33,34 +35,33 @@ class SpellRankViewModel {
   }
 
   void resetForm() {
-    firstSpellIdController.text = _fmt(0);
-    rankSpellIdController.text = _fmt(0);
-    rankController.text = _fmt(0);
+    firstSpellIdController.init(0);
+    rankSpellIdController.init(0);
+    rankController.init(0);
   }
 
   void fillForm(SpellRankEntity data) {
-    firstSpellIdController.text = _fmt(data.firstSpellId);
-    rankSpellIdController.text = _fmt(data.spellId);
-    rankController.text = _fmt(data.rank);
+    firstSpellIdController.init(data.firstSpellId);
+    rankSpellIdController.init(data.spellId);
+    rankController.init(data.rank);
   }
 
   SpellRankEntity collectFromForm() {
-    final data = SpellRankEntity(
-      firstSpellId: _pi(firstSpellIdController.text),
-      spellId: _pi(rankSpellIdController.text),
-      rank: _pi(rankController.text),
+    return SpellRankEntity(
+      firstSpellId: firstSpellIdController.collect(),
+      spellId: rankSpellIdController.collect(),
+      rank: rankController.collect(),
     );
-    return data;
   }
 
   Future<void> create() async {
     try {
       resetForm();
-      firstSpellIdController.text = _fmt(
+      firstSpellIdController.init(
         items.value.isNotEmpty ? items.value.first.firstSpellId : 0,
       );
-      rankSpellIdController.text = _fmt(spellId.value);
-      rankController.text = _fmt(
+      rankSpellIdController.init(spellId.value);
+      rankController.init(
         items.value.isNotEmpty ? (items.value.last.rank + 1) : 1,
       );
       selectedIndex.value = null;
@@ -188,8 +189,8 @@ class SpellRankViewModel {
   }
 
   void dispose() {
-    firstSpellIdController.dispose();
-    rankController.dispose();
-    rankSpellIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,23 +15,32 @@ class SpellLootTemplateViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = TextEditingController();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
-  final commentController = TextEditingController();
+
+  final spellIdController = IntFieldController();
+  final itemController = IntFieldController();
+  final referenceController = IntFieldController();
+  final chanceController = DoubleFieldController();
+  final questRequiredController = SelectFieldController<int>(fallback: 0);
+  final lootModeController = IntFieldController();
+  final groupIdController = IntFieldController();
+  final minCountController = IntFieldController();
+  final maxCountController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    itemController,
+    referenceController,
+    chanceController,
+    questRequiredController,
+    lootModeController,
+    groupIdController,
+    minCountController,
+    maxCountController,
+    commentController,
+  ];
 
   final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellLootTemplates(spellId.value);
@@ -41,43 +49,42 @@ class SpellLootTemplateViewModel {
   }
 
   void resetForm() {
-    itemController.text = _fmt(0);
-    referenceController.text = _fmt(0);
-    chanceController.text = _fmt(0.0);
-    questRequiredController.text = _fmt(0);
-    lootModeController.text = _fmt(0);
-    groupIdController.text = _fmt(0);
-    minCountController.text = _fmt(0);
-    maxCountController.text = _fmt(0);
-    commentController.clear();
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(0);
+    groupIdController.init(0);
+    minCountController.init(0);
+    maxCountController.init(0);
+    commentController.init('');
   }
 
   void fillForm(SpellLootTemplateEntity data) {
-    itemController.text = _fmt(data.item);
-    referenceController.text = _fmt(data.reference);
-    chanceController.text = _fmt(data.chance);
-    questRequiredController.text = _fmt(data.questRequired);
-    lootModeController.text = _fmt(data.lootMode);
-    groupIdController.text = _fmt(data.groupId);
-    minCountController.text = _fmt(data.minCount);
-    maxCountController.text = _fmt(data.maxCount);
-    commentController.text = data.comment;
+    itemController.init(data.item);
+    referenceController.init(data.reference);
+    chanceController.init(data.chance);
+    questRequiredController.init(data.questRequired);
+    lootModeController.init(data.lootMode);
+    groupIdController.init(data.groupId);
+    minCountController.init(data.minCount);
+    maxCountController.init(data.maxCount);
+    commentController.init(data.comment);
   }
 
   SpellLootTemplateEntity collectFromForm() {
-    final data = SpellLootTemplateEntity(
+    return SpellLootTemplateEntity(
       entry: spellId.value,
-      item: _pi(itemController.text),
-      reference: _pi(referenceController.text),
-      chance: _pd(chanceController.text),
-      questRequired: _pi(questRequiredController.text),
-      lootMode: _pi(lootModeController.text),
-      groupId: _pi(groupIdController.text),
-      minCount: _pi(minCountController.text),
-      maxCount: _pi(maxCountController.text),
-      comment: commentController.text,
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect(),
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
     );
-    return data;
   }
 
   Future<void> create() async {
@@ -196,6 +203,7 @@ class SpellLootTemplateViewModel {
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术掉落模板-初始化失败: $e');
@@ -208,14 +216,8 @@ class SpellLootTemplateViewModel {
   }
 
   void dispose() {
-    chanceController.dispose();
-    commentController.dispose();
-    groupIdController.dispose();
-    itemController.dispose();
-    lootModeController.dispose();
-    maxCountController.dispose();
-    minCountController.dispose();
-    questRequiredController.dispose();
-    referenceController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

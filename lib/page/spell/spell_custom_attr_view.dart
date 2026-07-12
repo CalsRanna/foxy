@@ -51,21 +51,21 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FoxyFormItem.legacy(
-                          controller: TextEditingController(
-                            text: widget.spellId.toString(),
-                          ),
+                        child: FoxyFormItem(
                           label: '编号',
-                          placeholder: 'spell_id',
-                          readOnly: true,
+                          child: FoxyNumberInput<int>(
+                            fieldController: viewModel.spellIdController,
+                            placeholder: 'spell_id',
+                            readOnly: true,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: FoxyFormItem(
                           label: '属性',
-                          placeholder: 'attributes',
                           child: FoxyNumberInput<int>(
-                            controller: viewModel.attributesController,
+                            fieldController: viewModel.attributesController,
+                            placeholder: 'attributes',
                           ),
                         ),
                       ),

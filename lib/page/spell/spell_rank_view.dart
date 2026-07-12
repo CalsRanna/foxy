@@ -162,27 +162,27 @@ class _SpellRankViewState extends State<SpellRankView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '起始技能',
-                  placeholder: 'first_spell_id',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.firstSpellIdController,
+                    fieldController: viewModel.firstSpellIdController,
+                    placeholder: 'first_spell_id',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '技能',
-                  placeholder: 'spell_id',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.rankSpellIdController,
+                    fieldController: viewModel.rankSpellIdController,
+                    placeholder: 'spell_id',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '排行',
-                  placeholder: 'rank',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.rankController,
+                    fieldController: viewModel.rankController,
+                    placeholder: 'rank',
                   ),
                 ),
               ),
