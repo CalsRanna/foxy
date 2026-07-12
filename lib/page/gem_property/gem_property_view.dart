@@ -35,7 +35,7 @@ class _GemPropertyViewState extends State<GemPropertyView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -43,28 +43,28 @@ class _GemPropertyViewState extends State<GemPropertyView> {
       label: '附魔编号',
       child: FoxyNumberInput<int>(
         placeholder: 'Enchant_ID',
-        controller: viewModel.enchantIdController,
+        fieldController: viewModel.enchantIdController,
       ),
     );
     final maxcountInvInput = FoxyFormItem(
       label: '最大库存',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_inv',
-        controller: viewModel.maxCountInvController,
+        fieldController: viewModel.maxCountInvController,
       ),
     );
     final maxcountItemInput = FoxyFormItem(
       label: '最大物品',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_item',
-        controller: viewModel.maxCountItemController,
+        fieldController: viewModel.maxCountItemController,
       ),
     );
     final typeInput = FoxyFormItem(
       label: '类型',
       child: FoxyNumberInput<int>(
         placeholder: 'Type',
-        controller: viewModel.typeController,
+        fieldController: viewModel.typeController,
       ),
     );
 
