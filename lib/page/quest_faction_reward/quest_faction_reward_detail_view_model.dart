@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,26 +15,35 @@ class QuestFactionRewardDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final idController = IntFieldController();
 
   /// Difficulty
-  final difficulty0Controller = TextEditingController();
-  final difficulty1Controller = TextEditingController();
-  final difficulty2Controller = TextEditingController();
-  final difficulty3Controller = TextEditingController();
-  final difficulty4Controller = TextEditingController();
-  final difficulty5Controller = TextEditingController();
-  final difficulty6Controller = TextEditingController();
-  final difficulty7Controller = TextEditingController();
-  final difficulty8Controller = TextEditingController();
-  final difficulty9Controller = TextEditingController();
+  final difficulty0Controller = IntFieldController();
+  final difficulty1Controller = IntFieldController();
+  final difficulty2Controller = IntFieldController();
+  final difficulty3Controller = IntFieldController();
+  final difficulty4Controller = IntFieldController();
+  final difficulty5Controller = IntFieldController();
+  final difficulty6Controller = IntFieldController();
+  final difficulty7Controller = IntFieldController();
+  final difficulty8Controller = IntFieldController();
+  final difficulty9Controller = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    difficulty0Controller,
+    difficulty1Controller,
+    difficulty2Controller,
+    difficulty3Controller,
+    difficulty4Controller,
+    difficulty5Controller,
+    difficulty6Controller,
+    difficulty7Controller,
+    difficulty8Controller,
+    difficulty9Controller,
+  ];
 
   final reward = signal(QuestFactionRewardEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -43,7 +51,7 @@ class QuestFactionRewardDetailViewModel {
       final existed = await _repository.getQuestFactionReward(t.id);
       if (existed == null) {
         final id = await _repository.storeQuestFactionReward(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateQuestFactionReward(t);
       }
@@ -70,17 +78,17 @@ class QuestFactionRewardDetailViewModel {
   /// 从所有 Controller 收集数据构建 QuestFactionReward
   QuestFactionRewardEntity _collectFromControllers() {
     return QuestFactionRewardEntity(
-      id: _pi(idController.text),
-      difficulty0: _pi(difficulty0Controller.text),
-      difficulty1: _pi(difficulty1Controller.text),
-      difficulty2: _pi(difficulty2Controller.text),
-      difficulty3: _pi(difficulty3Controller.text),
-      difficulty4: _pi(difficulty4Controller.text),
-      difficulty5: _pi(difficulty5Controller.text),
-      difficulty6: _pi(difficulty6Controller.text),
-      difficulty7: _pi(difficulty7Controller.text),
-      difficulty8: _pi(difficulty8Controller.text),
-      difficulty9: _pi(difficulty9Controller.text),
+      id: idController.collect(),
+      difficulty0: difficulty0Controller.collect(),
+      difficulty1: difficulty1Controller.collect(),
+      difficulty2: difficulty2Controller.collect(),
+      difficulty3: difficulty3Controller.collect(),
+      difficulty4: difficulty4Controller.collect(),
+      difficulty5: difficulty5Controller.collect(),
+      difficulty6: difficulty6Controller.collect(),
+      difficulty7: difficulty7Controller.collect(),
+      difficulty8: difficulty8Controller.collect(),
+      difficulty9: difficulty9Controller.collect(),
     );
   }
 
@@ -96,17 +104,9 @@ class QuestFactionRewardDetailViewModel {
   }
 
   void dispose() {
-    difficulty0Controller.dispose();
-    difficulty1Controller.dispose();
-    difficulty2Controller.dispose();
-    difficulty3Controller.dispose();
-    difficulty4Controller.dispose();
-    difficulty5Controller.dispose();
-    difficulty6Controller.dispose();
-    difficulty7Controller.dispose();
-    difficulty8Controller.dispose();
-    difficulty9Controller.dispose();
-    idController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -125,19 +125,16 @@ class QuestFactionRewardDetailViewModel {
   }
 
   void _initControllers(QuestFactionRewardEntity table) {
-    /// Basic
-    idController.text = _fmt(table.id);
-
-    /// Difficulty
-    difficulty0Controller.text = _fmt(table.difficulty0);
-    difficulty1Controller.text = _fmt(table.difficulty1);
-    difficulty2Controller.text = _fmt(table.difficulty2);
-    difficulty3Controller.text = _fmt(table.difficulty3);
-    difficulty4Controller.text = _fmt(table.difficulty4);
-    difficulty5Controller.text = _fmt(table.difficulty5);
-    difficulty6Controller.text = _fmt(table.difficulty6);
-    difficulty7Controller.text = _fmt(table.difficulty7);
-    difficulty8Controller.text = _fmt(table.difficulty8);
-    difficulty9Controller.text = _fmt(table.difficulty9);
+    idController.init(table.id);
+    difficulty0Controller.init(table.difficulty0);
+    difficulty1Controller.init(table.difficulty1);
+    difficulty2Controller.init(table.difficulty2);
+    difficulty3Controller.init(table.difficulty3);
+    difficulty4Controller.init(table.difficulty4);
+    difficulty5Controller.init(table.difficulty5);
+    difficulty6Controller.init(table.difficulty6);
+    difficulty7Controller.init(table.difficulty7);
+    difficulty8Controller.init(table.difficulty8);
+    difficulty9Controller.init(table.difficulty9);
   }
 }

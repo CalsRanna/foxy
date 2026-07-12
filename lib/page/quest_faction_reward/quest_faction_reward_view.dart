@@ -36,7 +36,7 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -46,70 +46,70 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
       label: '难度0',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty0',
-        controller: viewModel.difficulty0Controller,
+        fieldController: viewModel.difficulty0Controller,
       ),
     );
     final difficulty1Input = FoxyFormItem(
       label: '难度1',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty1',
-        controller: viewModel.difficulty1Controller,
+        fieldController: viewModel.difficulty1Controller,
       ),
     );
     final difficulty2Input = FoxyFormItem(
       label: '难度2',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty2',
-        controller: viewModel.difficulty2Controller,
+        fieldController: viewModel.difficulty2Controller,
       ),
     );
     final difficulty3Input = FoxyFormItem(
       label: '难度3',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty3',
-        controller: viewModel.difficulty3Controller,
+        fieldController: viewModel.difficulty3Controller,
       ),
     );
     final difficulty4Input = FoxyFormItem(
       label: '难度4',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty4',
-        controller: viewModel.difficulty4Controller,
+        fieldController: viewModel.difficulty4Controller,
       ),
     );
     final difficulty5Input = FoxyFormItem(
       label: '难度5',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty5',
-        controller: viewModel.difficulty5Controller,
+        fieldController: viewModel.difficulty5Controller,
       ),
     );
     final difficulty6Input = FoxyFormItem(
       label: '难度6',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty6',
-        controller: viewModel.difficulty6Controller,
+        fieldController: viewModel.difficulty6Controller,
       ),
     );
     final difficulty7Input = FoxyFormItem(
       label: '难度7',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty7',
-        controller: viewModel.difficulty7Controller,
+        fieldController: viewModel.difficulty7Controller,
       ),
     );
     final difficulty8Input = FoxyFormItem(
       label: '难度8',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty8',
-        controller: viewModel.difficulty8Controller,
+        fieldController: viewModel.difficulty8Controller,
       ),
     );
     final difficulty9Input = FoxyFormItem(
       label: '难度9',
       child: FoxyNumberInput<int>(
         placeholder: 'Difficulty9',
-        controller: viewModel.difficulty9Controller,
+        fieldController: viewModel.difficulty9Controller,
       ),
     );
 
