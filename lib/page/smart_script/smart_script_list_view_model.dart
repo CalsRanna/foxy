@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
@@ -8,14 +7,21 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SmartScriptListViewModel {
   int _refreshToken = 0;
-  final entryOrGuidController = TextEditingController();
-  final commentController = TextEditingController();
+  final entryOrGuidController = StringFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryOrGuidController,
+    commentController,
+  ];
+
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
   final page = signal(1);
@@ -76,8 +82,9 @@ class SmartScriptListViewModel {
   }
 
   void dispose() {
-    entryOrGuidController.dispose();
-    commentController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -123,8 +130,8 @@ class SmartScriptListViewModel {
 
   SmartScriptFilterEntity _buildFilter() {
     return SmartScriptFilterEntity(
-      entryOrGuid: entryOrGuidController.text,
-      comment: commentController.text,
+      entryOrGuid: entryOrGuidController.collect(),
+      comment: commentController.collect(),
     );
   }
 
@@ -134,8 +141,8 @@ class SmartScriptListViewModel {
   }
 
   Future<void> reset() async {
-    entryOrGuidController.clear();
-    commentController.clear();
+    entryOrGuidController.init('');
+    commentController.init('');
     page.value = 1;
     await _refresh();
   }
