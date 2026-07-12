@@ -40,7 +40,7 @@ class _EmoteTextViewState extends State<EmoteTextView> {
         readOnly: true,
       ),
     );
-    final nameInput = FoxyFormItem(
+    final nameInput = FoxyFormItem.legacy(
       controller: viewModel.nameController,
       label: '名称',
       placeholder: 'Name',

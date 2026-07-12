@@ -167,7 +167,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FoxyFormItem(
+                child: FoxyFormItem.legacy(
                   controller: TextEditingController(
                     text: widget.spellId.toString(),
                   ),
@@ -263,7 +263,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             ],
           ),
           SizedBox(height: 16),
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: viewModel.commentController,
             label: '注解',
             placeholder: 'Comment',

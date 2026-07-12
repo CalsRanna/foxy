@@ -12,6 +12,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -42,16 +43,18 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
   Widget build(BuildContext context) {
     /// Basic
     final entryInput = FoxyFormItem(
-      controller: viewModel.entryController.controller,
       label: '编号',
-      placeholder: 'entry',
-      readOnly: true,
+      child: FoxyNumberInput<int>(
+        fieldController: viewModel.entryController,
+        placeholder: 'entry',
+        readOnly: true,
+      ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        controller: viewModel.nameController.controller,
+        fieldController: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'name',
         title: '名称',
@@ -61,35 +64,37 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '称号',
       child: FoxyLocalePicker(
         entry: widget.entry,
-        controller: viewModel.subNameController.controller,
+        fieldController: viewModel.subNameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'subname',
         title: '称号',
       ),
     );
     final iconNameInput = FoxyFormItem(
-      controller: viewModel.iconNameController.controller,
       label: '鼠标形状',
-      placeholder: 'IconName',
+      child: FoxyStringInput(
+        controller: viewModel.iconNameController,
+        placeholder: 'IconName',
+      ),
     );
     final minLevelInput = FoxyFormItem(
       label: '最低等级',
       child: FoxyNumberInput<int>(
-        controller: viewModel.minLevelController.controller,
+        fieldController: viewModel.minLevelController,
         placeholder: 'minlevel',
       ),
     );
     final maxLevelInput = FoxyFormItem(
       label: '最高等级',
       child: FoxyNumberInput<int>(
-        controller: viewModel.maxLevelController.controller,
+        fieldController: viewModel.maxLevelController,
         placeholder: 'maxlevel',
       ),
     );
     final uniClassInput = FoxyFormItem(
       label: '职业',
       child: FoxyShadSelect<int>(
-        controller: viewModel.unitClassController.controller,
+        fieldController: viewModel.unitClassController,
         options: kUnitClassOptions,
         placeholder: const Text('unit_class'),
       ),
@@ -97,7 +102,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final rankInput = FoxyFormItem(
       label: '稀有程度',
       child: FoxyShadSelect<int>(
-        controller: viewModel.rankController.controller,
+        fieldController: viewModel.rankController,
         options: kRankOptions,
         placeholder: const Text('rank'),
       ),
@@ -105,7 +110,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final racialLeaderInput = FoxyFormItem(
       label: '种族领袖',
       child: FoxyShadSelect<int>(
-        controller: viewModel.racialLeaderController.controller,
+        fieldController: viewModel.racialLeaderController,
         options: kBooleanOptions,
         placeholder: const Text('RacialLeader'),
       ),
@@ -114,14 +119,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '阵营',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.dbcFaction,
-        controller: viewModel.factionController.controller,
+        fieldController: viewModel.factionController,
         placeholder: 'faction',
       ),
     );
     final familyInput = FoxyFormItem(
       label: '族群',
       child: FoxyShadSelect<int>(
-        controller: viewModel.familyController.controller,
+        fieldController: viewModel.familyController,
         options: kCreatureFamilyOptions,
         placeholder: const Text('family'),
       ),
@@ -129,7 +134,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final typeInput = FoxyFormItem(
       label: '类型',
       child: FoxyShadSelect<int>(
-        controller: viewModel.typeController.controller,
+        fieldController: viewModel.typeController,
         options: kCreatureTypeOptions,
         placeholder: const Text('type'),
       ),
@@ -137,7 +142,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final regenerateHealthInput = FoxyFormItem(
       label: '回复生命',
       child: FoxyShadSelect<int>(
-        controller: viewModel.regenerateHealthController.controller,
+        fieldController: viewModel.regenerateHealthController,
         options: kBooleanOptions,
         placeholder: const Text('RegenHealth'),
       ),
@@ -146,7 +151,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '宠物技能',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureSpellData,
-        controller: viewModel.petSpellDataIdController.controller,
+        fieldController: viewModel.petSpellDataIdController,
         placeholder: 'PetSpellDataId',
       ),
     );
@@ -154,7 +159,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '载具',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.vehicle,
-        controller: viewModel.vehicleIdController.controller,
+        fieldController: viewModel.vehicleIdController,
         placeholder: 'VehicleId',
       ),
     );
@@ -162,7 +167,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '对话',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.gossipMenu,
-        controller: viewModel.gossipMenuIdController.controller,
+        fieldController: viewModel.gossipMenuIdController,
         placeholder: 'gossip_menu_id',
       ),
     );
@@ -193,7 +198,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final expInput = FoxyFormItem(
       label: '属性扩展',
       child: FoxyShadSelect<int>(
-        controller: viewModel.expController.controller,
+        fieldController: viewModel.expController,
         options: kExpansionOptions,
         placeholder: const Text('exp'),
       ),
@@ -225,7 +230,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final npcFlagInput = FoxyFormItem(
       label: 'NPC标识',
       child: FoxyFlagPicker(
-        controller: viewModel.npcFlagController.controller,
+        fieldController: viewModel.npcFlagController,
         flags: kNpcFlagOptions,
         title: 'NPC标识',
         placeholder: 'npcflag',
@@ -234,7 +239,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final typeFlagInput = FoxyFormItem(
       label: '类型标识',
       child: FoxyFlagPicker(
-        controller: viewModel.typeFlagController.controller,
+        fieldController: viewModel.typeFlagController,
         flags: kCreatureTypeFlagOptions,
         title: '类型标识',
         placeholder: 'type_flags',
@@ -243,7 +248,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final dynamicFlagInput = FoxyFormItem(
       label: '动态标识',
       child: FoxyFlagPicker(
-        controller: viewModel.dynamicFlagController.controller,
+        fieldController: viewModel.dynamicFlagController,
         flags: kDynamicFlagOptions,
         title: '动态标识',
         placeholder: 'dynamicflags',
@@ -252,7 +257,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final extraFlagInput = FoxyFormItem(
       label: '额外标识',
       child: FoxyFlagPicker(
-        controller: viewModel.extraFlagController.controller,
+        fieldController: viewModel.extraFlagController,
         flags: kFlagsExtraOptions,
         title: '额外标识',
         placeholder: 'flags_extra',
@@ -261,7 +266,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final unitFlagInput = FoxyFormItem(
       label: '单位标识',
       child: FoxyFlagPicker(
-        controller: viewModel.unitFlagController.controller,
+        fieldController: viewModel.unitFlagController,
         flags: kUnitFlagOptions,
         title: '单位标识',
         placeholder: 'unit_flags',
@@ -270,7 +275,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final unitFlag2Input = FoxyFormItem(
       label: '单位标识2',
       child: FoxyFlagPicker(
-        controller: viewModel.unitFlag2Controller.controller,
+        fieldController: viewModel.unitFlag2Controller,
         flags: kUnitFlag2Options,
         title: '单位标识2',
         placeholder: 'unit_flags2',
@@ -281,7 +286,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final damageSchoolInput = FoxyFormItem(
       label: '伤害类型',
       child: FoxyShadSelect<int>(
-        controller: viewModel.damageSchoolController.controller,
+        fieldController: viewModel.damageSchoolController,
         options: kDamageSchoolOptions,
         placeholder: const Text('dmgschool'),
       ),
@@ -289,91 +294,91 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final damageModifierInput = FoxyFormItem(
       label: '伤害系数',
       child: FoxyNumberInput<double>(
-        controller: viewModel.damageModifierController.controller,
+        fieldController: viewModel.damageModifierController,
         placeholder: 'dmgschool',
       ),
     );
     final armorModifierInput = FoxyFormItem(
       label: '护甲系数',
       child: FoxyNumberInput<double>(
-        controller: viewModel.armorModifierController.controller,
+        fieldController: viewModel.armorModifierController,
         placeholder: 'ArmorModifier',
       ),
     );
     final baseAttackTimeInput = FoxyFormItem(
       label: '近战攻击间隔',
       child: FoxyNumberInput<int>(
-        controller: viewModel.baseAttackTimeController.controller,
+        fieldController: viewModel.baseAttackTimeController,
         placeholder: 'BaseAttackTime',
       ),
     );
     final baseVarianceInput = FoxyFormItem(
       label: '近战攻击方差',
       child: FoxyNumberInput<double>(
-        controller: viewModel.baseVarianceController.controller,
+        fieldController: viewModel.baseVarianceController,
         placeholder: 'BaseVariance',
       ),
     );
     final rangeAttackTimeInput = FoxyFormItem(
       label: '远程攻击间隔',
       child: FoxyNumberInput<int>(
-        controller: viewModel.rangeAttackTimeController.controller,
+        fieldController: viewModel.rangeAttackTimeController,
         placeholder: 'RangeAttackTime',
       ),
     );
     final rangeVarianceInput = FoxyFormItem(
       label: '远程攻击方差',
       child: FoxyNumberInput<double>(
-        controller: viewModel.rangeVarianceController.controller,
+        fieldController: viewModel.rangeVarianceController,
         placeholder: 'RangeVariance',
       ),
     );
     final healthModifierInput = FoxyFormItem(
       label: '生命值系数',
       child: FoxyNumberInput<double>(
-        controller: viewModel.healthModifierController.controller,
+        fieldController: viewModel.healthModifierController,
         placeholder: 'HealthModifier',
       ),
     );
     final manaModifierInput = FoxyFormItem(
       label: '法力值系数',
       child: FoxyNumberInput<double>(
-        controller: viewModel.manaModifierController.controller,
+        fieldController: viewModel.manaModifierController,
         placeholder: 'ManaModifier',
       ),
     );
     final experienceModifierInput = FoxyFormItem(
       label: '经验值系数',
       child: FoxyNumberInput<double>(
-        controller: viewModel.experienceModifierController.controller,
+        fieldController: viewModel.experienceModifierController,
         placeholder: 'ExperienceModifier',
       ),
     );
     final speedWalkInput = FoxyFormItem(
       label: '行走速度',
       child: FoxyNumberInput<double>(
-        controller: viewModel.speedWalkController.controller,
+        fieldController: viewModel.speedWalkController,
         placeholder: 'speed_walk',
       ),
     );
     final speedRunInput = FoxyFormItem(
       label: '奔跑速度',
       child: FoxyNumberInput<double>(
-        controller: viewModel.speedRunController.controller,
+        fieldController: viewModel.speedRunController,
         placeholder: 'speed_run',
       ),
     );
     final speedSwimInput = FoxyFormItem(
       label: '游泳速度',
       child: FoxyNumberInput<double>(
-        controller: viewModel.speedSwimController.controller,
+        fieldController: viewModel.speedSwimController,
         placeholder: 'speed_swim',
       ),
     );
     final speedFlightInput = FoxyFormItem(
       label: '飞行速度',
       child: FoxyNumberInput<double>(
-        controller: viewModel.speedFlightController.controller,
+        fieldController: viewModel.speedFlightController,
         placeholder: 'speed_flight',
       ),
     );
@@ -413,14 +418,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final minGoldInput = FoxyFormItem(
       label: '最小金钱掉落',
       child: FoxyNumberInput<int>(
-        controller: viewModel.minGoldController.controller,
+        fieldController: viewModel.minGoldController,
         placeholder: 'mingold',
       ),
     );
     final maxGoldInput = FoxyFormItem(
       label: '最大金钱掉落',
       child: FoxyNumberInput<int>(
-        controller: viewModel.maxGoldController.controller,
+        fieldController: viewModel.maxGoldController,
         placeholder: 'maxgold',
       ),
     );
@@ -431,7 +436,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           LootTableType.creature,
           '击杀掉落',
         ),
-        controller: viewModel.lootIdController.controller,
+        fieldController: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
     );
@@ -442,7 +447,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           LootTableType.pickpocket,
           '偷窃掉落',
         ),
-        controller: viewModel.pickpocketLootController.controller,
+        fieldController: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
     );
@@ -453,7 +458,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
           LootTableType.skinning,
           '剥皮掉落',
         ),
-        controller: viewModel.skinLootController.controller,
+        fieldController: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),
     );
@@ -462,14 +467,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final movementIdInput = FoxyFormItem(
       label: '移动',
       child: FoxyNumberInput<int>(
-        controller: viewModel.movementIdController.controller,
+        fieldController: viewModel.movementIdController,
         placeholder: 'movementId',
       ),
     );
     final movementTypeInput = FoxyFormItem(
       label: '移动类型',
       child: FoxyShadSelect<int>(
-        controller: viewModel.movementTypeController.controller,
+        fieldController: viewModel.movementTypeController,
         options: kMovementTypeOptions,
         placeholder: const Text('movementType'),
       ),
@@ -477,14 +482,14 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final hoverHeightInput = FoxyFormItem(
       label: '盘旋高度',
       child: FoxyNumberInput<double>(
-        controller: viewModel.hoverHeightController.controller,
+        fieldController: viewModel.hoverHeightController,
         placeholder: 'HoverHeight',
       ),
     );
     final detectionRangeInput = FoxyFormItem(
       label: '探测范围',
       child: FoxyNumberInput<double>(
-        controller: viewModel.detectionRangeController.controller,
+        fieldController: viewModel.detectionRangeController,
         placeholder: 'detection_range',
       ),
     );
@@ -524,7 +529,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final creatureImmunitiesIdInput = FoxyFormItem(
       label: '免疫ID',
       child: FoxyNumberInput<int>(
-        controller: viewModel.creatureImmunitiesIdController.controller,
+        fieldController: viewModel.creatureImmunitiesIdController,
         placeholder: 'CreatureImmunitiesId',
       ),
     );
@@ -556,7 +561,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '击杀关联1',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
-        controller: viewModel.killCredit1Controller.controller,
+        fieldController: viewModel.killCredit1Controller,
         placeholder: 'KillCredit1',
       ),
     );
@@ -564,7 +569,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '击杀关联2',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
-        controller: viewModel.killCredit2Controller.controller,
+        fieldController: viewModel.killCredit2Controller,
         placeholder: 'KillCredit2',
       ),
     );
@@ -572,7 +577,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '难度1',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
-        controller: viewModel.difficultyEntry1Controller.controller,
+        fieldController: viewModel.difficultyEntry1Controller,
         placeholder: 'difficulty_entry_1',
       ),
     );
@@ -580,7 +585,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '难度2',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
-        controller: viewModel.difficultyEntry2Controller.controller,
+        fieldController: viewModel.difficultyEntry2Controller,
         placeholder: 'difficulty_entry_2',
       ),
     );
@@ -588,24 +593,28 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       label: '难度3',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
-        controller: viewModel.difficultyEntry3Controller.controller,
+        fieldController: viewModel.difficultyEntry3Controller,
         placeholder: 'difficulty_entry_3',
       ),
     );
     final aiNameInput = FoxyFormItem(
-      controller: viewModel.aiNameController.controller,
       label: 'AI',
-      placeholder: 'AIName',
+      child: FoxyStringInput(
+        controller: viewModel.aiNameController,
+        placeholder: 'AIName',
+      ),
     );
     final scriptNameInput = FoxyFormItem(
-      controller: viewModel.scriptNameController.controller,
       label: '脚本',
-      placeholder: 'ScriptName',
+      child: FoxyStringInput(
+        controller: viewModel.scriptNameController,
+        placeholder: 'ScriptName',
+      ),
     );
     final verifiedBuildInput = FoxyFormItem(
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
-        controller: viewModel.verifiedBuildController.controller,
+        fieldController: viewModel.verifiedBuildController,
         placeholder: 'VerifiedBuild',
       ),
     );

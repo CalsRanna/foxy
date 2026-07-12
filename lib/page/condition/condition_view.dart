@@ -120,11 +120,7 @@ class _ConditionViewState extends State<ConditionView> {
       final type = viewModel.selectedConditionType.value;
       final cfg = conditionValueConfig(type);
       final pkLocked = viewModel.isExisting.value;
-      final value1Input = _buildValue1Input(
-        cfg,
-        viewModel,
-        readOnly: pkLocked,
-      );
+      final value1Input = _buildValue1Input(cfg, viewModel, readOnly: pkLocked);
       final value2Input = FoxyFormItem(
         label: cfg.displayLabel2,
         child: FoxyNumberInput<int>(
@@ -167,12 +163,12 @@ class _ConditionViewState extends State<ConditionView> {
         controller: viewModel.errorTextIdController,
       ),
     );
-    final scriptNameInput = FoxyFormItem(
+    final scriptNameInput = FoxyFormItem.legacy(
       controller: viewModel.scriptNameController,
       label: '脚本名称',
       placeholder: 'ScriptName',
     );
-    final commentInput = FoxyFormItem(
+    final commentInput = FoxyFormItem.legacy(
       controller: viewModel.commentController,
       label: '注解',
       placeholder: 'Comment',

@@ -1069,28 +1069,28 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: vm.objectiveText1Controller,
               label: '目标文本1',
               placeholder: 'ObjectiveText1',
             ),
           ),
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: vm.objectiveText2Controller,
               label: '目标文本2',
               placeholder: 'ObjectiveText2',
             ),
           ),
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: vm.objectiveText3Controller,
               label: '目标文本3',
               placeholder: 'ObjectiveText3',
             ),
           ),
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: vm.objectiveText4Controller,
               label: '目标文本4',
               placeholder: 'ObjectiveText4',
@@ -1174,7 +1174,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             ),
           ),
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: vm.verifiedBuildController,
               label: '验证版本',
               placeholder: 'VerifiedBuild',

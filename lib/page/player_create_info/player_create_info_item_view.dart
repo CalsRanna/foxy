@@ -121,7 +121,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                   controller: viewModel.amountController,
                 ),
               ),
-              FoxyFormItem(
+              FoxyFormItem.legacy(
                 controller: viewModel.noteController,
                 label: '备注',
                 placeholder: 'Note',

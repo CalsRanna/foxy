@@ -39,7 +39,7 @@ class _PageTextViewState extends State<PageTextView> {
         readOnly: true,
       ),
     );
-    final textInput = FoxyFormItem(
+    final textInput = FoxyFormItem.legacy(
       controller: viewModel.textController,
       label: '文本',
       placeholder: 'Text',

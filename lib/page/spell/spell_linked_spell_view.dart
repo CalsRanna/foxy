@@ -150,7 +150,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: TextEditingController(text: widget.spellId.toString()),
             label: '触发技能',
             placeholder: 'spell_trigger',
@@ -181,7 +181,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
             ],
           ),
           SizedBox(height: 16),
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: viewModel.commentController,
             label: '注解',
             placeholder: 'comment',

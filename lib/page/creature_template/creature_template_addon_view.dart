@@ -118,7 +118,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       ),
                     ),
                     Expanded(
-                      child: FoxyFormItem(
+                      child: FoxyFormItem.legacy(
                         controller: viewModel.aurasController,
                         label: '光环列表',
                         placeholder: 'auras',

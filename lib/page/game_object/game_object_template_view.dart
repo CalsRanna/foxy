@@ -64,7 +64,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
         title: '使用说明',
       ),
     );
-    final iconNameInput = FoxyFormItem(
+    final iconNameInput = FoxyFormItem.legacy(
       controller: viewModel.iconNameController,
       label: '鼠标形状',
       placeholder: 'IconName',
@@ -101,7 +101,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       placeholder: 'size',
       child: FoxyNumberInput<double>(controller: viewModel.sizeController),
     );
-    final unk1Input = FoxyFormItem(
+    final unk1Input = FoxyFormItem.legacy(
       controller: viewModel.unk1Controller,
       label: '未知字段',
       placeholder: 'unk1',
@@ -130,12 +130,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
     }
 
     /// AI与脚本
-    final aiNameInput = FoxyFormItem(
+    final aiNameInput = FoxyFormItem.legacy(
       controller: viewModel.aiNameController,
       label: 'AI',
       placeholder: 'AIName',
     );
-    final scriptNameInput = FoxyFormItem(
+    final scriptNameInput = FoxyFormItem.legacy(
       controller: viewModel.scriptNameController,
       label: '脚本',
       placeholder: 'ScriptName',

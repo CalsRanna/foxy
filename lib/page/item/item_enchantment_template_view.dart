@@ -168,7 +168,7 @@ class _ItemEnchantmentTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 物品ID（只读）
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: TextEditingController(text: widget.entry.toString()),
             label: '物品ID',
             placeholder: 'Entry',

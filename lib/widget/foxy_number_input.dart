@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -12,16 +13,24 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// 类型参数 [T] 标识该字段的数值类型。键盘与输入过滤尽量约束为数字，
 /// 但最终合法性仍由 ViewModel 在保存时校验（非法输入必须阻止保存）。
 class FoxyNumberInput<T extends num> extends StatelessWidget {
-  final TextEditingController controller;
+  /// 迁移完成后的类型化入口。
+  final NumberFieldController<T>? fieldController;
+
+  /// 其他模块迁移期间保留的原始入口。
+  final TextEditingController? controller;
   final String? placeholder;
   final bool readOnly;
 
   const FoxyNumberInput({
     super.key,
-    required this.controller,
+    this.fieldController,
+    this.controller,
     this.placeholder,
     this.readOnly = false,
-  });
+  }) : assert(
+         (fieldController == null) != (controller == null),
+         'fieldController 与 controller 必须且只能提供一个',
+       );
 
   bool get _isFloat => T == double;
 
@@ -30,7 +39,7 @@ class FoxyNumberInput<T extends num> extends StatelessWidget {
     final readonly = FoxyReadonlyInput.resolve(context, readOnly: readOnly);
     return readonly.wrap(
       ShadInput(
-        controller: controller,
+        controller: fieldController?.controller ?? controller,
         placeholder: Text(placeholder ?? ''),
         readOnly: readOnly,
         style: readonly.style,

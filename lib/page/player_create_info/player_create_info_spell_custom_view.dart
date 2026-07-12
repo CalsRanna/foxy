@@ -136,7 +136,7 @@ class _PlayerCreateInfoSpellCustomViewState
                   controller: viewModel.spellController,
                 ),
               ),
-              FoxyFormItem(
+              FoxyFormItem.legacy(
                 controller: viewModel.noteController,
                 label: '备注',
                 placeholder: 'note',

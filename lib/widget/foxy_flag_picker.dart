@@ -17,18 +17,29 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// 与 [FoxyEntityPicker]/[FoxyNumberInput] 对齐：纯 controller 模式，
 /// 无 onChanged 双向绑定。
 class FoxyFlagPicker extends StatefulWidget {
-  final TextEditingController controller;
+  /// 迁移完成后的类型化入口。
+  final FlagFieldController? fieldController;
+
+  /// 其他模块迁移期间保留的原始入口。
+  final TextEditingController? controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;
 
   const FoxyFlagPicker({
     super.key,
-    required this.controller,
+    this.fieldController,
+    this.controller,
     required this.flags,
     required this.title,
     this.placeholder,
-  });
+  }) : assert(
+         (fieldController == null) != (controller == null),
+         'fieldController 与 controller 必须且只能提供一个',
+       );
+
+  TextEditingController get textController =>
+      fieldController?.controller ?? controller!;
 
   @override
   State<FoxyFlagPicker> createState() => _FoxyFlagPickerState();
@@ -42,7 +53,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: ShadInput(
-        controller: widget.controller,
+        controller: widget.textController,
         placeholder: Text(widget.placeholder ?? ''),
         readOnly: true,
         showCursor: false,
@@ -59,7 +70,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
   }
 
   int get _currentValue {
-    final text = widget.controller.text;
+    final text = widget.textController.text;
     return int.tryParse(text.split(' ').first) ?? 0;
   }
 
@@ -75,7 +86,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
       },
     );
     if (result != null) {
-      widget.controller.text = FlagFieldController.formatFlagValue(result);
+      widget.textController.text = FlagFieldController.formatFlagValue(result);
     }
   }
 }

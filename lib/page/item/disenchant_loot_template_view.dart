@@ -195,7 +195,7 @@ class _DisenchantLootTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 分解ID（只读）
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: TextEditingController(
               text: viewModel.entry.value.toString(),
             ),
@@ -286,7 +286,7 @@ class _DisenchantLootTemplateViewState
           ),
           SizedBox(height: 16),
           // 备注
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: viewModel.commentController,
             label: '备注',
             placeholder: 'Comment',

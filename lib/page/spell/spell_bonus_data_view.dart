@@ -51,7 +51,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FoxyFormItem(
+                        child: FoxyFormItem.legacy(
                           controller: TextEditingController(
                             text: widget.spellId.toString(),
                           ),
@@ -61,7 +61,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         ),
                       ),
                       Expanded(
-                        child: FoxyFormItem(
+                        child: FoxyFormItem.legacy(
                           controller: viewModel.commentsController,
                           label: '备注',
                           placeholder: 'comments',
