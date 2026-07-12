@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -50,13 +51,13 @@ class _TextContentListPageState extends State<TextContentListPage> {
   }
 
   Widget _buildFilter() {
-    var idInput = ShadInput(
+    var idInput = FoxyStringInput(
       controller: viewModel.idController,
-      placeholder: Text('ID'),
+      placeholder: 'ID',
     );
-    var textInput = ShadInput(
+    var textInput = FoxyStringInput(
       controller: viewModel.textController,
-      placeholder: Text('文本'),
+      placeholder: '文本',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
