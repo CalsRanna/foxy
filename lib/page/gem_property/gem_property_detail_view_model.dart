@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,20 +15,23 @@ class GemPropertyDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
+  final idController = IntFieldController();
 
   /// Property
-  final enchantIdController = TextEditingController();
-  final maxCountInvController = TextEditingController();
-  final maxCountItemController = TextEditingController();
-  final typeController = TextEditingController();
+  final enchantIdController = IntFieldController();
+  final maxCountInvController = IntFieldController();
+  final maxCountItemController = IntFieldController();
+  final typeController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    enchantIdController,
+    maxCountInvController,
+    maxCountItemController,
+    typeController,
+  ];
 
   final property = signal(GemPropertyEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -37,7 +39,7 @@ class GemPropertyDetailViewModel {
       final existed = await _repository.getGemProperty(t.id);
       if (existed == null) {
         final id = await _repository.storeGemProperty(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateGemProperty(t);
       }
@@ -64,11 +66,11 @@ class GemPropertyDetailViewModel {
   /// 从所有 Controller 收集数据构建 GemProperty
   GemPropertyEntity _collectFromControllers() {
     return GemPropertyEntity(
-      id: _pi(idController.text),
-      enchantId: _pi(enchantIdController.text),
-      maxCountInv: _pi(maxCountInvController.text),
-      maxCountItem: _pi(maxCountItemController.text),
-      type: _pi(typeController.text),
+      id: idController.collect(),
+      enchantId: enchantIdController.collect(),
+      maxCountInv: maxCountInvController.collect(),
+      maxCountItem: maxCountItemController.collect(),
+      type: typeController.collect(),
     );
   }
 
@@ -84,11 +86,9 @@ class GemPropertyDetailViewModel {
   }
 
   void dispose() {
-    enchantIdController.dispose();
-    idController.dispose();
-    maxCountInvController.dispose();
-    maxCountItemController.dispose();
-    typeController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -107,10 +107,10 @@ class GemPropertyDetailViewModel {
   }
 
   void _initControllers(GemPropertyEntity gemProperty) {
-    idController.text = _fmt(gemProperty.id);
-    enchantIdController.text = _fmt(gemProperty.enchantId);
-    maxCountInvController.text = _fmt(gemProperty.maxCountInv);
-    maxCountItemController.text = _fmt(gemProperty.maxCountItem);
-    typeController.text = _fmt(gemProperty.type);
+    idController.init(gemProperty.id);
+    enchantIdController.init(gemProperty.enchantId);
+    maxCountInvController.init(gemProperty.maxCountInv);
+    maxCountItemController.init(gemProperty.maxCountItem);
+    typeController.init(gemProperty.type);
   }
 }

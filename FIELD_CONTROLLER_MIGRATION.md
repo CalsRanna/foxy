@@ -425,6 +425,7 @@ flutter test
 - `quest_info` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、4 个 FieldController。
 - `glyph_property` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、5 个 FieldController。
 - `currency_type` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、5 个 FieldController。
+- `gem_property` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、6 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -438,6 +439,7 @@ flutter test
 | `quest_info` | 列表筛选、详情编辑、DBC 名称本地化 | 4 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `glyph_property` | 列表筛选、详情编辑、雕文数值属性 | 5 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `currency_type` | 列表筛选、详情编辑、货币数值属性 | 5 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `gem_property` | 列表筛选、详情编辑、宝石数值属性 | 6 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 
