@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,23 +15,45 @@ class ConditionDetailViewModel {
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   // 主键字段（完整 10 列）
-  final sourceTypeOrReferenceIdController = ShadSelectController<int>();
-  final sourceGroupController = TextEditingController();
-  final sourceEntryController = TextEditingController();
-  final sourceIdController = TextEditingController();
-  final elseGroupController = TextEditingController();
-  final conditionTypeOrReferenceController = ShadSelectController<int>();
-  final conditionTargetController = TextEditingController();
-  final conditionValue1Controller = TextEditingController();
-  final conditionValue2Controller = TextEditingController();
-  final conditionValue3Controller = TextEditingController();
+  final sourceTypeOrReferenceIdController = SelectFieldController<int>(
+    fallback: 0,
+  );
+  final sourceGroupController = IntFieldController();
+  final sourceEntryController = IntFieldController();
+  final sourceIdController = IntFieldController();
+  final elseGroupController = IntFieldController();
+  final conditionTypeOrReferenceController = SelectFieldController<int>(
+    fallback: 0,
+  );
+  final conditionTargetController = IntFieldController();
+  final conditionValue1Controller = IntFieldController();
+  final conditionValue2Controller = IntFieldController();
+  final conditionValue3Controller = IntFieldController();
 
   // 非键字段
-  final negativeConditionController = TextEditingController();
-  final errorTypeController = TextEditingController();
-  final errorTextIdController = TextEditingController();
-  final scriptNameController = TextEditingController();
-  final commentController = TextEditingController();
+  final negativeConditionController = IntFieldController();
+  final errorTypeController = IntFieldController();
+  final errorTextIdController = IntFieldController();
+  final scriptNameController = StringFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    sourceTypeOrReferenceIdController,
+    sourceGroupController,
+    sourceEntryController,
+    sourceIdController,
+    elseGroupController,
+    conditionTypeOrReferenceController,
+    conditionTargetController,
+    conditionValue1Controller,
+    conditionValue2Controller,
+    conditionValue3Controller,
+    negativeConditionController,
+    errorTypeController,
+    errorTextIdController,
+    scriptNameController,
+    commentController,
+  ];
 
   final condition = signal<ConditionEntity?>(null);
 
@@ -43,18 +64,10 @@ class ConditionDetailViewModel {
   final isExisting = signal(false);
   Map<String, dynamic>? _originalCredential;
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-
-  int _getSelectValue(ShadSelectController<int> controller) =>
-      controller.value.firstOrNull ?? 0;
-
-  void _setSelectValue(ShadSelectController<int> controller, int value) =>
-      controller.value = {value};
-
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
-    conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
+    conditionTypeOrReferenceController.controller.addListener(
+      _onConditionTypeChange,
+    );
     try {
       // 复合主键均为语义列：新建可编辑；编辑锁定。无简单 MAX+1。
       if (credential == null) {
@@ -77,34 +90,26 @@ class ConditionDetailViewModel {
   }
 
   void _onConditionTypeChange() {
-    selectedConditionType.value = _getSelectValue(
-      conditionTypeOrReferenceController,
-    );
+    selectedConditionType.value = conditionTypeOrReferenceController.collect();
   }
 
   void _initControllers(ConditionEntity c) {
-    _setSelectValue(
-      sourceTypeOrReferenceIdController,
-      c.sourceTypeOrReferenceId,
-    );
-    sourceGroupController.text = _fmt(c.sourceGroup);
-    sourceEntryController.text = _fmt(c.sourceEntry);
-    sourceIdController.text = _fmt(c.sourceId);
-    elseGroupController.text = _fmt(c.elseGroup);
-    _setSelectValue(
-      conditionTypeOrReferenceController,
-      c.conditionTypeOrReference,
-    );
+    sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
+    sourceGroupController.init(c.sourceGroup);
+    sourceEntryController.init(c.sourceEntry);
+    sourceIdController.init(c.sourceId);
+    elseGroupController.init(c.elseGroup);
+    conditionTypeOrReferenceController.init(c.conditionTypeOrReference);
     selectedConditionType.value = c.conditionTypeOrReference;
-    conditionTargetController.text = _fmt(c.conditionTarget);
-    conditionValue1Controller.text = _fmt(c.conditionValue1);
-    conditionValue2Controller.text = _fmt(c.conditionValue2);
-    conditionValue3Controller.text = _fmt(c.conditionValue3);
-    negativeConditionController.text = _fmt(c.negativeCondition);
-    errorTypeController.text = _fmt(c.errorType);
-    errorTextIdController.text = _fmt(c.errorTextId);
-    scriptNameController.text = c.scriptName;
-    commentController.text = c.comment;
+    conditionTargetController.init(c.conditionTarget);
+    conditionValue1Controller.init(c.conditionValue1);
+    conditionValue2Controller.init(c.conditionValue2);
+    conditionValue3Controller.init(c.conditionValue3);
+    negativeConditionController.init(c.negativeCondition);
+    errorTypeController.init(c.errorType);
+    errorTextIdController.init(c.errorTextId);
+    scriptNameController.init(c.scriptName);
+    commentController.init(c.comment);
   }
 
   Future<void> save(BuildContext context) async {
@@ -137,28 +142,21 @@ class ConditionDetailViewModel {
 
   ConditionEntity _collectFromControllers() {
     return ConditionEntity(
-      sourceTypeOrReferenceId: _getSelectValue(
-        sourceTypeOrReferenceIdController,
-      ),
-      sourceGroup: _pi(sourceGroupController.text, 'SourceGroup'),
-      sourceEntry: _pi(sourceEntryController.text, 'SourceEntry'),
-      sourceId: _pi(sourceIdController.text, 'SourceId'),
-      elseGroup: _pi(elseGroupController.text, 'ElseGroup'),
-      conditionTypeOrReference: _getSelectValue(
-        conditionTypeOrReferenceController,
-      ),
-      conditionTarget: _pi(conditionTargetController.text, 'ConditionTarget'),
-      conditionValue1: _pi(conditionValue1Controller.text, 'ConditionValue1'),
-      conditionValue2: _pi(conditionValue2Controller.text, 'ConditionValue2'),
-      conditionValue3: _pi(conditionValue3Controller.text, 'ConditionValue3'),
-      negativeCondition: _pi(
-        negativeConditionController.text,
-        'NegativeCondition',
-      ),
-      errorType: _pi(errorTypeController.text, 'ErrorType'),
-      errorTextId: _pi(errorTextIdController.text, 'ErrorTextId'),
-      scriptName: scriptNameController.text,
-      comment: commentController.text,
+      sourceTypeOrReferenceId: sourceTypeOrReferenceIdController.collect(),
+      sourceGroup: sourceGroupController.collect(),
+      sourceEntry: sourceEntryController.collect(),
+      sourceId: sourceIdController.collect(),
+      elseGroup: elseGroupController.collect(),
+      conditionTypeOrReference: conditionTypeOrReferenceController.collect(),
+      conditionTarget: conditionTargetController.collect(),
+      conditionValue1: conditionValue1Controller.collect(),
+      conditionValue2: conditionValue2Controller.collect(),
+      conditionValue3: conditionValue3Controller.collect(),
+      negativeCondition: negativeConditionController.collect(),
+      errorType: errorTypeController.collect(),
+      errorTextId: errorTextIdController.collect(),
+      scriptName: scriptNameController.collect(),
+      comment: commentController.collect(),
     );
   }
 
@@ -174,21 +172,11 @@ class ConditionDetailViewModel {
   }
 
   void dispose() {
-    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
-    commentController.dispose();
-    conditionTargetController.dispose();
-    conditionTypeOrReferenceController.dispose();
-    conditionValue1Controller.dispose();
-    conditionValue2Controller.dispose();
-    conditionValue3Controller.dispose();
-    elseGroupController.dispose();
-    errorTextIdController.dispose();
-    errorTypeController.dispose();
-    negativeConditionController.dispose();
-    scriptNameController.dispose();
-    sourceEntryController.dispose();
-    sourceGroupController.dispose();
-    sourceIdController.dispose();
-    sourceTypeOrReferenceIdController.dispose();
+    conditionTypeOrReferenceController.controller.removeListener(
+      _onConditionTypeChange,
+    );
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
