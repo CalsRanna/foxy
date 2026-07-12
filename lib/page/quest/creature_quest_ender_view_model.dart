@@ -40,6 +40,7 @@ class CreatureQuestEnderViewModel {
 
     final item = items.value[index];
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认复制'),
@@ -94,6 +95,7 @@ class CreatureQuestEnderViewModel {
 
     final item = items.value[index];
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),
@@ -139,7 +141,10 @@ class CreatureQuestEnderViewModel {
       if (index == null || index < 0 || index >= items.value.length) return;
 
       final item = items.value[index];
-      final existing = await _repository.getCreatureQuestEnder(item.id, item.quest);
+      final existing = await _repository.getCreatureQuestEnder(
+        item.id,
+        item.quest,
+      );
       if (existing == null) return;
       fillForm(existing);
       _originalId = item.id;
@@ -207,7 +212,11 @@ class CreatureQuestEnderViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
-      await _repository.updateCreatureQuestEnder(_originalId, _originalQuest, model);
+      await _repository.updateCreatureQuestEnder(
+        _originalId,
+        _originalQuest,
+        model,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

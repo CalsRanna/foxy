@@ -93,7 +93,6 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-
   Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
     int id,
     DbcLocaleFieldDefinition field,

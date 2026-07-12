@@ -110,49 +110,52 @@ class FoxyEntityPickerDelegates {
       ),
     ],
     idOf: (BriefAreaTableEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance.get<AreaTableRepository>().getBriefAreaTables(
-      filter: AreaTableFilterEntity(id: v[0], name: v[1]),
-      page: page,
-    ),
+    fetch: (page, v) =>
+        GetIt.instance.get<AreaTableRepository>().getBriefAreaTables(
+          filter: AreaTableFilterEntity(id: v[0], name: v[1]),
+          page: page,
+        ),
     count: (v) => GetIt.instance.get<AreaTableRepository>().countAreaTables(
       filter: AreaTableFilterEntity(id: v[0], name: v[1]),
     ),
   );
 
-  static final broadcastText = FoxyEntityPickerDelegate<BriefBroadcastTextEntity>(
-    title: '广播文本',
-    errorLabel: '搜索广播文本失败',
-    filters: const [
-      FoxyEntityPickerFilter('广播文本ID'),
-      FoxyEntityPickerFilter('文本内容'),
-    ],
-    columns: [
-      FoxyEntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (BriefBroadcastTextEntity t) => t.id.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '文本',
-        text: (BriefBroadcastTextEntity t) => t.maleText,
-      ),
-      FoxyEntityPickerColumn(
-        header: '语言',
-        width: 120,
-        text: (BriefBroadcastTextEntity t) => t.languageId.toString(),
-      ),
-    ],
-    idOf: (BriefBroadcastTextEntity t) => t.id,
-    fetch: (page, v) =>
-        GetIt.instance.get<BroadcastTextRepository>().getBriefBroadcastTexts(
-          filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
-          page: page,
-        ),
-    count: (v) =>
-        GetIt.instance.get<BroadcastTextRepository>().countBroadcastTexts(
-          filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
-        ),
-  );
+  static final broadcastText =
+      FoxyEntityPickerDelegate<BriefBroadcastTextEntity>(
+        title: '广播文本',
+        errorLabel: '搜索广播文本失败',
+        filters: const [
+          FoxyEntityPickerFilter('广播文本ID'),
+          FoxyEntityPickerFilter('文本内容'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefBroadcastTextEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '文本',
+            text: (BriefBroadcastTextEntity t) => t.maleText,
+          ),
+          FoxyEntityPickerColumn(
+            header: '语言',
+            width: 120,
+            text: (BriefBroadcastTextEntity t) => t.languageId.toString(),
+          ),
+        ],
+        idOf: (BriefBroadcastTextEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<BroadcastTextRepository>()
+            .getBriefBroadcastTexts(
+              filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
+              page: page,
+            ),
+        count: (v) =>
+            GetIt.instance.get<BroadcastTextRepository>().countBroadcastTexts(
+              filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
+            ),
+      );
 
   static final charTitle = FoxyEntityPickerDelegate<BriefCharTitleEntity>(
     title: '称号',
@@ -173,10 +176,11 @@ class FoxyEntityPickerDelegates {
       ),
     ],
     idOf: (BriefCharTitleEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance.get<CharTitleRepository>().getBriefCharTitles(
-      filter: CharTitleFilterEntity(id: v[0], name: v[1]),
-      page: page,
-    ),
+    fetch: (page, v) =>
+        GetIt.instance.get<CharTitleRepository>().getBriefCharTitles(
+          filter: CharTitleFilterEntity(id: v[0], name: v[1]),
+          page: page,
+        ),
     count: (v) => GetIt.instance.get<CharTitleRepository>().countCharTitles(
       filter: CharTitleFilterEntity(id: v[0], name: v[1]),
     ),
@@ -391,8 +395,9 @@ class FoxyEntityPickerDelegates {
           ),
         ],
         idOf: (BriefItemDisplayInfoEntity t) => t.id,
-        fetch: (page, v) =>
-            GetIt.instance.get<ItemDisplayInfoRepository>().getBriefItemDisplayInfos(
+        fetch: (page, v) => GetIt.instance
+            .get<ItemDisplayInfoRepository>()
+            .getBriefItemDisplayInfos(
               filter: ItemDisplayInfoFilterEntity(id: v[0], name: v[1]),
               page: page,
             ),
@@ -700,10 +705,11 @@ class FoxyEntityPickerDelegates {
       ),
     ],
     idOf: (BriefMapInfoEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance.get<MapInfoRepository>().getBriefMapInfos(
-      filter: MapInfoFilterEntity(id: v[0], name: v[1]),
-      page: page,
-    ),
+    fetch: (page, v) =>
+        GetIt.instance.get<MapInfoRepository>().getBriefMapInfos(
+          filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+          page: page,
+        ),
     count: (v) => GetIt.instance.get<MapInfoRepository>().countMapInfos(
       filter: MapInfoFilterEntity(id: v[0], name: v[1]),
     ),
@@ -855,42 +861,43 @@ class FoxyEntityPickerDelegates {
             ),
       );
 
-  static final spellDuration = FoxyEntityPickerDelegate<BriefSpellDurationEntity>(
-    title: '施法时间',
-    errorLabel: '搜索持续时间失败',
-    filters: const [FoxyEntityPickerFilter('持续时间ID')],
-    columns: [
-      FoxyEntityPickerColumn(
-        header: '编号',
-        width: 120,
-        text: (BriefSpellDurationEntity t) => t.id.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '持续时间',
-        width: 120,
-        text: (BriefSpellDurationEntity t) => t.duration.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '每级增加值',
-        width: 120,
-        text: (BriefSpellDurationEntity t) => t.durationPerLevel.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '最大持续时间',
-        text: (BriefSpellDurationEntity t) => t.maxDuration.toString(),
-      ),
-    ],
-    idOf: (BriefSpellDurationEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance
-        .get<SpellDurationRepository>()
-        .getBriefSpellDurations(
-          filter: SpellDurationFilterEntity(id: v[0]),
-          page: page,
-        ),
-    count: (v) => GetIt.instance
-        .get<SpellDurationRepository>()
-        .countSpellDurations(filter: SpellDurationFilterEntity(id: v[0])),
-  );
+  static final spellDuration =
+      FoxyEntityPickerDelegate<BriefSpellDurationEntity>(
+        title: '施法时间',
+        errorLabel: '搜索持续时间失败',
+        filters: const [FoxyEntityPickerFilter('持续时间ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefSpellDurationEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '持续时间',
+            width: 120,
+            text: (BriefSpellDurationEntity t) => t.duration.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '每级增加值',
+            width: 120,
+            text: (BriefSpellDurationEntity t) => t.durationPerLevel.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '最大持续时间',
+            text: (BriefSpellDurationEntity t) => t.maxDuration.toString(),
+          ),
+        ],
+        idOf: (BriefSpellDurationEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<SpellDurationRepository>()
+            .getBriefSpellDurations(
+              filter: SpellDurationFilterEntity(id: v[0]),
+              page: page,
+            ),
+        count: (v) => GetIt.instance
+            .get<SpellDurationRepository>()
+            .countSpellDurations(filter: SpellDurationFilterEntity(id: v[0])),
+      );
 
   static final spellIcon = FoxyEntityPickerDelegate<BriefSpellIconEntity>(
     title: '技能图标',
@@ -920,10 +927,11 @@ class FoxyEntityPickerDelegates {
       ),
     ],
     idOf: (BriefSpellIconEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance.get<SpellIconRepository>().getBriefSpellIcons(
-      filter: SpellIconFilterEntity(id: v[0], name: v[1]),
-      page: page,
-    ),
+    fetch: (page, v) =>
+        GetIt.instance.get<SpellIconRepository>().getBriefSpellIcons(
+          filter: SpellIconFilterEntity(id: v[0], name: v[1]),
+          page: page,
+        ),
     count: (v) => GetIt.instance.get<SpellIconRepository>().countSpellIcons(
       filter: SpellIconFilterEntity(id: v[0], name: v[1]),
     ),
@@ -1033,10 +1041,11 @@ class FoxyEntityPickerDelegates {
       ),
     ],
     idOf: (BriefVehicleEntity t) => t.id,
-    fetch: (page, v) => GetIt.instance.get<VehicleRepository>().getBriefVehicles(
-      filter: VehicleFilterEntity(id: v[0]),
-      page: page,
-    ),
+    fetch: (page, v) =>
+        GetIt.instance.get<VehicleRepository>().getBriefVehicles(
+          filter: VehicleFilterEntity(id: v[0]),
+          page: page,
+        ),
     count: (v) => GetIt.instance.get<VehicleRepository>().countVehicles(
       filter: VehicleFilterEntity(id: v[0]),
     ),

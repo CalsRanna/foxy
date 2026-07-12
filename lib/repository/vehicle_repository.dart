@@ -89,10 +89,7 @@ class VehicleRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    VehicleFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

@@ -172,66 +172,73 @@ void main() {
     await first.toList().timeout(const Duration(seconds: 5));
   });
 
-  test('DBC 导入：扩展名大小写不敏感扫描', () async {
-    final util = DbcSyncUtil();
-    final dir = await Directory.systemTemp.createTemp('foxy_import_case_');
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
+  test(
+    'DBC 导入：扩展名大小写不敏感扫描',
+    () async {
+      final util = DbcSyncUtil();
+      final dir = await Directory.systemTemp.createTemp('foxy_import_case_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
 
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
-    await DbcExportUtil().write(
-      definition: definition,
-      rows: [
-        {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-      ],
-      outputDirectory: dir.path,
-    );
+      final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+      await DbcExportUtil().write(
+        definition: definition,
+        rows: [
+          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+        ],
+        outputDirectory: dir.path,
+      );
 
-    final lower = File(p.join(dir.path, definition.fileName));
-    final upper = File(p.join(dir.path, 'SpellDuration.DBC'));
-    await lower.rename(upper.path);
+      final lower = File(p.join(dir.path, definition.fileName));
+      final upper = File(p.join(dir.path, 'SpellDuration.DBC'));
+      await lower.rename(upper.path);
 
-    final events = await util
-        .import(directory: dir.path, mysqlConfig: mysql)
-        .toList()
-        .timeout(const Duration(seconds: 15));
+      final events = await util
+          .import(directory: dir.path, mysqlConfig: mysql)
+          .toList()
+          .timeout(const Duration(seconds: 15));
 
-    final result = events.whereType<DbcSyncResult>().single;
-    final text = result.errors.map((e) => e.message).join('\n');
-    // 扫描成功后才会进入数据库连接；不应仍是「未找到 DBC 文件」。
-    expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
-  }, skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法可靠构造 .DBC 与 .dbc 差异' : false);
+      final result = events.whereType<DbcSyncResult>().single;
+      final text = result.errors.map((e) => e.message).join('\n');
+      // 扫描成功后才会进入数据库连接；不应仍是「未找到 DBC 文件」。
+      expect(text, isNot(contains('未在目录中找到需要的 DBC 文件')));
+    },
+    skip: Platform.isWindows
+        ? 'Windows 文件系统大小写不敏感，无法可靠构造 .DBC 与 .dbc 差异'
+        : false,
+  );
 
-  test('DBC 导入：同一定义匹配多个文件时报错', () async {
-    final util = DbcSyncUtil();
-    final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
-    addTearDown(() async {
-      if (await dir.exists()) await dir.delete(recursive: true);
-    });
+  test(
+    'DBC 导入：同一定义匹配多个文件时报错',
+    () async {
+      final util = DbcSyncUtil();
+      final dir = await Directory.systemTemp.createTemp('foxy_import_dup_');
+      addTearDown(() async {
+        if (await dir.exists()) await dir.delete(recursive: true);
+      });
 
-    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
-    await DbcExportUtil().write(
-      definition: definition,
-      rows: [
-        {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
-      ],
-      outputDirectory: dir.path,
-    );
-    await File(
-      p.join(dir.path, definition.fileName),
-    ).copy(p.join(dir.path, 'SpellDuration.DBC'));
+      final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+      await DbcExportUtil().write(
+        definition: definition,
+        rows: [
+          {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+        ],
+        outputDirectory: dir.path,
+      );
+      await File(
+        p.join(dir.path, definition.fileName),
+      ).copy(p.join(dir.path, 'SpellDuration.DBC'));
 
-    final events = await util
-        .import(directory: dir.path, mysqlConfig: mysql)
-        .toList()
-        .timeout(const Duration(seconds: 15));
+      final events = await util
+          .import(directory: dir.path, mysqlConfig: mysql)
+          .toList()
+          .timeout(const Duration(seconds: 15));
 
-    final result = events.whereType<DbcSyncResult>().single;
-    expect(result.success, isFalse);
-    expect(
-      result.errors.map((e) => e.message).join('\n'),
-      contains('多个'),
-    );
-  }, skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false);
+      final result = events.whereType<DbcSyncResult>().single;
+      expect(result.success, isFalse);
+      expect(result.errors.map((e) => e.message).join('\n'), contains('多个'));
+    },
+    skip: Platform.isWindows ? 'Windows 文件系统大小写不敏感，无法并存 .dbc 与 .DBC' : false,
+  );
 }

@@ -25,7 +25,8 @@ class SpellBonusDataViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getSpellBonusData(spellId.value);

@@ -85,11 +85,7 @@ class SpellLinkedSpellRepository with RepositoryMixin {
       data.spellEffect,
     );
     if (existing != null) {
-      await updateSpellLinkedSpell(
-        data.spellTrigger,
-        data.spellEffect,
-        data,
-      );
+      await updateSpellLinkedSpell(data.spellTrigger, data.spellEffect, data);
     } else {
       await storeSpellLinkedSpell(data);
     }

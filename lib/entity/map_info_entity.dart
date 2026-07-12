@@ -369,40 +369,74 @@ class MapInfoEntity {
       mapNameLangUnk3: mapNameLangUnk3 ?? this.mapNameLangUnk3,
       mapNameLangFlags: mapNameLangFlags ?? this.mapNameLangFlags,
       areaTableId: areaTableId ?? this.areaTableId,
-      mapDescription0LangEnUS: mapDescription0LangEnUS ?? this.mapDescription0LangEnUS,
-      mapDescription0LangKoKR: mapDescription0LangKoKR ?? this.mapDescription0LangKoKR,
-      mapDescription0LangFrFR: mapDescription0LangFrFR ?? this.mapDescription0LangFrFR,
-      mapDescription0LangDeDE: mapDescription0LangDeDE ?? this.mapDescription0LangDeDE,
-      mapDescription0LangZhCN: mapDescription0LangZhCN ?? this.mapDescription0LangZhCN,
-      mapDescription0LangZhTW: mapDescription0LangZhTW ?? this.mapDescription0LangZhTW,
-      mapDescription0LangEsES: mapDescription0LangEsES ?? this.mapDescription0LangEsES,
-      mapDescription0LangEsMX: mapDescription0LangEsMX ?? this.mapDescription0LangEsMX,
-      mapDescription0LangRuRU: mapDescription0LangRuRU ?? this.mapDescription0LangRuRU,
-      mapDescription0LangJaJP: mapDescription0LangJaJP ?? this.mapDescription0LangJaJP,
-      mapDescription0LangPtPT: mapDescription0LangPtPT ?? this.mapDescription0LangPtPT,
-      mapDescription0LangPtBR: mapDescription0LangPtBR ?? this.mapDescription0LangPtBR,
-      mapDescription0LangItIT: mapDescription0LangItIT ?? this.mapDescription0LangItIT,
-      mapDescription0LangUnk1: mapDescription0LangUnk1 ?? this.mapDescription0LangUnk1,
-      mapDescription0LangUnk2: mapDescription0LangUnk2 ?? this.mapDescription0LangUnk2,
-      mapDescription0LangUnk3: mapDescription0LangUnk3 ?? this.mapDescription0LangUnk3,
-      mapDescription0LangFlags: mapDescription0LangFlags ?? this.mapDescription0LangFlags,
-      mapDescription1LangEnUS: mapDescription1LangEnUS ?? this.mapDescription1LangEnUS,
-      mapDescription1LangKoKR: mapDescription1LangKoKR ?? this.mapDescription1LangKoKR,
-      mapDescription1LangFrFR: mapDescription1LangFrFR ?? this.mapDescription1LangFrFR,
-      mapDescription1LangDeDE: mapDescription1LangDeDE ?? this.mapDescription1LangDeDE,
-      mapDescription1LangZhCN: mapDescription1LangZhCN ?? this.mapDescription1LangZhCN,
-      mapDescription1LangZhTW: mapDescription1LangZhTW ?? this.mapDescription1LangZhTW,
-      mapDescription1LangEsES: mapDescription1LangEsES ?? this.mapDescription1LangEsES,
-      mapDescription1LangEsMX: mapDescription1LangEsMX ?? this.mapDescription1LangEsMX,
-      mapDescription1LangRuRU: mapDescription1LangRuRU ?? this.mapDescription1LangRuRU,
-      mapDescription1LangJaJP: mapDescription1LangJaJP ?? this.mapDescription1LangJaJP,
-      mapDescription1LangPtPT: mapDescription1LangPtPT ?? this.mapDescription1LangPtPT,
-      mapDescription1LangPtBR: mapDescription1LangPtBR ?? this.mapDescription1LangPtBR,
-      mapDescription1LangItIT: mapDescription1LangItIT ?? this.mapDescription1LangItIT,
-      mapDescription1LangUnk1: mapDescription1LangUnk1 ?? this.mapDescription1LangUnk1,
-      mapDescription1LangUnk2: mapDescription1LangUnk2 ?? this.mapDescription1LangUnk2,
-      mapDescription1LangUnk3: mapDescription1LangUnk3 ?? this.mapDescription1LangUnk3,
-      mapDescription1LangFlags: mapDescription1LangFlags ?? this.mapDescription1LangFlags,
+      mapDescription0LangEnUS:
+          mapDescription0LangEnUS ?? this.mapDescription0LangEnUS,
+      mapDescription0LangKoKR:
+          mapDescription0LangKoKR ?? this.mapDescription0LangKoKR,
+      mapDescription0LangFrFR:
+          mapDescription0LangFrFR ?? this.mapDescription0LangFrFR,
+      mapDescription0LangDeDE:
+          mapDescription0LangDeDE ?? this.mapDescription0LangDeDE,
+      mapDescription0LangZhCN:
+          mapDescription0LangZhCN ?? this.mapDescription0LangZhCN,
+      mapDescription0LangZhTW:
+          mapDescription0LangZhTW ?? this.mapDescription0LangZhTW,
+      mapDescription0LangEsES:
+          mapDescription0LangEsES ?? this.mapDescription0LangEsES,
+      mapDescription0LangEsMX:
+          mapDescription0LangEsMX ?? this.mapDescription0LangEsMX,
+      mapDescription0LangRuRU:
+          mapDescription0LangRuRU ?? this.mapDescription0LangRuRU,
+      mapDescription0LangJaJP:
+          mapDescription0LangJaJP ?? this.mapDescription0LangJaJP,
+      mapDescription0LangPtPT:
+          mapDescription0LangPtPT ?? this.mapDescription0LangPtPT,
+      mapDescription0LangPtBR:
+          mapDescription0LangPtBR ?? this.mapDescription0LangPtBR,
+      mapDescription0LangItIT:
+          mapDescription0LangItIT ?? this.mapDescription0LangItIT,
+      mapDescription0LangUnk1:
+          mapDescription0LangUnk1 ?? this.mapDescription0LangUnk1,
+      mapDescription0LangUnk2:
+          mapDescription0LangUnk2 ?? this.mapDescription0LangUnk2,
+      mapDescription0LangUnk3:
+          mapDescription0LangUnk3 ?? this.mapDescription0LangUnk3,
+      mapDescription0LangFlags:
+          mapDescription0LangFlags ?? this.mapDescription0LangFlags,
+      mapDescription1LangEnUS:
+          mapDescription1LangEnUS ?? this.mapDescription1LangEnUS,
+      mapDescription1LangKoKR:
+          mapDescription1LangKoKR ?? this.mapDescription1LangKoKR,
+      mapDescription1LangFrFR:
+          mapDescription1LangFrFR ?? this.mapDescription1LangFrFR,
+      mapDescription1LangDeDE:
+          mapDescription1LangDeDE ?? this.mapDescription1LangDeDE,
+      mapDescription1LangZhCN:
+          mapDescription1LangZhCN ?? this.mapDescription1LangZhCN,
+      mapDescription1LangZhTW:
+          mapDescription1LangZhTW ?? this.mapDescription1LangZhTW,
+      mapDescription1LangEsES:
+          mapDescription1LangEsES ?? this.mapDescription1LangEsES,
+      mapDescription1LangEsMX:
+          mapDescription1LangEsMX ?? this.mapDescription1LangEsMX,
+      mapDescription1LangRuRU:
+          mapDescription1LangRuRU ?? this.mapDescription1LangRuRU,
+      mapDescription1LangJaJP:
+          mapDescription1LangJaJP ?? this.mapDescription1LangJaJP,
+      mapDescription1LangPtPT:
+          mapDescription1LangPtPT ?? this.mapDescription1LangPtPT,
+      mapDescription1LangPtBR:
+          mapDescription1LangPtBR ?? this.mapDescription1LangPtBR,
+      mapDescription1LangItIT:
+          mapDescription1LangItIT ?? this.mapDescription1LangItIT,
+      mapDescription1LangUnk1:
+          mapDescription1LangUnk1 ?? this.mapDescription1LangUnk1,
+      mapDescription1LangUnk2:
+          mapDescription1LangUnk2 ?? this.mapDescription1LangUnk2,
+      mapDescription1LangUnk3:
+          mapDescription1LangUnk3 ?? this.mapDescription1LangUnk3,
+      mapDescription1LangFlags:
+          mapDescription1LangFlags ?? this.mapDescription1LangFlags,
       loadingScreenId: loadingScreenId ?? this.loadingScreenId,
       minimapIconScale: minimapIconScale ?? this.minimapIconScale,
       corpseMapId: corpseMapId ?? this.corpseMapId,
@@ -415,7 +449,6 @@ class MapInfoEntity {
     );
   }
 }
-
 
 /// 地图列表/Picker 展示模型
 class BriefMapInfoEntity {

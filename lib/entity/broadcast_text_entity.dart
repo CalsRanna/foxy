@@ -70,11 +70,7 @@ class BriefBroadcastTextEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'MaleText': maleText,
-      'LanguageID': languageId,
-    };
+    return {'ID': id, 'MaleText': maleText, 'LanguageID': languageId};
   }
 
   BriefBroadcastTextEntity copyWith({

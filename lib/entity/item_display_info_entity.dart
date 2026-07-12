@@ -170,7 +170,6 @@ class ItemDisplayInfoEntity {
   }
 }
 
-
 /// 物品显示信息列表/Picker 展示模型
 class BriefItemDisplayInfoEntity {
   final int id;

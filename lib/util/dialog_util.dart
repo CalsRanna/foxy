@@ -16,6 +16,7 @@ class DialogUtil {
   }) async {
     final context = router.navigatorKey.currentContext!;
     final result = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -50,14 +51,12 @@ class DialogUtil {
   /// 显示阻塞式提示对话框，用户点「确定」后返回。
   ///
   /// 不隐式 pop 栈顶；调用方应先自行关闭 loading 等临时对话框。
-  Future<void> alert({
-    required String title,
-    required String message,
-  }) async {
+  Future<void> alert({required String title, required String message}) async {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
     await showShadDialog<void>(
+      opaque: false,
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -85,6 +84,7 @@ class DialogUtil {
     }
 
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -104,6 +104,7 @@ class DialogUtil {
   void loading() {
     final context = router.navigatorKey.currentContext!;
     showShadDialog(
+      opaque: false,
       barrierDismissible: false,
       context: context,
       builder: (context) {

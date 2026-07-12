@@ -111,11 +111,7 @@ class BriefQuestOfferRewardEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Emote1': emote1,
-      'RewardText': rewardText,
-    };
+    return {'ID': id, 'Emote1': emote1, 'RewardText': rewardText};
   }
 }
 
@@ -190,10 +186,6 @@ class BriefQuestOfferRewardLocaleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'RewardText': rewardText,
-    };
+    return {'ID': id, 'locale': locale, 'RewardText': rewardText};
   }
 }

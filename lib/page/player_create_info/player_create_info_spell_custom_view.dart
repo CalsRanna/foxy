@@ -105,6 +105,7 @@ class _PlayerCreateInfoSpellCustomViewState
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (c) => ShadDialog(
         title: Text('新增自定义法术'),

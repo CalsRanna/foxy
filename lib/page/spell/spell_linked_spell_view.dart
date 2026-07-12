@@ -120,6 +120,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增链接技能'),
@@ -131,6 +132,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑链接技能'),

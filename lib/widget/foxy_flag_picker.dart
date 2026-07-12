@@ -9,7 +9,7 @@ String formatFlagValue(int value) {
 }
 
 /// 将 [formatFlagValue] 产生的显示文本解析回 int。
-/// 
+///
 /// [controller] 存储格式化文本（如 "123 (0x0000007B)"），VM 在 save 时
 /// 用此函数读取原始值，与 [FoxyEntityPicker]/[FoxyNumberInput] 的
 /// controller-only 契约一致。
@@ -17,7 +17,10 @@ int parseFlagValue(String text) {
   return int.tryParse(text.split(' ').first) ?? 0;
 }
 
-/// 纯展示组件：显示已格式化的标志位值，点击弹出标志位编辑器。
+/// 标志位选择器：显示已格式化的值，点击输入框或尾部按钮打开编辑弹窗。
+///
+/// 这是可交互的编辑入口，**不**使用 [FoxyReadonlyInput] 的 muted/禁用外观。
+/// `ShadInput.readOnly` 仅用于禁止手改 `"123 (0x…)"` 格式串，编辑一律走弹窗。
 ///
 /// [controller] 的文本由调用方在初始化时设置（通过 [formatFlagValue]），
 /// 弹窗确认后组件自动写回 [controller]（格式化文本）。VM 在 save 时
@@ -46,16 +49,23 @@ class FoxyFlagPicker extends StatefulWidget {
 class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
   @override
   Widget build(BuildContext context) {
-    return ShadInput(
-      controller: widget.controller,
-      placeholder: Text(widget.placeholder ?? ''),
-      readOnly: true,
-      trailing: ShadButton.ghost(
-        height: 20,
-        width: 20,
-        padding: EdgeInsets.zero,
+    // 外观与可编辑输入框一致；外侧 MouseRegion 保证手型光标
+    // （readOnly 时 ShadInput 内部 AbsorbPointer 会使 mouseCursor 失效）。
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: ShadInput(
+        controller: widget.controller,
+        placeholder: Text(widget.placeholder ?? ''),
+        readOnly: true,
+        showCursor: false,
         onPressed: _openDialog,
-        child: Icon(LucideIcons.settings2, size: 12),
+        trailing: ShadButton.ghost(
+          height: 20,
+          width: 20,
+          padding: EdgeInsets.zero,
+          onPressed: _openDialog,
+          child: Icon(LucideIcons.settings2, size: 12),
+        ),
       ),
     );
   }
@@ -67,6 +77,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
 
   Future<void> _openDialog() async {
     final result = await showShadDialog<int>(
+      opaque: false,
       context: context,
       builder: (context) {
         return _FlagPickerDialog(

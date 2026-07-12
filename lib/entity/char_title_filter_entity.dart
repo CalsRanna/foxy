@@ -16,9 +16,6 @@ class CharTitleFilterEntity {
   }
 
   CharTitleFilterEntity copyWith({String? id, String? name}) {
-    return CharTitleFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+    return CharTitleFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

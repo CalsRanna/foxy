@@ -38,7 +38,8 @@ class PickpocketingLootTemplateViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final template = await _creatureRepository.getCreatureTemplate(
@@ -47,7 +48,9 @@ class PickpocketingLootTemplateViewModel {
     if (template == null) return;
     creatureTemplate.value = template;
 
-    final data = await repository.getBriefLootTemplates(template.pickpocketLoot);
+    final data = await repository.getBriefLootTemplates(
+      template.pickpocketLoot,
+    );
     items.value = data;
     selectedIndex.value = null;
   }
@@ -156,6 +159,7 @@ class PickpocketingLootTemplateViewModel {
     final loot = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

@@ -123,6 +123,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增结束物体'),
@@ -133,6 +134,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑结束物体'),

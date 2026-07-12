@@ -155,7 +155,8 @@ class QuestTemplateDetailViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {

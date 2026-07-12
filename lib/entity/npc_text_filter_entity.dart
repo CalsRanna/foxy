@@ -5,10 +5,7 @@ class NpcTextFilterEntity {
   const NpcTextFilterEntity({this.id = '', this.text = ''});
 
   factory NpcTextFilterEntity.fromJson(Map<String, dynamic> json) {
-    return NpcTextFilterEntity(
-      id: json['id'] ?? '',
-      text: json['text'] ?? '',
-    );
+    return NpcTextFilterEntity(id: json['id'] ?? '', text: json['text'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -16,9 +13,6 @@ class NpcTextFilterEntity {
   }
 
   NpcTextFilterEntity copyWith({String? id, String? text}) {
-    return NpcTextFilterEntity(
-      id: id ?? this.id,
-      text: text ?? this.text,
-    );
+    return NpcTextFilterEntity(id: id ?? this.id, text: text ?? this.text);
   }
 }

@@ -133,6 +133,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增训练师技能'),
@@ -145,6 +146,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑训练师技能'),

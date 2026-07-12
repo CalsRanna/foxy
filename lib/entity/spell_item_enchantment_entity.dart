@@ -248,7 +248,6 @@ class SpellItemEnchantmentEntity {
   }
 }
 
-
 /// 法术附魔列表展示模型
 class BriefSpellItemEnchantmentEntity {
   final int id;

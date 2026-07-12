@@ -40,9 +40,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
     return QuestRequestItemsEntity.fromJson(results.first.toMap());
   }
 
-  Future<QuestRequestItemsEntity> createQuestRequestItems([
-    int id = 0,
-  ]) async {
+  Future<QuestRequestItemsEntity> createQuestRequestItems([int id = 0]) async {
     return QuestRequestItemsEntity(id: id);
   }
 

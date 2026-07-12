@@ -91,7 +91,6 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-
   Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
     int id,
     DbcLocaleFieldDefinition field,
@@ -110,10 +109,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    MapInfoFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

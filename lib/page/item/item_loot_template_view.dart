@@ -160,6 +160,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增掉落'),
@@ -172,6 +173,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑掉落'),

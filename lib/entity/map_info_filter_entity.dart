@@ -5,10 +5,7 @@ class MapInfoFilterEntity {
   const MapInfoFilterEntity({this.id = '', this.name = ''});
 
   factory MapInfoFilterEntity.fromJson(Map<String, dynamic> json) {
-    return MapInfoFilterEntity(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-    );
+    return MapInfoFilterEntity(id: json['id'] ?? '', name: json['name'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -16,9 +13,6 @@ class MapInfoFilterEntity {
   }
 
   MapInfoFilterEntity copyWith({String? id, String? name}) {
-    return MapInfoFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+    return MapInfoFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

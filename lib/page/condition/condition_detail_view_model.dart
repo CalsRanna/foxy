@@ -35,8 +35,10 @@ class ConditionDetailViewModel {
   final commentController = TextEditingController();
 
   final condition = signal<ConditionEntity?>(null);
+
   /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
   final selectedConditionType = signal(0);
+
   /// 现有记录：完整 10 列主键只读
   final isExisting = signal(false);
   Map<String, dynamic>? _originalCredential;
@@ -76,12 +78,18 @@ class ConditionDetailViewModel {
   }
 
   void _initControllers(ConditionEntity c) {
-    _setSelectValue(sourceTypeOrReferenceIdController, c.sourceTypeOrReferenceId);
+    _setSelectValue(
+      sourceTypeOrReferenceIdController,
+      c.sourceTypeOrReferenceId,
+    );
     sourceGroupController.text = _fmt(c.sourceGroup);
     sourceEntryController.text = _fmt(c.sourceEntry);
     sourceIdController.text = _fmt(c.sourceId);
     elseGroupController.text = _fmt(c.elseGroup);
-    _setSelectValue(conditionTypeOrReferenceController, c.conditionTypeOrReference);
+    _setSelectValue(
+      conditionTypeOrReferenceController,
+      c.conditionTypeOrReference,
+    );
     selectedConditionType.value = c.conditionTypeOrReference;
     conditionTargetController.text = _fmt(c.conditionTarget);
     conditionValue1Controller.text = _fmt(c.conditionValue1);
@@ -124,17 +132,24 @@ class ConditionDetailViewModel {
 
   ConditionEntity _collectFromControllers() {
     return ConditionEntity(
-      sourceTypeOrReferenceId: _getSelectValue(sourceTypeOrReferenceIdController),
+      sourceTypeOrReferenceId: _getSelectValue(
+        sourceTypeOrReferenceIdController,
+      ),
       sourceGroup: _pi(sourceGroupController.text, 'SourceGroup'),
       sourceEntry: _pi(sourceEntryController.text, 'SourceEntry'),
       sourceId: _pi(sourceIdController.text, 'SourceId'),
       elseGroup: _pi(elseGroupController.text, 'ElseGroup'),
-      conditionTypeOrReference: _getSelectValue(conditionTypeOrReferenceController),
+      conditionTypeOrReference: _getSelectValue(
+        conditionTypeOrReferenceController,
+      ),
       conditionTarget: _pi(conditionTargetController.text, 'ConditionTarget'),
       conditionValue1: _pi(conditionValue1Controller.text, 'ConditionValue1'),
       conditionValue2: _pi(conditionValue2Controller.text, 'ConditionValue2'),
       conditionValue3: _pi(conditionValue3Controller.text, 'ConditionValue3'),
-      negativeCondition: _pi(negativeConditionController.text, 'NegativeCondition'),
+      negativeCondition: _pi(
+        negativeConditionController.text,
+        'NegativeCondition',
+      ),
       errorType: _pi(errorTypeController.text, 'ErrorType'),
       errorTextId: _pi(errorTextIdController.text, 'ErrorTextId'),
       scriptName: scriptNameController.text,

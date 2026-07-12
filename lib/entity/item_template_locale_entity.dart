@@ -73,10 +73,6 @@ class BriefItemTemplateLocaleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'Name': name,
-    };
+    return {'ID': id, 'locale': locale, 'Name': name};
   }
 }

@@ -68,10 +68,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
   Future<void> updateCreatureModelInfo(CreatureModelInfoEntity info) async {
     var json = info.toJson();
     json.remove('DisplayID');
-    await laconic
-        .table(_table)
-        .where('DisplayID', info.displayId)
-        .update(json);
+    await laconic.table(_table).where('DisplayID', info.displayId).update(json);
   }
 
   Future<void> destroyCreatureModelInfo(int displayId) async {

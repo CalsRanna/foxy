@@ -164,7 +164,6 @@ class ItemRandomPropertiesEntity {
   }
 }
 
-
 /// 随机属性列表/Picker 展示模型
 class BriefItemRandomPropertiesEntity {
   final int id;

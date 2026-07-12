@@ -51,6 +51,7 @@ class _AreaTableOrQuestSortSelectorState
   Future<void> _openDialog() async {
     final currentValue = int.tryParse(widget.controller.text);
     final result = await showShadDialog<int>(
+      opaque: false,
       context: context,
       builder: (context) =>
           _Dialog(initialValue: currentValue, mode: widget.mode),

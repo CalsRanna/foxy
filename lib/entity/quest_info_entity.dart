@@ -128,7 +128,6 @@ class QuestInfoEntity {
   }
 }
 
-
 /// 任务信息列表/Picker 展示模型
 class BriefQuestInfoEntity {
   final int id;

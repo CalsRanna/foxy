@@ -218,7 +218,6 @@ class LockEntity {
   }
 }
 
-
 /// 锁列表/Picker 展示模型
 class BriefLockEntity {
   final int id;

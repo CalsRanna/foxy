@@ -124,6 +124,7 @@ class _GameObjectQuestStarterViewState
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增开始物体'),
@@ -134,6 +135,7 @@ class _GameObjectQuestStarterViewState
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑开始物体'),

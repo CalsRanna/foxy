@@ -88,7 +88,6 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-
   Future<List<DbcLocaleFieldValue>> getCharTitleLocales(
     int id,
     DbcLocaleFieldDefinition field,

@@ -1179,17 +1179,16 @@ class _SpellViewState extends State<SpellView> {
     if (effect == 0) return null;
     if (effect == 6) {
       return switch (aura) {
-        13 ||
-        87 ||
-        174 ||
-        237 ||
-        238 => MiscValueFlagPicker(
+        13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
           kSpellSchoolMaskOptions,
         ), // school mask → FlagPicker!
         22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // 单值抗性 → 下拉
-        29 || 137 || 175 || 182 || 212 || 268 => MiscValueDropdown(
-          kStatTypeOptions,
-        ), // 单值属性 → 下拉
+        29 ||
+        137 ||
+        175 ||
+        182 ||
+        212 ||
+        268 => MiscValueDropdown(kStatTypeOptions), // 单值属性 → 下拉
         30 || 98 => null, // 技能ID → 数字
         31 => MiscValueDropdown(kSpeedTypeOptions),
         36 => MiscValueDropdown(kShapeshiftFormOptions),
@@ -1688,11 +1687,14 @@ class _SpellViewState extends State<SpellView> {
 sealed class MiscValueOptions {
   const MiscValueOptions();
 }
+
 class MiscValueNumber extends MiscValueOptions {}
+
 class MiscValueDropdown extends MiscValueOptions {
   final Map<int, String> items;
   const MiscValueDropdown(this.items);
 }
+
 class MiscValueFlagPicker extends MiscValueOptions {
   final List<FlagItem> flags;
   const MiscValueFlagPicker(this.flags);

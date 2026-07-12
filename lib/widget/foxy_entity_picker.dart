@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -76,6 +77,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
     final currentId = int.tryParse(widget.controller.text) ?? 0;
     if (!mounted) return;
     final result = await showShadDialog<int>(
+      opaque: false,
       context: context,
       builder: (context) => _EntityPickerDialog<T>(
         delegate: widget.delegate,
@@ -89,19 +91,30 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return ShadInput(
-      controller: widget.controller,
-      placeholder: Text(widget.placeholder ?? ''),
+    // 可编辑时用户可手改 ID；只读时为纯展示（无搜索按钮）。
+    final readonly = FoxyReadonlyInput.resolve(
+      context,
       readOnly: widget.readOnly,
-      trailing: widget.readOnly
-          ? null
-          : ShadButton.ghost(
-              height: 20,
-              width: 20,
-              padding: EdgeInsets.zero,
-              onPressed: _openDialog,
-              child: Icon(LucideIcons.search, size: 12),
-            ),
+    );
+    return readonly.wrap(
+      ShadInput(
+        controller: widget.controller,
+        placeholder: Text(widget.placeholder ?? ''),
+        readOnly: widget.readOnly,
+        style: readonly.style,
+        decoration: readonly.decoration,
+        mouseCursor: readonly.mouseCursor,
+        showCursor: readonly.showCursor,
+        trailing: widget.readOnly
+            ? null
+            : ShadButton.ghost(
+                height: 20,
+                width: 20,
+                padding: EdgeInsets.zero,
+                onPressed: _openDialog,
+                child: Icon(LucideIcons.search, size: 12),
+              ),
+      ),
     );
   }
 }

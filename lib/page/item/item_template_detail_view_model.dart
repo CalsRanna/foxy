@@ -80,7 +80,10 @@ class ItemTemplateDetailViewModel {
     10,
     (_) => ShadSelectController<int>(),
   );
-  final List<TextEditingController> statValues = List.generate(10, (_) => TextEditingController());
+  final List<TextEditingController> statValues = List.generate(
+    10,
+    (_) => TextEditingController(),
+  );
 
   /// Card 7: Resistances
   final holyResController = TextEditingController();
@@ -172,7 +175,8 @@ class ItemTemplateDetailViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;
@@ -399,7 +403,9 @@ class ItemTemplateDetailViewModel {
       spellCharges: [for (var i = 0; i < 5; i++) _pi(spellCharges[i].text)],
       spellPpmRates: [for (var i = 0; i < 5; i++) _pd(spellPpmRates[i].text)],
       spellCooldowns: [for (var i = 0; i < 5; i++) _pi(spellCooldowns[i].text)],
-      spellCategories: [for (var i = 0; i < 5; i++) _pi(spellCategories[i].text)],
+      spellCategories: [
+        for (var i = 0; i < 5; i++) _pi(spellCategories[i].text),
+      ],
       spellCategoryCooldowns: [
         for (var i = 0; i < 5; i++) _pi(spellCategoryCooldowns[i].text),
       ],

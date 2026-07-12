@@ -92,7 +92,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-
   Future<List<DbcLocaleFieldValue>> getItemSetLocales(
     int id,
     DbcLocaleFieldDefinition field,

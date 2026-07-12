@@ -11,7 +11,8 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['ID', 'locale', 'Title'])
-        .orderBy('ID').limit(kPageSize)
+        .orderBy('ID')
+        .limit(kPageSize)
         .offset(offset)
         .get();
     return results
@@ -52,9 +53,7 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
     return QuestTemplateLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> storeQuestTemplateLocale(
-    QuestTemplateLocaleEntity model,
-  ) async {
+  Future<void> storeQuestTemplateLocale(QuestTemplateLocaleEntity model) async {
     await laconic.table(_table).insert([model.toJson()]);
   }
 

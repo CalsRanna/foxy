@@ -53,10 +53,7 @@ class BriefNpcTextLocaleEntity {
   final int id;
   final String locale;
 
-  const BriefNpcTextLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-  });
+  const BriefNpcTextLocaleEntity({this.id = 0, this.locale = 'zhCN'});
 
   factory BriefNpcTextLocaleEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcTextLocaleEntity(
@@ -66,9 +63,6 @@ class BriefNpcTextLocaleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Locale': locale,
-    };
+    return {'ID': id, 'Locale': locale};
   }
 }

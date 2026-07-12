@@ -5,7 +5,8 @@ import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellItemEnchantmentSoloRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+class SpellItemEnchantmentSoloRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
 
   @override
@@ -108,7 +109,6 @@ class SpellItemEnchantmentSoloRepository with RepositoryMixin, DbcLocaleReposito
       await laconic.table(_table).insert([spellItemEnchantment.toJson()]);
     }
   }
-
 
   Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
     int id,

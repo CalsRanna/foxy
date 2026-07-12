@@ -5,14 +5,14 @@ import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class ItemRandomPropertiesRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+class ItemRandomPropertiesRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_properties';
 
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<List<BriefItemRandomPropertiesEntity>>
-  getBriefItemRandomProperties({
+  Future<List<BriefItemRandomPropertiesEntity>> getBriefItemRandomProperties({
     int page = 1,
     ItemRandomPropertiesFilterEntity? filter,
   }) async {
@@ -98,7 +98,6 @@ class ItemRandomPropertiesRepository with RepositoryMixin, DbcLocaleRepositoryMi
       await laconic.table(_table).insert([property.toJson()]);
     }
   }
-
 
   Future<List<DbcLocaleFieldValue>> getItemRandomPropertiesLocales(
     int id,

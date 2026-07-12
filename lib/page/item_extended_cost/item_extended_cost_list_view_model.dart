@@ -129,10 +129,7 @@ class ItemExtendedCostListViewModel {
     try {
       final filter = _buildFilter();
       final (items, count) = await (
-        _repository.getBriefItemExtendedCosts(
-          page: page.value,
-          filter: filter,
-        ),
+        _repository.getBriefItemExtendedCosts(page: page.value, filter: filter),
         _repository.countItemExtendedCosts(filter: filter),
       ).wait;
       if (token != _refreshToken) return;

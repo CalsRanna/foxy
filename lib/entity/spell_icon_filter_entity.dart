@@ -16,9 +16,6 @@ class SpellIconFilterEntity {
   }
 
   SpellIconFilterEntity copyWith({String? id, String? name}) {
-    return SpellIconFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+    return SpellIconFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

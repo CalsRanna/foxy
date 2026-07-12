@@ -128,7 +128,6 @@ class QuestSortEntity {
   }
 }
 
-
 /// 任务排序列表/Picker 展示模型
 class BriefQuestSortEntity {
   final int id;

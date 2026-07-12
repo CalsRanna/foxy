@@ -126,6 +126,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增区域技能'),
@@ -137,6 +138,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑区域技能'),

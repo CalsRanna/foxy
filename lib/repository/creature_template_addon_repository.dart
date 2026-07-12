@@ -8,13 +8,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   getBriefCreatureTemplateAddons({int page = 1}) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    builder = builder.select([
-      'entry',
-      'path_id',
-      'mount',
-      'emote',
-      'auras',
-    ]);
+    builder = builder.select(['entry', 'path_id', 'mount', 'emote', 'auras']);
     builder = builder.orderBy('entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();

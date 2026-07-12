@@ -162,6 +162,7 @@ class _DisenchantLootTemplateViewState
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增分解掉落'),
@@ -174,6 +175,7 @@ class _DisenchantLootTemplateViewState
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑分解掉落'),

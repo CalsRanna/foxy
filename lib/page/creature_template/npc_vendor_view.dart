@@ -150,6 +150,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增商品'),
@@ -162,6 +163,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑商品'),

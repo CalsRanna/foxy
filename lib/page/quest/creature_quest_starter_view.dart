@@ -125,6 +125,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增开始生物'),
@@ -135,6 +136,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑开始生物'),

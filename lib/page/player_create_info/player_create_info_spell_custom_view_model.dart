@@ -10,8 +10,8 @@ import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
 class PlayerCreateInfoSpellCustomViewModel {
-  final _repository =
-      GetIt.instance.get<PlayerCreateInfoSpellCustomRepository>();
+  final _repository = GetIt.instance
+      .get<PlayerCreateInfoSpellCustomRepository>();
 
   final spells = signal<List<PlayerCreateInfoSpellCustomEntity>>([]);
   int? _race;

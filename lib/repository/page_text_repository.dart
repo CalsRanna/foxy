@@ -31,9 +31,7 @@ class PageTextRepository with RepositoryMixin {
     builder = builder.orderBy('pt.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results
-        .map((e) => BriefPageTextEntity.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<List<PageTextEntity>> getPageTexts() async {
@@ -50,11 +48,7 @@ class PageTextRepository with RepositoryMixin {
         builder = builder.where('ID', filter.id);
       }
       if (filter != null && filter.text.isNotEmpty) {
-        builder = builder.where(
-          'Text',
-          '%${filter.text}%',
-          comparator: 'like',
-        );
+        builder = builder.where('Text', '%${filter.text}%', comparator: 'like');
       }
       return builder.count();
     }

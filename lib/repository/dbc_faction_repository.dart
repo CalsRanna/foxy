@@ -17,11 +17,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
-    builder = builder.select([
-      'ID',
-      'Name_lang_zhCN',
-      'Description_lang_zhCN',
-    ]);
+    builder = builder.select(['ID', 'Name_lang_zhCN', 'Description_lang_zhCN']);
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
@@ -91,7 +87,6 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       await laconic.table(_table).insert([faction.toJson()]);
     }
   }
-
 
   Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
     int id,
