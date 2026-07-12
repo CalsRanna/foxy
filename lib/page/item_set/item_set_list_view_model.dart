@@ -141,6 +141,6 @@ class ItemSetListViewModel {
       entityName: id.toString(),
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

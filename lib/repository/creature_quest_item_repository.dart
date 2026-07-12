@@ -23,7 +23,7 @@ class CreatureQuestItemRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl',
-        (join) => join.on('cq.ItemId', 'itl.ID').on('itl.locale', '"zhCN"'),
+        (join) => join.on('cq.ItemId', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(

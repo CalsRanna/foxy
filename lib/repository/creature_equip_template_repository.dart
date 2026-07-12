@@ -31,7 +31,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl1',
-        (join) => join.on('cet.ItemID1', 'itl1.ID').on('itl1.locale', '"zhCN"'),
+        (join) => join.on('cet.ItemID1', 'itl1.ID').where('itl1.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
@@ -45,7 +45,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl2',
-        (join) => join.on('cet.ItemID2', 'itl2.ID').on('itl2.locale', '"zhCN"'),
+        (join) => join.on('cet.ItemID2', 'itl2.ID').where('itl2.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
@@ -59,7 +59,7 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl3',
-        (join) => join.on('cet.ItemID3', 'itl3.ID').on('itl3.locale', '"zhCN"'),
+        (join) => join.on('cet.ItemID3', 'itl3.ID').where('itl3.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(

@@ -27,7 +27,7 @@ class GossipMenuRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'npc_text_locale AS ntl',
-        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+        (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
       );
     }
     builder = _applyFilter(builder, filter);
@@ -61,7 +61,7 @@ class GossipMenuRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'npc_text_locale AS ntl',
-        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+        (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
       );
     }
     builder = _applyFilter(builder, filter);

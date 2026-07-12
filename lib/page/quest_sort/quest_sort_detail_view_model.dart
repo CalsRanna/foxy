@@ -92,7 +92,7 @@ class QuestSortDetailViewModel {
       entityName: t.sortNameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   void dispose() {

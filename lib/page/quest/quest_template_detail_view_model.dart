@@ -456,7 +456,7 @@ class QuestTemplateDetailViewModel {
       entityName: t.logTitle,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   void dispose() {

@@ -26,7 +26,7 @@ class QuestTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'quest_template_locale AS qtl',
-        (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
+        (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
       );
     }
     builder = _applyFilter(builder, filter);
@@ -64,7 +64,7 @@ class QuestTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS qt');
     builder = builder.leftJoin(
       'quest_template_locale AS qtl',
-      (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
+      (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
     return builder.count();

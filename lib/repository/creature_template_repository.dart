@@ -26,7 +26,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'creature_template_locale AS ctl',
-        (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+        (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
       );
     }
     builder = _applyFilter(builder, filter);
@@ -76,7 +76,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS ct');
     builder = builder.leftJoin(
       'creature_template_locale AS ctl',
-      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+      (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
     return builder.count();

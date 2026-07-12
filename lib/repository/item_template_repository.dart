@@ -29,7 +29,7 @@ class ItemTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(
@@ -87,7 +87,7 @@ class ItemTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS it');
     builder = builder.leftJoin(
       '$_localeTable AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
     );
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -107,7 +107,7 @@ class ItemTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
     builder = builder.leftJoin(

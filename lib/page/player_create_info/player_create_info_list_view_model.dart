@@ -114,7 +114,7 @@ class PlayerCreateInfoListViewModel {
       entityName: '',
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLog(log);
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   PlayerCreateInfoFilterEntity _buildFilter() {
