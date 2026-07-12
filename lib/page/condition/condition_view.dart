@@ -38,18 +38,21 @@ class _ConditionViewState extends State<ConditionView> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) => _buildForm());
+    return Watch((_) {
+      // 复合主键语义列：仅编辑态锁定；新建可填
+      final pkReadOnly = viewModel.isExisting.value;
+      return _buildForm(pkReadOnly: pkReadOnly);
+    });
   }
 
-  Widget _buildForm() {
-    // 来源信息（复合主键字段始终只读；新建时由 createCondition 预填）
+  Widget _buildForm({required bool pkReadOnly}) {
     final sourceTypeInput = FoxyFormItem(
       label: '源类型/关联',
       child: FoxyShadSelect<int>(
         controller: viewModel.sourceTypeOrReferenceIdController,
         options: kConditionSourceTypeLabels,
         placeholder: const Text('SourceTypeOrReferenceId'),
-        enabled: false,
+        enabled: !pkReadOnly,
       ),
     );
     final sourceGroupInput = FoxyFormItem(
@@ -57,7 +60,7 @@ class _ConditionViewState extends State<ConditionView> {
       child: FoxyNumberInput<int>(
         placeholder: 'SourceGroup',
         controller: viewModel.sourceGroupController,
-        readOnly: true,
+        readOnly: pkReadOnly,
       ),
     );
     final sourceEntryInput = FoxyFormItem(
@@ -65,7 +68,7 @@ class _ConditionViewState extends State<ConditionView> {
       child: FoxyNumberInput<int>(
         placeholder: 'SourceEntry',
         controller: viewModel.sourceEntryController,
-        readOnly: true,
+        readOnly: pkReadOnly,
       ),
     );
     final sourceIdInput = FoxyFormItem(
@@ -73,7 +76,7 @@ class _ConditionViewState extends State<ConditionView> {
       child: FoxyNumberInput<int>(
         placeholder: 'SourceId',
         controller: viewModel.sourceIdController,
-        readOnly: true,
+        readOnly: pkReadOnly,
       ),
     );
     final elseGroupInput = FoxyFormItem(
@@ -81,7 +84,7 @@ class _ConditionViewState extends State<ConditionView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ElseGroup',
         controller: viewModel.elseGroupController,
-        readOnly: true,
+        readOnly: pkReadOnly,
       ),
     );
 
@@ -93,7 +96,7 @@ class _ConditionViewState extends State<ConditionView> {
         options: kConditionTypeLabels,
         placeholder: const Text('ConditionTypeOrReference'),
         maxHeight: 320,
-        enabled: false,
+        enabled: !pkReadOnly,
       ),
     );
     final conditionTargetInput = FoxyFormItem(
@@ -101,7 +104,7 @@ class _ConditionViewState extends State<ConditionView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ConditionTarget',
         controller: viewModel.conditionTargetController,
-        readOnly: true,
+        readOnly: pkReadOnly,
       ),
     );
     final negativeConditionInput = FoxyFormItem(
@@ -112,21 +115,22 @@ class _ConditionViewState extends State<ConditionView> {
       ),
     );
 
-    // 参数1/2/3 属于完整主键，已有记录只读；新建时可编辑
+    // 参数1/2/3 属于完整主键：编辑只读，新建可改
     final valueInputs = Watch((_) {
       final type = viewModel.selectedConditionType.value;
       final cfg = conditionValueConfig(type);
+      final pkLocked = viewModel.isExisting.value;
       final value1Input = _buildValue1Input(
         cfg,
         viewModel,
-        readOnly: true,
+        readOnly: pkLocked,
       );
       final value2Input = FoxyFormItem(
         label: cfg.displayLabel2,
         child: FoxyNumberInput<int>(
           placeholder: 'ConditionValue2',
           controller: viewModel.conditionValue2Controller,
-          readOnly: true,
+          readOnly: pkLocked,
         ),
       );
       final value3Input = FoxyFormItem(
@@ -134,7 +138,7 @@ class _ConditionViewState extends State<ConditionView> {
         child: FoxyNumberInput<int>(
           placeholder: 'ConditionValue3',
           controller: viewModel.conditionValue3Controller,
-          readOnly: true,
+          readOnly: pkLocked,
         ),
       );
       return Row(

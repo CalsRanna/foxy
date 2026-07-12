@@ -29,6 +29,10 @@ class ReferenceLootTemplateDetailViewModel {
   final template = signal<LootTemplateEntity?>(null);
   final originalEntry = signal<int?>(null);
   final originalItem = signal<int?>(null);
+
+  /// 复合主键 (Entry, Item) 均为业务语义键：新建可填，编辑只读。
+  bool get isNew => originalItem.value == null;
+
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
@@ -36,10 +40,18 @@ class ReferenceLootTemplateDetailViewModel {
       parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? entry, int? item}) async {
-    if (entry == null || item == null) return;
-    originalEntry.value = entry;
-    originalItem.value = item;
     try {
+      // 新建：不预填伪 Item 号；Entry/Item 由用户指定（Item 用实体选择器）
+      if (entry == null || item == null) {
+        originalEntry.value = null;
+        originalItem.value = null;
+        final blank = const LootTemplateEntity();
+        template.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      originalEntry.value = entry;
+      originalItem.value = item;
       final result = await repository.getLootTemplate(entry, item);
       if (result != null) {
         template.value = result;
@@ -68,16 +80,28 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
+    final oEntry = originalEntry.value;
     final oItem = originalItem.value;
     try {
       final data = _collectFromControllers();
-      if (oItem != null) {
-        await repository.updateLootTemplate(data.entry, oItem, data);
+      if (oItem != null && oEntry != null) {
+        await repository.updateLootTemplate(oEntry, oItem, data);
         template.value = data;
+        originalEntry.value = data.entry;
+        originalItem.value = data.item;
         _logActivity(ActivityActionType.update, data);
       } else {
+        final existed = await repository.getLootTemplate(
+          data.entry,
+          data.item,
+        );
+        if (existed != null) {
+          throw Exception('Entry=${data.entry}, Item=${data.item} 已存在');
+        }
         await repository.storeLootTemplate(data);
         template.value = data;
+        originalEntry.value = data.entry;
+        originalItem.value = data.item;
         _logActivity(ActivityActionType.create, data);
       }
       if (!context.mounted) return;

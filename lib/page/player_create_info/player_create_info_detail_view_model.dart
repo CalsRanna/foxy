@@ -25,6 +25,14 @@ class PlayerCreateInfoDetailViewModel {
   final orientationController = TextEditingController();
 
   final info = signal<PlayerCreateInfoEntity?>(null);
+
+  /// 复合主键 (race, class) 为语义键：新建可改，编辑只读。
+  final isNew = signal(true);
+
+  /// 编辑时用于 WHERE 的原主键
+  int? _origRace;
+  int? _origClass;
+
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
@@ -32,8 +40,19 @@ class PlayerCreateInfoDetailViewModel {
       parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? race, int? playerClass}) async {
-    if (race == null || playerClass == null) return;
     try {
+      if (race == null || playerClass == null) {
+        isNew.value = true;
+        _origRace = null;
+        _origClass = null;
+        final blank = await _repository.createPlayerCreateInfo();
+        info.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      isNew.value = false;
+      _origRace = race;
+      _origClass = playerClass;
       final result = await _repository.getPlayerCreateInfo(race, playerClass);
       if (result == null) return;
       info.value = result;
@@ -59,21 +78,30 @@ class PlayerCreateInfoDetailViewModel {
   }
 
   Future<void> save(BuildContext context) async {
-    final current = info.value;
     try {
       final data = _collect();
-      if (current != null) {
+      if (isNew.value) {
+        final existed = await _repository.getPlayerCreateInfo(
+          data.race,
+          data.class_,
+        );
+        if (existed != null) {
+          throw Exception('该种族/职业组合已存在');
+        }
+        await _repository.storePlayerCreateInfo(data);
+        info.value = data;
+        _origRace = data.race;
+        _origClass = data.class_;
+        isNew.value = false;
+        _logActivity(ActivityActionType.create, data);
+      } else {
         await _repository.updatePlayerCreateInfo(
-          current.race,
-          current.class_,
+          _origRace!,
+          _origClass!,
           data,
         );
         info.value = data;
         _logActivity(ActivityActionType.update, data);
-      } else {
-        await _repository.storePlayerCreateInfo(data);
-        info.value = data;
-        _logActivity(ActivityActionType.create, data);
       }
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
