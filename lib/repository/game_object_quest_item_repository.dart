@@ -8,10 +8,10 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     int gameObjectEntry,
   ) async {
     var builder = laconic.table('$_table AS gq');
-    const fields = [
+    final fields = <String>[
       'gq.*',
       'it.name',
-      'itl.Name AS localeName',
+      if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
       'didi.InventoryIcon0',
     ];
@@ -20,10 +20,12 @@ class GameObjectQuestItemRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('gq.ItemId', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),

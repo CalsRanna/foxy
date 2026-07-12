@@ -15,6 +15,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
       'mingold',
       'maxgold',
     ]);
+    builder = builder.orderBy('entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ConditionListViewModel {
+  int _refreshToken = 0;
   final sourceTypeController = TextEditingController();
   final sourceEntryController = TextEditingController();
   final _repository = GetIt.instance.get<ConditionRepository>();
@@ -24,8 +25,10 @@ class ConditionListViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
       conditions.value = items;
       total.value = count;
     } catch (e) {
@@ -43,9 +46,7 @@ class ConditionListViewModel {
     sourceTypeController.clear();
     sourceEntryController.clear();
     page.value = 1;
-    final (items, count) = await (_search(), _count()).wait;
-    conditions.value = items;
-    total.value = count;
+    await _refresh();
   }
 
   Future<void> paginate(int page) async {
@@ -82,15 +83,7 @@ class ConditionListViewModel {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyCondition(
-        condition.sourceTypeOrReferenceId,
-        condition.sourceGroup,
-        condition.sourceEntry,
-        condition.sourceId,
-        condition.elseGroup,
-        condition.conditionTypeOrReference,
-        condition.conditionTarget,
-      );
+      await _repository.copyCondition(condition.buildCredential());
       _logActivity(ActivityActionType.copy, condition);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -109,15 +102,7 @@ class ConditionListViewModel {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyCondition(
-        condition.sourceTypeOrReferenceId,
-        condition.sourceGroup,
-        condition.sourceEntry,
-        condition.sourceId,
-        condition.elseGroup,
-        condition.conditionTypeOrReference,
-        condition.conditionTarget,
-      );
+      await _repository.destroyCondition(condition.buildCredential());
       _logActivity(ActivityActionType.delete, condition);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -146,8 +131,10 @@ class ConditionListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
       conditions.value = items;
       total.value = count;
     } catch (e) {

@@ -31,6 +31,13 @@ dependencies:
   file_selector: ^1.1.0
 
   collection: any
+
+# Patched mysql_client: connection pool finally-release + TLS certificate validation.
+# Upstream 0.0.27 leaks pool slots on query errors and accepts any server cert.
+dependency_overrides:
+  mysql_client:
+    path: packages/mysql_client
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

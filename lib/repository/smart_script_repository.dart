@@ -27,7 +27,8 @@ class SmartScriptRepository with RepositoryMixin {
     builder = builder
         .orderBy('entryorguid')
         .orderBy('source_type')
-        .orderBy('id');
+        .orderBy('id')
+        .orderBy('link');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

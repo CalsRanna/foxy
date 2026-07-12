@@ -7,6 +7,20 @@ import 'package:laconic/laconic.dart';
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
+  /// acore_world.conditions 完整 10 列主键
+  static const pkColumns = [
+    'SourceTypeOrReferenceId',
+    'SourceGroup',
+    'SourceEntry',
+    'SourceId',
+    'ElseGroup',
+    'ConditionTypeOrReference',
+    'ConditionTarget',
+    'ConditionValue1',
+    'ConditionValue2',
+    'ConditionValue3',
+  ];
+
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
     ConditionFilterEntity? filter,
@@ -27,6 +41,10 @@ class ConditionRepository with RepositoryMixin {
     ];
     var builder = laconic.table(_table).select(fields);
     builder = _applyFilter(builder, filter);
+    // 完整主键排序，保证 LIMIT/OFFSET 稳定
+    for (final col in pkColumns) {
+      builder = builder.orderBy(col);
+    }
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -45,28 +63,50 @@ class ConditionRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<ConditionEntity?> getCondition(
-    int sourceTypeOrReferenceId,
-    int sourceGroup,
-    int sourceEntry,
-    int sourceId,
-    int elseGroup,
-    int conditionTypeOrReference,
-    int conditionTarget,
-  ) async {
-    var results = await laconic
-        .table(_table)
-        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
-        .where('SourceGroup', sourceGroup)
-        .where('SourceEntry', sourceEntry)
-        .where('SourceId', sourceId)
-        .where('ElseGroup', elseGroup)
-        .where('ConditionTypeOrReference', conditionTypeOrReference)
-        .where('ConditionTarget', conditionTarget)
-        .limit(1)
-        .get();
+  Future<ConditionEntity?> getCondition({
+    required int sourceTypeOrReferenceId,
+    required int sourceGroup,
+    required int sourceEntry,
+    required int sourceId,
+    required int elseGroup,
+    required int conditionTypeOrReference,
+    required int conditionTarget,
+    required int conditionValue1,
+    required int conditionValue2,
+    required int conditionValue3,
+  }) async {
+    var results = await _wherePk(
+      laconic.table(_table),
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId,
+      sourceGroup: sourceGroup,
+      sourceEntry: sourceEntry,
+      sourceId: sourceId,
+      elseGroup: elseGroup,
+      conditionTypeOrReference: conditionTypeOrReference,
+      conditionTarget: conditionTarget,
+      conditionValue1: conditionValue1,
+      conditionValue2: conditionValue2,
+      conditionValue3: conditionValue3,
+    ).limit(1).get();
     if (results.isEmpty) return null;
     return ConditionEntity.fromJson(results.first.toMap());
+  }
+
+  Future<ConditionEntity?> getConditionFromCredential(
+    Map<String, dynamic> credential,
+  ) {
+    return getCondition(
+      sourceTypeOrReferenceId: credential['SourceTypeOrReferenceId'] as int,
+      sourceGroup: credential['SourceGroup'] as int,
+      sourceEntry: credential['SourceEntry'] as int,
+      sourceId: credential['SourceId'] as int,
+      elseGroup: credential['ElseGroup'] as int,
+      conditionTypeOrReference: credential['ConditionTypeOrReference'] as int,
+      conditionTarget: credential['ConditionTarget'] as int,
+      conditionValue1: credential['ConditionValue1'] as int? ?? 0,
+      conditionValue2: credential['ConditionValue2'] as int? ?? 0,
+      conditionValue3: credential['ConditionValue3'] as int? ?? 0,
+    );
   }
 
   Future<ConditionEntity> createCondition() async {
@@ -78,105 +118,85 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> updateCondition(
-    int sourceTypeOrReferenceId,
-    int sourceGroup,
-    int sourceEntry,
-    int sourceId,
-    int elseGroup,
-    int conditionTypeOrReference,
-    int conditionTarget,
+    Map<String, dynamic> credential,
     ConditionEntity condition,
   ) async {
     var json = condition.toJson();
-    json.remove('SourceTypeOrReferenceId');
-    json.remove('SourceGroup');
-    json.remove('SourceEntry');
-    json.remove('SourceId');
-    json.remove('ElseGroup');
-    json.remove('ConditionTypeOrReference');
-    json.remove('ConditionTarget');
-    await laconic
-        .table(_table)
-        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
-        .where('SourceGroup', sourceGroup)
-        .where('SourceEntry', sourceEntry)
-        .where('SourceId', sourceId)
-        .where('ElseGroup', elseGroup)
-        .where('ConditionTypeOrReference', conditionTypeOrReference)
-        .where('ConditionTarget', conditionTarget)
-        .update(json);
+    for (final col in pkColumns) {
+      json.remove(col);
+    }
+    await _wherePkFromCredential(
+      laconic.table(_table),
+      credential,
+    ).update(json);
   }
 
-  Future<void> destroyCondition(
-    int sourceTypeOrReferenceId,
-    int sourceGroup,
-    int sourceEntry,
-    int sourceId,
-    int elseGroup,
-    int conditionTypeOrReference,
-    int conditionTarget,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
-        .where('SourceGroup', sourceGroup)
-        .where('SourceEntry', sourceEntry)
-        .where('SourceId', sourceId)
-        .where('ElseGroup', elseGroup)
-        .where('ConditionTypeOrReference', conditionTypeOrReference)
-        .where('ConditionTarget', conditionTarget)
-        .delete();
+  Future<void> destroyCondition(Map<String, dynamic> credential) async {
+    await _wherePkFromCredential(laconic.table(_table), credential).delete();
   }
 
-  Future<void> copyCondition(
-    int sourceTypeOrReferenceId,
-    int sourceGroup,
-    int sourceEntry,
-    int sourceId,
-    int elseGroup,
-    int conditionTypeOrReference,
-    int conditionTarget,
-  ) async {
-    var source = await getCondition(
-      sourceTypeOrReferenceId,
-      sourceGroup,
-      sourceEntry,
-      sourceId,
-      elseGroup,
-      conditionTypeOrReference,
-      conditionTarget,
-    );
+  Future<void> copyCondition(Map<String, dynamic> credential) async {
+    var source = await getConditionFromCredential(credential);
     if (source == null) return;
     var json = source.toJson();
     // Shift ElseGroup (part of PK) so the copy is unique
-    json['ElseGroup'] = elseGroup + 1;
+    json['ElseGroup'] = (credential['ElseGroup'] as int) + 1;
     await laconic.table(_table).insert([json]);
   }
 
   Future<void> saveCondition(ConditionEntity condition) async {
-    var existing = await getCondition(
-      condition.sourceTypeOrReferenceId,
-      condition.sourceGroup,
-      condition.sourceEntry,
-      condition.sourceId,
-      condition.elseGroup,
-      condition.conditionTypeOrReference,
-      condition.conditionTarget,
-    );
+    final credential = condition.buildCredential();
+    var existing = await getConditionFromCredential(credential);
     if (existing != null) {
-      await updateCondition(
-        condition.sourceTypeOrReferenceId,
-        condition.sourceGroup,
-        condition.sourceEntry,
-        condition.sourceId,
-        condition.elseGroup,
-        condition.conditionTypeOrReference,
-        condition.conditionTarget,
-        condition,
-      );
+      await updateCondition(credential, condition);
     } else {
       await storeCondition(condition);
     }
+  }
+
+  QueryBuilder _wherePk(
+    QueryBuilder builder, {
+    required int sourceTypeOrReferenceId,
+    required int sourceGroup,
+    required int sourceEntry,
+    required int sourceId,
+    required int elseGroup,
+    required int conditionTypeOrReference,
+    required int conditionTarget,
+    required int conditionValue1,
+    required int conditionValue2,
+    required int conditionValue3,
+  }) {
+    return builder
+        .where('SourceTypeOrReferenceId', sourceTypeOrReferenceId)
+        .where('SourceGroup', sourceGroup)
+        .where('SourceEntry', sourceEntry)
+        .where('SourceId', sourceId)
+        .where('ElseGroup', elseGroup)
+        .where('ConditionTypeOrReference', conditionTypeOrReference)
+        .where('ConditionTarget', conditionTarget)
+        .where('ConditionValue1', conditionValue1)
+        .where('ConditionValue2', conditionValue2)
+        .where('ConditionValue3', conditionValue3);
+  }
+
+  QueryBuilder _wherePkFromCredential(
+    QueryBuilder builder,
+    Map<String, dynamic> credential,
+  ) {
+    return _wherePk(
+      builder,
+      sourceTypeOrReferenceId: credential['SourceTypeOrReferenceId'] as int,
+      sourceGroup: credential['SourceGroup'] as int,
+      sourceEntry: credential['SourceEntry'] as int,
+      sourceId: credential['SourceId'] as int,
+      elseGroup: credential['ElseGroup'] as int,
+      conditionTypeOrReference: credential['ConditionTypeOrReference'] as int,
+      conditionTarget: credential['ConditionTarget'] as int,
+      conditionValue1: credential['ConditionValue1'] as int? ?? 0,
+      conditionValue2: credential['ConditionValue2'] as int? ?? 0,
+      conditionValue3: credential['ConditionValue3'] as int? ?? 0,
+    );
   }
 
   QueryBuilder _applyFilter(

@@ -14,19 +14,22 @@ class GameObjectTemplateRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS gt');
-    const fields = [
+    final fields = <String>[
       'gt.entry',
       'gt.name',
       'gt.type',
       'gt.size',
-      'gtl.name AS Name',
+      if (localeEnabled) 'gtl.name AS Name',
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      'gameobject_template_locale AS gtl',
-      (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'gameobject_template_locale AS gtl',
+        (join) => join.on('gt.entry', 'gtl.entry').on('gtl.locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('gt.entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -44,11 +47,19 @@ class GameObjectTemplateRepository with RepositoryMixin {
   Future<int> countGameObjectTemplates({
     GameObjectTemplateFilterEntity? filter,
   }) async {
-    final needsLocaleJoin = filter != null && filter.name.isNotEmpty;
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.name.isNotEmpty;
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
         builder = builder.where('entry', filter.entry);
+      }
+      if (filter != null && filter.name.isNotEmpty) {
+        builder = builder.where(
+          'name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }
@@ -163,11 +174,19 @@ class GameObjectTemplateRepository with RepositoryMixin {
       builder = builder.where('gt.entry', filter.entry);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['gt.name', 'gtl.name'],
-        '%${filter.name}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['gt.name', 'gtl.name'],
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'gt.name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      }
     }
     return builder;
   }

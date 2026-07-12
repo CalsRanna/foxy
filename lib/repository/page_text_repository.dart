@@ -14,18 +14,21 @@ class PageTextRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS pt');
-    const fields = [
+    final fields = <String>[
       'pt.ID',
       'pt.Text',
-      'ptl.Text AS localeText',
+      if (localeEnabled) 'ptl.Text AS localeText',
       'pt.NextPageID',
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      '$_localeTable AS ptl',
-      (join) => join.on('pt.ID', 'ptl.ID').on('ptl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        '$_localeTable AS ptl',
+        (join) => join.on('pt.ID', 'ptl.ID').on('ptl.locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('pt.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -39,11 +42,19 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
-    final needsLocaleJoin = filter != null && filter.text.isNotEmpty;
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.text.isNotEmpty;
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.id.isNotEmpty) {
         builder = builder.where('ID', filter.id);
+      }
+      if (filter != null && filter.text.isNotEmpty) {
+        builder = builder.where(
+          'Text',
+          '%${filter.text}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }
@@ -146,11 +157,19 @@ class PageTextRepository with RepositoryMixin {
       builder = builder.where('pt.ID', filter.id);
     }
     if (filter.text.isNotEmpty) {
-      builder = builder.whereAny(
-        ['pt.Text', 'ptl.Text'],
-        '%${filter.text}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['pt.Text', 'ptl.Text'],
+          '%${filter.text}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'pt.Text',
+          '%${filter.text}%',
+          comparator: 'like',
+        );
+      }
     }
     return builder;
   }

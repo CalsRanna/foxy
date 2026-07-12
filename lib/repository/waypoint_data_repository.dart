@@ -17,6 +17,7 @@ class WaypointDataRepository with RepositoryMixin {
     builder = builder.select(['id', 'COUNT(point) as points']);
     builder = builder.groupBy('id');
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

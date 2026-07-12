@@ -39,6 +39,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       (join) => join.on('ds.SpellIconID', 'dsi.ID'),
     );
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();

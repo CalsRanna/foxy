@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
@@ -39,7 +40,7 @@ class GossipMenuOptionViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> search(int menuId) async {
     currentMenuId.value = menuId;
@@ -175,24 +176,30 @@ class GossipMenuOptionViewModel {
 
   GossipMenuOptionEntity _collectFromControllers() {
     return GossipMenuOptionEntity(
-      menuId: int.tryParse(menuIdController.text) ?? 0,
-      optionId: int.tryParse(optionIdController.text) ?? 0,
+      menuId: _pi(menuIdController.text, 'MenuID'),
+      optionId: _pi(optionIdController.text, 'OptionID'),
       optionIcon: optionIconController.value.isNotEmpty
           ? optionIconController.value.first
           : 0,
       optionText: optionTextController.text,
-      optionBroadcastTextId: _pi(optionBroadcastTextIdController.text),
+      optionBroadcastTextId: _pi(
+        optionBroadcastTextIdController.text,
+        'OptionBroadcastTextID',
+      ),
       optionType: optionTypeController.value.isNotEmpty
           ? optionTypeController.value.first
           : 0,
       optionNpcFlag: parseFlagValue(optionNpcFlagController.text),
-      boxCoded: int.tryParse(boxCodedController.text) ?? 0,
-      boxMoney: int.tryParse(boxMoneyController.text) ?? 0,
+      boxCoded: _pi(boxCodedController.text, 'BoxCoded'),
+      boxMoney: _pi(boxMoneyController.text, 'BoxMoney'),
       boxText: boxTextController.text,
-      boxBroadcastTextId: _pi(boxBroadcastTextIdController.text),
-      actionMenuId: _pi(actionMenuIdController.text),
-      actionPoiId: int.tryParse(actionPoiIdController.text) ?? 0,
-      verifiedBuild: int.tryParse(verifiedBuildController.text) ?? 0,
+      boxBroadcastTextId: _pi(
+        boxBroadcastTextIdController.text,
+        'BoxBroadcastTextID',
+      ),
+      actionMenuId: _pi(actionMenuIdController.text, 'ActionMenuID'),
+      actionPoiId: _pi(actionPoiIdController.text, 'ActionPoiID'),
+      verifiedBuild: _pi(verifiedBuildController.text, 'VerifiedBuild'),
     );
   }
 }

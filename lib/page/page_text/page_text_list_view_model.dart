@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class PageTextListViewModel {
+  int _refreshToken = 0;
   final idController = TextEditingController();
   final textController = TextEditingController();
   final _repository = GetIt.instance.get<PageTextRepository>();
@@ -24,6 +25,7 @@ class PageTextListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefPageTexts(
@@ -32,6 +34,7 @@ class PageTextListViewModel {
         ),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
+      if (token != _refreshToken) return;
       pages.value = items;
       total.value = count;
     } catch (e) {
@@ -127,6 +130,7 @@ class PageTextListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefPageTexts(
@@ -135,6 +139,7 @@ class PageTextListViewModel {
         ),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
+      if (token != _refreshToken) return;
       pages.value = items;
       total.value = count;
     } catch (e) {

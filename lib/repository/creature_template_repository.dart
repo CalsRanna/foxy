@@ -14,21 +14,23 @@ class CreatureTemplateRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS ct');
-    const fields = [
+    final fields = <String>[
       'ct.entry',
       'ct.name',
       'ct.subname',
       'ct.minlevel',
       'ct.maxlevel',
-      'ctl.Name',
-      'ctl.Title',
+      if (localeEnabled) ...['ctl.Name', 'ctl.Title'],
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      'creature_template_locale AS ctl',
-      (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'creature_template_locale AS ctl',
+        (join) => join.on('ct.entry', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ct.entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -47,12 +49,27 @@ class CreatureTemplateRepository with RepositoryMixin {
     CreatureTemplateFilterEntity? filter,
   }) async {
     final needsLocaleJoin =
+        localeEnabled &&
         filter != null &&
         (filter.name.isNotEmpty || filter.subName.isNotEmpty);
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.entry.isNotEmpty) {
         builder = builder.where('entry', filter.entry);
+      }
+      if (filter != null && filter.name.isNotEmpty) {
+        builder = builder.where(
+          'name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      }
+      if (filter != null && filter.subName.isNotEmpty) {
+        builder = builder.where(
+          'subname',
+          '%${filter.subName}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }
@@ -166,18 +183,34 @@ class CreatureTemplateRepository with RepositoryMixin {
       builder = builder.where('ct.entry', filter.entry);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['ct.name', 'ctl.Name'],
-        '%${filter.name}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['ct.name', 'ctl.Name'],
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'ct.name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      }
     }
     if (filter.subName.isNotEmpty) {
-      builder = builder.whereAny(
-        ['ct.subname', 'ctl.Title'],
-        '%${filter.subName}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['ct.subname', 'ctl.Title'],
+          '%${filter.subName}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'ct.subname',
+          '%${filter.subName}%',
+          comparator: 'like',
+        );
+      }
     }
     return builder;
   }

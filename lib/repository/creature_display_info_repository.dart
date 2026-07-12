@@ -23,6 +23,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     ]);
     builder = _joinModelData(builder);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('cdi.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

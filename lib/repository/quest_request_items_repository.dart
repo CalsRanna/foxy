@@ -15,6 +15,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
       'EmoteOnIncomplete',
       'CompletionText',
     ]);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

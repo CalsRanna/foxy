@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class TalentListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final _repository = GetIt.instance.get<TalentRepository>();
 
@@ -62,11 +63,13 @@ class TalentListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefTalents(),
         _repository.countTalents(),
       ).wait;
+      if (token != _refreshToken) return;
       talents.value = items;
       total.value = count;
     } catch (e) {
@@ -108,12 +111,14 @@ class TalentListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefTalents(page: page.value, filter: filter),
         _repository.countTalents(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       talents.value = items;
       total.value = count;
     } catch (e) {

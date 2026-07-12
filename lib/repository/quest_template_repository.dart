@@ -12,22 +12,25 @@ class QuestTemplateRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS qt');
-    const fields = [
+    final fields = <String>[
       'qt.ID',
       'qt.LogTitle',
-      'qtl.Title',
+      if (localeEnabled) 'qtl.Title',
       'qt.QuestDescription',
-      'qtl.Details',
+      if (localeEnabled) 'qtl.Details',
       'qt.QuestType',
       'qt.QuestLevel',
       'qt.MinLevel',
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      'quest_template_locale AS qtl',
-      (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'quest_template_locale AS qtl',
+        (join) => join.on('qt.ID', 'qtl.ID').on('qtl.locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('qt.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -41,12 +44,20 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
-    final needsLocaleJoin = filter != null && filter.title.isNotEmpty;
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.title.isNotEmpty;
     if (!needsLocaleJoin) {
       var builder = laconic.table(_table);
       if (filter != null && filter.id.isNotEmpty) {
         var idValue = int.tryParse(filter.id) ?? 0;
         builder = builder.where('ID', idValue);
+      }
+      if (filter != null && filter.title.isNotEmpty) {
+        builder = builder.where(
+          'LogTitle',
+          '%${filter.title}%',
+          comparator: 'like',
+        );
       }
       return builder.count();
     }
@@ -127,11 +138,19 @@ class QuestTemplateRepository with RepositoryMixin {
       builder = builder.where('qt.ID', idValue);
     }
     if (filter.title.isNotEmpty) {
-      builder = builder.whereAny(
-        ['qt.LogTitle', 'qtl.Title'],
-        '%${filter.title}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['qt.LogTitle', 'qtl.Title'],
+          '%${filter.title}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'qt.LogTitle',
+          '%${filter.title}%',
+          comparator: 'like',
+        );
+      }
     }
     return builder;
   }

@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatDistributionListViewModel {
+  int _refreshToken = 0;
   final idController = TextEditingController();
   final _repository = GetIt.instance
       .get<ScalingStatDistributionSoloRepository>();
@@ -74,12 +75,14 @@ class ScalingStatDistributionListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final filter = ScalingStatDistributionFilterEntity();
       final (items, count) = await (
         _repository.getBriefScalingStatDistributions(page: 1, filter: filter),
         _repository.countScalingStatDistributions(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       distributions.value = items;
       total.value = count;
     } catch (e) {
@@ -123,6 +126,7 @@ class ScalingStatDistributionListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
@@ -132,6 +136,7 @@ class ScalingStatDistributionListViewModel {
         ),
         _repository.countScalingStatDistributions(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       distributions.value = items;
       total.value = count;
     } catch (e) {

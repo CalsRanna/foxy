@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ReferenceLootTemplateListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final repository = LootTemplateRepository(LootTableType.reference);
@@ -24,8 +25,10 @@ class ReferenceLootTemplateListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_searchEntries(), _countEntries()).wait;
+      if (token != _refreshToken) return;
       templates.value = items;
       total.value = count;
     } catch (e) {
@@ -43,9 +46,7 @@ class ReferenceLootTemplateListViewModel {
     entryController.clear();
     nameController.clear();
     page.value = 1;
-    final (items, count) = await (_searchEntries(), _countEntries()).wait;
-    templates.value = items;
-    total.value = count;
+    await _refresh();
   }
 
   Future<void> paginate(int page) async {
@@ -138,8 +139,10 @@ class ReferenceLootTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_searchEntries(), _countEntries()).wait;
+      if (token != _refreshToken) return;
       templates.value = items;
       total.value = count;
     } catch (e) {

@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class GossipMenuListViewModel {
+  int _refreshToken = 0;
   final _repository = GetIt.instance.get<GossipMenuRepository>();
 
   final menuIdController = TextEditingController();
@@ -23,11 +24,13 @@ class GossipMenuListViewModel {
   final total = signal(0);
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefGossipMenus(),
         _repository.countGossipMenus(),
       ).wait;
+      if (token != _refreshToken) return;
       menus.value = items;
       total.value = count;
     } catch (e) {
@@ -109,12 +112,14 @@ class GossipMenuListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefGossipMenus(filter: filter, page: page.value),
         _repository.countGossipMenus(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       menus.value = items;
       total.value = count;
     } catch (e) {

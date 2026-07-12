@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ItemExtendedCostListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
@@ -73,12 +74,14 @@ class ItemExtendedCostListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final filter = ItemExtendedCostFilterEntity();
       final (items, count) = await (
         _repository.getBriefItemExtendedCosts(page: 1, filter: filter),
         _repository.countItemExtendedCosts(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       costs.value = items;
       total.value = count;
     } catch (e) {
@@ -122,6 +125,7 @@ class ItemExtendedCostListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
@@ -131,6 +135,7 @@ class ItemExtendedCostListViewModel {
         ),
         _repository.countItemExtendedCosts(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       costs.value = items;
       total.value = count;
     } catch (e) {

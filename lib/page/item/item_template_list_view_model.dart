@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -42,11 +43,13 @@ class ItemTemplateListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefItemTemplates(),
         _repository.countItemTemplates(),
       ).wait;
+      if (token != _refreshToken) return;
       templates.value = items;
       total.value = count;
     } catch (e) {
@@ -179,8 +182,10 @@ class ItemTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_fetchItems(), _count()).wait;
+      if (token != _refreshToken) return;
       templates.value = items;
       total.value = count;
     } catch (e) {

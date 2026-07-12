@@ -7,17 +7,24 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
     int questId,
   ) async {
-    const fields = ['cqe.id', 'cqe.quest', 'ct.name', 'ctl.Name'];
+    final fields = <String>[
+      'cqe.id',
+      'cqe.quest',
+      'ct.name',
+      if (localeEnabled) 'ctl.Name',
+    ];
     var builder = laconic.table('$_table AS cqe');
     builder = builder.select(fields);
     builder = builder.leftJoin(
       'creature_template AS ct',
       (join) => join.on('cqe.id', 'ct.entry'),
     );
-    builder = builder.leftJoin(
-      'creature_template_locale AS ctl',
-      (join) => join.on('cqe.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'creature_template_locale AS ctl',
+        (join) => join.on('cqe.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.where('cqe.quest', questId);
     final results = await builder.get();
     return results

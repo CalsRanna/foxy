@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -24,7 +25,7 @@ class SpellBonusDataViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getSpellBonusData(spellId.value);

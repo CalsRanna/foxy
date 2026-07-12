@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
-import 'package:get_it/get_it.dart';
 
 @RoutePage()
 class SmartScriptDetailPage extends StatefulWidget {
@@ -25,29 +23,17 @@ class SmartScriptDetailPage extends StatefulWidget {
 }
 
 class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
-  final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(
-      entryOrGuid: widget.entryOrGuid,
-      sourceType: widget.sourceType,
-      id: widget.id,
-      link: widget.link,
-    );
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     var tabs = [const Text('脚本详情')];
-    var tabContents = [const SmartScriptView()];
+    var tabContents = [
+      SmartScriptView(
+        entryOrGuid: widget.entryOrGuid,
+        sourceType: widget.sourceType,
+        id: widget.id,
+        link: widget.link,
+      ),
+    ];
     var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
 
     return ListView(

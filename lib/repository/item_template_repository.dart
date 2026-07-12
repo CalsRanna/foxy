@@ -13,7 +13,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS it');
-    const fields = [
+    final fields = <String>[
       'it.entry',
       'it.name',
       'it.Quality',
@@ -22,19 +22,22 @@ class ItemTemplateRepository with RepositoryMixin {
       'it.InventoryType',
       'it.ItemLevel',
       'it.RequiredLevel',
-      'itl.Name AS localeName',
+      if (localeEnabled) 'itl.Name AS localeName',
       'didi.InventoryIcon0',
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      '$_localeTable AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        '$_localeTable AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('it.entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -49,6 +52,7 @@ class ItemTemplateRepository with RepositoryMixin {
 
   Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
     final needsLocaleJoin =
+        localeEnabled &&
         filter != null &&
         (filter.name.isNotEmpty || filter.description.isNotEmpty);
     if (!needsLocaleJoin) {
@@ -62,6 +66,20 @@ class ItemTemplateRepository with RepositoryMixin {
         }
         if (filter.subclass >= 0) {
           builder = builder.where('subclass', filter.subclass);
+        }
+        if (filter.name.isNotEmpty) {
+          builder = builder.where(
+            'name',
+            '%${filter.name}%',
+            comparator: 'like',
+          );
+        }
+        if (filter.description.isNotEmpty) {
+          builder = builder.where(
+            'description',
+            '%${filter.description}%',
+            comparator: 'like',
+          );
         }
       }
       return builder.count();
@@ -77,17 +95,21 @@ class ItemTemplateRepository with RepositoryMixin {
 
   Future<ItemTemplateEntity?> getItemTemplate(int entry) async {
     var builder = laconic.table('$_table AS it');
-    const fields = [
+    final fields = <String>[
       'it.*',
-      'itl.Name AS localeName',
-      'itl.Description AS localeDescription',
+      if (localeEnabled) ...[
+        'itl.Name AS localeName',
+        'itl.Description AS localeDescription',
+      ],
       'didi.InventoryIcon0',
     ];
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      '$_localeTable AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        '$_localeTable AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
@@ -159,18 +181,34 @@ class ItemTemplateRepository with RepositoryMixin {
       builder = builder.where('it.entry', filter.entry);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.name', 'itl.Name'],
-        '%${filter.name}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['it.name', 'itl.Name'],
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'it.name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      }
     }
     if (filter.description.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.description', 'itl.Description'],
-        '%${filter.description}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['it.description', 'itl.Description'],
+          '%${filter.description}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'it.description',
+          '%${filter.description}%',
+          comparator: 'like',
+        );
+      }
     }
     if (filter.classId >= 0) {
       builder = builder.where('it.class', filter.classId);

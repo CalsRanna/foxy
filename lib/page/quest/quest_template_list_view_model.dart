@@ -14,6 +14,7 @@ import 'package:signals/signals.dart';
 
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
 class QuestTemplateListViewModel {
+  int _refreshToken = 0;
   final _repository = GetIt.instance.get<QuestTemplateRepository>();
 
   final idController = TextEditingController();
@@ -104,12 +105,14 @@ class QuestTemplateListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefQuestTemplates(filter: filter, page: page.value),
         _repository.countQuestTemplates(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       templates.value = items;
       total.value = count;
     } catch (e) {

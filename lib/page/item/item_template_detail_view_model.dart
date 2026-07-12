@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -170,8 +171,8 @@ class ItemTemplateDetailViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? entry}) async {
     if (entry == null || entry <= 0) return;

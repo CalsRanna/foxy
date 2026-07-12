@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class CurrencyTypeListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
 
@@ -62,11 +63,13 @@ class CurrencyTypeListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefCurrencyTypes(),
         _repository.countCurrencyTypes(),
       ).wait;
+      if (token != _refreshToken) return;
       currencyTypes.value = items;
       total.value = count;
     } catch (e) {
@@ -108,12 +111,14 @@ class CurrencyTypeListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefCurrencyTypes(page: page.value, filter: filter),
         _repository.countCurrencyTypes(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       currencyTypes.value = items;
       total.value = count;
     } catch (e) {

@@ -14,6 +14,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'ModelName0', 'InventoryIcon0']);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

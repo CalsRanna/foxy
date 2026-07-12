@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -17,7 +18,9 @@ class NpcTextViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   final _controllers = <String, TextEditingController>{};
   final _emoteControllers = <String, TextEditingController>{};
@@ -160,14 +163,14 @@ class NpcTextViewModel {
 
   NpcTextEntity _collectMainFromControllers() {
     return NpcTextEntity(
-      id: int.tryParse(controllerOf('ID').text) ?? 0,
-      verifiedBuild: int.tryParse(controllerOf('VerifiedBuild').text) ?? 0,
+      id: _pi(controllerOf('ID').text, 'ID'),
+      verifiedBuild: _pi(controllerOf('VerifiedBuild').text, 'VerifiedBuild'),
       entries: List.generate(8, (n) {
         return NpcTextEntryEntity(
           lang: controllerOf('lang$n').text.isEmpty
               ? '0'
               : controllerOf('lang$n').text,
-          probability: double.tryParse(controllerOf('Probability$n').text) ?? 0,
+          probability: _pd(controllerOf('Probability$n').text, 'Probability$n'),
           text0: controllerOf('text${n}_0').text,
           text1: controllerOf('text${n}_1').text,
           broadcastTextId: _pi(broadcastControllerOf(n).text),

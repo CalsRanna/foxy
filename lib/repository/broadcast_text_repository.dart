@@ -18,6 +18,7 @@ class BroadcastTextRepository with RepositoryMixin {
       "COALESCE(NULLIF(MaleText, ''), FemaleText) as display_text",
     ]);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) {

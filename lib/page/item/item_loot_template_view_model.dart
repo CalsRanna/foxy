@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -33,8 +34,8 @@ class ItemLootTemplateViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await repository.getBriefLootTemplates(entry.value);

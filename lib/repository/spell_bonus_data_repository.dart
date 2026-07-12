@@ -17,6 +17,7 @@ class SpellBonusDataRepository with RepositoryMixin {
       'ap_dot_bonus',
       'comments',
     ]);
+    builder = builder.orderBy('entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

@@ -34,7 +34,7 @@ class SpellRankRepository with RepositoryMixin {
       (join) => join.on('sr.spell_id', 'ds.ID'),
     );
     builder = builder.where('sr.first_spell_id', firstSpellId);
-    builder = builder.orderBy('sr.rank');
+    builder = builder.orderBy('sr.`rank`');
     var results = await builder.get();
     return results.map((e) => SpellRankEntity.fromJson(e.toMap())).toList();
   }
@@ -43,7 +43,7 @@ class SpellRankRepository with RepositoryMixin {
     var results = await laconic
         .table(_table)
         .where('first_spell_id', firstSpellId)
-        .where('rank', rank)
+        .where('`rank`', rank)
         .limit(1)
         .get();
     if (results.isEmpty) return null;

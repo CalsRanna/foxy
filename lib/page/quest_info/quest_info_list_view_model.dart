@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestInfoListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final nameController = TextEditingController();
   final _repository = GetIt.instance.get<QuestInfoRepository>();
@@ -78,12 +79,14 @@ class QuestInfoListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final filter = QuestInfoFilterEntity();
       final (items, count) = await (
         _repository.getBriefQuestInfos(page: 1, filter: filter),
         _repository.countQuestInfos(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       infos.value = items;
       total.value = count;
     } catch (e) {
@@ -129,12 +132,14 @@ class QuestInfoListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefQuestInfos(page: page.value, filter: filter),
         _repository.countQuestInfos(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       infos.value = items;
       total.value = count;
     } catch (e) {

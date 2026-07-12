@@ -7,17 +7,24 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   Future<List<BriefCreatureQuestStarterEntity>> getBriefCreatureQuestStarters(
     int questId,
   ) async {
-    const fields = ['cqs.id', 'cqs.quest', 'ct.name', 'ctl.Name'];
+    final fields = <String>[
+      'cqs.id',
+      'cqs.quest',
+      'ct.name',
+      if (localeEnabled) 'ctl.Name',
+    ];
     var builder = laconic.table('$_table AS cqs');
     builder = builder.select(fields);
     builder = builder.leftJoin(
       'creature_template AS ct',
       (join) => join.on('cqs.id', 'ct.entry'),
     );
-    builder = builder.leftJoin(
-      'creature_template_locale AS ctl',
-      (join) => join.on('cqs.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'creature_template_locale AS ctl',
+        (join) => join.on('cqs.id', 'ctl.entry').on('ctl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.where('cqs.quest', questId);
     final results = await builder.get();
     return results

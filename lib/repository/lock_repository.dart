@@ -14,6 +14,7 @@ class LockRepository with RepositoryMixin {
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Type0', 'Index0', 'Skill0']);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefLockEntity.fromJson(e.toMap())).toList();

@@ -15,6 +15,7 @@ class NpcTextRepository with RepositoryMixin {
     const fields = ['ID', 'text0_0', 'text0_1'];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

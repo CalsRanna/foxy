@@ -20,6 +20,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     const fields = ['ID', 'SortName_lang_zhCN'];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

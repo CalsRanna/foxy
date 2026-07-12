@@ -13,6 +13,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('race').orderBy('`class`');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

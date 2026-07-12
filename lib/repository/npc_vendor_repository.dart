@@ -6,10 +6,10 @@ class NpcVendorRepository with RepositoryMixin {
 
   Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(int entry) async {
     var builder = laconic.table('$_table AS nv');
-    const fields = [
+    final fields = <String>[
       'nv.*',
       'it.name',
-      'itl.Name AS localeName',
+      if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
       'didi.InventoryIcon0',
     ];
@@ -18,10 +18,12 @@ class NpcVendorRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('nv.item', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),

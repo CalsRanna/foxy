@@ -10,7 +10,7 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['ID', 'locale', 'CompletionText'])
-        .limit(kPageSize)
+        .orderBy('ID').limit(kPageSize)
         .offset(offset)
         .get();
     return results

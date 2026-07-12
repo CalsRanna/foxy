@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class GlyphPropertyListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
 
@@ -73,12 +74,14 @@ class GlyphPropertyListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final filter = GlyphPropertyFilterEntity();
       final (items, count) = await (
         _repository.getBriefGlyphProperties(page: 1, filter: filter),
         _repository.countGlyphProperties(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       properties.value = items;
       total.value = count;
     } catch (e) {
@@ -120,12 +123,14 @@ class GlyphPropertyListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefGlyphProperties(page: page.value, filter: filter),
         _repository.countGlyphProperties(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       properties.value = items;
       total.value = count;
     } catch (e) {

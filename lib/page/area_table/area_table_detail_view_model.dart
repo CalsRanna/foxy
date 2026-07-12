@@ -6,6 +6,7 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -46,8 +47,8 @@ class AreaTableDetailViewModel {
   /// 保存到数据库
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {

@@ -12,24 +12,26 @@ class GossipMenuRepository with RepositoryMixin {
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS gm');
-    const fields = [
+    final fields = <String>[
       'gm.MenuID',
       'gm.TextID',
       'nt.text0_0',
       'nt.text0_1',
-      'ntl.Text0_0',
-      'ntl.Text0_1',
+      if (localeEnabled) ...['ntl.Text0_0', 'ntl.Text0_1'],
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
       'npc_text AS nt',
       (join) => join.on('gm.TextID', 'nt.ID'),
     );
-    builder = builder.leftJoin(
-      'npc_text_locale AS ntl',
-      (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'npc_text_locale AS ntl',
+        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('gm.MenuID').orderBy('gm.TextID');
     builder = builder.limit(kPageSize).offset(offset);
     final results = await builder.get();
     return results
@@ -56,10 +58,12 @@ class GossipMenuRepository with RepositoryMixin {
       'npc_text AS nt',
       (join) => join.on('gm.TextID', 'nt.ID'),
     );
-    builder = builder.leftJoin(
-      'npc_text_locale AS ntl',
-      (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'npc_text_locale AS ntl',
+        (join) => join.on('gm.TextID', 'ntl.ID').on('ntl.Locale', '"zhCN"'),
+      );
+    }
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
@@ -151,8 +155,11 @@ class GossipMenuRepository with RepositoryMixin {
       builder = builder.where('gm.MenuID', filter.menuId);
     }
     if (filter.text.isNotEmpty) {
+      final textColumns = localeEnabled
+          ? ['nt.text0_0', 'nt.text0_1', 'ntl.Text0_0', 'ntl.Text0_1']
+          : ['nt.text0_0', 'nt.text0_1'];
       builder = builder.whereAny(
-        ['nt.text0_0', 'nt.text0_1', 'ntl.Text0_0', 'ntl.Text0_1'],
+        textColumns,
         '%${filter.text}%',
         comparator: 'like',
       );
