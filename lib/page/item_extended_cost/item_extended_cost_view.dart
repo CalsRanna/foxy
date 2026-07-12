@@ -36,7 +36,7 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -44,21 +44,21 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '荣誉点数',
       child: FoxyNumberInput<int>(
         placeholder: 'HonorPoints',
-        controller: viewModel.honorPointsController,
+        fieldController: viewModel.honorPointsController,
       ),
     );
     final arenaPointsInput = FoxyFormItem(
       label: '竞技场点数',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaPoints',
-        controller: viewModel.arenaPointsController,
+        fieldController: viewModel.arenaPointsController,
       ),
     );
     final arenaBracketInput = FoxyFormItem(
       label: '竞技场等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ArenaBracket',
-        controller: viewModel.arenaBracketController,
+        fieldController: viewModel.arenaBracketController,
       ),
     );
 
@@ -67,14 +67,14 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '所需评级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredArenaRating',
-        controller: viewModel.requiredArenaRatingController,
+        fieldController: viewModel.requiredArenaRatingController,
       ),
     );
     final itemPurchaseGroupInput = FoxyFormItem(
       label: '购买组',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemPurchaseGroup',
-        controller: viewModel.itemPurchaseGroupController,
+        fieldController: viewModel.itemPurchaseGroupController,
       ),
     );
 
@@ -83,70 +83,70 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       label: '物品 ID 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID0',
-        controller: viewModel.itemID0Controller,
+        fieldController: viewModel.itemID0Controller,
       ),
     );
     final itemCount0Input = FoxyFormItem(
       label: '物品计数 0',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount0',
-        controller: viewModel.itemCount0Controller,
+        fieldController: viewModel.itemCount0Controller,
       ),
     );
     final itemID1Input = FoxyFormItem(
       label: '物品 ID 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID1',
-        controller: viewModel.itemID1Controller,
+        fieldController: viewModel.itemID1Controller,
       ),
     );
     final itemCount1Input = FoxyFormItem(
       label: '物品计数 1',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount1',
-        controller: viewModel.itemCount1Controller,
+        fieldController: viewModel.itemCount1Controller,
       ),
     );
     final itemID2Input = FoxyFormItem(
       label: '物品 ID 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID2',
-        controller: viewModel.itemID2Controller,
+        fieldController: viewModel.itemID2Controller,
       ),
     );
     final itemCount2Input = FoxyFormItem(
       label: '物品计数 2',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount2',
-        controller: viewModel.itemCount2Controller,
+        fieldController: viewModel.itemCount2Controller,
       ),
     );
     final itemID3Input = FoxyFormItem(
       label: '物品 ID 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID3',
-        controller: viewModel.itemID3Controller,
+        fieldController: viewModel.itemID3Controller,
       ),
     );
     final itemCount3Input = FoxyFormItem(
       label: '物品计数 3',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount3',
-        controller: viewModel.itemCount3Controller,
+        fieldController: viewModel.itemCount3Controller,
       ),
     );
     final itemID4Input = FoxyFormItem(
       label: '物品 ID 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemID4',
-        controller: viewModel.itemID4Controller,
+        fieldController: viewModel.itemID4Controller,
       ),
     );
     final itemCount4Input = FoxyFormItem(
       label: '物品计数 4',
       child: FoxyNumberInput<int>(
         placeholder: 'ItemCount4',
-        controller: viewModel.itemCount4Controller,
+        fieldController: viewModel.itemCount4Controller,
       ),
     );
 

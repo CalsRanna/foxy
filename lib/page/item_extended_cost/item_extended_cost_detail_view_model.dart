@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,33 +15,47 @@ class ItemExtendedCostDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = TextEditingController();
-  final honorPointsController = TextEditingController();
-  final arenaPointsController = TextEditingController();
-  final arenaBracketController = TextEditingController();
-  final requiredArenaRatingController = TextEditingController();
-  final itemPurchaseGroupController = TextEditingController();
+  final idController = IntFieldController();
+  final honorPointsController = IntFieldController();
+  final arenaPointsController = IntFieldController();
+  final arenaBracketController = IntFieldController();
+  final requiredArenaRatingController = IntFieldController();
+  final itemPurchaseGroupController = IntFieldController();
 
   /// ItemID
-  final itemID0Controller = TextEditingController();
-  final itemID1Controller = TextEditingController();
-  final itemID2Controller = TextEditingController();
-  final itemID3Controller = TextEditingController();
-  final itemID4Controller = TextEditingController();
+  final itemID0Controller = IntFieldController();
+  final itemID1Controller = IntFieldController();
+  final itemID2Controller = IntFieldController();
+  final itemID3Controller = IntFieldController();
+  final itemID4Controller = IntFieldController();
 
   /// ItemCount
-  final itemCount0Controller = TextEditingController();
-  final itemCount1Controller = TextEditingController();
-  final itemCount2Controller = TextEditingController();
-  final itemCount3Controller = TextEditingController();
-  final itemCount4Controller = TextEditingController();
+  final itemCount0Controller = IntFieldController();
+  final itemCount1Controller = IntFieldController();
+  final itemCount2Controller = IntFieldController();
+  final itemCount3Controller = IntFieldController();
+  final itemCount4Controller = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    honorPointsController,
+    arenaPointsController,
+    arenaBracketController,
+    requiredArenaRatingController,
+    itemPurchaseGroupController,
+    itemID0Controller,
+    itemID1Controller,
+    itemID2Controller,
+    itemID3Controller,
+    itemID4Controller,
+    itemCount0Controller,
+    itemCount1Controller,
+    itemCount2Controller,
+    itemCount3Controller,
+    itemCount4Controller,
+  ];
 
   final cost = signal(ItemExtendedCostEntity());
-
-  /// 保存到数据库
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -50,7 +63,7 @@ class ItemExtendedCostDetailViewModel {
       final existed = await _repository.getItemExtendedCost(t.id);
       if (existed == null) {
         final id = await _repository.storeItemExtendedCost(t);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateItemExtendedCost(t);
       }
@@ -77,22 +90,22 @@ class ItemExtendedCostDetailViewModel {
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
   ItemExtendedCostEntity _collectFromControllers() {
     return ItemExtendedCostEntity(
-      id: _pi(idController.text),
-      honorPoints: _pi(honorPointsController.text),
-      arenaPoints: _pi(arenaPointsController.text),
-      arenaBracket: _pi(arenaBracketController.text),
-      requiredArenaRating: _pi(requiredArenaRatingController.text),
-      itemPurchaseGroup: _pi(itemPurchaseGroupController.text),
-      itemID0: _pi(itemID0Controller.text),
-      itemID1: _pi(itemID1Controller.text),
-      itemID2: _pi(itemID2Controller.text),
-      itemID3: _pi(itemID3Controller.text),
-      itemID4: _pi(itemID4Controller.text),
-      itemCount0: _pi(itemCount0Controller.text),
-      itemCount1: _pi(itemCount1Controller.text),
-      itemCount2: _pi(itemCount2Controller.text),
-      itemCount3: _pi(itemCount3Controller.text),
-      itemCount4: _pi(itemCount4Controller.text),
+      id: idController.collect(),
+      honorPoints: honorPointsController.collect(),
+      arenaPoints: arenaPointsController.collect(),
+      arenaBracket: arenaBracketController.collect(),
+      requiredArenaRating: requiredArenaRatingController.collect(),
+      itemPurchaseGroup: itemPurchaseGroupController.collect(),
+      itemID0: itemID0Controller.collect(),
+      itemID1: itemID1Controller.collect(),
+      itemID2: itemID2Controller.collect(),
+      itemID3: itemID3Controller.collect(),
+      itemID4: itemID4Controller.collect(),
+      itemCount0: itemCount0Controller.collect(),
+      itemCount1: itemCount1Controller.collect(),
+      itemCount2: itemCount2Controller.collect(),
+      itemCount3: itemCount3Controller.collect(),
+      itemCount4: itemCount4Controller.collect(),
     );
   }
 
@@ -108,22 +121,9 @@ class ItemExtendedCostDetailViewModel {
   }
 
   void dispose() {
-    arenaBracketController.dispose();
-    arenaPointsController.dispose();
-    honorPointsController.dispose();
-    idController.dispose();
-    itemCount0Controller.dispose();
-    itemCount1Controller.dispose();
-    itemCount2Controller.dispose();
-    itemCount3Controller.dispose();
-    itemCount4Controller.dispose();
-    itemID0Controller.dispose();
-    itemID1Controller.dispose();
-    itemID2Controller.dispose();
-    itemID3Controller.dispose();
-    itemID4Controller.dispose();
-    itemPurchaseGroupController.dispose();
-    requiredArenaRatingController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -142,26 +142,21 @@ class ItemExtendedCostDetailViewModel {
   }
 
   void _initControllers(ItemExtendedCostEntity table) {
-    /// Basic
-    idController.text = _fmt(table.id);
-    honorPointsController.text = _fmt(table.honorPoints);
-    arenaPointsController.text = _fmt(table.arenaPoints);
-    arenaBracketController.text = _fmt(table.arenaBracket);
-    requiredArenaRatingController.text = _fmt(table.requiredArenaRating);
-    itemPurchaseGroupController.text = _fmt(table.itemPurchaseGroup);
-
-    /// ItemID
-    itemID0Controller.text = _fmt(table.itemID0);
-    itemID1Controller.text = _fmt(table.itemID1);
-    itemID2Controller.text = _fmt(table.itemID2);
-    itemID3Controller.text = _fmt(table.itemID3);
-    itemID4Controller.text = _fmt(table.itemID4);
-
-    /// ItemCount
-    itemCount0Controller.text = _fmt(table.itemCount0);
-    itemCount1Controller.text = _fmt(table.itemCount1);
-    itemCount2Controller.text = _fmt(table.itemCount2);
-    itemCount3Controller.text = _fmt(table.itemCount3);
-    itemCount4Controller.text = _fmt(table.itemCount4);
+    idController.init(table.id);
+    honorPointsController.init(table.honorPoints);
+    arenaPointsController.init(table.arenaPoints);
+    arenaBracketController.init(table.arenaBracket);
+    requiredArenaRatingController.init(table.requiredArenaRating);
+    itemPurchaseGroupController.init(table.itemPurchaseGroup);
+    itemID0Controller.init(table.itemID0);
+    itemID1Controller.init(table.itemID1);
+    itemID2Controller.init(table.itemID2);
+    itemID3Controller.init(table.itemID3);
+    itemID4Controller.init(table.itemID4);
+    itemCount0Controller.init(table.itemCount0);
+    itemCount1Controller.init(table.itemCount1);
+    itemCount2Controller.init(table.itemCount2);
+    itemCount3Controller.init(table.itemCount3);
+    itemCount4Controller.init(table.itemCount4);
   }
 }
