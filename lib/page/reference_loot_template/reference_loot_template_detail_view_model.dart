@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,16 +14,29 @@ class ReferenceLootTemplateDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = LootTemplateRepository(LootTableType.reference);
 
-  final entryController = TextEditingController();
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
-  final commentController = TextEditingController();
+  final entryController = IntFieldController();
+  final itemController = IntFieldController();
+  final referenceController = IntFieldController();
+  final chanceController = DoubleFieldController();
+  final questRequiredController = SelectFieldController<int>(fallback: 0);
+  final lootModeController = IntFieldController();
+  final groupIdController = IntFieldController();
+  final minCountController = IntFieldController();
+  final maxCountController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    itemController,
+    referenceController,
+    chanceController,
+    questRequiredController,
+    lootModeController,
+    groupIdController,
+    minCountController,
+    maxCountController,
+    commentController,
+  ];
 
   final template = signal<LootTemplateEntity?>(null);
   final originalEntry = signal<int?>(null);
@@ -32,12 +44,6 @@ class ReferenceLootTemplateDetailViewModel {
 
   /// 复合主键 (Entry, Item) 均为业务语义键：新建可填，编辑只读。
   bool get isNew => originalItem.value == null;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? entry, int? item}) async {
     try {
@@ -67,16 +73,16 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   void _initControllers(LootTemplateEntity loot) {
-    entryController.text = _fmt(loot.entry);
-    itemController.text = loot.item.toString();
-    referenceController.text = _fmt(loot.reference);
-    chanceController.text = _fmt(loot.chance);
-    questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = _fmt(loot.lootMode);
-    groupIdController.text = _fmt(loot.groupId);
-    minCountController.text = _fmt(loot.minCount);
-    maxCountController.text = _fmt(loot.maxCount);
-    commentController.text = loot.comment;
+    entryController.init(loot.entry);
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
   }
 
   Future<void> save(BuildContext context) async {
@@ -91,10 +97,7 @@ class ReferenceLootTemplateDetailViewModel {
         originalItem.value = data.item;
         _logActivity(ActivityActionType.update, data);
       } else {
-        final existed = await repository.getLootTemplate(
-          data.entry,
-          data.item,
-        );
+        final existed = await repository.getLootTemplate(data.entry, data.item);
         if (existed != null) {
           throw Exception('Entry=${data.entry}, Item=${data.item} 已存在');
         }
@@ -118,24 +121,17 @@ class ReferenceLootTemplateDetailViewModel {
 
   LootTemplateEntity _collectFromControllers() {
     return LootTemplateEntity(
-      entry: _pi(entryController.text),
-      item: _parseInt(itemController.text),
-      reference: _pi(referenceController.text),
-      chance: _pd(chanceController.text),
-      questRequired: questRequiredController.value.first == 1,
-      lootMode: _pi(lootModeController.text),
-      groupId: _pi(groupIdController.text),
-      minCount: _pi(minCountController.text),
-      maxCount: _pi(maxCountController.text),
-      comment: commentController.text,
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   void _logActivity(ActivityActionType action, LootTemplateEntity t) {
@@ -150,15 +146,8 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   void dispose() {
-    chanceController.dispose();
-    commentController.dispose();
-    entryController.dispose();
-    groupIdController.dispose();
-    itemController.dispose();
-    lootModeController.dispose();
-    maxCountController.dispose();
-    minCountController.dispose();
-    questRequiredController.dispose();
-    referenceController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
