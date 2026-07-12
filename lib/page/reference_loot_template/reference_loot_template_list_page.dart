@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -51,13 +52,13 @@ class _ReferenceLootTemplateListPageState
   }
 
   Widget _buildFilter() {
-    var entryInput = ShadInput(
+    var entryInput = FoxyStringInput(
       controller: viewModel.entryController,
-      placeholder: Text('Entry'),
+      placeholder: 'Entry',
     );
-    var nameInput = ShadInput(
+    var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
-      placeholder: Text('Item'),
+      placeholder: 'Item',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

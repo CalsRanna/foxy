@@ -437,6 +437,7 @@ flutter test
 - `achievement` 模块已完整迁移，包括列表筛选、详情编辑和三组 DBC 本地化字段，共 2 个 ViewModel、61 个 FieldController。
 - `item_set` 模块已完整迁移，包括列表筛选、详情编辑、DBC 名称本地化、物品/法术 EntityPicker 与门槛数值，共 2 个 ViewModel、54 个 FieldController。
 - `condition` 模块已完整迁移，包括列表筛选、详情编辑、Select 联动与 EntityPicker 参数，共 2 个 ViewModel、17 个 FieldController。
+- `reference_loot_template` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、12 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -462,6 +463,7 @@ flutter test
 | `achievement` | 列表筛选、详情编辑、标题/描述/奖励本地化与数值属性 | 61 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `item_set` | 列表筛选、详情编辑、DBC 名称本地化、物品/法术 Picker、门槛 | 54 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `condition` | 列表筛选、详情编辑、Select 联动、EntityPicker 参数 | 17 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `reference_loot_template` | 列表筛选、详情编辑、物品 Picker、掉落几率/模式 | 12 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 
