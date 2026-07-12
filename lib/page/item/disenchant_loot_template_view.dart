@@ -9,16 +9,17 @@ import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 /// 分解掉落Tab
 class DisenchantLootTemplateView extends StatefulWidget {
   final int entry;
 
-  const DisenchantLootTemplateView({super.key, this.entry = 0});
+  const DisenchantLootTemplateView({super.key, required this.entry});
 
   @override
   State<DisenchantLootTemplateView> createState() =>
@@ -32,7 +33,7 @@ class _DisenchantLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(disenchantId: widget.entry);
+    viewModel.initSignals(itemId: widget.entry);
   }
 
   @override
@@ -49,13 +50,11 @@ class _DisenchantLootTemplateViewState
   }
 
   Widget _buildTable() {
-    // 新增按钮
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
@@ -159,32 +158,29 @@ class _DisenchantLootTemplateViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  /// 显示新增对话框
   void _showCreateDialog() {
     viewModel.create();
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('新增分解掉落'),
-        description: Text('新增一条分解掉落记录'),
+        title: Text('新增掉落'),
+        description: Text('新增一条掉落记录'),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
-  /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
-        title: Text('编辑分解掉落'),
-        description: Text('编辑选中的分解掉落记录'),
+        title: Text('编辑掉落'),
+        description: Text('编辑选中的掉落记录'),
         child: _buildDialogForm(dialogContext),
       ),
     );
   }
 
-  /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editing.value;
 
@@ -194,105 +190,97 @@ class _DisenchantLootTemplateViewState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 分解ID（只读）
-          FoxyFormItem.legacy(
-            controller: TextEditingController(
-              text: viewModel.entry.value.toString(),
+          FoxyFormItem(
+            label: '物品ID',
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.entryController,
+              placeholder: 'Entry',
+              readOnly: true,
             ),
-            label: '分解ID',
-            placeholder: 'DisenchantID',
-            readOnly: true,
           ),
           SizedBox(height: 16),
-          // 物品ID
           FoxyFormItem(
             label: '掉落物品',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
+              fieldController: viewModel.itemController,
               placeholder: 'Item',
             ),
           ),
           SizedBox(height: 16),
-          // 关联ID
           FoxyFormItem(
             label: '关联ID',
-            placeholder: 'Reference (0=直接掉落)',
             child: FoxyNumberInput<int>(
-              controller: viewModel.referenceController,
+              fieldController: viewModel.referenceController,
+              placeholder: 'Reference (0=直接掉落)',
             ),
           ),
           SizedBox(height: 16),
-          // 掉落几率
           FoxyFormItem(
             label: '掉落几率',
-            placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
+              fieldController: viewModel.chanceController,
+              placeholder: 'Chance (%)',
             ),
           ),
           SizedBox(height: 16),
-          // 需要任务
           FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
-              controller: viewModel.questRequiredController,
+              fieldController: viewModel.questRequiredController,
               options: kBooleanOptions,
               placeholder: Text('QuestRequired'),
             ),
           ),
           SizedBox(height: 16),
-          // 掉落模式
           FoxyFormItem(
             label: '掉落模式',
-            placeholder: 'LootMode',
             child: FoxyNumberInput<int>(
-              controller: viewModel.lootModeController,
+              fieldController: viewModel.lootModeController,
+              placeholder: 'LootMode',
             ),
           ),
           SizedBox(height: 16),
-          // 组ID
           FoxyFormItem(
             label: '组ID',
-            placeholder: 'GroupId',
             child: FoxyNumberInput<int>(
-              controller: viewModel.groupIdController,
+              fieldController: viewModel.groupIdController,
+              placeholder: 'GroupId',
             ),
           ),
           SizedBox(height: 16),
-          // 数量范围
           Row(
             spacing: 16,
             children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '最小数量',
-                  placeholder: 'MinCount',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.minCountController,
+                    fieldController: viewModel.minCountController,
+                    placeholder: 'MinCount',
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '最大数量',
-                  placeholder: 'MaxCount',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.maxCountController,
+                    fieldController: viewModel.maxCountController,
+                    placeholder: 'MaxCount',
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          // 备注
-          FoxyFormItem.legacy(
-            controller: viewModel.commentController,
+          FoxyFormItem(
             label: '备注',
-            placeholder: 'Comment',
+            child: FoxyStringInput(
+              controller: viewModel.commentController,
+              placeholder: 'Comment',
+            ),
           ),
           SizedBox(height: 24),
-          // 按钮行
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

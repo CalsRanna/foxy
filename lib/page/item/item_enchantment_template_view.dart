@@ -46,13 +46,11 @@ class _ItemEnchantmentTemplateViewState
   }
 
   Widget _buildTable() {
-    // 新增按钮
     var createButton = ShadButton(
       onPressed: _showCreateDialog,
       child: Text('新增'),
     );
 
-    // 工具栏
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
@@ -132,7 +130,6 @@ class _ItemEnchantmentTemplateViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  /// 显示新增对话框
   void _showCreateDialog() {
     viewModel.create();
     showFoxyDialog(
@@ -145,7 +142,6 @@ class _ItemEnchantmentTemplateViewState
     );
   }
 
-  /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showFoxyDialog(
       context: context,
@@ -157,7 +153,6 @@ class _ItemEnchantmentTemplateViewState
     );
   }
 
-  /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
     final isEditing = viewModel.editing.value;
 
@@ -167,34 +162,32 @@ class _ItemEnchantmentTemplateViewState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 物品ID（只读）
-          FoxyFormItem.legacy(
-            controller: TextEditingController(text: widget.entry.toString()),
+          FoxyFormItem(
             label: '物品ID',
-            placeholder: 'Entry',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.entryController,
+              placeholder: 'Entry',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
-          // 附魔ID
           FoxyFormItem(
             label: '附魔ID',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemEnchantmentTemplate,
-              controller: viewModel.enchSignalController,
+              fieldController: viewModel.enchController,
               placeholder: 'Ench',
             ),
           ),
           SizedBox(height: 16),
-          // 几率
           FoxyFormItem(
             label: '几率',
-            placeholder: 'Chance (%)',
             child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
+              fieldController: viewModel.chanceController,
+              placeholder: 'Chance (%)',
             ),
           ),
           SizedBox(height: 24),
-          // 按钮行
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [

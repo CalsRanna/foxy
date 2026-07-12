@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -59,17 +60,17 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   }
 
   Widget _buildSearchInputs() {
-    var entryInput = ShadInput(
+    var entryInput = FoxyStringInput(
       controller: viewModel.entryController,
-      placeholder: Text('编号（entry）'),
+      placeholder: '编号（entry）',
     );
-    var nameInput = ShadInput(
+    var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
-      placeholder: Text('名称（name）'),
+      placeholder: '名称（name）',
     );
-    var descriptionInput = ShadInput(
+    var descriptionInput = FoxyStringInput(
       controller: viewModel.descriptionController,
-      placeholder: Text('描述（description）'),
+      placeholder: '描述（description）',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
