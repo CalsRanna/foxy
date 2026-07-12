@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -17,13 +16,23 @@ class NpcVendorViewModel {
   final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final slotController = TextEditingController();
-  final itemController = TextEditingController();
-  final maxcountController = TextEditingController();
-  final incrtimeController = TextEditingController();
-  final extendedCostController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final slotController = IntFieldController();
+  final itemController = IntFieldController();
+  final maxcountController = IntFieldController();
+  final incrtimeController = IntFieldController();
+  final extendedCostController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    slotController,
+    itemController,
+    maxcountController,
+    incrtimeController,
+    extendedCostController,
+    verifiedBuildController,
+  ];
 
   // 内部状态
   int? _editingSlot;
@@ -31,9 +40,6 @@ class NpcVendorViewModel {
   final _repository = GetIt.instance.get<NpcVendorRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefNpcVendors(entry.value);
@@ -43,42 +49,35 @@ class NpcVendorViewModel {
 
   /// 重置表单
   void resetForm() {
-    slotController.text = _fmt(0);
-    itemController.clear();
-    maxcountController.text = _fmt(0);
-    incrtimeController.text = _fmt(0);
-    extendedCostController.text = _fmt(0);
-    verifiedBuildController.text = _fmt(0);
+    slotController.init(0);
+    itemController.init(0);
+    maxcountController.init(0);
+    incrtimeController.init(0);
+    extendedCostController.init(0);
+    verifiedBuildController.init(0);
   }
 
   /// 填充表单
   void fillForm(BriefNpcVendorEntity vendor) {
-    slotController.text = _fmt(vendor.slot);
-    itemController.text = vendor.item.toString();
-    maxcountController.text = _fmt(vendor.maxcount);
-    incrtimeController.text = _fmt(vendor.incrtime);
-    extendedCostController.text = _fmt(vendor.extendedCost);
-    verifiedBuildController.text = _fmt(vendor.verifiedBuild);
+    slotController.init(vendor.slot);
+    itemController.init(vendor.item);
+    maxcountController.init(vendor.maxcount);
+    incrtimeController.init(vendor.incrtime);
+    extendedCostController.init(vendor.extendedCost);
+    verifiedBuildController.init(vendor.verifiedBuild);
   }
 
   /// 从表单收集数据
   NpcVendorEntity collectFromForm() {
     return NpcVendorEntity(
       entry: entry.value,
-      slot: _pi(slotController.text),
-      item: _parseInt(itemController.text),
-      maxcount: _pi(maxcountController.text),
-      incrtime: _pi(incrtimeController.text),
-      extendedCost: _pi(extendedCostController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      slot: slotController.collect(),
+      item: itemController.collect(),
+      maxcount: maxcountController.collect(),
+      incrtime: incrtimeController.collect(),
+      extendedCost: extendedCostController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   /// 创建新记录
@@ -86,7 +85,7 @@ class NpcVendorViewModel {
     try {
       final nextSlot = await _repository.getNextSlot(entry.value);
       resetForm();
-      slotController.text = _fmt(nextSlot);
+      slotController.init(nextSlot);
       selectedIndex.value = null;
       _editingSlot = null;
     } catch (e) {
@@ -211,7 +210,7 @@ class NpcVendorViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       entry.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化NPC商人失败: $e');
@@ -226,12 +225,8 @@ class NpcVendorViewModel {
 
   /// 清理资源
   void dispose() {
-    creatureIdController.dispose();
-    extendedCostController.dispose();
-    incrtimeController.dispose();
-    itemController.dispose();
-    maxcountController.dispose();
-    slotController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

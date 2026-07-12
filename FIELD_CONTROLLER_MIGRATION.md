@@ -418,13 +418,18 @@ flutter test
 
 截至 2026-07-13：
 
-- `creature_template` 主详情 ViewModel 已使用类型化 FieldController。
-- `creature_template` 主详情 Page 的 55 个字段已通过类型化入口连接输入组件。
-- 主详情 Page 不再直接访问 FieldController 内部的原始 Controller。
+- `creature_template` 模块已完整迁移，包括列表、主详情和全部关联 Tab。
+- 该模块共 13 个 ViewModel、137 个 FieldController，声明与 `_controllers` 释放列表完全一致。
+- 该模块目录内已不存在裸 `TextEditingController`、`ShadSelectController`、直接 `ShadInput`、`FoxyFormItem.legacy` 或 Page 层内部 Controller 访问。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
-- `creature_template` 目录中的部分关联 Tab 仍使用旧模式，不视为已完成全模块迁移。
+
+已完成模块：
+
+| 模块 | 范围 | Controller 数量 | 验证 |
+|---|---|---:|---|
+| `creature_template` | 列表、主详情、装备、掉落、击杀声望、任务物品、Addon、抗性、法术、训练师、商人、偷窃掉落、剥皮掉落 | 137 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 

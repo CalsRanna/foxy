@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
@@ -14,9 +14,15 @@ import 'package:signals/signals.dart';
 
 class CreatureTemplateListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
-  final nameController = TextEditingController();
-  final subNameController = TextEditingController();
+  final entryController = StringFieldController();
+  final nameController = StringFieldController();
+  final subNameController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    entryController,
+    nameController,
+    subNameController,
+  ];
   final _repository = GetIt.instance.get<CreatureTemplateRepository>();
 
   final page = signal(1);
@@ -61,9 +67,9 @@ class CreatureTemplateListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
-    nameController.dispose();
-    subNameController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -96,9 +102,9 @@ class CreatureTemplateListViewModel {
 
   CreatureTemplateFilterEntity _buildFilter() {
     return CreatureTemplateFilterEntity(
-      entry: entryController.text,
-      name: nameController.text,
-      subName: subNameController.text,
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      subName: subNameController.collect(),
     );
   }
 
@@ -108,9 +114,9 @@ class CreatureTemplateListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
-    nameController.clear();
-    subNameController.clear();
+    entryController.init('');
+    nameController.init('');
+    subNameController.init('');
     page.value = 1;
     await _refresh();
   }

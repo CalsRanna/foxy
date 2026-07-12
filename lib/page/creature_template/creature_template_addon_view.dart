@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -51,7 +52,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '编号',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.creatureIdController,
+                          fieldController: viewModel.creatureIdController,
                           placeholder: 'entry',
                           readOnly: true,
                         ),
@@ -61,7 +62,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '路径ID',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.pathIdController,
+                          fieldController: viewModel.pathIdController,
                           placeholder: 'path_id',
                         ),
                       ),
@@ -70,7 +71,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '坐骑编号',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.mountController,
+                          fieldController: viewModel.mountController,
                           placeholder: 'mount',
                         ),
                       ),
@@ -79,7 +80,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '表情',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.emoteController,
+                          fieldController: viewModel.emoteController,
                           placeholder: 'emote',
                         ),
                       ),
@@ -93,7 +94,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '覆盖标识1',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.bytes1Controller,
+                          fieldController: viewModel.bytes1Controller,
                           placeholder: 'bytes1',
                         ),
                       ),
@@ -102,7 +103,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '覆盖标识2',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.bytes2Controller,
+                          fieldController: viewModel.bytes2Controller,
                           placeholder: 'bytes2',
                         ),
                       ),
@@ -111,17 +112,19 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '可见距离类型',
                         child: FoxyNumberInput<int>(
-                          controller:
+                          fieldController:
                               viewModel.visibilityDistanceTypeController,
                           placeholder: 'visibilityDistanceType',
                         ),
                       ),
                     ),
                     Expanded(
-                      child: FoxyFormItem.legacy(
-                        controller: viewModel.aurasController,
+                      child: FoxyFormItem(
                         label: '光环列表',
-                        placeholder: 'auras',
+                        child: FoxyStringInput(
+                          controller: viewModel.aurasController,
+                          placeholder: 'auras',
+                        ),
                       ),
                     ),
                   ],

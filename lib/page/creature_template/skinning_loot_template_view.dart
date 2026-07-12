@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -196,7 +197,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              fieldController: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -207,7 +208,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
             label: '物品ID',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
+              fieldController: viewModel.itemController,
               placeholder: 'Item',
             ),
           ),
@@ -216,7 +217,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '关联ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.referenceController,
+              fieldController: viewModel.referenceController,
               placeholder: 'Reference (0=直接掉落)',
             ),
           ),
@@ -225,7 +226,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '掉落几率',
             child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
+              fieldController: viewModel.chanceController,
               placeholder: 'Chance (%)',
             ),
           ),
@@ -234,7 +235,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '需要任务',
             child: FoxyShadSelect<int>(
-              controller: viewModel.questRequiredController,
+              fieldController: viewModel.questRequiredController,
               options: kBooleanOptions,
               placeholder: Text('QuestRequired'),
             ),
@@ -244,7 +245,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '掉落模式',
             child: FoxyNumberInput<int>(
-              controller: viewModel.lootModeController,
+              fieldController: viewModel.lootModeController,
               placeholder: 'LootMode',
             ),
           ),
@@ -253,7 +254,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           FoxyFormItem(
             label: '组ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.groupIdController,
+              fieldController: viewModel.groupIdController,
               placeholder: 'GroupId',
             ),
           ),
@@ -266,7 +267,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
                 child: FoxyFormItem(
                   label: '最小数量',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.minCountController,
+                    fieldController: viewModel.minCountController,
                     placeholder: 'MinCount',
                   ),
                 ),
@@ -275,7 +276,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
                 child: FoxyFormItem(
                   label: '最大数量',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.maxCountController,
+                    fieldController: viewModel.maxCountController,
                     placeholder: 'MaxCount',
                   ),
                 ),
@@ -284,10 +285,12 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
           ),
           SizedBox(height: 16),
           // 备注
-          FoxyFormItem.legacy(
-            controller: viewModel.commentController,
+          FoxyFormItem(
             label: '备注',
-            placeholder: 'Comment',
+            child: FoxyStringInput(
+              controller: viewModel.commentController,
+              placeholder: 'Comment',
+            ),
           ),
           SizedBox(height: 24),
           // 按钮行

@@ -166,7 +166,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              fieldController: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -176,7 +176,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
-              controller: viewModel.indexController,
+              fieldController: viewModel.indexController,
               placeholder: 'Index',
               readOnly: true,
             ),
@@ -187,7 +187,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
             label: '技能',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.spell,
-              controller: viewModel.spellController,
+              fieldController: viewModel.spellController,
               placeholder: 'Spell',
             ),
           ),
@@ -196,7 +196,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
+              fieldController: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

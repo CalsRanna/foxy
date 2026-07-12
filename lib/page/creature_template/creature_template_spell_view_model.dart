@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -16,16 +15,19 @@ class CreatureTemplateSpellViewModel {
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final creatureIdController = TextEditingController();
-  final indexController = TextEditingController();
-  final spellController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final indexController = IntFieldController();
+  final spellController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    indexController,
+    spellController,
+    verifiedBuildController,
+  ];
 
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefCreatureTemplateSpells(
@@ -36,23 +38,23 @@ class CreatureTemplateSpellViewModel {
   }
 
   void resetForm() {
-    indexController.text = _fmt(0);
-    spellController.text = _fmt(0);
-    verifiedBuildController.text = _fmt(0);
+    indexController.init(0);
+    spellController.init(0);
+    verifiedBuildController.init(0);
   }
 
   void fillForm(CreatureTemplateSpellEntity spell) {
-    indexController.text = _fmt(spell.index);
-    spellController.text = _fmt(spell.spell);
-    verifiedBuildController.text = _fmt(spell.verifiedBuild);
+    indexController.init(spell.index);
+    spellController.init(spell.spell);
+    verifiedBuildController.init(spell.verifiedBuild);
   }
 
   CreatureTemplateSpellEntity collectFromForm() {
     return CreatureTemplateSpellEntity(
       creatureID: creatureId.value,
-      index: _pi(indexController.text),
-      spell: _pi(spellController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      index: indexController.collect(),
+      spell: spellController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
@@ -179,7 +181,7 @@ class CreatureTemplateSpellViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物法术失败: $e');
@@ -192,9 +194,8 @@ class CreatureTemplateSpellViewModel {
   }
 
   void dispose() {
-    creatureIdController.dispose();
-    indexController.dispose();
-    spellController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

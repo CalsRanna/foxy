@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -17,17 +16,21 @@ class CreatureQuestItemViewModel {
   final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final idxController = TextEditingController();
-  final itemIdController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final idxController = IntFieldController();
+  final itemIdController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    idxController,
+    itemIdController,
+    verifiedBuildController,
+  ];
 
   final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefCreatureQuestItems(
@@ -39,34 +42,27 @@ class CreatureQuestItemViewModel {
 
   /// 重置表单
   void resetForm() {
-    idxController.text = _fmt(0);
-    itemIdController.clear();
-    verifiedBuildController.text = _fmt(0);
+    idxController.init(0);
+    itemIdController.init(0);
+    verifiedBuildController.init(0);
   }
 
   /// 填充表单
   void fillForm(CreatureQuestItemEntity questItem) {
-    idxController.text = _fmt(questItem.idx);
-    itemIdController.text = questItem.itemId.toString();
-    verifiedBuildController.text = _fmt(questItem.verifiedBuild);
+    idxController.init(questItem.idx);
+    itemIdController.init(questItem.itemId);
+    verifiedBuildController.init(questItem.verifiedBuild);
   }
 
   /// 从表单收集数据
   CreatureQuestItemEntity collectFromForm() {
     final questItem = CreatureQuestItemEntity(
       creatureEntry: creatureEntry.value,
-      idx: _pi(idxController.text),
-      itemId: _parseInt(itemIdController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      idx: idxController.collect(),
+      itemId: itemIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
     return questItem;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   /// 创建新记录
@@ -76,7 +72,7 @@ class CreatureQuestItemViewModel {
         creatureEntry.value,
       );
       resetForm();
-      idxController.text = _fmt(blank.idx);
+      idxController.init(blank.idx);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物任务物品记录失败: $e');
@@ -201,7 +197,7 @@ class CreatureQuestItemViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       creatureEntry.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物任务物品失败: $e');
@@ -216,9 +212,8 @@ class CreatureQuestItemViewModel {
 
   /// 清理资源
   void dispose() {
-    creatureIdController.dispose();
-    idxController.dispose();
-    itemIdController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

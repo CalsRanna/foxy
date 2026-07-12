@@ -169,7 +169,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FoxyFormItem(
             label: '训练师ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              fieldController: viewModel.creatureIdController,
               placeholder: 'ID',
               readOnly: true,
             ),
@@ -180,7 +180,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
             label: '技能',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.spell,
-              controller: viewModel.spellIDController,
+              fieldController: viewModel.spellIDController,
               placeholder: 'SpellID',
             ),
           ),
@@ -189,7 +189,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FoxyFormItem(
             label: '金币花费',
             child: FoxyNumberInput<int>(
-              controller: viewModel.moneyCostController,
+              fieldController: viewModel.moneyCostController,
               placeholder: 'MoneyCost',
             ),
           ),
@@ -198,7 +198,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FoxyFormItem(
             label: '需要技能线',
             child: FoxyNumberInput<int>(
-              controller: viewModel.reqSkillLineController,
+              fieldController: viewModel.reqSkillLineController,
               placeholder: 'ReqSkillLine',
             ),
           ),
@@ -207,7 +207,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FoxyFormItem(
             label: '需要技能等级',
             child: FoxyNumberInput<int>(
-              controller: viewModel.reqSkillRankController,
+              fieldController: viewModel.reqSkillRankController,
               placeholder: 'ReqSkillRank',
             ),
           ),
@@ -216,7 +216,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           FoxyFormItem(
             label: '需要等级',
             child: FoxyNumberInput<int>(
-              controller: viewModel.reqLevelController,
+              fieldController: viewModel.reqLevelController,
               placeholder: 'ReqLevel',
             ),
           ),

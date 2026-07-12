@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -20,19 +19,25 @@ class NpcTrainerViewModel {
   final editing = signal(false);
 
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final spellIDController = TextEditingController();
-  final moneyCostController = TextEditingController();
-  final reqSkillLineController = TextEditingController();
-  final reqSkillRankController = TextEditingController();
-  final reqLevelController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final spellIDController = IntFieldController();
+  final moneyCostController = IntFieldController();
+  final reqSkillLineController = IntFieldController();
+  final reqSkillRankController = IntFieldController();
+  final reqLevelController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    spellIDController,
+    moneyCostController,
+    reqSkillLineController,
+    reqSkillRankController,
+    reqLevelController,
+  ];
 
   final _repository = GetIt.instance.get<NpcTrainerRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefNpcTrainers(id.value);
@@ -44,31 +49,31 @@ class NpcTrainerViewModel {
 
   /// 重置表单
   void resetForm() {
-    spellIDController.text = _fmt(0);
-    moneyCostController.text = _fmt(0);
-    reqSkillLineController.text = _fmt(0);
-    reqSkillRankController.text = _fmt(0);
-    reqLevelController.text = _fmt(0);
+    spellIDController.init(0);
+    moneyCostController.init(0);
+    reqSkillLineController.init(0);
+    reqSkillRankController.init(0);
+    reqLevelController.init(0);
   }
 
   /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
-    spellIDController.text = _fmt(trainer.spellID);
-    moneyCostController.text = _fmt(trainer.moneyCost);
-    reqSkillLineController.text = _fmt(trainer.reqSkillLine);
-    reqSkillRankController.text = _fmt(trainer.reqSkillRank);
-    reqLevelController.text = _fmt(trainer.reqLevel);
+    spellIDController.init(trainer.spellID);
+    moneyCostController.init(trainer.moneyCost);
+    reqSkillLineController.init(trainer.reqSkillLine);
+    reqSkillRankController.init(trainer.reqSkillRank);
+    reqLevelController.init(trainer.reqLevel);
   }
 
   /// 从表单收集数据
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
       id: id.value,
-      spellID: _pi(spellIDController.text),
-      moneyCost: _pi(moneyCostController.text),
-      reqSkillLine: _pi(reqSkillLineController.text),
-      reqSkillRank: _pi(reqSkillRankController.text),
-      reqLevel: _pi(reqLevelController.text),
+      spellID: spellIDController.collect(),
+      moneyCost: moneyCostController.collect(),
+      reqSkillLine: reqSkillLineController.collect(),
+      reqSkillRank: reqSkillRankController.collect(),
+      reqLevel: reqLevelController.collect(),
     );
   }
 
@@ -193,7 +198,7 @@ class NpcTrainerViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       id.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化NPC训练师失败: $e');
@@ -208,11 +213,8 @@ class NpcTrainerViewModel {
 
   /// 清理资源
   void dispose() {
-    creatureIdController.dispose();
-    moneyCostController.dispose();
-    reqLevelController.dispose();
-    reqSkillLineController.dispose();
-    reqSkillRankController.dispose();
-    spellIDController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

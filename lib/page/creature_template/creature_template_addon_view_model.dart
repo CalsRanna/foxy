@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -13,27 +12,35 @@ import 'package:signals/signals.dart';
 class CreatureTemplateAddonViewModel {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final creatureIdController = TextEditingController();
+  final creatureIdController = IntFieldController();
 
-  final pathIdController = TextEditingController();
-  final mountController = TextEditingController();
-  final emoteController = TextEditingController();
-  final bytes1Controller = TextEditingController();
-  final bytes2Controller = TextEditingController();
-  final visibilityDistanceTypeController = TextEditingController();
-  final aurasController = TextEditingController();
+  final pathIdController = IntFieldController();
+  final mountController = IntFieldController();
+  final emoteController = IntFieldController();
+  final bytes1Controller = IntFieldController();
+  final bytes2Controller = IntFieldController();
+  final visibilityDistanceTypeController = IntFieldController();
+  final aurasController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    pathIdController,
+    mountController,
+    emoteController,
+    bytes1Controller,
+    bytes2Controller,
+    visibilityDistanceTypeController,
+    aurasController,
+  ];
 
   final addon = signal(CreatureTemplateAddonEntity());
 
   /// 从数据库加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     try {
       final data = await _repository.getCreatureTemplateAddon(
-        _pi(creatureIdController.text),
+        creatureIdController.collect(),
       );
       if (data != null) {
         addon.value = data;
@@ -68,32 +75,32 @@ class CreatureTemplateAddonViewModel {
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
   CreatureTemplateAddonEntity _collectFromControllers() {
     return CreatureTemplateAddonEntity(
-      entry: _pi(creatureIdController.text),
-      pathId: _pi(pathIdController.text),
-      mount: _pi(mountController.text),
-      emote: _pi(emoteController.text),
-      bytes1: _pi(bytes1Controller.text),
-      bytes2: _pi(bytes2Controller.text),
-      visibilityDistanceType: _pi(visibilityDistanceTypeController.text),
-      auras: aurasController.text,
+      entry: creatureIdController.collect(),
+      pathId: pathIdController.collect(),
+      mount: mountController.collect(),
+      emote: emoteController.collect(),
+      bytes1: bytes1Controller.collect(),
+      bytes2: bytes2Controller.collect(),
+      visibilityDistanceType: visibilityDistanceTypeController.collect(),
+      auras: aurasController.collect(),
     );
   }
 
   /// 初始化 Controller 的值
   void _initSignals(CreatureTemplateAddonEntity data) {
-    pathIdController.text = _fmt(data.pathId);
-    mountController.text = _fmt(data.mount);
-    emoteController.text = _fmt(data.emote);
-    bytes1Controller.text = _fmt(data.bytes1);
-    bytes2Controller.text = _fmt(data.bytes2);
-    visibilityDistanceTypeController.text = _fmt(data.visibilityDistanceType);
-    aurasController.text = data.auras;
+    pathIdController.init(data.pathId);
+    mountController.init(data.mount);
+    emoteController.init(data.emote);
+    bytes1Controller.init(data.bytes1);
+    bytes2Controller.init(data.bytes2);
+    visibilityDistanceTypeController.init(data.visibilityDistanceType);
+    aurasController.init(data.auras);
   }
 
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
     try {
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物附加失败: $e');
@@ -103,13 +110,8 @@ class CreatureTemplateAddonViewModel {
 
   /// 清理资源
   void dispose() {
-    aurasController.dispose();
-    bytes1Controller.dispose();
-    bytes2Controller.dispose();
-    creatureIdController.dispose();
-    emoteController.dispose();
-    mountController.dispose();
-    pathIdController.dispose();
-    visibilityDistanceTypeController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
