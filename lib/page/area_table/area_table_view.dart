@@ -39,7 +39,7 @@ class _AreaTableViewState extends State<AreaTableView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
@@ -49,7 +49,7 @@ class _AreaTableViewState extends State<AreaTableView> {
         final id = viewModel.area.value.id;
         return FoxyLocalePicker(
           entry: id == 0 ? null : id,
-          controller: viewModel.nameController,
+          fieldController: viewModel.nameController,
           title: '区域名称本地化',
           placeholder: 'AreaName_lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcAreaTableAreaName,
@@ -61,42 +61,42 @@ class _AreaTableViewState extends State<AreaTableView> {
       label: '大陆',
       child: FoxyNumberInput<int>(
         placeholder: 'ContinentID',
-        controller: viewModel.continentIdController,
+        fieldController: viewModel.continentIdController,
       ),
     );
     final parentAreaIdInput = FoxyFormItem(
       label: '父级区域',
       child: FoxyNumberInput<int>(
         placeholder: 'ParentAreaID',
-        controller: viewModel.parentAreaIdController,
+        fieldController: viewModel.parentAreaIdController,
       ),
     );
     final areaBitInput = FoxyFormItem(
       label: '区域掩码',
       child: FoxyNumberInput<int>(
         placeholder: 'AreaBit',
-        controller: viewModel.areaBitController,
+        fieldController: viewModel.areaBitController,
       ),
     );
     final flagsInput = FoxyFormItem(
       label: '标识',
       child: FoxyNumberInput<int>(
         placeholder: 'Flags',
-        controller: viewModel.flagsController,
+        fieldController: viewModel.flagsController,
       ),
     );
     final factionGroupMaskInput = FoxyFormItem(
       label: '声望组掩码',
       child: FoxyNumberInput<int>(
         placeholder: 'FactionGroupMask',
-        controller: viewModel.factionGroupMaskController,
+        fieldController: viewModel.factionGroupMaskController,
       ),
     );
     final explorationLevelInput = FoxyFormItem(
       label: '探索等级',
       child: FoxyNumberInput<int>(
         placeholder: 'ExplorationLevel',
-        controller: viewModel.explorationLevelController,
+        fieldController: viewModel.explorationLevelController,
       ),
     );
 
@@ -105,56 +105,56 @@ class _AreaTableViewState extends State<AreaTableView> {
       label: '环境系数',
       child: FoxyNumberInput<double>(
         placeholder: 'Ambient_multiplier',
-        controller: viewModel.ambientMultiplierController,
+        fieldController: viewModel.ambientMultiplierController,
       ),
     );
     final ambienceIdInput = FoxyFormItem(
       label: '环境',
       child: FoxyNumberInput<int>(
         placeholder: 'AmbienceID',
-        controller: viewModel.ambienceIdController,
+        fieldController: viewModel.ambienceIdController,
       ),
     );
     final zoneMusicInput = FoxyFormItem(
       label: '区域音乐',
       child: FoxyNumberInput<int>(
         placeholder: 'ZoneMusic',
-        controller: viewModel.zoneMusicController,
+        fieldController: viewModel.zoneMusicController,
       ),
     );
     final introSoundInput = FoxyFormItem(
       label: 'IntroSound',
       child: FoxyNumberInput<int>(
         placeholder: 'IntroSound',
-        controller: viewModel.introSoundController,
+        fieldController: viewModel.introSoundController,
       ),
     );
     final soundProviderPrefInput = FoxyFormItem(
       label: '音效偏好',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundProviderPref',
-        controller: viewModel.soundProviderPrefController,
+        fieldController: viewModel.soundProviderPrefController,
       ),
     );
     final soundProviderPrefUnderwaterInput = FoxyFormItem(
       label: '水下音效',
       child: FoxyNumberInput<int>(
         placeholder: 'SoundProviderPrefUnderwater',
-        controller: viewModel.soundProviderPrefUnderwaterController,
+        fieldController: viewModel.soundProviderPrefUnderwaterController,
       ),
     );
     final lightIdInput = FoxyFormItem(
       label: '光线',
       child: FoxyNumberInput<int>(
         placeholder: 'LightID',
-        controller: viewModel.lightIdController,
+        fieldController: viewModel.lightIdController,
       ),
     );
     final minElevationInput = FoxyFormItem(
       label: '最低海拔',
       child: FoxyNumberInput<double>(
         placeholder: 'MinElevation',
-        controller: viewModel.minElevationController,
+        fieldController: viewModel.minElevationController,
       ),
     );
 
@@ -163,28 +163,28 @@ class _AreaTableViewState extends State<AreaTableView> {
       label: '液体类型0',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID0',
-        controller: viewModel.liquidTypeId0Controller,
+        fieldController: viewModel.liquidTypeId0Controller,
       ),
     );
     final liquidTypeId1Input = FoxyFormItem(
       label: '液体类型1',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID1',
-        controller: viewModel.liquidTypeId1Controller,
+        fieldController: viewModel.liquidTypeId1Controller,
       ),
     );
     final liquidTypeId2Input = FoxyFormItem(
       label: '液体类型2',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID2',
-        controller: viewModel.liquidTypeId2Controller,
+        fieldController: viewModel.liquidTypeId2Controller,
       ),
     );
     final liquidTypeId3Input = FoxyFormItem(
       label: '液体类型3',
       child: FoxyNumberInput<int>(
         placeholder: 'LiquidTypeID3',
-        controller: viewModel.liquidTypeId3Controller,
+        fieldController: viewModel.liquidTypeId3Controller,
       ),
     );
 
