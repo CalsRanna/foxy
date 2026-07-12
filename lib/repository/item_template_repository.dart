@@ -126,7 +126,9 @@ class ItemTemplateRepository with RepositoryMixin {
 
   Future<int> storeItemTemplate(ItemTemplateEntity template) async {
     var json = template.toJson();
-    final newEntry = template.entry > 0 ? template.entry : await _getNextEntry();
+    final newEntry = template.entry > 0
+        ? template.entry
+        : await _getNextEntry();
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
     return newEntry;

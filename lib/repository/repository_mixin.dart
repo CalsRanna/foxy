@@ -20,8 +20,8 @@ mixin RepositoryMixin {
 
   /// 主键下一序号：`MAX(column) + 1`，空表从 `1`。
   ///
-  /// [table] 为表名（DBC 可用 `foxy.dbc_*` 全名）。  
-  /// [column] 为主键列名（如 `ID` / `entry`）。  
+  /// [table] 为表名（DBC 可用 `foxy.dbc_*` 全名）。
+  /// [column] 为主键列名（如 `ID` / `entry`）。
   /// [where] 可选范围条件，用于「父键下子序号」：
   /// `nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureId})`。
   ///

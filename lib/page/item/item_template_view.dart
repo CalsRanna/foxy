@@ -1085,8 +1085,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategorycooldown_${i + 1}',
-                                controller:
-                                    viewModel.spellCategoryCooldowns[i],
+                                controller: viewModel.spellCategoryCooldowns[i],
                               ),
                             ),
                           ),

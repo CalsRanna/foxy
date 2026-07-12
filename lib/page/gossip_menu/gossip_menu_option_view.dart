@@ -255,8 +255,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       '广播文本编号',
                       FoxyEntityPicker(
                         delegate: FoxyEntityPickerDelegates.broadcastText,
-                        controller:
-                            viewModel.optionBroadcastTextIdController,
+                        controller: viewModel.optionBroadcastTextIdController,
                         placeholder: 'broadcast_text_id',
                       ),
                     ),
