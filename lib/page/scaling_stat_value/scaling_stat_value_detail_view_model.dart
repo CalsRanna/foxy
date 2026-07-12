@@ -10,62 +10,63 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ScalingStatValueDetailViewModel {
+class ScalingStatValueDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<ScalingStatValueRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final charlevelController = IntFieldController();
-  final shoulderBudgetController = IntFieldController();
-  final trinketBudgetController = IntFieldController();
-  final weaponBudget1HController = IntFieldController();
-  final rangedBudgetController = IntFieldController();
-  final primaryBudgetController = IntFieldController();
-  final tertiaryBudgetController = IntFieldController();
-  final spellPowerController = IntFieldController();
-  final clothShoulderArmorController = IntFieldController();
-  final leatherShoulderArmorController = IntFieldController();
-  final mailShoulderArmorController = IntFieldController();
-  final plateShoulderArmorController = IntFieldController();
-  final clothCloakArmorController = IntFieldController();
-  final clothChestArmorController = IntFieldController();
-  final leatherChestArmorController = IntFieldController();
-  final mailChestArmorController = IntFieldController();
-  final plateChestArmorController = IntFieldController();
-  final weaponDPS1HController = IntFieldController();
-  final weaponDPS2HController = IntFieldController();
-  final spellcasterDPS1HController = IntFieldController();
-  final spellcasterDPS2HController = IntFieldController();
-  final rangedDPSController = IntFieldController();
-  final wandDPSController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    charlevelController,
-    shoulderBudgetController,
-    trinketBudgetController,
-    weaponBudget1HController,
-    rangedBudgetController,
-    primaryBudgetController,
-    tertiaryBudgetController,
-    spellPowerController,
-    clothShoulderArmorController,
-    leatherShoulderArmorController,
-    mailShoulderArmorController,
-    plateShoulderArmorController,
-    clothCloakArmorController,
-    clothChestArmorController,
-    leatherChestArmorController,
-    mailChestArmorController,
-    plateChestArmorController,
-    weaponDPS1HController,
-    weaponDPS2HController,
-    spellcasterDPS1HController,
-    spellcasterDPS2HController,
-    rangedDPSController,
-    wandDPSController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final charlevelController = registerController(IntFieldController());
+  late final shoulderBudgetController = registerController(
+    IntFieldController(),
+  );
+  late final trinketBudgetController = registerController(IntFieldController());
+  late final weaponBudget1HController = registerController(
+    IntFieldController(),
+  );
+  late final rangedBudgetController = registerController(IntFieldController());
+  late final primaryBudgetController = registerController(IntFieldController());
+  late final tertiaryBudgetController = registerController(
+    IntFieldController(),
+  );
+  late final spellPowerController = registerController(IntFieldController());
+  late final clothShoulderArmorController = registerController(
+    IntFieldController(),
+  );
+  late final leatherShoulderArmorController = registerController(
+    IntFieldController(),
+  );
+  late final mailShoulderArmorController = registerController(
+    IntFieldController(),
+  );
+  late final plateShoulderArmorController = registerController(
+    IntFieldController(),
+  );
+  late final clothCloakArmorController = registerController(
+    IntFieldController(),
+  );
+  late final clothChestArmorController = registerController(
+    IntFieldController(),
+  );
+  late final leatherChestArmorController = registerController(
+    IntFieldController(),
+  );
+  late final mailChestArmorController = registerController(
+    IntFieldController(),
+  );
+  late final plateChestArmorController = registerController(
+    IntFieldController(),
+  );
+  late final weaponDPS1HController = registerController(IntFieldController());
+  late final weaponDPS2HController = registerController(IntFieldController());
+  late final spellcasterDPS1HController = registerController(
+    IntFieldController(),
+  );
+  late final spellcasterDPS2HController = registerController(
+    IntFieldController(),
+  );
+  late final rangedDPSController = registerController(IntFieldController());
+  late final wandDPSController = registerController(IntFieldController());
 
   final scalingStatValue = signal(ScalingStatValueEntity());
 
@@ -130,9 +131,7 @@ class ScalingStatValueDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   void _logActivity(ActivityActionType action, ScalingStatValueEntity t) {

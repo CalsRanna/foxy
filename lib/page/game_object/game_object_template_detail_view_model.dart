@@ -11,38 +11,30 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectTemplateDetailViewModel {
+class GameObjectTemplateDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final nameController = StringFieldController();
-  final castBarCaptionController = StringFieldController();
-  final iconNameController = StringFieldController();
-  final typeController = SelectFieldController<int>(fallback: 0);
-  final unk1Controller = StringFieldController();
-  final aiNameController = StringFieldController();
-  final scriptNameController = StringFieldController();
+  late final nameController = registerController(StringFieldController());
+  late final castBarCaptionController = registerController(
+    StringFieldController(),
+  );
+  late final iconNameController = registerController(StringFieldController());
+  late final typeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final unk1Controller = registerController(StringFieldController());
+  late final aiNameController = registerController(StringFieldController());
+  late final scriptNameController = registerController(StringFieldController());
 
-  final entryController = IntFieldController();
-  final displayIdController = IntFieldController();
-  final sizeController = DoubleFieldController();
-  final dataControllers = List.generate(24, (_) => IntFieldController());
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    nameController,
-    castBarCaptionController,
-    iconNameController,
-    typeController,
-    unk1Controller,
-    aiNameController,
-    scriptNameController,
-    entryController,
-    displayIdController,
-    sizeController,
-    ...dataControllers,
-    verifiedBuildController,
-  ];
+  late final entryController = registerController(IntFieldController());
+  late final displayIdController = registerController(IntFieldController());
+  late final sizeController = registerController(DoubleFieldController());
+  late final dataControllers = List.generate(
+    24,
+    (_) => registerController(IntFieldController()),
+  );
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final template = signal(GameObjectTemplateEntity());
 
@@ -115,9 +107,7 @@ class GameObjectTemplateDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? entry}) async {

@@ -10,24 +10,20 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class EmoteTextDetailViewModel {
+class EmoteTextDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<EmoteTextRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final nameController = StringFieldController();
-  final emoteIdController = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final emoteIdController = registerController(IntFieldController());
 
   /// EmoteText
-  final emoteTextControllers = List.generate(16, (_) => IntFieldController());
-
-  late final _controllers = <FieldController>[
-    idController,
-    nameController,
-    emoteIdController,
-    ...emoteTextControllers,
-  ];
+  late final emoteTextControllers = List.generate(
+    16,
+    (_) => registerController(IntFieldController()),
+  );
 
   final emote = signal(EmoteTextEntity());
 
@@ -98,9 +94,7 @@ class EmoteTextDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

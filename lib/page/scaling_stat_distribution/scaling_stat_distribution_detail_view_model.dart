@@ -10,59 +10,34 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ScalingStatDistributionDetailViewModel {
+class ScalingStatDistributionDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance
       .get<ScalingStatDistributionSoloRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final statId0Controller = IntFieldController();
-  final statId1Controller = IntFieldController();
-  final statId2Controller = IntFieldController();
-  final statId3Controller = IntFieldController();
-  final statId4Controller = IntFieldController();
-  final statId5Controller = IntFieldController();
-  final statId6Controller = IntFieldController();
-  final statId7Controller = IntFieldController();
-  final statId8Controller = IntFieldController();
-  final statId9Controller = IntFieldController();
-  final bonus0Controller = IntFieldController();
-  final bonus1Controller = IntFieldController();
-  final bonus2Controller = IntFieldController();
-  final bonus3Controller = IntFieldController();
-  final bonus4Controller = IntFieldController();
-  final bonus5Controller = IntFieldController();
-  final bonus6Controller = IntFieldController();
-  final bonus7Controller = IntFieldController();
-  final bonus8Controller = IntFieldController();
-  final bonus9Controller = IntFieldController();
-  final maxlevelController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    statId0Controller,
-    statId1Controller,
-    statId2Controller,
-    statId3Controller,
-    statId4Controller,
-    statId5Controller,
-    statId6Controller,
-    statId7Controller,
-    statId8Controller,
-    statId9Controller,
-    bonus0Controller,
-    bonus1Controller,
-    bonus2Controller,
-    bonus3Controller,
-    bonus4Controller,
-    bonus5Controller,
-    bonus6Controller,
-    bonus7Controller,
-    bonus8Controller,
-    bonus9Controller,
-    maxlevelController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final statId0Controller = registerController(IntFieldController());
+  late final statId1Controller = registerController(IntFieldController());
+  late final statId2Controller = registerController(IntFieldController());
+  late final statId3Controller = registerController(IntFieldController());
+  late final statId4Controller = registerController(IntFieldController());
+  late final statId5Controller = registerController(IntFieldController());
+  late final statId6Controller = registerController(IntFieldController());
+  late final statId7Controller = registerController(IntFieldController());
+  late final statId8Controller = registerController(IntFieldController());
+  late final statId9Controller = registerController(IntFieldController());
+  late final bonus0Controller = registerController(IntFieldController());
+  late final bonus1Controller = registerController(IntFieldController());
+  late final bonus2Controller = registerController(IntFieldController());
+  late final bonus3Controller = registerController(IntFieldController());
+  late final bonus4Controller = registerController(IntFieldController());
+  late final bonus5Controller = registerController(IntFieldController());
+  late final bonus6Controller = registerController(IntFieldController());
+  late final bonus7Controller = registerController(IntFieldController());
+  late final bonus8Controller = registerController(IntFieldController());
+  late final bonus9Controller = registerController(IntFieldController());
+  late final maxlevelController = registerController(IntFieldController());
 
   final distribution = signal(ScalingStatDistributionEntity());
 
@@ -125,9 +100,7 @@ class ScalingStatDistributionDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   void _logActivity(

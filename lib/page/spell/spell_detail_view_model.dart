@@ -11,404 +11,482 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellDetailViewModel {
+class SpellDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// 主键展示（只读）；新建时由 [createSpell] 预填 MAX+1。
-  final idController = IntFieldController();
+  late final idController = registerController(IntFieldController());
 
   // === 基础文本 ===
-  final nameLangZhCNController = StringFieldController();
-  final nameSubtextLangZhCNController = StringFieldController();
-  final descriptionLangZhCNController = StringFieldController();
-  final auraDescriptionLangZhCNController = StringFieldController();
-  final nameLangFlagsController = IntFieldController();
-  final nameSubtextLangFlagsController = IntFieldController();
-  final descriptionLangFlagsController = IntFieldController();
-  final auraDescriptionLangFlagsController = IntFieldController();
+  late final nameLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final nameSubtextLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final auraDescriptionLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangFlagsController = registerController(IntFieldController());
+  late final nameSubtextLangFlagsController = registerController(
+    IntFieldController(),
+  );
+  late final descriptionLangFlagsController = registerController(
+    IntFieldController(),
+  );
+  late final auraDescriptionLangFlagsController = registerController(
+    IntFieldController(),
+  );
 
   // === 图标/视觉 ===
-  final spellIconIDController = IntFieldController();
-  final activeIconIDController = IntFieldController();
-  final spellVisualID0Controller = IntFieldController();
-  final spellVisualID1Controller = IntFieldController();
+  late final spellIconIDController = registerController(IntFieldController());
+  late final activeIconIDController = registerController(IntFieldController());
+  late final spellVisualID0Controller = registerController(
+    IntFieldController(),
+  );
+  late final spellVisualID1Controller = registerController(
+    IntFieldController(),
+  );
 
   // === 分类/类型 ===
-  final categoryController = IntFieldController();
+  late final categoryController = registerController(IntFieldController());
 
   /// 冗余整数字段（历史保留）；UI 与 collect 以 [schoolMaskFlagController] 为准。
-  final schoolMaskController = IntFieldController();
-  final schoolMaskFlagController = FlagFieldController();
-  final mechanicController = SelectFieldController<int>(fallback: 0);
-  final defenseTypeController = SelectFieldController<int>(fallback: 0);
-  final dispelTypeController = SelectFieldController<int>(fallback: 0);
-  final preventionTypeController = SelectFieldController<int>(fallback: 0);
+  late final schoolMaskController = registerController(IntFieldController());
+  late final schoolMaskFlagController = registerController(
+    FlagFieldController(),
+  );
+  late final mechanicController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final defenseTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final dispelTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final preventionTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   // === 施法参数 ===
-  final castingTimeIndexController = IntFieldController();
-  final durationIndexController = IntFieldController();
-  final rangeIndexController = IntFieldController();
-  final spellDescriptionVariableIDController = IntFieldController();
+  late final castingTimeIndexController = registerController(
+    IntFieldController(),
+  );
+  late final durationIndexController = registerController(IntFieldController());
+  late final rangeIndexController = registerController(IntFieldController());
+  late final spellDescriptionVariableIDController = registerController(
+    IntFieldController(),
+  );
 
   // === 等级 ===
-  final baseLevelController = IntFieldController();
-  final spellLevelController = IntFieldController();
-  final maxLevelController = IntFieldController();
-  final spellDifficultyIDController = IntFieldController();
+  late final baseLevelController = registerController(IntFieldController());
+  late final spellLevelController = registerController(IntFieldController());
+  late final maxLevelController = registerController(IntFieldController());
+  late final spellDifficultyIDController = registerController(
+    IntFieldController(),
+  );
 
   // === 冷却/恢复 ===
-  final startRecoveryCategoryController = IntFieldController();
-  final startRecoveryTimeController = IntFieldController();
-  final recoveryTimeController = IntFieldController();
-  final categoryRecoveryTimeController = IntFieldController();
+  late final startRecoveryCategoryController = registerController(
+    IntFieldController(),
+  );
+  late final startRecoveryTimeController = registerController(
+    IntFieldController(),
+  );
+  late final recoveryTimeController = registerController(IntFieldController());
+  late final categoryRecoveryTimeController = registerController(
+    IntFieldController(),
+  );
 
   // === 目标 ===
-  final targetCreatureTypeController = SelectFieldController<int>(fallback: 0);
-  final targetsController = FlagFieldController();
-  final maxTargetsController = IntFieldController();
-  final maxTargetLevelController = IntFieldController();
+  late final targetCreatureTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final targetsController = registerController(FlagFieldController());
+  late final maxTargetsController = registerController(IntFieldController());
+  late final maxTargetLevelController = registerController(
+    IntFieldController(),
+  );
 
   // === 状态 ===
-  final casterAuraStateController = IntFieldController();
-  final targetAuraStateController = IntFieldController();
-  final spellMissileIDController = IntFieldController();
-  final speedController = DoubleFieldController();
+  late final casterAuraStateController = registerController(
+    IntFieldController(),
+  );
+  late final targetAuraStateController = registerController(
+    IntFieldController(),
+  );
+  late final spellMissileIDController = registerController(
+    IntFieldController(),
+  );
+  late final speedController = registerController(DoubleFieldController());
 
   // === 需求 ===
-  final requiredAreasIDController = IntFieldController();
-  final requiresSpellFocusController = IntFieldController();
-  final facingCasterFlagsController = FlagFieldController();
+  late final requiredAreasIDController = registerController(
+    IntFieldController(),
+  );
+  late final requiresSpellFocusController = registerController(
+    IntFieldController(),
+  );
+  late final facingCasterFlagsController = registerController(
+    FlagFieldController(),
+  );
 
   // === 能量消耗 ===
-  final powerDisplayIDController = IntFieldController();
-  final powerTypeController = SelectFieldController<int>(fallback: 0);
-  final runeCostIDController = IntFieldController();
-  final manaCostController = IntFieldController();
-  final manaCostPctController = IntFieldController();
-  final manaCostPerLevelController = IntFieldController();
-  final manaPerSecondController = IntFieldController();
-  final manaPerSecondPerLevelController = IntFieldController();
+  late final powerDisplayIDController = registerController(
+    IntFieldController(),
+  );
+  late final powerTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final runeCostIDController = registerController(IntFieldController());
+  late final manaCostController = registerController(IntFieldController());
+  late final manaCostPctController = registerController(IntFieldController());
+  late final manaCostPerLevelController = registerController(
+    IntFieldController(),
+  );
+  late final manaPerSecondController = registerController(IntFieldController());
+  late final manaPerSecondPerLevelController = registerController(
+    IntFieldController(),
+  );
 
   // === 标志位 ===
-  final interruptFlagsController = FlagFieldController();
-  final auraInterruptFlagsController = FlagFieldController();
-  final channelInterruptFlagsController = FlagFieldController();
-  final attributesController = FlagFieldController();
-  final attributesExController = FlagFieldController();
-  final attributesExBController = FlagFieldController();
-  final attributesExCController = FlagFieldController();
-  final attributesExDController = FlagFieldController();
-  final attributesExEController = FlagFieldController();
-  final attributesExFController = FlagFieldController();
-  final attributesExGController = FlagFieldController();
+  late final interruptFlagsController = registerController(
+    FlagFieldController(),
+  );
+  late final auraInterruptFlagsController = registerController(
+    FlagFieldController(),
+  );
+  late final channelInterruptFlagsController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesController = registerController(FlagFieldController());
+  late final attributesExController = registerController(FlagFieldController());
+  late final attributesExBController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesExCController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesExDController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesExEController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesExFController = registerController(
+    FlagFieldController(),
+  );
+  late final attributesExGController = registerController(
+    FlagFieldController(),
+  );
 
   // === 触发 ===
-  final procTypeMaskController = FlagFieldController();
-  final procChanceController = IntFieldController();
-  final procChargesController = IntFieldController();
+  late final procTypeMaskController = registerController(FlagFieldController());
+  late final procChanceController = registerController(IntFieldController());
+  late final procChargesController = registerController(IntFieldController());
 
   // === 法术分类 ===
-  final spellClassSetController = SelectFieldController<int>(fallback: 0);
-  final spellClassMask0Controller = FlagFieldController();
-  final spellClassMask1Controller = FlagFieldController();
-  final spellClassMask2Controller = FlagFieldController();
+  late final spellClassSetController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final spellClassMask0Controller = registerController(
+    FlagFieldController(),
+  );
+  late final spellClassMask1Controller = registerController(
+    FlagFieldController(),
+  );
+  late final spellClassMask2Controller = registerController(
+    FlagFieldController(),
+  );
 
   // === 效果0 ===
-  final effect0Controller = SelectFieldController<int>(fallback: 0);
-  final effectBasePoints0Controller = IntFieldController();
-  final effectDieSides0Controller = IntFieldController();
-  final effectRealPointsPerLevel0Controller = DoubleFieldController();
-  final effectMechanic0Controller = SelectFieldController<int>(fallback: 0);
-  final effectChainTargets0Controller = IntFieldController();
-  final effectAura0Controller = SelectFieldController<int>(fallback: 0);
-  final effectAuraPeriod0Controller = IntFieldController();
-  final effectAmplitude0Controller = DoubleFieldController();
-  final implicitTargetA0Controller = SelectFieldController<int>(fallback: 0);
-  final implicitTargetB0Controller = SelectFieldController<int>(fallback: 0);
-  final effectMiscValue0Controller = IntFieldController();
-  final effectMiscValueB0Controller = IntFieldController();
-  final effectRadiusIndex0Controller = IntFieldController();
-  final effectChainAmplitude0Controller = DoubleFieldController();
-  final effectBonusCoefficient0Controller = DoubleFieldController();
-  final effectItemType0Controller = SelectFieldController<int>(fallback: 0);
-  final effectTriggerSpell0Controller = IntFieldController();
-  final effectPointsPerCombo0Controller = DoubleFieldController();
-  final effectSpellClassMaskA0Controller = FlagFieldController();
-  final effectSpellClassMaskB0Controller = FlagFieldController();
-  final effectSpellClassMaskC0Controller = FlagFieldController();
+  late final effect0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectBasePoints0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectDieSides0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRealPointsPerLevel0Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectMechanic0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectChainTargets0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAura0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectAuraPeriod0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAmplitude0Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final implicitTargetA0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final implicitTargetB0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectMiscValue0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectMiscValueB0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRadiusIndex0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectChainAmplitude0Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectBonusCoefficient0Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectItemType0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectTriggerSpell0Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsPerCombo0Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectSpellClassMaskA0Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskB0Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskC0Controller = registerController(
+    FlagFieldController(),
+  );
 
   // === 效果1 ===
-  final effect1Controller = SelectFieldController<int>(fallback: 0);
-  final effectBasePoints1Controller = IntFieldController();
-  final effectDieSides1Controller = IntFieldController();
-  final effectRealPointsPerLevel1Controller = DoubleFieldController();
-  final effectMechanic1Controller = SelectFieldController<int>(fallback: 0);
-  final effectChainTargets1Controller = IntFieldController();
-  final effectAura1Controller = SelectFieldController<int>(fallback: 0);
-  final effectAuraPeriod1Controller = IntFieldController();
-  final effectAmplitude1Controller = DoubleFieldController();
-  final implicitTargetA1Controller = SelectFieldController<int>(fallback: 0);
-  final implicitTargetB1Controller = SelectFieldController<int>(fallback: 0);
-  final effectMiscValue1Controller = IntFieldController();
-  final effectMiscValueB1Controller = IntFieldController();
-  final effectRadiusIndex1Controller = IntFieldController();
-  final effectChainAmplitude1Controller = DoubleFieldController();
-  final effectBonusCoefficient1Controller = DoubleFieldController();
-  final effectItemType1Controller = SelectFieldController<int>(fallback: 0);
-  final effectTriggerSpell1Controller = IntFieldController();
-  final effectPointsPerCombo1Controller = DoubleFieldController();
-  final effectSpellClassMaskA1Controller = FlagFieldController();
-  final effectSpellClassMaskB1Controller = FlagFieldController();
-  final effectSpellClassMaskC1Controller = FlagFieldController();
+  late final effect1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectBasePoints1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectDieSides1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRealPointsPerLevel1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectMechanic1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectChainTargets1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAura1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectAuraPeriod1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAmplitude1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final implicitTargetA1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final implicitTargetB1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectMiscValue1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectMiscValueB1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRadiusIndex1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectChainAmplitude1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectBonusCoefficient1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectItemType1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectTriggerSpell1Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsPerCombo1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectSpellClassMaskA1Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskB1Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskC1Controller = registerController(
+    FlagFieldController(),
+  );
 
   // === 效果2 ===
-  final effect2Controller = SelectFieldController<int>(fallback: 0);
-  final effectBasePoints2Controller = IntFieldController();
-  final effectDieSides2Controller = IntFieldController();
-  final effectRealPointsPerLevel2Controller = DoubleFieldController();
-  final effectMechanic2Controller = SelectFieldController<int>(fallback: 0);
-  final effectChainTargets2Controller = IntFieldController();
-  final effectAura2Controller = SelectFieldController<int>(fallback: 0);
-  final effectAuraPeriod2Controller = IntFieldController();
-  final effectAmplitude2Controller = DoubleFieldController();
-  final implicitTargetA2Controller = SelectFieldController<int>(fallback: 0);
-  final implicitTargetB2Controller = SelectFieldController<int>(fallback: 0);
-  final effectMiscValue2Controller = IntFieldController();
-  final effectMiscValueB2Controller = IntFieldController();
-  final effectRadiusIndex2Controller = IntFieldController();
-  final effectChainAmplitude2Controller = DoubleFieldController();
-  final effectBonusCoefficient2Controller = DoubleFieldController();
-  final effectItemType2Controller = SelectFieldController<int>(fallback: 0);
-  final effectTriggerSpell2Controller = IntFieldController();
-  final effectPointsPerCombo2Controller = DoubleFieldController();
-  final effectSpellClassMaskA2Controller = FlagFieldController();
-  final effectSpellClassMaskB2Controller = FlagFieldController();
-  final effectSpellClassMaskC2Controller = FlagFieldController();
+  late final effect2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectBasePoints2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectDieSides2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRealPointsPerLevel2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectMechanic2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectChainTargets2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAura2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectAuraPeriod2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectAmplitude2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final implicitTargetA2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final implicitTargetB2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectMiscValue2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectMiscValueB2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectRadiusIndex2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectChainAmplitude2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectBonusCoefficient2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectItemType2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effectTriggerSpell2Controller = registerController(
+    IntFieldController(),
+  );
+  late final effectPointsPerCombo2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final effectSpellClassMaskA2Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskB2Controller = registerController(
+    FlagFieldController(),
+  );
+  late final effectSpellClassMaskC2Controller = registerController(
+    FlagFieldController(),
+  );
 
   // === 装备限制 ===
-  final equippedItemClassController = SelectFieldController<int>(fallback: 0);
-  final equippedItemSubclassController = IntFieldController();
-  final equippedItemInvTypesController = FlagFieldController();
+  late final equippedItemClassController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final equippedItemSubclassController = registerController(
+    IntFieldController(),
+  );
+  late final equippedItemInvTypesController = registerController(
+    FlagFieldController(),
+  );
 
   // === 图腾/施法材料 ===
-  final requiredTotemCategoryID0Controller = IntFieldController();
-  final totem0Controller = IntFieldController();
-  final requiredTotemCategoryID1Controller = IntFieldController();
-  final totem1Controller = IntFieldController();
-  final reagent0Controller = IntFieldController();
-  final reagent1Controller = IntFieldController();
-  final reagent2Controller = IntFieldController();
-  final reagent3Controller = IntFieldController();
-  final reagent4Controller = IntFieldController();
-  final reagent5Controller = IntFieldController();
-  final reagent6Controller = IntFieldController();
-  final reagent7Controller = IntFieldController();
-  final reagentCount0Controller = IntFieldController();
-  final reagentCount1Controller = IntFieldController();
-  final reagentCount2Controller = IntFieldController();
-  final reagentCount3Controller = IntFieldController();
-  final reagentCount4Controller = IntFieldController();
-  final reagentCount5Controller = IntFieldController();
-  final reagentCount6Controller = IntFieldController();
-  final reagentCount7Controller = IntFieldController();
+  late final requiredTotemCategoryID0Controller = registerController(
+    IntFieldController(),
+  );
+  late final totem0Controller = registerController(IntFieldController());
+  late final requiredTotemCategoryID1Controller = registerController(
+    IntFieldController(),
+  );
+  late final totem1Controller = registerController(IntFieldController());
+  late final reagent0Controller = registerController(IntFieldController());
+  late final reagent1Controller = registerController(IntFieldController());
+  late final reagent2Controller = registerController(IntFieldController());
+  late final reagent3Controller = registerController(IntFieldController());
+  late final reagent4Controller = registerController(IntFieldController());
+  late final reagent5Controller = registerController(IntFieldController());
+  late final reagent6Controller = registerController(IntFieldController());
+  late final reagent7Controller = registerController(IntFieldController());
+  late final reagentCount0Controller = registerController(IntFieldController());
+  late final reagentCount1Controller = registerController(IntFieldController());
+  late final reagentCount2Controller = registerController(IntFieldController());
+  late final reagentCount3Controller = registerController(IntFieldController());
+  late final reagentCount4Controller = registerController(IntFieldController());
+  late final reagentCount5Controller = registerController(IntFieldController());
+  late final reagentCount6Controller = registerController(IntFieldController());
+  late final reagentCount7Controller = registerController(IntFieldController());
 
   // === 其他高级属性 ===
-  final casterAuraSpellController = IntFieldController();
-  final cumulativeAuraController = IntFieldController();
-  final minFactionIDController = IntFieldController();
-  final minReputationController = SelectFieldController<int>(fallback: 0);
-  final excludeCasterAuraStateController = SelectFieldController<int>(
-    fallback: 0,
+  late final casterAuraSpellController = registerController(
+    IntFieldController(),
   );
-  final excludeCasterAuraSpellController = IntFieldController();
-  final excludeTargetAuraSpellController = IntFieldController();
-  final excludeTargetAuraStateController = SelectFieldController<int>(
-    fallback: 0,
+  late final cumulativeAuraController = registerController(
+    IntFieldController(),
   );
-  final spellPriorityController = IntFieldController();
-  final modalNextSpellController = IntFieldController();
-  final requiredAuraVisionController = IntFieldController();
-  final targetAuraSpellController = IntFieldController();
-  final stanceBarOrderController = IntFieldController();
-  final shapeshiftMask0Controller = FlagFieldController();
-  final shapeshiftExclude0Controller = FlagFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    nameLangZhCNController,
-    nameSubtextLangZhCNController,
-    descriptionLangZhCNController,
-    auraDescriptionLangZhCNController,
-    nameLangFlagsController,
-    nameSubtextLangFlagsController,
-    descriptionLangFlagsController,
-    auraDescriptionLangFlagsController,
-    spellIconIDController,
-    activeIconIDController,
-    spellVisualID0Controller,
-    spellVisualID1Controller,
-    categoryController,
-    schoolMaskController,
-    schoolMaskFlagController,
-    mechanicController,
-    defenseTypeController,
-    dispelTypeController,
-    preventionTypeController,
-    castingTimeIndexController,
-    durationIndexController,
-    rangeIndexController,
-    spellDescriptionVariableIDController,
-    baseLevelController,
-    spellLevelController,
-    maxLevelController,
-    spellDifficultyIDController,
-    startRecoveryCategoryController,
-    startRecoveryTimeController,
-    recoveryTimeController,
-    categoryRecoveryTimeController,
-    targetCreatureTypeController,
-    targetsController,
-    maxTargetsController,
-    maxTargetLevelController,
-    casterAuraStateController,
-    targetAuraStateController,
-    spellMissileIDController,
-    speedController,
-    requiredAreasIDController,
-    requiresSpellFocusController,
-    facingCasterFlagsController,
-    powerDisplayIDController,
-    powerTypeController,
-    runeCostIDController,
-    manaCostController,
-    manaCostPctController,
-    manaCostPerLevelController,
-    manaPerSecondController,
-    manaPerSecondPerLevelController,
-    interruptFlagsController,
-    auraInterruptFlagsController,
-    channelInterruptFlagsController,
-    attributesController,
-    attributesExController,
-    attributesExBController,
-    attributesExCController,
-    attributesExDController,
-    attributesExEController,
-    attributesExFController,
-    attributesExGController,
-    procTypeMaskController,
-    procChanceController,
-    procChargesController,
-    spellClassSetController,
-    spellClassMask0Controller,
-    spellClassMask1Controller,
-    spellClassMask2Controller,
-    effect0Controller,
-    effectBasePoints0Controller,
-    effectDieSides0Controller,
-    effectRealPointsPerLevel0Controller,
-    effectMechanic0Controller,
-    effectChainTargets0Controller,
-    effectAura0Controller,
-    effectAuraPeriod0Controller,
-    effectAmplitude0Controller,
-    implicitTargetA0Controller,
-    implicitTargetB0Controller,
-    effectMiscValue0Controller,
-    effectMiscValueB0Controller,
-    effectRadiusIndex0Controller,
-    effectChainAmplitude0Controller,
-    effectBonusCoefficient0Controller,
-    effectItemType0Controller,
-    effectTriggerSpell0Controller,
-    effectPointsPerCombo0Controller,
-    effectSpellClassMaskA0Controller,
-    effectSpellClassMaskB0Controller,
-    effectSpellClassMaskC0Controller,
-    effect1Controller,
-    effectBasePoints1Controller,
-    effectDieSides1Controller,
-    effectRealPointsPerLevel1Controller,
-    effectMechanic1Controller,
-    effectChainTargets1Controller,
-    effectAura1Controller,
-    effectAuraPeriod1Controller,
-    effectAmplitude1Controller,
-    implicitTargetA1Controller,
-    implicitTargetB1Controller,
-    effectMiscValue1Controller,
-    effectMiscValueB1Controller,
-    effectRadiusIndex1Controller,
-    effectChainAmplitude1Controller,
-    effectBonusCoefficient1Controller,
-    effectItemType1Controller,
-    effectTriggerSpell1Controller,
-    effectPointsPerCombo1Controller,
-    effectSpellClassMaskA1Controller,
-    effectSpellClassMaskB1Controller,
-    effectSpellClassMaskC1Controller,
-    effect2Controller,
-    effectBasePoints2Controller,
-    effectDieSides2Controller,
-    effectRealPointsPerLevel2Controller,
-    effectMechanic2Controller,
-    effectChainTargets2Controller,
-    effectAura2Controller,
-    effectAuraPeriod2Controller,
-    effectAmplitude2Controller,
-    implicitTargetA2Controller,
-    implicitTargetB2Controller,
-    effectMiscValue2Controller,
-    effectMiscValueB2Controller,
-    effectRadiusIndex2Controller,
-    effectChainAmplitude2Controller,
-    effectBonusCoefficient2Controller,
-    effectItemType2Controller,
-    effectTriggerSpell2Controller,
-    effectPointsPerCombo2Controller,
-    effectSpellClassMaskA2Controller,
-    effectSpellClassMaskB2Controller,
-    effectSpellClassMaskC2Controller,
-    equippedItemClassController,
-    equippedItemSubclassController,
-    equippedItemInvTypesController,
-    requiredTotemCategoryID0Controller,
-    totem0Controller,
-    requiredTotemCategoryID1Controller,
-    totem1Controller,
-    reagent0Controller,
-    reagent1Controller,
-    reagent2Controller,
-    reagent3Controller,
-    reagent4Controller,
-    reagent5Controller,
-    reagent6Controller,
-    reagent7Controller,
-    reagentCount0Controller,
-    reagentCount1Controller,
-    reagentCount2Controller,
-    reagentCount3Controller,
-    reagentCount4Controller,
-    reagentCount5Controller,
-    reagentCount6Controller,
-    reagentCount7Controller,
-    casterAuraSpellController,
-    cumulativeAuraController,
-    minFactionIDController,
-    minReputationController,
-    excludeCasterAuraStateController,
-    excludeCasterAuraSpellController,
-    excludeTargetAuraSpellController,
-    excludeTargetAuraStateController,
-    spellPriorityController,
-    modalNextSpellController,
-    requiredAuraVisionController,
-    targetAuraSpellController,
-    stanceBarOrderController,
-    shapeshiftMask0Controller,
-    shapeshiftExclude0Controller,
-  ];
+  late final minFactionIDController = registerController(IntFieldController());
+  late final minReputationController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final excludeCasterAuraStateController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final excludeCasterAuraSpellController = registerController(
+    IntFieldController(),
+  );
+  late final excludeTargetAuraSpellController = registerController(
+    IntFieldController(),
+  );
+  late final excludeTargetAuraStateController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final spellPriorityController = registerController(IntFieldController());
+  late final modalNextSpellController = registerController(
+    IntFieldController(),
+  );
+  late final requiredAuraVisionController = registerController(
+    IntFieldController(),
+  );
+  late final targetAuraSpellController = registerController(
+    IntFieldController(),
+  );
+  late final stanceBarOrderController = registerController(
+    IntFieldController(),
+  );
+  late final shapeshiftMask0Controller = registerController(
+    FlagFieldController(),
+  );
+  late final shapeshiftExclude0Controller = registerController(
+    FlagFieldController(),
+  );
 
   final id = signal(0);
   final spell = signal(SpellEntity());
@@ -772,9 +850,7 @@ class SpellDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {
@@ -808,7 +884,7 @@ class SpellDetailViewModel {
 
     void sync(SelectFieldController<int> ctrl, Signal<int> sig) {
       sig.value = ctrl.collect();
-      ctrl.controller.addListener(() => sig.value = ctrl.collect());
+      ctrl.addListener(() => sig.value = ctrl.collect());
     }
 
     sync(effect0Controller, effect0Signal);

@@ -11,145 +11,183 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class AchievementDetailViewModel {
+class AchievementDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<AchievementRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final factionController = IntFieldController();
-  final instanceIdController = IntFieldController();
-  final supercedesController = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final factionController = registerController(IntFieldController());
+  late final instanceIdController = registerController(IntFieldController());
+  late final supercedesController = registerController(IntFieldController());
 
   /// Title languages
-  final titleLangEnUSController = StringFieldController();
-  final titleLangKoKRController = StringFieldController();
-  final titleLangFrFRController = StringFieldController();
-  final titleLangDeDEController = StringFieldController();
-  final titleLangZhCNController = StringFieldController();
-  final titleLangZhTWController = StringFieldController();
-  final titleLangEsESController = StringFieldController();
-  final titleLangEsMXController = StringFieldController();
-  final titleLangRuRUController = StringFieldController();
-  final titleLangJaJPController = StringFieldController();
-  final titleLangPtPTController = StringFieldController();
-  final titleLangPtBRController = StringFieldController();
-  final titleLangItITController = StringFieldController();
-  final titleLangUnk1Controller = StringFieldController();
-  final titleLangUnk2Controller = StringFieldController();
-  final titleLangUnk3Controller = StringFieldController();
+  late final titleLangEnUSController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangKoKRController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangFrFRController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangDeDEController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangZhTWController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangEsESController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangEsMXController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangRuRUController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangJaJPController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangPtPTController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangPtBRController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangItITController = registerController(
+    StringFieldController(),
+  );
+  late final titleLangUnk1Controller = registerController(
+    StringFieldController(),
+  );
+  late final titleLangUnk2Controller = registerController(
+    StringFieldController(),
+  );
+  late final titleLangUnk3Controller = registerController(
+    StringFieldController(),
+  );
   final titleLangFlags = signal<int>(0);
 
   /// Description languages
-  final descriptionLangEnUSController = StringFieldController();
-  final descriptionLangKoKRController = StringFieldController();
-  final descriptionLangFrFRController = StringFieldController();
-  final descriptionLangDeDEController = StringFieldController();
-  final descriptionLangZhCNController = StringFieldController();
-  final descriptionLangZhTWController = StringFieldController();
-  final descriptionLangEsESController = StringFieldController();
-  final descriptionLangEsMXController = StringFieldController();
-  final descriptionLangRuRUController = StringFieldController();
-  final descriptionLangJaJPController = StringFieldController();
-  final descriptionLangPtPTController = StringFieldController();
-  final descriptionLangPtBRController = StringFieldController();
-  final descriptionLangItITController = StringFieldController();
-  final descriptionLangUnk1Controller = StringFieldController();
-  final descriptionLangUnk2Controller = StringFieldController();
-  final descriptionLangUnk3Controller = StringFieldController();
+  late final descriptionLangEnUSController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangKoKRController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangFrFRController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangDeDEController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangZhTWController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangEsESController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangEsMXController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangRuRUController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangJaJPController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangPtPTController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangPtBRController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangItITController = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangUnk1Controller = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangUnk2Controller = registerController(
+    StringFieldController(),
+  );
+  late final descriptionLangUnk3Controller = registerController(
+    StringFieldController(),
+  );
   final descriptionLangFlags = signal<int>(0);
 
   /// Category / Points / UI / Flags / Icon
-  final categoryController = IntFieldController();
-  final pointsController = IntFieldController();
-  final uiOrderController = IntFieldController();
-  final flagsController = IntFieldController();
-  final iconIdController = IntFieldController();
+  late final categoryController = registerController(IntFieldController());
+  late final pointsController = registerController(IntFieldController());
+  late final uiOrderController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final iconIdController = registerController(IntFieldController());
 
   /// Reward languages
-  final rewardLangEnUSController = StringFieldController();
-  final rewardLangKoKRController = StringFieldController();
-  final rewardLangFrFRController = StringFieldController();
-  final rewardLangDeDEController = StringFieldController();
-  final rewardLangZhCNController = StringFieldController();
-  final rewardLangZhTWController = StringFieldController();
-  final rewardLangEsESController = StringFieldController();
-  final rewardLangEsMXController = StringFieldController();
-  final rewardLangRuRUController = StringFieldController();
-  final rewardLangJaJPController = StringFieldController();
-  final rewardLangPtPTController = StringFieldController();
-  final rewardLangPtBRController = StringFieldController();
-  final rewardLangItITController = StringFieldController();
-  final rewardLangUnk1Controller = StringFieldController();
-  final rewardLangUnk2Controller = StringFieldController();
-  final rewardLangUnk3Controller = StringFieldController();
+  late final rewardLangEnUSController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangKoKRController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangFrFRController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangDeDEController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangZhTWController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangEsESController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangEsMXController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangRuRUController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangJaJPController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangPtPTController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangPtBRController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangItITController = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangUnk1Controller = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangUnk2Controller = registerController(
+    StringFieldController(),
+  );
+  late final rewardLangUnk3Controller = registerController(
+    StringFieldController(),
+  );
   final rewardLangFlags = signal<int>(0);
 
   /// Minimum / Shares
-  final minimumCriteriaController = IntFieldController();
-  final sharesCriteriaController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    factionController,
-    instanceIdController,
-    supercedesController,
-    titleLangEnUSController,
-    titleLangKoKRController,
-    titleLangFrFRController,
-    titleLangDeDEController,
-    titleLangZhCNController,
-    titleLangZhTWController,
-    titleLangEsESController,
-    titleLangEsMXController,
-    titleLangRuRUController,
-    titleLangJaJPController,
-    titleLangPtPTController,
-    titleLangPtBRController,
-    titleLangItITController,
-    titleLangUnk1Controller,
-    titleLangUnk2Controller,
-    titleLangUnk3Controller,
-    descriptionLangEnUSController,
-    descriptionLangKoKRController,
-    descriptionLangFrFRController,
-    descriptionLangDeDEController,
-    descriptionLangZhCNController,
-    descriptionLangZhTWController,
-    descriptionLangEsESController,
-    descriptionLangEsMXController,
-    descriptionLangRuRUController,
-    descriptionLangJaJPController,
-    descriptionLangPtPTController,
-    descriptionLangPtBRController,
-    descriptionLangItITController,
-    descriptionLangUnk1Controller,
-    descriptionLangUnk2Controller,
-    descriptionLangUnk3Controller,
-    categoryController,
-    pointsController,
-    uiOrderController,
-    flagsController,
-    iconIdController,
-    rewardLangEnUSController,
-    rewardLangKoKRController,
-    rewardLangFrFRController,
-    rewardLangDeDEController,
-    rewardLangZhCNController,
-    rewardLangZhTWController,
-    rewardLangEsESController,
-    rewardLangEsMXController,
-    rewardLangRuRUController,
-    rewardLangJaJPController,
-    rewardLangPtPTController,
-    rewardLangPtBRController,
-    rewardLangItITController,
-    rewardLangUnk1Controller,
-    rewardLangUnk2Controller,
-    rewardLangUnk3Controller,
-    minimumCriteriaController,
-    sharesCriteriaController,
-  ];
+  late final minimumCriteriaController = registerController(
+    IntFieldController(),
+  );
+  late final sharesCriteriaController = registerController(
+    IntFieldController(),
+  );
 
   final achievement = signal(AchievementEntity());
 
@@ -370,9 +408,7 @@ class AchievementDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

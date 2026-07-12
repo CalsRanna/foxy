@@ -9,33 +9,36 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureOnKillReputationViewModel {
+class CreatureOnKillReputationViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureOnKillReputationRepository>();
-  final creatureIdController = IntFieldController();
+  late final creatureIdController = registerController(IntFieldController());
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final rewOnKillRepFaction1Controller = IntFieldController();
-  final rewOnKillRepFaction2Controller = IntFieldController();
-  final maxStanding1Controller = SelectFieldController<int>(fallback: 0);
-  final maxStanding2Controller = SelectFieldController<int>(fallback: 0);
-  final isTeamAward1Controller = SelectFieldController<int>(fallback: 0);
-  final isTeamAward2Controller = SelectFieldController<int>(fallback: 0);
-  final rewOnKillRepValue1Controller = DoubleFieldController();
-  final rewOnKillRepValue2Controller = DoubleFieldController();
-  final teamDependentController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    rewOnKillRepFaction1Controller,
-    rewOnKillRepFaction2Controller,
-    teamDependentController,
-    rewOnKillRepValue1Controller,
-    rewOnKillRepValue2Controller,
-    maxStanding1Controller,
-    maxStanding2Controller,
-    isTeamAward1Controller,
-    isTeamAward2Controller,
-  ];
+  late final rewOnKillRepFaction1Controller = registerController(
+    IntFieldController(),
+  );
+  late final rewOnKillRepFaction2Controller = registerController(
+    IntFieldController(),
+  );
+  late final maxStanding1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final maxStanding2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final isTeamAward1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final isTeamAward2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final rewOnKillRepValue1Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final rewOnKillRepValue2Controller = registerController(
+    DoubleFieldController(),
+  );
+  late final teamDependentController = registerController(IntFieldController());
 
   final reputation = signal(CreatureOnKillReputationEntity());
 
@@ -112,8 +115,6 @@ class CreatureOnKillReputationViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

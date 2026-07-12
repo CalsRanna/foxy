@@ -9,30 +9,20 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class NpcVendorViewModel {
+class NpcVendorViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
   final items = signal<List<BriefNpcVendorEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = IntFieldController();
-  final slotController = IntFieldController();
-  final itemController = IntFieldController();
-  final maxcountController = IntFieldController();
-  final incrtimeController = IntFieldController();
-  final extendedCostController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    slotController,
-    itemController,
-    maxcountController,
-    incrtimeController,
-    extendedCostController,
-    verifiedBuildController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final slotController = registerController(IntFieldController());
+  late final itemController = registerController(IntFieldController());
+  late final maxcountController = registerController(IntFieldController());
+  late final incrtimeController = registerController(IntFieldController());
+  late final extendedCostController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   // 内部状态
   int? _editingSlot;
@@ -225,8 +215,6 @@ class NpcVendorViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

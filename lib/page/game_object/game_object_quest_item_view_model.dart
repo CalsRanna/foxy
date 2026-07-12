@@ -9,23 +9,16 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectQuestItemViewModel {
+class GameObjectQuestItemViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectEntry = signal<int>(0);
   final items = signal<List<GameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  final gameObjectIdController = IntFieldController();
-  final idxController = IntFieldController();
-  final itemIdController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    gameObjectIdController,
-    idxController,
-    itemIdController,
-    verifiedBuildController,
-  ];
+  late final gameObjectIdController = registerController(IntFieldController());
+  late final idxController = registerController(IntFieldController());
+  late final itemIdController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
@@ -163,8 +156,6 @@ class GameObjectQuestItemViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

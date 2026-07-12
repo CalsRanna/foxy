@@ -9,20 +9,15 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellGroupViewModel {
+class SpellGroupViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
   final items = signal<List<SpellGroupEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  final spellIdController = IntFieldController();
-  final groupIdController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    spellIdController,
-    groupIdController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final groupIdController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<SpellGroupRepository>();
 
@@ -174,8 +169,6 @@ class SpellGroupViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

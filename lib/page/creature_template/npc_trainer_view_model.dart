@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class NpcTrainerViewModel {
+class NpcTrainerViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final id = signal(0);
@@ -19,21 +19,12 @@ class NpcTrainerViewModel {
   final editing = signal(false);
 
   // 表单控制器
-  final creatureIdController = IntFieldController();
-  final spellIDController = IntFieldController();
-  final moneyCostController = IntFieldController();
-  final reqSkillLineController = IntFieldController();
-  final reqSkillRankController = IntFieldController();
-  final reqLevelController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    spellIDController,
-    moneyCostController,
-    reqSkillLineController,
-    reqSkillRankController,
-    reqLevelController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final spellIDController = registerController(IntFieldController());
+  late final moneyCostController = registerController(IntFieldController());
+  late final reqSkillLineController = registerController(IntFieldController());
+  late final reqSkillRankController = registerController(IntFieldController());
+  late final reqLevelController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<NpcTrainerRepository>();
 
@@ -213,8 +204,6 @@ class NpcTrainerViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

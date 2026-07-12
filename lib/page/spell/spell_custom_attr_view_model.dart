@@ -9,18 +9,13 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellCustomAttrViewModel {
+class SpellCustomAttrViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final spellIdController = IntFieldController();
-  final attributesController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    spellIdController,
-    attributesController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final attributesController = registerController(IntFieldController());
 
   final customAttr = signal(SpellCustomAttrEntity());
 
@@ -73,8 +68,6 @@ class SpellCustomAttrViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

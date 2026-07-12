@@ -9,24 +9,16 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectTemplateAddonViewModel {
+class GameObjectTemplateAddonViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
 
-  final factionController = IntFieldController();
-  final flagsController = IntFieldController();
-  final gameObjectIdController = IntFieldController();
-  final minGoldController = IntFieldController();
-  final maxGoldController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    factionController,
-    flagsController,
-    gameObjectIdController,
-    minGoldController,
-    maxGoldController,
-  ];
+  late final factionController = registerController(IntFieldController());
+  late final flagsController = registerController(IntFieldController());
+  late final gameObjectIdController = registerController(IntFieldController());
+  late final minGoldController = registerController(IntFieldController());
+  late final maxGoldController = registerController(IntFieldController());
 
   final addon = signal(GameObjectTemplateAddonEntity());
 
@@ -87,8 +79,6 @@ class GameObjectTemplateAddonViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

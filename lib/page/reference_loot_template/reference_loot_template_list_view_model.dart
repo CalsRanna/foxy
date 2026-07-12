@@ -12,12 +12,11 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class ReferenceLootTemplateListViewModel {
+class ReferenceLootTemplateListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final entryController = StringFieldController();
-  final nameController = StringFieldController();
+  late final entryController = registerController(StringFieldController());
+  late final nameController = registerController(StringFieldController());
 
-  late final _controllers = <FieldController>[entryController, nameController];
   final repository = LootTemplateRepository(LootTableType.reference);
 
   final page = signal(1);
@@ -154,8 +153,6 @@ class ReferenceLootTemplateListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

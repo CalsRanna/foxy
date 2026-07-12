@@ -10,130 +10,126 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureTemplateDetailViewModel {
+class CreatureTemplateDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final entryController = IntFieldController();
-  final nameController = StringFieldController();
-  final subNameController = StringFieldController();
-  final iconNameController = StringFieldController();
-  final minLevelController = IntFieldController();
-  final maxLevelController = IntFieldController();
-  final unitClassController = SelectFieldController<int>(fallback: 0);
-  final rankController = SelectFieldController<int>(fallback: 0);
-  final racialLeaderController = SelectFieldController<int>(fallback: 0);
-  final factionController = IntFieldController();
-  final familyController = SelectFieldController<int>(fallback: 0);
-  final typeController = SelectFieldController<int>(fallback: 0);
-  final regenerateHealthController = SelectFieldController<int>(fallback: 0);
-  final petSpellDataIdController = IntFieldController();
-  final vehicleIdController = IntFieldController();
-  final gossipMenuIdController = IntFieldController();
+  late final entryController = registerController(IntFieldController());
+  late final nameController = registerController(StringFieldController());
+  late final subNameController = registerController(StringFieldController());
+  late final iconNameController = registerController(StringFieldController());
+  late final minLevelController = registerController(IntFieldController());
+  late final maxLevelController = registerController(IntFieldController());
+  late final unitClassController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final rankController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final racialLeaderController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final factionController = registerController(IntFieldController());
+  late final familyController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final typeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final regenerateHealthController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final petSpellDataIdController = registerController(
+    IntFieldController(),
+  );
+  late final vehicleIdController = registerController(IntFieldController());
+  late final gossipMenuIdController = registerController(IntFieldController());
 
-  final npcFlagController = FlagFieldController();
-  final typeFlagController = FlagFieldController();
-  final dynamicFlagController = FlagFieldController();
-  final extraFlagController = FlagFieldController();
-  final unitFlagController = FlagFieldController();
-  final unitFlag2Controller = FlagFieldController();
+  late final npcFlagController = registerController(FlagFieldController());
+  late final typeFlagController = registerController(FlagFieldController());
+  late final dynamicFlagController = registerController(FlagFieldController());
+  late final extraFlagController = registerController(FlagFieldController());
+  late final unitFlagController = registerController(FlagFieldController());
+  late final unitFlag2Controller = registerController(FlagFieldController());
 
-  final creatureImmunitiesIdController = IntFieldController();
+  late final creatureImmunitiesIdController = registerController(
+    IntFieldController(),
+  );
 
-  final expController = SelectFieldController<int>(fallback: 0);
-  final damageSchoolController = SelectFieldController<int>(fallback: 0);
-  final damageModifierController = DoubleFieldController();
-  final armorModifierController = DoubleFieldController();
-  final baseAttackTimeController = IntFieldController();
-  final baseVarianceController = DoubleFieldController();
-  final rangeAttackTimeController = IntFieldController();
-  final rangeVarianceController = DoubleFieldController();
-  final healthModifierController = DoubleFieldController();
-  final manaModifierController = DoubleFieldController();
-  final experienceModifierController = DoubleFieldController();
-  final speedWalkController = DoubleFieldController();
-  final speedRunController = DoubleFieldController();
-  final speedSwimController = DoubleFieldController();
-  final speedFlightController = DoubleFieldController();
+  late final expController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final damageSchoolController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final damageModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final armorModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final baseAttackTimeController = registerController(
+    IntFieldController(),
+  );
+  late final baseVarianceController = registerController(
+    DoubleFieldController(),
+  );
+  late final rangeAttackTimeController = registerController(
+    IntFieldController(),
+  );
+  late final rangeVarianceController = registerController(
+    DoubleFieldController(),
+  );
+  late final healthModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final manaModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final experienceModifierController = registerController(
+    DoubleFieldController(),
+  );
+  late final speedWalkController = registerController(DoubleFieldController());
+  late final speedRunController = registerController(DoubleFieldController());
+  late final speedSwimController = registerController(DoubleFieldController());
+  late final speedFlightController = registerController(
+    DoubleFieldController(),
+  );
 
-  final minGoldController = IntFieldController();
-  final maxGoldController = IntFieldController();
-  final lootIdController = IntFieldController();
-  final pickpocketLootController = IntFieldController();
-  final skinLootController = IntFieldController();
+  late final minGoldController = registerController(IntFieldController());
+  late final maxGoldController = registerController(IntFieldController());
+  late final lootIdController = registerController(IntFieldController());
+  late final pickpocketLootController = registerController(
+    IntFieldController(),
+  );
+  late final skinLootController = registerController(IntFieldController());
 
-  final killCredit1Controller = IntFieldController();
-  final killCredit2Controller = IntFieldController();
-  final difficultyEntry1Controller = IntFieldController();
-  final difficultyEntry2Controller = IntFieldController();
-  final difficultyEntry3Controller = IntFieldController();
-  final aiNameController = StringFieldController();
-  final scriptNameController = StringFieldController();
+  late final killCredit1Controller = registerController(IntFieldController());
+  late final killCredit2Controller = registerController(IntFieldController());
+  late final difficultyEntry1Controller = registerController(
+    IntFieldController(),
+  );
+  late final difficultyEntry2Controller = registerController(
+    IntFieldController(),
+  );
+  late final difficultyEntry3Controller = registerController(
+    IntFieldController(),
+  );
+  late final aiNameController = registerController(StringFieldController());
+  late final scriptNameController = registerController(StringFieldController());
 
-  final movementIdController = IntFieldController();
-  final movementTypeController = SelectFieldController<int>(fallback: 0);
-  final hoverHeightController = DoubleFieldController();
-  final detectionRangeController = DoubleFieldController();
+  late final movementIdController = registerController(IntFieldController());
+  late final movementTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final hoverHeightController = registerController(
+    DoubleFieldController(),
+  );
+  late final detectionRangeController = registerController(
+    DoubleFieldController(),
+  );
 
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    entryController,
-    nameController,
-    subNameController,
-    iconNameController,
-    minLevelController,
-    maxLevelController,
-    unitClassController,
-    rankController,
-    racialLeaderController,
-    factionController,
-    familyController,
-    typeController,
-    regenerateHealthController,
-    petSpellDataIdController,
-    vehicleIdController,
-    gossipMenuIdController,
-    npcFlagController,
-    typeFlagController,
-    dynamicFlagController,
-    extraFlagController,
-    unitFlagController,
-    unitFlag2Controller,
-    creatureImmunitiesIdController,
-    expController,
-    damageSchoolController,
-    damageModifierController,
-    armorModifierController,
-    baseAttackTimeController,
-    baseVarianceController,
-    rangeAttackTimeController,
-    rangeVarianceController,
-    healthModifierController,
-    manaModifierController,
-    experienceModifierController,
-    speedWalkController,
-    speedRunController,
-    speedSwimController,
-    speedFlightController,
-    minGoldController,
-    maxGoldController,
-    lootIdController,
-    pickpocketLootController,
-    skinLootController,
-    killCredit1Controller,
-    killCredit2Controller,
-    difficultyEntry1Controller,
-    difficultyEntry2Controller,
-    difficultyEntry3Controller,
-    aiNameController,
-    scriptNameController,
-    movementIdController,
-    movementTypeController,
-    hoverHeightController,
-    detectionRangeController,
-    verifiedBuildController,
-  ];
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
@@ -231,9 +227,7 @@ class CreatureTemplateDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? entry}) async {

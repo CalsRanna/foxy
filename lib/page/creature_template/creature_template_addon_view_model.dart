@@ -9,29 +9,20 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureTemplateAddonViewModel {
+class CreatureTemplateAddonViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final creatureIdController = IntFieldController();
+  late final creatureIdController = registerController(IntFieldController());
 
-  final pathIdController = IntFieldController();
-  final mountController = IntFieldController();
-  final emoteController = IntFieldController();
-  final bytes1Controller = IntFieldController();
-  final bytes2Controller = IntFieldController();
-  final visibilityDistanceTypeController = IntFieldController();
-  final aurasController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    pathIdController,
-    mountController,
-    emoteController,
-    bytes1Controller,
-    bytes2Controller,
-    visibilityDistanceTypeController,
-    aurasController,
-  ];
+  late final pathIdController = registerController(IntFieldController());
+  late final mountController = registerController(IntFieldController());
+  late final emoteController = registerController(IntFieldController());
+  late final bytes1Controller = registerController(IntFieldController());
+  late final bytes2Controller = registerController(IntFieldController());
+  late final visibilityDistanceTypeController = registerController(
+    IntFieldController(),
+  );
+  late final aurasController = registerController(StringFieldController());
 
   final addon = signal(CreatureTemplateAddonEntity());
 
@@ -110,8 +101,6 @@ class CreatureTemplateAddonViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

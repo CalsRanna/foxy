@@ -9,26 +9,19 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellBonusDataViewModel {
+class SpellBonusDataViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellBonusDataRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final spellIdController = IntFieldController();
-  final directBonusController = DoubleFieldController();
-  final dotBonusController = DoubleFieldController();
-  final apBonusController = DoubleFieldController();
-  final apDotBonusController = DoubleFieldController();
-  final commentsController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    spellIdController,
-    directBonusController,
-    dotBonusController,
-    apBonusController,
-    apDotBonusController,
-    commentsController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final directBonusController = registerController(
+    DoubleFieldController(),
+  );
+  late final dotBonusController = registerController(DoubleFieldController());
+  late final apBonusController = registerController(DoubleFieldController());
+  late final apDotBonusController = registerController(DoubleFieldController());
+  late final commentsController = registerController(StringFieldController());
 
   final bonusData = signal(SpellBonusDataEntity());
 
@@ -89,8 +82,6 @@ class SpellBonusDataViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

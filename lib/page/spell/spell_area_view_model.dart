@@ -9,36 +9,27 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellAreaViewModel {
+class SpellAreaViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
   final items = signal<List<SpellAreaEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  final spellIdController = IntFieldController();
-  final areaController = IntFieldController();
-  final questStartController = IntFieldController();
-  final questEndController = IntFieldController();
-  final auraSpellController = IntFieldController();
-  final racemaskController = IntFieldController();
-  final genderController = IntFieldController();
-  final autocastController = IntFieldController();
-  final questStartStatusController = IntFieldController();
-  final questEndStatusController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    spellIdController,
-    areaController,
-    questStartController,
-    questEndController,
-    auraSpellController,
-    racemaskController,
-    genderController,
-    autocastController,
-    questStartStatusController,
-    questEndStatusController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final areaController = registerController(IntFieldController());
+  late final questStartController = registerController(IntFieldController());
+  late final questEndController = registerController(IntFieldController());
+  late final auraSpellController = registerController(IntFieldController());
+  late final racemaskController = registerController(IntFieldController());
+  late final genderController = registerController(IntFieldController());
+  late final autocastController = registerController(IntFieldController());
+  late final questStartStatusController = registerController(
+    IntFieldController(),
+  );
+  late final questEndStatusController = registerController(
+    IntFieldController(),
+  );
 
   final _repository = GetIt.instance.get<SpellAreaRepository>();
 
@@ -234,8 +225,6 @@ class SpellAreaViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

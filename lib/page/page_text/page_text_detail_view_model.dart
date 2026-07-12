@@ -11,21 +11,14 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PageTextDetailViewModel {
+class PageTextDetailViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PageTextRepository>();
 
-  final idController = IntFieldController();
-  final textController = StringFieldController();
-  final nextPageIdController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    textController,
-    nextPageIdController,
-    verifiedBuildController,
-  ];
+  late final idController = registerController(IntFieldController());
+  late final textController = registerController(StringFieldController());
+  late final nextPageIdController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
@@ -103,8 +96,6 @@ class PageTextDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

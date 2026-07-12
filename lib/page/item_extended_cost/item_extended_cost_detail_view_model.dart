@@ -10,50 +10,35 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemExtendedCostDetailViewModel {
+class ItemExtendedCostDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
-  final honorPointsController = IntFieldController();
-  final arenaPointsController = IntFieldController();
-  final arenaBracketController = IntFieldController();
-  final requiredArenaRatingController = IntFieldController();
-  final itemPurchaseGroupController = IntFieldController();
+  late final idController = registerController(IntFieldController());
+  late final honorPointsController = registerController(IntFieldController());
+  late final arenaPointsController = registerController(IntFieldController());
+  late final arenaBracketController = registerController(IntFieldController());
+  late final requiredArenaRatingController = registerController(
+    IntFieldController(),
+  );
+  late final itemPurchaseGroupController = registerController(
+    IntFieldController(),
+  );
 
   /// ItemID
-  final itemID0Controller = IntFieldController();
-  final itemID1Controller = IntFieldController();
-  final itemID2Controller = IntFieldController();
-  final itemID3Controller = IntFieldController();
-  final itemID4Controller = IntFieldController();
+  late final itemID0Controller = registerController(IntFieldController());
+  late final itemID1Controller = registerController(IntFieldController());
+  late final itemID2Controller = registerController(IntFieldController());
+  late final itemID3Controller = registerController(IntFieldController());
+  late final itemID4Controller = registerController(IntFieldController());
 
   /// ItemCount
-  final itemCount0Controller = IntFieldController();
-  final itemCount1Controller = IntFieldController();
-  final itemCount2Controller = IntFieldController();
-  final itemCount3Controller = IntFieldController();
-  final itemCount4Controller = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    honorPointsController,
-    arenaPointsController,
-    arenaBracketController,
-    requiredArenaRatingController,
-    itemPurchaseGroupController,
-    itemID0Controller,
-    itemID1Controller,
-    itemID2Controller,
-    itemID3Controller,
-    itemID4Controller,
-    itemCount0Controller,
-    itemCount1Controller,
-    itemCount2Controller,
-    itemCount3Controller,
-    itemCount4Controller,
-  ];
+  late final itemCount0Controller = registerController(IntFieldController());
+  late final itemCount1Controller = registerController(IntFieldController());
+  late final itemCount2Controller = registerController(IntFieldController());
+  late final itemCount3Controller = registerController(IntFieldController());
+  late final itemCount4Controller = registerController(IntFieldController());
 
   final cost = signal(ItemExtendedCostEntity());
 
@@ -121,9 +106,7 @@ class ItemExtendedCostDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

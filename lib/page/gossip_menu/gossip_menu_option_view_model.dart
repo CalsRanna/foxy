@@ -7,7 +7,7 @@ import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
 /// Tab 3 (gossip_menu_option) ViewModel
-class GossipMenuOptionViewModel {
+class GossipMenuOptionViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
 
   final currentMenuId = signal(0);
@@ -15,37 +15,30 @@ class GossipMenuOptionViewModel {
   final editing = signal(false);
   final creating = signal(false);
 
-  final menuIdController = IntFieldController();
-  final optionIdController = IntFieldController();
-  final optionIconController = SelectFieldController<int>(fallback: 0);
-  final optionTextController = StringFieldController();
-  final optionBroadcastTextIdController = IntFieldController();
-  final optionTypeController = SelectFieldController<int>(fallback: 0);
-  final optionNpcFlagController = FlagFieldController();
-  final boxCodedController = IntFieldController();
-  final boxMoneyController = IntFieldController();
-  final boxTextController = StringFieldController();
-  final boxBroadcastTextIdController = IntFieldController();
-  final actionMenuIdController = IntFieldController();
-  final actionPoiIdController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    menuIdController,
-    optionIdController,
-    optionIconController,
-    optionTextController,
-    optionBroadcastTextIdController,
-    optionTypeController,
-    optionNpcFlagController,
-    boxCodedController,
-    boxMoneyController,
-    boxTextController,
-    boxBroadcastTextIdController,
-    actionMenuIdController,
-    actionPoiIdController,
-    verifiedBuildController,
-  ];
+  late final menuIdController = registerController(IntFieldController());
+  late final optionIdController = registerController(IntFieldController());
+  late final optionIconController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final optionTextController = registerController(StringFieldController());
+  late final optionBroadcastTextIdController = registerController(
+    IntFieldController(),
+  );
+  late final optionTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final optionNpcFlagController = registerController(
+    FlagFieldController(),
+  );
+  late final boxCodedController = registerController(IntFieldController());
+  late final boxMoneyController = registerController(IntFieldController());
+  late final boxTextController = registerController(StringFieldController());
+  late final boxBroadcastTextIdController = registerController(
+    IntFieldController(),
+  );
+  late final actionMenuIdController = registerController(IntFieldController());
+  late final actionPoiIdController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   int _originalMenuId = 0;
   int _originalOptionId = 0;
@@ -149,9 +142,7 @@ class GossipMenuOptionViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   void _applyToControllers(GossipMenuOptionEntity o) {

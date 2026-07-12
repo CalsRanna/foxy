@@ -9,24 +9,17 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureQuestItemViewModel {
+class CreatureQuestItemViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureEntry = signal(0);
   final items = signal<List<CreatureQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = IntFieldController();
-  final idxController = IntFieldController();
-  final itemIdController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    idxController,
-    itemIdController,
-    verifiedBuildController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final idxController = registerController(IntFieldController());
+  late final itemIdController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
@@ -212,8 +205,6 @@ class CreatureQuestItemViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

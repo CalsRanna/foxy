@@ -11,74 +11,108 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemSetDetailViewModel {
+class ItemSetDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<ItemSetRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
+  late final idController = registerController(IntFieldController());
 
   /// Name lang
-  final nameLangEnUSController = StringFieldController();
-  final nameLangKoKRController = StringFieldController();
-  final nameLangFrFRController = StringFieldController();
-  final nameLangDeDEController = StringFieldController();
-  final nameLangZhCNController = StringFieldController();
-  final nameLangZhTWController = StringFieldController();
-  final nameLangEsESController = StringFieldController();
-  final nameLangEsMXController = StringFieldController();
-  final nameLangRuRUController = StringFieldController();
-  final nameLangJaJPController = StringFieldController();
-  final nameLangPtPTController = StringFieldController();
-  final nameLangPtBRController = StringFieldController();
-  final nameLangItITController = StringFieldController();
-  final nameLangUnk1Controller = StringFieldController();
-  final nameLangUnk2Controller = StringFieldController();
-  final nameLangUnk3Controller = StringFieldController();
+  late final nameLangEnUSController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangKoKRController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangFrFRController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangDeDEController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangZhCNController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangZhTWController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangEsESController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangEsMXController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangRuRUController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangJaJPController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangPtPTController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangPtBRController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangItITController = registerController(
+    StringFieldController(),
+  );
+  late final nameLangUnk1Controller = registerController(
+    StringFieldController(),
+  );
+  late final nameLangUnk2Controller = registerController(
+    StringFieldController(),
+  );
+  late final nameLangUnk3Controller = registerController(
+    StringFieldController(),
+  );
   final nameLangFlags = signal<int>(0);
 
   /// Item IDs
-  final itemId0Controller = IntFieldController();
-  final itemId1Controller = IntFieldController();
-  final itemId2Controller = IntFieldController();
-  final itemId3Controller = IntFieldController();
-  final itemId4Controller = IntFieldController();
-  final itemId5Controller = IntFieldController();
-  final itemId6Controller = IntFieldController();
-  final itemId7Controller = IntFieldController();
-  final itemId8Controller = IntFieldController();
-  final itemId9Controller = IntFieldController();
-  final itemId10Controller = IntFieldController();
-  final itemId11Controller = IntFieldController();
-  final itemId12Controller = IntFieldController();
-  final itemId13Controller = IntFieldController();
-  final itemId14Controller = IntFieldController();
-  final itemId15Controller = IntFieldController();
-  final itemId16Controller = IntFieldController();
+  late final itemId0Controller = registerController(IntFieldController());
+  late final itemId1Controller = registerController(IntFieldController());
+  late final itemId2Controller = registerController(IntFieldController());
+  late final itemId3Controller = registerController(IntFieldController());
+  late final itemId4Controller = registerController(IntFieldController());
+  late final itemId5Controller = registerController(IntFieldController());
+  late final itemId6Controller = registerController(IntFieldController());
+  late final itemId7Controller = registerController(IntFieldController());
+  late final itemId8Controller = registerController(IntFieldController());
+  late final itemId9Controller = registerController(IntFieldController());
+  late final itemId10Controller = registerController(IntFieldController());
+  late final itemId11Controller = registerController(IntFieldController());
+  late final itemId12Controller = registerController(IntFieldController());
+  late final itemId13Controller = registerController(IntFieldController());
+  late final itemId14Controller = registerController(IntFieldController());
+  late final itemId15Controller = registerController(IntFieldController());
+  late final itemId16Controller = registerController(IntFieldController());
 
   /// Set Spell IDs
-  final setSpellId0Controller = IntFieldController();
-  final setSpellId1Controller = IntFieldController();
-  final setSpellId2Controller = IntFieldController();
-  final setSpellId3Controller = IntFieldController();
-  final setSpellId4Controller = IntFieldController();
-  final setSpellId5Controller = IntFieldController();
-  final setSpellId6Controller = IntFieldController();
-  final setSpellId7Controller = IntFieldController();
+  late final setSpellId0Controller = registerController(IntFieldController());
+  late final setSpellId1Controller = registerController(IntFieldController());
+  late final setSpellId2Controller = registerController(IntFieldController());
+  late final setSpellId3Controller = registerController(IntFieldController());
+  late final setSpellId4Controller = registerController(IntFieldController());
+  late final setSpellId5Controller = registerController(IntFieldController());
+  late final setSpellId6Controller = registerController(IntFieldController());
+  late final setSpellId7Controller = registerController(IntFieldController());
 
   /// Set Thresholds
-  final setThreshold0Controller = IntFieldController();
-  final setThreshold1Controller = IntFieldController();
-  final setThreshold2Controller = IntFieldController();
-  final setThreshold3Controller = IntFieldController();
-  final setThreshold4Controller = IntFieldController();
-  final setThreshold5Controller = IntFieldController();
-  final setThreshold6Controller = IntFieldController();
-  final setThreshold7Controller = IntFieldController();
+  late final setThreshold0Controller = registerController(IntFieldController());
+  late final setThreshold1Controller = registerController(IntFieldController());
+  late final setThreshold2Controller = registerController(IntFieldController());
+  late final setThreshold3Controller = registerController(IntFieldController());
+  late final setThreshold4Controller = registerController(IntFieldController());
+  late final setThreshold5Controller = registerController(IntFieldController());
+  late final setThreshold6Controller = registerController(IntFieldController());
+  late final setThreshold7Controller = registerController(IntFieldController());
 
   /// Required
-  final requiredSkillController = IntFieldController();
-  final requiredSkillRankController = IntFieldController();
+  late final requiredSkillController = registerController(IntFieldController());
+  late final requiredSkillRankController = registerController(
+    IntFieldController(),
+  );
 
   /// 按索引访问套装物品/法术控制器
   List<IntFieldController> get itemIdControllers => [
@@ -110,38 +144,6 @@ class ItemSetDetailViewModel {
     setSpellId5Controller,
     setSpellId6Controller,
     setSpellId7Controller,
-  ];
-
-  late final _controllers = <FieldController>[
-    idController,
-    nameLangEnUSController,
-    nameLangKoKRController,
-    nameLangFrFRController,
-    nameLangDeDEController,
-    nameLangZhCNController,
-    nameLangZhTWController,
-    nameLangEsESController,
-    nameLangEsMXController,
-    nameLangRuRUController,
-    nameLangJaJPController,
-    nameLangPtPTController,
-    nameLangPtBRController,
-    nameLangItITController,
-    nameLangUnk1Controller,
-    nameLangUnk2Controller,
-    nameLangUnk3Controller,
-    ...itemIdControllers,
-    ...setSpellIdControllers,
-    setThreshold0Controller,
-    setThreshold1Controller,
-    setThreshold2Controller,
-    setThreshold3Controller,
-    setThreshold4Controller,
-    setThreshold5Controller,
-    setThreshold6Controller,
-    setThreshold7Controller,
-    requiredSkillController,
-    requiredSkillRankController,
   ];
 
   final itemSet = signal(ItemSetEntity());
@@ -268,9 +270,7 @@ class ItemSetDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

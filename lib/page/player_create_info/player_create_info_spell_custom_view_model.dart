@@ -8,7 +8,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
-class PlayerCreateInfoSpellCustomViewModel {
+class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
   final _repository = GetIt.instance
       .get<PlayerCreateInfoSpellCustomRepository>();
 
@@ -16,17 +16,10 @@ class PlayerCreateInfoSpellCustomViewModel {
   int? _race;
   int? _class_;
 
-  final racemaskController = IntFieldController();
-  final classmaskController = IntFieldController();
-  final spellController = IntFieldController();
-  final noteController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    racemaskController,
-    classmaskController,
-    spellController,
-    noteController,
-  ];
+  late final racemaskController = registerController(IntFieldController());
+  late final classmaskController = registerController(IntFieldController());
+  late final spellController = registerController(IntFieldController());
+  late final noteController = registerController(StringFieldController());
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -96,8 +89,6 @@ class PlayerCreateInfoSpellCustomViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

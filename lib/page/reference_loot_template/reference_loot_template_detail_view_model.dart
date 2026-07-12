@@ -10,33 +10,22 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ReferenceLootTemplateDetailViewModel {
+class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = LootTemplateRepository(LootTableType.reference);
 
-  final entryController = IntFieldController();
-  final itemController = IntFieldController();
-  final referenceController = IntFieldController();
-  final chanceController = DoubleFieldController();
-  final questRequiredController = SelectFieldController<int>(fallback: 0);
-  final lootModeController = IntFieldController();
-  final groupIdController = IntFieldController();
-  final minCountController = IntFieldController();
-  final maxCountController = IntFieldController();
-  final commentController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    entryController,
-    itemController,
-    referenceController,
-    chanceController,
-    questRequiredController,
-    lootModeController,
-    groupIdController,
-    minCountController,
-    maxCountController,
-    commentController,
-  ];
+  late final entryController = registerController(IntFieldController());
+  late final itemController = registerController(IntFieldController());
+  late final referenceController = registerController(IntFieldController());
+  late final chanceController = registerController(DoubleFieldController());
+  late final questRequiredController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final lootModeController = registerController(IntFieldController());
+  late final groupIdController = registerController(IntFieldController());
+  late final minCountController = registerController(IntFieldController());
+  late final maxCountController = registerController(IntFieldController());
+  late final commentController = registerController(StringFieldController());
 
   final template = signal<LootTemplateEntity?>(null);
   final originalEntry = signal<int?>(null);
@@ -146,8 +135,6 @@ class ReferenceLootTemplateDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

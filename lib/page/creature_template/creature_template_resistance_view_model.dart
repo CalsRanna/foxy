@@ -9,24 +9,19 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureTemplateResistanceViewModel {
+class CreatureTemplateResistanceViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final creatureId = signal(0);
   final items = signal<List<CreatureTemplateResistanceEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = IntFieldController();
-  final schoolController = SelectFieldController<int>(fallback: 0);
-  final resistanceController = IntFieldController();
-  final verifiedBuildController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    creatureIdController,
-    resistanceController,
-    verifiedBuildController,
-    schoolController,
-  ];
+  late final creatureIdController = registerController(IntFieldController());
+  late final schoolController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final resistanceController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance
       .get<CreatureTemplateResistanceRepository>();
@@ -207,8 +202,6 @@ class CreatureTemplateResistanceViewModel {
 
   /// 清理资源
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

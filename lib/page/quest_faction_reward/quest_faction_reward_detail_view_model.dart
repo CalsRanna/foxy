@@ -10,38 +10,24 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestFactionRewardDetailViewModel {
+class QuestFactionRewardDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
-  final idController = IntFieldController();
+  late final idController = registerController(IntFieldController());
 
   /// Difficulty
-  final difficulty0Controller = IntFieldController();
-  final difficulty1Controller = IntFieldController();
-  final difficulty2Controller = IntFieldController();
-  final difficulty3Controller = IntFieldController();
-  final difficulty4Controller = IntFieldController();
-  final difficulty5Controller = IntFieldController();
-  final difficulty6Controller = IntFieldController();
-  final difficulty7Controller = IntFieldController();
-  final difficulty8Controller = IntFieldController();
-  final difficulty9Controller = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    idController,
-    difficulty0Controller,
-    difficulty1Controller,
-    difficulty2Controller,
-    difficulty3Controller,
-    difficulty4Controller,
-    difficulty5Controller,
-    difficulty6Controller,
-    difficulty7Controller,
-    difficulty8Controller,
-    difficulty9Controller,
-  ];
+  late final difficulty0Controller = registerController(IntFieldController());
+  late final difficulty1Controller = registerController(IntFieldController());
+  late final difficulty2Controller = registerController(IntFieldController());
+  late final difficulty3Controller = registerController(IntFieldController());
+  late final difficulty4Controller = registerController(IntFieldController());
+  late final difficulty5Controller = registerController(IntFieldController());
+  late final difficulty6Controller = registerController(IntFieldController());
+  late final difficulty7Controller = registerController(IntFieldController());
+  late final difficulty8Controller = registerController(IntFieldController());
+  late final difficulty9Controller = registerController(IntFieldController());
 
   final reward = signal(QuestFactionRewardEntity());
 
@@ -104,9 +90,7 @@ class QuestFactionRewardDetailViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals({int? id}) async {

@@ -8,22 +8,16 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
-class PlayerCreateInfoItemViewModel {
+class PlayerCreateInfoItemViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoItemRepository>();
 
   final items = signal<List<PlayerCreateInfoItemEntity>>([]);
   int? _race;
   int? _class_;
 
-  final itemIdController = IntFieldController();
-  final amountController = IntFieldController();
-  final noteController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    itemIdController,
-    amountController,
-    noteController,
-  ];
+  late final itemIdController = registerController(IntFieldController());
+  late final amountController = registerController(IntFieldController());
+  late final noteController = registerController(StringFieldController());
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -93,8 +87,6 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

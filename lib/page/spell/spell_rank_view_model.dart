@@ -9,22 +9,16 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellRankViewModel {
+class SpellRankViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
   final items = signal<List<SpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  final firstSpellIdController = IntFieldController();
-  final rankSpellIdController = IntFieldController();
-  final rankController = IntFieldController();
-
-  late final _controllers = <FieldController>[
-    firstSpellIdController,
-    rankSpellIdController,
-    rankController,
-  ];
+  late final firstSpellIdController = registerController(IntFieldController());
+  late final rankSpellIdController = registerController(IntFieldController());
+  late final rankController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<SpellRankRepository>();
 
@@ -189,8 +183,6 @@ class SpellRankViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

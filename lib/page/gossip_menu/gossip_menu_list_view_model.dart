@@ -12,14 +12,12 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class GossipMenuListViewModel {
+class GossipMenuListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   final _repository = GetIt.instance.get<GossipMenuRepository>();
 
-  final menuIdController = StringFieldController();
-  final textController = StringFieldController();
-
-  late final _controllers = <FieldController>[menuIdController, textController];
+  late final menuIdController = registerController(StringFieldController());
+  late final textController = registerController(StringFieldController());
 
   final menus = signal<List<BriefGossipMenuEntity>>([]);
   final page = signal(1);
@@ -42,9 +40,7 @@ class GossipMenuListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> search() async {

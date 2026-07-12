@@ -12,11 +12,10 @@ import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class GlyphPropertyListViewModel {
+class GlyphPropertyListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
-  final entryController = StringFieldController();
+  late final entryController = registerController(StringFieldController());
 
-  late final _controllers = <FieldController>[entryController];
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
 
   final page = signal(1);
@@ -72,9 +71,7 @@ class GlyphPropertyListViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 
   Future<void> initSignals() async {

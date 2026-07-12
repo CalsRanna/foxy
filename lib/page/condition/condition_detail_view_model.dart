@@ -10,50 +10,42 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ConditionDetailViewModel {
+class ConditionDetailViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<ConditionRepository>();
 
   // 主键字段（完整 10 列）
-  final sourceTypeOrReferenceIdController = SelectFieldController<int>(
-    fallback: 0,
+  late final sourceTypeOrReferenceIdController = registerController(
+    SelectFieldController<int>(fallback: 0),
   );
-  final sourceGroupController = IntFieldController();
-  final sourceEntryController = IntFieldController();
-  final sourceIdController = IntFieldController();
-  final elseGroupController = IntFieldController();
-  final conditionTypeOrReferenceController = SelectFieldController<int>(
-    fallback: 0,
+  late final sourceGroupController = registerController(IntFieldController());
+  late final sourceEntryController = registerController(IntFieldController());
+  late final sourceIdController = registerController(IntFieldController());
+  late final elseGroupController = registerController(IntFieldController());
+  late final conditionTypeOrReferenceController = registerController(
+    SelectFieldController<int>(fallback: 0),
   );
-  final conditionTargetController = IntFieldController();
-  final conditionValue1Controller = IntFieldController();
-  final conditionValue2Controller = IntFieldController();
-  final conditionValue3Controller = IntFieldController();
+  late final conditionTargetController = registerController(
+    IntFieldController(),
+  );
+  late final conditionValue1Controller = registerController(
+    IntFieldController(),
+  );
+  late final conditionValue2Controller = registerController(
+    IntFieldController(),
+  );
+  late final conditionValue3Controller = registerController(
+    IntFieldController(),
+  );
 
   // 非键字段
-  final negativeConditionController = IntFieldController();
-  final errorTypeController = IntFieldController();
-  final errorTextIdController = IntFieldController();
-  final scriptNameController = StringFieldController();
-  final commentController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    sourceTypeOrReferenceIdController,
-    sourceGroupController,
-    sourceEntryController,
-    sourceIdController,
-    elseGroupController,
-    conditionTypeOrReferenceController,
-    conditionTargetController,
-    conditionValue1Controller,
-    conditionValue2Controller,
-    conditionValue3Controller,
-    negativeConditionController,
-    errorTypeController,
-    errorTextIdController,
-    scriptNameController,
-    commentController,
-  ];
+  late final negativeConditionController = registerController(
+    IntFieldController(),
+  );
+  late final errorTypeController = registerController(IntFieldController());
+  late final errorTextIdController = registerController(IntFieldController());
+  late final scriptNameController = registerController(StringFieldController());
+  late final commentController = registerController(StringFieldController());
 
   final condition = signal<ConditionEntity?>(null);
 
@@ -65,9 +57,7 @@ class ConditionDetailViewModel {
   Map<String, dynamic>? _originalCredential;
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
-    conditionTypeOrReferenceController.controller.addListener(
-      _onConditionTypeChange,
-    );
+    conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
     try {
       // 复合主键均为语义列：新建可编辑；编辑锁定。无简单 MAX+1。
       if (credential == null) {
@@ -172,11 +162,7 @@ class ConditionDetailViewModel {
   }
 
   void dispose() {
-    conditionTypeOrReferenceController.controller.removeListener(
-      _onConditionTypeChange,
-    );
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
+    disposeControllers();
   }
 }

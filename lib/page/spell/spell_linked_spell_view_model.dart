@@ -9,24 +9,17 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellLinkedSpellViewModel {
+class SpellLinkedSpellViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  final spellIdController = IntFieldController();
-  final spellEffectController = IntFieldController();
-  final typeController = IntFieldController();
-  final commentController = StringFieldController();
-
-  late final _controllers = <FieldController>[
-    spellIdController,
-    spellEffectController,
-    typeController,
-    commentController,
-  ];
+  late final spellIdController = registerController(IntFieldController());
+  late final spellEffectController = registerController(IntFieldController());
+  late final typeController = registerController(IntFieldController());
+  late final commentController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
 
@@ -192,8 +185,6 @@ class SpellLinkedSpellViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }
