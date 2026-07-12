@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view_model.dart';
+import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,15 +53,13 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           children: [
             ShadButton(
               leading: Icon(LucideIcons.plus, size: 16),
-              onPressed: () => viewModel.create(context),
+              onPressed: _showCreateDialog,
               size: ShadButtonSize.sm,
               child: Text('新增'),
             ),
             ShadButton.ghost(
               leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed: selectedIndex != null
-                  ? () => viewModel.edit(context)
-                  : null,
+              onPressed: selectedIndex != null ? _showEditDialog : null,
               size: ShadButtonSize.sm,
               child: Text('编辑'),
             ),
@@ -115,7 +118,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
               onRowTap: (row) => viewModel.selectRow(row),
               onRowDoubleTap: (row) {
                 viewModel.selectRow(row);
-                viewModel.edit(context);
+                _showEditDialog();
               },
               pinnedRowCount: 1,
               rowCount: items.length,
@@ -123,6 +126,103 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
           },
         ),
       ],
+    );
+  }
+
+  Future<void> _showCreateDialog() async {
+    await viewModel.create();
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('新增任务物品'),
+        description: Text('新增一条任务物品记录'),
+        child: _buildDialogForm(dialogContext, isEditing: false),
+      ),
+    );
+  }
+
+  void _showEditDialog() {
+    viewModel.edit();
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('编辑任务物品'),
+        description: Text('编辑选中的任务物品记录'),
+        child: _buildDialogForm(dialogContext, isEditing: true),
+      ),
+    );
+  }
+
+  Widget _buildDialogForm(
+    BuildContext dialogContext, {
+    required bool isEditing,
+  }) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 500),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FoxyFormItem(
+            label: '游戏对象编号',
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.gameObjectIdController,
+              placeholder: 'GameObjectEntry',
+              readOnly: true,
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: '索引',
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.idxController,
+              placeholder: 'Idx',
+              readOnly: true,
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: '物品',
+            child: FoxyEntityPicker(
+              delegate: FoxyEntityPickerDelegates.itemTemplate,
+              fieldController: viewModel.itemIdController,
+              placeholder: 'ItemId',
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: 'VerifiedBuild',
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.verifiedBuildController,
+              placeholder: 'VerifiedBuild',
+            ),
+          ),
+          SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text('取消'),
+              ),
+              SizedBox(width: 8),
+              ShadButton(
+                onPressed: () async {
+                  if (isEditing) {
+                    await viewModel.update(dialogContext);
+                  } else {
+                    await viewModel.save(dialogContext);
+                  }
+                  if (!dialogContext.mounted) return;
+                  Navigator.of(dialogContext).pop();
+                },
+                child: Text(isEditing ? '更新' : '保存'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
