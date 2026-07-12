@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -55,15 +56,15 @@ class _ConditionListPageState extends State<ConditionListPage> {
         spacing: 16,
         children: [
           Expanded(
-            child: ShadInput(
+            child: FoxyStringInput(
               controller: viewModel.sourceTypeController,
-              placeholder: Text('SourceTypeOrReferenceId'),
+              placeholder: 'SourceTypeOrReferenceId',
             ),
           ),
           Expanded(
-            child: ShadInput(
+            child: FoxyStringInput(
               controller: viewModel.sourceEntryController,
-              placeholder: Text('SourceEntry'),
+              placeholder: 'SourceEntry',
             ),
           ),
           Expanded(
