@@ -6,8 +6,6 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/field_controller.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -18,217 +16,399 @@ class SpellDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// 主键展示（只读）；新建时由 [createSpell] 预填 MAX+1。
-  final idController = TextEditingController();
+  final idController = IntFieldController();
 
   // === 基础文本 ===
-  final nameLangZhCNController = TextEditingController();
-  final nameSubtextLangZhCNController = TextEditingController();
-  final descriptionLangZhCNController = TextEditingController();
-  final auraDescriptionLangZhCNController = TextEditingController();
-  final nameLangFlagsController = TextEditingController();
-  final nameSubtextLangFlagsController = TextEditingController();
-  final descriptionLangFlagsController = TextEditingController();
-  final auraDescriptionLangFlagsController = TextEditingController();
+  final nameLangZhCNController = StringFieldController();
+  final nameSubtextLangZhCNController = StringFieldController();
+  final descriptionLangZhCNController = StringFieldController();
+  final auraDescriptionLangZhCNController = StringFieldController();
+  final nameLangFlagsController = IntFieldController();
+  final nameSubtextLangFlagsController = IntFieldController();
+  final descriptionLangFlagsController = IntFieldController();
+  final auraDescriptionLangFlagsController = IntFieldController();
 
   // === 图标/视觉 ===
-  final spellIconIDController = TextEditingController();
-  final activeIconIDController = TextEditingController();
-  final spellVisualID0Controller = TextEditingController();
-  final spellVisualID1Controller = TextEditingController();
+  final spellIconIDController = IntFieldController();
+  final activeIconIDController = IntFieldController();
+  final spellVisualID0Controller = IntFieldController();
+  final spellVisualID1Controller = IntFieldController();
 
   // === 分类/类型 ===
-  final categoryController = TextEditingController();
-  final schoolMaskController = TextEditingController();
-  final schoolMaskFlagController = TextEditingController();
-  final mechanicController = ShadSelectController<int>();
-  final defenseTypeController = ShadSelectController<int>();
-  final dispelTypeController = ShadSelectController<int>();
-  final preventionTypeController = ShadSelectController<int>();
+  final categoryController = IntFieldController();
+
+  /// 冗余整数字段（历史保留）；UI 与 collect 以 [schoolMaskFlagController] 为准。
+  final schoolMaskController = IntFieldController();
+  final schoolMaskFlagController = FlagFieldController();
+  final mechanicController = SelectFieldController<int>(fallback: 0);
+  final defenseTypeController = SelectFieldController<int>(fallback: 0);
+  final dispelTypeController = SelectFieldController<int>(fallback: 0);
+  final preventionTypeController = SelectFieldController<int>(fallback: 0);
 
   // === 施法参数 ===
-  final castingTimeIndexController = TextEditingController();
-  final durationIndexController = TextEditingController();
-  final rangeIndexController = TextEditingController();
-  final spellDescriptionVariableIDController = TextEditingController();
+  final castingTimeIndexController = IntFieldController();
+  final durationIndexController = IntFieldController();
+  final rangeIndexController = IntFieldController();
+  final spellDescriptionVariableIDController = IntFieldController();
 
   // === 等级 ===
-  final baseLevelController = TextEditingController();
-  final spellLevelController = TextEditingController();
-  final maxLevelController = TextEditingController();
-  final spellDifficultyIDController = TextEditingController();
+  final baseLevelController = IntFieldController();
+  final spellLevelController = IntFieldController();
+  final maxLevelController = IntFieldController();
+  final spellDifficultyIDController = IntFieldController();
 
   // === 冷却/恢复 ===
-  final startRecoveryCategoryController = TextEditingController();
-  final startRecoveryTimeController = TextEditingController();
-  final recoveryTimeController = TextEditingController();
-  final categoryRecoveryTimeController = TextEditingController();
+  final startRecoveryCategoryController = IntFieldController();
+  final startRecoveryTimeController = IntFieldController();
+  final recoveryTimeController = IntFieldController();
+  final categoryRecoveryTimeController = IntFieldController();
 
   // === 目标 ===
-  final targetCreatureTypeController = ShadSelectController<int>();
-  final targetsController = TextEditingController();
-  final maxTargetsController = TextEditingController();
-  final maxTargetLevelController = TextEditingController();
+  final targetCreatureTypeController = SelectFieldController<int>(fallback: 0);
+  final targetsController = FlagFieldController();
+  final maxTargetsController = IntFieldController();
+  final maxTargetLevelController = IntFieldController();
 
   // === 状态 ===
-  final casterAuraStateController = TextEditingController();
-  final targetAuraStateController = TextEditingController();
-  final spellMissileIDController = TextEditingController();
-  final speedController = TextEditingController();
+  final casterAuraStateController = IntFieldController();
+  final targetAuraStateController = IntFieldController();
+  final spellMissileIDController = IntFieldController();
+  final speedController = DoubleFieldController();
 
   // === 需求 ===
-  final requiredAreasIDController = TextEditingController();
-  final requiresSpellFocusController = TextEditingController();
-  final facingCasterFlagsController = TextEditingController();
+  final requiredAreasIDController = IntFieldController();
+  final requiresSpellFocusController = IntFieldController();
+  final facingCasterFlagsController = FlagFieldController();
 
   // === 能量消耗 ===
-  final powerDisplayIDController = TextEditingController();
-  final powerTypeController = ShadSelectController<int>();
-  final runeCostIDController = TextEditingController();
-  final manaCostController = TextEditingController();
-  final manaCostPctController = TextEditingController();
-  final manaCostPerLevelController = TextEditingController();
-  final manaPerSecondController = TextEditingController();
-  final manaPerSecondPerLevelController = TextEditingController();
+  final powerDisplayIDController = IntFieldController();
+  final powerTypeController = SelectFieldController<int>(fallback: 0);
+  final runeCostIDController = IntFieldController();
+  final manaCostController = IntFieldController();
+  final manaCostPctController = IntFieldController();
+  final manaCostPerLevelController = IntFieldController();
+  final manaPerSecondController = IntFieldController();
+  final manaPerSecondPerLevelController = IntFieldController();
 
   // === 标志位 ===
-  final interruptFlagsController = TextEditingController();
-  final auraInterruptFlagsController = TextEditingController();
-  final channelInterruptFlagsController = TextEditingController();
-  final attributesController = TextEditingController();
-  final attributesExController = TextEditingController();
-  final attributesExBController = TextEditingController();
-  final attributesExCController = TextEditingController();
-  final attributesExDController = TextEditingController();
-  final attributesExEController = TextEditingController();
-  final attributesExFController = TextEditingController();
-  final attributesExGController = TextEditingController();
+  final interruptFlagsController = FlagFieldController();
+  final auraInterruptFlagsController = FlagFieldController();
+  final channelInterruptFlagsController = FlagFieldController();
+  final attributesController = FlagFieldController();
+  final attributesExController = FlagFieldController();
+  final attributesExBController = FlagFieldController();
+  final attributesExCController = FlagFieldController();
+  final attributesExDController = FlagFieldController();
+  final attributesExEController = FlagFieldController();
+  final attributesExFController = FlagFieldController();
+  final attributesExGController = FlagFieldController();
 
   // === 触发 ===
-  final procTypeMaskController = TextEditingController();
-  final procChanceController = TextEditingController();
-  final procChargesController = TextEditingController();
+  final procTypeMaskController = FlagFieldController();
+  final procChanceController = IntFieldController();
+  final procChargesController = IntFieldController();
 
   // === 法术分类 ===
-  final spellClassSetController = ShadSelectController<int>();
-  final spellClassMask0Controller = TextEditingController();
-  final spellClassMask1Controller = TextEditingController();
-  final spellClassMask2Controller = TextEditingController();
+  final spellClassSetController = SelectFieldController<int>(fallback: 0);
+  final spellClassMask0Controller = FlagFieldController();
+  final spellClassMask1Controller = FlagFieldController();
+  final spellClassMask2Controller = FlagFieldController();
 
   // === 效果0 ===
-  final effect0Controller = ShadSelectController<int>();
-  final effectBasePoints0Controller = TextEditingController();
-  final effectDieSides0Controller = TextEditingController();
-  final effectRealPointsPerLevel0Controller = TextEditingController();
-  final effectMechanic0Controller = ShadSelectController<int>();
-  final effectChainTargets0Controller = TextEditingController();
-  final effectAura0Controller = ShadSelectController<int>();
-  final effectAuraPeriod0Controller = TextEditingController();
-  final effectAmplitude0Controller = TextEditingController();
-  final implicitTargetA0Controller = ShadSelectController<int>();
-  final implicitTargetB0Controller = ShadSelectController<int>();
-  final effectMiscValue0Controller = TextEditingController();
-  final effectMiscValueB0Controller = TextEditingController();
-  final effectRadiusIndex0Controller = TextEditingController();
-  final effectChainAmplitude0Controller = TextEditingController();
-  final effectBonusCoefficient0Controller = TextEditingController();
-  final effectItemType0Controller = ShadSelectController<int>();
-  final effectTriggerSpell0Controller = TextEditingController();
-  final effectPointsPerCombo0Controller = TextEditingController();
-  final effectSpellClassMaskA0Controller = TextEditingController();
-  final effectSpellClassMaskB0Controller = TextEditingController();
-  final effectSpellClassMaskC0Controller = TextEditingController();
+  final effect0Controller = SelectFieldController<int>(fallback: 0);
+  final effectBasePoints0Controller = IntFieldController();
+  final effectDieSides0Controller = IntFieldController();
+  final effectRealPointsPerLevel0Controller = DoubleFieldController();
+  final effectMechanic0Controller = SelectFieldController<int>(fallback: 0);
+  final effectChainTargets0Controller = IntFieldController();
+  final effectAura0Controller = SelectFieldController<int>(fallback: 0);
+  final effectAuraPeriod0Controller = IntFieldController();
+  final effectAmplitude0Controller = DoubleFieldController();
+  final implicitTargetA0Controller = SelectFieldController<int>(fallback: 0);
+  final implicitTargetB0Controller = SelectFieldController<int>(fallback: 0);
+  final effectMiscValue0Controller = IntFieldController();
+  final effectMiscValueB0Controller = IntFieldController();
+  final effectRadiusIndex0Controller = IntFieldController();
+  final effectChainAmplitude0Controller = DoubleFieldController();
+  final effectBonusCoefficient0Controller = DoubleFieldController();
+  final effectItemType0Controller = SelectFieldController<int>(fallback: 0);
+  final effectTriggerSpell0Controller = IntFieldController();
+  final effectPointsPerCombo0Controller = DoubleFieldController();
+  final effectSpellClassMaskA0Controller = FlagFieldController();
+  final effectSpellClassMaskB0Controller = FlagFieldController();
+  final effectSpellClassMaskC0Controller = FlagFieldController();
 
   // === 效果1 ===
-  final effect1Controller = ShadSelectController<int>();
-  final effectBasePoints1Controller = TextEditingController();
-  final effectDieSides1Controller = TextEditingController();
-  final effectRealPointsPerLevel1Controller = TextEditingController();
-  final effectMechanic1Controller = ShadSelectController<int>();
-  final effectChainTargets1Controller = TextEditingController();
-  final effectAura1Controller = ShadSelectController<int>();
-  final effectAuraPeriod1Controller = TextEditingController();
-  final effectAmplitude1Controller = TextEditingController();
-  final implicitTargetA1Controller = ShadSelectController<int>();
-  final implicitTargetB1Controller = ShadSelectController<int>();
-  final effectMiscValue1Controller = TextEditingController();
-  final effectMiscValueB1Controller = TextEditingController();
-  final effectRadiusIndex1Controller = TextEditingController();
-  final effectChainAmplitude1Controller = TextEditingController();
-  final effectBonusCoefficient1Controller = TextEditingController();
-  final effectItemType1Controller = ShadSelectController<int>();
-  final effectTriggerSpell1Controller = TextEditingController();
-  final effectPointsPerCombo1Controller = TextEditingController();
-  final effectSpellClassMaskA1Controller = TextEditingController();
-  final effectSpellClassMaskB1Controller = TextEditingController();
-  final effectSpellClassMaskC1Controller = TextEditingController();
+  final effect1Controller = SelectFieldController<int>(fallback: 0);
+  final effectBasePoints1Controller = IntFieldController();
+  final effectDieSides1Controller = IntFieldController();
+  final effectRealPointsPerLevel1Controller = DoubleFieldController();
+  final effectMechanic1Controller = SelectFieldController<int>(fallback: 0);
+  final effectChainTargets1Controller = IntFieldController();
+  final effectAura1Controller = SelectFieldController<int>(fallback: 0);
+  final effectAuraPeriod1Controller = IntFieldController();
+  final effectAmplitude1Controller = DoubleFieldController();
+  final implicitTargetA1Controller = SelectFieldController<int>(fallback: 0);
+  final implicitTargetB1Controller = SelectFieldController<int>(fallback: 0);
+  final effectMiscValue1Controller = IntFieldController();
+  final effectMiscValueB1Controller = IntFieldController();
+  final effectRadiusIndex1Controller = IntFieldController();
+  final effectChainAmplitude1Controller = DoubleFieldController();
+  final effectBonusCoefficient1Controller = DoubleFieldController();
+  final effectItemType1Controller = SelectFieldController<int>(fallback: 0);
+  final effectTriggerSpell1Controller = IntFieldController();
+  final effectPointsPerCombo1Controller = DoubleFieldController();
+  final effectSpellClassMaskA1Controller = FlagFieldController();
+  final effectSpellClassMaskB1Controller = FlagFieldController();
+  final effectSpellClassMaskC1Controller = FlagFieldController();
 
   // === 效果2 ===
-  final effect2Controller = ShadSelectController<int>();
-  final effectBasePoints2Controller = TextEditingController();
-  final effectDieSides2Controller = TextEditingController();
-  final effectRealPointsPerLevel2Controller = TextEditingController();
-  final effectMechanic2Controller = ShadSelectController<int>();
-  final effectChainTargets2Controller = TextEditingController();
-  final effectAura2Controller = ShadSelectController<int>();
-  final effectAuraPeriod2Controller = TextEditingController();
-  final effectAmplitude2Controller = TextEditingController();
-  final implicitTargetA2Controller = ShadSelectController<int>();
-  final implicitTargetB2Controller = ShadSelectController<int>();
-  final effectMiscValue2Controller = TextEditingController();
-  final effectMiscValueB2Controller = TextEditingController();
-  final effectRadiusIndex2Controller = TextEditingController();
-  final effectChainAmplitude2Controller = TextEditingController();
-  final effectBonusCoefficient2Controller = TextEditingController();
-  final effectItemType2Controller = ShadSelectController<int>();
-  final effectTriggerSpell2Controller = TextEditingController();
-  final effectPointsPerCombo2Controller = TextEditingController();
-  final effectSpellClassMaskA2Controller = TextEditingController();
-  final effectSpellClassMaskB2Controller = TextEditingController();
-  final effectSpellClassMaskC2Controller = TextEditingController();
+  final effect2Controller = SelectFieldController<int>(fallback: 0);
+  final effectBasePoints2Controller = IntFieldController();
+  final effectDieSides2Controller = IntFieldController();
+  final effectRealPointsPerLevel2Controller = DoubleFieldController();
+  final effectMechanic2Controller = SelectFieldController<int>(fallback: 0);
+  final effectChainTargets2Controller = IntFieldController();
+  final effectAura2Controller = SelectFieldController<int>(fallback: 0);
+  final effectAuraPeriod2Controller = IntFieldController();
+  final effectAmplitude2Controller = DoubleFieldController();
+  final implicitTargetA2Controller = SelectFieldController<int>(fallback: 0);
+  final implicitTargetB2Controller = SelectFieldController<int>(fallback: 0);
+  final effectMiscValue2Controller = IntFieldController();
+  final effectMiscValueB2Controller = IntFieldController();
+  final effectRadiusIndex2Controller = IntFieldController();
+  final effectChainAmplitude2Controller = DoubleFieldController();
+  final effectBonusCoefficient2Controller = DoubleFieldController();
+  final effectItemType2Controller = SelectFieldController<int>(fallback: 0);
+  final effectTriggerSpell2Controller = IntFieldController();
+  final effectPointsPerCombo2Controller = DoubleFieldController();
+  final effectSpellClassMaskA2Controller = FlagFieldController();
+  final effectSpellClassMaskB2Controller = FlagFieldController();
+  final effectSpellClassMaskC2Controller = FlagFieldController();
 
   // === 装备限制 ===
-  final equippedItemClassController = ShadSelectController<int>();
-  final equippedItemSubclassController = TextEditingController();
-  final equippedItemInvTypesController = TextEditingController();
+  final equippedItemClassController = SelectFieldController<int>(fallback: 0);
+  final equippedItemSubclassController = IntFieldController();
+  final equippedItemInvTypesController = FlagFieldController();
 
   // === 图腾/施法材料 ===
-  final requiredTotemCategoryID0Controller = TextEditingController();
-  final totem0Controller = TextEditingController();
-  final requiredTotemCategoryID1Controller = TextEditingController();
-  final totem1Controller = TextEditingController();
-  final reagent0Controller = TextEditingController();
-  final reagent1Controller = TextEditingController();
-  final reagent2Controller = TextEditingController();
-  final reagent3Controller = TextEditingController();
-  final reagent4Controller = TextEditingController();
-  final reagent5Controller = TextEditingController();
-  final reagent6Controller = TextEditingController();
-  final reagent7Controller = TextEditingController();
-  final reagentCount0Controller = TextEditingController();
-  final reagentCount1Controller = TextEditingController();
-  final reagentCount2Controller = TextEditingController();
-  final reagentCount3Controller = TextEditingController();
-  final reagentCount4Controller = TextEditingController();
-  final reagentCount5Controller = TextEditingController();
-  final reagentCount6Controller = TextEditingController();
-  final reagentCount7Controller = TextEditingController();
+  final requiredTotemCategoryID0Controller = IntFieldController();
+  final totem0Controller = IntFieldController();
+  final requiredTotemCategoryID1Controller = IntFieldController();
+  final totem1Controller = IntFieldController();
+  final reagent0Controller = IntFieldController();
+  final reagent1Controller = IntFieldController();
+  final reagent2Controller = IntFieldController();
+  final reagent3Controller = IntFieldController();
+  final reagent4Controller = IntFieldController();
+  final reagent5Controller = IntFieldController();
+  final reagent6Controller = IntFieldController();
+  final reagent7Controller = IntFieldController();
+  final reagentCount0Controller = IntFieldController();
+  final reagentCount1Controller = IntFieldController();
+  final reagentCount2Controller = IntFieldController();
+  final reagentCount3Controller = IntFieldController();
+  final reagentCount4Controller = IntFieldController();
+  final reagentCount5Controller = IntFieldController();
+  final reagentCount6Controller = IntFieldController();
+  final reagentCount7Controller = IntFieldController();
 
   // === 其他高级属性 ===
-  final casterAuraSpellController = TextEditingController();
-  final cumulativeAuraController = TextEditingController();
-  final minFactionIDController = TextEditingController();
-  final minReputationController = ShadSelectController<int>();
-  final excludeCasterAuraStateController = ShadSelectController<int>();
-  final excludeCasterAuraSpellController = TextEditingController();
-  final excludeTargetAuraSpellController = TextEditingController();
-  final excludeTargetAuraStateController = ShadSelectController<int>();
-  final spellPriorityController = TextEditingController();
-  final modalNextSpellController = TextEditingController();
-  final requiredAuraVisionController = TextEditingController();
-  final targetAuraSpellController = TextEditingController();
-  final stanceBarOrderController = TextEditingController();
-  final shapeshiftMask0Controller = TextEditingController();
-  final shapeshiftExclude0Controller = TextEditingController();
+  final casterAuraSpellController = IntFieldController();
+  final cumulativeAuraController = IntFieldController();
+  final minFactionIDController = IntFieldController();
+  final minReputationController = SelectFieldController<int>(fallback: 0);
+  final excludeCasterAuraStateController = SelectFieldController<int>(
+    fallback: 0,
+  );
+  final excludeCasterAuraSpellController = IntFieldController();
+  final excludeTargetAuraSpellController = IntFieldController();
+  final excludeTargetAuraStateController = SelectFieldController<int>(
+    fallback: 0,
+  );
+  final spellPriorityController = IntFieldController();
+  final modalNextSpellController = IntFieldController();
+  final requiredAuraVisionController = IntFieldController();
+  final targetAuraSpellController = IntFieldController();
+  final stanceBarOrderController = IntFieldController();
+  final shapeshiftMask0Controller = FlagFieldController();
+  final shapeshiftExclude0Controller = FlagFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    nameLangZhCNController,
+    nameSubtextLangZhCNController,
+    descriptionLangZhCNController,
+    auraDescriptionLangZhCNController,
+    nameLangFlagsController,
+    nameSubtextLangFlagsController,
+    descriptionLangFlagsController,
+    auraDescriptionLangFlagsController,
+    spellIconIDController,
+    activeIconIDController,
+    spellVisualID0Controller,
+    spellVisualID1Controller,
+    categoryController,
+    schoolMaskController,
+    schoolMaskFlagController,
+    mechanicController,
+    defenseTypeController,
+    dispelTypeController,
+    preventionTypeController,
+    castingTimeIndexController,
+    durationIndexController,
+    rangeIndexController,
+    spellDescriptionVariableIDController,
+    baseLevelController,
+    spellLevelController,
+    maxLevelController,
+    spellDifficultyIDController,
+    startRecoveryCategoryController,
+    startRecoveryTimeController,
+    recoveryTimeController,
+    categoryRecoveryTimeController,
+    targetCreatureTypeController,
+    targetsController,
+    maxTargetsController,
+    maxTargetLevelController,
+    casterAuraStateController,
+    targetAuraStateController,
+    spellMissileIDController,
+    speedController,
+    requiredAreasIDController,
+    requiresSpellFocusController,
+    facingCasterFlagsController,
+    powerDisplayIDController,
+    powerTypeController,
+    runeCostIDController,
+    manaCostController,
+    manaCostPctController,
+    manaCostPerLevelController,
+    manaPerSecondController,
+    manaPerSecondPerLevelController,
+    interruptFlagsController,
+    auraInterruptFlagsController,
+    channelInterruptFlagsController,
+    attributesController,
+    attributesExController,
+    attributesExBController,
+    attributesExCController,
+    attributesExDController,
+    attributesExEController,
+    attributesExFController,
+    attributesExGController,
+    procTypeMaskController,
+    procChanceController,
+    procChargesController,
+    spellClassSetController,
+    spellClassMask0Controller,
+    spellClassMask1Controller,
+    spellClassMask2Controller,
+    effect0Controller,
+    effectBasePoints0Controller,
+    effectDieSides0Controller,
+    effectRealPointsPerLevel0Controller,
+    effectMechanic0Controller,
+    effectChainTargets0Controller,
+    effectAura0Controller,
+    effectAuraPeriod0Controller,
+    effectAmplitude0Controller,
+    implicitTargetA0Controller,
+    implicitTargetB0Controller,
+    effectMiscValue0Controller,
+    effectMiscValueB0Controller,
+    effectRadiusIndex0Controller,
+    effectChainAmplitude0Controller,
+    effectBonusCoefficient0Controller,
+    effectItemType0Controller,
+    effectTriggerSpell0Controller,
+    effectPointsPerCombo0Controller,
+    effectSpellClassMaskA0Controller,
+    effectSpellClassMaskB0Controller,
+    effectSpellClassMaskC0Controller,
+    effect1Controller,
+    effectBasePoints1Controller,
+    effectDieSides1Controller,
+    effectRealPointsPerLevel1Controller,
+    effectMechanic1Controller,
+    effectChainTargets1Controller,
+    effectAura1Controller,
+    effectAuraPeriod1Controller,
+    effectAmplitude1Controller,
+    implicitTargetA1Controller,
+    implicitTargetB1Controller,
+    effectMiscValue1Controller,
+    effectMiscValueB1Controller,
+    effectRadiusIndex1Controller,
+    effectChainAmplitude1Controller,
+    effectBonusCoefficient1Controller,
+    effectItemType1Controller,
+    effectTriggerSpell1Controller,
+    effectPointsPerCombo1Controller,
+    effectSpellClassMaskA1Controller,
+    effectSpellClassMaskB1Controller,
+    effectSpellClassMaskC1Controller,
+    effect2Controller,
+    effectBasePoints2Controller,
+    effectDieSides2Controller,
+    effectRealPointsPerLevel2Controller,
+    effectMechanic2Controller,
+    effectChainTargets2Controller,
+    effectAura2Controller,
+    effectAuraPeriod2Controller,
+    effectAmplitude2Controller,
+    implicitTargetA2Controller,
+    implicitTargetB2Controller,
+    effectMiscValue2Controller,
+    effectMiscValueB2Controller,
+    effectRadiusIndex2Controller,
+    effectChainAmplitude2Controller,
+    effectBonusCoefficient2Controller,
+    effectItemType2Controller,
+    effectTriggerSpell2Controller,
+    effectPointsPerCombo2Controller,
+    effectSpellClassMaskA2Controller,
+    effectSpellClassMaskB2Controller,
+    effectSpellClassMaskC2Controller,
+    equippedItemClassController,
+    equippedItemSubclassController,
+    equippedItemInvTypesController,
+    requiredTotemCategoryID0Controller,
+    totem0Controller,
+    requiredTotemCategoryID1Controller,
+    totem1Controller,
+    reagent0Controller,
+    reagent1Controller,
+    reagent2Controller,
+    reagent3Controller,
+    reagent4Controller,
+    reagent5Controller,
+    reagent6Controller,
+    reagent7Controller,
+    reagentCount0Controller,
+    reagentCount1Controller,
+    reagentCount2Controller,
+    reagentCount3Controller,
+    reagentCount4Controller,
+    reagentCount5Controller,
+    reagentCount6Controller,
+    reagentCount7Controller,
+    casterAuraSpellController,
+    cumulativeAuraController,
+    minFactionIDController,
+    minReputationController,
+    excludeCasterAuraStateController,
+    excludeCasterAuraSpellController,
+    excludeTargetAuraSpellController,
+    excludeTargetAuraStateController,
+    spellPriorityController,
+    modalNextSpellController,
+    requiredAuraVisionController,
+    targetAuraSpellController,
+    stanceBarOrderController,
+    shapeshiftMask0Controller,
+    shapeshiftExclude0Controller,
+  ];
 
   final id = signal(0);
   final spell = signal(SpellEntity());
@@ -241,6 +421,9 @@ class SpellDetailViewModel {
   final effectAura1Signal = signal<int>(0);
   final effectAura2Signal = signal<int>(0);
   final spellClassSetSignal = signal<int>(0);
+
+  bool _effectSignalsWired = false;
+
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
@@ -248,7 +431,7 @@ class SpellDetailViewModel {
       if (isCreate) {
         final newId = await _repository.storeSpell(t);
         id.value = newId;
-        idController.text = _fmt(newId);
+        idController.init(newId);
         t = t.copyWith(id: newId);
       } else {
         await _repository.updateSpell(t);
@@ -287,7 +470,7 @@ class SpellDetailViewModel {
       nameLangUnk2: values.valueOf('unk2'),
       nameLangUnk3: values.valueOf('unk3'),
     );
-    nameLangZhCNController.text = values.zhCN;
+    nameLangZhCNController.init(values.zhCN);
   }
 
   void applyNameSubtextLocales(List<DbcLocaleFieldValue> values) {
@@ -309,7 +492,7 @@ class SpellDetailViewModel {
       nameSubtextLangUnk2: values.valueOf('unk2'),
       nameSubtextLangUnk3: values.valueOf('unk3'),
     );
-    nameSubtextLangZhCNController.text = values.zhCN;
+    nameSubtextLangZhCNController.init(values.zhCN);
   }
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
@@ -331,7 +514,7 @@ class SpellDetailViewModel {
       descriptionLangUnk2: values.valueOf('unk2'),
       descriptionLangUnk3: values.valueOf('unk3'),
     );
-    descriptionLangZhCNController.text = values.zhCN;
+    descriptionLangZhCNController.init(values.zhCN);
   }
 
   void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
@@ -353,7 +536,7 @@ class SpellDetailViewModel {
       auraDescriptionLangUnk2: values.valueOf('unk2'),
       auraDescriptionLangUnk3: values.valueOf('unk3'),
     );
-    auraDescriptionLangZhCNController.text = values.zhCN;
+    auraDescriptionLangZhCNController.init(values.zhCN);
   }
 
   void pop() {
@@ -362,274 +545,219 @@ class SpellDetailViewModel {
 
   SpellEntity _collectFromControllers() {
     // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
-    final t = spell.value.copyWith(
+    return spell.value.copyWith(
       id: id.value,
       // === 基础文本 ===
-      nameLangZhCN: nameLangZhCNController.text,
-      nameSubtextLangZhCN: nameSubtextLangZhCNController.text,
-      descriptionLangZhCN: descriptionLangZhCNController.text,
-      auraDescriptionLangZhCN: auraDescriptionLangZhCNController.text,
-      nameLangFlags: _pi(nameLangFlagsController.text),
-      nameSubtextLangFlags: _pi(nameSubtextLangFlagsController.text),
-      descriptionLangFlags: _pi(descriptionLangFlagsController.text),
-      auraDescriptionLangFlags: _pi(auraDescriptionLangFlagsController.text),
+      nameLangZhCN: nameLangZhCNController.collect(),
+      nameSubtextLangZhCN: nameSubtextLangZhCNController.collect(),
+      descriptionLangZhCN: descriptionLangZhCNController.collect(),
+      auraDescriptionLangZhCN: auraDescriptionLangZhCNController.collect(),
+      nameLangFlags: nameLangFlagsController.collect(),
+      nameSubtextLangFlags: nameSubtextLangFlagsController.collect(),
+      descriptionLangFlags: descriptionLangFlagsController.collect(),
+      auraDescriptionLangFlags: auraDescriptionLangFlagsController.collect(),
 
       // === 图标/视觉 ===
-      spellIconID: _pi(spellIconIDController.text),
-      activeIconID: _pi(activeIconIDController.text),
-      spellVisualID0: _pi(spellVisualID0Controller.text),
-      spellVisualID1: _pi(spellVisualID1Controller.text),
+      spellIconID: spellIconIDController.collect(),
+      activeIconID: activeIconIDController.collect(),
+      spellVisualID0: spellVisualID0Controller.collect(),
+      spellVisualID1: spellVisualID1Controller.collect(),
 
       // === 分类/类型 ===
-      category: _pi(categoryController.text),
-      schoolMask: _pi(schoolMaskController.text),
-      mechanic: _getSelectValue(mechanicController),
-      defenseType: _getSelectValue(defenseTypeController),
-      dispelType: _getSelectValue(dispelTypeController),
-      preventionType: _getSelectValue(preventionTypeController),
+      category: categoryController.collect(),
+      // schoolMask 以 Flag UI 为准（schoolMaskController 仅冗余保留）
+      schoolMask: schoolMaskFlagController.collect(),
+      mechanic: mechanicController.collect(),
+      defenseType: defenseTypeController.collect(),
+      dispelType: dispelTypeController.collect(),
+      preventionType: preventionTypeController.collect(),
 
       // === 施法参数 ===
-      castingTimeIndex: _pi(castingTimeIndexController.text),
-      durationIndex: _pi(durationIndexController.text),
-      rangeIndex: _pi(rangeIndexController.text),
-      spellDescriptionVariableID: _pi(
-        spellDescriptionVariableIDController.text,
-      ),
+      castingTimeIndex: castingTimeIndexController.collect(),
+      durationIndex: durationIndexController.collect(),
+      rangeIndex: rangeIndexController.collect(),
+      spellDescriptionVariableID: spellDescriptionVariableIDController
+          .collect(),
 
       // === 等级 ===
-      baseLevel: _pi(baseLevelController.text),
-      spellLevel: _pi(spellLevelController.text),
-      maxLevel: _pi(maxLevelController.text),
-      spellDifficultyID: _pi(spellDifficultyIDController.text),
+      baseLevel: baseLevelController.collect(),
+      spellLevel: spellLevelController.collect(),
+      maxLevel: maxLevelController.collect(),
+      spellDifficultyID: spellDifficultyIDController.collect(),
 
       // === 冷却/恢复 ===
-      startRecoveryCategory: _pi(startRecoveryCategoryController.text),
-      startRecoveryTime: _pi(startRecoveryTimeController.text),
-      recoveryTime: _pi(recoveryTimeController.text),
-      categoryRecoveryTime: _pi(categoryRecoveryTimeController.text),
+      startRecoveryCategory: startRecoveryCategoryController.collect(),
+      startRecoveryTime: startRecoveryTimeController.collect(),
+      recoveryTime: recoveryTimeController.collect(),
+      categoryRecoveryTime: categoryRecoveryTimeController.collect(),
 
       // === 目标 ===
-      targetCreatureType: _getSelectValue(targetCreatureTypeController),
-      targets: FlagFieldController.parseFlagValue(targetsController.text),
-      maxTargets: _pi(maxTargetsController.text),
-      maxTargetLevel: _pi(maxTargetLevelController.text),
+      targetCreatureType: targetCreatureTypeController.collect(),
+      targets: targetsController.collect(),
+      maxTargets: maxTargetsController.collect(),
+      maxTargetLevel: maxTargetLevelController.collect(),
 
       // === 状态 ===
-      casterAuraState: _pi(casterAuraStateController.text),
-      targetAuraState: _pi(targetAuraStateController.text),
-      spellMissileID: _pi(spellMissileIDController.text),
-      speed: _pd(speedController.text),
+      casterAuraState: casterAuraStateController.collect(),
+      targetAuraState: targetAuraStateController.collect(),
+      spellMissileID: spellMissileIDController.collect(),
+      speed: speedController.collect(),
 
       // === 需求 ===
-      requiredAreasID: _pi(requiredAreasIDController.text),
-      requiresSpellFocus: _pi(requiresSpellFocusController.text),
-      facingCasterFlags: FlagFieldController.parseFlagValue(
-        facingCasterFlagsController.text,
-      ),
+      requiredAreasID: requiredAreasIDController.collect(),
+      requiresSpellFocus: requiresSpellFocusController.collect(),
+      facingCasterFlags: facingCasterFlagsController.collect(),
 
       // === 能量消耗 ===
-      powerDisplayID: _pi(powerDisplayIDController.text),
-      powerType: _getSelectValue(powerTypeController),
-      runeCostID: _pi(runeCostIDController.text),
-      manaCost: _pi(manaCostController.text),
-      manaCostPct: _pi(manaCostPctController.text),
-      manaCostPerLevel: _pi(manaCostPerLevelController.text),
-      manaPerSecond: _pi(manaPerSecondController.text),
-      manaPerSecondPerLevel: _pi(manaPerSecondPerLevelController.text),
+      powerDisplayID: powerDisplayIDController.collect(),
+      powerType: powerTypeController.collect(),
+      runeCostID: runeCostIDController.collect(),
+      manaCost: manaCostController.collect(),
+      manaCostPct: manaCostPctController.collect(),
+      manaCostPerLevel: manaCostPerLevelController.collect(),
+      manaPerSecond: manaPerSecondController.collect(),
+      manaPerSecondPerLevel: manaPerSecondPerLevelController.collect(),
 
       // === 标志位 ===
-      interruptFlags: FlagFieldController.parseFlagValue(
-        interruptFlagsController.text,
-      ),
-      auraInterruptFlags: FlagFieldController.parseFlagValue(
-        auraInterruptFlagsController.text,
-      ),
-      channelInterruptFlags: FlagFieldController.parseFlagValue(
-        channelInterruptFlagsController.text,
-      ),
-      attributes: FlagFieldController.parseFlagValue(attributesController.text),
-      attributesEx: FlagFieldController.parseFlagValue(
-        attributesExController.text,
-      ),
-      attributesExB: FlagFieldController.parseFlagValue(
-        attributesExBController.text,
-      ),
-      attributesExC: FlagFieldController.parseFlagValue(
-        attributesExCController.text,
-      ),
-      attributesExD: FlagFieldController.parseFlagValue(
-        attributesExDController.text,
-      ),
-      attributesExE: FlagFieldController.parseFlagValue(
-        attributesExEController.text,
-      ),
-      attributesExF: FlagFieldController.parseFlagValue(
-        attributesExFController.text,
-      ),
-      attributesExG: FlagFieldController.parseFlagValue(
-        attributesExGController.text,
-      ),
+      interruptFlags: interruptFlagsController.collect(),
+      auraInterruptFlags: auraInterruptFlagsController.collect(),
+      channelInterruptFlags: channelInterruptFlagsController.collect(),
+      attributes: attributesController.collect(),
+      attributesEx: attributesExController.collect(),
+      attributesExB: attributesExBController.collect(),
+      attributesExC: attributesExCController.collect(),
+      attributesExD: attributesExDController.collect(),
+      attributesExE: attributesExEController.collect(),
+      attributesExF: attributesExFController.collect(),
+      attributesExG: attributesExGController.collect(),
 
       // === 触发 ===
-      procTypeMask: FlagFieldController.parseFlagValue(
-        procTypeMaskController.text,
-      ),
-      procChance: _pi(procChanceController.text),
-      procCharges: _pi(procChargesController.text),
+      procTypeMask: procTypeMaskController.collect(),
+      procChance: procChanceController.collect(),
+      procCharges: procChargesController.collect(),
 
       // === 法术分类 ===
-      spellClassSet: _getSelectValue(spellClassSetController),
-      spellClassMask0: FlagFieldController.parseFlagValue(
-        spellClassMask0Controller.text,
-      ),
-      spellClassMask1: FlagFieldController.parseFlagValue(
-        spellClassMask1Controller.text,
-      ),
-      spellClassMask2: FlagFieldController.parseFlagValue(
-        spellClassMask2Controller.text,
-      ),
+      spellClassSet: spellClassSetController.collect(),
+      spellClassMask0: spellClassMask0Controller.collect(),
+      spellClassMask1: spellClassMask1Controller.collect(),
+      spellClassMask2: spellClassMask2Controller.collect(),
 
       // === 效果0 ===
-      effect0: _getSelectValue(effect0Controller),
-      effectBasePoints0: _pi(effectBasePoints0Controller.text),
-      effectDieSides0: _pi(effectDieSides0Controller.text),
-      effectRealPointsPerLevel0: _pd(effectRealPointsPerLevel0Controller.text),
-      effectMechanic0: _getSelectValue(effectMechanic0Controller),
-      effectChainTargets0: _pi(effectChainTargets0Controller.text),
-      effectAura0: _getSelectValue(effectAura0Controller),
-      effectAuraPeriod0: _pi(effectAuraPeriod0Controller.text),
-      effectAmplitude0: _pd(effectAmplitude0Controller.text),
-      implicitTargetA0: _getSelectValue(implicitTargetA0Controller),
-      implicitTargetB0: _getSelectValue(implicitTargetB0Controller),
-      effectMiscValue0: _pi(effectMiscValue0Controller.text),
-      effectMiscValueB0: _pi(effectMiscValueB0Controller.text),
-      effectRadiusIndex0: _pi(effectRadiusIndex0Controller.text),
-      effectChainAmplitude0: _pd(effectChainAmplitude0Controller.text),
-      effectBonusCoefficient0: _pd(effectBonusCoefficient0Controller.text),
-      effectItemType0: _getSelectValue(effectItemType0Controller),
-      effectTriggerSpell0: _pi(effectTriggerSpell0Controller.text),
-      effectPointsPerCombo0: _pd(effectPointsPerCombo0Controller.text),
-      effectSpellClassMaskA0: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskA0Controller.text,
-      ),
-      effectSpellClassMaskB0: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskB0Controller.text,
-      ),
-      effectSpellClassMaskC0: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskC0Controller.text,
-      ),
+      effect0: effect0Controller.collect(),
+      effectBasePoints0: effectBasePoints0Controller.collect(),
+      effectDieSides0: effectDieSides0Controller.collect(),
+      effectRealPointsPerLevel0: effectRealPointsPerLevel0Controller.collect(),
+      effectMechanic0: effectMechanic0Controller.collect(),
+      effectChainTargets0: effectChainTargets0Controller.collect(),
+      effectAura0: effectAura0Controller.collect(),
+      effectAuraPeriod0: effectAuraPeriod0Controller.collect(),
+      effectAmplitude0: effectAmplitude0Controller.collect(),
+      implicitTargetA0: implicitTargetA0Controller.collect(),
+      implicitTargetB0: implicitTargetB0Controller.collect(),
+      effectMiscValue0: effectMiscValue0Controller.collect(),
+      effectMiscValueB0: effectMiscValueB0Controller.collect(),
+      effectRadiusIndex0: effectRadiusIndex0Controller.collect(),
+      effectChainAmplitude0: effectChainAmplitude0Controller.collect(),
+      effectBonusCoefficient0: effectBonusCoefficient0Controller.collect(),
+      effectItemType0: effectItemType0Controller.collect(),
+      effectTriggerSpell0: effectTriggerSpell0Controller.collect(),
+      effectPointsPerCombo0: effectPointsPerCombo0Controller.collect(),
+      effectSpellClassMaskA0: effectSpellClassMaskA0Controller.collect(),
+      effectSpellClassMaskB0: effectSpellClassMaskB0Controller.collect(),
+      effectSpellClassMaskC0: effectSpellClassMaskC0Controller.collect(),
 
       // === 效果1 ===
-      effect1: _getSelectValue(effect1Controller),
-      effectBasePoints1: _pi(effectBasePoints1Controller.text),
-      effectDieSides1: _pi(effectDieSides1Controller.text),
-      effectRealPointsPerLevel1: _pd(effectRealPointsPerLevel1Controller.text),
-      effectMechanic1: _getSelectValue(effectMechanic1Controller),
-      effectChainTargets1: _pi(effectChainTargets1Controller.text),
-      effectAura1: _getSelectValue(effectAura1Controller),
-      effectAuraPeriod1: _pi(effectAuraPeriod1Controller.text),
-      effectAmplitude1: _pd(effectAmplitude1Controller.text),
-      implicitTargetA1: _getSelectValue(implicitTargetA1Controller),
-      implicitTargetB1: _getSelectValue(implicitTargetB1Controller),
-      effectMiscValue1: _pi(effectMiscValue1Controller.text),
-      effectMiscValueB1: _pi(effectMiscValueB1Controller.text),
-      effectRadiusIndex1: _pi(effectRadiusIndex1Controller.text),
-      effectChainAmplitude1: _pd(effectChainAmplitude1Controller.text),
-      effectBonusCoefficient1: _pd(effectBonusCoefficient1Controller.text),
-      effectItemType1: _getSelectValue(effectItemType1Controller),
-      effectTriggerSpell1: _pi(effectTriggerSpell1Controller.text),
-      effectPointsPerCombo1: _pd(effectPointsPerCombo1Controller.text),
-      effectSpellClassMaskA1: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskA1Controller.text,
-      ),
-      effectSpellClassMaskB1: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskB1Controller.text,
-      ),
-      effectSpellClassMaskC1: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskC1Controller.text,
-      ),
+      effect1: effect1Controller.collect(),
+      effectBasePoints1: effectBasePoints1Controller.collect(),
+      effectDieSides1: effectDieSides1Controller.collect(),
+      effectRealPointsPerLevel1: effectRealPointsPerLevel1Controller.collect(),
+      effectMechanic1: effectMechanic1Controller.collect(),
+      effectChainTargets1: effectChainTargets1Controller.collect(),
+      effectAura1: effectAura1Controller.collect(),
+      effectAuraPeriod1: effectAuraPeriod1Controller.collect(),
+      effectAmplitude1: effectAmplitude1Controller.collect(),
+      implicitTargetA1: implicitTargetA1Controller.collect(),
+      implicitTargetB1: implicitTargetB1Controller.collect(),
+      effectMiscValue1: effectMiscValue1Controller.collect(),
+      effectMiscValueB1: effectMiscValueB1Controller.collect(),
+      effectRadiusIndex1: effectRadiusIndex1Controller.collect(),
+      effectChainAmplitude1: effectChainAmplitude1Controller.collect(),
+      effectBonusCoefficient1: effectBonusCoefficient1Controller.collect(),
+      effectItemType1: effectItemType1Controller.collect(),
+      effectTriggerSpell1: effectTriggerSpell1Controller.collect(),
+      effectPointsPerCombo1: effectPointsPerCombo1Controller.collect(),
+      effectSpellClassMaskA1: effectSpellClassMaskA1Controller.collect(),
+      effectSpellClassMaskB1: effectSpellClassMaskB1Controller.collect(),
+      effectSpellClassMaskC1: effectSpellClassMaskC1Controller.collect(),
 
       // === 效果2 ===
-      effect2: _getSelectValue(effect2Controller),
-      effectBasePoints2: _pi(effectBasePoints2Controller.text),
-      effectDieSides2: _pi(effectDieSides2Controller.text),
-      effectRealPointsPerLevel2: _pd(effectRealPointsPerLevel2Controller.text),
-      effectMechanic2: _getSelectValue(effectMechanic2Controller),
-      effectChainTargets2: _pi(effectChainTargets2Controller.text),
-      effectAura2: _getSelectValue(effectAura2Controller),
-      effectAuraPeriod2: _pi(effectAuraPeriod2Controller.text),
-      effectAmplitude2: _pd(effectAmplitude2Controller.text),
-      implicitTargetA2: _getSelectValue(implicitTargetA2Controller),
-      implicitTargetB2: _getSelectValue(implicitTargetB2Controller),
-      effectMiscValue2: _pi(effectMiscValue2Controller.text),
-      effectMiscValueB2: _pi(effectMiscValueB2Controller.text),
-      effectRadiusIndex2: _pi(effectRadiusIndex2Controller.text),
-      effectChainAmplitude2: _pd(effectChainAmplitude2Controller.text),
-      effectBonusCoefficient2: _pd(effectBonusCoefficient2Controller.text),
-      effectItemType2: _getSelectValue(effectItemType2Controller),
-      effectTriggerSpell2: _pi(effectTriggerSpell2Controller.text),
-      effectPointsPerCombo2: _pd(effectPointsPerCombo2Controller.text),
-      effectSpellClassMaskA2: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskA2Controller.text,
-      ),
-      effectSpellClassMaskB2: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskB2Controller.text,
-      ),
-      effectSpellClassMaskC2: FlagFieldController.parseFlagValue(
-        effectSpellClassMaskC2Controller.text,
-      ),
+      effect2: effect2Controller.collect(),
+      effectBasePoints2: effectBasePoints2Controller.collect(),
+      effectDieSides2: effectDieSides2Controller.collect(),
+      effectRealPointsPerLevel2: effectRealPointsPerLevel2Controller.collect(),
+      effectMechanic2: effectMechanic2Controller.collect(),
+      effectChainTargets2: effectChainTargets2Controller.collect(),
+      effectAura2: effectAura2Controller.collect(),
+      effectAuraPeriod2: effectAuraPeriod2Controller.collect(),
+      effectAmplitude2: effectAmplitude2Controller.collect(),
+      implicitTargetA2: implicitTargetA2Controller.collect(),
+      implicitTargetB2: implicitTargetB2Controller.collect(),
+      effectMiscValue2: effectMiscValue2Controller.collect(),
+      effectMiscValueB2: effectMiscValueB2Controller.collect(),
+      effectRadiusIndex2: effectRadiusIndex2Controller.collect(),
+      effectChainAmplitude2: effectChainAmplitude2Controller.collect(),
+      effectBonusCoefficient2: effectBonusCoefficient2Controller.collect(),
+      effectItemType2: effectItemType2Controller.collect(),
+      effectTriggerSpell2: effectTriggerSpell2Controller.collect(),
+      effectPointsPerCombo2: effectPointsPerCombo2Controller.collect(),
+      effectSpellClassMaskA2: effectSpellClassMaskA2Controller.collect(),
+      effectSpellClassMaskB2: effectSpellClassMaskB2Controller.collect(),
+      effectSpellClassMaskC2: effectSpellClassMaskC2Controller.collect(),
 
       // === 装备限制 ===
-      equippedItemClass: _getSelectValue(equippedItemClassController),
-      equippedItemSubclass: _pi(equippedItemSubclassController.text),
-      equippedItemInvTypes: FlagFieldController.parseFlagValue(
-        equippedItemInvTypesController.text,
-      ),
+      equippedItemClass: equippedItemClassController.collect(),
+      equippedItemSubclass: equippedItemSubclassController.collect(),
+      equippedItemInvTypes: equippedItemInvTypesController.collect(),
 
       // === 图腾/施法材料 ===
-      requiredTotemCategoryID0: _pi(requiredTotemCategoryID0Controller.text),
-      totem0: _pi(totem0Controller.text),
-      requiredTotemCategoryID1: _pi(requiredTotemCategoryID1Controller.text),
-      totem1: _pi(totem1Controller.text),
-      reagent0: _pi(reagent0Controller.text),
-      reagent1: _pi(reagent1Controller.text),
-      reagent2: _pi(reagent2Controller.text),
-      reagent3: _pi(reagent3Controller.text),
-      reagent4: _pi(reagent4Controller.text),
-      reagent5: _pi(reagent5Controller.text),
-      reagent6: _pi(reagent6Controller.text),
-      reagent7: _pi(reagent7Controller.text),
-      reagentCount0: _pi(reagentCount0Controller.text),
-      reagentCount1: _pi(reagentCount1Controller.text),
-      reagentCount2: _pi(reagentCount2Controller.text),
-      reagentCount3: _pi(reagentCount3Controller.text),
-      reagentCount4: _pi(reagentCount4Controller.text),
-      reagentCount5: _pi(reagentCount5Controller.text),
-      reagentCount6: _pi(reagentCount6Controller.text),
-      reagentCount7: _pi(reagentCount7Controller.text),
+      requiredTotemCategoryID0: requiredTotemCategoryID0Controller.collect(),
+      totem0: totem0Controller.collect(),
+      requiredTotemCategoryID1: requiredTotemCategoryID1Controller.collect(),
+      totem1: totem1Controller.collect(),
+      reagent0: reagent0Controller.collect(),
+      reagent1: reagent1Controller.collect(),
+      reagent2: reagent2Controller.collect(),
+      reagent3: reagent3Controller.collect(),
+      reagent4: reagent4Controller.collect(),
+      reagent5: reagent5Controller.collect(),
+      reagent6: reagent6Controller.collect(),
+      reagent7: reagent7Controller.collect(),
+      reagentCount0: reagentCount0Controller.collect(),
+      reagentCount1: reagentCount1Controller.collect(),
+      reagentCount2: reagentCount2Controller.collect(),
+      reagentCount3: reagentCount3Controller.collect(),
+      reagentCount4: reagentCount4Controller.collect(),
+      reagentCount5: reagentCount5Controller.collect(),
+      reagentCount6: reagentCount6Controller.collect(),
+      reagentCount7: reagentCount7Controller.collect(),
 
       // === 其他高级属性 ===
-      casterAuraSpell: _pi(casterAuraSpellController.text),
-      cumulativeAura: _pi(cumulativeAuraController.text),
-      minFactionID: _pi(minFactionIDController.text),
-      minReputation: _getSelectValue(minReputationController),
-      excludeCasterAuraSpell: _pi(excludeCasterAuraSpellController.text),
-      excludeCasterAuraState: _getSelectValue(excludeCasterAuraStateController),
-      excludeTargetAuraSpell: _pi(excludeTargetAuraSpellController.text),
-      excludeTargetAuraState: _getSelectValue(excludeTargetAuraStateController),
-      spellPriority: _pi(spellPriorityController.text),
-      modalNextSpell: _pi(modalNextSpellController.text),
-      requiredAuraVision: _pi(requiredAuraVisionController.text),
-      targetAuraSpell: _pi(targetAuraSpellController.text),
-      stanceBarOrder: _pi(stanceBarOrderController.text),
-      shapeshiftMask0: FlagFieldController.parseFlagValue(
-        shapeshiftMask0Controller.text,
-      ),
-      shapeshiftExclude0: FlagFieldController.parseFlagValue(
-        shapeshiftExclude0Controller.text,
-      ),
+      casterAuraSpell: casterAuraSpellController.collect(),
+      cumulativeAura: cumulativeAuraController.collect(),
+      minFactionID: minFactionIDController.collect(),
+      minReputation: minReputationController.collect(),
+      excludeCasterAuraSpell: excludeCasterAuraSpellController.collect(),
+      excludeCasterAuraState: excludeCasterAuraStateController.collect(),
+      excludeTargetAuraSpell: excludeTargetAuraSpellController.collect(),
+      excludeTargetAuraState: excludeTargetAuraStateController.collect(),
+      spellPriority: spellPriorityController.collect(),
+      modalNextSpell: modalNextSpellController.collect(),
+      requiredAuraVision: requiredAuraVisionController.collect(),
+      targetAuraSpell: targetAuraSpellController.collect(),
+      stanceBarOrder: stanceBarOrderController.collect(),
+      shapeshiftMask0: shapeshiftMask0Controller.collect(),
+      shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
     );
-    return t;
   }
 
   void _logActivity(ActivityActionType action, SpellEntity t) {
@@ -644,189 +772,10 @@ class SpellDetailViewModel {
   }
 
   void dispose() {
-    activeIconIDController.dispose();
-    attributesController.dispose();
-    attributesExController.dispose();
-    attributesExBController.dispose();
-    attributesExCController.dispose();
-    attributesExDController.dispose();
-    attributesExEController.dispose();
-    attributesExFController.dispose();
-    attributesExGController.dispose();
-    auraDescriptionLangFlagsController.dispose();
-    auraDescriptionLangZhCNController.dispose();
-    auraInterruptFlagsController.dispose();
-    baseLevelController.dispose();
-    casterAuraSpellController.dispose();
-    casterAuraStateController.dispose();
-    castingTimeIndexController.dispose();
-    categoryController.dispose();
-    categoryRecoveryTimeController.dispose();
-    channelInterruptFlagsController.dispose();
-    cumulativeAuraController.dispose();
-    defenseTypeController.dispose();
-    descriptionLangFlagsController.dispose();
-    descriptionLangZhCNController.dispose();
-    dispelTypeController.dispose();
-    durationIndexController.dispose();
-    effect0Controller.dispose();
-    effect1Controller.dispose();
-    effect2Controller.dispose();
-    effectAmplitude0Controller.dispose();
-    effectAmplitude1Controller.dispose();
-    effectAmplitude2Controller.dispose();
-    effectAura0Controller.dispose();
-    effectAura1Controller.dispose();
-    effectAura2Controller.dispose();
-    effectAuraPeriod0Controller.dispose();
-    effectAuraPeriod1Controller.dispose();
-    effectAuraPeriod2Controller.dispose();
-    effectBasePoints0Controller.dispose();
-    effectBasePoints1Controller.dispose();
-    effectBasePoints2Controller.dispose();
-    effectBonusCoefficient0Controller.dispose();
-    effectBonusCoefficient1Controller.dispose();
-    effectBonusCoefficient2Controller.dispose();
-    effectChainAmplitude0Controller.dispose();
-    effectChainAmplitude1Controller.dispose();
-    effectChainAmplitude2Controller.dispose();
-    effectChainTargets0Controller.dispose();
-    effectChainTargets1Controller.dispose();
-    effectChainTargets2Controller.dispose();
-    effectDieSides0Controller.dispose();
-    effectDieSides1Controller.dispose();
-    effectDieSides2Controller.dispose();
-    effectItemType0Controller.dispose();
-    effectItemType1Controller.dispose();
-    effectItemType2Controller.dispose();
-    effectMechanic0Controller.dispose();
-    effectMechanic1Controller.dispose();
-    effectMechanic2Controller.dispose();
-    effectMiscValue0Controller.dispose();
-    effectMiscValue1Controller.dispose();
-    effectMiscValue2Controller.dispose();
-    effectMiscValueB0Controller.dispose();
-    effectMiscValueB1Controller.dispose();
-    effectMiscValueB2Controller.dispose();
-    effectPointsPerCombo0Controller.dispose();
-    effectPointsPerCombo1Controller.dispose();
-    effectPointsPerCombo2Controller.dispose();
-    effectRadiusIndex0Controller.dispose();
-    effectRadiusIndex1Controller.dispose();
-    effectRadiusIndex2Controller.dispose();
-    effectRealPointsPerLevel0Controller.dispose();
-    effectRealPointsPerLevel1Controller.dispose();
-    effectRealPointsPerLevel2Controller.dispose();
-    effectSpellClassMaskA0Controller.dispose();
-    effectSpellClassMaskA1Controller.dispose();
-    effectSpellClassMaskA2Controller.dispose();
-    effectSpellClassMaskB0Controller.dispose();
-    effectSpellClassMaskB1Controller.dispose();
-    effectSpellClassMaskB2Controller.dispose();
-    effectSpellClassMaskC0Controller.dispose();
-    effectSpellClassMaskC1Controller.dispose();
-    effectSpellClassMaskC2Controller.dispose();
-    effectTriggerSpell0Controller.dispose();
-    effectTriggerSpell1Controller.dispose();
-    effectTriggerSpell2Controller.dispose();
-    equippedItemClassController.dispose();
-    equippedItemInvTypesController.dispose();
-    equippedItemSubclassController.dispose();
-    excludeCasterAuraSpellController.dispose();
-    excludeCasterAuraStateController.dispose();
-    excludeTargetAuraSpellController.dispose();
-    excludeTargetAuraStateController.dispose();
-    facingCasterFlagsController.dispose();
-    implicitTargetA0Controller.dispose();
-    implicitTargetA1Controller.dispose();
-    implicitTargetA2Controller.dispose();
-    implicitTargetB0Controller.dispose();
-    implicitTargetB1Controller.dispose();
-    implicitTargetB2Controller.dispose();
-    interruptFlagsController.dispose();
-    manaCostController.dispose();
-    manaCostPctController.dispose();
-    manaCostPerLevelController.dispose();
-    manaPerSecondController.dispose();
-    manaPerSecondPerLevelController.dispose();
-    maxLevelController.dispose();
-    maxTargetLevelController.dispose();
-    maxTargetsController.dispose();
-    mechanicController.dispose();
-    minFactionIDController.dispose();
-    minReputationController.dispose();
-    modalNextSpellController.dispose();
-    nameLangFlagsController.dispose();
-    idController.dispose();
-    nameLangZhCNController.dispose();
-    nameSubtextLangFlagsController.dispose();
-    nameSubtextLangZhCNController.dispose();
-    powerDisplayIDController.dispose();
-    powerTypeController.dispose();
-    preventionTypeController.dispose();
-    procChanceController.dispose();
-    procChargesController.dispose();
-    procTypeMaskController.dispose();
-    rangeIndexController.dispose();
-    reagent0Controller.dispose();
-    reagent1Controller.dispose();
-    reagent2Controller.dispose();
-    reagent3Controller.dispose();
-    reagent4Controller.dispose();
-    reagent5Controller.dispose();
-    reagent6Controller.dispose();
-    reagent7Controller.dispose();
-    reagentCount0Controller.dispose();
-    reagentCount1Controller.dispose();
-    reagentCount2Controller.dispose();
-    reagentCount3Controller.dispose();
-    reagentCount4Controller.dispose();
-    reagentCount5Controller.dispose();
-    reagentCount6Controller.dispose();
-    reagentCount7Controller.dispose();
-    recoveryTimeController.dispose();
-    requiredAreasIDController.dispose();
-    requiredAuraVisionController.dispose();
-    requiredTotemCategoryID0Controller.dispose();
-    requiredTotemCategoryID1Controller.dispose();
-    requiresSpellFocusController.dispose();
-    runeCostIDController.dispose();
-    schoolMaskController.dispose();
-    schoolMaskFlagController.dispose();
-    shapeshiftExclude0Controller.dispose();
-    shapeshiftMask0Controller.dispose();
-    speedController.dispose();
-    spellClassMask0Controller.dispose();
-    spellClassMask1Controller.dispose();
-    spellClassMask2Controller.dispose();
-    spellClassSetController.dispose();
-    spellDescriptionVariableIDController.dispose();
-    spellDifficultyIDController.dispose();
-    spellIconIDController.dispose();
-    spellLevelController.dispose();
-    spellMissileIDController.dispose();
-    spellPriorityController.dispose();
-    spellVisualID0Controller.dispose();
-    spellVisualID1Controller.dispose();
-    stanceBarOrderController.dispose();
-    startRecoveryCategoryController.dispose();
-    startRecoveryTimeController.dispose();
-    targetAuraSpellController.dispose();
-    targetAuraStateController.dispose();
-    targetCreatureTypeController.dispose();
-    targetsController.dispose();
-    totem0Controller.dispose();
-    totem1Controller.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
-
-  int _getSelectValue(ShadSelectController<int> controller) =>
-      controller.value.firstOrNull ?? 0;
 
   Future<void> initSignals({int? id}) async {
     try {
@@ -849,11 +798,17 @@ class SpellDetailViewModel {
     }
   }
 
-  /// 监听 ShadSelectController 变化，同步到 signal
+  /// 监听 SelectFieldController 变化，同步到 signal。
+  ///
+  /// 使用 `selectController.controller.addListener` 是 ViewModel 侧允许的
+  /// 联动例外（见 FIELD_CONTROLLER_MIGRATION / 迁移任务说明）。
   void _wireEffectSignals() {
-    void sync(ShadSelectController<int> ctrl, Signal<int> sig) {
-      sig.value = _getSelectValue(ctrl);
-      ctrl.addListener(() => sig.value = _getSelectValue(ctrl));
+    if (_effectSignalsWired) return;
+    _effectSignalsWired = true;
+
+    void sync(SelectFieldController<int> ctrl, Signal<int> sig) {
+      sig.value = ctrl.collect();
+      ctrl.controller.addListener(() => sig.value = ctrl.collect());
     }
 
     sync(effect0Controller, effect0Signal);
@@ -866,299 +821,223 @@ class SpellDetailViewModel {
   }
 
   void _initControllers(SpellEntity template) {
-    idController.text = _fmt(template.id);
+    idController.init(template.id);
     // === 基础文本 ===
-    nameLangZhCNController.text = template.nameLangZhCN;
-    nameSubtextLangZhCNController.text = template.nameSubtextLangZhCN;
-    descriptionLangZhCNController.text = template.descriptionLangZhCN;
-    auraDescriptionLangZhCNController.text = template.auraDescriptionLangZhCN;
-    nameLangFlagsController.text = _fmt(template.nameLangFlags);
-    nameSubtextLangFlagsController.text = _fmt(template.nameSubtextLangFlags);
-    descriptionLangFlagsController.text = _fmt(template.descriptionLangFlags);
-    auraDescriptionLangFlagsController.text = _fmt(
-      template.auraDescriptionLangFlags,
-    );
+    nameLangZhCNController.init(template.nameLangZhCN);
+    nameSubtextLangZhCNController.init(template.nameSubtextLangZhCN);
+    descriptionLangZhCNController.init(template.descriptionLangZhCN);
+    auraDescriptionLangZhCNController.init(template.auraDescriptionLangZhCN);
+    nameLangFlagsController.init(template.nameLangFlags);
+    nameSubtextLangFlagsController.init(template.nameSubtextLangFlags);
+    descriptionLangFlagsController.init(template.descriptionLangFlags);
+    auraDescriptionLangFlagsController.init(template.auraDescriptionLangFlags);
 
     // === 图标/视觉 ===
-    spellIconIDController.text = _fmt(template.spellIconID);
-    activeIconIDController.text = _fmt(template.activeIconID);
-    spellVisualID0Controller.text = _fmt(template.spellVisualID0);
-    spellVisualID1Controller.text = _fmt(template.spellVisualID1);
+    spellIconIDController.init(template.spellIconID);
+    activeIconIDController.init(template.activeIconID);
+    spellVisualID0Controller.init(template.spellVisualID0);
+    spellVisualID1Controller.init(template.spellVisualID1);
 
     // === 分类/类型 ===
-    categoryController.text = _fmt(template.category);
-    schoolMaskController.text = _fmt(template.schoolMask);
-    schoolMaskFlagController.text = FlagFieldController.formatFlagValue(
-      template.schoolMask,
-    );
-    mechanicController.value = {template.mechanic};
-    defenseTypeController.value = {template.defenseType};
-    dispelTypeController.value = {template.dispelType};
-    preventionTypeController.value = {template.preventionType};
+    categoryController.init(template.category);
+    schoolMaskController.init(template.schoolMask);
+    schoolMaskFlagController.init(template.schoolMask);
+    mechanicController.init(template.mechanic);
+    defenseTypeController.init(template.defenseType);
+    dispelTypeController.init(template.dispelType);
+    preventionTypeController.init(template.preventionType);
 
     // === 施法参数 ===
-    castingTimeIndexController.text = _fmt(template.castingTimeIndex);
-    durationIndexController.text = _fmt(template.durationIndex);
-    rangeIndexController.text = _fmt(template.rangeIndex);
-    spellDescriptionVariableIDController.text = _fmt(
+    castingTimeIndexController.init(template.castingTimeIndex);
+    durationIndexController.init(template.durationIndex);
+    rangeIndexController.init(template.rangeIndex);
+    spellDescriptionVariableIDController.init(
       template.spellDescriptionVariableID,
     );
 
     // === 等级 ===
-    baseLevelController.text = _fmt(template.baseLevel);
-    spellLevelController.text = _fmt(template.spellLevel);
-    maxLevelController.text = _fmt(template.maxLevel);
-    spellDifficultyIDController.text = _fmt(template.spellDifficultyID);
+    baseLevelController.init(template.baseLevel);
+    spellLevelController.init(template.spellLevel);
+    maxLevelController.init(template.maxLevel);
+    spellDifficultyIDController.init(template.spellDifficultyID);
 
     // === 冷却/恢复 ===
-    startRecoveryCategoryController.text = _fmt(template.startRecoveryCategory);
-    startRecoveryTimeController.text = _fmt(template.startRecoveryTime);
-    recoveryTimeController.text = _fmt(template.recoveryTime);
-    categoryRecoveryTimeController.text = _fmt(template.categoryRecoveryTime);
+    startRecoveryCategoryController.init(template.startRecoveryCategory);
+    startRecoveryTimeController.init(template.startRecoveryTime);
+    recoveryTimeController.init(template.recoveryTime);
+    categoryRecoveryTimeController.init(template.categoryRecoveryTime);
 
     // === 目标 ===
-    targetCreatureTypeController.value = {template.targetCreatureType};
-    targetsController.text = FlagFieldController.formatFlagValue(
-      template.targets,
-    );
-    maxTargetsController.text = _fmt(template.maxTargets);
-    maxTargetLevelController.text = _fmt(template.maxTargetLevel);
+    targetCreatureTypeController.init(template.targetCreatureType);
+    targetsController.init(template.targets);
+    maxTargetsController.init(template.maxTargets);
+    maxTargetLevelController.init(template.maxTargetLevel);
 
     // === 状态 ===
-    casterAuraStateController.text = _fmt(template.casterAuraState);
-    targetAuraStateController.text = _fmt(template.targetAuraState);
-    spellMissileIDController.text = _fmt(template.spellMissileID);
-    speedController.text = _fmt(template.speed);
+    casterAuraStateController.init(template.casterAuraState);
+    targetAuraStateController.init(template.targetAuraState);
+    spellMissileIDController.init(template.spellMissileID);
+    speedController.init(template.speed);
 
     // === 需求 ===
-    requiredAreasIDController.text = _fmt(template.requiredAreasID);
-    requiresSpellFocusController.text = _fmt(template.requiresSpellFocus);
-    facingCasterFlagsController.text = FlagFieldController.formatFlagValue(
-      template.facingCasterFlags,
-    );
+    requiredAreasIDController.init(template.requiredAreasID);
+    requiresSpellFocusController.init(template.requiresSpellFocus);
+    facingCasterFlagsController.init(template.facingCasterFlags);
 
     // === 能量消耗 ===
-    powerDisplayIDController.text = _fmt(template.powerDisplayID);
-    powerTypeController.value = {template.powerType};
-    runeCostIDController.text = _fmt(template.runeCostID);
-    manaCostController.text = _fmt(template.manaCost);
-    manaCostPctController.text = _fmt(template.manaCostPct);
-    manaCostPerLevelController.text = _fmt(template.manaCostPerLevel);
-    manaPerSecondController.text = _fmt(template.manaPerSecond);
-    manaPerSecondPerLevelController.text = _fmt(template.manaPerSecondPerLevel);
+    powerDisplayIDController.init(template.powerDisplayID);
+    powerTypeController.init(template.powerType);
+    runeCostIDController.init(template.runeCostID);
+    manaCostController.init(template.manaCost);
+    manaCostPctController.init(template.manaCostPct);
+    manaCostPerLevelController.init(template.manaCostPerLevel);
+    manaPerSecondController.init(template.manaPerSecond);
+    manaPerSecondPerLevelController.init(template.manaPerSecondPerLevel);
 
     // === 标志位 ===
-    interruptFlagsController.text = FlagFieldController.formatFlagValue(
-      template.interruptFlags,
-    );
-    auraInterruptFlagsController.text = FlagFieldController.formatFlagValue(
-      template.auraInterruptFlags,
-    );
-    channelInterruptFlagsController.text = FlagFieldController.formatFlagValue(
-      template.channelInterruptFlags,
-    );
-    attributesController.text = FlagFieldController.formatFlagValue(
-      template.attributes,
-    );
-    attributesExController.text = FlagFieldController.formatFlagValue(
-      template.attributesEx,
-    );
-    attributesExBController.text = FlagFieldController.formatFlagValue(
-      template.attributesExB,
-    );
-    attributesExCController.text = FlagFieldController.formatFlagValue(
-      template.attributesExC,
-    );
-    attributesExDController.text = FlagFieldController.formatFlagValue(
-      template.attributesExD,
-    );
-    attributesExEController.text = FlagFieldController.formatFlagValue(
-      template.attributesExE,
-    );
-    attributesExFController.text = FlagFieldController.formatFlagValue(
-      template.attributesExF,
-    );
-    attributesExGController.text = FlagFieldController.formatFlagValue(
-      template.attributesExG,
-    );
+    interruptFlagsController.init(template.interruptFlags);
+    auraInterruptFlagsController.init(template.auraInterruptFlags);
+    channelInterruptFlagsController.init(template.channelInterruptFlags);
+    attributesController.init(template.attributes);
+    attributesExController.init(template.attributesEx);
+    attributesExBController.init(template.attributesExB);
+    attributesExCController.init(template.attributesExC);
+    attributesExDController.init(template.attributesExD);
+    attributesExEController.init(template.attributesExE);
+    attributesExFController.init(template.attributesExF);
+    attributesExGController.init(template.attributesExG);
 
     // === 触发 ===
-    procTypeMaskController.text = FlagFieldController.formatFlagValue(
-      template.procTypeMask,
-    );
-    procChanceController.text = _fmt(template.procChance);
-    procChargesController.text = _fmt(template.procCharges);
+    procTypeMaskController.init(template.procTypeMask);
+    procChanceController.init(template.procChance);
+    procChargesController.init(template.procCharges);
 
     // === 法术分类 ===
-    spellClassSetController.value = {template.spellClassSet};
-    spellClassMask0Controller.text = FlagFieldController.formatFlagValue(
-      template.spellClassMask0,
-    );
-    spellClassMask1Controller.text = FlagFieldController.formatFlagValue(
-      template.spellClassMask1,
-    );
-    spellClassMask2Controller.text = FlagFieldController.formatFlagValue(
-      template.spellClassMask2,
-    );
+    spellClassSetController.init(template.spellClassSet);
+    spellClassMask0Controller.init(template.spellClassMask0);
+    spellClassMask1Controller.init(template.spellClassMask1);
+    spellClassMask2Controller.init(template.spellClassMask2);
 
     // === 效果0 ===
-    effect0Controller.value = {template.effect0};
-    effectBasePoints0Controller.text = _fmt(template.effectBasePoints0);
-    effectDieSides0Controller.text = _fmt(template.effectDieSides0);
-    effectRealPointsPerLevel0Controller.text = _fmt(
+    effect0Controller.init(template.effect0);
+    effectBasePoints0Controller.init(template.effectBasePoints0);
+    effectDieSides0Controller.init(template.effectDieSides0);
+    effectRealPointsPerLevel0Controller.init(
       template.effectRealPointsPerLevel0,
     );
-    effectMechanic0Controller.value = {template.effectMechanic0};
-    effectChainTargets0Controller.text = _fmt(template.effectChainTargets0);
-    effectAura0Controller.value = {template.effectAura0};
-    effectAuraPeriod0Controller.text = _fmt(template.effectAuraPeriod0);
-    effectAmplitude0Controller.text = _fmt(template.effectAmplitude0);
-    implicitTargetA0Controller.value = {template.implicitTargetA0};
-    implicitTargetB0Controller.value = {template.implicitTargetB0};
-    effectMiscValue0Controller.text = _fmt(template.effectMiscValue0);
-    effectMiscValueB0Controller.text = _fmt(template.effectMiscValueB0);
-    effectRadiusIndex0Controller.text = _fmt(template.effectRadiusIndex0);
-    effectChainAmplitude0Controller.text = _fmt(template.effectChainAmplitude0);
-    effectBonusCoefficient0Controller.text = _fmt(
-      template.effectBonusCoefficient0,
-    );
-    effectItemType0Controller.value = {template.effectItemType0};
-    effectTriggerSpell0Controller.text = _fmt(template.effectTriggerSpell0);
-    effectPointsPerCombo0Controller.text = _fmt(template.effectPointsPerCombo0);
-    effectSpellClassMaskA0Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskA0,
-    );
-    effectSpellClassMaskB0Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskB0,
-    );
-    effectSpellClassMaskC0Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskC0,
-    );
+    effectMechanic0Controller.init(template.effectMechanic0);
+    effectChainTargets0Controller.init(template.effectChainTargets0);
+    effectAura0Controller.init(template.effectAura0);
+    effectAuraPeriod0Controller.init(template.effectAuraPeriod0);
+    effectAmplitude0Controller.init(template.effectAmplitude0);
+    implicitTargetA0Controller.init(template.implicitTargetA0);
+    implicitTargetB0Controller.init(template.implicitTargetB0);
+    effectMiscValue0Controller.init(template.effectMiscValue0);
+    effectMiscValueB0Controller.init(template.effectMiscValueB0);
+    effectRadiusIndex0Controller.init(template.effectRadiusIndex0);
+    effectChainAmplitude0Controller.init(template.effectChainAmplitude0);
+    effectBonusCoefficient0Controller.init(template.effectBonusCoefficient0);
+    effectItemType0Controller.init(template.effectItemType0);
+    effectTriggerSpell0Controller.init(template.effectTriggerSpell0);
+    effectPointsPerCombo0Controller.init(template.effectPointsPerCombo0);
+    effectSpellClassMaskA0Controller.init(template.effectSpellClassMaskA0);
+    effectSpellClassMaskB0Controller.init(template.effectSpellClassMaskB0);
+    effectSpellClassMaskC0Controller.init(template.effectSpellClassMaskC0);
 
     // === 效果1 ===
-    effect1Controller.value = {template.effect1};
-    effectBasePoints1Controller.text = _fmt(template.effectBasePoints1);
-    effectDieSides1Controller.text = _fmt(template.effectDieSides1);
-    effectRealPointsPerLevel1Controller.text = _fmt(
+    effect1Controller.init(template.effect1);
+    effectBasePoints1Controller.init(template.effectBasePoints1);
+    effectDieSides1Controller.init(template.effectDieSides1);
+    effectRealPointsPerLevel1Controller.init(
       template.effectRealPointsPerLevel1,
     );
-    effectMechanic1Controller.value = {template.effectMechanic1};
-    effectChainTargets1Controller.text = _fmt(template.effectChainTargets1);
-    effectAura1Controller.value = {template.effectAura1};
-    effectAuraPeriod1Controller.text = _fmt(template.effectAuraPeriod1);
-    effectAmplitude1Controller.text = _fmt(template.effectAmplitude1);
-    implicitTargetA1Controller.value = {template.implicitTargetA1};
-    implicitTargetB1Controller.value = {template.implicitTargetB1};
-    effectMiscValue1Controller.text = _fmt(template.effectMiscValue1);
-    effectMiscValueB1Controller.text = _fmt(template.effectMiscValueB1);
-    effectRadiusIndex1Controller.text = _fmt(template.effectRadiusIndex1);
-    effectChainAmplitude1Controller.text = _fmt(template.effectChainAmplitude1);
-    effectBonusCoefficient1Controller.text = _fmt(
-      template.effectBonusCoefficient1,
-    );
-    effectItemType1Controller.value = {template.effectItemType1};
-    effectTriggerSpell1Controller.text = _fmt(template.effectTriggerSpell1);
-    effectPointsPerCombo1Controller.text = _fmt(template.effectPointsPerCombo1);
-    effectSpellClassMaskA1Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskA1,
-    );
-    effectSpellClassMaskB1Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskB1,
-    );
-    effectSpellClassMaskC1Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskC1,
-    );
+    effectMechanic1Controller.init(template.effectMechanic1);
+    effectChainTargets1Controller.init(template.effectChainTargets1);
+    effectAura1Controller.init(template.effectAura1);
+    effectAuraPeriod1Controller.init(template.effectAuraPeriod1);
+    effectAmplitude1Controller.init(template.effectAmplitude1);
+    implicitTargetA1Controller.init(template.implicitTargetA1);
+    implicitTargetB1Controller.init(template.implicitTargetB1);
+    effectMiscValue1Controller.init(template.effectMiscValue1);
+    effectMiscValueB1Controller.init(template.effectMiscValueB1);
+    effectRadiusIndex1Controller.init(template.effectRadiusIndex1);
+    effectChainAmplitude1Controller.init(template.effectChainAmplitude1);
+    effectBonusCoefficient1Controller.init(template.effectBonusCoefficient1);
+    effectItemType1Controller.init(template.effectItemType1);
+    effectTriggerSpell1Controller.init(template.effectTriggerSpell1);
+    effectPointsPerCombo1Controller.init(template.effectPointsPerCombo1);
+    effectSpellClassMaskA1Controller.init(template.effectSpellClassMaskA1);
+    effectSpellClassMaskB1Controller.init(template.effectSpellClassMaskB1);
+    effectSpellClassMaskC1Controller.init(template.effectSpellClassMaskC1);
 
     // === 效果2 ===
-    effect2Controller.value = {template.effect2};
-    effectBasePoints2Controller.text = _fmt(template.effectBasePoints2);
-    effectDieSides2Controller.text = _fmt(template.effectDieSides2);
-    effectRealPointsPerLevel2Controller.text = _fmt(
+    effect2Controller.init(template.effect2);
+    effectBasePoints2Controller.init(template.effectBasePoints2);
+    effectDieSides2Controller.init(template.effectDieSides2);
+    effectRealPointsPerLevel2Controller.init(
       template.effectRealPointsPerLevel2,
     );
-    effectMechanic2Controller.value = {template.effectMechanic2};
-    effectChainTargets2Controller.text = _fmt(template.effectChainTargets2);
-    effectAura2Controller.value = {template.effectAura2};
-    effectAuraPeriod2Controller.text = _fmt(template.effectAuraPeriod2);
-    effectAmplitude2Controller.text = _fmt(template.effectAmplitude2);
-    implicitTargetA2Controller.value = {template.implicitTargetA2};
-    implicitTargetB2Controller.value = {template.implicitTargetB2};
-    effectMiscValue2Controller.text = _fmt(template.effectMiscValue2);
-    effectMiscValueB2Controller.text = _fmt(template.effectMiscValueB2);
-    effectRadiusIndex2Controller.text = _fmt(template.effectRadiusIndex2);
-    effectChainAmplitude2Controller.text = _fmt(template.effectChainAmplitude2);
-    effectBonusCoefficient2Controller.text = _fmt(
-      template.effectBonusCoefficient2,
-    );
-    effectItemType2Controller.value = {template.effectItemType2};
-    effectTriggerSpell2Controller.text = _fmt(template.effectTriggerSpell2);
-    effectPointsPerCombo2Controller.text = _fmt(template.effectPointsPerCombo2);
-    effectSpellClassMaskA2Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskA2,
-    );
-    effectSpellClassMaskB2Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskB2,
-    );
-    effectSpellClassMaskC2Controller.text = FlagFieldController.formatFlagValue(
-      template.effectSpellClassMaskC2,
-    );
+    effectMechanic2Controller.init(template.effectMechanic2);
+    effectChainTargets2Controller.init(template.effectChainTargets2);
+    effectAura2Controller.init(template.effectAura2);
+    effectAuraPeriod2Controller.init(template.effectAuraPeriod2);
+    effectAmplitude2Controller.init(template.effectAmplitude2);
+    implicitTargetA2Controller.init(template.implicitTargetA2);
+    implicitTargetB2Controller.init(template.implicitTargetB2);
+    effectMiscValue2Controller.init(template.effectMiscValue2);
+    effectMiscValueB2Controller.init(template.effectMiscValueB2);
+    effectRadiusIndex2Controller.init(template.effectRadiusIndex2);
+    effectChainAmplitude2Controller.init(template.effectChainAmplitude2);
+    effectBonusCoefficient2Controller.init(template.effectBonusCoefficient2);
+    effectItemType2Controller.init(template.effectItemType2);
+    effectTriggerSpell2Controller.init(template.effectTriggerSpell2);
+    effectPointsPerCombo2Controller.init(template.effectPointsPerCombo2);
+    effectSpellClassMaskA2Controller.init(template.effectSpellClassMaskA2);
+    effectSpellClassMaskB2Controller.init(template.effectSpellClassMaskB2);
+    effectSpellClassMaskC2Controller.init(template.effectSpellClassMaskC2);
 
     // === 装备限制 ===
-    equippedItemClassController.value = {template.equippedItemClass};
-    equippedItemSubclassController.text = _fmt(template.equippedItemSubclass);
-    equippedItemInvTypesController.text = FlagFieldController.formatFlagValue(
-      template.equippedItemInvTypes,
-    );
+    equippedItemClassController.init(template.equippedItemClass);
+    equippedItemSubclassController.init(template.equippedItemSubclass);
+    equippedItemInvTypesController.init(template.equippedItemInvTypes);
 
     // === 图腾/施法材料 ===
-    requiredTotemCategoryID0Controller.text = _fmt(
-      template.requiredTotemCategoryID0,
-    );
-    totem0Controller.text = _fmt(template.totem0);
-    requiredTotemCategoryID1Controller.text = _fmt(
-      template.requiredTotemCategoryID1,
-    );
-    totem1Controller.text = _fmt(template.totem1);
-    reagent0Controller.text = _fmt(template.reagent0);
-    reagent1Controller.text = _fmt(template.reagent1);
-    reagent2Controller.text = _fmt(template.reagent2);
-    reagent3Controller.text = _fmt(template.reagent3);
-    reagent4Controller.text = _fmt(template.reagent4);
-    reagent5Controller.text = _fmt(template.reagent5);
-    reagent6Controller.text = _fmt(template.reagent6);
-    reagent7Controller.text = _fmt(template.reagent7);
-    reagentCount0Controller.text = _fmt(template.reagentCount0);
-    reagentCount1Controller.text = _fmt(template.reagentCount1);
-    reagentCount2Controller.text = _fmt(template.reagentCount2);
-    reagentCount3Controller.text = _fmt(template.reagentCount3);
-    reagentCount4Controller.text = _fmt(template.reagentCount4);
-    reagentCount5Controller.text = _fmt(template.reagentCount5);
-    reagentCount6Controller.text = _fmt(template.reagentCount6);
-    reagentCount7Controller.text = _fmt(template.reagentCount7);
+    requiredTotemCategoryID0Controller.init(template.requiredTotemCategoryID0);
+    totem0Controller.init(template.totem0);
+    requiredTotemCategoryID1Controller.init(template.requiredTotemCategoryID1);
+    totem1Controller.init(template.totem1);
+    reagent0Controller.init(template.reagent0);
+    reagent1Controller.init(template.reagent1);
+    reagent2Controller.init(template.reagent2);
+    reagent3Controller.init(template.reagent3);
+    reagent4Controller.init(template.reagent4);
+    reagent5Controller.init(template.reagent5);
+    reagent6Controller.init(template.reagent6);
+    reagent7Controller.init(template.reagent7);
+    reagentCount0Controller.init(template.reagentCount0);
+    reagentCount1Controller.init(template.reagentCount1);
+    reagentCount2Controller.init(template.reagentCount2);
+    reagentCount3Controller.init(template.reagentCount3);
+    reagentCount4Controller.init(template.reagentCount4);
+    reagentCount5Controller.init(template.reagentCount5);
+    reagentCount6Controller.init(template.reagentCount6);
+    reagentCount7Controller.init(template.reagentCount7);
 
     // === 其他高级属性 ===
-    casterAuraSpellController.text = _fmt(template.casterAuraSpell);
-    cumulativeAuraController.text = _fmt(template.cumulativeAura);
-    minFactionIDController.text = _fmt(template.minFactionID);
-    minReputationController.value = {template.minReputation};
-    excludeCasterAuraSpellController.text = _fmt(
-      template.excludeCasterAuraSpell,
-    );
-    excludeCasterAuraStateController.value = {template.excludeCasterAuraState};
-    excludeTargetAuraSpellController.text = _fmt(
-      template.excludeTargetAuraSpell,
-    );
-    excludeTargetAuraStateController.value = {template.excludeTargetAuraState};
-    spellPriorityController.text = _fmt(template.spellPriority);
-    modalNextSpellController.text = _fmt(template.modalNextSpell);
-    requiredAuraVisionController.text = _fmt(template.requiredAuraVision);
-    targetAuraSpellController.text = _fmt(template.targetAuraSpell);
-    stanceBarOrderController.text = _fmt(template.stanceBarOrder);
-    shapeshiftMask0Controller.text = FlagFieldController.formatFlagValue(
-      template.shapeshiftMask0,
-    );
-    shapeshiftExclude0Controller.text = FlagFieldController.formatFlagValue(
-      template.shapeshiftExclude0,
-    );
+    casterAuraSpellController.init(template.casterAuraSpell);
+    cumulativeAuraController.init(template.cumulativeAura);
+    minFactionIDController.init(template.minFactionID);
+    minReputationController.init(template.minReputation);
+    excludeCasterAuraSpellController.init(template.excludeCasterAuraSpell);
+    excludeCasterAuraStateController.init(template.excludeCasterAuraState);
+    excludeTargetAuraSpellController.init(template.excludeTargetAuraSpell);
+    excludeTargetAuraStateController.init(template.excludeTargetAuraState);
+    spellPriorityController.init(template.spellPriority);
+    modalNextSpellController.init(template.modalNextSpell);
+    requiredAuraVisionController.init(template.requiredAuraVision);
+    targetAuraSpellController.init(template.targetAuraSpell);
+    stanceBarOrderController.init(template.stanceBarOrder);
+    shapeshiftMask0Controller.init(template.shapeshiftMask0);
+    shapeshiftExclude0Controller.init(template.shapeshiftExclude0);
   }
 }

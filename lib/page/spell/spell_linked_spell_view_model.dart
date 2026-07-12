@@ -3,8 +3,7 @@ import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,15 +15,20 @@ class SpellLinkedSpellViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final spellEffectController = TextEditingController();
-  final typeController = TextEditingController();
-  final commentController = TextEditingController();
+
+  final spellIdController = IntFieldController();
+  final spellEffectController = IntFieldController();
+  final typeController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    spellEffectController,
+    typeController,
+    commentController,
+  ];
 
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellLinkedSpells(spellId.value);
@@ -33,25 +37,24 @@ class SpellLinkedSpellViewModel {
   }
 
   void resetForm() {
-    spellEffectController.text = _fmt(0);
-    typeController.text = _fmt(0);
-    commentController.clear();
+    spellEffectController.init(0);
+    typeController.init(0);
+    commentController.init('');
   }
 
   void fillForm(SpellLinkedSpellEntity data) {
-    spellEffectController.text = _fmt(data.spellEffect);
-    typeController.text = _fmt(data.type);
-    commentController.text = data.comment;
+    spellEffectController.init(data.spellEffect);
+    typeController.init(data.type);
+    commentController.init(data.comment);
   }
 
   SpellLinkedSpellEntity collectFromForm() {
-    final data = SpellLinkedSpellEntity(
+    return SpellLinkedSpellEntity(
       spellTrigger: spellId.value,
-      spellEffect: _pi(spellEffectController.text),
-      type: _pi(typeController.text),
-      comment: commentController.text,
+      spellEffect: spellEffectController.collect(),
+      type: typeController.collect(),
+      comment: commentController.collect(),
     );
-    return data;
   }
 
   Future<void> create() async {
@@ -176,6 +179,7 @@ class SpellLinkedSpellViewModel {
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术链接-初始化失败: $e');
@@ -188,8 +192,8 @@ class SpellLinkedSpellViewModel {
   }
 
   void dispose() {
-    commentController.dispose();
-    spellEffectController.dispose();
-    typeController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

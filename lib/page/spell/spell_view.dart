@@ -48,7 +48,7 @@ class _SpellViewState extends State<SpellView> {
     final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
-        controller: vm.idController,
+        fieldController: vm.idController,
         placeholder: 'ID',
         readOnly: true,
       ),
@@ -61,7 +61,7 @@ class _SpellViewState extends State<SpellView> {
         final entry = vm.id.value == 0 ? null : vm.id.value;
         return FoxyLocalePicker(
           entry: entry,
-          controller: vm.nameLangZhCNController,
+          fieldController: vm.nameLangZhCNController,
           title: '法术名称本地化',
           placeholder: 'Name_Lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcSpellName,
@@ -75,7 +75,7 @@ class _SpellViewState extends State<SpellView> {
         final entry = vm.id.value == 0 ? null : vm.id.value;
         return FoxyLocalePicker(
           entry: entry,
-          controller: vm.nameSubtextLangZhCNController,
+          fieldController: vm.nameSubtextLangZhCNController,
           title: '法术副标题本地化',
           placeholder: 'NameSubtext_Lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcSpellNameSubtext,
@@ -89,7 +89,7 @@ class _SpellViewState extends State<SpellView> {
         final entry = vm.id.value == 0 ? null : vm.id.value;
         return FoxyLocalePicker(
           entry: entry,
-          controller: vm.descriptionLangZhCNController,
+          fieldController: vm.descriptionLangZhCNController,
           title: '法术描述本地化',
           placeholder: 'Description_Lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcSpellDescription,
@@ -103,7 +103,7 @@ class _SpellViewState extends State<SpellView> {
         final entry = vm.id.value == 0 ? null : vm.id.value;
         return FoxyLocalePicker(
           entry: entry,
-          controller: vm.auraDescriptionLangZhCNController,
+          fieldController: vm.auraDescriptionLangZhCNController,
           title: '光环描述本地化',
           placeholder: 'AuraDescription_Lang_zhCN',
           delegate: FoxyLocalePickerDelegates.dbcSpellAuraDescription,
@@ -117,7 +117,7 @@ class _SpellViewState extends State<SpellView> {
       label: '图标',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spellIcon,
-        controller: vm.spellIconIDController,
+        fieldController: vm.spellIconIDController,
         placeholder: 'SpellIconID',
       ),
     );
@@ -125,7 +125,7 @@ class _SpellViewState extends State<SpellView> {
       label: '激活图标',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spellIcon,
-        controller: vm.activeIconIDController,
+        fieldController: vm.activeIconIDController,
         placeholder: 'ActiveIconID',
       ),
     );
@@ -133,14 +133,14 @@ class _SpellViewState extends State<SpellView> {
       label: '视觉',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellVisualID0',
-        controller: vm.spellVisualID0Controller,
+        fieldController: vm.spellVisualID0Controller,
       ),
     );
     final spellVisualID1Input = FoxyFormItem(
       label: '视觉',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellVisualID1',
-        controller: vm.spellVisualID1Controller,
+        fieldController: vm.spellVisualID1Controller,
       ),
     );
 
@@ -149,13 +149,13 @@ class _SpellViewState extends State<SpellView> {
       label: '分类',
       child: FoxyNumberInput<int>(
         placeholder: 'Category',
-        controller: vm.categoryController,
+        fieldController: vm.categoryController,
       ),
     );
     final schoolMaskInput = FoxyFormItem(
       label: '法术类型掩码',
       child: FoxyFlagPicker(
-        controller: vm.schoolMaskFlagController,
+        fieldController: vm.schoolMaskFlagController,
         flags: kSpellSchoolMaskOptions,
         title: '法术类型掩码',
         placeholder: 'SchoolMask',
@@ -164,7 +164,7 @@ class _SpellViewState extends State<SpellView> {
     final mechanicInput = FoxyFormItem(
       label: '机制',
       child: FoxyShadSelect<int>(
-        controller: vm.mechanicController,
+        fieldController: vm.mechanicController,
         options: kSpellMechanicOptions,
         placeholder: const Text('Mechanic'),
       ),
@@ -172,7 +172,7 @@ class _SpellViewState extends State<SpellView> {
     final defenseTypeInput = FoxyFormItem(
       label: '伤害类型',
       child: FoxyShadSelect<int>(
-        controller: vm.defenseTypeController,
+        fieldController: vm.defenseTypeController,
         options: kSpellDmgClassOptions,
         placeholder: const Text('DefenseType'),
       ),
@@ -180,7 +180,7 @@ class _SpellViewState extends State<SpellView> {
     final dispelTypeInput = FoxyFormItem(
       label: '驱散类型',
       child: FoxyShadSelect<int>(
-        controller: vm.dispelTypeController,
+        fieldController: vm.dispelTypeController,
         options: kSpellDispelTypeOptions,
         placeholder: const Text('DispelType'),
       ),
@@ -188,7 +188,7 @@ class _SpellViewState extends State<SpellView> {
     final preventionTypeInput = FoxyFormItem(
       label: '防止类型',
       child: FoxyShadSelect<int>(
-        controller: vm.preventionTypeController,
+        fieldController: vm.preventionTypeController,
         options: kSpellPreventionTypeOptions,
         placeholder: const Text('PreventionType'),
       ),
@@ -199,14 +199,14 @@ class _SpellViewState extends State<SpellView> {
       label: '施法时间',
       child: FoxyNumberInput<int>(
         placeholder: 'CastingTimeIndex',
-        controller: vm.castingTimeIndexController,
+        fieldController: vm.castingTimeIndexController,
       ),
     );
     final durationIndexInput = FoxyFormItem(
       label: '持续时间',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spellDuration,
-        controller: vm.durationIndexController,
+        fieldController: vm.durationIndexController,
         placeholder: 'DurationIndex',
       ),
     );
@@ -214,7 +214,7 @@ class _SpellViewState extends State<SpellView> {
       label: '施法范围',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spellRange,
-        controller: vm.rangeIndexController,
+        fieldController: vm.rangeIndexController,
         placeholder: 'RangeIndex',
       ),
     );
@@ -222,7 +222,7 @@ class _SpellViewState extends State<SpellView> {
       label: '描述变量',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellDescriptionVariableID',
-        controller: vm.spellDescriptionVariableIDController,
+        fieldController: vm.spellDescriptionVariableIDController,
       ),
     );
 
@@ -231,28 +231,28 @@ class _SpellViewState extends State<SpellView> {
       label: '基础等级',
       child: FoxyNumberInput<int>(
         placeholder: 'BaseLevel',
-        controller: vm.baseLevelController,
+        fieldController: vm.baseLevelController,
       ),
     );
     final spellLevelInput = FoxyFormItem(
       label: '法术等级',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellLevel',
-        controller: vm.spellLevelController,
+        fieldController: vm.spellLevelController,
       ),
     );
     final maxLevelInput = FoxyFormItem(
       label: '最高等级',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxLevel',
-        controller: vm.maxLevelController,
+        fieldController: vm.maxLevelController,
       ),
     );
     final spellDifficultyIDInput = FoxyFormItem(
       label: '难度ID',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellDifficultyID',
-        controller: vm.spellDifficultyIDController,
+        fieldController: vm.spellDifficultyIDController,
       ),
     );
 
@@ -261,28 +261,28 @@ class _SpellViewState extends State<SpellView> {
       label: '冷却分类',
       child: FoxyNumberInput<int>(
         placeholder: 'StartRecoveryCategory',
-        controller: vm.startRecoveryCategoryController,
+        fieldController: vm.startRecoveryCategoryController,
       ),
     );
     final startRecoveryTimeInput = FoxyFormItem(
       label: '冷却开始时间',
       child: FoxyNumberInput<int>(
         placeholder: 'StartRecoveryTime',
-        controller: vm.startRecoveryTimeController,
+        fieldController: vm.startRecoveryTimeController,
       ),
     );
     final recoveryTimeInput = FoxyFormItem(
       label: '冷却时间',
       child: FoxyNumberInput<int>(
         placeholder: 'RecoveryTime',
-        controller: vm.recoveryTimeController,
+        fieldController: vm.recoveryTimeController,
       ),
     );
     final categoryRecoveryTimeInput = FoxyFormItem(
       label: '分类冷却时间',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryRecoveryTime',
-        controller: vm.categoryRecoveryTimeController,
+        fieldController: vm.categoryRecoveryTimeController,
       ),
     );
 
@@ -290,7 +290,7 @@ class _SpellViewState extends State<SpellView> {
     final targetCreatureTypeInput = FoxyFormItem(
       label: '目标生物类型',
       child: FoxyShadSelect<int>(
-        controller: vm.targetCreatureTypeController,
+        fieldController: vm.targetCreatureTypeController,
         options: kCreatureTypeOptions,
         placeholder: const Text('TargetCreatureType'),
       ),
@@ -298,7 +298,7 @@ class _SpellViewState extends State<SpellView> {
     final targetsInput = FoxyFormItem(
       label: '目标限制',
       child: FoxyFlagPicker(
-        controller: vm.targetsController,
+        fieldController: vm.targetsController,
         flags: kSpellCastTargetFlagsOptions,
         title: '目标限制',
         placeholder: 'Targets',
@@ -308,14 +308,14 @@ class _SpellViewState extends State<SpellView> {
       label: '最大目标数',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxTargets',
-        controller: vm.maxTargetsController,
+        fieldController: vm.maxTargetsController,
       ),
     );
     final maxTargetLevelInput = FoxyFormItem(
       label: '最大目标等级',
       child: FoxyNumberInput<int>(
         placeholder: 'MaxTargetLevel',
-        controller: vm.maxTargetLevelController,
+        fieldController: vm.maxTargetLevelController,
       ),
     );
 
@@ -324,28 +324,28 @@ class _SpellViewState extends State<SpellView> {
       label: '施法者状态',
       child: FoxyNumberInput<int>(
         placeholder: 'CasterAuraState',
-        controller: vm.casterAuraStateController,
+        fieldController: vm.casterAuraStateController,
       ),
     );
     final targetAuraStateInput = FoxyFormItem(
       label: '目标状态',
       child: FoxyNumberInput<int>(
         placeholder: 'TargetAuraState',
-        controller: vm.targetAuraStateController,
+        fieldController: vm.targetAuraStateController,
       ),
     );
     final spellMissileIDInput = FoxyFormItem(
       label: '弹道',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellMissileID',
-        controller: vm.spellMissileIDController,
+        fieldController: vm.spellMissileIDController,
       ),
     );
     final speedInput = FoxyFormItem(
       label: '弹道速度',
       child: FoxyNumberInput<double>(
         placeholder: 'Speed',
-        controller: vm.speedController,
+        fieldController: vm.speedController,
       ),
     );
 
@@ -354,7 +354,7 @@ class _SpellViewState extends State<SpellView> {
       label: '需求区域',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.areaTable,
-        controller: vm.requiredAreasIDController,
+        fieldController: vm.requiredAreasIDController,
         placeholder: 'RequiredAreasID',
       ),
     );
@@ -362,13 +362,13 @@ class _SpellViewState extends State<SpellView> {
       label: '需求法术焦点',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiresSpellFocus',
-        controller: vm.requiresSpellFocusController,
+        fieldController: vm.requiresSpellFocusController,
       ),
     );
     final facingCasterFlagsInput = FoxyFormItem(
       label: '施法朝向',
       child: FoxyFlagPicker(
-        controller: vm.facingCasterFlagsController,
+        fieldController: vm.facingCasterFlagsController,
         flags: kSpellFacingFlagsOptions,
         title: '施法朝向',
         placeholder: 'FacingCasterFlags',
@@ -380,13 +380,13 @@ class _SpellViewState extends State<SpellView> {
       label: '能量显示',
       child: FoxyNumberInput<int>(
         placeholder: 'PowerDisplayID',
-        controller: vm.powerDisplayIDController,
+        fieldController: vm.powerDisplayIDController,
       ),
     );
     final powerTypeInput = FoxyFormItem(
       label: '能量类型',
       child: FoxyShadSelect<int>(
-        controller: vm.powerTypeController,
+        fieldController: vm.powerTypeController,
         options: kSpellPowerTypeOptions,
         placeholder: const Text('PowerType'),
       ),
@@ -395,42 +395,42 @@ class _SpellViewState extends State<SpellView> {
       label: '符文消耗',
       child: FoxyNumberInput<int>(
         placeholder: 'RuneCostID',
-        controller: vm.runeCostIDController,
+        fieldController: vm.runeCostIDController,
       ),
     );
     final manaCostInput = FoxyFormItem(
       label: '法力消耗',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaCost',
-        controller: vm.manaCostController,
+        fieldController: vm.manaCostController,
       ),
     );
     final manaCostPctInput = FoxyFormItem(
       label: '法力消耗百分比',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaCostPct',
-        controller: vm.manaCostPctController,
+        fieldController: vm.manaCostPctController,
       ),
     );
     final manaCostPerLevelInput = FoxyFormItem(
       label: '每级法力消耗',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaCostPerLevel',
-        controller: vm.manaCostPerLevelController,
+        fieldController: vm.manaCostPerLevelController,
       ),
     );
     final manaPerSecondInput = FoxyFormItem(
       label: '每秒法力',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaPerSecond',
-        controller: vm.manaPerSecondController,
+        fieldController: vm.manaPerSecondController,
       ),
     );
     final manaPerSecondPerLevelInput = FoxyFormItem(
       label: '每秒每级法力',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaPerSecondPerLevel',
-        controller: vm.manaPerSecondPerLevelController,
+        fieldController: vm.manaPerSecondPerLevelController,
       ),
     );
 
@@ -438,7 +438,7 @@ class _SpellViewState extends State<SpellView> {
     final interruptFlagsInput = FoxyFormItem(
       label: '打断标志',
       child: FoxyFlagPicker(
-        controller: vm.interruptFlagsController,
+        fieldController: vm.interruptFlagsController,
         flags: kSpellInterruptFlagsOptions,
         title: '打断标志',
         placeholder: 'InterruptFlags',
@@ -447,7 +447,7 @@ class _SpellViewState extends State<SpellView> {
     final auraInterruptFlagsInput = FoxyFormItem(
       label: '光环打断标志',
       child: FoxyFlagPicker(
-        controller: vm.auraInterruptFlagsController,
+        fieldController: vm.auraInterruptFlagsController,
         flags: kSpellAuraInterruptFlagsOptions,
         title: '光环打断标志',
         placeholder: 'AuraInterruptFlags',
@@ -456,7 +456,7 @@ class _SpellViewState extends State<SpellView> {
     final channelInterruptFlagsInput = FoxyFormItem(
       label: '引导打断标志',
       child: FoxyFlagPicker(
-        controller: vm.channelInterruptFlagsController,
+        fieldController: vm.channelInterruptFlagsController,
         flags: kSpellChannelInterruptFlagsOptions,
         title: '引导打断标志',
         placeholder: 'ChannelInterruptFlags',
@@ -465,7 +465,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesInput = FoxyFormItem(
       label: '属性',
       child: FoxyFlagPicker(
-        controller: vm.attributesController,
+        fieldController: vm.attributesController,
         flags: kSpellAttr0Options,
         title: '属性 (Attributes)',
         placeholder: 'Attributes',
@@ -474,7 +474,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExInput = FoxyFormItem(
       label: '属性Ex',
       child: FoxyFlagPicker(
-        controller: vm.attributesExController,
+        fieldController: vm.attributesExController,
         flags: kSpellAttr1Options,
         title: '属性Ex (AttributesEx)',
         placeholder: 'AttributesEx',
@@ -483,7 +483,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExBInput = FoxyFormItem(
       label: '属性ExB',
       child: FoxyFlagPicker(
-        controller: vm.attributesExBController,
+        fieldController: vm.attributesExBController,
         flags: kSpellAttr2Options,
         title: '属性ExB (AttributesExB)',
         placeholder: 'AttributesExB',
@@ -492,7 +492,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExCInput = FoxyFormItem(
       label: '属性ExC',
       child: FoxyFlagPicker(
-        controller: vm.attributesExCController,
+        fieldController: vm.attributesExCController,
         flags: kSpellAttr3Options,
         title: '属性ExC (AttributesExC)',
         placeholder: 'AttributesExC',
@@ -501,7 +501,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExDInput = FoxyFormItem(
       label: '属性ExD',
       child: FoxyFlagPicker(
-        controller: vm.attributesExDController,
+        fieldController: vm.attributesExDController,
         flags: kSpellAttr4Options,
         title: '属性ExD (AttributesExD)',
         placeholder: 'AttributesExD',
@@ -510,7 +510,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExEInput = FoxyFormItem(
       label: '属性ExE',
       child: FoxyFlagPicker(
-        controller: vm.attributesExEController,
+        fieldController: vm.attributesExEController,
         flags: kSpellAttr5Options,
         title: '属性ExE (AttributesExE)',
         placeholder: 'AttributesExE',
@@ -519,7 +519,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExFInput = FoxyFormItem(
       label: '属性ExF',
       child: FoxyFlagPicker(
-        controller: vm.attributesExFController,
+        fieldController: vm.attributesExFController,
         flags: kSpellAttr6Options,
         title: '属性ExF (AttributesExF)',
         placeholder: 'AttributesExF',
@@ -528,7 +528,7 @@ class _SpellViewState extends State<SpellView> {
     final attributesExGInput = FoxyFormItem(
       label: '属性ExG',
       child: FoxyFlagPicker(
-        controller: vm.attributesExGController,
+        fieldController: vm.attributesExGController,
         flags: kSpellAttr7Options,
         title: '属性ExG (AttributesExG)',
         placeholder: 'AttributesExG',
@@ -539,7 +539,7 @@ class _SpellViewState extends State<SpellView> {
     final procTypeMaskInput = FoxyFormItem(
       label: '触发类型掩码',
       child: FoxyFlagPicker(
-        controller: vm.procTypeMaskController,
+        fieldController: vm.procTypeMaskController,
         flags: kSpellProcFlagsOptions,
         title: '触发类型掩码',
         placeholder: 'ProcTypeMask',
@@ -549,14 +549,14 @@ class _SpellViewState extends State<SpellView> {
       label: '触发几率',
       child: FoxyNumberInput<int>(
         placeholder: 'ProcChance',
-        controller: vm.procChanceController,
+        fieldController: vm.procChanceController,
       ),
     );
     final procChargesInput = FoxyFormItem(
       label: '触发次数',
       child: FoxyNumberInput<int>(
         placeholder: 'ProcCharges',
-        controller: vm.procChargesController,
+        fieldController: vm.procChargesController,
       ),
     );
 
@@ -564,7 +564,7 @@ class _SpellViewState extends State<SpellView> {
     final spellClassSetInput = FoxyFormItem(
       label: '法术族',
       child: FoxyShadSelect<int>(
-        controller: vm.spellClassSetController,
+        fieldController: vm.spellClassSetController,
         options: kSpellFamilyNameOptions,
         placeholder: const Text('SpellClassSet'),
       ),
@@ -576,7 +576,7 @@ class _SpellViewState extends State<SpellView> {
     final equippedItemClassInput = FoxyFormItem(
       label: '装备类型',
       child: FoxyShadSelect<int>(
-        controller: vm.equippedItemClassController,
+        fieldController: vm.equippedItemClassController,
         options: kSpellItemClassOptions,
         placeholder: const Text('EquippedItemClass'),
       ),
@@ -585,13 +585,13 @@ class _SpellViewState extends State<SpellView> {
       label: '装备子类',
       child: FoxyNumberInput<int>(
         placeholder: 'EquippedItemSubclass',
-        controller: vm.equippedItemSubclassController,
+        fieldController: vm.equippedItemSubclassController,
       ),
     );
     final equippedItemInvTypesInput = FoxyFormItem(
       label: '装备栏位',
       child: FoxyFlagPicker(
-        controller: vm.equippedItemInvTypesController,
+        fieldController: vm.equippedItemInvTypesController,
         flags: kInventoryTypeOptions,
         title: '装备栏位',
         placeholder: 'EquippedItemInvTypes',
@@ -603,84 +603,84 @@ class _SpellViewState extends State<SpellView> {
       label: '图腾1类型',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredTotemCategoryID0',
-        controller: vm.requiredTotemCategoryID0Controller,
+        fieldController: vm.requiredTotemCategoryID0Controller,
       ),
     );
     final totem0Input = FoxyFormItem(
       label: '图腾1',
       child: FoxyNumberInput<int>(
         placeholder: 'Totem0',
-        controller: vm.totem0Controller,
+        fieldController: vm.totem0Controller,
       ),
     );
     final requiredTotemCategoryID1Input = FoxyFormItem(
       label: '图腾2类型',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredTotemCategoryID1',
-        controller: vm.requiredTotemCategoryID1Controller,
+        fieldController: vm.requiredTotemCategoryID1Controller,
       ),
     );
     final totem1Input = FoxyFormItem(
       label: '图腾2',
       child: FoxyNumberInput<int>(
         placeholder: 'Totem1',
-        controller: vm.totem1Controller,
+        fieldController: vm.totem1Controller,
       ),
     );
     final reagent0Input = FoxyFormItem(
       label: '施法材料1',
       child: FoxyNumberInput<int>(
         placeholder: 'Reagent0',
-        controller: vm.reagent0Controller,
+        fieldController: vm.reagent0Controller,
       ),
     );
     final reagentCount0Input = FoxyFormItem(
       label: '材料1数量',
       child: FoxyNumberInput<int>(
         placeholder: 'ReagentCount0',
-        controller: vm.reagentCount0Controller,
+        fieldController: vm.reagentCount0Controller,
       ),
     );
     final reagent1Input = FoxyFormItem(
       label: '施法材料2',
       child: FoxyNumberInput<int>(
         placeholder: 'Reagent1',
-        controller: vm.reagent1Controller,
+        fieldController: vm.reagent1Controller,
       ),
     );
     final reagentCount1Input = FoxyFormItem(
       label: '材料2数量',
       child: FoxyNumberInput<int>(
         placeholder: 'ReagentCount1',
-        controller: vm.reagentCount1Controller,
+        fieldController: vm.reagentCount1Controller,
       ),
     );
     final reagent2Input = FoxyFormItem(
       label: '施法材料3',
       child: FoxyNumberInput<int>(
         placeholder: 'Reagent2',
-        controller: vm.reagent2Controller,
+        fieldController: vm.reagent2Controller,
       ),
     );
     final reagentCount2Input = FoxyFormItem(
       label: '材料3数量',
       child: FoxyNumberInput<int>(
         placeholder: 'ReagentCount2',
-        controller: vm.reagentCount2Controller,
+        fieldController: vm.reagentCount2Controller,
       ),
     );
     final reagent3Input = FoxyFormItem(
       label: '施法材料4',
       child: FoxyNumberInput<int>(
         placeholder: 'Reagent3',
-        controller: vm.reagent3Controller,
+        fieldController: vm.reagent3Controller,
       ),
     );
     final reagentCount3Input = FoxyFormItem(
       label: '材料4数量',
       child: FoxyNumberInput<int>(
         placeholder: 'ReagentCount3',
-        controller: vm.reagentCount3Controller,
+        fieldController: vm.reagentCount3Controller,
       ),
     );
 
@@ -689,27 +689,27 @@ class _SpellViewState extends State<SpellView> {
       label: '施法者光环法术',
       child: FoxyNumberInput<int>(
         placeholder: 'CasterAuraSpell',
-        controller: vm.casterAuraSpellController,
+        fieldController: vm.casterAuraSpellController,
       ),
     );
     final cumulativeAuraInput = FoxyFormItem(
       label: '累积光环',
       child: FoxyNumberInput<int>(
         placeholder: 'CumulativeAura',
-        controller: vm.cumulativeAuraController,
+        fieldController: vm.cumulativeAuraController,
       ),
     );
     final minFactionIDInput = FoxyFormItem(
       label: '最低声望阵营',
       child: FoxyNumberInput<int>(
         placeholder: 'MinFactionID',
-        controller: vm.minFactionIDController,
+        fieldController: vm.minFactionIDController,
       ),
     );
     final minReputationInput = FoxyFormItem(
       label: '最低声望等级',
       child: FoxyShadSelect<int>(
-        controller: vm.minReputationController,
+        fieldController: vm.minReputationController,
         options: kSpellReputationRankOptions,
         placeholder: const Text('MinReputation'),
       ),
@@ -718,41 +718,41 @@ class _SpellViewState extends State<SpellView> {
       label: '法术优先级',
       child: FoxyNumberInput<int>(
         placeholder: 'SpellPriority',
-        controller: vm.spellPriorityController,
+        fieldController: vm.spellPriorityController,
       ),
     );
     final modalNextSpellInput = FoxyFormItem(
       label: '下个模态法术',
       child: FoxyNumberInput<int>(
         placeholder: 'ModalNextSpell',
-        controller: vm.modalNextSpellController,
+        fieldController: vm.modalNextSpellController,
       ),
     );
     final requiredAuraVisionInput = FoxyFormItem(
       label: '需求光环视野',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredAuraVision',
-        controller: vm.requiredAuraVisionController,
+        fieldController: vm.requiredAuraVisionController,
       ),
     );
     final targetAuraSpellInput = FoxyFormItem(
       label: '目标光环法术',
       child: FoxyNumberInput<int>(
         placeholder: 'TargetAuraSpell',
-        controller: vm.targetAuraSpellController,
+        fieldController: vm.targetAuraSpellController,
       ),
     );
     final stanceBarOrderInput = FoxyFormItem(
       label: '姿态栏顺序',
       child: FoxyNumberInput<int>(
         placeholder: 'StanceBarOrder',
-        controller: vm.stanceBarOrderController,
+        fieldController: vm.stanceBarOrderController,
       ),
     );
     final shapeshiftMask0Input = FoxyFormItem(
       label: '变形掩码',
       child: FoxyFlagPicker(
-        controller: vm.shapeshiftMask0Controller,
+        fieldController: vm.shapeshiftMask0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形掩码',
         placeholder: 'ShapeshiftMask0',
@@ -761,7 +761,7 @@ class _SpellViewState extends State<SpellView> {
     final shapeshiftExclude0Input = FoxyFormItem(
       label: '变形排除',
       child: FoxyFlagPicker(
-        controller: vm.shapeshiftExclude0Controller,
+        fieldController: vm.shapeshiftExclude0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
@@ -1058,7 +1058,7 @@ class _SpellViewState extends State<SpellView> {
                       child: FoxyFormItem(
                         label: '分类掩码1',
                         child: FoxyFlagPicker(
-                          controller: vm.spellClassMask0Controller,
+                          fieldController: vm.spellClassMask0Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码1',
                           placeholder: 'SpellClassMask0',
@@ -1069,7 +1069,7 @@ class _SpellViewState extends State<SpellView> {
                       child: FoxyFormItem(
                         label: '分类掩码2',
                         child: FoxyFlagPicker(
-                          controller: vm.spellClassMask1Controller,
+                          fieldController: vm.spellClassMask1Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码2',
                           placeholder: 'SpellClassMask1',
@@ -1080,7 +1080,7 @@ class _SpellViewState extends State<SpellView> {
                       child: FoxyFormItem(
                         label: '分类掩码3',
                         child: FoxyFlagPicker(
-                          controller: vm.spellClassMask2Controller,
+                          fieldController: vm.spellClassMask2Controller,
                           flags: kSpellClassMaskBits,
                           title: '分类掩码3',
                           placeholder: 'SpellClassMask2',
@@ -1325,7 +1325,7 @@ class _SpellViewState extends State<SpellView> {
         2 => viewModel.effectChainTargets2Controller,
         _ => viewModel.effectChainTargets0Controller,
       };
-      final chainTargetsVal = int.tryParse(chainTargetsCtrl.text) ?? 0;
+      final chainTargetsVal = chainTargetsCtrl.collect();
       final needsChainAmplitude = chainTargetsVal > 0;
       final auraCtrl = switch (i) {
         0 => viewModel.effectAura0Controller,
@@ -1434,7 +1434,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '类型',
                   child: FoxyShadSelect<int>(
-                    controller: effCtrl,
+                    fieldController: effCtrl,
                     options: kSpellEffectOptions,
                     placeholder: const Text('Effect'),
                   ),
@@ -1445,7 +1445,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '基础值',
                   child: FoxyNumberInput<int>(
                     placeholder: 'BasePoints',
-                    controller: basePointsCtrl,
+                    fieldController: basePointsCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1455,7 +1455,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '波动值',
                   child: FoxyNumberInput<int>(
                     placeholder: 'DieSides',
-                    controller: dieSidesCtrl,
+                    fieldController: dieSidesCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1465,7 +1465,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '每级加成',
                   child: FoxyNumberInput<double>(
                     placeholder: 'RealPointsPerLevel',
-                    controller: pointsPerLevelCtrl,
+                    fieldController: pointsPerLevelCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1479,7 +1479,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '机制',
                   child: FoxyShadSelect<int>(
-                    controller: mechanicCtrl,
+                    fieldController: mechanicCtrl,
                     options: kSpellMechanicOptions,
                     placeholder: const Text('Mechanic'),
                     enabled: effectActive,
@@ -1491,7 +1491,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '连锁目标',
                   child: FoxyNumberInput<int>(
                     placeholder: 'ChainTarget',
-                    controller: chainTargetsCtrl,
+                    fieldController: chainTargetsCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1500,7 +1500,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '光环',
                   child: FoxyShadSelect<int>(
-                    controller: auraCtrl,
+                    fieldController: auraCtrl,
                     options: kSpellAuraTypeOptions,
                     placeholder: const Text('Aura'),
                     enabled: needsAura,
@@ -1512,7 +1512,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '光环周期',
                   child: FoxyNumberInput<int>(
                     placeholder: 'AuraPeriod',
-                    controller: auraPeriodCtrl,
+                    fieldController: auraPeriodCtrl,
                     readOnly: !(needsAura && isPeriodic),
                   ),
                 ),
@@ -1527,7 +1527,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '振幅',
                   child: FoxyNumberInput<double>(
                     placeholder: 'Amplitude',
-                    controller: amplitudeCtrl,
+                    fieldController: amplitudeCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1536,7 +1536,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '目标A',
                   child: FoxyShadSelect<int>(
-                    controller: targetACtrl,
+                    fieldController: targetACtrl,
                     options: kSpellImplicitTargetOptions,
                     placeholder: const Text('TargetA'),
                     enabled: effectActive,
@@ -1547,7 +1547,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '目标B',
                   child: FoxyShadSelect<int>(
-                    controller: targetBCtrl,
+                    fieldController: targetBCtrl,
                     options: kSpellImplicitTargetOptions,
                     placeholder: const Text('TargetB'),
                     enabled: effectActive,
@@ -1558,7 +1558,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: _miscValueLabel(effectValue, auraValue),
                   child: _MiscValueInput(
-                    textController: miscValueCtrl,
+                    fieldController: miscValueCtrl,
                     options: miscOptions,
                     readOnly: !effectActive,
                   ),
@@ -1573,7 +1573,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: _miscValueBLabel(effectValue, auraValue),
                   child: _MiscValueInput(
-                    textController: miscValueBCtrl,
+                    fieldController: miscValueBCtrl,
                     options: miscBOptions,
                     readOnly: !effectActive,
                   ),
@@ -1584,7 +1584,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '半径',
                   child: FoxyNumberInput<int>(
                     placeholder: 'RadiusIndex',
-                    controller: radiusCtrl,
+                    fieldController: radiusCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1594,7 +1594,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '连锁振幅',
                   child: FoxyNumberInput<double>(
                     placeholder: 'ChainAmplitude',
-                    controller: chainAmpCtrl,
+                    fieldController: chainAmpCtrl,
                     readOnly: !effectActive || !needsChainAmplitude,
                   ),
                 ),
@@ -1604,7 +1604,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '加成系数',
                   child: FoxyNumberInput<double>(
                     placeholder: 'BonusCoefficient',
-                    controller: bonusCoefCtrl,
+                    fieldController: bonusCoefCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1618,7 +1618,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '物品类型',
                   child: FoxyShadSelect<int>(
-                    controller: itemTypeCtrl,
+                    fieldController: itemTypeCtrl,
                     options: kSpellItemClassOptions,
                     placeholder: const Text('ItemType'),
                     enabled: effectActive && needsItemType,
@@ -1630,7 +1630,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '触发法术',
                   child: FoxyNumberInput<int>(
                     placeholder: 'TriggerSpell',
-                    controller: triggerSpellCtrl,
+                    fieldController: triggerSpellCtrl,
                     readOnly: !effectActive || !needsTriggerSpell,
                   ),
                 ),
@@ -1640,7 +1640,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '连锁目标',
                   child: FoxyNumberInput<int>(
                     placeholder: 'ChainTarget',
-                    controller: chainTargetsCtrl,
+                    fieldController: chainTargetsCtrl,
                     readOnly: !effectActive,
                   ),
                 ),
@@ -1650,7 +1650,7 @@ class _SpellViewState extends State<SpellView> {
                   label: '连击点数',
                   child: FoxyNumberInput<double>(
                     placeholder: 'PointsPerCombo',
-                    controller: comboCtrl,
+                    fieldController: comboCtrl,
                     readOnly: !effectActive || !needsComboPoints,
                   ),
                 ),
@@ -1664,7 +1664,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '分类掩码A',
                   child: FoxyFlagPicker(
-                    controller: maskAController,
+                    fieldController: maskAController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码A',
                     placeholder: 'MaskA',
@@ -1675,7 +1675,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '分类掩码B',
                   child: FoxyFlagPicker(
-                    controller: maskBController,
+                    fieldController: maskBController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码B',
                     placeholder: 'MaskB',
@@ -1686,7 +1686,7 @@ class _SpellViewState extends State<SpellView> {
                 child: FoxyFormItem(
                   label: '分类掩码C',
                   child: FoxyFlagPicker(
-                    controller: maskCController,
+                    fieldController: maskCController,
                     flags: kSpellClassMaskBits,
                     title: '分类掩码C',
                     placeholder: 'MaskC',
@@ -1720,13 +1720,16 @@ class MiscValueFlagPicker extends MiscValueOptions {
 }
 
 /// 根据上下文动态切换 数字输入 / 下拉框 / FlagPicker。
+///
+/// 源数据始终是 VM 的 [IntFieldController]；Select/Flag 模式使用本地适配器
+/// 控制器，通过 listener 写回 int 值。
 class _MiscValueInput extends StatefulWidget {
-  final TextEditingController textController;
+  final IntFieldController fieldController;
   final MiscValueOptions? options;
   final bool readOnly;
 
   const _MiscValueInput({
-    required this.textController,
+    required this.fieldController,
     this.options,
     this.readOnly = false,
   });
@@ -1736,73 +1739,73 @@ class _MiscValueInput extends StatefulWidget {
 }
 
 class _MiscValueInputState extends State<_MiscValueInput> {
-  ShadSelectController<int>? _selectController;
-  late final TextEditingController _flagDisplayController;
+  SelectFieldController<int>? _selectController;
+  FlagFieldController? _flagController;
+
+  void _onSelectChanged() {
+    final select = _selectController;
+    if (select == null) return;
+    widget.fieldController.init(select.collect());
+  }
+
+  void _onFlagChanged() {
+    final flag = _flagController;
+    if (flag == null) return;
+    widget.fieldController.init(flag.collect());
+  }
+
+  void _disposeAdapters() {
+    _selectController?.controller.removeListener(_onSelectChanged);
+    _selectController?.dispose();
+    _selectController = null;
+    _flagController?.controller.removeListener(_onFlagChanged);
+    _flagController?.dispose();
+    _flagController = null;
+  }
+
+  void _ensureAdapters() {
+    if (_isSelectMode && _selectController == null) {
+      _selectController = SelectFieldController<int>(fallback: 0);
+      _selectController!.init(widget.fieldController.collect());
+      _selectController!.controller.addListener(_onSelectChanged);
+    }
+    if (_isFlagMode && _flagController == null) {
+      _flagController = FlagFieldController();
+      _flagController!.init(widget.fieldController.collect());
+      _flagController!.controller.addListener(_onFlagChanged);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _flagDisplayController = TextEditingController(
-      text: FlagFieldController.formatFlagValue(
-        int.tryParse(widget.textController.text) ?? 0,
-      ),
-    );
-    _flagDisplayController.addListener(_syncTextController);
-    _syncController();
+    _ensureAdapters();
   }
 
   @override
   void didUpdateWidget(_MiscValueInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.options != widget.options) {
-      _selectController?.dispose();
-      _selectController = null;
-      if (_isSelectMode) {
-        _syncController();
-      } else if (_isFlagMode) {
-        _flagDisplayController.text = FlagFieldController.formatFlagValue(
-          int.tryParse(widget.textController.text) ?? 0,
-        );
-      }
+    if (oldWidget.options.runtimeType != widget.options.runtimeType ||
+        oldWidget.fieldController != widget.fieldController) {
+      _disposeAdapters();
+      _ensureAdapters();
     }
   }
 
   @override
   void dispose() {
-    _flagDisplayController.removeListener(_syncTextController);
-    _selectController?.dispose();
-    _flagDisplayController.dispose();
+    _disposeAdapters();
     super.dispose();
   }
 
   bool get _isFlagMode => widget.options is MiscValueFlagPicker;
   bool get _isSelectMode => widget.options is MiscValueDropdown;
 
-  /// 将 [_flagDisplayController] 的格式化文本同步回 [widget.textController]（纯数字），
-  /// 供 VM 读取。替代原 [FoxyFlagPicker.onChanged] 的回写。
-  void _syncTextController() {
-    widget.textController.text = FlagFieldController.parseFlagValue(
-      _flagDisplayController.text,
-    ).toString();
-  }
-
-  void _syncController() {
-    if (_isSelectMode) {
-      final curVal = int.tryParse(widget.textController.text) ?? 0;
-      _selectController = ShadSelectController<int>();
-      _selectController!.value = {curVal};
-      _selectController!.addListener(() {
-        final v = _selectController!.value.firstOrNull;
-        if (v != null) widget.textController.text = v.toString();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_isFlagMode) {
       return FoxyFlagPicker(
-        controller: _flagDisplayController,
+        fieldController: _flagController!,
         flags: (widget.options! as MiscValueFlagPicker).flags,
         title: '杂项值',
         placeholder: 'MiscValue',
@@ -1810,7 +1813,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     }
     if (_isSelectMode) {
       return FoxyShadSelect<int>(
-        controller: _selectController!,
+        fieldController: _selectController!,
         options: (widget.options! as MiscValueDropdown).items,
         placeholder: const Text('选择...'),
         enabled: !widget.readOnly,
@@ -1818,7 +1821,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     }
     return FoxyNumberInput<int>(
       placeholder: 'MiscValue',
-      controller: widget.textController,
+      fieldController: widget.fieldController,
       readOnly: widget.readOnly,
     );
   }

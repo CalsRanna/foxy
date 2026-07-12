@@ -151,11 +151,13 @@ class _SpellGroupViewState extends State<SpellGroupView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem.legacy(
-            controller: TextEditingController(text: widget.spellId.toString()),
+          FoxyFormItem(
             label: '法术ID',
-            placeholder: 'spell_id',
-            readOnly: true,
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.spellIdController,
+              placeholder: 'spell_id',
+              readOnly: true,
+            ),
           ),
           SizedBox(height: 16),
           Row(
@@ -164,9 +166,9 @@ class _SpellGroupViewState extends State<SpellGroupView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '技能组',
-                  placeholder: 'id',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.groupIdController,
+                    fieldController: viewModel.groupIdController,
+                    placeholder: 'id',
                   ),
                 ),
               ),

@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,13 +14,15 @@ class SpellCustomAttrViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final attributesController = TextEditingController();
+  final spellIdController = IntFieldController();
+  final attributesController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    attributesController,
+  ];
 
   final customAttr = signal(SpellCustomAttrEntity());
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getSpellCustomAttr(spellId.value);
@@ -49,20 +50,21 @@ class SpellCustomAttrViewModel {
   }
 
   SpellCustomAttrEntity _collectFromControllers() {
-    final data = SpellCustomAttrEntity(
+    return SpellCustomAttrEntity(
       spellId: spellId.value,
-      attributes: _pi(attributesController.text),
+      attributes: attributesController.collect(),
     );
-    return data;
   }
 
   void initControllers(SpellCustomAttrEntity data) {
-    attributesController.text = _fmt(data.attributes);
+    spellIdController.init(spellId.value);
+    attributesController.init(data.attributes);
   }
 
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术自定义属性-初始化失败: $e');
@@ -71,6 +73,8 @@ class SpellCustomAttrViewModel {
   }
 
   void dispose() {
-    attributesController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

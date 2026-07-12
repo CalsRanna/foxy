@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,18 +14,23 @@ class SpellBonusDataViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
 
-  final directBonusController = TextEditingController();
-  final dotBonusController = TextEditingController();
-  final apBonusController = TextEditingController();
-  final apDotBonusController = TextEditingController();
-  final commentsController = TextEditingController();
+  final spellIdController = IntFieldController();
+  final directBonusController = DoubleFieldController();
+  final dotBonusController = DoubleFieldController();
+  final apBonusController = DoubleFieldController();
+  final apDotBonusController = DoubleFieldController();
+  final commentsController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    directBonusController,
+    dotBonusController,
+    apBonusController,
+    apDotBonusController,
+    commentsController,
+  ];
 
   final bonusData = signal(SpellBonusDataEntity());
-
-  String _fmt(num v) => formatNum(v);
-
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getSpellBonusData(spellId.value);
@@ -56,25 +60,27 @@ class SpellBonusDataViewModel {
   SpellBonusDataEntity _collectFromControllers() {
     return SpellBonusDataEntity(
       entry: spellId.value,
-      directBonus: _pd(directBonusController.text),
-      dotBonus: _pd(dotBonusController.text),
-      apBonus: _pd(apBonusController.text),
-      apDotBonus: _pd(apDotBonusController.text),
-      comments: commentsController.text,
+      directBonus: directBonusController.collect(),
+      dotBonus: dotBonusController.collect(),
+      apBonus: apBonusController.collect(),
+      apDotBonus: apDotBonusController.collect(),
+      comments: commentsController.collect(),
     );
   }
 
   void initControllers(SpellBonusDataEntity data) {
-    directBonusController.text = _fmt(data.directBonus);
-    dotBonusController.text = _fmt(data.dotBonus);
-    apBonusController.text = _fmt(data.apBonus);
-    apDotBonusController.text = _fmt(data.apDotBonus);
-    commentsController.text = data.comments;
+    spellIdController.init(spellId.value);
+    directBonusController.init(data.directBonus);
+    dotBonusController.init(data.dotBonus);
+    apBonusController.init(data.apBonus);
+    apDotBonusController.init(data.apDotBonus);
+    commentsController.init(data.comments);
   }
 
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术加成-初始化失败: $e');
@@ -83,10 +89,8 @@ class SpellBonusDataViewModel {
   }
 
   void dispose() {
-    apBonusController.dispose();
-    apDotBonusController.dispose();
-    commentsController.dispose();
-    directBonusController.dispose();
-    dotBonusController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

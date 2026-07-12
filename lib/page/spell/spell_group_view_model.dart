@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,13 +15,16 @@ class SpellGroupViewModel {
   final spellId = signal(0);
   final items = signal<List<SpellGroupEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final groupIdController = TextEditingController();
+
+  final spellIdController = IntFieldController();
+  final groupIdController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    spellIdController,
+    groupIdController,
+  ];
 
   final _repository = GetIt.instance.get<SpellGroupRepository>();
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellGroups(spellId.value);
@@ -31,26 +33,25 @@ class SpellGroupViewModel {
   }
 
   void resetForm() {
-    groupIdController.text = _fmt(0);
+    groupIdController.init(0);
   }
 
   void fillForm(SpellGroupEntity data) {
-    groupIdController.text = _fmt(data.id);
+    groupIdController.init(data.id);
   }
 
   SpellGroupEntity collectFromForm() {
-    final data = SpellGroupEntity(
+    return SpellGroupEntity(
       spellId: spellId.value,
-      id: _pi(groupIdController.text),
+      id: groupIdController.collect(),
     );
-    return data;
   }
 
   Future<void> create() async {
     try {
       final nextId = await _repository.getNextId();
       resetForm();
-      groupIdController.text = _fmt(nextId);
+      groupIdController.init(nextId);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('法术组-创建失败: $e');
@@ -160,6 +161,7 @@ class SpellGroupViewModel {
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
+      spellIdController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术组-初始化失败: $e');
@@ -172,6 +174,8 @@ class SpellGroupViewModel {
   }
 
   void dispose() {
-    groupIdController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
