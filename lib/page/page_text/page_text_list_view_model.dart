@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
@@ -8,14 +7,17 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class PageTextListViewModel {
   int _refreshToken = 0;
-  final idController = TextEditingController();
-  final textController = TextEditingController();
+  final idController = StringFieldController();
+  final textController = StringFieldController();
+
+  late final _controllers = <FieldController>[idController, textController];
   final _repository = GetIt.instance.get<PageTextRepository>();
 
   final page = signal(1);
@@ -46,8 +48,8 @@ class PageTextListViewModel {
   }
 
   Future<void> reset() async {
-    idController.clear();
-    textController.clear();
+    idController.init('');
+    textController.init('');
     page.value = 1;
     await _refresh();
   }
@@ -121,8 +123,8 @@ class PageTextListViewModel {
 
   PageTextFilterEntity _buildFilter() {
     return PageTextFilterEntity(
-      id: idController.text,
-      text: textController.text,
+      id: idController.collect(),
+      text: textController.collect(),
     );
   }
 
@@ -143,7 +145,8 @@ class PageTextListViewModel {
   }
 
   void dispose() {
-    idController.dispose();
-    textController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

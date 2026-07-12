@@ -3,6 +3,7 @@ import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -35,27 +36,29 @@ class _PageTextViewState extends State<PageTextView> {
       label: '编号',
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
-        controller: viewModel.idController,
+        fieldController: viewModel.idController,
         readOnly: true,
       ),
     );
-    final textInput = FoxyFormItem.legacy(
-      controller: viewModel.textController,
+    final textInput = FoxyFormItem(
       label: '文本',
-      placeholder: 'Text',
+      child: FoxyStringInput(
+        controller: viewModel.textController,
+        placeholder: 'Text',
+      ),
     );
     final nextPageIdInput = FoxyFormItem(
       label: '下一页编号',
       child: FoxyNumberInput<int>(
         placeholder: 'NextPageID',
-        controller: viewModel.nextPageIdController,
+        fieldController: viewModel.nextPageIdController,
       ),
     );
     final verifiedBuildInput = FoxyFormItem(
       label: 'VerifiedBuild',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
-        controller: viewModel.verifiedBuildController,
+        fieldController: viewModel.verifiedBuildController,
       ),
     );
 

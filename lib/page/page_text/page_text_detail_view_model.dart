@@ -1,12 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,16 +15,20 @@ class PageTextDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PageTextRepository>();
 
-  final idController = TextEditingController();
-  final textController = TextEditingController();
-  final nextPageIdController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final idController = IntFieldController();
+  final textController = StringFieldController();
+  final nextPageIdController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    textController,
+    nextPageIdController,
+    verifiedBuildController,
+  ];
 
   final page = signal<PageTextEntity?>(null);
   final locales = signal<List<PageTextLocaleEntity>>([]);
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({int? id}) async {
     try {
@@ -47,10 +50,10 @@ class PageTextDetailViewModel {
   }
 
   void _initControllers(PageTextEntity pt) {
-    idController.text = _fmt(pt.id);
-    textController.text = pt.text;
-    nextPageIdController.text = _fmt(pt.nextPageId);
-    verifiedBuildController.text = _fmt(pt.verifiedBuild);
+    idController.init(pt.id);
+    textController.init(pt.text);
+    nextPageIdController.init(pt.nextPageId);
+    verifiedBuildController.init(pt.verifiedBuild);
   }
 
   Future<void> save(BuildContext context) async {
@@ -60,7 +63,7 @@ class PageTextDetailViewModel {
       final existed = await _repository.getPageText(data.id);
       if (existed == null) {
         final id = await _repository.storePageText(data);
-        idController.text = '$id';
+        idController.init(id);
         page.value = data.copyWith(id: id);
         _logActivity(ActivityActionType.create, page.value!);
       } else {
@@ -92,17 +95,16 @@ class PageTextDetailViewModel {
 
   PageTextEntity _collect() {
     return PageTextEntity(
-      id: _pi(idController.text),
-      text: textController.text,
-      nextPageId: _pi(nextPageIdController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      id: idController.collect(),
+      text: textController.collect(),
+      nextPageId: nextPageIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
   void dispose() {
-    idController.dispose();
-    nextPageIdController.dispose();
-    textController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
