@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -48,13 +49,13 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
   }
 
   Widget _buildFilter() {
-    var entryInput = ShadInput(
+    var entryInput = FoxyStringInput(
       controller: viewModel.entryController,
-      placeholder: Text('编号（ID）'),
+      placeholder: '编号（ID）',
     );
-    var nameInput = ShadInput(
+    var nameInput = FoxyStringInput(
       controller: viewModel.nameController,
-      placeholder: Text('名称（InfoName_lang_zhCN）'),
+      placeholder: '名称（InfoName_lang_zhCN）',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

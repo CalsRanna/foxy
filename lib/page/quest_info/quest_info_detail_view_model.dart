@@ -5,8 +5,7 @@ import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,14 +15,12 @@ class QuestInfoDetailViewModel {
   final _repository = GetIt.instance.get<QuestInfoRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final idController = TextEditingController();
-  final nameController = TextEditingController();
+  final idController = IntFieldController();
+  final nameController = StringFieldController();
+
+  late final _controllers = <FieldController>[idController, nameController];
 
   final info = signal(QuestInfoEntity());
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -32,7 +29,7 @@ class QuestInfoDetailViewModel {
       if (isCreate) {
         final id = await _repository.storeQuestInfo(t);
         t = t.copyWith(id: id);
-        idController.text = '$id';
+        idController.init(id);
       } else {
         await _repository.updateQuestInfo(t);
       }
@@ -70,7 +67,7 @@ class QuestInfoDetailViewModel {
       infoNameLangUnk2: values.valueOf('unk2'),
       infoNameLangUnk3: values.valueOf('unk3'),
     );
-    nameController.text = values.zhCN;
+    nameController.init(values.zhCN);
   }
 
   void pop() {
@@ -79,8 +76,8 @@ class QuestInfoDetailViewModel {
 
   QuestInfoEntity _collectFromControllers() {
     return info.value.copyWith(
-      id: _pi(idController.text),
-      infoNameLangZhCN: nameController.text,
+      id: idController.collect(),
+      infoNameLangZhCN: nameController.collect(),
     );
   }
 
@@ -96,8 +93,9 @@ class QuestInfoDetailViewModel {
   }
 
   void dispose() {
-    idController.dispose();
-    nameController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals({int? id}) async {
@@ -116,7 +114,7 @@ class QuestInfoDetailViewModel {
   }
 
   void _initControllers(QuestInfoEntity table) {
-    idController.text = _fmt(table.id);
-    nameController.text = table.infoNameLangZhCN;
+    idController.init(table.id);
+    nameController.init(table.infoNameLangZhCN);
   }
 }
