@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -19,13 +18,15 @@ class PlayerCreateInfoActionViewModel {
   int? _class_;
   int? _oldButton;
 
-  final buttonController = TextEditingController();
-  final actionController = TextEditingController();
-  final typeController = TextEditingController();
+  final buttonController = IntFieldController();
+  final actionController = IntFieldController();
+  final typeController = IntFieldController();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  late final _controllers = <FieldController>[
+    buttonController,
+    actionController,
+    typeController,
+  ];
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -44,18 +45,18 @@ class PlayerCreateInfoActionViewModel {
 
   void create() {
     _oldButton = null;
-    buttonController.text = _fmt(0);
-    actionController.text = _fmt(0);
-    typeController.text = _fmt(0);
+    buttonController.init(0);
+    actionController.init(0);
+    typeController.init(0);
   }
 
   void edit(int index) {
     if (index >= actions.value.length) return;
     final item = actions.value[index];
     _oldButton = item.button;
-    buttonController.text = _fmt(item.button);
-    actionController.text = _fmt(item.action);
-    typeController.text = _fmt(item.type);
+    buttonController.init(item.button);
+    actionController.init(item.action);
+    typeController.init(item.type);
   }
 
   Future<void> save(BuildContext context) async {
@@ -124,15 +125,15 @@ class PlayerCreateInfoActionViewModel {
     return PlayerCreateInfoActionEntity(
       race: _race ?? 0,
       class_: _class_ ?? 0,
-      button: _pi(buttonController.text),
-      action: _pi(actionController.text),
-      type: _pi(typeController.text),
+      button: buttonController.collect(),
+      action: actionController.collect(),
+      type: typeController.collect(),
     );
   }
 
   void dispose() {
-    actionController.dispose();
-    buttonController.dispose();
-    typeController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

@@ -56,9 +56,9 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '种族',
-                      placeholder: 'race',
                       child: FoxyNumberInput<int>(
-                        controller: viewModel.raceController,
+                        placeholder: 'race',
+                        fieldController: viewModel.raceController,
                         readOnly: pkReadOnly,
                       ),
                     ),
@@ -66,9 +66,9 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '职业',
-                      placeholder: 'class',
                       child: FoxyNumberInput<int>(
-                        controller: viewModel.playerClassController,
+                        placeholder: 'class',
+                        fieldController: viewModel.playerClassController,
                         readOnly: pkReadOnly,
                       ),
                     ),
@@ -76,18 +76,18 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '地图',
-                      placeholder: 'map',
                       child: FoxyNumberInput<int>(
-                        controller: viewModel.mapController,
+                        placeholder: 'map',
+                        fieldController: viewModel.mapController,
                       ),
                     ),
                   ),
                   Expanded(
                     child: FoxyFormItem(
                       label: '区域',
-                      placeholder: 'zone',
                       child: FoxyNumberInput<int>(
-                        controller: viewModel.zoneController,
+                        placeholder: 'zone',
+                        fieldController: viewModel.zoneController,
                       ),
                     ),
                   ),
@@ -99,36 +99,36 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: 'X坐标',
-                      placeholder: 'position_x',
                       child: FoxyNumberInput<double>(
-                        controller: viewModel.positionXController,
+                        placeholder: 'position_x',
+                        fieldController: viewModel.positionXController,
                       ),
                     ),
                   ),
                   Expanded(
                     child: FoxyFormItem(
                       label: 'Y坐标',
-                      placeholder: 'position_y',
                       child: FoxyNumberInput<double>(
-                        controller: viewModel.positionYController,
+                        placeholder: 'position_y',
+                        fieldController: viewModel.positionYController,
                       ),
                     ),
                   ),
                   Expanded(
                     child: FoxyFormItem(
                       label: 'Z坐标',
-                      placeholder: 'position_z',
                       child: FoxyNumberInput<double>(
-                        controller: viewModel.positionZController,
+                        placeholder: 'position_z',
+                        fieldController: viewModel.positionZController,
                       ),
                     ),
                   ),
                   Expanded(
                     child: FoxyFormItem(
                       label: '朝向',
-                      placeholder: 'orientation',
                       child: FoxyNumberInput<double>(
-                        controller: viewModel.orientationController,
+                        placeholder: 'orientation',
+                        fieldController: viewModel.orientationController,
                       ),
                     ),
                   ),

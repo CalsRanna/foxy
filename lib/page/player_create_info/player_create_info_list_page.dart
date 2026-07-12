@@ -5,6 +5,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -56,15 +57,15 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
         spacing: 16,
         children: [
           Expanded(
-            child: ShadInput(
+            child: FoxyStringInput(
               controller: viewModel.raceController,
-              placeholder: Text('种族 (race)'),
+              placeholder: '种族 (race)',
             ),
           ),
           Expanded(
-            child: ShadInput(
+            child: FoxyStringInput(
               controller: viewModel.classController,
-              placeholder: Text('职业 (class)'),
+              placeholder: '职业 (class)',
             ),
           ),
           Expanded(

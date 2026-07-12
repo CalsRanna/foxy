@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -16,13 +15,15 @@ class PlayerCreateInfoItemViewModel {
   int? _race;
   int? _class_;
 
-  final itemIdController = TextEditingController();
-  final amountController = TextEditingController();
-  final noteController = TextEditingController();
+  final itemIdController = IntFieldController();
+  final amountController = IntFieldController();
+  final noteController = StringFieldController();
 
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  late final _controllers = <FieldController>[
+    itemIdController,
+    amountController,
+    noteController,
+  ];
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -40,9 +41,9 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void create() {
-    itemIdController.text = _fmt(0);
-    amountController.text = _fmt(1);
-    noteController.clear();
+    itemIdController.init(0);
+    amountController.init(1);
+    noteController.init('');
   }
 
   Future<void> save(BuildContext context) async {
@@ -51,9 +52,9 @@ class PlayerCreateInfoItemViewModel {
       final item = PlayerCreateInfoItemEntity(
         race: _race!,
         class_: _class_!,
-        itemid: _pi(itemIdController.text),
-        amount: _pi(amountController.text),
-        note: noteController.text,
+        itemid: itemIdController.collect(),
+        amount: amountController.collect(),
+        note: noteController.collect(),
       );
       await _repository.storePlayerCreateInfoItem(item);
       items.value = await _repository.getBriefPlayerCreateInfoItems(
@@ -92,8 +93,8 @@ class PlayerCreateInfoItemViewModel {
   }
 
   void dispose() {
-    amountController.dispose();
-    itemIdController.dispose();
-    noteController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
