@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -20,26 +19,34 @@ class PickpocketingLootTemplateViewModel {
   final items = signal<List<BriefLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final itemController = TextEditingController();
-  final referenceController = TextEditingController();
-  final chanceController = TextEditingController();
-  final questRequiredController = ShadSelectController<int>();
-  final lootModeController = TextEditingController();
-  final groupIdController = TextEditingController();
-  final minCountController = TextEditingController();
-  final maxCountController = TextEditingController();
-  final commentController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final itemController = IntFieldController();
+  final referenceController = IntFieldController();
+  final chanceController = DoubleFieldController();
+  final questRequiredController = SelectFieldController<int>(fallback: 0);
+  final lootModeController = IntFieldController();
+  final groupIdController = IntFieldController();
+  final minCountController = IntFieldController();
+  final maxCountController = IntFieldController();
+  final commentController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    itemController,
+    referenceController,
+    lootModeController,
+    groupIdController,
+    minCountController,
+    maxCountController,
+    chanceController,
+    commentController,
+    questRequiredController,
+  ];
 
   final repository = LootTemplateRepository(LootTableType.pickpocket);
   final _creatureRepository = GetIt.instance.get<CreatureTemplateRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) =>
-      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final template = await _creatureRepository.getCreatureTemplate(
@@ -57,28 +64,28 @@ class PickpocketingLootTemplateViewModel {
 
   /// 重置表单
   void resetForm() {
-    itemController.clear();
-    referenceController.text = _fmt(0);
-    chanceController.text = _fmt(0.0);
-    questRequiredController.value = {0};
-    lootModeController.text = _fmt(1);
-    groupIdController.text = _fmt(0);
-    minCountController.text = _fmt(1);
-    maxCountController.text = _fmt(1);
-    commentController.clear();
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
   }
 
   /// 填充表单
   void fillForm(BriefLootTemplateEntity loot) {
-    itemController.text = loot.item.toString();
-    referenceController.text = _fmt(loot.reference);
-    chanceController.text = _fmt(loot.chance);
-    questRequiredController.value = {loot.questRequired ? 1 : 0};
-    lootModeController.text = _fmt(loot.lootMode);
-    groupIdController.text = _fmt(loot.groupId);
-    minCountController.text = _fmt(loot.minCount);
-    maxCountController.text = _fmt(loot.maxCount);
-    commentController.text = loot.comment;
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
   }
 
   /// 从表单收集数据
@@ -88,23 +95,16 @@ class PickpocketingLootTemplateViewModel {
 
     return LootTemplateEntity(
       entry: template.pickpocketLoot,
-      item: _parseInt(itemController.text),
-      reference: _pi(referenceController.text),
-      chance: _pd(chanceController.text),
-      questRequired: questRequiredController.value.firstOrNull == 1,
-      lootMode: _pi(lootModeController.text),
-      groupId: _pi(groupIdController.text),
-      minCount: _pi(minCountController.text),
-      maxCount: _pi(maxCountController.text),
-      comment: commentController.text,
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
     );
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   /// 创建新记录
@@ -115,7 +115,7 @@ class PickpocketingLootTemplateViewModel {
 
       final nextItem = await repository.getNextItemId(template.pickpocketLoot);
       resetForm();
-      itemController.text = nextItem.toString();
+      itemController.init(nextItem);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建偷窃掉落记录失败: $e');
@@ -235,7 +235,7 @@ class PickpocketingLootTemplateViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化偷窃掉落失败: $e');
@@ -250,15 +250,8 @@ class PickpocketingLootTemplateViewModel {
 
   /// 清理资源
   void dispose() {
-    chanceController.dispose();
-    creatureIdController.dispose();
-    commentController.dispose();
-    groupIdController.dispose();
-    itemController.dispose();
-    lootModeController.dispose();
-    maxCountController.dispose();
-    minCountController.dispose();
-    questRequiredController.dispose();
-    referenceController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

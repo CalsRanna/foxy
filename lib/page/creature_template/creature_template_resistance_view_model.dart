@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -17,18 +16,22 @@ class CreatureTemplateResistanceViewModel {
   final items = signal<List<CreatureTemplateResistanceEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final schoolController = ShadSelectController<int>();
-  final resistanceController = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final schoolController = SelectFieldController<int>(fallback: 0);
+  final resistanceController = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    resistanceController,
+    verifiedBuildController,
+    schoolController,
+  ];
 
   final _repository = GetIt.instance
       .get<CreatureTemplateResistanceRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefCreatureTemplateResistances(
@@ -40,25 +43,25 @@ class CreatureTemplateResistanceViewModel {
 
   /// 重置表单
   void resetForm() {
-    schoolController.value = {0};
-    resistanceController.text = _fmt(0);
-    verifiedBuildController.text = _fmt(0);
+    schoolController.init(0);
+    resistanceController.init(0);
+    verifiedBuildController.init(0);
   }
 
   /// 填充表单
   void fillForm(CreatureTemplateResistanceEntity resistance) {
-    schoolController.value = {resistance.school};
-    resistanceController.text = _fmt(resistance.resistance);
-    verifiedBuildController.text = _fmt(resistance.verifiedBuild);
+    schoolController.init(resistance.school);
+    resistanceController.init(resistance.resistance);
+    verifiedBuildController.init(resistance.verifiedBuild);
   }
 
   /// 从表单收集数据
   CreatureTemplateResistanceEntity collectFromForm() {
     return CreatureTemplateResistanceEntity(
       creatureID: creatureId.value,
-      school: schoolController.value.firstOrNull ?? 0,
-      resistance: _pi(resistanceController.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      school: schoolController.collect(),
+      resistance: resistanceController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
@@ -67,7 +70,7 @@ class CreatureTemplateResistanceViewModel {
     try {
       final nextSchool = await _repository.getNextSchool(creatureId.value);
       resetForm();
-      schoolController.value = {nextSchool};
+      schoolController.init(nextSchool);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物抗性记录失败: $e');
@@ -189,7 +192,7 @@ class CreatureTemplateResistanceViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物抗性失败: $e');
@@ -204,9 +207,8 @@ class CreatureTemplateResistanceViewModel {
 
   /// 清理资源
   void dispose() {
-    creatureIdController.dispose();
-    resistanceController.dispose();
-    schoolController.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

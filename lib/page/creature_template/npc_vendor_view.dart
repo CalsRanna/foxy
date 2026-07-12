@@ -186,7 +186,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FoxyFormItem(
             label: '商人ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              fieldController: viewModel.creatureIdController,
               placeholder: 'Entry',
               readOnly: true,
             ),
@@ -196,7 +196,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FoxyFormItem(
             label: '插槽',
             child: FoxyNumberInput<int>(
-              controller: viewModel.slotController,
+              fieldController: viewModel.slotController,
               placeholder: 'slot',
             ),
           ),
@@ -206,7 +206,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
             label: '物品',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
+              fieldController: viewModel.itemController,
               placeholder: 'item',
             ),
           ),
@@ -215,7 +215,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FoxyFormItem(
             label: '最大数量',
             child: FoxyNumberInput<int>(
-              controller: viewModel.maxcountController,
+              fieldController: viewModel.maxcountController,
               placeholder: 'maxcount (0=无限)',
             ),
           ),
@@ -224,7 +224,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FoxyFormItem(
             label: '补货时间',
             child: FoxyNumberInput<int>(
-              controller: viewModel.incrtimeController,
+              fieldController: viewModel.incrtimeController,
               placeholder: 'incrtime (秒)',
             ),
           ),
@@ -234,7 +234,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
             label: '扩展价格',
             child: FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemExtendedCost,
-              controller: viewModel.extendedCostController,
+              fieldController: viewModel.extendedCostController,
               placeholder: 'ExtendedCost',
             ),
           ),
@@ -243,7 +243,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
+              fieldController: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

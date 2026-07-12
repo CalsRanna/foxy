@@ -171,7 +171,7 @@ class _CreatureTemplateResistanceViewState
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              fieldController: viewModel.creatureIdController,
               placeholder: 'CreatureID',
               readOnly: true,
             ),
@@ -181,7 +181,7 @@ class _CreatureTemplateResistanceViewState
           FoxyFormItem(
             label: '抗性类型',
             child: FoxyShadSelect<int>(
-              controller: viewModel.schoolController,
+              fieldController: viewModel.schoolController,
               options: kResistanceSchoolOptions,
               placeholder: Text('School'),
             ),
@@ -191,7 +191,7 @@ class _CreatureTemplateResistanceViewState
           FoxyFormItem(
             label: '抗性值',
             child: FoxyNumberInput<int>(
-              controller: viewModel.resistanceController,
+              fieldController: viewModel.resistanceController,
               placeholder: 'Resistance',
             ),
           ),
@@ -200,7 +200,7 @@ class _CreatureTemplateResistanceViewState
           FoxyFormItem(
             label: 'VerifiedBuild',
             child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
+              fieldController: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
             ),
           ),

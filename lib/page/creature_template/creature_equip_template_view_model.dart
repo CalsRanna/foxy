@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
@@ -17,19 +16,25 @@ class CreatureEquipTemplateViewModel {
   final items = signal<List<BriefCreatureEquipTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   // 表单控制器
-  final creatureIdController = TextEditingController();
-  final idController = TextEditingController();
-  final itemID1Controller = TextEditingController();
-  final itemID2Controller = TextEditingController();
-  final itemID3Controller = TextEditingController();
-  final verifiedBuildController = TextEditingController();
+  final creatureIdController = IntFieldController();
+  final idController = IntFieldController();
+  final itemID1Controller = IntFieldController();
+  final itemID2Controller = IntFieldController();
+  final itemID3Controller = IntFieldController();
+  final verifiedBuildController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    creatureIdController,
+    idController,
+    itemID1Controller,
+    itemID2Controller,
+    itemID3Controller,
+    verifiedBuildController,
+  ];
 
   final _repository = GetIt.instance.get<CreatureEquipTemplateRepository>();
 
   /// 加载数据
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefCreatureEquipTemplates(
@@ -41,40 +46,33 @@ class CreatureEquipTemplateViewModel {
 
   /// 重置表单
   void resetForm() {
-    idController.text = _fmt(0);
-    itemID1Controller.clear();
-    itemID2Controller.clear();
-    itemID3Controller.clear();
-    verifiedBuildController.text = _fmt(0);
+    idController.init(0);
+    itemID1Controller.init(0);
+    itemID2Controller.init(0);
+    itemID3Controller.init(0);
+    verifiedBuildController.init(0);
   }
 
   /// 填充表单
   void fillForm(BriefCreatureEquipTemplateEntity equip) {
-    idController.text = _fmt(equip.id);
-    itemID1Controller.text = equip.itemID1.toString();
-    itemID2Controller.text = equip.itemID2.toString();
-    itemID3Controller.text = equip.itemID3.toString();
-    verifiedBuildController.text = _fmt(equip.verifiedBuild);
+    idController.init(equip.id);
+    itemID1Controller.init(equip.itemID1);
+    itemID2Controller.init(equip.itemID2);
+    itemID3Controller.init(equip.itemID3);
+    verifiedBuildController.init(equip.verifiedBuild);
   }
 
   /// 从表单收集数据
   CreatureEquipTemplateEntity collectFromForm() {
     final equip = CreatureEquipTemplateEntity(
       creatureID: creatureId.value,
-      id: _pi(idController.text),
-      itemID1: _parseInt(itemID1Controller.text),
-      itemID2: _parseInt(itemID2Controller.text),
-      itemID3: _parseInt(itemID3Controller.text),
-      verifiedBuild: _pi(verifiedBuildController.text),
+      id: idController.collect(),
+      itemID1: itemID1Controller.collect(),
+      itemID2: itemID2Controller.collect(),
+      itemID3: itemID3Controller.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
     return equip;
-  }
-
-  int _parseInt(String text) {
-    if (text.isEmpty) return 0;
-    final value = int.tryParse(text);
-    if (value == null) throw Exception('输入值 "$text" 不是有效数字');
-    return value;
   }
 
   /// 创建新记录
@@ -84,7 +82,7 @@ class CreatureEquipTemplateViewModel {
         creatureId.value,
       );
       resetForm();
-      idController.text = _fmt(blank.id);
+      idController.init(blank.id);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物装备记录失败: $e');
@@ -206,7 +204,7 @@ class CreatureEquipTemplateViewModel {
   Future<void> initSignals({required int creatureId}) async {
     try {
       this.creatureId.value = creatureId;
-      creatureIdController.text = _fmt(creatureId);
+      creatureIdController.init(creatureId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化生物装备失败: $e');
@@ -221,11 +219,8 @@ class CreatureEquipTemplateViewModel {
 
   /// 清理资源
   void dispose() {
-    creatureIdController.dispose();
-    idController.dispose();
-    itemID1Controller.dispose();
-    itemID2Controller.dispose();
-    itemID3Controller.dispose();
-    verifiedBuildController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }
