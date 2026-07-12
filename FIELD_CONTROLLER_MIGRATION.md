@@ -433,6 +433,7 @@ flutter test
 - `talent` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、24 个 FieldController。
 - `spell_item_enchantment` 模块已完整迁移，包括列表筛选、详情编辑和 DBC 名称本地化，共 2 个 ViewModel、24 个 FieldController。
 - `emote_text` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、21 个 FieldController。
+- `area_table` 模块已完整迁移，包括列表筛选、详情编辑和 DBC 名称本地化，共 2 个 ViewModel、22 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -454,6 +455,7 @@ flutter test
 | `talent` | 列表筛选、详情编辑、法术等级/前置天赋/掩码 | 24 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `spell_item_enchantment` | 列表筛选、详情编辑、DBC 名称本地化、效果数值 | 24 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `emote_text` | 列表筛选、详情编辑、16 个 EmoteText 数值槽 | 21 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `area_table` | 列表筛选、详情编辑、DBC 名称本地化、音效/液体数值 | 22 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 
