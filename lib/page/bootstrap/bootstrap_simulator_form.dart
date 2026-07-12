@@ -20,51 +20,58 @@ class BootstrapSimulatorForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(64.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 16,
-        children: [
-          Text(
-            'Welcome to Foxy',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 640),
+        child: Padding(
+          padding: const EdgeInsets.all(64.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             spacing: 16,
             children: [
-              Row(
+              Text(
+                'Welcome to Foxy',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 spacing: 16,
                 children: [
-                  Expanded(child: _buildInput(context, hostController, 'Host')),
-                  SizedBox(
-                    width: 160,
-                    child: _buildInput(
-                      context,
-                      portController,
-                      'Port(Optional)',
-                    ),
+                  Row(
+                    spacing: 16,
+                    children: [
+                      Expanded(
+                        child: _buildInput(context, hostController, 'Host'),
+                      ),
+                      SizedBox(
+                        width: 160,
+                        child: _buildInput(
+                          context,
+                          portController,
+                          'Port(Optional)',
+                        ),
+                      ),
+                    ],
+                  ),
+                  _buildInput(context, databaseController, 'Database'),
+                  _buildInput(context, usernameController, 'Username'),
+                  _buildInput(
+                    context,
+                    passwordController,
+                    'Password',
+                    obscureText: true,
                   ),
                 ],
               ),
-              _buildInput(context, databaseController, 'Database'),
-              _buildInput(context, usernameController, 'Username'),
-              _buildInput(
-                context,
-                passwordController,
-                'Password',
-                obscureText: true,
+              ShadButton(
+                width: double.infinity,
+                onPressed: onConnect,
+                child: Text('Connect'),
               ),
             ],
           ),
-          ShadButton(
-            width: double.infinity,
-            onPressed: onConnect,
-            child: Text('Connect'),
-          ),
-        ],
+        ),
       ),
     );
   }
