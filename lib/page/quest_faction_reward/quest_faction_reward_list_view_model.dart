@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -6,13 +5,16 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestFactionRewardListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
+  final entryController = StringFieldController();
+
+  late final _controllers = <FieldController>[entryController];
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
 
   final page = signal(1);
@@ -55,7 +57,9 @@ class QuestFactionRewardListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -90,7 +94,7 @@ class QuestFactionRewardListViewModel {
   }
 
   QuestFactionRewardFilterEntity _buildFilter() {
-    return QuestFactionRewardFilterEntity(id: entryController.text);
+    return QuestFactionRewardFilterEntity(id: entryController.collect());
   }
 
   Future<void> paginate(int page) async {
@@ -99,7 +103,7 @@ class QuestFactionRewardListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
+    entryController.init('');
     page.value = 1;
     await _refresh();
   }
