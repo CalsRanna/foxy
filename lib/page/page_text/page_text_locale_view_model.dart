@@ -7,12 +7,51 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
-class PageTextLocaleViewModel {
+class PageTextLocaleViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<PageTextRepository>();
 
   final locales = signal<List<PageTextLocaleEntity>>([]);
-  final _controllers = signal<List<StringFieldController>>([]);
   int _currentId = 0;
+
+  /// 预分配 16 个 Controller，覆盖可能的 locale 行数。
+  late final localeController0 = registerController(StringFieldController());
+  late final localeController1 = registerController(StringFieldController());
+  late final localeController2 = registerController(StringFieldController());
+  late final localeController3 = registerController(StringFieldController());
+  late final localeController4 = registerController(StringFieldController());
+  late final localeController5 = registerController(StringFieldController());
+  late final localeController6 = registerController(StringFieldController());
+  late final localeController7 = registerController(StringFieldController());
+  late final localeController8 = registerController(StringFieldController());
+  late final localeController9 = registerController(StringFieldController());
+  late final localeController10 = registerController(StringFieldController());
+  late final localeController11 = registerController(StringFieldController());
+  late final localeController12 = registerController(StringFieldController());
+  late final localeController13 = registerController(StringFieldController());
+  late final localeController14 = registerController(StringFieldController());
+  late final localeController15 = registerController(StringFieldController());
+
+  StringFieldController localeController(int index) {
+    return switch (index) {
+      0 => localeController0,
+      1 => localeController1,
+      2 => localeController2,
+      3 => localeController3,
+      4 => localeController4,
+      5 => localeController5,
+      6 => localeController6,
+      7 => localeController7,
+      8 => localeController8,
+      9 => localeController9,
+      10 => localeController10,
+      11 => localeController11,
+      12 => localeController12,
+      13 => localeController13,
+      14 => localeController14,
+      15 => localeController15,
+      _ => localeController0, // 防御：超出范围回退首个
+    };
+  }
 
   Future<void> initSignals({int? id}) async {
     if (id == null) return;
@@ -26,59 +65,45 @@ class PageTextLocaleViewModel {
     }
   }
 
-  StringFieldController localeController(int index) {
-    final controllers = _controllers.value;
-    if (index >= controllers.length) {
-      // 防御：UI 与列表不同步时不应泄漏长期控制器
-      return StringFieldController();
-    }
-    return controllers[index];
-  }
-
   void _syncControllers() {
-    for (final controller in _controllers.value) {
-      controller.dispose();
+    final data = locales.value;
+    for (var i = 0; i < 16; i++) {
+      if (i < data.length) {
+        localeController(i).init(data[i].text);
+      } else {
+        localeController(i).init('');
+      }
     }
-    _controllers.value = locales.value.map((l) {
-      final controller = StringFieldController();
-      controller.init(l.text);
-      return controller;
-    }).toList();
   }
 
   void addLocale() {
-    final newLocales = [...locales.value];
-    final locale = PageTextLocaleEntity(id: _currentId, locale: 'zhCN');
-    newLocales.add(locale);
+    final newLocales = [
+      ...locales.value,
+      PageTextLocaleEntity(id: _currentId, locale: 'zhCN'),
+    ];
     locales.value = newLocales;
-    _controllers.value = [..._controllers.value, StringFieldController()];
+    _syncControllers();
   }
 
   void removeLocale(int index) {
     final newLocales = [...locales.value];
-    final newControllers = [..._controllers.value];
     newLocales.removeAt(index);
-    newControllers[index].dispose();
-    newControllers.removeAt(index);
     locales.value = newLocales;
-    _controllers.value = newControllers;
+    _syncControllers();
   }
 
   Future<void> save(BuildContext context) async {
     try {
-      final controllers = _controllers.value;
-      final updatedLocales = locales.value.asMap().entries.map((entry) {
+      final data = locales.value;
+      final updatedLocales = data.asMap().entries.map((entry) {
         final idx = entry.key;
         final locale = entry.value;
-        if (idx < controllers.length) {
-          return PageTextLocaleEntity(
-            id: locale.id,
-            locale: locale.locale,
-            text: controllers[idx].collect(),
-            verifiedBuild: locale.verifiedBuild,
-          );
-        }
-        return locale;
+        return PageTextLocaleEntity(
+          id: locale.id,
+          locale: locale.locale,
+          text: localeController(idx).collect(),
+          verifiedBuild: locale.verifiedBuild,
+        );
       }).toList();
       await _repository.savePageTextLocales(_currentId, updatedLocales);
       if (!context.mounted) return;
@@ -90,8 +115,6 @@ class PageTextLocaleViewModel {
   }
 
   void dispose() {
-    for (final controller in _controllers.value) {
-      controller.dispose();
-    }
+    disposeControllers();
   }
 }

@@ -62,7 +62,7 @@ class _EmoteTextViewState extends State<EmoteTextView> {
         label: '表情文本$i',
         child: FoxyNumberInput<int>(
           placeholder: 'EmoteText$i',
-          controller: viewModel.emoteTextControllers[i],
+          controller: viewModel.emoteTextController(i),
         ),
       );
     });

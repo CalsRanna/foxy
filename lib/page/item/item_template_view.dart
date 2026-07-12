@@ -830,7 +830,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final socketColor1Input = FoxyFormItem(
       label: '插槽颜色1',
       child: FoxyShadSelect<int>(
-        controller: viewModel.socketColorControllers[0],
+        controller: viewModel.socketColorController(0),
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_1'),
       ),
@@ -838,7 +838,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final socketColor2Input = FoxyFormItem(
       label: '插槽颜色2',
       child: FoxyShadSelect<int>(
-        controller: viewModel.socketColorControllers[1],
+        controller: viewModel.socketColorController(1),
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_2'),
       ),
@@ -846,7 +846,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final socketColor3Input = FoxyFormItem(
       label: '插槽颜色3',
       child: FoxyShadSelect<int>(
-        controller: viewModel.socketColorControllers[2],
+        controller: viewModel.socketColorController(2),
         options: kItemSocketColorOptions,
         placeholder: const Text('socketColor_3'),
       ),
@@ -855,21 +855,21 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       label: '插槽内容1',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_1',
-        controller: viewModel.socketContents[0],
+        controller: viewModel.socketContentController(0),
       ),
     );
     final socketContent2Input = FoxyFormItem(
       label: '插槽内容2',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_2',
-        controller: viewModel.socketContents[1],
+        controller: viewModel.socketContentController(1),
       ),
     );
     final socketContent3Input = FoxyFormItem(
       label: '插槽内容3',
       child: FoxyNumberInput<int>(
         placeholder: 'socketContent_3',
-        controller: viewModel.socketContents[2],
+        controller: viewModel.socketContentController(2),
       ),
     );
 
@@ -982,7 +982,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                           child: FoxyFormItem(
                             label: '属性类型${i + 1}',
                             child: FoxyShadSelect<int>(
-                              controller: viewModel.statTypeControllers[i],
+                              controller: viewModel.statTypeController(i),
                               options: kItemStatTypeOptions,
                               placeholder: Text('stat_type_${i + 1}'),
                             ),
@@ -993,7 +993,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             label: '属性值${i + 1}',
                             child: FoxyNumberInput<int>(
                               placeholder: 'stat_value_${i + 1}',
-                              controller: viewModel.statValues[i],
+                              controller: viewModel.statValueController(i),
                             ),
                           ),
                         ),
@@ -1023,7 +1023,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '法术${i + 1}',
                               child: FoxyEntityPicker(
                                 delegate: FoxyEntityPickerDelegates.spell,
-                                controller: viewModel.spellIds[i],
+                                controller: viewModel.spellIdController(i),
                                 placeholder: 'spellid_${i + 1}',
                               ),
                             ),
@@ -1032,8 +1032,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                             child: FoxyFormItem(
                               label: '触发类型',
                               child: FoxyShadSelect<int>(
-                                controller:
-                                    viewModel.spellTriggerControllers[i],
+                                controller: viewModel.spellTriggerController(i),
                                 options: kItemSpellTriggerOptions,
                                 placeholder: Text('spelltrigger_${i + 1}'),
                               ),
@@ -1044,7 +1043,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '充能',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcharges_${i + 1}',
-                                controller: viewModel.spellCharges[i],
+                                controller: viewModel.spellChargeController(i),
                               ),
                             ),
                           ),
@@ -1053,7 +1052,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: 'PPM率',
                               child: FoxyNumberInput<double>(
                                 placeholder: 'spellppmRate_${i + 1}',
-                                controller: viewModel.spellPpmRates[i],
+                                controller: viewModel.spellPpmRateController(i),
                               ),
                             ),
                           ),
@@ -1067,7 +1066,9 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcooldown_${i + 1}',
-                                controller: viewModel.spellCooldowns[i],
+                                controller: viewModel.spellCooldownController(
+                                  i,
+                                ),
                               ),
                             ),
                           ),
@@ -1076,7 +1077,9 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategory_${i + 1}',
-                                controller: viewModel.spellCategories[i],
+                                controller: viewModel.spellCategoryController(
+                                  i,
+                                ),
                               ),
                             ),
                           ),
@@ -1085,7 +1088,8 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
                               label: '类别冷却',
                               child: FoxyNumberInput<int>(
                                 placeholder: 'spellcategorycooldown_${i + 1}',
-                                controller: viewModel.spellCategoryCooldowns[i],
+                                controller: viewModel
+                                    .spellCategoryCooldownController(i),
                               ),
                             ),
                           ),

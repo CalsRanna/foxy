@@ -1755,10 +1755,10 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   }
 
   void _disposeAdapters() {
-    _selectController?.controller.removeListener(_onSelectChanged);
+    _selectController?.removeListener(_onSelectChanged);
     _selectController?.dispose();
     _selectController = null;
-    _flagController?.controller.removeListener(_onFlagChanged);
+    _flagController?.removeListener(_onFlagChanged);
     _flagController?.dispose();
     _flagController = null;
   }
@@ -1767,12 +1767,12 @@ class _MiscValueInputState extends State<_MiscValueInput> {
     if (_isSelectMode && _selectController == null) {
       _selectController = SelectFieldController<int>(fallback: 0);
       _selectController!.init(widget.controller.collect());
-      _selectController!.controller.addListener(_onSelectChanged);
+      _selectController!.addListener(_onSelectChanged);
     }
     if (_isFlagMode && _flagController == null) {
       _flagController = FlagFieldController();
       _flagController!.init(widget.controller.collect());
-      _flagController!.controller.addListener(_onFlagChanged);
+      _flagController!.addListener(_onFlagChanged);
     }
   }
 

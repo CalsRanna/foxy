@@ -876,8 +876,7 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   /// 监听 SelectFieldController 变化，同步到 signal。
   ///
-  /// 使用 `selectController.controller.addListener` 是 ViewModel 侧允许的
-  /// 联动例外（见 FIELD_CONTROLLER_MIGRATION / 迁移任务说明）。
+  /// 使用 [SelectFieldController.addListener] 监听联动变化。
   void _wireEffectSignals() {
     if (_effectSignalsWired) return;
     _effectSignalsWired = true;

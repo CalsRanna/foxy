@@ -133,7 +133,7 @@ class _ItemSetViewState extends State<ItemSetView> {
       title: '套装物品',
       count: 17,
       delegate: FoxyEntityPickerDelegates.itemTemplate,
-      controllers: viewModel.itemIdControllers,
+      controllerProvider: viewModel.itemIdController,
       labelPrefix: '物品',
       placeholderPrefix: 'ItemID',
     );
@@ -144,7 +144,7 @@ class _ItemSetViewState extends State<ItemSetView> {
       title: '套装法术',
       count: 8,
       delegate: FoxyEntityPickerDelegates.spell,
-      controllers: viewModel.setSpellIdControllers,
+      controllerProvider: viewModel.setSpellIdController,
       labelPrefix: '法术',
       placeholderPrefix: 'SetSpellID',
     );
@@ -155,7 +155,7 @@ class _ItemSetViewState extends State<ItemSetView> {
     required String title,
     required int count,
     required FoxyEntityPickerDelegate<T> delegate,
-    required List<IntFieldController> controllers,
+    required IntFieldController Function(int) controllerProvider,
     required String labelPrefix,
     required String placeholderPrefix,
   }) {
@@ -174,7 +174,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                           label: '$labelPrefix${r * 4 + c}',
                           child: FoxyEntityPicker<T>(
                             delegate: delegate,
-                            controller: controllers[r * 4 + c],
+                            controller: controllerProvider(r * 4 + c),
                             placeholder: '$placeholderPrefix${r * 4 + c}',
                           ),
                         )
