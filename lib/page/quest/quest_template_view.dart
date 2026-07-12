@@ -12,8 +12,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestTemplateView extends StatefulWidget {
-  final int questId;
-  const QuestTemplateView({super.key, required this.questId});
+  final int? questId;
+  const QuestTemplateView({super.key, this.questId});
 
   @override
   State<QuestTemplateView> createState() => _QuestTemplateViewState();

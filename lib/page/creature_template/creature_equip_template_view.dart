@@ -199,12 +199,13 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
             ),
           ),
           SizedBox(height: 16),
-          // 模板ID
+          // 模板ID（主键序号，create 时 MAX+1，始终只读）
           FoxyFormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.idController,
               placeholder: 'ID',
+              readOnly: true,
             ),
           ),
           SizedBox(height: 16),

@@ -54,7 +54,7 @@ class AreaTableDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getAreaTable(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeAreaTable(t);
         t = t.copyWith(id: id);
@@ -171,8 +171,13 @@ class AreaTableDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createAreaTable();
+        area.value = blank;
+        _initControllers(blank);
+        return;
+      }
       area.value = (await _repository.getAreaTable(id))!;
       _initControllers(area.value);
     } catch (e, s) {

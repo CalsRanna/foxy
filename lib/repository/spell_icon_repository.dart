@@ -40,12 +40,12 @@ class SpellIconRepository with RepositoryMixin {
   }
 
   Future<SpellIconEntity> createSpellIcon() async {
-    return const SpellIconEntity();
+    return SpellIconEntity(id: await _getNextId());
   }
 
   Future<int> storeSpellIcon(SpellIconEntity icon) async {
     var json = icon.toJson();
-    var nextId = await _getNextId();
+    final nextId = icon.id > 0 ? icon.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -84,11 +84,7 @@ class SpellIconRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

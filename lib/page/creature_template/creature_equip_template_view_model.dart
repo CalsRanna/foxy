@@ -80,9 +80,11 @@ class CreatureEquipTemplateViewModel {
   /// 创建新记录
   Future<void> create() async {
     try {
-      final nextId = await _repository.getNextId(creatureId.value);
+      final blank = await _repository.createCreatureEquipTemplate(
+        creatureId.value,
+      );
       resetForm();
-      idController.text = _fmt(nextId);
+      idController.text = _fmt(blank.id);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('创建生物装备记录失败: $e');

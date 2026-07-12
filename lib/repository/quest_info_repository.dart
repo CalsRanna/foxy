@@ -46,12 +46,12 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<QuestInfoEntity> createQuestInfo() async {
-    return const QuestInfoEntity();
+    return QuestInfoEntity(id: await _getNextId());
   }
 
   Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
     var json = questInfo.toJson();
-    var nextId = await _getNextId();
+    final nextId = questInfo.id > 0 ? questInfo.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -100,11 +100,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

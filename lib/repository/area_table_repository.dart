@@ -53,12 +53,12 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<AreaTableEntity> createAreaTable() async {
-    return const AreaTableEntity();
+    return AreaTableEntity(id: await _getNextId());
   }
 
   Future<int> storeAreaTable(AreaTableEntity area) async {
     var json = area.toJson();
-    var nextId = await _getNextId();
+    final nextId = area.id > 0 ? area.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -108,11 +108,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

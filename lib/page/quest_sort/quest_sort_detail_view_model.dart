@@ -28,7 +28,7 @@ class QuestSortDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getQuestSort(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeQuestSort(t);
         t = t.copyWith(id: id);
@@ -101,8 +101,13 @@ class QuestSortDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createQuestSort();
+        sort.value = blank;
+        _initControllers(blank);
+        return;
+      }
       sort.value = (await _repository.getQuestSort(id))!;
       _initControllers(sort.value);
     } catch (e, s) {

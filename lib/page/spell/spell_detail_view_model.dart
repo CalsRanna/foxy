@@ -17,6 +17,9 @@ class SpellDetailViewModel {
   final _repository = GetIt.instance.get<SpellRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
+  /// 主键展示（只读）；新建时由 [createSpell] 预填 MAX+1。
+  final idController = TextEditingController();
+
   // === 基础文本 ===
   final nameLangZhCNController = TextEditingController();
   final nameSubtextLangZhCNController = TextEditingController();
@@ -241,10 +244,11 @@ class SpellDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getSpell(t.id)) == null;
       if (isCreate) {
         final newId = await _repository.storeSpell(t);
         id.value = newId;
+        idController.text = _fmt(newId);
         t = t.copyWith(id: newId);
       } else {
         await _repository.updateSpell(t);
@@ -719,6 +723,7 @@ class SpellDetailViewModel {
     minReputationController.dispose();
     modalNextSpellController.dispose();
     nameLangFlagsController.dispose();
+    idController.dispose();
     nameLangZhCNController.dispose();
     nameSubtextLangFlagsController.dispose();
     nameSubtextLangZhCNController.dispose();
@@ -790,8 +795,15 @@ class SpellDetailViewModel {
       controller.value.firstOrNull ?? 0;
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createSpell();
+        this.id.value = blank.id;
+        spell.value = blank;
+        _initControllers(blank);
+        _wireEffectSignals();
+        return;
+      }
       this.id.value = id;
       final result = await _repository.getSpell(id);
       if (result == null) return;
@@ -820,6 +832,7 @@ class SpellDetailViewModel {
   }
 
   void _initControllers(SpellEntity template) {
+    idController.text = _fmt(template.id);
     // === 基础文本 ===
     nameLangZhCNController.text = template.nameLangZhCN;
     nameSubtextLangZhCNController.text = template.nameSubtextLangZhCN;

@@ -48,12 +48,12 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<MapInfoEntity> createMapInfo() async {
-    return const MapInfoEntity();
+    return MapInfoEntity(id: await _getNextId());
   }
 
   Future<int> storeMapInfo(MapInfoEntity map) async {
     var json = map.toJson();
-    var nextId = await _getNextId();
+    final nextId = map.id > 0 ? map.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -102,11 +102,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilterEntity? filter) {

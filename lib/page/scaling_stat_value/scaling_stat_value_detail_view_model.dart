@@ -51,7 +51,8 @@ class ScalingStatValueDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getScalingStatValue(t.id);
+      if (existed == null) {
         final id = await _repository.storeScalingStatValue(t);
         idController.text = '$id';
       } else {
@@ -146,8 +147,13 @@ class ScalingStatValueDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createScalingStatValue();
+        scalingStatValue.value = blank;
+        _initControllers(blank);
+        return;
+      }
       scalingStatValue.value = (await _repository.getScalingStatValue(id))!;
       _initControllers(scalingStatValue.value);
     } catch (e, s) {

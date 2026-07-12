@@ -30,16 +30,18 @@ class CurrencyTypeDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getCurrencyType(t.id);
+      if (existed == null) {
         final id = await _repository.storeCurrencyType(t);
         idController.text = '$id';
       } else {
         await _repository.updateCurrencyType(t);
       }
-      currencyType.value = t;
+      final isCreate = existed == null;
+      currencyType.value = isCreate ? t.copyWith(id: int.tryParse(idController.text) ?? t.id) : t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        currencyType.value,
       );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('货币数据已保存'));
@@ -85,8 +87,13 @@ class CurrencyTypeDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createCurrencyType();
+        currencyType.value = blank;
+        _initControllers(blank);
+        return;
+      }
       currencyType.value = (await _repository.getCurrencyType(id))!;
       _initControllers(currencyType.value);
     } catch (e, s) {

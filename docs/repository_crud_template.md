@@ -254,8 +254,9 @@ Future<int> _getNextId() async      // 列名为 ID
 Future<int> _getNextEntry() async   // 列名为 entry
 ```
 
-- 实现：`MAX(pk) + 1`，空表从 1。
-- 公开的 `getNext*` 仅在 UI 必须预显号时保留（如 gossip menu），否则 private。
+- 实现：委托 `RepositoryMixin.nextMaxPlusOne`（`MAX(pk) + 1`，空表从 1）。
+- 范围序号（父键下子序号）用 `nextMaxPlusOne(table, column, where: {...})`。
+- 公开的 `getNext*` 尽量少；UI 预显号优先走 `create*`。
 
 ---
 
@@ -267,9 +268,17 @@ Future<int> _getNextEntry() async   // 列名为 entry
 Future<{Entity}Entity> create{Entity}(/* 可选：预填默认值或下一序号所需参数 */) async
 ```
 
-- **只构造**默认/空白实体（或填好下一可用序号等），**不** `insert`。
-- 用于编辑态「先出空表单再 store」。
+- **只构造**默认/空白实体，**不** `insert`。
+- **必须**通过 `_getNext*` / `nextMaxPlusOne` 预填自增主键，供新建表单只读展示。
+- 新建详情 / 弹窗：`id == null` 时 ViewModel 调 `create*`，**禁止**在 ViewModel 内自行算号。
+- 主键在 UI 上**始终 `readOnly: true`**（新建与编辑相同）。
 - 与 `store` 严格区分：`create` ≠ 插入。
+
+### 4.1.1 `store{Entity}` 与预填主键
+
+- 实体主键 **`> 0`**（来自 `create*` 预填）时：`store` **沿用**该主键插入。
+- 主键为 `0` 时：`store` 再调用 `_getNext*` 分配（兜底）。
+- 保证表单展示的编号与落库编号一致。
 
 ### 4.2 `save{Entity}` — upsert（正式模板，各业务表均提供）
 

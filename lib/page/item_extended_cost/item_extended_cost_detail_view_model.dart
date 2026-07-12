@@ -47,7 +47,8 @@ class ItemExtendedCostDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getItemExtendedCost(t.id);
+      if (existed == null) {
         final id = await _repository.storeItemExtendedCost(t);
         idController.text = '$id';
       } else {
@@ -126,8 +127,13 @@ class ItemExtendedCostDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createItemExtendedCost();
+        cost.value = blank;
+        _initControllers(blank);
+        return;
+      }
       cost.value = (await _repository.getItemExtendedCost(id))!;
       _initControllers(cost.value);
     } catch (e, s) {

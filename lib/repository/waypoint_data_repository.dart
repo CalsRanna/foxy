@@ -53,7 +53,7 @@ class WaypointDataRepository with RepositoryMixin {
   }
 
   Future<WaypointDataEntity> createWaypointData() async {
-    return const WaypointDataEntity();
+    return WaypointDataEntity(id: await _getNextId());
   }
 
   /// 仅分配下一 path id，不插入 point 行（聚合实体无点位数据）。

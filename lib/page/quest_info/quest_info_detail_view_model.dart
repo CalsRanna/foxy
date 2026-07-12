@@ -28,7 +28,7 @@ class QuestInfoDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      final isCreate = t.id == 0;
+      final isCreate = (await _repository.getQuestInfo(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeQuestInfo(t);
         t = t.copyWith(id: id);
@@ -101,8 +101,13 @@ class QuestInfoDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createQuestInfo();
+        info.value = blank;
+        _initControllers(blank);
+        return;
+      }
       info.value = (await _repository.getQuestInfo(id))!;
       _initControllers(info.value);
     } catch (e, s) {

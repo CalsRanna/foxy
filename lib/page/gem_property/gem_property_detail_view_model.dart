@@ -34,7 +34,8 @@ class GemPropertyDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.id == 0) {
+      final existed = await _repository.getGemProperty(t.id);
+      if (existed == null) {
         final id = await _repository.storeGemProperty(t);
         idController.text = '$id';
       } else {
@@ -91,8 +92,13 @@ class GemPropertyDetailViewModel {
   }
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createGemProperty();
+        property.value = blank;
+        _initControllers(blank);
+        return;
+      }
       property.value = (await _repository.getGemProperty(id))!;
       _initControllers(property.value);
     } catch (e, s) {

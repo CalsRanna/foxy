@@ -64,12 +64,12 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<SpellEntity> createSpell() async {
-    return const SpellEntity();
+    return SpellEntity(id: await _getNextId());
   }
 
   Future<int> storeSpell(SpellEntity spell) async {
     var json = spell.toJson();
-    var newId = await _getNextId();
+    final newId = spell.id > 0 ? spell.id : await _getNextId();
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
     return newId;
@@ -119,11 +119,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilterEntity? filter) {

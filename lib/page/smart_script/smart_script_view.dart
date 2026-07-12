@@ -27,8 +27,6 @@ class SmartScriptView extends StatefulWidget {
 class _SmartScriptViewState extends State<SmartScriptView> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
 
-  bool get _pkReadOnly => widget.entryOrGuid != null;
-
   @override
   void initState() {
     super.initState();
@@ -58,7 +56,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'entryorguid',
               child: FoxyNumberInput<int>(
                 controller: viewModel.entryOrGuidController,
-                readOnly: _pkReadOnly,
+                readOnly: true,
               ),
             ),
           ),
@@ -68,7 +66,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'source_type',
               child: FoxyNumberInput<int>(
                 controller: viewModel.sourceTypeController,
-                readOnly: _pkReadOnly,
+                readOnly: true,
               ),
             ),
           ),
@@ -78,7 +76,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'id',
               child: FoxyNumberInput<int>(
                 controller: viewModel.idController,
-                readOnly: _pkReadOnly,
+                readOnly: true,
               ),
             ),
           ),
@@ -88,7 +86,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'link',
               child: FoxyNumberInput<int>(
                 controller: viewModel.linkController,
-                readOnly: _pkReadOnly,
+                readOnly: true,
               ),
             ),
           ),

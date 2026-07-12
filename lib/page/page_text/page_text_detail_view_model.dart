@@ -28,8 +28,14 @@ class PageTextDetailViewModel {
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({int? id}) async {
-    if (id == null) return;
     try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createPageText();
+        page.value = blank;
+        _initControllers(blank);
+        locales.value = [];
+        return;
+      }
       final entity = await _repository.getPageText(id);
       if (entity == null) return;
       page.value = entity;
@@ -50,17 +56,18 @@ class PageTextDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collect();
-      final existing = page.value;
-      if (existing != null) {
-        final updated = data.copyWith(id: existing.id);
-        await _repository.updatePageText(updated);
-        page.value = updated;
-        _logActivity(ActivityActionType.update, updated);
-      } else {
+      // create* 预填 id 后 page 非 null，必须用库内是否存在判断新建
+      final existed = await _repository.getPageText(data.id);
+      if (existed == null) {
         final id = await _repository.storePageText(data);
         idController.text = '$id';
         page.value = data.copyWith(id: id);
-        _logActivity(ActivityActionType.create, data);
+        _logActivity(ActivityActionType.create, page.value!);
+      } else {
+        final updated = data.copyWith(id: existed.id);
+        await _repository.updatePageText(updated);
+        page.value = updated;
+        _logActivity(ActivityActionType.update, updated);
       }
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));

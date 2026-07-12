@@ -39,12 +39,12 @@ class TalentRepository with RepositoryMixin {
   }
 
   Future<TalentEntity> createTalent() async {
-    return const TalentEntity();
+    return TalentEntity(id: await _getNextId());
   }
 
   Future<int> storeTalent(TalentEntity talent) async {
     var json = talent.toJson();
-    var nextId = await _getNextId();
+    final nextId = talent.id > 0 ? talent.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -83,11 +83,7 @@ class TalentRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilterEntity? filter) {

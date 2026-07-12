@@ -51,12 +51,12 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<AchievementEntity> createAchievement() async {
-    return const AchievementEntity();
+    return AchievementEntity(id: await _getNextId());
   }
 
   Future<int> storeAchievement(AchievementEntity achievement) async {
     var json = achievement.toJson();
-    var nextId = await _getNextId();
+    final nextId = achievement.id > 0 ? achievement.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -106,11 +106,7 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

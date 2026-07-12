@@ -41,12 +41,12 @@ class GlyphPropertyRepository with RepositoryMixin {
   }
 
   Future<GlyphPropertyEntity> createGlyphProperty() async {
-    return const GlyphPropertyEntity();
+    return GlyphPropertyEntity(id: await _getNextId());
   }
 
   Future<int> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     var json = glyphProperty.toJson();
-    var nextId = await _getNextId();
+    final nextId = glyphProperty.id > 0 ? glyphProperty.id : await _getNextId();
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -85,11 +85,7 @@ class GlyphPropertyRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(ID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(

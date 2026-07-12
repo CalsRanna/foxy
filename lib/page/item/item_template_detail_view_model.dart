@@ -179,8 +179,13 @@ class ItemTemplateDetailViewModel {
       parseDoubleField(t, field: field);
 
   Future<void> initSignals({int? entry}) async {
-    if (entry == null || entry <= 0) return;
     try {
+      if (entry == null || entry <= 0) {
+        final blank = await _repository.createItemTemplate();
+        template.value = blank;
+        _initControllers(blank);
+        return;
+      }
       final result = await _repository.getItemTemplate(entry);
       if (result == null) return;
       template.value = result;
@@ -448,17 +453,17 @@ class ItemTemplateDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (t.entry == 0) {
+      final existed = await _repository.getItemTemplate(t.entry);
+      if (existed == null) {
         final id = await _repository.storeItemTemplate(t);
         entryController.text = '$id';
+        template.value = t.copyWith(entry: id);
+        _logActivity(ActivityActionType.create, template.value);
       } else {
         await _repository.updateItemTemplate(t);
+        template.value = t;
+        _logActivity(ActivityActionType.update, t);
       }
-      template.value = t;
-      _logActivity(
-        t.entry == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
