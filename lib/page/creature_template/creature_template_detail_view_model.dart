@@ -14,125 +14,125 @@ class CreatureTemplateDetailViewModel {
   final _repository = GetIt.instance.get<CreatureTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final entryField = IntFieldController('编号');
-  final nameField = TextFieldController('姓名');
-  final subNameField = TextFieldController('称号');
-  final iconNameField = TextFieldController('图标');
-  final minLevelField = IntFieldController('最低等级');
-  final maxLevelField = IntFieldController('最高等级');
-  final unitClassField = SelectFieldController<int>('职业', fallback: 0);
-  final rankField = SelectFieldController<int>('级别', fallback: 0);
-  final racialLeaderField = SelectFieldController<int>('种族领袖', fallback: 0);
-  final factionField = IntFieldController('阵营');
-  final familyField = SelectFieldController<int>('宠物类别', fallback: 0);
-  final typeField = SelectFieldController<int>('类型', fallback: 0);
-  final regenerateHealthField = SelectFieldController<int>('生命回复', fallback: 0);
-  final petSpellDataIdField = IntFieldController('宠物法术数据');
-  final vehicleIdField = IntFieldController('载具');
-  final gossipMenuIdField = IntFieldController('对话菜单');
+  final entryController = IntFieldController();
+  final nameController = StringFieldController();
+  final subNameController = StringFieldController();
+  final iconNameController = StringFieldController();
+  final minLevelController = IntFieldController();
+  final maxLevelController = IntFieldController();
+  final unitClassController = SelectFieldController<int>(fallback: 0);
+  final rankController = SelectFieldController<int>(fallback: 0);
+  final racialLeaderController = SelectFieldController<int>(fallback: 0);
+  final factionController = IntFieldController();
+  final familyController = SelectFieldController<int>(fallback: 0);
+  final typeController = SelectFieldController<int>(fallback: 0);
+  final regenerateHealthController = SelectFieldController<int>(fallback: 0);
+  final petSpellDataIdController = IntFieldController();
+  final vehicleIdController = IntFieldController();
+  final gossipMenuIdController = IntFieldController();
 
-  final npcFlagField = FlagFieldController('NPC 标记');
-  final typeFlagField = FlagFieldController('类型标记');
-  final dynamicFlagField = FlagFieldController('动态标记');
-  final extraFlagField = FlagFieldController('额外标记');
-  final unitFlagField = FlagFieldController('单位标记');
-  final unitFlag2Field = FlagFieldController('单位标记2');
+  final npcFlagController = FlagFieldController();
+  final typeFlagController = FlagFieldController();
+  final dynamicFlagController = FlagFieldController();
+  final extraFlagController = FlagFieldController();
+  final unitFlagController = FlagFieldController();
+  final unitFlag2Controller = FlagFieldController();
 
-  final creatureImmunitiesIdField = IntFieldController('免疫组');
+  final creatureImmunitiesIdController = IntFieldController();
 
-  final expField = SelectFieldController<int>('经验', fallback: 0);
-  final damageSchoolField = SelectFieldController<int>('伤害类型', fallback: 0);
-  final damageModifierField = DoubleFieldController('伤害系数');
-  final armorModifierField = DoubleFieldController('护甲系数');
-  final baseAttackTimeField = IntFieldController('近战攻击间隔');
-  final baseVarianceField = DoubleFieldController('近战攻击浮动');
-  final rangeAttackTimeField = IntFieldController('远程攻击间隔');
-  final rangeVarianceField = DoubleFieldController('远程攻击浮动');
-  final healthModifierField = DoubleFieldController('生命系数');
-  final manaModifierField = DoubleFieldController('法力系数');
-  final experienceModifierField = DoubleFieldController('经验系数');
-  final speedWalkField = DoubleFieldController('行走速度');
-  final speedRunField = DoubleFieldController('奔跑速度');
-  final speedSwimField = DoubleFieldController('游泳速度');
-  final speedFlightField = DoubleFieldController('飞行速度');
+  final expController = SelectFieldController<int>(fallback: 0);
+  final damageSchoolController = SelectFieldController<int>(fallback: 0);
+  final damageModifierController = DoubleFieldController();
+  final armorModifierController = DoubleFieldController();
+  final baseAttackTimeController = IntFieldController();
+  final baseVarianceController = DoubleFieldController();
+  final rangeAttackTimeController = IntFieldController();
+  final rangeVarianceController = DoubleFieldController();
+  final healthModifierController = DoubleFieldController();
+  final manaModifierController = DoubleFieldController();
+  final experienceModifierController = DoubleFieldController();
+  final speedWalkController = DoubleFieldController();
+  final speedRunController = DoubleFieldController();
+  final speedSwimController = DoubleFieldController();
+  final speedFlightController = DoubleFieldController();
 
-  final minGoldField = IntFieldController('最少金钱');
-  final maxGoldField = IntFieldController('最多金钱');
-  final lootIdField = IntFieldController('战利品');
-  final pickpocketLootField = IntFieldController('偷窃战利品');
-  final skinLootField = IntFieldController('剥皮战利品');
+  final minGoldController = IntFieldController();
+  final maxGoldController = IntFieldController();
+  final lootIdController = IntFieldController();
+  final pickpocketLootController = IntFieldController();
+  final skinLootController = IntFieldController();
 
-  final killCredit1Field = IntFieldController('击杀积分1');
-  final killCredit2Field = IntFieldController('击杀积分2');
-  final difficultyEntry1Field = IntFieldController('难度编号1');
-  final difficultyEntry2Field = IntFieldController('难度编号2');
-  final difficultyEntry3Field = IntFieldController('难度编号3');
-  final aiNameField = TextFieldController('AI 名称');
-  final scriptNameField = TextFieldController('脚本名称');
+  final killCredit1Controller = IntFieldController();
+  final killCredit2Controller = IntFieldController();
+  final difficultyEntry1Controller = IntFieldController();
+  final difficultyEntry2Controller = IntFieldController();
+  final difficultyEntry3Controller = IntFieldController();
+  final aiNameController = StringFieldController();
+  final scriptNameController = StringFieldController();
 
-  final movementIdField = IntFieldController('移动模板');
-  final movementTypeField = SelectFieldController<int>('移动类型', fallback: 0);
-  final hoverHeightField = DoubleFieldController('悬浮高度');
-  final detectionRangeField = DoubleFieldController('侦测范围');
+  final movementIdController = IntFieldController();
+  final movementTypeController = SelectFieldController<int>(fallback: 0);
+  final hoverHeightController = DoubleFieldController();
+  final detectionRangeController = DoubleFieldController();
 
-  final verifiedBuildField = IntFieldController('验证版本');
+  final verifiedBuildController = IntFieldController();
 
-  late final _fields = <FieldController>[
-    entryField,
-    nameField,
-    subNameField,
-    iconNameField,
-    minLevelField,
-    maxLevelField,
-    unitClassField,
-    rankField,
-    racialLeaderField,
-    factionField,
-    familyField,
-    typeField,
-    regenerateHealthField,
-    petSpellDataIdField,
-    vehicleIdField,
-    gossipMenuIdField,
-    npcFlagField,
-    typeFlagField,
-    dynamicFlagField,
-    extraFlagField,
-    unitFlagField,
-    unitFlag2Field,
-    creatureImmunitiesIdField,
-    expField,
-    damageSchoolField,
-    damageModifierField,
-    armorModifierField,
-    baseAttackTimeField,
-    baseVarianceField,
-    rangeAttackTimeField,
-    rangeVarianceField,
-    healthModifierField,
-    manaModifierField,
-    experienceModifierField,
-    speedWalkField,
-    speedRunField,
-    speedSwimField,
-    speedFlightField,
-    minGoldField,
-    maxGoldField,
-    lootIdField,
-    pickpocketLootField,
-    skinLootField,
-    killCredit1Field,
-    killCredit2Field,
-    difficultyEntry1Field,
-    difficultyEntry2Field,
-    difficultyEntry3Field,
-    aiNameField,
-    scriptNameField,
-    movementIdField,
-    movementTypeField,
-    hoverHeightField,
-    detectionRangeField,
-    verifiedBuildField,
+  late final _controllers = <FieldController>[
+    entryController,
+    nameController,
+    subNameController,
+    iconNameController,
+    minLevelController,
+    maxLevelController,
+    unitClassController,
+    rankController,
+    racialLeaderController,
+    factionController,
+    familyController,
+    typeController,
+    regenerateHealthController,
+    petSpellDataIdController,
+    vehicleIdController,
+    gossipMenuIdController,
+    npcFlagController,
+    typeFlagController,
+    dynamicFlagController,
+    extraFlagController,
+    unitFlagController,
+    unitFlag2Controller,
+    creatureImmunitiesIdController,
+    expController,
+    damageSchoolController,
+    damageModifierController,
+    armorModifierController,
+    baseAttackTimeController,
+    baseVarianceController,
+    rangeAttackTimeController,
+    rangeVarianceController,
+    healthModifierController,
+    manaModifierController,
+    experienceModifierController,
+    speedWalkController,
+    speedRunController,
+    speedSwimController,
+    speedFlightController,
+    minGoldController,
+    maxGoldController,
+    lootIdController,
+    pickpocketLootController,
+    skinLootController,
+    killCredit1Controller,
+    killCredit2Controller,
+    difficultyEntry1Controller,
+    difficultyEntry2Controller,
+    difficultyEntry3Controller,
+    aiNameController,
+    scriptNameController,
+    movementIdController,
+    movementTypeController,
+    hoverHeightController,
+    detectionRangeController,
+    verifiedBuildController,
   ];
 
   final entry = signal(0);
@@ -145,7 +145,7 @@ class CreatureTemplateDetailViewModel {
       final existed = await _repository.getCreatureTemplate(t.entry);
       if (existed == null) {
         final id = await _repository.storeCreatureTemplate(t);
-        entryField.init(id);
+        entryController.init(id);
         template.value = t.copyWith(entry: id);
         entry.value = id;
         _logActivity(ActivityActionType.create, template.value);
@@ -172,67 +172,67 @@ class CreatureTemplateDetailViewModel {
   /// 从所有字段收集数据构建 CreatureTemplate
   CreatureTemplateEntity _collectFromControllers() {
     return CreatureTemplateEntity(
-      entry: entryField.collect(),
-      name: nameField.collect(),
-      subName: subNameField.collect(),
-      iconName: iconNameField.collect(),
-      minLevel: minLevelField.collect(),
-      maxLevel: maxLevelField.collect(),
-      unitClass: unitClassField.collect(),
-      rank: rankField.collect(),
-      racialLeader: racialLeaderField.collect(),
-      faction: factionField.collect(),
-      family: familyField.collect(),
-      type: typeField.collect(),
-      regenHealth: regenerateHealthField.collect(),
-      petSpellDataId: petSpellDataIdField.collect(),
-      vehicleId: vehicleIdField.collect(),
-      gossipMenuId: gossipMenuIdField.collect(),
-      npcFlag: npcFlagField.collect(),
-      typeFlags: typeFlagField.collect(),
-      dynamicFlags: dynamicFlagField.collect(),
-      flagsExtra: extraFlagField.collect(),
-      unitFlags: unitFlagField.collect(),
-      unitFlags2: unitFlag2Field.collect(),
-      creatureImmunitiesId: creatureImmunitiesIdField.collect(),
-      exp: expField.collect(),
-      damageSchool: damageSchoolField.collect(),
-      damageModifier: damageModifierField.collect(),
-      armorModifier: armorModifierField.collect(),
-      baseAttackTime: baseAttackTimeField.collect(),
-      baseVariance: baseVarianceField.collect(),
-      rangeAttackTime: rangeAttackTimeField.collect(),
-      rangeVariance: rangeVarianceField.collect(),
-      healthModifier: healthModifierField.collect(),
-      manaModifier: manaModifierField.collect(),
-      experienceModifier: experienceModifierField.collect(),
-      speedWalk: speedWalkField.collect(),
-      speedRun: speedRunField.collect(),
-      speedSwim: speedSwimField.collect(),
-      speedFlight: speedFlightField.collect(),
-      minGold: minGoldField.collect(),
-      maxGold: maxGoldField.collect(),
-      lootId: lootIdField.collect(),
-      pickpocketLoot: pickpocketLootField.collect(),
-      skinLoot: skinLootField.collect(),
-      killCredit1: killCredit1Field.collect(),
-      killCredit2: killCredit2Field.collect(),
-      difficultyEntry1: difficultyEntry1Field.collect(),
-      difficultyEntry2: difficultyEntry2Field.collect(),
-      difficultyEntry3: difficultyEntry3Field.collect(),
-      movementId: movementIdField.collect(),
-      movementType: movementTypeField.collect(),
-      hoverHeight: hoverHeightField.collect(),
-      detectionRange: detectionRangeField.collect(),
-      aiName: aiNameField.collect(),
-      scriptName: scriptNameField.collect(),
-      verifiedBuild: verifiedBuildField.collect(),
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      subName: subNameController.collect(),
+      iconName: iconNameController.collect(),
+      minLevel: minLevelController.collect(),
+      maxLevel: maxLevelController.collect(),
+      unitClass: unitClassController.collect(),
+      rank: rankController.collect(),
+      racialLeader: racialLeaderController.collect(),
+      faction: factionController.collect(),
+      family: familyController.collect(),
+      type: typeController.collect(),
+      regenHealth: regenerateHealthController.collect(),
+      petSpellDataId: petSpellDataIdController.collect(),
+      vehicleId: vehicleIdController.collect(),
+      gossipMenuId: gossipMenuIdController.collect(),
+      npcFlag: npcFlagController.collect(),
+      typeFlags: typeFlagController.collect(),
+      dynamicFlags: dynamicFlagController.collect(),
+      flagsExtra: extraFlagController.collect(),
+      unitFlags: unitFlagController.collect(),
+      unitFlags2: unitFlag2Controller.collect(),
+      creatureImmunitiesId: creatureImmunitiesIdController.collect(),
+      exp: expController.collect(),
+      damageSchool: damageSchoolController.collect(),
+      damageModifier: damageModifierController.collect(),
+      armorModifier: armorModifierController.collect(),
+      baseAttackTime: baseAttackTimeController.collect(),
+      baseVariance: baseVarianceController.collect(),
+      rangeAttackTime: rangeAttackTimeController.collect(),
+      rangeVariance: rangeVarianceController.collect(),
+      healthModifier: healthModifierController.collect(),
+      manaModifier: manaModifierController.collect(),
+      experienceModifier: experienceModifierController.collect(),
+      speedWalk: speedWalkController.collect(),
+      speedRun: speedRunController.collect(),
+      speedSwim: speedSwimController.collect(),
+      speedFlight: speedFlightController.collect(),
+      minGold: minGoldController.collect(),
+      maxGold: maxGoldController.collect(),
+      lootId: lootIdController.collect(),
+      pickpocketLoot: pickpocketLootController.collect(),
+      skinLoot: skinLootController.collect(),
+      killCredit1: killCredit1Controller.collect(),
+      killCredit2: killCredit2Controller.collect(),
+      difficultyEntry1: difficultyEntry1Controller.collect(),
+      difficultyEntry2: difficultyEntry2Controller.collect(),
+      difficultyEntry3: difficultyEntry3Controller.collect(),
+      movementId: movementIdController.collect(),
+      movementType: movementTypeController.collect(),
+      hoverHeight: hoverHeightController.collect(),
+      detectionRange: detectionRangeController.collect(),
+      aiName: aiNameController.collect(),
+      scriptName: scriptNameController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
   void dispose() {
-    for (final field in _fields) {
-      field.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
     }
   }
 
@@ -257,68 +257,68 @@ class CreatureTemplateDetailViewModel {
   }
 
   void _initControllers(CreatureTemplateEntity template) {
-    entryField.init(template.entry);
-    nameField.init(template.name);
-    subNameField.init(template.subName);
-    iconNameField.init(template.iconName);
-    minLevelField.init(template.minLevel);
-    maxLevelField.init(template.maxLevel);
-    unitClassField.init(template.unitClass);
-    rankField.init(template.rank);
-    racialLeaderField.init(template.racialLeader);
-    factionField.init(template.faction);
-    familyField.init(template.family);
-    typeField.init(template.type);
-    regenerateHealthField.init(template.regenHealth);
-    petSpellDataIdField.init(template.petSpellDataId);
-    vehicleIdField.init(template.vehicleId);
-    gossipMenuIdField.init(template.gossipMenuId);
+    entryController.init(template.entry);
+    nameController.init(template.name);
+    subNameController.init(template.subName);
+    iconNameController.init(template.iconName);
+    minLevelController.init(template.minLevel);
+    maxLevelController.init(template.maxLevel);
+    unitClassController.init(template.unitClass);
+    rankController.init(template.rank);
+    racialLeaderController.init(template.racialLeader);
+    factionController.init(template.faction);
+    familyController.init(template.family);
+    typeController.init(template.type);
+    regenerateHealthController.init(template.regenHealth);
+    petSpellDataIdController.init(template.petSpellDataId);
+    vehicleIdController.init(template.vehicleId);
+    gossipMenuIdController.init(template.gossipMenuId);
 
-    npcFlagField.init(template.npcFlag);
-    typeFlagField.init(template.typeFlags);
-    dynamicFlagField.init(template.dynamicFlags);
-    extraFlagField.init(template.flagsExtra);
-    unitFlagField.init(template.unitFlags);
-    unitFlag2Field.init(template.unitFlags2);
+    npcFlagController.init(template.npcFlag);
+    typeFlagController.init(template.typeFlags);
+    dynamicFlagController.init(template.dynamicFlags);
+    extraFlagController.init(template.flagsExtra);
+    unitFlagController.init(template.unitFlags);
+    unitFlag2Controller.init(template.unitFlags2);
 
-    creatureImmunitiesIdField.init(template.creatureImmunitiesId);
+    creatureImmunitiesIdController.init(template.creatureImmunitiesId);
 
-    expField.init(template.exp);
-    damageSchoolField.init(template.damageSchool);
-    damageModifierField.init(template.damageModifier);
-    armorModifierField.init(template.armorModifier);
-    baseAttackTimeField.init(template.baseAttackTime);
-    baseVarianceField.init(template.baseVariance);
-    rangeAttackTimeField.init(template.rangeAttackTime);
-    rangeVarianceField.init(template.rangeVariance);
-    healthModifierField.init(template.healthModifier);
-    manaModifierField.init(template.manaModifier);
-    experienceModifierField.init(template.experienceModifier);
-    speedWalkField.init(template.speedWalk);
-    speedRunField.init(template.speedRun);
-    speedSwimField.init(template.speedSwim);
-    speedFlightField.init(template.speedFlight);
+    expController.init(template.exp);
+    damageSchoolController.init(template.damageSchool);
+    damageModifierController.init(template.damageModifier);
+    armorModifierController.init(template.armorModifier);
+    baseAttackTimeController.init(template.baseAttackTime);
+    baseVarianceController.init(template.baseVariance);
+    rangeAttackTimeController.init(template.rangeAttackTime);
+    rangeVarianceController.init(template.rangeVariance);
+    healthModifierController.init(template.healthModifier);
+    manaModifierController.init(template.manaModifier);
+    experienceModifierController.init(template.experienceModifier);
+    speedWalkController.init(template.speedWalk);
+    speedRunController.init(template.speedRun);
+    speedSwimController.init(template.speedSwim);
+    speedFlightController.init(template.speedFlight);
 
-    minGoldField.init(template.minGold);
-    maxGoldField.init(template.maxGold);
-    lootIdField.init(template.lootId);
-    pickpocketLootField.init(template.pickpocketLoot);
-    skinLootField.init(template.skinLoot);
+    minGoldController.init(template.minGold);
+    maxGoldController.init(template.maxGold);
+    lootIdController.init(template.lootId);
+    pickpocketLootController.init(template.pickpocketLoot);
+    skinLootController.init(template.skinLoot);
 
-    killCredit1Field.init(template.killCredit1);
-    killCredit2Field.init(template.killCredit2);
-    difficultyEntry1Field.init(template.difficultyEntry1);
-    difficultyEntry2Field.init(template.difficultyEntry2);
-    difficultyEntry3Field.init(template.difficultyEntry3);
+    killCredit1Controller.init(template.killCredit1);
+    killCredit2Controller.init(template.killCredit2);
+    difficultyEntry1Controller.init(template.difficultyEntry1);
+    difficultyEntry2Controller.init(template.difficultyEntry2);
+    difficultyEntry3Controller.init(template.difficultyEntry3);
 
-    movementIdField.init(template.movementId);
-    movementTypeField.init(template.movementType);
-    hoverHeightField.init(template.hoverHeight);
-    detectionRangeField.init(template.detectionRange);
+    movementIdController.init(template.movementId);
+    movementTypeController.init(template.movementType);
+    hoverHeightController.init(template.hoverHeight);
+    detectionRangeController.init(template.detectionRange);
 
-    aiNameField.init(template.aiName);
-    scriptNameField.init(template.scriptName);
-    verifiedBuildField.init(template.verifiedBuild);
+    aiNameController.init(template.aiName);
+    scriptNameController.init(template.scriptName);
+    verifiedBuildController.init(template.verifiedBuild);
   }
 
   void _logActivity(ActivityActionType action, CreatureTemplateEntity t) {

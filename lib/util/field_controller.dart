@@ -17,34 +17,31 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// 本类族将该知识只声明一次：
 ///
 /// ```dart
-/// final minLevelField = IntFieldController('最低等级');
-/// final speedWalkField = DoubleFieldController('行走速度');
+/// final minLevelController = IntFieldController();
+/// final speedWalkController = DoubleFieldController();
 ///
-/// late final _fields = <FieldController>[minLevelField, speedWalkField];
+/// late final _controllers = <FieldController>[
+///   minLevelController,
+///   speedWalkController,
+/// ];
 ///
 /// void _initControllers(Entity t) {
-///   minLevelField.init(t.minLevel);
-///   speedWalkField.init(t.speedWalk);
+///   minLevelController.init(t.minLevel);
+///   speedWalkController.init(t.speedWalk);
 /// }
 ///
 /// Entity _collect() => Entity(
-///   minLevel: minLevelField.collect(),
-///   speedWalk: speedWalkField.collect(),
+///   minLevel: minLevelController.collect(),
+///   speedWalk: speedWalkController.collect(),
 /// );
 ///
 /// void dispose() {
-///   for (final field in _fields) {
-///     field.dispose();
+///   for (final controller in _controllers) {
+///     controller.dispose();
 ///   }
 /// }
 /// ```
-///
-/// [label] 用于解析失败时的错误消息（如「最低等级」不是有效整数）。
 sealed class FieldController<T> {
-  final String label;
-
-  FieldController(this.label);
-
   /// 用 entity 值初始化底层控件。
   void init(T value);
 
@@ -57,8 +54,6 @@ sealed class FieldController<T> {
 /// 文本框族：持有 [TextEditingController]，负责字符串双向转换。
 sealed class TextBackedFieldController<T> extends FieldController<T> {
   final controller = TextEditingController();
-
-  TextBackedFieldController(super.label);
 
   @override
   void init(T value) => controller.text = format(value);
@@ -76,30 +71,24 @@ sealed class TextBackedFieldController<T> extends FieldController<T> {
 
 /// 整数字段：空串视为 0，非法输入抛 [FormatException]。
 class IntFieldController extends TextBackedFieldController<int> {
-  IntFieldController(super.label);
-
   @override
   String format(int value) => formatNum(value);
 
   @override
-  int parse(String text) => parseIntField(text, field: label);
+  int parse(String text) => parseIntField(text);
 }
 
 /// 浮点字段：空串视为 0.0，非法输入抛 [FormatException]。
 class DoubleFieldController extends TextBackedFieldController<double> {
-  DoubleFieldController(super.label);
-
   @override
   String format(double value) => formatNum(value);
 
   @override
-  double parse(String text) => parseDoubleField(text, field: label);
+  double parse(String text) => parseDoubleField(text);
 }
 
 /// 位标记字段：负责位标记值的显示格式化与解析。
 class FlagFieldController extends TextBackedFieldController<int> {
-  FlagFieldController(super.label);
-
   /// 格式化标志位整数值为显示文本，如 `123 (0x0000007B)`。
   static String formatFlagValue(int value) {
     final hex = value.toRadixString(16).toUpperCase().padLeft(8, '0');
@@ -119,9 +108,7 @@ class FlagFieldController extends TextBackedFieldController<int> {
 }
 
 /// 纯文本字段：原样透传。
-class TextFieldController extends TextBackedFieldController<String> {
-  TextFieldController(super.label);
-
+class StringFieldController extends TextBackedFieldController<String> {
   @override
   String format(String value) => value;
 
@@ -136,7 +123,7 @@ class SelectFieldController<T> extends FieldController<T> {
   final controller = ShadSelectController<T>();
   final T fallback;
 
-  SelectFieldController(super.label, {required this.fallback});
+  SelectFieldController({required this.fallback});
 
   @override
   void init(T value) => controller.value = {value};
