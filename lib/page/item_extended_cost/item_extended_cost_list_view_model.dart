@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
@@ -8,13 +7,16 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class ItemExtendedCostListViewModel {
   int _refreshToken = 0;
-  final entryController = TextEditingController();
+  final entryController = StringFieldController();
+
+  late final _controllers = <FieldController>[entryController];
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
   final page = signal(1);
@@ -70,7 +72,9 @@ class ItemExtendedCostListViewModel {
   }
 
   void dispose() {
-    entryController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
@@ -105,7 +109,7 @@ class ItemExtendedCostListViewModel {
   }
 
   ItemExtendedCostFilterEntity _buildFilter() {
-    return ItemExtendedCostFilterEntity(id: entryController.text);
+    return ItemExtendedCostFilterEntity(id: entryController.collect());
   }
 
   Future<void> paginate(int page) async {
@@ -114,7 +118,7 @@ class ItemExtendedCostListViewModel {
   }
 
   Future<void> reset() async {
-    entryController.clear();
+    entryController.init('');
     page.value = 1;
     await _refresh();
   }
