@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
@@ -66,6 +67,9 @@ class FoxyLocalePicker extends StatefulWidget {
   /// 主输入框的 controller（通常由 ViewModel 持有，回填主语言值）。
   final TextEditingController? controller;
 
+  /// 迁移完成后的类型化入口。
+  final StringFieldController? fieldController;
+
   /// 多语言编辑弹窗的标题。
   final String title;
 
@@ -86,13 +90,20 @@ class FoxyLocalePicker extends StatefulWidget {
   const FoxyLocalePicker({
     super.key,
     required this.entry,
-    required this.controller,
+    this.controller,
+    this.fieldController,
     required this.title,
     required this.delegate,
     this.placeholder,
     this.readOnly = false,
     this.onSaved,
-  });
+  }) : assert(
+         fieldController == null || controller == null,
+         'fieldController 与 controller 不能同时提供',
+       );
+
+  TextEditingController? get textController =>
+      fieldController?.controller ?? controller;
 
   @override
   State<FoxyLocalePicker> createState() => _FoxyLocalePickerState();
@@ -109,7 +120,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
     );
     return readonly.wrap(
       ShadInput(
-        controller: widget.controller,
+        controller: widget.textController,
         placeholder: Text(widget.placeholder ?? ''),
         readOnly: widget.readOnly,
         style: readonly.style,
@@ -162,7 +173,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
           // → 把库里旧 zhCN 写回并冲掉主框」的丢失。
           onLoad: () async {
             final loaded = await onLoad(entry);
-            final controller = widget.controller;
+            final controller = widget.textController;
             if (controller == null) return loaded;
             return loaded.withPrimaryDraft(controller.text);
           },

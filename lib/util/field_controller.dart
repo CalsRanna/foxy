@@ -70,7 +70,11 @@ sealed class TextBackedFieldController<T> extends FieldController<T> {
 }
 
 /// 整数字段：空串视为 0，非法输入抛 [FormatException]。
-class IntFieldController extends TextBackedFieldController<int> {
+sealed class NumberFieldController<T extends num>
+    extends TextBackedFieldController<T> {}
+
+/// 整数字段：空串视为 0，非法输入抛 [FormatException]。
+class IntFieldController extends NumberFieldController<int> {
   @override
   String format(int value) => formatNum(value);
 
@@ -79,7 +83,7 @@ class IntFieldController extends TextBackedFieldController<int> {
 }
 
 /// 浮点字段：空串视为 0.0，非法输入抛 [FormatException]。
-class DoubleFieldController extends TextBackedFieldController<double> {
+class DoubleFieldController extends NumberFieldController<double> {
   @override
   String format(double value) => formatNum(value);
 

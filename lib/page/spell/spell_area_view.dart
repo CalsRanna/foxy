@@ -160,7 +160,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
             spacing: 16,
             children: [
               Expanded(
-                child: FoxyFormItem(
+                child: FoxyFormItem.legacy(
                   controller: TextEditingController(
                     text: widget.spellId.toString(),
                   ),

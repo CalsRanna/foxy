@@ -51,7 +51,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: FoxyFormItem(
+                        child: FoxyFormItem.legacy(
                           controller: TextEditingController(
                             text: widget.spellId.toString(),
                           ),

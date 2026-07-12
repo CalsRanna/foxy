@@ -114,7 +114,7 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
         controller: viewModel.maxCountController,
       ),
     );
-    final commentInput = FoxyFormItem(
+    final commentInput = FoxyFormItem.legacy(
       controller: viewModel.commentController,
       label: '备注',
       placeholder: 'Comment',

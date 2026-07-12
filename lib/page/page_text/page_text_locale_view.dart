@@ -50,7 +50,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                       spacing: 8,
                       children: [
                         Expanded(
-                          child: FoxyFormItem(
+                          child: FoxyFormItem.legacy(
                             controller: viewModel.localeController(idx),
                             label: locale.locale,
                             placeholder: locale.locale,

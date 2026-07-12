@@ -194,7 +194,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 物品ID（只读）
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: TextEditingController(text: widget.entry.toString()),
             label: '物品ID',
             placeholder: 'Entry',
@@ -283,7 +283,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
           ),
           SizedBox(height: 16),
           // 备注
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: viewModel.commentController,
             label: '备注',
             placeholder: 'Comment',

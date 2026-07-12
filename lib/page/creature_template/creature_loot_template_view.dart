@@ -285,7 +285,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
           ),
           SizedBox(height: 16),
           // 备注
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: viewModel.commentController,
             label: '备注',
             placeholder: 'Comment',

@@ -108,7 +108,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
         spacing: 8,
         children: [
           Expanded(
-            child: FoxyFormItem(
+            child: FoxyFormItem.legacy(
               controller: viewModel.commentController,
               label: '备注',
               placeholder: 'comment',

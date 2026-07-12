@@ -151,7 +151,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
+          FoxyFormItem.legacy(
             controller: TextEditingController(text: widget.spellId.toString()),
             label: '法术ID',
             placeholder: 'spell_id',

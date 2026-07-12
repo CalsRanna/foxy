@@ -66,7 +66,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
   @override
   Widget build(BuildContext context) {
     /// ==================== Card 1: 基本信息 ====================
-    final entryInput = FoxyFormItem(
+    final entryInput = FoxyFormItem.legacy(
       controller: viewModel.entryController,
       label: '编号',
       placeholder: 'entry',
@@ -916,7 +916,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
         placeholder: const Text('LanguageID'),
       ),
     );
-    final scriptNameInput = FoxyFormItem(
+    final scriptNameInput = FoxyFormItem.legacy(
       controller: viewModel.scriptNameController,
       label: '脚本',
       placeholder: 'ScriptName',
