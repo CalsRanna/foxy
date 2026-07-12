@@ -14,6 +14,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = _briefBuilder();
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('entry').orderBy('ench');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -14,7 +15,7 @@ class ConditionDetailViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<ConditionRepository>();
 
-  // 主键字段
+  // 主键字段（完整 10 列）
   final sourceTypeOrReferenceIdController = ShadSelectController<int>();
   final sourceGroupController = TextEditingController();
   final sourceEntryController = TextEditingController();
@@ -36,11 +37,13 @@ class ConditionDetailViewModel {
   final condition = signal<ConditionEntity?>(null);
   /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
   final selectedConditionType = signal(0);
+  /// 现有记录：完整 10 列主键只读
+  final isExisting = signal(false);
   Map<String, dynamic>? _originalCredential;
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;
@@ -49,20 +52,15 @@ class ConditionDetailViewModel {
       controller.value = {value};
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
-    // 监听条件类型变化，驱动 View 重建参数区域
     conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
-    if (credential == null) return;
+    if (credential == null) {
+      isExisting.value = false;
+      return;
+    }
+    isExisting.value = true;
     _originalCredential = credential;
     try {
-      final result = await _repository.getCondition(
-        credential['SourceTypeOrReferenceId'] as int,
-        credential['SourceGroup'] as int,
-        credential['SourceEntry'] as int,
-        credential['SourceId'] as int,
-        credential['ElseGroup'] as int,
-        credential['ConditionTypeOrReference'] as int,
-        credential['ConditionTarget'] as int,
-      );
+      final result = await _repository.getConditionFromCredential(credential);
       if (result == null) return;
       condition.value = result;
       _initControllers(result);
@@ -99,26 +97,17 @@ class ConditionDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collectFromControllers();
-      if (_originalCredential == null) {
+      final isCreate = _originalCredential == null;
+      if (isCreate) {
         await _repository.storeCondition(data);
+        _originalCredential = data.buildCredential();
+        isExisting.value = true;
       } else {
-        final c = _originalCredential!;
-        await _repository.updateCondition(
-          c['SourceTypeOrReferenceId'] as int,
-          c['SourceGroup'] as int,
-          c['SourceEntry'] as int,
-          c['SourceId'] as int,
-          c['ElseGroup'] as int,
-          c['ConditionTypeOrReference'] as int,
-          c['ConditionTarget'] as int,
-          data,
-        );
+        await _repository.updateCondition(_originalCredential!, data);
       }
       condition.value = data;
       _logActivity(
-        _originalCredential == null
-            ? ActivityActionType.create
-            : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         data,
       );
       if (!context.mounted) return;
@@ -134,24 +123,23 @@ class ConditionDetailViewModel {
   }
 
   ConditionEntity _collectFromControllers() {
-    final c = ConditionEntity(
+    return ConditionEntity(
       sourceTypeOrReferenceId: _getSelectValue(sourceTypeOrReferenceIdController),
-      sourceGroup: _pi(sourceGroupController.text),
-      sourceEntry: _pi(sourceEntryController.text),
-      sourceId: _pi(sourceIdController.text),
-      elseGroup: _pi(elseGroupController.text),
+      sourceGroup: _pi(sourceGroupController.text, 'SourceGroup'),
+      sourceEntry: _pi(sourceEntryController.text, 'SourceEntry'),
+      sourceId: _pi(sourceIdController.text, 'SourceId'),
+      elseGroup: _pi(elseGroupController.text, 'ElseGroup'),
       conditionTypeOrReference: _getSelectValue(conditionTypeOrReferenceController),
-      conditionTarget: _pi(conditionTargetController.text),
-      conditionValue1: _pi(conditionValue1Controller.text),
-      conditionValue2: _pi(conditionValue2Controller.text),
-      conditionValue3: _pi(conditionValue3Controller.text),
-      negativeCondition: _pi(negativeConditionController.text),
-      errorType: _pi(errorTypeController.text),
-      errorTextId: _pi(errorTextIdController.text),
+      conditionTarget: _pi(conditionTargetController.text, 'ConditionTarget'),
+      conditionValue1: _pi(conditionValue1Controller.text, 'ConditionValue1'),
+      conditionValue2: _pi(conditionValue2Controller.text, 'ConditionValue2'),
+      conditionValue3: _pi(conditionValue3Controller.text, 'ConditionValue3'),
+      negativeCondition: _pi(negativeConditionController.text, 'NegativeCondition'),
+      errorType: _pi(errorTypeController.text, 'ErrorType'),
+      errorTextId: _pi(errorTextIdController.text, 'ErrorTextId'),
       scriptName: scriptNameController.text,
       comment: commentController.text,
     );
-    return c;
   }
 
   void _logActivity(ActivityActionType action, ConditionEntity c) {

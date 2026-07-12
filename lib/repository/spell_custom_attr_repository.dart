@@ -10,6 +10,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['spell_id', 'attributes']);
+    builder = builder.orderBy('spell_id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

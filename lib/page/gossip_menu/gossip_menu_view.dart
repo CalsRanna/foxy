@@ -8,7 +8,10 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class GossipMenuView extends StatefulWidget {
-  const GossipMenuView({super.key});
+  final int? menuId;
+  final int? textId;
+
+  const GossipMenuView({super.key, this.menuId, this.textId});
 
   @override
   State<GossipMenuView> createState() => _GossipMenuViewState();
@@ -16,6 +19,12 @@ class GossipMenuView extends StatefulWidget {
 
 class _GossipMenuViewState extends State<GossipMenuView> {
   final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals(menuId: widget.menuId, textId: widget.textId);
+  }
 
   @override
   void dispose() {
@@ -30,6 +39,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
       child: ShadInput(
         controller: viewModel.menuIdController,
         placeholder: const Text('MenuID'),
+        readOnly: widget.menuId != null,
       ),
     );
     final textIdInput = FoxyFormItem(

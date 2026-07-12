@@ -24,6 +24,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'DisplayName_lang_zhCN',
     ]);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

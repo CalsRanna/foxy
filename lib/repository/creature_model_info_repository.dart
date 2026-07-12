@@ -20,6 +20,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
       'DisplayID_Other_Gender',
     ]);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('DisplayID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

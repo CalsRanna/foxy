@@ -8,7 +8,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   Future<List<GossipMenuOptionEntity>> getBriefGossipMenuOptions(
     int menuId,
   ) async {
-    const fields = [
+    final fields = <String>[
       'gmo.MenuID',
       'gmo.OptionID',
       'gmo.OptionIcon',
@@ -23,17 +23,19 @@ class GossipMenuOptionRepository with RepositoryMixin {
       'gmo.ActionMenuID',
       'gmo.ActionPoiID',
       'gmo.VerifiedBuild',
-      'gmol.OptionText AS localeOptionText',
+      if (localeEnabled) 'gmol.OptionText AS localeOptionText',
     ];
     var builder = laconic.table('$_table AS gmo');
     builder = builder.select(fields);
-    builder = builder.leftJoin(
-      '$_localeTable AS gmol',
-      (join) => join
-          .on('gmo.MenuID', 'gmol.MenuID')
-          .on('gmo.OptionID', 'gmol.OptionID')
-          .on('gmol.Locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        '$_localeTable AS gmol',
+        (join) => join
+            .on('gmo.MenuID', 'gmol.MenuID')
+            .on('gmo.OptionID', 'gmol.OptionID')
+            .on('gmol.Locale', '"zhCN"'),
+      );
+    }
     builder = builder.where('gmo.MenuID', menuId);
     final results = await builder.get();
     return results

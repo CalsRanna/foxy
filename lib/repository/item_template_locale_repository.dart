@@ -11,7 +11,7 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['ID', 'locale', 'Name'])
-        .limit(kPageSize)
+        .orderBy('ID').limit(kPageSize)
         .offset(offset)
         .get();
     return results

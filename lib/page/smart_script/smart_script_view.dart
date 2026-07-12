@@ -7,7 +7,18 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class SmartScriptView extends StatefulWidget {
-  const SmartScriptView({super.key});
+  final int? entryOrGuid;
+  final int? sourceType;
+  final int? id;
+  final int? link;
+
+  const SmartScriptView({
+    super.key,
+    this.entryOrGuid,
+    this.sourceType,
+    this.id,
+    this.link,
+  });
 
   @override
   State<SmartScriptView> createState() => _SmartScriptViewState();
@@ -15,6 +26,19 @@ class SmartScriptView extends StatefulWidget {
 
 class _SmartScriptViewState extends State<SmartScriptView> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
+
+  bool get _pkReadOnly => widget.entryOrGuid != null;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals(
+      entryOrGuid: widget.entryOrGuid,
+      sourceType: widget.sourceType,
+      id: widget.id,
+      link: widget.link,
+    );
+  }
 
   @override
   void dispose() {
@@ -34,6 +58,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'entryorguid',
               child: FoxyNumberInput<int>(
                 controller: viewModel.entryOrGuidController,
+                readOnly: _pkReadOnly,
               ),
             ),
           ),
@@ -43,6 +68,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               placeholder: 'source_type',
               child: FoxyNumberInput<int>(
                 controller: viewModel.sourceTypeController,
+                readOnly: _pkReadOnly,
               ),
             ),
           ),
@@ -50,14 +76,20 @@ class _SmartScriptViewState extends State<SmartScriptView> {
             child: FoxyFormItem(
               label: 'ID',
               placeholder: 'id',
-              child: FoxyNumberInput<int>(controller: viewModel.idController),
+              child: FoxyNumberInput<int>(
+                controller: viewModel.idController,
+                readOnly: _pkReadOnly,
+              ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '链接',
               placeholder: 'link',
-              child: FoxyNumberInput<int>(controller: viewModel.linkController),
+              child: FoxyNumberInput<int>(
+                controller: viewModel.linkController,
+                readOnly: _pkReadOnly,
+              ),
             ),
           ),
         ],

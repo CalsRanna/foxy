@@ -29,10 +29,10 @@ class LootTemplateRepository with RepositoryMixin {
     int entry,
   ) async {
     var builder = laconic.table('$_table AS lt');
-    const fields = [
+    final fields = <String>[
       'lt.*',
       'it.name',
-      'itl.Name AS localeName',
+      if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
       'didi.InventoryIcon0',
     ];
@@ -41,10 +41,12 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
@@ -63,10 +65,10 @@ class LootTemplateRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS lt');
-    const fields = [
+    final fields = <String>[
       'lt.*',
       'it.name',
-      'itl.Name AS localeName',
+      if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
       'didi.InventoryIcon0',
     ];
@@ -75,15 +77,18 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = builder.leftJoin(
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = _applyRowFilter(builder, filter);
+    builder = builder.orderBy('lt.Entry').orderBy('lt.Item');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -103,6 +108,7 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.where('Entry', filter.entry);
     }
     builder = builder.groupBy('Entry');
+    builder = builder.orderBy('Entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
@@ -133,10 +139,12 @@ class LootTemplateRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').on('itl.locale', '"zhCN"'),
+      );
+    }
     builder = _applyRowFilter(builder, filter);
     return builder.count();
   }
@@ -224,11 +232,19 @@ class LootTemplateRepository with RepositoryMixin {
       builder = builder.where('lt.Entry', filter.entry);
     }
     if (filter.name.isNotEmpty) {
-      builder = builder.whereAny(
-        ['it.name', 'itl.Name'],
-        '%${filter.name}%',
-        comparator: 'like',
-      );
+      if (localeEnabled) {
+        builder = builder.whereAny(
+          ['it.name', 'itl.Name'],
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      } else {
+        builder = builder.where(
+          'it.name',
+          '%${filter.name}%',
+          comparator: 'like',
+        );
+      }
     }
     return builder;
   }

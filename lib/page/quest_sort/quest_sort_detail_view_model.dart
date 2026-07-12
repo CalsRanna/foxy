@@ -6,6 +6,7 @@ import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -22,7 +23,7 @@ class QuestSortDetailViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {

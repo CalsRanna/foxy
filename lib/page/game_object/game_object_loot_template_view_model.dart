@@ -6,6 +6,7 @@ import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -80,9 +81,9 @@ class GameObjectLootTemplateViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;

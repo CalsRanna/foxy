@@ -11,6 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestFactionRewardListViewModel {
+  int _refreshToken = 0;
   final entryController = TextEditingController();
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
 
@@ -58,12 +59,14 @@ class QuestFactionRewardListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final filter = QuestFactionRewardFilterEntity();
       final (items, count) = await (
         _repository.getBriefQuestFactionRewards(page: 1, filter: filter),
         _repository.countQuestFactionRewards(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       rewards.value = items;
       total.value = count;
     } catch (e) {
@@ -107,6 +110,7 @@ class QuestFactionRewardListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
@@ -116,6 +120,7 @@ class QuestFactionRewardListViewModel {
         ),
         _repository.countQuestFactionRewards(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       rewards.value = items;
       total.value = count;
     } catch (e) {

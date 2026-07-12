@@ -56,12 +56,14 @@ class FoxyEntityPicker<T> extends StatefulWidget {
   final TextEditingController controller;
   final FoxyEntityPickerDelegate<T> delegate;
   final String? placeholder;
+  final bool readOnly;
 
   const FoxyEntityPicker({
     super.key,
     required this.controller,
     required this.delegate,
     this.placeholder,
+    this.readOnly = false,
   });
 
   @override
@@ -70,6 +72,7 @@ class FoxyEntityPicker<T> extends StatefulWidget {
 
 class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
   Future<void> _openDialog() async {
+    if (widget.readOnly) return;
     final currentId = int.tryParse(widget.controller.text) ?? 0;
     if (!mounted) return;
     final result = await showShadDialog<int>(
@@ -89,13 +92,16 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
     return ShadInput(
       controller: widget.controller,
       placeholder: Text(widget.placeholder ?? ''),
-      trailing: ShadButton.ghost(
-        height: 20,
-        width: 20,
-        padding: EdgeInsets.zero,
-        onPressed: _openDialog,
-        child: Icon(LucideIcons.search, size: 12),
-      ),
+      readOnly: widget.readOnly,
+      trailing: widget.readOnly
+          ? null
+          : ShadButton.ghost(
+              height: 20,
+              width: 20,
+              padding: EdgeInsets.zero,
+              onPressed: _openDialog,
+              child: Icon(LucideIcons.search, size: 12),
+            ),
     );
   }
 }

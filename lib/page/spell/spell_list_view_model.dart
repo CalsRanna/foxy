@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SpellListViewModel {
+  int _refreshToken = 0;
   final idController = TextEditingController();
   final nameController = TextEditingController();
   final _repository = GetIt.instance.get<SpellRepository>();
@@ -64,11 +65,13 @@ class SpellListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefSpells(),
         _repository.countSpells(),
       ).wait;
+      if (token != _refreshToken) return;
       spells.value = items;
       total.value = count;
     } catch (e) {
@@ -111,12 +114,14 @@ class SpellListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefSpells(page: page.value, filter: filter),
         _repository.countSpells(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       spells.value = items;
       total.value = count;
     } catch (e) {

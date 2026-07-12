@@ -1,10 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
@@ -25,7 +28,7 @@ class GossipMenuDetailViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
@@ -57,12 +60,14 @@ class GossipMenuDetailViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
-      if (_originalMenuId == null) {
+      final wasNew = _originalMenuId == null;
+      final prevTextId = _originalTextId;
+      if (wasNew) {
         final id = await _repository.storeGossipMenu(t);
         menuIdController.text = '$id';
         menuId.value = id;
-        menu.value = t;
-        _logActivity(ActivityActionType.create, t);
+        menu.value = t.copyWith(menuId: id);
+        _logActivity(ActivityActionType.create, menu.value);
         _originalMenuId = id;
         _originalTextId = t.textId;
       } else {
@@ -75,11 +80,24 @@ class GossipMenuDetailViewModel {
         _logActivity(ActivityActionType.update, t);
         _originalTextId = t.textId;
       }
-      menuId.value = t.menuId;
-      textIdController.text = _fmt(t.textId);
+      final saved = menu.value;
+      menuId.value = saved.menuId;
+      textIdController.text = _fmt(saved.textId);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);
+      // 新建保存后，或 TextID 变更后：替换路由参数，让各 Tab 用真实 ID 重新初始化
+      if (wasNew || prevTextId != saved.textId) {
+        routerFacade.replaceCurrentDetail(
+          id: '${saved.menuId}',
+          label: '对话 ${saved.menuId}',
+          route: GossipMenuDetailRoute(
+            menuId: saved.menuId,
+            textId: saved.textId,
+          ),
+          parentMenu: RouterMenu.gossipMenu,
+        );
+      }
     } catch (e) {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
@@ -93,8 +111,8 @@ class GossipMenuDetailViewModel {
 
   GossipMenuEntity _collectFromControllers() {
     return GossipMenuEntity(
-      menuId: int.tryParse(menuIdController.text) ?? 0,
-      textId: _pi(textIdController.text),
+      menuId: _pi(menuIdController.text, 'MenuID'),
+      textId: _pi(textIdController.text, 'TextID'),
     );
   }
 

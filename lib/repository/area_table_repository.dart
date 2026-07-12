@@ -27,6 +27,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     ];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -57,8 +58,8 @@ class SmartScriptDetailViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
-  double _pd(String t) => double.tryParse(t) ?? 0.0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
+  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
 
   Future<void> save(BuildContext context) async {
     try {
@@ -75,6 +76,7 @@ class SmartScriptDetailViewModel {
         isNew.value = false;
         script.value = t;
       } else {
+        // 复合主键只读：WHERE 始终用加载时的键，不把表单主键写回 _orig*
         await _repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,
@@ -82,10 +84,6 @@ class SmartScriptDetailViewModel {
           _origLink!,
           t,
         );
-        _origEntryOrGuid = t.entryOrGuid;
-        _origSourceType = t.sourceType;
-        _origId = t.id;
-        _origLink = t.link;
         script.value = t;
       }
       _logActivity(action, t);

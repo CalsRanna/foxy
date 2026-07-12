@@ -3,7 +3,6 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
@@ -17,7 +16,9 @@ import 'package:signals/signals_flutter.dart';
 
 /// Tab 3：gossip_menu_option 双态（列表 / 表单）
 class GossipMenuOptionView extends StatefulWidget {
-  const GossipMenuOptionView({super.key});
+  final int menuId;
+
+  const GossipMenuOptionView({super.key, required this.menuId});
 
   @override
   State<GossipMenuOptionView> createState() => _GossipMenuOptionViewState();
@@ -25,27 +26,17 @@ class GossipMenuOptionView extends StatefulWidget {
 
 class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   final viewModel = GetIt.instance.get<GossipMenuOptionViewModel>();
-  final parentViewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
-  late final VoidCallback _disposer;
 
   @override
   void initState() {
     super.initState();
-    final initialMenuId = parentViewModel.menuId.value;
-    if (initialMenuId != 0) {
-      viewModel.search(initialMenuId);
+    if (widget.menuId != 0) {
+      viewModel.search(widget.menuId);
     }
-    _disposer = effect(() {
-      final menuId = parentViewModel.menuId.value;
-      if (menuId != 0 && menuId != viewModel.currentMenuId.value) {
-        viewModel.search(menuId);
-      }
-    });
   }
 
   @override
   void dispose() {
-    _disposer();
     viewModel.dispose();
     super.dispose();
   }

@@ -8,10 +8,10 @@ class SpellLootTemplateRepository with RepositoryMixin {
     int entry,
   ) async {
     var builder = laconic.table('$_table AS slt');
-    const fields = [
+    final fields = <String>[
       'slt.*',
       'it.name',
-      'itl.Name as localeName',
+      if (localeEnabled) 'itl.Name as localeName',
       'it.Quality',
       'didi.InventoryIcon0',
     ];
@@ -20,10 +20,12 @@ class SpellLootTemplateRepository with RepositoryMixin {
       'item_template AS it',
       (join) => join.on('slt.Item', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID'),
+      );
+    }
     builder = builder.where('slt.Entry', entry);
     var results = await builder.get();
     return results

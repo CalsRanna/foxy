@@ -6,6 +6,7 @@ import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:foxy/util/format_util.dart';
+import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
@@ -51,7 +52,7 @@ class GameObjectQuestItemViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  int _pi(String t) => int.tryParse(t) ?? 0;
+  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;

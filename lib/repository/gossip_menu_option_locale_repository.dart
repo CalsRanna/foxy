@@ -10,7 +10,7 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['MenuID', 'OptionID', 'Locale', 'OptionText'])
-        .limit(kPageSize)
+        .orderBy('MenuID').limit(kPageSize)
         .offset(offset)
         .get();
     return results

@@ -16,6 +16,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
       'RewOnKillRepValue2',
       'TeamDependent',
     ]);
+    builder = builder.orderBy('creature_id');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

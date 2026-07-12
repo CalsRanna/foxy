@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SmartScriptListViewModel {
+  int _refreshToken = 0;
   final entryOrGuidController = TextEditingController();
   final commentController = TextEditingController();
   final _repository = GetIt.instance.get<SmartScriptRepository>();
@@ -80,11 +81,13 @@ class SmartScriptListViewModel {
   }
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (
         _repository.getBriefSmartScripts(),
         _repository.countSmartScripts(),
       ).wait;
+      if (token != _refreshToken) return;
       scripts.value = items;
       total.value = count;
     } catch (e) {
@@ -143,12 +146,14 @@ class SmartScriptListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final filter = _buildFilter();
       final (items, count) = await (
         _repository.getBriefSmartScripts(page: page.value, filter: filter),
         _repository.countSmartScripts(filter: filter),
       ).wait;
+      if (token != _refreshToken) return;
       scripts.value = items;
       total.value = count;
     } catch (e) {

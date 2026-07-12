@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:get_it/get_it.dart';
@@ -11,7 +11,9 @@ import 'package:signals/signals_flutter.dart';
 
 /// Tab 2：npc_text 主表 + npc_text_locale (zhCN)
 class NpcTextView extends StatefulWidget {
-  const NpcTextView({super.key});
+  final int textId;
+
+  const NpcTextView({super.key, required this.textId});
 
   @override
   State<NpcTextView> createState() => _NpcTextViewState();
@@ -19,27 +21,18 @@ class NpcTextView extends StatefulWidget {
 
 class _NpcTextViewState extends State<NpcTextView> {
   final viewModel = GetIt.instance.get<NpcTextViewModel>();
-  final parentViewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
 
   /// 本地 UI 状态：哪些 locale 输入框展开
   final _expandedLocales = <String>{};
 
-  late final VoidCallback _disposer;
-
   @override
   void initState() {
     super.initState();
-    viewModel.load(int.tryParse(parentViewModel.textIdController.text) ?? 0);
-    _disposer = effect(() {
-      final newTextId =
-          int.tryParse(parentViewModel.textIdController.text) ?? 0;
-      viewModel.load(newTextId);
-    });
+    viewModel.load(widget.textId);
   }
 
   @override
   void dispose() {
-    _disposer();
     viewModel.dispose();
     super.dispose();
   }
@@ -201,7 +194,7 @@ class _NpcTextViewState extends State<NpcTextView> {
         ShadButton(onPressed: viewModel.save, child: const Text('保存')),
         const SizedBox(width: 8),
         ShadButton.ghost(
-          onPressed: parentViewModel.pop,
+          onPressed: () => GetIt.instance.get<RouterFacade>().goBack(),
           child: const Text('取消'),
         ),
       ],

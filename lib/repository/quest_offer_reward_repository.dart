@@ -10,6 +10,7 @@ class QuestOfferRewardRepository with RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Emote1', 'RewardText']);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

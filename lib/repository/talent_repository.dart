@@ -15,6 +15,7 @@ class TalentRepository with RepositoryMixin {
     const fields = ['ID', 'TabID', 'TierID', 'ColumnIndex', 'SpellRank0'];
     builder = builder.select(fields);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefTalentEntity.fromJson(e.toMap())).toList();

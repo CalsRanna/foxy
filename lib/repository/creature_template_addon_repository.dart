@@ -15,6 +15,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
       'emote',
       'auras',
     ]);
+    builder = builder.orderBy('entry');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

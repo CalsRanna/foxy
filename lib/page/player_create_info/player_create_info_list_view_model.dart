@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class PlayerCreateInfoListViewModel {
+  int _refreshToken = 0;
   final raceController = TextEditingController();
   final classController = TextEditingController();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
@@ -24,8 +25,10 @@ class PlayerCreateInfoListViewModel {
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
   Future<void> initSignals() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
       infos.value = items;
       total.value = count;
     } catch (e) {
@@ -43,9 +46,7 @@ class PlayerCreateInfoListViewModel {
     raceController.clear();
     classController.clear();
     page.value = 1;
-    final (items, count) = await (_search(), _count()).wait;
-    infos.value = items;
-    total.value = count;
+    await _refresh();
   }
 
   Future<void> paginate(int page) async {
@@ -135,8 +136,10 @@ class PlayerCreateInfoListViewModel {
   }
 
   Future<void> _refresh() async {
+    final token = ++_refreshToken;
     try {
       final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
       infos.value = items;
       total.value = count;
     } catch (e) {

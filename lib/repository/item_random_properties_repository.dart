@@ -20,6 +20,7 @@ class ItemRandomPropertiesRepository with RepositoryMixin, DbcLocaleRepositoryMi
     var builder = laconic.table(_table);
     builder = builder.select(['ID', 'Name', 'Name_lang_zhCN']);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

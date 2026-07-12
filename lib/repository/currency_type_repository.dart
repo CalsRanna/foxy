@@ -12,24 +12,27 @@ class CurrencyTypeRepository with RepositoryMixin {
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS ct');
-    const fields = [
+    final fields = <String>[
       'ct.ID',
       'ct.ItemID',
       'ct.CategoryID',
       'ct.BitIndex',
       'it.name',
-      'itl.Name as localeName',
+      if (localeEnabled) 'itl.Name as localeName',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
       'item_template AS it',
       (join) => join.on('ct.ItemID', 'it.entry'),
     );
-    builder = builder.leftJoin(
-      'item_template_locale AS itl',
-      (join) => join.on('it.entry', 'itl.ID'),
-    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID'),
+      );
+    }
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ct.ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results

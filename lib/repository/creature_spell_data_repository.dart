@@ -31,6 +31,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     builder = builder.select(fields);
     builder = _joinSpells(builder);
     builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
