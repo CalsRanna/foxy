@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
@@ -8,6 +7,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -16,8 +16,10 @@ class GossipMenuListViewModel {
   int _refreshToken = 0;
   final _repository = GetIt.instance.get<GossipMenuRepository>();
 
-  final menuIdController = TextEditingController();
-  final textController = TextEditingController();
+  final menuIdController = StringFieldController();
+  final textController = StringFieldController();
+
+  late final _controllers = <FieldController>[menuIdController, textController];
 
   final menus = signal<List<BriefGossipMenuEntity>>([]);
   final page = signal(1);
@@ -40,8 +42,9 @@ class GossipMenuListViewModel {
   }
 
   void dispose() {
-    menuIdController.dispose();
-    textController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> search() async {
@@ -55,8 +58,8 @@ class GossipMenuListViewModel {
   }
 
   Future<void> reset() async {
-    menuIdController.clear();
-    textController.clear();
+    menuIdController.init('');
+    textController.init('');
     page.value = 1;
     await _refresh();
   }
@@ -130,8 +133,8 @@ class GossipMenuListViewModel {
 
   GossipMenuFilterEntity _buildFilter() {
     return GossipMenuFilterEntity(
-      menuId: menuIdController.text,
-      text: textController.text,
+      menuId: menuIdController.collect(),
+      text: textController.collect(),
     );
   }
 

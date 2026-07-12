@@ -5,6 +5,8 @@ import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -63,12 +65,22 @@ class _NpcTextViewState extends State<NpcTextView> {
         Row(
           spacing: 8,
           children: [
-            Expanded(child: _field('编号', 'ID', viewModel.controllerOf('ID'))),
             Expanded(
-              child: _field(
-                'VerifiedBuild',
-                'VerifiedBuild',
-                viewModel.controllerOf('VerifiedBuild'),
+              child: FoxyFormItem(
+                label: '编号',
+                child: FoxyNumberInput<int>(
+                  fieldController: viewModel.intOf('ID'),
+                  placeholder: 'ID',
+                ),
+              ),
+            ),
+            Expanded(
+              child: FoxyFormItem(
+                label: 'VerifiedBuild',
+                child: FoxyNumberInput<int>(
+                  fieldController: viewModel.intOf('VerifiedBuild'),
+                  placeholder: 'VerifiedBuild',
+                ),
               ),
             ),
             Expanded(child: SizedBox()),
@@ -87,13 +99,21 @@ class _NpcTextViewState extends State<NpcTextView> {
           spacing: 8,
           children: [
             Expanded(
-              child: _field('语言', 'lang$n', viewModel.controllerOf('lang$n')),
+              child: FoxyFormItem(
+                label: '语言',
+                child: FoxyStringInput(
+                  controller: viewModel.stringOf('lang$n'),
+                  placeholder: 'lang$n',
+                ),
+              ),
             ),
             Expanded(
-              child: _field(
-                '几率',
-                'Probability$n',
-                viewModel.controllerOf('Probability$n'),
+              child: FoxyFormItem(
+                label: '几率',
+                child: FoxyNumberInput<double>(
+                  fieldController: viewModel.doubleOf('Probability$n'),
+                  placeholder: 'Probability$n',
+                ),
               ),
             ),
             Expanded(child: SizedBox()),
@@ -108,10 +128,9 @@ class _NpcTextViewState extends State<NpcTextView> {
             Expanded(
               child: FoxyFormItem(
                 label: '广播文本',
-                placeholder: 'BroadcastTextID$n',
                 child: FoxyEntityPicker(
                   delegate: FoxyEntityPickerDelegates.broadcastText,
-                  controller: viewModel.broadcastControllerOf(n),
+                  fieldController: viewModel.broadcastOf(n),
                   placeholder: 'BroadcastTextID$n',
                 ),
               ),
@@ -126,10 +145,9 @@ class _NpcTextViewState extends State<NpcTextView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '表演',
-                  placeholder: 'em${n}_$i',
                   child: FoxyEntityPicker(
                     delegate: FoxyEntityPickerDelegates.emote,
-                    controller: viewModel.emoteControllerOf('em${n}_$i'),
+                    fieldController: viewModel.emoteOf('em${n}_$i'),
                     placeholder: 'em${n}_$i',
                   ),
                 ),
@@ -137,13 +155,6 @@ class _NpcTextViewState extends State<NpcTextView> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _field(String label, String placeholder, TextEditingController c) {
-    return FoxyFormItem(
-      label: label,
-      child: ShadInput(controller: c, placeholder: Text(placeholder)),
     );
   }
 
@@ -164,17 +175,24 @@ class _NpcTextViewState extends State<NpcTextView> {
       },
       child: Icon(LucideIcons.languages, size: 12),
     );
-    final mainInput = ShadInput(
-      controller: viewModel.controllerOf(mainKey),
-      placeholder: Text(mainKey),
-      trailing: toggleBtn,
+    final mainInput = Row(
+      spacing: 4,
+      children: [
+        Expanded(
+          child: FoxyStringInput(
+            controller: viewModel.stringOf(mainKey),
+            placeholder: mainKey,
+          ),
+        ),
+        toggleBtn,
+      ],
     );
     final children = <Widget>[mainInput];
     if (expanded) {
       children.add(
-        ShadInput(
-          controller: viewModel.controllerOf('locale.$localeKey'),
-          placeholder: Text('zhCN: $localeKey'),
+        FoxyStringInput(
+          controller: viewModel.stringOf('locale.$localeKey'),
+          placeholder: 'zhCN: $localeKey',
         ),
       );
     }
