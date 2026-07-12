@@ -113,8 +113,7 @@ class ItemEnchantmentTemplateViewModel {
 
     final model = items.value[index];
 
-    final confirmed = await showShadDialog<bool>(
-      opaque: false,
+    final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

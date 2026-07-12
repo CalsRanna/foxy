@@ -76,8 +76,7 @@ class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
     if (widget.readOnly) return;
     final currentId = int.tryParse(widget.controller.text) ?? 0;
     if (!mounted) return;
-    final result = await showShadDialog<int>(
-      opaque: false,
+    final result = await showFoxyDialog<int>(
       context: context,
       builder: (context) => _EntityPickerDialog<T>(
         delegate: widget.delegate,

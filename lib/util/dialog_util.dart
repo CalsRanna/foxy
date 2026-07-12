@@ -2,6 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+/// Foxy 对话框入口，封装 [showShadDialog] 并固定项目默认行为。
+///
+/// ## 与 [showShadDialog] 的差异
+/// - **`opaque` 默认 `false`**：保留下层页面绘制，蒙层只做半透明遮罩。
+///   `shadcn_ui` 0.55+ 将 `opaque` 默认改为 `true`，会导致背景整页不绘制，
+///   看起来像「只有黑屏 + 对话框」。
+///
+/// 业务代码应调用本函数，而不是直接使用 [showShadDialog]。
+Future<T?> showFoxyDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool barrierDismissible = true,
+  Color barrierColor = const Color(0xcc000000),
+  String barrierLabel = '',
+  bool useRootNavigator = true,
+  RouteSettings? routeSettings,
+  Offset? anchorPoint,
+  ShadDialogVariant variant = ShadDialogVariant.primary,
+  /// 是否遮挡下层路由。Foxy 默认 `false`（见函数文档）。
+  bool opaque = false,
+}) {
+  return showShadDialog<T>(
+    context: context,
+    builder: builder,
+    barrierDismissible: barrierDismissible,
+    barrierColor: barrierColor,
+    barrierLabel: barrierLabel,
+    useRootNavigator: useRootNavigator,
+    routeSettings: routeSettings,
+    anchorPoint: anchorPoint,
+    variant: variant,
+    opaque: opaque,
+  );
+}
+
 class DialogUtil {
   static final DialogUtil instance = DialogUtil._();
 
@@ -15,8 +50,7 @@ class DialogUtil {
     bool destructive = false,
   }) async {
     final context = router.navigatorKey.currentContext!;
-    final result = await showShadDialog<bool>(
-      opaque: false,
+    final result = await showFoxyDialog<bool>(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -55,8 +89,7 @@ class DialogUtil {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
 
-    await showShadDialog<void>(
-      opaque: false,
+    await showFoxyDialog<void>(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -83,8 +116,7 @@ class DialogUtil {
       Navigator.of(context).pop();
     }
 
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (context) {
         return ShadDialog.alert(
@@ -103,8 +135,7 @@ class DialogUtil {
 
   void loading() {
     final context = router.navigatorKey.currentContext!;
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {

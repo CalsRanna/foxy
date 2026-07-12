@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 普通数据库 `*_locale` 分表的动态行编辑器。
@@ -51,8 +52,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
     final initialRows = jsonList.map((json) {
       return fields.map((f) => json[f] ?? '').toList();
     }).toList();
-    return showShadDialog<bool>(
-      opaque: false,
+    return showFoxyDialog<bool>(
       context: context,
       builder: (_) => DatabaseLocaleEditor(
         title: title,
