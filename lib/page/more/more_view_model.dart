@@ -1,8 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -10,17 +10,20 @@ class MoreViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final scaffoldViewModel = GetIt.instance.get<ScaffoldViewModel>();
 
-  final searchController = TextEditingController();
+  final searchController = StringFieldController();
   final filteredModules = signal<List<FeatureEntity>>([]);
+
+  late final _controllers = <FieldController>[searchController];
 
   List<FeatureEntity> get _allModules => scaffoldViewModel.allFeatures.value;
 
   void initSignals() {
+    searchController.controller.addListener(search);
     filteredModules.value = List.of(_allModules);
   }
 
   void search() {
-    final query = searchController.text.trim().toLowerCase();
+    final query = searchController.collect().trim().toLowerCase();
     if (query.isEmpty) {
       filteredModules.value = List.of(_allModules);
     } else {
@@ -31,7 +34,7 @@ class MoreViewModel {
   }
 
   void reset() {
-    searchController.clear();
+    searchController.init('');
     filteredModules.value = List.of(_allModules);
   }
 
@@ -56,6 +59,8 @@ class MoreViewModel {
   }
 
   void dispose() {
-    searchController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

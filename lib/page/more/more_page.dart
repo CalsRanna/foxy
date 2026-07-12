@@ -5,6 +5,7 @@ import 'package:foxy/page/more/more_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_feature_card.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -48,10 +49,9 @@ class _MorePageState extends State<MorePage> {
   }
 
   Widget _buildSearch() {
-    var searchInput = ShadInput(
+    var searchInput = FoxyStringInput(
       controller: viewModel.searchController,
-      placeholder: const Text('搜索模块名称'),
-      onChanged: (_) => viewModel.search(),
+      placeholder: '搜索模块名称',
     );
     var searchButton = ShadButton(
       onPressed: viewModel.search,

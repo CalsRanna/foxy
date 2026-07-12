@@ -446,9 +446,10 @@ flutter test
 - `item` 模块已完整迁移，包括列表筛选、主详情（属性/法术/插槽等动态区）、附魔子 Tab 与 item/disenchant/milling/prospecting 四类掉落子 Tab，共 7 个 ViewModel、185 个 FieldController。
 - `quest` 模块已完整迁移，包括列表筛选、主详情、Addon、发放奖励、提交物品、起止生物/物体 4 个子 Tab，以及 AreaTableOrQuestSortSelector 共享选择器，共 9 个 ViewModel、146 个 FieldController。
 - `spell` 模块已完整迁移，包括列表筛选、主详情（效果联动/DBC 本地化/Flag/Select）、奖励系数、自定义属性、区域技能、技能组、链接技能、技能排行、技能掉落子 Tab，共 9 个 ViewModel、212 个 FieldController。
+- `bootstrap` / `more` / `scaffold` DBC 导入对话框 / `setting` DBC 同步对话框 已迁移为 `StringFieldController`（连接表单、模块搜索、路径与导出搜索）。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
-- `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
+- 业务 Page 层已无裸 `TextEditingController` / `ShadSelectController` / `FoxyFormItem.legacy`；部分 Widget 内部仍可通过 `fieldController.controller` 访问底层控件（如密码框 obscureText、路径浏览）。
 
 已完成模块：
 
@@ -480,8 +481,11 @@ flutter test
 | `item` | 列表筛选、主详情、附魔、物品/分解/选矿/研磨掉落 | 185 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `quest` | 列表筛选、主详情、Addon、发放奖励、提交物品、起止生物/物体、区域/排序选择器 | 146 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `spell` | 列表筛选、主详情（效果联动/DBC 本地化）、奖励系数、自定义属性、区域/组/链接/排行/掉落子 Tab | 212 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `bootstrap` | 数据库连接表单 | 5 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `more` | 模块搜索 | 1 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `scaffold` / `setting` | DBC 导入路径、导出目录/表名搜索对话框 | 4 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
-后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
+业务 Page 层 FieldController 迁移已完成。后续可清理通用输入组件上的 `controller`/`fieldController` 双入口过渡 API。
 
 ## 12. 架构决策摘要
 

@@ -1,6 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -77,7 +78,7 @@ Widget _banner(
 }
 
 Widget _pathField({
-  required TextEditingController controller,
+  required StringFieldController controller,
   required String placeholder,
   required VoidCallback onBrowse,
   ValueChanged<String>? onChanged,
@@ -89,7 +90,7 @@ Widget _pathField({
     children: [
       Expanded(
         child: ShadInput(
-          controller: controller,
+          controller: controller.controller,
           placeholder: Text(placeholder),
           enabled: enabled,
           leading: const Padding(
@@ -175,7 +176,7 @@ class DbcImportDialog extends StatefulWidget {
 
 class _DbcImportDialogState extends State<DbcImportDialog> {
   SettingViewModel get _vm => widget.vm;
-  final _pathController = TextEditingController();
+  final _pathController = StringFieldController();
   bool _ready = false;
 
   @override
@@ -184,7 +185,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     _vm.prepareImportDialog().then((_) {
       if (!mounted) return;
       final path = _vm.dbcImportPath.value;
-      if (path != null) _pathController.text = path;
+      if (path != null) _pathController.init(path);
       setState(() => _ready = true);
     });
   }
@@ -198,14 +199,14 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
   Future<void> _browse() async {
     final dir = await getDirectoryPath();
     if (dir == null || !mounted) return;
-    _pathController.text = dir;
+    _pathController.init(dir);
     _vm.setImportPathLocal(dir);
     setState(() {});
     await _vm.setImportPath(dir);
   }
 
   Future<void> _start() async {
-    _vm.setImportPathLocal(_pathController.text);
+    _vm.setImportPathLocal(_pathController.collect());
     await _vm.startImport();
   }
 
@@ -350,8 +351,8 @@ class DbcExportDialog extends StatefulWidget {
 
 class _DbcExportDialogState extends State<DbcExportDialog> {
   SettingViewModel get _vm => widget.vm;
-  final _dirController = TextEditingController();
-  final _searchController = TextEditingController();
+  final _dirController = StringFieldController();
+  final _searchController = StringFieldController();
   String? _outputDir;
   bool _loaded = false;
   String _query = '';
@@ -359,8 +360,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      setState(() => _query = _searchController.text.trim().toLowerCase());
+    _searchController.controller.addListener(() {
+      setState(() => _query = _searchController.collect().trim().toLowerCase());
     });
     _bootstrap();
   }
@@ -369,7 +370,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     final defaultDir = await _vm.prepareExportDialog();
     if (!mounted) return;
     if (defaultDir != null) {
-      _dirController.text = defaultDir;
+      _dirController.init(defaultDir);
       _outputDir = defaultDir;
     }
     await _vm.loadExportItems();
@@ -398,7 +399,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     final dir = await getDirectoryPath();
     if (dir == null || !mounted) return;
     setState(() {
-      _dirController.text = dir;
+      _dirController.init(dir);
       _outputDir = dir;
     });
   }
@@ -592,7 +593,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   SizedBox(
                     width: 200,
                     child: ShadInput(
-                      controller: _searchController,
+                      controller: _searchController.controller,
                       placeholder: const Text('搜索表名…'),
                       leading: const Padding(
                         padding: EdgeInsets.only(left: 10),
