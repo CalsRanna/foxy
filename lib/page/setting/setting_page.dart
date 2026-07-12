@@ -4,6 +4,7 @@ import 'package:foxy/page/setting/dbc_sync_dialogs.dart';
 import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -97,8 +98,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showImportDialog() {
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcImportDialog(vm: viewModel),
@@ -106,8 +106,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showExportDialog() {
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcExportDialog(vm: viewModel),

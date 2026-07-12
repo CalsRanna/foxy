@@ -7,6 +7,7 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -124,8 +125,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
 
   void _showCreateDialog() {
     viewModel.create();
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增开始生物'),
@@ -135,8 +135,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
   }
 
   void _showEditDialog(BuildContext context) {
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑开始生物'),

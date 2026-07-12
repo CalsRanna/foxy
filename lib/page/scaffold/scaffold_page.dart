@@ -10,6 +10,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
@@ -72,8 +73,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     // 路径已配置 → 自动导入（显示进度对话框并启动导入）
     if (vm.dbcPath.value != null) {
       vm.startImport();
-      showShadDialog(
-        opaque: false,
+      showFoxyDialog(
         context: context,
         barrierDismissible: false,
         builder: (ctx) => _DbcImportDialog(vm: viewModel),
@@ -82,8 +82,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     }
 
     // 未配置路径 → 显示提醒对话框
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (ctx) => ShadDialog.alert(
         title: const Text('DBC 数据未导入'),
@@ -100,8 +99,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             child: const Text('立即导入'),
             onPressed: () {
               Navigator.of(ctx).pop();
-              showShadDialog(
-                opaque: false,
+              showFoxyDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (ctx) => _DbcImportDialog(vm: vm),
@@ -119,8 +117,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final incompatible = vm.dbcCheckIncompatible.value;
     final theme = ShadTheme.of(context);
 
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (ctx) => ShadDialog.alert(
         title: Text(incompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败'),
@@ -176,8 +173,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
               Navigator.of(ctx).pop();
               await vm.prepareManualImport(startIfPathReady: true);
               if (!mounted) return;
-              showShadDialog(
-                opaque: false,
+              showFoxyDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (importCtx) => _DbcImportDialog(vm: vm),
@@ -313,7 +309,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
 const _kDbcDialogWidth = 480.0;
 
-/// DBC 导入对话框，使用 showShadDialog 自带遮罩，不可关闭
+/// DBC 导入对话框，使用 showFoxyDialog 自带遮罩，不可关闭
 class _DbcImportDialog extends StatefulWidget {
   final ScaffoldViewModel vm;
   const _DbcImportDialog({required this.vm});

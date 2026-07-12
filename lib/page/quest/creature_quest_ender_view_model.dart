@@ -39,8 +39,7 @@ class CreatureQuestEnderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final confirmed = await showShadDialog<bool>(
-      opaque: false,
+    final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认复制'),
@@ -94,8 +93,7 @@ class CreatureQuestEnderViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
 
     final item = items.value[index];
-    final confirmed = await showShadDialog<bool>(
-      opaque: false,
+    final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

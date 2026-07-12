@@ -324,7 +324,7 @@ class FooListViewModel {
 - **组件库**：`shadcn_ui`（导入 `package:shadcn_ui/shadcn_ui.dart`）
 - **图标**：`LucideIcons.xxx`（来自 `lucide_icons_flutter`）
 - **Toast**：`ShadSonner.of(context).show(ShadToast(...))`
-- **对话框**：通过 `DialogUtil.instance` 调用（`confirm` / `error` / `success` / `loading`），不直接使用 `showShadDialog`
+- **对话框**：简单确认/错误/Toast 用 `DialogUtil.instance`（`confirm` / `error` / `success` / `loading` / `alert`）；自定义内容对话框用 `showFoxyDialog`（见 `lib/util/dialog_util.dart`）。**禁止**直接调用 `showShadDialog`（其默认 `opaque: true` 会让下层页面不绘制）
 - **数据表格**：`FoxyShadTable`（虚拟化），配合 `FoxyPagination` 分页
 - **Tab 容器**：`FoxyTab`（`tabs` + `contents` 列表）
 - **平台字体**：Windows 使用 `'Microsoft YaHei UI'`，其他平台 null

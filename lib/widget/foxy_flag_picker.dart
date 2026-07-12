@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 格式化标志位整数值为显示文本，如 "123 (0x0000007B)"。
@@ -76,8 +77,7 @@ class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
   }
 
   Future<void> _openDialog() async {
-    final result = await showShadDialog<int>(
-      opaque: false,
+    final result = await showFoxyDialog<int>(
       context: context,
       builder: (context) {
         return _FlagPickerDialog(

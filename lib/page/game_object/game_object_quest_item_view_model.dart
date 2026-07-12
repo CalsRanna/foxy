@@ -67,8 +67,7 @@ class GameObjectQuestItemViewModel {
       final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
       if (!context.mounted) return;
       idxController.text = _fmt(nextIdx);
-      await showShadDialog(
-        opaque: false,
+      await showFoxyDialog(
         context: context,
         builder: (context) => _buildDialogForm(context, isNew: true),
       );
@@ -82,8 +81,7 @@ class GameObjectQuestItemViewModel {
     final index = selectedIndex.value;
     if (index == null) return;
     fillForm(items.value[index]);
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (context) => _buildDialogForm(context, isNew: false),
     );

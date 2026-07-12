@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// DBC 单字段本地化编辑器：固定 16 行「语言编号 + 当前字段」。
@@ -43,8 +44,7 @@ class DbcLocaleFieldEditor extends StatefulWidget {
       return null;
     }
     if (!context.mounted) return null;
-    return showShadDialog<List<DbcLocaleFieldValue>>(
-      opaque: false,
+    return showFoxyDialog<List<DbcLocaleFieldValue>>(
       context: context,
       builder: (_) => DbcLocaleFieldEditor(
         title: title,

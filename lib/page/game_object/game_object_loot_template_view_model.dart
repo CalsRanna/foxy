@@ -102,8 +102,7 @@ class GameObjectLootTemplateViewModel {
       final nextItemId = await repository.getNextItemId(gameObjectId.value);
       if (!context.mounted) return;
       itemController.text = nextItemId.toString();
-      await showShadDialog(
-        opaque: false,
+      await showFoxyDialog(
         context: context,
         builder: (context) => _buildDialogForm(context),
       );
@@ -117,8 +116,7 @@ class GameObjectLootTemplateViewModel {
     final index = selectedIndex.value;
     if (index == null) return;
     fillForm(items.value[index]);
-    showShadDialog(
-      opaque: false,
+    showFoxyDialog(
       context: context,
       builder: (context) => _buildDialogForm(context),
     );
