@@ -428,6 +428,7 @@ flutter test
 - `gem_property` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、6 个 FieldController。
 - `quest_faction_reward` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、12 个 FieldController。
 - `item_extended_cost` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、17 个 FieldController。
+- `scaling_stat_distribution` 模块已完整迁移，包括列表筛选和详情编辑，共 2 个 ViewModel、23 个 FieldController。
 - `FoxyStringInput` 与 `NumberFieldController<T>` 已建立。
 - 通用输入组件已提供类型化入口，同时暂时保留原始入口。
 - `FoxyFormItem` 默认构造要求显式 `child`；未迁移页面暂时使用 `.legacy`。
@@ -444,6 +445,7 @@ flutter test
 | `gem_property` | 列表筛选、详情编辑、宝石数值属性 | 6 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `quest_faction_reward` | 列表筛选、详情编辑、难度声望数值 | 12 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 | `item_extended_cost` | 列表筛选、详情编辑、荣誉/竞技场与物品消耗 | 17 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
+| `scaling_stat_distribution` | 列表筛选、详情编辑、StatID/Bonus/Maxlevel | 23 | `flutter analyze`、`flutter test`、架构残留扫描通过 |
 
 后续迁移时应更新本节，记录已完成模块和仍存在的过渡范围。
 
