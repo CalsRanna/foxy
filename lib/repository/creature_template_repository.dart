@@ -94,7 +94,9 @@ class CreatureTemplateRepository with RepositoryMixin {
 
   Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
     var json = template.toJson();
-    final newEntry = template.entry > 0 ? template.entry : await _getNextEntry();
+    final newEntry = template.entry > 0
+        ? template.entry
+        : await _getNextEntry();
     json['entry'] = newEntry;
     _handleReservedWords(json);
     await laconic.table(_table).insert([json]);

@@ -113,8 +113,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '声望值1',
                           child: FoxyNumberInput<double>(
-                            controller:
-                                viewModel.rewOnKillRepValue1Controller,
+                            controller: viewModel.rewOnKillRepValue1Controller,
                             placeholder: 'RewOnKillRepValue1',
                           ),
                         ),
@@ -123,8 +122,7 @@ class _CreatureOnKillReputationViewState
                         child: FoxyFormItem(
                           label: '声望值2',
                           child: FoxyNumberInput<double>(
-                            controller:
-                                viewModel.rewOnKillRepValue2Controller,
+                            controller: viewModel.rewOnKillRepValue2Controller,
                             placeholder: 'RewOnKillRepValue2',
                           ),
                         ),

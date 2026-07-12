@@ -20,6 +20,7 @@ Future<T?> showFoxyDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
   ShadDialogVariant variant = ShadDialogVariant.primary,
+
   /// 是否遮挡下层路由。Foxy 默认 `false`（见函数文档）。
   bool opaque = false,
 }) {

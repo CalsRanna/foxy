@@ -160,10 +160,7 @@ class SmartScriptRepository with RepositoryMixin {
     return nextMaxPlusOne(
       _table,
       'id',
-      where: {
-        'entryorguid': entryOrGuid,
-        'source_type': sourceType,
-      },
+      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
     );
   }
 
