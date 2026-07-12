@@ -194,7 +194,6 @@ class ItemRandomSuffixEntity {
   }
 }
 
-
 /// 随机后缀列表/Picker 展示模型
 class BriefItemRandomSuffixEntity {
   final int id;

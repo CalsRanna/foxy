@@ -97,6 +97,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (c) => ShadDialog(
         title: Text('新增起始物品'),

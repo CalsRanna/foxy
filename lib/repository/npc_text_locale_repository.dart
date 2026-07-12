@@ -11,7 +11,8 @@ class NpcTextLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['ID', 'Locale'])
-        .orderBy('ID').limit(kPageSize)
+        .orderBy('ID')
+        .limit(kPageSize)
         .offset(offset)
         .get();
     return results
@@ -21,9 +22,7 @@ class NpcTextLocaleRepository with RepositoryMixin {
 
   Future<List<NpcTextLocaleEntity>> getNpcTextLocaleEntities() async {
     final results = await laconic.table(_table).get();
-    return results
-        .map((e) => NpcTextLocaleEntity.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> countNpcTextLocales() async {

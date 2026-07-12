@@ -28,7 +28,9 @@ class CreatureTemplateSpellViewModel {
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
-    final data = await _repository.getBriefCreatureTemplateSpells(creatureId.value);
+    final data = await _repository.getBriefCreatureTemplateSpells(
+      creatureId.value,
+    );
     items.value = data;
     selectedIndex.value = null;
   }
@@ -102,6 +104,7 @@ class CreatureTemplateSpellViewModel {
     final spell = items.value[idx];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

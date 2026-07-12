@@ -132,6 +132,7 @@ class NpcVendorViewModel {
     final vendor = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

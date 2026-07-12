@@ -55,9 +55,7 @@ void main() {
       final values = DbcLocaleFieldCodec.empty();
       final updated = [
         for (final item in values)
-          item.locale.code == 'zhCN'
-              ? item.copyWith(value: '火焰冲击')
-              : item,
+          item.locale.code == 'zhCN' ? item.copyWith(value: '火焰冲击') : item,
       ];
       final encoded = DbcLocaleFieldCodec.encode(field, updated);
 
@@ -74,7 +72,10 @@ void main() {
       ];
       final encoded = DbcLocaleFieldCodec.encode(description, values);
 
-      expect(encoded.keys.every((k) => k.startsWith('Description_lang_')), isTrue);
+      expect(
+        encoded.keys.every((k) => k.startsWith('Description_lang_')),
+        isTrue,
+      );
       expect(encoded.containsKey('Name_lang_enUS'), isFalse);
       expect(encoded.containsKey('AuraDescription_lang_zhCN'), isFalse);
       expect(encoded.containsKey('Description_lang_Flags'), isFalse);
@@ -177,8 +178,7 @@ void main() {
           expect(
             registered,
             isTrue,
-            reason:
-                'Schema 含本地化前缀 ${definition.tableName}.$prefix 但未注册编辑器',
+            reason: 'Schema 含本地化前缀 ${definition.tableName}.$prefix 但未注册编辑器',
           );
         }
       }

@@ -68,6 +68,7 @@ class GameObjectQuestItemViewModel {
       if (!context.mounted) return;
       idxController.text = _fmt(nextIdx);
       await showShadDialog(
+        opaque: false,
         context: context,
         builder: (context) => _buildDialogForm(context, isNew: true),
       );
@@ -82,6 +83,7 @@ class GameObjectQuestItemViewModel {
     if (index == null) return;
     fillForm(items.value[index]);
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (context) => _buildDialogForm(context, isNew: false),
     );

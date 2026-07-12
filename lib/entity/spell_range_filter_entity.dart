@@ -16,9 +16,6 @@ class SpellRangeFilterEntity {
   }
 
   SpellRangeFilterEntity copyWith({String? id, String? name}) {
-    return SpellRangeFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+    return SpellRangeFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

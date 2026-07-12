@@ -31,7 +31,8 @@ class SpellLootTemplateViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await _repository.getBriefSpellLootTemplates(spellId.value);
@@ -118,6 +119,7 @@ class SpellLootTemplateViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final loot = items.value[index];
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

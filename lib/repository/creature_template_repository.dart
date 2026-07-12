@@ -58,11 +58,7 @@ class CreatureTemplateRepository with RepositoryMixin {
         builder = builder.where('entry', filter.entry);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where(
-          'name',
-          '%${filter.name}%',
-          comparator: 'like',
-        );
+        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
       }
       if (filter != null && filter.subName.isNotEmpty) {
         builder = builder.where(

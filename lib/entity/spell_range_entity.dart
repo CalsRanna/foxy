@@ -239,27 +239,43 @@ class SpellRangeEntity {
       displayNameLangUnk2: displayNameLangUnk2 ?? this.displayNameLangUnk2,
       displayNameLangUnk3: displayNameLangUnk3 ?? this.displayNameLangUnk3,
       displayNameLangFlags: displayNameLangFlags ?? this.displayNameLangFlags,
-      displayNameShortLangEnUS: displayNameShortLangEnUS ?? this.displayNameShortLangEnUS,
-      displayNameShortLangKoKR: displayNameShortLangKoKR ?? this.displayNameShortLangKoKR,
-      displayNameShortLangFrFR: displayNameShortLangFrFR ?? this.displayNameShortLangFrFR,
-      displayNameShortLangDeDE: displayNameShortLangDeDE ?? this.displayNameShortLangDeDE,
-      displayNameShortLangZhCN: displayNameShortLangZhCN ?? this.displayNameShortLangZhCN,
-      displayNameShortLangZhTW: displayNameShortLangZhTW ?? this.displayNameShortLangZhTW,
-      displayNameShortLangEsES: displayNameShortLangEsES ?? this.displayNameShortLangEsES,
-      displayNameShortLangEsMX: displayNameShortLangEsMX ?? this.displayNameShortLangEsMX,
-      displayNameShortLangRuRU: displayNameShortLangRuRU ?? this.displayNameShortLangRuRU,
-      displayNameShortLangJaJP: displayNameShortLangJaJP ?? this.displayNameShortLangJaJP,
-      displayNameShortLangPtPT: displayNameShortLangPtPT ?? this.displayNameShortLangPtPT,
-      displayNameShortLangPtBR: displayNameShortLangPtBR ?? this.displayNameShortLangPtBR,
-      displayNameShortLangItIT: displayNameShortLangItIT ?? this.displayNameShortLangItIT,
-      displayNameShortLangUnk1: displayNameShortLangUnk1 ?? this.displayNameShortLangUnk1,
-      displayNameShortLangUnk2: displayNameShortLangUnk2 ?? this.displayNameShortLangUnk2,
-      displayNameShortLangUnk3: displayNameShortLangUnk3 ?? this.displayNameShortLangUnk3,
-      displayNameShortLangFlags: displayNameShortLangFlags ?? this.displayNameShortLangFlags,
+      displayNameShortLangEnUS:
+          displayNameShortLangEnUS ?? this.displayNameShortLangEnUS,
+      displayNameShortLangKoKR:
+          displayNameShortLangKoKR ?? this.displayNameShortLangKoKR,
+      displayNameShortLangFrFR:
+          displayNameShortLangFrFR ?? this.displayNameShortLangFrFR,
+      displayNameShortLangDeDE:
+          displayNameShortLangDeDE ?? this.displayNameShortLangDeDE,
+      displayNameShortLangZhCN:
+          displayNameShortLangZhCN ?? this.displayNameShortLangZhCN,
+      displayNameShortLangZhTW:
+          displayNameShortLangZhTW ?? this.displayNameShortLangZhTW,
+      displayNameShortLangEsES:
+          displayNameShortLangEsES ?? this.displayNameShortLangEsES,
+      displayNameShortLangEsMX:
+          displayNameShortLangEsMX ?? this.displayNameShortLangEsMX,
+      displayNameShortLangRuRU:
+          displayNameShortLangRuRU ?? this.displayNameShortLangRuRU,
+      displayNameShortLangJaJP:
+          displayNameShortLangJaJP ?? this.displayNameShortLangJaJP,
+      displayNameShortLangPtPT:
+          displayNameShortLangPtPT ?? this.displayNameShortLangPtPT,
+      displayNameShortLangPtBR:
+          displayNameShortLangPtBR ?? this.displayNameShortLangPtBR,
+      displayNameShortLangItIT:
+          displayNameShortLangItIT ?? this.displayNameShortLangItIT,
+      displayNameShortLangUnk1:
+          displayNameShortLangUnk1 ?? this.displayNameShortLangUnk1,
+      displayNameShortLangUnk2:
+          displayNameShortLangUnk2 ?? this.displayNameShortLangUnk2,
+      displayNameShortLangUnk3:
+          displayNameShortLangUnk3 ?? this.displayNameShortLangUnk3,
+      displayNameShortLangFlags:
+          displayNameShortLangFlags ?? this.displayNameShortLangFlags,
     );
   }
 }
-
 
 /// 法术射程列表/Picker 展示模型
 class BriefSpellRangeEntity {

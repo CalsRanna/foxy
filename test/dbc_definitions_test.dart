@@ -54,8 +54,16 @@ void main() {
 
   test('所有 DBC 定义都有非空 Schema 与 format', () {
     for (final definition in dbcDefinitions) {
-      expect(definition.schema.fields, isNotEmpty, reason: definition.tableName);
-      expect(definition.schema.format, isNotEmpty, reason: definition.tableName);
+      expect(
+        definition.schema.fields,
+        isNotEmpty,
+        reason: definition.tableName,
+      );
+      expect(
+        definition.schema.format,
+        isNotEmpty,
+        reason: definition.tableName,
+      );
       expect(definition.schema.name, isNotEmpty, reason: definition.tableName);
     }
   });

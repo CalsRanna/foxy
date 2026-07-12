@@ -242,7 +242,6 @@ class CharTitleEntity {
   }
 }
 
-
 /// 称号列表/Picker 展示模型
 class BriefCharTitleEntity {
   final int id;

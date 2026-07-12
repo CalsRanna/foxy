@@ -43,9 +43,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
       try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('加载失败: $e')),
-        );
+        ShadSonner.of(context).show(ShadToast(description: Text('加载失败: $e')));
       } catch (_) {}
       return null;
     }
@@ -54,6 +52,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
       return fields.map((f) => json[f] ?? '').toList();
     }).toList();
     return showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (_) => DatabaseLocaleEditor(
         title: title,
@@ -137,9 +136,7 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       if (!mounted) return;
       setState(() => _errorMessage = '保存失败: $e');
       try {
-        ShadSonner.of(context).show(
-          ShadToast(description: Text('保存失败: $e')),
-        );
+        ShadSonner.of(context).show(ShadToast(description: Text('保存失败: $e')));
       } catch (_) {}
     } finally {
       if (mounted) {

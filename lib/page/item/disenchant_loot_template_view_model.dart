@@ -35,7 +35,8 @@ class DisenchantLootTemplateViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   Future<void> load() async {
     final data = await repository.getBriefLootTemplates(entry.value);
@@ -143,6 +144,7 @@ class DisenchantLootTemplateViewModel {
     final loot = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),
@@ -193,7 +195,11 @@ class DisenchantLootTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
-      await repository.updateLootTemplate(loot.entry, editingItem ?? loot.item, loot);
+      await repository.updateLootTemplate(
+        loot.entry,
+        editingItem ?? loot.item,
+        loot,
+      );
       await load();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('更新成功'));

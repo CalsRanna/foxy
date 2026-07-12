@@ -96,6 +96,7 @@ class SpellLinkedSpellViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final linked = items.value[index];
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

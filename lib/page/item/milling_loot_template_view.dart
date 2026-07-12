@@ -161,6 +161,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增碾磨掉落'),
@@ -173,6 +174,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑碾磨掉落'),

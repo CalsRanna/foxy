@@ -162,6 +162,7 @@ class _ProspectingLootTemplateViewState
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增选矿掉落'),
@@ -174,6 +175,7 @@ class _ProspectingLootTemplateViewState
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑选矿掉落'),

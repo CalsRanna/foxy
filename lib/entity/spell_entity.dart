@@ -644,9 +644,12 @@ class SpellEntity {
       effectDieSides0: json['EffectDieSides0'] ?? 0,
       effectDieSides1: json['EffectDieSides1'] ?? 0,
       effectDieSides2: json['EffectDieSides2'] ?? 0,
-      effectRealPointsPerLevel0: (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0,
-      effectRealPointsPerLevel1: (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0,
-      effectRealPointsPerLevel2: (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0,
+      effectRealPointsPerLevel0:
+          (json['EffectRealPointsPerLevel0'] as num?)?.toDouble() ?? 0.0,
+      effectRealPointsPerLevel1:
+          (json['EffectRealPointsPerLevel1'] as num?)?.toDouble() ?? 0.0,
+      effectRealPointsPerLevel2:
+          (json['EffectRealPointsPerLevel2'] as num?)?.toDouble() ?? 0.0,
       effectBasePoints0: json['EffectBasePoints0'] ?? 0,
       effectBasePoints1: json['EffectBasePoints1'] ?? 0,
       effectBasePoints2: json['EffectBasePoints2'] ?? 0,
@@ -686,9 +689,12 @@ class SpellEntity {
       effectTriggerSpell0: json['EffectTriggerSpell0'] ?? 0,
       effectTriggerSpell1: json['EffectTriggerSpell1'] ?? 0,
       effectTriggerSpell2: json['EffectTriggerSpell2'] ?? 0,
-      effectPointsPerCombo0: (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0,
-      effectPointsPerCombo1: (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0,
-      effectPointsPerCombo2: (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0,
+      effectPointsPerCombo0:
+          (json['EffectPointsPerCombo0'] as num?)?.toDouble() ?? 0.0,
+      effectPointsPerCombo1:
+          (json['EffectPointsPerCombo1'] as num?)?.toDouble() ?? 0.0,
+      effectPointsPerCombo2:
+          (json['EffectPointsPerCombo2'] as num?)?.toDouble() ?? 0.0,
       effectSpellClassMaskA0: json['EffectSpellClassMaskA0'] ?? 0,
       effectSpellClassMaskA1: json['EffectSpellClassMaskA1'] ?? 0,
       effectSpellClassMaskA2: json['EffectSpellClassMaskA2'] ?? 0,
@@ -783,9 +789,12 @@ class SpellEntity {
       defenseType: json['DefenseType'] ?? 0,
       preventionType: json['PreventionType'] ?? 0,
       stanceBarOrder: json['StanceBarOrder'] ?? 0,
-      effectChainAmplitude0: (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0,
-      effectChainAmplitude1: (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0,
-      effectChainAmplitude2: (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0,
+      effectChainAmplitude0:
+          (json['EffectChainAmplitude0'] as num?)?.toDouble() ?? 0.0,
+      effectChainAmplitude1:
+          (json['EffectChainAmplitude1'] as num?)?.toDouble() ?? 0.0,
+      effectChainAmplitude2:
+          (json['EffectChainAmplitude2'] as num?)?.toDouble() ?? 0.0,
       minFactionID: json['MinFactionID'] ?? 0,
       minReputation: json['MinReputation'] ?? 0,
       requiredAuraVision: json['RequiredAuraVision'] ?? 0,
@@ -796,9 +805,12 @@ class SpellEntity {
       runeCostID: json['RuneCostID'] ?? 0,
       spellMissileID: json['SpellMissileID'] ?? 0,
       powerDisplayID: json['PowerDisplayID'] ?? 0,
-      effectBonusCoefficient0: (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0,
-      effectBonusCoefficient1: (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0,
-      effectBonusCoefficient2: (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0,
+      effectBonusCoefficient0:
+          (json['EffectBonusCoefficient0'] as num?)?.toDouble() ?? 0.0,
+      effectBonusCoefficient1:
+          (json['EffectBonusCoefficient1'] as num?)?.toDouble() ?? 0.0,
+      effectBonusCoefficient2:
+          (json['EffectBonusCoefficient2'] as num?)?.toDouble() ?? 0.0,
       spellDescriptionVariableID: json['DescriptionVariablesID'] ?? 0,
       spellDifficultyID: json['Difficulty'] ?? 0,
     );
@@ -1302,18 +1314,23 @@ class SpellEntity {
       facingCasterFlags: facingCasterFlags ?? this.facingCasterFlags,
       casterAuraState: casterAuraState ?? this.casterAuraState,
       targetAuraState: targetAuraState ?? this.targetAuraState,
-      excludeCasterAuraState: excludeCasterAuraState ?? this.excludeCasterAuraState,
-      excludeTargetAuraState: excludeTargetAuraState ?? this.excludeTargetAuraState,
+      excludeCasterAuraState:
+          excludeCasterAuraState ?? this.excludeCasterAuraState,
+      excludeTargetAuraState:
+          excludeTargetAuraState ?? this.excludeTargetAuraState,
       casterAuraSpell: casterAuraSpell ?? this.casterAuraSpell,
       targetAuraSpell: targetAuraSpell ?? this.targetAuraSpell,
-      excludeCasterAuraSpell: excludeCasterAuraSpell ?? this.excludeCasterAuraSpell,
-      excludeTargetAuraSpell: excludeTargetAuraSpell ?? this.excludeTargetAuraSpell,
+      excludeCasterAuraSpell:
+          excludeCasterAuraSpell ?? this.excludeCasterAuraSpell,
+      excludeTargetAuraSpell:
+          excludeTargetAuraSpell ?? this.excludeTargetAuraSpell,
       castingTimeIndex: castingTimeIndex ?? this.castingTimeIndex,
       recoveryTime: recoveryTime ?? this.recoveryTime,
       categoryRecoveryTime: categoryRecoveryTime ?? this.categoryRecoveryTime,
       interruptFlags: interruptFlags ?? this.interruptFlags,
       auraInterruptFlags: auraInterruptFlags ?? this.auraInterruptFlags,
-      channelInterruptFlags: channelInterruptFlags ?? this.channelInterruptFlags,
+      channelInterruptFlags:
+          channelInterruptFlags ?? this.channelInterruptFlags,
       procTypeMask: procTypeMask ?? this.procTypeMask,
       procChance: procChance ?? this.procChance,
       procCharges: procCharges ?? this.procCharges,
@@ -1325,7 +1342,8 @@ class SpellEntity {
       manaCost: manaCost ?? this.manaCost,
       manaCostPerLevel: manaCostPerLevel ?? this.manaCostPerLevel,
       manaPerSecond: manaPerSecond ?? this.manaPerSecond,
-      manaPerSecondPerLevel: manaPerSecondPerLevel ?? this.manaPerSecondPerLevel,
+      manaPerSecondPerLevel:
+          manaPerSecondPerLevel ?? this.manaPerSecondPerLevel,
       rangeIndex: rangeIndex ?? this.rangeIndex,
       speed: speed ?? this.speed,
       modalNextSpell: modalNextSpell ?? this.modalNextSpell,
@@ -1357,9 +1375,12 @@ class SpellEntity {
       effectDieSides0: effectDieSides0 ?? this.effectDieSides0,
       effectDieSides1: effectDieSides1 ?? this.effectDieSides1,
       effectDieSides2: effectDieSides2 ?? this.effectDieSides2,
-      effectRealPointsPerLevel0: effectRealPointsPerLevel0 ?? this.effectRealPointsPerLevel0,
-      effectRealPointsPerLevel1: effectRealPointsPerLevel1 ?? this.effectRealPointsPerLevel1,
-      effectRealPointsPerLevel2: effectRealPointsPerLevel2 ?? this.effectRealPointsPerLevel2,
+      effectRealPointsPerLevel0:
+          effectRealPointsPerLevel0 ?? this.effectRealPointsPerLevel0,
+      effectRealPointsPerLevel1:
+          effectRealPointsPerLevel1 ?? this.effectRealPointsPerLevel1,
+      effectRealPointsPerLevel2:
+          effectRealPointsPerLevel2 ?? this.effectRealPointsPerLevel2,
       effectBasePoints0: effectBasePoints0 ?? this.effectBasePoints0,
       effectBasePoints1: effectBasePoints1 ?? this.effectBasePoints1,
       effectBasePoints2: effectBasePoints2 ?? this.effectBasePoints2,
@@ -1399,18 +1420,30 @@ class SpellEntity {
       effectTriggerSpell0: effectTriggerSpell0 ?? this.effectTriggerSpell0,
       effectTriggerSpell1: effectTriggerSpell1 ?? this.effectTriggerSpell1,
       effectTriggerSpell2: effectTriggerSpell2 ?? this.effectTriggerSpell2,
-      effectPointsPerCombo0: effectPointsPerCombo0 ?? this.effectPointsPerCombo0,
-      effectPointsPerCombo1: effectPointsPerCombo1 ?? this.effectPointsPerCombo1,
-      effectPointsPerCombo2: effectPointsPerCombo2 ?? this.effectPointsPerCombo2,
-      effectSpellClassMaskA0: effectSpellClassMaskA0 ?? this.effectSpellClassMaskA0,
-      effectSpellClassMaskA1: effectSpellClassMaskA1 ?? this.effectSpellClassMaskA1,
-      effectSpellClassMaskA2: effectSpellClassMaskA2 ?? this.effectSpellClassMaskA2,
-      effectSpellClassMaskB0: effectSpellClassMaskB0 ?? this.effectSpellClassMaskB0,
-      effectSpellClassMaskB1: effectSpellClassMaskB1 ?? this.effectSpellClassMaskB1,
-      effectSpellClassMaskB2: effectSpellClassMaskB2 ?? this.effectSpellClassMaskB2,
-      effectSpellClassMaskC0: effectSpellClassMaskC0 ?? this.effectSpellClassMaskC0,
-      effectSpellClassMaskC1: effectSpellClassMaskC1 ?? this.effectSpellClassMaskC1,
-      effectSpellClassMaskC2: effectSpellClassMaskC2 ?? this.effectSpellClassMaskC2,
+      effectPointsPerCombo0:
+          effectPointsPerCombo0 ?? this.effectPointsPerCombo0,
+      effectPointsPerCombo1:
+          effectPointsPerCombo1 ?? this.effectPointsPerCombo1,
+      effectPointsPerCombo2:
+          effectPointsPerCombo2 ?? this.effectPointsPerCombo2,
+      effectSpellClassMaskA0:
+          effectSpellClassMaskA0 ?? this.effectSpellClassMaskA0,
+      effectSpellClassMaskA1:
+          effectSpellClassMaskA1 ?? this.effectSpellClassMaskA1,
+      effectSpellClassMaskA2:
+          effectSpellClassMaskA2 ?? this.effectSpellClassMaskA2,
+      effectSpellClassMaskB0:
+          effectSpellClassMaskB0 ?? this.effectSpellClassMaskB0,
+      effectSpellClassMaskB1:
+          effectSpellClassMaskB1 ?? this.effectSpellClassMaskB1,
+      effectSpellClassMaskB2:
+          effectSpellClassMaskB2 ?? this.effectSpellClassMaskB2,
+      effectSpellClassMaskC0:
+          effectSpellClassMaskC0 ?? this.effectSpellClassMaskC0,
+      effectSpellClassMaskC1:
+          effectSpellClassMaskC1 ?? this.effectSpellClassMaskC1,
+      effectSpellClassMaskC2:
+          effectSpellClassMaskC2 ?? this.effectSpellClassMaskC2,
       spellVisualID0: spellVisualID0 ?? this.spellVisualID0,
       spellVisualID1: spellVisualID1 ?? this.spellVisualID1,
       spellIconID: spellIconID ?? this.spellIconID,
@@ -1467,25 +1500,43 @@ class SpellEntity {
       descriptionLangUnk2: descriptionLangUnk2 ?? this.descriptionLangUnk2,
       descriptionLangUnk3: descriptionLangUnk3 ?? this.descriptionLangUnk3,
       descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
-      auraDescriptionLangEnUS: auraDescriptionLangEnUS ?? this.auraDescriptionLangEnUS,
-      auraDescriptionLangKoKR: auraDescriptionLangKoKR ?? this.auraDescriptionLangKoKR,
-      auraDescriptionLangFrFR: auraDescriptionLangFrFR ?? this.auraDescriptionLangFrFR,
-      auraDescriptionLangDeDE: auraDescriptionLangDeDE ?? this.auraDescriptionLangDeDE,
-      auraDescriptionLangZhCN: auraDescriptionLangZhCN ?? this.auraDescriptionLangZhCN,
-      auraDescriptionLangZhTW: auraDescriptionLangZhTW ?? this.auraDescriptionLangZhTW,
-      auraDescriptionLangEsES: auraDescriptionLangEsES ?? this.auraDescriptionLangEsES,
-      auraDescriptionLangEsMX: auraDescriptionLangEsMX ?? this.auraDescriptionLangEsMX,
-      auraDescriptionLangRuRU: auraDescriptionLangRuRU ?? this.auraDescriptionLangRuRU,
-      auraDescriptionLangJaJP: auraDescriptionLangJaJP ?? this.auraDescriptionLangJaJP,
-      auraDescriptionLangPtPT: auraDescriptionLangPtPT ?? this.auraDescriptionLangPtPT,
-      auraDescriptionLangPtBR: auraDescriptionLangPtBR ?? this.auraDescriptionLangPtBR,
-      auraDescriptionLangItIT: auraDescriptionLangItIT ?? this.auraDescriptionLangItIT,
-      auraDescriptionLangUnk1: auraDescriptionLangUnk1 ?? this.auraDescriptionLangUnk1,
-      auraDescriptionLangUnk2: auraDescriptionLangUnk2 ?? this.auraDescriptionLangUnk2,
-      auraDescriptionLangUnk3: auraDescriptionLangUnk3 ?? this.auraDescriptionLangUnk3,
-      auraDescriptionLangFlags: auraDescriptionLangFlags ?? this.auraDescriptionLangFlags,
+      auraDescriptionLangEnUS:
+          auraDescriptionLangEnUS ?? this.auraDescriptionLangEnUS,
+      auraDescriptionLangKoKR:
+          auraDescriptionLangKoKR ?? this.auraDescriptionLangKoKR,
+      auraDescriptionLangFrFR:
+          auraDescriptionLangFrFR ?? this.auraDescriptionLangFrFR,
+      auraDescriptionLangDeDE:
+          auraDescriptionLangDeDE ?? this.auraDescriptionLangDeDE,
+      auraDescriptionLangZhCN:
+          auraDescriptionLangZhCN ?? this.auraDescriptionLangZhCN,
+      auraDescriptionLangZhTW:
+          auraDescriptionLangZhTW ?? this.auraDescriptionLangZhTW,
+      auraDescriptionLangEsES:
+          auraDescriptionLangEsES ?? this.auraDescriptionLangEsES,
+      auraDescriptionLangEsMX:
+          auraDescriptionLangEsMX ?? this.auraDescriptionLangEsMX,
+      auraDescriptionLangRuRU:
+          auraDescriptionLangRuRU ?? this.auraDescriptionLangRuRU,
+      auraDescriptionLangJaJP:
+          auraDescriptionLangJaJP ?? this.auraDescriptionLangJaJP,
+      auraDescriptionLangPtPT:
+          auraDescriptionLangPtPT ?? this.auraDescriptionLangPtPT,
+      auraDescriptionLangPtBR:
+          auraDescriptionLangPtBR ?? this.auraDescriptionLangPtBR,
+      auraDescriptionLangItIT:
+          auraDescriptionLangItIT ?? this.auraDescriptionLangItIT,
+      auraDescriptionLangUnk1:
+          auraDescriptionLangUnk1 ?? this.auraDescriptionLangUnk1,
+      auraDescriptionLangUnk2:
+          auraDescriptionLangUnk2 ?? this.auraDescriptionLangUnk2,
+      auraDescriptionLangUnk3:
+          auraDescriptionLangUnk3 ?? this.auraDescriptionLangUnk3,
+      auraDescriptionLangFlags:
+          auraDescriptionLangFlags ?? this.auraDescriptionLangFlags,
       manaCostPct: manaCostPct ?? this.manaCostPct,
-      startRecoveryCategory: startRecoveryCategory ?? this.startRecoveryCategory,
+      startRecoveryCategory:
+          startRecoveryCategory ?? this.startRecoveryCategory,
       startRecoveryTime: startRecoveryTime ?? this.startRecoveryTime,
       maxTargetLevel: maxTargetLevel ?? this.maxTargetLevel,
       spellClassSet: spellClassSet ?? this.spellClassSet,
@@ -1496,25 +1547,33 @@ class SpellEntity {
       defenseType: defenseType ?? this.defenseType,
       preventionType: preventionType ?? this.preventionType,
       stanceBarOrder: stanceBarOrder ?? this.stanceBarOrder,
-      effectChainAmplitude0: effectChainAmplitude0 ?? this.effectChainAmplitude0,
-      effectChainAmplitude1: effectChainAmplitude1 ?? this.effectChainAmplitude1,
-      effectChainAmplitude2: effectChainAmplitude2 ?? this.effectChainAmplitude2,
+      effectChainAmplitude0:
+          effectChainAmplitude0 ?? this.effectChainAmplitude0,
+      effectChainAmplitude1:
+          effectChainAmplitude1 ?? this.effectChainAmplitude1,
+      effectChainAmplitude2:
+          effectChainAmplitude2 ?? this.effectChainAmplitude2,
       minFactionID: minFactionID ?? this.minFactionID,
       minReputation: minReputation ?? this.minReputation,
       requiredAuraVision: requiredAuraVision ?? this.requiredAuraVision,
-      requiredTotemCategoryID0: requiredTotemCategoryID0 ?? this.requiredTotemCategoryID0,
-      requiredTotemCategoryID1: requiredTotemCategoryID1 ?? this.requiredTotemCategoryID1,
+      requiredTotemCategoryID0:
+          requiredTotemCategoryID0 ?? this.requiredTotemCategoryID0,
+      requiredTotemCategoryID1:
+          requiredTotemCategoryID1 ?? this.requiredTotemCategoryID1,
       requiredAreasID: requiredAreasID ?? this.requiredAreasID,
       schoolMask: schoolMask ?? this.schoolMask,
       runeCostID: runeCostID ?? this.runeCostID,
       spellMissileID: spellMissileID ?? this.spellMissileID,
       powerDisplayID: powerDisplayID ?? this.powerDisplayID,
-      effectBonusCoefficient0: effectBonusCoefficient0 ?? this.effectBonusCoefficient0,
-      effectBonusCoefficient1: effectBonusCoefficient1 ?? this.effectBonusCoefficient1,
-      effectBonusCoefficient2: effectBonusCoefficient2 ?? this.effectBonusCoefficient2,
-      spellDescriptionVariableID: spellDescriptionVariableID ?? this.spellDescriptionVariableID,
+      effectBonusCoefficient0:
+          effectBonusCoefficient0 ?? this.effectBonusCoefficient0,
+      effectBonusCoefficient1:
+          effectBonusCoefficient1 ?? this.effectBonusCoefficient1,
+      effectBonusCoefficient2:
+          effectBonusCoefficient2 ?? this.effectBonusCoefficient2,
+      spellDescriptionVariableID:
+          spellDescriptionVariableID ?? this.spellDescriptionVariableID,
       spellDifficultyID: spellDifficultyID ?? this.spellDifficultyID,
     );
   }
 }
-

@@ -111,7 +111,8 @@ class AreaTableEntity {
       liquidTypeId2: json['LiquidTypeID2'] ?? 0,
       liquidTypeId3: json['LiquidTypeID3'] ?? 0,
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
-      ambientMultiplier: (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
+      ambientMultiplier:
+          (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
       lightId: json['LightID'] ?? 0,
     );
   }
@@ -202,7 +203,8 @@ class AreaTableEntity {
       areaBit: areaBit ?? this.areaBit,
       flags: flags ?? this.flags,
       soundProviderPref: soundProviderPref ?? this.soundProviderPref,
-      soundProviderPrefUnderwater: soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
+      soundProviderPrefUnderwater:
+          soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
       ambienceId: ambienceId ?? this.ambienceId,
       zoneMusic: zoneMusic ?? this.zoneMusic,
       introSound: introSound ?? this.introSound,
@@ -235,7 +237,6 @@ class AreaTableEntity {
     );
   }
 }
-
 
 class BriefAreaTableEntity {
   final int id;

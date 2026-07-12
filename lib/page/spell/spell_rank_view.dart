@@ -126,6 +126,7 @@ class _SpellRankViewState extends State<SpellRankView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能排行'),
@@ -137,6 +138,7 @@ class _SpellRankViewState extends State<SpellRankView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能排行'),

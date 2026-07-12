@@ -116,10 +116,6 @@ class BriefQuestTemplateLocaleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'Title': title,
-    };
+    return {'ID': id, 'locale': locale, 'Title': title};
   }
 }

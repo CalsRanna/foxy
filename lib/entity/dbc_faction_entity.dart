@@ -363,7 +363,6 @@ class DbcFactionEntity {
   }
 }
 
-
 /// 阵营列表/Picker 展示模型
 class BriefDbcFactionEntity {
   final int id;

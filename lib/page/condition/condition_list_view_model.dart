@@ -60,8 +60,8 @@ class ConditionListViewModel {
         : 'condition_new';
     final label = condition != null
         ? (condition.comment.isNotEmpty
-            ? condition.comment
-            : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
+              ? condition.comment
+              : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
         : '新建条件';
 
     // 用主键 credential 序列化传递给详情页

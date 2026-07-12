@@ -25,9 +25,7 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
-  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(
-    int entry,
-  ) async {
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(int entry) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       'lt.*',

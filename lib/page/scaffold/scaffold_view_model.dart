@@ -67,8 +67,10 @@ class ScaffoldViewModel {
   final dbcImported = signal(false);
   final dbcPath = signal<String?>(null);
   final dbcImportError = signal<String?>(null);
+
   /// 表检查本身失败（查询错误 / 结构不兼容），与「表缺失待导入」区分。
   final dbcCheckError = signal<String?>(null);
+
   /// 是否因表结构不兼容阻塞（可引导用户重新导入修复）。
   final dbcCheckIncompatible = signal(false);
   final dbcImporting = signal(false);

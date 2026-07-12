@@ -98,6 +98,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void _showImportDialog() {
     showShadDialog(
+      opaque: false,
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcImportDialog(vm: viewModel),
@@ -106,6 +107,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void _showExportDialog() {
     showShadDialog(
+      opaque: false,
       context: context,
       barrierDismissible: false,
       builder: (context) => DbcExportDialog(vm: viewModel),

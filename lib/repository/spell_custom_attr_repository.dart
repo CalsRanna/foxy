@@ -39,9 +39,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
     return SpellCustomAttrEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellCustomAttrEntity> createSpellCustomAttr([
-    int spellId = 0,
-  ]) async {
+  Future<SpellCustomAttrEntity> createSpellCustomAttr([int spellId = 0]) async {
     return SpellCustomAttrEntity(spellId: spellId);
   }
 

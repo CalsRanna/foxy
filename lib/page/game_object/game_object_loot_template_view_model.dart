@@ -83,7 +83,8 @@ class GameObjectLootTemplateViewModel {
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   int _parseInt(String text) {
     if (text.isEmpty) return 0;
@@ -102,6 +103,7 @@ class GameObjectLootTemplateViewModel {
       if (!context.mounted) return;
       itemController.text = nextItemId.toString();
       await showShadDialog(
+        opaque: false,
         context: context,
         builder: (context) => _buildDialogForm(context),
       );
@@ -116,6 +118,7 @@ class GameObjectLootTemplateViewModel {
     if (index == null) return;
     fillForm(items.value[index]);
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (context) => _buildDialogForm(context),
     );
@@ -170,7 +173,11 @@ class GameObjectLootTemplateViewModel {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
-      await repository.updateLootTemplate(loot.entry, editingItem ?? loot.item, loot);
+      await repository.updateLootTemplate(
+        loot.entry,
+        editingItem ?? loot.item,
+        loot,
+      );
       await load();
       if (context.mounted) Navigator.of(context).pop();
     } catch (e) {

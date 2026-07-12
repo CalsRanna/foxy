@@ -44,6 +44,7 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     }
     if (!context.mounted) return null;
     return showShadDialog<List<DbcLocaleFieldValue>>(
+      opaque: false,
       context: context,
       builder: (_) => DbcLocaleFieldEditor(
         title: title,
@@ -216,10 +217,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
                 width: 120,
                 child: Padding(
                   padding: EdgeInsets.only(top: multiline ? 8 : 0),
-                  child: Text(
-                    locale.displayCode,
-                    style: theme.textTheme.small,
-                  ),
+                  child: Text(locale.displayCode, style: theme.textTheme.small),
                 ),
               ),
               Expanded(

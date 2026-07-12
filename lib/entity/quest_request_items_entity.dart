@@ -158,10 +158,6 @@ class BriefQuestRequestItemsLocaleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'CompletionText': completionText,
-    };
+    return {'ID': id, 'locale': locale, 'CompletionText': completionText};
   }
 }

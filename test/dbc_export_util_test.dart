@@ -132,12 +132,7 @@ void main() {
       util.write(
         definition: definition,
         rows: [
-          {
-            'ID': 1,
-            'Duration': 1.5,
-            'DurationPerLevel': 0,
-            'MaxDuration': 10,
-          },
+          {'ID': 1, 'Duration': 1.5, 'DurationPerLevel': 0, 'MaxDuration': 10},
         ],
         outputDirectory: directory.path,
       ),

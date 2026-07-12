@@ -276,11 +276,7 @@ class BriefVehicleEntity {
   final int flags;
   final double turnSpeed;
 
-  const BriefVehicleEntity({
-    this.id = 0,
-    this.flags = 0,
-    this.turnSpeed = 0,
-  });
+  const BriefVehicleEntity({this.id = 0, this.flags = 0, this.turnSpeed = 0});
 
   factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
     return BriefVehicleEntity(
@@ -291,11 +287,7 @@ class BriefVehicleEntity {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'TurnSpeed': turnSpeed,
-    };
+    return {'ID': id, 'Flags': flags, 'TurnSpeed': turnSpeed};
   }
 
   BriefVehicleEntity copyWith({int? id, int? flags, double? turnSpeed}) {

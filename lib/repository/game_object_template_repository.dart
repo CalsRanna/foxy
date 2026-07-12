@@ -55,11 +55,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
         builder = builder.where('entry', filter.entry);
       }
       if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where(
-          'name',
-          '%${filter.name}%',
-          comparator: 'like',
-        );
+        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
       }
       return builder.count();
     }
@@ -86,9 +82,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return const GameObjectTemplateEntity();
   }
 
-  Future<int> storeGameObjectTemplate(
-    GameObjectTemplateEntity template,
-  ) async {
+  Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
     var json = template.toJson();
     var newEntry = await _getNextEntry();
     json['entry'] = newEntry;
@@ -117,9 +111,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     await laconic.table(_table).insert([json]);
   }
 
-  Future<void> saveGameObjectTemplate(
-    GameObjectTemplateEntity template,
-  ) async {
+  Future<void> saveGameObjectTemplate(GameObjectTemplateEntity template) async {
     if (template.entry == 0) {
       await storeGameObjectTemplate(template);
       return;

@@ -21,7 +21,10 @@ class EmoteTextDetailViewModel {
   final emoteIdController = TextEditingController();
 
   /// EmoteText
-  final emoteTextControllers = List.generate(16, (_) => TextEditingController());
+  final emoteTextControllers = List.generate(
+    16,
+    (_) => TextEditingController(),
+  );
 
   final emote = signal(EmoteTextEntity());
 

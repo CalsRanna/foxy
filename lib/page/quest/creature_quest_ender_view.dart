@@ -124,6 +124,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增结束生物'),
@@ -134,6 +135,7 @@ class _CreatureQuestEnderViewState extends State<CreatureQuestEnderView> {
 
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑结束生物'),

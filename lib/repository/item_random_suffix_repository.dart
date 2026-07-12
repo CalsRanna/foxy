@@ -5,7 +5,8 @@ import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class ItemRandomSuffixRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+class ItemRandomSuffixRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
 
   @override
@@ -91,7 +92,6 @@ class ItemRandomSuffixRepository with RepositoryMixin, DbcLocaleRepositoryMixin 
       await laconic.table(_table).insert([suffix.toJson()]);
     }
   }
-
 
   Future<List<DbcLocaleFieldValue>> getItemRandomSuffixLocales(
     int id,

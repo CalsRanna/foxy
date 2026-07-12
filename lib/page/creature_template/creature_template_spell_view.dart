@@ -130,6 +130,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('新增技能'),
@@ -142,6 +143,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   /// 显示编辑对话框
   void _showEditDialog(BuildContext context) {
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text('编辑技能'),

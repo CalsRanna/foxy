@@ -123,6 +123,7 @@ class SpellAreaViewModel {
     if (index == null || index < 0 || index >= items.value.length) return;
     final area = items.value[index];
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

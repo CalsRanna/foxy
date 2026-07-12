@@ -46,21 +46,17 @@ void main() {
       items.singleWhere((e) => e.tableName == 'dbc_spell_icon').selected,
       isFalse,
     );
-    expect(
-      items.where((e) => e.selected).map((e) => e.tableName),
-      ['dbc_spell_duration', 'dbc_talent'],
-    );
+    expect(items.where((e) => e.selected).map((e) => e.tableName), [
+      'dbc_spell_duration',
+      'dbc_talent',
+    ]);
   });
 
   test('导出拦截：已选且计数失败的表应被识别', () {
     final items = [
       DbcExportItem(definition: spellDuration, recordCount: 1, selected: true),
       // 理论上 UI 不允许，但若状态被污染，导出前仍应拦截。
-      DbcExportItem(
-        definition: spellIcon,
-        countError: 'boom',
-        selected: true,
-      ),
+      DbcExportItem(definition: spellIcon, countError: 'boom', selected: true),
     ];
     final invalid = items
         .where((item) => item.selected && item.countFailed)

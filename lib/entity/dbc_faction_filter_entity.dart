@@ -16,9 +16,6 @@ class DbcFactionFilterEntity {
   }
 
   DbcFactionFilterEntity copyWith({String? id, String? name}) {
-    return DbcFactionFilterEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
+    return DbcFactionFilterEntity(id: id ?? this.id, name: name ?? this.name);
   }
 }

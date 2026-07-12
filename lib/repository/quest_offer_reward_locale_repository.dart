@@ -10,7 +10,8 @@ class QuestOfferRewardLocaleRepository with RepositoryMixin {
     final results = await laconic
         .table(_table)
         .select(['ID', 'locale', 'RewardText'])
-        .orderBy('ID').limit(kPageSize)
+        .orderBy('ID')
+        .limit(kPageSize)
         .offset(offset)
         .get();
     return results

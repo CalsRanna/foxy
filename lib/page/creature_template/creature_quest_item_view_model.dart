@@ -30,7 +30,9 @@ class CreatureQuestItemViewModel {
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
-    final data = await _repository.getBriefCreatureQuestItems(creatureEntry.value);
+    final data = await _repository.getBriefCreatureQuestItems(
+      creatureEntry.value,
+    );
     items.value = data;
     selectedIndex.value = null;
   }
@@ -119,6 +121,7 @@ class CreatureQuestItemViewModel {
     final questItem = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

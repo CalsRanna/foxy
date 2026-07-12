@@ -105,6 +105,7 @@ class _PlayerCreateInfoActionViewState
   void _showCreateDialog() {
     viewModel.create();
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (c) => _buildDialog(c, isEditing: false),
     );
@@ -113,6 +114,7 @@ class _PlayerCreateInfoActionViewState
   void _showEditDialog(int index) {
     viewModel.edit(index);
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (c) => _buildDialog(c, isEditing: true),
     );

@@ -434,7 +434,9 @@ class SpellDetailViewModel {
       // === 标志位 ===
       interruptFlags: parseFlagValue(interruptFlagsController.text),
       auraInterruptFlags: parseFlagValue(auraInterruptFlagsController.text),
-      channelInterruptFlags: parseFlagValue(channelInterruptFlagsController.text),
+      channelInterruptFlags: parseFlagValue(
+        channelInterruptFlagsController.text,
+      ),
       attributes: parseFlagValue(attributesController.text),
       attributesEx: parseFlagValue(attributesExController.text),
       attributesExB: parseFlagValue(attributesExBController.text),
@@ -475,9 +477,15 @@ class SpellDetailViewModel {
       effectItemType0: _getSelectValue(effectItemType0Controller),
       effectTriggerSpell0: _pi(effectTriggerSpell0Controller.text),
       effectPointsPerCombo0: _pd(effectPointsPerCombo0Controller.text),
-      effectSpellClassMaskA0: parseFlagValue(effectSpellClassMaskA0Controller.text),
-      effectSpellClassMaskB0: parseFlagValue(effectSpellClassMaskB0Controller.text),
-      effectSpellClassMaskC0: parseFlagValue(effectSpellClassMaskC0Controller.text),
+      effectSpellClassMaskA0: parseFlagValue(
+        effectSpellClassMaskA0Controller.text,
+      ),
+      effectSpellClassMaskB0: parseFlagValue(
+        effectSpellClassMaskB0Controller.text,
+      ),
+      effectSpellClassMaskC0: parseFlagValue(
+        effectSpellClassMaskC0Controller.text,
+      ),
 
       // === 效果1 ===
       effect1: _getSelectValue(effect1Controller),
@@ -499,9 +507,15 @@ class SpellDetailViewModel {
       effectItemType1: _getSelectValue(effectItemType1Controller),
       effectTriggerSpell1: _pi(effectTriggerSpell1Controller.text),
       effectPointsPerCombo1: _pd(effectPointsPerCombo1Controller.text),
-      effectSpellClassMaskA1: parseFlagValue(effectSpellClassMaskA1Controller.text),
-      effectSpellClassMaskB1: parseFlagValue(effectSpellClassMaskB1Controller.text),
-      effectSpellClassMaskC1: parseFlagValue(effectSpellClassMaskC1Controller.text),
+      effectSpellClassMaskA1: parseFlagValue(
+        effectSpellClassMaskA1Controller.text,
+      ),
+      effectSpellClassMaskB1: parseFlagValue(
+        effectSpellClassMaskB1Controller.text,
+      ),
+      effectSpellClassMaskC1: parseFlagValue(
+        effectSpellClassMaskC1Controller.text,
+      ),
 
       // === 效果2 ===
       effect2: _getSelectValue(effect2Controller),
@@ -523,9 +537,15 @@ class SpellDetailViewModel {
       effectItemType2: _getSelectValue(effectItemType2Controller),
       effectTriggerSpell2: _pi(effectTriggerSpell2Controller.text),
       effectPointsPerCombo2: _pd(effectPointsPerCombo2Controller.text),
-      effectSpellClassMaskA2: parseFlagValue(effectSpellClassMaskA2Controller.text),
-      effectSpellClassMaskB2: parseFlagValue(effectSpellClassMaskB2Controller.text),
-      effectSpellClassMaskC2: parseFlagValue(effectSpellClassMaskC2Controller.text),
+      effectSpellClassMaskA2: parseFlagValue(
+        effectSpellClassMaskA2Controller.text,
+      ),
+      effectSpellClassMaskB2: parseFlagValue(
+        effectSpellClassMaskB2Controller.text,
+      ),
+      effectSpellClassMaskC2: parseFlagValue(
+        effectSpellClassMaskC2Controller.text,
+      ),
 
       // === 装备限制 ===
       equippedItemClass: _getSelectValue(equippedItemClassController),
@@ -763,7 +783,8 @@ class SpellDetailViewModel {
   String _fmt(num v) => formatNum(v);
 
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
 
   int _getSelectValue(ShadSelectController<int> controller) =>
       controller.value.firstOrNull ?? 0;

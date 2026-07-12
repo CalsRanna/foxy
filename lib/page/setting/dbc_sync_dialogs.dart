@@ -133,7 +133,10 @@ Widget _progressPanel(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('进度', style: muted),
-            Text('${(ratio * 100).clamp(0, 100).toStringAsFixed(0)}%', style: muted),
+            Text(
+              '${(ratio * 100).clamp(0, 100).toStringAsFixed(0)}%',
+              style: muted,
+            ),
           ],
         ),
         ClipRRect(
@@ -148,10 +151,14 @@ Widget _progressPanel(
           ),
         ),
       if (label.isNotEmpty)
-        Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        ),
       if (detail.isNotEmpty) Text(detail, style: muted),
       if (ratio == null && label.isEmpty) Text(idleText, style: muted),
-      if (trailing != null) Align(alignment: Alignment.centerRight, child: trailing),
+      if (trailing != null)
+        Align(alignment: Alignment.centerRight, child: trailing),
     ],
   );
 }
@@ -264,9 +271,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 onPressed: _vm.dbcImportCancelling.value
                     ? null
                     : _vm.cancelImport,
-                child: Text(
-                  _vm.dbcImportCancelling.value ? '正在取消…' : '取消导入',
-                ),
+                child: Text(_vm.dbcImportCancelling.value ? '正在取消…' : '取消导入'),
               ),
             ),
           );
@@ -302,7 +307,12 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 '选择包含 Spell.dbc、Faction.dbc 等文件的客户端 DBC 目录。'
                 '导入以 DBC 为准：将覆盖数据库中对应表的数据；若需保留库内数据请先自行备份。',
               ),
-              Text('源目录', style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                '源目录',
+                style: theme.textTheme.small.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               _pathField(
                 controller: _pathController,
                 placeholder: '选择或输入 DBC 目录路径',
@@ -453,8 +463,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   color: theme.colorScheme.primary,
                   icon: LucideIcons.circleCheck,
                 ),
-                if (_outputDir != null)
-                  _mutedHint(context, '输出目录：$_outputDir'),
+                if (_outputDir != null) _mutedHint(context, '输出目录：$_outputDir'),
               ],
             ),
           );
@@ -507,13 +516,12 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              _mutedHint(
-                context,
-                '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
-              ),
+              _mutedHint(context, '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。'),
               Text(
                 '输出目录',
-                style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600),
+                style: theme.textTheme.small.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               _pathField(
                 controller: _dirController,
@@ -598,9 +606,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                 height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: theme.colorScheme.border,
-                  ),
+                  border: Border.all(color: theme.colorScheme.border),
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
@@ -683,7 +689,11 @@ class _ExportTableRow extends StatelessWidget {
   final DbcExportItem item;
   final ValueChanged<bool> onChanged;
 
-  const _ExportTableRow({super.key, required this.item, required this.onChanged});
+  const _ExportTableRow({
+    super.key,
+    required this.item,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -700,9 +710,7 @@ class _ExportTableRow extends StatelessWidget {
     // 使用受控 Checkbox，避免 shadcn 组件内部状态与外部 selected 脱节。
     final checkbox = Checkbox(
       value: item.selected,
-      onChanged: item.canSelect
-          ? (value) => onChanged(value ?? false)
-          : null,
+      onChanged: item.canSelect ? (value) => onChanged(value ?? false) : null,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       visualDensity: VisualDensity.compact,
     );

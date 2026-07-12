@@ -73,6 +73,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     if (vm.dbcPath.value != null) {
       vm.startImport();
       showShadDialog(
+        opaque: false,
         context: context,
         barrierDismissible: false,
         builder: (ctx) => _DbcImportDialog(vm: viewModel),
@@ -82,6 +83,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
 
     // 未配置路径 → 显示提醒对话框
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (ctx) => ShadDialog.alert(
         title: const Text('DBC 数据未导入'),
@@ -99,6 +101,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             onPressed: () {
               Navigator.of(ctx).pop();
               showShadDialog(
+                opaque: false,
                 context: context,
                 barrierDismissible: false,
                 builder: (ctx) => _DbcImportDialog(vm: vm),
@@ -117,6 +120,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     final theme = ShadTheme.of(context);
 
     showShadDialog(
+      opaque: false,
       context: context,
       builder: (ctx) => ShadDialog.alert(
         title: Text(incompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败'),
@@ -128,7 +132,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             Text(
               incompatible
                   ? '当前数据库中的 DBC 表与应用期望的字段结构不一致。'
-                    '可重新检查，或重新导入（以 DBC 为准覆盖库内对应表）。'
+                        '可重新检查，或重新导入（以 DBC 为准覆盖库内对应表）。'
                   : '无法完成 DBC 表状态检查。请确认数据库连接正常后重试。',
               style: theme.textTheme.muted.copyWith(fontSize: 13),
             ),
@@ -173,6 +177,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
               await vm.prepareManualImport(startIfPathReady: true);
               if (!mounted) return;
               showShadDialog(
+                opaque: false,
                 context: context,
                 barrierDismissible: false,
                 builder: (importCtx) => _DbcImportDialog(vm: vm),

@@ -89,7 +89,6 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-
   Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
     int id,
     DbcLocaleFieldDefinition field,

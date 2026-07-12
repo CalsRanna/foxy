@@ -65,9 +65,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     return const CreatureDisplayInfoEntity();
   }
 
-  Future<int> storeCreatureDisplayInfo(
-    CreatureDisplayInfoEntity info,
-  ) async {
+  Future<int> storeCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
     var json = info.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
@@ -75,9 +73,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     return nextId;
   }
 
-  Future<void> updateCreatureDisplayInfo(
-    CreatureDisplayInfoEntity info,
-  ) async {
+  Future<void> updateCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
     var json = info.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', info.id).update(json);

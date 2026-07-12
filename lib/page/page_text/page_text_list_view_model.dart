@@ -28,10 +28,7 @@ class PageTextListViewModel {
     final token = ++_refreshToken;
     try {
       final (items, count) = await (
-        _repository.getBriefPageTexts(
-          filter: _buildFilter(),
-          page: page.value,
-        ),
+        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
       if (token != _refreshToken) return;
@@ -133,10 +130,7 @@ class PageTextListViewModel {
     final token = ++_refreshToken;
     try {
       final (items, count) = await (
-        _repository.getBriefPageTexts(
-          filter: _buildFilter(),
-          page: page.value,
-        ),
+        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
         _repository.countPageTexts(filter: _buildFilter()),
       ).wait;
       if (token != _refreshToken) return;

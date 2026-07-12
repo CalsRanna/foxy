@@ -75,10 +75,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
   ) async {
     var json = questFactionReward.toJson();
     json.remove('ID');
-    await laconic
-        .table(_table)
-        .where('ID', questFactionReward.id)
-        .update(json);
+    await laconic.table(_table).where('ID', questFactionReward.id).update(json);
   }
 
   Future<void> destroyQuestFactionReward(int id) async {

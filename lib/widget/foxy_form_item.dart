@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class FoxyFormItem extends StatelessWidget {
@@ -20,10 +21,18 @@ class FoxyFormItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final leading = _buildLeading();
-    final input = ShadInput(
-      controller: controller,
-      placeholder: Text(placeholder ?? ''),
-      readOnly: readOnly,
+    final readonly = FoxyReadonlyInput.resolve(context, readOnly: readOnly);
+    // mouseCursor 仍传给 ShadInput 作为兜底；真正生效依赖 wrap 外侧 MouseRegion。
+    final input = readonly.wrap(
+      ShadInput(
+        controller: controller,
+        placeholder: Text(placeholder ?? ''),
+        readOnly: readOnly,
+        style: readonly.style,
+        decoration: readonly.decoration,
+        mouseCursor: readonly.mouseCursor,
+        showCursor: readonly.showCursor,
+      ),
     );
     var children = [leading, Expanded(child: child ?? input)];
     return Row(spacing: 16, children: children);

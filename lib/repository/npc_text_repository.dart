@@ -18,9 +18,7 @@ class NpcTextRepository with RepositoryMixin {
     builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
-    return results
-        .map((e) => BriefNpcTextEntity.fromJson(e.toMap()))
-        .toList();
+    return results.map((e) => BriefNpcTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<List<NpcTextEntity>> getNpcTexts() async {
@@ -92,10 +90,7 @@ class NpcTextRepository with RepositoryMixin {
     return (maxId ?? 0) + 1;
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    NpcTextFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

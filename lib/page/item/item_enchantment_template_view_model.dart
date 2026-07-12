@@ -27,7 +27,8 @@ class ItemEnchantmentTemplateViewModel {
 
   String _fmt(num v) => formatNum(v);
 
-  double _pd(String t, [String field = '']) => parseDoubleField(t, field: field);
+  double _pd(String t, [String field = '']) =>
+      parseDoubleField(t, field: field);
   int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> load() async {
@@ -113,6 +114,7 @@ class ItemEnchantmentTemplateViewModel {
     final model = items.value[index];
 
     final confirmed = await showShadDialog<bool>(
+      opaque: false,
       context: context,
       builder: (context) => ShadDialog.alert(
         title: Text('确认删除'),

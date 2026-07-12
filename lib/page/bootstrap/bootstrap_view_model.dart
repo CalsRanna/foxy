@@ -86,8 +86,7 @@ class BootstrapViewModel {
       if (!configSaved) {
         await DialogUtil.instance.alert(
           title: '警告',
-          message:
-              '数据库连接成功，但配置文件保存失败。本次可继续使用；下次启动可能需要重新填写连接信息。',
+          message: '数据库连接成功，但配置文件保存失败。本次可继续使用；下次启动可能需要重新填写连接信息。',
         );
       }
 

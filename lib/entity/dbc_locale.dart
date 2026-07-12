@@ -176,9 +176,7 @@ extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
   }) {
     return [
       for (final item in this)
-        item.locale.code == primaryCode
-            ? item.copyWith(value: draft)
-            : item,
+        item.locale.code == primaryCode ? item.copyWith(value: draft) : item,
     ];
   }
 }

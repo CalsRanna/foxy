@@ -42,4 +42,3 @@ class BriefSpellCustomAttrEntity {
     return {'spell_id': spellId, 'attributes': attributes};
   }
 }
-

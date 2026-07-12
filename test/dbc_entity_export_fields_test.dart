@@ -47,8 +47,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_glyph_properties' => const GlyphPropertyEntity().toJson(),
     'dbc_item_display_info' => const ItemDisplayInfoEntity().toJson(),
     'dbc_item_extended_cost' => const ItemExtendedCostEntity().toJson(),
-    'dbc_item_random_properties' =>
-      const ItemRandomPropertiesEntity().toJson(),
+    'dbc_item_random_properties' => const ItemRandomPropertiesEntity().toJson(),
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
     'dbc_item_set' => const ItemSetEntity().toJson(),
     'dbc_lock' => const LockEntity().toJson(),
@@ -62,8 +61,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_spell' => const SpellEntity().toJson(),
     'dbc_spell_duration' => const SpellDurationEntity().toJson(),
     'dbc_spell_icon' => const SpellIconEntity().toJson(),
-    'dbc_spell_item_enchantment' =>
-      const SpellItemEnchantmentEntity().toJson(),
+    'dbc_spell_item_enchantment' => const SpellItemEnchantmentEntity().toJson(),
     'dbc_spell_range' => const SpellRangeEntity().toJson(),
     'dbc_talent' => const TalentEntity().toJson(),
     'dbc_vehicle' => const VehicleEntity().toJson(),
@@ -92,8 +90,9 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_achievement' => AchievementEntity.fromJson(row).toJson(),
     'dbc_area_table' => AreaTableEntity.fromJson(row).toJson(),
     'dbc_char_titles' => CharTitleEntity.fromJson(row).toJson(),
-    'dbc_creature_display_info' =>
-      CreatureDisplayInfoEntity.fromJson(row).toJson(),
+    'dbc_creature_display_info' => CreatureDisplayInfoEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_creature_model_data' => CreatureModelDataEntity.fromJson(row).toJson(),
     'dbc_creature_spell_data' => CreatureSpellDataEntity.fromJson(row).toJson(),
     'dbc_currency_types' => CurrencyTypeEntity.fromJson(row).toJson(),
@@ -103,24 +102,28 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_glyph_properties' => GlyphPropertyEntity.fromJson(row).toJson(),
     'dbc_item_display_info' => ItemDisplayInfoEntity.fromJson(row).toJson(),
     'dbc_item_extended_cost' => ItemExtendedCostEntity.fromJson(row).toJson(),
-    'dbc_item_random_properties' =>
-      ItemRandomPropertiesEntity.fromJson(row).toJson(),
+    'dbc_item_random_properties' => ItemRandomPropertiesEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_item_random_suffix' => ItemRandomSuffixEntity.fromJson(row).toJson(),
     'dbc_item_set' => ItemSetEntity.fromJson(row).toJson(),
     'dbc_lock' => LockEntity.fromJson(row).toJson(),
     'dbc_map' => MapInfoEntity.fromJson(row).toJson(),
-    'dbc_quest_faction_reward' =>
-      QuestFactionRewardEntity.fromJson(row).toJson(),
+    'dbc_quest_faction_reward' => QuestFactionRewardEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_quest_info' => QuestInfoEntity.fromJson(row).toJson(),
     'dbc_quest_sort' => QuestSortEntity.fromJson(row).toJson(),
-    'dbc_scaling_stat_distribution' =>
-      ScalingStatDistributionEntity.fromJson(row).toJson(),
+    'dbc_scaling_stat_distribution' => ScalingStatDistributionEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_scaling_stat_values' => ScalingStatValueEntity.fromJson(row).toJson(),
     'dbc_spell' => SpellEntity.fromJson(row).toJson(),
     'dbc_spell_duration' => SpellDurationEntity.fromJson(row).toJson(),
     'dbc_spell_icon' => SpellIconEntity.fromJson(row).toJson(),
-    'dbc_spell_item_enchantment' =>
-      SpellItemEnchantmentEntity.fromJson(row).toJson(),
+    'dbc_spell_item_enchantment' => SpellItemEnchantmentEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
     'dbc_talent' => TalentEntity.fromJson(row).toJson(),
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
