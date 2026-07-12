@@ -11,6 +11,7 @@ import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
@@ -320,13 +321,16 @@ class _DbcImportDialog extends StatefulWidget {
 
 class _DbcImportDialogState extends State<_DbcImportDialog> {
   ScaffoldViewModel get _vm => widget.vm;
-  final _pathController = TextEditingController();
+  final _pathController = StringFieldController();
   final _pathFocus = FocusNode();
   void Function()? _unsub;
 
   @override
   void initState() {
     super.initState();
+    _pathController.controller.addListener(() {
+      if (mounted) setState(() {});
+    });
     _unsub = _vm.dbcImported.subscribe(_onImportedChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _pathFocus.requestFocus();
@@ -396,7 +400,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
             style: descStyle,
           ),
           ShadInput(
-            controller: _pathController,
+            controller: _pathController.controller,
             focusNode: _pathFocus,
             placeholder: const Text('选择或输入 DBC 目录路径...'),
             leading: const Padding(
@@ -406,9 +410,9 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
             trailing: ShadButton.ghost(
               height: 28,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              onPressed: _pathController.text.isEmpty
+              onPressed: _pathController.collect().isEmpty
                   ? null
-                  : () => _pathController.clear(),
+                  : () => _pathController.init(''),
               child: const Icon(LucideIcons.x, size: 14),
             ),
             onSubmitted: (_) => _submitPath(),
@@ -419,7 +423,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
               ShadButton.outline(
                 onPressed: () async {
                   final dir = await getDirectoryPath();
-                  if (dir != null) _pathController.text = dir;
+                  if (dir != null) _pathController.init(dir);
                 },
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
@@ -447,7 +451,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
   }
 
   void _submitPath() {
-    final path = _pathController.text.trim();
+    final path = _pathController.collect().trim();
     if (path.isEmpty) return;
     _vm.setDbcPath(path);
   }

@@ -10,6 +10,7 @@ import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/util/config_util.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -22,14 +23,22 @@ class BootstrapViewModel {
   final _configUtil = GetIt.instance.get<ConfigUtil>();
   final version = signal('');
 
-  final hostController = TextEditingController();
-  final portController = TextEditingController();
-  final databaseController = TextEditingController();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
+  final hostController = StringFieldController();
+  final portController = StringFieldController();
+  final databaseController = StringFieldController();
+  final usernameController = StringFieldController();
+  final passwordController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    hostController,
+    portController,
+    databaseController,
+    usernameController,
+    passwordController,
+  ];
 
   Future<void> connect(BuildContext context) async {
-    final port = parseMysqlPort(portController.text);
+    final port = parseMysqlPort(portController.collect());
     if (port == null) {
       DialogUtil.instance.error('端口无效：请输入 1–65535 之间的整数');
       return;
@@ -41,11 +50,11 @@ class BootstrapViewModel {
       loadingShown = true;
 
       var config = MysqlConfig(
-        database: databaseController.text,
-        password: passwordController.text,
-        host: hostController.text,
+        database: databaseController.collect(),
+        password: passwordController.collect(),
+        host: hostController.collect(),
         port: port,
-        username: usernameController.text,
+        username: usernameController.collect(),
       );
       await Database.instance.connect(
         config,
@@ -103,21 +112,19 @@ class BootstrapViewModel {
   }
 
   void dispose() {
-    hostController.dispose();
-    portController.dispose();
-    databaseController.dispose();
-    usernameController.dispose();
-    passwordController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   Future<void> initSignals() async {
     try {
       var config = await _configUtil.load();
-      hostController.text = config['host']?.toString() ?? '127.0.0.1';
-      portController.text = config['port']?.toString() ?? '3306';
-      databaseController.text = config['database']?.toString() ?? '';
-      usernameController.text = config['username']?.toString() ?? '';
-      passwordController.text = config['password']?.toString() ?? '';
+      hostController.init(config['host']?.toString() ?? '127.0.0.1');
+      portController.init(config['port']?.toString() ?? '3306');
+      databaseController.init(config['database']?.toString() ?? '');
+      usernameController.init(config['username']?.toString() ?? '');
+      passwordController.init(config['password']?.toString() ?? '');
       final packageInfo = await PackageInfo.fromPlatform();
       version.value = '${packageInfo.version}+${packageInfo.buildNumber}';
     } catch (e) {
@@ -130,11 +137,11 @@ class BootstrapViewModel {
   Future<bool> _tryUpdateConfig() async {
     try {
       await _configUtil.update({
-        'host': hostController.text,
-        'port': portController.text,
-        'database': databaseController.text,
-        'username': usernameController.text,
-        'password': passwordController.text,
+        'host': hostController.collect(),
+        'port': portController.collect(),
+        'database': databaseController.collect(),
+        'username': usernameController.collect(),
+        'password': passwordController.collect(),
       });
       return true;
     } catch (e) {

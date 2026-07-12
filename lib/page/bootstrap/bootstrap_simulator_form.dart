@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class BootstrapSimulatorForm extends StatelessWidget {
   final void Function()? onConnect;
-  final TextEditingController hostController;
-  final TextEditingController portController;
-  final TextEditingController databaseController;
-  final TextEditingController usernameController;
-  final TextEditingController passwordController;
+  final StringFieldController hostController;
+  final StringFieldController portController;
+  final StringFieldController databaseController;
+  final StringFieldController usernameController;
+  final StringFieldController passwordController;
   const BootstrapSimulatorForm({
     super.key,
     this.onConnect,
@@ -42,24 +44,33 @@ class BootstrapSimulatorForm extends StatelessWidget {
                     spacing: 16,
                     children: [
                       Expanded(
-                        child: _buildInput(context, hostController, 'Host'),
+                        child: FoxyStringInput(
+                          controller: hostController,
+                          placeholder: 'Host',
+                        ),
                       ),
                       SizedBox(
                         width: 160,
-                        child: _buildInput(
-                          context,
-                          portController,
-                          'Port(Optional)',
+                        child: FoxyStringInput(
+                          controller: portController,
+                          placeholder: 'Port(Optional)',
                         ),
                       ),
                     ],
                   ),
-                  _buildInput(context, databaseController, 'Database'),
-                  _buildInput(context, usernameController, 'Username'),
-                  _buildInput(
-                    context,
-                    passwordController,
-                    'Password',
+                  FoxyStringInput(
+                    controller: databaseController,
+                    placeholder: 'Database',
+                  ),
+                  FoxyStringInput(
+                    controller: usernameController,
+                    placeholder: 'Username',
+                  ),
+                  // 密码框：FoxyStringInput 暂不支持 obscureText，
+                  // Widget 内部可访问 FieldController.controller。
+                  ShadInput(
+                    controller: passwordController.controller,
+                    placeholder: Text('Password'),
                     obscureText: true,
                   ),
                 ],
@@ -73,19 +84,6 @@ class BootstrapSimulatorForm extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildInput(
-    BuildContext context,
-    TextEditingController controller,
-    String hintText, {
-    bool obscureText = false,
-  }) {
-    return ShadInput(
-      controller: controller,
-      placeholder: Text(hintText),
-      obscureText: obscureText,
     );
   }
 }
