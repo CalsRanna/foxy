@@ -154,13 +154,15 @@ class _GameObjectQuestStarterViewState
           FoxyFormItem(
             label: '物体编号',
             placeholder: 'GameobjectId',
-            child: FoxyNumberInput<int>(controller: viewModel.idController),
+            child: FoxyNumberInput<int>(
+              fieldController: viewModel.idController,
+            ),
           ),
           SizedBox(height: 16),
           FoxyFormItem(
             label: '任务编号',
             child: FoxyNumberInput<int>(
-              controller: viewModel.questController,
+              fieldController: viewModel.questController,
               readOnly: true,
             ),
           ),

@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -16,29 +15,45 @@ class QuestTemplateAddonViewModel {
   final questId = signal(0);
   final addon = signal(QuestTemplateAddonEntity());
 
-  final idController = TextEditingController();
-  final maxLevelController = TextEditingController();
-  final allowableClassesController = TextEditingController();
-  final sourceSpellIdController = TextEditingController();
-  final prevQuestIdController = TextEditingController();
-  final nextQuestIdController = TextEditingController();
-  final exclusiveGroupController = TextEditingController();
-  final rewardMailTemplateIdController = TextEditingController();
-  final rewardMailDelayController = TextEditingController();
-  final requiredSkillIdController = TextEditingController();
-  final requiredSkillPointsController = TextEditingController();
-  final requiredMinRepFactionController = TextEditingController();
-  final requiredMaxRepFactionController = TextEditingController();
-  final requiredMinRepValueController = TextEditingController();
-  final requiredMaxRepValueController = TextEditingController();
-  final providedItemCountController = TextEditingController();
-  final specialFlagsController = TextEditingController();
+  final idController = IntFieldController();
+  final maxLevelController = IntFieldController();
+  final allowableClassesController = IntFieldController();
+  final sourceSpellIdController = IntFieldController();
+  final prevQuestIdController = IntFieldController();
+  final nextQuestIdController = IntFieldController();
+  final exclusiveGroupController = IntFieldController();
+  final rewardMailTemplateIdController = IntFieldController();
+  final rewardMailDelayController = IntFieldController();
+  final requiredSkillIdController = IntFieldController();
+  final requiredSkillPointsController = IntFieldController();
+  final requiredMinRepFactionController = IntFieldController();
+  final requiredMaxRepFactionController = IntFieldController();
+  final requiredMinRepValueController = IntFieldController();
+  final requiredMaxRepValueController = IntFieldController();
+  final providedItemCountController = IntFieldController();
+  final specialFlagsController = IntFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    maxLevelController,
+    allowableClassesController,
+    sourceSpellIdController,
+    prevQuestIdController,
+    nextQuestIdController,
+    exclusiveGroupController,
+    rewardMailTemplateIdController,
+    rewardMailDelayController,
+    requiredSkillIdController,
+    requiredSkillPointsController,
+    requiredMinRepFactionController,
+    requiredMaxRepFactionController,
+    requiredMinRepValueController,
+    requiredMaxRepValueController,
+    providedItemCountController,
+    specialFlagsController,
+  ];
 
   int _originalId = 0;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({required int questId}) async {
     try {
@@ -83,64 +98,50 @@ class QuestTemplateAddonViewModel {
   }
 
   void _initSignals(QuestTemplateAddonEntity addon) {
-    idController.text = _fmt(addon.id);
-    maxLevelController.text = _fmt(addon.maxLevel);
-    allowableClassesController.text = _fmt(addon.allowableClasses);
-    sourceSpellIdController.text = _fmt(addon.sourceSpellId);
-    prevQuestIdController.text = _fmt(addon.prevQuestId);
-    nextQuestIdController.text = _fmt(addon.nextQuestId);
-    exclusiveGroupController.text = _fmt(addon.exclusiveGroup);
-    rewardMailTemplateIdController.text = _fmt(addon.rewardMailTemplateId);
-    rewardMailDelayController.text = _fmt(addon.rewardMailDelay);
-    requiredSkillIdController.text = _fmt(addon.requiredSkillId);
-    requiredSkillPointsController.text = _fmt(addon.requiredSkillPoints);
-    requiredMinRepFactionController.text = _fmt(addon.requiredMinRepFaction);
-    requiredMaxRepFactionController.text = _fmt(addon.requiredMaxRepFaction);
-    requiredMinRepValueController.text = _fmt(addon.requiredMinRepValue);
-    requiredMaxRepValueController.text = _fmt(addon.requiredMaxRepValue);
-    providedItemCountController.text = _fmt(addon.providedItemCount);
-    specialFlagsController.text = _fmt(addon.specialFlags);
+    idController.init(addon.id);
+    maxLevelController.init(addon.maxLevel);
+    allowableClassesController.init(addon.allowableClasses);
+    sourceSpellIdController.init(addon.sourceSpellId);
+    prevQuestIdController.init(addon.prevQuestId);
+    nextQuestIdController.init(addon.nextQuestId);
+    exclusiveGroupController.init(addon.exclusiveGroup);
+    rewardMailTemplateIdController.init(addon.rewardMailTemplateId);
+    rewardMailDelayController.init(addon.rewardMailDelay);
+    requiredSkillIdController.init(addon.requiredSkillId);
+    requiredSkillPointsController.init(addon.requiredSkillPoints);
+    requiredMinRepFactionController.init(addon.requiredMinRepFaction);
+    requiredMaxRepFactionController.init(addon.requiredMaxRepFaction);
+    requiredMinRepValueController.init(addon.requiredMinRepValue);
+    requiredMaxRepValueController.init(addon.requiredMaxRepValue);
+    providedItemCountController.init(addon.providedItemCount);
+    specialFlagsController.init(addon.specialFlags);
   }
 
   QuestTemplateAddonEntity _collect() {
     return QuestTemplateAddonEntity(
       id: questId.value,
-      maxLevel: _pi(maxLevelController.text),
-      allowableClasses: _pi(allowableClassesController.text),
-      sourceSpellId: _pi(sourceSpellIdController.text),
-      prevQuestId: _pi(prevQuestIdController.text),
-      nextQuestId: _pi(nextQuestIdController.text),
-      exclusiveGroup: _pi(exclusiveGroupController.text),
-      rewardMailTemplateId: _pi(rewardMailTemplateIdController.text),
-      rewardMailDelay: _pi(rewardMailDelayController.text),
-      requiredSkillId: _pi(requiredSkillIdController.text),
-      requiredSkillPoints: _pi(requiredSkillPointsController.text),
-      requiredMinRepFaction: _pi(requiredMinRepFactionController.text),
-      requiredMaxRepFaction: _pi(requiredMaxRepFactionController.text),
-      requiredMinRepValue: _pi(requiredMinRepValueController.text),
-      requiredMaxRepValue: _pi(requiredMaxRepValueController.text),
-      providedItemCount: _pi(providedItemCountController.text),
-      specialFlags: _pi(specialFlagsController.text),
+      maxLevel: maxLevelController.collect(),
+      allowableClasses: allowableClassesController.collect(),
+      sourceSpellId: sourceSpellIdController.collect(),
+      prevQuestId: prevQuestIdController.collect(),
+      nextQuestId: nextQuestIdController.collect(),
+      exclusiveGroup: exclusiveGroupController.collect(),
+      rewardMailTemplateId: rewardMailTemplateIdController.collect(),
+      rewardMailDelay: rewardMailDelayController.collect(),
+      requiredSkillId: requiredSkillIdController.collect(),
+      requiredSkillPoints: requiredSkillPointsController.collect(),
+      requiredMinRepFaction: requiredMinRepFactionController.collect(),
+      requiredMaxRepFaction: requiredMaxRepFactionController.collect(),
+      requiredMinRepValue: requiredMinRepValueController.collect(),
+      requiredMaxRepValue: requiredMaxRepValueController.collect(),
+      providedItemCount: providedItemCountController.collect(),
+      specialFlags: specialFlagsController.collect(),
     );
   }
 
   void dispose() {
-    allowableClassesController.dispose();
-    exclusiveGroupController.dispose();
-    idController.dispose();
-    maxLevelController.dispose();
-    nextQuestIdController.dispose();
-    prevQuestIdController.dispose();
-    providedItemCountController.dispose();
-    requiredMaxRepFactionController.dispose();
-    requiredMaxRepValueController.dispose();
-    requiredMinRepFactionController.dispose();
-    requiredMinRepValueController.dispose();
-    requiredSkillIdController.dispose();
-    requiredSkillPointsController.dispose();
-    rewardMailDelayController.dispose();
-    rewardMailTemplateIdController.dispose();
-    sourceSpellIdController.dispose();
-    specialFlagsController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -13,8 +12,10 @@ class CreatureQuestEnderViewModel {
   final questId = signal(0);
   final items = signal<List<BriefCreatureQuestEnderEntity>>([]);
   final selectedIndex = signal<int?>(null);
-  final idController = TextEditingController();
-  final questController = TextEditingController();
+  final idController = IntFieldController();
+  final questController = IntFieldController();
+
+  late final _controllers = <FieldController>[idController, questController];
 
   int _originalId = 0;
   int _originalQuest = 0;
@@ -24,16 +25,12 @@ class CreatureQuestEnderViewModel {
   /// 从表单收集数据
   CreatureQuestEnderEntity collectFromForm() {
     return CreatureQuestEnderEntity(
-      id: _pi(idController.text),
-      quest: _pi(questController.text),
+      id: idController.collect(),
+      quest: questController.collect(),
     );
   }
 
   /// 复制记录
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
-
   Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -128,8 +125,9 @@ class CreatureQuestEnderViewModel {
 
   /// 清理资源
   void dispose() {
-    idController.dispose();
-    questController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 
   /// 编辑选中记录
@@ -155,8 +153,8 @@ class CreatureQuestEnderViewModel {
 
   /// 填充表单
   void fillForm(CreatureQuestEnderEntity model) {
-    idController.text = _fmt(model.id);
-    questController.text = _fmt(model.quest);
+    idController.init(model.id);
+    questController.init(model.quest);
   }
 
   /// 初始化
@@ -179,8 +177,8 @@ class CreatureQuestEnderViewModel {
 
   /// 重置表单
   void resetForm() {
-    idController.text = _fmt(0);
-    questController.text = _fmt(0);
+    idController.init(0);
+    questController.init(0);
   }
 
   /// 保存新记录

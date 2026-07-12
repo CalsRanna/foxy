@@ -1,10 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -15,16 +14,19 @@ class QuestRequestItemsViewModel {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
 
-  final idController = TextEditingController();
-  final emoteOnCompleteController = TextEditingController();
-  final emoteOnIncompleteController = TextEditingController();
-  final completionTextController = TextEditingController();
+  final idController = IntFieldController();
+  final emoteOnCompleteController = IntFieldController();
+  final emoteOnIncompleteController = IntFieldController();
+  final completionTextController = StringFieldController();
+
+  late final _controllers = <FieldController>[
+    idController,
+    emoteOnCompleteController,
+    emoteOnIncompleteController,
+    completionTextController,
+  ];
 
   int _originalId = 0;
-
-  String _fmt(num v) => formatNum(v);
-
-  int _pi(String t, [String field = '']) => parseIntField(t, field: field);
 
   Future<void> initSignals({required int questId}) async {
     try {
@@ -37,7 +39,7 @@ class QuestRequestItemsViewModel {
         final blank = await _repository.createQuestRequestItems(questId);
         _initSignals(blank);
       }
-      idController.text = _fmt(questId);
+      idController.init(questId);
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -69,24 +71,23 @@ class QuestRequestItemsViewModel {
   }
 
   void _initSignals(QuestRequestItemsEntity model) {
-    emoteOnCompleteController.text = _fmt(model.emoteOnComplete);
-    emoteOnIncompleteController.text = _fmt(model.emoteOnIncomplete);
-    completionTextController.text = model.completionText;
+    emoteOnCompleteController.init(model.emoteOnComplete);
+    emoteOnIncompleteController.init(model.emoteOnIncomplete);
+    completionTextController.init(model.completionText);
   }
 
   QuestRequestItemsEntity _collect() {
     return QuestRequestItemsEntity(
       id: questId.value,
-      emoteOnComplete: _pi(emoteOnCompleteController.text),
-      emoteOnIncomplete: _pi(emoteOnIncompleteController.text),
-      completionText: completionTextController.text,
+      emoteOnComplete: emoteOnCompleteController.collect(),
+      emoteOnIncomplete: emoteOnIncompleteController.collect(),
+      completionText: completionTextController.collect(),
     );
   }
 
   void dispose() {
-    completionTextController.dispose();
-    emoteOnCompleteController.dispose();
-    emoteOnIncompleteController.dispose();
-    idController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
   }
 }

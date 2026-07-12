@@ -4,6 +4,7 @@ import 'package:foxy/page/quest/quest_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -48,13 +49,13 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
   }
 
   Widget _buildFilter() {
-    final idInput = ShadInput(
+    final idInput = FoxyStringInput(
       controller: viewModel.idController,
-      placeholder: Text('编号（Entry）'),
+      placeholder: '编号（Entry）',
     );
-    final titleInput = ShadInput(
+    final titleInput = FoxyStringInput(
       controller: viewModel.titleController,
-      placeholder: Text('标题（Title）'),
+      placeholder: '标题（Title）',
     );
     final searchBtn = ShadButton(
       onPressed: viewModel.search,

@@ -5,8 +5,10 @@ import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
+import 'package:foxy/util/field_controller.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/util/logger_util.dart';
 import 'package:foxy/util/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -14,13 +16,13 @@ import 'package:get_it/get_it.dart';
 
 /// 区域或任务排序选择器，通过 [mode] 切换数据源
 class AreaTableOrQuestSortSelector extends StatefulWidget {
-  final TextEditingController controller;
+  final IntFieldController fieldController;
   final String? placeholder;
   final String mode;
 
   const AreaTableOrQuestSortSelector({
     super.key,
-    required this.controller,
+    required this.fieldController,
     this.placeholder,
     this.mode = 'AreaTable',
   });
@@ -41,22 +43,23 @@ class _AreaTableOrQuestSortSelectorState
       width: 20,
       child: Icon(LucideIcons.search, size: 12),
     );
+    // Widget implementation may access FieldController.controller.
     return ShadInput(
-      controller: widget.controller,
+      controller: widget.fieldController.controller,
       placeholder: Text(widget.placeholder ?? ''),
       trailing: shadButton,
     );
   }
 
   Future<void> _openDialog() async {
-    final currentValue = int.tryParse(widget.controller.text);
+    final currentValue = widget.fieldController.collect();
     final result = await showFoxyDialog<int>(
       context: context,
       builder: (context) =>
           _Dialog(initialValue: currentValue, mode: widget.mode),
     );
     if (result == null) return;
-    widget.controller.text = result.toString();
+    widget.fieldController.init(result);
   }
 }
 
@@ -71,8 +74,10 @@ class _Dialog extends StatefulWidget {
 }
 
 class _DialogState extends State<_Dialog> {
-  final _idController = TextEditingController();
-  final _nameController = TextEditingController();
+  final _idController = StringFieldController();
+  final _nameController = StringFieldController();
+
+  late final _controllers = <FieldController>[_idController, _nameController];
 
   List<BriefAreaTableEntity> _areaItems = [];
   List<BriefQuestSortEntity> _questItems = [];
@@ -112,8 +117,9 @@ class _DialogState extends State<_Dialog> {
 
   @override
   void dispose() {
-    _idController.dispose();
-    _nameController.dispose();
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -122,7 +128,7 @@ class _DialogState extends State<_Dialog> {
     super.initState();
     _currentMode = widget.mode;
     if (widget.initialValue != null && widget.initialValue != 0) {
-      _idController.text = widget.initialValue?.toString() ?? '';
+      _idController.init(widget.initialValue?.toString() ?? '');
       _selectedId = widget.initialValue;
     }
     _search();
@@ -138,8 +144,8 @@ class _DialogState extends State<_Dialog> {
               : () {
                   setState(() {
                     _currentMode = 'AreaTable';
-                    _idController.clear();
-                    _nameController.clear();
+                    _idController.init('');
+                    _nameController.init('');
                     _selectedId = null;
                     _page = 1;
                   });
@@ -154,8 +160,8 @@ class _DialogState extends State<_Dialog> {
               : () {
                   setState(() {
                     _currentMode = 'QuestSort';
-                    _idController.clear();
-                    _nameController.clear();
+                    _idController.init('');
+                    _nameController.init('');
                     _selectedId = null;
                     _page = 1;
                   });
@@ -170,11 +176,11 @@ class _DialogState extends State<_Dialog> {
 
   Widget _buildFilter() {
     var idInput = _currentMode == 'AreaTable'
-        ? ShadInput(controller: _idController, placeholder: Text('区域ID'))
-        : ShadInput(controller: _idController, placeholder: Text('任务排序ID'));
-    var nameInput = ShadInput(
+        ? FoxyStringInput(controller: _idController, placeholder: '区域ID')
+        : FoxyStringInput(controller: _idController, placeholder: '任务排序ID');
+    var nameInput = FoxyStringInput(
       controller: _nameController,
-      placeholder: Text('名称'),
+      placeholder: '名称',
     );
     var searchButton = ShadButton(
       onPressed: _doSearch,
@@ -325,8 +331,8 @@ class _DialogState extends State<_Dialog> {
   }
 
   void _reset() {
-    _idController.clear();
-    _nameController.clear();
+    _idController.init('');
+    _nameController.init('');
     _page = 1;
     _search();
   }
@@ -336,8 +342,8 @@ class _DialogState extends State<_Dialog> {
       if (_currentMode == 'AreaTable') {
         final repository = GetIt.instance.get<AreaTableRepository>();
         final filter = AreaTableFilterEntity(
-          id: _idController.text,
-          name: _nameController.text,
+          id: _idController.collect(),
+          name: _nameController.collect(),
         );
         final items = await repository.getBriefAreaTables(
           filter: filter,
@@ -354,8 +360,8 @@ class _DialogState extends State<_Dialog> {
       } else {
         final repository = GetIt.instance.get<QuestSortRepository>();
         final filter = QuestSortFilterEntity(
-          id: _idController.text,
-          name: _nameController.text,
+          id: _idController.collect(),
+          name: _nameController.collect(),
         );
         final items = await repository.getBriefQuestSorts(
           filter: filter,
