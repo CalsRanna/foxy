@@ -5,9 +5,11 @@ import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_model_data_entity.dart';
+import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
+import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
@@ -39,10 +41,12 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_char_titles' => const CharTitleEntity().toJson(),
     'dbc_creature_display_info' => const CreatureDisplayInfoEntity().toJson(),
     'dbc_creature_model_data' => const CreatureModelDataEntity().toJson(),
+    'dbc_creature_movement_info' => const CreatureMovementInfoEntity().toJson(),
     'dbc_creature_spell_data' => const CreatureSpellDataEntity().toJson(),
     'dbc_currency_types' => const CurrencyTypeEntity().toJson(),
     'dbc_emotes_text' => const EmoteTextEntity().toJson(),
     'dbc_faction' => const DbcFactionEntity().toJson(),
+    'dbc_faction_template' => const DbcFactionTemplateEntity().toJson(),
     'dbc_gem_properties' => const GemPropertyEntity().toJson(),
     'dbc_glyph_properties' => const GlyphPropertyEntity().toJson(),
     'dbc_item_display_info' => const ItemDisplayInfoEntity().toJson(),
@@ -94,10 +98,14 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
       row,
     ).toJson(),
     'dbc_creature_model_data' => CreatureModelDataEntity.fromJson(row).toJson(),
+    'dbc_creature_movement_info' => CreatureMovementInfoEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_creature_spell_data' => CreatureSpellDataEntity.fromJson(row).toJson(),
     'dbc_currency_types' => CurrencyTypeEntity.fromJson(row).toJson(),
     'dbc_emotes_text' => EmoteTextEntity.fromJson(row).toJson(),
     'dbc_faction' => DbcFactionEntity.fromJson(row).toJson(),
+    'dbc_faction_template' => DbcFactionTemplateEntity.fromJson(row).toJson(),
     'dbc_gem_properties' => GemPropertyEntity.fromJson(row).toJson(),
     'dbc_glyph_properties' => GlyphPropertyEntity.fromJson(row).toJson(),
     'dbc_item_display_info' => ItemDisplayInfoEntity.fromJson(row).toJson(),
@@ -132,8 +140,8 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 }
 
 void main() {
-  test('全部 30 张 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(30));
+  test('全部 32 张 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
+    expect(dbcDefinitions, hasLength(32));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);
@@ -150,7 +158,7 @@ void main() {
     }
   });
 
-  test('全部 30 张 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
+  test('全部 32 张 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
     for (final definition in dbcDefinitions) {
       final sample = _sampleRow(definition);
       final json = _roundTrip(definition.tableName, sample);

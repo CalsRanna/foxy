@@ -16,6 +16,7 @@ const kRankOptions = {
   2: '稀有精英', // Rare Elite
   3: '世界BOSS', // World Boss
   4: '稀有', // Rare
+  5: '未知', // Unknown (present on two historical creatures)
 };
 
 /// type 生物类型选项
@@ -76,7 +77,7 @@ const kCreatureFamilyOptions = {
   7: '食腐鸟', // Carrion Bird
   8: '螃蟹', // Crab
   9: '猩猩', // Gorilla
-  10: '马', // Horse
+  10: '未指定', // Hidden miscellaneous family; not present in DBC
   11: '迅猛龙', // Raptor
   12: '陆行鸟', // Tallstrider
   15: '地狱猎犬', // Felhunter
