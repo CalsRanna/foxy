@@ -159,44 +159,54 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     required bool isEditing,
   }) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '游戏对象编号',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.gameObjectIdController,
-              placeholder: 'GameObjectEntry',
-              readOnly: true,
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '索引',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idxController,
-              placeholder: 'Idx',
-              readOnly: true,
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '物品',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemIdController,
-              placeholder: 'ItemId',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: 'VerifiedBuild',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '游戏对象编号',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.gameObjectIdController,
+                    placeholder: 'GameObjectEntry',
+                    readOnly: true,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '索引',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.idxController,
+                    placeholder: 'Idx',
+                    readOnly: true,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物品',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
+                    controller: viewModel.itemIdController,
+                    placeholder: 'ItemId',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: 'VerifiedBuild',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.verifiedBuildController,
+                    placeholder: 'VerifiedBuild',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 24),
           Row(

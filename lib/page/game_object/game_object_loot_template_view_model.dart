@@ -42,7 +42,7 @@ class GameObjectLootTemplateViewModel with FieldControllerMixin {
   void resetForm() {
     itemController.init(0);
     referenceController.init(0);
-    chanceController.init(0.0);
+    chanceController.init(100.0);
     questRequiredController.init(0);
     lootModeController.init(1);
     groupIdController.init(0);

@@ -12,7 +12,7 @@ import 'package:signals/signals.dart';
 class GameObjectQuestItemViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectEntry = signal<int>(0);
-  final items = signal<List<GameObjectQuestItemEntity>>([]);
+  final items = signal<List<BriefGameObjectQuestItemEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
   late final gameObjectIdController = registerController(IntFieldController());
@@ -35,7 +35,7 @@ class GameObjectQuestItemViewModel with FieldControllerMixin {
     verifiedBuildController.init(0);
   }
 
-  void fillForm(GameObjectQuestItemEntity questItem) {
+  void fillForm(BriefGameObjectQuestItemEntity questItem) {
     idxController.init(questItem.idx);
     itemIdController.init(questItem.itemId);
     verifiedBuildController.init(questItem.verifiedBuild);

@@ -67,14 +67,6 @@ class _GameObjectLootTemplateViewState
               size: ShadButtonSize.sm,
               child: Text('编辑'),
             ),
-            ShadButton.ghost(
-              leading: Icon(LucideIcons.copy, size: 16),
-              onPressed: selectedIndex != null
-                  ? () => viewModel.copy(context)
-                  : null,
-              size: ShadButtonSize.sm,
-              child: Text('复制'),
-            ),
             const Spacer(),
             ShadButton.destructive(
               leading: Icon(LucideIcons.trash, size: 16),
@@ -175,73 +167,87 @@ class _GameObjectLootTemplateViewState
     final isEditing = viewModel.editing.value;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '游戏对象编号',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.gameObjectIdController,
-              placeholder: 'GameObjectID',
-              readOnly: true,
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '物品ID',
-            child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
-              controller: viewModel.itemController,
-              placeholder: 'Item',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '关联ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.referenceController,
-              placeholder: 'Reference (0=直接掉落)',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '掉落几率',
-            child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
-              placeholder: 'Chance (%)',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '需要任务',
-            child: FoxyShadSelect<int>(
-              controller: viewModel.questRequiredController,
-              options: kBooleanOptions,
-              placeholder: Text('QuestRequired'),
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '掉落模式',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.lootModeController,
-              placeholder: 'LootMode',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '组ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.groupIdController,
-              placeholder: 'GroupId',
-            ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '游戏对象编号',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.gameObjectIdController,
+                    placeholder: 'Entry',
+                    readOnly: true,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '物品 ID',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
+                    controller: viewModel.itemController,
+                    placeholder: 'Item',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '引用掉落模板',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.referenceLoot,
+                    controller: viewModel.referenceController,
+                    placeholder: 'Reference',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '掉落几率',
+                  child: FoxyNumberInput<double>(
+                    controller: viewModel.chanceController,
+                    placeholder: 'Chance',
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
           Row(
-            spacing: 16,
+            spacing: 8,
             children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '需要任务',
+                  child: FoxyShadSelect<int>(
+                    controller: viewModel.questRequiredController,
+                    options: kBooleanOptions,
+                    placeholder: const Text('QuestRequired'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '掉落模式',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.lootModeController,
+                    placeholder: 'LootMode',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '组 ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.groupIdController,
+                    placeholder: 'GroupId',
+                  ),
+                ),
+              ),
               Expanded(
                 child: FoxyFormItem(
                   label: '最小数量',
@@ -251,6 +257,12 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            spacing: 8,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '最大数量',
@@ -260,15 +272,18 @@ class _GameObjectLootTemplateViewState
                   ),
                 ),
               ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '备注',
+                  child: FoxyStringInput(
+                    controller: viewModel.commentController,
+                    placeholder: 'Comment',
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '备注',
-            child: FoxyStringInput(
-              controller: viewModel.commentController,
-              placeholder: 'Comment',
-            ),
           ),
           SizedBox(height: 24),
           Row(

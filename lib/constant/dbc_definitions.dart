@@ -19,6 +19,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_area_table', schema: Definitions.areaTable),
   DbcDefinition(tableName: 'dbc_char_titles', schema: Definitions.charTitles),
   DbcDefinition(
+    tableName: 'dbc_cinematic_sequences',
+    schema: Definitions.cinematicSequences,
+  ),
+  DbcDefinition(
     tableName: 'dbc_creature_display_info',
     schema: Definitions.creatureDisplayInfo,
   ),
@@ -38,6 +42,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     tableName: 'dbc_currency_types',
     schema: Definitions.currencyTypes,
   ),
+  DbcDefinition(
+    tableName: 'dbc_destructible_model_data',
+    schema: Definitions.destructibleModelData,
+  ),
   DbcDefinition(tableName: 'dbc_emotes_text', schema: Definitions.emotesText),
   DbcDefinition(tableName: 'dbc_emotes', schema: Definitions.emotes),
   DbcDefinition(tableName: 'dbc_faction', schema: Definitions.faction),
@@ -52,6 +60,14 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(
     tableName: 'dbc_glyph_properties',
     schema: Definitions.glyphProperties,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_game_object_art_kit',
+    schema: Definitions.gameObjectArtKit,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_game_object_display_info',
+    schema: Definitions.gameObjectDisplayInfo,
   ),
   DbcDefinition(tableName: 'dbc_holidays', schema: Definitions.holidays),
   DbcDefinition(
@@ -102,6 +118,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
   DbcDefinition(tableName: 'dbc_spell', schema: Definitions.spell),
   DbcDefinition(
+    tableName: 'dbc_spell_focus_object',
+    schema: Definitions.spellFocusObject,
+  ),
+  DbcDefinition(
     tableName: 'dbc_spell_duration',
     schema: Definitions.spellDuration,
   ),
@@ -113,6 +133,7 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
   DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),
   DbcDefinition(tableName: 'dbc_talent', schema: Definitions.talent),
+  DbcDefinition(tableName: 'dbc_taxi_path', schema: Definitions.taxiPath),
   DbcDefinition(
     tableName: 'dbc_totem_category',
     schema: Definitions.totemCategory,

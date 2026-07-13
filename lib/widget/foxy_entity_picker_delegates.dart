@@ -6,6 +6,8 @@ import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
+import 'package:foxy/entity/cinematic_sequence_entity.dart';
+import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
 import 'package:foxy/entity/creature_immunity_filter_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
@@ -26,10 +28,16 @@ import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_emote_filter_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
+import 'package:foxy/entity/destructible_model_data_entity.dart';
+import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/entity/game_object_art_kit_entity.dart';
+import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
+import 'package:foxy/entity/game_object_display_info_entity.dart';
+import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/entity/holiday_entity.dart';
@@ -70,6 +78,8 @@ import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
+import 'package:foxy/entity/spell_focus_object_entity.dart';
+import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
@@ -80,6 +90,8 @@ import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';
+import 'package:foxy/entity/taxi_path_entity.dart';
+import 'package:foxy/entity/taxi_path_filter_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
@@ -89,6 +101,7 @@ import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
+import 'package:foxy/repository/cinematic_sequence_repository.dart';
 import 'package:foxy/repository/creature_immunity_repository.dart';
 import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
@@ -99,8 +112,11 @@ import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
+import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
+import 'package:foxy/repository/game_object_art_kit_repository.dart';
+import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
@@ -123,9 +139,11 @@ import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
+import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
+import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
@@ -758,6 +776,237 @@ class FoxyEntityPickerDelegates {
         ),
     count: (v) => GetIt.instance.get<GossipMenuRepository>().countGossipMenus(
       filter: GossipMenuFilterEntity(menuId: v[0], text: v[1]),
+    ),
+  );
+
+  static final cinematicSequence =
+      FoxyEntityPickerDelegate<BriefCinematicSequenceEntity>(
+        title: '过场动画序列',
+        errorLabel: '搜索 CinematicSequences.dbc 失败',
+        filters: const [FoxyEntityPickerFilter('序列 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefCinematicSequenceEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '声音 ID',
+            width: 160,
+            text: (BriefCinematicSequenceEntity row) => row.soundId.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '首个镜头 ID',
+            text: (BriefCinematicSequenceEntity row) => row.camera0.toString(),
+          ),
+        ],
+        idOf: (BriefCinematicSequenceEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<CinematicSequenceRepository>()
+            .getBriefCinematicSequences(
+              page: page,
+              filter: CinematicSequenceFilterEntity(id: values[0]),
+            ),
+        count: (values) => GetIt.instance
+            .get<CinematicSequenceRepository>()
+            .countCinematicSequences(
+              filter: CinematicSequenceFilterEntity(id: values[0]),
+            ),
+      );
+
+  static final destructibleModelData =
+      FoxyEntityPickerDelegate<BriefDestructibleModelDataEntity>(
+        title: '可破坏模型数据',
+        errorLabel: '搜索 DestructibleModelData.dbc 失败',
+        filters: const [FoxyEntityPickerFilter('模型数据 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefDestructibleModelDataEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '状态 1 WMO',
+            text: (BriefDestructibleModelDataEntity row) =>
+                row.state1Wmo.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '状态 2 WMO',
+            text: (BriefDestructibleModelDataEntity row) =>
+                row.state2Wmo.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '状态 3 WMO',
+            text: (BriefDestructibleModelDataEntity row) =>
+                row.state3Wmo.toString(),
+          ),
+        ],
+        idOf: (BriefDestructibleModelDataEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<DestructibleModelDataRepository>()
+            .getBriefDestructibleModelDatas(
+              page: page,
+              filter: DestructibleModelDataFilterEntity(id: values[0]),
+            ),
+        count: (values) => GetIt.instance
+            .get<DestructibleModelDataRepository>()
+            .countDestructibleModelDatas(
+              filter: DestructibleModelDataFilterEntity(id: values[0]),
+            ),
+      );
+
+  static final gameObjectArtKit =
+      FoxyEntityPickerDelegate<BriefGameObjectArtKitEntity>(
+        title: '游戏对象 ArtKit',
+        errorLabel: '搜索 GameObjectArtKit.dbc 失败',
+        filters: const [
+          FoxyEntityPickerFilter('ArtKit ID'),
+          FoxyEntityPickerFilter('资源路径'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefGameObjectArtKitEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '纹理',
+            text: (BriefGameObjectArtKitEntity row) => row.textureVariation0,
+          ),
+          FoxyEntityPickerColumn(
+            header: '附加模型',
+            text: (BriefGameObjectArtKitEntity row) => row.attachModel0,
+          ),
+        ],
+        idOf: (BriefGameObjectArtKitEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<GameObjectArtKitRepository>()
+            .getBriefGameObjectArtKits(
+              page: page,
+              filter: GameObjectArtKitFilterEntity(
+                id: values[0],
+                path: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<GameObjectArtKitRepository>()
+            .countGameObjectArtKits(
+              filter: GameObjectArtKitFilterEntity(
+                id: values[0],
+                path: values[1],
+              ),
+            ),
+      );
+
+  static final gameObjectDisplayInfo =
+      FoxyEntityPickerDelegate<BriefGameObjectDisplayInfoEntity>(
+        title: '游戏对象显示信息',
+        errorLabel: '搜索 GameObjectDisplayInfo.dbc 失败',
+        filters: const [
+          FoxyEntityPickerFilter('显示 ID'),
+          FoxyEntityPickerFilter('模型名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefGameObjectDisplayInfoEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '模型名称',
+            text: (BriefGameObjectDisplayInfoEntity row) => row.modelName,
+          ),
+        ],
+        idOf: (BriefGameObjectDisplayInfoEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<GameObjectDisplayInfoRepository>()
+            .getBriefGameObjectDisplayInfos(
+              page: page,
+              filter: GameObjectDisplayInfoFilterEntity(
+                id: values[0],
+                modelName: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<GameObjectDisplayInfoRepository>()
+            .countGameObjectDisplayInfos(
+              filter: GameObjectDisplayInfoFilterEntity(
+                id: values[0],
+                modelName: values[1],
+              ),
+            ),
+      );
+
+  static final spellFocusObject =
+      FoxyEntityPickerDelegate<BriefSpellFocusObjectEntity>(
+        title: '法术焦点对象',
+        errorLabel: '搜索 SpellFocusObject.dbc 失败',
+        filters: const [
+          FoxyEntityPickerFilter('焦点 ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefSpellFocusObjectEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefSpellFocusObjectEntity row) => row.displayName,
+          ),
+        ],
+        idOf: (BriefSpellFocusObjectEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<SpellFocusObjectRepository>()
+            .getBriefSpellFocusObjects(
+              page: page,
+              filter: SpellFocusObjectFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<SpellFocusObjectRepository>()
+            .countSpellFocusObjects(
+              filter: SpellFocusObjectFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
+
+  static final taxiPath = FoxyEntityPickerDelegate<BriefTaxiPathEntity>(
+    title: '飞行路径',
+    errorLabel: '搜索 TaxiPath.dbc 失败',
+    filters: const [FoxyEntityPickerFilter('路径 ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: 'ID',
+        width: 120,
+        text: (BriefTaxiPathEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '起点',
+        text: (BriefTaxiPathEntity row) => row.fromTaxiNode.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '终点',
+        text: (BriefTaxiPathEntity row) => row.toTaxiNode.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '费用',
+        text: (BriefTaxiPathEntity row) => row.cost.toString(),
+      ),
+    ],
+    idOf: (BriefTaxiPathEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<TaxiPathRepository>().getBriefTaxiPaths(
+          page: page,
+          filter: TaxiPathFilterEntity(id: values[0]),
+        ),
+    count: (values) => GetIt.instance.get<TaxiPathRepository>().countTaxiPaths(
+      filter: TaxiPathFilterEntity(id: values[0]),
     ),
   );
 
