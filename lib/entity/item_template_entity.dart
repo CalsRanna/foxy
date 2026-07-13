@@ -52,7 +52,7 @@ class ItemTemplateEntity {
 
   // --- 武器与伤害 ---
   final int delay;
-  final int rangedModRange;
+  final double rangedModRange;
   final double armorDamageModifier;
   final int dmgType1;
   final double dmgMin1;
@@ -69,9 +69,26 @@ class ItemTemplateEntity {
   final int scalingStatValue;
 
   // --- 统计属性（10 组）---
-  final int statsCount;
-  final List<int> statTypes;
-  final List<int> statValues;
+  final int statType1;
+  final int statValue1;
+  final int statType2;
+  final int statValue2;
+  final int statType3;
+  final int statValue3;
+  final int statType4;
+  final int statValue4;
+  final int statType5;
+  final int statValue5;
+  final int statType6;
+  final int statValue6;
+  final int statType7;
+  final int statValue7;
+  final int statType8;
+  final int statValue8;
+  final int statType9;
+  final int statValue9;
+  final int statType10;
+  final int statValue10;
 
   // --- 抗性 ---
   final int holyRes;
@@ -82,13 +99,41 @@ class ItemTemplateEntity {
   final int arcaneRes;
 
   // --- 法术效果（5 组）---
-  final List<int> spellIds;
-  final List<int> spellTriggers;
-  final List<int> spellCharges;
-  final List<double> spellPpmRates;
-  final List<int> spellCooldowns;
-  final List<int> spellCategories;
-  final List<int> spellCategoryCooldowns;
+  final int spellId1;
+  final int spellTrigger1;
+  final int spellCharges1;
+  final double spellPpmRate1;
+  final int spellCooldown1;
+  final int spellCategory1;
+  final int spellCategoryCooldown1;
+  final int spellId2;
+  final int spellTrigger2;
+  final int spellCharges2;
+  final double spellPpmRate2;
+  final int spellCooldown2;
+  final int spellCategory2;
+  final int spellCategoryCooldown2;
+  final int spellId3;
+  final int spellTrigger3;
+  final int spellCharges3;
+  final double spellPpmRate3;
+  final int spellCooldown3;
+  final int spellCategory3;
+  final int spellCategoryCooldown3;
+  final int spellId4;
+  final int spellTrigger4;
+  final int spellCharges4;
+  final double spellPpmRate4;
+  final int spellCooldown4;
+  final int spellCategory4;
+  final int spellCategoryCooldown4;
+  final int spellId5;
+  final int spellTrigger5;
+  final int spellCharges5;
+  final double spellPpmRate5;
+  final int spellCooldown5;
+  final int spellCategory5;
+  final int spellCategoryCooldown5;
 
   // --- 使用限制 ---
   final int allowableClass;
@@ -113,8 +158,12 @@ class ItemTemplateEntity {
   final int lockid;
   final int gemProperties;
   final int socketBonus;
-  final List<int> socketColors;
-  final List<int> socketContents;
+  final int socketColor1;
+  final int socketContent1;
+  final int socketColor2;
+  final int socketContent2;
+  final int socketColor3;
+  final int socketContent3;
 
   // --- 图标（joined，不在 toJson 中）---
   final String inventoryIcon;
@@ -135,6 +184,19 @@ class ItemTemplateEntity {
   String get displayDescription =>
       localeDescription.isNotEmpty ? localeDescription : description;
 
+  /// AzerothCore derives StatsCount from non-zero stat values at load time.
+  int get statsCount =>
+      (statValue1 != 0 ? 1 : 0) +
+      (statValue2 != 0 ? 1 : 0) +
+      (statValue3 != 0 ? 1 : 0) +
+      (statValue4 != 0 ? 1 : 0) +
+      (statValue5 != 0 ? 1 : 0) +
+      (statValue6 != 0 ? 1 : 0) +
+      (statValue7 != 0 ? 1 : 0) +
+      (statValue8 != 0 ? 1 : 0) +
+      (statValue9 != 0 ? 1 : 0) +
+      (statValue10 != 0 ? 1 : 0);
+
   const ItemTemplateEntity({
     // --- 基础标识 ---
     this.entry = 0,
@@ -147,7 +209,7 @@ class ItemTemplateEntity {
     this.quality = 0,
     this.className = 0,
     this.subclass = 0,
-    this.soundOverrideSubclass = 0,
+    this.soundOverrideSubclass = -1,
     this.material = 0,
     this.displayId = 0,
     this.inventoryType = 0,
@@ -160,7 +222,7 @@ class ItemTemplateEntity {
     this.maxDurability = 0,
     this.buyPrice = 0,
     this.sellPrice = 0,
-    this.buyCount = 0,
+    this.buyCount = 1,
     this.maxcount = 0,
     this.stackable = 1,
     // --- 分类与容器 ---
@@ -180,8 +242,8 @@ class ItemTemplateEntity {
     this.flagsExtra = 0,
     this.flagsCustom = 0,
     // --- 武器与伤害 ---
-    this.delay = 0,
-    this.rangedModRange = 0,
+    this.delay = 1000,
+    this.rangedModRange = 0.0,
     this.armorDamageModifier = 0.0,
     this.dmgType1 = 0,
     this.dmgMin1 = 0,
@@ -196,9 +258,26 @@ class ItemTemplateEntity {
     this.scalingStatDistribution = 0,
     this.scalingStatValue = 0,
     // --- 统计属性（10 组）---
-    this.statsCount = 0,
-    this.statTypes = const [],
-    this.statValues = const [],
+    this.statType1 = 0,
+    this.statValue1 = 0,
+    this.statType2 = 0,
+    this.statValue2 = 0,
+    this.statType3 = 0,
+    this.statValue3 = 0,
+    this.statType4 = 0,
+    this.statValue4 = 0,
+    this.statType5 = 0,
+    this.statValue5 = 0,
+    this.statType6 = 0,
+    this.statValue6 = 0,
+    this.statType7 = 0,
+    this.statValue7 = 0,
+    this.statType8 = 0,
+    this.statValue8 = 0,
+    this.statType9 = 0,
+    this.statValue9 = 0,
+    this.statType10 = 0,
+    this.statValue10 = 0,
     // --- 抗性 ---
     this.holyRes = 0,
     this.fireRes = 0,
@@ -207,13 +286,41 @@ class ItemTemplateEntity {
     this.frostRes = 0,
     this.arcaneRes = 0,
     // --- 法术效果（5 组）---
-    this.spellIds = const [],
-    this.spellTriggers = const [],
-    this.spellCharges = const [],
-    this.spellPpmRates = const [],
-    this.spellCooldowns = const [],
-    this.spellCategories = const [],
-    this.spellCategoryCooldowns = const [],
+    this.spellId1 = 0,
+    this.spellTrigger1 = 0,
+    this.spellCharges1 = 0,
+    this.spellPpmRate1 = 0,
+    this.spellCooldown1 = -1,
+    this.spellCategory1 = 0,
+    this.spellCategoryCooldown1 = -1,
+    this.spellId2 = 0,
+    this.spellTrigger2 = 0,
+    this.spellCharges2 = 0,
+    this.spellPpmRate2 = 0,
+    this.spellCooldown2 = -1,
+    this.spellCategory2 = 0,
+    this.spellCategoryCooldown2 = -1,
+    this.spellId3 = 0,
+    this.spellTrigger3 = 0,
+    this.spellCharges3 = 0,
+    this.spellPpmRate3 = 0,
+    this.spellCooldown3 = -1,
+    this.spellCategory3 = 0,
+    this.spellCategoryCooldown3 = -1,
+    this.spellId4 = 0,
+    this.spellTrigger4 = 0,
+    this.spellCharges4 = 0,
+    this.spellPpmRate4 = 0,
+    this.spellCooldown4 = -1,
+    this.spellCategory4 = 0,
+    this.spellCategoryCooldown4 = -1,
+    this.spellId5 = 0,
+    this.spellTrigger5 = 0,
+    this.spellCharges5 = 0,
+    this.spellPpmRate5 = 0,
+    this.spellCooldown5 = -1,
+    this.spellCategory5 = 0,
+    this.spellCategoryCooldown5 = -1,
     // --- 使用限制 ---
     this.allowableClass = -1,
     this.allowableRace = -1,
@@ -226,7 +333,7 @@ class ItemTemplateEntity {
     this.requiredCityRank = 0,
     this.requiredReputationFaction = 0,
     this.requiredReputationRank = 0,
-    this.requiredDisenchantSkill = 0,
+    this.requiredDisenchantSkill = -1,
     // --- 区域与节日 ---
     this.mapId = 0,
     this.area = 0,
@@ -235,8 +342,12 @@ class ItemTemplateEntity {
     this.lockid = 0,
     this.gemProperties = 0,
     this.socketBonus = 0,
-    this.socketColors = const [],
-    this.socketContents = const [],
+    this.socketColor1 = 0,
+    this.socketContent1 = 0,
+    this.socketColor2 = 0,
+    this.socketContent2 = 0,
+    this.socketColor3 = 0,
+    this.socketContent3 = 0,
     // --- 图标（joined）---
     this.inventoryIcon = '',
     // --- 书页信息 ---
@@ -262,7 +373,7 @@ class ItemTemplateEntity {
       className: json['class'] ?? json['className'] ?? 0,
       subclass: json['subclass'] ?? 0,
       soundOverrideSubclass:
-          json['SoundOverrideSubclass'] ?? json['soundOverrideSubclass'] ?? 0,
+          json['SoundOverrideSubclass'] ?? json['soundOverrideSubclass'] ?? -1,
       material: json['Material'] ?? json['material'] ?? 0,
       displayId: json['displayid'] ?? json['displayId'] ?? 0,
       inventoryType: json['InventoryType'] ?? json['inventoryType'] ?? 0,
@@ -275,7 +386,7 @@ class ItemTemplateEntity {
       maxDurability: json['MaxDurability'] ?? json['maxDurability'] ?? 0,
       buyPrice: json['BuyPrice'] ?? json['buyPrice'] ?? 0,
       sellPrice: json['SellPrice'] ?? json['sellPrice'] ?? 0,
-      buyCount: json['BuyCount'] ?? json['buyCount'] ?? 0,
+      buyCount: json['BuyCount'] ?? json['buyCount'] ?? 1,
       maxcount: json['maxcount'] ?? 0,
       stackable: json['stackable'] ?? 1,
       // --- 分类与容器 ---
@@ -296,19 +407,20 @@ class ItemTemplateEntity {
       flagsExtra: json['FlagsExtra'] ?? json['flagsExtra'] ?? 0,
       flagsCustom: json['flagsCustom'] ?? 0,
       // --- 武器与伤害 ---
-      delay: json['delay'] ?? 0,
+      delay: json['delay'] ?? 1000,
       rangedModRange:
           ((json['RangedModRange'] ?? json['rangedModRange'] ?? 0) as num)
-              .toInt(),
+              .toDouble(),
       armorDamageModifier:
-          (json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0.0)
-              as double,
+          ((json['ArmorDamageModifier'] ?? json['armorDamageModifier'] ?? 0)
+                  as num)
+              .toDouble(),
       dmgType1: json['dmg_type1'] ?? json['dmgType1'] ?? 0,
-      dmgMin1: (json['dmg_min1'] ?? json['dmgMin1'] ?? 0.0),
-      dmgMax1: (json['dmg_max1'] ?? json['dmgMax1'] ?? 0.0),
+      dmgMin1: ((json['dmg_min1'] ?? json['dmgMin1'] ?? 0) as num).toDouble(),
+      dmgMax1: ((json['dmg_max1'] ?? json['dmgMax1'] ?? 0) as num).toDouble(),
       dmgType2: json['dmg_type2'] ?? json['dmgType2'] ?? 0,
-      dmgMin2: (json['dmg_min2'] ?? json['dmgMin2'] ?? 0.0),
-      dmgMax2: (json['dmg_max2'] ?? json['dmgMax2'] ?? 0.0),
+      dmgMin2: ((json['dmg_min2'] ?? json['dmgMin2'] ?? 0) as num).toDouble(),
+      dmgMax2: ((json['dmg_max2'] ?? json['dmgMax2'] ?? 0) as num).toDouble(),
       ammoType: json['ammo_type'] ?? json['ammoType'] ?? 0,
       armor: json['armor'] ?? 0,
       block: json['block'] ?? 0,
@@ -320,9 +432,26 @@ class ItemTemplateEntity {
       scalingStatValue:
           json['ScalingStatValue'] ?? json['scalingStatValue'] ?? 0,
       // --- 统计属性（10 组）---
-      statsCount: json['StatsCount'] ?? 0,
-      statTypes: [for (var i = 1; i <= 10; i++) json['stat_type$i'] ?? 0],
-      statValues: [for (var i = 1; i <= 10; i++) json['stat_value$i'] ?? 0],
+      statType1: json['stat_type1'] ?? json['statType1'] ?? 0,
+      statValue1: json['stat_value1'] ?? json['statValue1'] ?? 0,
+      statType2: json['stat_type2'] ?? json['statType2'] ?? 0,
+      statValue2: json['stat_value2'] ?? json['statValue2'] ?? 0,
+      statType3: json['stat_type3'] ?? json['statType3'] ?? 0,
+      statValue3: json['stat_value3'] ?? json['statValue3'] ?? 0,
+      statType4: json['stat_type4'] ?? json['statType4'] ?? 0,
+      statValue4: json['stat_value4'] ?? json['statValue4'] ?? 0,
+      statType5: json['stat_type5'] ?? json['statType5'] ?? 0,
+      statValue5: json['stat_value5'] ?? json['statValue5'] ?? 0,
+      statType6: json['stat_type6'] ?? json['statType6'] ?? 0,
+      statValue6: json['stat_value6'] ?? json['statValue6'] ?? 0,
+      statType7: json['stat_type7'] ?? json['statType7'] ?? 0,
+      statValue7: json['stat_value7'] ?? json['statValue7'] ?? 0,
+      statType8: json['stat_type8'] ?? json['statType8'] ?? 0,
+      statValue8: json['stat_value8'] ?? json['statValue8'] ?? 0,
+      statType9: json['stat_type9'] ?? json['statType9'] ?? 0,
+      statValue9: json['stat_value9'] ?? json['statValue9'] ?? 0,
+      statType10: json['stat_type10'] ?? json['statType10'] ?? 0,
+      statValue10: json['stat_value10'] ?? json['statValue10'] ?? 0,
       // --- 抗性 ---
       holyRes: json['holy_res'] ?? json['holyRes'] ?? 0,
       fireRes: json['fire_res'] ?? json['fireRes'] ?? 0,
@@ -331,23 +460,66 @@ class ItemTemplateEntity {
       frostRes: json['frost_res'] ?? json['frostRes'] ?? 0,
       arcaneRes: json['arcane_res'] ?? json['arcaneRes'] ?? 0,
       // --- 法术效果（5 组）---
-      spellIds: [for (var i = 1; i <= 5; i++) json['spellid_$i'] ?? 0],
-      spellTriggers: [
-        for (var i = 1; i <= 5; i++) json['spelltrigger_$i'] ?? 0,
-      ],
-      spellCharges: [for (var i = 1; i <= 5; i++) json['spellcharges_$i'] ?? 0],
-      spellPpmRates: [
-        for (var i = 1; i <= 5; i++) (json['spellppmRate_$i'] ?? 0.0) as double,
-      ],
-      spellCooldowns: [
-        for (var i = 1; i <= 5; i++) json['spellcooldown_$i'] ?? 0,
-      ],
-      spellCategories: [
-        for (var i = 1; i <= 5; i++) json['spellcategory_$i'] ?? 0,
-      ],
-      spellCategoryCooldowns: [
-        for (var i = 1; i <= 5; i++) json['spellcategorycooldown_$i'] ?? 0,
-      ],
+      spellId1: json['spellid_1'] ?? json['spellId1'] ?? 0,
+      spellTrigger1: json['spelltrigger_1'] ?? json['spellTrigger1'] ?? 0,
+      spellCharges1: json['spellcharges_1'] ?? json['spellCharges1'] ?? 0,
+      spellPpmRate1:
+          ((json['spellppmRate_1'] ?? json['spellPpmRate1'] ?? 0) as num)
+              .toDouble(),
+      spellCooldown1: json['spellcooldown_1'] ?? json['spellCooldown1'] ?? -1,
+      spellCategory1: json['spellcategory_1'] ?? json['spellCategory1'] ?? 0,
+      spellCategoryCooldown1:
+          json['spellcategorycooldown_1'] ??
+          json['spellCategoryCooldown1'] ??
+          -1,
+      spellId2: json['spellid_2'] ?? json['spellId2'] ?? 0,
+      spellTrigger2: json['spelltrigger_2'] ?? json['spellTrigger2'] ?? 0,
+      spellCharges2: json['spellcharges_2'] ?? json['spellCharges2'] ?? 0,
+      spellPpmRate2:
+          ((json['spellppmRate_2'] ?? json['spellPpmRate2'] ?? 0) as num)
+              .toDouble(),
+      spellCooldown2: json['spellcooldown_2'] ?? json['spellCooldown2'] ?? -1,
+      spellCategory2: json['spellcategory_2'] ?? json['spellCategory2'] ?? 0,
+      spellCategoryCooldown2:
+          json['spellcategorycooldown_2'] ??
+          json['spellCategoryCooldown2'] ??
+          -1,
+      spellId3: json['spellid_3'] ?? json['spellId3'] ?? 0,
+      spellTrigger3: json['spelltrigger_3'] ?? json['spellTrigger3'] ?? 0,
+      spellCharges3: json['spellcharges_3'] ?? json['spellCharges3'] ?? 0,
+      spellPpmRate3:
+          ((json['spellppmRate_3'] ?? json['spellPpmRate3'] ?? 0) as num)
+              .toDouble(),
+      spellCooldown3: json['spellcooldown_3'] ?? json['spellCooldown3'] ?? -1,
+      spellCategory3: json['spellcategory_3'] ?? json['spellCategory3'] ?? 0,
+      spellCategoryCooldown3:
+          json['spellcategorycooldown_3'] ??
+          json['spellCategoryCooldown3'] ??
+          -1,
+      spellId4: json['spellid_4'] ?? json['spellId4'] ?? 0,
+      spellTrigger4: json['spelltrigger_4'] ?? json['spellTrigger4'] ?? 0,
+      spellCharges4: json['spellcharges_4'] ?? json['spellCharges4'] ?? 0,
+      spellPpmRate4:
+          ((json['spellppmRate_4'] ?? json['spellPpmRate4'] ?? 0) as num)
+              .toDouble(),
+      spellCooldown4: json['spellcooldown_4'] ?? json['spellCooldown4'] ?? -1,
+      spellCategory4: json['spellcategory_4'] ?? json['spellCategory4'] ?? 0,
+      spellCategoryCooldown4:
+          json['spellcategorycooldown_4'] ??
+          json['spellCategoryCooldown4'] ??
+          -1,
+      spellId5: json['spellid_5'] ?? json['spellId5'] ?? 0,
+      spellTrigger5: json['spelltrigger_5'] ?? json['spellTrigger5'] ?? 0,
+      spellCharges5: json['spellcharges_5'] ?? json['spellCharges5'] ?? 0,
+      spellPpmRate5:
+          ((json['spellppmRate_5'] ?? json['spellPpmRate5'] ?? 0) as num)
+              .toDouble(),
+      spellCooldown5: json['spellcooldown_5'] ?? json['spellCooldown5'] ?? -1,
+      spellCategory5: json['spellcategory_5'] ?? json['spellCategory5'] ?? 0,
+      spellCategoryCooldown5:
+          json['spellcategorycooldown_5'] ??
+          json['spellCategoryCooldown5'] ??
+          -1,
       // --- 使用限制 ---
       allowableClass: json['AllowableClass'] ?? -1,
       allowableRace: json['AllowableRace'] ?? json['allowableRace'] ?? -1,
@@ -370,7 +542,7 @@ class ItemTemplateEntity {
       requiredDisenchantSkill:
           json['RequiredDisenchantSkill'] ??
           json['requiredDisenchantSkill'] ??
-          0,
+          -1,
       // --- 区域与节日 ---
       mapId: json['Map'] ?? json['mapId'] ?? 0,
       area: json['area'] ?? 0,
@@ -379,10 +551,12 @@ class ItemTemplateEntity {
       lockid: json['lockid'] ?? 0,
       gemProperties: json['GemProperties'] ?? json['gemProperties'] ?? 0,
       socketBonus: json['socketBonus'] ?? 0,
-      socketColors: [for (var i = 1; i <= 3; i++) json['socketColor_$i'] ?? 0],
-      socketContents: [
-        for (var i = 1; i <= 3; i++) json['socketContent_$i'] ?? 0,
-      ],
+      socketColor1: json['socketColor_1'] ?? json['socketColor1'] ?? 0,
+      socketContent1: json['socketContent_1'] ?? json['socketContent1'] ?? 0,
+      socketColor2: json['socketColor_2'] ?? json['socketColor2'] ?? 0,
+      socketContent2: json['socketContent_2'] ?? json['socketContent2'] ?? 0,
+      socketColor3: json['socketColor_3'] ?? json['socketColor3'] ?? 0,
+      socketContent3: json['socketContent_3'] ?? json['socketContent3'] ?? 0,
       // --- 图标（joined）---
       inventoryIcon: json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '',
       // --- 书页信息 ---
@@ -462,11 +636,27 @@ class ItemTemplateEntity {
       'ScalingStatValue': scalingStatValue,
 
       // --- 统计属性 ---
+      'stat_type1': statType1,
+      'stat_value1': statValue1,
+      'stat_type2': statType2,
+      'stat_value2': statValue2,
+      'stat_type3': statType3,
+      'stat_value3': statValue3,
+      'stat_type4': statType4,
+      'stat_value4': statValue4,
+      'stat_type5': statType5,
+      'stat_value5': statValue5,
+      'stat_type6': statType6,
+      'stat_value6': statValue6,
+      'stat_type7': statType7,
+      'stat_value7': statValue7,
+      'stat_type8': statType8,
+      'stat_value8': statValue8,
+      'stat_type9': statType9,
+      'stat_value9': statValue9,
+      'stat_type10': statType10,
+      'stat_value10': statValue10,
     };
-    for (var i = 0; i < 10; i++) {
-      result['stat_type${i + 1}'] = statTypes[i];
-      result['stat_value${i + 1}'] = statValues[i];
-    }
 
     // --- 抗性 ---
     result['holy_res'] = holyRes;
@@ -477,15 +667,41 @@ class ItemTemplateEntity {
     result['arcane_res'] = arcaneRes;
 
     // --- 法术效果（5 组）---
-    for (var i = 0; i < 5; i++) {
-      result['spellid_${i + 1}'] = spellIds[i];
-      result['spelltrigger_${i + 1}'] = spellTriggers[i];
-      result['spellcharges_${i + 1}'] = spellCharges[i];
-      result['spellppmRate_${i + 1}'] = spellPpmRates[i];
-      result['spellcooldown_${i + 1}'] = spellCooldowns[i];
-      result['spellcategory_${i + 1}'] = spellCategories[i];
-      result['spellcategorycooldown_${i + 1}'] = spellCategoryCooldowns[i];
-    }
+    result['spellid_1'] = spellId1;
+    result['spelltrigger_1'] = spellTrigger1;
+    result['spellcharges_1'] = spellCharges1;
+    result['spellppmRate_1'] = spellPpmRate1;
+    result['spellcooldown_1'] = spellCooldown1;
+    result['spellcategory_1'] = spellCategory1;
+    result['spellcategorycooldown_1'] = spellCategoryCooldown1;
+    result['spellid_2'] = spellId2;
+    result['spelltrigger_2'] = spellTrigger2;
+    result['spellcharges_2'] = spellCharges2;
+    result['spellppmRate_2'] = spellPpmRate2;
+    result['spellcooldown_2'] = spellCooldown2;
+    result['spellcategory_2'] = spellCategory2;
+    result['spellcategorycooldown_2'] = spellCategoryCooldown2;
+    result['spellid_3'] = spellId3;
+    result['spelltrigger_3'] = spellTrigger3;
+    result['spellcharges_3'] = spellCharges3;
+    result['spellppmRate_3'] = spellPpmRate3;
+    result['spellcooldown_3'] = spellCooldown3;
+    result['spellcategory_3'] = spellCategory3;
+    result['spellcategorycooldown_3'] = spellCategoryCooldown3;
+    result['spellid_4'] = spellId4;
+    result['spelltrigger_4'] = spellTrigger4;
+    result['spellcharges_4'] = spellCharges4;
+    result['spellppmRate_4'] = spellPpmRate4;
+    result['spellcooldown_4'] = spellCooldown4;
+    result['spellcategory_4'] = spellCategory4;
+    result['spellcategorycooldown_4'] = spellCategoryCooldown4;
+    result['spellid_5'] = spellId5;
+    result['spelltrigger_5'] = spellTrigger5;
+    result['spellcharges_5'] = spellCharges5;
+    result['spellppmRate_5'] = spellPpmRate5;
+    result['spellcooldown_5'] = spellCooldown5;
+    result['spellcategory_5'] = spellCategory5;
+    result['spellcategorycooldown_5'] = spellCategoryCooldown5;
 
     // --- 使用限制 ---
     result['AllowableClass'] = allowableClass;
@@ -510,10 +726,12 @@ class ItemTemplateEntity {
     result['lockid'] = lockid;
     result['GemProperties'] = gemProperties;
     result['socketBonus'] = socketBonus;
-    for (var i = 0; i < 3; i++) {
-      result['socketColor_${i + 1}'] = socketColors[i];
-      result['socketContent_${i + 1}'] = socketContents[i];
-    }
+    result['socketColor_1'] = socketColor1;
+    result['socketContent_1'] = socketContent1;
+    result['socketColor_2'] = socketColor2;
+    result['socketContent_2'] = socketContent2;
+    result['socketColor_3'] = socketColor3;
+    result['socketContent_3'] = socketContent3;
 
     // --- 书页信息 ---
     result['PageText'] = pageText;
@@ -525,6 +743,117 @@ class ItemTemplateEntity {
     result['VerifiedBuild'] = verifiedBuild;
 
     return result;
+  }
+
+  void validate() {
+    if (quality < 0 || quality > 7) {
+      throw ArgumentError.value(quality, 'Quality', '必须在 0 到 7 之间');
+    }
+    if (buyCount <= 0) {
+      throw ArgumentError.value(buyCount, 'BuyCount', '必须大于 0');
+    }
+    if (maxcount < -1) {
+      throw ArgumentError.value(maxcount, 'maxcount', '最小特殊值为 -1');
+    }
+    if (stackable < -1 || stackable == 0) {
+      throw ArgumentError.value(stackable, 'stackable', '只允许 -1 或正整数');
+    }
+    if (containerSlots < 0 || containerSlots > 36) {
+      throw ArgumentError.value(
+        containerSlots,
+        'ContainerSlots',
+        '必须在 0 到 36 之间',
+      );
+    }
+    if (randomProperty != 0 && randomSuffix != 0) {
+      throw ArgumentError('RandomProperty 与 RandomSuffix 只能设置一个');
+    }
+    if (minMoneyLoot > maxMoneyLoot) {
+      throw ArgumentError('minMoneyLoot 不能大于 maxMoneyLoot');
+    }
+    _validateStatType(statType1, statValue1, 'stat_type1');
+    _validateStatType(statType2, statValue2, 'stat_type2');
+    _validateStatType(statType3, statValue3, 'stat_type3');
+    _validateStatType(statType4, statValue4, 'stat_type4');
+    _validateStatType(statType5, statValue5, 'stat_type5');
+    _validateStatType(statType6, statValue6, 'stat_type6');
+    _validateStatType(statType7, statValue7, 'stat_type7');
+    _validateStatType(statType8, statValue8, 'stat_type8');
+    _validateStatType(statType9, statValue9, 'stat_type9');
+    _validateStatType(statType10, statValue10, 'stat_type10');
+    if (dmgType1 < 0 || dmgType1 > 6) {
+      throw ArgumentError('dmg_type1 必须在 0 到 6 之间');
+    }
+    if (dmgType2 < 0 || dmgType2 > 6) {
+      throw ArgumentError('dmg_type2 必须在 0 到 6 之间');
+    }
+    _validateSpellTrigger(spellTrigger1, 'spelltrigger_1');
+    _validateSpellTrigger(spellTrigger2, 'spelltrigger_2');
+    _validateSpellTrigger(spellTrigger3, 'spelltrigger_3');
+    _validateSpellTrigger(spellTrigger4, 'spelltrigger_4');
+    _validateSpellTrigger(spellTrigger5, 'spelltrigger_5');
+    final specialLearning = spellId1 == 483 || spellId1 == 55884;
+    if (specialLearning) {
+      if (spellTrigger1 != 0 ||
+          spellTrigger2 != 6 ||
+          spellId2 == 0 ||
+          spellId3 != 0 ||
+          spellId4 != 0 ||
+          spellId5 != 0 ||
+          spellTrigger3 != 0 ||
+          spellTrigger4 != 0 ||
+          spellTrigger5 != 0) {
+        throw ArgumentError('特殊学习物品必须使用 AzerothCore 的 spell_1/spell_2 格式');
+      }
+    } else if (spellTrigger1 == 6 ||
+        spellTrigger2 == 6 ||
+        spellTrigger3 == 6 ||
+        spellTrigger4 == 6 ||
+        spellTrigger5 == 6 ||
+        spellId2 == 483 ||
+        spellId3 == 483 ||
+        spellId4 == 483 ||
+        spellId5 == 483 ||
+        spellId2 == 55884 ||
+        spellId3 == 55884 ||
+        spellId4 == 55884 ||
+        spellId5 == 55884) {
+      throw ArgumentError('学习触发类型 6 仅允许用于特殊学习物品格式');
+    }
+    if (bonding < 0 || bonding > 5) {
+      throw ArgumentError.value(bonding, 'bonding', '必须在 0 到 5 之间');
+    }
+    if (requiredReputationRank < 0 || requiredReputationRank > 7) {
+      throw ArgumentError.value(
+        requiredReputationRank,
+        'RequiredReputationRank',
+        '必须在 0 到 7 之间',
+      );
+    }
+    _validateSocketColor(socketColor1, 'socketColor_1');
+    _validateSocketColor(socketColor2, 'socketColor_2');
+    _validateSocketColor(socketColor3, 'socketColor_3');
+    if ((flagsCustom & 1) != 0 && duration == 0) {
+      throw ArgumentError('启用离线计时标志时 duration 必须大于 0');
+    }
+  }
+
+  void _validateStatType(int type, int value, String column) {
+    if (value != 0 && (type < 0 || type >= 49)) {
+      throw ArgumentError('$column 必须在 0 到 48 之间');
+    }
+  }
+
+  void _validateSpellTrigger(int trigger, String column) {
+    if (!const {0, 1, 2, 4, 5, 6}.contains(trigger)) {
+      throw ArgumentError('$column 不是有效触发类型');
+    }
+  }
+
+  void _validateSocketColor(int color, String column) {
+    if ((color & ~0x0F) != 0) {
+      throw ArgumentError('$column 包含无效颜色位');
+    }
   }
 
   ItemTemplateEntity copyWith({
@@ -565,7 +894,7 @@ class ItemTemplateEntity {
     int? flagsExtra,
     int? flagsCustom,
     int? delay,
-    int? rangedModRange,
+    double? rangedModRange,
     double? armorDamageModifier,
     int? dmgType1,
     double? dmgMin1,
@@ -578,22 +907,67 @@ class ItemTemplateEntity {
     int? block,
     int? scalingStatDistribution,
     int? scalingStatValue,
-    int? statsCount,
-    List<int>? statTypes,
-    List<int>? statValues,
+    int? statType1,
+    int? statValue1,
+    int? statType2,
+    int? statValue2,
+    int? statType3,
+    int? statValue3,
+    int? statType4,
+    int? statValue4,
+    int? statType5,
+    int? statValue5,
+    int? statType6,
+    int? statValue6,
+    int? statType7,
+    int? statValue7,
+    int? statType8,
+    int? statValue8,
+    int? statType9,
+    int? statValue9,
+    int? statType10,
+    int? statValue10,
     int? holyRes,
     int? fireRes,
     int? natureRes,
     int? shadowRes,
     int? frostRes,
     int? arcaneRes,
-    List<int>? spellIds,
-    List<int>? spellTriggers,
-    List<int>? spellCharges,
-    List<double>? spellPpmRates,
-    List<int>? spellCooldowns,
-    List<int>? spellCategories,
-    List<int>? spellCategoryCooldowns,
+    int? spellId1,
+    int? spellTrigger1,
+    int? spellCharges1,
+    double? spellPpmRate1,
+    int? spellCooldown1,
+    int? spellCategory1,
+    int? spellCategoryCooldown1,
+    int? spellId2,
+    int? spellTrigger2,
+    int? spellCharges2,
+    double? spellPpmRate2,
+    int? spellCooldown2,
+    int? spellCategory2,
+    int? spellCategoryCooldown2,
+    int? spellId3,
+    int? spellTrigger3,
+    int? spellCharges3,
+    double? spellPpmRate3,
+    int? spellCooldown3,
+    int? spellCategory3,
+    int? spellCategoryCooldown3,
+    int? spellId4,
+    int? spellTrigger4,
+    int? spellCharges4,
+    double? spellPpmRate4,
+    int? spellCooldown4,
+    int? spellCategory4,
+    int? spellCategoryCooldown4,
+    int? spellId5,
+    int? spellTrigger5,
+    int? spellCharges5,
+    double? spellPpmRate5,
+    int? spellCooldown5,
+    int? spellCategory5,
+    int? spellCategoryCooldown5,
     int? allowableClass,
     int? allowableRace,
     int? itemLevel,
@@ -612,8 +986,12 @@ class ItemTemplateEntity {
     int? lockid,
     int? gemProperties,
     int? socketBonus,
-    List<int>? socketColors,
-    List<int>? socketContents,
+    int? socketColor1,
+    int? socketContent1,
+    int? socketColor2,
+    int? socketContent2,
+    int? socketColor3,
+    int? socketContent3,
     String? inventoryIcon,
     int? pageText,
     int? pageMaterial,
@@ -674,23 +1052,72 @@ class ItemTemplateEntity {
       scalingStatDistribution:
           scalingStatDistribution ?? this.scalingStatDistribution,
       scalingStatValue: scalingStatValue ?? this.scalingStatValue,
-      statsCount: statsCount ?? this.statsCount,
-      statTypes: statTypes ?? this.statTypes,
-      statValues: statValues ?? this.statValues,
+      statType1: statType1 ?? this.statType1,
+      statValue1: statValue1 ?? this.statValue1,
+      statType2: statType2 ?? this.statType2,
+      statValue2: statValue2 ?? this.statValue2,
+      statType3: statType3 ?? this.statType3,
+      statValue3: statValue3 ?? this.statValue3,
+      statType4: statType4 ?? this.statType4,
+      statValue4: statValue4 ?? this.statValue4,
+      statType5: statType5 ?? this.statType5,
+      statValue5: statValue5 ?? this.statValue5,
+      statType6: statType6 ?? this.statType6,
+      statValue6: statValue6 ?? this.statValue6,
+      statType7: statType7 ?? this.statType7,
+      statValue7: statValue7 ?? this.statValue7,
+      statType8: statType8 ?? this.statType8,
+      statValue8: statValue8 ?? this.statValue8,
+      statType9: statType9 ?? this.statType9,
+      statValue9: statValue9 ?? this.statValue9,
+      statType10: statType10 ?? this.statType10,
+      statValue10: statValue10 ?? this.statValue10,
       holyRes: holyRes ?? this.holyRes,
       fireRes: fireRes ?? this.fireRes,
       natureRes: natureRes ?? this.natureRes,
       shadowRes: shadowRes ?? this.shadowRes,
       frostRes: frostRes ?? this.frostRes,
       arcaneRes: arcaneRes ?? this.arcaneRes,
-      spellIds: spellIds ?? this.spellIds,
-      spellTriggers: spellTriggers ?? this.spellTriggers,
-      spellCharges: spellCharges ?? this.spellCharges,
-      spellPpmRates: spellPpmRates ?? this.spellPpmRates,
-      spellCooldowns: spellCooldowns ?? this.spellCooldowns,
-      spellCategories: spellCategories ?? this.spellCategories,
-      spellCategoryCooldowns:
-          spellCategoryCooldowns ?? this.spellCategoryCooldowns,
+      spellId1: spellId1 ?? this.spellId1,
+      spellTrigger1: spellTrigger1 ?? this.spellTrigger1,
+      spellCharges1: spellCharges1 ?? this.spellCharges1,
+      spellPpmRate1: spellPpmRate1 ?? this.spellPpmRate1,
+      spellCooldown1: spellCooldown1 ?? this.spellCooldown1,
+      spellCategory1: spellCategory1 ?? this.spellCategory1,
+      spellCategoryCooldown1:
+          spellCategoryCooldown1 ?? this.spellCategoryCooldown1,
+      spellId2: spellId2 ?? this.spellId2,
+      spellTrigger2: spellTrigger2 ?? this.spellTrigger2,
+      spellCharges2: spellCharges2 ?? this.spellCharges2,
+      spellPpmRate2: spellPpmRate2 ?? this.spellPpmRate2,
+      spellCooldown2: spellCooldown2 ?? this.spellCooldown2,
+      spellCategory2: spellCategory2 ?? this.spellCategory2,
+      spellCategoryCooldown2:
+          spellCategoryCooldown2 ?? this.spellCategoryCooldown2,
+      spellId3: spellId3 ?? this.spellId3,
+      spellTrigger3: spellTrigger3 ?? this.spellTrigger3,
+      spellCharges3: spellCharges3 ?? this.spellCharges3,
+      spellPpmRate3: spellPpmRate3 ?? this.spellPpmRate3,
+      spellCooldown3: spellCooldown3 ?? this.spellCooldown3,
+      spellCategory3: spellCategory3 ?? this.spellCategory3,
+      spellCategoryCooldown3:
+          spellCategoryCooldown3 ?? this.spellCategoryCooldown3,
+      spellId4: spellId4 ?? this.spellId4,
+      spellTrigger4: spellTrigger4 ?? this.spellTrigger4,
+      spellCharges4: spellCharges4 ?? this.spellCharges4,
+      spellPpmRate4: spellPpmRate4 ?? this.spellPpmRate4,
+      spellCooldown4: spellCooldown4 ?? this.spellCooldown4,
+      spellCategory4: spellCategory4 ?? this.spellCategory4,
+      spellCategoryCooldown4:
+          spellCategoryCooldown4 ?? this.spellCategoryCooldown4,
+      spellId5: spellId5 ?? this.spellId5,
+      spellTrigger5: spellTrigger5 ?? this.spellTrigger5,
+      spellCharges5: spellCharges5 ?? this.spellCharges5,
+      spellPpmRate5: spellPpmRate5 ?? this.spellPpmRate5,
+      spellCooldown5: spellCooldown5 ?? this.spellCooldown5,
+      spellCategory5: spellCategory5 ?? this.spellCategory5,
+      spellCategoryCooldown5:
+          spellCategoryCooldown5 ?? this.spellCategoryCooldown5,
       allowableClass: allowableClass ?? this.allowableClass,
       allowableRace: allowableRace ?? this.allowableRace,
       itemLevel: itemLevel ?? this.itemLevel,
@@ -712,8 +1139,12 @@ class ItemTemplateEntity {
       lockid: lockid ?? this.lockid,
       gemProperties: gemProperties ?? this.gemProperties,
       socketBonus: socketBonus ?? this.socketBonus,
-      socketColors: socketColors ?? this.socketColors,
-      socketContents: socketContents ?? this.socketContents,
+      socketColor1: socketColor1 ?? this.socketColor1,
+      socketContent1: socketContent1 ?? this.socketContent1,
+      socketColor2: socketColor2 ?? this.socketColor2,
+      socketContent2: socketContent2 ?? this.socketContent2,
+      socketColor3: socketColor3 ?? this.socketColor3,
+      socketContent3: socketContent3 ?? this.socketContent3,
       inventoryIcon: inventoryIcon ?? this.inventoryIcon,
       pageText: pageText ?? this.pageText,
       pageMaterial: pageMaterial ?? this.pageMaterial,

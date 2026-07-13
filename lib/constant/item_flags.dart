@@ -5,66 +5,74 @@ import 'package:foxy/constant/creature_flags.dart';
 
 /// Item Flags 物品标识选项
 const kItemFlagOptions = [
-  FlagItem(1, '未知'), // Unknown
+  FlagItem(1, '不可拾取'),
   FlagItem(2, '魔法制造'), // Conjured
-  FlagItem(4, '可打开的'), // Openable
-  FlagItem(8, '英雄等级'), // Heroic
+  FlagItem(4, '包含掉落'),
+  FlagItem(8, '英雄提示'),
   FlagItem(16, '废弃物品'), // Deprecated
   FlagItem(32, '无法摧毁'), // Indestructible
-  FlagItem(64, '未知'), // Unknown
-  FlagItem(128, '无冷却'), // No Cooldown
-  FlagItem(256, '未知'), // Unknown
+  FlagItem(64, '玩家可施法'),
+  FlagItem(128, '无装备冷却'),
+  FlagItem(256, '多次任务拾取'),
   FlagItem(512, '包裹'), // Wrapper
-  FlagItem(1024, '未知'), // Unknown
-  FlagItem(2048, '部分掉落'), // Party Loot
-  FlagItem(4096, '可退还'), // Refundable
-  FlagItem(8192, '登记表'), // Charter
-  FlagItem(16384, '可读物品'), // Readable
-  FlagItem(32768, '未知'), // Unknown
-  FlagItem(65536, '未知'), // Unknown
-  FlagItem(131072, '未知'), // Unknown
+  FlagItem(1024, '使用资源'),
+  FlagItem(2048, '多次掉落'),
+  FlagItem(4096, '购买记录'),
+  FlagItem(8192, '请愿书'),
+  FlagItem(16384, '包含文本'),
+  FlagItem(32768, '不可分解'),
+  FlagItem(65536, '实时持续时间'),
+  FlagItem(131072, '不记录制造者'),
   FlagItem(262144, '可勘探/选矿掉落'), // Prospectable
   FlagItem(524288, '装备唯一'), // Unique Equip
-  FlagItem(1048576, '未知'), // Unknown
+  FlagItem(1048576, '光环忽略'),
   FlagItem(2097152, '竞技场可用'), // Arena
-  FlagItem(4194304, '异常'), // Throwable
+  FlagItem(4194304, '无耐久损失'),
   FlagItem(8388608, '变形时可用'), // Shapeshift
-  FlagItem(16777216, '未知'), // Unknown
-  FlagItem(33554432, '职业配方'), // Profession Recipe
+  FlagItem(16777216, '任务发光'),
+  FlagItem(33554432, '隐藏不可用配方'),
   FlagItem(67108864, '竞技场不可用'), // Not in Arena
   FlagItem(134217728, '账号绑定'), // Account Bound
-  FlagItem(268435456, '触发标志'), // Triggered
+  FlagItem(268435456, '施法不消耗材料'),
   FlagItem(536870912, '研磨掉落'), // Millable
-  FlagItem(1073741824, '未知'), // Unknown
-  FlagItem(2147483648, '拾取绑定可交易'), // Upgradable
+  FlagItem(1073741824, '报告到公会频道'),
+  FlagItem(2147483648, '禁用渐进掉落'),
 ];
 
 /// Item FlagsExtra 额外标识选项
 const kItemFlagsExtraOptions = [
   FlagItem(1, '部落'), // Horde
   FlagItem(2, '联盟'), // Alliance
-  FlagItem(4, '附带金钱'), // Extra Gold
-  FlagItem(8, '未知'), // Unknown
-  FlagItem(16, '未知'), // Unknown
-  FlagItem(32, '未知'), // Unknown
-  FlagItem(64, '未知'), // Unknown
-  FlagItem(128, '未知'), // Unknown
-  FlagItem(256, '不用roll点'), // No Roll
-  FlagItem(512, '取消roll点'), // Cancel Roll
-  FlagItem(1024, '未知'), // Unknown
-  FlagItem(2048, '未知'), // Unknown
-  FlagItem(4096, '未知'), // Unknown
-  FlagItem(8192, '未知'), // Unknown
-  FlagItem(16384, '普通标价'), // Normal Price
-  FlagItem(32768, '未知'), // Unknown
-  FlagItem(65536, '未知'), // Unknown
-  FlagItem(131072, '账号绑定'), // Account Bound
-  FlagItem(262144, '未知'), // Unknown
-  FlagItem(524288, '未知'), // Unknown
-  FlagItem(1048576, '未知'), // Unknown
-  FlagItem(2097152, '不能被变形'), // Cannot Transmog
-  FlagItem(4194304, '不能变形'), // Cannot Transmog Destination
-  FlagItem(8388608, '可以变形'), // Can Transmog
+  FlagItem(4, '扩展价格仍需金币'),
+  FlagItem(8, '按施法物品分类'),
+  FlagItem(16, '按物理物品分类'),
+  FlagItem(32, '所有人可需求'),
+  FlagItem(64, '拾取绑定不可交易'),
+  FlagItem(128, '拾取绑定可交易'),
+  FlagItem(256, '只能贪婪'),
+  FlagItem(512, '施法武器'),
+  FlagItem(1024, '登录时删除'),
+  FlagItem(2048, '内部物品'),
+  FlagItem(4096, '无商店价值'),
+  FlagItem(8192, '发现前显示'),
+  FlagItem(16384, '覆盖金币花费'),
+  FlagItem(32768, '忽略评级战场默认限制'),
+  FlagItem(65536, '评级战场不可用'),
+  FlagItem(131072, '战网账号可交易'),
+  FlagItem(262144, '使用前确认'),
+  FlagItem(524288, '变换时重新判断绑定'),
+  FlagItem(1048576, '充能耗尽时不变换'),
+  FlagItem(2097152, '不改变物品外观'),
+  FlagItem(4194304, '不能作为外观来源'),
+  FlagItem(8388608, '外观来源忽略品质'),
+  FlagItem(16777216, '无耐久'),
+  FlagItem(33554432, '坦克角色'),
+  FlagItem(67108864, '治疗角色'),
+  FlagItem(134217728, '伤害角色'),
+  FlagItem(268435456, '挑战模式可掉落'),
+  FlagItem(536870912, '掉落界面不堆叠'),
+  FlagItem(1073741824, '分解到掉落模板'),
+  FlagItem(2147483648, '用于专业技能'),
 ];
 
 /// Item flagsCustom 自定义标识选项
@@ -146,4 +154,12 @@ const kItemScalingStatValueOptions = [
   FlagItem(1048576, '皮甲护甲'), // Leather Armor
   FlagItem(2097152, '锁甲护甲'), // Mail Armor
   FlagItem(4194304, '板甲护甲'), // Plate Armor
+];
+
+/// SocketColor 是位掩码，服务端允许四种颜色的任意组合。
+const kItemSocketColorFlagOptions = [
+  FlagItem(1, '多彩'),
+  FlagItem(2, '红色'),
+  FlagItem(4, '黄色'),
+  FlagItem(8, '蓝色'),
 ];

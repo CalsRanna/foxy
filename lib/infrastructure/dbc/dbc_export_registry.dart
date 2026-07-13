@@ -13,8 +13,11 @@ import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
+import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
+import 'package:foxy/repository/item_bag_family_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -32,6 +35,7 @@ import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -125,8 +129,11 @@ class DbcExportRegistry {
     final emoteText = getIt.get<EmoteTextRepository>();
     final gemProperty = getIt.get<GemPropertyRepository>();
     final glyphProperty = getIt.get<GlyphPropertyRepository>();
+    final holiday = getIt.get<HolidayRepository>();
     final itemDisplayInfo = getIt.get<ItemDisplayInfoRepository>();
+    final itemBagFamily = getIt.get<ItemBagFamilyRepository>();
     final itemExtendedCost = getIt.get<ItemExtendedCostRepository>();
+    final itemLimitCategory = getIt.get<ItemLimitCategoryRepository>();
     final itemRandomProperties = getIt.get<ItemRandomPropertiesRepository>();
     final itemRandomSuffix = getIt.get<ItemRandomSuffixRepository>();
     final itemSet = getIt.get<ItemSetRepository>();
@@ -146,6 +153,7 @@ class DbcExportRegistry {
         .get<SpellItemEnchantmentSoloRepository>();
     final spellRange = getIt.get<SpellRangeRepository>();
     final talent = getIt.get<TalentRepository>();
+    final totemCategory = getIt.get<TotemCategoryRepository>();
     final vehicle = getIt.get<VehicleRepository>();
 
     return {
@@ -219,6 +227,11 @@ class DbcExportRegistry {
         count: () => glyphProperty.countGlyphProperties(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_holidays': DbcExportDelegate.typed(
+        load: holiday.getHolidays,
+        count: () => holiday.countHolidays(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_item_display_info': DbcExportDelegate.typed(
         load: itemDisplayInfo.getItemDisplayInfos,
         count: () => itemDisplayInfo.countItemDisplayInfos(),
@@ -229,9 +242,19 @@ class DbcExportRegistry {
         count: () => dbcItem.countDbcItems(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_item_bag_family': DbcExportDelegate.typed(
+        load: itemBagFamily.getItemBagFamilies,
+        count: itemBagFamily.countItemBagFamilies,
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_item_extended_cost': DbcExportDelegate.typed(
         load: itemExtendedCost.getItemExtendedCosts,
         count: () => itemExtendedCost.countItemExtendedCosts(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_item_limit_category': DbcExportDelegate.typed(
+        load: itemLimitCategory.getItemLimitCategories,
+        count: () => itemLimitCategory.countItemLimitCategories(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_item_random_properties': DbcExportDelegate.typed(
@@ -317,6 +340,11 @@ class DbcExportRegistry {
       'dbc_talent': DbcExportDelegate.typed(
         load: talent.getTalents,
         count: () => talent.countTalents(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_totem_category': DbcExportDelegate.typed(
+        load: totemCategory.getTotemCategories,
+        count: () => totemCategory.countTotemCategories(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_vehicle': DbcExportDelegate.typed(

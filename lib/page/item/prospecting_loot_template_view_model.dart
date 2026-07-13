@@ -26,7 +26,7 @@ class ProspectingLootTemplateViewModel with FieldControllerMixin {
   late final questRequiredController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final lootModeController = registerController(IntFieldController());
+  late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());
   late final minCountController = registerController(IntFieldController());
   late final maxCountController = registerController(IntFieldController());
@@ -82,18 +82,19 @@ class ProspectingLootTemplateViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> create() async {
+  bool create() {
     try {
-      final nextItem = await repository.getNextItemId(entry.value);
+      if (entry.value == 0) throw StateError('父模板 ID 不能为 0');
       resetForm();
-      itemController.init(nextItem);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
       editingItem = null;
+      return true;
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
+      return false;
     }
   }
 
@@ -106,24 +107,6 @@ class ProspectingLootTemplateViewModel with FieldControllerMixin {
     editing.value = true;
     creating.value = false;
     editingItem = loot.item;
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
-    try {
-      await repository.copyLootTemplate(loot.entry, loot.item);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {

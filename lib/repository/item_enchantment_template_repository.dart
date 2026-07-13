@@ -5,14 +5,21 @@ import 'package:laconic/laconic.dart';
 
 class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
+  static const primaryKeyColumns = {'entry', 'ench'};
+
+  static String dbcTableFor(ItemEnchantmentKind kind) =>
+      kind == ItemEnchantmentKind.randomProperty
+      ? 'foxy.dbc_item_random_properties'
+      : 'foxy.dbc_item_random_suffix';
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
   getBriefItemEnchantmentTemplates({
     ItemEnchantmentTemplateFilterEntity? filter,
     int page = 1,
+    ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
     var offset = (page - 1) * kPageSize;
-    var builder = _briefBuilder();
+    var builder = _briefBuilder(kind);
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('entry').orderBy('ench');
     builder = builder.limit(kPageSize).offset(offset);
@@ -23,8 +30,11 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
-  getBriefItemEnchantmentTemplatesByEntry(int entry) async {
-    var builder = _briefBuilder();
+  getBriefItemEnchantmentTemplatesByEntry(
+    int entry, {
+    required ItemEnchantmentKind kind,
+  }) async {
+    var builder = _briefBuilder(kind);
     builder = builder.where('iet.entry', entry);
     var results = await builder.get();
     return results
@@ -34,16 +44,63 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
 
   Future<int> countItemEnchantmentTemplates({
     ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
-    // Keep join + whereNotNull so count matches brief rows (valid ench only).
     var builder = laconic.table('$_table AS iet');
+    final dbcTable = dbcTableFor(kind);
     builder = builder.leftJoin(
-      'foxy.dbc_item_random_properties AS dirp',
-      (join) => join.on('iet.ench', 'dirp.ID'),
+      '$dbcTable AS random_ench',
+      (join) => join.on('iet.ench', 'random_ench.ID'),
     );
-    builder = builder.whereNotNull('dirp.ID');
+    builder = builder.whereNotNull('random_ench.ID');
     builder = _applyFilter(builder, filter);
     return builder.count();
+  }
+
+  Future<List<BriefItemEnchantmentTemplateEntity>>
+  getBriefItemEnchantmentGroups({
+    required ItemEnchantmentKind kind,
+    ItemEnchantmentTemplateFilterEntity? filter,
+    int page = 1,
+  }) async {
+    final dbcTable = dbcTableFor(kind);
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.select([
+      'iet.entry',
+      'COUNT(*) AS ItemCount',
+      "'${kind.name}' AS kind",
+    ]);
+    builder = builder.leftJoin(
+      '$dbcTable AS random_ench',
+      (join) => join.on('iet.ench', 'random_ench.ID'),
+    );
+    builder = builder.whereNotNull('random_ench.ID');
+    builder = _applyFilter(builder, filter);
+    builder = builder
+        .groupBy('iet.entry')
+        .orderBy('iet.entry')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize);
+    final rows = await builder.get();
+    return rows
+        .map((row) => BriefItemEnchantmentTemplateEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<int> countItemEnchantmentGroups({
+    required ItemEnchantmentKind kind,
+    ItemEnchantmentTemplateFilterEntity? filter,
+  }) async {
+    final dbcTable = dbcTableFor(kind);
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.select(['iet.entry']);
+    builder = builder.leftJoin(
+      '$dbcTable AS random_ench',
+      (join) => join.on('iet.ench', 'random_ench.ID'),
+    );
+    builder = builder.whereNotNull('random_ench.ID');
+    builder = _applyFilter(builder, filter).groupBy('iet.entry');
+    return (await builder.get()).length;
   }
 
   Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
@@ -69,6 +126,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   Future<void> storeItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity model,
   ) async {
+    model.validate();
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -77,9 +135,10 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     int ench,
     ItemEnchantmentTemplateEntity model,
   ) async {
+    model.validate();
     var json = model.toJson();
     json.remove('entry');
-    // allow ench change in payload
+    json.remove('ench');
     await laconic
         .table(_table)
         .where('entry', entry)
@@ -95,23 +154,10 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<void> copyItemEnchantmentTemplate(int entry, int ench) async {
-    var source = await getItemEnchantmentTemplate(entry, ench);
-    if (source == null) return;
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(ench) AS maxEnch'])
-        .where('entry', entry)
-        .first();
-    var maxEnch = (maxResult.toMap()['maxEnch'] ?? 0) as int;
-    var json = source.toJson();
-    json['ench'] = maxEnch + 1;
-    await laconic.table(_table).insert([json]);
-  }
-
   Future<void> saveItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity model,
   ) async {
+    model.validate();
     var existing = await getItemEnchantmentTemplate(model.entry, model.ench);
     if (existing != null) {
       await updateItemEnchantmentTemplate(model.entry, model.ench, model);
@@ -120,14 +166,14 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _briefBuilder() {
+  QueryBuilder _briefBuilder(ItemEnchantmentKind kind) {
     var builder = laconic.table('$_table AS iet');
+    final dbcTable = dbcTableFor(kind);
     builder = builder.select([
       'iet.entry',
       'iet.ench',
       'iet.chance',
-      'dirp.Name_lang_zhCN',
-      'dirp.Name',
+      'random_ench.Name_lang_zhCN',
       'dsie_1.Name_lang_zhCN AS Enchantment_1',
       'dsie_2.Name_lang_zhCN AS Enchantment_2',
       'dsie_3.Name_lang_zhCN AS Enchantment_3',
@@ -135,30 +181,30 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       'dsie_5.Name_lang_zhCN AS Enchantment_5',
     ]);
     builder = builder.leftJoin(
-      'foxy.dbc_item_random_properties AS dirp',
-      (join) => join.on('iet.ench', 'dirp.ID'),
+      '$dbcTable AS random_ench',
+      (join) => join.on('iet.ench', 'random_ench.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment AS dsie_1',
-      (join) => join.on('dirp.Enchantment_1', 'dsie_1.ID'),
+      (join) => join.on('random_ench.Enchantment_1', 'dsie_1.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment AS dsie_2',
-      (join) => join.on('dirp.Enchantment_2', 'dsie_2.ID'),
+      (join) => join.on('random_ench.Enchantment_2', 'dsie_2.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment AS dsie_3',
-      (join) => join.on('dirp.Enchantment_3', 'dsie_3.ID'),
+      (join) => join.on('random_ench.Enchantment_3', 'dsie_3.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment AS dsie_4',
-      (join) => join.on('dirp.Enchantment_4', 'dsie_4.ID'),
+      (join) => join.on('random_ench.Enchantment_4', 'dsie_4.ID'),
     );
     builder = builder.leftJoin(
       'foxy.dbc_spell_item_enchantment AS dsie_5',
-      (join) => join.on('dirp.Enchantment_5', 'dsie_5.ID'),
+      (join) => join.on('random_ench.Enchantment_5', 'dsie_5.ID'),
     );
-    builder = builder.whereNotNull('dirp.ID');
+    builder = builder.whereNotNull('random_ench.ID');
     return builder;
   }
 

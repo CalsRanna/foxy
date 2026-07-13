@@ -65,11 +65,25 @@ class DbcLocaleFields {
     label: '随机属性名称',
   );
 
+  // --- item_bag_family ---
+  static final itemBagFamilyName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_item_bag_family',
+    columnPrefix: 'Name_lang',
+    label: '背包类别名称',
+  );
+
   // --- item_random_suffix ---
   static final itemRandomSuffixName = DbcLocaleFieldDefinition(
     tableName: 'dbc_item_random_suffix',
     columnPrefix: 'Name_lang',
     label: '随机后缀名称',
+  );
+
+  // --- item_limit_category ---
+  static final itemLimitCategoryName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_item_limit_category',
+    columnPrefix: 'Name_lang',
+    label: '限制类别名称',
   );
 
   // --- item_set ---
@@ -173,6 +187,13 @@ class DbcLocaleFields {
     label: '备选动词',
   );
 
+  // --- totem_category ---
+  static final totemCategoryName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_totem_category',
+    columnPrefix: 'Name_lang',
+    label: '图腾类别名称',
+  );
+
   /// 全部已注册字段，供覆盖完整性测试使用。
   static final List<DbcLocaleFieldDefinition> all = [
     achievementTitle,
@@ -183,8 +204,10 @@ class DbcLocaleFields {
     charTitlesName1,
     factionName,
     factionDescription,
+    itemBagFamilyName,
     itemRandomPropertiesName,
     itemRandomSuffixName,
+    itemLimitCategoryName,
     itemSetName,
     mapMapName,
     mapMapDescription0,
@@ -201,5 +224,6 @@ class DbcLocaleFields {
     skillLineDisplayName,
     skillLineDescription,
     skillLineAlternateVerb,
+    totemCategoryName,
   ];
 }

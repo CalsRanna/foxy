@@ -28,16 +28,24 @@ import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
+import 'package:foxy/entity/gem_property_filter_entity.dart';
+import 'package:foxy/entity/holiday_entity.dart';
+import 'package:foxy/entity/holiday_filter_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_filter_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/item_limit_category_entity.dart';
+import 'package:foxy/entity/item_limit_category_filter_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_properties_filter_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
+import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/item_set_filter_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
@@ -62,8 +70,12 @@ import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
+import 'package:foxy/entity/totem_category_entity.dart';
+import 'package:foxy/entity/totem_category_filter_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
@@ -84,11 +96,15 @@ import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/repository/gem_property_repository.dart';
+import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
+import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -101,7 +117,9 @@ import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
+import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
@@ -149,6 +167,9 @@ class FoxyEntityPickerDelegates {
 
   static final _referenceLootRepository = LootTemplateRepository(
     LootTableType.reference,
+  );
+  static final _disenchantLootRepository = LootTemplateRepository(
+    LootTableType.disenchant,
   );
 
   static final referenceLoot =
@@ -803,6 +824,280 @@ class FoxyEntityPickerDelegates {
               filter: ItemEnchantmentTemplateFilterEntity(entry: v[0]),
             ),
       );
+
+  static final randomPropertyGroup = _itemEnchantmentGroupDelegate(
+    title: '随机属性组',
+    kind: ItemEnchantmentKind.randomProperty,
+  );
+
+  static final randomSuffixGroup = _itemEnchantmentGroupDelegate(
+    title: '随机后缀组',
+    kind: ItemEnchantmentKind.randomSuffix,
+  );
+
+  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
+  _itemEnchantmentGroupDelegate({
+    required String title,
+    required ItemEnchantmentKind kind,
+  }) => FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
+    title: title,
+    errorLabel: '搜索$title失败',
+    filters: const [FoxyEntityPickerFilter('组 ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '组 ID',
+        width: 160,
+        text: (BriefItemEnchantmentTemplateEntity row) => row.entry.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '有效附魔数',
+        text: (BriefItemEnchantmentTemplateEntity row) =>
+            row.itemCount.toString(),
+      ),
+    ],
+    idOf: (BriefItemEnchantmentTemplateEntity row) => row.entry,
+    fetch: (page, values) => GetIt.instance
+        .get<ItemEnchantmentTemplateRepository>()
+        .getBriefItemEnchantmentGroups(
+          kind: kind,
+          page: page,
+          filter: ItemEnchantmentTemplateFilterEntity(entry: values[0]),
+        ),
+    count: (values) => GetIt.instance
+        .get<ItemEnchantmentTemplateRepository>()
+        .countItemEnchantmentGroups(
+          kind: kind,
+          filter: ItemEnchantmentTemplateFilterEntity(entry: values[0]),
+        ),
+  );
+
+  static final itemSet = FoxyEntityPickerDelegate<BriefItemSetEntity>(
+    title: '物品套装',
+    errorLabel: '搜索物品套装失败',
+    filters: const [
+      FoxyEntityPickerFilter('套装 ID'),
+      FoxyEntityPickerFilter('名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: 'ID',
+        width: 120,
+        text: (BriefItemSetEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefItemSetEntity row) => row.nameLangZhCN,
+      ),
+    ],
+    idOf: (BriefItemSetEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<ItemSetRepository>().getBriefItemSets(
+          page: page,
+          filter: ItemSetFilterEntity(id: values[0], name: values[1]),
+        ),
+    count: (values) => GetIt.instance.get<ItemSetRepository>().countItemSets(
+      filter: ItemSetFilterEntity(id: values[0], name: values[1]),
+    ),
+  );
+
+  static final disenchantLoot =
+      FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
+        title: '分解掉落模板',
+        errorLabel: '搜索分解掉落模板失败',
+        filters: const [FoxyEntityPickerFilter('模板 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '模板 ID',
+            width: 160,
+            text: (BriefLootTemplateEntity row) => row.entry.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '掉落项数',
+            text: (BriefLootTemplateEntity row) => row.itemCount.toString(),
+          ),
+        ],
+        idOf: (BriefLootTemplateEntity row) => row.entry,
+        fetch: (page, values) =>
+            _disenchantLootRepository.getBriefLootTemplateEntries(
+              page: page,
+              filter: LootTemplateFilterEntity(entry: values[0]),
+            ),
+        count: (values) => _disenchantLootRepository.countLootTemplates(
+          filter: LootTemplateFilterEntity(entry: values[0]),
+        ),
+      );
+
+  static final gemProperty = FoxyEntityPickerDelegate<BriefGemPropertyEntity>(
+    title: '宝石属性',
+    errorLabel: '搜索宝石属性失败',
+    filters: const [FoxyEntityPickerFilter('ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: 'ID',
+        width: 120,
+        text: (BriefGemPropertyEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '附魔 ID',
+        text: (BriefGemPropertyEntity row) => row.enchantId.toString(),
+      ),
+    ],
+    idOf: (BriefGemPropertyEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<GemPropertyRepository>().getBriefGemProperties(
+          page: page,
+          filter: GemPropertyFilterEntity(id: values[0]),
+        ),
+    count: (values) => GetIt.instance
+        .get<GemPropertyRepository>()
+        .countGemProperties(filter: GemPropertyFilterEntity(id: values[0])),
+  );
+
+  static final spellItemEnchantment =
+      FoxyEntityPickerDelegate<BriefSpellItemEnchantmentEntity>(
+        title: '法术物品附魔',
+        errorLabel: '搜索法术物品附魔失败',
+        filters: const [
+          FoxyEntityPickerFilter('ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefSpellItemEnchantmentEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefSpellItemEnchantmentEntity row) => row.nameLangZhCN,
+          ),
+        ],
+        idOf: (BriefSpellItemEnchantmentEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<SpellItemEnchantmentSoloRepository>()
+            .getBriefSpellItemEnchantments(
+              page: page,
+              filter: SpellItemEnchantmentFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<SpellItemEnchantmentSoloRepository>()
+            .countSpellItemEnchantments(
+              filter: SpellItemEnchantmentFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
+
+  static final totemCategory =
+      FoxyEntityPickerDelegate<BriefTotemCategoryEntity>(
+        title: '图腾类别',
+        errorLabel: '搜索图腾类别失败',
+        filters: const [
+          FoxyEntityPickerFilter('ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefTotemCategoryEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefTotemCategoryEntity row) => row.name,
+          ),
+        ],
+        idOf: (BriefTotemCategoryEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<TotemCategoryRepository>()
+            .getBriefTotemCategories(
+              page: page,
+              filter: TotemCategoryFilterEntity(id: values[0], name: values[1]),
+            ),
+        count: (values) =>
+            GetIt.instance.get<TotemCategoryRepository>().countTotemCategories(
+              filter: TotemCategoryFilterEntity(id: values[0], name: values[1]),
+            ),
+      );
+
+  static final itemLimitCategory =
+      FoxyEntityPickerDelegate<BriefItemLimitCategoryEntity>(
+        title: '物品限制类别',
+        errorLabel: '搜索物品限制类别失败',
+        filters: const [
+          FoxyEntityPickerFilter('ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefItemLimitCategoryEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefItemLimitCategoryEntity row) => row.name,
+          ),
+          FoxyEntityPickerColumn(
+            header: '数量',
+            width: 100,
+            text: (BriefItemLimitCategoryEntity row) => row.quantity.toString(),
+          ),
+        ],
+        idOf: (BriefItemLimitCategoryEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<ItemLimitCategoryRepository>()
+            .getBriefItemLimitCategories(
+              page: page,
+              filter: ItemLimitCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<ItemLimitCategoryRepository>()
+            .countItemLimitCategories(
+              filter: ItemLimitCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
+
+  static final holiday = FoxyEntityPickerDelegate<BriefHolidayEntity>(
+    title: '节日',
+    errorLabel: '搜索节日失败',
+    filters: const [FoxyEntityPickerFilter('ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: 'ID',
+        width: 120,
+        text: (BriefHolidayEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称记录 ID',
+        width: 160,
+        text: (BriefHolidayEntity row) => row.holidayNameId.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '纹理',
+        text: (BriefHolidayEntity row) => row.textureFileName,
+      ),
+    ],
+    idOf: (BriefHolidayEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<HolidayRepository>().getBriefHolidays(
+          page: page,
+          filter: HolidayFilterEntity(id: values[0]),
+        ),
+    count: (values) => GetIt.instance.get<HolidayRepository>().countHolidays(
+      filter: HolidayFilterEntity(id: values[0]),
+    ),
+  );
 
   static final itemExtendedCost =
       FoxyEntityPickerDelegate<BriefItemExtendedCostEntity>(

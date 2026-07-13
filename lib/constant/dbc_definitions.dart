@@ -53,14 +53,23 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     tableName: 'dbc_glyph_properties',
     schema: Definitions.glyphProperties,
   ),
+  DbcDefinition(tableName: 'dbc_holidays', schema: Definitions.holidays),
   DbcDefinition(
     tableName: 'dbc_item_display_info',
     schema: Definitions.itemDisplayInfo,
   ),
   DbcDefinition(tableName: 'dbc_item', schema: Definitions.item),
   DbcDefinition(
+    tableName: 'dbc_item_bag_family',
+    schema: Definitions.itemBagFamily,
+  ),
+  DbcDefinition(
     tableName: 'dbc_item_extended_cost',
     schema: Definitions.itemExtendedCost,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_item_limit_category',
+    schema: Definitions.itemLimitCategory,
   ),
   DbcDefinition(
     tableName: 'dbc_item_random_properties',
@@ -100,6 +109,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
   DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),
   DbcDefinition(tableName: 'dbc_talent', schema: Definitions.talent),
+  DbcDefinition(
+    tableName: 'dbc_totem_category',
+    schema: Definitions.totemCategory,
+  ),
   DbcDefinition(tableName: 'dbc_vehicle', schema: Definitions.vehicle),
 ]);
 

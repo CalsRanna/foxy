@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -26,13 +27,14 @@ class DisenchantLootTemplateViewModel with FieldControllerMixin {
   late final questRequiredController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final lootModeController = registerController(IntFieldController());
+  late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());
   late final minCountController = registerController(IntFieldController());
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
   final repository = LootTemplateRepository(LootTableType.disenchant);
+  final itemRepository = GetIt.instance.get<ItemTemplateRepository>();
 
   Future<void> load() async {
     final data = await repository.getBriefLootTemplates(entry.value);
@@ -82,18 +84,19 @@ class DisenchantLootTemplateViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> create() async {
+  bool create() {
     try {
-      final nextItem = await repository.getNextItemId(entry.value);
+      if (entry.value == 0) throw StateError('父模板 ID 不能为 0');
       resetForm();
-      itemController.init(nextItem);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
       editingItem = null;
+      return true;
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
+      return false;
     }
   }
 
@@ -106,24 +109,6 @@ class DisenchantLootTemplateViewModel with FieldControllerMixin {
     editing.value = true;
     creating.value = false;
     editingItem = loot.item;
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
-    try {
-      await repository.copyLootTemplate(loot.entry, loot.item);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {
@@ -207,8 +192,9 @@ class DisenchantLootTemplateViewModel with FieldControllerMixin {
 
   Future<void> initSignals({required int itemId}) async {
     try {
-      entry.value = itemId;
-      entryController.init(itemId);
+      final template = await itemRepository.getItemTemplate(itemId);
+      entry.value = template?.disenchantId ?? 0;
+      entryController.init(entry.value);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
