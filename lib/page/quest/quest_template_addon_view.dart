@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_flags.dart';
+import 'package:foxy/constant/quest_flags.dart';
 import 'package:foxy/page/quest/quest_template_addon_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -58,16 +63,19 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '允许职业',
-              child: FoxyNumberInput<int>(
+              child: FoxyFlagPicker(
                 controller: vm.allowableClassesController,
                 placeholder: 'AllowableClasses',
+                flags: kAllowableClassOptions,
+                title: '允许职业',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '来源法术',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.spell,
                 controller: vm.sourceSpellIdController,
                 placeholder: 'SourceSpellId',
               ),
@@ -90,7 +98,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '后续任务',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.questTemplate,
                 controller: vm.nextQuestIdController,
                 placeholder: 'NextQuestID',
               ),
@@ -105,7 +114,16 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
+          Expanded(
+            child: FoxyFormItem(
+              label: '面包屑目标任务',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.questTemplate,
+                controller: vm.breadcrumbForQuestIdController,
+                placeholder: 'BreadcrumbForQuestId',
+              ),
+            ),
+          ),
         ],
       ),
       Row(
@@ -114,7 +132,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励邮件模板',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.mailTemplate,
                 controller: vm.rewardMailTemplateIdController,
                 placeholder: 'RewardMailTemplateId',
               ),
@@ -132,7 +151,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要技能',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.skillLine,
                 controller: vm.requiredSkillIdController,
                 placeholder: 'RequiredSkillId',
               ),
@@ -155,7 +175,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '最低声望阵营',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 controller: vm.requiredMinRepFactionController,
                 placeholder: 'RequiredMinRepFaction',
               ),
@@ -164,7 +185,8 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '最高声望阵营',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 controller: vm.requiredMaxRepFactionController,
                 placeholder: 'RequiredMaxRepFaction',
               ),
@@ -205,9 +227,11 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '特殊标志',
-              child: FoxyNumberInput<int>(
+              child: FoxyFlagPicker(
                 controller: vm.specialFlagsController,
                 placeholder: 'SpecialFlags',
+                flags: kQuestSpecialFlagOptions,
+                title: '任务特殊标志',
               ),
             ),
           ),

@@ -28,6 +28,8 @@ import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/entity/game_object_template_filter_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/entity/holiday_entity.dart';
@@ -54,6 +56,8 @@ import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
+import 'package:foxy/entity/mail_template_entity.dart';
+import 'package:foxy/entity/mail_template_filter_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
@@ -96,6 +100,7 @@ import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
@@ -109,6 +114,7 @@ import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -755,6 +761,44 @@ class FoxyEntityPickerDelegates {
     ),
   );
 
+  static final gameObjectTemplate =
+      FoxyEntityPickerDelegate<BriefGameObjectTemplateEntity>(
+        title: '游戏对象模板',
+        errorLabel: '搜索游戏对象模板失败',
+        filters: const [
+          FoxyEntityPickerFilter('游戏对象 ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefGameObjectTemplateEntity t) => t.entry.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefGameObjectTemplateEntity t) => t.displayName,
+          ),
+          FoxyEntityPickerColumn(
+            header: '类型',
+            width: 120,
+            text: (BriefGameObjectTemplateEntity t) => t.type.toString(),
+          ),
+        ],
+        idOf: (BriefGameObjectTemplateEntity t) => t.entry,
+        fetch: (page, v) => GetIt.instance
+            .get<GameObjectTemplateRepository>()
+            .getBriefGameObjectTemplates(
+              filter: GameObjectTemplateFilterEntity(entry: v[0], name: v[1]),
+              page: page,
+            ),
+        count: (v) => GetIt.instance
+            .get<GameObjectTemplateRepository>()
+            .countGameObjectTemplates(
+              filter: GameObjectTemplateFilterEntity(entry: v[0], name: v[1]),
+            ),
+      );
+
   static final itemDisplayInfo =
       FoxyEntityPickerDelegate<BriefItemDisplayInfoEntity>(
         title: '物品显示信息',
@@ -1333,6 +1377,40 @@ class FoxyEntityPickerDelegates {
       ),
     );
   }
+
+  static final mailTemplate = FoxyEntityPickerDelegate<BriefMailTemplateEntity>(
+    title: '邮件模板',
+    errorLabel: '搜索邮件模板失败',
+    filters: const [
+      FoxyEntityPickerFilter('邮件模板 ID'),
+      FoxyEntityPickerFilter('邮件主题'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefMailTemplateEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '主题',
+        text: (BriefMailTemplateEntity t) => t.subjectLangZhCN,
+      ),
+      FoxyEntityPickerColumn(
+        header: '正文',
+        text: (BriefMailTemplateEntity t) => t.bodyLangZhCN,
+      ),
+    ],
+    idOf: (BriefMailTemplateEntity t) => t.id,
+    fetch: (page, v) =>
+        GetIt.instance.get<MailTemplateRepository>().getBriefMailTemplates(
+          filter: MailTemplateFilterEntity(id: v[0], subject: v[1]),
+          page: page,
+        ),
+    count: (v) =>
+        GetIt.instance.get<MailTemplateRepository>().countMailTemplates(
+          filter: MailTemplateFilterEntity(id: v[0], subject: v[1]),
+        ),
+  );
 
   static final map = FoxyEntityPickerDelegate<BriefMapInfoEntity>(
     title: '地图',

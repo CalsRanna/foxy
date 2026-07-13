@@ -17,6 +17,7 @@ import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
@@ -329,6 +330,22 @@ class FoxyLocalePickerDelegates {
     () => GetIt.instance.get<DbcFactionRepository>(),
     (repo, id, field) => repo.getDbcFactionLocales(id, field),
     (repo, id, field, values) => repo.saveDbcFactionLocales(id, field, values),
+  );
+
+  static final dbcMailTemplateSubject = _dbc(
+    DbcLocaleFields.mailTemplateSubject,
+    () => GetIt.instance.get<MailTemplateRepository>(),
+    (repo, id, field) => repo.getMailTemplateLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveMailTemplateLocales(id, field, values),
+  );
+
+  static final dbcMailTemplateBody = _dbc(
+    DbcLocaleFields.mailTemplateBody,
+    () => GetIt.instance.get<MailTemplateRepository>(),
+    (repo, id, field) => repo.getMailTemplateLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveMailTemplateLocales(id, field, values),
   );
 
   static final dbcItemRandomPropertiesName = _dbc(

@@ -24,6 +24,7 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
   late final emoteDelay3Controller = registerController(IntFieldController());
   late final emoteDelay4Controller = registerController(IntFieldController());
   late final rewardTextController = registerController(StringFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   int _originalId = 0;
 
@@ -79,6 +80,7 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
     emoteDelay3Controller.init(model.emoteDelay3);
     emoteDelay4Controller.init(model.emoteDelay4);
     rewardTextController.init(model.rewardText);
+    verifiedBuildController.init(model.verifiedBuild);
   }
 
   QuestOfferRewardEntity _collect() {
@@ -93,6 +95,7 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
       emoteDelay3: emoteDelay3Controller.collect(),
       emoteDelay4: emoteDelay4Controller.collect(),
       rewardText: rewardTextController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 

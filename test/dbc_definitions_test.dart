@@ -31,6 +31,10 @@ void main() {
     expect(dbcDefinitionByTable['dbc_emotes']?.fileName, 'Emotes.dbc');
     expect(dbcDefinitionByTable['dbc_item']?.fileName, 'Item.dbc');
     expect(dbcDefinitionByTable['dbc_skill_line']?.fileName, 'SkillLine.dbc');
+    expect(
+      dbcDefinitionByTable['dbc_mail_template']?.fileName,
+      'MailTemplate.dbc',
+    );
   });
 
   test('所有 DBC 定义都包含 ID 字段', () {

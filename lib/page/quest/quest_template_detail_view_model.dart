@@ -20,7 +20,9 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
 
   /// Basic (ints)
   late final idController = registerController(IntFieldController());
-  late final questTypeController = registerController(IntFieldController());
+  late final questTypeController = registerController(
+    SelectFieldController<int>(fallback: 2),
+  );
   late final questLevelController = registerController(IntFieldController());
   late final minLevelController = registerController(IntFieldController());
   late final suggestedGroupNumController = registerController(
@@ -48,11 +50,11 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final rewardXpDifficultyController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final rewardMoneyController = registerController(IntFieldController());
   late final rewardMoneyDifficultyController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final rewardDisplaySpellController = registerController(
     IntFieldController(),
@@ -63,7 +65,7 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final startItemController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(FlagFieldController());
   late final requiredPlayerKillsController = registerController(
     IntFieldController(),
   );
@@ -197,7 +199,7 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
   /// Other int
   late final timeAllowedController = registerController(IntFieldController());
   late final allowableRacesController = registerController(
-    IntFieldController(),
+    FlagFieldController(),
   );
 
   /// Text (string controllers)
@@ -295,7 +297,7 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
   );
   late final verifiedBuildController = registerController(IntFieldController());
 
-  Future<void> save(BuildContext context) async {
+  Future<int?> save(BuildContext context) async {
     try {
       final t = _collect();
       final existed = await _repository.getQuestTemplate(t.id);
@@ -311,13 +313,15 @@ class QuestTemplateDetailViewModel with FieldControllerMixin {
         entry.value = t.id;
         _logActivity(ActivityActionType.update, t);
       }
-      if (!context.mounted) return;
+      if (!context.mounted) return null;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
+      return entry.value;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return null;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return null;
     }
   }
 

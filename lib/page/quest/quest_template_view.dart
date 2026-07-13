@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_flags.dart';
+import 'package:foxy/constant/quest_enums.dart';
+import 'package:foxy/constant/quest_flags.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
+import 'package:foxy/page/quest/quest_objective_target_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class QuestTemplateView extends StatefulWidget {
   final int? questId;
-  const QuestTemplateView({super.key, this.questId});
+  final ValueChanged<int>? onSaved;
+  const QuestTemplateView({super.key, this.questId, this.onSaved});
 
   @override
   State<QuestTemplateView> createState() => _QuestTemplateViewState();
@@ -55,10 +61,11 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '任务类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'QuestType',
+              label: '任务方式',
+              child: FoxyShadSelect<int>(
                 controller: vm.questTypeController,
+                options: kQuestMethodOptions,
+                placeholder: const Text('QuestType'),
               ),
             ),
           ),
@@ -117,9 +124,11 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '标志',
-              child: FoxyNumberInput<int>(
+              child: FoxyFlagPicker(
                 placeholder: 'Flags',
                 controller: vm.flagsController,
+                flags: kQuestFlagOptions,
+                title: '任务标志',
               ),
             ),
           ),
@@ -131,7 +140,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要阵营1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RequiredFactionId1',
                 controller: vm.requiredFactionId1Controller,
               ),
@@ -140,7 +150,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要阵营2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RequiredFactionId2',
                 controller: vm.requiredFactionId2Controller,
               ),
@@ -176,7 +187,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO1',
-              child: FoxyNumberInput<int>(
+              child: QuestObjectiveTargetPicker(
                 placeholder: 'RequiredNpcOrGo1',
                 controller: vm.requiredNpcOrGo1Controller,
               ),
@@ -185,7 +196,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO2',
-              child: FoxyNumberInput<int>(
+              child: QuestObjectiveTargetPicker(
                 placeholder: 'RequiredNpcOrGo2',
                 controller: vm.requiredNpcOrGo2Controller,
               ),
@@ -194,7 +205,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO3',
-              child: FoxyNumberInput<int>(
+              child: QuestObjectiveTargetPicker(
                 placeholder: 'RequiredNpcOrGo3',
                 controller: vm.requiredNpcOrGo3Controller,
               ),
@@ -203,7 +214,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要NPC/GO4',
-              child: FoxyNumberInput<int>(
+              child: QuestObjectiveTargetPicker(
                 placeholder: 'RequiredNpcOrGo4',
                 controller: vm.requiredNpcOrGo4Controller,
               ),
@@ -258,7 +269,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId1',
                 controller: vm.requiredItemId1Controller,
               ),
@@ -267,7 +279,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId2',
                 controller: vm.requiredItemId2Controller,
               ),
@@ -276,7 +289,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品3',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId3',
                 controller: vm.requiredItemId3Controller,
               ),
@@ -285,7 +299,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品4',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId4',
                 controller: vm.requiredItemId4Controller,
               ),
@@ -299,7 +314,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品5',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId5',
                 controller: vm.requiredItemId5Controller,
               ),
@@ -308,7 +324,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '需要物品6',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RequiredItemId6',
                 controller: vm.requiredItemId6Controller,
               ),
@@ -381,7 +398,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '起始物品',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'StartItem',
                 controller: vm.startItemController,
               ),
@@ -410,7 +428,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '下一个任务',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.questTemplate,
                 placeholder: 'RewardNextQuest',
                 controller: vm.rewardNextQuestController,
               ),
@@ -419,9 +438,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '经验难度',
-              child: FoxyNumberInput<int>(
-                placeholder: 'RewardXPDifficulty',
+              child: FoxyShadSelect<int>(
                 controller: vm.rewardXpDifficultyController,
+                options: kQuestRewardDifficultyOptions,
+                placeholder: const Text('RewardXPDifficulty'),
               ),
             ),
           ),
@@ -437,9 +457,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '金币难度',
-              child: FoxyNumberInput<int>(
-                placeholder: 'RewardMoneyDifficulty',
+              child: FoxyShadSelect<int>(
                 controller: vm.rewardMoneyDifficultyController,
+                options: kQuestRewardDifficultyOptions,
+                placeholder: const Text('RewardMoneyDifficulty'),
               ),
             ),
           ),
@@ -451,7 +472,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '展示法术',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.spell,
                 placeholder: 'RewardDisplaySpell',
                 controller: vm.rewardDisplaySpellController,
               ),
@@ -460,7 +482,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '法术奖励',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.spell,
                 placeholder: 'RewardSpell',
                 controller: vm.rewardSpellController,
               ),
@@ -530,7 +553,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励物品1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardItem1',
                 controller: vm.rewardItem1Controller,
               ),
@@ -548,7 +572,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励物品2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardItem2',
                 controller: vm.rewardItem2Controller,
               ),
@@ -571,7 +596,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励物品3',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardItem3',
                 controller: vm.rewardItem3Controller,
               ),
@@ -589,7 +615,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励物品4',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardItem4',
                 controller: vm.rewardItem4Controller,
               ),
@@ -612,7 +639,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID1',
                 controller: vm.rewardChoiceItemId1Controller,
               ),
@@ -630,7 +658,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID2',
                 controller: vm.rewardChoiceItemId2Controller,
               ),
@@ -653,7 +682,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励3',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID3',
                 controller: vm.rewardChoiceItemId3Controller,
               ),
@@ -671,7 +701,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励4',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID4',
                 controller: vm.rewardChoiceItemId4Controller,
               ),
@@ -694,7 +725,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励5',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID5',
                 controller: vm.rewardChoiceItemId5Controller,
               ),
@@ -712,7 +744,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '可选奖励6',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'RewardChoiceItemID6',
                 controller: vm.rewardChoiceItemId6Controller,
               ),
@@ -735,7 +768,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '掉落物品1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'ItemDrop1',
                 controller: vm.itemDrop1Controller,
               ),
@@ -753,7 +787,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '掉落物品2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'ItemDrop2',
                 controller: vm.itemDrop2Controller,
               ),
@@ -776,7 +811,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '掉落物品3',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'ItemDrop3',
                 controller: vm.itemDrop3Controller,
               ),
@@ -794,7 +830,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '掉落物品4',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.itemTemplate,
                 placeholder: 'ItemDrop4',
                 controller: vm.itemDrop4Controller,
               ),
@@ -821,7 +858,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '声望阵营1',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RewardFactionID1',
                 controller: vm.rewardFactionId1Controller,
               ),
@@ -854,7 +892,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '声望阵营2',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RewardFactionID2',
                 controller: vm.rewardFactionId2Controller,
               ),
@@ -887,7 +926,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '声望阵营3',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RewardFactionID3',
                 controller: vm.rewardFactionId3Controller,
               ),
@@ -920,7 +960,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '声望阵营4',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RewardFactionID4',
                 controller: vm.rewardFactionId4Controller,
               ),
@@ -953,7 +994,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '声望阵营5',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcFaction,
                 placeholder: 'RewardFactionID5',
                 controller: vm.rewardFactionId5Controller,
               ),
@@ -1072,36 +1114,48 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '目标文本1',
-              child: FoxyStringInput(
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.objectiveText1Controller,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText1',
+                title: '目标文本1',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标文本2',
-              child: FoxyStringInput(
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.objectiveText2Controller,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText2',
+                title: '目标文本2',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标文本3',
-              child: FoxyStringInput(
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.objectiveText3Controller,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText3',
+                title: '目标文本3',
               ),
             ),
           ),
           Expanded(
             child: FoxyFormItem(
               label: '目标文本4',
-              child: FoxyStringInput(
+              child: FoxyLocalePicker(
+                entry: widget.questId,
                 controller: vm.objectiveText4Controller,
+                delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText4',
+                title: '目标文本4',
               ),
             ),
           ),
@@ -1117,7 +1171,8 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: 'POI大陆',
-              child: FoxyNumberInput<int>(
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.map,
                 placeholder: 'POIContinent',
                 controller: vm.poiContinentController,
               ),
@@ -1167,9 +1222,11 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '允许种族',
-              child: FoxyNumberInput<int>(
+              child: FoxyFlagPicker(
                 placeholder: 'AllowableRaces',
                 controller: vm.allowableRacesController,
+                flags: kAllowableRaceOptions,
+                title: '允许种族',
               ),
             ),
           ),
@@ -1212,7 +1269,10 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             spacing: 8,
             children: [
               ShadButton(
-                onPressed: () => viewModel.save(context),
+                onPressed: () async {
+                  final entry = await viewModel.save(context);
+                  if (entry != null) widget.onSaved?.call(entry);
+                },
                 child: Text('保存'),
               ),
               ShadButton.ghost(

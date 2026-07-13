@@ -100,11 +100,6 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () => viewModel.delete(context),
                   child: Text('删除'),

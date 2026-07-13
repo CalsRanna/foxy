@@ -147,6 +147,7 @@ import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
@@ -263,6 +264,7 @@ class DI {
     _instance.registerLazySingleton(() => ItemTemplateRepository());
     _instance.registerLazySingleton(() => LockRepository());
     _instance.registerLazySingleton(() => MapInfoRepository());
+    _instance.registerLazySingleton(() => MailTemplateRepository());
     _instance.registerLazySingleton(() => NpcTextLocaleRepository());
     _instance.registerLazySingleton(() => NpcTextRepository());
     _instance.registerLazySingleton(() => NpcTrainerRepository());

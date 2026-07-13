@@ -47,17 +47,11 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   }
 
   Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
-    final result = await laconic.table(_table).where('quest', questId).select([
-      'MAX(id) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return CreatureQuestEnderEntity(
-      quest: questId,
-      id: maxId == null ? 0 : maxId + 1,
-    );
+    return CreatureQuestEnderEntity(quest: questId);
   }
 
   Future<void> storeCreatureQuestEnder(CreatureQuestEnderEntity model) async {
+    _validate(model.id, model.quest);
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -66,25 +60,16 @@ class CreatureQuestEnderRepository with RepositoryMixin {
     int quest,
     CreatureQuestEnderEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('id');
-    json.remove('quest');
+    _validate(model.id, model.quest);
     await laconic
         .table(_table)
         .where('id', id)
         .where('quest', quest)
-        .update(json);
+        .update(model.toJson());
   }
 
   Future<void> destroyCreatureQuestEnder(int id, int quest) async {
     await laconic.table(_table).where('id', id).where('quest', quest).delete();
-  }
-
-  Future<void> copyCreatureQuestEnder(int id, int quest) async {
-    final original = await getCreatureQuestEnder(id, quest);
-    if (original == null) return;
-    final next = await createCreatureQuestEnder(original.quest);
-    await storeCreatureQuestEnder(next);
   }
 
   Future<void> saveCreatureQuestEnder(CreatureQuestEnderEntity model) async {
@@ -93,6 +78,12 @@ class CreatureQuestEnderRepository with RepositoryMixin {
       await updateCreatureQuestEnder(model.id, model.quest, model);
     } else {
       await storeCreatureQuestEnder(model);
+    }
+  }
+
+  void _validate(int id, int quest) {
+    if (id <= 0 || quest <= 0) {
+      throw ArgumentError('生物编号和任务编号必须大于 0');
     }
   }
 }
