@@ -70,38 +70,48 @@ class FoxyLocalePickerDelegates {
     },
     onSave: (entry, data) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final locales = data
-          .map(
-            (d) => GameObjectTemplateLocaleEntity(
-              entry: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-            ),
-          )
-          .toList();
+      final existing = await repo.getGameObjectTemplateLocales(entry);
+      final locales = data.map((d) {
+        final locale = d['locale'] ?? '';
+        final current = existing.where((row) => row.locale == locale);
+        final preserved = current.isEmpty ? null : current.first;
+        return GameObjectTemplateLocaleEntity(
+          entry: entry,
+          locale: locale,
+          name: d['name'] ?? '',
+          castBarCaption: preserved?.castBarCaption ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveGameObjectTemplateLocales(entry, locales);
     },
   );
 
   static final gameObjectCaption = DatabaseLocaleEditorDelegate(
-    fields: ['locale', 'name'],
+    fields: ['locale', 'castBarCaption'],
     fieldLabels: ['语言', '使用说明'],
     onLoad: (entry) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
+      return locales
+          .map((e) => {'locale': e.locale, 'castBarCaption': e.castBarCaption})
+          .toList();
     },
     onSave: (entry, data) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final locales = data
-          .map(
-            (d) => GameObjectTemplateLocaleEntity(
-              entry: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-            ),
-          )
-          .toList();
+      final existing = await repo.getGameObjectTemplateLocales(entry);
+      final locales = data.map((d) {
+        final locale = d['locale'] ?? '';
+        final current = existing.where((row) => row.locale == locale);
+        final preserved = current.isEmpty ? null : current.first;
+        return GameObjectTemplateLocaleEntity(
+          entry: entry,
+          locale: locale,
+          name: preserved?.name ?? '',
+          castBarCaption: d['castBarCaption'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveGameObjectTemplateLocales(entry, locales);
     },
   );

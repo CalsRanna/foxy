@@ -163,6 +163,13 @@ class DbcLocaleFields {
     multiline: true,
   );
 
+  // --- spell_focus_object ---
+  static final spellFocusObjectName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_spell_focus_object',
+    columnPrefix: 'Name_lang',
+    label: '法术焦点名称',
+  );
+
   // --- spell_item_enchantment ---
   static final spellItemEnchantmentName = DbcLocaleFieldDefinition(
     tableName: 'dbc_spell_item_enchantment',
@@ -233,6 +240,7 @@ class DbcLocaleFields {
     spellNameSubtext,
     spellDescription,
     spellAuraDescription,
+    spellFocusObjectName,
     spellItemEnchantmentName,
     spellRangeDisplayName,
     spellRangeDisplayNameShort,

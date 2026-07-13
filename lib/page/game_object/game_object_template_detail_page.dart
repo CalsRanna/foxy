@@ -20,18 +20,38 @@ class GameObjectTemplateDetailPage extends StatefulWidget {
 
 class _GameObjectTemplateDetailPageState
     extends State<GameObjectTemplateDetailPage> {
+  late int? gameObjectEntry = widget.entry;
+
   @override
   Widget build(BuildContext context) {
     var tabs = [Text('游戏对象模板'), Text('模版补充'), Text('任务物品'), Text('物品掉落')];
 
     var tabContents = [
-      GameObjectTemplateView(entry: widget.entry),
-      GameObjectTemplateAddonView(gameObjectId: widget.entry ?? 0),
-      GameObjectQuestItemView(gameObjectId: widget.entry ?? 0),
-      GameObjectLootTemplateView(gameObjectId: widget.entry ?? 0),
+      GameObjectTemplateView(
+        entry: gameObjectEntry,
+        onSaved: (entry) => setState(() => gameObjectEntry = entry),
+      ),
+      GameObjectTemplateAddonView(
+        key: ValueKey('addon-$gameObjectEntry'),
+        gameObjectId: gameObjectEntry ?? 0,
+      ),
+      GameObjectQuestItemView(
+        key: ValueKey('quest-item-$gameObjectEntry'),
+        gameObjectId: gameObjectEntry ?? 0,
+      ),
+      GameObjectLootTemplateView(
+        key: ValueKey('loot-$gameObjectEntry'),
+        gameObjectId: gameObjectEntry ?? 0,
+      ),
     ];
 
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+    var tabBar = FoxyTab(
+      tabs: tabs,
+      contents: tabContents,
+      disabledIndexes: gameObjectEntry == null || gameObjectEntry! <= 0
+          ? const {1, 2, 3}
+          : const {},
+    );
 
     return ListView(
       padding: const EdgeInsets.all(16),

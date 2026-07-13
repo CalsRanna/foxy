@@ -49,6 +49,12 @@ class GameObjectTemplateAddonEntity {
     };
   }
 
+  void validate() {
+    if (entry <= 0) throw ArgumentError('游戏对象编号必须大于 0');
+    if (minGold < 0 || maxGold < 0) throw ArgumentError('金币数量不能小于 0');
+    if (minGold > maxGold) throw ArgumentError('最小金币不能大于最大金币');
+  }
+
   GameObjectTemplateAddonEntity copyWith({
     int? entry,
     int? faction,

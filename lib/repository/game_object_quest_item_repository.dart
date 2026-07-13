@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectQuestItemRepository with RepositoryMixin {
   static const _table = 'gameobject_questitem';
 
-  Future<List<GameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
+  Future<List<BriefGameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
     int gameObjectEntry,
   ) async {
     var builder = laconic.table('$_table AS gq');
@@ -34,7 +34,7 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     builder = builder.orderBy('gq.Idx');
     var results = await builder.get();
     return results
-        .map((e) => GameObjectQuestItemEntity.fromJson(e.toMap()))
+        .map((e) => BriefGameObjectQuestItemEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -65,12 +65,14 @@ class GameObjectQuestItemRepository with RepositoryMixin {
   Future<void> storeGameObjectQuestItem(
     GameObjectQuestItemEntity questItem,
   ) async {
+    questItem.validate();
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
   Future<void> updateGameObjectQuestItem(
     GameObjectQuestItemEntity questItem,
   ) async {
+    questItem.validate();
     var json = questItem.toJson();
     json.remove('GameObjectEntry');
     json.remove('Idx');
@@ -113,12 +115,16 @@ class GameObjectQuestItemRepository with RepositoryMixin {
   }
 
   Future<int> getNextIdx(int gameObjectEntry) async {
-    var maxResult = await laconic
+    final rows = await laconic
         .table(_table)
-        .select(['MAX(Idx) AS maxIdx'])
+        .select(['Idx'])
         .where('GameObjectEntry', gameObjectEntry)
-        .first();
-    var maxIdx = (maxResult.toMap()['maxIdx'] ?? 0) as int;
-    return maxIdx + 1;
+        .orderBy('Idx')
+        .get();
+    final occupied = rows.map((row) => row.toMap()['Idx'] as int).toSet();
+    for (var idx = 0; idx < 6; idx++) {
+      if (!occupied.contains(idx)) return idx;
+    }
+    throw StateError('该游戏对象的 6 个任务物品槽位已全部占用');
   }
 }

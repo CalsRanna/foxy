@@ -56,12 +56,14 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   Future<void> storeGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity addon,
   ) async {
+    addon.validate();
     await laconic.table(_table).insert([addon.toJson()]);
   }
 
   Future<void> updateGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity addon,
   ) async {
+    addon.validate();
     var json = addon.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);
@@ -72,12 +74,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> copyGameObjectTemplateAddon(int entry) async {
-    var source = await getGameObjectTemplateAddon(entry);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextEntry = await _getNextEntry();
-    json['entry'] = nextEntry;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
   }
 
   Future<void> saveGameObjectTemplateAddon(
@@ -89,9 +86,5 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     } else {
       await storeGameObjectTemplateAddon(addon);
     }
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 }

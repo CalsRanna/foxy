@@ -15,10 +15,14 @@ class GameObjectTemplateAddonViewModel with FieldControllerMixin {
   final gameObjectId = signal<int>(0);
 
   late final factionController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(FlagFieldController());
   late final gameObjectIdController = registerController(IntFieldController());
   late final minGoldController = registerController(IntFieldController());
   late final maxGoldController = registerController(IntFieldController());
+  late final artkit0Controller = registerController(IntFieldController());
+  late final artkit1Controller = registerController(IntFieldController());
+  late final artkit2Controller = registerController(IntFieldController());
+  late final artkit3Controller = registerController(IntFieldController());
 
   final addon = signal(GameObjectTemplateAddonEntity());
 
@@ -57,6 +61,10 @@ class GameObjectTemplateAddonViewModel with FieldControllerMixin {
       flags: flagsController.collect(),
       minGold: minGoldController.collect(),
       maxGold: maxGoldController.collect(),
+      artkit0: artkit0Controller.collect(),
+      artkit1: artkit1Controller.collect(),
+      artkit2: artkit2Controller.collect(),
+      artkit3: artkit3Controller.collect(),
     );
   }
 
@@ -65,6 +73,10 @@ class GameObjectTemplateAddonViewModel with FieldControllerMixin {
     flagsController.init(data.flags);
     minGoldController.init(data.minGold);
     maxGoldController.init(data.maxGold);
+    artkit0Controller.init(data.artkit0);
+    artkit1Controller.init(data.artkit1);
+    artkit2Controller.init(data.artkit2);
+    artkit3Controller.init(data.artkit3);
   }
 
   Future<void> initSignals({required int gameObjectId}) async {

@@ -55,39 +55,11 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
   late final data22Controller = registerController(IntFieldController());
   late final data23Controller = registerController(IntFieldController());
 
-  IntFieldController dataController(int i) => switch (i) {
-    0 => data0Controller,
-    1 => data1Controller,
-    2 => data2Controller,
-    3 => data3Controller,
-    4 => data4Controller,
-    5 => data5Controller,
-    6 => data6Controller,
-    7 => data7Controller,
-    8 => data8Controller,
-    9 => data9Controller,
-    10 => data10Controller,
-    11 => data11Controller,
-    12 => data12Controller,
-    13 => data13Controller,
-    14 => data14Controller,
-    15 => data15Controller,
-    16 => data16Controller,
-    17 => data17Controller,
-    18 => data18Controller,
-    19 => data19Controller,
-    20 => data20Controller,
-    21 => data21Controller,
-    22 => data22Controller,
-    23 => data23Controller,
-    _ => data0Controller,
-  };
-
   late final verifiedBuildController = registerController(IntFieldController());
 
   final template = signal(GameObjectTemplateEntity());
 
-  Future<void> save(BuildContext context) async {
+  Future<int?> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
       final existed = await _repository.getGameObjectTemplate(t.entry);
@@ -101,13 +73,15 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
         template.value = t;
         _logActivity(ActivityActionType.update, t);
       }
-      if (!context.mounted) return;
+      if (!context.mounted) return template.value.entry;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
+      return template.value.entry;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return null;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return null;
     }
   }
 

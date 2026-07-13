@@ -83,6 +83,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
   }
 
   Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
+    template.validate();
     var json = template.toJson();
     final newEntry = template.entry > 0
         ? template.entry
@@ -95,6 +96,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
   Future<void> updateGameObjectTemplate(
     GameObjectTemplateEntity template,
   ) async {
+    template.validate();
     var json = template.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', template.entry).update(json);

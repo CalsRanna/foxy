@@ -1,17 +1,21 @@
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
+import 'package:foxy/repository/cinematic_sequence_repository.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/repository/creature_model_data_repository.dart';
 import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
+import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
+import 'package:foxy/repository/game_object_art_kit_repository.dart';
+import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
@@ -30,12 +34,14 @@ import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
+import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -118,17 +124,21 @@ class DbcExportRegistry {
     final achievement = getIt.get<AchievementRepository>();
     final areaTable = getIt.get<AreaTableRepository>();
     final charTitle = getIt.get<CharTitleRepository>();
+    final cinematicSequence = getIt.get<CinematicSequenceRepository>();
     final creatureDisplayInfo = getIt.get<CreatureDisplayInfoRepository>();
     final creatureModelData = getIt.get<CreatureModelDataRepository>();
     final creatureMovementInfo = getIt.get<CreatureMovementInfoRepository>();
     final creatureSpellData = getIt.get<CreatureSpellDataRepository>();
     final currencyType = getIt.get<CurrencyTypeRepository>();
+    final destructibleModelData = getIt.get<DestructibleModelDataRepository>();
     final faction = getIt.get<DbcFactionRepository>();
     final factionTemplate = getIt.get<DbcFactionTemplateRepository>();
     final emote = getIt.get<DbcEmoteRepository>();
     final dbcItem = getIt.get<DbcItemRepository>();
     final emoteText = getIt.get<EmoteTextRepository>();
     final gemProperty = getIt.get<GemPropertyRepository>();
+    final gameObjectArtKit = getIt.get<GameObjectArtKitRepository>();
+    final gameObjectDisplayInfo = getIt.get<GameObjectDisplayInfoRepository>();
     final glyphProperty = getIt.get<GlyphPropertyRepository>();
     final holiday = getIt.get<HolidayRepository>();
     final itemDisplayInfo = getIt.get<ItemDisplayInfoRepository>();
@@ -150,11 +160,13 @@ class DbcExportRegistry {
     final spell = getIt.get<SpellRepository>();
     final skillLine = getIt.get<SkillLineRepository>();
     final spellDuration = getIt.get<SpellDurationRepository>();
+    final spellFocusObject = getIt.get<SpellFocusObjectRepository>();
     final spellIcon = getIt.get<SpellIconRepository>();
     final spellItemEnchantment = getIt
         .get<SpellItemEnchantmentSoloRepository>();
     final spellRange = getIt.get<SpellRangeRepository>();
     final talent = getIt.get<TalentRepository>();
+    final taxiPath = getIt.get<TaxiPathRepository>();
     final totemCategory = getIt.get<TotemCategoryRepository>();
     final vehicle = getIt.get<VehicleRepository>();
 
@@ -172,6 +184,11 @@ class DbcExportRegistry {
       'dbc_char_titles': DbcExportDelegate.typed(
         load: charTitle.getCharTitles,
         count: () => charTitle.countCharTitles(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_cinematic_sequences': DbcExportDelegate.typed(
+        load: cinematicSequence.getCinematicSequences,
+        count: () => cinematicSequence.countCinematicSequences(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_creature_display_info': DbcExportDelegate.typed(
@@ -197,6 +214,11 @@ class DbcExportRegistry {
       'dbc_currency_types': DbcExportDelegate.typed(
         load: currencyType.getCurrencyTypes,
         count: () => currencyType.countCurrencyTypes(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_destructible_model_data': DbcExportDelegate.typed(
+        load: destructibleModelData.getDestructibleModelDatas,
+        count: () => destructibleModelData.countDestructibleModelDatas(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_emotes_text': DbcExportDelegate.typed(
@@ -227,6 +249,16 @@ class DbcExportRegistry {
       'dbc_glyph_properties': DbcExportDelegate.typed(
         load: glyphProperty.getGlyphProperties,
         count: () => glyphProperty.countGlyphProperties(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_game_object_art_kit': DbcExportDelegate.typed(
+        load: gameObjectArtKit.getGameObjectArtKits,
+        count: () => gameObjectArtKit.countGameObjectArtKits(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_game_object_display_info': DbcExportDelegate.typed(
+        load: gameObjectDisplayInfo.getGameObjectDisplayInfos,
+        count: () => gameObjectDisplayInfo.countGameObjectDisplayInfos(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_holidays': DbcExportDelegate.typed(
@@ -319,6 +351,11 @@ class DbcExportRegistry {
         count: () => spell.countSpells(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_spell_focus_object': DbcExportDelegate.typed(
+        load: spellFocusObject.getSpellFocusObjects,
+        count: () => spellFocusObject.countSpellFocusObjects(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_skill_line': DbcExportDelegate.typed(
         load: skillLine.getSkillLines,
         count: () => skillLine.countSkillLines(),
@@ -347,6 +384,11 @@ class DbcExportRegistry {
       'dbc_talent': DbcExportDelegate.typed(
         load: talent.getTalents,
         count: () => talent.countTalents(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_taxi_path': DbcExportDelegate.typed(
+        load: taxiPath.getTaxiPaths,
+        count: () => taxiPath.countTaxiPaths(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_totem_category': DbcExportDelegate.typed(
