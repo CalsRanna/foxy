@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/util/format_util.dart';
-import 'package:foxy/util/parse_util.dart';
+import 'package:foxy/infrastructure/util/format_util.dart';
+import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 详情表单字段控制器：把「字段类型 → 格式化/解析规则」内聚到字段声明处。

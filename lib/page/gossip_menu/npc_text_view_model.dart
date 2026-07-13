@@ -2,9 +2,9 @@ import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/field_controller.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 

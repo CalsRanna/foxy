@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 

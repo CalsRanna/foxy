@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/activity_logged_event.dart';
 import 'package:foxy/repository/repository_mixin.dart';
-import 'package:foxy/util/event_bus.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 
 class ActivityLogRepository with RepositoryMixin {

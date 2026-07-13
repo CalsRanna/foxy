@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/util/config_util.dart';
-import 'package:foxy/util/dbc_export_registry.dart';
-import 'package:foxy/util/dbc_sync_progress.dart';
-import 'package:foxy/util/dbc_sync_util.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:signals/signals.dart';

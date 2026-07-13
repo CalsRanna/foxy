@@ -4,10 +4,10 @@ import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/database/database.dart';
-import 'package:foxy/util/dbc_export_util.dart';
-import 'package:foxy/util/dbc_import_worker.dart';
-import 'package:foxy/util/dbc_sync_progress.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 typedef DbcExportRowLoader =

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 标志位选择器：显示已格式化的值，点击输入框或尾部按钮打开编辑弹窗。

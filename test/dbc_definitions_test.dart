@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/di.dart';
-import 'package:foxy/util/dbc_export_registry.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {

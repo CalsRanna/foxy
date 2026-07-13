@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 一个筛选输入框（输入编号）。

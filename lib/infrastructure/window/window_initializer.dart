@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/util/shared_preferences_util.dart';
+import 'package:foxy/infrastructure/preferences/shared_preferences_util.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowInitializer with WindowListener {

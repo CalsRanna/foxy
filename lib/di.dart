@@ -179,10 +179,10 @@ import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/util/event_bus.dart';
-import 'package:foxy/util/config_util.dart';
-import 'package:foxy/util/dbc_export_registry.dart';
-import 'package:foxy/util/dbc_sync_util.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:get_it/get_it.dart';
 
 class DI {
