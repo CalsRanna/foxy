@@ -1,8 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -15,6 +17,7 @@ import 'package:signals/signals.dart';
 
 class GossipMenuDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuRepository>();
+  final _npcTextRepository = GetIt.instance.get<NpcTextRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   late final menuIdController = registerController(IntFieldController());
@@ -24,11 +27,16 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
   final menu = signal(GossipMenuEntity());
   int? _originalMenuId;
   int? _originalTextId;
+  int? _reservedTextId;
 
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
       if (menuId == null) {
-        final blank = await _repository.createGossipMenu();
+        final reservedText = await _npcTextRepository.createNpcText();
+        final blank = (await _repository.createGossipMenu()).copyWith(
+          textId: reservedText.id,
+        );
+        _reservedTextId = reservedText.id;
         this.menuId.value = blank.menuId;
         menu.value = blank;
         _originalMenuId = null;
@@ -51,9 +59,20 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> save(BuildContext context) async {
+  Future<void> save(
+    BuildContext context, {
+    required void Function(int menuId, int textId) onSaved,
+  }) async {
     try {
       final t = _collectFromControllers();
+      if (t.textId <= 0) throw StateError('请选择有效的 NPC 文本');
+      final npcText = await _npcTextRepository.getNpcText(t.textId);
+      if (npcText == null) {
+        if (t.textId != _reservedTextId) {
+          throw StateError('TextID ${t.textId} 在 npc_text 中不存在');
+        }
+        await _npcTextRepository.storeNpcText(NpcTextEntity(id: t.textId));
+      }
       final wasNew = _originalMenuId == null;
       final prevTextId = _originalTextId;
       if (wasNew) {
@@ -77,6 +96,7 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
       final saved = menu.value;
       menuId.value = saved.menuId;
       textIdController.init(saved.textId);
+      onSaved(saved.menuId, saved.textId);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);

@@ -17,6 +17,16 @@ class GossipMenuDetailPage extends StatefulWidget {
 }
 
 class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
+  int? _menuId;
+  int? _textId;
+
+  @override
+  void initState() {
+    super.initState();
+    _menuId = widget.menuId;
+    _textId = widget.textId;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -26,9 +36,7 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
   }
 
   Widget _buildHeader() {
-    final label = widget.menuId != null
-        ? '对话 ${widget.menuId} / 文本 ${widget.textId ?? 0}'
-        : '新建对话';
+    final label = _menuId != null ? '对话 $_menuId / 文本 ${_textId ?? 0}' : '新建对话';
     var textStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
     var text = Text(label, style: textStyle);
     var edgeInsets = const EdgeInsets.only(bottom: 12);
@@ -37,11 +45,25 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
 
   Widget _buildTabs() {
     final tabs = const [Text('对话'), Text('文本'), Text('选项')];
+    final saved = (_menuId ?? 0) > 0 && (_textId ?? 0) > 0;
     final contents = [
-      GossipMenuView(menuId: widget.menuId, textId: widget.textId),
-      NpcTextView(textId: widget.textId ?? 0),
-      GossipMenuOptionView(menuId: widget.menuId ?? 0),
+      GossipMenuView(
+        menuId: widget.menuId,
+        textId: widget.textId,
+        onSaved: (menuId, textId) {
+          setState(() {
+            _menuId = menuId;
+            _textId = textId;
+          });
+        },
+      ),
+      NpcTextView(key: ValueKey(_textId), textId: _textId ?? 0),
+      GossipMenuOptionView(key: ValueKey(_menuId), menuId: _menuId ?? 0),
     ];
-    return FoxyTab(tabs: tabs, contents: contents);
+    return FoxyTab(
+      tabs: tabs,
+      contents: contents,
+      disabledIndexes: saved ? const {} : const {1, 2},
+    );
   }
 }

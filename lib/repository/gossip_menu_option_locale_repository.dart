@@ -156,4 +156,31 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
       await laconic.table(_table).insert(jsons);
     });
   }
+
+  Future<void> destroyGossipMenuOptionLocales(int menuId, int optionId) async {
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .delete();
+  }
+
+  Future<void> copyGossipMenuOptionLocales(
+    int menuId,
+    int sourceOptionId,
+    int targetOptionId,
+  ) async {
+    final results = await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', sourceOptionId)
+        .get();
+    if (results.isEmpty) return;
+    final jsons = results.map((row) {
+      final json = row.toMap();
+      json['OptionID'] = targetOptionId;
+      return json;
+    }).toList();
+    await laconic.table(_table).insert(jsons);
+  }
 }

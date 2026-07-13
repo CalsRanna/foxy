@@ -50,3 +50,28 @@ const kGossipOptionTypes = {
   19: '户外PVP', // OutdoorPVP
   20: '双天赋信息', // DualspecInfo
 };
+
+/// npc_text.lang0..lang7 可存储的服务端语言。
+/// 来源：AzerothCore SharedDefines.h `Language`；LANG_ADDON 超出 tinyint 范围。
+const kNpcTextLanguages = <int, String>{
+  0: '全语言',
+  1: '兽人语',
+  2: '达纳苏斯语',
+  3: '牛头人语',
+  6: '矮人语',
+  7: '通用语（人类）',
+  8: '恶魔语',
+  9: '泰坦语',
+  10: '萨拉斯语',
+  11: '龙语',
+  12: '卡利姆多语',
+  13: '侏儒语',
+  14: '巨魔语',
+  33: '亡灵语',
+  35: '德莱尼语',
+  36: '僵尸语',
+  37: '侏儒二进制语',
+  38: '地精二进制语',
+};
+
+const kGossipBooleanOptions = <int, String>{0: '否', 1: '是'};

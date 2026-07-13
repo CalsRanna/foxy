@@ -1,8 +1,5 @@
 /// gossip_menu_option_locale 本地化模型
 /// 复合键: MenuID + OptionID + Locale
-///
-/// 本模块仅在 GossipMenuOptionRepository 的列表 JOIN 中使用，
-/// 不单独提供编辑 UI。
 class GossipMenuOptionLocaleEntity {
   final int menuId;
   final int optionId;

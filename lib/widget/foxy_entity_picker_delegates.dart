@@ -70,6 +70,8 @@ import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/entity/point_of_interest_entity.dart';
+import 'package:foxy/entity/point_of_interest_filter_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
@@ -133,6 +135,7 @@ import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
+import 'package:foxy/repository/point_of_interest_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
@@ -778,6 +781,45 @@ class FoxyEntityPickerDelegates {
       filter: GossipMenuFilterEntity(menuId: v[0], text: v[1]),
     ),
   );
+
+  static final pointOfInterest =
+      FoxyEntityPickerDelegate<BriefPointOfInterestEntity>(
+        title: '兴趣点',
+        errorLabel: '搜索兴趣点失败',
+        filters: const [
+          FoxyEntityPickerFilter('兴趣点 ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            width: 120,
+            text: (BriefPointOfInterestEntity entity) => entity.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefPointOfInterestEntity entity) => entity.displayName,
+          ),
+        ],
+        idOf: (BriefPointOfInterestEntity entity) => entity.id,
+        fetch: (page, values) => GetIt.instance
+            .get<PointOfInterestRepository>()
+            .getBriefPointsOfInterest(
+              page: page,
+              filter: PointOfInterestFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<PointOfInterestRepository>()
+            .countPointsOfInterest(
+              filter: PointOfInterestFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
 
   static final cinematicSequence =
       FoxyEntityPickerDelegate<BriefCinematicSequenceEntity>(
