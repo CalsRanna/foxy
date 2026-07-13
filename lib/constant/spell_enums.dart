@@ -72,6 +72,8 @@ const kSpellPowerTypeOptions = {
   4: '快乐值',
   5: '符文',
   6: '符能',
+  127: '全部能量',
+  0xFFFFFFFE: '生命值',
 };
 
 /// SpellFamilyNames 法术族选项（来源: SharedDefines.h enum SpellFamilyNames）
@@ -95,6 +97,7 @@ const kSpellFamilyNameOptions = {
 
 /// SpellEffects 法术效果类型选项（来源: SharedDefines.h enum SpellEffects, 1-164）
 const kSpellEffectOptions = {
+  0: '无',
   1: '即死',
   2: '法术伤害',
   3: '占位效果',
@@ -825,3 +828,9 @@ const kAuraStateTypeOptions = {
   22: '未知22',
   23: '生命高于75%',
 };
+
+/// SharedDefines.h Gender，spell_area.gender 仅接受 0、1、2。
+const kSpellAreaGenderOptions = {0: '男性', 1: '女性', 2: '不限'};
+
+/// SpellMgr.h SpellLinkedType；数据库保存未乘 SPELL_LINKED_MAX_SPELLS 的序号。
+const kSpellLinkedTypeOptions = {0: '施放', 1: '命中', 2: '光环'};

@@ -16,9 +16,11 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
   final items = signal<List<SpellLinkedSpellEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
-  late final spellIdController = registerController(IntFieldController());
+  late final spellTriggerController = registerController(IntFieldController());
   late final spellEffectController = registerController(IntFieldController());
-  late final typeController = registerController(IntFieldController());
+  late final typeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final commentController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
@@ -30,20 +32,26 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
   }
 
   void resetForm() {
+    spellTriggerController.init(spellId.value);
     spellEffectController.init(0);
     typeController.init(0);
     commentController.init('');
   }
 
   void fillForm(SpellLinkedSpellEntity data) {
+    spellTriggerController.init(data.spellTrigger);
     spellEffectController.init(data.spellEffect);
     typeController.init(data.type);
     commentController.init(data.comment);
   }
 
   SpellLinkedSpellEntity collectFromForm() {
+    final trigger = spellTriggerController.collect();
+    if (trigger.abs() != spellId.value) {
+      throw ArgumentError('触发法术绝对值必须等于当前法术ID');
+    }
     return SpellLinkedSpellEntity(
-      spellTrigger: spellId.value,
+      spellTrigger: trigger,
       spellEffect: spellEffectController.collect(),
       type: typeController.collect(),
       comment: commentController.collect(),
@@ -75,6 +83,7 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
       await _repository.copySpellLinkedSpell(
         linked.spellTrigger,
         linked.spellEffect,
+        linked.type,
       );
       await load();
       if (!context.mounted) return;
@@ -113,6 +122,7 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
         await _repository.destroySpellLinkedSpell(
           linked.spellTrigger,
           linked.spellEffect,
+          linked.type,
         );
         await load();
         if (!context.mounted) return;
@@ -150,6 +160,7 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
       await _repository.updateSpellLinkedSpell(
         oldData.spellTrigger,
         oldData.spellEffect,
+        oldData.type,
         newData,
       );
       await load();
@@ -172,7 +183,7 @@ class SpellLinkedSpellViewModel with FieldControllerMixin {
   Future<void> initSignals({required int spellId}) async {
     try {
       this.spellId.value = spellId;
-      spellIdController.init(spellId);
+      spellTriggerController.init(spellId);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('法术链接-初始化失败: $e');

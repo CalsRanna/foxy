@@ -44,10 +44,12 @@ class SpellCustomAttrRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellCustomAttr(SpellCustomAttrEntity data) async {
+    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
   Future<void> updateSpellCustomAttr(SpellCustomAttrEntity data) async {
+    data.validate();
     var json = data.toJson();
     json.remove('spell_id');
     await laconic.table(_table).where('spell_id', data.spellId).update(json);
@@ -58,12 +60,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
   }
 
   Future<void> copySpellCustomAttr(int spellId) async {
-    var source = await getSpellCustomAttr(spellId);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextSpellId();
-    json['spell_id'] = nextId;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
   }
 
   Future<void> saveSpellCustomAttr(SpellCustomAttrEntity data) async {
@@ -73,13 +70,5 @@ class SpellCustomAttrRepository with RepositoryMixin {
     } else {
       await storeSpellCustomAttr(data);
     }
-  }
-
-  Future<int> _getNextSpellId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(spell_id) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
   }
 }

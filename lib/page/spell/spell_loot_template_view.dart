@@ -111,11 +111,6 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () => viewModel.delete(context),
                   child: Text('删除'),
@@ -161,7 +156,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
     final isEditing = viewModel.selectedIndex.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,12 +183,6 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            spacing: 16,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '关联',
@@ -212,6 +201,12 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 16,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '需要任务',
@@ -222,12 +217,6 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            spacing: 16,
-            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '掉落模式',
@@ -255,6 +244,12 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            spacing: 16,
+            children: [
               Expanded(
                 child: FoxyFormItem(
                   label: '最大数量',
@@ -264,15 +259,18 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   ),
                 ),
               ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '注解',
+                  child: FoxyStringInput(
+                    controller: viewModel.commentController,
+                    placeholder: 'Comment',
+                  ),
+                ),
+              ),
+              Expanded(child: SizedBox()),
+              Expanded(child: SizedBox()),
             ],
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '注解',
-            child: FoxyStringInput(
-              controller: viewModel.commentController,
-              placeholder: 'Comment',
-            ),
           ),
           SizedBox(height: 24),
           Row(

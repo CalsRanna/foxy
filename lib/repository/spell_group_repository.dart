@@ -5,19 +5,11 @@ class SpellGroupRepository with RepositoryMixin {
   static const _table = 'spell_group';
 
   Future<List<SpellGroupEntity>> getBriefSpellGroups(int spellId) async {
-    var builder = laconic.table('$_table AS sg');
-    const fields = [
-      'sg.*',
-      'sgsr.stack_rule as stack_rule',
-      'sgsr.description as description',
-    ];
-    builder = builder.select(fields);
-    builder = builder.leftJoin(
-      'spell_group_stack_rules AS sgsr',
-      (join) => join.on('sg.id', 'sgsr.group_id'),
-    );
-    builder = builder.where('sg.spell_id', spellId);
-    var results = await builder.get();
+    var results = await laconic
+        .table(_table)
+        .where('spell_id', spellId)
+        .orderBy('id')
+        .get();
     return results.map((e) => SpellGroupEntity.fromJson(e.toMap())).toList();
   }
 
@@ -33,11 +25,12 @@ class SpellGroupRepository with RepositoryMixin {
   }
 
   Future<SpellGroupEntity> createSpellGroup(int spellId) async {
-    var nextId = await getNextId();
+    var nextId = await _getNextId();
     return SpellGroupEntity(id: nextId, spellId: spellId);
   }
 
   Future<void> storeSpellGroup(SpellGroupEntity data) async {
+    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -46,14 +39,12 @@ class SpellGroupRepository with RepositoryMixin {
     int spellId,
     SpellGroupEntity data,
   ) async {
-    var json = data.toJson();
-    json.remove('id');
-    json.remove('spell_id');
+    data.validate();
     await laconic
         .table(_table)
         .where('id', id)
         .where('spell_id', spellId)
-        .update(json);
+        .update(data.toJson());
   }
 
   Future<void> destroySpellGroup(int id, int spellId) async {
@@ -68,7 +59,7 @@ class SpellGroupRepository with RepositoryMixin {
     var source = await getSpellGroup(id, spellId);
     if (source == null) return;
     var json = source.toJson();
-    json['id'] = await getNextId();
+    json['id'] = await _getNextId();
     await laconic.table(_table).insert([json]);
   }
 
@@ -81,7 +72,7 @@ class SpellGroupRepository with RepositoryMixin {
     }
   }
 
-  Future<int> getNextId() async {
+  Future<int> _getNextId() async {
     var maxResult = await laconic.table(_table).select([
       'MAX(id) AS maxId',
     ]).first();

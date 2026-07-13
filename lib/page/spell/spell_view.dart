@@ -20,7 +20,8 @@ import 'package:signals/signals_flutter.dart';
 
 class SpellView extends StatefulWidget {
   final int? id;
-  const SpellView({super.key, this.id});
+  final ValueChanged<int>? onSaved;
+  const SpellView({super.key, this.id, this.onSaved});
 
   @override
   State<SpellView> createState() => _SpellViewState();
@@ -110,6 +111,34 @@ class _SpellViewState extends State<SpellView> {
           onSaved: vm.applyAuraDescriptionLocales,
         );
       }),
+    );
+    final nameLangFlagsInput = FoxyFormItem(
+      label: '名称语言标志',
+      child: FoxyNumberInput<int>(
+        controller: vm.nameLangFlagsController,
+        placeholder: 'Name_lang_Flags',
+      ),
+    );
+    final nameSubtextLangFlagsInput = FoxyFormItem(
+      label: '子名称语言标志',
+      child: FoxyNumberInput<int>(
+        controller: vm.nameSubtextLangFlagsController,
+        placeholder: 'NameSubtext_lang_Flags',
+      ),
+    );
+    final descriptionLangFlagsInput = FoxyFormItem(
+      label: '描述语言标志',
+      child: FoxyNumberInput<int>(
+        controller: vm.descriptionLangFlagsController,
+        placeholder: 'Description_lang_Flags',
+      ),
+    );
+    final auraDescriptionLangFlagsInput = FoxyFormItem(
+      label: '光环描述语言标志',
+      child: FoxyNumberInput<int>(
+        controller: vm.auraDescriptionLangFlagsController,
+        placeholder: 'AuraDescription_lang_Flags',
+      ),
     );
 
     // === 图标/视觉 ===
@@ -322,16 +351,18 @@ class _SpellViewState extends State<SpellView> {
     // === 状态 ===
     final casterAuraStateInput = FoxyFormItem(
       label: '施法者状态',
-      child: FoxyNumberInput<int>(
-        placeholder: 'CasterAuraState',
+      child: FoxyShadSelect<int>(
         controller: vm.casterAuraStateController,
+        options: kAuraStateTypeOptions,
+        placeholder: Text('CasterAuraState'),
       ),
     );
     final targetAuraStateInput = FoxyFormItem(
       label: '目标状态',
-      child: FoxyNumberInput<int>(
-        placeholder: 'TargetAuraState',
+      child: FoxyShadSelect<int>(
         controller: vm.targetAuraStateController,
+        options: kAuraStateTypeOptions,
+        placeholder: Text('TargetAuraState'),
       ),
     );
     final spellMissileIDInput = FoxyFormItem(
@@ -351,9 +382,8 @@ class _SpellViewState extends State<SpellView> {
 
     // === 需求 ===
     final requiredAreasIDInput = FoxyFormItem(
-      label: '需求区域',
-      child: FoxyEntityPicker(
-        delegate: FoxyEntityPickerDelegates.areaTable,
+      label: '需求区域组',
+      child: FoxyNumberInput<int>(
         controller: vm.requiredAreasIDController,
         placeholder: 'RequiredAreasID',
       ),
@@ -601,28 +631,32 @@ class _SpellViewState extends State<SpellView> {
     // === 图腾/施法材料 ===
     final requiredTotemCategoryID0Input = FoxyFormItem(
       label: '图腾1类型',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.totemCategory,
         placeholder: 'RequiredTotemCategoryID0',
         controller: vm.requiredTotemCategoryID0Controller,
       ),
     );
     final totem0Input = FoxyFormItem(
       label: '图腾1',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         placeholder: 'Totem0',
         controller: vm.totem0Controller,
       ),
     );
     final requiredTotemCategoryID1Input = FoxyFormItem(
       label: '图腾2类型',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.totemCategory,
         placeholder: 'RequiredTotemCategoryID1',
         controller: vm.requiredTotemCategoryID1Controller,
       ),
     );
     final totem1Input = FoxyFormItem(
       label: '图腾2',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         placeholder: 'Totem1',
         controller: vm.totem1Controller,
       ),
@@ -683,11 +717,68 @@ class _SpellViewState extends State<SpellView> {
         controller: vm.reagentCount3Controller,
       ),
     );
+    final reagent4Input = FoxyFormItem(
+      label: '施法材料5',
+      child: FoxyNumberInput<int>(
+        placeholder: 'Reagent4',
+        controller: vm.reagent4Controller,
+      ),
+    );
+    final reagentCount4Input = FoxyFormItem(
+      label: '材料5数量',
+      child: FoxyNumberInput<int>(
+        placeholder: 'ReagentCount4',
+        controller: vm.reagentCount4Controller,
+      ),
+    );
+    final reagent5Input = FoxyFormItem(
+      label: '施法材料6',
+      child: FoxyNumberInput<int>(
+        placeholder: 'Reagent5',
+        controller: vm.reagent5Controller,
+      ),
+    );
+    final reagentCount5Input = FoxyFormItem(
+      label: '材料6数量',
+      child: FoxyNumberInput<int>(
+        placeholder: 'ReagentCount5',
+        controller: vm.reagentCount5Controller,
+      ),
+    );
+    final reagent6Input = FoxyFormItem(
+      label: '施法材料7',
+      child: FoxyNumberInput<int>(
+        placeholder: 'Reagent6',
+        controller: vm.reagent6Controller,
+      ),
+    );
+    final reagentCount6Input = FoxyFormItem(
+      label: '材料7数量',
+      child: FoxyNumberInput<int>(
+        placeholder: 'ReagentCount6',
+        controller: vm.reagentCount6Controller,
+      ),
+    );
+    final reagent7Input = FoxyFormItem(
+      label: '施法材料8',
+      child: FoxyNumberInput<int>(
+        placeholder: 'Reagent7',
+        controller: vm.reagent7Controller,
+      ),
+    );
+    final reagentCount7Input = FoxyFormItem(
+      label: '材料8数量',
+      child: FoxyNumberInput<int>(
+        placeholder: 'ReagentCount7',
+        controller: vm.reagentCount7Controller,
+      ),
+    );
 
     // === 其他高级属性 ===
     final casterAuraSpellInput = FoxyFormItem(
       label: '施法者光环法术',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.spell,
         placeholder: 'CasterAuraSpell',
         controller: vm.casterAuraSpellController,
       ),
@@ -737,7 +828,8 @@ class _SpellViewState extends State<SpellView> {
     );
     final targetAuraSpellInput = FoxyFormItem(
       label: '目标光环法术',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.spell,
         placeholder: 'TargetAuraSpell',
         controller: vm.targetAuraSpellController,
       ),
@@ -750,7 +842,7 @@ class _SpellViewState extends State<SpellView> {
       ),
     );
     final shapeshiftMask0Input = FoxyFormItem(
-      label: '变形掩码',
+      label: '变形掩码低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftMask0Controller,
         flags: kShapeshiftFormMaskOptions,
@@ -758,13 +850,63 @@ class _SpellViewState extends State<SpellView> {
         placeholder: 'ShapeshiftMask0',
       ),
     );
+    final shapeshiftMask1Input = FoxyFormItem(
+      label: '变形掩码高32位',
+      child: FoxyFlagPicker(
+        controller: vm.shapeshiftMask1Controller,
+        flags: kSpellClassMaskBits,
+        title: '变形掩码高32位',
+        placeholder: 'ShapeshiftMask1',
+      ),
+    );
     final shapeshiftExclude0Input = FoxyFormItem(
-      label: '变形排除',
+      label: '变形排除低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude0Controller,
         flags: kShapeshiftFormMaskOptions,
         title: '变形排除',
         placeholder: 'ShapeshiftExclude0',
+      ),
+    );
+    final shapeshiftExclude1Input = FoxyFormItem(
+      label: '变形排除高32位',
+      child: FoxyFlagPicker(
+        controller: vm.shapeshiftExclude1Controller,
+        flags: kSpellClassMaskBits,
+        title: '变形排除高32位',
+        placeholder: 'ShapeshiftExclude1',
+      ),
+    );
+    final excludeCasterAuraStateInput = FoxyFormItem(
+      label: '排除施法者光环状态',
+      child: FoxyShadSelect<int>(
+        controller: vm.excludeCasterAuraStateController,
+        options: kAuraStateTypeOptions,
+        placeholder: Text('ExcludeCasterAuraState'),
+      ),
+    );
+    final excludeTargetAuraStateInput = FoxyFormItem(
+      label: '排除目标光环状态',
+      child: FoxyShadSelect<int>(
+        controller: vm.excludeTargetAuraStateController,
+        options: kAuraStateTypeOptions,
+        placeholder: Text('ExcludeTargetAuraState'),
+      ),
+    );
+    final excludeCasterAuraSpellInput = FoxyFormItem(
+      label: '排除施法者光环法术',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.spell,
+        controller: vm.excludeCasterAuraSpellController,
+        placeholder: 'ExcludeCasterAuraSpell',
+      ),
+    );
+    final excludeTargetAuraSpellInput = FoxyFormItem(
+      label: '排除目标光环法术',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.spell,
+        controller: vm.excludeTargetAuraSpellController,
+        placeholder: 'ExcludeTargetAuraSpell',
       ),
     );
 
@@ -774,15 +916,24 @@ class _SpellViewState extends State<SpellView> {
         children: [
           Expanded(child: idInput),
           Expanded(child: nameInput),
+          Expanded(child: nameLangFlagsInput),
           Expanded(child: subtextInput),
-          Expanded(child: SizedBox()),
         ],
       ),
       Row(
         spacing: 8,
         children: [
+          Expanded(child: nameSubtextLangFlagsInput),
           Expanded(child: descriptionInput),
+          Expanded(child: descriptionLangFlagsInput),
           Expanded(child: auraDescriptionInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: auraDescriptionLangFlagsInput),
+          Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
         ],
@@ -997,6 +1148,24 @@ class _SpellViewState extends State<SpellView> {
           Expanded(child: reagentCount3Input),
         ],
       ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: reagent4Input),
+          Expanded(child: reagentCount4Input),
+          Expanded(child: reagent5Input),
+          Expanded(child: reagentCount5Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: reagent6Input),
+          Expanded(child: reagentCount6Input),
+          Expanded(child: reagent7Input),
+          Expanded(child: reagentCount7Input),
+        ],
+      ),
     ];
 
     final otherRows = [
@@ -1007,6 +1176,15 @@ class _SpellViewState extends State<SpellView> {
           Expanded(child: cumulativeAuraInput),
           Expanded(child: minFactionIDInput),
           Expanded(child: minReputationInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: excludeCasterAuraStateInput),
+          Expanded(child: excludeTargetAuraStateInput),
+          Expanded(child: excludeCasterAuraSpellInput),
+          Expanded(child: excludeTargetAuraSpellInput),
         ],
       ),
       Row(
@@ -1023,7 +1201,16 @@ class _SpellViewState extends State<SpellView> {
         children: [
           Expanded(child: stanceBarOrderInput),
           Expanded(child: shapeshiftMask0Input),
+          Expanded(child: shapeshiftMask1Input),
           Expanded(child: shapeshiftExclude0Input),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: shapeshiftExclude1Input),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
           Expanded(child: SizedBox()),
         ],
       ),
@@ -1092,9 +1279,9 @@ class _SpellViewState extends State<SpellView> {
               ],
             );
           }),
-          _buildEffectSection(0),
-          _buildEffectSection(1),
-          _buildEffectSection(2),
+          _buildEffectSection('效果1', 0),
+          _buildEffectSection('效果2', 1),
+          _buildEffectSection('效果3', 2),
           FoxyFormSection(title: '装备限制', children: equipRows),
           FoxyFormSection(title: '图腾', children: totemRows),
           FoxyFormSection(title: '施法材料', children: reagentRows),
@@ -1102,7 +1289,10 @@ class _SpellViewState extends State<SpellView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () => viewModel.save(context),
+                onPressed: () async {
+                  final id = await viewModel.save(context);
+                  if (id != null) widget.onSaved?.call(id);
+                },
                 child: Text('保存'),
               ),
               const SizedBox(width: 8),
@@ -1224,8 +1414,7 @@ class _SpellViewState extends State<SpellView> {
 
   /// 构建响应式效果区域
   /// 根据 [effectSignal] 和 [effectAuraSignal] 决定子字段的 readonly 状态
-  Widget _buildEffectSection(int i) {
-    final labels = ['效果1', '效果2', '效果3'];
+  Widget _buildEffectSection(String title, int i) {
     return Watch((_) {
       final effectValue = switch (i) {
         0 => viewModel.effect0Signal.value,
@@ -1425,7 +1614,7 @@ class _SpellViewState extends State<SpellView> {
       };
 
       return FoxyFormSection(
-        title: labels[i],
+        title: title,
         children: [
           Row(
             spacing: 8,
@@ -1524,7 +1713,7 @@ class _SpellViewState extends State<SpellView> {
             children: [
               Expanded(
                 child: FoxyFormItem(
-                  label: '振幅',
+                  label: '效果值倍率',
                   child: FoxyNumberInput<double>(
                     placeholder: 'Amplitude',
                     controller: amplitudeCtrl,
@@ -1591,7 +1780,7 @@ class _SpellViewState extends State<SpellView> {
               ),
               Expanded(
                 child: FoxyFormItem(
-                  label: '连锁振幅',
+                  label: '效果伤害倍率',
                   child: FoxyNumberInput<double>(
                     placeholder: 'ChainAmplitude',
                     controller: chainAmpCtrl,
@@ -1601,7 +1790,7 @@ class _SpellViewState extends State<SpellView> {
               ),
               Expanded(
                 child: FoxyFormItem(
-                  label: '加成系数',
+                  label: '效果加成倍率',
                   child: FoxyNumberInput<double>(
                     placeholder: 'BonusCoefficient',
                     controller: bonusCoefCtrl,
@@ -1617,31 +1806,22 @@ class _SpellViewState extends State<SpellView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '物品类型',
-                  child: FoxyShadSelect<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.itemTemplate,
                     controller: itemTypeCtrl,
-                    options: kSpellItemClassOptions,
-                    placeholder: const Text('ItemType'),
-                    enabled: effectActive && needsItemType,
+                    placeholder: 'ItemType',
+                    readOnly: !(effectActive && needsItemType),
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '触发法术',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
                     placeholder: 'TriggerSpell',
                     controller: triggerSpellCtrl,
-                    readOnly: !effectActive || !needsTriggerSpell,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '连锁目标',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'ChainTarget',
-                    controller: chainTargetsCtrl,
-                    readOnly: !effectActive,
+                    readOnly: !(effectActive && needsTriggerSpell),
                   ),
                 ),
               ),
@@ -1655,6 +1835,7 @@ class _SpellViewState extends State<SpellView> {
                   ),
                 ),
               ),
+              Expanded(child: SizedBox()),
             ],
           ),
           Row(

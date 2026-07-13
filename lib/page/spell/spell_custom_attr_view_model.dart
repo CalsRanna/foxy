@@ -15,7 +15,7 @@ class SpellCustomAttrViewModel with FieldControllerMixin {
   final spellId = signal(0);
 
   late final spellIdController = registerController(IntFieldController());
-  late final attributesController = registerController(IntFieldController());
+  late final attributesController = registerController(FlagFieldController());
 
   final customAttr = signal(SpellCustomAttrEntity());
 

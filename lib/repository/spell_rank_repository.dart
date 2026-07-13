@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellRankRepository with RepositoryMixin {
   static const _table = 'spell_ranks';
 
-  Future<List<SpellRankEntity>> getBriefSpellRanks(int spellId) async {
+  Future<List<BriefSpellRankEntity>> getBriefSpellRanks(int spellId) async {
     var firstResults = await laconic
         .table(_table)
         .select(['first_spell_id'])
@@ -36,7 +36,9 @@ class SpellRankRepository with RepositoryMixin {
     builder = builder.where('sr.first_spell_id', firstSpellId);
     builder = builder.orderBy('sr.`rank`');
     var results = await builder.get();
-    return results.map((e) => SpellRankEntity.fromJson(e.toMap())).toList();
+    return results
+        .map((e) => BriefSpellRankEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<SpellRankEntity?> getSpellRank(int firstSpellId, int rank) async {
@@ -55,6 +57,7 @@ class SpellRankRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellRank(SpellRankEntity data) async {
+    data.validate();
     var json = data.toJson();
     json['`rank`'] = json.remove('rank');
     await laconic.table(_table).insert([json]);
@@ -65,8 +68,8 @@ class SpellRankRepository with RepositoryMixin {
     int rank,
     SpellRankEntity data,
   ) async {
+    data.validate();
     var json = data.toJson();
-    json.remove('first_spell_id');
     json['`rank`'] = json.remove('rank');
     await laconic
         .table(_table)
@@ -84,25 +87,7 @@ class SpellRankRepository with RepositoryMixin {
   }
 
   Future<void> copySpellRank(int firstSpellId, int rank) async {
-    var source = await getSpellRank(firstSpellId, rank);
-    if (source == null) return;
-    var json = source.toJson();
-    var maxSpellIdResult = await laconic
-        .table(_table)
-        .select(['MAX(spell_id) AS maxSpellId'])
-        .where('first_spell_id', firstSpellId)
-        .first();
-    var maxRankResult = await laconic
-        .table(_table)
-        .select(['MAX(`rank`) AS maxRank'])
-        .where('first_spell_id', firstSpellId)
-        .first();
-    var maxSpellId = (maxSpellIdResult.toMap()['maxSpellId'] ?? 0) as int;
-    var maxRank = (maxRankResult.toMap()['maxRank'] ?? 0) as int;
-    json['spell_id'] = maxSpellId + 1;
-    json['rank'] = maxRank + 1;
-    json['`rank`'] = json.remove('rank');
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术等级记录不能自动复制，请新增记录并选择有效法术。');
   }
 
   Future<void> saveSpellRank(SpellRankEntity data) async {

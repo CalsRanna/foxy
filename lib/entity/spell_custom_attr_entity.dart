@@ -5,6 +5,18 @@ class SpellCustomAttrEntity {
 
   const SpellCustomAttrEntity({this.spellId = 0, this.attributes = 0});
 
+  void validate() {
+    if ((attributes & 0x00001000) != 0 && (attributes & 0x02000000) != 0) {
+      throw ArgumentError('效果1不能同时标记为正面和负面');
+    }
+    if ((attributes & 0x00002000) != 0 && (attributes & 0x04000000) != 0) {
+      throw ArgumentError('效果2不能同时标记为正面和负面');
+    }
+    if ((attributes & 0x00004000) != 0 && (attributes & 0x08000000) != 0) {
+      throw ArgumentError('效果3不能同时标记为正面和负面');
+    }
+  }
+
   factory SpellCustomAttrEntity.fromJson(Map<String, dynamic> json) {
     return SpellCustomAttrEntity(
       spellId: json['spell_id'] ?? 0,

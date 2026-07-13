@@ -21,14 +21,18 @@ class SpellAreaViewModel with FieldControllerMixin {
   late final questStartController = registerController(IntFieldController());
   late final questEndController = registerController(IntFieldController());
   late final auraSpellController = registerController(IntFieldController());
-  late final racemaskController = registerController(IntFieldController());
-  late final genderController = registerController(IntFieldController());
-  late final autocastController = registerController(IntFieldController());
+  late final racemaskController = registerController(FlagFieldController());
+  late final genderController = registerController(
+    SelectFieldController<int>(fallback: 2),
+  );
+  late final autocastController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final questStartStatusController = registerController(
-    IntFieldController(),
+    FlagFieldController(),
   );
   late final questEndStatusController = registerController(
-    IntFieldController(),
+    FlagFieldController(),
   );
 
   final _repository = GetIt.instance.get<SpellAreaRepository>();
@@ -45,10 +49,10 @@ class SpellAreaViewModel with FieldControllerMixin {
     questEndController.init(0);
     auraSpellController.init(0);
     racemaskController.init(0);
-    genderController.init(0);
+    genderController.init(2);
     autocastController.init(0);
-    questStartStatusController.init(0);
-    questEndStatusController.init(0);
+    questStartStatusController.init(64);
+    questEndStatusController.init(11);
   }
 
   void fillForm(SpellAreaEntity data) {
@@ -93,30 +97,6 @@ class SpellAreaViewModel with FieldControllerMixin {
     if (index == null || index < 0 || index >= items.value.length) return;
     final area = items.value[index];
     fillForm(area);
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final area = items.value[index];
-    try {
-      await _repository.copySpellArea(
-        area.spell,
-        area.area,
-        area.questStart,
-        area.auraSpell,
-        area.racemask,
-        area.gender,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {

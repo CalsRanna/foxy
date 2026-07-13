@@ -55,8 +55,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   // === 分类/类型 ===
   late final categoryController = registerController(IntFieldController());
 
-  /// 冗余整数字段（历史保留）；UI 与 collect 以 [schoolMaskFlagController] 为准。
-  late final schoolMaskController = registerController(IntFieldController());
   late final schoolMaskFlagController = registerController(
     FlagFieldController(),
   );
@@ -115,10 +113,10 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   // === 状态 ===
   late final casterAuraStateController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final targetAuraStateController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final spellMissileIDController = registerController(
     IntFieldController(),
@@ -254,7 +252,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectItemType0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    IntFieldController(),
   );
   late final effectTriggerSpell0Controller = registerController(
     IntFieldController(),
@@ -322,7 +320,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectItemType1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    IntFieldController(),
   );
   late final effectTriggerSpell1Controller = registerController(
     IntFieldController(),
@@ -390,7 +388,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     DoubleFieldController(),
   );
   late final effectItemType2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
+    IntFieldController(),
   );
   late final effectTriggerSpell2Controller = registerController(
     IntFieldController(),
@@ -484,7 +482,13 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final shapeshiftMask0Controller = registerController(
     FlagFieldController(),
   );
+  late final shapeshiftMask1Controller = registerController(
+    FlagFieldController(),
+  );
   late final shapeshiftExclude0Controller = registerController(
+    FlagFieldController(),
+  );
+  late final shapeshiftExclude1Controller = registerController(
     FlagFieldController(),
   );
 
@@ -502,7 +506,7 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   bool _effectSignalsWired = false;
 
-  Future<void> save(BuildContext context) async {
+  Future<int?> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
       final isCreate = (await _repository.getSpell(t.id)) == null;
@@ -519,13 +523,15 @@ class SpellDetailViewModel with FieldControllerMixin {
         isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
-      if (!context.mounted) return;
+      if (!context.mounted) return t.id;
       var toast = ShadToast(description: Text('法术数据已保存'));
       ShadSonner.of(context).show(toast);
+      return t.id;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return null;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return null;
     }
   }
 
@@ -834,7 +840,9 @@ class SpellDetailViewModel with FieldControllerMixin {
       targetAuraSpell: targetAuraSpellController.collect(),
       stanceBarOrder: stanceBarOrderController.collect(),
       shapeshiftMask0: shapeshiftMask0Controller.collect(),
+      shapeshiftMask1: shapeshiftMask1Controller.collect(),
       shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
+      shapeshiftExclude1: shapeshiftExclude1Controller.collect(),
     );
   }
 
@@ -915,7 +923,6 @@ class SpellDetailViewModel with FieldControllerMixin {
 
     // === 分类/类型 ===
     categoryController.init(template.category);
-    schoolMaskController.init(template.schoolMask);
     schoolMaskFlagController.init(template.schoolMask);
     mechanicController.init(template.mechanic);
     defenseTypeController.init(template.defenseType);
@@ -1113,6 +1120,8 @@ class SpellDetailViewModel with FieldControllerMixin {
     targetAuraSpellController.init(template.targetAuraSpell);
     stanceBarOrderController.init(template.stanceBarOrder);
     shapeshiftMask0Controller.init(template.shapeshiftMask0);
+    shapeshiftMask1Controller.init(template.shapeshiftMask1);
     shapeshiftExclude0Controller.init(template.shapeshiftExclude0);
+    shapeshiftExclude1Controller.init(template.shapeshiftExclude1);
   }
 }

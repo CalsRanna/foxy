@@ -13,7 +13,7 @@ class SpellRankViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellRankEntity>>([]);
+  final items = signal<List<BriefSpellRankEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
   late final firstSpellIdController = registerController(IntFieldController());
@@ -34,7 +34,7 @@ class SpellRankViewModel with FieldControllerMixin {
     rankController.init(0);
   }
 
-  void fillForm(SpellRankEntity data) {
+  void fillForm(BriefSpellRankEntity data) {
     firstSpellIdController.init(data.firstSpellId);
     rankSpellIdController.init(data.spellId);
     rankController.init(data.rank);
@@ -52,7 +52,7 @@ class SpellRankViewModel with FieldControllerMixin {
     try {
       resetForm();
       firstSpellIdController.init(
-        items.value.isNotEmpty ? items.value.first.firstSpellId : 0,
+        items.value.isNotEmpty ? items.value.first.firstSpellId : spellId.value,
       );
       rankSpellIdController.init(spellId.value);
       rankController.init(
@@ -70,23 +70,6 @@ class SpellRankViewModel with FieldControllerMixin {
     if (index == null || index < 0 || index >= items.value.length) return;
     final rank = items.value[index];
     fillForm(rank);
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final rank = items.value[index];
-    try {
-      await _repository.copySpellRank(rank.firstSpellId, rank.rank);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {

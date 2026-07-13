@@ -13,7 +13,7 @@ class SpellLootTemplateViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
-  final items = signal<List<SpellLootTemplateEntity>>([]);
+  final items = signal<List<BriefSpellLootTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
 
   late final spellIdController = registerController(IntFieldController());
@@ -40,16 +40,16 @@ class SpellLootTemplateViewModel with FieldControllerMixin {
   void resetForm() {
     itemController.init(0);
     referenceController.init(0);
-    chanceController.init(0.0);
+    chanceController.init(100.0);
     questRequiredController.init(0);
-    lootModeController.init(0);
+    lootModeController.init(1);
     groupIdController.init(0);
-    minCountController.init(0);
-    maxCountController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
     commentController.init('');
   }
 
-  void fillForm(SpellLootTemplateEntity data) {
+  void fillForm(BriefSpellLootTemplateEntity data) {
     itemController.init(data.item);
     referenceController.init(data.reference);
     chanceController.init(data.chance);
@@ -91,23 +91,6 @@ class SpellLootTemplateViewModel with FieldControllerMixin {
     if (index == null || index < 0 || index >= items.value.length) return;
     final loot = items.value[index];
     fillForm(loot);
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final loot = items.value[index];
-    try {
-      await _repository.copySpellLootTemplate(loot.entry, loot.item);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {

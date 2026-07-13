@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/constant/item_flags.dart';
+import 'package:foxy/constant/spell_enums.dart';
+import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/page/spell/spell_area_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -101,11 +109,6 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () => viewModel.delete(context),
                   child: Text('删除'),
@@ -151,7 +154,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
     final isEditing = viewModel.selectedIndex.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 600),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,12 +175,15 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '区域',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.areaTable,
                     controller: viewModel.areaController,
                     placeholder: 'area',
                   ),
                 ),
               ),
+              Expanded(child: SizedBox()),
+              Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 16),
@@ -187,7 +193,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '开始任务',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.questTemplate,
                     controller: viewModel.questStartController,
                     placeholder: 'quest_start',
                   ),
@@ -196,7 +203,8 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '结束任务',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.questTemplate,
                     controller: viewModel.questEndController,
                     placeholder: 'quest_end',
                   ),
@@ -205,8 +213,10 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '开始任务掩码',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyFlagPicker(
                     controller: viewModel.questStartStatusController,
+                    flags: kSpellAreaQuestStatusOptions,
+                    title: '开始任务状态',
                     placeholder: 'quest_start_status',
                   ),
                 ),
@@ -214,8 +224,10 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '结束任务掩码',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyFlagPicker(
                     controller: viewModel.questEndStatusController,
+                    flags: kSpellAreaQuestStatusOptions,
+                    title: '结束任务状态',
                     placeholder: 'quest_end_status',
                   ),
                 ),
@@ -238,8 +250,10 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '种族掩码',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyFlagPicker(
                     controller: viewModel.racemaskController,
+                    flags: kAllowableRaceOptions,
+                    title: '种族掩码',
                     placeholder: 'racemask',
                   ),
                 ),
@@ -247,18 +261,20 @@ class _SpellAreaViewState extends State<SpellAreaView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '性别',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.genderController,
-                    placeholder: 'gender',
+                    options: kSpellAreaGenderOptions,
+                    placeholder: Text('gender'),
                   ),
                 ),
               ),
               Expanded(
                 child: FoxyFormItem(
                   label: '自动施放',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.autocastController,
-                    placeholder: 'autocast',
+                    options: kBooleanOptions,
+                    placeholder: Text('autocast'),
                   ),
                 ),
               ),

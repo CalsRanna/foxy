@@ -65,12 +65,7 @@ class SpellBonusDataRepository with RepositoryMixin {
   }
 
   Future<void> copySpellBonusData(int entry) async {
-    var source = await getSpellBonusData(entry);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextEntry = await _getNextEntry();
-    json['entry'] = nextEntry;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术加成记录不能自动复制，请为有效法术新增记录。');
   }
 
   Future<void> saveSpellBonusData(SpellBonusDataEntity data) async {
@@ -80,9 +75,5 @@ class SpellBonusDataRepository with RepositoryMixin {
     } else {
       await storeSpellBonusData(data);
     }
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 }
