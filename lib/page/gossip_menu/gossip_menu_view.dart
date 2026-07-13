@@ -11,8 +11,14 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 class GossipMenuView extends StatefulWidget {
   final int? menuId;
   final int? textId;
+  final void Function(int menuId, int textId) onSaved;
 
-  const GossipMenuView({super.key, this.menuId, this.textId});
+  const GossipMenuView({
+    super.key,
+    this.menuId,
+    this.textId,
+    required this.onSaved,
+  });
 
   @override
   State<GossipMenuView> createState() => _GossipMenuViewState();
@@ -75,7 +81,8 @@ class _GossipMenuViewState extends State<GossipMenuView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () => viewModel.save(context),
+                onPressed: () =>
+                    viewModel.save(context, onSaved: widget.onSaved),
                 child: Text('保存'),
               ),
               const SizedBox(width: 8),

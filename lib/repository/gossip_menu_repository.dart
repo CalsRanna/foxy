@@ -85,7 +85,7 @@ class GossipMenuRepository with RepositoryMixin {
   }
 
   Future<int> storeGossipMenu(GossipMenuEntity menu) async {
-    var newMenuId = await getNextMenuId();
+    final newMenuId = menu.menuId > 0 ? menu.menuId : await getNextMenuId();
     await laconic.table(_table).insert([
       {'MenuID': newMenuId, 'TextID': menu.textId},
     ]);
@@ -137,7 +137,6 @@ class GossipMenuRepository with RepositoryMixin {
     }
   }
 
-  /// UI previews next MenuID before insert; keep public.
   Future<int> getNextMenuId() async {
     final result = await laconic.table(_table).select([
       'MAX(MenuID) as max_id',

@@ -152,11 +152,8 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   }
 
   Widget _buildForm() {
-    final iconOptions = kGossipOptionIcons;
-    final typeOptions = kGossipOptionTypes;
-
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
@@ -187,31 +184,13 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       ),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
-                  Expanded(child: SizedBox()),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
                   Expanded(
                     child: _labeled(
                       '类型',
                       FoxyShadSelect<int>(
                         controller: viewModel.optionTypeController,
-                        options: typeOptions,
+                        options: kGossipOptionTypes,
                         placeholder: const Text('OptionType'),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: _labeled(
-                      'NPC标识',
-                      FoxyFlagPicker(
-                        controller: viewModel.optionNpcFlagController,
-                        flags: kNpcFlagOptions,
-                        title: 'Npc标识编辑器',
-                        placeholder: 'OptionNpcFlag',
                       ),
                     ),
                   ),
@@ -220,23 +199,24 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       '图标',
                       FoxyShadSelect<int>(
                         controller: viewModel.optionIconController,
-                        options: iconOptions,
+                        options: kGossipOptionIcons,
                         placeholder: const Text('OptionIcon'),
                       ),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
                 ],
               ),
               Row(
                 spacing: 8,
                 children: [
                   Expanded(
-                    child: FoxyFormItem(
-                      label: '文本',
-                      child: FoxyStringInput(
-                        controller: viewModel.optionTextController,
-                        placeholder: 'OptionText',
+                    child: _labeled(
+                      'NPC标识',
+                      FoxyFlagPicker(
+                        controller: viewModel.optionNpcFlagController,
+                        flags: kNpcFlagOptions,
+                        title: 'Npc标识编辑器',
+                        placeholder: 'OptionNpcFlag',
                       ),
                     ),
                   ),
@@ -252,49 +232,24 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   ),
                   Expanded(
                     child: _labeled(
-                      '广播文本编号',
+                      '兴趣点',
                       FoxyEntityPicker(
-                        delegate: FoxyEntityPickerDelegates.broadcastText,
-                        controller: viewModel.optionBroadcastTextIdController,
-                        placeholder: 'broadcast_text_id',
-                      ),
-                    ),
-                  ),
-                  Expanded(child: SizedBox()),
-                ],
-              ),
-              Row(
-                spacing: 8,
-                children: [
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: 'BoxMoney',
-                      child: FoxyNumberInput<int>(
-                        controller: viewModel.boxMoneyController,
-                        placeholder: 'BoxMoney',
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FoxyFormItem(
-                      label: 'BoxCoded',
-                      child: FoxyNumberInput<int>(
-                        controller: viewModel.boxCodedController,
-                        placeholder: 'BoxCoded',
+                        delegate: FoxyEntityPickerDelegates.pointOfInterest,
+                        controller: viewModel.actionPoiIdController,
+                        placeholder: 'ActionPoiID',
                       ),
                     ),
                   ),
                   Expanded(
                     child: _labeled(
-                      'BoxBroadcastTextID',
-                      FoxyEntityPicker(
-                        delegate: FoxyEntityPickerDelegates.broadcastText,
-                        controller: viewModel.boxBroadcastTextIdController,
-                        placeholder: 'box_broadcast_text_id',
+                      '输入密码',
+                      FoxyShadSelect<int>(
+                        controller: viewModel.boxCodedController,
+                        options: kGossipBooleanOptions,
+                        placeholder: const Text('BoxCoded'),
                       ),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
                 ],
               ),
               Row(
@@ -302,19 +257,29 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                 children: [
                   Expanded(
                     child: FoxyFormItem(
-                      label: 'BoxText',
+                      label: '选项文本',
                       child: FoxyStringInput(
-                        controller: viewModel.boxTextController,
-                        placeholder: 'BoxText',
+                        controller: viewModel.optionTextController,
+                        placeholder: 'OptionText',
                       ),
                     ),
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: 'ActionPoiID',
-                      child: FoxyNumberInput<int>(
-                        controller: viewModel.actionPoiIdController,
-                        placeholder: 'ActionPoiID',
+                      label: '选项文本（zhCN）',
+                      child: FoxyStringInput(
+                        controller: viewModel.localeOptionTextController,
+                        placeholder: 'zhCN OptionText',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      '选项广播文本',
+                      FoxyEntityPicker(
+                        delegate: FoxyEntityPickerDelegates.broadcastText,
+                        controller: viewModel.optionBroadcastTextIdController,
+                        placeholder: 'OptionBroadcastTextID',
                       ),
                     ),
                   ),
@@ -327,7 +292,48 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       ),
                     ),
                   ),
-                  Expanded(child: SizedBox()),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '确认文本',
+                      child: FoxyStringInput(
+                        controller: viewModel.boxTextController,
+                        placeholder: 'BoxText',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '确认文本（zhCN）',
+                      child: FoxyStringInput(
+                        controller: viewModel.localeBoxTextController,
+                        placeholder: 'zhCN BoxText',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: _labeled(
+                      '确认广播文本',
+                      FoxyEntityPicker(
+                        delegate: FoxyEntityPickerDelegates.broadcastText,
+                        controller: viewModel.boxBroadcastTextIdController,
+                        placeholder: 'BoxBroadcastTextID',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '所需铜币',
+                      child: FoxyNumberInput<int>(
+                        controller: viewModel.boxMoneyController,
+                        placeholder: 'BoxMoney',
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

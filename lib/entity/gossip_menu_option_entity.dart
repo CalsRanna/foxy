@@ -1,7 +1,42 @@
-/// gossip_menu_option 模型（复合键: MenuID + OptionID）
-///
-/// 列表查询时通过 LEFT JOIN gossip_menu_option_locale 得到 localeOptionText，
-/// 仅用于列表展示，不参与 toJson。
+class BriefGossipMenuOptionEntity {
+  final int menuId;
+  final int optionId;
+  final int optionIcon;
+  final String optionText;
+  final int optionType;
+  final int optionNpcFlag;
+  final int actionMenuId;
+  final String localeOptionText;
+
+  const BriefGossipMenuOptionEntity({
+    this.menuId = 0,
+    this.optionId = 0,
+    this.optionIcon = 0,
+    this.optionText = '',
+    this.optionType = 0,
+    this.optionNpcFlag = 0,
+    this.actionMenuId = 0,
+    this.localeOptionText = '',
+  });
+
+  factory BriefGossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGossipMenuOptionEntity(
+      menuId: json['MenuID'] ?? json['menuid'] ?? 0,
+      optionId: json['OptionID'] ?? json['optionid'] ?? 0,
+      optionIcon: json['OptionIcon'] ?? json['optionicon'] ?? 0,
+      optionText: json['OptionText']?.toString() ?? '',
+      optionType: json['OptionType'] ?? 0,
+      optionNpcFlag: json['OptionNpcFlag'] ?? 0,
+      actionMenuId: json['ActionMenuID'] ?? 0,
+      localeOptionText: json['localeOptionText']?.toString() ?? '',
+    );
+  }
+
+  String get displayText =>
+      localeOptionText.isNotEmpty ? localeOptionText : optionText;
+}
+
+/// gossip_menu_option 模型（复合键: MenuID + OptionID）。
 class GossipMenuOptionEntity {
   final int menuId;
   final int optionId;
@@ -18,9 +53,6 @@ class GossipMenuOptionEntity {
   final int actionPoiId;
   final int verifiedBuild;
 
-  /// 仅列表展示用（JOIN 结果）
-  final String localeOptionText;
-
   const GossipMenuOptionEntity({
     this.menuId = 0,
     this.optionId = 0,
@@ -36,7 +68,6 @@ class GossipMenuOptionEntity {
     this.actionMenuId = 0,
     this.actionPoiId = 0,
     this.verifiedBuild = 0,
-    this.localeOptionText = '',
   });
 
   factory GossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
@@ -55,13 +86,8 @@ class GossipMenuOptionEntity {
       actionMenuId: json['ActionMenuID'] ?? 0,
       actionPoiId: json['ActionPoiID'] ?? 0,
       verifiedBuild: json['VerifiedBuild'] ?? 0,
-      localeOptionText: json['localeOptionText']?.toString() ?? '',
     );
   }
-
-  /// 显示文本（优先本地化）
-  String get displayText =>
-      localeOptionText.isNotEmpty ? localeOptionText : optionText;
 
   Map<String, dynamic> toJson() {
     return {
@@ -97,7 +123,6 @@ class GossipMenuOptionEntity {
     int? actionMenuId,
     int? actionPoiId,
     int? verifiedBuild,
-    String? localeOptionText,
   }) {
     return GossipMenuOptionEntity(
       menuId: menuId ?? this.menuId,
@@ -115,7 +140,6 @@ class GossipMenuOptionEntity {
       actionMenuId: actionMenuId ?? this.actionMenuId,
       actionPoiId: actionPoiId ?? this.actionPoiId,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-      localeOptionText: localeOptionText ?? this.localeOptionText,
     );
   }
 }

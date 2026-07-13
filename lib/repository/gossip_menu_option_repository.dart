@@ -5,7 +5,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
 
-  Future<List<GossipMenuOptionEntity>> getBriefGossipMenuOptions(
+  Future<List<BriefGossipMenuOptionEntity>> getBriefGossipMenuOptions(
     int menuId,
   ) async {
     final fields = <String>[
@@ -13,16 +13,9 @@ class GossipMenuOptionRepository with RepositoryMixin {
       'gmo.OptionID',
       'gmo.OptionIcon',
       'gmo.OptionText',
-      'gmo.OptionBroadcastTextID',
       'gmo.OptionType',
       'gmo.OptionNpcFlag',
-      'gmo.BoxCoded',
-      'gmo.BoxMoney',
-      'gmo.BoxText',
-      'gmo.BoxBroadcastTextID',
       'gmo.ActionMenuID',
-      'gmo.ActionPoiID',
-      'gmo.VerifiedBuild',
       if (localeEnabled) 'gmol.OptionText AS localeOptionText',
     ];
     var builder = laconic.table('$_table AS gmo');
@@ -39,8 +32,19 @@ class GossipMenuOptionRepository with RepositoryMixin {
     builder = builder.where('gmo.MenuID', menuId);
     final results = await builder.get();
     return results
-        .map((e) => GossipMenuOptionEntity.fromJson(e.toMap()))
+        .map((e) => BriefGossipMenuOptionEntity.fromJson(e.toMap()))
         .toList();
+  }
+
+  Future<List<GossipMenuOptionEntity>> getGossipMenuOptions() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((row) => GossipMenuOptionEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<int> countGossipMenuOptions(int menuId) async {
+    return laconic.table(_table).where('MenuID', menuId).count();
   }
 
   Future<GossipMenuOptionEntity?> getGossipMenuOption(
@@ -58,11 +62,7 @@ class GossipMenuOptionRepository with RepositoryMixin {
   }
 
   Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
-    final nextOptionId = await nextMaxPlusOne(
-      _table,
-      'OptionID',
-      where: {'MenuID': menuId},
-    );
+    final nextOptionId = await _getNextOptionId(menuId);
     return GossipMenuOptionEntity(menuId: menuId, optionId: nextOptionId);
   }
 
@@ -93,13 +93,14 @@ class GossipMenuOptionRepository with RepositoryMixin {
         .delete();
   }
 
-  Future<void> copyGossipMenuOption(int menuId, int optionId) async {
+  Future<int?> copyGossipMenuOption(int menuId, int optionId) async {
     final original = await getGossipMenuOption(menuId, optionId);
-    if (original == null) return;
+    if (original == null) return null;
     final next = await createGossipMenuOption(original.menuId);
     final json = original.toJson();
     json['OptionID'] = next.optionId;
     await laconic.table(_table).insert([json]);
+    return next.optionId;
   }
 
   Future<void> saveGossipMenuOption(GossipMenuOptionEntity model) async {
@@ -109,5 +110,20 @@ class GossipMenuOptionRepository with RepositoryMixin {
     } else {
       await storeGossipMenuOption(model);
     }
+  }
+
+  Future<int> _getNextOptionId(int menuId) async {
+    final rows = await laconic
+        .table(_table)
+        .select(['OptionID'])
+        .where('MenuID', menuId)
+        .get();
+    final used = rows
+        .map((row) => (row.toMap()['OptionID'] as num).toInt())
+        .toSet();
+    for (var optionId = 0; optionId < 32; optionId++) {
+      if (!used.contains(optionId)) return optionId;
+    }
+    throw StateError('每个对话菜单最多支持 32 个选项');
   }
 }
