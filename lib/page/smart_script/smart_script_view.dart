@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,6 +38,10 @@ class _SmartScriptViewState extends State<SmartScriptView> {
   @override
   void initState() {
     super.initState();
+    viewModel.sourceTypeController.addListener(_typeChanged);
+    viewModel.eventTypeController.addListener(_typeChanged);
+    viewModel.actionTypeController.addListener(_typeChanged);
+    viewModel.targetTypeController.addListener(_typeChanged);
     viewModel.initSignals(
       entryOrGuid: widget.entryOrGuid,
       sourceType: widget.sourceType,
@@ -40,396 +50,383 @@ class _SmartScriptViewState extends State<SmartScriptView> {
     );
   }
 
+  void _typeChanged() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
+    viewModel.sourceTypeController.removeListener(_typeChanged);
+    viewModel.eventTypeController.removeListener(_typeChanged);
+    viewModel.actionTypeController.removeListener(_typeChanged);
+    viewModel.targetTypeController.removeListener(_typeChanged);
     viewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // 复合主键策略：
-    // - entryorguid / source_type：归属键，仅新建可改
-    // - id：范围内 MAX+1，始终只读
-    // - link：默认 0，始终只读
-    return Watch((_) {
-      final ownerEditable = viewModel.isNew.value;
-      return _buildBody(ownerEditable: ownerEditable);
-    });
+    return Watch((_) => _buildBody(ownerEditable: viewModel.isNew.value));
   }
 
   Widget _buildBody({required bool ownerEditable}) {
-    final basicRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '实体编号',
-              child: FoxyNumberInput<int>(
-                placeholder: 'entryorguid',
-                controller: viewModel.entryOrGuidController,
-                readOnly: !ownerEditable,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '源类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'source_type',
-                controller: viewModel.sourceTypeController,
-                readOnly: !ownerEditable,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: 'ID',
-              child: FoxyNumberInput<int>(
-                placeholder: 'id',
-                controller: viewModel.idController,
-                readOnly: true,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '链接',
-              child: FoxyNumberInput<int>(
-                placeholder: 'link',
-                controller: viewModel.linkController,
-                readOnly: true,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '备注',
-              child: FoxyStringInput(
-                controller: viewModel.commentController,
-                placeholder: 'comment',
-              ),
-            ),
-          ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    final eventRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_type',
-                controller: viewModel.eventTypeController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '阶段掩码',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_phase_mask',
-                controller: viewModel.eventPhaseMaskController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '触发几率',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_chance',
-                controller: viewModel.eventChanceController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件标识',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_flags',
-                controller: viewModel.eventFlagsController,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件参数1',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_param1',
-                controller: viewModel.eventParam1Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件参数2',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_param2',
-                controller: viewModel.eventParam2Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件参数3',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_param3',
-                controller: viewModel.eventParam3Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件参数4',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_param4',
-                controller: viewModel.eventParam4Controller,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '事件参数5',
-              child: FoxyNumberInput<int>(
-                placeholder: 'event_param5',
-                controller: viewModel.eventParam5Controller,
-              ),
-            ),
-          ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    final actionRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_type',
-                controller: viewModel.actionTypeController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数1',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param1',
-                controller: viewModel.actionParam1Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数2',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param2',
-                controller: viewModel.actionParam2Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数3',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param3',
-                controller: viewModel.actionParam3Controller,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数4',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param4',
-                controller: viewModel.actionParam4Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数5',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param5',
-                controller: viewModel.actionParam5Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '动作参数6',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action_param6',
-                controller: viewModel.actionParam6Controller,
-              ),
-            ),
-          ),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
-
-    final targetRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '目标类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'target_type',
-                controller: viewModel.targetTypeController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '目标参数1',
-              child: FoxyNumberInput<int>(
-                placeholder: 'target_param1',
-                controller: viewModel.targetParam1Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '目标参数2',
-              child: FoxyNumberInput<int>(
-                placeholder: 'target_param2',
-                controller: viewModel.targetParam2Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '目标参数3',
-              child: FoxyNumberInput<int>(
-                placeholder: 'target_param3',
-                controller: viewModel.targetParam3Controller,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '目标参数4',
-              child: FoxyNumberInput<int>(
-                placeholder: 'target_param4',
-                controller: viewModel.targetParam4Controller,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: 'X坐标',
-              child: FoxyNumberInput<double>(
-                placeholder: 'target_x',
-                controller: viewModel.targetXController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: 'Y坐标',
-              child: FoxyNumberInput<double>(
-                placeholder: 'target_y',
-                controller: viewModel.targetYController,
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: 'Z坐标',
-              child: FoxyNumberInput<double>(
-                placeholder: 'target_z',
-                controller: viewModel.targetZController,
-              ),
-            ),
-          ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(
-            child: FoxyFormItem(
-              label: '朝向',
-              child: FoxyNumberInput<double>(
-                placeholder: 'target_o',
-                controller: viewModel.targetOController,
-              ),
-            ),
-          ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-        ],
-      ),
-    ];
+    final eventConfig = smartEventParameterConfig(
+      viewModel.eventTypeController.collect(),
+    );
+    final actionConfig = smartActionParameterConfig(
+      viewModel.actionTypeController.collect(),
+    );
+    final targetConfig = smartTargetParameterConfig(
+      viewModel.targetTypeController.collect(),
+    );
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FoxyFormSection(title: '基础信息', children: basicRows),
-          FoxyFormSection(title: '事件参数', children: eventRows),
-          FoxyFormSection(title: '动作参数', children: actionRows),
-          FoxyFormSection(title: '目标参数', children: targetRows),
+          FoxyFormSection(
+            title: '基础信息',
+            children: [
+              _row(
+                _numberItem(
+                  '实体编号',
+                  'entryorguid',
+                  viewModel.entryOrGuidController,
+                  readOnly: !ownerEditable,
+                ),
+                FoxyFormItem(
+                  label: '源类型',
+                  child: FoxyIntShadSelect(
+                    controller: viewModel.sourceTypeController,
+                    options: kSourceTypes,
+                    placeholder: const Text('source_type'),
+                    enabled: ownerEditable,
+                  ),
+                ),
+                _numberItem('ID', 'id', viewModel.idController, readOnly: true),
+                _numberItem(
+                  '链接事件 ID',
+                  'link',
+                  viewModel.linkController,
+                  readOnly: !ownerEditable,
+                ),
+              ),
+              _row(
+                FoxyFormItem(
+                  label: '备注',
+                  child: FoxyStringInput(
+                    controller: viewModel.commentController,
+                    placeholder: 'comment',
+                  ),
+                ),
+                const SizedBox(),
+                const SizedBox(),
+                const SizedBox(),
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '事件参数',
+            children: [
+              _row(
+                FoxyFormItem(
+                  label: '事件类型',
+                  child: FoxyIntShadSelect(
+                    controller: viewModel.eventTypeController,
+                    options: smartEventTypesForSource(
+                      viewModel.sourceTypeController.collect(),
+                    ),
+                    placeholder: const Text('event_type'),
+                  ),
+                ),
+                FoxyFormItem(
+                  label: '阶段掩码',
+                  child: FoxyFlagPicker(
+                    controller: viewModel.eventPhaseMaskController,
+                    flags: kEventPhaseFlagItems,
+                    title: '事件阶段掩码',
+                    placeholder: 'event_phase_mask',
+                  ),
+                ),
+                _numberItem(
+                  '触发几率',
+                  'event_chance',
+                  viewModel.eventChanceController,
+                ),
+                FoxyFormItem(
+                  label: '事件标志',
+                  child: FoxyFlagPicker(
+                    controller: viewModel.eventFlagsController,
+                    flags: kEventFlagItems,
+                    title: '事件标志',
+                    placeholder: 'event_flags',
+                  ),
+                ),
+              ),
+              _row(
+                _parameterItem(
+                  'event_param1',
+                  eventConfig.param1,
+                  viewModel.eventParam1Controller,
+                ),
+                _parameterItem(
+                  'event_param2',
+                  eventConfig.param2,
+                  viewModel.eventParam2Controller,
+                ),
+                _parameterItem(
+                  'event_param3',
+                  eventConfig.param3,
+                  viewModel.eventParam3Controller,
+                ),
+                _parameterItem(
+                  'event_param4',
+                  eventConfig.param4,
+                  viewModel.eventParam4Controller,
+                ),
+              ),
+              _row(
+                _parameterItem(
+                  'event_param5',
+                  eventConfig.param5,
+                  viewModel.eventParam5Controller,
+                ),
+                _parameterItem(
+                  'event_param6',
+                  eventConfig.param6,
+                  viewModel.eventParam6Controller,
+                ),
+                const SizedBox(),
+                const SizedBox(),
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '动作参数',
+            children: [
+              _row(
+                FoxyFormItem(
+                  label: '动作类型',
+                  child: FoxyIntShadSelect(
+                    controller: viewModel.actionTypeController,
+                    options: kActionTypes,
+                    placeholder: const Text('action_type'),
+                  ),
+                ),
+                _parameterItem(
+                  'action_param1',
+                  actionConfig.param1,
+                  viewModel.actionParam1Controller,
+                ),
+                _parameterItem(
+                  'action_param2',
+                  actionConfig.param2,
+                  viewModel.actionParam2Controller,
+                ),
+                _parameterItem(
+                  'action_param3',
+                  actionConfig.param3,
+                  viewModel.actionParam3Controller,
+                ),
+              ),
+              _row(
+                _parameterItem(
+                  'action_param4',
+                  actionConfig.param4,
+                  viewModel.actionParam4Controller,
+                ),
+                _parameterItem(
+                  'action_param5',
+                  actionConfig.param5,
+                  viewModel.actionParam5Controller,
+                ),
+                _parameterItem(
+                  'action_param6',
+                  actionConfig.param6,
+                  viewModel.actionParam6Controller,
+                ),
+                const SizedBox(),
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '目标参数',
+            children: [
+              _row(
+                FoxyFormItem(
+                  label: '目标类型',
+                  child: FoxyIntShadSelect(
+                    controller: viewModel.targetTypeController,
+                    options: kTargetTypes,
+                    placeholder: const Text('target_type'),
+                  ),
+                ),
+                _parameterItem(
+                  'target_param1',
+                  targetConfig.param1,
+                  viewModel.targetParam1Controller,
+                ),
+                _parameterItem(
+                  'target_param2',
+                  targetConfig.param2,
+                  viewModel.targetParam2Controller,
+                ),
+                _parameterItem(
+                  'target_param3',
+                  targetConfig.param3,
+                  viewModel.targetParam3Controller,
+                ),
+              ),
+              _row(
+                _parameterItem(
+                  'target_param4',
+                  targetConfig.param4,
+                  viewModel.targetParam4Controller,
+                ),
+                _doubleItem('X 坐标', 'target_x', viewModel.targetXController),
+                _doubleItem('Y 坐标', 'target_y', viewModel.targetYController),
+                _doubleItem('Z 坐标', 'target_z', viewModel.targetZController),
+              ),
+              _row(
+                _doubleItem('朝向', 'target_o', viewModel.targetOController),
+                const SizedBox(),
+                const SizedBox(),
+                const SizedBox(),
+              ),
+            ],
+          ),
           Row(
             spacing: 8,
             children: [
               ShadButton(
                 onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+                child: const Text('保存'),
               ),
               ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
+                onPressed: viewModel.pop,
+                child: const Text('取消'),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _row(Widget first, Widget second, Widget third, Widget fourth) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(child: first),
+        Expanded(child: second),
+        Expanded(child: third),
+        Expanded(child: fourth),
+      ],
+    );
+  }
+
+  FoxyFormItem _numberItem(
+    String label,
+    String column,
+    IntFieldController controller, {
+    bool readOnly = false,
+  }) {
+    return FoxyFormItem(
+      label: label,
+      child: FoxyNumberInput<int>(
+        placeholder: column,
+        controller: controller,
+        readOnly: readOnly,
+      ),
+    );
+  }
+
+  FoxyFormItem _doubleItem(
+    String label,
+    String column,
+    DoubleFieldController controller,
+  ) {
+    return FoxyFormItem(
+      label: label,
+      child: FoxyNumberInput<double>(
+        placeholder: column,
+        controller: controller,
+      ),
+    );
+  }
+
+  FoxyFormItem _parameterItem(
+    String column,
+    SmartParameterFieldConfig config,
+    IntFieldController controller,
+  ) {
+    return FoxyFormItem(
+      label: '${config.label} ($column)',
+      child: _parameterEditor(column, config, controller),
+    );
+  }
+
+  Widget _parameterEditor(
+    String column,
+    SmartParameterFieldConfig config,
+    IntFieldController controller,
+  ) {
+    final delegate = switch (config.reference) {
+      SmartParameterReference.area => FoxyEntityPickerDelegates.areaTable,
+      SmartParameterReference.cinematicSequence =>
+        FoxyEntityPickerDelegates.cinematicSequence,
+      SmartParameterReference.creature =>
+        FoxyEntityPickerDelegates.creatureTemplate,
+      SmartParameterReference.creatureDisplay =>
+        FoxyEntityPickerDelegates.creatureDisplayInfo,
+      SmartParameterReference.emote => FoxyEntityPickerDelegates.dbcEmote,
+      SmartParameterReference.factionTemplate =>
+        FoxyEntityPickerDelegates.dbcFactionTemplate,
+      SmartParameterReference.gameObject =>
+        FoxyEntityPickerDelegates.gameObjectTemplate,
+      SmartParameterReference.gossipMenu =>
+        FoxyEntityPickerDelegates.gossipMenu,
+      SmartParameterReference.item => FoxyEntityPickerDelegates.itemTemplate,
+      SmartParameterReference.map => FoxyEntityPickerDelegates.map,
+      SmartParameterReference.npcText => FoxyEntityPickerDelegates.npcText,
+      SmartParameterReference.quest => FoxyEntityPickerDelegates.questTemplate,
+      SmartParameterReference.spell => FoxyEntityPickerDelegates.spell,
+      SmartParameterReference.taxiPath => FoxyEntityPickerDelegates.taxiPath,
+      SmartParameterReference.textEmote => FoxyEntityPickerDelegates.emote,
+      SmartParameterReference.waypointPath =>
+        FoxyEntityPickerDelegates.waypointData,
+      SmartParameterReference.none => null,
+    };
+    if (delegate != null) {
+      return FoxyEntityPicker(
+        controller: controller,
+        delegate: delegate,
+        placeholder: column,
+        readOnly: !config.editable,
+      );
+    }
+    if (config.flags != null) {
+      return FoxyFlagPicker(
+        controller: controller,
+        flags: config.flags!,
+        title: config.label,
+        placeholder: column,
+      );
+    }
+    if (config.options != null) {
+      return FoxyIntShadSelect(
+        controller: controller,
+        options: config.options!,
+        placeholder: Text(column),
+        enabled: config.editable,
+      );
+    }
+    return FoxyNumberInput<int>(
+      placeholder: column,
+      controller: controller,
+      readOnly: !config.editable,
     );
   }
 }
