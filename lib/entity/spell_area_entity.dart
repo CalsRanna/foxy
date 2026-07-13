@@ -18,11 +18,34 @@ class SpellAreaEntity {
     this.questEnd = 0,
     this.auraSpell = 0,
     this.racemask = 0,
-    this.gender = 0,
+    this.gender = 2,
     this.autocast = 0,
-    this.questStartStatus = 0,
-    this.questEndStatus = 0,
+    this.questStartStatus = 64,
+    this.questEndStatus = 11,
   });
+
+  void validate() {
+    if (gender < 0 || gender > 2) {
+      throw RangeError.range(gender, 0, 2, 'gender');
+    }
+    if (autocast != 0 && autocast != 1) {
+      throw ArgumentError.value(autocast, 'autocast', '只能为 0 或 1');
+    }
+    const allowedQuestStatusMask = 0x6B;
+    if (questStartStatus & ~allowedQuestStatusMask != 0) {
+      throw ArgumentError.value(
+        questStartStatus,
+        'questStartStatus',
+        '包含无效任务状态位',
+      );
+    }
+    if (questEndStatus & ~allowedQuestStatusMask != 0) {
+      throw ArgumentError.value(questEndStatus, 'questEndStatus', '包含无效任务状态位');
+    }
+    if (auraSpell.abs() == spell && spell != 0) {
+      throw ArgumentError('aura_spell 不能引用当前 spell');
+    }
+  }
 
   factory SpellAreaEntity.fromJson(Map<String, dynamic> json) {
     return SpellAreaEntity(
@@ -32,10 +55,10 @@ class SpellAreaEntity {
       questEnd: json['quest_end'] ?? 0,
       auraSpell: json['aura_spell'] ?? 0,
       racemask: json['racemask'] ?? 0,
-      gender: json['gender'] ?? 0,
+      gender: json['gender'] ?? 2,
       autocast: json['autocast'] ?? 0,
-      questStartStatus: json['quest_start_status'] ?? 0,
-      questEndStatus: json['quest_end_status'] ?? 0,
+      questStartStatus: json['quest_start_status'] ?? 64,
+      questEndStatus: json['quest_end_status'] ?? 11,
     );
   }
 

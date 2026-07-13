@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_rank_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -101,11 +103,6 @@ class _SpellRankViewState extends State<SpellRankView> {
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () => viewModel.delete(context),
                   child: Text('删除'),
@@ -151,7 +148,7 @@ class _SpellRankViewState extends State<SpellRankView> {
     final isEditing = viewModel.selectedIndex.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +159,8 @@ class _SpellRankViewState extends State<SpellRankView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '起始技能',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
                     controller: viewModel.firstSpellIdController,
                     placeholder: 'first_spell_id',
                   ),
@@ -171,7 +169,8 @@ class _SpellRankViewState extends State<SpellRankView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '技能',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
                     controller: viewModel.rankSpellIdController,
                     placeholder: 'spell_id',
                   ),
@@ -186,6 +185,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                   ),
                 ),
               ),
+              Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),

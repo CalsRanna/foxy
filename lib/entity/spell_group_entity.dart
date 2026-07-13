@@ -3,23 +3,21 @@ class SpellGroupEntity {
   final int id;
   final int spellId;
 
-  // 关联字段
-  final int stackRule;
-  final String description;
+  const SpellGroupEntity({this.id = 0, this.spellId = 0});
 
-  const SpellGroupEntity({
-    this.id = 0,
-    this.spellId = 0,
-    this.stackRule = 0,
-    this.description = '',
-  });
+  void validate() {
+    if (id <= 0 || (id >= 3 && id <= 1000)) {
+      throw ArgumentError.value(id, 'id', '只能使用核心组 1/2 或数据库组 > 1000');
+    }
+    if (spellId == 0) {
+      throw ArgumentError.value(spellId, 'spellId', '不能为 0');
+    }
+  }
 
   factory SpellGroupEntity.fromJson(Map<String, dynamic> json) {
     return SpellGroupEntity(
       id: json['id'] ?? 0,
       spellId: json['spell_id'] ?? 0,
-      stackRule: json['stack_rule'] ?? 0,
-      description: json['description'] ?? '',
     );
   }
 
@@ -27,17 +25,10 @@ class SpellGroupEntity {
     return {'id': id, 'spell_id': spellId};
   }
 
-  SpellGroupEntity copyWith({
-    int? id,
-    int? spellId,
-    int? stackRule,
-    String? description,
-  }) {
+  SpellGroupEntity copyWith({int? id, int? spellId}) {
     return SpellGroupEntity(
       id: id ?? this.id,
       spellId: spellId ?? this.spellId,
-      stackRule: stackRule ?? this.stackRule,
-      description: description ?? this.description,
     );
   }
 }

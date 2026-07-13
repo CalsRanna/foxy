@@ -36,6 +36,7 @@ class SpellAreaRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellArea(SpellAreaEntity data) async {
+    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -48,13 +49,7 @@ class SpellAreaRepository with RepositoryMixin {
     int gender,
     SpellAreaEntity data,
   ) async {
-    var json = data.toJson();
-    json.remove('spell');
-    json.remove('area');
-    json.remove('quest_start');
-    json.remove('aura_spell');
-    json.remove('racemask');
-    json.remove('gender');
+    data.validate();
     await laconic
         .table(_table)
         .where('spell', spell)
@@ -63,7 +58,7 @@ class SpellAreaRepository with RepositoryMixin {
         .where('aura_spell', auraSpell)
         .where('racemask', racemask)
         .where('gender', gender)
-        .update(json);
+        .update(data.toJson());
   }
 
   Future<void> destroySpellArea(
@@ -93,24 +88,7 @@ class SpellAreaRepository with RepositoryMixin {
     int racemask,
     int gender,
   ) async {
-    var source = await getSpellArea(
-      spell,
-      area,
-      questStart,
-      auraSpell,
-      racemask,
-      gender,
-    );
-    if (source == null) return;
-    var json = source.toJson();
-    var maxAreaResult = await laconic
-        .table(_table)
-        .select(['MAX(area) AS maxArea'])
-        .where('spell', spell)
-        .first();
-    var maxArea = (maxAreaResult.toMap()['maxArea'] ?? 0) as int;
-    json['area'] = maxArea + 1;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术区域记录不能自动复制，请新增记录并选择有效区域。');
   }
 
   Future<void> saveSpellArea(SpellAreaEntity data) async {

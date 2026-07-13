@@ -501,3 +501,49 @@ const kSpellClassMaskBits = [
   FlagItem(0x40000000, '位 30'),
   FlagItem(0x80000000, '位 31'),
 ];
+
+/// SpellInfo.h SpellCustomAttributes 的独立物理位。
+/// FORCE_AURA_SAVING(0x20000800) 是两个现有位的组合别名，不重复列为可选位。
+const kSpellCustomAttributeOptions = [
+  FlagItem(0x00000001, '附魔触发'),
+  FlagItem(0x00000002, '背向锥形'),
+  FlagItem(0x00000004, '线形锥形'),
+  FlagItem(0x00000008, '分摊伤害'),
+  FlagItem(0x00000010, '无初始威胁'),
+  FlagItem(0x00000020, '控制类光环'),
+  FlagItem(0x00000040, '不打破潜行'),
+  FlagItem(0x00000080, '不设置PVP标志'),
+  FlagItem(0x00000100, '直接伤害'),
+  FlagItem(0x00000200, '冲锋'),
+  FlagItem(0x00000400, '偷窃'),
+  FlagItem(0x00000800, '忽略闪避'),
+  FlagItem(0x00001000, '效果1为负面'),
+  FlagItem(0x00002000, '效果2为负面'),
+  FlagItem(0x00004000, '效果3为负面'),
+  FlagItem(0x00008000, '忽略护甲'),
+  FlagItem(0x00010000, '目标必须面向施法者'),
+  FlagItem(0x00020000, '施法者必须位于目标背后'),
+  FlagItem(0x00040000, '允许飞行中目标'),
+  FlagItem(0x00080000, '需要弹药数据'),
+  FlagItem(0x00100000, '二元法术'),
+  FlagItem(0x00200000, '不受正向加成'),
+  FlagItem(0x00400000, '单光环叠加'),
+  FlagItem(0x00800000, '物理与魔法混合学派'),
+  FlagItem(0x01000000, '光环不可保存'),
+  FlagItem(0x02000000, '效果1为正面'),
+  FlagItem(0x04000000, '效果2为正面'),
+  FlagItem(0x08000000, '效果3为正面'),
+  FlagItem(0x10000000, '强制发送分类冷却'),
+  FlagItem(0x20000000, '区域光环唯一'),
+  FlagItem(0x40000000, '遭遇奖励'),
+  FlagItem(0x80000000, '绕过机制免疫'),
+];
+
+/// QuestDef.h QuestStatus 的位掩码，spell_area 保存 1 << QuestStatus。
+const kSpellAreaQuestStatusOptions = [
+  FlagItem(0x01, '未接取'),
+  FlagItem(0x02, '已完成'),
+  FlagItem(0x08, '进行中'),
+  FlagItem(0x20, '失败'),
+  FlagItem(0x40, '已奖励'),
+];

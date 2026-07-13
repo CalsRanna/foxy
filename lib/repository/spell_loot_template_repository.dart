@@ -4,7 +4,7 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellLootTemplateRepository with RepositoryMixin {
   static const _table = 'spell_loot_template';
 
-  Future<List<SpellLootTemplateEntity>> getBriefSpellLootTemplates(
+  Future<List<BriefSpellLootTemplateEntity>> getBriefSpellLootTemplates(
     int entry,
   ) async {
     var builder = laconic.table('$_table AS slt');
@@ -23,13 +23,17 @@ class SpellLootTemplateRepository with RepositoryMixin {
     if (localeEnabled) {
       builder = builder.leftJoin(
         'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID'),
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
     builder = builder.where('slt.Entry', entry);
     var results = await builder.get();
     return results
-        .map((e) => SpellLootTemplateEntity.fromJson(e.toMap()))
+        .map((e) => BriefSpellLootTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -52,6 +56,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellLootTemplate(SpellLootTemplateEntity data) async {
+    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -60,14 +65,12 @@ class SpellLootTemplateRepository with RepositoryMixin {
     int item,
     SpellLootTemplateEntity data,
   ) async {
-    var json = data.toJson();
-    json.remove('Entry');
-    json.remove('Item');
+    data.validate();
     await laconic
         .table(_table)
         .where('Entry', entry)
         .where('Item', item)
-        .update(json);
+        .update(data.toJson());
   }
 
   Future<void> destroySpellLootTemplate(int entry, int item) async {
@@ -79,20 +82,7 @@ class SpellLootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> copySpellLootTemplate(int entry, int item) async {
-    var source = await getSpellLootTemplate(entry, item);
-    if (source == null) return;
-    var json = source.toJson();
-    var maxItemResult = await laconic
-        .table(_table)
-        .select(['MAX(Item) AS maxItem'])
-        .where('Entry', entry)
-        .first();
-    var maxItem = (maxItemResult.toMap()['maxItem'] ?? 0) as int;
-    json['Item'] = maxItem + 1;
-    if (source.reference != 0) {
-      json['Reference'] = maxItem + 1;
-    }
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术掉落记录不能自动复制，请新增记录并选择有效物品或引用模板。');
   }
 
   Future<void> saveSpellLootTemplate(SpellLootTemplateEntity data) async {

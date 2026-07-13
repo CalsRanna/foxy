@@ -49,12 +49,11 @@ class _SpellGroupViewState extends State<SpellGroupView> {
     final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
-    final headers = ['技能组', '光环叠加规则', '描述'];
+    final headers = ['技能组'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var maxWidth = constraints.maxWidth;
-        var flexWidth = maxWidth - 430;
         return FoxyShadTable(
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= items.length) {
@@ -63,18 +62,13 @@ class _SpellGroupViewState extends State<SpellGroupView> {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.stackRule.toString())),
-              2 => ShadTableCell(child: Text(item.description)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(100),
-              1 => FixedTableSpanExtent(130),
-              2 => FixedTableSpanExtent(100),
-              3 => FixedTableSpanExtent(flexWidth),
+              0 => FixedTableSpanExtent(maxWidth),
               _ => null,
             };
           },
@@ -146,23 +140,24 @@ class _SpellGroupViewState extends State<SpellGroupView> {
     final isEditing = viewModel.selectedIndex.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '法术ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.spellIdController,
-              placeholder: 'spell_id',
-              readOnly: true,
-            ),
-          ),
-          SizedBox(height: 16),
           Row(
             spacing: 16,
             children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '法术ID',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.spellIdController,
+                    placeholder: 'spell_id',
+                    readOnly: true,
+                  ),
+                ),
+              ),
               Expanded(
                 child: FoxyFormItem(
                   label: '技能组',
@@ -172,6 +167,8 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                   ),
                 ),
               ),
+              Expanded(child: SizedBox()),
+              Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 24),

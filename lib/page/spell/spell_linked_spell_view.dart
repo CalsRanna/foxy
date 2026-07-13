@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -146,26 +148,26 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
     final isEditing = viewModel.selectedIndex.value != null;
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
+      constraints: BoxConstraints(maxWidth: 960),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FoxyFormItem(
-            label: '触发技能',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.spellIdController,
-              placeholder: 'spell_trigger',
-              readOnly: true,
-            ),
-          ),
-          SizedBox(height: 16),
           Row(
             spacing: 16,
             children: [
               Expanded(
                 child: FoxyFormItem(
-                  label: '链接技能',
+                  label: '触发法术（可为负值）',
+                  child: FoxyNumberInput<int>(
+                    controller: viewModel.spellTriggerController,
+                    placeholder: 'spell_trigger',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '效果法术（可为负值）',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.spellEffectController,
                     placeholder: 'spell_effect',
@@ -175,21 +177,23 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               Expanded(
                 child: FoxyFormItem(
                   label: '类型',
-                  child: FoxyNumberInput<int>(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.typeController,
-                    placeholder: 'type',
+                    options: kSpellLinkedTypeOptions,
+                    placeholder: Text('type'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '注解',
+                  child: FoxyStringInput(
+                    controller: viewModel.commentController,
+                    placeholder: 'comment',
                   ),
                 ),
               ),
             ],
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '注解',
-            child: FoxyStringInput(
-              controller: viewModel.commentController,
-              placeholder: 'comment',
-            ),
           ),
           SizedBox(height: 24),
           Row(

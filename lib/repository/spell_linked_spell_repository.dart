@@ -20,11 +20,13 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   Future<SpellLinkedSpellEntity?> getSpellLinkedSpell(
     int spellTrigger,
     int spellEffect,
+    int type,
   ) async {
     var results = await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)
         .where('spell_effect', spellEffect)
+        .where('type', type)
         .limit(1)
         .get();
     if (results.isEmpty) return null;
@@ -38,44 +40,57 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellLinkedSpell(SpellLinkedSpellEntity data) async {
+    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
   Future<void> updateSpellLinkedSpell(
     int spellTrigger,
     int spellEffect,
+    int type,
     SpellLinkedSpellEntity data,
   ) async {
-    var json = data.toJson();
-    json.remove('spell_trigger');
-    json.remove('spell_effect');
+    data.validate();
     await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)
         .where('spell_effect', spellEffect)
-        .update(json);
+        .where('type', type)
+        .update(data.toJson());
   }
 
   Future<void> destroySpellLinkedSpell(
     int spellTrigger,
     int spellEffect,
+    int type,
   ) async {
     await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)
         .where('spell_effect', spellEffect)
+        .where('type', type)
         .delete();
   }
 
-  Future<void> copySpellLinkedSpell(int spellTrigger, int spellEffect) async {
-    var source = await getSpellLinkedSpell(spellTrigger, spellEffect);
+  Future<void> copySpellLinkedSpell(
+    int spellTrigger,
+    int spellEffect,
+    int type,
+  ) async {
+    var source = await getSpellLinkedSpell(spellTrigger, spellEffect, type);
     if (source == null) return;
+    final availableTypes = {0, 1, 2}..remove(type);
+    for (final candidate in List<int>.from(availableTypes)) {
+      if (await getSpellLinkedSpell(spellTrigger, spellEffect, candidate) !=
+          null) {
+        availableTypes.remove(candidate);
+      }
+    }
+    if (availableTypes.isEmpty) {
+      throw StateError('该触发法术与效果法术已使用全部链接类型');
+    }
     var json = source.toJson();
-    var maxEffectResult = await laconic.table(_table).select([
-      'MAX(spell_effect) AS maxEffect',
-    ]).first();
-    var maxEffect = (maxEffectResult.toMap()['maxEffect'] ?? 0) as int;
-    json['spell_effect'] = maxEffect + 1;
+    json['type'] = availableTypes.first;
     await laconic.table(_table).insert([json]);
   }
 
@@ -83,9 +98,15 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     var existing = await getSpellLinkedSpell(
       data.spellTrigger,
       data.spellEffect,
+      data.type,
     );
     if (existing != null) {
-      await updateSpellLinkedSpell(data.spellTrigger, data.spellEffect, data);
+      await updateSpellLinkedSpell(
+        data.spellTrigger,
+        data.spellEffect,
+        data.type,
+        data,
+      );
     } else {
       await storeSpellLinkedSpell(data);
     }

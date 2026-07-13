@@ -44,9 +44,9 @@ class SpellGroupViewModel with FieldControllerMixin {
 
   Future<void> create() async {
     try {
-      final nextId = await _repository.getNextId();
+      final blank = await _repository.createSpellGroup(spellId.value);
       resetForm();
-      groupIdController.init(nextId);
+      groupIdController.init(blank.id);
       selectedIndex.value = null;
     } catch (e) {
       LoggerUtil.instance.e('法术组-创建失败: $e');

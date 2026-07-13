@@ -22,10 +22,10 @@ class SpellDetailPage extends StatefulWidget {
 }
 
 class _SpellDetailPageState extends State<SpellDetailPage> {
+  late int? spellId = (widget.id ?? 0) > 0 ? widget.id : null;
+
   @override
   Widget build(BuildContext context) {
-    var spellId = widget.id ?? 0;
-
     var tabs = [
       Text('基本信息'),
       Text('奖励系数'),
@@ -38,17 +38,24 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
     ];
 
     var tabContents = [
-      SpellView(id: widget.id),
-      SpellBonusDataView(spellId: spellId),
-      SpellCustomAttrView(spellId: spellId),
-      SpellAreaView(spellId: spellId),
-      SpellGroupView(spellId: spellId),
-      SpellLinkedSpellView(spellId: spellId),
-      SpellRankView(spellId: spellId),
-      SpellLootTemplateView(spellId: spellId),
+      SpellView(
+        id: spellId,
+        onSaved: (value) => setState(() => spellId = value),
+      ),
+      SpellBonusDataView(spellId: spellId ?? 0),
+      SpellCustomAttrView(spellId: spellId ?? 0),
+      SpellAreaView(spellId: spellId ?? 0),
+      SpellGroupView(spellId: spellId ?? 0),
+      SpellLinkedSpellView(spellId: spellId ?? 0),
+      SpellRankView(spellId: spellId ?? 0),
+      SpellLootTemplateView(spellId: spellId ?? 0),
     ];
 
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+    var tabBar = FoxyTab(
+      tabs: tabs,
+      contents: tabContents,
+      disabledIndexes: spellId == null ? const {1, 2, 3, 4, 5, 6, 7} : const {},
+    );
 
     return ListView(
       padding: const EdgeInsets.all(16),
