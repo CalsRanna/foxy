@@ -12,7 +12,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 /// [controller] 由 ViewModel 初始化（[FlagFieldController.init]）；
 /// 弹窗确认后写回格式化文本。VM 在 save 时用 [FlagFieldController.collect] 读取。
 class FoxyFlagPicker extends StatefulWidget {
-  final FlagFieldController controller;
+  final TextBackedFieldController<int> controller;
   final List<FlagItem> flags;
   final String title;
   final String? placeholder;

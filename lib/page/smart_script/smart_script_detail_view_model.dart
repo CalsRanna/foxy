@@ -29,15 +29,16 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
 
   late final eventTypeController = registerController(IntFieldController());
   late final eventPhaseMaskController = registerController(
-    IntFieldController(),
+    FlagFieldController(),
   );
   late final eventChanceController = registerController(IntFieldController());
-  late final eventFlagsController = registerController(IntFieldController());
+  late final eventFlagsController = registerController(FlagFieldController());
   late final eventParam1Controller = registerController(IntFieldController());
   late final eventParam2Controller = registerController(IntFieldController());
   late final eventParam3Controller = registerController(IntFieldController());
   late final eventParam4Controller = registerController(IntFieldController());
   late final eventParam5Controller = registerController(IntFieldController());
+  late final eventParam6Controller = registerController(IntFieldController());
 
   late final actionTypeController = registerController(IntFieldController());
   late final actionParam1Controller = registerController(IntFieldController());
@@ -64,11 +65,10 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (isNew.value) {
-        // 用户可能改过归属键：按最终 (entryorguid, source_type) 重新分配 id
         final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
-        t = t.copyWith(id: nextId, link: 0);
+        t = t.copyWith(id: nextId);
         idController.init(nextId);
-        linkController.init(0);
+        t.validate();
         await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
@@ -77,7 +77,7 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
         isNew.value = false;
         script.value = t;
       } else {
-        // 编辑：复合主键 WHERE 用加载时的键
+        t.validate();
         await _repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,
@@ -109,7 +109,6 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
     int? link,
   }) async {
     try {
-      // 复合主键：新建时 create* 预填 scoped id；归属键可改，id/link 只读
       if (entryOrGuid == null ||
           sourceType == null ||
           id == null ||
@@ -159,6 +158,7 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
     eventParam3Controller.init(t.eventParam3);
     eventParam4Controller.init(t.eventParam4);
     eventParam5Controller.init(t.eventParam5);
+    eventParam6Controller.init(t.eventParam6);
 
     actionTypeController.init(t.actionType);
     actionParam1Controller.init(t.actionParam1);
@@ -195,6 +195,7 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
       eventParam3: eventParam3Controller.collect(),
       eventParam4: eventParam4Controller.collect(),
       eventParam5: eventParam5Controller.collect(),
+      eventParam6: eventParam6Controller.collect(),
       actionType: actionTypeController.collect(),
       actionParam1: actionParam1Controller.collect(),
       actionParam2: actionParam2Controller.collect(),
