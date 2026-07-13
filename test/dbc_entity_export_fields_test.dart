@@ -15,8 +15,11 @@ import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
+import 'package:foxy/entity/holiday_entity.dart';
+import 'package:foxy/entity/item_bag_family_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
+import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
@@ -34,6 +37,7 @@ import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:warcrafty/warcrafty.dart';
 
@@ -53,9 +57,18 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_faction_template' => const DbcFactionTemplateEntity().toJson(),
     'dbc_gem_properties' => const GemPropertyEntity().toJson(),
     'dbc_glyph_properties' => const GlyphPropertyEntity().toJson(),
+    'dbc_holidays' => HolidayEntity.fromJson(
+      _schemaDefaults(tableName),
+    ).toJson(),
     'dbc_item_display_info' => const ItemDisplayInfoEntity().toJson(),
     'dbc_item' => DbcItemEntity.fromJson(_schemaDefaults(tableName)).toJson(),
+    'dbc_item_bag_family' => ItemBagFamilyEntity.fromJson(
+      _schemaDefaults(tableName),
+    ).toJson(),
     'dbc_item_extended_cost' => const ItemExtendedCostEntity().toJson(),
+    'dbc_item_limit_category' => ItemLimitCategoryEntity.fromJson(
+      _schemaDefaults(tableName),
+    ).toJson(),
     'dbc_item_random_properties' => const ItemRandomPropertiesEntity().toJson(),
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
     'dbc_item_set' => const ItemSetEntity().toJson(),
@@ -76,6 +89,9 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
       _schemaDefaults(tableName),
     ).toJson(),
     'dbc_talent' => const TalentEntity().toJson(),
+    'dbc_totem_category' => TotemCategoryEntity.fromJson(
+      _schemaDefaults(tableName),
+    ).toJson(),
     'dbc_vehicle' => const VehicleEntity().toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
   };
@@ -126,9 +142,12 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_faction_template' => DbcFactionTemplateEntity.fromJson(row).toJson(),
     'dbc_gem_properties' => GemPropertyEntity.fromJson(row).toJson(),
     'dbc_glyph_properties' => GlyphPropertyEntity.fromJson(row).toJson(),
+    'dbc_holidays' => HolidayEntity.fromJson(row).toJson(),
     'dbc_item_display_info' => ItemDisplayInfoEntity.fromJson(row).toJson(),
     'dbc_item' => DbcItemEntity.fromJson(row).toJson(),
+    'dbc_item_bag_family' => ItemBagFamilyEntity.fromJson(row).toJson(),
     'dbc_item_extended_cost' => ItemExtendedCostEntity.fromJson(row).toJson(),
+    'dbc_item_limit_category' => ItemLimitCategoryEntity.fromJson(row).toJson(),
     'dbc_item_random_properties' => ItemRandomPropertiesEntity.fromJson(
       row,
     ).toJson(),
@@ -154,6 +173,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
     'dbc_skill_line' => SkillLineEntity.fromJson(row).toJson(),
     'dbc_talent' => TalentEntity.fromJson(row).toJson(),
+    'dbc_totem_category' => TotemCategoryEntity.fromJson(row).toJson(),
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
   };
@@ -161,7 +181,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(35));
+    expect(dbcDefinitions, hasLength(39));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

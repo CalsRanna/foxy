@@ -83,7 +83,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   /// Card 4: Damage/Armor
   late final delayController = registerController(IntFieldController());
   late final rangedModRangeController = registerController(
-    IntFieldController(),
+    DoubleFieldController(),
   );
   late final armorDamageModifierController = registerController(
     DoubleFieldController(),
@@ -113,10 +113,6 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   );
 
   /// Card 6: Stats
-  late final statsCountController = registerController(IntFieldController());
-  late final statType0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
   late final statType1Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -144,7 +140,9 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final statType9Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final statValue0Controller = registerController(IntFieldController());
+  late final statType10Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final statValue1Controller = registerController(IntFieldController());
   late final statValue2Controller = registerController(IntFieldController());
   late final statValue3Controller = registerController(IntFieldController());
@@ -154,6 +152,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final statValue7Controller = registerController(IntFieldController());
   late final statValue8Controller = registerController(IntFieldController());
   late final statValue9Controller = registerController(IntFieldController());
+  late final statValue10Controller = registerController(IntFieldController());
 
   /// Card 7: Resistances
   late final holyResController = registerController(IntFieldController());
@@ -164,14 +163,11 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final arcaneResController = registerController(IntFieldController());
 
   /// Card 8: Spells (5 slots)
-  late final spellId0Controller = registerController(IntFieldController());
   late final spellId1Controller = registerController(IntFieldController());
   late final spellId2Controller = registerController(IntFieldController());
   late final spellId3Controller = registerController(IntFieldController());
   late final spellId4Controller = registerController(IntFieldController());
-  late final spellTrigger0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
+  late final spellId5Controller = registerController(IntFieldController());
   late final spellTrigger1Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -184,14 +180,14 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final spellTrigger4Controller = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final spellCharge0Controller = registerController(IntFieldController());
+  late final spellTrigger5Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final spellCharge1Controller = registerController(IntFieldController());
   late final spellCharge2Controller = registerController(IntFieldController());
   late final spellCharge3Controller = registerController(IntFieldController());
   late final spellCharge4Controller = registerController(IntFieldController());
-  late final spellPpmRate0Controller = registerController(
-    DoubleFieldController(),
-  );
+  late final spellCharge5Controller = registerController(IntFieldController());
   late final spellPpmRate1Controller = registerController(
     DoubleFieldController(),
   );
@@ -204,8 +200,8 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final spellPpmRate4Controller = registerController(
     DoubleFieldController(),
   );
-  late final spellCooldown0Controller = registerController(
-    IntFieldController(),
+  late final spellPpmRate5Controller = registerController(
+    DoubleFieldController(),
   );
   late final spellCooldown1Controller = registerController(
     IntFieldController(),
@@ -219,7 +215,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final spellCooldown4Controller = registerController(
     IntFieldController(),
   );
-  late final spellCategory0Controller = registerController(
+  late final spellCooldown5Controller = registerController(
     IntFieldController(),
   );
   late final spellCategory1Controller = registerController(
@@ -234,7 +230,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final spellCategory4Controller = registerController(
     IntFieldController(),
   );
-  late final spellCategoryCooldown0Controller = registerController(
+  late final spellCategory5Controller = registerController(
     IntFieldController(),
   );
   late final spellCategoryCooldown1Controller = registerController(
@@ -247,6 +243,9 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final spellCategoryCooldown4Controller = registerController(
+    IntFieldController(),
+  );
+  late final spellCategoryCooldown5Controller = registerController(
     IntFieldController(),
   );
 
@@ -274,7 +273,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final requiredReputationRankController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final requiredDisenchantSkillController = registerController(
     IntFieldController(),
@@ -284,129 +283,18 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
   late final lockidController = registerController(IntFieldController());
   late final gemPropertiesController = registerController(IntFieldController());
   late final socketBonusController = registerController(IntFieldController());
-  late final socketColor0Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final socketColor1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final socketColor2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final socketContent0Controller = registerController(
-    IntFieldController(),
-  );
+  late final socketColor1Controller = registerController(FlagFieldController());
+  late final socketColor2Controller = registerController(FlagFieldController());
+  late final socketColor3Controller = registerController(FlagFieldController());
   late final socketContent1Controller = registerController(
     IntFieldController(),
   );
   late final socketContent2Controller = registerController(
     IntFieldController(),
   );
-
-  SelectFieldController<int> statTypeController(int i) => switch (i) {
-    0 => statType0Controller,
-    1 => statType1Controller,
-    2 => statType2Controller,
-    3 => statType3Controller,
-    4 => statType4Controller,
-    5 => statType5Controller,
-    6 => statType6Controller,
-    7 => statType7Controller,
-    8 => statType8Controller,
-    9 => statType9Controller,
-    _ => statType0Controller,
-  };
-
-  IntFieldController statValueController(int i) => switch (i) {
-    0 => statValue0Controller,
-    1 => statValue1Controller,
-    2 => statValue2Controller,
-    3 => statValue3Controller,
-    4 => statValue4Controller,
-    5 => statValue5Controller,
-    6 => statValue6Controller,
-    7 => statValue7Controller,
-    8 => statValue8Controller,
-    9 => statValue9Controller,
-    _ => statValue0Controller,
-  };
-
-  IntFieldController spellIdController(int i) => switch (i) {
-    0 => spellId0Controller,
-    1 => spellId1Controller,
-    2 => spellId2Controller,
-    3 => spellId3Controller,
-    4 => spellId4Controller,
-    _ => spellId0Controller,
-  };
-
-  SelectFieldController<int> spellTriggerController(int i) => switch (i) {
-    0 => spellTrigger0Controller,
-    1 => spellTrigger1Controller,
-    2 => spellTrigger2Controller,
-    3 => spellTrigger3Controller,
-    4 => spellTrigger4Controller,
-    _ => spellTrigger0Controller,
-  };
-
-  IntFieldController spellChargeController(int i) => switch (i) {
-    0 => spellCharge0Controller,
-    1 => spellCharge1Controller,
-    2 => spellCharge2Controller,
-    3 => spellCharge3Controller,
-    4 => spellCharge4Controller,
-    _ => spellCharge0Controller,
-  };
-
-  DoubleFieldController spellPpmRateController(int i) => switch (i) {
-    0 => spellPpmRate0Controller,
-    1 => spellPpmRate1Controller,
-    2 => spellPpmRate2Controller,
-    3 => spellPpmRate3Controller,
-    4 => spellPpmRate4Controller,
-    _ => spellPpmRate0Controller,
-  };
-
-  IntFieldController spellCooldownController(int i) => switch (i) {
-    0 => spellCooldown0Controller,
-    1 => spellCooldown1Controller,
-    2 => spellCooldown2Controller,
-    3 => spellCooldown3Controller,
-    4 => spellCooldown4Controller,
-    _ => spellCooldown0Controller,
-  };
-
-  IntFieldController spellCategoryController(int i) => switch (i) {
-    0 => spellCategory0Controller,
-    1 => spellCategory1Controller,
-    2 => spellCategory2Controller,
-    3 => spellCategory3Controller,
-    4 => spellCategory4Controller,
-    _ => spellCategory0Controller,
-  };
-
-  IntFieldController spellCategoryCooldownController(int i) => switch (i) {
-    0 => spellCategoryCooldown0Controller,
-    1 => spellCategoryCooldown1Controller,
-    2 => spellCategoryCooldown2Controller,
-    3 => spellCategoryCooldown3Controller,
-    4 => spellCategoryCooldown4Controller,
-    _ => spellCategoryCooldown0Controller,
-  };
-
-  SelectFieldController<int> socketColorController(int i) => switch (i) {
-    0 => socketColor0Controller,
-    1 => socketColor1Controller,
-    2 => socketColor2Controller,
-    _ => socketColor0Controller,
-  };
-
-  IntFieldController socketContentController(int i) => switch (i) {
-    0 => socketContent0Controller,
-    1 => socketContent1Controller,
-    2 => socketContent2Controller,
-    _ => socketContent0Controller,
-  };
+  late final socketContent3Controller = registerController(
+    IntFieldController(),
+  );
 
   /// Card 11: Page/Misc
   late final mapIdController = registerController(IntFieldController());
@@ -511,27 +399,26 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     scalingStatValueController.init(template.scalingStatValue);
 
     /// Card 6: Stats
-    statsCountController.init(template.statsCount);
-    statType0Controller.init(template.statTypes[0]);
-    statType1Controller.init(template.statTypes[1]);
-    statType2Controller.init(template.statTypes[2]);
-    statType3Controller.init(template.statTypes[3]);
-    statType4Controller.init(template.statTypes[4]);
-    statType5Controller.init(template.statTypes[5]);
-    statType6Controller.init(template.statTypes[6]);
-    statType7Controller.init(template.statTypes[7]);
-    statType8Controller.init(template.statTypes[8]);
-    statType9Controller.init(template.statTypes[9]);
-    statValue0Controller.init(template.statValues[0]);
-    statValue1Controller.init(template.statValues[1]);
-    statValue2Controller.init(template.statValues[2]);
-    statValue3Controller.init(template.statValues[3]);
-    statValue4Controller.init(template.statValues[4]);
-    statValue5Controller.init(template.statValues[5]);
-    statValue6Controller.init(template.statValues[6]);
-    statValue7Controller.init(template.statValues[7]);
-    statValue8Controller.init(template.statValues[8]);
-    statValue9Controller.init(template.statValues[9]);
+    statType1Controller.init(template.statType1);
+    statValue1Controller.init(template.statValue1);
+    statType2Controller.init(template.statType2);
+    statValue2Controller.init(template.statValue2);
+    statType3Controller.init(template.statType3);
+    statValue3Controller.init(template.statValue3);
+    statType4Controller.init(template.statType4);
+    statValue4Controller.init(template.statValue4);
+    statType5Controller.init(template.statType5);
+    statValue5Controller.init(template.statValue5);
+    statType6Controller.init(template.statType6);
+    statValue6Controller.init(template.statValue6);
+    statType7Controller.init(template.statType7);
+    statValue7Controller.init(template.statValue7);
+    statType8Controller.init(template.statType8);
+    statValue8Controller.init(template.statValue8);
+    statType9Controller.init(template.statType9);
+    statValue9Controller.init(template.statValue9);
+    statType10Controller.init(template.statType10);
+    statValue10Controller.init(template.statValue10);
 
     /// Card 7: Resistances
     holyResController.init(template.holyRes);
@@ -542,41 +429,41 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     arcaneResController.init(template.arcaneRes);
 
     /// Card 8: Spells (5 slots)
-    spellId0Controller.init(template.spellIds[0]);
-    spellId1Controller.init(template.spellIds[1]);
-    spellId2Controller.init(template.spellIds[2]);
-    spellId3Controller.init(template.spellIds[3]);
-    spellId4Controller.init(template.spellIds[4]);
-    spellTrigger0Controller.init(template.spellTriggers[0]);
-    spellTrigger1Controller.init(template.spellTriggers[1]);
-    spellTrigger2Controller.init(template.spellTriggers[2]);
-    spellTrigger3Controller.init(template.spellTriggers[3]);
-    spellTrigger4Controller.init(template.spellTriggers[4]);
-    spellCharge0Controller.init(template.spellCharges[0]);
-    spellCharge1Controller.init(template.spellCharges[1]);
-    spellCharge2Controller.init(template.spellCharges[2]);
-    spellCharge3Controller.init(template.spellCharges[3]);
-    spellCharge4Controller.init(template.spellCharges[4]);
-    spellPpmRate0Controller.init(template.spellPpmRates[0]);
-    spellPpmRate1Controller.init(template.spellPpmRates[1]);
-    spellPpmRate2Controller.init(template.spellPpmRates[2]);
-    spellPpmRate3Controller.init(template.spellPpmRates[3]);
-    spellPpmRate4Controller.init(template.spellPpmRates[4]);
-    spellCooldown0Controller.init(template.spellCooldowns[0]);
-    spellCooldown1Controller.init(template.spellCooldowns[1]);
-    spellCooldown2Controller.init(template.spellCooldowns[2]);
-    spellCooldown3Controller.init(template.spellCooldowns[3]);
-    spellCooldown4Controller.init(template.spellCooldowns[4]);
-    spellCategory0Controller.init(template.spellCategories[0]);
-    spellCategory1Controller.init(template.spellCategories[1]);
-    spellCategory2Controller.init(template.spellCategories[2]);
-    spellCategory3Controller.init(template.spellCategories[3]);
-    spellCategory4Controller.init(template.spellCategories[4]);
-    spellCategoryCooldown0Controller.init(template.spellCategoryCooldowns[0]);
-    spellCategoryCooldown1Controller.init(template.spellCategoryCooldowns[1]);
-    spellCategoryCooldown2Controller.init(template.spellCategoryCooldowns[2]);
-    spellCategoryCooldown3Controller.init(template.spellCategoryCooldowns[3]);
-    spellCategoryCooldown4Controller.init(template.spellCategoryCooldowns[4]);
+    spellId1Controller.init(template.spellId1);
+    spellTrigger1Controller.init(template.spellTrigger1);
+    spellCharge1Controller.init(template.spellCharges1);
+    spellPpmRate1Controller.init(template.spellPpmRate1);
+    spellCooldown1Controller.init(template.spellCooldown1);
+    spellCategory1Controller.init(template.spellCategory1);
+    spellCategoryCooldown1Controller.init(template.spellCategoryCooldown1);
+    spellId2Controller.init(template.spellId2);
+    spellTrigger2Controller.init(template.spellTrigger2);
+    spellCharge2Controller.init(template.spellCharges2);
+    spellPpmRate2Controller.init(template.spellPpmRate2);
+    spellCooldown2Controller.init(template.spellCooldown2);
+    spellCategory2Controller.init(template.spellCategory2);
+    spellCategoryCooldown2Controller.init(template.spellCategoryCooldown2);
+    spellId3Controller.init(template.spellId3);
+    spellTrigger3Controller.init(template.spellTrigger3);
+    spellCharge3Controller.init(template.spellCharges3);
+    spellPpmRate3Controller.init(template.spellPpmRate3);
+    spellCooldown3Controller.init(template.spellCooldown3);
+    spellCategory3Controller.init(template.spellCategory3);
+    spellCategoryCooldown3Controller.init(template.spellCategoryCooldown3);
+    spellId4Controller.init(template.spellId4);
+    spellTrigger4Controller.init(template.spellTrigger4);
+    spellCharge4Controller.init(template.spellCharges4);
+    spellPpmRate4Controller.init(template.spellPpmRate4);
+    spellCooldown4Controller.init(template.spellCooldown4);
+    spellCategory4Controller.init(template.spellCategory4);
+    spellCategoryCooldown4Controller.init(template.spellCategoryCooldown4);
+    spellId5Controller.init(template.spellId5);
+    spellTrigger5Controller.init(template.spellTrigger5);
+    spellCharge5Controller.init(template.spellCharges5);
+    spellPpmRate5Controller.init(template.spellPpmRate5);
+    spellCooldown5Controller.init(template.spellCooldown5);
+    spellCategory5Controller.init(template.spellCategory5);
+    spellCategoryCooldown5Controller.init(template.spellCategoryCooldown5);
 
     /// Card 9: Requirements
     allowableClassController.init(template.allowableClass);
@@ -598,12 +485,12 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     lockidController.init(template.lockid);
     gemPropertiesController.init(template.gemProperties);
     socketBonusController.init(template.socketBonus);
-    socketColor0Controller.init(template.socketColors[0]);
-    socketColor1Controller.init(template.socketColors[1]);
-    socketColor2Controller.init(template.socketColors[2]);
-    socketContent0Controller.init(template.socketContents[0]);
-    socketContent1Controller.init(template.socketContents[1]);
-    socketContent2Controller.init(template.socketContents[2]);
+    socketColor1Controller.init(template.socketColor1);
+    socketContent1Controller.init(template.socketContent1);
+    socketColor2Controller.init(template.socketColor2);
+    socketContent2Controller.init(template.socketContent2);
+    socketColor3Controller.init(template.socketColor3);
+    socketContent3Controller.init(template.socketContent3);
 
     /// Card 11: Page/Misc
     mapIdController.init(template.mapId);
@@ -677,31 +564,26 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
       scalingStatValue: scalingStatValueController.collect(),
 
       /// Card 6: Stats
-      statsCount: statsCountController.collect(),
-      statTypes: [
-        statType0Controller.collect(),
-        statType1Controller.collect(),
-        statType2Controller.collect(),
-        statType3Controller.collect(),
-        statType4Controller.collect(),
-        statType5Controller.collect(),
-        statType6Controller.collect(),
-        statType7Controller.collect(),
-        statType8Controller.collect(),
-        statType9Controller.collect(),
-      ],
-      statValues: [
-        statValue0Controller.collect(),
-        statValue1Controller.collect(),
-        statValue2Controller.collect(),
-        statValue3Controller.collect(),
-        statValue4Controller.collect(),
-        statValue5Controller.collect(),
-        statValue6Controller.collect(),
-        statValue7Controller.collect(),
-        statValue8Controller.collect(),
-        statValue9Controller.collect(),
-      ],
+      statType1: statType1Controller.collect(),
+      statValue1: statValue1Controller.collect(),
+      statType2: statType2Controller.collect(),
+      statValue2: statValue2Controller.collect(),
+      statType3: statType3Controller.collect(),
+      statValue3: statValue3Controller.collect(),
+      statType4: statType4Controller.collect(),
+      statValue4: statValue4Controller.collect(),
+      statType5: statType5Controller.collect(),
+      statValue5: statValue5Controller.collect(),
+      statType6: statType6Controller.collect(),
+      statValue6: statValue6Controller.collect(),
+      statType7: statType7Controller.collect(),
+      statValue7: statValue7Controller.collect(),
+      statType8: statType8Controller.collect(),
+      statValue8: statValue8Controller.collect(),
+      statType9: statType9Controller.collect(),
+      statValue9: statValue9Controller.collect(),
+      statType10: statType10Controller.collect(),
+      statValue10: statValue10Controller.collect(),
 
       /// Card 7: Resistances
       holyRes: holyResController.collect(),
@@ -712,55 +594,41 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
       arcaneRes: arcaneResController.collect(),
 
       /// Card 8: Spells (5 slots)
-      spellIds: [
-        spellId0Controller.collect(),
-        spellId1Controller.collect(),
-        spellId2Controller.collect(),
-        spellId3Controller.collect(),
-        spellId4Controller.collect(),
-      ],
-      spellTriggers: [
-        spellTrigger0Controller.collect(),
-        spellTrigger1Controller.collect(),
-        spellTrigger2Controller.collect(),
-        spellTrigger3Controller.collect(),
-        spellTrigger4Controller.collect(),
-      ],
-      spellCharges: [
-        spellCharge0Controller.collect(),
-        spellCharge1Controller.collect(),
-        spellCharge2Controller.collect(),
-        spellCharge3Controller.collect(),
-        spellCharge4Controller.collect(),
-      ],
-      spellPpmRates: [
-        spellPpmRate0Controller.collect(),
-        spellPpmRate1Controller.collect(),
-        spellPpmRate2Controller.collect(),
-        spellPpmRate3Controller.collect(),
-        spellPpmRate4Controller.collect(),
-      ],
-      spellCooldowns: [
-        spellCooldown0Controller.collect(),
-        spellCooldown1Controller.collect(),
-        spellCooldown2Controller.collect(),
-        spellCooldown3Controller.collect(),
-        spellCooldown4Controller.collect(),
-      ],
-      spellCategories: [
-        spellCategory0Controller.collect(),
-        spellCategory1Controller.collect(),
-        spellCategory2Controller.collect(),
-        spellCategory3Controller.collect(),
-        spellCategory4Controller.collect(),
-      ],
-      spellCategoryCooldowns: [
-        spellCategoryCooldown0Controller.collect(),
-        spellCategoryCooldown1Controller.collect(),
-        spellCategoryCooldown2Controller.collect(),
-        spellCategoryCooldown3Controller.collect(),
-        spellCategoryCooldown4Controller.collect(),
-      ],
+      spellId1: spellId1Controller.collect(),
+      spellTrigger1: spellTrigger1Controller.collect(),
+      spellCharges1: spellCharge1Controller.collect(),
+      spellPpmRate1: spellPpmRate1Controller.collect(),
+      spellCooldown1: spellCooldown1Controller.collect(),
+      spellCategory1: spellCategory1Controller.collect(),
+      spellCategoryCooldown1: spellCategoryCooldown1Controller.collect(),
+      spellId2: spellId2Controller.collect(),
+      spellTrigger2: spellTrigger2Controller.collect(),
+      spellCharges2: spellCharge2Controller.collect(),
+      spellPpmRate2: spellPpmRate2Controller.collect(),
+      spellCooldown2: spellCooldown2Controller.collect(),
+      spellCategory2: spellCategory2Controller.collect(),
+      spellCategoryCooldown2: spellCategoryCooldown2Controller.collect(),
+      spellId3: spellId3Controller.collect(),
+      spellTrigger3: spellTrigger3Controller.collect(),
+      spellCharges3: spellCharge3Controller.collect(),
+      spellPpmRate3: spellPpmRate3Controller.collect(),
+      spellCooldown3: spellCooldown3Controller.collect(),
+      spellCategory3: spellCategory3Controller.collect(),
+      spellCategoryCooldown3: spellCategoryCooldown3Controller.collect(),
+      spellId4: spellId4Controller.collect(),
+      spellTrigger4: spellTrigger4Controller.collect(),
+      spellCharges4: spellCharge4Controller.collect(),
+      spellPpmRate4: spellPpmRate4Controller.collect(),
+      spellCooldown4: spellCooldown4Controller.collect(),
+      spellCategory4: spellCategory4Controller.collect(),
+      spellCategoryCooldown4: spellCategoryCooldown4Controller.collect(),
+      spellId5: spellId5Controller.collect(),
+      spellTrigger5: spellTrigger5Controller.collect(),
+      spellCharges5: spellCharge5Controller.collect(),
+      spellPpmRate5: spellPpmRate5Controller.collect(),
+      spellCooldown5: spellCooldown5Controller.collect(),
+      spellCategory5: spellCategory5Controller.collect(),
+      spellCategoryCooldown5: spellCategoryCooldown5Controller.collect(),
 
       /// Card 9: Requirements
       allowableClass: allowableClassController.collect(),
@@ -780,16 +648,12 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
       lockid: lockidController.collect(),
       gemProperties: gemPropertiesController.collect(),
       socketBonus: socketBonusController.collect(),
-      socketColors: [
-        socketColor0Controller.collect(),
-        socketColor1Controller.collect(),
-        socketColor2Controller.collect(),
-      ],
-      socketContents: [
-        socketContent0Controller.collect(),
-        socketContent1Controller.collect(),
-        socketContent2Controller.collect(),
-      ],
+      socketColor1: socketColor1Controller.collect(),
+      socketContent1: socketContent1Controller.collect(),
+      socketColor2: socketColor2Controller.collect(),
+      socketContent2: socketContent2Controller.collect(),
+      socketColor3: socketColor3Controller.collect(),
+      socketContent3: socketContent3Controller.collect(),
 
       /// Card 11: Page/Misc
       mapId: mapIdController.collect(),
@@ -803,7 +667,7 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> save(BuildContext context) async {
+  Future<int?> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
       final existed = await _repository.getItemTemplate(t.entry);
@@ -817,13 +681,15 @@ class ItemTemplateDetailViewModel with FieldControllerMixin {
         template.value = t;
         _logActivity(ActivityActionType.update, t);
       }
-      if (!context.mounted) return;
+      if (!context.mounted) return template.value.entry;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
+      return template.value.entry;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return null;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return null;
     }
   }
 

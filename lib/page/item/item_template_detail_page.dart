@@ -20,11 +20,13 @@ class ItemTemplateDetailPage extends StatefulWidget {
 }
 
 class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
+  late int? entry = widget.entry;
+
   @override
   Widget build(BuildContext context) {
     var tabs = [
       Text('物品模板'),
-      Text('附魔模板'),
+      Text('随机附魔组'),
       Text('物品掉落'),
       Text('分解掉落'),
       Text('选矿掉落'),
@@ -32,15 +34,22 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
     ];
 
     var tabContents = [
-      ItemTemplateView(entry: widget.entry),
-      ItemEnchantmentTemplateView(entry: widget.entry ?? 0),
-      ItemLootTemplateView(entry: widget.entry ?? 0),
-      DisenchantLootTemplateView(entry: widget.entry ?? 0),
-      ProspectingLootTemplateView(entry: widget.entry ?? 0),
-      MillingLootTemplateView(entry: widget.entry ?? 0),
+      ItemTemplateView(
+        entry: entry,
+        onSaved: (value) => setState(() => entry = value),
+      ),
+      ItemEnchantmentTemplateView(entry: entry ?? 0),
+      ItemLootTemplateView(entry: entry ?? 0),
+      DisenchantLootTemplateView(entry: entry ?? 0),
+      ProspectingLootTemplateView(entry: entry ?? 0),
+      MillingLootTemplateView(entry: entry ?? 0),
     ];
 
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+    var tabBar = FoxyTab(
+      tabs: tabs,
+      contents: tabContents,
+      disabledIndexes: entry == null ? const {1, 2, 3, 4, 5} : const {},
+    );
 
     return ListView(
       padding: const EdgeInsets.all(16),

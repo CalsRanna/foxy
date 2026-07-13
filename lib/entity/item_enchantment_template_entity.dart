@@ -1,3 +1,5 @@
+enum ItemEnchantmentKind { randomProperty, randomSuffix }
+
 /// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
 class ItemEnchantmentTemplateEntity {
   final int entry;
@@ -14,12 +16,20 @@ class ItemEnchantmentTemplateEntity {
     return ItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
-      chance: json['chance'] ?? 0.0,
+      chance: ((json['chance'] ?? 0) as num).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {'entry': entry, 'ench': ench, 'chance': chance};
+  }
+
+  void validate() {
+    if (entry == 0) throw ArgumentError('entry 必须引用非零附魔组');
+    if (ench == 0) throw ArgumentError('ench 必须引用随机属性或随机后缀 DBC');
+    if (chance <= 0.000001 || chance > 100) {
+      throw ArgumentError.value(chance, 'chance', '必须大于 0.000001 且不超过 100');
+    }
   }
 
   ItemEnchantmentTemplateEntity copyWith({
@@ -46,6 +56,8 @@ class BriefItemEnchantmentTemplateEntity {
   final String enchantment3Name;
   final String enchantment4Name;
   final String enchantment5Name;
+  final ItemEnchantmentKind kind;
+  final int itemCount;
 
   const BriefItemEnchantmentTemplateEntity({
     this.entry = 0,
@@ -57,6 +69,8 @@ class BriefItemEnchantmentTemplateEntity {
     this.enchantment3Name = '',
     this.enchantment4Name = '',
     this.enchantment5Name = '',
+    this.kind = ItemEnchantmentKind.randomProperty,
+    this.itemCount = 0,
   });
 
   factory BriefItemEnchantmentTemplateEntity.fromJson(
@@ -65,13 +79,17 @@ class BriefItemEnchantmentTemplateEntity {
     return BriefItemEnchantmentTemplateEntity(
       entry: json['entry'] ?? 0,
       ench: json['ench'] ?? 0,
-      chance: json['chance'] ?? 0.0,
-      name: json['Name_Lang_zhCN'] ?? '',
+      chance: ((json['chance'] ?? 0) as num).toDouble(),
+      name: json['Name_lang_zhCN'] ?? json['Name'] ?? '',
       enchantment1Name: json['Enchantment_1'] ?? '',
       enchantment2Name: json['Enchantment_2'] ?? '',
       enchantment3Name: json['Enchantment_3'] ?? '',
       enchantment4Name: json['Enchantment_4'] ?? '',
       enchantment5Name: json['Enchantment_5'] ?? '',
+      kind: json['kind'] == ItemEnchantmentKind.randomSuffix.name
+          ? ItemEnchantmentKind.randomSuffix
+          : ItemEnchantmentKind.randomProperty,
+      itemCount: json['ItemCount'] ?? 0,
     );
   }
 }

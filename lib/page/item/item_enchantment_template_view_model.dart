@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
+import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -13,6 +14,7 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
+  final kind = signal(ItemEnchantmentKind.randomProperty);
   final items = signal<List<BriefItemEnchantmentTemplateEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final creating = signal(false);
@@ -24,10 +26,12 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
   late final chanceController = registerController(DoubleFieldController());
 
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
+  final _itemRepository = GetIt.instance.get<ItemTemplateRepository>();
 
   Future<void> load() async {
     final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
       entry.value,
+      kind: kind.value,
     );
     items.value = data;
     selectedIndex.value = null;
@@ -54,21 +58,21 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> create() async {
+  bool create() {
     try {
-      final maxEnch = items.value.fold<int>(
-        0,
-        (max, e) => e.ench > max ? e.ench : max,
-      );
+      if (entry.value == 0) {
+        throw StateError('请先在物品模板中选择随机属性组或随机后缀组并保存');
+      }
       resetForm();
-      enchController.init(maxEnch + 1);
       creating.value = true;
       editing.value = false;
       selectedIndex.value = null;
       editingEnch = null;
+      return true;
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
+      return false;
     }
   }
 
@@ -81,24 +85,6 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
     editing.value = true;
     creating.value = false;
     editingEnch = model.ench;
-  }
-
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final model = items.value[index];
-    try {
-      await _repository.copyItemEnchantmentTemplate(model.entry, model.ench);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   Future<void> delete(BuildContext context) async {
@@ -185,8 +171,16 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
 
   Future<void> initSignals({required int entry}) async {
     try {
-      this.entry.value = entry;
-      entryController.init(entry);
+      final template = await _itemRepository.getItemTemplate(entry);
+      if (template == null) return;
+      if (template.randomProperty != 0) {
+        this.entry.value = template.randomProperty;
+        kind.value = ItemEnchantmentKind.randomProperty;
+      } else if (template.randomSuffix != 0) {
+        this.entry.value = template.randomSuffix;
+        kind.value = ItemEnchantmentKind.randomSuffix;
+      }
+      entryController.init(this.entry.value);
       await load();
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');

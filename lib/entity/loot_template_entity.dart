@@ -44,6 +44,7 @@ class LootTemplateEntity {
     if (chance != 0 && chance < 0.000001) {
       throw StateError('非零掉落几率不能小于 0.000001');
     }
+    if (chance > 100) throw StateError('掉落几率不能超过 100');
   }
 
   factory LootTemplateEntity.fromJson(Map<String, dynamic> json) {

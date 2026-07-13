@@ -3,6 +3,7 @@
 
 /// Material 材质类型选项
 const kItemMaterialOptions = {
+  -1: '消耗品', // Consumable
   0: '未定义', // None
   1: '金属', // Metal
   2: '木制品', // Wood
@@ -50,63 +51,55 @@ const kItemFoodTypeOptions = {
 
 /// StatType 属性类型选项
 const kItemStatTypeOptions = {
-  0: '无', // None
+  0: '法力值', // Mana
   1: '生命值', // Health
-  2: '法力值', // Mana
+  2: '保留（未定义）',
   3: '敏捷', // Agility
   4: '力量', // Strength
   5: '智力', // Intellect
   6: '精神', // Spirit
   7: '耐力', // Stamina
-  8: '未知', // Unknown
-  9: '未知', // Unknown
-  10: '未知', // Unknown
-  11: '未知', // Unknown
-  12: '防御等级', // Defense Rating
+  8: '保留（未定义）',
+  9: '保留（未定义）',
+  10: '保留（未定义）',
+  11: '保留（未定义）',
+  12: '防御技能等级', // Defense Skill Rating
   13: '躲闪等级', // Dodge Rating
   14: '招架等级', // Parry Rating
-  15: '盾牌格挡', // Shield Block
-  16: '近战命中', // Melee Hit
-  17: '远程命中', // Ranged Hit
-  18: '法术命中', // Spell Hit
-  19: '近战暴击', // Melee Crit
-  20: '远程暴击', // Ranged Crit
-  21: '法术暴击', // Spell Crit
-  22: '近战躲闪', // Melee Dodge
-  23: '远程躲闪', // Ranged Dodge
-  24: '法术躲闪', // Spell Dodge
-  25: '近战暴击躲闪', // Melee Crit Dodge
-  26: '远程暴击躲闪', // Ranged Crit Dodge
-  27: '法术暴击躲闪', // Spell Crit Dodge
-  28: '近战攻击速度', // Melee Haste
-  29: '远程攻击速度', // Ranged Haste
-  30: '法术攻击速度', // Spell Haste
+  15: '格挡等级', // Block Rating
+  16: '近战命中等级', // Melee Hit Rating
+  17: '远程命中等级', // Ranged Hit Rating
+  18: '法术命中等级', // Spell Hit Rating
+  19: '近战暴击等级', // Melee Crit Rating
+  20: '远程暴击等级', // Ranged Crit Rating
+  21: '法术暴击等级', // Spell Crit Rating
+  22: '近战被命中等级', // Melee Hit Taken Rating
+  23: '远程被命中等级', // Ranged Hit Taken Rating
+  24: '法术被命中等级', // Spell Hit Taken Rating
+  25: '近战被暴击等级', // Melee Crit Taken Rating
+  26: '远程被暴击等级', // Ranged Crit Taken Rating
+  27: '法术被暴击等级', // Spell Crit Taken Rating
+  28: '近战急速等级', // Melee Haste Rating
+  29: '远程急速等级', // Ranged Haste Rating
+  30: '法术急速等级', // Spell Haste Rating
   31: '命中等级', // Hit Rating
   32: '暴击等级', // Crit Rating
-  33: '命中躲闪', // Hit Dodge
-  34: '暴击躲闪', // Crit Dodge
-  35: '韧性', // Resilience
-  36: '急速攻击速度', // Haste Rating
+  33: '被命中等级', // Hit Taken Rating
+  34: '被暴击等级', // Crit Taken Rating
+  35: '韧性等级', // Resilience Rating
+  36: '急速等级', // Haste Rating
   37: '精准等级', // Expertise
   38: '攻击强度', // Attack Power
   39: '远程攻击强度', // Ranged Attack Power
-  40: '猎豹/熊/巨熊形态攻击强度', // Feral Attack Power
-  41: '法术治疗效果', // Spell Healing
-  42: '法术伤害效果', // Spell Damage
-  43: '5秒回蓝', // MP5
+  40: '野性攻击强度（3.3.5a 未使用）', // Feral Attack Power, not in 3.3.5a
+  41: '法术治疗加成（已弃用）', // Spell Healing Done, deprecated
+  42: '法术伤害加成（已弃用）', // Spell Damage Done, deprecated
+  43: '法力回复', // Mana Regeneration
   44: '护甲穿透等级', // Armor Penetration
   45: '法术强度', // Spell Power
-  46: '5秒回血', // HP5
+  46: '生命回复', // Health Regeneration
   47: '法术穿透', // Spell Penetration
   48: '格挡值', // Block Value
-};
-
-/// SocketColor 插槽颜色选项
-const kItemSocketColorOptions = {
-  1: '原石', // Meta
-  2: '红色', // Red
-  4: '黄色', // Yellow
-  8: '蓝色', // Blue
 };
 
 /// SpellTrigger 法术触发类型选项
@@ -129,4 +122,16 @@ const kItemQualityOptions = {
   5: '传说', // Legendary
   6: '神器', // Artifact
   7: '传家宝', // Heirloom
+};
+
+/// ReputationRank，AzerothCore MAX_REPUTATION_RANK = 8。
+const kItemReputationRankOptions = {
+  0: '仇恨',
+  1: '敌对',
+  2: '冷淡',
+  3: '中立',
+  4: '友善',
+  5: '尊敬',
+  6: '崇敬',
+  7: '崇拜',
 };

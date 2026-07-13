@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
@@ -107,11 +108,6 @@ class _ItemEnchantmentTemplateViewState
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () => viewModel.delete(context),
                   child: Text('删除'),
@@ -131,7 +127,7 @@ class _ItemEnchantmentTemplateViewState
   }
 
   void _showCreateDialog() {
-    viewModel.create();
+    if (!viewModel.create()) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -163,7 +159,7 @@ class _ItemEnchantmentTemplateViewState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FoxyFormItem(
-            label: '物品ID',
+            label: '附魔组ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.entryController,
               placeholder: 'Entry',
@@ -174,9 +170,13 @@ class _ItemEnchantmentTemplateViewState
           FoxyFormItem(
             label: '附魔ID',
             child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemEnchantmentTemplate,
+              delegate:
+                  viewModel.kind.value == ItemEnchantmentKind.randomProperty
+                  ? FoxyEntityPickerDelegates.itemRandomProperties
+                  : FoxyEntityPickerDelegates.itemRandomSuffix,
               controller: viewModel.enchController,
               placeholder: 'Ench',
+              readOnly: isEditing,
             ),
           ),
           SizedBox(height: 16),

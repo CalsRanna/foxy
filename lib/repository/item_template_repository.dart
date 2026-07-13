@@ -125,6 +125,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<int> storeItemTemplate(ItemTemplateEntity template) async {
+    template.validate();
     var json = template.toJson();
     final newEntry = template.entry > 0
         ? template.entry
@@ -135,6 +136,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateItemTemplate(ItemTemplateEntity template) async {
+    template.validate();
     var json = template.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', template.entry).update(json);
@@ -154,6 +156,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<void> saveItemTemplate(ItemTemplateEntity template) async {
+    template.validate();
     if (template.entry == 0) {
       await storeItemTemplate(template);
       return;
