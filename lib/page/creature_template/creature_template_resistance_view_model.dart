@@ -61,15 +61,17 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
   }
 
   /// 创建新记录
-  Future<void> create() async {
+  Future<bool> create() async {
     try {
       final nextSchool = await _repository.getNextSchool(creatureId.value);
       resetForm();
       schoolController.init(nextSchool);
       selectedIndex.value = null;
+      return true;
     } catch (e) {
       LoggerUtil.instance.e('创建生物抗性记录失败: $e');
       DialogUtil.instance.error('创建生物抗性记录失败: $e');
+      return false;
     }
   }
 

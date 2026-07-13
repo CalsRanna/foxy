@@ -3,6 +3,8 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateSpellRepository with RepositoryMixin {
   static const _table = 'creature_template_spell';
+  static const minIndex = 0;
+  static const maxIndex = 7;
 
   Future<List<CreatureTemplateSpellEntity>> getBriefCreatureTemplateSpells(
     int creatureID,
@@ -53,6 +55,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   Future<void> storeCreatureTemplateSpell(
     CreatureTemplateSpellEntity spell,
   ) async {
+    validateIndex(spell.index);
     var json = spell.toJson();
     json['`Index`'] = json.remove('Index');
     await laconic.table(_table).insert([json]);
@@ -61,6 +64,7 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   Future<void> updateCreatureTemplateSpell(
     CreatureTemplateSpellEntity spell,
   ) async {
+    validateIndex(spell.index);
     var json = spell.toJson();
     json.remove('CreatureID');
     json['`Index`'] = json.remove('Index');
@@ -104,12 +108,27 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   }
 
   Future<int> getNextIndex(int creatureID) async {
-    var maxResult = await laconic
+    var results = await laconic
         .table(_table)
-        .select(['MAX(`Index`) AS maxIndex'])
+        .select(['`Index`'])
         .where('CreatureID', creatureID)
-        .first();
-    var maxIndex = (maxResult.toMap()['maxIndex'] ?? 0) as int;
-    return maxIndex + 1;
+        .get();
+    return nextAvailableIndex(
+      results.map((result) => result.toMap()['Index'] as int),
+    );
+  }
+
+  static int nextAvailableIndex(Iterable<int> usedIndexes) {
+    final used = usedIndexes.toSet();
+    for (var index = minIndex; index <= maxIndex; index++) {
+      if (!used.contains(index)) return index;
+    }
+    throw StateError('生物技能槽已满，只允许 $minIndex-$maxIndex');
+  }
+
+  static void validateIndex(int index) {
+    if (index < minIndex || index > maxIndex) {
+      throw ArgumentError.value(index, 'index', '生物技能槽只允许 $minIndex-$maxIndex');
+    }
   }
 }

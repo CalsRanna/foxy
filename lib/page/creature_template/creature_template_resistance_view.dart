@@ -133,8 +133,8 @@ class _CreatureTemplateResistanceViewState
   }
 
   /// 显示新增对话框
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -184,6 +184,7 @@ class _CreatureTemplateResistanceViewState
               controller: viewModel.schoolController,
               options: kResistanceSchoolOptions,
               placeholder: Text('School'),
+              enabled: !isEditing,
             ),
           ),
           SizedBox(height: 16),

@@ -665,3 +665,9 @@ DBC 影响：
 11. 最终按文档中的报告模板说明核验基线、字段数量、关键修正、测试结果
     和未完成风险。
 ```
+
+## 18. 模块核验进度
+
+| Foxy 模块 | 主表 / 关联范围 | 核验基线 | 状态 | 验证结果 | 完成日期 | 备注 |
+|---|---|---|---|---|---|---|
+| `creature_template` | `creature_template` 55 列；详情页全部 11 个关联 Tab，包括 Addon、击杀声望、抗性、技能、装备、任务物品、商人、训练师、生物掉落、偷窃掉落和剥皮掉落 | Foxy `64f34b230716d09a05698f2f96582c6657617497`；AzerothCore `master@a0b6553b5b83771e5a4a59bf3b68e76c6ce90826`；3.3.5a DBC；实际 `acore_world` 库只读结构/数据检查 | **已完成** | `flutter analyze` 通过；模块、DBC 字段/本地化/导出契约测试通过；`git diff --check` 通过 | 2026-07-13 | 新增 required `Emotes.dbc`、`Item.dbc`、`SkillLine.dbc` 闭环。实际库保留的旧 `npc_trainer` 为当前 core 不加载的结构漂移，不纳入 Foxy 支持范围。全量 `flutter test` 仅剩任务前已可复现的 `dbc_sync_util_test.dart` 无效 MySQL 配置失败，与本模块无关。 |

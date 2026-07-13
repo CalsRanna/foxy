@@ -3,6 +3,8 @@ import 'package:foxy/repository/repository_mixin.dart';
 
 class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const _table = 'creature_template_resistance';
+  static const minSchool = 1;
+  static const maxSchool = 6;
 
   Future<List<CreatureTemplateResistanceEntity>>
   getBriefCreatureTemplateResistances(int creatureID) async {
@@ -43,12 +45,14 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   Future<void> storeCreatureTemplateResistance(
     CreatureTemplateResistanceEntity resistance,
   ) async {
+    validateSchool(resistance.school);
     await laconic.table(_table).insert([resistance.toJson()]);
   }
 
   Future<void> updateCreatureTemplateResistance(
     CreatureTemplateResistanceEntity resistance,
   ) async {
+    validateSchool(resistance.school);
     var json = resistance.toJson();
     json.remove('CreatureID');
     json.remove('School');
@@ -97,12 +101,31 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   }
 
   Future<int> getNextSchool(int creatureID) async {
-    var maxResult = await laconic
+    var results = await laconic
         .table(_table)
-        .select(['MAX(School) AS maxSchool'])
+        .select(['School'])
         .where('CreatureID', creatureID)
-        .first();
-    var maxSchool = (maxResult.toMap()['maxSchool'] ?? 0) as int;
-    return maxSchool + 1;
+        .get();
+    return nextAvailableSchool(
+      results.map((result) => result.toMap()['School'] as int),
+    );
+  }
+
+  static int nextAvailableSchool(Iterable<int> usedSchools) {
+    final used = usedSchools.toSet();
+    for (var school = minSchool; school <= maxSchool; school++) {
+      if (!used.contains(school)) return school;
+    }
+    throw StateError('生物抗性学校已满，只允许 $minSchool-$maxSchool');
+  }
+
+  static void validateSchool(int school) {
+    if (school < minSchool || school > maxSchool) {
+      throw ArgumentError.value(
+        school,
+        'school',
+        '生物抗性学校只允许 $minSchool-$maxSchool',
+      );
+    }
   }
 }

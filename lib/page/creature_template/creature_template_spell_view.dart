@@ -128,8 +128,8 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   }
 
   /// 显示新增对话框
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(

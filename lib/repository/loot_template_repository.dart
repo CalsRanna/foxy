@@ -25,6 +25,11 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
+  static Set<String> primaryKeyColumnsFor(LootTableType tableType) =>
+      tableType == LootTableType.creature
+      ? const {'Entry', 'Item', 'Reference', 'GroupId'}
+      : const {'Entry', 'Item'};
+
   Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(int entry) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
@@ -147,51 +152,75 @@ class LootTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(int entry, int item) async {
-    var results = await laconic
+  Future<LootTemplateEntity?> getLootTemplate(
+    int entry,
+    int item, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    var builder = laconic
         .table(_table)
         .where('Entry', entry)
-        .where('Item', item)
-        .limit(1)
-        .get();
+        .where('Item', item);
+    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
+    var results = await builder.limit(1).get();
     if (results.isEmpty) return null;
     return LootTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    var nextItem = await getNextItemId(entry);
-    return LootTemplateEntity(entry: entry, item: nextItem);
+    return LootTemplateEntity(entry: entry);
   }
 
   Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+    loot.validate();
     await laconic.table(_table).insert([loot.toJson()]);
   }
 
   Future<void> updateLootTemplate(
     int entry,
     int item,
-    LootTemplateEntity loot,
-  ) async {
+    LootTemplateEntity loot, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    loot.validate();
     var json = loot.toJson();
     json.remove('Entry');
-    // allow Item change in payload
-    await laconic
+    var builder = laconic
         .table(_table)
         .where('Entry', entry)
-        .where('Item', item)
-        .update(json);
+        .where('Item', item);
+    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
+    await builder.update(json);
   }
 
-  Future<void> destroyLootTemplate(int entry, int item) async {
-    await laconic
+  Future<void> destroyLootTemplate(
+    int entry,
+    int item, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    var builder = laconic
         .table(_table)
         .where('Entry', entry)
-        .where('Item', item)
-        .delete();
+        .where('Item', item);
+    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
+    await builder.delete();
   }
 
-  Future<void> copyLootTemplate(int entry, int item) async {
-    var source = await getLootTemplate(entry, item);
+  Future<void> copyLootTemplate(
+    int entry,
+    int item, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    var source = await getLootTemplate(
+      entry,
+      item,
+      reference: reference,
+      groupId: groupId,
+    );
     if (source == null) return;
     var nextItem = await getNextItemId(entry);
     var json = source.toJson();
@@ -203,9 +232,21 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> saveLootTemplate(LootTemplateEntity loot) async {
-    var existing = await getLootTemplate(loot.entry, loot.item);
+    loot.validate();
+    var existing = await getLootTemplate(
+      loot.entry,
+      loot.item,
+      reference: loot.reference,
+      groupId: loot.groupId,
+    );
     if (existing != null) {
-      await updateLootTemplate(loot.entry, loot.item, loot);
+      await updateLootTemplate(
+        loot.entry,
+        loot.item,
+        loot,
+        reference: loot.reference,
+        groupId: loot.groupId,
+      );
     } else {
       await storeLootTemplate(loot);
     }
@@ -219,6 +260,15 @@ class LootTemplateRepository with RepositoryMixin {
         .first();
     var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
     return maxItem + 1;
+  }
+
+  QueryBuilder _applyAdditionalPrimaryKey(
+    QueryBuilder builder,
+    int reference,
+    int groupId,
+  ) {
+    if (tableType != LootTableType.creature) return builder;
+    return builder.where('Reference', reference).where('GroupId', groupId);
   }
 
   QueryBuilder _applyRowFilter(

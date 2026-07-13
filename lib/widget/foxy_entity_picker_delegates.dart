@@ -14,12 +14,18 @@ import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/entity/creature_display_info_entity.dart';
+import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/entity/dbc_emote_entity.dart';
+import 'package:foxy/entity/dbc_emote_filter_entity.dart';
+import 'package:foxy/entity/dbc_item_entity.dart';
+import 'package:foxy/entity/dbc_item_filter_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
@@ -56,10 +62,14 @@ import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
+import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
+import 'package:foxy/entity/waypoint_data_entity.dart';
+import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
@@ -67,9 +77,12 @@ import 'package:foxy/repository/creature_immunity_repository.dart';
 import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
+import 'package:foxy/repository/dbc_emote_repository.dart';
+import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
@@ -88,13 +101,221 @@ import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
+import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
+import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
 
 class FoxyEntityPickerDelegates {
+  static final handEquippableDbcItem =
+      FoxyEntityPickerDelegate<BriefDbcItemEntity>(
+        title: '可持握物品',
+        errorLabel: '搜索 Item.dbc 物品失败',
+        filters: const [FoxyEntityPickerFilter('物品 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '物品 ID',
+            width: 140,
+            text: (BriefDbcItemEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '类 / 子类',
+            width: 140,
+            text: (BriefDbcItemEntity t) => '${t.classId} / ${t.subclassId}',
+          ),
+          FoxyEntityPickerColumn(
+            header: '装备位置',
+            width: 120,
+            text: (BriefDbcItemEntity t) => t.inventoryType.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '显示 ID',
+            text: (BriefDbcItemEntity t) => t.displayInfoId.toString(),
+          ),
+        ],
+        idOf: (BriefDbcItemEntity t) => t.id,
+        fetch: (page, v) =>
+            GetIt.instance.get<DbcItemRepository>().getBriefDbcItems(
+              page: page,
+              filter: DbcItemFilterEntity(id: v[0], handEquippableOnly: true),
+            ),
+        count: (v) => GetIt.instance.get<DbcItemRepository>().countDbcItems(
+          filter: DbcItemFilterEntity(id: v[0], handEquippableOnly: true),
+        ),
+      );
+
+  static final _referenceLootRepository = LootTemplateRepository(
+    LootTableType.reference,
+  );
+
+  static final referenceLoot =
+      FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
+        title: '关联掉落模板',
+        errorLabel: '搜索关联掉落模板失败',
+        filters: const [FoxyEntityPickerFilter('模板 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '模板 ID',
+            width: 160,
+            text: (BriefLootTemplateEntity t) => t.entry.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '掉落项数',
+            text: (BriefLootTemplateEntity t) => t.itemCount.toString(),
+          ),
+        ],
+        idOf: (BriefLootTemplateEntity t) => t.entry,
+        fetch: (page, v) =>
+            _referenceLootRepository.getBriefLootTemplateEntries(
+              page: page,
+              filter: LootTemplateFilterEntity(entry: v[0]),
+            ),
+        count: (v) => _referenceLootRepository.countLootTemplates(
+          filter: LootTemplateFilterEntity(entry: v[0]),
+        ),
+      );
+
+  static final dbcEmote = FoxyEntityPickerDelegate<BriefDbcEmoteEntity>(
+    title: '生物表情',
+    errorLabel: '搜索生物表情失败',
+    filters: const [
+      FoxyEntityPickerFilter('表情 ID'),
+      FoxyEntityPickerFilter('斜杠命令'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefDbcEmoteEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '命令',
+        text: (BriefDbcEmoteEntity t) => t.slashCommand,
+      ),
+      FoxyEntityPickerColumn(
+        header: '动画 ID',
+        width: 120,
+        text: (BriefDbcEmoteEntity t) => t.animId.toString(),
+      ),
+    ],
+    idOf: (BriefDbcEmoteEntity t) => t.id,
+    fetch: (page, v) =>
+        GetIt.instance.get<DbcEmoteRepository>().getBriefDbcEmotes(
+          page: page,
+          filter: DbcEmoteFilterEntity(id: v[0], command: v[1]),
+        ),
+    count: (v) => GetIt.instance.get<DbcEmoteRepository>().countDbcEmotes(
+      filter: DbcEmoteFilterEntity(id: v[0], command: v[1]),
+    ),
+  );
+
+  static final skillLine = FoxyEntityPickerDelegate<BriefSkillLineEntity>(
+    title: '技能线',
+    errorLabel: '搜索技能线失败',
+    filters: const [
+      FoxyEntityPickerFilter('技能线 ID'),
+      FoxyEntityPickerFilter('技能线名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefSkillLineEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefSkillLineEntity t) => t.displayNameZhCN,
+      ),
+      FoxyEntityPickerColumn(
+        header: '分类 ID',
+        width: 120,
+        text: (BriefSkillLineEntity t) => t.categoryId.toString(),
+      ),
+    ],
+    idOf: (BriefSkillLineEntity t) => t.id,
+    fetch: (page, v) =>
+        GetIt.instance.get<SkillLineRepository>().getBriefSkillLines(
+          page: page,
+          filter: SkillLineFilterEntity(id: v[0], name: v[1]),
+        ),
+    count: (v) => GetIt.instance.get<SkillLineRepository>().countSkillLines(
+      filter: SkillLineFilterEntity(id: v[0], name: v[1]),
+    ),
+  );
+
+  static final creatureDisplayInfo =
+      FoxyEntityPickerDelegate<BriefCreatureDisplayInfoEntity>(
+        title: '生物显示信息',
+        errorLabel: '搜索生物显示信息失败',
+        filters: const [
+          FoxyEntityPickerFilter('显示信息 ID'),
+          FoxyEntityPickerFilter('模型名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefCreatureDisplayInfoEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '模型 ID',
+            width: 120,
+            text: (BriefCreatureDisplayInfoEntity t) => t.modelId.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '模型名称',
+            text: (BriefCreatureDisplayInfoEntity t) => t.modelName,
+          ),
+        ],
+        idOf: (BriefCreatureDisplayInfoEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<CreatureDisplayInfoRepository>()
+            .getBriefCreatureDisplayInfos(
+              page: page,
+              filter: CreatureDisplayInfoFilterEntity(
+                id: v[0],
+                modelName: v[1],
+              ),
+            ),
+        count: (v) => GetIt.instance
+            .get<CreatureDisplayInfoRepository>()
+            .countCreatureDisplayInfos(
+              filter: CreatureDisplayInfoFilterEntity(
+                id: v[0],
+                modelName: v[1],
+              ),
+            ),
+      );
+
+  static final waypointData = FoxyEntityPickerDelegate<BriefWaypointDataEntity>(
+    title: '路径',
+    errorLabel: '搜索路径失败',
+    filters: const [FoxyEntityPickerFilter('路径 ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '路径 ID',
+        width: 160,
+        text: (BriefWaypointDataEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '路径点数',
+        text: (BriefWaypointDataEntity t) => t.points.toString(),
+      ),
+    ],
+    idOf: (BriefWaypointDataEntity t) => t.id,
+    fetch: (page, v) =>
+        GetIt.instance.get<WaypointDataRepository>().getBriefWaypointDatas(
+          page: page,
+          filter: WaypointDataFilterEntity(id: v[0]),
+        ),
+    count: (v) => GetIt.instance
+        .get<WaypointDataRepository>()
+        .countWaypointDatas(filter: WaypointDataFilterEntity(id: v[0])),
+  );
+
   static final areaTable = FoxyEntityPickerDelegate<BriefAreaTableEntity>(
     title: '区域',
     errorLabel: '搜索区域失败',

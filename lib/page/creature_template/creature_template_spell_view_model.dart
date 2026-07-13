@@ -51,16 +51,18 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> create() async {
+  Future<bool> create() async {
     try {
       final blank = await _repository.createCreatureTemplateSpell(
         creatureId.value,
       );
       fillForm(blank);
       selectedIndex.value = null;
+      return true;
     } catch (e) {
       LoggerUtil.instance.e('创建生物法术记录失败: $e');
       DialogUtil.instance.error('创建生物法术记录失败: $e');
+      return false;
     }
   }
 

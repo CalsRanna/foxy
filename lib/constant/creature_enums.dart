@@ -40,6 +40,16 @@ const kCreatureTypeOptions = {
 /// RacialLeader / RegenHealth 布尔选项
 const kBooleanOptions = {0: '否', 1: '是'}; // No, Yes
 
+/// creature_template_addon.visibilityDistanceType
+const kVisibilityDistanceTypeOptions = {
+  0: '正常',
+  1: '极小',
+  2: '较小',
+  3: '较大',
+  4: '巨大',
+  5: '无限',
+};
+
 /// exp 属性扩展选项（资料片）
 const kExpansionOptions = {
   0: '经典旧世', // Classic

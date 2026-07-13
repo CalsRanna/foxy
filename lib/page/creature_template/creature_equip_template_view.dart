@@ -213,7 +213,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: '主手武器',
             child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
               controller: viewModel.itemID1Controller,
               placeholder: 'ItemID1',
             ),
@@ -223,7 +223,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: '副手武器',
             child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
               controller: viewModel.itemID2Controller,
               placeholder: 'ItemID2',
             ),
@@ -233,7 +233,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
           FoxyFormItem(
             label: '远程武器',
             child: FoxyEntityPicker(
-              delegate: FoxyEntityPickerDelegates.itemTemplate,
+              delegate: FoxyEntityPickerDelegates.handEquippableDbcItem,
               controller: viewModel.itemID3Controller,
               placeholder: 'ItemID3',
             ),

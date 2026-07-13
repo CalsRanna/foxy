@@ -26,7 +26,7 @@ class PickpocketingLootTemplateViewModel with FieldControllerMixin {
   late final questRequiredController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final lootModeController = registerController(IntFieldController());
+  late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());
   late final minCountController = registerController(IntFieldController());
   late final maxCountController = registerController(IntFieldController());
@@ -97,19 +97,10 @@ class PickpocketingLootTemplateViewModel with FieldControllerMixin {
   }
 
   /// 创建新记录
-  Future<void> create() async {
-    try {
-      final template = creatureTemplate.value;
-      if (template == null) return;
-
-      final nextItem = await repository.getNextItemId(template.pickpocketLoot);
-      resetForm();
-      itemController.init(nextItem);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建偷窃掉落记录失败: $e');
-      DialogUtil.instance.error('创建偷窃掉落记录失败: $e');
-    }
+  void create() {
+    if (creatureTemplate.value == null) return;
+    resetForm();
+    selectedIndex.value = null;
   }
 
   /// 编辑选中记录
@@ -119,25 +110,6 @@ class PickpocketingLootTemplateViewModel with FieldControllerMixin {
 
     final loot = items.value[index];
     fillForm(loot);
-  }
-
-  /// 复制记录
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
-    try {
-      await repository.copyLootTemplate(loot.entry, loot.item);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
   }
 
   /// 删除记录
