@@ -6,12 +6,18 @@ import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
+import 'package:foxy/entity/creature_immunity_entity.dart';
+import 'package:foxy/entity/creature_immunity_filter_entity.dart';
+import 'package:foxy/entity/creature_movement_info_entity.dart';
+import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
+import 'package:foxy/entity/dbc_faction_template_entity.dart';
+import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
@@ -57,9 +63,12 @@ import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
+import 'package:foxy/repository/creature_immunity_repository.dart';
+import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
+import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
@@ -231,6 +240,86 @@ class FoxyEntityPickerDelegates {
             ),
       );
 
+  static final creatureImmunity =
+      FoxyEntityPickerDelegate<BriefCreatureImmunityEntity>(
+        title: '生物免疫配置',
+        errorLabel: '搜索生物免疫配置失败',
+        filters: const [
+          FoxyEntityPickerFilter('配置 ID'),
+          FoxyEntityPickerFilter('注释'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '配置 ID',
+            width: 100,
+            text: (BriefCreatureImmunityEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '法术学派掩码',
+            width: 120,
+            text: (BriefCreatureImmunityEntity t) => t.schoolMask.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '机制掩码',
+            width: 120,
+            text: (BriefCreatureImmunityEntity t) => t.mechanicsMask.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: 'AoE / 链式',
+            width: 100,
+            text: (BriefCreatureImmunityEntity t) =>
+                '${t.immuneAoE} / ${t.immuneChain}',
+          ),
+          FoxyEntityPickerColumn(
+            header: '注释',
+            text: (BriefCreatureImmunityEntity t) => t.comment,
+          ),
+        ],
+        idOf: (BriefCreatureImmunityEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<CreatureImmunityRepository>()
+            .getBriefCreatureImmunities(
+              page: page,
+              filter: CreatureImmunityFilterEntity(id: v[0], comment: v[1]),
+            ),
+        count: (v) => GetIt.instance
+            .get<CreatureImmunityRepository>()
+            .countCreatureImmunities(
+              filter: CreatureImmunityFilterEntity(id: v[0], comment: v[1]),
+            ),
+      );
+
+  static final creatureMovementInfo =
+      FoxyEntityPickerDelegate<CreatureMovementInfoEntity>(
+        title: '生物移动信息',
+        errorLabel: '搜索生物移动信息失败',
+        filters: const [FoxyEntityPickerFilter('编号')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (CreatureMovementInfoEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '平滑转向追逐速率',
+            text: (CreatureMovementInfoEntity t) =>
+                t.smoothFacingChaseRate.toString(),
+          ),
+        ],
+        idOf: (CreatureMovementInfoEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<CreatureMovementInfoRepository>()
+            .getBriefCreatureMovementInfos(
+              page: page,
+              filter: CreatureMovementInfoFilterEntity(id: v[0]),
+            ),
+        count: (v) => GetIt.instance
+            .get<CreatureMovementInfoRepository>()
+            .countCreatureMovementInfos(
+              filter: CreatureMovementInfoFilterEntity(id: v[0]),
+            ),
+      );
+
   static final creatureTemplate =
       FoxyEntityPickerDelegate<BriefCreatureTemplateEntity>(
         title: '生物模板',
@@ -302,6 +391,59 @@ class FoxyEntityPickerDelegates {
       filter: DbcFactionFilterEntity(id: v[0], name: v[1]),
     ),
   );
+
+  static final dbcFactionTemplate =
+      FoxyEntityPickerDelegate<BriefDbcFactionTemplateEntity>(
+        title: '阵营模板',
+        errorLabel: '搜索阵营模板失败',
+        filters: const [
+          FoxyEntityPickerFilter('模板 ID'),
+          FoxyEntityPickerFilter('阵营 ID'),
+          FoxyEntityPickerFilter('阵营名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '模板 ID',
+            width: 100,
+            text: (BriefDbcFactionTemplateEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '阵营 ID',
+            width: 100,
+            text: (BriefDbcFactionTemplateEntity t) => t.faction.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '阵营名称',
+            text: (BriefDbcFactionTemplateEntity t) => t.displayName,
+          ),
+          FoxyEntityPickerColumn(
+            header: '组 / 友好 / 敌对',
+            width: 150,
+            text: (BriefDbcFactionTemplateEntity t) =>
+                '${t.factionGroup} / ${t.friendGroup} / ${t.enemyGroup}',
+          ),
+        ],
+        idOf: (BriefDbcFactionTemplateEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<DbcFactionTemplateRepository>()
+            .getBriefDbcFactionTemplates(
+              page: page,
+              filter: DbcFactionTemplateFilterEntity(
+                id: v[0],
+                faction: v[1],
+                name: v[2],
+              ),
+            ),
+        count: (v) => GetIt.instance
+            .get<DbcFactionTemplateRepository>()
+            .countDbcFactionTemplates(
+              filter: DbcFactionTemplateFilterEntity(
+                id: v[0],
+                faction: v[1],
+                name: v[2],
+              ),
+            ),
+      );
 
   static final emote = FoxyEntityPickerDelegate<BriefEmoteTextEntity>(
     title: '表情',

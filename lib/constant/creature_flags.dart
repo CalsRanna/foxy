@@ -72,9 +72,9 @@ const kUnitFlagOptions = [
   FlagItem(0x04000000, '可剥皮'), // Skinnable
   FlagItem(0x08000000, '坐骑'), // Mount
   FlagItem(0x10000000, 'UNK_28'),
-  FlagItem(0x20000000, 'UNK_29'),
-  FlagItem(0x40000000, '变形'), // Sheathe
-  FlagItem(0x80000000, 'UNK_31'),
+  FlagItem(0x20000000, '阻止聊天文本触发表情'), // Prevent Emotes From Chat Text
+  FlagItem(0x40000000, '收起武器'), // Sheathe
+  FlagItem(0x80000000, '免疫伤害'), // Immune
 ];
 
 /// 单位标识2选项
@@ -97,30 +97,43 @@ const kUnitFlag2Options = [
   FlagItem(0x00010000, 'UNK2'),
   FlagItem(0x00020000, '播放死亡动画'), // Play Death Anim
   FlagItem(0x00040000, '允许作弊法术'), // Allow Cheat Spells
+  FlagItem(0x01000000, '未使用 6'), // Unused 6
 ];
 
 /// 类型标识选项
 const kCreatureTypeFlagOptions = [
   FlagItem(0x00000001, '可驯服'), // Tameable
-  FlagItem(0x00000002, '灵魂可见'), // Visible To Ghosts
-  FlagItem(0x00000004, 'BOSS'),
+  FlagItem(0x00000002, '死亡玩家可见'), // Visible To Ghosts
+  FlagItem(0x00000004, '首领（?? 等级）'), // Boss Mob
   FlagItem(0x00000008, '不播放受伤动画'), // No Wound Anim
   FlagItem(0x00000010, '无阵营提示'), // No Faction Tooltip
-  FlagItem(0x00000020, '更响亮'), // More Audible
-  FlagItem(0x00000040, '法术可攻击'), // Spell Attackable
+  FlagItem(0x00000020, '更易被听见'), // More Audible
+  FlagItem(0x00000040, '可被法术攻击'), // Spell Attackable
   FlagItem(0x00000080, '死亡可交互'), // Interact While Dead
   FlagItem(0x00000100, '草药剥皮'), // Skin With Herbalism
   FlagItem(0x00000200, '采矿剥皮'), // Skin With Mining
   FlagItem(0x00000400, '无死亡消息'), // No Death Message
   FlagItem(0x00000800, '允许骑乘战斗'), // Allow Mounted Combat
   FlagItem(0x00001000, '可协助'), // Can Assist
-  FlagItem(0x00002000, '无宠物栏'), // No Pet Bar
-  FlagItem(0x00004000, '面具生物'), // Mask UID
+  FlagItem(0x00002000, '不显示宠物动作条'), // No Pet Bar
+  FlagItem(0x00004000, '隐藏唯一标识（Mask UID）'), // Mask UID
   FlagItem(0x00008000, '工程剥皮'), // Skin With Engineering
-  FlagItem(0x00010000, '奇特外观'), // Exotic
+  FlagItem(0x00010000, '可驯服（特殊宠物）'), // Tameable Exotic
   FlagItem(0x00020000, '使用模型碰撞大小'), // Use Model Collision Size
-  FlagItem(0x00040000, '允许远程交互'), // Allow Interaction While In Combat
-  FlagItem(0x00080000, '法术可点击'), // Spell Clickable
+  FlagItem(0x00040000, '战斗中可交互'), // Allow Interaction While In Combat
+  FlagItem(0x00080000, '可与投射物碰撞'), // Collide With Missiles
+  FlagItem(0x00100000, '隐藏姓名板'), // No Name Plate
+  FlagItem(0x00200000, '不播放骑乘动画'), // Do Not Play Mounted Animations
+  FlagItem(0x00400000, '关联全部'), // Link All
+  FlagItem(0x00800000, '仅创建者可交互'), // Interact Only With Creator
+  FlagItem(0x01000000, '不播放单位事件音效'), // Do Not Play Unit Event Sounds
+  FlagItem(0x02000000, '不显示阴影斑点'), // Has No Shadow Blob
+  FlagItem(0x04000000, '视为团队成员'), // Treat As Raid Unit
+  FlagItem(0x08000000, '强制显示对话'), // Force Gossip
+  FlagItem(0x10000000, '不收起武器'), // Do Not Sheathe
+  FlagItem(0x20000000, '交互时不选中目标'), // Do Not Target On Interaction
+  FlagItem(0x40000000, '不显示对象名称'), // Do Not Render Object Name
+  FlagItem(0x80000000, '任务首领'), // Quest Boss
 ];
 
 /// 动态标识选项
@@ -128,33 +141,47 @@ const kDynamicFlagOptions = [
   FlagItem(0x00000001, '可拾取'), // Lootable
   FlagItem(0x00000002, '追踪单位'), // Track Unit
   FlagItem(0x00000004, '已标记'), // Tapped
-  FlagItem(0x00000008, '其他人标记'), // Tapped By All Threat List
+  FlagItem(0x00000008, '被当前玩家标记'), // Tapped By Player
   FlagItem(0x00000010, '特殊信息'), // Special Info
   FlagItem(0x00000020, '死亡'), // Dead
-  FlagItem(0x00000040, '引用玩家'), // Refer A Friend
-  FlagItem(0x00000080, '被其他人标记'), // Tapped By Player
+  FlagItem(0x00000040, '招募好友'), // Refer A Friend
+  FlagItem(0x00000080, '被全部仇恨列表标记'), // Tapped By All Threat List
 ];
 
 /// 额外标识选项
 const kFlagsExtraOptions = [
-  FlagItem(0x00000001, '实例绑定'), // Instance Bind
+  FlagItem(0x00000001, '副本绑定'), // Instance Bind
   FlagItem(0x00000002, '平民'), // Civilian
-  FlagItem(0x00000004, '无parry'), // No Parry
-  FlagItem(0x00000008, '无parry急速'), // No Parry Hasten
-  FlagItem(0x00000010, '无格挡'), // No Block
-  FlagItem(0x00000020, '无碾压'), // No Crush
-  FlagItem(0x00000040, '无经验'), // No XP At Kill
-  FlagItem(0x00000080, '触发'), // Trigger
-  FlagItem(0x00000100, '无taunt'), // No Taunt
-  FlagItem(0x00000400, '世界事件'), // Worldevent
-  FlagItem(0x00000800, '守卫'), // Guard
-  FlagItem(0x00004000, '无仇恨'), // No Crit
-  FlagItem(0x00008000, '无技能提升'), // No Skill Gain
-  FlagItem(0x00010000, '被召唤时服从召唤者目标'), // Taunt Diminish
-  FlagItem(0x00020000, '所有仇恨减少'), // All Diminish
-  FlagItem(0x00080000, '地下城BOSS'), // Dungeon Boss
-  FlagItem(0x00100000, '忽略寻路'), // Ignore Pathfinding
-  FlagItem(0x00200000, '免疫击退'), // Immunity Knockback
+  FlagItem(0x00000004, '禁止招架'), // No Parry
+  FlagItem(0x00000008, '招架不加速'), // No Parry Hasten
+  FlagItem(0x00000010, '禁止格挡'), // No Block
+  FlagItem(0x00000020, '禁止碾压攻击'), // No Crushing Blows
+  FlagItem(0x00000040, '击杀不提供经验'), // No XP
+  FlagItem(0x00000080, '触发器生物'), // Trigger
+  FlagItem(0x00000100, '免疫嘲讽（已弃用）'), // No Taunt
+  FlagItem(0x00000200, '不更新移动标志'), // No Move Flags Update
+  FlagItem(0x00000400, '仅灵魂可见'), // Ghost Visibility
+  FlagItem(0x00000800, '使用副手攻击'), // Use Offhand Attack
+  FlagItem(0x00001000, '禁止向商人出售'), // No Sell Vendor
+  FlagItem(0x00002000, '禁止进入战斗'), // Cannot Enter Combat
+  FlagItem(0x00004000, '世界事件'), // World Event
+  FlagItem(0x00008000, '守卫'), // Guard
+  FlagItem(0x00010000, '忽略假死'), // Ignore Feign Death
+  FlagItem(0x00020000, '禁止暴击'), // No Crit
+  FlagItem(0x00040000, '不提升武器技能'), // No Skill Gains
+  FlagItem(0x00080000, '嘲讽受递减规则影响'), // Taunt Diminishing Returns
+  FlagItem(0x00100000, '所有控制受递减规则影响'), // All Diminish
+  FlagItem(0x00200000, '击杀归属无需玩家伤害'), // No Player Damage Requirement
+  FlagItem(0x00400000, '不作为范围法术目标（已弃用）'), // Avoid AoE
+  FlagItem(0x00800000, '禁止闪避'), // No Dodge
+  FlagItem(0x01000000, '模块生物'), // Module
+  FlagItem(0x02000000, '不呼叫援助'), // Don't Call Assistance
+  FlagItem(0x04000000, '忽略所有援助呼叫'), // Ignore All Assistance Calls
+  FlagItem(0x08000000, '不覆盖 Entry SmartAI'), // Don't Override Entry SAI
+  // 0x10000000 由服务端动态设置，禁止写入数据库。
+  FlagItem(0x20000000, '忽略寻路'), // Ignore Pathfinding
+  FlagItem(0x40000000, '免疫击退（已弃用）'), // Immunity Knockback
+  FlagItem(0x80000000, '强制完全重置'), // Hard Reset
 ];
 
 /// 免疫机制选项

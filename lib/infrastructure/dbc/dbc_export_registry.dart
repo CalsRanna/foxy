@@ -3,9 +3,11 @@ import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/repository/creature_model_data_repository.dart';
+import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
+import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -110,9 +112,11 @@ class DbcExportRegistry {
     final charTitle = getIt.get<CharTitleRepository>();
     final creatureDisplayInfo = getIt.get<CreatureDisplayInfoRepository>();
     final creatureModelData = getIt.get<CreatureModelDataRepository>();
+    final creatureMovementInfo = getIt.get<CreatureMovementInfoRepository>();
     final creatureSpellData = getIt.get<CreatureSpellDataRepository>();
     final currencyType = getIt.get<CurrencyTypeRepository>();
     final faction = getIt.get<DbcFactionRepository>();
+    final factionTemplate = getIt.get<DbcFactionTemplateRepository>();
     final emoteText = getIt.get<EmoteTextRepository>();
     final gemProperty = getIt.get<GemPropertyRepository>();
     final glyphProperty = getIt.get<GlyphPropertyRepository>();
@@ -164,6 +168,11 @@ class DbcExportRegistry {
         count: () => creatureModelData.countCreatureModelDatas(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_creature_movement_info': DbcExportDelegate.typed(
+        load: creatureMovementInfo.getCreatureMovementInfos,
+        count: () => creatureMovementInfo.countCreatureMovementInfos(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_creature_spell_data': DbcExportDelegate.typed(
         load: creatureSpellData.getCreatureSpellDatas,
         count: () => creatureSpellData.countCreatureSpellDatas(),
@@ -182,6 +191,11 @@ class DbcExportRegistry {
       'dbc_faction': DbcExportDelegate.typed(
         load: faction.getDbcFactions,
         count: () => faction.countDbcFactions(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_faction_template': DbcExportDelegate.typed(
+        load: factionTemplate.getDbcFactionTemplates,
+        count: () => factionTemplate.countDbcFactionTemplates(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_gem_properties': DbcExportDelegate.typed(

@@ -27,6 +27,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.creatureModelData,
   ),
   DbcDefinition(
+    tableName: 'dbc_creature_movement_info',
+    schema: Definitions.creatureMovementInfo,
+  ),
+  DbcDefinition(
     tableName: 'dbc_creature_spell_data',
     schema: Definitions.creatureSpellData,
   ),
@@ -36,6 +40,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
   DbcDefinition(tableName: 'dbc_emotes_text', schema: Definitions.emotesText),
   DbcDefinition(tableName: 'dbc_faction', schema: Definitions.faction),
+  DbcDefinition(
+    tableName: 'dbc_faction_template',
+    schema: Definitions.factionTemplate,
+  ),
   DbcDefinition(
     tableName: 'dbc_gem_properties',
     schema: Definitions.gemProperties,

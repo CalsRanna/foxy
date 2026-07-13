@@ -21,7 +21,7 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   late final minLevelController = registerController(IntFieldController());
   late final maxLevelController = registerController(IntFieldController());
   late final unitClassController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    SelectFieldController<int>(fallback: 1),
   );
   late final rankController = registerController(
     SelectFieldController<int>(fallback: 0),
