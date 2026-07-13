@@ -49,13 +49,13 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   Future<void> storeCreatureTemplateAddon(
     CreatureTemplateAddonEntity addon,
   ) async {
-    await laconic.table(_table).insert([addon.toJson()]);
+    await laconic.table(_table).insert([_validated(addon).toJson()]);
   }
 
   Future<void> updateCreatureTemplateAddon(
     CreatureTemplateAddonEntity addon,
   ) async {
-    var json = addon.toJson();
+    var json = _validated(addon).toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);
   }
@@ -76,12 +76,27 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   Future<void> saveCreatureTemplateAddon(
     CreatureTemplateAddonEntity addon,
   ) async {
-    var existing = await getCreatureTemplateAddon(addon.entry);
+    final validated = _validated(addon);
+    var existing = await getCreatureTemplateAddon(validated.entry);
     if (existing != null) {
-      await updateCreatureTemplateAddon(addon);
+      await updateCreatureTemplateAddon(validated);
     } else {
-      await storeCreatureTemplateAddon(addon);
+      await storeCreatureTemplateAddon(validated);
     }
+  }
+
+  CreatureTemplateAddonEntity _validated(CreatureTemplateAddonEntity addon) {
+    if (addon.visibilityDistanceType < 0 || addon.visibilityDistanceType > 5) {
+      throw RangeError.range(
+        addon.visibilityDistanceType,
+        0,
+        5,
+        'visibilityDistanceType',
+      );
+    }
+    return addon.copyWith(
+      auras: CreatureTemplateAddonEntity.normalizeAuras(addon.auras),
+    );
   }
 
   Future<int> _getNextEntry() async {

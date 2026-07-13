@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -61,7 +65,8 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                     Expanded(
                       child: FoxyFormItem(
                         label: '路径ID',
-                        child: FoxyNumberInput<int>(
+                        child: FoxyEntityPicker(
+                          delegate: FoxyEntityPickerDelegates.waypointData,
                           controller: viewModel.pathIdController,
                           placeholder: 'path_id',
                         ),
@@ -70,7 +75,9 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                     Expanded(
                       child: FoxyFormItem(
                         label: '坐骑编号',
-                        child: FoxyNumberInput<int>(
+                        child: FoxyEntityPicker(
+                          delegate:
+                              FoxyEntityPickerDelegates.creatureDisplayInfo,
                           controller: viewModel.mountController,
                           placeholder: 'mount',
                         ),
@@ -79,7 +86,8 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                     Expanded(
                       child: FoxyFormItem(
                         label: '表情',
-                        child: FoxyNumberInput<int>(
+                        child: FoxyEntityPicker(
+                          delegate: FoxyEntityPickerDelegates.dbcEmote,
                           controller: viewModel.emoteController,
                           placeholder: 'emote',
                         ),
@@ -111,10 +119,11 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                     Expanded(
                       child: FoxyFormItem(
                         label: '可见距离类型',
-                        child: FoxyNumberInput<int>(
+                        child: FoxyShadSelect<int>(
                           controller:
                               viewModel.visibilityDistanceTypeController,
-                          placeholder: 'visibilityDistanceType',
+                          options: kVisibilityDistanceTypeOptions,
+                          placeholder: Text('visibilityDistanceType'),
                         ),
                       ),
                     ),
@@ -123,7 +132,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                         label: '光环列表',
                         child: FoxyStringInput(
                           controller: viewModel.aurasController,
-                          placeholder: 'auras',
+                          placeholder: '以空格分隔的法术 ID',
                         ),
                       ),
                     ),

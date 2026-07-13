@@ -39,6 +39,7 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.currencyTypes,
   ),
   DbcDefinition(tableName: 'dbc_emotes_text', schema: Definitions.emotesText),
+  DbcDefinition(tableName: 'dbc_emotes', schema: Definitions.emotes),
   DbcDefinition(tableName: 'dbc_faction', schema: Definitions.faction),
   DbcDefinition(
     tableName: 'dbc_faction_template',
@@ -56,6 +57,7 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     tableName: 'dbc_item_display_info',
     schema: Definitions.itemDisplayInfo,
   ),
+  DbcDefinition(tableName: 'dbc_item', schema: Definitions.item),
   DbcDefinition(
     tableName: 'dbc_item_extended_cost',
     schema: Definitions.itemExtendedCost,
@@ -96,6 +98,7 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.spellItemEnchantment,
   ),
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
+  DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),
   DbcDefinition(tableName: 'dbc_talent', schema: Definitions.talent),
   DbcDefinition(tableName: 'dbc_vehicle', schema: Definitions.vehicle),
 ]);

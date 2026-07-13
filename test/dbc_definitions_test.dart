@@ -28,6 +28,9 @@ void main() {
     expect(spell!.fileName, 'Spell.dbc');
     expect(dbcDefinitionByFileName['spell.dbc'], same(spell));
     expect(spell.qualifiedTableName, 'foxy.dbc_spell');
+    expect(dbcDefinitionByTable['dbc_emotes']?.fileName, 'Emotes.dbc');
+    expect(dbcDefinitionByTable['dbc_item']?.fileName, 'Item.dbc');
+    expect(dbcDefinitionByTable['dbc_skill_line']?.fileName, 'SkillLine.dbc');
   });
 
   test('所有 DBC 定义都包含 ID 字段', () {

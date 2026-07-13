@@ -8,6 +8,8 @@ import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
+import 'package:foxy/repository/dbc_emote_repository.dart';
+import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -28,6 +30,7 @@ import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
+import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -117,6 +120,8 @@ class DbcExportRegistry {
     final currencyType = getIt.get<CurrencyTypeRepository>();
     final faction = getIt.get<DbcFactionRepository>();
     final factionTemplate = getIt.get<DbcFactionTemplateRepository>();
+    final emote = getIt.get<DbcEmoteRepository>();
+    final dbcItem = getIt.get<DbcItemRepository>();
     final emoteText = getIt.get<EmoteTextRepository>();
     final gemProperty = getIt.get<GemPropertyRepository>();
     final glyphProperty = getIt.get<GlyphPropertyRepository>();
@@ -134,6 +139,7 @@ class DbcExportRegistry {
         .get<ScalingStatDistributionSoloRepository>();
     final scalingValue = getIt.get<ScalingStatValueRepository>();
     final spell = getIt.get<SpellRepository>();
+    final skillLine = getIt.get<SkillLineRepository>();
     final spellDuration = getIt.get<SpellDurationRepository>();
     final spellIcon = getIt.get<SpellIconRepository>();
     final spellItemEnchantment = getIt
@@ -188,6 +194,11 @@ class DbcExportRegistry {
         count: () => emoteText.countEmoteTexts(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_emotes': DbcExportDelegate.typed(
+        load: emote.getDbcEmotes,
+        count: () => emote.countDbcEmotes(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_faction': DbcExportDelegate.typed(
         load: faction.getDbcFactions,
         count: () => faction.countDbcFactions(),
@@ -211,6 +222,11 @@ class DbcExportRegistry {
       'dbc_item_display_info': DbcExportDelegate.typed(
         load: itemDisplayInfo.getItemDisplayInfos,
         count: () => itemDisplayInfo.countItemDisplayInfos(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_item': DbcExportDelegate.typed(
+        load: dbcItem.getDbcItems,
+        count: () => dbcItem.countDbcItems(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_item_extended_cost': DbcExportDelegate.typed(
@@ -271,6 +287,11 @@ class DbcExportRegistry {
       'dbc_spell': DbcExportDelegate.typed(
         load: spell.getSpells,
         count: () => spell.countSpells(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_skill_line': DbcExportDelegate.typed(
+        load: skillLine.getSkillLines,
+        count: () => skillLine.countSkillLines(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_spell_duration': DbcExportDelegate.typed(

@@ -1,118 +1,125 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/repository/npc_trainer_repository.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/creature_default_trainer_repository.dart';
+import 'package:foxy/repository/npc_trainer_repository.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class NpcTrainerViewModel with FieldControllerMixin {
-  final routerFacade = GetIt.instance.get<RouterFacade>();
-
-  final id = signal(0);
+  final creatureId = signal(0);
   final items = signal<List<BriefNpcTrainerEntity>>([]);
   final selectedIndex = signal<int?>(null);
   final creating = signal(false);
   final editing = signal(false);
 
-  // 表单控制器
   late final creatureIdController = registerController(IntFieldController());
-  late final spellIDController = registerController(IntFieldController());
+  late final trainerIdController = registerController(IntFieldController());
+  late final spellIdController = registerController(IntFieldController());
   late final moneyCostController = registerController(IntFieldController());
   late final reqSkillLineController = registerController(IntFieldController());
   late final reqSkillRankController = registerController(IntFieldController());
+  late final reqAbility1Controller = registerController(IntFieldController());
+  late final reqAbility2Controller = registerController(IntFieldController());
+  late final reqAbility3Controller = registerController(IntFieldController());
   late final reqLevelController = registerController(IntFieldController());
+  late final verifiedBuildController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<NpcTrainerRepository>();
-
-  /// 加载数据
+  final _relationRepository = GetIt.instance
+      .get<CreatureDefaultTrainerRepository>();
 
   Future<void> load() async {
-    final data = await _repository.getBriefNpcTrainers(id.value);
-    items.value = data;
+    final relation = await _relationRepository.getCreatureDefaultTrainer(
+      creatureId.value,
+    );
+    trainerIdController.init(relation?.trainerId ?? 0);
+    items.value = relation == null
+        ? []
+        : await _repository.getBriefNpcTrainers(relation.trainerId);
     selectedIndex.value = null;
     creating.value = false;
     editing.value = false;
   }
 
-  /// 重置表单
   void resetForm() {
-    spellIDController.init(0);
+    trainerIdController.init(0);
+    spellIdController.init(0);
     moneyCostController.init(0);
     reqSkillLineController.init(0);
     reqSkillRankController.init(0);
+    reqAbility1Controller.init(0);
+    reqAbility2Controller.init(0);
+    reqAbility3Controller.init(0);
     reqLevelController.init(0);
+    verifiedBuildController.init(0);
   }
 
-  /// 填充表单
   void fillForm(BriefNpcTrainerEntity trainer) {
-    spellIDController.init(trainer.spellID);
+    trainerIdController.init(trainer.trainerId);
+    spellIdController.init(trainer.spellId);
     moneyCostController.init(trainer.moneyCost);
     reqSkillLineController.init(trainer.reqSkillLine);
     reqSkillRankController.init(trainer.reqSkillRank);
+    reqAbility1Controller.init(trainer.reqAbility1);
+    reqAbility2Controller.init(trainer.reqAbility2);
+    reqAbility3Controller.init(trainer.reqAbility3);
     reqLevelController.init(trainer.reqLevel);
+    verifiedBuildController.init(trainer.verifiedBuild);
   }
 
-  /// 从表单收集数据
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
-      id: id.value,
-      spellID: spellIDController.collect(),
+      trainerId: trainerIdController.collect(),
+      spellId: spellIdController.collect(),
       moneyCost: moneyCostController.collect(),
       reqSkillLine: reqSkillLineController.collect(),
       reqSkillRank: reqSkillRankController.collect(),
+      reqAbility1: reqAbility1Controller.collect(),
+      reqAbility2: reqAbility2Controller.collect(),
+      reqAbility3: reqAbility3Controller.collect(),
       reqLevel: reqLevelController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 
-  /// 创建新记录
-  void create() {
-    resetForm();
-    creating.value = true;
-    editing.value = false;
-    selectedIndex.value = null;
+  Future<bool> create() async {
+    try {
+      final relation = await _relationRepository.getCreatureDefaultTrainer(
+        creatureId.value,
+      );
+      if (relation == null) {
+        throw StateError('该生物未配置 creature_default_trainer');
+      }
+      final blank = await _repository.createNpcTrainer(relation.trainerId);
+      resetForm();
+      trainerIdController.init(blank.trainerId);
+      creating.value = true;
+      editing.value = false;
+      selectedIndex.value = null;
+      return true;
+    } catch (e) {
+      LoggerUtil.instance.e('创建训练师技能记录失败: $e');
+      DialogUtil.instance.error('创建训练师技能记录失败: $e');
+      return false;
+    }
   }
 
-  /// 编辑选中记录
   void edit() {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-
-    final trainer = items.value[index];
-    fillForm(trainer);
+    fillForm(items.value[index]);
     editing.value = true;
     creating.value = false;
   }
 
-  /// 复制记录
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final trainer = items.value[index];
-    try {
-      await _repository.copyNpcTrainer(trainer.id, trainer.spellID);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  /// 删除记录
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-
     final trainer = items.value[index];
-
     final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
@@ -130,65 +137,56 @@ class NpcTrainerViewModel with FieldControllerMixin {
         ],
       ),
     );
-
-    if (confirmed == true) {
-      try {
-        await _repository.destroyNpcTrainer(trainer.id, trainer.spellID);
-        await load();
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text('删除成功'));
-        ShadSonner.of(context).show(toast);
-      } catch (e) {
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text(e.toString()));
-        ShadSonner.of(context).show(toast);
-      }
-    }
-  }
-
-  /// 保存记录
-  Future<void> save(BuildContext context) async {
+    if (confirmed != true) return;
     try {
-      final trainer = collectFromForm();
-      await _repository.storeNpcTrainer(trainer);
+      await _repository.destroyNpcTrainer(trainer.trainerId, trainer.spellId);
       await load();
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
     } catch (e) {
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
     }
   }
 
-  /// 更新记录
+  Future<void> save(BuildContext context) async {
+    try {
+      await _repository.storeNpcTrainer(collectFromForm());
+      await load();
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
+    } catch (e) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
   Future<void> update(BuildContext context) async {
     try {
       final trainer = collectFromForm();
-      await _repository.updateNpcTrainer(trainer.id, trainer.spellID, trainer);
+      await _repository.updateNpcTrainer(
+        trainer.trainerId,
+        trainer.spellId,
+        trainer,
+      );
       await load();
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
     } catch (e) {
       if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
     }
   }
 
-  /// 选择行
   void selectRow(int index) {
     if (index >= 0 && index < items.value.length) {
       selectedIndex.value = index;
     }
   }
 
-  /// 初始化
   Future<void> initSignals({required int creatureId}) async {
     try {
-      id.value = creatureId;
+      this.creatureId.value = creatureId;
       creatureIdController.init(creatureId);
       await load();
     } catch (e) {
@@ -197,13 +195,5 @@ class NpcTrainerViewModel with FieldControllerMixin {
     }
   }
 
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
-  }
+  void dispose() => disposeControllers();
 }

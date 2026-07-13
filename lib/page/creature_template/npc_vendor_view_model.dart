@@ -25,7 +25,8 @@ class NpcVendorViewModel with FieldControllerMixin {
   late final verifiedBuildController = registerController(IntFieldController());
 
   // 内部状态
-  int? _editingSlot;
+  int? _editingItem;
+  int? _editingExtendedCost;
 
   final _repository = GetIt.instance.get<NpcVendorRepository>();
 
@@ -77,7 +78,8 @@ class NpcVendorViewModel with FieldControllerMixin {
       resetForm();
       slotController.init(nextSlot);
       selectedIndex.value = null;
-      _editingSlot = null;
+      _editingItem = null;
+      _editingExtendedCost = null;
     } catch (e) {
       LoggerUtil.instance.e('创建NPC商人记录失败: $e');
       DialogUtil.instance.error('创建NPC商人记录失败: $e');
@@ -91,26 +93,8 @@ class NpcVendorViewModel with FieldControllerMixin {
 
     final vendor = items.value[index];
     fillForm(vendor);
-    _editingSlot = vendor.slot;
-  }
-
-  /// 复制记录
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final vendor = items.value[index];
-    try {
-      await _repository.copyNpcVendor(vendor.entry, vendor.slot);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('复制成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+    _editingItem = vendor.item;
+    _editingExtendedCost = vendor.extendedCost;
   }
 
   /// 删除记录
@@ -140,7 +124,11 @@ class NpcVendorViewModel with FieldControllerMixin {
 
     if (confirmed == true) {
       try {
-        await _repository.destroyNpcVendor(vendor.entry, vendor.slot);
+        await _repository.destroyNpcVendor(
+          vendor.entry,
+          vendor.item,
+          vendor.extendedCost,
+        );
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -175,7 +163,8 @@ class NpcVendorViewModel with FieldControllerMixin {
       final vendor = collectFromForm();
       await _repository.updateNpcVendor(
         entry.value,
-        _editingSlot ?? vendor.slot,
+        _editingItem ?? vendor.item,
+        _editingExtendedCost ?? vendor.extendedCost,
         vendor,
       );
       await load();

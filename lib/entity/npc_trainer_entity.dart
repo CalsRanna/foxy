@@ -1,101 +1,102 @@
-/// NPC训练师 — 对应 npc_trainer 表（复合键: ID + SpellID）
+/// 训练师技能 — 对应 trainer_spell 表（复合键: TrainerId + SpellId）。
 class NpcTrainerEntity {
-  final int id;
-  final int spellID;
+  final int trainerId;
+  final int spellId;
   final int moneyCost;
   final int reqSkillLine;
   final int reqSkillRank;
+  final int reqAbility1;
+  final int reqAbility2;
+  final int reqAbility3;
   final int reqLevel;
-  final int reqSpell;
+  final int verifiedBuild;
 
   const NpcTrainerEntity({
-    this.id = 0,
-    this.spellID = 0,
+    this.trainerId = 0,
+    this.spellId = 0,
     this.moneyCost = 0,
     this.reqSkillLine = 0,
     this.reqSkillRank = 0,
+    this.reqAbility1 = 0,
+    this.reqAbility2 = 0,
+    this.reqAbility3 = 0,
     this.reqLevel = 0,
-    this.reqSpell = 0,
+    this.verifiedBuild = 0,
   });
 
   factory NpcTrainerEntity.fromJson(Map<String, dynamic> json) {
     return NpcTrainerEntity(
-      id: json['ID'] ?? 0,
-      spellID: json['SpellID'] ?? 0,
+      trainerId: json['TrainerId'] ?? 0,
+      spellId: json['SpellId'] ?? 0,
       moneyCost: json['MoneyCost'] ?? 0,
       reqSkillLine: json['ReqSkillLine'] ?? 0,
       reqSkillRank: json['ReqSkillRank'] ?? 0,
+      reqAbility1: json['ReqAbility1'] ?? 0,
+      reqAbility2: json['ReqAbility2'] ?? 0,
+      reqAbility3: json['ReqAbility3'] ?? 0,
       reqLevel: json['ReqLevel'] ?? 0,
-      reqSpell: json['ReqSpell'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'ID': id,
-      'SpellID': spellID,
+      'TrainerId': trainerId,
+      'SpellId': spellId,
       'MoneyCost': moneyCost,
       'ReqSkillLine': reqSkillLine,
       'ReqSkillRank': reqSkillRank,
+      'ReqAbility1': reqAbility1,
+      'ReqAbility2': reqAbility2,
+      'ReqAbility3': reqAbility3,
       'ReqLevel': reqLevel,
-      'ReqSpell': reqSpell,
+      'VerifiedBuild': verifiedBuild,
     };
-  }
-
-  NpcTrainerEntity copyWith({
-    int? id,
-    int? spellID,
-    int? moneyCost,
-    int? reqSkillLine,
-    int? reqSkillRank,
-    int? reqLevel,
-    int? reqSpell,
-  }) {
-    return NpcTrainerEntity(
-      id: id ?? this.id,
-      spellID: spellID ?? this.spellID,
-      moneyCost: moneyCost ?? this.moneyCost,
-      reqSkillLine: reqSkillLine ?? this.reqSkillLine,
-      reqSkillRank: reqSkillRank ?? this.reqSkillRank,
-      reqLevel: reqLevel ?? this.reqLevel,
-      reqSpell: reqSpell ?? this.reqSpell,
-    );
   }
 }
 
-/// NPC训练师列表展示模型（含 LEFT JOIN foxy.dbc_spell 的技能信息）
+/// 训练师技能列表展示模型（含 DBC 技能名称）。
 class BriefNpcTrainerEntity {
-  final int id;
-  final int spellID;
+  final int trainerId;
+  final int spellId;
   final int moneyCost;
   final int reqSkillLine;
   final int reqSkillRank;
+  final int reqAbility1;
+  final int reqAbility2;
+  final int reqAbility3;
   final int reqLevel;
-  final int reqSpell;
+  final int verifiedBuild;
   final String spellName;
   final String spellSubtext;
 
   const BriefNpcTrainerEntity({
-    this.id = 0,
-    this.spellID = 0,
+    this.trainerId = 0,
+    this.spellId = 0,
     this.moneyCost = 0,
     this.reqSkillLine = 0,
     this.reqSkillRank = 0,
+    this.reqAbility1 = 0,
+    this.reqAbility2 = 0,
+    this.reqAbility3 = 0,
     this.reqLevel = 0,
-    this.reqSpell = 0,
+    this.verifiedBuild = 0,
     this.spellName = '',
     this.spellSubtext = '',
   });
 
   factory BriefNpcTrainerEntity.fromJson(Map<String, dynamic> json) {
     return BriefNpcTrainerEntity(
-      id: json['ID'] ?? 0,
-      spellID: json['SpellID'] ?? 0,
+      trainerId: json['TrainerId'] ?? 0,
+      spellId: json['SpellId'] ?? 0,
       moneyCost: json['MoneyCost'] ?? 0,
       reqSkillLine: json['ReqSkillLine'] ?? 0,
       reqSkillRank: json['ReqSkillRank'] ?? 0,
+      reqAbility1: json['ReqAbility1'] ?? 0,
+      reqAbility2: json['ReqAbility2'] ?? 0,
+      reqAbility3: json['ReqAbility3'] ?? 0,
       reqLevel: json['ReqLevel'] ?? 0,
-      reqSpell: json['ReqSpell'] ?? 0,
+      verifiedBuild: json['VerifiedBuild'] ?? 0,
       spellName: json['spellName'] ?? '',
       spellSubtext: json['spellSubtext'] ?? '',
     );

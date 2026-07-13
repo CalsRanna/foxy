@@ -20,6 +20,25 @@ class CreatureTemplateAddonEntity {
     this.auras = '',
   });
 
+  static String normalizeAuras(String value) {
+    final tokens = value.trim().isEmpty
+        ? const <String>[]
+        : value.trim().split(RegExp(r'\s+'));
+    final spellIds = <int>[];
+    final seen = <int>{};
+    for (final token in tokens) {
+      final spellId = int.tryParse(token);
+      if (spellId == null || spellId <= 0) {
+        throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
+      }
+      if (!seen.add(spellId)) {
+        throw FormatException('光环列表不能包含重复法术 ID: $spellId');
+      }
+      spellIds.add(spellId);
+    }
+    return spellIds.join(' ');
+  }
+
   factory CreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
     return CreatureTemplateAddonEntity(
       entry: json['entry'] ?? 0,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
@@ -69,9 +71,10 @@ class _CreatureOnKillReputationViewState
                       Expanded(
                         child: FoxyFormItem(
                           label: '区分阵营',
-                          child: FoxyNumberInput<int>(
+                          child: FoxyShadSelect<int>(
                             controller: viewModel.teamDependentController,
-                            placeholder: 'TeamDependent',
+                            options: kBooleanOptions,
+                            placeholder: Text('TeamDependent'),
                           ),
                         ),
                       ),
@@ -85,7 +88,8 @@ class _CreatureOnKillReputationViewState
                       Expanded(
                         child: FoxyFormItem(
                           label: '阵营1',
-                          child: FoxyNumberInput<int>(
+                          child: FoxyEntityPicker(
+                            delegate: FoxyEntityPickerDelegates.dbcFaction,
                             controller:
                                 viewModel.rewOnKillRepFaction1Controller,
                             placeholder: 'RewOnKillRepFaction1',
@@ -95,7 +99,8 @@ class _CreatureOnKillReputationViewState
                       Expanded(
                         child: FoxyFormItem(
                           label: '阵营2',
-                          child: FoxyNumberInput<int>(
+                          child: FoxyEntityPicker(
+                            delegate: FoxyEntityPickerDelegates.dbcFaction,
                             controller:
                                 viewModel.rewOnKillRepFaction2Controller,
                             placeholder: 'RewOnKillRepFaction2',

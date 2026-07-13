@@ -155,6 +155,24 @@ class DbcLocaleFields {
     label: '距离简称',
   );
 
+  // --- skill_line ---
+  static final skillLineDisplayName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_skill_line',
+    columnPrefix: 'DisplayName_lang',
+    label: '技能线名称',
+  );
+  static final skillLineDescription = DbcLocaleFieldDefinition(
+    tableName: 'dbc_skill_line',
+    columnPrefix: 'Description_lang',
+    label: '技能线描述',
+    multiline: true,
+  );
+  static final skillLineAlternateVerb = DbcLocaleFieldDefinition(
+    tableName: 'dbc_skill_line',
+    columnPrefix: 'AlternateVerb_lang',
+    label: '备选动词',
+  );
+
   /// 全部已注册字段，供覆盖完整性测试使用。
   static final List<DbcLocaleFieldDefinition> all = [
     achievementTitle,
@@ -180,5 +198,8 @@ class DbcLocaleFields {
     spellItemEnchantmentName,
     spellRangeDisplayName,
     spellRangeDisplayNameShort,
+    skillLineDisplayName,
+    skillLineDescription,
+    skillLineAlternateVerb,
   ];
 }

@@ -38,7 +38,9 @@ class CreatureOnKillReputationViewModel with FieldControllerMixin {
   late final rewOnKillRepValue2Controller = registerController(
     DoubleFieldController(),
   );
-  late final teamDependentController = registerController(IntFieldController());
+  late final teamDependentController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   final reputation = signal(CreatureOnKillReputationEntity());
 

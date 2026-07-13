@@ -1,4 +1,4 @@
-/// NPC商人物品 — 对应 npc_vendor 表（复合键: entry + slot）
+/// NPC商人物品 — 对应 npc_vendor 表（复合键: entry + item + ExtendedCost）
 class NpcVendorEntity {
   final int entry;
   final int slot;

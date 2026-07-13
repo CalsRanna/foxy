@@ -24,6 +24,28 @@ class LootTemplateEntity {
     this.comment = '',
   });
 
+  void validate() {
+    if (lootMode == 0) throw StateError('掉落模式不能为 0');
+    if (groupId < 0 || groupId >= 128) {
+      throw RangeError.range(groupId, 0, 127, 'GroupId');
+    }
+    if (minCount < 1 || minCount > 255) {
+      throw RangeError.range(minCount, 1, 255, 'MinCount');
+    }
+    if (maxCount < 1 || maxCount > 255) {
+      throw RangeError.range(maxCount, 1, 255, 'MaxCount');
+    }
+    if (reference == 0 && maxCount < minCount) {
+      throw StateError('最大数量不能小于最小数量');
+    }
+    if (chance == 0 && groupId == 0) {
+      throw StateError('掉落几率为 0 时必须指定掉落组');
+    }
+    if (chance != 0 && chance < 0.000001) {
+      throw StateError('非零掉落几率不能小于 0.000001');
+    }
+  }
+
   factory LootTemplateEntity.fromJson(Map<String, dynamic> json) {
     return LootTemplateEntity(
       entry: json['Entry'] ?? 0,

@@ -10,6 +10,15 @@ class FlagItem {
   const FlagItem(this.value, this.label, [this.group]);
 }
 
+const kLootModeFlagOptions = [
+  FlagItem(0x0001, '默认'),
+  FlagItem(0x0002, '困难模式 1'),
+  FlagItem(0x0004, '困难模式 2'),
+  FlagItem(0x0008, '困难模式 3'),
+  FlagItem(0x0010, '困难模式 4'),
+  FlagItem(0x8000, '垃圾鱼'),
+];
+
 /// NPC 标识选项
 const kNpcFlagOptions = [
   FlagItem(0x00000001, '对话', '基础功能'), // Gossip

@@ -10,6 +10,8 @@ import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
+import 'package:foxy/entity/dbc_emote_entity.dart';
+import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
@@ -30,6 +32,7 @@ import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
+import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:warcrafty/warcrafty.dart';
@@ -45,11 +48,13 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_creature_spell_data' => const CreatureSpellDataEntity().toJson(),
     'dbc_currency_types' => const CurrencyTypeEntity().toJson(),
     'dbc_emotes_text' => const EmoteTextEntity().toJson(),
+    'dbc_emotes' => const DbcEmoteEntity().toJson(),
     'dbc_faction' => const DbcFactionEntity().toJson(),
     'dbc_faction_template' => const DbcFactionTemplateEntity().toJson(),
     'dbc_gem_properties' => const GemPropertyEntity().toJson(),
     'dbc_glyph_properties' => const GlyphPropertyEntity().toJson(),
     'dbc_item_display_info' => const ItemDisplayInfoEntity().toJson(),
+    'dbc_item' => DbcItemEntity.fromJson(_schemaDefaults(tableName)).toJson(),
     'dbc_item_extended_cost' => const ItemExtendedCostEntity().toJson(),
     'dbc_item_random_properties' => const ItemRandomPropertiesEntity().toJson(),
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
@@ -67,9 +72,21 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_spell_icon' => const SpellIconEntity().toJson(),
     'dbc_spell_item_enchantment' => const SpellItemEnchantmentEntity().toJson(),
     'dbc_spell_range' => const SpellRangeEntity().toJson(),
+    'dbc_skill_line' => SkillLineEntity.fromJson(
+      _schemaDefaults(tableName),
+    ).toJson(),
     'dbc_talent' => const TalentEntity().toJson(),
     'dbc_vehicle' => const VehicleEntity().toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
+  };
+}
+
+Map<String, dynamic> _schemaDefaults(String tableName) {
+  final definition = dbcDefinitionByTable[tableName]!;
+  return {
+    for (final field in definition.schema.fields)
+      if (!field.type.isSkip && field.type != FieldType.sort)
+        field.name: field.type == FieldType.string ? '' : 0,
   };
 }
 
@@ -104,11 +121,13 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_creature_spell_data' => CreatureSpellDataEntity.fromJson(row).toJson(),
     'dbc_currency_types' => CurrencyTypeEntity.fromJson(row).toJson(),
     'dbc_emotes_text' => EmoteTextEntity.fromJson(row).toJson(),
+    'dbc_emotes' => DbcEmoteEntity.fromJson(row).toJson(),
     'dbc_faction' => DbcFactionEntity.fromJson(row).toJson(),
     'dbc_faction_template' => DbcFactionTemplateEntity.fromJson(row).toJson(),
     'dbc_gem_properties' => GemPropertyEntity.fromJson(row).toJson(),
     'dbc_glyph_properties' => GlyphPropertyEntity.fromJson(row).toJson(),
     'dbc_item_display_info' => ItemDisplayInfoEntity.fromJson(row).toJson(),
+    'dbc_item' => DbcItemEntity.fromJson(row).toJson(),
     'dbc_item_extended_cost' => ItemExtendedCostEntity.fromJson(row).toJson(),
     'dbc_item_random_properties' => ItemRandomPropertiesEntity.fromJson(
       row,
@@ -133,6 +152,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
       row,
     ).toJson(),
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
+    'dbc_skill_line' => SkillLineEntity.fromJson(row).toJson(),
     'dbc_talent' => TalentEntity.fromJson(row).toJson(),
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
@@ -140,8 +160,8 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 }
 
 void main() {
-  test('全部 32 张 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(32));
+  test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
+    expect(dbcDefinitions, hasLength(35));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);
@@ -158,7 +178,7 @@ void main() {
     }
   });
 
-  test('全部 32 张 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
+  test('全部 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
     for (final definition in dbcDefinitions) {
       final sample = _sampleRow(definition);
       final json = _roundTrip(definition.tableName, sample);

@@ -20,7 +20,7 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
   late final bytes1Controller = registerController(IntFieldController());
   late final bytes2Controller = registerController(IntFieldController());
   late final visibilityDistanceTypeController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final aurasController = registerController(StringFieldController());
 
@@ -73,7 +73,9 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
       bytes1: bytes1Controller.collect(),
       bytes2: bytes2Controller.collect(),
       visibilityDistanceType: visibilityDistanceTypeController.collect(),
-      auras: aurasController.collect(),
+      auras: CreatureTemplateAddonEntity.normalizeAuras(
+        aurasController.collect(),
+      ),
     );
   }
 
