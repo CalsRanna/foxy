@@ -81,6 +81,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
   DbcDefinition(tableName: 'dbc_item_set', schema: Definitions.itemSet),
   DbcDefinition(tableName: 'dbc_lock', schema: Definitions.lock),
+  DbcDefinition(
+    tableName: 'dbc_mail_template',
+    schema: Definitions.mailTemplate,
+  ),
   DbcDefinition(tableName: 'dbc_map', schema: Definitions.map),
   DbcDefinition(
     tableName: 'dbc_quest_faction_reward',

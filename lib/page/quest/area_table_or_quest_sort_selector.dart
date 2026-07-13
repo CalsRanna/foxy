@@ -122,9 +122,9 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
   @override
   void initState() {
     super.initState();
-    _currentMode = widget.mode;
+    _currentMode = (widget.initialValue ?? 0) < 0 ? 'QuestSort' : widget.mode;
     if (widget.initialValue != null && widget.initialValue != 0) {
-      _idController.init(widget.initialValue?.toString() ?? '');
+      _idController.init(widget.initialValue!.abs().toString());
       _selectedId = widget.initialValue;
     }
     _search();
@@ -253,7 +253,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
                 }
               } else {
                 if (dataRow < 0 || dataRow >= _questItems.length) return null;
-                if (_questItems[dataRow].id == _selectedId) {
+                if (-_questItems[dataRow].id == _selectedId) {
                   return TableSpanDecoration(color: theme.colorScheme.accent);
                 }
               }
@@ -266,7 +266,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
                 }
               } else {
                 if (row >= 0 && row < _questItems.length) {
-                  setState(() => _selectedId = _questItems[row].id);
+                  setState(() => _selectedId = -_questItems[row].id);
                 }
               }
             },
@@ -277,7 +277,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
                 }
               } else {
                 if (row >= 0 && row < _questItems.length) {
-                  Navigator.of(context).pop(_questItems[row].id);
+                  Navigator.of(context).pop(-_questItems[row].id);
                 }
               }
             },

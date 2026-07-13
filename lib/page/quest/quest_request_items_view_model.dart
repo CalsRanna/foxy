@@ -24,6 +24,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
   late final completionTextController = registerController(
     StringFieldController(),
   );
+  late final verifiedBuildController = registerController(IntFieldController());
 
   int _originalId = 0;
 
@@ -73,6 +74,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
     emoteOnCompleteController.init(model.emoteOnComplete);
     emoteOnIncompleteController.init(model.emoteOnIncomplete);
     completionTextController.init(model.completionText);
+    verifiedBuildController.init(model.verifiedBuild);
   }
 
   QuestRequestItemsEntity _collect() {
@@ -81,6 +83,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
       emoteOnComplete: emoteOnCompleteController.collect(),
       emoteOnIncomplete: emoteOnIncompleteController.collect(),
       completionText: completionTextController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
     );
   }
 

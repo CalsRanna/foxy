@@ -118,45 +118,6 @@ class GameObjectQuestEnderViewModel with FieldControllerMixin {
     }
   }
 
-  /// 复制记录
-  Future<void> copy(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final item = items.value[index];
-    final confirmed = await showFoxyDialog<bool>(
-      context: context,
-      builder: (context) => ShadDialog.alert(
-        title: Text('确认复制'),
-        description: Text('此操作不会复制关联表数据，确认继续？'),
-        actions: [
-          ShadButton.outline(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
-          ),
-          ShadButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('复制'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      try {
-        await _repository.copyGameObjectQuestEnder(item.id, item.quest);
-        await load();
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text('复制成功'));
-        ShadSonner.of(context).show(toast);
-      } catch (e) {
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text(e.toString()));
-        ShadSonner.of(context).show(toast);
-      }
-    }
-  }
-
   /// 删除记录
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;

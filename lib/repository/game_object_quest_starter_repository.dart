@@ -37,19 +37,13 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
   Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
     int questId,
   ) async {
-    final result = await laconic.table(_table).where('quest', questId).select([
-      'MAX(id) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return GameObjectQuestStarterEntity(
-      quest: questId,
-      id: maxId == null ? 0 : maxId + 1,
-    );
+    return GameObjectQuestStarterEntity(quest: questId);
   }
 
   Future<void> storeGameObjectQuestStarter(
     GameObjectQuestStarterEntity model,
   ) async {
+    _validate(model.id, model.quest);
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -58,25 +52,16 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
     int quest,
     GameObjectQuestStarterEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('id');
-    json.remove('quest');
+    _validate(model.id, model.quest);
     await laconic
         .table(_table)
         .where('id', id)
         .where('quest', quest)
-        .update(json);
+        .update(model.toJson());
   }
 
   Future<void> destroyGameObjectQuestStarter(int id, int quest) async {
     await laconic.table(_table).where('id', id).where('quest', quest).delete();
-  }
-
-  Future<void> copyGameObjectQuestStarter(int id, int quest) async {
-    final original = await getGameObjectQuestStarter(id, quest);
-    if (original == null) return;
-    final next = await createGameObjectQuestStarter(original.quest);
-    await storeGameObjectQuestStarter(next);
   }
 
   Future<void> saveGameObjectQuestStarter(
@@ -87,6 +72,12 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
       await updateGameObjectQuestStarter(model.id, model.quest, model);
     } else {
       await storeGameObjectQuestStarter(model);
+    }
+  }
+
+  void _validate(int id, int quest) {
+    if (id <= 0 || quest <= 0) {
+      throw ArgumentError('游戏对象编号和任务编号必须大于 0');
     }
   }
 }

@@ -23,6 +23,7 @@ import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
@@ -139,6 +140,7 @@ class DbcExportRegistry {
     final itemSet = getIt.get<ItemSetRepository>();
     final lock = getIt.get<LockRepository>();
     final map = getIt.get<MapInfoRepository>();
+    final mailTemplate = getIt.get<MailTemplateRepository>();
     final questFactionReward = getIt.get<QuestFactionRewardRepository>();
     final questInfo = getIt.get<QuestInfoRepository>();
     final questSort = getIt.get<QuestSortRepository>();
@@ -275,6 +277,11 @@ class DbcExportRegistry {
       'dbc_lock': DbcExportDelegate.typed(
         load: lock.getLocks,
         count: () => lock.countLocks(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_mail_template': DbcExportDelegate.typed(
+        load: mailTemplate.getMailTemplates,
+        count: () => mailTemplate.countMailTemplates(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_map': DbcExportDelegate.typed(

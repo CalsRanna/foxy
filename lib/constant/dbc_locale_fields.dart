@@ -112,6 +112,19 @@ class DbcLocaleFields {
     multiline: true,
   );
 
+  // --- mail_template ---
+  static final mailTemplateSubject = DbcLocaleFieldDefinition(
+    tableName: 'dbc_mail_template',
+    columnPrefix: 'Subject_lang',
+    label: '邮件主题',
+  );
+  static final mailTemplateBody = DbcLocaleFieldDefinition(
+    tableName: 'dbc_mail_template',
+    columnPrefix: 'Body_lang',
+    label: '邮件正文',
+    multiline: true,
+  );
+
   // --- quest_info ---
   static final questInfoInfoName = DbcLocaleFieldDefinition(
     tableName: 'dbc_quest_info',
@@ -212,6 +225,8 @@ class DbcLocaleFields {
     mapMapName,
     mapMapDescription0,
     mapMapDescription1,
+    mailTemplateSubject,
+    mailTemplateBody,
     questInfoInfoName,
     questSortSortName,
     spellName,

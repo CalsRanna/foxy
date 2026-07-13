@@ -25,6 +25,7 @@ import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
+import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
@@ -73,6 +74,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
     'dbc_item_set' => const ItemSetEntity().toJson(),
     'dbc_lock' => const LockEntity().toJson(),
+    'dbc_mail_template' => const MailTemplateEntity().toJson(),
     'dbc_map' => const MapInfoEntity().toJson(),
     'dbc_quest_faction_reward' => const QuestFactionRewardEntity().toJson(),
     'dbc_quest_info' => const QuestInfoEntity().toJson(),
@@ -154,6 +156,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_item_random_suffix' => ItemRandomSuffixEntity.fromJson(row).toJson(),
     'dbc_item_set' => ItemSetEntity.fromJson(row).toJson(),
     'dbc_lock' => LockEntity.fromJson(row).toJson(),
+    'dbc_mail_template' => MailTemplateEntity.fromJson(row).toJson(),
     'dbc_map' => MapInfoEntity.fromJson(row).toJson(),
     'dbc_quest_faction_reward' => QuestFactionRewardEntity.fromJson(
       row,
@@ -181,7 +184,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(39));
+    expect(dbcDefinitions, hasLength(40));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

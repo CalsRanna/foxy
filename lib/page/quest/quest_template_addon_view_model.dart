@@ -18,12 +18,15 @@ class QuestTemplateAddonViewModel with FieldControllerMixin {
   late final idController = registerController(IntFieldController());
   late final maxLevelController = registerController(IntFieldController());
   late final allowableClassesController = registerController(
-    IntFieldController(),
+    FlagFieldController(),
   );
   late final sourceSpellIdController = registerController(IntFieldController());
   late final prevQuestIdController = registerController(IntFieldController());
   late final nextQuestIdController = registerController(IntFieldController());
   late final exclusiveGroupController = registerController(
+    IntFieldController(),
+  );
+  late final breadcrumbForQuestIdController = registerController(
     IntFieldController(),
   );
   late final rewardMailTemplateIdController = registerController(
@@ -53,7 +56,7 @@ class QuestTemplateAddonViewModel with FieldControllerMixin {
   late final providedItemCountController = registerController(
     IntFieldController(),
   );
-  late final specialFlagsController = registerController(IntFieldController());
+  late final specialFlagsController = registerController(FlagFieldController());
 
   int _originalId = 0;
 
@@ -107,6 +110,7 @@ class QuestTemplateAddonViewModel with FieldControllerMixin {
     prevQuestIdController.init(addon.prevQuestId);
     nextQuestIdController.init(addon.nextQuestId);
     exclusiveGroupController.init(addon.exclusiveGroup);
+    breadcrumbForQuestIdController.init(addon.breadcrumbForQuestId);
     rewardMailTemplateIdController.init(addon.rewardMailTemplateId);
     rewardMailDelayController.init(addon.rewardMailDelay);
     requiredSkillIdController.init(addon.requiredSkillId);
@@ -128,6 +132,7 @@ class QuestTemplateAddonViewModel with FieldControllerMixin {
       prevQuestId: prevQuestIdController.collect(),
       nextQuestId: nextQuestIdController.collect(),
       exclusiveGroup: exclusiveGroupController.collect(),
+      breadcrumbForQuestId: breadcrumbForQuestIdController.collect(),
       rewardMailTemplateId: rewardMailTemplateIdController.collect(),
       rewardMailDelay: rewardMailDelayController.collect(),
       requiredSkillId: requiredSkillIdController.collect(),

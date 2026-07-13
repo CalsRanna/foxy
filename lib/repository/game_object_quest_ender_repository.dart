@@ -38,19 +38,13 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
   Future<GameObjectQuestEnderEntity> createGameObjectQuestEnder(
     int questId,
   ) async {
-    final result = await laconic.table(_table).where('quest', questId).select([
-      'MAX(id) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return GameObjectQuestEnderEntity(
-      quest: questId,
-      id: maxId == null ? 0 : maxId + 1,
-    );
+    return GameObjectQuestEnderEntity(quest: questId);
   }
 
   Future<void> storeGameObjectQuestEnder(
     GameObjectQuestEnderEntity model,
   ) async {
+    _validate(model.id, model.quest);
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -59,25 +53,16 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
     int quest,
     GameObjectQuestEnderEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('id');
-    json.remove('quest');
+    _validate(model.id, model.quest);
     await laconic
         .table(_table)
         .where('id', id)
         .where('quest', quest)
-        .update(json);
+        .update(model.toJson());
   }
 
   Future<void> destroyGameObjectQuestEnder(int id, int quest) async {
     await laconic.table(_table).where('id', id).where('quest', quest).delete();
-  }
-
-  Future<void> copyGameObjectQuestEnder(int id, int quest) async {
-    final original = await getGameObjectQuestEnder(id, quest);
-    if (original == null) return;
-    final next = await createGameObjectQuestEnder(original.quest);
-    await storeGameObjectQuestEnder(next);
   }
 
   Future<void> saveGameObjectQuestEnder(
@@ -88,6 +73,12 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
       await updateGameObjectQuestEnder(model.id, model.quest, model);
     } else {
       await storeGameObjectQuestEnder(model);
+    }
+  }
+
+  void _validate(int id, int quest) {
+    if (id <= 0 || quest <= 0) {
+      throw ArgumentError('游戏对象编号和任务编号必须大于 0');
     }
   }
 }

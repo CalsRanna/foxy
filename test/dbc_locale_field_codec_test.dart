@@ -185,7 +185,7 @@ void main() {
     });
 
     test('已注册字段数量与清单一致', () {
-      expect(DbcLocaleFields.all, hasLength(29));
+      expect(DbcLocaleFields.all, hasLength(31));
     });
 
     test('已注册字段表名与前缀唯一', () {

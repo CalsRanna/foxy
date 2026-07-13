@@ -5,6 +5,8 @@ import 'package:foxy/page/quest/quest_offer_reward_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -50,31 +52,15 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '表情1',
+              label: '验证版本',
               child: FoxyNumberInput<int>(
-                controller: vm.emote1Controller,
-                placeholder: 'Emote1',
+                controller: vm.verifiedBuildController,
+                placeholder: 'VerifiedBuild',
               ),
             ),
           ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '表情2',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote2Controller,
-                placeholder: 'Emote2',
-              ),
-            ),
-          ),
-          Expanded(
-            child: FoxyFormItem(
-              label: '表情3',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote3Controller,
-                placeholder: 'Emote3',
-              ),
-            ),
-          ),
+          Expanded(child: SizedBox()),
+          Expanded(child: SizedBox()),
         ],
       ),
       Row(
@@ -82,10 +68,11 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
         children: [
           Expanded(
             child: FoxyFormItem(
-              label: '表情4',
-              child: FoxyNumberInput<int>(
-                controller: vm.emote4Controller,
-                placeholder: 'Emote4',
+              label: '表情1',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcEmote,
+                controller: vm.emote1Controller,
+                placeholder: 'Emote1',
               ),
             ),
           ),
@@ -100,10 +87,35 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           ),
           Expanded(
             child: FoxyFormItem(
+              label: '表情2',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcEmote,
+                controller: vm.emote2Controller,
+                placeholder: 'Emote2',
+              ),
+            ),
+          ),
+          Expanded(
+            child: FoxyFormItem(
               label: '表情延迟2',
               child: FoxyNumberInput<int>(
                 controller: vm.emoteDelay2Controller,
                 placeholder: 'EmoteDelay2',
+              ),
+            ),
+          ),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '表情3',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcEmote,
+                controller: vm.emote3Controller,
+                placeholder: 'Emote3',
               ),
             ),
           ),
@@ -116,11 +128,16 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               ),
             ),
           ),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
+          Expanded(
+            child: FoxyFormItem(
+              label: '表情4',
+              child: FoxyEntityPicker(
+                delegate: FoxyEntityPickerDelegates.dbcEmote,
+                controller: vm.emote4Controller,
+                placeholder: 'Emote4',
+              ),
+            ),
+          ),
           Expanded(
             child: FoxyFormItem(
               label: '表情延迟4',
@@ -130,9 +147,6 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               ),
             ),
           ),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
-          Expanded(child: SizedBox()),
         ],
       ),
       Row(
