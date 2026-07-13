@@ -48,6 +48,8 @@ Database → Laconic → MySQL
   └─ foxy（应用元数据 / DBC 镜像表 / 迁移记录）
 ```
 
+`Infrastructure` 不作为一层强行插入上述业务调用链，而是承载横向基础能力：配置、DBC 文件处理、日志、偏好设置、窗口适配和少量通用工具。数据库与 Repository 仍是本项目的一等核心目录，不迁入 `infrastructure/`。`widget/` 是共享展示层目录，除 Widget 外也包含供 Page / ViewModel 复用的对话框和表单 Controller。
+
 ### 核心设计决策
 
 - **一张表一个 Repository**，命名与表语义对应（`CreatureTemplateRepository`、`QuestTemplateRepository` 等）
@@ -56,7 +58,9 @@ Database → Laconic → MySQL
 - **主键**：UI 始终 `readOnly`；新建时 ViewModel 调 `create*`（内部分配 `MAX+1`），禁止在 ViewModel 自行算号
 - **ViewModel 注册为工厂**（`registerFactory`），每次页面打开获取新实例；**Repository 注册为懒汉单例**（`registerLazySingleton`）
 - **跨库查询 DBC** 时使用全限定名：`foxy.dbc_spell`、`foxy.dbc_faction` 等
-- **本地化**：世界库的 `*_locale` 分表（如 `creature_template_locale`）默认检测 `zhCN`，通过 `FoxyViewModel` 信号全局控制
+- **本地化**：世界库的 `*_locale` 分表（如 `creature_template_locale`）默认检测 `zhCN`，通过 `FoxyViewModel` 信号全局控制。当前 `RepositoryMixin.localeEnabled` 会经 GetIt 读取该信号，这是 Repository → ViewModel 的既有受控例外，不应扩展为通用依赖方式
+- **基础设施边界**：跨业务、非 UI 的运行时能力放入 `infrastructure/`；UI 专用能力放入 `widget/`；事件及事件总线放入 `event/`
+- **禁止恢复顶层 `util/`**：无状态通用辅助函数统一放在 `infrastructure/util/`，新增前先判断是否已有更明确的业务或 UI 归属，避免再次形成杂物目录
 
 ---
 
@@ -72,6 +76,8 @@ lib/
 │   ├── condition_value_config.dart
 │   ├── creature_enums.dart
 │   ├── creature_flags.dart
+│   ├── dbc_definitions.dart          # DBC 表名、文件名与 Schema 的唯一定义
+│   ├── dbc_locale_fields.dart        # DBC 本地化字段注册表
 │   ├── game_object_constants.dart
 │   ├── gossip_menu_option_constants.dart
 │   ├── item_constants.dart / item_enums.dart / item_flags.dart / item_quality.dart
@@ -102,13 +108,13 @@ lib/
 │   ├── dashboard/                    # 工作台首页（常用模块、活动趋势、版本信息）
 │   ├── scaffold/                     # 主壳：侧边栏、面包屑、DBC 导入对话框
 │   ├── foxy_app/                     # FoxyApp Widget + FoxyViewModel（locale 开关）
-│   ├── creature_template/            # 生物详情页 + 12 个关联表 Tab
+│   ├── creature_template/            # 生物详情页：1 个主表 Tab + 11 个关联 Tab
 │   ├── item/                         # 物品模板 + 附魔/掉落 Tab
 │   ├── quest/                        # 任务模板 + Addon/奖励/起止点 Tab
 │   ├── game_object/                  # 游戏对象模板
 │   ├── gossip_menu/                  # 对话菜单 + NPC 文本
 │   ├── smart_script/                 # SmartAI 脚本
-│   ├── spell/                        # 法术（含 6 个关联 Tab：区域/加成/自定义属性/分组/链接/等级/掉落）
+│   ├── spell/                        # 法术：1 个基本信息 Tab + 7 个关联 Tab（加成/属性/区域/分组/链接/等级/掉落）
 │   ├── condition/                    # 条件
 │   ├── player_create_info/           # 出生信息
 │   ├── setting/                      # DBC 导入 / 导出管理
@@ -145,18 +151,33 @@ lib/
 │   ├── router_facade.dart            # RouterFacade：面包屑 + 导航 + 路径 signals
 │   ├── router_menu.dart              # RouterMenu 枚举（菜单图标、中文标签、路由映射）
 │   └── router_node.dart              # RouterNode 数据类（路径节点）
-├── util/
-│   ├── dbc_sync_util.dart            # DBC 导入/导出（含 Isolate 后台处理）
-│   ├── dbc_export_registry.dart      # DBC 导出表名与列映射
-│   ├── dialog_util.dart              # 全局对话框：confirm / error / success / loading
-│   ├── event_bus.dart                # 发布/订阅事件总线
-│   ├── format_util.dart              # 格式化工具
-│   ├── item_helpers.dart             # 物品相关辅助函数
-│   ├── logger_util.dart              # Logger 封装
-│   ├── shared_preferences_util.dart  # SharedPreferences 封装
-│   └── window_initializer.dart       # 窗口管理器初始化
+├── infrastructure/                   # 跨业务的运行时适配与基础能力
+│   ├── config/
+│   │   └── config_util.dart          # config.yaml 读写
+│   ├── dbc/                          # DBC 导入、导出、注册表、进度与 Isolate worker
+│   │   ├── dbc_sync_util.dart
+│   │   ├── dbc_import_worker.dart
+│   │   ├── dbc_export_util.dart
+│   │   ├── dbc_export_registry.dart
+│   │   ├── dbc_locale_field_codec.dart
+│   │   └── dbc_sync_progress.dart
+│   ├── logging/
+│   │   └── logger_util.dart          # Logger 封装
+│   ├── preferences/
+│   │   └── shared_preferences_util.dart
+│   ├── util/                         # 少量无状态通用辅助函数；不作为杂物目录
+│   │   ├── format_util.dart
+│   │   ├── parse_util.dart
+│   │   └── item_helpers.dart
+│   └── window/
+│       └── window_initializer.dart   # window_manager 初始化与尺寸记忆
 ├── widget/                           # 通用 UI 组件
+│   ├── dialog/
+│   │   └── dialog_util.dart          # 全局对话框入口
+│   ├── form/
+│   │   └── field_controller.dart     # 表单字段格式化、解析与 Controller 生命周期
 │   ├── context_menu.dart             # 右键菜单
+│   ├── dbc_locale_field_editor.dart  # DBC 固定 16 语言字段编辑器
 │   ├── foxy_card.dart                # 卡片组件
 │   ├── foxy_entity_picker.dart       # 实体选择器（弹窗搜索/选择）
 │   ├── foxy_entity_picker_delegates.dart
@@ -166,6 +187,7 @@ lib/
 │   ├── foxy_form_section.dart        # 表单分区
 │   ├── foxy_game_asset_icon.dart     # 游戏资源图标显示
 │   ├── foxy_header.dart              # 页面标题头
+│   ├── foxy_input_readonly.dart      # 输入框只读展示规则
 │   ├── foxy_locale_crud_dialog.dart  # 多语言（locale）CRUD 对话框
 │   ├── foxy_locale_picker.dart       # 语言选择器
 │   ├── foxy_locale_picker_delegates.dart
@@ -173,10 +195,12 @@ lib/
 │   ├── foxy_pagination.dart          # 分页组件
 │   ├── foxy_shad_select.dart         # 选择下拉框
 │   ├── foxy_shad_table.dart          # 虚拟化数据表格
+│   ├── foxy_string_input.dart        # 字符串输入框
 │   ├── foxy_tab.dart                 # Tab 容器
 │   ├── lazy_indexed_stack.dart       # 懒加载 IndexedStack
 │   └── window_button.dart            # 窗口控制按钮（最小化/最大化/关闭）
 └── event/
+    ├── event_bus.dart                # 发布/订阅事件总线
     └── activity_logged_event.dart    # 活动日志事件
 
 docs/
@@ -202,8 +226,11 @@ config.yaml                           # 本地数据库连接配置（.gitignore
 | `lib/database/database.dart` | MySQL 连接单例 | 很少改动——连接/关闭逻辑 |
 | `lib/database/migration_runner.dart` | 迁移框架 | 新增 Migration 类注册时 |
 | `lib/repository/repository_mixin.dart` | Repository 基类 mixin | 很少改动——laconic 访问 + kPageSize |
-| `lib/util/dialog_util.dart` | 全局对话框工具 | 修改对话框行为时 |
-| `lib/util/dbc_sync_util.dart` | DBC 导入/导出引擎 | 新增 DBC 表或修改导入流程时 |
+| `lib/constant/dbc_definitions.dart` | DBC 表名、文件名与 Schema 唯一定义 | 新增/修改 DBC 表定义时 |
+| `lib/infrastructure/config/config_util.dart` | `config.yaml` 并发安全读写 | 修改本地配置项持久化时 |
+| `lib/widget/dialog/dialog_util.dart` | 全局对话框工具 | 修改对话框行为时 |
+| `lib/widget/form/field_controller.dart` | 表单字段解析、格式化与 Controller 生命周期 | 新增字段控制器类型时 |
+| `lib/infrastructure/dbc/dbc_sync_util.dart` | DBC 导入/导出引擎 | 新增 DBC 表或修改导入流程时 |
 | `lib/page/scaffold/scaffold_page.dart` | 主外壳（侧边栏+面包屑+窗口） | 修改主布局/窗口行为时 |
 | `lib/page/foxy_app/foxy_app.dart` | Material App 根组件 | 修改主题/全局配置时 |
 | `config.yaml` | 数据库连接配置 | 运行时自动写入，**不入库** |
@@ -305,10 +332,11 @@ class FooListViewModel {
   - **面包屑显示**：`Watch((_) => routerFacade.path.value)` 渲染 `List<RouterNode>`
 - `RouterNode` 包含 `menu`（顶层菜单枚举）、`parentMenu`（详情页归属的父菜单，用于侧边栏高亮）、`label`（显示文字）、`route`（路由对象）
 - `RouterFacade.activeMenu` 从路径末端反向查找第一个有 `parentMenu`/`menu` 的节点来高亮侧边栏
+- **启动路由例外**：`BootstrapViewModel` 连接成功后直接调用 `AutoRouter.of(context).replaceAll([DashboardRoute()])`，用于清空引导页历史；普通业务导航仍必须经过 `RouterFacade`
 
 ### 5. 数据库与迁移
 
-- **连接流程**：`BootstrapPage` 收集 MySQL 凭据 → `Database.instance.connect(config)` → `MigrationRunner.run()` → 检测 locale 表 → 进入主界面
+- **连接流程**：`BootstrapPage` 收集 MySQL 凭据 → `Database.instance.connect(config)` → 检测世界库 locale 表并设置全局信号 → `MigrationRunner.run()` → 加载 features → 保存连接配置 → 进入主界面
 - **迁移**：`MigrationRunner` 确保 `foxy` 库和 `foxy.migrations` 表存在后，按顺序执行 `List<Migration>`。已执行过的迁移（`migrations` 表有记录）自动跳过
 - 新增迁移：创建 `lib/database/migration/migration_YYYYMMDDNNNN.dart`，实现 `Migration` 接口，在 `MigrationRunner.run()` 列表中注册
 - `config.yaml` 存储连接信息（含密码），在 `.gitignore` 中排除
@@ -317,7 +345,7 @@ class FooListViewModel {
 
 - **导入**：启动后若 `foxy.dbc_*` 表缺失或为空则提示。在后台 Isolate 中使用 `warcrafty` 解析 `.dbc` 文件并写入 MySQL
 - **导出**：设置页支持将库内 DBC 表导出为 `.dbc` 文件
-- DBC 表名清单：`requiredDbcTableNames` 常量（`dbc_sync_util.dart`）
+- DBC 表名清单：`requiredDbcTableNames` 常量（`lib/constant/dbc_definitions.dart`）
 - 进度通过信号（`dbcProgress` / `dbcProgressLabel` / `dbcProgressDetail`）实时展示
 
 ### 7. UI 约定
@@ -325,7 +353,7 @@ class FooListViewModel {
 - **组件库**：`shadcn_ui`（导入 `package:shadcn_ui/shadcn_ui.dart`）
 - **图标**：`LucideIcons.xxx`（来自 `lucide_icons_flutter`）
 - **Toast**：`ShadSonner.of(context).show(ShadToast(...))`
-- **对话框**：简单确认/错误/Toast 用 `DialogUtil.instance`（`confirm` / `error` / `success` / `loading` / `alert`）；自定义内容对话框用 `showFoxyDialog`（见 `lib/util/dialog_util.dart`）。**禁止**直接调用 `showShadDialog`（其默认 `opaque: true` 会让下层页面不绘制）
+- **对话框**：简单确认/错误/Toast 用 `DialogUtil.instance`（`confirm` / `error` / `success` / `loading` / `alert`）；自定义内容对话框用 `showFoxyDialog`（见 `lib/widget/dialog/dialog_util.dart`）。**禁止**直接调用 `showShadDialog`（其默认 `opaque: true` 会让下层页面不绘制）
 - **数据表格**：`FoxyShadTable`（虚拟化），配合 `FoxyPagination` 分页
 - **Tab 容器**：`FoxyTab`（`tabs` + `contents` 列表）
 - **平台字体**：Windows 使用 `'Microsoft YaHei UI'`，其他平台 null
@@ -379,5 +407,5 @@ flutter test
 - **默认 locale**：locale join 固定使用 `'zhCN'`
 - **避免 `delete` 关键词**：删除操作用 `destroy`，因为 `delete` 在某些上下文中是保留字
 - **`get{s}()` vs `getBrief*`**：全量方法仅在导出场景使用。列表页和 Picker 必须走 `getBrief*` + `count*`
-- **测试**：已有 DBC 导出/定义/locale、工具函数等测试；普通业务 Repository / ViewModel 覆盖仍偏少。PR 会经 CI 跑 `flutter analyze` 与 `flutter test`
+- **测试**：已有 DBC 导出/定义/locale、工具函数等测试；普通业务 Repository / ViewModel 覆盖仍偏少。仓库当前未配置 CI workflow，提交或创建 PR 前应在本地运行 `flutter analyze` 与 `flutter test`
 - **拼写检查配置**：`codebook.toml` 包含项目专有词汇（Azeroth、DBC、NPC 等），避免被拼写检查误报

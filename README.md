@@ -82,6 +82,8 @@
 └─────────────────────────────────────────────┘
 ```
 
+`lib/infrastructure/` 提供横向基础能力，包括配置、DBC 文件处理、日志、偏好设置、窗口适配和通用工具。它不是额外的业务调用层；`database/` 与 `repository/` 仍保持独立的一等目录，UI 专用辅助能力归入 `widget/`，事件机制归入 `event/`。
+
 ### 关键约定
 
 - **一张表一个 Repository**，公开 API 统一为：  
@@ -95,7 +97,7 @@
 
 ## 环境要求
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install)（与 `pubspec.yaml` 中 `sdk: ^3.9.2` 匹配）
+- [Flutter SDK](https://docs.flutter.dev/get-started/install)（所带 Dart SDK 需满足 `pubspec.yaml` 中的 `sdk: ^3.9.2`）
 - MySQL 5.7+ / 8.x（可访问 AzerothCore 世界库）
 - 已部署的 **AzerothCore**（或等价）`acore_world` 数据库
 - （可选）客户端 **DBC** 目录，用于首次导入成就、法术、区域等客户端表数据
@@ -144,13 +146,14 @@ flutter run -d macos
 
 连接成功后会：
 
-1. 写入工作目录下的 `config.yaml`（该文件已在 `.gitignore` 中，勿提交密钥）
-2. 确保存在 `foxy` 库并执行迁移
-3. 检测 locale 表并进入主界面
+1. 检测世界库 locale 表并初始化本地化开关
+2. 确保存在 `foxy` 库、执行迁移并加载功能清单
+3. 将连接信息写入工作目录下的 `config.yaml`（该文件已在 `.gitignore` 中，勿提交密钥）
+4. 进入主界面
 
 ### 5. 导入 DBC（推荐）
 
-进入主界面后，若所需 `foxy.dbc_*` 表缺失或为空，会提示配置 **DBC 目录** 并导入。也可在 `config.yaml` 中预先配置：
+进入主界面后，若所需 `foxy.dbc_*` 表缺失或为空，会提示配置 **DBC 目录** 并导入；表结构不兼容或检查失败时会显示带恢复操作的专用错误。也可在 `config.yaml` 中预先配置：
 
 ```yaml
 host: 127.0.0.1
@@ -174,6 +177,14 @@ lib/
 ├── constant/                 # 枚举、Flags、条件类型等常量
 ├── database/                 # 连接封装、Migration 与 Runner
 ├── entity/                   # 数据实体与 Filter 实体
+├── event/                    # 事件类型与 EventBus
+├── infrastructure/           # 跨业务的运行时适配与基础能力
+│   ├── config/               # config.yaml 读写
+│   ├── dbc/                  # DBC 导入、导出、注册表、进度与 worker
+│   ├── logging/              # 日志封装
+│   ├── preferences/          # SharedPreferences 封装
+│   ├── util/                 # 格式化、解析等少量无状态辅助函数
+│   └── window/               # 桌面窗口初始化与尺寸记忆
 ├── page/                     # 按业务域划分的页面与 ViewModel
 │   ├── bootstrap/            # 启动连接页
 │   ├── dashboard/            # 工作台
@@ -183,8 +194,10 @@ lib/
 │   └── setting/              # DBC 导入 / 导出管理
 ├── repository/               # 数据访问层
 ├── router/                   # auto_route 配置与菜单
-├── util/                     # DBC 同步、日志、对话框、事件总线等
-└── widget/                   # 通用组件（表格、分页、表单、Picker…）
+└── widget/                   # 通用组件及 UI 辅助能力
+    ├── dialog/               # 项目统一对话框入口
+    ├── form/                 # 表单字段 Controller
+    └── *.dart                # 表格、分页、输入框、Picker 等通用 Widget
 
 docs/
 ├── database_acore_world_schema.md   # 世界库表结构参考
