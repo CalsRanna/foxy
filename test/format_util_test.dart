@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/util/format_util.dart';
+import 'package:foxy/infrastructure/util/format_util.dart';
 
 void main() {
   group('formatNum', () {

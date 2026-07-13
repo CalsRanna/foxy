@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// A wrapper around [ShadSelect] that provides consistent styling and behavior.

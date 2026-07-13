@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
-import 'package:foxy/util/dialog_util.dart';
-import 'package:foxy/util/field_controller.dart';
-import 'package:foxy/util/logger_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';

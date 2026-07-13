@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
-import 'package:foxy/util/dbc_locale_field_codec.dart';
+import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
 
 void main() {
   group('DbcLocaleRepositoryMixin 表名校验', () {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 普通数据库 `*_locale` 分表的动态行编辑器。

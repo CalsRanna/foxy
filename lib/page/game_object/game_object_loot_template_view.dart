@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view_model.dart';
-import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';

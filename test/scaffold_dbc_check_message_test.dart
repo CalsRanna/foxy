@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
-import 'package:foxy/util/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 
 void main() {
   test('结构不兼容时使用对应标题并列出详情', () {

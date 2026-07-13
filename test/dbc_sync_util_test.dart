@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/util/dbc_export_util.dart';
-import 'package:foxy/util/dbc_sync_progress.dart';
-import 'package:foxy/util/dbc_sync_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 

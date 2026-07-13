@@ -5,12 +5,12 @@ import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:foxy/util/logger_util.dart';
-import 'package:foxy/util/dialog_util.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:get_it/get_it.dart';
 

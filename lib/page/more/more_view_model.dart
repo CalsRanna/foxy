@@ -2,7 +2,7 @@ import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/page/scaffold/scaffold_view_model.dart';
-import 'package:foxy/util/field_controller.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
