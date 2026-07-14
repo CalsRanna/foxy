@@ -33,17 +33,19 @@ class QuestFactionRewardDetailViewModel with FieldControllerMixin {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      final existed = await _repository.getQuestFactionReward(t.id);
-      if (existed == null) {
+      var t = _collectFromControllers();
+      t.validate();
+      final isCreate = await _repository.getQuestFactionReward(t.id) == null;
+      if (isCreate) {
         final id = await _repository.storeQuestFactionReward(t);
+        t = t.copyWith(id: id);
         idController.init(id);
       } else {
         await _repository.updateQuestFactionReward(t);
       }
       reward.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;

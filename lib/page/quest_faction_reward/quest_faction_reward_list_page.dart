@@ -77,14 +77,17 @@ class _QuestFactionRewardListPageState
   }
 
   Widget _buildTable() {
-    var createButton = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
-      child: Text('新增'),
-    );
     final rewards = viewModel.rewards.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
+    final canCreate =
+        !rewards.any((reward) => reward.id == 1) ||
+        !rewards.any((reward) => reward.id == 2);
+    var createButton = ShadButton(
+      leading: Icon(LucideIcons.plus, size: 16),
+      onPressed: canCreate ? () => viewModel.navigateToDetail() : null,
+      child: Text('新增'),
+    );
     var pagination = FoxyPagination(
       page: page,
       pageSize: 50,
@@ -96,16 +99,16 @@ class _QuestFactionRewardListPageState
 
     final headers = [
       '编号',
-      '难度0',
-      '难度1',
-      '难度2',
-      '难度3',
-      '难度4',
-      '难度5',
-      '难度6',
-      '难度7',
-      '难度8',
-      '难度9',
+      '索引 0 声望值',
+      '索引 1 声望值',
+      '索引 2 声望值',
+      '索引 3 声望值',
+      '索引 4 声望值',
+      '索引 5 声望值',
+      '索引 6 声望值',
+      '索引 7 声望值',
+      '索引 8 声望值',
+      '索引 9 声望值',
     ];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -152,20 +155,6 @@ class _QuestFactionRewardListPageState
                     viewModel.navigateToDetail(id: rewards[row].id);
                   },
                   child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    viewModel.copyQuestFactionReward(rewards[row].id);
-                  },
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () {
-                    viewModel.deleteQuestFactionReward(rewards[row].id);
-                  },
-                  child: Text('删除'),
                 ),
               ],
             );

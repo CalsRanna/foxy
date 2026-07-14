@@ -57,38 +57,36 @@ class QuestFactionRewardRepository with RepositoryMixin {
   }
 
   Future<QuestFactionRewardEntity> createQuestFactionReward() async {
-    return QuestFactionRewardEntity(id: await _getNextId());
+    return QuestFactionRewardEntity(id: await _getAvailableId());
   }
 
   Future<int> storeQuestFactionReward(
     QuestFactionRewardEntity questFactionReward,
   ) async {
-    var json = questFactionReward.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
+    final id = questFactionReward.id > 0
+        ? questFactionReward.id
+        : await _getAvailableId();
+    final candidate = questFactionReward.copyWith(id: id)..validate();
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
-    return nextId;
+    return id;
   }
 
   Future<void> updateQuestFactionReward(
     QuestFactionRewardEntity questFactionReward,
   ) async {
+    questFactionReward.validate();
     var json = questFactionReward.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questFactionReward.id).update(json);
   }
 
   Future<void> destroyQuestFactionReward(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+    throw StateError('任务声望固定记录不能删除');
   }
 
   Future<void> copyQuestFactionReward(int id) async {
-    var source = await getQuestFactionReward(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    throw StateError('任务声望固定记录不能复制');
   }
 
   Future<void> saveQuestFactionReward(
@@ -98,6 +96,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
       await storeQuestFactionReward(questFactionReward);
       return;
     }
+    questFactionReward.validate();
     var existing = await getQuestFactionReward(questFactionReward.id);
     if (existing != null) {
       await updateQuestFactionReward(questFactionReward);
@@ -106,8 +105,10 @@ class QuestFactionRewardRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> _getAvailableId() async {
+    if (await getQuestFactionReward(1) == null) return 1;
+    if (await getQuestFactionReward(2) == null) return 2;
+    throw StateError('任务声望固定记录 1 和 2 已存在，不能继续新增');
   }
 
   QueryBuilder _applyFilter(
