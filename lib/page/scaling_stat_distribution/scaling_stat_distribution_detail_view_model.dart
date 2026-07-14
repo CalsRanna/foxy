@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -11,8 +11,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ScalingStatDistributionDetailViewModel with FieldControllerMixin {
-  final _repository = GetIt.instance
-      .get<ScalingStatDistributionSoloRepository>();
+  final _repository = GetIt.instance.get<ScalingStatDistributionRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -45,16 +44,19 @@ class ScalingStatDistributionDetailViewModel with FieldControllerMixin {
     try {
       final t = _collectFromControllers();
       final existed = await _repository.getScalingStatDistribution(t.id);
+      final isCreate = existed == null;
+      var saved = t;
       if (existed == null) {
         final id = await _repository.storeScalingStatDistribution(t);
         idController.init(id);
+        saved = t.copyWith(id: id);
       } else {
         await _repository.updateScalingStatDistribution(t);
       }
-      distribution.value = t;
+      distribution.value = saved;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        saved,
       );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('属性缩放分布数据已保存'));

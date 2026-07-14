@@ -35,7 +35,7 @@ import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
-import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_focus_object_repository.dart';
@@ -166,8 +166,7 @@ class DbcExportRegistry {
     final questFactionReward = getIt.get<QuestFactionRewardRepository>();
     final questInfo = getIt.get<QuestInfoRepository>();
     final questSort = getIt.get<QuestSortRepository>();
-    final scalingDistribution = getIt
-        .get<ScalingStatDistributionSoloRepository>();
+    final scalingDistribution = getIt.get<ScalingStatDistributionRepository>();
     final scalingValue = getIt.get<ScalingStatValueRepository>();
     final spell = getIt.get<SpellRepository>();
     final skillLine = getIt.get<SkillLineRepository>();
