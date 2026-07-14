@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 游戏图标（物品/法术）统一渲染组件。
 ///
@@ -45,7 +46,7 @@ class FoxyGameAssetIcon extends StatelessWidget {
       cacheWidth: cache,
       cacheHeight: cache,
       errorBuilder: (context, error, stackTrace) => Icon(
-        Icons.image_not_supported_outlined,
+        LucideIcons.image,
         size: size * 0.6,
         color: Theme.of(context).disabledColor,
       ),
