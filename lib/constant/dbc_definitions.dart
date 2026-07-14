@@ -88,6 +88,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.itemExtendedCost,
   ),
   DbcDefinition(
+    tableName: 'dbc_item_purchase_group',
+    schema: Definitions.itemPurchaseGroup,
+  ),
+  DbcDefinition(
     tableName: 'dbc_item_limit_category',
     schema: Definitions.itemLimitCategory,
   ),

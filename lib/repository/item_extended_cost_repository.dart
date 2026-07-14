@@ -66,31 +66,40 @@ class ItemExtendedCostRepository with RepositoryMixin {
   Future<int> storeItemExtendedCost(
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
-    var json = itemExtendedCost.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
+    final id = itemExtendedCost.id > 0
+        ? itemExtendedCost.id
+        : await _getNextId();
+    final candidate = itemExtendedCost.copyWith(id: id)..validate();
+    await _validateReferences(candidate);
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
-    return nextId;
+    return id;
   }
 
   Future<void> updateItemExtendedCost(
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
+    itemExtendedCost.validate();
+    await _validateReferences(itemExtendedCost);
     var json = itemExtendedCost.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', itemExtendedCost.id).update(json);
   }
 
   Future<void> destroyItemExtendedCost(int id) async {
+    if (await _isReferencedByVendors(id)) {
+      throw StateError('扩展价格 $id 仍被商人数据引用，不能删除');
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyItemExtendedCost(int id) async {
     var source = await getItemExtendedCost(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
+    final nextId = await _getNextId();
+    final candidate = source.copyWith(id: nextId)..validate();
+    await _validateReferences(candidate);
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
   }
 
@@ -105,12 +114,59 @@ class ItemExtendedCostRepository with RepositoryMixin {
     if (existing != null) {
       await updateItemExtendedCost(itemExtendedCost);
     } else {
+      itemExtendedCost.validate();
+      await _validateReferences(itemExtendedCost);
       await laconic.table(_table).insert([itemExtendedCost.toJson()]);
     }
   }
 
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 2147483647) {
+      throw StateError('扩展价格编号已超出 signed int32 范围');
+    }
+    return id;
+  }
+
+  Future<void> _validateReferences(ItemExtendedCostEntity entity) async {
+    await _validateItemReference('物品 0', entity.itemID0);
+    await _validateItemReference('物品 1', entity.itemID1);
+    await _validateItemReference('物品 2', entity.itemID2);
+    await _validateItemReference('物品 3', entity.itemID3);
+    await _validateItemReference('物品 4', entity.itemID4);
+    if (entity.itemPurchaseGroup != 0) {
+      final count = await laconic
+          .table('foxy.dbc_item_purchase_group')
+          .where('ID', entity.itemPurchaseGroup)
+          .count();
+      if (count == 0) {
+        throw StateError('物品购买组 ${entity.itemPurchaseGroup} 不存在');
+      }
+    }
+  }
+
+  Future<void> _validateItemReference(String label, int itemId) async {
+    if (itemId == 0) return;
+    final count = await laconic
+        .table('item_template')
+        .where('entry', itemId)
+        .count();
+    if (count == 0) {
+      throw StateError('$label 引用的物品 $itemId 不存在');
+    }
+  }
+
+  Future<bool> _isReferencedByVendors(int id) async {
+    final vendorCount = await laconic
+        .table('npc_vendor')
+        .where('ExtendedCost', id)
+        .count();
+    if (vendorCount > 0) return true;
+    final eventVendorCount = await laconic
+        .table('game_event_npc_vendor')
+        .where('ExtendedCost', id)
+        .count();
+    return eventVendorCount > 0;
   }
 
   QueryBuilder _applyFilter(

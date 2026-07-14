@@ -94,6 +94,13 @@ class DbcLocaleFields {
     label: '限制类别名称',
   );
 
+  // --- item_purchase_group ---
+  static final itemPurchaseGroupName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_item_purchase_group',
+    columnPrefix: 'Name_lang',
+    label: '物品购买组名称',
+  );
+
   // --- item_set ---
   static final itemSetName = DbcLocaleFieldDefinition(
     tableName: 'dbc_item_set',
@@ -237,6 +244,7 @@ class DbcLocaleFields {
     itemRandomPropertiesName,
     itemRandomSuffixName,
     itemLimitCategoryName,
+    itemPurchaseGroupName,
     itemSetName,
     mapMapName,
     mapMapDescription0,

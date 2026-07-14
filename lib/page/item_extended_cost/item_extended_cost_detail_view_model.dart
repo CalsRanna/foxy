@@ -44,19 +44,21 @@ class ItemExtendedCostDetailViewModel with FieldControllerMixin {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
+      var t = _collectFromControllers();
+      t.validate();
       final existed = await _repository.getItemExtendedCost(t.id);
+      final action = existed == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
       if (existed == null) {
         final id = await _repository.storeItemExtendedCost(t);
         idController.init(id);
+        t = t.copyWith(id: id);
       } else {
         await _repository.updateItemExtendedCost(t);
       }
       cost.value = t;
-      _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      _logActivity(action, t);
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('扩展价格数据已保存'));
       ShadSonner.of(context).show(toast);

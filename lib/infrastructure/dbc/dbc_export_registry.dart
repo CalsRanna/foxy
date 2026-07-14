@@ -22,6 +22,7 @@ import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_bag_family_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
@@ -152,6 +153,7 @@ class DbcExportRegistry {
     final itemDisplayInfo = getIt.get<ItemDisplayInfoRepository>();
     final itemBagFamily = getIt.get<ItemBagFamilyRepository>();
     final itemExtendedCost = getIt.get<ItemExtendedCostRepository>();
+    final itemPurchaseGroup = getIt.get<ItemPurchaseGroupRepository>();
     final itemLimitCategory = getIt.get<ItemLimitCategoryRepository>();
     final itemRandomProperties = getIt.get<ItemRandomPropertiesRepository>();
     final itemRandomSuffix = getIt.get<ItemRandomSuffixRepository>();
@@ -304,6 +306,11 @@ class DbcExportRegistry {
       'dbc_item_extended_cost': DbcExportDelegate.typed(
         load: itemExtendedCost.getItemExtendedCosts,
         count: () => itemExtendedCost.countItemExtendedCosts(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_item_purchase_group': DbcExportDelegate.typed(
+        load: itemPurchaseGroup.getItemPurchaseGroups,
+        count: () => itemPurchaseGroup.countItemPurchaseGroups(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_item_limit_category': DbcExportDelegate.typed(
