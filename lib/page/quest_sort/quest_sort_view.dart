@@ -56,9 +56,16 @@ class _QuestSortViewState extends State<QuestSortView> {
         );
       }),
     );
+    final sortNameLangFlagsInput = FoxyFormItem(
+      label: '名称语言标志',
+      child: FoxyNumberInput<int>(
+        placeholder: 'SortName_lang_Flags',
+        controller: viewModel.sortNameLangFlagsController,
+      ),
+    );
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
@@ -71,6 +78,8 @@ class _QuestSortViewState extends State<QuestSortView> {
                 children: [
                   Expanded(child: idInput),
                   Expanded(child: nameInput),
+                  Expanded(child: sortNameLangFlagsInput),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
             ],
@@ -79,12 +88,12 @@ class _QuestSortViewState extends State<QuestSortView> {
             children: [
               ShadButton(
                 onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+                child: const Text('保存'),
               ),
               const SizedBox(width: 8),
               ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
+                onPressed: viewModel.pop,
+                child: const Text('取消'),
               ),
             ],
           ),

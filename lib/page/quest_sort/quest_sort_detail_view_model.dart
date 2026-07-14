@@ -17,12 +17,16 @@ class QuestSortDetailViewModel with FieldControllerMixin {
 
   late final idController = registerController(IntFieldController());
   late final nameController = registerController(StringFieldController());
+  late final sortNameLangFlagsController = registerController(
+    IntFieldController(),
+  );
 
   final sort = signal(QuestSortEntity());
 
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      t.validate();
       final isCreate = (await _repository.getQuestSort(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeQuestSort(t);
@@ -76,6 +80,7 @@ class QuestSortDetailViewModel with FieldControllerMixin {
     return sort.value.copyWith(
       id: idController.collect(),
       sortNameLangZhCN: nameController.collect(),
+      sortNameLangFlags: sortNameLangFlagsController.collect(),
     );
   }
 
@@ -112,5 +117,6 @@ class QuestSortDetailViewModel with FieldControllerMixin {
   void _initControllers(QuestSortEntity table) {
     idController.init(table.id);
     nameController.init(table.sortNameLangZhCN);
+    sortNameLangFlagsController.init(table.sortNameLangFlags);
   }
 }
