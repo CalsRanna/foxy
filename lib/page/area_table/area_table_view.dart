@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/area_table_constants.dart';
 import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -58,38 +63,43 @@ class _AreaTableViewState extends State<AreaTableView> {
       }),
     );
     final continentIdInput = FoxyFormItem(
-      label: '大陆',
-      child: FoxyNumberInput<int>(
+      label: '地图',
+      child: FoxyEntityPicker(
         placeholder: 'ContinentID',
         controller: viewModel.continentIdController,
+        delegate: FoxyEntityPickerDelegates.map,
       ),
     );
     final parentAreaIdInput = FoxyFormItem(
       label: '父级区域',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
         placeholder: 'ParentAreaID',
         controller: viewModel.parentAreaIdController,
+        delegate: FoxyEntityPickerDelegates.areaTable,
       ),
     );
     final areaBitInput = FoxyFormItem(
-      label: '区域掩码',
+      label: '探索位索引',
       child: FoxyNumberInput<int>(
         placeholder: 'AreaBit',
         controller: viewModel.areaBitController,
       ),
     );
     final flagsInput = FoxyFormItem(
-      label: '标识',
-      child: FoxyNumberInput<int>(
+      label: '区域标志',
+      child: FoxyFlagPicker(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
+        flags: kAreaFlagOptions,
+        title: '区域标志',
       ),
     );
     final factionGroupMaskInput = FoxyFormItem(
-      label: '声望组掩码',
-      child: FoxyNumberInput<int>(
-        placeholder: 'FactionGroupMask',
+      label: '区域阵营',
+      child: FoxyIntShadSelect(
         controller: viewModel.factionGroupMaskController,
+        options: kAreaTeamOptions,
+        placeholder: const Text('FactionGroupMask'),
       ),
     );
     final explorationLevelInput = FoxyFormItem(
@@ -109,45 +119,51 @@ class _AreaTableViewState extends State<AreaTableView> {
       ),
     );
     final ambienceIdInput = FoxyFormItem(
-      label: '环境',
-      child: FoxyNumberInput<int>(
+      label: '环境声音',
+      child: FoxyEntityPicker(
         placeholder: 'AmbienceID',
         controller: viewModel.ambienceIdController,
+        delegate: FoxyEntityPickerDelegates.soundAmbience,
       ),
     );
     final zoneMusicInput = FoxyFormItem(
       label: '区域音乐',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
         placeholder: 'ZoneMusic',
         controller: viewModel.zoneMusicController,
+        delegate: FoxyEntityPickerDelegates.zoneMusic,
       ),
     );
     final introSoundInput = FoxyFormItem(
-      label: 'IntroSound',
-      child: FoxyNumberInput<int>(
+      label: '进入音乐',
+      child: FoxyEntityPicker(
         placeholder: 'IntroSound',
         controller: viewModel.introSoundController,
+        delegate: FoxyEntityPickerDelegates.zoneIntroMusic,
       ),
     );
     final soundProviderPrefInput = FoxyFormItem(
-      label: '音效偏好',
-      child: FoxyNumberInput<int>(
+      label: '声音提供器偏好',
+      child: FoxyEntityPicker(
         placeholder: 'SoundProviderPref',
         controller: viewModel.soundProviderPrefController,
+        delegate: FoxyEntityPickerDelegates.soundProviderPreferences,
       ),
     );
     final soundProviderPrefUnderwaterInput = FoxyFormItem(
-      label: '水下音效',
-      child: FoxyNumberInput<int>(
+      label: '水下声音提供器偏好',
+      child: FoxyEntityPicker(
         placeholder: 'SoundProviderPrefUnderwater',
         controller: viewModel.soundProviderPrefUnderwaterController,
+        delegate: FoxyEntityPickerDelegates.soundProviderPreferences,
       ),
     );
     final lightIdInput = FoxyFormItem(
-      label: '光线',
-      child: FoxyNumberInput<int>(
+      label: '光照',
+      child: FoxyEntityPicker(
         placeholder: 'LightID',
         controller: viewModel.lightIdController,
+        delegate: FoxyEntityPickerDelegates.light,
       ),
     );
     final minElevationInput = FoxyFormItem(
@@ -160,31 +176,35 @@ class _AreaTableViewState extends State<AreaTableView> {
 
     /// Liquid
     final liquidTypeId0Input = FoxyFormItem(
-      label: '液体类型0',
-      child: FoxyNumberInput<int>(
+      label: '水覆盖',
+      child: FoxyEntityPicker(
         placeholder: 'LiquidTypeID0',
         controller: viewModel.liquidTypeId0Controller,
+        delegate: FoxyEntityPickerDelegates.liquidType,
       ),
     );
     final liquidTypeId1Input = FoxyFormItem(
-      label: '液体类型1',
-      child: FoxyNumberInput<int>(
+      label: '海洋覆盖',
+      child: FoxyEntityPicker(
         placeholder: 'LiquidTypeID1',
         controller: viewModel.liquidTypeId1Controller,
+        delegate: FoxyEntityPickerDelegates.liquidType,
       ),
     );
     final liquidTypeId2Input = FoxyFormItem(
-      label: '液体类型2',
-      child: FoxyNumberInput<int>(
+      label: '岩浆覆盖',
+      child: FoxyEntityPicker(
         placeholder: 'LiquidTypeID2',
         controller: viewModel.liquidTypeId2Controller,
+        delegate: FoxyEntityPickerDelegates.liquidType,
       ),
     );
     final liquidTypeId3Input = FoxyFormItem(
-      label: '液体类型3',
-      child: FoxyNumberInput<int>(
+      label: '软泥覆盖',
+      child: FoxyEntityPicker(
         placeholder: 'LiquidTypeID3',
         controller: viewModel.liquidTypeId3Controller,
+        delegate: FoxyEntityPickerDelegates.liquidType,
       ),
     );
 

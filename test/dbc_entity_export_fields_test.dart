@@ -28,6 +28,8 @@ import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
+import 'package:foxy/entity/light_entity.dart';
+import 'package:foxy/entity/liquid_type_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
@@ -42,10 +44,14 @@ import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/sound_ambience_entity.dart';
+import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
+import 'package:foxy/entity/zone_intro_music_entity.dart';
+import 'package:foxy/entity/zone_music_entity.dart';
 import 'package:warcrafty/warcrafty.dart';
 
 Map<String, dynamic> _emptyEntityJson(String tableName) {
@@ -86,6 +92,8 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
     'dbc_item_set' => const ItemSetEntity().toJson(),
     'dbc_lock' => const LockEntity().toJson(),
+    'dbc_light' => const LightEntity().toJson(),
+    'dbc_liquid_type' => const LiquidTypeEntity().toJson(),
     'dbc_mail_template' => const MailTemplateEntity().toJson(),
     'dbc_map' => const MapInfoEntity().toJson(),
     'dbc_quest_faction_reward' => const QuestFactionRewardEntity().toJson(),
@@ -103,12 +111,17 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_skill_line' => SkillLineEntity.fromJson(
       _schemaDefaults(tableName),
     ).toJson(),
+    'dbc_sound_ambience' => const SoundAmbienceEntity().toJson(),
+    'dbc_sound_provider_preferences' =>
+      const SoundProviderPreferencesEntity().toJson(),
     'dbc_talent' => const TalentEntity().toJson(),
     'dbc_taxi_path' => const TaxiPathEntity().toJson(),
     'dbc_totem_category' => TotemCategoryEntity.fromJson(
       _schemaDefaults(tableName),
     ).toJson(),
     'dbc_vehicle' => const VehicleEntity().toJson(),
+    'dbc_zone_intro_music_table' => const ZoneIntroMusicEntity().toJson(),
+    'dbc_zone_music' => const ZoneMusicEntity().toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
   };
 }
@@ -178,6 +191,8 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_item_random_suffix' => ItemRandomSuffixEntity.fromJson(row).toJson(),
     'dbc_item_set' => ItemSetEntity.fromJson(row).toJson(),
     'dbc_lock' => LockEntity.fromJson(row).toJson(),
+    'dbc_light' => LightEntity.fromJson(row).toJson(),
+    'dbc_liquid_type' => LiquidTypeEntity.fromJson(row).toJson(),
     'dbc_mail_template' => MailTemplateEntity.fromJson(row).toJson(),
     'dbc_map' => MapInfoEntity.fromJson(row).toJson(),
     'dbc_quest_faction_reward' => QuestFactionRewardEntity.fromJson(
@@ -198,17 +213,23 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     ).toJson(),
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
     'dbc_skill_line' => SkillLineEntity.fromJson(row).toJson(),
+    'dbc_sound_ambience' => SoundAmbienceEntity.fromJson(row).toJson(),
+    'dbc_sound_provider_preferences' => SoundProviderPreferencesEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_talent' => TalentEntity.fromJson(row).toJson(),
     'dbc_taxi_path' => TaxiPathEntity.fromJson(row).toJson(),
     'dbc_totem_category' => TotemCategoryEntity.fromJson(row).toJson(),
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
+    'dbc_zone_intro_music_table' => ZoneIntroMusicEntity.fromJson(row).toJson(),
+    'dbc_zone_music' => ZoneMusicEntity.fromJson(row).toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
   };
 }
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(46));
+    expect(dbcDefinitions, hasLength(52));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

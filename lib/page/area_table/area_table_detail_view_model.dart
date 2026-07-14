@@ -21,7 +21,7 @@ class AreaTableDetailViewModel with FieldControllerMixin {
   late final continentIdController = registerController(IntFieldController());
   late final parentAreaIdController = registerController(IntFieldController());
   late final areaBitController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(FlagFieldController());
   late final factionGroupMaskController = registerController(
     IntFieldController(),
   );
@@ -58,6 +58,7 @@ class AreaTableDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      await _validate(t);
       final isCreate = (await _repository.getAreaTable(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeAreaTable(t);
@@ -135,6 +136,20 @@ class AreaTableDetailViewModel with FieldControllerMixin {
       liquidTypeId2: liquidTypeId2Controller.collect(),
       liquidTypeId3: liquidTypeId3Controller.collect(),
     );
+  }
+
+  Future<void> _validate(AreaTableEntity value) async {
+    value.validate();
+    if (value.parentAreaId > 0 &&
+        await _repository.getAreaTable(value.parentAreaId) == null) {
+      throw StateError('父级区域 ${value.parentAreaId} 不存在');
+    }
+    if (!await _repository.isAreaBitAvailable(
+      value.areaBit,
+      areaId: value.id,
+    )) {
+      throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
+    }
   }
 
   void _logActivity(ActivityActionType action, AreaTableEntity t) {

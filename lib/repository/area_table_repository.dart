@@ -53,7 +53,10 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<AreaTableEntity> createAreaTable() async {
-    return AreaTableEntity(id: await _getNextId());
+    return AreaTableEntity(
+      id: await _getNextId(),
+      areaBit: await _getNextAreaBit(),
+    );
   }
 
   Future<int> storeAreaTable(AreaTableEntity area) async {
@@ -80,6 +83,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var json = source.toJson();
     var nextId = await _getNextId();
     json['ID'] = nextId;
+    json['AreaBit'] = await _getNextAreaBit();
     await laconic.table(_table).insert([json]);
   }
 
@@ -107,8 +111,21 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  Future<bool> isAreaBitAvailable(int areaBit, {required int areaId}) async {
+    final count = await laconic
+        .table(_table)
+        .where('AreaBit', areaBit)
+        .where('ID', areaId, comparator: '!=')
+        .count();
+    return count == 0;
+  }
+
   Future<int> _getNextId() async {
     return nextMaxPlusOne(_table, 'ID');
+  }
+
+  Future<int> _getNextAreaBit() async {
+    return nextMaxPlusOne(_table, 'AreaBit');
   }
 
   QueryBuilder _applyFilter(

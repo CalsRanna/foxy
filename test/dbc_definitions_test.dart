@@ -35,6 +35,21 @@ void main() {
       dbcDefinitionByTable['dbc_mail_template']?.fileName,
       'MailTemplate.dbc',
     );
+    expect(
+      dbcDefinitionByTable['dbc_sound_provider_preferences']?.fileName,
+      'SoundProviderPreferences.dbc',
+    );
+    expect(
+      dbcDefinitionByTable['dbc_sound_ambience']?.fileName,
+      'SoundAmbience.dbc',
+    );
+    expect(dbcDefinitionByTable['dbc_zone_music']?.fileName, 'ZoneMusic.dbc');
+    expect(
+      dbcDefinitionByTable['dbc_zone_intro_music_table']?.fileName,
+      'ZoneIntroMusicTable.dbc',
+    );
+    expect(dbcDefinitionByTable['dbc_liquid_type']?.fileName, 'LiquidType.dbc');
+    expect(dbcDefinitionByTable['dbc_light']?.fileName, 'Light.dbc');
   });
 
   test('所有 DBC 定义都包含 ID 字段', () {
