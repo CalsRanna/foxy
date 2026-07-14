@@ -4,7 +4,6 @@
 /// SourceTypeOrReferenceId 来源类型标签
 /// 非负值对应来源类型；负值表示引用另一组条件
 const kConditionSourceTypeLabels = <int, String>{
-  0: '无', // CONDITION_SOURCE_TYPE_NONE
   1: '生物掉落', // CONDITION_SOURCE_TYPE_CREATURE_LOOT_TEMPLATE
   2: '分解掉落', // CONDITION_SOURCE_TYPE_DISENCHANT_LOOT_TEMPLATE
   3: '钓鱼掉落', // CONDITION_SOURCE_TYPE_FISHING_LOOT_TEMPLATE
@@ -29,10 +28,54 @@ const kConditionSourceTypeLabels = <int, String>{
   22: '智能事件', // CONDITION_SOURCE_TYPE_SMART_EVENT
   23: 'NPC商人', // CONDITION_SOURCE_TYPE_NPC_VENDOR
   24: '法术触发', // CONDITION_SOURCE_TYPE_SPELL_PROC
-  25: '地形切换', // CONDITION_SOURCE_TYPE_TERRAIN_SWAP (3.3.5a 不使用)
-  26: '相位', // CONDITION_SOURCE_TYPE_PHASE (3.3.5a 不使用)
-  27: '墓地', // CONDITION_SOURCE_TYPE_GRAVEYARD (3.3.5a 不使用)
   28: '玩家掉落', // CONDITION_SOURCE_TYPE_PLAYER_LOOT_TEMPLATE
   29: '生物重生', // CONDITION_SOURCE_TYPE_CREATURE_RESPAWN
   30: '对象可见性', // CONDITION_SOURCE_TYPE_OBJECT_VISIBILITY
 };
+
+const kConditionSourceTypesWithGroup = <int>{
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  18,
+  20,
+  21,
+  22,
+  23,
+  28,
+  30,
+};
+
+const kConditionSourceTypesWithSourceId = <int>{22, 30};
+
+int conditionTargetCount(int sourceTypeOrReferenceId) {
+  if (sourceTypeOrReferenceId == 22) return 3;
+  if (const {
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    20,
+    21,
+    23,
+    24,
+    30,
+  }.contains(sourceTypeOrReferenceId)) {
+    return 2;
+  }
+  return 1;
+}
