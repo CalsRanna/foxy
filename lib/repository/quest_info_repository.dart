@@ -50,29 +50,33 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
-    var json = questInfo.toJson();
-    final nextId = questInfo.id > 0 ? questInfo.id : await _getNextId();
-    json['ID'] = nextId;
+    final id = questInfo.id > 0 ? questInfo.id : await _getNextId();
+    final candidate = questInfo.copyWith(id: id)..validate();
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
-    return nextId;
+    return id;
   }
 
   Future<void> updateQuestInfo(QuestInfoEntity questInfo) async {
+    questInfo.validate();
     var json = questInfo.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questInfo.id).update(json);
   }
 
   Future<void> destroyQuestInfo(int id) async {
+    if (await _isReferencedByQuest(id)) {
+      throw StateError('任务信息 $id 仍被任务模板引用，不能删除');
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyQuestInfo(int id) async {
     var source = await getQuestInfo(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
+    final nextId = await _getNextId();
+    final candidate = source.copyWith(id: nextId)..validate();
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
   }
 
@@ -81,6 +85,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       await storeQuestInfo(questInfo);
       return;
     }
+    questInfo.validate();
     var existing = await getQuestInfo(questInfo.id);
     if (existing != null) {
       await updateQuestInfo(questInfo);
@@ -99,8 +104,21 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
+
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 65535) {
+      throw StateError('任务信息编号已超出 QuestInfoID 可引用范围');
+    }
+    return id;
+  }
+
+  Future<bool> _isReferencedByQuest(int id) async {
+    final count = await laconic
+        .table('quest_template')
+        .where('QuestInfoID', id)
+        .count();
+    return count > 0;
   }
 
   QueryBuilder _applyFilter(
