@@ -97,6 +97,8 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
   DbcDefinition(tableName: 'dbc_item_set', schema: Definitions.itemSet),
   DbcDefinition(tableName: 'dbc_lock', schema: Definitions.lock),
+  DbcDefinition(tableName: 'dbc_light', schema: Definitions.light),
+  DbcDefinition(tableName: 'dbc_liquid_type', schema: Definitions.liquidType),
   DbcDefinition(
     tableName: 'dbc_mail_template',
     schema: Definitions.mailTemplate,
@@ -132,6 +134,14 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
   DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),
+  DbcDefinition(
+    tableName: 'dbc_sound_ambience',
+    schema: Definitions.soundAmbience,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_sound_provider_preferences',
+    schema: Definitions.soundProviderPreferences,
+  ),
   DbcDefinition(tableName: 'dbc_talent', schema: Definitions.talent),
   DbcDefinition(tableName: 'dbc_taxi_path', schema: Definitions.taxiPath),
   DbcDefinition(
@@ -139,6 +149,11 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.totemCategory,
   ),
   DbcDefinition(tableName: 'dbc_vehicle', schema: Definitions.vehicle),
+  DbcDefinition(tableName: 'dbc_zone_music', schema: Definitions.zoneMusic),
+  DbcDefinition(
+    tableName: 'dbc_zone_intro_music_table',
+    schema: Definitions.zoneIntroMusicTable,
+  ),
 ]);
 
 final Map<String, DbcDefinition> dbcDefinitionByTable = Map.unmodifiable({

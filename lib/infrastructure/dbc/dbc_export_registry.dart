@@ -26,6 +26,8 @@ import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
+import 'package:foxy/repository/light_repository.dart';
+import 'package:foxy/repository/liquid_type_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -40,10 +42,14 @@ import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
+import 'package:foxy/repository/sound_ambience_repository.dart';
+import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
+import 'package:foxy/repository/zone_intro_music_repository.dart';
+import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:get_it/get_it.dart';
 
 class DbcExportCountResult {
@@ -149,6 +155,8 @@ class DbcExportRegistry {
     final itemRandomSuffix = getIt.get<ItemRandomSuffixRepository>();
     final itemSet = getIt.get<ItemSetRepository>();
     final lock = getIt.get<LockRepository>();
+    final light = getIt.get<LightRepository>();
+    final liquidType = getIt.get<LiquidTypeRepository>();
     final map = getIt.get<MapInfoRepository>();
     final mailTemplate = getIt.get<MailTemplateRepository>();
     final questFactionReward = getIt.get<QuestFactionRewardRepository>();
@@ -159,6 +167,9 @@ class DbcExportRegistry {
     final scalingValue = getIt.get<ScalingStatValueRepository>();
     final spell = getIt.get<SpellRepository>();
     final skillLine = getIt.get<SkillLineRepository>();
+    final soundAmbience = getIt.get<SoundAmbienceRepository>();
+    final soundProviderPreferences = getIt
+        .get<SoundProviderPreferencesRepository>();
     final spellDuration = getIt.get<SpellDurationRepository>();
     final spellFocusObject = getIt.get<SpellFocusObjectRepository>();
     final spellIcon = getIt.get<SpellIconRepository>();
@@ -169,6 +180,8 @@ class DbcExportRegistry {
     final taxiPath = getIt.get<TaxiPathRepository>();
     final totemCategory = getIt.get<TotemCategoryRepository>();
     final vehicle = getIt.get<VehicleRepository>();
+    final zoneIntroMusic = getIt.get<ZoneIntroMusicRepository>();
+    final zoneMusic = getIt.get<ZoneMusicRepository>();
 
     return {
       'dbc_achievement': DbcExportDelegate.typed(
@@ -311,6 +324,16 @@ class DbcExportRegistry {
         count: () => lock.countLocks(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_light': DbcExportDelegate.typed(
+        load: light.getLights,
+        count: () => light.countLights(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_liquid_type': DbcExportDelegate.typed(
+        load: liquidType.getLiquidTypes,
+        count: () => liquidType.countLiquidTypes(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_mail_template': DbcExportDelegate.typed(
         load: mailTemplate.getMailTemplates,
         count: () => mailTemplate.countMailTemplates(),
@@ -361,6 +384,16 @@ class DbcExportRegistry {
         count: () => skillLine.countSkillLines(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_sound_ambience': DbcExportDelegate.typed(
+        load: soundAmbience.getSoundAmbiences,
+        count: () => soundAmbience.countSoundAmbiences(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_sound_provider_preferences': DbcExportDelegate.typed(
+        load: soundProviderPreferences.getSoundProviderPreferences,
+        count: () => soundProviderPreferences.countSoundProviderPreferences(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_spell_duration': DbcExportDelegate.typed(
         load: spellDuration.getSpellDurations,
         count: () => spellDuration.countSpellDurations(),
@@ -399,6 +432,16 @@ class DbcExportRegistry {
       'dbc_vehicle': DbcExportDelegate.typed(
         load: vehicle.getVehicles,
         count: () => vehicle.countVehicles(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_zone_intro_music_table': DbcExportDelegate.typed(
+        load: zoneIntroMusic.getZoneIntroMusics,
+        count: () => zoneIntroMusic.countZoneIntroMusics(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_zone_music': DbcExportDelegate.typed(
+        load: zoneMusic.getZoneMusics,
+        count: () => zoneMusic.countZoneMusics(),
         toJson: (entity) => entity.toJson(),
       ),
     };

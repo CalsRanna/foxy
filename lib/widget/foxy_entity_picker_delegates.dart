@@ -62,6 +62,10 @@ import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
+import 'package:foxy/entity/light_entity.dart';
+import 'package:foxy/entity/light_filter_entity.dart';
+import 'package:foxy/entity/liquid_type_entity.dart';
+import 'package:foxy/entity/liquid_type_filter_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
@@ -92,6 +96,10 @@ import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
+import 'package:foxy/entity/sound_ambience_entity.dart';
+import 'package:foxy/entity/sound_ambience_filter_entity.dart';
+import 'package:foxy/entity/sound_provider_preferences_entity.dart';
+import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
@@ -100,6 +108,10 @@ import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
+import 'package:foxy/entity/zone_intro_music_entity.dart';
+import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
+import 'package:foxy/entity/zone_music_entity.dart';
+import 'package:foxy/entity/zone_music_filter_entity.dart';
 import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
@@ -133,6 +145,8 @@ import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
+import 'package:foxy/repository/light_repository.dart';
+import 'package:foxy/repository/liquid_type_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
@@ -148,10 +162,14 @@ import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
+import 'package:foxy/repository/sound_ambience_repository.dart';
+import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
+import 'package:foxy/repository/zone_intro_music_repository.dart';
+import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
@@ -432,6 +450,253 @@ class FoxyEntityPickerDelegates {
         ),
     count: (v) => GetIt.instance.get<AreaTableRepository>().countAreaTables(
       filter: AreaTableFilterEntity(id: v[0], name: v[1]),
+    ),
+  );
+
+  static final soundProviderPreferences =
+      FoxyEntityPickerDelegate<BriefSoundProviderPreferencesEntity>(
+        title: '声音提供器偏好',
+        errorLabel: '搜索 SoundProviderPreferences.dbc 失败',
+        filters: const [
+          FoxyEntityPickerFilter('偏好 ID'),
+          FoxyEntityPickerFilter('描述'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefSoundProviderPreferencesEntity value) =>
+                value.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '描述',
+            text: (BriefSoundProviderPreferencesEntity value) =>
+                value.description,
+          ),
+          FoxyEntityPickerColumn(
+            header: '标志',
+            width: 120,
+            text: (BriefSoundProviderPreferencesEntity value) =>
+                value.flags.toString(),
+          ),
+        ],
+        idOf: (BriefSoundProviderPreferencesEntity value) => value.id,
+        fetch: (page, values) => GetIt.instance
+            .get<SoundProviderPreferencesRepository>()
+            .getBriefSoundProviderPreferences(
+              page: page,
+              filter: SoundProviderPreferencesFilterEntity(
+                id: values[0],
+                description: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<SoundProviderPreferencesRepository>()
+            .countSoundProviderPreferences(
+              filter: SoundProviderPreferencesFilterEntity(
+                id: values[0],
+                description: values[1],
+              ),
+            ),
+      );
+
+  static final soundAmbience =
+      FoxyEntityPickerDelegate<BriefSoundAmbienceEntity>(
+        title: '环境声音',
+        errorLabel: '搜索 SoundAmbience.dbc 失败',
+        filters: const [FoxyEntityPickerFilter('环境声音 ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefSoundAmbienceEntity value) => value.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '日间声音',
+            text: (BriefSoundAmbienceEntity value) =>
+                value.ambienceId0.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '夜间声音',
+            text: (BriefSoundAmbienceEntity value) =>
+                value.ambienceId1.toString(),
+          ),
+        ],
+        idOf: (BriefSoundAmbienceEntity value) => value.id,
+        fetch: (page, values) => GetIt.instance
+            .get<SoundAmbienceRepository>()
+            .getBriefSoundAmbiences(
+              page: page,
+              filter: SoundAmbienceFilterEntity(id: values[0]),
+            ),
+        count: (values) =>
+            GetIt.instance.get<SoundAmbienceRepository>().countSoundAmbiences(
+              filter: SoundAmbienceFilterEntity(id: values[0]),
+            ),
+      );
+
+  static final zoneMusic = FoxyEntityPickerDelegate<BriefZoneMusicEntity>(
+    title: '区域音乐',
+    errorLabel: '搜索 ZoneMusic.dbc 失败',
+    filters: const [
+      FoxyEntityPickerFilter('音乐 ID'),
+      FoxyEntityPickerFilter('集合名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefZoneMusicEntity value) => value.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefZoneMusicEntity value) => value.setName,
+      ),
+      FoxyEntityPickerColumn(
+        header: '日间声音',
+        width: 120,
+        text: (BriefZoneMusicEntity value) => value.sounds0.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '夜间声音',
+        width: 120,
+        text: (BriefZoneMusicEntity value) => value.sounds1.toString(),
+      ),
+    ],
+    idOf: (BriefZoneMusicEntity value) => value.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<ZoneMusicRepository>().getBriefZoneMusics(
+          page: page,
+          filter: ZoneMusicFilterEntity(id: values[0], name: values[1]),
+        ),
+    count: (values) =>
+        GetIt.instance.get<ZoneMusicRepository>().countZoneMusics(
+          filter: ZoneMusicFilterEntity(id: values[0], name: values[1]),
+        ),
+  );
+
+  static final zoneIntroMusic =
+      FoxyEntityPickerDelegate<BriefZoneIntroMusicEntity>(
+        title: '区域进入音乐',
+        errorLabel: '搜索 ZoneIntroMusicTable.dbc 失败',
+        filters: const [
+          FoxyEntityPickerFilter('进入音乐 ID'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefZoneIntroMusicEntity value) => value.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefZoneIntroMusicEntity value) => value.name,
+          ),
+          FoxyEntityPickerColumn(
+            header: '声音 ID',
+            width: 120,
+            text: (BriefZoneIntroMusicEntity value) => value.soundId.toString(),
+          ),
+        ],
+        idOf: (BriefZoneIntroMusicEntity value) => value.id,
+        fetch: (page, values) => GetIt.instance
+            .get<ZoneIntroMusicRepository>()
+            .getBriefZoneIntroMusics(
+              page: page,
+              filter: ZoneIntroMusicFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) =>
+            GetIt.instance.get<ZoneIntroMusicRepository>().countZoneIntroMusics(
+              filter: ZoneIntroMusicFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
+
+  static final liquidType = FoxyEntityPickerDelegate<BriefLiquidTypeEntity>(
+    title: '液体类型',
+    errorLabel: '搜索 LiquidType.dbc 失败',
+    filters: const [
+      FoxyEntityPickerFilter('液体类型 ID'),
+      FoxyEntityPickerFilter('名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefLiquidTypeEntity value) => value.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefLiquidTypeEntity value) => value.name,
+      ),
+      FoxyEntityPickerColumn(
+        header: '类别',
+        width: 120,
+        text: (BriefLiquidTypeEntity value) => value.soundBank.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '法术 ID',
+        width: 120,
+        text: (BriefLiquidTypeEntity value) => value.spellId.toString(),
+      ),
+    ],
+    idOf: (BriefLiquidTypeEntity value) => value.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<LiquidTypeRepository>().getBriefLiquidTypes(
+          page: page,
+          filter: LiquidTypeFilterEntity(id: values[0], name: values[1]),
+        ),
+    count: (values) =>
+        GetIt.instance.get<LiquidTypeRepository>().countLiquidTypes(
+          filter: LiquidTypeFilterEntity(id: values[0], name: values[1]),
+        ),
+  );
+
+  static final light = FoxyEntityPickerDelegate<BriefLightEntity>(
+    title: '光照',
+    errorLabel: '搜索 Light.dbc 失败',
+    filters: const [
+      FoxyEntityPickerFilter('光照 ID'),
+      FoxyEntityPickerFilter('地图 ID'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefLightEntity value) => value.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '地图 ID',
+        width: 120,
+        text: (BriefLightEntity value) => value.continentId.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '坐标 X',
+        text: (BriefLightEntity value) => value.gameCoords0.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '坐标 Y',
+        text: (BriefLightEntity value) => value.gameCoords1.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '坐标 Z',
+        text: (BriefLightEntity value) => value.gameCoords2.toString(),
+      ),
+    ],
+    idOf: (BriefLightEntity value) => value.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<LightRepository>().getBriefLights(
+          page: page,
+          filter: LightFilterEntity(id: values[0], continentId: values[1]),
+        ),
+    count: (values) => GetIt.instance.get<LightRepository>().countLights(
+      filter: LightFilterEntity(id: values[0], continentId: values[1]),
     ),
   );
 

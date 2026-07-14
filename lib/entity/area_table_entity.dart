@@ -1,3 +1,5 @@
+import 'package:foxy/constant/area_table_constants.dart';
+
 class AreaTableEntity {
   final int id;
   final int continentId;
@@ -158,6 +160,43 @@ class AreaTableEntity {
     };
   }
 
+  void validate() {
+    if (id <= 0) throw StateError('编号必须大于 0');
+    if (continentId < 0) throw StateError('地图 ID 不能为负数');
+    if (parentAreaId < 0) throw StateError('父级区域 ID 不能为负数');
+    if (parentAreaId == id) throw StateError('父级区域不能指向自身');
+    if (areaBit < 0 || areaBit > kAreaTableMaxAreaBit) {
+      throw StateError('探索位索引必须在 0..$kAreaTableMaxAreaBit 之间');
+    }
+    if (flags < 0 || (flags & ~kAreaTableKnownFlagMask) != 0) {
+      throw StateError('区域标志包含 3.3.5a AreaTable 未定义的位');
+    }
+    if (!kAreaTeamOptions.containsKey(factionGroupMask)) {
+      throw StateError('区域阵营必须为 0、2、4 或 6');
+    }
+    if (explorationLevel < -1 || explorationLevel > 80) {
+      throw StateError('探索等级必须在 -1..80 之间');
+    }
+    if (soundProviderPref < 0) {
+      throw StateError('声音提供器偏好 ID 不能为负数');
+    }
+    if (soundProviderPrefUnderwater < 0) {
+      throw StateError('水下声音提供器偏好 ID 不能为负数');
+    }
+    if (ambienceId < 0) throw StateError('环境声音 ID 不能为负数');
+    if (zoneMusic < 0) throw StateError('区域音乐 ID 不能为负数');
+    if (introSound < 0) throw StateError('进入音乐 ID 不能为负数');
+    if (liquidTypeId0 < 0) throw StateError('水覆盖 ID 不能为负数');
+    if (liquidTypeId1 < 0) throw StateError('海洋覆盖 ID 不能为负数');
+    if (liquidTypeId2 < 0) throw StateError('岩浆覆盖 ID 不能为负数');
+    if (liquidTypeId3 < 0) throw StateError('软泥覆盖 ID 不能为负数');
+    if (lightId < 0) throw StateError('光照 ID 不能为负数');
+    if (!minElevation.isFinite) throw StateError('最低海拔必须是有限数值');
+    if (!ambientMultiplier.isFinite) {
+      throw StateError('环境系数必须是有限数值');
+    }
+  }
+
   AreaTableEntity copyWith({
     int? id,
     int? continentId,
@@ -260,7 +299,7 @@ class BriefAreaTableEntity {
       id: json['ID'] ?? 0,
       areaNameLangZhCN: json['AreaName_lang_zhCN'] ?? '',
       continentId: json['ContinentID'] ?? 0,
-      minElevation: json['MinElevation'] ?? 0.0,
+      minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
       zoneMusic: json['ZoneMusic'] ?? 0,
       explorationLevel: json['ExplorationLevel'] ?? 0,
     );
