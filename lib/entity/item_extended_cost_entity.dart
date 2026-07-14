@@ -38,10 +38,10 @@ class ItemExtendedCostEntity {
 
   factory ItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
     return ItemExtendedCostEntity(
-      id: json['ID'] ?? json['id'] ?? 0,
-      honorPoints: json['HonorPoints'] ?? json['honorPoints'] ?? 0,
-      arenaPoints: json['ArenaPoints'] ?? json['arenaPoints'] ?? 0,
-      arenaBracket: json['ArenaBracket'] ?? json['arenaBracket'] ?? 0,
+      id: json['ID'] ?? 0,
+      honorPoints: json['HonorPoints'] ?? 0,
+      arenaPoints: json['ArenaPoints'] ?? 0,
+      arenaBracket: json['ArenaBracket'] ?? 0,
       itemID0: json['ItemID0'] ?? 0,
       itemID1: json['ItemID1'] ?? 0,
       itemID2: json['ItemID2'] ?? 0,
@@ -78,16 +78,20 @@ class ItemExtendedCostEntity {
     };
   }
 
-  String get displayItems {
-    final ids = [itemID0, itemID1, itemID2, itemID3, itemID4];
-    final counts = [itemCount0, itemCount1, itemCount2, itemCount3, itemCount4];
-    final parts = <String>[];
-    for (var i = 0; i < 5; i++) {
-      if (ids[i] != 0) {
-        parts.add('${ids[i]}x${counts[i]}');
-      }
+  void validate() {
+    _requirePositiveInt32('编号', id);
+    _requireUnsignedInt32('荣誉点数', honorPoints);
+    _requireUnsignedInt32('竞技场点数', arenaPoints);
+    if (arenaBracket < 0 || arenaBracket > 2) {
+      throw StateError('最低竞技场槽位必须是 0、1 或 2');
     }
-    return parts.isEmpty ? '-' : parts.join(', ');
+    _validateItemRequirement('物品 0', itemID0, itemCount0);
+    _validateItemRequirement('物品 1', itemID1, itemCount1);
+    _validateItemRequirement('物品 2', itemID2, itemCount2);
+    _validateItemRequirement('物品 3', itemID3, itemCount3);
+    _validateItemRequirement('物品 4', itemID4, itemCount4);
+    _requireUnsignedInt32('所需个人竞技场评级', requiredArenaRating);
+    _requireUnsignedInt32('物品购买组', itemPurchaseGroup);
   }
 
   ItemExtendedCostEntity copyWith({
@@ -165,10 +169,10 @@ class BriefItemExtendedCostEntity {
 
   factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
     return BriefItemExtendedCostEntity(
-      id: json['ID'] ?? json['id'] ?? 0,
-      honorPoints: json['HonorPoints'] ?? json['honorPoints'] ?? 0,
-      arenaPoints: json['ArenaPoints'] ?? json['arenaPoints'] ?? 0,
-      arenaBracket: json['ArenaBracket'] ?? json['arenaBracket'] ?? 0,
+      id: json['ID'] ?? 0,
+      honorPoints: json['HonorPoints'] ?? 0,
+      arenaPoints: json['ArenaPoints'] ?? 0,
+      arenaBracket: json['ArenaBracket'] ?? 0,
       itemID0: json['ItemID0'] ?? 0,
       itemID1: json['ItemID1'] ?? 0,
       itemID2: json['ItemID2'] ?? 0,
@@ -202,15 +206,13 @@ class BriefItemExtendedCostEntity {
   }
 
   String get displayItems {
-    final ids = [itemID0, itemID1, itemID2, itemID3, itemID4];
-    final counts = [itemCount0, itemCount1, itemCount2, itemCount3, itemCount4];
-    final parts = <String>[];
-    for (var i = 0; i < 5; i++) {
-      if (ids[i] != 0) {
-        parts.add('${ids[i]}x${counts[i]}');
-      }
-    }
-    return parts.isEmpty ? '-' : parts.join(', ');
+    var result = '';
+    result = _appendDisplayItem(result, itemID0, itemCount0);
+    result = _appendDisplayItem(result, itemID1, itemCount1);
+    result = _appendDisplayItem(result, itemID2, itemCount2);
+    result = _appendDisplayItem(result, itemID3, itemCount3);
+    result = _appendDisplayItem(result, itemID4, itemCount4);
+    return result.isEmpty ? '-' : result;
   }
 
   BriefItemExtendedCostEntity copyWith({
@@ -246,4 +248,30 @@ class BriefItemExtendedCostEntity {
       itemCount4: itemCount4 ?? this.itemCount4,
     );
   }
+}
+
+void _requirePositiveInt32(String label, int value) {
+  if (value <= 0 || value > 2147483647) {
+    throw StateError('$label必须在 1..2147483647 之间');
+  }
+}
+
+void _requireUnsignedInt32(String label, int value) {
+  if (value < 0 || value > 2147483647) {
+    throw StateError('$label必须在 0..2147483647 之间');
+  }
+}
+
+void _validateItemRequirement(String label, int itemId, int count) {
+  _requireUnsignedInt32('$label ID', itemId);
+  _requireUnsignedInt32('$label数量', count);
+  if (itemId != 0 && count == 0) {
+    throw StateError('$label设置了 ID 时数量必须大于 0');
+  }
+}
+
+String _appendDisplayItem(String current, int itemId, int count) {
+  if (itemId == 0) return current;
+  final value = '${itemId}x$count';
+  return current.isEmpty ? value : '$current, $value';
 }

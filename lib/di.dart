@@ -146,6 +146,7 @@ import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_bag_family_repository.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
@@ -279,6 +280,7 @@ class DI {
     _instance.registerLazySingleton(() => ItemBagFamilyRepository());
     _instance.registerLazySingleton(() => ItemEnchantmentTemplateRepository());
     _instance.registerLazySingleton(() => ItemExtendedCostRepository());
+    _instance.registerLazySingleton(() => ItemPurchaseGroupRepository());
     _instance.registerLazySingleton(() => ItemLimitCategoryRepository());
     _instance.registerLazySingleton(() => ItemRandomPropertiesRepository());
     _instance.registerLazySingleton(() => ItemRandomSuffixRepository());

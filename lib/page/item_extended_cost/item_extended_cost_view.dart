@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/item_extended_cost_constants.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -55,10 +59,11 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       ),
     );
     final arenaBracketInput = FoxyFormItem(
-      label: '竞技场等级',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ArenaBracket',
+      label: '最低竞技场槽位',
+      child: FoxyIntShadSelect(
         controller: viewModel.arenaBracketController,
+        options: kItemExtendedCostArenaSlotOptions,
+        placeholder: const Text('ArenaBracket'),
       ),
     );
 
@@ -71,19 +76,21 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
       ),
     );
     final itemPurchaseGroupInput = FoxyFormItem(
-      label: '购买组',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemPurchaseGroup',
+      label: '物品购买组',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemPurchaseGroup,
         controller: viewModel.itemPurchaseGroupController,
+        placeholder: 'ItemPurchaseGroup',
       ),
     );
 
     /// ItemID + ItemCount
     final itemID0Input = FoxyFormItem(
       label: '物品 ID 0',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemID0',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemID0Controller,
+        placeholder: 'ItemID0',
       ),
     );
     final itemCount0Input = FoxyFormItem(
@@ -95,9 +102,10 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
     final itemID1Input = FoxyFormItem(
       label: '物品 ID 1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemID1',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemID1Controller,
+        placeholder: 'ItemID1',
       ),
     );
     final itemCount1Input = FoxyFormItem(
@@ -109,9 +117,10 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
     final itemID2Input = FoxyFormItem(
       label: '物品 ID 2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemID2',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemID2Controller,
+        placeholder: 'ItemID2',
       ),
     );
     final itemCount2Input = FoxyFormItem(
@@ -123,9 +132,10 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
     final itemID3Input = FoxyFormItem(
       label: '物品 ID 3',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemID3',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemID3Controller,
+        placeholder: 'ItemID3',
       ),
     );
     final itemCount3Input = FoxyFormItem(
@@ -137,9 +147,10 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
     );
     final itemID4Input = FoxyFormItem(
       label: '物品 ID 4',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemID4',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
         controller: viewModel.itemID4Controller,
+        placeholder: 'ItemID4',
       ),
     );
     final itemCount4Input = FoxyFormItem(
@@ -170,11 +181,6 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         children: [
           Expanded(child: itemID0Input),
           Expanded(child: itemCount0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
           Expanded(child: itemID1Input),
           Expanded(child: itemCount1Input),
         ],
@@ -184,11 +190,6 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         children: [
           Expanded(child: itemID2Input),
           Expanded(child: itemCount2Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
           Expanded(child: itemID3Input),
           Expanded(child: itemCount3Input),
         ],
@@ -198,6 +199,8 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         children: [
           Expanded(child: itemID4Input),
           Expanded(child: itemCount4Input),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
@@ -209,6 +212,8 @@ class _ItemExtendedCostViewState extends State<ItemExtendedCostView> {
         children: [
           Expanded(child: requiredArenaRatingInput),
           Expanded(child: itemPurchaseGroupInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];

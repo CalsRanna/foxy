@@ -24,6 +24,7 @@ import 'package:foxy/entity/holiday_entity.dart';
 import 'package:foxy/entity/item_bag_family_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
+import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
@@ -87,6 +88,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
       _schemaDefaults(tableName),
     ).toJson(),
     'dbc_item_extended_cost' => const ItemExtendedCostEntity().toJson(),
+    'dbc_item_purchase_group' => const ItemPurchaseGroupEntity().toJson(),
     'dbc_item_limit_category' => ItemLimitCategoryEntity.fromJson(
       _schemaDefaults(tableName),
     ).toJson(),
@@ -187,6 +189,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_item' => DbcItemEntity.fromJson(row).toJson(),
     'dbc_item_bag_family' => ItemBagFamilyEntity.fromJson(row).toJson(),
     'dbc_item_extended_cost' => ItemExtendedCostEntity.fromJson(row).toJson(),
+    'dbc_item_purchase_group' => ItemPurchaseGroupEntity.fromJson(row).toJson(),
     'dbc_item_limit_category' => ItemLimitCategoryEntity.fromJson(row).toJson(),
     'dbc_item_random_properties' => ItemRandomPropertiesEntity.fromJson(
       row,
@@ -232,7 +235,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(53));
+    expect(dbcDefinitions, hasLength(54));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

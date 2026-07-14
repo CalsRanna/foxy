@@ -52,6 +52,8 @@ import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/item_purchase_group_entity.dart';
+import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
@@ -142,6 +144,7 @@ import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
@@ -1809,6 +1812,46 @@ class FoxyEntityPickerDelegates {
             .get<ItemExtendedCostRepository>()
             .countItemExtendedCosts(
               filter: ItemExtendedCostFilterEntity(id: v[0]),
+            ),
+      );
+
+  static final itemPurchaseGroup =
+      FoxyEntityPickerDelegate<BriefItemPurchaseGroupEntity>(
+        title: '选择物品购买组',
+        errorLabel: '搜索物品购买组失败',
+        emptyText: '暂无数据',
+        filters: const [
+          FoxyEntityPickerFilter('编号'),
+          FoxyEntityPickerFilter('名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefItemPurchaseGroupEntity group) => group.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefItemPurchaseGroupEntity group) => group.nameLangZhCN,
+          ),
+        ],
+        idOf: (BriefItemPurchaseGroupEntity group) => group.id,
+        fetch: (page, values) => GetIt.instance
+            .get<ItemPurchaseGroupRepository>()
+            .getBriefItemPurchaseGroups(
+              page: page,
+              filter: ItemPurchaseGroupFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<ItemPurchaseGroupRepository>()
+            .countItemPurchaseGroups(
+              filter: ItemPurchaseGroupFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
             ),
       );
 
