@@ -1,15 +1,21 @@
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 
 class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
   static const _table = 'playercreateinfo_spell_custom';
 
   Future<List<PlayerCreateInfoSpellCustomEntity>>
-  getBriefPlayerCreateInfoSpellCustoms(int racemask, int classmask) async {
+  getBriefPlayerCreateInfoSpellCustoms(int race, int playerClass) async {
+    final raceBit = playerCreateRaceBit(race);
+    final classBit = playerCreateClassBit(playerClass);
     var results = await laconic
         .table(_table)
-        .where('racemask', racemask)
-        .where('classmask', classmask)
+        .whereRaw('(racemask = 0 OR (racemask & ?) <> 0)', [raceBit])
+        .whereRaw('(classmask = 0 OR (classmask & ?) <> 0)', [classBit])
+        .orderBy('racemask')
+        .orderBy('classmask')
+        .orderBy('Spell')
         .get();
     return results
         .map((e) => PlayerCreateInfoSpellCustomEntity.fromJson(e.toMap()))
@@ -45,6 +51,7 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomEntity spell,
   ) async {
+    spell.validate();
     await laconic.table(_table).insert([spell.toJson()]);
   }
 
@@ -54,6 +61,7 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
     int spell,
     PlayerCreateInfoSpellCustomEntity entity,
   ) async {
+    entity.validate();
     var json = entity.toJson();
     json.remove('racemask');
     json.remove('classmask');
@@ -84,15 +92,7 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
     int classmask,
     int spell,
   ) async {
-    var source = await getPlayerCreateInfoSpellCustom(
-      racemask,
-      classmask,
-      spell,
-    );
-    if (source == null) return;
-    var json = source.toJson();
-    json['Spell'] = spell + 1;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('法术 ID 是复合主键的一部分，请新增并选择有效法术。');
   }
 
   Future<void> savePlayerCreateInfoSpellCustom(

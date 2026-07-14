@@ -5,6 +5,8 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -44,7 +46,10 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
         children: [
           Row(
             children: [
-              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+              ShadButton(
+                onPressed: widget.race == null ? null : _showCreateDialog,
+                child: Text('新增'),
+              ),
             ],
           ),
           Watch((_) => _buildTable()),
@@ -57,25 +62,30 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
     final items = viewModel.items.value;
     return LayoutBuilder(
       builder: (context, constraints) {
-        var flexWidth = constraints.maxWidth - 240;
+        var flexWidth = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.itemid.toString())),
-              1 => ShadTableCell(child: Text(item.amount.toString())),
-              2 => ShadTableCell(child: Text(item.note)),
+              0 => ShadTableCell(child: Text(item.race.toString())),
+              1 => ShadTableCell(child: Text(item.class_.toString())),
+              2 => ShadTableCell(child: Text(item.itemid.toString())),
+              3 => ShadTableCell(child: Text(item.amount.toString())),
+              4 => ShadTableCell(child: Text(item.note)),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
-          columnCount: 3,
+          columnCount: 5,
           columnSpanExtent: (index) => switch (index) {
             0 => FixedTableSpanExtent(120),
             1 => FixedTableSpanExtent(120),
+            2 => FixedTableSpanExtent(120),
+            3 => FixedTableSpanExtent(120),
             _ => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
           },
-          header: (context, index) =>
-              ShadTableCell.header(child: Text(['物品ID', '数量', '备注'][index])),
+          header: (context, index) => ShadTableCell.header(
+            child: Text(['种族', '职业', '物品ID', '数量', '备注'][index]),
+          ),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -103,31 +113,44 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
       builder: (c) => ShadDialog(
         title: Text('新增起始物品'),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400),
+          constraints: BoxConstraints(maxWidth: 960),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              FoxyFormItem(
-                label: '物品ID',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'itemid',
-                  controller: viewModel.itemIdController,
-                ),
-              ),
-              FoxyFormItem(
-                label: '数量',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'amount',
-                  controller: viewModel.amountController,
-                ),
-              ),
-              FoxyFormItem(
-                label: '备注',
-                child: FoxyStringInput(
-                  controller: viewModel.noteController,
-                  placeholder: 'Note',
-                ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '物品ID',
+                      child: FoxyEntityPicker(
+                        placeholder: 'itemid',
+                        controller: viewModel.itemIdController,
+                        delegate: FoxyEntityPickerDelegates.itemTemplate,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '数量',
+                      child: FoxyNumberInput<int>(
+                        placeholder: 'amount',
+                        controller: viewModel.amountController,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '备注',
+                      child: FoxyStringInput(
+                        controller: viewModel.noteController,
+                        placeholder: 'Note',
+                      ),
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

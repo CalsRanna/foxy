@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -49,7 +52,10 @@ class _PlayerCreateInfoSpellCustomViewState
         children: [
           Row(
             children: [
-              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+              ShadButton(
+                onPressed: widget.race == null ? null : _showCreateDialog,
+                child: Text('新增'),
+              ),
             ],
           ),
           Watch((_) => _buildTable()),
@@ -111,38 +117,54 @@ class _PlayerCreateInfoSpellCustomViewState
       builder: (c) => ShadDialog(
         title: Text('新增自定义法术'),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400),
+          constraints: BoxConstraints(maxWidth: 960),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 16,
             children: [
-              FoxyFormItem(
-                label: '种族掩码',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'racemask',
-                  controller: viewModel.racemaskController,
-                ),
-              ),
-              FoxyFormItem(
-                label: '职业掩码',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'classmask',
-                  controller: viewModel.classmaskController,
-                ),
-              ),
-              FoxyFormItem(
-                label: '法术',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'spell',
-                  controller: viewModel.spellController,
-                ),
-              ),
-              FoxyFormItem(
-                label: '备注',
-                child: FoxyStringInput(
-                  controller: viewModel.noteController,
-                  placeholder: 'note',
-                ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '种族掩码',
+                      child: FoxyFlagPicker(
+                        controller: viewModel.racemaskController,
+                        flags: kPlayerCreateRaceMaskFlags,
+                        title: '种族掩码',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '职业掩码',
+                      child: FoxyFlagPicker(
+                        controller: viewModel.classmaskController,
+                        flags: kPlayerCreateClassMaskFlags,
+                        title: '职业掩码',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '法术',
+                      child: FoxyEntityPicker(
+                        placeholder: 'Spell',
+                        controller: viewModel.spellController,
+                        delegate: FoxyEntityPickerDelegates.spell,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: FoxyFormItem(
+                      label: '备注',
+                      child: FoxyStringInput(
+                        controller: viewModel.noteController,
+                        placeholder: 'Note',
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

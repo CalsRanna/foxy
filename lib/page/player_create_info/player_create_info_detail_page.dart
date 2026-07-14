@@ -4,6 +4,8 @@ import 'package:foxy/page/player_create_info/player_create_info_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view.dart';
+import 'package:foxy/page/player_create_info/player_create_info_skill_view.dart';
+import 'package:foxy/page/player_create_info/player_create_info_cast_spell_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 
 @RoutePage()
@@ -40,7 +42,14 @@ class _PlayerCreateInfoDetailPageState
           ),
         ),
         FoxyTab(
-          tabs: [Text('出生信息'), Text('动作按钮'), Text('起始物品'), Text('自定义法术')],
+          tabs: [
+            Text('出生信息'),
+            Text('动作按钮'),
+            Text('起始物品'),
+            Text('初始技能'),
+            Text('自定义法术'),
+            Text('登录施法'),
+          ],
           contents: [
             PlayerCreateInfoView(
               race: widget.race,
@@ -54,7 +63,15 @@ class _PlayerCreateInfoDetailPageState
               race: widget.race,
               playerClass: widget.playerClass,
             ),
+            PlayerCreateInfoSkillView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
             PlayerCreateInfoSpellCustomView(
+              race: widget.race,
+              playerClass: widget.playerClass,
+            ),
+            PlayerCreateInfoCastSpellView(
               race: widget.race,
               playerClass: widget.playerClass,
             ),

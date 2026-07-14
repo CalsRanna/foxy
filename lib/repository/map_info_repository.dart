@@ -14,6 +14,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
     int page = 1,
     MapInfoFilterEntity? filter,
+    bool nonInstanceableOnly = false,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -24,6 +25,9 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'PVP',
     ]);
     builder = _applyFilter(builder, filter);
+    if (nonInstanceableOnly) {
+      builder = builder.whereNotIn('InstanceType', [1, 2, 3, 4]);
+    }
     builder = builder.orderBy('ID');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
@@ -35,9 +39,15 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> countMapInfos({MapInfoFilterEntity? filter}) async {
+  Future<int> countMapInfos({
+    MapInfoFilterEntity? filter,
+    bool nonInstanceableOnly = false,
+  }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
+    if (nonInstanceableOnly) {
+      builder = builder.whereNotIn('InstanceType', [1, 2, 3, 4]);
+    }
     return builder.count();
   }
 

@@ -50,6 +50,7 @@ class PlayerCreateInfoItemViewModel with FieldControllerMixin {
         amount: amountController.collect(),
         note: noteController.collect(),
       );
+      item.validate();
       await _repository.storePlayerCreateInfoItem(item);
       items.value = await _repository.getBriefPlayerCreateInfoItems(
         _race!,

@@ -53,9 +53,11 @@ import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/page/page_text/page_text_list_view_model.dart';
 import 'package:foxy/page/page_text/page_text_locale_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_cast_spell_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_list_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_skill_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view_model.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view_model.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view_model.dart';
@@ -159,8 +161,10 @@ import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/repository/point_of_interest_repository.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
+import 'package:foxy/repository/player_create_info_cast_spell_repository.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
+import 'package:foxy/repository/player_create_info_skill_repository.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -284,10 +288,14 @@ class DI {
     _instance.registerLazySingleton(() => PointOfInterestRepository());
     _instance.registerLazySingleton(() => PlayerCreateInfoRepository());
     _instance.registerLazySingleton(() => PlayerCreateInfoActionRepository());
+    _instance.registerLazySingleton(
+      () => PlayerCreateInfoCastSpellRepository(),
+    );
     _instance.registerLazySingleton(() => PlayerCreateInfoItemRepository());
     _instance.registerLazySingleton(
       () => PlayerCreateInfoSpellCustomRepository(),
     );
+    _instance.registerLazySingleton(() => PlayerCreateInfoSkillRepository());
     _instance.registerLazySingleton(() => QuestFactionRewardRepository());
     _instance.registerLazySingleton(() => QuestInfoRepository());
     _instance.registerLazySingleton(() => QuestOfferRewardLocaleRepository());
@@ -398,8 +406,10 @@ class DI {
     _instance.registerFactory(() => PlayerCreateInfoListViewModel());
     _instance.registerFactory(() => PlayerCreateInfoDetailViewModel());
     _instance.registerFactory(() => PlayerCreateInfoActionViewModel());
+    _instance.registerFactory(() => PlayerCreateInfoCastSpellViewModel());
     _instance.registerFactory(() => PlayerCreateInfoItemViewModel());
     _instance.registerFactory(() => PlayerCreateInfoSpellCustomViewModel());
+    _instance.registerFactory(() => PlayerCreateInfoSkillViewModel());
     _instance.registerFactory(() => AreaTableListViewModel());
     _instance.registerFactory(() => AreaTableDetailViewModel());
     _instance.registerFactory(() => EmoteTextListViewModel());

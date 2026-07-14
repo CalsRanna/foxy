@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -44,7 +48,10 @@ class _PlayerCreateInfoActionViewState
         children: [
           Row(
             children: [
-              ShadButton(onPressed: _showCreateDialog, child: Text('新增')),
+              ShadButton(
+                onPressed: widget.race == null ? null : _showCreateDialog,
+                child: Text('新增'),
+              ),
             ],
           ),
           Watch((_) => _buildTable()),
@@ -123,31 +130,42 @@ class _PlayerCreateInfoActionViewState
     return ShadDialog(
       title: Text(isEditing ? '编辑动作' : '新增动作'),
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 400),
+        constraints: BoxConstraints(maxWidth: 960),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
-            FoxyFormItem(
-              label: '按钮',
-              child: FoxyNumberInput<int>(
-                placeholder: 'button',
-                controller: viewModel.buttonController,
-              ),
-            ),
-            FoxyFormItem(
-              label: '动作',
-              child: FoxyNumberInput<int>(
-                placeholder: 'action',
-                controller: viewModel.actionController,
-              ),
-            ),
-            FoxyFormItem(
-              label: '类型',
-              child: FoxyNumberInput<int>(
-                placeholder: 'type',
-                controller: viewModel.typeController,
-              ),
+            Row(
+              spacing: 8,
+              children: [
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '按钮',
+                    child: FoxyNumberInput<int>(
+                      placeholder: 'button (0..143)',
+                      controller: viewModel.buttonController,
+                      readOnly: isEditing,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '动作',
+                    child: Watch((_) => _buildActionInput()),
+                  ),
+                ),
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '类型',
+                    child: FoxyIntShadSelect(
+                      controller: viewModel.typeController,
+                      options: kPlayerActionButtonTypeOptions,
+                      placeholder: const Text('type'),
+                    ),
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -175,5 +193,24 @@ class _PlayerCreateInfoActionViewState
         ),
       ),
     );
+  }
+
+  Widget _buildActionInput() {
+    return switch (viewModel.actionType.value) {
+      0 => FoxyEntityPicker(
+        controller: viewModel.actionController,
+        delegate: FoxyEntityPickerDelegates.spell,
+        placeholder: 'action (Spell.dbc)',
+      ),
+      128 => FoxyEntityPicker(
+        controller: viewModel.actionController,
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
+        placeholder: 'action (item_template)',
+      ),
+      _ => FoxyNumberInput<int>(
+        placeholder: 'action (0..16777215)',
+        controller: viewModel.actionController,
+      ),
+    };
   }
 }
