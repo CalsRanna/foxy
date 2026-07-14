@@ -29,6 +29,10 @@ void main() {
     expect(dbcDefinitionByFileName['spell.dbc'], same(spell));
     expect(spell.qualifiedTableName, 'foxy.dbc_spell');
     expect(dbcDefinitionByTable['dbc_emotes']?.fileName, 'Emotes.dbc');
+    expect(
+      dbcDefinitionByTable['dbc_emotes_text_data']?.fileName,
+      'EmotesTextData.dbc',
+    );
     expect(dbcDefinitionByTable['dbc_item']?.fileName, 'Item.dbc');
     expect(dbcDefinitionByTable['dbc_skill_line']?.fileName, 'SkillLine.dbc');
     expect(

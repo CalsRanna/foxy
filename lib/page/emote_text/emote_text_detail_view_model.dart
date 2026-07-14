@@ -37,41 +37,23 @@ class EmoteTextDetailViewModel with FieldControllerMixin {
   late final emoteText14Controller = registerController(IntFieldController());
   late final emoteText15Controller = registerController(IntFieldController());
 
-  IntFieldController emoteTextController(int i) => switch (i) {
-    0 => emoteText0Controller,
-    1 => emoteText1Controller,
-    2 => emoteText2Controller,
-    3 => emoteText3Controller,
-    4 => emoteText4Controller,
-    5 => emoteText5Controller,
-    6 => emoteText6Controller,
-    7 => emoteText7Controller,
-    8 => emoteText8Controller,
-    9 => emoteText9Controller,
-    10 => emoteText10Controller,
-    11 => emoteText11Controller,
-    12 => emoteText12Controller,
-    13 => emoteText13Controller,
-    14 => emoteText14Controller,
-    15 => emoteText15Controller,
-    _ => emoteText0Controller,
-  };
-
   final emote = signal(EmoteTextEntity());
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      final existed = await _repository.getEmoteText(t.id);
-      if (existed == null) {
+      var t = _collectFromControllers();
+      t.validate();
+      final isCreate = await _repository.getEmoteText(t.id) == null;
+      if (isCreate) {
         final id = await _repository.storeEmoteText(t);
+        t = t.copyWith(id: id);
         idController.init(id);
       } else {
         await _repository.updateEmoteText(t);
       }
       emote.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;

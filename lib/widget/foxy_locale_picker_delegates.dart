@@ -11,6 +11,7 @@ import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
@@ -340,6 +341,14 @@ class FoxyLocalePickerDelegates {
     () => GetIt.instance.get<DbcFactionRepository>(),
     (repo, id, field) => repo.getDbcFactionLocales(id, field),
     (repo, id, field, values) => repo.saveDbcFactionLocales(id, field, values),
+  );
+
+  static final dbcEmotesTextDataText = _dbc(
+    DbcLocaleFields.emotesTextDataText,
+    () => GetIt.instance.get<EmoteTextDataRepository>(),
+    (repo, id, field) => repo.getEmoteTextDataLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveEmoteTextDataLocales(id, field, values),
   );
 
   static final dbcMailTemplateSubject = _dbc(

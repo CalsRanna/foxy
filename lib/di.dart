@@ -126,6 +126,7 @@ import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
@@ -258,6 +259,7 @@ class DI {
     _instance.registerLazySingleton(() => DbcFactionTemplateRepository());
     _instance.registerLazySingleton(() => DbcEmoteRepository());
     _instance.registerLazySingleton(() => DbcItemRepository());
+    _instance.registerLazySingleton(() => EmoteTextDataRepository());
     _instance.registerLazySingleton(() => EmoteTextRepository());
     _instance.registerLazySingleton(() => FeatureRepository());
     _instance.registerLazySingleton(() => GameObjectArtKitRepository());
