@@ -58,6 +58,14 @@ class DbcLocaleFields {
     multiline: true,
   );
 
+  // --- emotes_text_data ---
+  static final emotesTextDataText = DbcLocaleFieldDefinition(
+    tableName: 'dbc_emotes_text_data',
+    columnPrefix: 'Text_lang',
+    label: '表情文本',
+    multiline: true,
+  );
+
   // --- item_random_properties ---
   static final itemRandomPropertiesName = DbcLocaleFieldDefinition(
     tableName: 'dbc_item_random_properties',
@@ -224,6 +232,7 @@ class DbcLocaleFields {
     charTitlesName1,
     factionName,
     factionDescription,
+    emotesTextDataText,
     itemBagFamilyName,
     itemRandomPropertiesName,
     itemRandomSuffixName,

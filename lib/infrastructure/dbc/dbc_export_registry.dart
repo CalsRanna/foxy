@@ -12,6 +12,7 @@ import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/game_object_art_kit_repository.dart';
@@ -141,6 +142,7 @@ class DbcExportRegistry {
     final factionTemplate = getIt.get<DbcFactionTemplateRepository>();
     final emote = getIt.get<DbcEmoteRepository>();
     final dbcItem = getIt.get<DbcItemRepository>();
+    final emoteTextData = getIt.get<EmoteTextDataRepository>();
     final emoteText = getIt.get<EmoteTextRepository>();
     final gemProperty = getIt.get<GemPropertyRepository>();
     final gameObjectArtKit = getIt.get<GameObjectArtKitRepository>();
@@ -237,6 +239,11 @@ class DbcExportRegistry {
       'dbc_emotes_text': DbcExportDelegate.typed(
         load: emoteText.getEmoteTexts,
         count: () => emoteText.countEmoteTexts(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_emotes_text_data': DbcExportDelegate.typed(
+        load: emoteTextData.getEmoteTextDatas,
+        count: () => emoteTextData.countEmoteTextDatas(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_emotes': DbcExportDelegate.typed(

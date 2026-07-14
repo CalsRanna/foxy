@@ -26,6 +26,8 @@ import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/entity/emote_text_data_entity.dart';
+import 'package:foxy/entity/emote_text_data_filter_entity.dart';
 import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_emote_filter_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
@@ -127,6 +129,7 @@ import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/destructible_model_data_repository.dart';
@@ -314,6 +317,38 @@ class FoxyEntityPickerDelegates {
       filter: DbcEmoteFilterEntity(id: v[0], command: v[1]),
     ),
   );
+
+  static final emoteTextData =
+      FoxyEntityPickerDelegate<BriefEmoteTextDataEntity>(
+        title: '表情文本内容',
+        errorLabel: '搜索表情文本内容失败',
+        filters: const [
+          FoxyEntityPickerFilter('文本 ID'),
+          FoxyEntityPickerFilter('文本内容'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefEmoteTextDataEntity t) => t.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '文本',
+            text: (BriefEmoteTextDataEntity t) => t.textLangZhCN,
+          ),
+        ],
+        idOf: (BriefEmoteTextDataEntity t) => t.id,
+        fetch: (page, v) => GetIt.instance
+            .get<EmoteTextDataRepository>()
+            .getBriefEmoteTextDatas(
+              page: page,
+              filter: EmoteTextDataFilterEntity(id: v[0], text: v[1]),
+            ),
+        count: (v) =>
+            GetIt.instance.get<EmoteTextDataRepository>().countEmoteTextDatas(
+              filter: EmoteTextDataFilterEntity(id: v[0], text: v[1]),
+            ),
+      );
 
   static final skillLine = FoxyEntityPickerDelegate<BriefSkillLineEntity>(
     title: '技能线',

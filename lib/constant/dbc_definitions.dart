@@ -47,6 +47,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.destructibleModelData,
   ),
   DbcDefinition(tableName: 'dbc_emotes_text', schema: Definitions.emotesText),
+  DbcDefinition(
+    tableName: 'dbc_emotes_text_data',
+    schema: Definitions.emotesTextData,
+  ),
   DbcDefinition(tableName: 'dbc_emotes', schema: Definitions.emotes),
   DbcDefinition(tableName: 'dbc_faction', schema: Definitions.faction),
   DbcDefinition(

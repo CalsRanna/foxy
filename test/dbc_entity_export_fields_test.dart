@@ -15,6 +15,7 @@ import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
@@ -68,6 +69,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_destructible_model_data' =>
       const DestructibleModelDataEntity().toJson(),
     'dbc_emotes_text' => const EmoteTextEntity().toJson(),
+    'dbc_emotes_text_data' => const EmoteTextDataEntity().toJson(),
     'dbc_emotes' => const DbcEmoteEntity().toJson(),
     'dbc_faction' => const DbcFactionEntity().toJson(),
     'dbc_faction_template' => const DbcFactionTemplateEntity().toJson(),
@@ -170,6 +172,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
       row,
     ).toJson(),
     'dbc_emotes_text' => EmoteTextEntity.fromJson(row).toJson(),
+    'dbc_emotes_text_data' => EmoteTextDataEntity.fromJson(row).toJson(),
     'dbc_emotes' => DbcEmoteEntity.fromJson(row).toJson(),
     'dbc_faction' => DbcFactionEntity.fromJson(row).toJson(),
     'dbc_faction_template' => DbcFactionTemplateEntity.fromJson(row).toJson(),
@@ -229,7 +232,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(52));
+    expect(dbcDefinitions, hasLength(53));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);
