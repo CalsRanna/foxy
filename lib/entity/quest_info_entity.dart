@@ -85,6 +85,15 @@ class QuestInfoEntity {
     };
   }
 
+  void validate() {
+    if (id <= 0 || id > 65535) {
+      throw StateError('编号必须在 1..65535 之间');
+    }
+    if (infoNameLangFlags < -2147483648 || infoNameLangFlags > 2147483647) {
+      throw StateError('名称语言标志超出 signed int32 范围');
+    }
+  }
+
   QuestInfoEntity copyWith({
     int? id,
     String? infoNameLangEnUS,

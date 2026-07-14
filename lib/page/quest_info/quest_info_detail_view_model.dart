@@ -17,12 +17,16 @@ class QuestInfoDetailViewModel with FieldControllerMixin {
 
   late final idController = registerController(IntFieldController());
   late final nameController = registerController(StringFieldController());
+  late final infoNameLangFlagsController = registerController(
+    IntFieldController(),
+  );
 
   final info = signal(QuestInfoEntity());
 
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      t.validate();
       final isCreate = (await _repository.getQuestInfo(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeQuestInfo(t);
@@ -76,6 +80,7 @@ class QuestInfoDetailViewModel with FieldControllerMixin {
     return info.value.copyWith(
       id: idController.collect(),
       infoNameLangZhCN: nameController.collect(),
+      infoNameLangFlags: infoNameLangFlagsController.collect(),
     );
   }
 
@@ -112,5 +117,6 @@ class QuestInfoDetailViewModel with FieldControllerMixin {
   void _initControllers(QuestInfoEntity table) {
     idController.init(table.id);
     nameController.init(table.infoNameLangZhCN);
+    infoNameLangFlagsController.init(table.infoNameLangFlags);
   }
 }
