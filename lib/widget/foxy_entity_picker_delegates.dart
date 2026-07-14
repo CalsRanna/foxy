@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_quality.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
+import 'package:foxy/entity/achievement_entity.dart';
+import 'package:foxy/entity/achievement_filter_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
@@ -101,6 +103,7 @@ import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
+import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/cinematic_sequence_repository.dart';
@@ -155,6 +158,40 @@ import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
 
 class FoxyEntityPickerDelegates {
+  static final achievement = FoxyEntityPickerDelegate<BriefAchievementEntity>(
+    title: '成就',
+    errorLabel: '搜索 Achievement.dbc 成就失败',
+    filters: const [
+      FoxyEntityPickerFilter('成就 ID'),
+      FoxyEntityPickerFilter('成就名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefAchievementEntity value) => value.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefAchievementEntity value) => value.titleLangZhCN,
+      ),
+      FoxyEntityPickerColumn(
+        header: '说明',
+        text: (BriefAchievementEntity value) => value.descriptionLangZhCN,
+      ),
+    ],
+    idOf: (BriefAchievementEntity value) => value.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<AchievementRepository>().getBriefAchievements(
+          page: page,
+          filter: AchievementFilterEntity(id: values[0], title: values[1]),
+        ),
+    count: (values) =>
+        GetIt.instance.get<AchievementRepository>().countAchievements(
+          filter: AchievementFilterEntity(id: values[0], title: values[1]),
+        ),
+  );
+
   static final handEquippableDbcItem =
       FoxyEntityPickerDelegate<BriefDbcItemEntity>(
         title: '可持握物品',

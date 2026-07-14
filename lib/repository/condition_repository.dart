@@ -114,6 +114,7 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> storeCondition(ConditionEntity condition) async {
+    condition.validate();
     await laconic.table(_table).insert([condition.toJson()]);
   }
 
@@ -121,6 +122,7 @@ class ConditionRepository with RepositoryMixin {
     Map<String, dynamic> credential,
     ConditionEntity condition,
   ) async {
+    condition.validate();
     var json = condition.toJson();
     for (final col in pkColumns) {
       json.remove(col);
@@ -138,13 +140,27 @@ class ConditionRepository with RepositoryMixin {
   Future<void> copyCondition(Map<String, dynamic> credential) async {
     var source = await getConditionFromCredential(credential);
     if (source == null) return;
-    var json = source.toJson();
-    // Shift ElseGroup (part of PK) so the copy is unique
-    json['ElseGroup'] = (credential['ElseGroup'] as int) + 1;
-    await laconic.table(_table).insert([json]);
+    var nextElseGroup = source.elseGroup + 1;
+    while (await getCondition(
+          sourceTypeOrReferenceId: source.sourceTypeOrReferenceId,
+          sourceGroup: source.sourceGroup,
+          sourceEntry: source.sourceEntry,
+          sourceId: source.sourceId,
+          elseGroup: nextElseGroup,
+          conditionTypeOrReference: source.conditionTypeOrReference,
+          conditionTarget: source.conditionTarget,
+          conditionValue1: source.conditionValue1,
+          conditionValue2: source.conditionValue2,
+          conditionValue3: source.conditionValue3,
+        ) !=
+        null) {
+      nextElseGroup++;
+    }
+    await storeCondition(source.copyWith(elseGroup: nextElseGroup));
   }
 
   Future<void> saveCondition(ConditionEntity condition) async {
+    condition.validate();
     final credential = condition.buildCredential();
     var existing = await getConditionFromCredential(credential);
     if (existing != null) {

@@ -4,7 +4,6 @@
 /// ConditionTypeOrReference 条件类型标签
 /// 非负值对应条件类型；负值表示引用另一组条件
 const kConditionTypeLabels = <int, String>{
-  0: '无', // CONDITION_NONE
   1: '光环', // CONDITION_AURA
   2: '物品', // CONDITION_ITEM
   3: '已装备物品', // CONDITION_ITEM_EQUIPPED
@@ -45,7 +44,6 @@ const kConditionTypeLabels = <int, String>{
   38: '生命值百分比', // CONDITION_HP_PCT
   39: '服务器成就', // CONDITION_REALM_ACHIEVEMENT
   40: '在水中', // CONDITION_IN_WATER
-  41: '地形切换', // CONDITION_TERRAIN_SWAP (3.3.5a 不使用)
   42: '站立状态', // CONDITION_STAND_STATE
   43: '日常任务完成', // CONDITION_DAILY_QUEST_DONE
   44: '被魅惑', // CONDITION_CHARMED

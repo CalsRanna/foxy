@@ -16,14 +16,14 @@ class ConditionDetailViewModel with FieldControllerMixin {
 
   // 主键字段（完整 10 列）
   late final sourceTypeOrReferenceIdController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    IntFieldController(),
   );
   late final sourceGroupController = registerController(IntFieldController());
   late final sourceEntryController = registerController(IntFieldController());
   late final sourceIdController = registerController(IntFieldController());
   late final elseGroupController = registerController(IntFieldController());
   late final conditionTypeOrReferenceController = registerController(
-    SelectFieldController<int>(fallback: 0),
+    IntFieldController(),
   );
   late final conditionTargetController = registerController(
     IntFieldController(),
@@ -51,13 +51,21 @@ class ConditionDetailViewModel with FieldControllerMixin {
 
   /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
   final selectedConditionType = signal(0);
+  final selectedSourceType = signal(0);
+  final selectedSourceGroup = signal(0);
+  final selectedConditionValue1 = signal(0);
+  final selectedErrorType = signal(0);
 
   /// 现有记录：完整 10 列主键只读
   final isExisting = signal(false);
   Map<String, dynamic>? _originalCredential;
 
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
+    sourceTypeOrReferenceIdController.addListener(_onSourceTypeChange);
+    sourceGroupController.addListener(_onSourceGroupChange);
     conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
+    conditionValue1Controller.addListener(_onConditionValue1Change);
+    errorTypeController.addListener(_onErrorTypeChange);
     try {
       // 复合主键均为语义列：新建可编辑；编辑锁定。无简单 MAX+1。
       if (credential == null) {
@@ -83,9 +91,27 @@ class ConditionDetailViewModel with FieldControllerMixin {
     selectedConditionType.value = conditionTypeOrReferenceController.collect();
   }
 
+  void _onSourceTypeChange() {
+    selectedSourceType.value = sourceTypeOrReferenceIdController.collect();
+  }
+
+  void _onSourceGroupChange() {
+    selectedSourceGroup.value = sourceGroupController.collect();
+  }
+
+  void _onConditionValue1Change() {
+    selectedConditionValue1.value = conditionValue1Controller.collect();
+  }
+
+  void _onErrorTypeChange() {
+    selectedErrorType.value = errorTypeController.collect();
+  }
+
   void _initControllers(ConditionEntity c) {
     sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
+    selectedSourceType.value = c.sourceTypeOrReferenceId;
     sourceGroupController.init(c.sourceGroup);
+    selectedSourceGroup.value = c.sourceGroup;
     sourceEntryController.init(c.sourceEntry);
     sourceIdController.init(c.sourceId);
     elseGroupController.init(c.elseGroup);
@@ -93,10 +119,12 @@ class ConditionDetailViewModel with FieldControllerMixin {
     selectedConditionType.value = c.conditionTypeOrReference;
     conditionTargetController.init(c.conditionTarget);
     conditionValue1Controller.init(c.conditionValue1);
+    selectedConditionValue1.value = c.conditionValue1;
     conditionValue2Controller.init(c.conditionValue2);
     conditionValue3Controller.init(c.conditionValue3);
     negativeConditionController.init(c.negativeCondition);
     errorTypeController.init(c.errorType);
+    selectedErrorType.value = c.errorType;
     errorTextIdController.init(c.errorTextId);
     scriptNameController.init(c.scriptName);
     commentController.init(c.comment);
@@ -105,6 +133,7 @@ class ConditionDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collectFromControllers();
+      data.validate();
       final isCreate = _originalCredential == null;
       if (isCreate) {
         await _repository.storeCondition(data);
@@ -162,7 +191,11 @@ class ConditionDetailViewModel with FieldControllerMixin {
   }
 
   void dispose() {
+    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
+    sourceGroupController.removeListener(_onSourceGroupChange);
     conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
+    conditionValue1Controller.removeListener(_onConditionValue1Change);
+    errorTypeController.removeListener(_onErrorTypeChange);
     disposeControllers();
   }
 }
