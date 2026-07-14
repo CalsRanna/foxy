@@ -78,32 +78,40 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   Future<int> storeScalingStatDistribution(
     ScalingStatDistributionEntity distribution,
   ) async {
-    var json = distribution.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+    final id = distribution.id > 0 ? distribution.id : await _getNextId();
+    final stored = distribution.copyWith(id: id);
+    stored.validate();
+    await laconic.table(_table).insert([stored.toJson()]);
+    return id;
   }
 
   Future<void> updateScalingStatDistribution(
     ScalingStatDistributionEntity distribution,
   ) async {
+    distribution.validate();
     var json = distribution.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', distribution.id).update(json);
   }
 
   Future<void> destroyScalingStatDistribution(int id) async {
+    final references = await laconic
+        .table('item_template')
+        .where('ScalingStatDistribution', id)
+        .count();
+    if (references > 0) {
+      throw StateError('该属性缩放分布仍被 $references 个物品模板引用，不能删除');
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyScalingStatDistribution(int id) async {
     var source = await getScalingStatDistribution(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    final nextId = await _getNextId();
+    final copied = source.copyWith(id: nextId);
+    copied.validate();
+    await laconic.table(_table).insert([copied.toJson()]);
   }
 
   Future<void> saveScalingStatDistribution(
@@ -113,6 +121,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       await storeScalingStatDistribution(distribution);
       return;
     }
+    distribution.validate();
     var existing = await getScalingStatDistribution(distribution.id);
     if (existing != null) {
       await updateScalingStatDistribution(distribution);
@@ -122,7 +131,11 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   }
 
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 32767) {
+      throw StateError('ScalingStatDistribution ID 已超出物品模板可引用范围');
+    }
+    return id;
   }
 
   QueryBuilder _applyFilter(

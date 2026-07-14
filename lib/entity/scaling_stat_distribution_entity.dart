@@ -1,3 +1,5 @@
+import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
+
 class ScalingStatDistributionEntity {
   final int id;
   final int statId0;
@@ -24,16 +26,16 @@ class ScalingStatDistributionEntity {
 
   const ScalingStatDistributionEntity({
     this.id = 0,
-    this.statId0 = 0,
-    this.statId1 = 0,
-    this.statId2 = 0,
-    this.statId3 = 0,
-    this.statId4 = 0,
-    this.statId5 = 0,
-    this.statId6 = 0,
-    this.statId7 = 0,
-    this.statId8 = 0,
-    this.statId9 = 0,
+    this.statId0 = -1,
+    this.statId1 = -1,
+    this.statId2 = -1,
+    this.statId3 = -1,
+    this.statId4 = -1,
+    this.statId5 = -1,
+    this.statId6 = -1,
+    this.statId7 = -1,
+    this.statId8 = -1,
+    this.statId9 = -1,
     this.bonus0 = 0,
     this.bonus1 = 0,
     this.bonus2 = 0,
@@ -44,7 +46,7 @@ class ScalingStatDistributionEntity {
     this.bonus7 = 0,
     this.bonus8 = 0,
     this.bonus9 = 0,
-    this.maxlevel = 0,
+    this.maxlevel = 80,
   });
 
   factory ScalingStatDistributionEntity.fromJson(Map<String, dynamic> json) {
@@ -102,37 +104,65 @@ class ScalingStatDistributionEntity {
   }
 
   String get displayStats {
-    final stats = [
-      statId0,
-      statId1,
-      statId2,
-      statId3,
-      statId4,
-      statId5,
-      statId6,
-      statId7,
-      statId8,
-      statId9,
-    ];
-    final bonuses = [
-      bonus0,
-      bonus1,
-      bonus2,
-      bonus3,
-      bonus4,
-      bonus5,
-      bonus6,
-      bonus7,
-      bonus8,
-      bonus9,
-    ];
-    final parts = <String>[];
-    for (var i = 0; i < 10; i++) {
-      if (stats[i] != 0) {
-        parts.add('${stats[i]}+${bonuses[i]}');
-      }
+    final result = StringBuffer();
+    void append(int statId, int bonus) {
+      if (statId < 0) return;
+      if (result.isNotEmpty) result.write(', ');
+      result.write('$statId+$bonus');
     }
-    return parts.isEmpty ? '-' : parts.join(', ');
+
+    append(statId0, bonus0);
+    append(statId1, bonus1);
+    append(statId2, bonus2);
+    append(statId3, bonus3);
+    append(statId4, bonus4);
+    append(statId5, bonus5);
+    append(statId6, bonus6);
+    append(statId7, bonus7);
+    append(statId8, bonus8);
+    append(statId9, bonus9);
+    return result.isEmpty ? '-' : result.toString();
+  }
+
+  void validate() {
+    if (id < 1 || id > 32767) {
+      throw StateError('ID 必须在 1 到 32767 之间');
+    }
+    _validateStat(statId0, 'StatID0');
+    _validateStat(statId1, 'StatID1');
+    _validateStat(statId2, 'StatID2');
+    _validateStat(statId3, 'StatID3');
+    _validateStat(statId4, 'StatID4');
+    _validateStat(statId5, 'StatID5');
+    _validateStat(statId6, 'StatID6');
+    _validateStat(statId7, 'StatID7');
+    _validateStat(statId8, 'StatID8');
+    _validateStat(statId9, 'StatID9');
+    _validateBonus(bonus0, 'Bonus0');
+    _validateBonus(bonus1, 'Bonus1');
+    _validateBonus(bonus2, 'Bonus2');
+    _validateBonus(bonus3, 'Bonus3');
+    _validateBonus(bonus4, 'Bonus4');
+    _validateBonus(bonus5, 'Bonus5');
+    _validateBonus(bonus6, 'Bonus6');
+    _validateBonus(bonus7, 'Bonus7');
+    _validateBonus(bonus8, 'Bonus8');
+    _validateBonus(bonus9, 'Bonus9');
+    if (maxlevel < 0 || maxlevel > 0x7fffffff) {
+      throw StateError('Maxlevel 必须在 0 到 2147483647 之间');
+    }
+  }
+
+  void _validateStat(int value, String column) {
+    if (!kScalingStatDistributionStatOptions.containsKey(value)) {
+      throw StateError('$column 不是有效的缩放属性类型');
+    }
+  }
+
+  void _validateBonus(int value, String column) {
+    if (value < 0 || value > 0x7fffffff) {
+      throw StateError('$column 必须在 0 到 2147483647 之间');
+    }
   }
 
   ScalingStatDistributionEntity copyWith({
@@ -213,16 +243,16 @@ class BriefScalingStatDistributionEntity {
 
   const BriefScalingStatDistributionEntity({
     this.id = 0,
-    this.statId0 = 0,
-    this.statId1 = 0,
-    this.statId2 = 0,
-    this.statId3 = 0,
-    this.statId4 = 0,
-    this.statId5 = 0,
-    this.statId6 = 0,
-    this.statId7 = 0,
-    this.statId8 = 0,
-    this.statId9 = 0,
+    this.statId0 = -1,
+    this.statId1 = -1,
+    this.statId2 = -1,
+    this.statId3 = -1,
+    this.statId4 = -1,
+    this.statId5 = -1,
+    this.statId6 = -1,
+    this.statId7 = -1,
+    this.statId8 = -1,
+    this.statId9 = -1,
     this.bonus0 = 0,
     this.bonus1 = 0,
     this.bonus2 = 0,
@@ -233,7 +263,7 @@ class BriefScalingStatDistributionEntity {
     this.bonus7 = 0,
     this.bonus8 = 0,
     this.bonus9 = 0,
-    this.maxlevel = 0,
+    this.maxlevel = 80,
   });
 
   factory BriefScalingStatDistributionEntity.fromJson(
@@ -293,37 +323,24 @@ class BriefScalingStatDistributionEntity {
   }
 
   String get displayStats {
-    final stats = [
-      statId0,
-      statId1,
-      statId2,
-      statId3,
-      statId4,
-      statId5,
-      statId6,
-      statId7,
-      statId8,
-      statId9,
-    ];
-    final bonuses = [
-      bonus0,
-      bonus1,
-      bonus2,
-      bonus3,
-      bonus4,
-      bonus5,
-      bonus6,
-      bonus7,
-      bonus8,
-      bonus9,
-    ];
-    final parts = <String>[];
-    for (var i = 0; i < 10; i++) {
-      if (stats[i] != 0) {
-        parts.add('${stats[i]}+${bonuses[i]}');
-      }
+    final result = StringBuffer();
+    void append(int statId, int bonus) {
+      if (statId < 0) return;
+      if (result.isNotEmpty) result.write(', ');
+      result.write('$statId+$bonus');
     }
-    return parts.isEmpty ? '-' : parts.join(', ');
+
+    append(statId0, bonus0);
+    append(statId1, bonus1);
+    append(statId2, bonus2);
+    append(statId3, bonus3);
+    append(statId4, bonus4);
+    append(statId5, bonus5);
+    append(statId6, bonus6);
+    append(statId7, bonus7);
+    append(statId8, bonus8);
+    append(statId9, bonus9);
+    return result.isEmpty ? '-' : result.toString();
   }
 
   BriefScalingStatDistributionEntity copyWith({

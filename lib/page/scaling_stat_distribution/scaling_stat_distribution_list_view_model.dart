@@ -2,7 +2,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -16,8 +16,7 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   late final idController = registerController(StringFieldController());
 
-  final _repository = GetIt.instance
-      .get<ScalingStatDistributionSoloRepository>();
+  final _repository = GetIt.instance.get<ScalingStatDistributionRepository>();
 
   final page = signal(1);
   final distributions = signal(<BriefScalingStatDistributionEntity>[]);

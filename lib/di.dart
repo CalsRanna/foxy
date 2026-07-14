@@ -181,7 +181,6 @@ import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
-import 'package:foxy/repository/scaling_stat_distribution_solo_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
 import 'package:foxy/repository/setting_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -319,9 +318,6 @@ class DI {
     _instance.registerLazySingleton(() => QuestTemplateLocaleRepository());
     _instance.registerLazySingleton(() => QuestTemplateRepository());
     _instance.registerLazySingleton(() => ScalingStatDistributionRepository());
-    _instance.registerLazySingleton(
-      () => ScalingStatDistributionSoloRepository(),
-    );
     _instance.registerLazySingleton(() => ScalingStatValueRepository());
     _instance.registerLazySingleton(() => SettingRepository());
     _instance.registerLazySingleton(() => SmartScriptRepository());
