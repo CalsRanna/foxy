@@ -10,8 +10,11 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
   ) async {
     var results = await laconic
         .table(_table)
-        .where('race', race)
-        .where('class', class_)
+        .whereRaw('(`race` = 0 OR `race` = ?)', [race])
+        .whereRaw('(`class` = 0 OR `class` = ?)', [class_])
+        .orderBy('race')
+        .orderBy('`class`')
+        .orderBy('itemid')
         .get();
     return results
         .map((e) => PlayerCreateInfoItemEntity.fromJson(e.toMap()))
@@ -44,6 +47,7 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoItem(
     PlayerCreateInfoItemEntity item,
   ) async {
+    item.validate();
     await laconic.table(_table).insert([item.toJson()]);
   }
 
@@ -53,6 +57,7 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     int itemid,
     PlayerCreateInfoItemEntity item,
   ) async {
+    item.validate();
     var json = item.toJson();
     json.remove('race');
     json.remove('class');
@@ -83,11 +88,7 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     int class_,
     int itemid,
   ) async {
-    var source = await getPlayerCreateInfoItem(race, class_, itemid);
-    if (source == null) return;
-    var json = source.toJson();
-    json['itemid'] = itemid + 1;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('物品 ID 是复合主键的一部分，请新增并选择有效物品。');
   }
 
   Future<void> savePlayerCreateInfoItem(PlayerCreateInfoItemEntity item) async {

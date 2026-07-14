@@ -70,24 +70,6 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> copyPlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '是否复制该出生信息记录？class 将自动+1。',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      await _repository.copyPlayerCreateInfo(info.race, info.class_);
-      _logActivity(ActivityActionType.copy, info.race);
-      DialogUtil.instance.success('复制成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('复制失败: ${e.toString()}');
-    }
-  }
-
   Future<void> deletePlayerCreateInfo(PlayerCreateInfoEntity info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(

@@ -10,10 +10,14 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class PlayerCreateInfoActionViewModel with FieldControllerMixin {
+  PlayerCreateInfoActionViewModel() {
+    typeController.addListener(_syncActionType);
+  }
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoActionRepository>();
 
   final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
+  final actionType = signal(0);
   int? _race;
   int? _class_;
   int? _oldButton;
@@ -21,6 +25,8 @@ class PlayerCreateInfoActionViewModel with FieldControllerMixin {
   late final buttonController = registerController(IntFieldController());
   late final actionController = registerController(IntFieldController());
   late final typeController = registerController(IntFieldController());
+
+  void _syncActionType() => actionType.value = typeController.collect();
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -126,6 +132,7 @@ class PlayerCreateInfoActionViewModel with FieldControllerMixin {
   }
 
   void dispose() {
+    typeController.removeListener(_syncActionType);
     disposeControllers();
   }
 }

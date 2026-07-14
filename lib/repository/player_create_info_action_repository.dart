@@ -44,6 +44,7 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoAction(
     PlayerCreateInfoActionEntity action,
   ) async {
+    action.validate();
     await laconic.table(_table).insert([action.toJson()]);
   }
 
@@ -53,6 +54,7 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
     int button,
     PlayerCreateInfoActionEntity action,
   ) async {
+    action.validate();
     var json = action.toJson();
     json.remove('race');
     json.remove('class');
@@ -82,18 +84,7 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
     int class_,
     int button,
   ) async {
-    var source = await getPlayerCreateInfoAction(race, class_, button);
-    if (source == null) return;
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(button) AS maxButton'])
-        .where('race', race)
-        .where('class', class_)
-        .first();
-    var maxButton = (maxResult.toMap()['maxButton'] ?? 0) as int;
-    var json = source.toJson();
-    json['button'] = maxButton + 1;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('动作按钮编号必须在 0..143 内明确选择，请新增记录。');
   }
 
   Future<void> savePlayerCreateInfoAction(

@@ -7,6 +7,7 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 
 class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
   final _repository = GetIt.instance
@@ -16,8 +17,8 @@ class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
   int? _race;
   int? _class_;
 
-  late final racemaskController = registerController(IntFieldController());
-  late final classmaskController = registerController(IntFieldController());
+  late final racemaskController = registerController(FlagFieldController());
+  late final classmaskController = registerController(FlagFieldController());
   late final spellController = registerController(IntFieldController());
   late final noteController = registerController(StringFieldController());
 
@@ -37,8 +38,8 @@ class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
   }
 
   void create() {
-    racemaskController.init(0);
-    classmaskController.init(0);
+    racemaskController.init(playerCreateRaceBit(_race!));
+    classmaskController.init(playerCreateClassBit(_class_!));
     spellController.init(0);
     noteController.init('');
   }
@@ -52,6 +53,7 @@ class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
         spell: spellController.collect(),
         note: noteController.collect(),
       );
+      item.validate();
       await _repository.storePlayerCreateInfoSpellCustom(item);
       spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
         _race!,

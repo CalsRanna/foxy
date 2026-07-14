@@ -1779,6 +1779,42 @@ class FoxyEntityPickerDelegates {
     ),
   );
 
+  static final playerCreateMap = FoxyEntityPickerDelegate<BriefMapInfoEntity>(
+    title: '出生地图',
+    errorLabel: '搜索出生地图失败',
+    filters: const [
+      FoxyEntityPickerFilter('地图ID'),
+      FoxyEntityPickerFilter('地图名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefMapInfoEntity t) => t.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefMapInfoEntity t) => t.mapNameLangZhCN,
+      ),
+      FoxyEntityPickerColumn(
+        header: '类型',
+        width: 120,
+        text: (BriefMapInfoEntity t) => t.instanceType.toString(),
+      ),
+    ],
+    idOf: (BriefMapInfoEntity t) => t.id,
+    fetch: (page, v) =>
+        GetIt.instance.get<MapInfoRepository>().getBriefMapInfos(
+          filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+          page: page,
+          nonInstanceableOnly: true,
+        ),
+    count: (v) => GetIt.instance.get<MapInfoRepository>().countMapInfos(
+      filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+      nonInstanceableOnly: true,
+    ),
+  );
+
   static final npcText = FoxyEntityPickerDelegate<BriefNpcTextEntity>(
     title: 'NPC 文本',
     errorLabel: '搜索NPC文本失败',

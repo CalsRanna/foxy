@@ -48,6 +48,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
+    info.validate();
     await laconic.table(_table).insert([info.toJson()]);
   }
 
@@ -56,6 +57,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     int class_,
     PlayerCreateInfoEntity info,
   ) async {
+    info.validate();
     var json = info.toJson();
     json.remove('race');
     json.remove('class');
@@ -75,14 +77,11 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<void> copyPlayerCreateInfo(int race, int class_) async {
-    var source = await getPlayerCreateInfo(race, class_);
-    if (source == null) return;
-    var json = source.toJson();
-    json['class'] = (json['class'] as int) + 1;
-    await laconic.table(_table).insert([json]);
+    throw UnsupportedError('出生信息使用种族/职业语义主键，请新增有效组合。');
   }
 
   Future<void> savePlayerCreateInfo(PlayerCreateInfoEntity info) async {
+    info.validate();
     var existing = await getPlayerCreateInfo(info.race, info.class_);
     if (existing != null) {
       await updatePlayerCreateInfo(info.race, info.class_, info);
