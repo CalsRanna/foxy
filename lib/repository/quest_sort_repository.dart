@@ -50,29 +50,33 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> storeQuestSort(QuestSortEntity questSort) async {
-    var json = questSort.toJson();
-    final nextId = questSort.id > 0 ? questSort.id : await _getNextId();
-    json['ID'] = nextId;
+    final id = questSort.id > 0 ? questSort.id : await _getNextId();
+    final candidate = questSort.copyWith(id: id)..validate();
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
-    return nextId;
+    return id;
   }
 
   Future<void> updateQuestSort(QuestSortEntity questSort) async {
+    questSort.validate();
     var json = questSort.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questSort.id).update(json);
   }
 
   Future<void> destroyQuestSort(int id) async {
+    if (await _isReferencedByQuest(id)) {
+      throw StateError('任务排序 $id 仍被任务模板引用，不能删除');
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyQuestSort(int id) async {
     var source = await getQuestSort(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
+    final nextId = await _getNextId();
+    final candidate = source.copyWith(id: nextId)..validate();
+    var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
   }
 
@@ -81,6 +85,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       await storeQuestSort(questSort);
       return;
     }
+    questSort.validate();
     var existing = await getQuestSort(questSort.id);
     if (existing != null) {
       await updateQuestSort(questSort);
@@ -99,8 +104,21 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
+
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 32768) {
+      throw StateError('任务排序编号已超出 QuestSortID 可引用范围');
+    }
+    return id;
+  }
+
+  Future<bool> _isReferencedByQuest(int id) async {
+    final count = await laconic
+        .table('quest_template')
+        .where('QuestSortID', -id)
+        .count();
+    return count > 0;
   }
 
   QueryBuilder _applyFilter(

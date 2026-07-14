@@ -85,6 +85,15 @@ class QuestSortEntity {
     };
   }
 
+  void validate() {
+    if (id <= 0 || id > 32768) {
+      throw StateError('编号必须在 1..32768 之间');
+    }
+    if (sortNameLangFlags < -2147483648 || sortNameLangFlags > 2147483647) {
+      throw StateError('名称语言标志超出 signed int32 范围');
+    }
+  }
+
   QuestSortEntity copyWith({
     int? id,
     String? sortNameLangEnUS,
