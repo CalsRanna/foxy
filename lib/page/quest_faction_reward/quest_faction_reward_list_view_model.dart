@@ -20,41 +20,6 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
   final rewards = signal(<BriefQuestFactionRewardEntity>[]);
   final total = signal(0);
 
-  Future<void> copyQuestFactionReward(int id) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '是否复制编号为 $id 的任务声望？',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      await _repository.copyQuestFactionReward(id);
-      DialogUtil.instance.success('复制成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('复制失败: ${e.toString()}');
-    }
-  }
-
-  Future<void> deleteQuestFactionReward(int id) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认删除',
-        description: '是否删除编号为 $id 的任务声望？此操作不可撤销。',
-        confirmText: '删除',
-        destructive: true,
-      );
-      if (!confirmed) return;
-      await _repository.destroyQuestFactionReward(id);
-      DialogUtil.instance.success('删除成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('删除失败: ${e.toString()}');
-    }
-  }
-
   void dispose() {
     disposeControllers();
   }
