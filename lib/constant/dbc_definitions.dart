@@ -104,6 +104,11 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.itemRandomSuffix,
   ),
   DbcDefinition(tableName: 'dbc_item_set', schema: Definitions.itemSet),
+  DbcDefinition(
+    tableName: 'dbc_item_visual_effects',
+    schema: Definitions.itemVisualEffects,
+  ),
+  DbcDefinition(tableName: 'dbc_item_visuals', schema: Definitions.itemVisuals),
   DbcDefinition(tableName: 'dbc_lock', schema: Definitions.lock),
   DbcDefinition(tableName: 'dbc_light', schema: Definitions.light),
   DbcDefinition(tableName: 'dbc_liquid_type', schema: Definitions.liquidType),
@@ -139,6 +144,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(
     tableName: 'dbc_spell_item_enchantment',
     schema: Definitions.spellItemEnchantment,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_spell_item_enchantment_condition',
+    schema: Definitions.spellItemEnchantmentCondition,
   ),
   DbcDefinition(tableName: 'dbc_spell_range', schema: Definitions.spellRange),
   DbcDefinition(tableName: 'dbc_skill_line', schema: Definitions.skillLine),

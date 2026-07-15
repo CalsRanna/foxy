@@ -27,6 +27,8 @@ import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
+import 'package:foxy/repository/item_visual_effect_repository.dart';
+import 'package:foxy/repository/item_visuals_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/light_repository.dart';
 import 'package:foxy/repository/liquid_type_repository.dart';
@@ -40,7 +42,8 @@ import 'package:foxy/repository/scaling_stat_value_repository.dart';
 import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
@@ -158,6 +161,8 @@ class DbcExportRegistry {
     final itemRandomProperties = getIt.get<ItemRandomPropertiesRepository>();
     final itemRandomSuffix = getIt.get<ItemRandomSuffixRepository>();
     final itemSet = getIt.get<ItemSetRepository>();
+    final itemVisualEffect = getIt.get<ItemVisualEffectRepository>();
+    final itemVisuals = getIt.get<ItemVisualsRepository>();
     final lock = getIt.get<LockRepository>();
     final light = getIt.get<LightRepository>();
     final liquidType = getIt.get<LiquidTypeRepository>();
@@ -176,8 +181,9 @@ class DbcExportRegistry {
     final spellDuration = getIt.get<SpellDurationRepository>();
     final spellFocusObject = getIt.get<SpellFocusObjectRepository>();
     final spellIcon = getIt.get<SpellIconRepository>();
-    final spellItemEnchantment = getIt
-        .get<SpellItemEnchantmentSoloRepository>();
+    final spellItemEnchantment = getIt.get<SpellItemEnchantmentRepository>();
+    final spellItemEnchantmentCondition = getIt
+        .get<SpellItemEnchantmentConditionRepository>();
     final spellRange = getIt.get<SpellRangeRepository>();
     final talent = getIt.get<TalentRepository>();
     final taxiPath = getIt.get<TaxiPathRepository>();
@@ -332,6 +338,16 @@ class DbcExportRegistry {
         count: () => itemSet.countItemSets(),
         toJson: (entity) => entity.toJson(),
       ),
+      'dbc_item_visual_effects': DbcExportDelegate.typed(
+        load: itemVisualEffect.getItemVisualEffects,
+        count: () => itemVisualEffect.countItemVisualEffects(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_item_visuals': DbcExportDelegate.typed(
+        load: itemVisuals.getItemVisuals,
+        count: () => itemVisuals.countItemVisuals(),
+        toJson: (entity) => entity.toJson(),
+      ),
       'dbc_lock': DbcExportDelegate.typed(
         load: lock.getLocks,
         count: () => lock.countLocks(),
@@ -420,6 +436,12 @@ class DbcExportRegistry {
       'dbc_spell_item_enchantment': DbcExportDelegate.typed(
         load: spellItemEnchantment.getSpellItemEnchantments,
         count: () => spellItemEnchantment.countSpellItemEnchantments(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_spell_item_enchantment_condition': DbcExportDelegate.typed(
+        load: spellItemEnchantmentCondition.getSpellItemEnchantmentConditions,
+        count: () =>
+            spellItemEnchantmentCondition.countSpellItemEnchantmentConditions(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_spell_range': DbcExportDelegate.typed(

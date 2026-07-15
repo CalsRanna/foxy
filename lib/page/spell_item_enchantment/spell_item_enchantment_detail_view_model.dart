@@ -3,7 +3,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -12,7 +12,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
-  final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
+  final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   /// Basic
@@ -54,7 +54,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
 
   /// Other
   late final itemVisualController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(FlagFieldController());
   late final srcItemIdController = registerController(IntFieldController());
   late final conditionIdController = registerController(IntFieldController());
   late final requiredSkillIdController = registerController(

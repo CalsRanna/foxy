@@ -151,6 +151,8 @@ import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
+import 'package:foxy/repository/item_visual_effect_repository.dart';
+import 'package:foxy/repository/item_visuals_repository.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
@@ -191,7 +193,8 @@ import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
@@ -284,6 +287,8 @@ class DI {
     _instance.registerLazySingleton(() => ItemRandomPropertiesRepository());
     _instance.registerLazySingleton(() => ItemRandomSuffixRepository());
     _instance.registerLazySingleton(() => ItemSetRepository());
+    _instance.registerLazySingleton(() => ItemVisualEffectRepository());
+    _instance.registerLazySingleton(() => ItemVisualsRepository());
     _instance.registerLazySingleton(() => ItemTemplateLocaleRepository());
     _instance.registerLazySingleton(() => ItemTemplateRepository());
     _instance.registerLazySingleton(() => LockRepository());
@@ -328,7 +333,10 @@ class DI {
     _instance.registerLazySingleton(() => SpellFocusObjectRepository());
     _instance.registerLazySingleton(() => SpellGroupRepository());
     _instance.registerLazySingleton(() => SpellIconRepository());
-    _instance.registerLazySingleton(() => SpellItemEnchantmentSoloRepository());
+    _instance.registerLazySingleton(
+      () => SpellItemEnchantmentConditionRepository(),
+    );
+    _instance.registerLazySingleton(() => SpellItemEnchantmentRepository());
     _instance.registerLazySingleton(() => SpellLinkedSpellRepository());
     _instance.registerLazySingleton(() => SpellLootTemplateRepository());
     _instance.registerLazySingleton(() => SpellRangeRepository());

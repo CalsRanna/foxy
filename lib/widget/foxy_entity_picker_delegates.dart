@@ -62,6 +62,8 @@ import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
+import 'package:foxy/entity/item_visuals_entity.dart';
+import 'package:foxy/entity/item_visuals_filter_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
@@ -98,6 +100,8 @@ import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
@@ -149,6 +153,7 @@ import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
+import 'package:foxy/repository/item_visuals_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/light_repository.dart';
@@ -166,7 +171,8 @@ import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_focus_object_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
@@ -1628,6 +1634,74 @@ class FoxyEntityPickerDelegates {
         .countGemProperties(filter: GemPropertyFilterEntity(id: values[0])),
   );
 
+  static final itemVisuals = FoxyEntityPickerDelegate<BriefItemVisualsEntity>(
+    title: '物品视觉',
+    errorLabel: '搜索 ItemVisuals.dbc 失败',
+    filters: const [FoxyEntityPickerFilter('ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: 'ID',
+        width: 120,
+        text: (BriefItemVisualsEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '视觉效果槽 0',
+        text: (BriefItemVisualsEntity row) => row.slot0.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '视觉效果槽 1',
+        text: (BriefItemVisualsEntity row) => row.slot1.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '视觉效果槽 2',
+        text: (BriefItemVisualsEntity row) => row.slot2.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '视觉效果槽 3',
+        text: (BriefItemVisualsEntity row) => row.slot3.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '视觉效果槽 4',
+        text: (BriefItemVisualsEntity row) => row.slot4.toString(),
+      ),
+    ],
+    idOf: (BriefItemVisualsEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<ItemVisualsRepository>().getBriefItemVisuals(
+          page: page,
+          filter: ItemVisualsFilterEntity(id: values[0]),
+        ),
+    count: (values) => GetIt.instance
+        .get<ItemVisualsRepository>()
+        .countItemVisuals(filter: ItemVisualsFilterEntity(id: values[0])),
+  );
+
+  static final spellItemEnchantmentCondition =
+      FoxyEntityPickerDelegate<BriefSpellItemEnchantmentConditionEntity>(
+        title: '附魔条件',
+        errorLabel: '搜索 SpellItemEnchantmentCondition.dbc 失败',
+        filters: const [FoxyEntityPickerFilter('ID')],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: 'ID',
+            text: (BriefSpellItemEnchantmentConditionEntity row) =>
+                row.id.toString(),
+          ),
+        ],
+        idOf: (BriefSpellItemEnchantmentConditionEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<SpellItemEnchantmentConditionRepository>()
+            .getBriefSpellItemEnchantmentConditions(
+              page: page,
+              filter: SpellItemEnchantmentConditionFilterEntity(id: values[0]),
+            ),
+        count: (values) => GetIt.instance
+            .get<SpellItemEnchantmentConditionRepository>()
+            .countSpellItemEnchantmentConditions(
+              filter: SpellItemEnchantmentConditionFilterEntity(id: values[0]),
+            ),
+      );
+
   static final spellItemEnchantment =
       FoxyEntityPickerDelegate<BriefSpellItemEnchantmentEntity>(
         title: '法术物品附魔',
@@ -1649,7 +1723,7 @@ class FoxyEntityPickerDelegates {
         ],
         idOf: (BriefSpellItemEnchantmentEntity row) => row.id,
         fetch: (page, values) => GetIt.instance
-            .get<SpellItemEnchantmentSoloRepository>()
+            .get<SpellItemEnchantmentRepository>()
             .getBriefSpellItemEnchantments(
               page: page,
               filter: SpellItemEnchantmentFilterEntity(
@@ -1658,7 +1732,7 @@ class FoxyEntityPickerDelegates {
               ),
             ),
         count: (values) => GetIt.instance
-            .get<SpellItemEnchantmentSoloRepository>()
+            .get<SpellItemEnchantmentRepository>()
             .countSpellItemEnchantments(
               filter: SpellItemEnchantmentFilterEntity(
                 id: values[0],
