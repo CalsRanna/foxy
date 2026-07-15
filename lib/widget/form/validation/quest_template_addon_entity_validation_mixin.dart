@@ -2,12 +2,16 @@ import 'package:foxy/entity/quest_template_addon_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin QuestTemplateAddonValidationMixin on ViewModelValidationMixin {
-  void validateQuestTemplateAddonFields(QuestTemplateAddonEntity value) =>
-      value._validateFields();
-}
+  void validateQuestTemplateAddonFields(QuestTemplateAddonEntity value) {
+    final nextQuestId = value.nextQuestId;
+    final exclusiveGroup = value.exclusiveGroup;
+    final breadcrumbForQuestId = value.breadcrumbForQuestId;
+    final requiredMinRepFaction = value.requiredMinRepFaction;
+    final requiredMaxRepFaction = value.requiredMaxRepFaction;
+    final requiredMinRepValue = value.requiredMinRepValue;
+    final requiredMaxRepValue = value.requiredMaxRepValue;
+    final specialFlags = value.specialFlags;
 
-extension on QuestTemplateAddonEntity {
-  void _validateFields() {
     if ((specialFlags & ~0x000001FF) != 0) {
       throw ArgumentError.value(
         specialFlags,

@@ -2,12 +2,15 @@ import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin SpellLootTemplateValidationMixin on ViewModelValidationMixin {
-  void validateSpellLootTemplateFields(SpellLootTemplateEntity value) =>
-      value._validateFields();
-}
+  void validateSpellLootTemplateFields(SpellLootTemplateEntity value) {
+    final reference = value.reference;
+    final chance = value.chance;
+    final questRequired = value.questRequired;
+    final lootMode = value.lootMode;
+    final groupId = value.groupId;
+    final minCount = value.minCount;
+    final maxCount = value.maxCount;
 
-extension on SpellLootTemplateEntity {
-  void _validateFields() {
     if (lootMode == 0) throw StateError('掉落模式不能为 0');
     if (groupId < 0 || groupId > 127) {
       throw RangeError.range(groupId, 0, 127, 'GroupId');

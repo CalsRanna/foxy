@@ -3,11 +3,11 @@ import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin PageTextValidationMixin on ViewModelValidationMixin {
-  void validatePageTextFields(PageTextEntity value) => value._validateFields();
-}
+  void validatePageTextFields(PageTextEntity value) {
+    final id = value.id;
+    final nextPageId = value.nextPageId;
+    final verifiedBuild = value.verifiedBuild;
 
-extension on PageTextEntity {
-  void _validateFields() {
     if (id <= 0 || id > kPageTextMaxUnsignedInt) {
       throw RangeError.range(id, 1, kPageTextMaxUnsignedInt, 'ID');
     }

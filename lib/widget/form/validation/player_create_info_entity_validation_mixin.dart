@@ -3,12 +3,14 @@ import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin PlayerCreateInfoValidationMixin on ViewModelValidationMixin {
-  void validatePlayerCreateInfoFields(PlayerCreateInfoEntity value) =>
-      value._validateFields();
-}
+  void validatePlayerCreateInfoFields(PlayerCreateInfoEntity value) {
+    final race = value.race;
+    final class_ = value.class_;
+    final positionX = value.positionX;
+    final positionY = value.positionY;
+    final positionZ = value.positionZ;
+    final orientation = value.orientation;
 
-extension on PlayerCreateInfoEntity {
-  void _validateFields() {
     if (!kPlayerRaceOptions.containsKey(race)) throw StateError('种族无效: $race');
     if (!kPlayerClassOptions.containsKey(class_)) {
       throw StateError('职业无效: $class_');
@@ -29,11 +31,13 @@ extension on PlayerCreateInfoEntity {
 mixin PlayerCreateInfoActionValidationMixin on ViewModelValidationMixin {
   void validatePlayerCreateInfoActionFields(
     PlayerCreateInfoActionEntity value,
-  ) => value._validateFields();
-}
+  ) {
+    final race = value.race;
+    final class_ = value.class_;
+    final button = value.button;
+    final action = value.action;
+    final type = value.type;
 
-extension on PlayerCreateInfoActionEntity {
-  void _validateFields() {
     if (!kPlayerRaceOptions.containsKey(race) ||
         !kPlayerClassOptions.containsKey(class_)) {
       throw StateError('动作按钮必须属于有效的种族/职业组合');
@@ -49,12 +53,12 @@ extension on PlayerCreateInfoActionEntity {
 }
 
 mixin PlayerCreateInfoItemValidationMixin on ViewModelValidationMixin {
-  void validatePlayerCreateInfoItemFields(PlayerCreateInfoItemEntity value) =>
-      value._validateFields();
-}
+  void validatePlayerCreateInfoItemFields(PlayerCreateInfoItemEntity value) {
+    final race = value.race;
+    final class_ = value.class_;
+    final itemid = value.itemid;
+    final amount = value.amount;
 
-extension on PlayerCreateInfoItemEntity {
-  void _validateFields() {
     if (race != 0 && !kPlayerRaceOptions.containsKey(race)) {
       throw StateError('种族无效: $race');
     }
@@ -69,23 +73,23 @@ extension on PlayerCreateInfoItemEntity {
 mixin PlayerCreateInfoSpellCustomValidationMixin on ViewModelValidationMixin {
   void validatePlayerCreateInfoSpellCustomFields(
     PlayerCreateInfoSpellCustomEntity value,
-  ) => value._validateFields();
-}
+  ) {
+    final racemask = value.racemask;
+    final classmask = value.classmask;
+    final spell = value.spell;
 
-extension on PlayerCreateInfoSpellCustomEntity {
-  void _validateFields() {
     _validatePlayerCreateMasks(racemask, classmask);
     if (spell <= 0) throw StateError('法术 ID 必须大于 0');
   }
 }
 
 mixin PlayerCreateInfoSkillValidationMixin on ViewModelValidationMixin {
-  void validatePlayerCreateInfoSkillFields(PlayerCreateInfoSkillEntity value) =>
-      value._validateFields();
-}
+  void validatePlayerCreateInfoSkillFields(PlayerCreateInfoSkillEntity value) {
+    final raceMask = value.raceMask;
+    final classMask = value.classMask;
+    final skill = value.skill;
+    final rank = value.rank;
 
-extension on PlayerCreateInfoSkillEntity {
-  void _validateFields() {
     _validatePlayerCreateMasks(raceMask, classMask);
     if (skill <= 0) throw StateError('技能 ID 必须大于 0');
     if (rank < 0 || rank >= 16) throw StateError('技能阶数必须在 0..15 之间');
@@ -95,11 +99,11 @@ extension on PlayerCreateInfoSkillEntity {
 mixin PlayerCreateInfoCastSpellValidationMixin on ViewModelValidationMixin {
   void validatePlayerCreateInfoCastSpellFields(
     PlayerCreateInfoCastSpellEntity value,
-  ) => value._validateFields();
-}
+  ) {
+    final raceMask = value.raceMask;
+    final classMask = value.classMask;
+    final spell = value.spell;
 
-extension on PlayerCreateInfoCastSpellEntity {
-  void _validateFields() {
     _validatePlayerCreateMasks(raceMask, classMask);
     if (spell <= 0) throw StateError('法术 ID 必须大于 0');
   }
