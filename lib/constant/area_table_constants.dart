@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// AzerothCore DBCEnums.h::AreaTeams used by AreaTableEntry::team.
 const kAreaTeamOptions = {0: '无阵营', 2: '联盟', 4: '部落', 6: '双方'};

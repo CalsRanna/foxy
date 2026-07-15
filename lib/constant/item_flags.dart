@@ -1,7 +1,7 @@
 // Item Template 标志位常量定义
 // 数据来源：AzerothCore SharedDefines.h, ItemDefines.h
 
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// Item Flags 物品标识选项
 const kItemFlagOptions = [

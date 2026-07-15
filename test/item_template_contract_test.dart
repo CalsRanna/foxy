@@ -1,7 +1,7 @@
 import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';

@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// AzerothCore DBCEnums.h::AchievementFaction.
 const kAchievementFactionOptions = {-1: '双方', 0: '部落', 1: '联盟'};

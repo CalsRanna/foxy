@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// `SharedDefines.h::GameobjectTypes`，3.3.5a 共 0..35。
 const kGameObjectTypeOptions = <int, String>{

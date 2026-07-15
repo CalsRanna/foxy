@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/constant/item_quality.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
