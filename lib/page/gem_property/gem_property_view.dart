@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/gem_property_constants.dart';
 import 'package:foxy/page/gem_property/gem_property_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -40,36 +44,38 @@ class _GemPropertyViewState extends State<GemPropertyView> {
       ),
     );
     final enchantIdInput = FoxyFormItem(
-      label: '附魔编号',
-      child: FoxyNumberInput<int>(
+      label: '法术物品附魔',
+      child: FoxyEntityPicker(
         placeholder: 'Enchant_ID',
         controller: viewModel.enchantIdController,
+        delegate: FoxyEntityPickerDelegates.spellItemEnchantment,
       ),
     );
     final maxcountInvInput = FoxyFormItem(
-      label: '最大库存',
+      label: '客户端库存计数',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_inv',
         controller: viewModel.maxCountInvController,
       ),
     );
     final maxcountItemInput = FoxyFormItem(
-      label: '最大物品',
+      label: '客户端物品计数',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_item',
         controller: viewModel.maxCountItemController,
       ),
     );
     final typeInput = FoxyFormItem(
-      label: '类型',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Type',
+      label: '宝石颜色',
+      child: FoxyIntShadSelect(
         controller: viewModel.typeController,
+        options: kGemPropertyColorOptions,
+        placeholder: const Text('Type'),
       ),
     );
 
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
@@ -90,9 +96,9 @@ class _GemPropertyViewState extends State<GemPropertyView> {
                 spacing: 8,
                 children: [
                   Expanded(child: typeInput),
-                  Expanded(child: SizedBox()),
-                  Expanded(child: SizedBox()),
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
             ],
@@ -101,12 +107,12 @@ class _GemPropertyViewState extends State<GemPropertyView> {
             children: [
               ShadButton(
                 onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+                child: const Text('保存'),
               ),
               const SizedBox(width: 8),
               ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
+                onPressed: viewModel.pop,
+                child: const Text('取消'),
               ),
             ],
           ),

@@ -51,47 +51,72 @@ class GemPropertyRepository with RepositoryMixin {
   }
 
   Future<int> storeGemProperty(GemPropertyEntity gemProperty) async {
-    var json = gemProperty.toJson();
-    final nextId = gemProperty.id > 0 ? gemProperty.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+    final id = gemProperty.id > 0 ? gemProperty.id : await _getNextId();
+    final stored = gemProperty.copyWith(id: id);
+    stored.validate();
+    await _validateEnchantReference(stored, preserveExisting: false);
+    await laconic.table(_table).insert([stored.toJson()]);
+    return id;
   }
 
   Future<void> updateGemProperty(GemPropertyEntity gemProperty) async {
-    var json = gemProperty.toJson();
-    json.remove('ID');
+    gemProperty.validate();
+    await _validateEnchantReference(gemProperty, preserveExisting: true);
+    final json = gemProperty.toJson()..remove('ID');
     await laconic.table(_table).where('ID', gemProperty.id).update(json);
   }
 
   Future<void> destroyGemProperty(int id) async {
+    final references = await laconic
+        .table('item_template')
+        .where('GemProperties', id)
+        .count();
+    if (references > 0) {
+      throw StateError('宝石属性 $id 仍被 $references 个物品模板引用，不能删除');
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyGemProperty(int id) async {
     var source = await getGemProperty(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    await storeGemProperty(source.copyWith(id: await _getNextId()));
   }
 
   Future<void> saveGemProperty(GemPropertyEntity gemProperty) async {
-    if (gemProperty.id == 0) {
+    final existing = gemProperty.id == 0
+        ? null
+        : await getGemProperty(gemProperty.id);
+    if (existing == null) {
       await storeGemProperty(gemProperty);
-      return;
-    }
-    var existing = await getGemProperty(gemProperty.id);
-    if (existing != null) {
-      await updateGemProperty(gemProperty);
     } else {
-      await laconic.table(_table).insert([gemProperty.toJson()]);
+      await updateGemProperty(gemProperty);
     }
   }
 
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 0x7fffffff) {
+      throw StateError('GemProperties ID 已超出 DBC int32 范围');
+    }
+    return id;
+  }
+
+  Future<void> _validateEnchantReference(
+    GemPropertyEntity gemProperty, {
+    required bool preserveExisting,
+  }) async {
+    if (gemProperty.enchantId == 0) return;
+    final references = await laconic
+        .table('foxy.dbc_spell_item_enchantment')
+        .where('ID', gemProperty.enchantId)
+        .count();
+    if (references > 0) return;
+    if (preserveExisting) {
+      final existing = await getGemProperty(gemProperty.id);
+      if (existing?.enchantId == gemProperty.enchantId) return;
+    }
+    throw StateError('Enchant_ID 引用的法术物品附魔 ${gemProperty.enchantId} 不存在');
   }
 
   QueryBuilder _applyFilter(
