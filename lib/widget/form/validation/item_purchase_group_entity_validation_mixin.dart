@@ -2,12 +2,18 @@ import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin ItemPurchaseGroupValidationMixin on ViewModelValidationMixin {
-  void validateItemPurchaseGroupFields(ItemPurchaseGroupEntity value) =>
-      value._validateFields();
-}
+  void validateItemPurchaseGroupFields(ItemPurchaseGroupEntity value) {
+    final id = value.id;
+    final itemID0 = value.itemID0;
+    final itemID1 = value.itemID1;
+    final itemID2 = value.itemID2;
+    final itemID3 = value.itemID3;
+    final itemID4 = value.itemID4;
+    final itemID5 = value.itemID5;
+    final itemID6 = value.itemID6;
+    final itemID7 = value.itemID7;
+    final nameLangFlags = value.nameLangFlags;
 
-extension on ItemPurchaseGroupEntity {
-  void _validateFields() {
     _requirePositiveInt32('编号', id);
     _requireUnsignedInt32('物品 ID 0', itemID0);
     _requireUnsignedInt32('物品 ID 1', itemID1);

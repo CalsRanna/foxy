@@ -2,12 +2,14 @@ import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin SpellAreaValidationMixin on ViewModelValidationMixin {
-  void validateSpellAreaFields(SpellAreaEntity value) =>
-      value._validateFields();
-}
+  void validateSpellAreaFields(SpellAreaEntity value) {
+    final spell = value.spell;
+    final auraSpell = value.auraSpell;
+    final gender = value.gender;
+    final autocast = value.autocast;
+    final questStartStatus = value.questStartStatus;
+    final questEndStatus = value.questEndStatus;
 
-extension on SpellAreaEntity {
-  void _validateFields() {
     if (gender < 0 || gender > 2) {
       throw RangeError.range(gender, 0, 2, 'gender');
     }

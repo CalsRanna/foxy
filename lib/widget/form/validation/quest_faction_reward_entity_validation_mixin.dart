@@ -2,12 +2,19 @@ import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin QuestFactionRewardValidationMixin on ViewModelValidationMixin {
-  void validateQuestFactionRewardFields(QuestFactionRewardEntity value) =>
-      value._validateFields();
-}
+  void validateQuestFactionRewardFields(QuestFactionRewardEntity value) {
+    final id = value.id;
+    final difficulty0 = value.difficulty0;
+    final difficulty1 = value.difficulty1;
+    final difficulty2 = value.difficulty2;
+    final difficulty3 = value.difficulty3;
+    final difficulty4 = value.difficulty4;
+    final difficulty5 = value.difficulty5;
+    final difficulty6 = value.difficulty6;
+    final difficulty7 = value.difficulty7;
+    final difficulty8 = value.difficulty8;
+    final difficulty9 = value.difficulty9;
 
-extension on QuestFactionRewardEntity {
-  void _validateFields() {
     if (id != 1 && id != 2) {
       throw StateError('编号只能是 1（正向）或 2（负向）');
     }

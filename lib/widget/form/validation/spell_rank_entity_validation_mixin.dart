@@ -2,12 +2,11 @@ import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin SpellRankValidationMixin on ViewModelValidationMixin {
-  void validateSpellRankFields(SpellRankEntity value) =>
-      value._validateFields();
-}
+  void validateSpellRankFields(SpellRankEntity value) {
+    final firstSpellId = value.firstSpellId;
+    final spellId = value.spellId;
+    final rank = value.rank;
 
-extension on SpellRankEntity {
-  void _validateFields() {
     if (firstSpellId <= 0 || spellId <= 0) {
       throw ArgumentError('first_spell_id 和 spell_id 必须大于 0');
     }

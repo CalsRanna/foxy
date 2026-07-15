@@ -2,11 +2,45 @@ import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin ItemSetValidationMixin on ViewModelValidationMixin {
-  void validateItemSetFields(ItemSetEntity value) => value._validateFields();
-}
+  void validateItemSetFields(ItemSetEntity value) {
+    final id = value.id;
+    final nameLangFlags = value.nameLangFlags;
+    final itemId0 = value.itemId0;
+    final itemId1 = value.itemId1;
+    final itemId2 = value.itemId2;
+    final itemId3 = value.itemId3;
+    final itemId4 = value.itemId4;
+    final itemId5 = value.itemId5;
+    final itemId6 = value.itemId6;
+    final itemId7 = value.itemId7;
+    final itemId8 = value.itemId8;
+    final itemId9 = value.itemId9;
+    final itemId10 = value.itemId10;
+    final itemId11 = value.itemId11;
+    final itemId12 = value.itemId12;
+    final itemId13 = value.itemId13;
+    final itemId14 = value.itemId14;
+    final itemId15 = value.itemId15;
+    final itemId16 = value.itemId16;
+    final setSpellId0 = value.setSpellId0;
+    final setSpellId1 = value.setSpellId1;
+    final setSpellId2 = value.setSpellId2;
+    final setSpellId3 = value.setSpellId3;
+    final setSpellId4 = value.setSpellId4;
+    final setSpellId5 = value.setSpellId5;
+    final setSpellId6 = value.setSpellId6;
+    final setSpellId7 = value.setSpellId7;
+    final setThreshold0 = value.setThreshold0;
+    final setThreshold1 = value.setThreshold1;
+    final setThreshold2 = value.setThreshold2;
+    final setThreshold3 = value.setThreshold3;
+    final setThreshold4 = value.setThreshold4;
+    final setThreshold5 = value.setThreshold5;
+    final setThreshold6 = value.setThreshold6;
+    final setThreshold7 = value.setThreshold7;
+    final requiredSkill = value.requiredSkill;
+    final requiredSkillRank = value.requiredSkillRank;
 
-extension on ItemSetEntity {
-  void _validateFields() {
     if (id <= 0 || id > 0x7FFFFFFF) {
       throw ArgumentError.value(id, 'ID', '必须在 1..2147483647 范围内');
     }

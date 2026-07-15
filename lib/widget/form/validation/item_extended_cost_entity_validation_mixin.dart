@@ -2,12 +2,24 @@ import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin ItemExtendedCostValidationMixin on ViewModelValidationMixin {
-  void validateItemExtendedCostFields(ItemExtendedCostEntity value) =>
-      value._validateFields();
-}
+  void validateItemExtendedCostFields(ItemExtendedCostEntity value) {
+    final id = value.id;
+    final honorPoints = value.honorPoints;
+    final arenaPoints = value.arenaPoints;
+    final arenaBracket = value.arenaBracket;
+    final itemID0 = value.itemID0;
+    final itemID1 = value.itemID1;
+    final itemID2 = value.itemID2;
+    final itemID3 = value.itemID3;
+    final itemID4 = value.itemID4;
+    final itemCount0 = value.itemCount0;
+    final itemCount1 = value.itemCount1;
+    final itemCount2 = value.itemCount2;
+    final itemCount3 = value.itemCount3;
+    final itemCount4 = value.itemCount4;
+    final requiredArenaRating = value.requiredArenaRating;
+    final itemPurchaseGroup = value.itemPurchaseGroup;
 
-extension on ItemExtendedCostEntity {
-  void _validateFields() {
     _requirePositiveInt32('编号', id);
     _requireUnsignedInt32('荣誉点数', honorPoints);
     _requireUnsignedInt32('竞技场点数', arenaPoints);

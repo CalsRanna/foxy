@@ -3,12 +3,11 @@ import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin PageTextLocaleValidationMixin on ViewModelValidationMixin {
-  void validatePageTextLocaleFields(PageTextLocaleEntity value) =>
-      value._validateFields();
-}
+  void validatePageTextLocaleFields(PageTextLocaleEntity value) {
+    final id = value.id;
+    final locale = value.locale;
+    final verifiedBuild = value.verifiedBuild;
 
-extension on PageTextLocaleEntity {
-  void _validateFields() {
     if (id <= 0 || id > kPageTextMaxUnsignedInt) {
       throw RangeError.range(id, 1, kPageTextMaxUnsignedInt, 'ID');
     }

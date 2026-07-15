@@ -2,12 +2,10 @@ import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin QuestInfoValidationMixin on ViewModelValidationMixin {
-  void validateQuestInfoFields(QuestInfoEntity value) =>
-      value._validateFields();
-}
+  void validateQuestInfoFields(QuestInfoEntity value) {
+    final id = value.id;
+    final infoNameLangFlags = value.infoNameLangFlags;
 
-extension on QuestInfoEntity {
-  void _validateFields() {
     if (id <= 0 || id > 65535) {
       throw StateError('编号必须在 1..65535 之间');
     }

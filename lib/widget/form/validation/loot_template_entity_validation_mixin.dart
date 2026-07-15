@@ -3,12 +3,17 @@ import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin LootTemplateValidationMixin on ViewModelValidationMixin {
-  void validateLootTemplateFields(LootTemplateEntity value) =>
-      value._validateFields();
-}
+  void validateLootTemplateFields(LootTemplateEntity value) {
+    final entry = value.entry;
+    final item = value.item;
+    final reference = value.reference;
+    final chance = value.chance;
+    final questRequired = value.questRequired;
+    final lootMode = value.lootMode;
+    final groupId = value.groupId;
+    final minCount = value.minCount;
+    final maxCount = value.maxCount;
 
-extension on LootTemplateEntity {
-  void _validateFields() {
     if (entry < 0 || entry > 0xffffffff) {
       throw RangeError.range(entry, 0, 0xffffffff, 'Entry');
     }
