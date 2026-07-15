@@ -39,6 +39,10 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.creatureSpellData,
   ),
   DbcDefinition(
+    tableName: 'dbc_currency_category',
+    schema: Definitions.currencyCategory,
+  ),
+  DbcDefinition(
     tableName: 'dbc_currency_types',
     schema: Definitions.currencyTypes,
   ),

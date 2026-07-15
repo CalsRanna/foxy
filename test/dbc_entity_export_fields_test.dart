@@ -9,6 +9,7 @@ import 'package:foxy/entity/creature_model_data_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
+import 'package:foxy/entity/currency_category_entity.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
@@ -71,6 +72,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_creature_movement_info' => const CreatureMovementInfoEntity().toJson(),
     'dbc_creature_spell_data' => const CreatureSpellDataEntity().toJson(),
     'dbc_currency_types' => const CurrencyTypeEntity().toJson(),
+    'dbc_currency_category' => const CurrencyCategoryEntity().toJson(),
     'dbc_destructible_model_data' =>
       const DestructibleModelDataEntity().toJson(),
     'dbc_emotes_text' => const EmoteTextEntity().toJson(),
@@ -179,6 +181,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     ).toJson(),
     'dbc_creature_spell_data' => CreatureSpellDataEntity.fromJson(row).toJson(),
     'dbc_currency_types' => CurrencyTypeEntity.fromJson(row).toJson(),
+    'dbc_currency_category' => CurrencyCategoryEntity.fromJson(row).toJson(),
     'dbc_destructible_model_data' => DestructibleModelDataEntity.fromJson(
       row,
     ).toJson(),
@@ -249,7 +252,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(58));
+    expect(dbcDefinitions, hasLength(59));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

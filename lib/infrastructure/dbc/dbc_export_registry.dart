@@ -7,6 +7,7 @@ import 'package:foxy/repository/creature_model_data_repository.dart';
 import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
@@ -142,6 +143,7 @@ class DbcExportRegistry {
     final creatureMovementInfo = getIt.get<CreatureMovementInfoRepository>();
     final creatureSpellData = getIt.get<CreatureSpellDataRepository>();
     final currencyType = getIt.get<CurrencyTypeRepository>();
+    final currencyCategory = getIt.get<CurrencyCategoryRepository>();
     final destructibleModelData = getIt.get<DestructibleModelDataRepository>();
     final faction = getIt.get<DbcFactionRepository>();
     final factionTemplate = getIt.get<DbcFactionTemplateRepository>();
@@ -238,6 +240,11 @@ class DbcExportRegistry {
       'dbc_currency_types': DbcExportDelegate.typed(
         load: currencyType.getCurrencyTypes,
         count: () => currencyType.countCurrencyTypes(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_currency_category': DbcExportDelegate.typed(
+        load: currencyCategory.getCurrencyCategories,
+        count: () => currencyCategory.countCurrencyCategories(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_destructible_model_data': DbcExportDelegate.typed(

@@ -10,6 +10,7 @@ import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -328,6 +329,14 @@ class FoxyLocalePickerDelegates {
     () => GetIt.instance.get<CharTitleRepository>(),
     (repo, id, field) => repo.getCharTitleLocales(id, field),
     (repo, id, field, values) => repo.saveCharTitleLocales(id, field, values),
+  );
+
+  static final dbcCurrencyCategoryName = _dbc(
+    DbcLocaleFields.currencyCategoryName,
+    () => GetIt.instance.get<CurrencyCategoryRepository>(),
+    (repo, id, field) => repo.getCurrencyCategoryLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveCurrencyCategoryLocales(id, field, values),
   );
 
   static final dbcFactionName = _dbc(

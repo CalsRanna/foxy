@@ -53,6 +53,10 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
       controller: viewModel.entryController,
       placeholder: '编号（ID）',
     );
+    var nameInput = FoxyStringInput(
+      controller: viewModel.nameController,
+      placeholder: '物品名称',
+    );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
       size: ShadButtonSize.sm,
@@ -66,7 +70,9 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: entryInput),
+      Expanded(child: nameInput),
       Expanded(child: row),
+      Expanded(child: SizedBox()),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -92,17 +98,19 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '名称', '分类'];
+    final headers = ['编号', '物品编号', '名称', '分类', '位索引'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 240;
+        var width = constraints.maxWidth - 460;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.displayItemName)),
-              2 => ShadTableCell(child: Text(item.categoryId.toString())),
+              1 => ShadTableCell(child: Text(item.itemId.toString())),
+              2 => ShadTableCell(child: Text(item.displayItemName)),
+              3 => ShadTableCell(child: Text(item.categoryId.toString())),
+              4 => ShadTableCell(child: Text(item.bitIndex.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
@@ -110,8 +118,10 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
-              2 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(width),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(100),
               _ => null,
             };
           },
@@ -132,13 +142,6 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
                     viewModel.navigateToDetail(id: items[row].id);
                   },
                   child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () {
-                    viewModel.copyCurrencyType(items[row].id);
-                  },
-                  child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
