@@ -17,7 +17,9 @@ class AchievementDetailViewModel with FieldControllerMixin {
 
   /// Basic
   late final idController = registerController(IntFieldController());
-  late final factionController = registerController(IntFieldController());
+  late final factionController = registerController(
+    SelectFieldController<int>(fallback: -1),
+  );
   late final instanceIdController = registerController(IntFieldController());
   late final supercedesController = registerController(IntFieldController());
 
@@ -127,7 +129,7 @@ class AchievementDetailViewModel with FieldControllerMixin {
   late final categoryController = registerController(IntFieldController());
   late final pointsController = registerController(IntFieldController());
   late final uiOrderController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(FlagFieldController());
   late final iconIdController = registerController(IntFieldController());
 
   /// Reward languages
@@ -401,7 +403,7 @@ class AchievementDetailViewModel with FieldControllerMixin {
       module: 'achievement',
       actionType: action,
       entityId: t.id,
-      entityName: '',
+      entityName: t.titleLangZhCN,
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

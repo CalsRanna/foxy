@@ -98,6 +98,8 @@ import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_vie
 import 'package:foxy/page/talent/talent_detail_view_model.dart';
 import 'package:foxy/page/talent/talent_list_view_model.dart';
 import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
+import 'package:foxy/repository/achievement_criteria_repository.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
@@ -234,6 +236,8 @@ class DI {
 
   static void _registerRepositories() {
     _instance.registerLazySingleton(() => AchievementRepository());
+    _instance.registerLazySingleton(() => AchievementCategoryRepository());
+    _instance.registerLazySingleton(() => AchievementCriteriaRepository());
     _instance.registerLazySingleton(() => ActivityLogRepository());
     _instance.registerLazySingleton(() => AreaTableRepository());
     _instance.registerLazySingleton(() => BroadcastTextRepository());

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/achievement_constants.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -62,23 +67,26 @@ class _AchievementViewState extends State<AchievementView> {
     );
     final factionInput = FoxyFormItem(
       label: '阵营',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Faction',
+      child: FoxyShadSelect<int>(
         controller: viewModel.factionController,
+        options: kAchievementFactionOptions,
+        placeholder: const Text('Faction'),
       ),
     );
     final instanceIdInput = FoxyFormItem(
-      label: '实例编号',
-      child: FoxyNumberInput<int>(
+      label: '限制地图',
+      child: FoxyEntityPicker(
         placeholder: 'Instance_ID',
         controller: viewModel.instanceIdController,
+        delegate: FoxyEntityPickerDelegates.map,
       ),
     );
     final supercedesInput = FoxyFormItem(
       label: '前置成就',
-      child: FoxyNumberInput<int>(
+      child: FoxyEntityPicker(
         placeholder: 'Supercedes',
         controller: viewModel.supercedesController,
+        delegate: FoxyEntityPickerDelegates.achievement,
       ),
     );
 
@@ -197,10 +205,11 @@ class _AchievementViewState extends State<AchievementView> {
 
   Widget _buildOtherCard() {
     final categoryInput = FoxyFormItem(
-      label: '类别',
-      child: FoxyNumberInput<int>(
+      label: '成就分类',
+      child: FoxyEntityPicker(
         placeholder: 'Category',
         controller: viewModel.categoryController,
+        delegate: FoxyEntityPickerDelegates.achievementCategory,
       ),
     );
     final pointsInput = FoxyFormItem(
@@ -218,31 +227,35 @@ class _AchievementViewState extends State<AchievementView> {
       ),
     );
     final flagsInput = FoxyFormItem(
-      label: '标识',
-      child: FoxyNumberInput<int>(
+      label: '成就标志',
+      child: FoxyFlagPicker(
         placeholder: 'Flags',
         controller: viewModel.flagsController,
+        flags: kAchievementFlagOptions,
+        title: '成就标志',
       ),
     );
     final iconIdInput = FoxyFormItem(
-      label: '图标编号',
-      child: FoxyNumberInput<int>(
+      label: '成就图标',
+      child: FoxyEntityPicker(
         placeholder: 'IconID',
         controller: viewModel.iconIdController,
+        delegate: FoxyEntityPickerDelegates.spellIcon,
       ),
     );
     final minimumCriteriaInput = FoxyFormItem(
-      label: '最小完成条件',
+      label: '最少完成条件数',
       child: FoxyNumberInput<int>(
         placeholder: 'Minimum_criteria',
         controller: viewModel.minimumCriteriaController,
       ),
     );
     final sharesCriteriaInput = FoxyFormItem(
-      label: '共享条件',
-      child: FoxyNumberInput<int>(
+      label: '共享条件成就',
+      child: FoxyEntityPicker(
         placeholder: 'Shares_criteria',
         controller: viewModel.sharesCriteriaController,
+        delegate: FoxyEntityPickerDelegates.achievement,
       ),
     );
 

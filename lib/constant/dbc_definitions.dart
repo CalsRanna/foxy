@@ -16,6 +16,14 @@ class DbcDefinition {
 
 final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_achievement', schema: Definitions.achievement),
+  DbcDefinition(
+    tableName: 'dbc_achievement_category',
+    schema: Definitions.achievementCategory,
+  ),
+  DbcDefinition(
+    tableName: 'dbc_achievement_criteria',
+    schema: Definitions.achievementCriteria,
+  ),
   DbcDefinition(tableName: 'dbc_area_table', schema: Definitions.areaTable),
   DbcDefinition(tableName: 'dbc_char_titles', schema: Definitions.charTitles),
   DbcDefinition(

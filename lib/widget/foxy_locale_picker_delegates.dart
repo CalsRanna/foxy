@@ -7,6 +7,8 @@ import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
+import 'package:foxy/repository/achievement_criteria_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -308,6 +310,22 @@ class FoxyLocalePickerDelegates {
     () => GetIt.instance.get<AchievementRepository>(),
     (repo, id, field) => repo.getAchievementLocales(id, field),
     (repo, id, field, values) => repo.saveAchievementLocales(id, field, values),
+  );
+
+  static final dbcAchievementCategoryName = _dbc(
+    DbcLocaleFields.achievementCategoryName,
+    () => GetIt.instance.get<AchievementCategoryRepository>(),
+    (repo, id, field) => repo.getAchievementCategoryLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveAchievementCategoryLocales(id, field, values),
+  );
+
+  static final dbcAchievementCriteriaDescription = _dbc(
+    DbcLocaleFields.achievementCriteriaDescription,
+    () => GetIt.instance.get<AchievementCriteriaRepository>(),
+    (repo, id, field) => repo.getAchievementCriteriaLocales(id, field),
+    (repo, id, field, values) =>
+        repo.saveAchievementCriteriaLocales(id, field, values),
   );
 
   static final dbcAreaTableAreaName = _dbc(
