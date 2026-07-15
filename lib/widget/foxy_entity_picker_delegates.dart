@@ -18,6 +18,8 @@ import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/entity/currency_category_entity.dart';
+import 'package:foxy/entity/currency_category_filter_entity.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
@@ -136,6 +138,7 @@ import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/creature_display_info_repository.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
@@ -194,6 +197,50 @@ import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
 
 class FoxyEntityPickerDelegates {
+  static final currencyCategory =
+      FoxyEntityPickerDelegate<BriefCurrencyCategoryEntity>(
+        title: '货币分类',
+        errorLabel: '搜索 CurrencyCategory.dbc 货币分类失败',
+        filters: const [
+          FoxyEntityPickerFilter('分类 ID'),
+          FoxyEntityPickerFilter('分类名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefCurrencyCategoryEntity row) => row.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefCurrencyCategoryEntity row) => row.nameLangZhCN,
+          ),
+          FoxyEntityPickerColumn(
+            header: '标志',
+            width: 120,
+            text: (BriefCurrencyCategoryEntity row) => row.flags.toString(),
+          ),
+        ],
+        idOf: (BriefCurrencyCategoryEntity row) => row.id,
+        fetch: (page, values) => GetIt.instance
+            .get<CurrencyCategoryRepository>()
+            .getBriefCurrencyCategories(
+              page: page,
+              filter: CurrencyCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<CurrencyCategoryRepository>()
+            .countCurrencyCategories(
+              filter: CurrencyCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+      );
+
   static final achievement = FoxyEntityPickerDelegate<BriefAchievementEntity>(
     title: '成就',
     errorLabel: '搜索 Achievement.dbc 成就失败',

@@ -15,30 +15,13 @@ import 'package:signals/signals.dart';
 class CurrencyTypeListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   late final entryController = registerController(StringFieldController());
+  late final nameController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
 
   final page = signal(1);
   final currencyTypes = signal(<BriefCurrencyTypeEntity>[]);
   final total = signal(0);
-
-  Future<void> copyCurrencyType(int id) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '是否复制编号为 $id 的货币？',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      await _repository.copyCurrencyType(id);
-      _logActivity(ActivityActionType.copy, id);
-      DialogUtil.instance.success('复制成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('复制失败: ${e.toString()}');
-    }
-  }
 
   Future<void> deleteCurrencyType(int id) async {
     try {
@@ -92,7 +75,10 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
   }
 
   CurrencyTypeFilterEntity _buildFilter() {
-    return CurrencyTypeFilterEntity(id: entryController.collect());
+    return CurrencyTypeFilterEntity(
+      id: entryController.collect(),
+      name: nameController.collect(),
+    );
   }
 
   Future<void> paginate(int page) async {
@@ -102,6 +88,7 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
 
   Future<void> reset() async {
     entryController.init('');
+    nameController.init('');
     page.value = 1;
     await _refresh();
   }

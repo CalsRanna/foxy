@@ -45,6 +45,13 @@ class DbcLocaleFields {
     label: '女性称号',
   );
 
+  // --- currency_category ---
+  static final currencyCategoryName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_currency_category',
+    columnPrefix: 'Name_lang',
+    label: '货币分类名称',
+  );
+
   // --- faction ---
   static final factionName = DbcLocaleFieldDefinition(
     tableName: 'dbc_faction',
@@ -244,6 +251,7 @@ class DbcLocaleFields {
     areaTableAreaName,
     charTitlesName,
     charTitlesName1,
+    currencyCategoryName,
     factionName,
     factionDescription,
     emotesTextDataText,

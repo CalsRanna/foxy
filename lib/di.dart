@@ -121,6 +121,7 @@ import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
@@ -258,6 +259,7 @@ class DI {
     _instance.registerLazySingleton(() => CreatureTemplateSpellRepository());
     _instance.registerLazySingleton(() => CreatureDefaultTrainerRepository());
     _instance.registerLazySingleton(() => CurrencyTypeRepository());
+    _instance.registerLazySingleton(() => CurrencyCategoryRepository());
     _instance.registerLazySingleton(() => DestructibleModelDataRepository());
     _instance.registerLazySingleton(() => DbcFactionRepository());
     _instance.registerLazySingleton(() => DbcFactionTemplateRepository());

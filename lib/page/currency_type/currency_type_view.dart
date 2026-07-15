@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/currency_type/currency_type_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -40,17 +42,19 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       ),
     );
     final itemIdInput = FoxyFormItem(
-      label: '物品编号',
-      child: FoxyNumberInput<int>(
+      label: '货币物品',
+      child: FoxyEntityPicker(
         placeholder: 'ItemID',
         controller: viewModel.itemIdController,
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
       ),
     );
     final categoryIdInput = FoxyFormItem(
-      label: '分类编号',
-      child: FoxyNumberInput<int>(
+      label: '货币分类',
+      child: FoxyEntityPicker(
         placeholder: 'CategoryID',
         controller: viewModel.categoryIdController,
+        delegate: FoxyEntityPickerDelegates.currencyCategory,
       ),
     );
     final bitIndexInput = FoxyFormItem(
