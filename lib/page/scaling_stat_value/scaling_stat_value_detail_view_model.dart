@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/scaling_stat_value_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ScalingStatValueDetailViewModel with FieldControllerMixin {
+class ScalingStatValueDetailViewModel
+    with
+        ViewModelValidationMixin,
+        ScalingStatValueValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<ScalingStatValueRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -73,6 +79,7 @@ class ScalingStatValueDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
+      validateScalingStatValueFields(t);
       final existed = await _repository.getScalingStatValue(t.id);
       if (existed == null) {
         final id = await _repository.storeScalingStatValue(t);

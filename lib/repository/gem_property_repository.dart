@@ -53,14 +53,12 @@ class GemPropertyRepository with RepositoryMixin {
   Future<int> storeGemProperty(GemPropertyEntity gemProperty) async {
     final id = gemProperty.id > 0 ? gemProperty.id : await _getNextId();
     final stored = gemProperty.copyWith(id: id);
-    stored.validate();
     await _validateEnchantReference(stored, preserveExisting: false);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateGemProperty(GemPropertyEntity gemProperty) async {
-    gemProperty.validate();
     await _validateEnchantReference(gemProperty, preserveExisting: true);
     final json = gemProperty.toJson()..remove('ID');
     await laconic.table(_table).where('ID', gemProperty.id).update(json);

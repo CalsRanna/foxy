@@ -1,16 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
+import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SmartScriptDetailViewModel with FieldControllerMixin {
+class SmartScriptDetailViewModel
+    with
+        FieldControllerMixin,
+        ViewModelValidationMixin,
+        SmartScriptValidationMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
@@ -68,7 +74,7 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
         final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
         t = t.copyWith(id: nextId);
         idController.init(nextId);
-        t.validate();
+        validateSmartScriptFields(t);
         await _repository.storeSmartScript(t);
         _origEntryOrGuid = t.entryOrGuid;
         _origSourceType = t.sourceType;
@@ -77,7 +83,7 @@ class SmartScriptDetailViewModel with FieldControllerMixin {
         isNew.value = false;
         script.value = t;
       } else {
-        t.validate();
+        validateSmartScriptFields(t);
         await _repository.updateSmartScript(
           _origEntryOrGuid!,
           _origSourceType!,

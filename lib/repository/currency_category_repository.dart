@@ -57,13 +57,11 @@ class CurrencyCategoryRepository
   Future<int> storeCurrencyCategory(CurrencyCategoryEntity category) async {
     final id = category.id > 0 ? category.id : await _getNextId();
     final stored = category.copyWith(id: id);
-    stored.validate();
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateCurrencyCategory(CurrencyCategoryEntity category) async {
-    category.validate();
     final json = category.toJson()..remove('ID');
     await laconic.table(_table).where('ID', category.id).update(json);
   }

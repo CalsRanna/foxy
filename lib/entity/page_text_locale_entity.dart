@@ -1,6 +1,3 @@
-import 'package:foxy/constant/page_text_constants.dart';
-import 'package:foxy/entity/page_text_entity.dart';
-
 class PageTextLocaleEntity {
   final int id;
   final String locale;
@@ -30,24 +27,6 @@ class PageTextLocaleEntity {
       'Text': text,
       'VerifiedBuild': verifiedBuild,
     };
-  }
-
-  void validate() {
-    if (id <= 0 || id > PageTextEntity.maxUnsignedInt) {
-      throw RangeError.range(id, 1, PageTextEntity.maxUnsignedInt, 'ID');
-    }
-    if (!kPageTextLocaleOptions.containsKey(locale)) {
-      throw ArgumentError.value(locale, 'locale', 'AzerothCore 不加载该语言代码');
-    }
-    if (verifiedBuild < PageTextEntity.minSignedInt ||
-        verifiedBuild > PageTextEntity.maxSignedInt) {
-      throw RangeError.range(
-        verifiedBuild,
-        PageTextEntity.minSignedInt,
-        PageTextEntity.maxSignedInt,
-        'VerifiedBuild',
-      );
-    }
   }
 
   PageTextLocaleEntity copyWith({

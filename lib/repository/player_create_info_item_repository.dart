@@ -47,7 +47,6 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoItem(
     PlayerCreateInfoItemEntity item,
   ) async {
-    item.validate();
     await laconic.table(_table).insert([item.toJson()]);
   }
 
@@ -57,7 +56,6 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     int itemid,
     PlayerCreateInfoItemEntity item,
   ) async {
-    item.validate();
     var json = item.toJson();
     json.remove('race');
     json.remove('class');

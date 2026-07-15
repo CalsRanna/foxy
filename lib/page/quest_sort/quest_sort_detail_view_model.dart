@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/quest_sort_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
@@ -11,7 +13,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestSortDetailViewModel with FieldControllerMixin {
+class QuestSortDetailViewModel
+    with
+        ViewModelValidationMixin,
+        QuestSortValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestSortRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -26,7 +32,7 @@ class QuestSortDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
-      t.validate();
+      validateQuestSortFields(t);
       final isCreate = (await _repository.getQuestSort(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeQuestSort(t);

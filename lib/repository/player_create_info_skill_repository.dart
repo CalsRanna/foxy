@@ -52,7 +52,6 @@ class PlayerCreateInfoSkillRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoSkill(
     PlayerCreateInfoSkillEntity entity,
   ) async {
-    entity.validate();
     await laconic.table(_table).insert([entity.toJson()]);
   }
 
@@ -62,7 +61,6 @@ class PlayerCreateInfoSkillRepository with RepositoryMixin {
     int skill,
     PlayerCreateInfoSkillEntity entity,
   ) async {
-    entity.validate();
     await laconic
         .table(_table)
         .where('raceMask', raceMask)

@@ -1,8 +1,4 @@
 class PageTextEntity {
-  static const maxUnsignedInt = 0xFFFFFFFF;
-  static const minSignedInt = -0x80000000;
-  static const maxSignedInt = 0x7FFFFFFF;
-
   final int id;
   final String text;
   final int nextPageId;
@@ -31,23 +27,6 @@ class PageTextEntity {
       'NextPageID': nextPageId,
       'VerifiedBuild': verifiedBuild,
     };
-  }
-
-  void validate() {
-    if (id <= 0 || id > maxUnsignedInt) {
-      throw RangeError.range(id, 1, maxUnsignedInt, 'ID');
-    }
-    if (nextPageId < 0 || nextPageId > maxUnsignedInt) {
-      throw RangeError.range(nextPageId, 0, maxUnsignedInt, 'NextPageID');
-    }
-    if (verifiedBuild < minSignedInt || verifiedBuild > maxSignedInt) {
-      throw RangeError.range(
-        verifiedBuild,
-        minSignedInt,
-        maxSignedInt,
-        'VerifiedBuild',
-      );
-    }
   }
 
   PageTextEntity copyWith({

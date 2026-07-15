@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -101,7 +102,11 @@ void main() {
     expect(source, contains(".where('Data7', id)"));
     expect(source, contains(".table(_localeTable).where('ID', id).delete()"));
     expect(source, contains('final localeKeys = <String>{};'));
-    expect(source, contains('normalized.validate();'));
+    expect(source, isNot(contains('.validate()')));
+    final viewModel = File(
+      'lib/page/page_text/page_text_detail_view_model.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('validatePageTextFields(data);'));
     expect(source, contains('final locales = _prepareLocales('));
   });
 

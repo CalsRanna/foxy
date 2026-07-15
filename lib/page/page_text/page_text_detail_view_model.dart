@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/page_text_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PageTextDetailViewModel with FieldControllerMixin {
+class PageTextDetailViewModel
+    with
+        ViewModelValidationMixin,
+        PageTextValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PageTextRepository>();
 
@@ -48,6 +54,7 @@ class PageTextDetailViewModel with FieldControllerMixin {
   Future<int?> save(BuildContext context) async {
     try {
       final data = _collect();
+      validatePageTextFields(data);
       final existed = await _repository.getPageText(data.id);
       late final PageTextEntity saved;
       if (existed == null) {

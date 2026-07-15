@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/gem_property_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GemPropertyDetailViewModel with FieldControllerMixin {
+class GemPropertyDetailViewModel
+    with
+        ViewModelValidationMixin,
+        GemPropertyValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<GemPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -28,6 +34,7 @@ class GemPropertyDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      validateGemPropertyFields(t);
       final isCreate = (await _repository.getGemProperty(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeGemProperty(t);

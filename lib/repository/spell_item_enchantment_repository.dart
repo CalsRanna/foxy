@@ -68,7 +68,6 @@ class SpellItemEnchantmentRepository
         ? spellItemEnchantment.id
         : await _getNextId();
     final stored = spellItemEnchantment.copyWith(id: id);
-    stored.validate();
     await _validateReferences(stored);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
@@ -77,7 +76,6 @@ class SpellItemEnchantmentRepository
   Future<void> updateSpellItemEnchantment(
     SpellItemEnchantmentEntity spellItemEnchantment,
   ) async {
-    spellItemEnchantment.validate();
     await _validateReferences(spellItemEnchantment);
     final json = spellItemEnchantment.toJson()..remove('ID');
     await laconic

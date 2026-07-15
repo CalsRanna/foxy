@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -79,8 +80,12 @@ void main() {
     final repository = File(
       'lib/repository/gem_property_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/gem_property/gem_property_detail_view_model.dart',
+    ).readAsStringSync();
     expect(repository, contains('gemProperty.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateGemPropertyFields(t);'));
     expect(repository, contains(".table('item_template')"));
     expect(repository, contains(".where('GemProperties', id)"));
     expect(repository, contains('preserveExisting: true'));

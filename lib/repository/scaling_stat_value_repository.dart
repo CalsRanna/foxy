@@ -64,14 +64,12 @@ class ScalingStatValueRepository with RepositoryMixin {
   Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
     final id = value.id > 0 ? value.id : await _getNextId();
     final stored = value.copyWith(id: id);
-    stored.validate();
     await _validateNewCharlevel(stored);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateScalingStatValue(ScalingStatValueEntity value) async {
-    value.validate();
     final existing = await getScalingStatValue(value.id);
     if (existing == null) {
       throw StateError('缩放属性值 ${value.id} 不存在');

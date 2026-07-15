@@ -56,7 +56,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final stored = itemSet.id > 0
         ? itemSet
         : itemSet.copyWith(id: await _getNextId());
-    stored.validate();
     await _validateReferences(stored, null);
     await laconic.table(_table).insert([stored.toJson()]);
     return stored.id;
@@ -65,7 +64,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> updateItemSet(ItemSetEntity itemSet) async {
     final existing = await getItemSet(itemSet.id);
     if (existing == null) throw StateError('套装 ${itemSet.id} 不存在');
-    itemSet.validate();
     await _validateReferences(itemSet, existing);
     var json = itemSet.toJson();
     json.remove('ID');

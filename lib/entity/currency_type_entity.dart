@@ -1,5 +1,3 @@
-import 'package:foxy/constant/currency_type_constants.dart';
-
 class CurrencyTypeEntity {
   final int id;
   final int itemId;
@@ -29,24 +27,6 @@ class CurrencyTypeEntity {
       'CategoryID': categoryId,
       'BitIndex': bitIndex,
     };
-  }
-
-  void validate() {
-    _requireRange(id, 1, 0x7fffffff, 'ID');
-    _requireRange(itemId, 1, 0x7fffffff, 'ItemID');
-    _requireRange(categoryId, 1, 0x7fffffff, 'CategoryID');
-    _requireRange(
-      bitIndex,
-      kCurrencyBitIndexMinimum,
-      kCurrencyBitIndexMaximum,
-      'BitIndex',
-    );
-  }
-
-  static void _requireRange(int value, int minimum, int maximum, String name) {
-    if (value < minimum || value > maximum) {
-      throw ArgumentError('$name 必须在 $minimum..$maximum 范围内');
-    }
   }
 
   CurrencyTypeEntity copyWith({

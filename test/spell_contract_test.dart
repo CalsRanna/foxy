@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';

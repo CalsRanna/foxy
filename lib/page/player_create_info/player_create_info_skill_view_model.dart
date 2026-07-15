@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -8,7 +10,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PlayerCreateInfoSkillViewModel with FieldControllerMixin {
+class PlayerCreateInfoSkillViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoSkillValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoSkillRepository>();
   final skills = signal(<PlayerCreateInfoSkillEntity>[]);
 
@@ -47,6 +53,7 @@ class PlayerCreateInfoSkillViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final entity = _collect();
+      validatePlayerCreateInfoSkillFields(entity);
       if (_editing == null) {
         await _repository.storePlayerCreateInfoSkill(entity);
       } else {

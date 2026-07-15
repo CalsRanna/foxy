@@ -1,4 +1,5 @@
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -74,7 +75,6 @@ class PageTextRepository with RepositoryMixin {
   Future<int> storePageText(PageTextEntity pageText) async {
     final nextId = pageText.id > 0 ? pageText.id : await _getNextId();
     final stored = pageText.copyWith(id: nextId);
-    stored.validate();
     await _validateNextPage(stored.id, stored.nextPageId);
     if (await getPageText(stored.id) != null) {
       throw StateError('页面文本 ${stored.id} 已存在');
@@ -87,7 +87,6 @@ class PageTextRepository with RepositoryMixin {
     if (await getPageText(pageText.id) == null) {
       throw StateError('页面文本 ${pageText.id} 不存在');
     }
-    pageText.validate();
     await _validateNextPage(pageText.id, pageText.nextPageId);
     final json = pageText.toJson();
     json.remove('ID');
@@ -136,7 +135,6 @@ class PageTextRepository with RepositoryMixin {
     if (source == null) return;
     final nextId = await _getNextId();
     final copied = source.copyWith(id: nextId);
-    copied.validate();
     await _validateNextPage(copied.id, copied.nextPageId);
     final locales = _prepareLocales(nextId, await getPageTextLocales(id));
     await laconic.transaction(() async {
@@ -187,7 +185,7 @@ class PageTextRepository with RepositoryMixin {
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > PageTextEntity.maxUnsignedInt) {
+    if (id > kPageTextMaxUnsignedInt) {
       throw StateError('page_text 已无可用 uint32 ID');
     }
     return id;
@@ -216,7 +214,6 @@ class PageTextRepository with RepositoryMixin {
     final localeKeys = <String>{};
     return locales.map((locale) {
       final normalized = locale.copyWith(id: id);
-      normalized.validate();
       if (!localeKeys.add(normalized.locale)) {
         throw StateError('语言 ${normalized.locale} 重复');
       }

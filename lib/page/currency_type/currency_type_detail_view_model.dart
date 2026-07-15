@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/currency_type_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CurrencyTypeDetailViewModel with FieldControllerMixin {
+class CurrencyTypeDetailViewModel
+    with
+        ViewModelValidationMixin,
+        CurrencyTypeValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -24,6 +30,7 @@ class CurrencyTypeDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
+      validateCurrencyTypeFields(t);
       final existed = await _repository.getCurrencyType(t.id);
       if (existed == null) {
         final id = await _repository.storeCurrencyType(t);

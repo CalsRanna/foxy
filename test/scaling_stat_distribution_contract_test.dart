@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -124,6 +125,9 @@ void main() {
     final repository = File(
       'lib/repository/scaling_stat_distribution_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart',
+    ).readAsStringSync();
     final di = File('lib/di.dart').readAsStringSync();
     expect(
       File(
@@ -132,7 +136,8 @@ void main() {
       isFalse,
     );
     expect(repository, contains('distribution.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateScalingStatDistributionFields(t);'));
     expect(repository, contains(".table('item_template')"));
     expect(repository, contains(".where('ScalingStatDistribution', id)"));
     expect(repository, contains(r'仍被 $references 个物品模板引用，不能删除'));

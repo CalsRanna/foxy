@@ -13,12 +13,6 @@ class ItemVisualEffectEntity {
 
   Map<String, dynamic> toJson() => {'ID': id, 'Model': model};
 
-  void validate() {
-    if (id <= 0 || id > 0x7fffffff) {
-      throw ArgumentError('ItemVisualEffects ID 必须在 1..2147483647 范围内');
-    }
-  }
-
   ItemVisualEffectEntity copyWith({int? id, String? model}) {
     return ItemVisualEffectEntity(
       id: id ?? this.id,

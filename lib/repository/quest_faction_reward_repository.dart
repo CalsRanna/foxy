@@ -66,7 +66,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
     final id = questFactionReward.id > 0
         ? questFactionReward.id
         : await _getAvailableId();
-    final candidate = questFactionReward.copyWith(id: id)..validate();
+    final candidate = questFactionReward.copyWith(id: id);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
     return id;
@@ -75,7 +75,6 @@ class QuestFactionRewardRepository with RepositoryMixin {
   Future<void> updateQuestFactionReward(
     QuestFactionRewardEntity questFactionReward,
   ) async {
-    questFactionReward.validate();
     var json = questFactionReward.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questFactionReward.id).update(json);
@@ -96,7 +95,6 @@ class QuestFactionRewardRepository with RepositoryMixin {
       await storeQuestFactionReward(questFactionReward);
       return;
     }
-    questFactionReward.validate();
     var existing = await getQuestFactionReward(questFactionReward.id);
     if (existing != null) {
       await updateQuestFactionReward(questFactionReward);

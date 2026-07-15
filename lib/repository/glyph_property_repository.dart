@@ -48,14 +48,12 @@ class GlyphPropertyRepository with RepositoryMixin {
   Future<int> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     final id = glyphProperty.id > 0 ? glyphProperty.id : await _getNextId();
     final stored = glyphProperty.copyWith(id: id);
-    stored.validate();
     await _validateReferences(stored, preserveExisting: false);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateGlyphProperty(GlyphPropertyEntity glyphProperty) async {
-    glyphProperty.validate();
     await _validateReferences(glyphProperty, preserveExisting: true);
     final json = glyphProperty.toJson()..remove('ID');
     await laconic.table(_table).where('ID', glyphProperty.id).update(json);

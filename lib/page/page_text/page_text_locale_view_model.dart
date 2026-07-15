@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
@@ -38,7 +40,8 @@ class PageTextLocaleForm {
   }
 }
 
-class PageTextLocaleViewModel {
+class PageTextLocaleViewModel
+    with ViewModelValidationMixin, PageTextLocaleValidationMixin {
   final _repository = GetIt.instance.get<PageTextRepository>();
 
   final rows = signal<List<PageTextLocaleForm>>([]);
@@ -77,6 +80,9 @@ class PageTextLocaleViewModel {
   Future<void> save(BuildContext context) async {
     try {
       final locales = rows.value.map((row) => row.collect()).toList();
+      for (final locale in locales) {
+        validatePageTextLocaleFields(locale);
+      }
       await _repository.savePageTextLocales(_currentId, locales);
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('本地化已保存')));

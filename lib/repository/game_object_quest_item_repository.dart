@@ -65,14 +65,12 @@ class GameObjectQuestItemRepository with RepositoryMixin {
   Future<void> storeGameObjectQuestItem(
     GameObjectQuestItemEntity questItem,
   ) async {
-    questItem.validate();
     await laconic.table(_table).insert([questItem.toJson()]);
   }
 
   Future<void> updateGameObjectQuestItem(
     GameObjectQuestItemEntity questItem,
   ) async {
-    questItem.validate();
     var json = questItem.toJson();
     json.remove('GameObjectEntry');
     json.remove('Idx');

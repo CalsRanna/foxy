@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/game_object_template_addon_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectTemplateAddonViewModel with FieldControllerMixin {
+class GameObjectTemplateAddonViewModel
+    with
+        ViewModelValidationMixin,
+        GameObjectTemplateAddonValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
@@ -39,6 +45,7 @@ class GameObjectTemplateAddonViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final addonData = _collectFromControllers();
+      validateGameObjectTemplateAddonFields(addonData);
       await _repository.saveGameObjectTemplateAddon(addonData);
       addon.value = addonData;
       if (!context.mounted) return;

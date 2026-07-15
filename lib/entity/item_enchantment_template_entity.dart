@@ -24,14 +24,6 @@ class ItemEnchantmentTemplateEntity {
     return {'entry': entry, 'ench': ench, 'chance': chance};
   }
 
-  void validate() {
-    if (entry == 0) throw ArgumentError('entry 必须引用非零附魔组');
-    if (ench == 0) throw ArgumentError('ench 必须引用随机属性或随机后缀 DBC');
-    if (chance <= 0.000001 || chance > 100) {
-      throw ArgumentError.value(chance, 'chance', '必须大于 0.000001 且不超过 100');
-    }
-  }
-
   ItemEnchantmentTemplateEntity copyWith({
     int? entry,
     int? ench,

@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -90,7 +91,7 @@ void main() {
     expect(source, contains('任务声望固定记录不能删除'));
     expect(source, contains('任务声望固定记录不能复制'));
     expect(source, isNot(contains('nextMaxPlusOne')));
-    expect(source, contains('questFactionReward.copyWith(id: id)..validate()'));
+    expect(source, isNot(contains('.validate()')));
   });
 
   test('详情页显式管理十个奖励值并保持每行四列等宽', () {
@@ -110,7 +111,7 @@ void main() {
     expect(view, isNot(contains('flex:')));
     expect('Expanded(child:'.allMatches(view), hasLength(16));
     expect(viewModel, isNot(contains('List.generate')));
-    expect(viewModel, contains('t.validate()'));
+    expect(viewModel, contains('validateQuestFactionRewardFields(t)'));
   });
 
   test('列表只保留编辑并仅在缺少固定记录时允许新增', () {

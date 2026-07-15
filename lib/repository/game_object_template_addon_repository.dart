@@ -56,14 +56,12 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   Future<void> storeGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity addon,
   ) async {
-    addon.validate();
     await laconic.table(_table).insert([addon.toJson()]);
   }
 
   Future<void> updateGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity addon,
   ) async {
-    addon.validate();
     var json = addon.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);

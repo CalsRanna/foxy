@@ -60,7 +60,6 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   ) async {
     final id = entity.id > 0 ? entity.id : await _getNextId();
     final stored = entity.copyWith(id: id);
-    stored.validate();
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
@@ -68,7 +67,6 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   Future<void> updateSpellItemEnchantmentCondition(
     SpellItemEnchantmentConditionEntity entity,
   ) async {
-    entity.validate();
     final json = entity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', entity.id).update(json);
   }

@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -179,7 +180,7 @@ void main() {
     expect(view, isNot(contains('flex: 3')));
     expect(view, isNot(contains('List.generate')));
     expect(viewModel, contains('IntFieldController()'));
-    expect(viewModel, contains('data.validate()'));
+    expect(viewModel, contains('validateConditionFields(data)'));
     expect(viewModel, isNot(contains('SelectFieldController<int>')));
   });
 }

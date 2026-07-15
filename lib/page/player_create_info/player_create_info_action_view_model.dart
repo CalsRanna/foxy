@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PlayerCreateInfoActionViewModel with FieldControllerMixin {
+class PlayerCreateInfoActionViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoActionValidationMixin,
+        FieldControllerMixin {
   PlayerCreateInfoActionViewModel() {
     typeController.addListener(_syncActionType);
   }
@@ -63,6 +69,7 @@ class PlayerCreateInfoActionViewModel with FieldControllerMixin {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
+      validatePlayerCreateInfoActionFields(item);
       await _repository.storePlayerCreateInfoAction(item);
       actions.value = await _repository.getBriefPlayerCreateInfoActions(
         _race!,
@@ -80,6 +87,7 @@ class PlayerCreateInfoActionViewModel with FieldControllerMixin {
     if (_race == null || _class_ == null) return;
     try {
       final item = _collect();
+      validatePlayerCreateInfoActionFields(item);
       await _repository.updatePlayerCreateInfoAction(
         _race!,
         _class_!,

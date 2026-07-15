@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -167,8 +168,12 @@ void main() {
     final repository = File(
       'lib/repository/talent_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/talent/talent_detail_view_model.dart',
+    ).readAsStringSync();
     expect(repository, contains('talent.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateTalentFields(t);'));
     expect(repository, contains("table: 'foxy.dbc_talent_tab'"));
     expect("table: 'foxy.dbc_spell'".allMatches(repository), hasLength(1));
     expect(repository, contains(".where('SpellRank0'"));

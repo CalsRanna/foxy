@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/achievement_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
@@ -11,7 +13,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class AchievementDetailViewModel with FieldControllerMixin {
+class AchievementDetailViewModel
+    with
+        ViewModelValidationMixin,
+        AchievementValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<AchievementRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -196,6 +202,8 @@ class AchievementDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      validateAchievementFields(t);
+      validateAchievementFields(t);
       final isCreate = (await _repository.getAchievement(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeAchievement(t);

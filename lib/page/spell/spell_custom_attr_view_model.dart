@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/spell_custom_attr_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellCustomAttrViewModel with FieldControllerMixin {
+class SpellCustomAttrViewModel
+    with
+        ViewModelValidationMixin,
+        SpellCustomAttrValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final spellId = signal(0);
@@ -29,6 +35,7 @@ class SpellCustomAttrViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collectFromControllers();
+      validateSpellCustomAttrFields(data);
       await _repository.saveSpellCustomAttr(data);
       customAttr.value = data;
       if (!context.mounted) return;

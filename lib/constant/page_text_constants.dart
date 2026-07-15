@@ -11,3 +11,7 @@ const kPageTextLocaleOptions = <String, String>{
   'esMX': 'esMX',
   'ruRU': 'ruRU',
 };
+
+const kPageTextMaxUnsignedInt = 0xFFFFFFFF;
+const kPageTextMinSignedInt = -0x80000000;
+const kPageTextMaxSignedInt = 0x7FFFFFFF;

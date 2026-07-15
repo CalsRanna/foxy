@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/glyph_property_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GlyphPropertyDetailViewModel with FieldControllerMixin {
+class GlyphPropertyDetailViewModel
+    with
+        ViewModelValidationMixin,
+        GlyphPropertyValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -29,6 +35,7 @@ class GlyphPropertyDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      validateGlyphPropertyFields(t);
       final isCreate = (await _repository.getGlyphProperty(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeGlyphProperty(t);
