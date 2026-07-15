@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/glyph_property_constants.dart';
 import 'package:foxy/page/glyph_property/glyph_property_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -43,24 +47,27 @@ class _GlyphPropertyViewState extends State<GlyphPropertyView> {
 
     /// Property
     final spellIdInput = FoxyFormItem(
-      label: '技能编号',
-      child: FoxyNumberInput<int>(
+      label: '法术',
+      child: FoxyEntityPicker(
         placeholder: 'SpellID',
         controller: viewModel.spellIdController,
+        delegate: FoxyEntityPickerDelegates.spell,
       ),
     );
     final glyphSlotFlagsInput = FoxyFormItem(
-      label: '雕文槽标记',
-      child: FoxyNumberInput<int>(
-        placeholder: 'GlyphSlotFlags',
+      label: '雕文类型',
+      child: FoxyIntShadSelect(
         controller: viewModel.glyphSlotFlagsController,
+        options: kGlyphPropertySlotTypeOptions,
+        placeholder: const Text('GlyphSlotFlags'),
       ),
     );
     final spellIconIdInput = FoxyFormItem(
-      label: '技能图标',
-      child: FoxyNumberInput<int>(
+      label: '法术图标',
+      child: FoxyEntityPicker(
         placeholder: 'SpellIconID',
         controller: viewModel.spellIconIdController,
+        delegate: FoxyEntityPickerDelegates.spellIcon,
       ),
     );
 

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/glyph_property_constants.dart';
 import 'package:foxy/page/glyph_property/glyph_property_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -92,7 +93,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '技能编号', '雕文槽标记', '技能图标'];
+    final headers = ['编号', '法术', '雕文类型', '法术图标'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 120;
@@ -102,7 +103,12 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
               1 => ShadTableCell(child: Text(item.spellId.toString())),
-              2 => ShadTableCell(child: Text(item.glyphSlotFlags.toString())),
+              2 => ShadTableCell(
+                child: Text(
+                  kGlyphPropertySlotTypeOptions[item.glyphSlotFlags] ??
+                      item.glyphSlotFlags.toString(),
+                ),
+              ),
               3 => ShadTableCell(child: Text(item.spellIconId.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
