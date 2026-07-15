@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/gem_property_constants.dart';
 import 'package:foxy/page/gem_property/gem_property_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -92,7 +93,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '附魔编号', '最大数量(背包)', '最大数量(物品)', '类型'];
+    final headers = ['编号', '法术物品附魔', '客户端库存计数', '客户端物品计数', '宝石颜色'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 480;
@@ -104,7 +105,11 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
               1 => ShadTableCell(child: Text(item.enchantId.toString())),
               2 => ShadTableCell(child: Text(item.maxCountInv.toString())),
               3 => ShadTableCell(child: Text(item.maxCountItem.toString())),
-              4 => ShadTableCell(child: Text(item.type.toString())),
+              4 => ShadTableCell(
+                child: Text(
+                  kGemPropertyColorOptions[item.type] ?? item.type.toString(),
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
