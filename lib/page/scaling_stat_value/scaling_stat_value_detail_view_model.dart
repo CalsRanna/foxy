@@ -80,10 +80,13 @@ class ScalingStatValueDetailViewModel with FieldControllerMixin {
       } else {
         await _repository.updateScalingStatValue(t);
       }
-      scalingStatValue.value = t;
+      final isCreate = existed == null;
+      scalingStatValue.value = isCreate
+          ? t.copyWith(id: idController.collect())
+          : t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        scalingStatValue.value,
       );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('缩放属性值数据已保存'));

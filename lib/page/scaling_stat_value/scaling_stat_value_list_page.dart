@@ -73,6 +73,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
       Expanded(child: entryInput),
       Expanded(child: charlevelInput),
       Expanded(child: row),
+      Expanded(child: SizedBox()),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -102,7 +103,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
       '编号',
       '角色等级',
       '主要预算',
-      '次要预算',
+      '三级预算',
       '肩膀预算',
       '饰品预算',
       '单手武器预算',

@@ -45,6 +45,7 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       child: FoxyNumberInput<int>(
         placeholder: 'Charlevel',
         controller: viewModel.charlevelController,
+        readOnly: true,
       ),
     );
 
@@ -78,14 +79,14 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       ),
     );
     final primaryBudgetInput = FoxyFormItem(
-      label: '主属性预算',
+      label: '主要预算',
       child: FoxyNumberInput<int>(
         placeholder: 'PrimaryBudget',
         controller: viewModel.primaryBudgetController,
       ),
     );
     final tertiaryBudgetInput = FoxyFormItem(
-      label: '第三属性预算',
+      label: '三级预算',
       child: FoxyNumberInput<int>(
         placeholder: 'TertiaryBudget',
         controller: viewModel.tertiaryBudgetController,
