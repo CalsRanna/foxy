@@ -205,6 +205,7 @@ import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/talent_tab_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/repository/zone_intro_music_repository.dart';
@@ -347,6 +348,7 @@ class DI {
     _instance.registerLazySingleton(() => SoundProviderPreferencesRepository());
     _instance.registerLazySingleton(() => TotemCategoryRepository());
     _instance.registerLazySingleton(() => TalentRepository());
+    _instance.registerLazySingleton(() => TalentTabRepository());
     _instance.registerLazySingleton(() => TaxiPathRepository());
     _instance.registerLazySingleton(() => VehicleRepository());
     _instance.registerLazySingleton(() => ZoneIntroMusicRepository());

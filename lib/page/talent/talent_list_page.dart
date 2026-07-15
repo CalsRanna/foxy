@@ -53,6 +53,10 @@ class _TalentListPageState extends State<TalentListPage> {
       controller: viewModel.entryController,
       placeholder: '编号（ID）',
     );
+    var spellInput = FoxyStringInput(
+      controller: viewModel.spellController,
+      placeholder: '法术编号（SpellRank0..8）',
+    );
     var searchButton = ShadButton(
       onPressed: viewModel.search,
       size: ShadButtonSize.sm,
@@ -66,7 +70,9 @@ class _TalentListPageState extends State<TalentListPage> {
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: entryInput),
+      Expanded(child: spellInput),
       Expanded(child: row),
+      Expanded(child: SizedBox()),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
@@ -92,7 +98,7 @@ class _TalentListPageState extends State<TalentListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '标签页', '层', '列', '法术'];
+    final headers = ['编号', '天赋页', '层', '列', '第 1 级法术'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         var width = constraints.maxWidth - 480;

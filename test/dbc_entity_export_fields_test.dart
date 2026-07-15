@@ -52,6 +52,7 @@ import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
@@ -126,6 +127,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_sound_provider_preferences' =>
       const SoundProviderPreferencesEntity().toJson(),
     'dbc_talent' => const TalentEntity().toJson(),
+    'dbc_talent_tab' => const TalentTabEntity().toJson(),
     'dbc_taxi_path' => const TaxiPathEntity().toJson(),
     'dbc_totem_category' => TotemCategoryEntity.fromJson(
       _schemaDefaults(tableName),
@@ -235,6 +237,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
       row,
     ).toJson(),
     'dbc_talent' => TalentEntity.fromJson(row).toJson(),
+    'dbc_talent_tab' => TalentTabEntity.fromJson(row).toJson(),
     'dbc_taxi_path' => TaxiPathEntity.fromJson(row).toJson(),
     'dbc_totem_category' => TotemCategoryEntity.fromJson(row).toJson(),
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
@@ -246,7 +249,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(57));
+    expect(dbcDefinitions, hasLength(58));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

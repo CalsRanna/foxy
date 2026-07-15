@@ -47,16 +47,19 @@ class TalentDetailViewModel with FieldControllerMixin {
     try {
       final t = _collectFromControllers();
       final existed = await _repository.getTalent(t.id);
+      late final TalentEntity saved;
       if (existed == null) {
         final id = await _repository.storeTalent(t);
         idController.init(id);
+        saved = t.copyWith(id: id);
       } else {
         await _repository.updateTalent(t);
+        saved = t;
       }
-      talent.value = t;
+      talent.value = saved;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
-        t,
+        existed == null ? ActivityActionType.create : ActivityActionType.update,
+        saved,
       );
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('天赋数据已保存'));

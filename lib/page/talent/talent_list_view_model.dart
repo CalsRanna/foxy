@@ -15,6 +15,7 @@ import 'package:signals/signals.dart';
 class TalentListViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   late final entryController = registerController(StringFieldController());
+  late final spellController = registerController(StringFieldController());
 
   final _repository = GetIt.instance.get<TalentRepository>();
 
@@ -92,7 +93,10 @@ class TalentListViewModel with FieldControllerMixin {
   }
 
   TalentFilterEntity _buildFilter() {
-    return TalentFilterEntity(id: entryController.collect());
+    return TalentFilterEntity(
+      id: entryController.collect(),
+      spell: spellController.collect(),
+    );
   }
 
   Future<void> paginate(int page) async {
@@ -102,6 +106,7 @@ class TalentListViewModel with FieldControllerMixin {
 
   Future<void> reset() async {
     entryController.init('');
+    spellController.init('');
     page.value = 1;
     await _refresh();
   }
