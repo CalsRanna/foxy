@@ -16,6 +16,8 @@ const kLootModeFlagOptions = [
   FlagItem(0x0004, '困难模式 2'),
   FlagItem(0x0008, '困难模式 3'),
   FlagItem(0x0010, '困难模式 4'),
+  // SharedDefines.h 未命名，但 core base 用于戈多克贡品第 5 档。
+  FlagItem(0x0020, '额外掉落模式 5'),
   FlagItem(0x8000, '垃圾鱼'),
 ];
 

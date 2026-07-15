@@ -11,6 +11,10 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
+  ReferenceLootTemplateDetailViewModel() {
+    referenceController.addListener(_syncReferenceState);
+  }
+
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final repository = LootTemplateRepository(LootTableType.reference);
 
@@ -21,7 +25,7 @@ class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
   late final questRequiredController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final lootModeController = registerController(IntFieldController());
+  late final lootModeController = registerController(FlagFieldController());
   late final groupIdController = registerController(IntFieldController());
   late final minCountController = registerController(IntFieldController());
   late final maxCountController = registerController(IntFieldController());
@@ -30,6 +34,7 @@ class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
   final template = signal<LootTemplateEntity?>(null);
   final originalEntry = signal<int?>(null);
   final originalItem = signal<int?>(null);
+  final hasReference = signal(false);
 
   /// 复合主键 (Entry, Item) 均为业务语义键：新建可填，编辑只读。
   bool get isNew => originalItem.value == null;
@@ -72,6 +77,18 @@ class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
     minCountController.init(loot.minCount);
     maxCountController.init(loot.maxCount);
     commentController.init(loot.comment);
+  }
+
+  void _syncReferenceState() {
+    try {
+      final value = referenceController.collect() != 0;
+      hasReference.value = value;
+      if (value && questRequiredController.collect() != 0) {
+        questRequiredController.init(0);
+      }
+    } on FormatException {
+      hasReference.value = false;
+    }
   }
 
   Future<void> save(BuildContext context) async {
@@ -135,6 +152,7 @@ class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
   }
 
   void dispose() {
+    referenceController.removeListener(_syncReferenceState);
     disposeControllers();
   }
 }

@@ -121,10 +121,10 @@ class LootTemplateRepository with RepositoryMixin {
 
   Future<int> countLootTemplates({LootTemplateFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder = builder.select(['DISTINCT Entry']);
     if (filter != null && filter.entry.isNotEmpty) {
       builder = builder.where('Entry', filter.entry);
     }
+    builder = builder.groupBy('Entry');
     return builder.count();
   }
 
@@ -174,6 +174,7 @@ class LootTemplateRepository with RepositoryMixin {
 
   Future<void> storeLootTemplate(LootTemplateEntity loot) async {
     loot.validate();
+    await _validateReferences(loot);
     await laconic.table(_table).insert([loot.toJson()]);
   }
 
@@ -185,6 +186,7 @@ class LootTemplateRepository with RepositoryMixin {
     int groupId = 0,
   }) async {
     loot.validate();
+    await _validateReferences(loot);
     var json = loot.toJson();
     json.remove('Entry');
     var builder = laconic
@@ -222,11 +224,15 @@ class LootTemplateRepository with RepositoryMixin {
       groupId: groupId,
     );
     if (source == null) return;
-    var nextItem = await getNextItemId(entry);
     var json = source.toJson();
-    json['Item'] = nextItem;
-    if (source.reference != 0) {
-      json['Reference'] = nextItem;
+    if (tableType == LootTableType.reference) {
+      json['Entry'] = await nextMaxPlusOne(_table, 'Entry');
+    } else {
+      var nextItem = await getNextItemId(entry);
+      json['Item'] = nextItem;
+      if (source.reference != 0) {
+        json['Reference'] = nextItem;
+      }
     }
     await laconic.table(_table).insert([json]);
   }
@@ -295,5 +301,32 @@ class LootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  Future<void> _validateReferences(LootTemplateEntity loot) async {
+    if (loot.reference == 0) {
+      final item = await laconic
+          .table('item_template')
+          .select(['entry'])
+          .where('entry', loot.item)
+          .limit(1)
+          .get();
+      if (item.isEmpty) {
+        throw StateError('物品 ID ${loot.item} 不存在于 item_template');
+      }
+      return;
+    }
+
+    final target = await laconic
+        .table(LootTableType.reference.tableName)
+        .select(['Entry'])
+        .where('Entry', loot.reference.abs())
+        .limit(1)
+        .get();
+    if (target.isEmpty) {
+      throw StateError(
+        '关联掉落模板 ${loot.reference.abs()} 不存在于 reference_loot_template',
+      );
+    }
   }
 }

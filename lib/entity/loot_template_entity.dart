@@ -1,5 +1,7 @@
 /// 掉落模板 — 对应 *_loot_template 表
 class LootTemplateEntity {
+  static const validLootModeMask = 0x803f;
+
   final int entry;
   final int item;
   final int reference;
@@ -15,7 +17,7 @@ class LootTemplateEntity {
     this.entry = 0,
     this.item = 0,
     this.reference = 0,
-    this.chance = 0,
+    this.chance = 100,
     this.questRequired = false,
     this.lootMode = 1,
     this.groupId = 0,
@@ -25,7 +27,25 @@ class LootTemplateEntity {
   });
 
   void validate() {
+    if (entry < 0 || entry > 0xffffffff) {
+      throw RangeError.range(entry, 0, 0xffffffff, 'Entry');
+    }
+    if (item < 0 || item > 0xffffffff) {
+      throw RangeError.range(item, 0, 0xffffffff, 'Item');
+    }
+    if (reference < -0x7fffffff || reference > 0x7fffffff) {
+      throw RangeError.range(reference, -0x7fffffff, 0x7fffffff, 'Reference');
+    }
+    if (!chance.isFinite || chance < 0 || chance > 100) {
+      throw RangeError.range(chance, 0, 100, 'Chance');
+    }
     if (lootMode == 0) throw StateError('掉落模式不能为 0');
+    if (lootMode < 0 || lootMode > 0xffff) {
+      throw RangeError.range(lootMode, 1, 0xffff, 'LootMode');
+    }
+    if ((lootMode & ~validLootModeMask) != 0) {
+      throw StateError('掉落模式包含 AzerothCore 未定义的标志位');
+    }
     if (groupId < 0 || groupId >= 128) {
       throw RangeError.range(groupId, 0, 127, 'GroupId');
     }
@@ -35,8 +55,16 @@ class LootTemplateEntity {
     if (maxCount < 1 || maxCount > 255) {
       throw RangeError.range(maxCount, 1, 255, 'MaxCount');
     }
-    if (reference == 0 && maxCount < minCount) {
-      throw StateError('最大数量不能小于最小数量');
+    if (reference == 0) {
+      if (item == 0) throw StateError('物品掉落行必须指定物品 ID');
+      if (maxCount < minCount) {
+        throw StateError('最大数量不能小于最小数量');
+      }
+    } else {
+      if (questRequired) throw StateError('引用掉落行不能设置任务需求');
+      if (minCount != maxCount) {
+        throw StateError('引用掉落行的最小数量和最大数量必须相等');
+      }
     }
     if (chance == 0 && groupId == 0) {
       throw StateError('掉落几率为 0 时必须指定掉落组');
@@ -44,7 +72,6 @@ class LootTemplateEntity {
     if (chance != 0 && chance < 0.000001) {
       throw StateError('非零掉落几率不能小于 0.000001');
     }
-    if (chance > 100) throw StateError('掉落几率不能超过 100');
   }
 
   factory LootTemplateEntity.fromJson(Map<String, dynamic> json) {
@@ -52,7 +79,7 @@ class LootTemplateEntity {
       entry: json['Entry'] ?? 0,
       item: json['Item'] ?? 0,
       reference: json['Reference'] ?? 0,
-      chance: (json['Chance'] ?? 0.0),
+      chance: (json['Chance'] as num?)?.toDouble() ?? 100,
       questRequired: (json['QuestRequired'] ?? 0) == 1,
       lootMode: json['LootMode'] ?? 1,
       groupId: json['GroupId'] ?? 0,
@@ -129,7 +156,7 @@ class BriefLootTemplateEntity {
     this.entry = 0,
     this.item = 0,
     this.reference = 0,
-    this.chance = 0,
+    this.chance = 100,
     this.questRequired = false,
     this.lootMode = 1,
     this.groupId = 0,
@@ -148,7 +175,7 @@ class BriefLootTemplateEntity {
       entry: json['Entry'] ?? 0,
       item: json['Item'] ?? 0,
       reference: json['Reference'] ?? 0,
-      chance: json['Chance'] ?? 0.0,
+      chance: (json['Chance'] as num?)?.toDouble() ?? 100,
       questRequired: (json['QuestRequired'] ?? 0) == 1,
       lootMode: json['LootMode'] ?? 1,
       groupId: json['GroupId'] ?? 0,

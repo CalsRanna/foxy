@@ -128,7 +128,7 @@ void main() {
     });
     expect(_valuesOf(kCreatureTypeFlagOptions), _bits(0, 31));
     expect(_valuesOf(kDynamicFlagOptions), _bits(0, 7));
-    expect(_valuesOf(kLootModeFlagOptions), {1, 2, 4, 8, 16, 0x8000});
+    expect(_valuesOf(kLootModeFlagOptions), {1, 2, 4, 8, 16, 32, 0x8000});
 
     final dbAllowedExtraFlags = _bits(0, 31)..remove(1 << 28);
     expect(_valuesOf(kFlagsExtraOptions), dbAllowedExtraFlags);
@@ -284,7 +284,7 @@ void main() {
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(chance: 100).validate(),
+      () => const LootTemplateEntity(item: 1, chance: 100).validate(),
       returnsNormally,
     );
   });
