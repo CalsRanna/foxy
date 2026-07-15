@@ -1,4 +1,5 @@
 import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 
 // AzerothCore master@a0b6553b, SmartScriptMgr.h / SmartScriptMgr.cpp.

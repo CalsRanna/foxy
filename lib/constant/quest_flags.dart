@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 const kQuestFlagsAllowedMask = 0x000FFFFF;
 

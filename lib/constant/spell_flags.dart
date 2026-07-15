@@ -1,7 +1,7 @@
 // 法术标志位常量定义
 // 数据来源：AzerothCore SharedDefines.h SpellAttr0-7, SpellDefines.h
 
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// 法术类型掩码（SchoolMask）
 const kSpellSchoolMaskOptions = [

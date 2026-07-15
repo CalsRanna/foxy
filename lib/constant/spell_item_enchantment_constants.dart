@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// AzerothCore `ItemEnchantmentType` used by SpellItemEnchantment.dbc.
 const kSpellItemEnchantmentEffectTypeOptions = <int, String>{

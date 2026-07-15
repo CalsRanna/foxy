@@ -2,6 +2,7 @@ import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';

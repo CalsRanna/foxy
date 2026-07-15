@@ -1,14 +1,7 @@
 // Creature Template 标志位常量定义
 // 数据来源：AzerothCore SharedDefines.h, UnitDefines.h
 
-/// 标志位项
-class FlagItem {
-  final int value;
-  final String label;
-  final String? group;
-
-  const FlagItem(this.value, this.label, [this.group]);
-}
+import 'package:foxy/constant/flag_item.dart';
 
 const kLootModeFlagOptions = [
   FlagItem(0x0001, '默认'),

@@ -1,4 +1,4 @@
-import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/constant/flag_item.dart';
 
 /// `playercreateinfo.race` uses ChrRaces.dbc IDs accepted by ObjectMgr.
 const kPlayerRaceOptions = {
