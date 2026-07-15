@@ -2,7 +2,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -17,7 +17,7 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
   late final entryController = registerController(StringFieldController());
   late final nameController = registerController(StringFieldController());
 
-  final _repository = GetIt.instance.get<SpellItemEnchantmentSoloRepository>();
+  final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
 
   final page = signal(1);
   final enchantments = signal(<BriefSpellItemEnchantmentEntity>[]);

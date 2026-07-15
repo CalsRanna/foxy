@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/spell_item_enchantment_constants.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class SpellItemEnchantmentView extends StatefulWidget {
   final int? entry;
+
   const SpellItemEnchantmentView({super.key, this.entry});
 
   @override
@@ -35,7 +42,6 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
 
   @override
   Widget build(BuildContext context) {
-    /// Basic
     final idInput = FoxyFormItem(
       label: '编号',
       child: FoxyNumberInput<int>(
@@ -66,235 +72,304 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       ),
     );
 
-    /// Effect row 0
-    final effect0Input = FoxyFormItem(
-      label: 'Effect0',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect0',
-        controller: viewModel.effect0Controller,
-      ),
+    final effect0Input = _effectTypeInput(0, viewModel.effect0Controller);
+    final effectPointsMin0Input = _effectAmountInput(
+      0,
+      viewModel.effect0Controller,
+      viewModel.effectPointsMin0Controller,
     );
-    final effectPointsMin0Input = FoxyFormItem(
-      label: 'EffectPointsMin0',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMin0',
-        controller: viewModel.effectPointsMin0Controller,
-      ),
+    final effectPointsMax0Input = _clientMaximumInput(
+      0,
+      viewModel.effectPointsMax0Controller,
     );
-    final effectPointsMax0Input = FoxyFormItem(
-      label: 'EffectPointsMax0',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMax0',
-        controller: viewModel.effectPointsMax0Controller,
-      ),
-    );
-    final effectArg0Input = FoxyFormItem(
-      label: 'EffectArg0',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectArg0',
-        controller: viewModel.effectArg0Controller,
-      ),
+    final effectArg0Input = _effectArgumentInput(
+      0,
+      viewModel.effect0Controller,
+      viewModel.effectArg0Controller,
     );
 
-    /// Effect row 1
-    final effect1Input = FoxyFormItem(
-      label: 'Effect1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect1',
-        controller: viewModel.effect1Controller,
-      ),
+    final effect1Input = _effectTypeInput(1, viewModel.effect1Controller);
+    final effectPointsMin1Input = _effectAmountInput(
+      1,
+      viewModel.effect1Controller,
+      viewModel.effectPointsMin1Controller,
     );
-    final effectPointsMin1Input = FoxyFormItem(
-      label: 'EffectPointsMin1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMin1',
-        controller: viewModel.effectPointsMin1Controller,
-      ),
+    final effectPointsMax1Input = _clientMaximumInput(
+      1,
+      viewModel.effectPointsMax1Controller,
     );
-    final effectPointsMax1Input = FoxyFormItem(
-      label: 'EffectPointsMax1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMax1',
-        controller: viewModel.effectPointsMax1Controller,
-      ),
-    );
-    final effectArg1Input = FoxyFormItem(
-      label: 'EffectArg1',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectArg1',
-        controller: viewModel.effectArg1Controller,
-      ),
+    final effectArg1Input = _effectArgumentInput(
+      1,
+      viewModel.effect1Controller,
+      viewModel.effectArg1Controller,
     );
 
-    /// Effect row 2
-    final effect2Input = FoxyFormItem(
-      label: 'Effect2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Effect2',
-        controller: viewModel.effect2Controller,
-      ),
+    final effect2Input = _effectTypeInput(2, viewModel.effect2Controller);
+    final effectPointsMin2Input = _effectAmountInput(
+      2,
+      viewModel.effect2Controller,
+      viewModel.effectPointsMin2Controller,
     );
-    final effectPointsMin2Input = FoxyFormItem(
-      label: 'EffectPointsMin2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMin2',
-        controller: viewModel.effectPointsMin2Controller,
-      ),
+    final effectPointsMax2Input = _clientMaximumInput(
+      2,
+      viewModel.effectPointsMax2Controller,
     );
-    final effectPointsMax2Input = FoxyFormItem(
-      label: 'EffectPointsMax2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMax2',
-        controller: viewModel.effectPointsMax2Controller,
-      ),
-    );
-    final effectArg2Input = FoxyFormItem(
-      label: 'EffectArg2',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectArg2',
-        controller: viewModel.effectArg2Controller,
-      ),
+    final effectArg2Input = _effectArgumentInput(
+      2,
+      viewModel.effect2Controller,
+      viewModel.effectArg2Controller,
     );
 
-    /// Other
     final itemVisualInput = FoxyFormItem(
-      label: 'ItemVisual',
-      child: FoxyNumberInput<int>(
-        placeholder: 'ItemVisual',
+      label: '物品视觉',
+      child: FoxyEntityPicker(
         controller: viewModel.itemVisualController,
+        delegate: FoxyEntityPickerDelegates.itemVisuals,
+        placeholder: 'ItemVisual',
       ),
     );
     final flagsInput = FoxyFormItem(
-      label: 'Flags',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Flags',
+      label: '附魔标志',
+      child: FoxyFlagPicker(
         controller: viewModel.flagsController,
+        flags: kSpellItemEnchantmentFlagOptions,
+        title: '附魔标志',
+        placeholder: 'Flags',
       ),
     );
     final srcItemIdInput = FoxyFormItem(
-      label: 'Src_itemID',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Src_itemID',
+      label: '来源宝石物品',
+      child: FoxyEntityPicker(
         controller: viewModel.srcItemIdController,
+        delegate: FoxyEntityPickerDelegates.itemTemplate,
+        placeholder: 'Src_itemID',
       ),
     );
     final conditionIdInput = FoxyFormItem(
-      label: 'Condition_ID',
-      child: FoxyNumberInput<int>(
-        placeholder: 'Condition_ID',
+      label: '附魔条件',
+      child: FoxyEntityPicker(
         controller: viewModel.conditionIdController,
+        delegate: FoxyEntityPickerDelegates.spellItemEnchantmentCondition,
+        placeholder: 'Condition_ID',
       ),
     );
     final requiredSkillIdInput = FoxyFormItem(
-      label: 'RequiredSkillID',
-      child: FoxyNumberInput<int>(
-        placeholder: 'RequiredSkillID',
+      label: '所需技能',
+      child: FoxyEntityPicker(
         controller: viewModel.requiredSkillIdController,
+        delegate: FoxyEntityPickerDelegates.skillLine,
+        placeholder: 'RequiredSkillID',
       ),
     );
     final requiredSkillRankInput = FoxyFormItem(
-      label: 'RequiredSkillRank',
+      label: '所需技能等级',
       child: FoxyNumberInput<int>(
         placeholder: 'RequiredSkillRank',
         controller: viewModel.requiredSkillRankController,
       ),
     );
     final minLevelInput = FoxyFormItem(
-      label: 'MinLevel',
+      label: '最低角色等级',
       child: FoxyNumberInput<int>(
         placeholder: 'MinLevel',
         controller: viewModel.minLevelController,
       ),
     );
 
-    /// 1. 基本信息
-    final basicRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: idInput),
-          Expanded(child: nameInput),
-          Expanded(child: chargesInput),
-        ],
-      ),
-    ];
-
-    /// 2. 效果信息（3 行）
-    final effectRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect0Input),
-          Expanded(child: effectPointsMin0Input),
-          Expanded(child: effectPointsMax0Input),
-          Expanded(child: effectArg0Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect1Input),
-          Expanded(child: effectPointsMin1Input),
-          Expanded(child: effectPointsMax1Input),
-          Expanded(child: effectArg1Input),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: effect2Input),
-          Expanded(child: effectPointsMin2Input),
-          Expanded(child: effectPointsMax2Input),
-          Expanded(child: effectArg2Input),
-        ],
-      ),
-    ];
-
-    /// 3. 其他（2 行 4+3）
-    final otherRows = [
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: itemVisualInput),
-          Expanded(child: flagsInput),
-          Expanded(child: srcItemIdInput),
-          Expanded(child: conditionIdInput),
-        ],
-      ),
-      Row(
-        spacing: 8,
-        children: [
-          Expanded(child: requiredSkillIdInput),
-          Expanded(child: requiredSkillRankInput),
-          Expanded(child: minLevelInput),
-        ],
-      ),
-    ];
-
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          FoxyFormSection(title: '基本信息', children: basicRows),
-          FoxyFormSection(title: '效果信息', children: effectRows),
-          FoxyFormSection(title: '其他', children: otherRows),
+          FoxyFormSection(
+            title: '基本信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: idInput),
+                  Expanded(child: nameInput),
+                  Expanded(child: chargesInput),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '效果信息',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: effect0Input),
+                  Expanded(child: effectPointsMin0Input),
+                  Expanded(child: effectPointsMax0Input),
+                  Expanded(child: effectArg0Input),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: effect1Input),
+                  Expanded(child: effectPointsMin1Input),
+                  Expanded(child: effectPointsMax1Input),
+                  Expanded(child: effectArg1Input),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: effect2Input),
+                  Expanded(child: effectPointsMin2Input),
+                  Expanded(child: effectPointsMax2Input),
+                  Expanded(child: effectArg2Input),
+                ],
+              ),
+            ],
+          ),
+          FoxyFormSection(
+            title: '其他',
+            children: [
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: itemVisualInput),
+                  Expanded(child: flagsInput),
+                  Expanded(child: srcItemIdInput),
+                  Expanded(child: conditionIdInput),
+                ],
+              ),
+              Row(
+                spacing: 8,
+                children: [
+                  Expanded(child: requiredSkillIdInput),
+                  Expanded(child: requiredSkillRankInput),
+                  Expanded(child: minLevelInput),
+                  const Expanded(child: SizedBox()),
+                ],
+              ),
+            ],
+          ),
           Row(
             children: [
               ShadButton(
                 onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+                child: const Text('保存'),
               ),
               const SizedBox(width: 8),
               ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
+                onPressed: viewModel.pop,
+                child: const Text('取消'),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  FoxyFormItem _effectTypeInput(int slot, IntFieldController controller) {
+    return FoxyFormItem(
+      label: '效果类型 $slot',
+      child: FoxyIntShadSelect(
+        controller: controller,
+        options: kSpellItemEnchantmentEffectTypeOptions,
+        placeholder: Text('Effect$slot'),
+      ),
+    );
+  }
+
+  Widget _effectAmountInput(
+    int slot,
+    IntFieldController typeController,
+    IntFieldController amountController,
+  ) {
+    return ListenableBuilder(
+      listenable: typeController.controller,
+      builder: (context, child) {
+        final type = typeController.collect();
+        return FoxyFormItem(
+          label: _amountLabel(type, slot),
+          child: FoxyNumberInput<int>(
+            placeholder: 'EffectPointsMin$slot',
+            controller: amountController,
+          ),
+        );
+      },
+    );
+  }
+
+  FoxyFormItem _clientMaximumInput(int slot, IntFieldController controller) {
+    return FoxyFormItem(
+      label: '客户端效果值 $slot',
+      child: FoxyNumberInput<int>(
+        placeholder: 'EffectPointsMax$slot',
+        controller: controller,
+      ),
+    );
+  }
+
+  Widget _effectArgumentInput(
+    int slot,
+    IntFieldController typeController,
+    IntFieldController argumentController,
+  ) {
+    return ListenableBuilder(
+      listenable: typeController.controller,
+      builder: (context, child) {
+        final type = typeController.collect();
+        if (type == 1 || type == 3 || type == 7) {
+          return FoxyFormItem(
+            label: '法术 $slot',
+            child: FoxyEntityPicker(
+              controller: argumentController,
+              delegate: FoxyEntityPickerDelegates.spell,
+              placeholder: 'EffectArg$slot',
+            ),
+          );
+        }
+        if (type == 4) {
+          return FoxyFormItem(
+            label: '抗性系别 $slot',
+            child: FoxyIntShadSelect(
+              controller: argumentController,
+              options: kSpellItemEnchantmentSchoolOptions,
+              placeholder: Text('EffectArg$slot'),
+            ),
+          );
+        }
+        if (type == 5) {
+          return FoxyFormItem(
+            label: '附魔属性 $slot',
+            child: FoxyIntShadSelect(
+              controller: argumentController,
+              options: kSpellItemEnchantmentStatOptions,
+              placeholder: Text('EffectArg$slot'),
+              maxHeight: 360,
+            ),
+          );
+        }
+        return FoxyFormItem(
+          label: '效果参数 $slot',
+          child: FoxyNumberInput<int>(
+            placeholder: 'EffectArg$slot',
+            controller: argumentController,
+          ),
+        );
+      },
+    );
+  }
+
+  String _amountLabel(int type, int slot) {
+    return switch (type) {
+      1 => '触发几率 $slot',
+      2 => '武器伤害 $slot',
+      3 => '法术数值 $slot',
+      4 => '抗性数值 $slot',
+      5 => '属性数值 $slot',
+      6 => '武器伤害系数 $slot',
+      _ => '效果数值 $slot',
+    };
   }
 }

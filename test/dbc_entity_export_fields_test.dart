@@ -29,6 +29,8 @@ import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/item_visual_effect_entity.dart';
+import 'package:foxy/entity/item_visuals_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
@@ -44,6 +46,7 @@ import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
@@ -95,6 +98,8 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_item_random_properties' => const ItemRandomPropertiesEntity().toJson(),
     'dbc_item_random_suffix' => const ItemRandomSuffixEntity().toJson(),
     'dbc_item_set' => const ItemSetEntity().toJson(),
+    'dbc_item_visual_effects' => const ItemVisualEffectEntity().toJson(),
+    'dbc_item_visuals' => const ItemVisualsEntity().toJson(),
     'dbc_lock' => const LockEntity().toJson(),
     'dbc_light' => const LightEntity().toJson(),
     'dbc_liquid_type' => const LiquidTypeEntity().toJson(),
@@ -111,6 +116,8 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_spell_duration' => const SpellDurationEntity().toJson(),
     'dbc_spell_icon' => const SpellIconEntity().toJson(),
     'dbc_spell_item_enchantment' => const SpellItemEnchantmentEntity().toJson(),
+    'dbc_spell_item_enchantment_condition' =>
+      const SpellItemEnchantmentConditionEntity().toJson(),
     'dbc_spell_range' => const SpellRangeEntity().toJson(),
     'dbc_skill_line' => SkillLineEntity.fromJson(
       _schemaDefaults(tableName),
@@ -196,6 +203,8 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     ).toJson(),
     'dbc_item_random_suffix' => ItemRandomSuffixEntity.fromJson(row).toJson(),
     'dbc_item_set' => ItemSetEntity.fromJson(row).toJson(),
+    'dbc_item_visual_effects' => ItemVisualEffectEntity.fromJson(row).toJson(),
+    'dbc_item_visuals' => ItemVisualsEntity.fromJson(row).toJson(),
     'dbc_lock' => LockEntity.fromJson(row).toJson(),
     'dbc_light' => LightEntity.fromJson(row).toJson(),
     'dbc_liquid_type' => LiquidTypeEntity.fromJson(row).toJson(),
@@ -217,6 +226,8 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_spell_item_enchantment' => SpellItemEnchantmentEntity.fromJson(
       row,
     ).toJson(),
+    'dbc_spell_item_enchantment_condition' =>
+      SpellItemEnchantmentConditionEntity.fromJson(row).toJson(),
     'dbc_spell_range' => SpellRangeEntity.fromJson(row).toJson(),
     'dbc_skill_line' => SkillLineEntity.fromJson(row).toJson(),
     'dbc_sound_ambience' => SoundAmbienceEntity.fromJson(row).toJson(),
@@ -235,7 +246,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(54));
+    expect(dbcDefinitions, hasLength(57));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);

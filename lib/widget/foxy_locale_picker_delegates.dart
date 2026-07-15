@@ -24,7 +24,7 @@ import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/repository/quest_template_locale_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_solo_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
@@ -455,7 +455,7 @@ class FoxyLocalePickerDelegates {
 
   static final dbcSpellItemEnchantmentName = _dbc(
     DbcLocaleFields.spellItemEnchantmentName,
-    () => GetIt.instance.get<SpellItemEnchantmentSoloRepository>(),
+    () => GetIt.instance.get<SpellItemEnchantmentRepository>(),
     (repo, id, field) => repo.getSpellItemEnchantmentLocales(id, field),
     (repo, id, field, values) =>
         repo.saveSpellItemEnchantmentLocales(id, field, values),
