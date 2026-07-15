@@ -1,3 +1,5 @@
+import 'package:foxy/constant/scaling_stat_value_constants.dart';
+
 /// 物品模板（完整字段，对应 AzerothCore item_template 表）
 class ItemTemplateEntity {
   // --- 基础标识 ---
@@ -836,6 +838,7 @@ class ItemTemplateEntity {
     if ((flagsCustom & 1) != 0 && duration == 0) {
       throw ArgumentError('启用离线计时标志时 duration 必须大于 0');
     }
+    _validateScalingStatValue();
   }
 
   void _validateStatType(int type, int value, String column) {
@@ -853,6 +856,32 @@ class ItemTemplateEntity {
   void _validateSocketColor(int color, String column) {
     if ((color & ~0x0F) != 0) {
       throw ArgumentError('$column 包含无效颜色位');
+    }
+  }
+
+  void _validateScalingStatValue() {
+    if (scalingStatValue < 0 ||
+        (scalingStatValue & ~kScalingStatValueSupportedMask) != 0) {
+      throw ArgumentError('ScalingStatValue 包含 AzerothCore 不消费的位');
+    }
+    _requireAtMostOneScalingBit(
+      kScalingStatValueBudgetMask,
+      'ScalingStatValue 只能选择一个预算列',
+    );
+    _requireAtMostOneScalingBit(
+      kScalingStatValueArmorMask,
+      'ScalingStatValue 只能选择一个护甲列',
+    );
+    _requireAtMostOneScalingBit(
+      kScalingStatValueDpsMask,
+      'ScalingStatValue 只能选择一个 DPS 列',
+    );
+  }
+
+  void _requireAtMostOneScalingBit(int mask, String message) {
+    final selected = scalingStatValue & mask;
+    if (selected != 0 && (selected & (selected - 1)) != 0) {
+      throw ArgumentError(message);
     }
   }
 

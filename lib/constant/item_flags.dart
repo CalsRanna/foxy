@@ -131,29 +131,28 @@ const kAllowableRaceOptions = [
 
 /// ScalingStatValue 缩放属性标识选项
 const kItemScalingStatValueOptions = [
-  FlagItem(1, '肩膀SSD'), // Shoulder
-  FlagItem(2, '饰品SSD'), // Trinket
-  FlagItem(4, '单手武器SSD'), // One-Hand Weapon
-  FlagItem(8, '远程武器SSD'), // Ranged Weapon
-  FlagItem(16, '布甲肩膀护甲'), // Cloth Shoulder
-  FlagItem(32, '皮甲肩膀护甲'), // Leather Shoulder
-  FlagItem(64, '锁甲肩膀护甲'), // Mail Shoulder
-  FlagItem(128, '板甲肩膀护甲'), // Plate Shoulder
-  FlagItem(256, '单手武器伤害'), // One-Hand DPS
-  FlagItem(512, '双手武器伤害'), // Two-Hand DPS
-  FlagItem(1024, '单手法杖伤害'), // One-Hand Caster DPS
-  FlagItem(2048, '双手法杖伤害'), // Two-Hand Caster DPS
-  FlagItem(4096, '远程武器伤害'), // Ranged DPS
-  FlagItem(8192, '魔杖伤害'), // Wand DPS
-  FlagItem(16384, '法术加成'), // Spell Power
-  FlagItem(32768, '野性加成'), // Feral Attack Power
-  FlagItem(65536, '未知'), // Unknown
-  FlagItem(131072, '3.3版本SSD'), // 3.3 SSD
-  FlagItem(262144, '披风护甲'), // Cloak Armor
-  FlagItem(524288, '布甲护甲'), // Cloth Armor
-  FlagItem(1048576, '皮甲护甲'), // Leather Armor
-  FlagItem(2097152, '锁甲护甲'), // Mail Armor
-  FlagItem(4194304, '板甲护甲'), // Plate Armor
+  FlagItem(0x00000001, '肩部预算'),
+  FlagItem(0x00000002, '饰品预算'),
+  FlagItem(0x00000004, '单手武器预算'),
+  FlagItem(0x00000008, '主要预算'),
+  FlagItem(0x00000010, '远程预算'),
+  FlagItem(0x00000020, '布甲肩部护甲'),
+  FlagItem(0x00000040, '皮甲肩部护甲'),
+  FlagItem(0x00000080, '锁甲肩部护甲'),
+  FlagItem(0x00000100, '板甲肩部护甲'),
+  FlagItem(0x00000200, '单手武器 DPS'),
+  FlagItem(0x00000400, '双手武器 DPS'),
+  FlagItem(0x00000800, '法系单手 DPS'),
+  FlagItem(0x00001000, '法系双手 DPS'),
+  FlagItem(0x00002000, '远程 DPS'),
+  FlagItem(0x00004000, '魔杖 DPS'),
+  FlagItem(0x00008000, '法术强度'),
+  FlagItem(0x00040000, '三级预算'),
+  FlagItem(0x00080000, '披风护甲'),
+  FlagItem(0x00100000, '布甲胸部护甲'),
+  FlagItem(0x00200000, '皮甲胸部护甲'),
+  FlagItem(0x00400000, '锁甲胸部护甲'),
+  FlagItem(0x00800000, '板甲胸部护甲'),
 ];
 
 /// SocketColor 是位掩码，服务端允许四种颜色的任意组合。
