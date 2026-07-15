@@ -16,6 +16,14 @@ class TextContentDetailPage extends StatefulWidget {
 }
 
 class _TextContentDetailPageState extends State<TextContentDetailPage> {
+  int? savedId;
+
+  @override
+  void initState() {
+    super.initState();
+    savedId = widget.id;
+  }
+
   @override
   Widget build(BuildContext context) {
     var name = widget.label?.isNotEmpty == true ? widget.label! : '新建页面文本';
@@ -31,9 +39,13 @@ class _TextContentDetailPageState extends State<TextContentDetailPage> {
         ),
         FoxyTab(
           tabs: [Text('页面文本'), Text('本地化')],
+          disabledIndexes: savedId == null ? const {1} : const {},
           contents: [
-            PageTextView(id: widget.id),
-            PageTextLocaleView(id: widget.id),
+            PageTextView(
+              id: widget.id,
+              onSaved: (id) => setState(() => savedId = id),
+            ),
+            PageTextLocaleView(id: savedId),
           ],
         ),
       ],

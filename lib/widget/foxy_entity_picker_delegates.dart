@@ -2365,7 +2365,7 @@ class FoxyEntityPickerDelegates {
   static final pageText = FoxyEntityPickerDelegate<BriefPageTextEntity>(
     title: '页面文本',
     errorLabel: '搜索页面文本失败',
-    filters: const [FoxyEntityPickerFilter('编号')],
+    filters: const [FoxyEntityPickerFilter('编号'), FoxyEntityPickerFilter('文本')],
     columns: [
       FoxyEntityPickerColumn(
         header: '编号',
@@ -2380,11 +2380,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefPageTextEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<PageTextRepository>().getBriefPageTexts(
-          filter: PageTextFilterEntity(id: v[0], text: ''),
+          filter: PageTextFilterEntity(id: v[0], text: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<PageTextRepository>().countPageTexts(
-      filter: PageTextFilterEntity(id: v[0], text: ''),
+      filter: PageTextFilterEntity(id: v[0], text: v[1]),
     ),
   );
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -9,7 +11,9 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class PageTextView extends StatefulWidget {
   final int? id;
-  const PageTextView({super.key, this.id});
+  final ValueChanged<int>? onSaved;
+
+  const PageTextView({super.key, this.id, this.onSaved});
 
   @override
   State<PageTextView> createState() => _PageTextViewState();
@@ -48,8 +52,9 @@ class _PageTextViewState extends State<PageTextView> {
       ),
     );
     final nextPageIdInput = FoxyFormItem(
-      label: '下一页编号',
-      child: FoxyNumberInput<int>(
+      label: '下一页页面文本',
+      child: FoxyEntityPicker(
+        delegate: FoxyEntityPickerDelegates.pageText,
         placeholder: 'NextPageID',
         controller: viewModel.nextPageIdController,
       ),
@@ -75,18 +80,20 @@ class _PageTextViewState extends State<PageTextView> {
                 spacing: 8,
                 children: [
                   Expanded(child: idInput),
+                  Expanded(child: textInput),
                   Expanded(child: nextPageIdInput),
                   Expanded(child: verifiedBuildInput),
-                  Expanded(child: SizedBox()),
                 ],
               ),
-              Row(spacing: 8, children: [Expanded(flex: 4, child: textInput)]),
             ],
           ),
           Row(
             children: [
               ShadButton(
-                onPressed: () => viewModel.save(context),
+                onPressed: () async {
+                  final id = await viewModel.save(context);
+                  if (id != null && mounted) widget.onSaved?.call(id);
+                },
                 child: Text('保存'),
               ),
               SizedBox(width: 8),

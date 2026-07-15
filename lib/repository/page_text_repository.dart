@@ -72,47 +72,97 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<int> storePageText(PageTextEntity pageText) async {
-    var json = pageText.toJson();
     final nextId = pageText.id > 0 ? pageText.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    final stored = pageText.copyWith(id: nextId);
+    stored.validate();
+    await _validateNextPage(stored.id, stored.nextPageId);
+    if (await getPageText(stored.id) != null) {
+      throw StateError('页面文本 ${stored.id} 已存在');
+    }
+    await laconic.table(_table).insert([stored.toJson()]);
     return nextId;
   }
 
   Future<void> updatePageText(PageTextEntity pageText) async {
-    var json = pageText.toJson();
+    if (await getPageText(pageText.id) == null) {
+      throw StateError('页面文本 ${pageText.id} 不存在');
+    }
+    pageText.validate();
+    await _validateNextPage(pageText.id, pageText.nextPageId);
+    final json = pageText.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', pageText.id).update(json);
   }
 
   Future<void> destroyPageText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+    final nextPageReferences = await laconic
+        .table(_table)
+        .where('NextPageID', id)
+        .count();
+    final itemReferences = await laconic
+        .table('item_template')
+        .where('PageText', id)
+        .count();
+    final textGameObjectReferences = await laconic
+        .table('gameobject_template')
+        .where('type', 9)
+        .where('Data0', id)
+        .count();
+    final gooberReferences = await laconic
+        .table('gameobject_template')
+        .where('type', 10)
+        .where('Data7', id)
+        .count();
+    final references =
+        nextPageReferences +
+        itemReferences +
+        textGameObjectReferences +
+        gooberReferences;
+    if (references > 0) {
+      throw StateError(
+        '页面文本 $id 仍有 $references 条引用，不能删除'
+        '（下一页 $nextPageReferences、物品 $itemReferences、'
+        '文本对象 $textGameObjectReferences、Goober $gooberReferences）',
+      );
+    }
+    await laconic.transaction(() async {
+      await laconic.table(_localeTable).where('ID', id).delete();
+      await laconic.table(_table).where('ID', id).delete();
+    });
   }
 
   Future<void> copyPageText(int id) async {
-    var source = await getPageText(id);
+    final source = await getPageText(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    final nextId = await _getNextId();
+    final copied = source.copyWith(id: nextId);
+    copied.validate();
+    await _validateNextPage(copied.id, copied.nextPageId);
+    final locales = _prepareLocales(nextId, await getPageTextLocales(id));
+    await laconic.transaction(() async {
+      await laconic.table(_table).insert([copied.toJson()]);
+      if (locales.isNotEmpty) {
+        await laconic
+            .table(_localeTable)
+            .insert(locales.map((locale) => locale.toJson()).toList());
+      }
+    });
   }
 
   Future<void> savePageText(PageTextEntity pageText) async {
-    if (pageText.id == 0) {
+    if (pageText.id == 0 || await getPageText(pageText.id) == null) {
       await storePageText(pageText);
       return;
     }
-    var existing = await getPageText(pageText.id);
-    if (existing != null) {
-      await updatePageText(pageText);
-    } else {
-      await laconic.table(_table).insert([pageText.toJson()]);
-    }
+    await updatePageText(pageText);
   }
 
   Future<List<PageTextLocaleEntity>> getPageTextLocales(int id) async {
-    var results = await laconic.table(_localeTable).where('ID', id).get();
+    final results = await laconic
+        .table(_localeTable)
+        .where('ID', id)
+        .orderBy('locale')
+        .get();
     return results
         .map((e) => PageTextLocaleEntity.fromJson(e.toMap()))
         .toList();
@@ -122,20 +172,56 @@ class PageTextRepository with RepositoryMixin {
     int id,
     List<PageTextLocaleEntity> locales,
   ) async {
+    if (await getPageText(id) == null) {
+      throw StateError('页面文本 $id 不存在，不能保存本地化');
+    }
+    final stored = _prepareLocales(id, locales);
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('ID', id).delete();
-      if (locales.isEmpty) return;
-      var jsons = locales.map((e) {
-        var json = e.toJson();
-        json['ID'] = id;
-        return json;
-      }).toList();
-      await laconic.table(_localeTable).insert(jsons);
+      if (stored.isEmpty) return;
+      await laconic
+          .table(_localeTable)
+          .insert(stored.map((locale) => locale.toJson()).toList());
     });
   }
 
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > PageTextEntity.maxUnsignedInt) {
+      throw StateError('page_text 已无可用 uint32 ID');
+    }
+    return id;
+  }
+
+  Future<void> _validateNextPage(int id, int nextPageId) async {
+    if (nextPageId == 0) return;
+    var current = nextPageId;
+    final visited = <int>{id};
+    while (current != 0) {
+      if (!visited.add(current)) {
+        throw StateError('NextPageID 形成循环引用');
+      }
+      final page = await getPageText(current);
+      if (page == null) {
+        throw StateError('NextPageID 引用的页面文本 $current 不存在');
+      }
+      current = page.nextPageId;
+    }
+  }
+
+  List<PageTextLocaleEntity> _prepareLocales(
+    int id,
+    List<PageTextLocaleEntity> locales,
+  ) {
+    final localeKeys = <String>{};
+    return locales.map((locale) {
+      final normalized = locale.copyWith(id: id);
+      normalized.validate();
+      if (!localeKeys.add(normalized.locale)) {
+        throw StateError('语言 ${normalized.locale} 重复');
+      }
+      return normalized;
+    }).toList();
   }
 
   QueryBuilder _applyFilter(
