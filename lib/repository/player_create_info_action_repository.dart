@@ -44,7 +44,6 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoAction(
     PlayerCreateInfoActionEntity action,
   ) async {
-    action.validate();
     await laconic.table(_table).insert([action.toJson()]);
   }
 
@@ -54,7 +53,6 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
     int button,
     PlayerCreateInfoActionEntity action,
   ) async {
-    action.validate();
     var json = action.toJson();
     json.remove('race');
     json.remove('class');

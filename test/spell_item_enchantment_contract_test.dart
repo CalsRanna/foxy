@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -167,6 +168,9 @@ void main() {
     final repository = File(
       'lib/repository/spell_item_enchantment_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart',
+    ).readAsStringSync();
     final di = File('lib/di.dart').readAsStringSync();
     expect(
       File(
@@ -175,7 +179,8 @@ void main() {
       isFalse,
     );
     expect(repository, contains('spellItemEnchantment.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateSpellItemEnchantmentFields(t);'));
     expect(repository, contains(".where('socketBonus', id)"));
     expect(repository, contains(".where('Enchant_ID', id)"));
     expect(repository, contains(".where('entry', id)"));

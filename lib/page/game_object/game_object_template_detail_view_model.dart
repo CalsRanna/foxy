@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/game_object_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
@@ -11,7 +13,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectTemplateDetailViewModel with FieldControllerMixin {
+class GameObjectTemplateDetailViewModel
+    with
+        ViewModelValidationMixin,
+        GameObjectTemplateValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -62,6 +68,7 @@ class GameObjectTemplateDetailViewModel with FieldControllerMixin {
   Future<int?> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
+      validateGameObjectTemplateFields(t);
       final existed = await _repository.getGameObjectTemplate(t.entry);
       if (existed == null) {
         final id = await _repository.storeGameObjectTemplate(t);

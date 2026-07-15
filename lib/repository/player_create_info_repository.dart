@@ -48,7 +48,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    info.validate();
     await laconic.table(_table).insert([info.toJson()]);
   }
 
@@ -57,7 +56,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     int class_,
     PlayerCreateInfoEntity info,
   ) async {
-    info.validate();
     var json = info.toJson();
     json.remove('race');
     json.remove('class');
@@ -81,7 +79,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<void> savePlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    info.validate();
     var existing = await getPlayerCreateInfo(info.race, info.class_);
     if (existing != null) {
       await updatePlayerCreateInfo(info.race, info.class_, info);

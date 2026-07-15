@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/item_enchantment_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
+class ItemEnchantmentTemplateViewModel
+    with
+        ViewModelValidationMixin,
+        ItemEnchantmentTemplateValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
@@ -132,6 +138,7 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final model = collectFromForm();
+      validateItemEnchantmentTemplateFields(model);
       await _repository.storeItemEnchantmentTemplate(model);
       await load();
       if (!context.mounted) return;
@@ -147,6 +154,7 @@ class ItemEnchantmentTemplateViewModel with FieldControllerMixin {
   Future<void> update(BuildContext context) async {
     try {
       final model = collectFromForm();
+      validateItemEnchantmentTemplateFields(model);
       await _repository.updateItemEnchantmentTemplate(
         model.entry,
         editingEnch ?? model.ench,

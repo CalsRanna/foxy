@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -67,7 +68,7 @@ void main() {
     final source = File(
       'lib/repository/quest_sort_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('questSort.copyWith(id: id)..validate()'));
+    expect(source, isNot(contains('.validate()')));
     expect(source, contains(".table('quest_template')"));
     expect(source, contains(".where('QuestSortID', -id)"));
     expect(source, contains('仍被任务模板引用，不能删除'));
@@ -96,7 +97,7 @@ void main() {
     expect('Expanded(child:'.allMatches(view), hasLength(4));
     expect(viewModel, contains('sortNameLangFlagsController.collect()'));
     expect(viewModel, contains('sortNameLangFlagsController.init('));
-    expect(viewModel, contains('t.validate()'));
+    expect(viewModel, contains('validateQuestSortFields(t)'));
   });
 
   test('Entity 源码没有数组或 Map 字段', () {

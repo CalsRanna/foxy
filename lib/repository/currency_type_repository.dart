@@ -77,7 +77,6 @@ class CurrencyTypeRepository with RepositoryMixin {
   Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
     final id = currencyType.id > 0 ? currencyType.id : await _getNextId();
     final stored = currencyType.copyWith(id: id);
-    stored.validate();
     await _validateReferences(stored, preserveExisting: false);
     await _validateUniqueness(stored);
     await laconic.table(_table).insert([stored.toJson()]);
@@ -85,7 +84,6 @@ class CurrencyTypeRepository with RepositoryMixin {
   }
 
   Future<void> updateCurrencyType(CurrencyTypeEntity currencyType) async {
-    currencyType.validate();
     final existing = await getCurrencyType(currencyType.id);
     await _validateReferences(currencyType, preserveExisting: true);
     await _validateUniqueness(currencyType);

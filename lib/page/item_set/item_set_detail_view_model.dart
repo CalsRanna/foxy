@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/item_set_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
@@ -11,7 +13,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ItemSetDetailViewModel with FieldControllerMixin {
+class ItemSetDetailViewModel
+    with
+        ViewModelValidationMixin,
+        ItemSetValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<ItemSetRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -119,6 +125,7 @@ class ItemSetDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      validateItemSetFields(t);
       final isCreate = (await _repository.getItemSet(t.id)) == null;
       if (isCreate) {
         final id = await _repository.storeItemSet(t);

@@ -55,13 +55,11 @@ class ItemVisualsRepository with RepositoryMixin {
   Future<int> storeItemVisual(ItemVisualsEntity entity) async {
     final id = entity.id > 0 ? entity.id : await _getNextId();
     final stored = entity.copyWith(id: id);
-    stored.validate();
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateItemVisual(ItemVisualsEntity entity) async {
-    entity.validate();
     final json = entity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', entity.id).update(json);
   }

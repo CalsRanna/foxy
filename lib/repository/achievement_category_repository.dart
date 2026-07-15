@@ -56,7 +56,6 @@ class AchievementCategoryRepository
     final stored = category.id > 0
         ? category
         : category.copyWith(id: await _getNextId());
-    stored.validate();
     await _validateParent(stored.parent);
     await _validateNoCycle(stored.id, stored.parent);
     await laconic.table(_table).insert([stored.toJson()]);
@@ -69,7 +68,6 @@ class AchievementCategoryRepository
     if (await getAchievementCategory(category.id) == null) {
       throw StateError('成就分类 ${category.id} 不存在');
     }
-    category.validate();
     await _validateParent(category.parent);
     await _validateNoCycle(category.id, category.parent);
     final json = category.toJson()..remove('ID');

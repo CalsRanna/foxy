@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -164,7 +165,11 @@ void main() {
     final repository = File(
       'lib/repository/achievement_repository.dart',
     ).readAsStringSync();
-    expect(repository, contains('stored.validate();'));
+    final viewModel = File(
+      'lib/page/achievement/achievement_detail_view_model.dart',
+    ).readAsStringSync();
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateAchievementFields(t);'));
     expect(repository, contains('await _validateReferences(stored, null);'));
     expect(repository, contains("table: 'foxy.dbc_map'"));
     expect(repository, contains("table: 'foxy.dbc_achievement_category'"));

@@ -10,6 +10,11 @@ import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_music_entity.dart';
+import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+
+class _AreaTableValidationViewModel
+    with ViewModelValidationMixin, AreaTableValidationMixin {}
 
 void main() {
   test('AreaTable Entity 精确覆盖 36 个物理列且全部为标量', () {
@@ -95,28 +100,39 @@ void main() {
   });
 
   test('AreaBit、阵营、Flags、等级和浮点约束拒绝非法值', () {
+    final viewModel = _AreaTableValidationViewModel();
     const valid = AreaTableEntity(
       id: 1,
       areaBit: 0,
       factionGroupMask: 0,
       explorationLevel: -1,
     );
-    expect(valid.validate, returnsNormally);
-    expect(() => valid.copyWith(areaBit: 4096).validate(), throwsStateError);
+    expect(() => viewModel.validateAreaTableFields(valid), returnsNormally);
     expect(
-      () => valid.copyWith(flags: 0x10000000).validate(),
+      () => viewModel.validateAreaTableFields(valid.copyWith(areaBit: 4096)),
       throwsStateError,
     );
     expect(
-      () => valid.copyWith(factionGroupMask: 1).validate(),
+      () =>
+          viewModel.validateAreaTableFields(valid.copyWith(flags: 0x10000000)),
       throwsStateError,
     );
     expect(
-      () => valid.copyWith(explorationLevel: -2).validate(),
+      () => viewModel.validateAreaTableFields(
+        valid.copyWith(factionGroupMask: 1),
+      ),
       throwsStateError,
     );
     expect(
-      () => valid.copyWith(ambientMultiplier: double.nan).validate(),
+      () => viewModel.validateAreaTableFields(
+        valid.copyWith(explorationLevel: -2),
+      ),
+      throwsStateError,
+    );
+    expect(
+      () => viewModel.validateAreaTableFields(
+        valid.copyWith(ambientMultiplier: double.nan),
+      ),
       throwsStateError,
     );
   });

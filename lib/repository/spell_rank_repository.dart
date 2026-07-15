@@ -57,7 +57,6 @@ class SpellRankRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellRank(SpellRankEntity data) async {
-    data.validate();
     var json = data.toJson();
     json['`rank`'] = json.remove('rank');
     await laconic.table(_table).insert([json]);
@@ -68,7 +67,6 @@ class SpellRankRepository with RepositoryMixin {
     int rank,
     SpellRankEntity data,
   ) async {
-    data.validate();
     var json = data.toJson();
     json['`rank`'] = json.remove('rank');
     await laconic

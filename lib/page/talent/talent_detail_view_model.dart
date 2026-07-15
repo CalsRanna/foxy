@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/talent_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
@@ -10,7 +12,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class TalentDetailViewModel with FieldControllerMixin {
+class TalentDetailViewModel
+    with ViewModelValidationMixin, TalentValidationMixin, FieldControllerMixin {
   final _repository = GetIt.instance.get<TalentRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -46,6 +49,7 @@ class TalentDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
+      validateTalentFields(t);
       final existed = await _repository.getTalent(t.id);
       late final TalentEntity saved;
       if (existed == null) {

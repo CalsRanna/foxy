@@ -173,7 +173,6 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> storeLootTemplate(LootTemplateEntity loot) async {
-    loot.validate();
     await _validateReferences(loot);
     await laconic.table(_table).insert([loot.toJson()]);
   }
@@ -185,7 +184,6 @@ class LootTemplateRepository with RepositoryMixin {
     int reference = 0,
     int groupId = 0,
   }) async {
-    loot.validate();
     await _validateReferences(loot);
     var json = loot.toJson();
     json.remove('Entry');
@@ -238,7 +236,6 @@ class LootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> saveLootTemplate(LootTemplateEntity loot) async {
-    loot.validate();
     var existing = await getLootTemplate(
       loot.entry,
       loot.item,

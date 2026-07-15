@@ -1,8 +1,10 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/constant/loot_template_constants.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 
 void main() {
@@ -84,7 +86,7 @@ void main() {
       0x0020,
       0x8000,
     });
-    expect(LootTemplateEntity.validLootModeMask, 0x803f);
+    expect(kLootTemplateValidLootModeMask, 0x803f);
   });
 
   test('Entity 拒绝 LootMgr 会跳过、修正或忽略的值', () {

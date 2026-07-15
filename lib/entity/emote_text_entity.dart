@@ -89,27 +89,6 @@ class EmoteTextEntity {
     };
   }
 
-  void validate() {
-    if (id <= 0) throw StateError('编号必须大于 0');
-    _requireNonNegative('表情编号', emoteId);
-    _requireNonNegative('表情文本 1', emoteText0);
-    _requireNonNegative('表情文本 2', emoteText1);
-    _requireNonNegative('表情文本 3', emoteText2);
-    _requireNonNegative('表情文本 4', emoteText3);
-    _requireNonNegative('表情文本 5', emoteText4);
-    _requireNonNegative('表情文本 6', emoteText5);
-    _requireNonNegative('表情文本 7', emoteText6);
-    _requireNonNegative('表情文本 8', emoteText7);
-    _requireNonNegative('表情文本 9', emoteText8);
-    _requireNonNegative('表情文本 10', emoteText9);
-    _requireNonNegative('表情文本 11', emoteText10);
-    _requireNonNegative('表情文本 12', emoteText11);
-    _requireNonNegative('表情文本 13', emoteText12);
-    _requireNonNegative('表情文本 14', emoteText13);
-    _requireNonNegative('表情文本 15', emoteText14);
-    _requireNonNegative('表情文本 16', emoteText15);
-  }
-
   EmoteTextEntity copyWith({
     int? id,
     String? name,
@@ -153,10 +132,6 @@ class EmoteTextEntity {
       emoteText15: emoteText15 ?? this.emoteText15,
     );
   }
-}
-
-void _requireNonNegative(String label, int value) {
-  if (value < 0) throw StateError('$label 不能小于 0');
 }
 
 /// 表情文本列表/Picker 展示模型

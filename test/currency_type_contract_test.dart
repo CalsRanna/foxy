@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -125,8 +126,12 @@ void main() {
     final repository = File(
       'lib/repository/currency_type_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/currency_type/currency_type_detail_view_model.dart',
+    ).readAsStringSync();
     expect(repository, contains('currencyType.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateCurrencyTypeFields(t);'));
     expect(repository, contains("table: 'item_template'"));
     expect(repository, contains("table: 'foxy.dbc_currency_category'"));
     expect(repository, contains(".where('ItemID', currencyType.itemId)"));

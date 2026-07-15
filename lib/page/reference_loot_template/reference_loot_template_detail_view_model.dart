@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
+class ReferenceLootTemplateDetailViewModel
+    with
+        ViewModelValidationMixin,
+        LootTemplateValidationMixin,
+        FieldControllerMixin {
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
   }
@@ -96,6 +102,7 @@ class ReferenceLootTemplateDetailViewModel with FieldControllerMixin {
     final oItem = originalItem.value;
     try {
       final data = _collectFromControllers();
+      validateLootTemplateFields(data);
       if (oItem != null && oEntry != null) {
         await repository.updateLootTemplate(oEntry, oItem, data);
         template.value = data;

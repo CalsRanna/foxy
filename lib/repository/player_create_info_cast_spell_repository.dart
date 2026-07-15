@@ -50,7 +50,6 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoCastSpell(
     PlayerCreateInfoCastSpellEntity entity,
   ) async {
-    entity.validate();
     await laconic.table(_table).insert([entity.toJson()]);
   }
 
@@ -60,7 +59,6 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
     int spell,
     PlayerCreateInfoCastSpellEntity entity,
   ) async {
-    entity.validate();
     await laconic
         .table(_table)
         .where('raceMask', raceMask)

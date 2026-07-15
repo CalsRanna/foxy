@@ -3,6 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
+import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+
+class _SmartScriptValidationViewModel
+    with ViewModelValidationMixin, SmartScriptValidationMixin {}
 
 void main() {
   test('smart_scripts Entity 精确覆盖 31 个物理列且全部为标量', () {
@@ -176,6 +181,7 @@ void main() {
   });
 
   test('关键 core 约束在保存前拒绝非法记录', () {
+    final viewModel = _SmartScriptValidationViewModel();
     const valid = SmartScriptEntity(
       entryOrGuid: 1,
       sourceType: 0,
@@ -183,29 +189,35 @@ void main() {
       actionType: 24,
       targetType: 1,
     );
-    expect(valid.validate, returnsNormally);
+    expect(() => viewModel.validateSmartScriptFields(valid), returnsNormally);
     expect(
-      () => valid.copyWith(eventChance: 101).validate(),
+      () =>
+          viewModel.validateSmartScriptFields(valid.copyWith(eventChance: 101)),
       throwsArgumentError,
     );
     expect(
-      () => valid.copyWith(sourceType: 2, eventType: 4).validate(),
+      () => viewModel.validateSmartScriptFields(
+        valid.copyWith(sourceType: 2, eventType: 4),
+      ),
       throwsArgumentError,
     );
     expect(
-      () => valid.copyWith(actionType: 119).validate(),
+      () =>
+          viewModel.validateSmartScriptFields(valid.copyWith(actionType: 119)),
       throwsArgumentError,
     );
     expect(
-      () => valid.copyWith(targetType: 27).validate(),
+      () => viewModel.validateSmartScriptFields(valid.copyWith(targetType: 27)),
       throwsArgumentError,
     );
     expect(
-      () => valid.copyWith(eventParam1: 1).validate(),
+      () => viewModel.validateSmartScriptFields(valid.copyWith(eventParam1: 1)),
       throwsArgumentError,
     );
     expect(
-      () => valid.copyWith(eventType: 61, id: 3, link: 3).validate(),
+      () => viewModel.validateSmartScriptFields(
+        valid.copyWith(eventType: 61, id: 3, link: 3),
+      ),
       throwsArgumentError,
     );
   });

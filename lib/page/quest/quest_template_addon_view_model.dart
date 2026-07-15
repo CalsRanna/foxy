@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/quest_template_addon_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class QuestTemplateAddonViewModel with FieldControllerMixin {
+class QuestTemplateAddonViewModel
+    with
+        ViewModelValidationMixin,
+        QuestTemplateAddonValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final questId = signal(0);
@@ -81,6 +87,7 @@ class QuestTemplateAddonViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final model = _collect();
+      validateQuestTemplateAddonFields(model);
       if (_originalId == 0) {
         await _repository.storeQuestTemplateAddon(model);
       } else {

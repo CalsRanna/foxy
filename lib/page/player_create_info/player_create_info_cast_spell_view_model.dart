@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -8,7 +10,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PlayerCreateInfoCastSpellViewModel with FieldControllerMixin {
+class PlayerCreateInfoCastSpellViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoCastSpellValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoCastSpellRepository>();
   final spells = signal(<PlayerCreateInfoCastSpellEntity>[]);
 
@@ -44,6 +50,7 @@ class PlayerCreateInfoCastSpellViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final entity = _collect();
+      validatePlayerCreateInfoCastSpellFields(entity);
       if (_editing == null) {
         final existing = await _repository.getPlayerCreateInfoCastSpell(
           entity.raceMask,

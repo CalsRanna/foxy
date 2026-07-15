@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
@@ -9,7 +11,11 @@ import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
 
-class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
+class PlayerCreateInfoSpellCustomViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoSpellCustomValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance
       .get<PlayerCreateInfoSpellCustomRepository>();
 
@@ -53,7 +59,7 @@ class PlayerCreateInfoSpellCustomViewModel with FieldControllerMixin {
         spell: spellController.collect(),
         note: noteController.collect(),
       );
-      item.validate();
+      validatePlayerCreateInfoSpellCustomFields(item);
       await _repository.storePlayerCreateInfoSpellCustom(item);
       spells.value = await _repository.getBriefPlayerCreateInfoSpellCustoms(
         _race!,

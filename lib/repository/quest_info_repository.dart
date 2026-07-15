@@ -51,14 +51,13 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
     final id = questInfo.id > 0 ? questInfo.id : await _getNextId();
-    final candidate = questInfo.copyWith(id: id)..validate();
+    final candidate = questInfo.copyWith(id: id);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
     return id;
   }
 
   Future<void> updateQuestInfo(QuestInfoEntity questInfo) async {
-    questInfo.validate();
     var json = questInfo.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questInfo.id).update(json);
@@ -75,7 +74,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getQuestInfo(id);
     if (source == null) return;
     final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId)..validate();
+    final candidate = source.copyWith(id: nextId);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
   }
@@ -85,7 +84,6 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       await storeQuestInfo(questInfo);
       return;
     }
-    questInfo.validate();
     var existing = await getQuestInfo(questInfo.id);
     if (existing != null) {
       await updateQuestInfo(questInfo);

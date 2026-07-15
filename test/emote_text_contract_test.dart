@@ -5,6 +5,11 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/page/emote_text/emote_text_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+
+class _EmoteTextValidationViewModel
+    with ViewModelValidationMixin, EmoteTextValidationMixin {}
 
 void main() {
   test('EmotesText Entity 精确覆盖 19 个物理列且全部为标量', () {
@@ -78,11 +83,21 @@ void main() {
   });
 
   test('引用字段拒绝负数并允许零值', () {
+    final viewModel = _EmoteTextValidationViewModel();
     const valid = EmoteTextEntity(id: 1);
-    expect(valid.validate, returnsNormally);
-    expect(() => valid.copyWith(emoteId: -1).validate(), throwsStateError);
-    expect(() => valid.copyWith(emoteText0: -1).validate(), throwsStateError);
-    expect(() => valid.copyWith(emoteText15: -1).validate(), throwsStateError);
+    expect(() => viewModel.validateEmoteTextFields(valid), returnsNormally);
+    expect(
+      () => viewModel.validateEmoteTextFields(valid.copyWith(emoteId: -1)),
+      throwsStateError,
+    );
+    expect(
+      () => viewModel.validateEmoteTextFields(valid.copyWith(emoteText0: -1)),
+      throwsStateError,
+    );
+    expect(
+      () => viewModel.validateEmoteTextFields(valid.copyWith(emoteText15: -1)),
+      throwsStateError,
+    );
   });
 
   test('详情 UI 显式管理全部字段并使用精确 Picker 和四列等宽布局', () {

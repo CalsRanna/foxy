@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class GameObjectLootTemplateViewModel with FieldControllerMixin {
+class GameObjectLootTemplateViewModel
+    with
+        ViewModelValidationMixin,
+        LootTemplateValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
   final items = signal<List<BriefLootTemplateEntity>>([]);
@@ -138,6 +144,7 @@ class GameObjectLootTemplateViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
+      validateLootTemplateFields(loot);
       await repository.storeLootTemplate(loot);
       await load();
       if (!context.mounted) return;
@@ -153,6 +160,7 @@ class GameObjectLootTemplateViewModel with FieldControllerMixin {
   Future<void> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
+      validateLootTemplateFields(loot);
       await repository.updateLootTemplate(
         loot.entry,
         editingItem ?? loot.item,

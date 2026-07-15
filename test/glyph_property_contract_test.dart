@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -67,8 +68,12 @@ void main() {
     final repository = File(
       'lib/repository/glyph_property_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/glyph_property/glyph_property_detail_view_model.dart',
+    ).readAsStringSync();
     expect(repository, contains('glyphProperty.id > 0'));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateGlyphPropertyFields(t);'));
     expect(repository, contains("table: 'foxy.dbc_spell'"));
     expect(repository, contains("table: 'foxy.dbc_spell_icon'"));
     expect(repository, contains('allowZero: false'));

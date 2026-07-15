@@ -207,17 +207,6 @@ class GameObjectTemplateEntity {
     };
   }
 
-  void validate() {
-    if (type < 0 || type > 35) throw ArgumentError('游戏对象类型必须在 0..35');
-    if (size <= 0) throw ArgumentError('尺寸必须大于 0');
-    if (type == 23 && data0 > data1) {
-      throw ArgumentError('集合石最低等级不能大于最高等级');
-    }
-    if (type == 25 && data2 > data3) {
-      throw ArgumentError('钓鱼水域最少开启次数不能大于最多开启次数');
-    }
-  }
-
   GameObjectTemplateEntity copyWith({
     int? entry,
     int? type,

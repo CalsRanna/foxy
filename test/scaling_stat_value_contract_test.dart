@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -157,8 +158,12 @@ void main() {
     final repository = File(
       'lib/repository/scaling_stat_value_repository.dart',
     ).readAsStringSync();
+    final viewModel = File(
+      'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
+    ).readAsStringSync();
     expect(repository, contains(".orderBy('Charlevel')"));
-    expect(repository, contains('stored.validate();'));
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateScalingStatValueFields(t);'));
     expect(repository, contains('_validateNewCharlevel(stored)'));
     expect(repository, contains('Charlevel 决定 DBC 物理查找顺序'));
     expect(repository, contains(".where('ScalingStatValue', 0"));

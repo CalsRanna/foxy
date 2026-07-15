@@ -51,7 +51,6 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
   Future<void> storePlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomEntity spell,
   ) async {
-    spell.validate();
     await laconic.table(_table).insert([spell.toJson()]);
   }
 
@@ -61,7 +60,6 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
     int spell,
     PlayerCreateInfoSpellCustomEntity entity,
   ) async {
-    entity.validate();
     var json = entity.toJson();
     json.remove('racemask');
     json.remove('classmask');

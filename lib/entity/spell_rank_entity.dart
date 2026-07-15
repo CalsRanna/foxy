@@ -10,18 +10,6 @@ class SpellRankEntity {
     this.rank = 0,
   });
 
-  void validate() {
-    if (firstSpellId <= 0 || spellId <= 0) {
-      throw ArgumentError('first_spell_id 和 spell_id 必须大于 0');
-    }
-    if (rank <= 0 || rank > 255) {
-      throw RangeError.range(rank, 1, 255, 'rank');
-    }
-    if (rank == 1 && firstSpellId != spellId) {
-      throw ArgumentError('rank=1 时 first_spell_id 必须等于 spell_id');
-    }
-  }
-
   factory SpellRankEntity.fromJson(Map<String, dynamic> json) {
     return SpellRankEntity(
       firstSpellId: json['first_spell_id'] ?? 0,

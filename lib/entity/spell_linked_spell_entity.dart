@@ -12,15 +12,6 @@ class SpellLinkedSpellEntity {
     this.comment = '',
   });
 
-  void validate() {
-    if (spellTrigger == 0 || spellEffect == 0) {
-      throw ArgumentError('spell_trigger 和 spell_effect 均不能为 0');
-    }
-    if (type < 0 || type > 2) {
-      throw RangeError.range(type, 0, 2, 'type');
-    }
-  }
-
   factory SpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) {
     return SpellLinkedSpellEntity(
       spellTrigger: json['spell_trigger'] ?? 0,

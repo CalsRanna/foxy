@@ -1,5 +1,3 @@
-import 'package:foxy/constant/gem_property_constants.dart';
-
 class GemPropertyEntity {
   final int id;
   final int enchantId;
@@ -33,22 +31,6 @@ class GemPropertyEntity {
       'Maxcount_item': maxCountItem,
       'Type': type,
     };
-  }
-
-  void validate() {
-    _requireRange(id, 1, 0x7fffffff, 'ID');
-    _requireRange(enchantId, 0, 0x7fffffff, 'Enchant_ID');
-    _requireRange(maxCountInv, 0, 0x7fffffff, 'Maxcount_inv');
-    _requireRange(maxCountItem, 0, 0x7fffffff, 'Maxcount_item');
-    if (!kGemPropertyColorOptions.containsKey(type)) {
-      throw ArgumentError('Type 必须是有效的 GemProperties SocketColor 组合');
-    }
-  }
-
-  static void _requireRange(int value, int minimum, int maximum, String name) {
-    if (value < minimum || value > maximum) {
-      throw ArgumentError('$name 必须在 $minimum..$maximum 范围内');
-    }
   }
 
   GemPropertyEntity copyWith({

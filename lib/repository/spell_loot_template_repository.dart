@@ -56,7 +56,6 @@ class SpellLootTemplateRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellLootTemplate(SpellLootTemplateEntity data) async {
-    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -65,7 +64,6 @@ class SpellLootTemplateRepository with RepositoryMixin {
     int item,
     SpellLootTemplateEntity data,
   ) async {
-    data.validate();
     await laconic
         .table(_table)
         .where('Entry', entry)

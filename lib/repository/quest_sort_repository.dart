@@ -51,14 +51,13 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeQuestSort(QuestSortEntity questSort) async {
     final id = questSort.id > 0 ? questSort.id : await _getNextId();
-    final candidate = questSort.copyWith(id: id)..validate();
+    final candidate = questSort.copyWith(id: id);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
     return id;
   }
 
   Future<void> updateQuestSort(QuestSortEntity questSort) async {
-    questSort.validate();
     var json = questSort.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', questSort.id).update(json);
@@ -75,7 +74,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getQuestSort(id);
     if (source == null) return;
     final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId)..validate();
+    final candidate = source.copyWith(id: nextId);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
   }
@@ -85,7 +84,6 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       await storeQuestSort(questSort);
       return;
     }
-    questSort.validate();
     var existing = await getQuestSort(questSort.id);
     if (existing != null) {
       await updateQuestSort(questSort);

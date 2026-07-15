@@ -80,7 +80,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   ) async {
     final id = distribution.id > 0 ? distribution.id : await _getNextId();
     final stored = distribution.copyWith(id: id);
-    stored.validate();
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
@@ -88,7 +87,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   Future<void> updateScalingStatDistribution(
     ScalingStatDistributionEntity distribution,
   ) async {
-    distribution.validate();
     var json = distribution.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', distribution.id).update(json);
@@ -110,7 +108,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     if (source == null) return;
     final nextId = await _getNextId();
     final copied = source.copyWith(id: nextId);
-    copied.validate();
     await laconic.table(_table).insert([copied.toJson()]);
   }
 
@@ -121,7 +118,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       await storeScalingStatDistribution(distribution);
       return;
     }
-    distribution.validate();
     var existing = await getScalingStatDistribution(distribution.id);
     if (existing != null) {
       await updateScalingStatDistribution(distribution);

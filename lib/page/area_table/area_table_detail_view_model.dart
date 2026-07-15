@@ -2,16 +2,22 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class AreaTableDetailViewModel with FieldControllerMixin {
+class AreaTableDetailViewModel
+    with
+        FieldControllerMixin,
+        ViewModelValidationMixin,
+        AreaTableValidationMixin {
   final _repository = GetIt.instance.get<AreaTableRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -139,7 +145,7 @@ class AreaTableDetailViewModel with FieldControllerMixin {
   }
 
   Future<void> _validate(AreaTableEntity value) async {
-    value.validate();
+    validateAreaTableFields(value);
     if (value.parentAreaId > 0 &&
         await _repository.getAreaTable(value.parentAreaId) == null) {
       throw StateError('父级区域 ${value.parentAreaId} 不存在');

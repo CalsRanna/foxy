@@ -55,7 +55,6 @@ class AchievementCriteriaRepository
     final stored = criterion.id > 0
         ? criterion
         : criterion.copyWith(id: await _getNextId());
-    stored.validate();
     await _validateAchievement(stored.achievementId, null);
     await laconic.table(_table).insert([stored.toJson()]);
     return stored.id;
@@ -68,7 +67,6 @@ class AchievementCriteriaRepository
     if (existing == null) {
       throw StateError('成就条件 ${criterion.id} 不存在');
     }
-    criterion.validate();
     await _validateAchievement(criterion.achievementId, existing.achievementId);
     final json = criterion.toJson()..remove('ID');
     await laconic.table(_table).where('ID', criterion.id).update(json);

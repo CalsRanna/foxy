@@ -30,7 +30,6 @@ class SpellGroupRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellGroup(SpellGroupEntity data) async {
-    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -39,7 +38,6 @@ class SpellGroupRepository with RepositoryMixin {
     int spellId,
     SpellGroupEntity data,
   ) async {
-    data.validate();
     await laconic
         .table(_table)
         .where('id', id)

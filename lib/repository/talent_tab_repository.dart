@@ -54,14 +54,12 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<int> storeTalentTab(TalentTabEntity talentTab) async {
     final id = talentTab.id > 0 ? talentTab.id : await _getNextId();
     final stored = talentTab.copyWith(id: id);
-    stored.validate();
     await _validateSpellIcon(stored, preserveExisting: false);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateTalentTab(TalentTabEntity talentTab) async {
-    talentTab.validate();
     await _validateSpellIcon(talentTab, preserveExisting: true);
     final json = talentTab.toJson()..remove('ID');
     await laconic.table(_table).where('ID', talentTab.id).update(json);

@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/spell_item_enchantment_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
@@ -11,7 +13,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
+class SpellItemEnchantmentDetailViewModel
+    with
+        ViewModelValidationMixin,
+        SpellItemEnchantmentValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
@@ -70,6 +76,7 @@ class SpellItemEnchantmentDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
+      validateSpellItemEnchantmentFields(t);
       final isCreate =
           (await _repository.getSpellItemEnchantment(t.id)) == null;
       if (isCreate) {

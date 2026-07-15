@@ -126,7 +126,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   Future<void> storeItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity model,
   ) async {
-    model.validate();
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -135,7 +134,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     int ench,
     ItemEnchantmentTemplateEntity model,
   ) async {
-    model.validate();
     var json = model.toJson();
     json.remove('entry');
     json.remove('ench');
@@ -157,7 +155,6 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   Future<void> saveItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity model,
   ) async {
-    model.validate();
     var existing = await getItemEnchantmentTemplate(model.entry, model.ench);
     if (existing != null) {
       await updateItemEnchantmentTemplate(model.entry, model.ench, model);

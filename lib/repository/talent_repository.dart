@@ -47,14 +47,12 @@ class TalentRepository with RepositoryMixin {
   Future<int> storeTalent(TalentEntity talent) async {
     final id = talent.id > 0 ? talent.id : await _getNextId();
     final stored = talent.copyWith(id: id);
-    stored.validate();
     await _validateReferences(stored, preserveExisting: false);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
   }
 
   Future<void> updateTalent(TalentEntity talent) async {
-    talent.validate();
     await _validateReferences(talent, preserveExisting: true);
     final json = talent.toJson()..remove('ID');
     await laconic.table(_table).where('ID', talent.id).update(json);

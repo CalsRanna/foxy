@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/spell_group_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
@@ -9,7 +11,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class SpellGroupViewModel with FieldControllerMixin {
+class SpellGroupViewModel
+    with
+        ViewModelValidationMixin,
+        SpellGroupValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final spellId = signal(0);
@@ -117,6 +123,7 @@ class SpellGroupViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
+      validateSpellGroupFields(data);
       await _repository.storeSpellGroup(data);
       await load();
       if (!context.mounted) return;
@@ -135,6 +142,7 @@ class SpellGroupViewModel with FieldControllerMixin {
     try {
       final oldData = items.value[index];
       final newData = collectFromForm();
+      validateSpellGroupFields(newData);
       await _repository.updateSpellGroup(oldData.id, oldData.spellId, newData);
       await load();
       if (!context.mounted) return;

@@ -58,7 +58,6 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final stored = achievement.id > 0
         ? achievement
         : achievement.copyWith(id: await _getNextId());
-    stored.validate();
     await _validateReferences(stored, null);
     await laconic.table(_table).insert([stored.toJson()]);
     return stored.id;
@@ -67,7 +66,6 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   Future<void> updateAchievement(AchievementEntity achievement) async {
     final existing = await getAchievement(achievement.id);
     if (existing == null) throw StateError('成就 ${achievement.id} 不存在');
-    achievement.validate();
     await _validateReferences(achievement, existing);
     var json = achievement.toJson();
     json.remove('ID');

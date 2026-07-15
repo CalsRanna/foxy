@@ -52,13 +52,12 @@ class ItemPurchaseGroupRepository
 
   Future<int> storeItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
     final id = group.id > 0 ? group.id : await _getNextId();
-    final candidate = group.copyWith(id: id)..validate();
+    final candidate = group.copyWith(id: id);
     await laconic.table(_table).insert([candidate.toJson()]);
     return id;
   }
 
   Future<void> updateItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    group.validate();
     final json = group.toJson()..remove('ID');
     await laconic.table(_table).where('ID', group.id).update(json);
   }
@@ -77,7 +76,7 @@ class ItemPurchaseGroupRepository
   Future<void> copyItemPurchaseGroup(int id) async {
     final source = await getItemPurchaseGroup(id);
     if (source == null) return;
-    final candidate = source.copyWith(id: await _getNextId())..validate();
+    final candidate = source.copyWith(id: await _getNextId());
     await laconic.table(_table).insert([candidate.toJson()]);
   }
 

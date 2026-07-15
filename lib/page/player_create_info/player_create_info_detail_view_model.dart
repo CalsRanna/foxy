@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
@@ -10,7 +12,11 @@ import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class PlayerCreateInfoDetailViewModel with FieldControllerMixin {
+class PlayerCreateInfoDetailViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
@@ -75,6 +81,7 @@ class PlayerCreateInfoDetailViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final data = _collect();
+      validatePlayerCreateInfoFields(data);
       if (isNew.value) {
         final existed = await _repository.getPlayerCreateInfo(
           data.race,

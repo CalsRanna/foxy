@@ -48,7 +48,6 @@ class QuestTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> storeQuestTemplateAddon(QuestTemplateAddonEntity model) async {
-    model.validate();
     await laconic.table(_table).insert([model.toJson()]);
   }
 
@@ -56,7 +55,6 @@ class QuestTemplateAddonRepository with RepositoryMixin {
     int id,
     QuestTemplateAddonEntity model,
   ) async {
-    model.validate();
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
@@ -76,7 +74,6 @@ class QuestTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> saveQuestTemplateAddon(QuestTemplateAddonEntity model) async {
-    model.validate();
     var existing = await getQuestTemplateAddon(model.id);
     if (existing != null) {
       await updateQuestTemplateAddon(model.id, model);

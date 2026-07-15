@@ -36,7 +36,6 @@ class SpellAreaRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellArea(SpellAreaEntity data) async {
-    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -49,7 +48,6 @@ class SpellAreaRepository with RepositoryMixin {
     int gender,
     SpellAreaEntity data,
   ) async {
-    data.validate();
     await laconic
         .table(_table)
         .where('spell', spell)

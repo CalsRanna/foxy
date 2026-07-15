@@ -1,3 +1,4 @@
+import 'support/entity_validation_test_extensions.dart';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -107,7 +108,11 @@ void main() {
     final repository = File(
       'lib/repository/item_set_repository.dart',
     ).readAsStringSync();
-    expect(repository, contains('stored.validate();'));
+    final viewModel = File(
+      'lib/page/item_set/item_set_detail_view_model.dart',
+    ).readAsStringSync();
+    expect(repository, isNot(contains('.validate()')));
+    expect(viewModel, contains('validateItemSetFields(t);'));
     expect(repository, contains('await _validateReferences(stored, null);'));
     expect(repository, contains("table: 'item_template'"));
     expect(repository, contains("table: 'foxy.dbc_spell'"));

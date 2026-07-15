@@ -89,12 +89,6 @@ class CurrencyCategoryEntity {
     };
   }
 
-  void validate() {
-    _requireRange(id, 1, 0x7fffffff, 'ID');
-    _requireSignedInt32(flags, 'Flags');
-    _requireSignedInt32(nameLangFlags, 'Name_lang_Flags');
-  }
-
   CurrencyCategoryEntity copyWith({
     int? id,
     int? flags,
@@ -137,16 +131,6 @@ class CurrencyCategoryEntity {
       nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
     );
-  }
-
-  static void _requireSignedInt32(int value, String name) {
-    _requireRange(value, -0x80000000, 0x7fffffff, name);
-  }
-
-  static void _requireRange(int value, int minimum, int maximum, String name) {
-    if (value < minimum || value > maximum) {
-      throw ArgumentError('$name 必须在 $minimum..$maximum 范围内');
-    }
   }
 }
 

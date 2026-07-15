@@ -81,7 +81,6 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<int> storeQuestTemplate(QuestTemplateEntity template) async {
-    template.validate();
     var json = template.toJson();
     final newId = template.id > 0 ? template.id : await _getNextId();
     json['ID'] = newId;
@@ -90,7 +89,6 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestTemplate(QuestTemplateEntity template) async {
-    template.validate();
     var json = template.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', template.id).update(json);
@@ -110,7 +108,6 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<void> saveQuestTemplate(QuestTemplateEntity template) async {
-    template.validate();
     if (template.id == 0) {
       await storeQuestTemplate(template);
       return;

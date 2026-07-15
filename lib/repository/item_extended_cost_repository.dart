@@ -69,7 +69,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     final id = itemExtendedCost.id > 0
         ? itemExtendedCost.id
         : await _getNextId();
-    final candidate = itemExtendedCost.copyWith(id: id)..validate();
+    final candidate = itemExtendedCost.copyWith(id: id);
     await _validateReferences(candidate);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
@@ -79,7 +79,6 @@ class ItemExtendedCostRepository with RepositoryMixin {
   Future<void> updateItemExtendedCost(
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
-    itemExtendedCost.validate();
     await _validateReferences(itemExtendedCost);
     var json = itemExtendedCost.toJson();
     json.remove('ID');
@@ -97,7 +96,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     var source = await getItemExtendedCost(id);
     if (source == null) return;
     final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId)..validate();
+    final candidate = source.copyWith(id: nextId);
     await _validateReferences(candidate);
     var json = candidate.toJson();
     await laconic.table(_table).insert([json]);
@@ -114,7 +113,6 @@ class ItemExtendedCostRepository with RepositoryMixin {
     if (existing != null) {
       await updateItemExtendedCost(itemExtendedCost);
     } else {
-      itemExtendedCost.validate();
       await _validateReferences(itemExtendedCost);
       await laconic.table(_table).insert([itemExtendedCost.toJson()]);
     }

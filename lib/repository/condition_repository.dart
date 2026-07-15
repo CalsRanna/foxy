@@ -114,7 +114,6 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> storeCondition(ConditionEntity condition) async {
-    condition.validate();
     await laconic.table(_table).insert([condition.toJson()]);
   }
 
@@ -122,7 +121,6 @@ class ConditionRepository with RepositoryMixin {
     Map<String, dynamic> credential,
     ConditionEntity condition,
   ) async {
-    condition.validate();
     var json = condition.toJson();
     for (final col in pkColumns) {
       json.remove(col);
@@ -160,7 +158,6 @@ class ConditionRepository with RepositoryMixin {
   }
 
   Future<void> saveCondition(ConditionEntity condition) async {
-    condition.validate();
     final credential = condition.buildCredential();
     var existing = await getConditionFromCredential(credential);
     if (existing != null) {

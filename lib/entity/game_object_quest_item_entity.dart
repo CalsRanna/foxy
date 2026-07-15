@@ -65,12 +65,6 @@ class GameObjectQuestItemEntity {
     'VerifiedBuild': verifiedBuild,
   };
 
-  void validate() {
-    if (gameObjectEntry <= 0) throw ArgumentError('游戏对象编号必须大于 0');
-    if (idx < 0 || idx >= 6) throw ArgumentError('任务物品索引必须在 0..5');
-    if (itemId <= 0) throw ArgumentError('物品 ID 必须大于 0');
-  }
-
   GameObjectQuestItemEntity copyWith({
     int? gameObjectEntry,
     int? idx,

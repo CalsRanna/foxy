@@ -29,19 +29,6 @@ class GlyphPropertyEntity {
     };
   }
 
-  void validate() {
-    _requireRange(id, 1, 0xffff, 'ID');
-    _requireRange(spellId, 0, 0x7fffffff, 'SpellID');
-    _requireRange(glyphSlotFlags, 0, 0x7fffffff, 'GlyphSlotFlags');
-    _requireRange(spellIconId, 0, 0x7fffffff, 'SpellIconID');
-  }
-
-  static void _requireRange(int value, int minimum, int maximum, String name) {
-    if (value < minimum || value > maximum) {
-      throw ArgumentError('$name 必须在 $minimum..$maximum 范围内');
-    }
-  }
-
   GlyphPropertyEntity copyWith({
     int? id,
     int? spellId,

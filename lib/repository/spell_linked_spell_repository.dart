@@ -40,7 +40,6 @@ class SpellLinkedSpellRepository with RepositoryMixin {
   }
 
   Future<void> storeSpellLinkedSpell(SpellLinkedSpellEntity data) async {
-    data.validate();
     await laconic.table(_table).insert([data.toJson()]);
   }
 
@@ -50,7 +49,6 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     int type,
     SpellLinkedSpellEntity data,
   ) async {
-    data.validate();
     await laconic
         .table(_table)
         .where('spell_trigger', spellTrigger)

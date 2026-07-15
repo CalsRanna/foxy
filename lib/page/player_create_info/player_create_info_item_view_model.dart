@@ -1,3 +1,5 @@
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
@@ -8,7 +10,11 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 import 'package:get_it/get_it.dart';
 
-class PlayerCreateInfoItemViewModel with FieldControllerMixin {
+class PlayerCreateInfoItemViewModel
+    with
+        ViewModelValidationMixin,
+        PlayerCreateInfoItemValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoItemRepository>();
 
   final items = signal<List<PlayerCreateInfoItemEntity>>([]);
@@ -50,7 +56,7 @@ class PlayerCreateInfoItemViewModel with FieldControllerMixin {
         amount: amountController.collect(),
         note: noteController.collect(),
       );
-      item.validate();
+      validatePlayerCreateInfoItemFields(item);
       await _repository.storePlayerCreateInfoItem(item);
       items.value = await _repository.getBriefPlayerCreateInfoItems(
         _race!,
