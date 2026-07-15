@@ -28,17 +28,18 @@ class GlyphPropertyDetailViewModel with FieldControllerMixin {
 
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      final existed = await _repository.getGlyphProperty(t.id);
-      if (existed == null) {
+      var t = _collectFromControllers();
+      final isCreate = (await _repository.getGlyphProperty(t.id)) == null;
+      if (isCreate) {
         final id = await _repository.storeGlyphProperty(t);
+        t = t.copyWith(id: id);
         idController.init(id);
       } else {
         await _repository.updateGlyphProperty(t);
       }
       property.value = t;
       _logActivity(
-        t.id == 0 ? ActivityActionType.create : ActivityActionType.update,
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
         t,
       );
       if (!context.mounted) return;
