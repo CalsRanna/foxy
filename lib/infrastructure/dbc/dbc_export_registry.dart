@@ -1,4 +1,6 @@
 import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
+import 'package:foxy/repository/achievement_criteria_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/cinematic_sequence_repository.dart';
@@ -135,6 +137,8 @@ class DbcExportRegistry {
 
   static Map<String, DbcExportDelegate> _buildDelegates(GetIt getIt) {
     final achievement = getIt.get<AchievementRepository>();
+    final achievementCategory = getIt.get<AchievementCategoryRepository>();
+    final achievementCriteria = getIt.get<AchievementCriteriaRepository>();
     final areaTable = getIt.get<AreaTableRepository>();
     final charTitle = getIt.get<CharTitleRepository>();
     final cinematicSequence = getIt.get<CinematicSequenceRepository>();
@@ -200,6 +204,16 @@ class DbcExportRegistry {
       'dbc_achievement': DbcExportDelegate.typed(
         load: achievement.getAchievements,
         count: () => achievement.countAchievements(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_achievement_category': DbcExportDelegate.typed(
+        load: achievementCategory.getAchievementCategories,
+        count: () => achievementCategory.countAchievementCategories(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_achievement_criteria': DbcExportDelegate.typed(
+        load: achievementCriteria.getAchievementCriteria,
+        count: () => achievementCriteria.countAchievementCriteria(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_area_table': DbcExportDelegate.typed(

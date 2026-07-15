@@ -4,6 +4,8 @@ import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/achievement_filter_entity.dart';
+import 'package:foxy/entity/achievement_category_entity.dart';
+import 'package:foxy/entity/achievement_category_filter_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
@@ -130,6 +132,7 @@ import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/cinematic_sequence_repository.dart';
@@ -310,6 +313,51 @@ class FoxyEntityPickerDelegates {
         count: (v) => GetIt.instance.get<DbcItemRepository>().countDbcItems(
           filter: DbcItemFilterEntity(id: v[0], handEquippableOnly: true),
         ),
+      );
+
+  static final achievementCategory =
+      FoxyEntityPickerDelegate<BriefAchievementCategoryEntity>(
+        title: '成就分类',
+        errorLabel: '搜索 Achievement_Category.dbc 分类失败',
+        filters: const [
+          FoxyEntityPickerFilter('分类 ID'),
+          FoxyEntityPickerFilter('分类名称'),
+        ],
+        columns: [
+          FoxyEntityPickerColumn(
+            header: '编号',
+            width: 120,
+            text: (BriefAchievementCategoryEntity value) => value.id.toString(),
+          ),
+          FoxyEntityPickerColumn(
+            header: '名称',
+            text: (BriefAchievementCategoryEntity value) => value.nameLangZhCN,
+          ),
+          FoxyEntityPickerColumn(
+            header: '父分类',
+            width: 120,
+            text: (BriefAchievementCategoryEntity value) =>
+                value.parent.toString(),
+          ),
+        ],
+        idOf: (BriefAchievementCategoryEntity value) => value.id,
+        fetch: (page, values) => GetIt.instance
+            .get<AchievementCategoryRepository>()
+            .getBriefAchievementCategories(
+              page: page,
+              filter: AchievementCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
+        count: (values) => GetIt.instance
+            .get<AchievementCategoryRepository>()
+            .countAchievementCategories(
+              filter: AchievementCategoryFilterEntity(
+                id: values[0],
+                name: values[1],
+              ),
+            ),
       );
 
   static final _referenceLootRepository = LootTemplateRepository(

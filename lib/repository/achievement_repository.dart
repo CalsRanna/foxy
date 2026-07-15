@@ -34,7 +34,7 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<List<AchievementEntity>> getAchievements() async {
-    var results = await laconic.table(_table).get();
+    var results = await laconic.table(_table).orderBy('ID').get();
     return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
   }
 
@@ -55,43 +55,76 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> storeAchievement(AchievementEntity achievement) async {
-    var json = achievement.toJson();
-    final nextId = achievement.id > 0 ? achievement.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+    final stored = achievement.id > 0
+        ? achievement
+        : achievement.copyWith(id: await _getNextId());
+    stored.validate();
+    await _validateReferences(stored, null);
+    await laconic.table(_table).insert([stored.toJson()]);
+    return stored.id;
   }
 
   Future<void> updateAchievement(AchievementEntity achievement) async {
+    final existing = await getAchievement(achievement.id);
+    if (existing == null) throw StateError('成就 ${achievement.id} 不存在');
+    achievement.validate();
+    await _validateReferences(achievement, existing);
     var json = achievement.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', achievement.id).update(json);
   }
 
   Future<void> destroyAchievement(int id) async {
+    final supercedesCount = await laconic
+        .table(_table)
+        .where('Supercedes', id)
+        .count();
+    final sharesCount = await laconic
+        .table(_table)
+        .where('Shares_criteria', id)
+        .count();
+    final criteriaCount = await _tableExists('foxy', 'dbc_achievement_criteria')
+        ? await laconic
+              .table('foxy.dbc_achievement_criteria')
+              .where('Achievement_ID', id)
+              .count()
+        : 0;
+    final rewardCount = await laconic
+        .table('achievement_reward')
+        .where('ID', id)
+        .count();
+    final completionCount = await laconic
+        .table('acore_characters.character_achievement')
+        .where('achievement', id)
+        .count();
+    final references =
+        supercedesCount +
+        sharesCount +
+        criteriaCount +
+        rewardCount +
+        completionCount;
+    if (references > 0) {
+      throw StateError(
+        '成就 $id 仍被前置成就 $supercedesCount 条、共享条件 $sharesCount 条、'
+        '成就条件 $criteriaCount 条、奖励 $rewardCount 条、角色完成记录 '
+        '$completionCount 条引用，不能删除',
+      );
+    }
     await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<void> copyAchievement(int id) async {
     var source = await getAchievement(id);
     if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+    await storeAchievement(source.copyWith(id: await _getNextId()));
   }
 
   Future<void> saveAchievement(AchievementEntity achievement) async {
-    if (achievement.id == 0) {
+    if (achievement.id == 0 || await getAchievement(achievement.id) == null) {
       await storeAchievement(achievement);
       return;
     }
-    var existing = await getAchievement(achievement.id);
-    if (existing != null) {
-      await updateAchievement(achievement);
-    } else {
-      await laconic.table(_table).insert([achievement.toJson()]);
-    }
+    await updateAchievement(achievement);
   }
 
   Future<List<DbcLocaleFieldValue>> getAchievementLocales(
@@ -106,7 +139,149 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 0xffff) {
+      throw StateError('Achievement.dbc 已无可用 smallint unsigned ID');
+    }
+    return id;
+  }
+
+  Future<void> _validateReferences(
+    AchievementEntity changed,
+    AchievementEntity? existing,
+  ) async {
+    await _validateReference(
+      table: 'foxy.dbc_map',
+      schema: 'foxy',
+      shortTable: 'dbc_map',
+      column: 'ID',
+      value: changed.instanceId,
+      existingValue: existing?.instanceId,
+      sentinel: -1,
+      field: 'Instance_ID',
+      target: '地图',
+    );
+    await _validateReference(
+      table: _table,
+      schema: 'foxy',
+      shortTable: 'dbc_achievement',
+      column: 'ID',
+      value: changed.supercedes,
+      existingValue: existing?.supercedes,
+      sentinel: 0,
+      field: 'Supercedes',
+      target: '前置成就',
+    );
+    await _validateReference(
+      table: 'foxy.dbc_achievement_category',
+      schema: 'foxy',
+      shortTable: 'dbc_achievement_category',
+      column: 'ID',
+      value: changed.category,
+      existingValue: existing?.category,
+      sentinel: null,
+      field: 'Category',
+      target: '成就分类',
+      requireImportedTable: true,
+    );
+    await _validateReference(
+      table: 'foxy.dbc_spell_icon',
+      schema: 'foxy',
+      shortTable: 'dbc_spell_icon',
+      column: 'ID',
+      value: changed.iconId,
+      existingValue: existing?.iconId,
+      sentinel: 0,
+      field: 'IconID',
+      target: '技能图标',
+    );
+    await _validateReference(
+      table: _table,
+      schema: 'foxy',
+      shortTable: 'dbc_achievement',
+      column: 'ID',
+      value: changed.sharesCriteria,
+      existingValue: existing?.sharesCriteria,
+      sentinel: 0,
+      field: 'Shares_criteria',
+      target: '共享条件成就',
+    );
+    await _validateNoCycle('Supercedes', changed.id, changed.supercedes);
+    await _validateNoCycle(
+      'Shares_criteria',
+      changed.id,
+      changed.sharesCriteria,
+    );
+    if (await _tableExists('foxy', 'dbc_achievement_criteria')) {
+      final criteriaSource = changed.sharesCriteria == 0
+          ? changed.id
+          : changed.sharesCriteria;
+      final criteriaCount = await laconic
+          .table('foxy.dbc_achievement_criteria')
+          .where('Achievement_ID', criteriaSource)
+          .count();
+      if (changed.minimumCriteria > criteriaCount) {
+        throw ArgumentError.value(
+          changed.minimumCriteria,
+          'Minimum_criteria',
+          '超过条件来源成就 $criteriaSource 的条件数量 $criteriaCount',
+        );
+      }
+    }
+  }
+
+  Future<void> _validateReference({
+    required String table,
+    required String schema,
+    required String shortTable,
+    required String column,
+    required int value,
+    required int? existingValue,
+    required int? sentinel,
+    required String field,
+    required String target,
+    bool requireImportedTable = false,
+  }) async {
+    if (sentinel != null && value == sentinel) return;
+    if (existingValue == value) return;
+    if (!await _tableExists(schema, shortTable)) {
+      if (requireImportedTable) {
+        throw StateError('缺少 $table，请重新导入 required DBC 后再保存');
+      }
+      return;
+    }
+    final count = await laconic.table(table).where(column, value).count();
+    if (count == 0) {
+      throw ArgumentError.value(value, field, '引用的$target不存在');
+    }
+  }
+
+  Future<void> _validateNoCycle(String field, int id, int first) async {
+    var current = first;
+    final visited = <int>{id};
+    while (current != 0) {
+      if (!visited.add(current)) {
+        throw ArgumentError('$field 形成循环引用');
+      }
+      final rows = await laconic
+          .table(_table)
+          .select([field])
+          .where('ID', current)
+          .limit(1)
+          .get();
+      if (rows.isEmpty) return;
+      current = rows.first.toMap()[field] as int? ?? 0;
+    }
+  }
+
+  Future<bool> _tableExists(String schema, String table) async {
+    final rows = await laconic
+        .table('information_schema.TABLES')
+        .where('TABLE_SCHEMA', schema)
+        .where('TABLE_NAME', table)
+        .limit(1)
+        .get();
+    return rows.isNotEmpty;
   }
 
   QueryBuilder _applyFilter(

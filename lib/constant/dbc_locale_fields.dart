@@ -25,6 +25,17 @@ class DbcLocaleFields {
     label: '奖励文本',
     multiline: true,
   );
+  static final achievementCategoryName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_achievement_category',
+    columnPrefix: 'Name_lang',
+    label: '成就分类名称',
+  );
+  static final achievementCriteriaDescription = DbcLocaleFieldDefinition(
+    tableName: 'dbc_achievement_criteria',
+    columnPrefix: 'Description_lang',
+    label: '成就条件描述',
+    multiline: true,
+  );
 
   // --- area_table ---
   static final areaTableAreaName = DbcLocaleFieldDefinition(
@@ -248,6 +259,8 @@ class DbcLocaleFields {
     achievementTitle,
     achievementDescription,
     achievementReward,
+    achievementCategoryName,
+    achievementCriteriaDescription,
     areaTableAreaName,
     charTitlesName,
     charTitlesName1,

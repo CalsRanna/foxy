@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/achievement_entity.dart';
+import 'package:foxy/entity/achievement_category_entity.dart';
+import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
@@ -64,6 +66,8 @@ import 'package:warcrafty/warcrafty.dart';
 Map<String, dynamic> _emptyEntityJson(String tableName) {
   return switch (tableName) {
     'dbc_achievement' => const AchievementEntity().toJson(),
+    'dbc_achievement_category' => const AchievementCategoryEntity().toJson(),
+    'dbc_achievement_criteria' => const AchievementCriteriaEntity().toJson(),
     'dbc_area_table' => const AreaTableEntity().toJson(),
     'dbc_char_titles' => const CharTitleEntity().toJson(),
     'dbc_cinematic_sequences' => const CinematicSequenceEntity().toJson(),
@@ -167,6 +171,12 @@ Map<String, dynamic> _sampleRow(DbcDefinition definition) {
 Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
   return switch (tableName) {
     'dbc_achievement' => AchievementEntity.fromJson(row).toJson(),
+    'dbc_achievement_category' => AchievementCategoryEntity.fromJson(
+      row,
+    ).toJson(),
+    'dbc_achievement_criteria' => AchievementCriteriaEntity.fromJson(
+      row,
+    ).toJson(),
     'dbc_area_table' => AreaTableEntity.fromJson(row).toJson(),
     'dbc_char_titles' => CharTitleEntity.fromJson(row).toJson(),
     'dbc_cinematic_sequences' => CinematicSequenceEntity.fromJson(row).toJson(),
@@ -250,7 +260,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
 
 void main() {
   test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(59));
+    expect(dbcDefinitions, hasLength(61));
 
     for (final definition in dbcDefinitions) {
       final json = _emptyEntityJson(definition.tableName);
