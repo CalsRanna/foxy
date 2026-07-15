@@ -101,7 +101,7 @@ class _ReferenceLootTemplateListPageState
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['Entry', '物品名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
+    final headers = ['Entry', '物品/行标识', '关联', '几率', '需要任务', '最小数量', '最大数量'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -115,7 +115,11 @@ class _ReferenceLootTemplateListPageState
               0 => ShadTableCell(child: Text(template.entry.toString())),
               1 => ShadTableCell(
                 child: Text(
-                  template.displayName,
+                  template.reference == 0
+                      ? (template.displayName.isEmpty
+                            ? template.item.toString()
+                            : template.displayName)
+                      : template.item.toString(),
                   style: TextStyle(color: qualityColor),
                 ),
               ),
