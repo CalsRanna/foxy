@@ -122,9 +122,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_spell_item_enchantment_condition' =>
       const SpellItemEnchantmentConditionEntity().toJson(),
     'dbc_spell_range' => const SpellRangeEntity().toJson(),
-    'dbc_skill_line' => SkillLineEntity.fromJson(
-      _schemaDefaults(tableName),
-    ).toJson(),
+    'dbc_skill_line' => const SkillLineEntity().toJson(),
     'dbc_sound_ambience' => const SoundAmbienceEntity().toJson(),
     'dbc_sound_provider_preferences' =>
       const SoundProviderPreferencesEntity().toJson(),

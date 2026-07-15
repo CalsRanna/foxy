@@ -46,8 +46,7 @@ class _ItemSetViewState extends State<ItemSetView> {
           _buildBasicInfo(),
           _buildNameText(),
           _buildItemIds(),
-          _buildSetSpellIds(),
-          _buildSetThresholds(),
+          _buildSetEffects(),
           _buildButtons(),
         ],
       ),
@@ -74,7 +73,8 @@ class _ItemSetViewState extends State<ItemSetView> {
             Expanded(
               child: FoxyFormItem(
                 label: '需求技能',
-                child: FoxyNumberInput<int>(
+                child: FoxyEntityPicker(
+                  delegate: FoxyEntityPickerDelegates.skillLine,
                   placeholder: 'RequiredSkill',
                   controller: viewModel.requiredSkillController,
                 ),
@@ -89,7 +89,7 @@ class _ItemSetViewState extends State<ItemSetView> {
                 ),
               ),
             ),
-            Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
           ],
         ),
       ],
@@ -129,150 +129,181 @@ class _ItemSetViewState extends State<ItemSetView> {
   }
 
   Widget _buildItemIds() {
-    return _buildPickerSection(
+    return FoxyFormSection(
       title: '套装物品',
-      count: 17,
-      delegate: FoxyEntityPickerDelegates.itemTemplate,
-      controllerProvider: viewModel.itemIdController,
-      labelPrefix: '物品',
-      placeholderPrefix: 'ItemID',
-    );
-  }
-
-  Widget _buildSetSpellIds() {
-    return _buildPickerSection(
-      title: '套装法术',
-      count: 8,
-      delegate: FoxyEntityPickerDelegates.spell,
-      controllerProvider: viewModel.setSpellIdController,
-      labelPrefix: '法术',
-      placeholderPrefix: 'SetSpellID',
-    );
-  }
-
-  /// 按每行 4 个构建编号选择器网格，不足 4 个的位置用空白占位。
-  Widget _buildPickerSection<T>({
-    required String title,
-    required int count,
-    required FoxyEntityPickerDelegate<T> delegate,
-    required IntFieldController Function(int) controllerProvider,
-    required String labelPrefix,
-    required String placeholderPrefix,
-  }) {
-    final rowCount = (count + 3) ~/ 4;
-    return FoxyFormSection(
-      title: title,
-      children: [
-        for (int r = 0; r < rowCount; r++)
-          Row(
-            spacing: 8,
-            children: [
-              for (int c = 0; c < 4; c++)
-                Expanded(
-                  child: (r * 4 + c < count)
-                      ? FoxyFormItem(
-                          label: '$labelPrefix${r * 4 + c}',
-                          child: FoxyEntityPicker<T>(
-                            delegate: delegate,
-                            controller: controllerProvider(r * 4 + c),
-                            placeholder: '$placeholderPrefix${r * 4 + c}',
-                          ),
-                        )
-                      : const SizedBox(),
-                ),
-            ],
-          ),
-      ],
-    );
-  }
-
-  Widget _buildSetThresholds() {
-    return FoxyFormSection(
-      title: '触发门槛',
       children: [
         Row(
           spacing: 8,
           children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛0',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold0',
-                  controller: viewModel.setThreshold0Controller,
-                ),
-              ),
+            _itemField('物品0', 'ItemID0', viewModel.itemId0Controller),
+            _itemField('物品1', 'ItemID1', viewModel.itemId1Controller),
+            _itemField('物品2', 'ItemID2', viewModel.itemId2Controller),
+            _itemField('物品3', 'ItemID3', viewModel.itemId3Controller),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _itemField('物品4', 'ItemID4', viewModel.itemId4Controller),
+            _itemField('物品5', 'ItemID5', viewModel.itemId5Controller),
+            _itemField('物品6', 'ItemID6', viewModel.itemId6Controller),
+            _itemField('物品7', 'ItemID7', viewModel.itemId7Controller),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _itemField('物品8', 'ItemID8', viewModel.itemId8Controller),
+            _itemField('物品9', 'ItemID9', viewModel.itemId9Controller),
+            _itemField('物品10', 'ItemID10', viewModel.itemId10Controller),
+            _itemField('物品11', 'ItemID11', viewModel.itemId11Controller),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _itemField('物品12', 'ItemID12', viewModel.itemId12Controller),
+            _itemField('物品13', 'ItemID13', viewModel.itemId13Controller),
+            _itemField('物品14', 'ItemID14', viewModel.itemId14Controller),
+            _itemField('物品15', 'ItemID15', viewModel.itemId15Controller),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _itemField('物品16', 'ItemID16', viewModel.itemId16Controller),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSetEffects() {
+    return FoxyFormSection(
+      title: '套装效果',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            _spellField('法术0', 'SetSpellID0', viewModel.setSpellId0Controller),
+            _thresholdField(
+              '触发件数0',
+              'SetThreshold0',
+              viewModel.setThreshold0Controller,
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛1',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold1',
-                  controller: viewModel.setThreshold1Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛2',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold2',
-                  controller: viewModel.setThreshold2Controller,
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛3',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold3',
-                  controller: viewModel.setThreshold3Controller,
-                ),
-              ),
+            _spellField('法术1', 'SetSpellID1', viewModel.setSpellId1Controller),
+            _thresholdField(
+              '触发件数1',
+              'SetThreshold1',
+              viewModel.setThreshold1Controller,
             ),
           ],
         ),
         Row(
           spacing: 8,
           children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛4',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold4',
-                  controller: viewModel.setThreshold4Controller,
-                ),
-              ),
+            _spellField('法术2', 'SetSpellID2', viewModel.setSpellId2Controller),
+            _thresholdField(
+              '触发件数2',
+              'SetThreshold2',
+              viewModel.setThreshold2Controller,
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛5',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold5',
-                  controller: viewModel.setThreshold5Controller,
-                ),
-              ),
+            _spellField('法术3', 'SetSpellID3', viewModel.setSpellId3Controller),
+            _thresholdField(
+              '触发件数3',
+              'SetThreshold3',
+              viewModel.setThreshold3Controller,
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛6',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold6',
-                  controller: viewModel.setThreshold6Controller,
-                ),
-              ),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _spellField('法术4', 'SetSpellID4', viewModel.setSpellId4Controller),
+            _thresholdField(
+              '触发件数4',
+              'SetThreshold4',
+              viewModel.setThreshold4Controller,
             ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '门槛7',
-                child: FoxyNumberInput<int>(
-                  placeholder: 'SetThreshold7',
-                  controller: viewModel.setThreshold7Controller,
-                ),
-              ),
+            _spellField('法术5', 'SetSpellID5', viewModel.setSpellId5Controller),
+            _thresholdField(
+              '触发件数5',
+              'SetThreshold5',
+              viewModel.setThreshold5Controller,
+            ),
+          ],
+        ),
+        Row(
+          spacing: 8,
+          children: [
+            _spellField('法术6', 'SetSpellID6', viewModel.setSpellId6Controller),
+            _thresholdField(
+              '触发件数6',
+              'SetThreshold6',
+              viewModel.setThreshold6Controller,
+            ),
+            _spellField('法术7', 'SetSpellID7', viewModel.setSpellId7Controller),
+            _thresholdField(
+              '触发件数7',
+              'SetThreshold7',
+              viewModel.setThreshold7Controller,
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _itemField(
+    String label,
+    String placeholder,
+    IntFieldController controller,
+  ) {
+    return Expanded(
+      child: FoxyFormItem(
+        label: label,
+        child: FoxyEntityPicker(
+          delegate: FoxyEntityPickerDelegates.itemTemplate,
+          controller: controller,
+          placeholder: placeholder,
+        ),
+      ),
+    );
+  }
+
+  Widget _spellField(
+    String label,
+    String placeholder,
+    IntFieldController controller,
+  ) {
+    return Expanded(
+      child: FoxyFormItem(
+        label: label,
+        child: FoxyEntityPicker(
+          delegate: FoxyEntityPickerDelegates.spell,
+          controller: controller,
+          placeholder: placeholder,
+        ),
+      ),
+    );
+  }
+
+  Widget _thresholdField(
+    String label,
+    String placeholder,
+    IntFieldController controller,
+  ) {
+    return Expanded(
+      child: FoxyFormItem(
+        label: label,
+        child: FoxyNumberInput<int>(
+          placeholder: placeholder,
+          controller: controller,
+        ),
+      ),
     );
   }
 

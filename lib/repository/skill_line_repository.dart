@@ -39,7 +39,7 @@ class SkillLineRepository with RepositoryMixin {
   }
 
   Future<SkillLineEntity> createSkillLine() async =>
-      SkillLineEntity.fromJson({'ID': await _getNextId()});
+      SkillLineEntity(id: await _getNextId());
 
   Future<int> storeSkillLine(SkillLineEntity skillLine) async {
     final json = skillLine.toJson();
