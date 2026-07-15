@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -21,7 +20,6 @@ class PageTextDetailViewModel with FieldControllerMixin {
   late final verifiedBuildController = registerController(IntFieldController());
 
   final page = signal<PageTextEntity?>(null);
-  final locales = signal<List<PageTextLocaleEntity>>([]);
 
   Future<void> initSignals({int? id}) async {
     try {
@@ -29,14 +27,12 @@ class PageTextDetailViewModel with FieldControllerMixin {
         final blank = await _repository.createPageText();
         page.value = blank;
         _initControllers(blank);
-        locales.value = [];
         return;
       }
       final entity = await _repository.getPageText(id);
       if (entity == null) return;
       page.value = entity;
       _initControllers(entity);
-      locales.value = await _repository.getPageTextLocales(id);
     } catch (e, s) {
       LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
     }
@@ -49,27 +45,32 @@ class PageTextDetailViewModel with FieldControllerMixin {
     verifiedBuildController.init(pt.verifiedBuild);
   }
 
-  Future<void> save(BuildContext context) async {
+  Future<int?> save(BuildContext context) async {
     try {
       final data = _collect();
-      // create* 预填 id 后 page 非 null，必须用库内是否存在判断新建
       final existed = await _repository.getPageText(data.id);
+      late final PageTextEntity saved;
       if (existed == null) {
         final id = await _repository.storePageText(data);
         idController.init(id);
-        page.value = data.copyWith(id: id);
-        _logActivity(ActivityActionType.create, page.value!);
+        saved = data.copyWith(id: id);
+        page.value = saved;
+        _logActivity(ActivityActionType.create, saved);
       } else {
-        final updated = data.copyWith(id: existed.id);
-        await _repository.updatePageText(updated);
-        page.value = updated;
-        _logActivity(ActivityActionType.update, updated);
+        saved = data.copyWith(id: existed.id);
+        await _repository.updatePageText(saved);
+        page.value = saved;
+        _logActivity(ActivityActionType.update, saved);
       }
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
+      if (context.mounted) {
+        ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
+      }
+      return saved.id;
     } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      if (context.mounted) {
+        ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      }
+      return null;
     }
   }
 

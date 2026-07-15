@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/page/page_text/page_text_locale_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -8,6 +11,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 class PageTextLocaleView extends StatefulWidget {
   final int? id;
+
   const PageTextLocaleView({super.key, this.id});
 
   @override
@@ -32,19 +36,19 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      final locales = viewModel.locales.value;
+      final rows = viewModel.rows.value;
       return Padding(
         padding: const EdgeInsets.only(top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            ...locales.asMap().entries.map((entry) {
-              final idx = entry.key;
-              final locale = entry.value;
-              return ShadCard(
-                padding: EdgeInsets.all(16),
+            for (final row in rows)
+              ShadCard(
+                key: ObjectKey(row),
+                padding: const EdgeInsets.all(16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   spacing: 8,
                   children: [
                     Row(
@@ -52,32 +56,65 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                       children: [
                         Expanded(
                           child: FoxyFormItem(
-                            label: locale.locale,
-                            child: FoxyStringInput(
-                              controller: viewModel.localeController(idx),
-                              placeholder: locale.locale,
+                            label: '编号',
+                            child: FoxyNumberInput<int>(
+                              controller: row.idController,
+                              placeholder: 'ID',
+                              readOnly: true,
                             ),
                           ),
                         ),
-                        ShadButton.destructive(
-                          size: ShadButtonSize.sm,
-                          onPressed: () => viewModel.removeLocale(idx),
-                          child: Icon(LucideIcons.trash, size: 14),
+                        Expanded(
+                          child: FoxyFormItem(
+                            label: '语言',
+                            child: FoxyShadSelect<String>(
+                              controller: row.localeController,
+                              options: kPageTextLocaleOptions,
+                              placeholder: const Text('locale'),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: FoxyFormItem(
+                            label: '文本',
+                            child: FoxyStringInput(
+                              controller: row.textController,
+                              placeholder: 'Text',
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: FoxyFormItem(
+                            label: 'VerifiedBuild',
+                            child: FoxyNumberInput<int>(
+                              controller: row.verifiedBuildController,
+                              placeholder: 'VerifiedBuild',
+                            ),
+                          ),
                         ),
                       ],
                     ),
+                    ShadButton.destructive(
+                      size: ShadButtonSize.sm,
+                      onPressed: () => viewModel.removeLocale(row),
+                      child: const Icon(LucideIcons.trash, size: 14),
+                    ),
                   ],
                 ),
-              );
-            }),
-            ShadButton.outline(
-              leading: Icon(LucideIcons.plus, size: 14),
-              onPressed: () => viewModel.addLocale(),
-              child: Text('添加本地化'),
-            ),
-            ShadButton(
-              onPressed: () => viewModel.save(context),
-              child: Text('保存'),
+              ),
+            Row(
+              spacing: 8,
+              children: [
+                ShadButton.outline(
+                  leading: const Icon(LucideIcons.plus, size: 14),
+                  onPressed: viewModel.addLocale,
+                  child: const Text('添加本地化'),
+                ),
+                ShadButton(
+                  onPressed: () => viewModel.save(context),
+                  child: const Text('保存'),
+                ),
+              ],
             ),
           ],
         ),
