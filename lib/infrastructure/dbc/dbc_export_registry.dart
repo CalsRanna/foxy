@@ -50,6 +50,7 @@ import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/talent_tab_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/vehicle_repository.dart';
@@ -186,6 +187,7 @@ class DbcExportRegistry {
         .get<SpellItemEnchantmentConditionRepository>();
     final spellRange = getIt.get<SpellRangeRepository>();
     final talent = getIt.get<TalentRepository>();
+    final talentTab = getIt.get<TalentTabRepository>();
     final taxiPath = getIt.get<TaxiPathRepository>();
     final totemCategory = getIt.get<TotemCategoryRepository>();
     final vehicle = getIt.get<VehicleRepository>();
@@ -452,6 +454,11 @@ class DbcExportRegistry {
       'dbc_talent': DbcExportDelegate.typed(
         load: talent.getTalents,
         count: () => talent.countTalents(),
+        toJson: (entity) => entity.toJson(),
+      ),
+      'dbc_talent_tab': DbcExportDelegate.typed(
+        load: talentTab.getTalentTabs,
+        count: () => talentTab.countTalentTabs(),
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_taxi_path': DbcExportDelegate.typed(

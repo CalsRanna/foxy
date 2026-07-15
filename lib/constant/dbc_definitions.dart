@@ -160,6 +160,7 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
     schema: Definitions.soundProviderPreferences,
   ),
   DbcDefinition(tableName: 'dbc_talent', schema: Definitions.talent),
+  DbcDefinition(tableName: 'dbc_talent_tab', schema: Definitions.talentTab),
   DbcDefinition(tableName: 'dbc_taxi_path', schema: Definitions.taxiPath),
   DbcDefinition(
     tableName: 'dbc_totem_category',

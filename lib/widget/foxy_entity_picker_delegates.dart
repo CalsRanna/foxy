@@ -108,6 +108,10 @@ import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_filter_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
+import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/talent_filter_entity.dart';
+import 'package:foxy/entity/talent_tab_entity.dart';
+import 'package:foxy/entity/talent_tab_filter_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
@@ -176,6 +180,8 @@ import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
+import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/talent_tab_repository.dart';
 import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -2496,6 +2502,96 @@ class FoxyEntityPickerDelegates {
       );
       return repo.countSpells(filter: filter);
     },
+  );
+
+  static final talent = FoxyEntityPickerDelegate<BriefTalentEntity>(
+    title: '天赋',
+    errorLabel: '搜索 Talent.dbc 天赋失败',
+    filters: const [
+      FoxyEntityPickerFilter('天赋 ID'),
+      FoxyEntityPickerFilter('法术 ID'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefTalentEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '天赋页',
+        width: 120,
+        text: (BriefTalentEntity row) => row.tabId.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '层',
+        width: 80,
+        text: (BriefTalentEntity row) => row.tierId.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '列',
+        width: 80,
+        text: (BriefTalentEntity row) => row.columnIndex.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '第 1 级法术',
+        width: 120,
+        text: (BriefTalentEntity row) => row.spellRank0.toString(),
+      ),
+    ],
+    idOf: (BriefTalentEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<TalentRepository>().getBriefTalents(
+          page: page,
+          filter: TalentFilterEntity(id: values[0], spell: values[1]),
+        ),
+    count: (values) => GetIt.instance.get<TalentRepository>().countTalents(
+      filter: TalentFilterEntity(id: values[0], spell: values[1]),
+    ),
+  );
+
+  static final talentTab = FoxyEntityPickerDelegate<BriefTalentTabEntity>(
+    title: '天赋页',
+    errorLabel: '搜索 TalentTab.dbc 天赋页失败',
+    filters: const [
+      FoxyEntityPickerFilter('天赋页 ID'),
+      FoxyEntityPickerFilter('天赋页名称'),
+    ],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '编号',
+        width: 120,
+        text: (BriefTalentTabEntity row) => row.id.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '名称',
+        text: (BriefTalentTabEntity row) => row.nameLangZhCN,
+      ),
+      FoxyEntityPickerColumn(
+        header: '职业掩码',
+        width: 120,
+        text: (BriefTalentTabEntity row) => row.classMask.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '分类',
+        width: 100,
+        text: (BriefTalentTabEntity row) => row.categoryEnumId.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '页序',
+        width: 80,
+        text: (BriefTalentTabEntity row) => row.orderIndex.toString(),
+      ),
+    ],
+    idOf: (BriefTalentTabEntity row) => row.id,
+    fetch: (page, values) =>
+        GetIt.instance.get<TalentTabRepository>().getBriefTalentTabs(
+          page: page,
+          filter: TalentTabFilterEntity(id: values[0], name: values[1]),
+        ),
+    count: (values) =>
+        GetIt.instance.get<TalentTabRepository>().countTalentTabs(
+          filter: TalentTabFilterEntity(id: values[0], name: values[1]),
+        ),
   );
 
   static final spellRange = FoxyEntityPickerDelegate<BriefSpellRangeEntity>(

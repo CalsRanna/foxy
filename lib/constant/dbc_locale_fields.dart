@@ -222,6 +222,13 @@ class DbcLocaleFields {
     label: '备选动词',
   );
 
+  // --- talent_tab ---
+  static final talentTabName = DbcLocaleFieldDefinition(
+    tableName: 'dbc_talent_tab',
+    columnPrefix: 'Name_lang',
+    label: '天赋页名称',
+  );
+
   // --- totem_category ---
   static final totemCategoryName = DbcLocaleFieldDefinition(
     tableName: 'dbc_totem_category',
@@ -264,6 +271,7 @@ class DbcLocaleFields {
     skillLineDisplayName,
     skillLineDescription,
     skillLineAlternateVerb,
+    talentTabName,
     totemCategoryName,
   ];
 }
