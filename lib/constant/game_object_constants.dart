@@ -1,5 +1,27 @@
 import 'package:foxy/constant/flag_item.dart';
 
+const kGameObjectBooleanOptions = <int, String>{0: '否', 1: '是'};
+
+const kGameObjectChairHeightOptions = <int, String>{0: '低', 1: '中', 2: '高'};
+
+/// `GameObjectFlags` 中 AzerothCore 实际使用的位。
+const kGameObjectFlagItems = <FlagItem>[
+  FlagItem(0x00000001, '正在使用'),
+  FlagItem(0x00000002, '已锁定'),
+  FlagItem(0x00000004, '受交互条件限制'),
+  FlagItem(0x00000008, '运输对象'),
+  FlagItem(0x00000010, '不可选中'),
+  FlagItem(0x00000020, '不自动生成'),
+  FlagItem(0x00000040, '已触发'),
+  FlagItem(0x00000200, '已损坏'),
+  FlagItem(0x00000400, '已摧毁'),
+];
+const kGameObjectTrapTypeOptions = <int, String>{
+  0: '非炸弹陷阱',
+  1: '炸弹陷阱',
+  2: '自动关闭陷阱',
+};
+
 /// `SharedDefines.h::GameobjectTypes`，3.3.5a 共 0..35。
 const kGameObjectTypeOptions = <int, String>{
   0: '门',
@@ -39,60 +61,6 @@ const kGameObjectTypeOptions = <int, String>{
   34: '公会银行',
   35: '活板门',
 };
-
-const kGameObjectBooleanOptions = <int, String>{0: '否', 1: '是'};
-const kGameObjectTrapTypeOptions = <int, String>{
-  0: '非炸弹陷阱',
-  1: '炸弹陷阱',
-  2: '自动关闭陷阱',
-};
-const kGameObjectChairHeightOptions = <int, String>{0: '低', 1: '中', 2: '高'};
-
-/// `GameObjectFlags` 中 AzerothCore 实际使用的位。
-const kGameObjectFlagItems = <FlagItem>[
-  FlagItem(0x00000001, '正在使用'),
-  FlagItem(0x00000002, '已锁定'),
-  FlagItem(0x00000004, '受交互条件限制'),
-  FlagItem(0x00000008, '运输对象'),
-  FlagItem(0x00000010, '不可选中'),
-  FlagItem(0x00000020, '不自动生成'),
-  FlagItem(0x00000040, '已触发'),
-  FlagItem(0x00000200, '已损坏'),
-  FlagItem(0x00000400, '已摧毁'),
-];
-
-enum GameObjectDataReference {
-  none,
-  area,
-  cinematicSequence,
-  creatureTemplate,
-  destructibleModelData,
-  gameObjectLoot,
-  gameObjectDisplayInfo,
-  gameObjectTemplate,
-  gossipMenu,
-  lock,
-  map,
-  pageText,
-  questTemplate,
-  spell,
-  spellFocusObject,
-  taxiPath,
-}
-
-class GameObjectDataFieldConfig {
-  final String label;
-  final bool editable;
-  final GameObjectDataReference reference;
-  final Map<int, String>? options;
-
-  const GameObjectDataFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = GameObjectDataReference.none,
-    this.options,
-  });
-}
 
 const _unusedGameObjectData = GameObjectDataFieldConfig('未使用', editable: false);
 
@@ -640,4 +608,37 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
     (35, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
     _ => _unusedGameObjectData,
   };
+}
+
+class GameObjectDataFieldConfig {
+  final String label;
+  final bool editable;
+  final GameObjectDataReference reference;
+  final Map<int, String>? options;
+
+  const GameObjectDataFieldConfig(
+    this.label, {
+    this.editable = true,
+    this.reference = GameObjectDataReference.none,
+    this.options,
+  });
+}
+
+enum GameObjectDataReference {
+  none,
+  area,
+  cinematicSequence,
+  creatureTemplate,
+  destructibleModelData,
+  gameObjectLoot,
+  gameObjectDisplayInfo,
+  gameObjectTemplate,
+  gossipMenu,
+  lock,
+  map,
+  pageText,
+  questTemplate,
+  spell,
+  spellFocusObject,
+  taxiPath,
 }

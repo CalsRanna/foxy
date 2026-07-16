@@ -1,7 +1,5 @@
 import 'package:foxy/constant/flag_item.dart';
 
-const kQuestFlagsAllowedMask = 0x000FFFFF;
-
 /// AzerothCore `QuestFlags` for the 3.3.5a client.
 const kQuestFlagOptions = [
   FlagItem(0x00000001, '保持存活（未使用）'),
@@ -26,7 +24,7 @@ const kQuestFlagOptions = [
   FlagItem(0x00080000, '自动接受'),
 ];
 
-const kQuestSpecialFlagsAllowedMask = 0x000001FF;
+const kQuestFlagsAllowedMask = 0x000FFFFF;
 
 /// Only the bits included in AzerothCore `QUEST_SPECIAL_FLAGS_DB_ALLOWED`.
 const kQuestSpecialFlagOptions = [
@@ -40,3 +38,5 @@ const kQuestSpecialFlagOptions = [
   FlagItem(0x0080, '任意状态可失败'),
   FlagItem(0x0100, '不计入博学者'),
 ];
+
+const kQuestSpecialFlagsAllowedMask = 0x000001FF;

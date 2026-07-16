@@ -1,6 +1,8 @@
 // GossipMenuOption 枚举常量定义
 // 数据来源：AzerothCore GossipDef.h
 
+const kGossipBooleanOptions = <int, String>{0: '否', 1: '是'};
+
 /// GossipMenuOption 图标名称（OptionIcon 值 → 名称）
 /// 来源：AzerothCore GossipOptionIcon enum
 const kGossipOptionIcons = {
@@ -73,5 +75,3 @@ const kNpcTextLanguages = <int, String>{
   37: '侏儒二进制语',
   38: '地精二进制语',
 };
-
-const kGossipBooleanOptions = <int, String>{0: '否', 1: '是'};

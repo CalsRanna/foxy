@@ -2,107 +2,6 @@ import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 
-// AzerothCore master@a0b6553b, SmartScriptMgr.h / SmartScriptMgr.cpp.
-// Only source types accepted by SmartAIMgr::LoadSmartAIFromDB are exposed.
-const kSourceTypes = <int, String>{
-  0: 'CREATURE',
-  1: 'GAMEOBJECT',
-  2: 'AREATRIGGER',
-  9: 'TIMED_ACTIONLIST',
-};
-
-const kEventTypes = <int, String>{
-  0: 'UPDATE_IC',
-  1: 'UPDATE_OOC',
-  2: 'HEALTH_PCT',
-  3: 'MANA_PCT',
-  4: 'AGGRO',
-  5: 'KILL',
-  6: 'DEATH',
-  7: 'EVADE',
-  8: 'SPELLHIT',
-  9: 'RANGE',
-  10: 'OOC_LOS',
-  11: 'RESPAWN',
-  12: 'TARGET_HEALTH_PCT',
-  13: 'VICTIM_CASTING',
-  14: 'FRIENDLY_HEALTH',
-  15: 'FRIENDLY_IS_CC',
-  16: 'FRIENDLY_MISSING_BUFF',
-  17: 'SUMMONED_UNIT',
-  18: 'TARGET_MANA_PCT',
-  19: 'ACCEPTED_QUEST',
-  20: 'REWARD_QUEST',
-  21: 'REACHED_HOME',
-  22: 'RECEIVE_EMOTE',
-  23: 'HAS_AURA',
-  24: 'TARGET_BUFFED',
-  25: 'RESET',
-  26: 'IC_LOS',
-  27: 'PASSENGER_BOARDED',
-  28: 'PASSENGER_REMOVED',
-  29: 'CHARMED',
-  30: 'CHARMED_TARGET',
-  31: 'SPELLHIT_TARGET',
-  32: 'DAMAGED',
-  33: 'DAMAGED_TARGET',
-  34: 'MOVEMENTINFORM',
-  35: 'SUMMON_DESPAWNED',
-  36: 'CORPSE_REMOVED',
-  37: 'AI_INIT',
-  38: 'DATA_SET',
-  39: 'ESCORT_START',
-  40: 'ESCORT_REACHED',
-  41: 'TRANSPORT_ADDPLAYER',
-  42: 'TRANSPORT_ADDCREATURE',
-  43: 'TRANSPORT_REMOVE_PLAYER',
-  44: 'TRANSPORT_RELOCATE',
-  45: 'INSTANCE_PLAYER_ENTER',
-  46: 'AREATRIGGER_ONTRIGGER',
-  47: 'QUEST_ACCEPTED',
-  48: 'QUEST_OBJ_COMPLETION',
-  49: 'QUEST_COMPLETION',
-  50: 'QUEST_REWARDED',
-  51: 'QUEST_FAIL',
-  52: 'TEXT_OVER',
-  53: 'RECEIVE_HEAL',
-  54: 'JUST_SUMMONED',
-  55: 'ESCORT_PAUSED',
-  56: 'ESCORT_RESUMED',
-  57: 'ESCORT_STOPPED',
-  58: 'ESCORT_ENDED',
-  59: 'TIMED_EVENT_TRIGGERED',
-  60: 'UPDATE',
-  61: 'LINK',
-  62: 'GOSSIP_SELECT',
-  63: 'JUST_CREATED',
-  64: 'GOSSIP_HELLO',
-  65: 'FOLLOW_COMPLETED',
-  66: 'EVENT_PHASE_CHANGE',
-  67: 'IS_BEHIND_TARGET',
-  68: 'GAME_EVENT_START',
-  69: 'GAME_EVENT_END',
-  70: 'GO_STATE_CHANGED',
-  71: 'GO_EVENT_INFORM',
-  72: 'ACTION_DONE',
-  73: 'ON_SPELLCLICK',
-  74: 'FRIENDLY_HEALTH_PCT',
-  75: 'DISTANCE_CREATURE',
-  76: 'DISTANCE_GAMEOBJECT',
-  77: 'COUNTER_SET',
-  82: 'SUMMONED_UNIT_DIES',
-  101: 'NEAR_PLAYERS',
-  102: 'NEAR_PLAYERS_NEGATION',
-  103: 'NEAR_UNIT',
-  104: 'NEAR_UNIT_NEGATION',
-  105: 'AREA_CASTING',
-  106: 'AREA_RANGE',
-  107: 'SUMMONED_UNIT_EVADE',
-  108: 'WAYPOINT_REACHED',
-  109: 'WAYPOINT_ENDED',
-  110: 'IS_IN_MELEE_RANGE',
-};
-
 const kActionTypes = <int, String>{
   1: 'TALK',
   2: 'SET_FACTION',
@@ -276,6 +175,196 @@ const kActionTypes = <int, String>{
   242: 'INC_DATA',
 };
 
+const kEventFlagItems = <FlagItem>[
+  FlagItem(0x001, 'NOT_REPEATABLE'),
+  FlagItem(0x002, 'DIFFICULTY_0'),
+  FlagItem(0x004, 'DIFFICULTY_1'),
+  FlagItem(0x008, 'DIFFICULTY_2'),
+  FlagItem(0x010, 'DIFFICULTY_3'),
+  FlagItem(0x020, 'RESERVED_5'),
+  FlagItem(0x040, 'RESERVED_6'),
+  FlagItem(0x080, 'DEBUG_ONLY'),
+  FlagItem(0x100, 'DONT_RESET'),
+  FlagItem(0x200, 'WHILE_CHARMED'),
+];
+
+const kEventPhaseFlagItems = <FlagItem>[
+  FlagItem(1, 'Phase 1'),
+  FlagItem(2, 'Phase 2'),
+  FlagItem(4, 'Phase 3'),
+  FlagItem(8, 'Phase 4'),
+  FlagItem(16, 'Phase 5'),
+  FlagItem(32, 'Phase 6'),
+  FlagItem(64, 'Phase 7'),
+  FlagItem(128, 'Phase 8'),
+  FlagItem(256, 'Phase 9'),
+  FlagItem(512, 'Phase 10'),
+  FlagItem(1024, 'Phase 11'),
+  FlagItem(2048, 'Phase 12'),
+];
+
+const kEventPhaseMasks = <int, String>{
+  1: 'Phase 1',
+  2: 'Phase 2',
+  4: 'Phase 3',
+  8: 'Phase 4',
+  16: 'Phase 5',
+  32: 'Phase 6',
+  64: 'Phase 7',
+  128: 'Phase 8',
+  256: 'Phase 9',
+  512: 'Phase 10',
+  1024: 'Phase 11',
+  2048: 'Phase 12',
+};
+
+const kEventTypes = <int, String>{
+  0: 'UPDATE_IC',
+  1: 'UPDATE_OOC',
+  2: 'HEALTH_PCT',
+  3: 'MANA_PCT',
+  4: 'AGGRO',
+  5: 'KILL',
+  6: 'DEATH',
+  7: 'EVADE',
+  8: 'SPELLHIT',
+  9: 'RANGE',
+  10: 'OOC_LOS',
+  11: 'RESPAWN',
+  12: 'TARGET_HEALTH_PCT',
+  13: 'VICTIM_CASTING',
+  14: 'FRIENDLY_HEALTH',
+  15: 'FRIENDLY_IS_CC',
+  16: 'FRIENDLY_MISSING_BUFF',
+  17: 'SUMMONED_UNIT',
+  18: 'TARGET_MANA_PCT',
+  19: 'ACCEPTED_QUEST',
+  20: 'REWARD_QUEST',
+  21: 'REACHED_HOME',
+  22: 'RECEIVE_EMOTE',
+  23: 'HAS_AURA',
+  24: 'TARGET_BUFFED',
+  25: 'RESET',
+  26: 'IC_LOS',
+  27: 'PASSENGER_BOARDED',
+  28: 'PASSENGER_REMOVED',
+  29: 'CHARMED',
+  30: 'CHARMED_TARGET',
+  31: 'SPELLHIT_TARGET',
+  32: 'DAMAGED',
+  33: 'DAMAGED_TARGET',
+  34: 'MOVEMENTINFORM',
+  35: 'SUMMON_DESPAWNED',
+  36: 'CORPSE_REMOVED',
+  37: 'AI_INIT',
+  38: 'DATA_SET',
+  39: 'ESCORT_START',
+  40: 'ESCORT_REACHED',
+  41: 'TRANSPORT_ADDPLAYER',
+  42: 'TRANSPORT_ADDCREATURE',
+  43: 'TRANSPORT_REMOVE_PLAYER',
+  44: 'TRANSPORT_RELOCATE',
+  45: 'INSTANCE_PLAYER_ENTER',
+  46: 'AREATRIGGER_ONTRIGGER',
+  47: 'QUEST_ACCEPTED',
+  48: 'QUEST_OBJ_COMPLETION',
+  49: 'QUEST_COMPLETION',
+  50: 'QUEST_REWARDED',
+  51: 'QUEST_FAIL',
+  52: 'TEXT_OVER',
+  53: 'RECEIVE_HEAL',
+  54: 'JUST_SUMMONED',
+  55: 'ESCORT_PAUSED',
+  56: 'ESCORT_RESUMED',
+  57: 'ESCORT_STOPPED',
+  58: 'ESCORT_ENDED',
+  59: 'TIMED_EVENT_TRIGGERED',
+  60: 'UPDATE',
+  61: 'LINK',
+  62: 'GOSSIP_SELECT',
+  63: 'JUST_CREATED',
+  64: 'GOSSIP_HELLO',
+  65: 'FOLLOW_COMPLETED',
+  66: 'EVENT_PHASE_CHANGE',
+  67: 'IS_BEHIND_TARGET',
+  68: 'GAME_EVENT_START',
+  69: 'GAME_EVENT_END',
+  70: 'GO_STATE_CHANGED',
+  71: 'GO_EVENT_INFORM',
+  72: 'ACTION_DONE',
+  73: 'ON_SPELLCLICK',
+  74: 'FRIENDLY_HEALTH_PCT',
+  75: 'DISTANCE_CREATURE',
+  76: 'DISTANCE_GAMEOBJECT',
+  77: 'COUNTER_SET',
+  82: 'SUMMONED_UNIT_DIES',
+  101: 'NEAR_PLAYERS',
+  102: 'NEAR_PLAYERS_NEGATION',
+  103: 'NEAR_UNIT',
+  104: 'NEAR_UNIT_NEGATION',
+  105: 'AREA_CASTING',
+  106: 'AREA_RANGE',
+  107: 'SUMMONED_UNIT_EVADE',
+  108: 'WAYPOINT_REACHED',
+  109: 'WAYPOINT_ENDED',
+  110: 'IS_IN_MELEE_RANGE',
+};
+
+const kFormationTargetTypeOptions = <int, String>{
+  0: 'MEMBERS',
+  1: 'LEADER',
+  2: 'ALL',
+};
+
+const kGossipHelloFilterOptions = <int, String>{
+  0: '无过滤',
+  1: '仅 GossipHello',
+  2: '仅 reportUse',
+};
+
+const kInstanceStorageTypeOptions = <int, String>{
+  1: 'CREATURE',
+  2: 'GAMEOBJECT',
+};
+
+const kLivingStateOptions = <int, String>{0: 'ANY', 1: 'ALIVE', 2: 'DEAD'};
+
+const kLosHostilityOptions = <int, String>{
+  0: 'HOSTILE',
+  1: 'NOT_HOSTILE',
+  2: 'ANY',
+};
+
+const kNearUnitTypeOptions = <int, String>{0: 'CREATURE', 1: 'GAMEOBJECT'};
+const kRespawnConditionOptions = <int, String>{0: 'NONE', 1: 'MAP', 2: 'AREA'};
+const kSmartBooleanOptions = <int, String>{0: '否', 1: '是'};
+const kSmartCastFlagItems = <FlagItem>[
+  FlagItem(0x001, 'INTERRUPT_PREVIOUS'),
+  FlagItem(0x002, 'TRIGGERED'),
+  FlagItem(0x020, 'AURA_NOT_PRESENT'),
+  FlagItem(0x040, 'COMBAT_MOVE'),
+  FlagItem(0x080, 'THREATLIST_NOT_SINGLE'),
+  FlagItem(0x100, 'TARGET_POWER_MANA'),
+  FlagItem(0x200, 'ENABLE_COMBAT_MOVE_ON_LOS'),
+  FlagItem(0x400, 'MAIN_SPELL'),
+];
+// AzerothCore master@a0b6553b, SmartScriptMgr.h / SmartScriptMgr.cpp.
+// Only source types accepted by SmartAIMgr::LoadSmartAIFromDB are exposed.
+const kSourceTypes = <int, String>{
+  0: 'CREATURE',
+  1: 'GAMEOBJECT',
+  2: 'AREATRIGGER',
+  9: 'TIMED_ACTIONLIST',
+};
+const kSummonCreatureFlagItems = <FlagItem>[
+  FlagItem(0x1, 'PERSONAL_SPAWN'),
+  FlagItem(0x2, 'PREFER_UNIT'),
+];
+const kTargetRoleFlagItems = <FlagItem>[
+  FlagItem(0x1, 'TANKS'),
+  FlagItem(0x2, 'HEALERS'),
+  FlagItem(0x4, 'DAMAGERS'),
+];
 const kTargetTypes = <int, String>{
   0: 'NONE',
   1: 'SELF',
@@ -314,189 +403,115 @@ const kTargetTypes = <int, String>{
   206: 'FORMATION',
 };
 
-const kEventPhaseMasks = <int, String>{
-  1: 'Phase 1',
-  2: 'Phase 2',
-  4: 'Phase 3',
-  8: 'Phase 4',
-  16: 'Phase 5',
-  32: 'Phase 6',
-  64: 'Phase 7',
-  128: 'Phase 8',
-  256: 'Phase 9',
-  512: 'Phase 10',
-  1024: 'Phase 11',
-  2048: 'Phase 12',
+const _creatureEvents = <int>{
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  72,
+  73,
+  74,
+  75,
+  76,
+  77,
+  82,
+  101,
+  102,
+  103,
+  104,
+  105,
+  106,
+  107,
+  108,
+  109,
+  110,
 };
 
-const kEventPhaseFlagItems = <FlagItem>[
-  FlagItem(1, 'Phase 1'),
-  FlagItem(2, 'Phase 2'),
-  FlagItem(4, 'Phase 3'),
-  FlagItem(8, 'Phase 4'),
-  FlagItem(16, 'Phase 5'),
-  FlagItem(32, 'Phase 6'),
-  FlagItem(64, 'Phase 7'),
-  FlagItem(128, 'Phase 8'),
-  FlagItem(256, 'Phase 9'),
-  FlagItem(512, 'Phase 10'),
-  FlagItem(1024, 'Phase 11'),
-  FlagItem(2048, 'Phase 12'),
-];
-
-const kEventFlagItems = <FlagItem>[
-  FlagItem(0x001, 'NOT_REPEATABLE'),
-  FlagItem(0x002, 'DIFFICULTY_0'),
-  FlagItem(0x004, 'DIFFICULTY_1'),
-  FlagItem(0x008, 'DIFFICULTY_2'),
-  FlagItem(0x010, 'DIFFICULTY_3'),
-  FlagItem(0x020, 'RESERVED_5'),
-  FlagItem(0x040, 'RESERVED_6'),
-  FlagItem(0x080, 'DEBUG_ONLY'),
-  FlagItem(0x100, 'DONT_RESET'),
-  FlagItem(0x200, 'WHILE_CHARMED'),
-];
-
-const kSmartCastFlagItems = <FlagItem>[
-  FlagItem(0x001, 'INTERRUPT_PREVIOUS'),
-  FlagItem(0x002, 'TRIGGERED'),
-  FlagItem(0x020, 'AURA_NOT_PRESENT'),
-  FlagItem(0x040, 'COMBAT_MOVE'),
-  FlagItem(0x080, 'THREATLIST_NOT_SINGLE'),
-  FlagItem(0x100, 'TARGET_POWER_MANA'),
-  FlagItem(0x200, 'ENABLE_COMBAT_MOVE_ON_LOS'),
-  FlagItem(0x400, 'MAIN_SPELL'),
-];
-
-const kSummonCreatureFlagItems = <FlagItem>[
-  FlagItem(0x1, 'PERSONAL_SPAWN'),
-  FlagItem(0x2, 'PREFER_UNIT'),
-];
-
-const kTargetRoleFlagItems = <FlagItem>[
-  FlagItem(0x1, 'TANKS'),
-  FlagItem(0x2, 'HEALERS'),
-  FlagItem(0x4, 'DAMAGERS'),
-];
-
-const kSmartBooleanOptions = <int, String>{0: '否', 1: '是'};
-const kLosHostilityOptions = <int, String>{
-  0: 'HOSTILE',
-  1: 'NOT_HOSTILE',
-  2: 'ANY',
+const _gameObjectEvents = <int>{
+  1,
+  8,
+  11,
+  17,
+  19,
+  20,
+  35,
+  37,
+  38,
+  52,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  66,
+  68,
+  69,
+  70,
+  71,
+  77,
+  82,
+  101,
+  102,
+  103,
+  104,
+  107,
 };
-const kRespawnConditionOptions = <int, String>{0: 'NONE', 1: 'MAP', 2: 'AREA'};
-const kLivingStateOptions = <int, String>{0: 'ANY', 1: 'ALIVE', 2: 'DEAD'};
-const kNearUnitTypeOptions = <int, String>{0: 'CREATURE', 1: 'GAMEOBJECT'};
-const kGossipHelloFilterOptions = <int, String>{
-  0: '无过滤',
-  1: '仅 GossipHello',
-  2: '仅 reportUse',
-};
-const kInstanceStorageTypeOptions = <int, String>{
-  1: 'CREATURE',
-  2: 'GAMEOBJECT',
-};
-const kFormationTargetTypeOptions = <int, String>{
-  0: 'MEMBERS',
-  1: 'LEADER',
-  2: 'ALL',
-};
-
-enum SmartParameterReference {
-  none,
-  area,
-  cinematicSequence,
-  creature,
-  creatureDisplay,
-  emote,
-  factionTemplate,
-  gameObject,
-  gossipMenu,
-  item,
-  map,
-  npcText,
-  quest,
-  spell,
-  taxiPath,
-  textEmote,
-  waypointPath,
-}
-
-class SmartParameterFieldConfig {
-  final String label;
-  final bool editable;
-  final SmartParameterReference reference;
-  final Map<int, String>? options;
-  final List<FlagItem>? flags;
-
-  const SmartParameterFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = SmartParameterReference.none,
-    this.options,
-    this.flags,
-  });
-}
-
-class SmartParameterGroupConfig {
-  final SmartParameterFieldConfig param1;
-  final SmartParameterFieldConfig param2;
-  final SmartParameterFieldConfig param3;
-  final SmartParameterFieldConfig param4;
-  final SmartParameterFieldConfig param5;
-  final SmartParameterFieldConfig param6;
-
-  const SmartParameterGroupConfig(
-    this.param1,
-    this.param2,
-    this.param3,
-    this.param4,
-    this.param5,
-    this.param6,
-  );
-
-  SmartParameterFieldConfig field(int index) => switch (index) {
-    1 => param1,
-    2 => param2,
-    3 => param3,
-    4 => param4,
-    5 => param5,
-    6 => param6,
-    _ => throw RangeError.range(index, 1, 6, 'index'),
-  };
-}
-
-const _unused = SmartParameterFieldConfig('未使用', editable: false);
-const _none = SmartParameterGroupConfig(
-  _unused,
-  _unused,
-  _unused,
-  _unused,
-  _unused,
-  _unused,
-);
-
-SmartParameterFieldConfig _f(
-  String label, {
-  SmartParameterReference reference = SmartParameterReference.none,
-  Map<int, String>? options,
-  List<FlagItem>? flags,
-}) => SmartParameterFieldConfig(
-  label,
-  reference: reference,
-  options: options,
-  flags: flags,
-);
-
-SmartParameterGroupConfig _g(
-  SmartParameterFieldConfig p1, [
-  SmartParameterFieldConfig p2 = _unused,
-  SmartParameterFieldConfig p3 = _unused,
-  SmartParameterFieldConfig p4 = _unused,
-  SmartParameterFieldConfig p5 = _unused,
-  SmartParameterFieldConfig p6 = _unused,
-]) => SmartParameterGroupConfig(p1, p2, p3, p4, p5, p6);
 
 const _minMaxRepeatEvents = <int>{
   0,
@@ -517,232 +532,15 @@ const _minMaxRepeatEvents = <int>{
   110,
 };
 
-SmartParameterGroupConfig smartEventParameterConfig(int type) {
-  if (_minMaxRepeatEvents.contains(type)) {
-    final percent = const {2, 3, 12, 18, 74}.contains(type);
-    final hasParam5 = const {9, 32, 67, 74, 105, 106, 110}.contains(type);
-    final hasParam6 = const {9, 67, 74, 105, 106, 110}.contains(type);
-    return _g(
-      _f(percent ? '最小百分比' : '最小值'),
-      _f(percent ? '最大百分比' : '最大值'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-      hasParam5
-          ? _f(
-              type == 74
-                  ? '生命百分比'
-                  : type == 110
-                  ? '距离'
-                  : '范围最小值',
-            )
-          : _unused,
-      hasParam6
-          ? _f(
-              type == 74
-                  ? '半径'
-                  : type == 110
-                  ? '反向'
-                  : '范围最大值',
-              options: type == 110 ? kSmartBooleanOptions : null,
-            )
-          : _unused,
-    );
-  }
-  return switch (type) {
-    5 => _g(
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-      _f('仅玩家', options: kSmartBooleanOptions),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-    ),
-    8 || 31 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('法术学派掩码'),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-    ),
-    10 || 26 => _g(
-      _f('敌对模式', options: kLosHostilityOptions),
-      _f('最大距离'),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-      _f('仅玩家', options: kSmartBooleanOptions),
-    ),
-    11 => _g(
-      _f('重生条件', options: kRespawnConditionOptions),
-      _f('地图 ID', reference: SmartParameterReference.map),
-      _f('区域 ID', reference: SmartParameterReference.area),
-    ),
-    13 => _g(
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-      _f('法术 ID', reference: SmartParameterReference.spell),
-    ),
-    14 => _g(_f('生命缺口'), _f('半径'), _f('重复最短时间'), _f('重复最长时间')),
-    15 => _g(_f('半径'), _f('重复最短时间'), _f('重复最长时间')),
-    16 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('半径'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-      _f('仅战斗中', options: kSmartBooleanOptions),
-    ),
-    17 || 35 || 82 || 107 => _g(
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-    ),
-    19 || 20 => _g(
-      _f('任务 ID', reference: SmartParameterReference.quest),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-    ),
-    22 => _g(
-      _f('文本表情 ID', reference: SmartParameterReference.textEmote),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-    ),
-    23 || 24 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('层数'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-    ),
-    27 || 28 => _g(_f('冷却最短时间'), _f('冷却最长时间')),
-    29 => _g(_f('移除时触发', options: kSmartBooleanOptions)),
-    34 => _g(
-      _f('移动类型'),
-      _f('点 ID'),
-      _f('路径 ID', reference: SmartParameterReference.waypointPath),
-    ),
-    38 => _g(_f('数据 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
-    39 || 40 || 55 || 56 || 57 || 58 || 108 || 109 => _g(
-      _f('点 ID'),
-      _f('路径 ID', reference: SmartParameterReference.waypointPath),
-    ),
-    42 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
-    44 => _g(_f('点 ID')),
-    45 => _g(_f('阵营'), _f('冷却最短时间'), _f('冷却最长时间')),
-    46 => _g(_f('AreaTrigger ID')),
-    52 => _g(
-      _f('creature_text 组 ID'),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-    ),
-    59 => _g(_f('定时事件 ID')),
-    62 => _g(
-      _f('菜单 ID', reference: SmartParameterReference.gossipMenu),
-      _f('Action ID'),
-    ),
-    64 => _g(_f('过滤方式', options: kGossipHelloFilterOptions)),
-    66 => _g(_f('事件阶段掩码', flags: kEventPhaseFlagItems)),
-    68 || 69 => _g(_f('game_event Entry')),
-    70 => _g(_f('GO 状态')),
-    71 => _g(_f('事件 ID')),
-    72 => _g(_f('事件 ID'), _f('冷却最短时间'), _f('冷却最长时间')),
-    75 => _g(
-      _f('生物 GUID'),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-      _f('距离'),
-      _f('重复时间'),
-    ),
-    76 => _g(
-      _f('游戏对象 GUID'),
-      _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
-      _f('距离'),
-      _f('重复时间'),
-    ),
-    77 => _g(_f('计数器 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
-    101 => _g(_f('最少玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
-    102 => _g(_f('最多玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
-    103 || 104 => _g(
-      _f('单位类型', options: kNearUnitTypeOptions),
-      _f('Entry'),
-      _f('数量'),
-      _f('范围'),
-      _f('计时器'),
-    ),
-    _ => _none,
-  };
-}
-
-SmartParameterGroupConfig smartTargetParameterConfig(
-  int type,
-) => switch (type) {
-  3 || 4 || 5 || 6 => _g(
-    _f('最大距离'),
-    _f('仅玩家', options: kSmartBooleanOptions),
-    _f('能量类型 + 1'),
-    _f('缺少的光环', reference: SmartParameterReference.spell),
-  ),
-  9 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最小距离'),
-    _f('最大距离'),
-    _f('存活状态', options: kLivingStateOptions),
-  ),
-  10 => _g(
-    _f('生物 GUID'),
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-  ),
-  11 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最大距离'),
-    _f('存活状态', options: kLivingStateOptions),
-  ),
-  12 => _g(_f('已存储目标 ID')),
-  13 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
-    _f('最小距离'),
-    _f('最大距离'),
-  ),
-  14 => _g(
-    _f('游戏对象 GUID'),
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
-  ),
-  15 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
-    _f('最大距离'),
-  ),
-  16 => _g(_f('包含宠物', options: kSmartBooleanOptions)),
-  17 => _g(_f('最小距离'), _f('最大距离'), _f('最大数量')),
-  18 || 21 => _g(_f('最大距离')),
-  19 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最大距离'),
-    _f('死亡目标', options: kSmartBooleanOptions),
-  ),
-  20 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
-    _f('最大距离'),
-    _f('仅已生成', options: kSmartBooleanOptions),
-  ),
-  23 => _g(_f('使用控制者/所有者', options: kSmartBooleanOptions)),
-  24 => _g(_f('最大距离')),
-  25 || 26 => _g(_f('最大距离'), _f('仅玩家', options: kSmartBooleanOptions)),
-  28 => _g(
-    _f('最大距离'),
-    _f('仅玩家', options: kSmartBooleanOptions),
-    _f('要求视线', options: kSmartBooleanOptions),
-    _f('最小距离'),
-  ),
-  29 => _g(_f('座位掩码')),
-  201 => _g(
-    _f('法术 ID', reference: SmartParameterReference.spell),
-    _f('反向', options: kSmartBooleanOptions),
-    _f('最大距离'),
-    _f('最小距离'),
-  ),
-  202 => _g(_f('范围'), _f('数量'), _f('以自身为中心', options: kSmartBooleanOptions)),
-  203 => _g(_f('最大范围'), _f('职责掩码', flags: kTargetRoleFlagItems), _f('结果数量')),
-  204 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
-  205 => _g(_f('存储索引'), _f('对象类型', options: kInstanceStorageTypeOptions)),
-  206 => _g(
-    _f('编队目标', options: kFormationTargetTypeOptions),
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('排除自身', options: kSmartBooleanOptions),
-  ),
-  _ => _none,
-};
+const _none = SmartParameterGroupConfig(
+  _unused,
+  _unused,
+  _unused,
+  _unused,
+  _unused,
+  _unused,
+);
+const _unused = SmartParameterFieldConfig('未使用', editable: false);
 
 SmartParameterGroupConfig smartActionParameterConfig(int type) {
   switch (type) {
@@ -1264,114 +1062,153 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
   }
 }
 
-const _creatureEvents = <int>{
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  10,
-  11,
-  12,
-  13,
-  14,
-  15,
-  16,
-  17,
-  18,
-  19,
-  20,
-  21,
-  22,
-  23,
-  24,
-  25,
-  26,
-  27,
-  28,
-  29,
-  30,
-  31,
-  32,
-  33,
-  34,
-  35,
-  36,
-  37,
-  38,
-  39,
-  40,
-  52,
-  53,
-  54,
-  55,
-  56,
-  57,
-  58,
-  59,
-  60,
-  61,
-  62,
-  63,
-  64,
-  65,
-  66,
-  67,
-  68,
-  69,
-  72,
-  73,
-  74,
-  75,
-  76,
-  77,
-  82,
-  101,
-  102,
-  103,
-  104,
-  105,
-  106,
-  107,
-  108,
-  109,
-  110,
-};
-const _gameObjectEvents = <int>{
-  1,
-  8,
-  11,
-  17,
-  19,
-  20,
-  35,
-  37,
-  38,
-  52,
-  59,
-  60,
-  61,
-  62,
-  63,
-  64,
-  66,
-  68,
-  69,
-  70,
-  71,
-  77,
-  82,
-  101,
-  102,
-  103,
-  104,
-  107,
-};
+SmartParameterGroupConfig smartEventParameterConfig(int type) {
+  if (_minMaxRepeatEvents.contains(type)) {
+    final percent = const {2, 3, 12, 18, 74}.contains(type);
+    final hasParam5 = const {9, 32, 67, 74, 105, 106, 110}.contains(type);
+    final hasParam6 = const {9, 67, 74, 105, 106, 110}.contains(type);
+    return _g(
+      _f(percent ? '最小百分比' : '最小值'),
+      _f(percent ? '最大百分比' : '最大值'),
+      _f('重复最短时间'),
+      _f('重复最长时间'),
+      hasParam5
+          ? _f(
+              type == 74
+                  ? '生命百分比'
+                  : type == 110
+                  ? '距离'
+                  : '范围最小值',
+            )
+          : _unused,
+      hasParam6
+          ? _f(
+              type == 74
+                  ? '半径'
+                  : type == 110
+                  ? '反向'
+                  : '范围最大值',
+              options: type == 110 ? kSmartBooleanOptions : null,
+            )
+          : _unused,
+    );
+  }
+  return switch (type) {
+    5 => _g(
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+      _f('仅玩家', options: kSmartBooleanOptions),
+      _f('生物 Entry', reference: SmartParameterReference.creature),
+    ),
+    8 || 31 => _g(
+      _f('法术 ID', reference: SmartParameterReference.spell),
+      _f('法术学派掩码'),
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+    ),
+    10 || 26 => _g(
+      _f('敌对模式', options: kLosHostilityOptions),
+      _f('最大距离'),
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+      _f('仅玩家', options: kSmartBooleanOptions),
+    ),
+    11 => _g(
+      _f('重生条件', options: kRespawnConditionOptions),
+      _f('地图 ID', reference: SmartParameterReference.map),
+      _f('区域 ID', reference: SmartParameterReference.area),
+    ),
+    13 => _g(
+      _f('重复最短时间'),
+      _f('重复最长时间'),
+      _f('法术 ID', reference: SmartParameterReference.spell),
+    ),
+    14 => _g(_f('生命缺口'), _f('半径'), _f('重复最短时间'), _f('重复最长时间')),
+    15 => _g(_f('半径'), _f('重复最短时间'), _f('重复最长时间')),
+    16 => _g(
+      _f('法术 ID', reference: SmartParameterReference.spell),
+      _f('半径'),
+      _f('重复最短时间'),
+      _f('重复最长时间'),
+      _f('仅战斗中', options: kSmartBooleanOptions),
+    ),
+    17 || 35 || 82 || 107 => _g(
+      _f('生物 Entry', reference: SmartParameterReference.creature),
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+    ),
+    19 || 20 => _g(
+      _f('任务 ID', reference: SmartParameterReference.quest),
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+    ),
+    22 => _g(
+      _f('文本表情 ID', reference: SmartParameterReference.textEmote),
+      _f('冷却最短时间'),
+      _f('冷却最长时间'),
+    ),
+    23 || 24 => _g(
+      _f('法术 ID', reference: SmartParameterReference.spell),
+      _f('层数'),
+      _f('重复最短时间'),
+      _f('重复最长时间'),
+    ),
+    27 || 28 => _g(_f('冷却最短时间'), _f('冷却最长时间')),
+    29 => _g(_f('移除时触发', options: kSmartBooleanOptions)),
+    34 => _g(
+      _f('移动类型'),
+      _f('点 ID'),
+      _f('路径 ID', reference: SmartParameterReference.waypointPath),
+    ),
+    38 => _g(_f('数据 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
+    39 || 40 || 55 || 56 || 57 || 58 || 108 || 109 => _g(
+      _f('点 ID'),
+      _f('路径 ID', reference: SmartParameterReference.waypointPath),
+    ),
+    42 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
+    44 => _g(_f('点 ID')),
+    45 => _g(_f('阵营'), _f('冷却最短时间'), _f('冷却最长时间')),
+    46 => _g(_f('AreaTrigger ID')),
+    52 => _g(
+      _f('creature_text 组 ID'),
+      _f('生物 Entry', reference: SmartParameterReference.creature),
+    ),
+    59 => _g(_f('定时事件 ID')),
+    62 => _g(
+      _f('菜单 ID', reference: SmartParameterReference.gossipMenu),
+      _f('Action ID'),
+    ),
+    64 => _g(_f('过滤方式', options: kGossipHelloFilterOptions)),
+    66 => _g(_f('事件阶段掩码', flags: kEventPhaseFlagItems)),
+    68 || 69 => _g(_f('game_event Entry')),
+    70 => _g(_f('GO 状态')),
+    71 => _g(_f('事件 ID')),
+    72 => _g(_f('事件 ID'), _f('冷却最短时间'), _f('冷却最长时间')),
+    75 => _g(
+      _f('生物 GUID'),
+      _f('生物 Entry', reference: SmartParameterReference.creature),
+      _f('距离'),
+      _f('重复时间'),
+    ),
+    76 => _g(
+      _f('游戏对象 GUID'),
+      _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+      _f('距离'),
+      _f('重复时间'),
+    ),
+    77 => _g(_f('计数器 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
+    101 => _g(_f('最少玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
+    102 => _g(_f('最多玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
+    103 || 104 => _g(
+      _f('单位类型', options: kNearUnitTypeOptions),
+      _f('Entry'),
+      _f('数量'),
+      _f('范围'),
+      _f('计时器'),
+    ),
+    _ => _none,
+  };
+}
 
 Map<int, String> smartEventTypesForSource(int sourceType) {
   if (sourceType == 9) return kEventTypes;
@@ -1386,4 +1223,168 @@ Map<int, String> smartEventTypesForSource(int sourceType) {
       kEventTypes.entries.where((entry) => allowed.contains(entry.key)),
     ),
   );
+}
+
+SmartParameterGroupConfig smartTargetParameterConfig(
+  int type,
+) => switch (type) {
+  3 || 4 || 5 || 6 => _g(
+    _f('最大距离'),
+    _f('仅玩家', options: kSmartBooleanOptions),
+    _f('能量类型 + 1'),
+    _f('缺少的光环', reference: SmartParameterReference.spell),
+  ),
+  9 => _g(
+    _f('生物 Entry', reference: SmartParameterReference.creature),
+    _f('最小距离'),
+    _f('最大距离'),
+    _f('存活状态', options: kLivingStateOptions),
+  ),
+  10 => _g(
+    _f('生物 GUID'),
+    _f('生物 Entry', reference: SmartParameterReference.creature),
+  ),
+  11 => _g(
+    _f('生物 Entry', reference: SmartParameterReference.creature),
+    _f('最大距离'),
+    _f('存活状态', options: kLivingStateOptions),
+  ),
+  12 => _g(_f('已存储目标 ID')),
+  13 => _g(
+    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('最小距离'),
+    _f('最大距离'),
+  ),
+  14 => _g(
+    _f('游戏对象 GUID'),
+    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+  ),
+  15 => _g(
+    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('最大距离'),
+  ),
+  16 => _g(_f('包含宠物', options: kSmartBooleanOptions)),
+  17 => _g(_f('最小距离'), _f('最大距离'), _f('最大数量')),
+  18 || 21 => _g(_f('最大距离')),
+  19 => _g(
+    _f('生物 Entry', reference: SmartParameterReference.creature),
+    _f('最大距离'),
+    _f('死亡目标', options: kSmartBooleanOptions),
+  ),
+  20 => _g(
+    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('最大距离'),
+    _f('仅已生成', options: kSmartBooleanOptions),
+  ),
+  23 => _g(_f('使用控制者/所有者', options: kSmartBooleanOptions)),
+  24 => _g(_f('最大距离')),
+  25 || 26 => _g(_f('最大距离'), _f('仅玩家', options: kSmartBooleanOptions)),
+  28 => _g(
+    _f('最大距离'),
+    _f('仅玩家', options: kSmartBooleanOptions),
+    _f('要求视线', options: kSmartBooleanOptions),
+    _f('最小距离'),
+  ),
+  29 => _g(_f('座位掩码')),
+  201 => _g(
+    _f('法术 ID', reference: SmartParameterReference.spell),
+    _f('反向', options: kSmartBooleanOptions),
+    _f('最大距离'),
+    _f('最小距离'),
+  ),
+  202 => _g(_f('范围'), _f('数量'), _f('以自身为中心', options: kSmartBooleanOptions)),
+  203 => _g(_f('最大范围'), _f('职责掩码', flags: kTargetRoleFlagItems), _f('结果数量')),
+  204 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
+  205 => _g(_f('存储索引'), _f('对象类型', options: kInstanceStorageTypeOptions)),
+  206 => _g(
+    _f('编队目标', options: kFormationTargetTypeOptions),
+    _f('生物 Entry', reference: SmartParameterReference.creature),
+    _f('排除自身', options: kSmartBooleanOptions),
+  ),
+  _ => _none,
+};
+
+SmartParameterFieldConfig _f(
+  String label, {
+  SmartParameterReference reference = SmartParameterReference.none,
+  Map<int, String>? options,
+  List<FlagItem>? flags,
+}) => SmartParameterFieldConfig(
+  label,
+  reference: reference,
+  options: options,
+  flags: flags,
+);
+
+SmartParameterGroupConfig _g(
+  SmartParameterFieldConfig p1, [
+  SmartParameterFieldConfig p2 = _unused,
+  SmartParameterFieldConfig p3 = _unused,
+  SmartParameterFieldConfig p4 = _unused,
+  SmartParameterFieldConfig p5 = _unused,
+  SmartParameterFieldConfig p6 = _unused,
+]) => SmartParameterGroupConfig(p1, p2, p3, p4, p5, p6);
+
+class SmartParameterFieldConfig {
+  final String label;
+  final bool editable;
+  final SmartParameterReference reference;
+  final Map<int, String>? options;
+  final List<FlagItem>? flags;
+
+  const SmartParameterFieldConfig(
+    this.label, {
+    this.editable = true,
+    this.reference = SmartParameterReference.none,
+    this.options,
+    this.flags,
+  });
+}
+
+class SmartParameterGroupConfig {
+  final SmartParameterFieldConfig param1;
+  final SmartParameterFieldConfig param2;
+  final SmartParameterFieldConfig param3;
+  final SmartParameterFieldConfig param4;
+  final SmartParameterFieldConfig param5;
+  final SmartParameterFieldConfig param6;
+
+  const SmartParameterGroupConfig(
+    this.param1,
+    this.param2,
+    this.param3,
+    this.param4,
+    this.param5,
+    this.param6,
+  );
+
+  SmartParameterFieldConfig field(int index) => switch (index) {
+    1 => param1,
+    2 => param2,
+    3 => param3,
+    4 => param4,
+    5 => param5,
+    6 => param6,
+    _ => throw RangeError.range(index, 1, 6, 'index'),
+  };
+}
+
+enum SmartParameterReference {
+  none,
+  area,
+  cinematicSequence,
+  creature,
+  creatureDisplay,
+  emote,
+  factionTemplate,
+  gameObject,
+  gossipMenu,
+  item,
+  map,
+  npcText,
+  quest,
+  spell,
+  taxiPath,
+  textEmote,
+  waypointPath,
 }

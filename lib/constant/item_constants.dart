@@ -22,6 +22,39 @@ const kItemClasses = [
   '雕文', // Glyph
 ];
 
+/// 物品佩戴位置名称
+const kItemInventoryTypes = [
+  '其他', // Non-equippable
+  '头部', // Head
+  '颈部', // Neck
+  '肩部', // Shoulder
+  '衬衣', // Shirt
+  '胸部', // Chest
+  '腰部', // Waist
+  '腿部', // Legs
+  '脚', // Feet
+  '手腕', // Wrist
+  '手', // Hands
+  '手指', // Finger
+  '饰品', // Trinket
+  '单手', // One-Hand
+  '副手-盾', // Shield
+  '远程', // Ranged
+  '背部', // Back
+  '双手', // Two-Hand
+  '背包', // Bag
+  '披风', // Tabard
+  '长袍', // Robe
+  '主手', // Main Hand
+  '副手', // Off Hand
+  '副手物品', // Held in Off-hand
+  '弹药', // Ammo
+  '投掷', // Thrown
+  '远程-右手', // Ranged Right
+  '箭袋', // Quiver
+  '圣物', // Relic
+];
+
 /// 物品子类别名称（按类别索引）
 const kItemSubclasses = [
   // 0: 消耗品
@@ -185,37 +218,4 @@ const kItemSubclasses = [
     '无', // None
     '德鲁伊', // Druid
   ],
-];
-
-/// 物品佩戴位置名称
-const kItemInventoryTypes = [
-  '其他', // Non-equippable
-  '头部', // Head
-  '颈部', // Neck
-  '肩部', // Shoulder
-  '衬衣', // Shirt
-  '胸部', // Chest
-  '腰部', // Waist
-  '腿部', // Legs
-  '脚', // Feet
-  '手腕', // Wrist
-  '手', // Hands
-  '手指', // Finger
-  '饰品', // Trinket
-  '单手', // One-Hand
-  '副手-盾', // Shield
-  '远程', // Ranged
-  '背部', // Back
-  '双手', // Two-Hand
-  '背包', // Bag
-  '披风', // Tabard
-  '长袍', // Robe
-  '主手', // Main Hand
-  '副手', // Off Hand
-  '副手物品', // Held in Off-hand
-  '弹药', // Ammo
-  '投掷', // Thrown
-  '远程-右手', // Ranged Right
-  '箭袋', // Quiver
-  '圣物', // Relic
 ];

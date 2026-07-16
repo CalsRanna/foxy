@@ -1,18 +1,13 @@
 import 'package:warcrafty/warcrafty.dart';
 
-/// Foxy 支持同步的单个 DBC 定义。
-///
-/// DBC 的二进制结构仍以 [schema] 中的 warcrafty 定义为准；
-/// Foxy 只在此补充对应的数据库表名。
-class DbcDefinition {
-  final String tableName;
-  final DbcSchema schema;
+final Map<String, DbcDefinition> dbcDefinitionByFileName = Map.unmodifiable({
+  for (final definition in dbcDefinitions)
+    definition.fileName.toLowerCase(): definition,
+});
 
-  const DbcDefinition({required this.tableName, required this.schema});
-
-  String get qualifiedTableName => 'foxy.$tableName';
-  String get fileName => '${schema.name}.dbc';
-}
+final Map<String, DbcDefinition> dbcDefinitionByTable = Map.unmodifiable({
+  for (final definition in dbcDefinitions) definition.tableName: definition,
+});
 
 final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   DbcDefinition(tableName: 'dbc_achievement', schema: Definitions.achievement),
@@ -186,15 +181,20 @@ final List<DbcDefinition> dbcDefinitions = List.unmodifiable([
   ),
 ]);
 
-final Map<String, DbcDefinition> dbcDefinitionByTable = Map.unmodifiable({
-  for (final definition in dbcDefinitions) definition.tableName: definition,
-});
-
-final Map<String, DbcDefinition> dbcDefinitionByFileName = Map.unmodifiable({
-  for (final definition in dbcDefinitions)
-    definition.fileName.toLowerCase(): definition,
-});
-
 final List<String> requiredDbcTableNames = List.unmodifiable(
   dbcDefinitions.map((definition) => definition.tableName),
 );
+
+/// Foxy 支持同步的单个 DBC 定义。
+///
+/// DBC 的二进制结构仍以 [schema] 中的 warcrafty 定义为准；
+/// Foxy 只在此补充对应的数据库表名。
+class DbcDefinition {
+  final String tableName;
+  final DbcSchema schema;
+
+  const DbcDefinition({required this.tableName, required this.schema});
+
+  String get fileName => '${schema.name}.dbc';
+  String get qualifiedTableName => 'foxy.$tableName';
+}
