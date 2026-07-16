@@ -8,7 +8,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     var source = await getCreatureOnKillReputation(creatureID);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextCreatureId();
+    var nextId = await nextMaxPlusOne(_table, 'creature_id');
     json['creature_id'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -93,13 +93,5 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
         .table(_table)
         .where('creature_id', rep.creatureID)
         .update(json);
-  }
-
-  Future<int> _getNextCreatureId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(creature_id) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
   }
 }

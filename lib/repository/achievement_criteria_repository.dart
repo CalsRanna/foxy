@@ -27,20 +27,6 @@ class AchievementCriteriaRepository
   }
 
   Future<void> destroyAchievementCriterion(int id) async {
-    final progressCount = await laconic
-        .table('acore_characters.character_achievement_progress')
-        .where('criteria', id)
-        .count();
-    if (progressCount > 0) {
-      throw StateError('成就条件 $id 仍有 $progressCount 条角色进度，不能删除');
-    }
-    final dataCount = await laconic
-        .table('achievement_criteria_data')
-        .where('criteria_id', id)
-        .count();
-    if (dataCount > 0) {
-      throw StateError('成就条件 $id 仍有 $dataCount 条附加条件，不能删除');
-    }
     await laconic.table(_table).where('ID', id).delete();
   }
 

@@ -10,7 +10,7 @@ class SpellIconRepository with RepositoryMixin {
     var source = await getSpellIcon(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class SpellIconRepository with RepositoryMixin {
   }
 
   Future<SpellIconEntity> createSpellIcon() async {
-    return SpellIconEntity(id: await _getNextId());
+    return SpellIconEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroySpellIcon(int id) async {
@@ -71,7 +71,7 @@ class SpellIconRepository with RepositoryMixin {
 
   Future<int> storeSpellIcon(SpellIconEntity icon) async {
     var json = icon.toJson();
-    final nextId = icon.id > 0 ? icon.id : await _getNextId();
+    final nextId = icon.id > 0 ? icon.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -99,9 +99,5 @@ class SpellIconRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

@@ -10,7 +10,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     final source = await getCreatureMovementInfo(id);
     if (source == null) return;
     final json = source.toJson();
-    json['ID'] = await _getNextId();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -23,7 +23,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
   }
 
   Future<CreatureMovementInfoEntity> createCreatureMovementInfo() async {
-    return CreatureMovementInfoEntity(id: await _getNextId());
+    return CreatureMovementInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyCreatureMovementInfo(int id) async {
@@ -73,7 +73,9 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     CreatureMovementInfoEntity movementInfo,
   ) async {
     final json = movementInfo.toJson();
-    final nextId = movementInfo.id > 0 ? movementInfo.id : await _getNextId();
+    final nextId = movementInfo.id > 0
+        ? movementInfo.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -95,9 +97,5 @@ class CreatureMovementInfoRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

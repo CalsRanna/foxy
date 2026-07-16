@@ -15,7 +15,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getCharTitle(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -27,7 +27,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<CharTitleEntity> createCharTitle() async {
-    return CharTitleEntity(id: await _getNextId());
+    return CharTitleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyCharTitle(int id) async {
@@ -87,7 +87,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeCharTitle(CharTitleEntity title) async {
     var json = title.toJson();
-    final nextId = title.id > 0 ? title.id : await _getNextId();
+    final nextId = title.id > 0 ? title.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -115,9 +115,5 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

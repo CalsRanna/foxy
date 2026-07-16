@@ -15,15 +15,7 @@ class PageTextRepository with RepositoryMixin {
     final nextId = await _getNextId();
     final copied = source.copyWith(id: nextId);
     await _validateNextPage(copied.id, copied.nextPageId);
-    final locales = _prepareLocales(nextId, await getPageTextLocales(id));
-    await laconic.transaction(() async {
-      await laconic.table(_table).insert([copied.toJson()]);
-      if (locales.isNotEmpty) {
-        await laconic
-            .table(_localeTable)
-            .insert(locales.map((locale) => locale.toJson()).toList());
-      }
-    });
+    await laconic.table(_table).insert([copied.toJson()]);
   }
 
   Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
@@ -53,40 +45,7 @@ class PageTextRepository with RepositoryMixin {
   }
 
   Future<void> destroyPageText(int id) async {
-    final nextPageReferences = await laconic
-        .table(_table)
-        .where('NextPageID', id)
-        .count();
-    final itemReferences = await laconic
-        .table('item_template')
-        .where('PageText', id)
-        .count();
-    final textGameObjectReferences = await laconic
-        .table('gameobject_template')
-        .where('type', 9)
-        .where('Data0', id)
-        .count();
-    final gooberReferences = await laconic
-        .table('gameobject_template')
-        .where('type', 10)
-        .where('Data7', id)
-        .count();
-    final references =
-        nextPageReferences +
-        itemReferences +
-        textGameObjectReferences +
-        gooberReferences;
-    if (references > 0) {
-      throw StateError(
-        '页面文本 $id 仍有 $references 条引用，不能删除'
-        '（下一页 $nextPageReferences、物品 $itemReferences、'
-        '文本对象 $textGameObjectReferences、Goober $gooberReferences）',
-      );
-    }
-    await laconic.transaction(() async {
-      await laconic.table(_localeTable).where('ID', id).delete();
-      await laconic.table(_table).where('ID', id).delete();
-    });
+    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefPageTextEntity>> getBriefPageTexts({
@@ -149,9 +108,6 @@ class PageTextRepository with RepositoryMixin {
     int id,
     List<PageTextLocaleEntity> locales,
   ) async {
-    if (await getPageText(id) == null) {
-      throw StateError('页面文本 $id 不存在，不能保存本地化');
-    }
     final stored = _prepareLocales(id, locales);
     await laconic.transaction(() async {
       await laconic.table(_localeTable).where('ID', id).delete();

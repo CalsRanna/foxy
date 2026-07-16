@@ -15,7 +15,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getDbcFaction(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -27,7 +27,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<DbcFactionEntity> createDbcFaction() async {
-    return DbcFactionEntity(id: await _getNextId());
+    return DbcFactionEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyDbcFaction(int id) async {
@@ -87,7 +87,9 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeDbcFaction(DbcFactionEntity faction) async {
     var json = faction.toJson();
-    final nextId = faction.id > 0 ? faction.id : await _getNextId();
+    final nextId = faction.id > 0
+        ? faction.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -115,9 +117,5 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

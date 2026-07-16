@@ -10,7 +10,7 @@ class EmoteTextRepository with RepositoryMixin {
     var source = await getEmoteText(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class EmoteTextRepository with RepositoryMixin {
   }
 
   Future<EmoteTextEntity> createEmoteText() async {
-    return EmoteTextEntity(id: await _getNextId());
+    return EmoteTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyEmoteText(int id) async {
@@ -72,7 +72,9 @@ class EmoteTextRepository with RepositoryMixin {
 
   Future<int> storeEmoteText(EmoteTextEntity emoteText) async {
     var json = emoteText.toJson();
-    final nextId = emoteText.id > 0 ? emoteText.id : await _getNextId();
+    final nextId = emoteText.id > 0
+        ? emoteText.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -96,9 +98,5 @@ class EmoteTextRepository with RepositoryMixin {
       builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

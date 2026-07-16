@@ -16,7 +16,7 @@ class ItemRandomPropertiesRepository
     var source = await getItemRandomProperty(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -30,7 +30,7 @@ class ItemRandomPropertiesRepository
   }
 
   Future<ItemRandomPropertiesEntity> createItemRandomProperty() async {
-    return ItemRandomPropertiesEntity(id: await _getNextId());
+    return ItemRandomPropertiesEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemRandomProperty(int id) async {
@@ -96,7 +96,7 @@ class ItemRandomPropertiesRepository
     ItemRandomPropertiesEntity property,
   ) async {
     var json = property.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -126,9 +126,5 @@ class ItemRandomPropertiesRepository
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

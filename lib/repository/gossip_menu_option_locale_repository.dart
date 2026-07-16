@@ -4,16 +4,6 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GossipMenuOptionLocaleRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
 
-  Future<void> copyGossipMenuOptionLocale(
-    int menuId,
-    int optionId,
-    String locale,
-  ) async {
-    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
-    final source = await getGossipMenuOptionLocale(menuId, optionId, locale);
-    if (source == null) return;
-  }
-
   Future<void> copyGossipMenuOptionLocales(
     int menuId,
     int sourceOptionId,

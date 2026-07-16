@@ -10,7 +10,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     var source = await getItemDisplayInfo(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -24,7 +24,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<ItemDisplayInfoEntity> createItemDisplayInfo() async {
-    return ItemDisplayInfoEntity(id: await _getNextId());
+    return ItemDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemDisplayInfo(int id) async {
@@ -75,7 +75,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
 
   Future<int> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
     var json = info.toJson();
-    final nextId = info.id > 0 ? info.id : await _getNextId();
+    final nextId = info.id > 0 ? info.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -103,9 +103,5 @@ class ItemDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

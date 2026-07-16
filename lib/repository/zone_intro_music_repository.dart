@@ -9,7 +9,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
   Future<void> copyZoneIntroMusic(int id) async {
     final source = await getZoneIntroMusic(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -17,7 +17,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<ZoneIntroMusicEntity> createZoneIntroMusic() async =>
-      ZoneIntroMusicEntity(id: await _getNextId());
+      ZoneIntroMusicEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroyZoneIntroMusic(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -60,7 +60,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
 
   Future<int> storeZoneIntroMusic(ZoneIntroMusicEntity entity) async {
     final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -82,6 +82,4 @@ class ZoneIntroMusicRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

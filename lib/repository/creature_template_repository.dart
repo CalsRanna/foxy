@@ -12,7 +12,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     var template = await getCreatureTemplate(entry);
     if (template == null) return;
     var json = template.toJson();
-    var newEntry = await _getNextEntry();
+    var newEntry = await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     _handleReservedWords(json);
     await laconic.table(_table).insert([json]);
@@ -52,7 +52,7 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<CreatureTemplateEntity> createCreatureTemplate() async {
-    return CreatureTemplateEntity(entry: await _getNextEntry());
+    return CreatureTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
   Future<void> destroyCreatureTemplate(int entry) async {
@@ -150,7 +150,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     var json = template.toJson();
     final newEntry = template.entry > 0
         ? template.entry
-        : await _getNextEntry();
+        : await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     _handleReservedWords(json);
     await laconic.table(_table).insert([json]);
@@ -203,10 +203,6 @@ class CreatureTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 
   void _handleReservedWords(Map<String, dynamic> json) {

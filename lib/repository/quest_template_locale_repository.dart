@@ -4,12 +4,6 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'quest_template_locale';
 
-  Future<void> copyQuestTemplateLocale(int id, String locale) async {
-    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
-    final source = await getQuestTemplateLocale(id, locale);
-    if (source == null) return;
-  }
-
   Future<int> countQuestTemplateLocales() async {
     return laconic.table(_table).count();
   }

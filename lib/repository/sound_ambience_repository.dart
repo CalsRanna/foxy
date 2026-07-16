@@ -9,7 +9,7 @@ class SoundAmbienceRepository with RepositoryMixin {
   Future<void> copySoundAmbience(int id) async {
     final source = await getSoundAmbience(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -17,7 +17,7 @@ class SoundAmbienceRepository with RepositoryMixin {
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<SoundAmbienceEntity> createSoundAmbience() async =>
-      SoundAmbienceEntity(id: await _getNextId());
+      SoundAmbienceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroySoundAmbience(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -60,7 +60,7 @@ class SoundAmbienceRepository with RepositoryMixin {
 
   Future<int> storeSoundAmbience(SoundAmbienceEntity entity) async {
     final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -80,6 +80,4 @@ class SoundAmbienceRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

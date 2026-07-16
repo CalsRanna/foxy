@@ -8,12 +8,12 @@ class SpellGroupRepository with RepositoryMixin {
     var source = await getSpellGroup(id, spellId);
     if (source == null) return;
     var json = source.toJson();
-    json['id'] = await _getNextId();
+    json['id'] = await nextMaxPlusOne(_table, 'id');
     await laconic.table(_table).insert([json]);
   }
 
   Future<SpellGroupEntity> createSpellGroup(int spellId) async {
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'id');
     return SpellGroupEntity(id: nextId, spellId: spellId);
   }
 
@@ -68,13 +68,5 @@ class SpellGroupRepository with RepositoryMixin {
         .where('id', id)
         .where('spell_id', spellId)
         .update(data.toJson());
-  }
-
-  Future<int> _getNextId() async {
-    var maxResult = await laconic.table(_table).select([
-      'MAX(id) AS maxId',
-    ]).first();
-    var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
-    return maxId + 1;
   }
 }

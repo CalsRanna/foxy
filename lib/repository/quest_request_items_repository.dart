@@ -8,7 +8,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
     var source = await getQuestRequestItems(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -77,9 +77,5 @@ class QuestRequestItemsRepository with RepositoryMixin {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

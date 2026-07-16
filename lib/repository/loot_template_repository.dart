@@ -31,24 +31,17 @@ class LootTemplateRepository with RepositoryMixin {
     int reference = 0,
     int groupId = 0,
   }) async {
-    var source = await getLootTemplate(
+    final source = await getLootTemplate(
       entry,
       item,
       reference: reference,
       groupId: groupId,
     );
     if (source == null) return;
-    var json = source.toJson();
-    if (tableType == LootTableType.reference) {
-      json['Entry'] = await nextMaxPlusOne(_table, 'Entry');
-    } else {
-      var nextItem = await getNextItemId(entry);
-      json['Item'] = nextItem;
-      if (source.reference != 0) {
-        json['Reference'] = nextItem;
-      }
-    }
-    await laconic.table(_table).insert([json]);
+    final copied = tableType == LootTableType.reference
+        ? source.copyWith(entry: await nextMaxPlusOne(_table, 'Entry'))
+        : source.copyWith(item: await getNextItemId(entry));
+    await storeLootTemplate(copied);
   }
 
   Future<int> countLootTemplateRows({LootTemplateFilterEntity? filter}) async {
@@ -207,15 +200,8 @@ class LootTemplateRepository with RepositoryMixin {
     return LootTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> getNextItemId(int entry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(Item) AS maxItem'])
-        .where('Entry', entry)
-        .first();
-    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
-    return maxItem + 1;
-  }
+  Future<int> getNextItemId(int entry) =>
+      nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
   Future<void> saveLootTemplate(LootTemplateEntity loot) async {
     var existing = await getLootTemplate(

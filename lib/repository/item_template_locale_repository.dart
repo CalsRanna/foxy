@@ -4,12 +4,6 @@ import 'package:foxy/repository/repository_mixin.dart';
 class ItemTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'item_template_locale';
 
-  Future<void> copyItemTemplateLocale(int id, String locale) async {
-    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
-    final source = await getItemTemplateLocale(id, locale);
-    if (source == null) return;
-  }
-
   Future<int> countItemTemplateLocales() async {
     return laconic.table(_table).count();
   }

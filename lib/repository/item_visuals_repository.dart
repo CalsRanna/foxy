@@ -9,7 +9,9 @@ class ItemVisualsRepository with RepositoryMixin {
   Future<void> copyItemVisual(int id) async {
     final source = await getItemVisual(id);
     if (source == null) return;
-    await storeItemVisual(source.copyWith(id: await _getNextId()));
+    await storeItemVisual(
+      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
+    );
   }
 
   Future<int> countItemVisuals({ItemVisualsFilterEntity? filter}) async {
@@ -19,7 +21,7 @@ class ItemVisualsRepository with RepositoryMixin {
   }
 
   Future<ItemVisualsEntity> createItemVisual() async {
-    return ItemVisualsEntity(id: await _getNextId());
+    return ItemVisualsEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemVisual(int id) async {
@@ -79,7 +81,7 @@ class ItemVisualsRepository with RepositoryMixin {
   }
 
   Future<int> storeItemVisual(ItemVisualsEntity entity) async {
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     final stored = entity.copyWith(id: id);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
@@ -99,6 +101,4 @@ class ItemVisualsRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

@@ -11,7 +11,7 @@ class WaypointDataRepository with RepositoryMixin {
   Future<void> copyWaypointData(int id) async {
     var rows = await laconic.table(_table).where('id', id).get();
     if (rows.isEmpty) return;
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'id');
     var inserts = rows.map((row) {
       var json = Map<String, dynamic>.from(row.toMap());
       json['id'] = nextId;
@@ -29,7 +29,7 @@ class WaypointDataRepository with RepositoryMixin {
   }
 
   Future<WaypointDataEntity> createWaypointData() async {
-    return WaypointDataEntity(id: await _getNextId());
+    return WaypointDataEntity(id: await nextMaxPlusOne(_table, 'id'));
   }
 
   Future<void> destroyWaypointData(int id) async {
@@ -85,7 +85,7 @@ class WaypointDataRepository with RepositoryMixin {
 
   /// 仅分配下一 path id，不插入 point 行（聚合实体无点位数据）。
   Future<int> storeWaypointData(WaypointDataEntity data) async {
-    return _getNextId();
+    return nextMaxPlusOne(_table, 'id');
   }
 
   /// 聚合实体无可更新字段，空操作。
@@ -100,13 +100,5 @@ class WaypointDataRepository with RepositoryMixin {
       builder = builder.where('id', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(id) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
   }
 }

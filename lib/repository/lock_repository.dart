@@ -10,7 +10,7 @@ class LockRepository with RepositoryMixin {
     var source = await getLock(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class LockRepository with RepositoryMixin {
   }
 
   Future<LockEntity> createLock() async {
-    return LockEntity(id: await _getNextId());
+    return LockEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyLock(int id) async {
@@ -69,7 +69,7 @@ class LockRepository with RepositoryMixin {
 
   Future<int> storeLock(LockEntity lock) async {
     var json = lock.toJson();
-    final nextId = lock.id > 0 ? lock.id : await _getNextId();
+    final nextId = lock.id > 0 ? lock.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -87,9 +87,5 @@ class LockRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

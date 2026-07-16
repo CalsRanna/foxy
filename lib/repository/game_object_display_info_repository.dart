@@ -9,7 +9,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   Future<void> copyGameObjectDisplayInfo(int id) async {
     final source = await getGameObjectDisplayInfo(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -18,7 +18,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   }) => _applyFilter(laconic.table(_table), filter).count();
 
   Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
-      GameObjectDisplayInfoEntity(id: await _getNextId());
+      GameObjectDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroyGameObjectDisplayInfo(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -71,7 +71,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     GameObjectDisplayInfoEntity entity,
   ) async {
     final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -99,6 +99,4 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

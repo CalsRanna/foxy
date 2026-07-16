@@ -10,7 +10,7 @@ class SpellDurationRepository with RepositoryMixin {
     var source = await getSpellDuration(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class SpellDurationRepository with RepositoryMixin {
   }
 
   Future<SpellDurationEntity> createSpellDuration() async {
-    return SpellDurationEntity(id: await _getNextId());
+    return SpellDurationEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroySpellDuration(int id) async {
@@ -76,7 +76,9 @@ class SpellDurationRepository with RepositoryMixin {
 
   Future<int> storeSpellDuration(SpellDurationEntity duration) async {
     var json = duration.toJson();
-    final nextId = duration.id > 0 ? duration.id : await _getNextId();
+    final nextId = duration.id > 0
+        ? duration.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -97,9 +99,5 @@ class SpellDurationRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

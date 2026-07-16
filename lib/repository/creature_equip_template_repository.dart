@@ -115,15 +115,8 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     return CreatureEquipTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> getNextId(int creatureID) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(ID) AS maxId'])
-        .where('CreatureID', creatureID)
-        .first();
-    var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
-    return maxId + 1;
-  }
+  Future<int> getNextId(int creatureID) =>
+      nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureID});
 
   Future<void> saveCreatureEquipTemplate(
     CreatureEquipTemplateEntity equip,

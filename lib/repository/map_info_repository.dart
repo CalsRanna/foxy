@@ -15,7 +15,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getMapInfo(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -33,7 +33,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<MapInfoEntity> createMapInfo() async {
-    return MapInfoEntity(id: await _getNextId());
+    return MapInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyMapInfo(int id) async {
@@ -100,7 +100,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeMapInfo(MapInfoEntity map) async {
     var json = map.toJson();
-    final nextId = map.id > 0 ? map.id : await _getNextId();
+    final nextId = map.id > 0 ? map.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -125,9 +125,5 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

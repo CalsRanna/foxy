@@ -15,7 +15,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final source = await getEmoteTextData(id);
     if (source == null) return;
     final json = source.toJson();
-    json['ID'] = await _getNextId();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -24,7 +24,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<EmoteTextDataEntity> createEmoteTextData() async {
-    return EmoteTextDataEntity(id: await _getNextId());
+    return EmoteTextDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyEmoteTextData(int id) async {
@@ -82,7 +82,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeEmoteTextData(EmoteTextDataEntity data) async {
     final json = data.toJson();
-    final id = data.id > 0 ? data.id : await _getNextId();
+    final id = data.id > 0 ? data.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -108,6 +108,4 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

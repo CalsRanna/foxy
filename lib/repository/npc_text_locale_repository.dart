@@ -4,12 +4,6 @@ import 'package:foxy/repository/repository_mixin.dart';
 class NpcTextLocaleRepository with RepositoryMixin {
   static const _table = 'npc_text_locale';
 
-  Future<void> copyNpcTextLocale(int id, String locale) async {
-    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
-    final source = await getNpcTextLocale(id, locale);
-    if (source == null) return;
-  }
-
   Future<int> countNpcTextLocales() async {
     return laconic.table(_table).count();
   }

@@ -9,7 +9,7 @@ class LightRepository with RepositoryMixin {
   Future<void> copyLight(int id) async {
     final source = await getLight(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -17,7 +17,7 @@ class LightRepository with RepositoryMixin {
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<LightEntity> createLight() async =>
-      LightEntity(id: await _getNextId());
+      LightEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroyLight(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -60,7 +60,7 @@ class LightRepository with RepositoryMixin {
 
   Future<int> storeLight(LightEntity entity) async {
     final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -79,6 +79,4 @@ class LightRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }
