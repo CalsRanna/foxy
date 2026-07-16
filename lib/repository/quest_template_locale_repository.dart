@@ -4,6 +4,31 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestTemplateLocaleRepository with RepositoryMixin {
   static const _table = 'quest_template_locale';
 
+  Future<void> copyQuestTemplateLocale(int id, String locale) async {
+    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
+    final source = await getQuestTemplateLocale(id, locale);
+    if (source == null) return;
+  }
+
+  Future<int> countQuestTemplateLocales() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<QuestTemplateLocaleEntity> createQuestTemplateLocale({
+    int id = 0,
+    String locale = 'zhCN',
+  }) async {
+    return QuestTemplateLocaleEntity(id: id, locale: locale);
+  }
+
+  Future<void> destroyQuestTemplateLocale(int id, String locale) async {
+    await laconic
+        .table(_table)
+        .where('ID', id)
+        .where('locale', locale)
+        .delete();
+  }
+
   Future<List<BriefQuestTemplateLocaleEntity>> getBriefQuestTemplateLocales({
     int page = 1,
   }) async {
@@ -20,18 +45,6 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<QuestTemplateLocaleEntity>>
-  getQuestTemplateLocaleEntities() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countQuestTemplateLocales() async {
-    return laconic.table(_table).count();
-  }
-
   Future<QuestTemplateLocaleEntity?> getQuestTemplateLocale(
     int id,
     String locale,
@@ -46,11 +59,46 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
     return QuestTemplateLocaleEntity.fromJson(results.first.toMap());
   }
 
-  Future<QuestTemplateLocaleEntity> createQuestTemplateLocale({
-    int id = 0,
-    String locale = 'zhCN',
-  }) async {
-    return QuestTemplateLocaleEntity(id: id, locale: locale);
+  Future<List<QuestTemplateLocaleEntity>>
+  getQuestTemplateLocaleEntities() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<QuestTemplateLocaleEntity>> getQuestTemplateLocales(
+    int id,
+  ) async {
+    final results = await laconic.table(_table).where('ID', id).get();
+    return results
+        .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveQuestTemplateLocale(QuestTemplateLocaleEntity model) async {
+    final existing = await getQuestTemplateLocale(model.id, model.locale);
+    if (existing == null) {
+      await storeQuestTemplateLocale(model);
+    } else {
+      await updateQuestTemplateLocale(model.id, model.locale, model);
+    }
+  }
+
+  Future<void> saveQuestTemplateLocales(
+    int id,
+    List<QuestTemplateLocaleEntity> locales,
+  ) async {
+    await laconic.transaction(() async {
+      await laconic.table(_table).where('ID', id).delete();
+      if (locales.isEmpty) return;
+      final jsons = locales.map((e) {
+        final json = e.toJson();
+        json['ID'] = id;
+        return json;
+      }).toList();
+      await laconic.table(_table).insert(jsons);
+    });
   }
 
   Future<void> storeQuestTemplateLocale(QuestTemplateLocaleEntity model) async {
@@ -70,53 +118,5 @@ class QuestTemplateLocaleRepository with RepositoryMixin {
         .where('ID', id)
         .where('locale', locale)
         .update(json);
-  }
-
-  Future<void> destroyQuestTemplateLocale(int id, String locale) async {
-    await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('locale', locale)
-        .delete();
-  }
-
-  Future<void> copyQuestTemplateLocale(int id, String locale) async {
-    // Locales are keyed by locale string; shallow copy is a no-op without a new locale.
-    final source = await getQuestTemplateLocale(id, locale);
-    if (source == null) return;
-  }
-
-  Future<void> saveQuestTemplateLocale(QuestTemplateLocaleEntity model) async {
-    final existing = await getQuestTemplateLocale(model.id, model.locale);
-    if (existing == null) {
-      await storeQuestTemplateLocale(model);
-    } else {
-      await updateQuestTemplateLocale(model.id, model.locale, model);
-    }
-  }
-
-  Future<List<QuestTemplateLocaleEntity>> getQuestTemplateLocales(
-    int id,
-  ) async {
-    final results = await laconic.table(_table).where('ID', id).get();
-    return results
-        .map((e) => QuestTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<void> saveQuestTemplateLocales(
-    int id,
-    List<QuestTemplateLocaleEntity> locales,
-  ) async {
-    await laconic.transaction(() async {
-      await laconic.table(_table).where('ID', id).delete();
-      if (locales.isEmpty) return;
-      final jsons = locales.map((e) {
-        final json = e.toJson();
-        json['ID'] = id;
-        return json;
-      }).toList();
-      await laconic.table(_table).insert(jsons);
-    });
   }
 }

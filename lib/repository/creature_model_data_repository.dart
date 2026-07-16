@@ -6,6 +6,30 @@ import 'package:laconic/laconic.dart';
 class CreatureModelDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_model_data';
 
+  Future<void> copyCreatureModelData(int id) async {
+    final source = await getCreatureModelData(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureModelDatas({
+    CreatureModelDataFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureModelDataEntity> createCreatureModelData() async {
+    return CreatureModelDataEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCreatureModelData(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCreatureModelDataEntity>> getBriefCreatureModelDatas({
     int page = 1,
     CreatureModelDataFilterEntity? filter,
@@ -28,54 +52,17 @@ class CreatureModelDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CreatureModelDataEntity>> getCreatureModelDatas() async {
-    final results = await laconic.table(_table).orderBy('ID').get();
-    return results
-        .map((e) => CreatureModelDataEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countCreatureModelDatas({
-    CreatureModelDataFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<CreatureModelDataEntity?> getCreatureModelData(int id) async {
     final results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureModelDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureModelDataEntity> createCreatureModelData() async {
-    return CreatureModelDataEntity(id: await _getNextId());
-  }
-
-  Future<int> storeCreatureModelData(CreatureModelDataEntity entity) async {
-    final json = entity.toJson();
-    final nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateCreatureModelData(CreatureModelDataEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
-  }
-
-  Future<void> destroyCreatureModelData(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCreatureModelData(int id) async {
-    final source = await getCreatureModelData(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
+  Future<List<CreatureModelDataEntity>> getCreatureModelDatas() async {
+    final results = await laconic.table(_table).orderBy('ID').get();
+    return results
+        .map((e) => CreatureModelDataEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveCreatureModelData(CreatureModelDataEntity entity) async {
@@ -91,8 +78,17 @@ class CreatureModelDataRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeCreatureModelData(CreatureModelDataEntity entity) async {
+    final json = entity.toJson();
+    final nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateCreatureModelData(CreatureModelDataEntity entity) async {
+    final json = entity.toJson()..remove('ID');
+    await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -111,5 +107,9 @@ class CreatureModelDataRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

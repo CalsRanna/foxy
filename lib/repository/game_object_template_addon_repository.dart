@@ -4,6 +4,24 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
+  Future<void> copyGameObjectTemplateAddon(int entry) async {
+    throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
+  }
+
+  Future<int> countGameObjectTemplateAddons() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<GameObjectTemplateAddonEntity> createGameObjectTemplateAddon([
+    int entry = 0,
+  ]) async {
+    return GameObjectTemplateAddonEntity(entry: entry);
+  }
+
+  Future<void> destroyGameObjectTemplateAddon(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
   Future<List<BriefGameObjectTemplateAddonEntity>>
   getBriefGameObjectTemplateAddons({int page = 1}) async {
     var offset = (page - 1) * kPageSize;
@@ -23,18 +41,6 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GameObjectTemplateAddonEntity>>
-  getGameObjectTemplateAddons() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => GameObjectTemplateAddonEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countGameObjectTemplateAddons() async {
-    return laconic.table(_table).count();
-  }
-
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
     int entry,
   ) async {
@@ -47,10 +53,23 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     return GameObjectTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
-  Future<GameObjectTemplateAddonEntity> createGameObjectTemplateAddon([
-    int entry = 0,
-  ]) async {
-    return GameObjectTemplateAddonEntity(entry: entry);
+  Future<List<GameObjectTemplateAddonEntity>>
+  getGameObjectTemplateAddons() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => GameObjectTemplateAddonEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveGameObjectTemplateAddon(
+    GameObjectTemplateAddonEntity addon,
+  ) async {
+    var existing = await getGameObjectTemplateAddon(addon.entry);
+    if (existing != null) {
+      await updateGameObjectTemplateAddon(addon);
+    } else {
+      await storeGameObjectTemplateAddon(addon);
+    }
   }
 
   Future<void> storeGameObjectTemplateAddon(
@@ -65,24 +84,5 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     var json = addon.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);
-  }
-
-  Future<void> destroyGameObjectTemplateAddon(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
-  Future<void> copyGameObjectTemplateAddon(int entry) async {
-    throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
-  }
-
-  Future<void> saveGameObjectTemplateAddon(
-    GameObjectTemplateAddonEntity addon,
-  ) async {
-    var existing = await getGameObjectTemplateAddon(addon.entry);
-    if (existing != null) {
-      await updateGameObjectTemplateAddon(addon);
-    } else {
-      await storeGameObjectTemplateAddon(addon);
-    }
   }
 }

@@ -6,6 +6,30 @@ import 'package:laconic/laconic.dart';
 class CreatureImmunityRepository with RepositoryMixin {
   static const _table = 'creature_immunities';
 
+  Future<void> copyCreatureImmunity(int id) async {
+    final source = await getCreatureImmunity(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureImmunities({
+    CreatureImmunityFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureImmunityEntity> createCreatureImmunity() async {
+    return CreatureImmunityEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCreatureImmunity(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCreatureImmunityEntity>> getBriefCreatureImmunities({
     int page = 1,
     CreatureImmunityFilterEntity? filter,
@@ -36,22 +60,19 @@ class CreatureImmunityRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureImmunities({
-    CreatureImmunityFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<CreatureImmunityEntity?> getCreatureImmunity(int id) async {
     final results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureImmunityEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureImmunityEntity> createCreatureImmunity() async {
-    return CreatureImmunityEntity(id: await _getNextId());
+  Future<void> saveCreatureImmunity(CreatureImmunityEntity immunity) async {
+    final existing = await getCreatureImmunity(immunity.id);
+    if (existing == null) {
+      await storeCreatureImmunity(immunity);
+      return;
+    }
+    await updateCreatureImmunity(immunity);
   }
 
   Future<int> storeCreatureImmunity(CreatureImmunityEntity immunity) async {
@@ -65,31 +86,6 @@ class CreatureImmunityRepository with RepositoryMixin {
   Future<void> updateCreatureImmunity(CreatureImmunityEntity immunity) async {
     final json = immunity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', immunity.id).update(json);
-  }
-
-  Future<void> destroyCreatureImmunity(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCreatureImmunity(int id) async {
-    final source = await getCreatureImmunity(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureImmunity(CreatureImmunityEntity immunity) async {
-    final existing = await getCreatureImmunity(immunity.id);
-    if (existing == null) {
-      await storeCreatureImmunity(immunity);
-      return;
-    }
-    await updateCreatureImmunity(immunity);
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _applyFilter(
@@ -108,5 +104,9 @@ class CreatureImmunityRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

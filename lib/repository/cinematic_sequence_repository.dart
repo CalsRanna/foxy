@@ -6,6 +6,24 @@ import 'package:laconic/laconic.dart';
 class CinematicSequenceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_cinematic_sequences';
 
+  Future<void> copyCinematicSequence(int id) async {
+    final source = await getCinematicSequence(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCinematicSequences({
+    CinematicSequenceFilterEntity? filter,
+  }) => _applyFilter(laconic.table(_table), filter).count();
+
+  Future<CinematicSequenceEntity> createCinematicSequence() async =>
+      CinematicSequenceEntity(id: await _getNextId());
+
+  Future<void> destroyCinematicSequence(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCinematicSequenceEntity>> getBriefCinematicSequences({
     int page = 1,
     CinematicSequenceFilterEntity? filter,
@@ -19,17 +37,6 @@ class CinematicSequenceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CinematicSequenceEntity>> getCinematicSequences() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => CinematicSequenceEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countCinematicSequences({
-    CinematicSequenceFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
-
   Future<CinematicSequenceEntity?> getCinematicSequence(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -37,8 +44,20 @@ class CinematicSequenceRepository with RepositoryMixin {
         : CinematicSequenceEntity.fromJson(rows.first.toMap());
   }
 
-  Future<CinematicSequenceEntity> createCinematicSequence() async =>
-      CinematicSequenceEntity(id: await _getNextId());
+  Future<List<CinematicSequenceEntity>> getCinematicSequences() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => CinematicSequenceEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveCinematicSequence(CinematicSequenceEntity entity) async {
+    if (await getCinematicSequence(entity.id) == null) {
+      await storeCinematicSequence(entity);
+    } else {
+      await updateCinematicSequence(entity);
+    }
+  }
 
   Future<int> storeCinematicSequence(CinematicSequenceEntity entity) async {
     final json = entity.toJson();
@@ -53,27 +72,6 @@ class CinematicSequenceRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroyCinematicSequence(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCinematicSequence(int id) async {
-    final source = await getCinematicSequence(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCinematicSequence(CinematicSequenceEntity entity) async {
-    if (await getCinematicSequence(entity.id) == null) {
-      await storeCinematicSequence(entity);
-    } else {
-      await updateCinematicSequence(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CinematicSequenceFilterEntity? filter,
@@ -83,4 +81,6 @@ class CinematicSequenceRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 
 mixin RepositoryMixin {
-  Laconic get laconic => Database.instance.laconic;
   final kPageSize = 50;
+  Laconic get laconic => Database.instance.laconic;
 
   /// 是否 JOIN `*_locale` 表显示本地化名称。
   ///

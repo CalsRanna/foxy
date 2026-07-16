@@ -8,6 +8,34 @@ import 'package:laconic/laconic.dart';
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 
+  Future<void> copyWaypointData(int id) async {
+    var rows = await laconic.table(_table).where('id', id).get();
+    if (rows.isEmpty) return;
+    var nextId = await _getNextId();
+    var inserts = rows.map((row) {
+      var json = Map<String, dynamic>.from(row.toMap());
+      json['id'] = nextId;
+      return json;
+    }).toList();
+    await laconic.table(_table).insert(inserts);
+  }
+
+  Future<int> countWaypointDatas({WaypointDataFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.groupBy('id');
+    return builder.count();
+  }
+
+  Future<WaypointDataEntity> createWaypointData() async {
+    return WaypointDataEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyWaypointData(int id) async {
+    await laconic.table(_table).where('id', id).delete();
+  }
+
   Future<List<BriefWaypointDataEntity>> getBriefWaypointDatas({
     int page = 1,
     WaypointDataFilterEntity? filter,
@@ -25,22 +53,6 @@ class WaypointDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<WaypointDataEntity>> getWaypointDatas() async {
-    var builder = laconic.table(_table);
-    builder = builder.select(['id', 'COUNT(point) as points']);
-    builder = builder.groupBy('id');
-    var results = await builder.get();
-    return results.map((e) => WaypointDataEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countWaypointDatas({WaypointDataFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    builder = builder.select(['id', 'COUNT(point) as points']);
-    builder = builder.groupBy('id');
-    return builder.count();
-  }
-
   Future<WaypointDataEntity?> getWaypointData(int id) async {
     var builder = laconic.table(_table);
     builder = builder.select(['id', 'COUNT(point) as points']);
@@ -52,32 +64,12 @@ class WaypointDataRepository with RepositoryMixin {
     return WaypointDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<WaypointDataEntity> createWaypointData() async {
-    return WaypointDataEntity(id: await _getNextId());
-  }
-
-  /// 仅分配下一 path id，不插入 point 行（聚合实体无点位数据）。
-  Future<int> storeWaypointData(WaypointDataEntity data) async {
-    return _getNextId();
-  }
-
-  /// 聚合实体无可更新字段，空操作。
-  Future<void> updateWaypointData(WaypointDataEntity data) async {}
-
-  Future<void> destroyWaypointData(int id) async {
-    await laconic.table(_table).where('id', id).delete();
-  }
-
-  Future<void> copyWaypointData(int id) async {
-    var rows = await laconic.table(_table).where('id', id).get();
-    if (rows.isEmpty) return;
-    var nextId = await _getNextId();
-    var inserts = rows.map((row) {
-      var json = Map<String, dynamic>.from(row.toMap());
-      json['id'] = nextId;
-      return json;
-    }).toList();
-    await laconic.table(_table).insert(inserts);
+  Future<List<WaypointDataEntity>> getWaypointDatas() async {
+    var builder = laconic.table(_table);
+    builder = builder.select(['id', 'COUNT(point) as points']);
+    builder = builder.groupBy('id');
+    var results = await builder.get();
+    return results.map((e) => WaypointDataEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveWaypointData(WaypointDataEntity data) async {
@@ -91,13 +83,13 @@ class WaypointDataRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(id) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
+  /// 仅分配下一 path id，不插入 point 行（聚合实体无点位数据）。
+  Future<int> storeWaypointData(WaypointDataEntity data) async {
+    return _getNextId();
   }
+
+  /// 聚合实体无可更新字段，空操作。
+  Future<void> updateWaypointData(WaypointDataEntity data) async {}
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -108,5 +100,13 @@ class WaypointDataRepository with RepositoryMixin {
       builder = builder.where('id', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(id) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 }

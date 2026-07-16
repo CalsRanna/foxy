@@ -4,6 +4,29 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestTemplateAddonRepository with RepositoryMixin {
   static const _table = 'quest_template_addon';
 
+  Future<void> copyQuestTemplateAddon(int id) async {
+    var source = await getQuestTemplateAddon(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countQuestTemplateAddons() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<QuestTemplateAddonEntity> createQuestTemplateAddon([
+    int id = 0,
+  ]) async {
+    return QuestTemplateAddonEntity(id: id);
+  }
+
+  Future<void> destroyQuestTemplateAddon(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefQuestTemplateAddonEntity>> getBriefQuestTemplateAddons({
     int page = 1,
   }) async {
@@ -24,6 +47,12 @@ class QuestTemplateAddonRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return QuestTemplateAddonEntity.fromJson(results.first.toMap());
+  }
+
   Future<List<QuestTemplateAddonEntity>> getQuestTemplateAddons() async {
     var results = await laconic.table(_table).get();
     return results
@@ -31,20 +60,13 @@ class QuestTemplateAddonRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countQuestTemplateAddons() async {
-    return laconic.table(_table).count();
-  }
-
-  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestTemplateAddonEntity.fromJson(results.first.toMap());
-  }
-
-  Future<QuestTemplateAddonEntity> createQuestTemplateAddon([
-    int id = 0,
-  ]) async {
-    return QuestTemplateAddonEntity(id: id);
+  Future<void> saveQuestTemplateAddon(QuestTemplateAddonEntity model) async {
+    var existing = await getQuestTemplateAddon(model.id);
+    if (existing != null) {
+      await updateQuestTemplateAddon(model.id, model);
+    } else {
+      await storeQuestTemplateAddon(model);
+    }
   }
 
   Future<void> storeQuestTemplateAddon(QuestTemplateAddonEntity model) async {
@@ -58,28 +80,6 @@ class QuestTemplateAddonRepository with RepositoryMixin {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
-  }
-
-  Future<void> destroyQuestTemplateAddon(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyQuestTemplateAddon(int id) async {
-    var source = await getQuestTemplateAddon(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveQuestTemplateAddon(QuestTemplateAddonEntity model) async {
-    var existing = await getQuestTemplateAddon(model.id);
-    if (existing != null) {
-      await updateQuestTemplateAddon(model.id, model);
-    } else {
-      await storeQuestTemplateAddon(model);
-    }
   }
 
   Future<int> _getNextId() async {

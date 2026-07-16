@@ -7,6 +7,49 @@ import 'package:laconic/laconic.dart';
 class CurrencyTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
 
+  Future<void> copyCurrencyType(int id) async {
+    if (await getCurrencyType(id) == null) return;
+    throw StateError('CurrencyTypes 的 ItemID 和 BitIndex 必须唯一，请使用新增并选择新值');
+  }
+
+  Future<int> countCurrencyTypes({CurrencyTypeFilterEntity? filter}) {
+    final joinLocale = localeEnabled;
+    var builder = laconic
+        .table('$_table AS ct')
+        .leftJoin(
+          'item_template AS it',
+          (join) => join.on('ct.ItemID', 'it.entry'),
+        );
+    if (joinLocale) {
+      builder = builder.leftJoin(
+        'item_template_locale AS itl',
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
+      );
+    }
+    return _applyFilter(builder, filter, joinLocale: joinLocale).count();
+  }
+
+  Future<CurrencyTypeEntity> createCurrencyType() async {
+    return CurrencyTypeEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCurrencyType(int id) async {
+    final source = await getCurrencyType(id);
+    if (source == null) return;
+    if (await _isCurrencyTokenItem(source.itemId)) {
+      throw StateError('物品 ${source.itemId} 仍使用货币背包位，不能删除对应货币');
+    }
+    final characterReferences = await _countKnownCurrencyReferences(
+      source.bitIndex,
+    );
+    if (characterReferences > 0) {
+      throw StateError(
+        '货币位 ${source.bitIndex} 仍被 $characterReferences 个角色记录引用，不能删除',
+      );
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
     int page = 1,
     CurrencyTypeFilterEntity? filter,
@@ -41,28 +84,6 @@ class CurrencyTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countCurrencyTypes({CurrencyTypeFilterEntity? filter}) {
-    final joinLocale = localeEnabled;
-    var builder = laconic
-        .table('$_table AS ct')
-        .leftJoin(
-          'item_template AS it',
-          (join) => join.on('ct.ItemID', 'it.entry'),
-        );
-    if (joinLocale) {
-      builder = builder.leftJoin(
-        'item_template_locale AS itl',
-        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
-      );
-    }
-    return _applyFilter(builder, filter, joinLocale: joinLocale).count();
-  }
-
   Future<CurrencyTypeEntity?> getCurrencyType(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -70,8 +91,20 @@ class CurrencyTypeRepository with RepositoryMixin {
         : CurrencyTypeEntity.fromJson(rows.first.toMap());
   }
 
-  Future<CurrencyTypeEntity> createCurrencyType() async {
-    return CurrencyTypeEntity(id: await _getNextId());
+  Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveCurrencyType(CurrencyTypeEntity currencyType) async {
+    final existing = currencyType.id == 0
+        ? null
+        : await getCurrencyType(currencyType.id);
+    if (existing == null) {
+      await storeCurrencyType(currencyType);
+    } else {
+      await updateCurrencyType(currencyType);
+    }
   }
 
   Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
@@ -94,37 +127,40 @@ class CurrencyTypeRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', currencyType.id).update(json);
   }
 
-  Future<void> destroyCurrencyType(int id) async {
-    final source = await getCurrencyType(id);
-    if (source == null) return;
-    if (await _isCurrencyTokenItem(source.itemId)) {
-      throw StateError('物品 ${source.itemId} 仍使用货币背包位，不能删除对应货币');
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CurrencyTypeFilterEntity? filter, {
+    required bool joinLocale,
+  }) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) builder = builder.where('ct.ID', filter.id);
+    if (filter.name.isNotEmpty) {
+      builder = builder.whereNested((query) {
+        query.where('it.name', '%${filter.name}%', comparator: 'like');
+        if (joinLocale) {
+          query.orWhere('itl.Name', '%${filter.name}%', comparator: 'like');
+        }
+      });
     }
-    final characterReferences = await _countKnownCurrencyReferences(
-      source.bitIndex,
-    );
-    if (characterReferences > 0) {
-      throw StateError(
-        '货币位 ${source.bitIndex} 仍被 $characterReferences 个角色记录引用，不能删除',
-      );
-    }
-    await laconic.table(_table).where('ID', id).delete();
+    return builder;
   }
 
-  Future<void> copyCurrencyType(int id) async {
-    if (await getCurrencyType(id) == null) return;
-    throw StateError('CurrencyTypes 的 ItemID 和 BitIndex 必须唯一，请使用新增并选择新值');
-  }
-
-  Future<void> saveCurrencyType(CurrencyTypeEntity currencyType) async {
-    final existing = currencyType.id == 0
-        ? null
-        : await getCurrencyType(currencyType.id);
-    if (existing == null) {
-      await storeCurrencyType(currencyType);
-    } else {
-      await updateCurrencyType(currencyType);
+  Future<int> _countKnownCurrencyReferences(int bitIndex) async {
+    final schemas = await laconic.select('''
+SELECT DISTINCT TABLE_SCHEMA
+FROM information_schema.COLUMNS
+WHERE TABLE_NAME = 'characters' AND COLUMN_NAME = 'knownCurrencies'
+''');
+    var references = 0;
+    for (final row in schemas) {
+      final schema = row['TABLE_SCHEMA'] as String;
+      if (!RegExp(r'^[0-9A-Za-z_$]+$').hasMatch(schema)) continue;
+      references += await laconic.table('$schema.characters').whereRaw(
+        '(`knownCurrencies` & (CAST(1 AS UNSIGNED) << ?)) <> 0',
+        [bitIndex - 1],
+      ).count();
     }
+    return references;
   }
 
   Future<int> _getNextId() async {
@@ -133,6 +169,47 @@ class CurrencyTypeRepository with RepositoryMixin {
       throw StateError('CurrencyTypes ID 已超出 DBC int32 范围');
     }
     return id;
+  }
+
+  Future<bool> _isCurrencyTokenItem(int itemId) async {
+    final count = await laconic
+        .table('item_template')
+        .where('entry', itemId)
+        .whereRaw('(`BagFamily` & ?) <> 0', [kCurrencyTokenBagFamilyMask])
+        .count();
+    return count > 0;
+  }
+
+  Future<void> _validateKeyChanges(
+    CurrencyTypeEntity existing,
+    CurrencyTypeEntity changed,
+  ) async {
+    if (existing.itemId != changed.itemId &&
+        await _isCurrencyTokenItem(existing.itemId)) {
+      throw StateError('原物品 ${existing.itemId} 仍使用货币背包位，不能更换 ItemID');
+    }
+    if (existing.bitIndex != changed.bitIndex) {
+      final references = await _countKnownCurrencyReferences(existing.bitIndex);
+      if (references > 0) {
+        throw StateError(
+          '原货币位 ${existing.bitIndex} 仍被 $references 个角色记录引用，不能更换 BitIndex',
+        );
+      }
+    }
+  }
+
+  Future<void> _validateReference({
+    required String table,
+    required String column,
+    required int value,
+    required int? existingValue,
+    required String field,
+    required String target,
+  }) async {
+    if (existingValue == value) return;
+    final references = await laconic.table(table).where(column, value).count();
+    if (references > 0) return;
+    throw StateError('$field 引用的$target $value 不存在');
   }
 
   Future<void> _validateReferences(
@@ -167,20 +244,6 @@ class CurrencyTypeRepository with RepositoryMixin {
     }
   }
 
-  Future<void> _validateReference({
-    required String table,
-    required String column,
-    required int value,
-    required int? existingValue,
-    required String field,
-    required String target,
-  }) async {
-    if (existingValue == value) return;
-    final references = await laconic.table(table).where(column, value).count();
-    if (references > 0) return;
-    throw StateError('$field 引用的$target $value 不存在');
-  }
-
   Future<void> _validateUniqueness(CurrencyTypeEntity currencyType) async {
     final itemDuplicates = await laconic
         .table(_table)
@@ -198,68 +261,5 @@ class CurrencyTypeRepository with RepositoryMixin {
     if (bitDuplicates > 0) {
       throw StateError('BitIndex ${currencyType.bitIndex} 已被其他货币使用');
     }
-  }
-
-  Future<void> _validateKeyChanges(
-    CurrencyTypeEntity existing,
-    CurrencyTypeEntity changed,
-  ) async {
-    if (existing.itemId != changed.itemId &&
-        await _isCurrencyTokenItem(existing.itemId)) {
-      throw StateError('原物品 ${existing.itemId} 仍使用货币背包位，不能更换 ItemID');
-    }
-    if (existing.bitIndex != changed.bitIndex) {
-      final references = await _countKnownCurrencyReferences(existing.bitIndex);
-      if (references > 0) {
-        throw StateError(
-          '原货币位 ${existing.bitIndex} 仍被 $references 个角色记录引用，不能更换 BitIndex',
-        );
-      }
-    }
-  }
-
-  Future<bool> _isCurrencyTokenItem(int itemId) async {
-    final count = await laconic
-        .table('item_template')
-        .where('entry', itemId)
-        .whereRaw('(`BagFamily` & ?) <> 0', [kCurrencyTokenBagFamilyMask])
-        .count();
-    return count > 0;
-  }
-
-  Future<int> _countKnownCurrencyReferences(int bitIndex) async {
-    final schemas = await laconic.select('''
-SELECT DISTINCT TABLE_SCHEMA
-FROM information_schema.COLUMNS
-WHERE TABLE_NAME = 'characters' AND COLUMN_NAME = 'knownCurrencies'
-''');
-    var references = 0;
-    for (final row in schemas) {
-      final schema = row['TABLE_SCHEMA'] as String;
-      if (!RegExp(r'^[0-9A-Za-z_$]+$').hasMatch(schema)) continue;
-      references += await laconic.table('$schema.characters').whereRaw(
-        '(`knownCurrencies` & (CAST(1 AS UNSIGNED) << ?)) <> 0',
-        [bitIndex - 1],
-      ).count();
-    }
-    return references;
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    CurrencyTypeFilterEntity? filter, {
-    required bool joinLocale,
-  }) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ct.ID', filter.id);
-    if (filter.name.isNotEmpty) {
-      builder = builder.whereNested((query) {
-        query.where('it.name', '%${filter.name}%', comparator: 'like');
-        if (joinLocale) {
-          query.orWhere('itl.Name', '%${filter.name}%', comparator: 'like');
-        }
-      });
-    }
-    return builder;
   }
 }

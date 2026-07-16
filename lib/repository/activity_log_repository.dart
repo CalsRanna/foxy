@@ -2,15 +2,19 @@ import 'dart:async';
 
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/activity_logged_event.dart';
-import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/repository_mixin.dart';
 import 'package:get_it/get_it.dart';
 
 class ActivityLogRepository with RepositoryMixin {
   static const _table = 'foxy.activity_log';
 
   final _eventBus = GetIt.instance.get<EventBus>();
+
+  Future<int> countActivityLogs() async {
+    return laconic.table(_table).count();
+  }
 
   Future<List<ActivityLogEntity>> getActivityLogs({int limit = 20}) async {
     final rows = await laconic
@@ -20,10 +24,6 @@ class ActivityLogRepository with RepositoryMixin {
         .limit(limit)
         .get();
     return rows.map((row) => ActivityLogEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countActivityLogs() async {
-    return laconic.table(_table).count();
   }
 
   /// 严格写入；失败会抛出，供需要确认落库的调用方使用。

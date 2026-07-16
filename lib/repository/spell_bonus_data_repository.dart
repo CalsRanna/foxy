@@ -4,6 +4,22 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellBonusDataRepository with RepositoryMixin {
   static const _table = 'spell_bonus_data';
 
+  Future<void> copySpellBonusData(int entry) async {
+    throw UnsupportedError('法术加成记录不能自动复制，请为有效法术新增记录。');
+  }
+
+  Future<int> countSpellBonusDatas() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<SpellBonusDataEntity> createSpellBonusData([int entry = 0]) async {
+    return SpellBonusDataEntity(entry: entry);
+  }
+
+  Future<void> destroySpellBonusData(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
   Future<List<BriefSpellBonusDataEntity>> getBriefSpellBonusDatas({
     int page = 1,
   }) async {
@@ -25,17 +41,6 @@ class SpellBonusDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SpellBonusDataEntity>> getSpellBonusDatas() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => SpellBonusDataEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countSpellBonusDatas() async {
-    return laconic.table(_table).count();
-  }
-
   Future<SpellBonusDataEntity?> getSpellBonusData(int entry) async {
     var results = await laconic
         .table(_table)
@@ -46,8 +51,20 @@ class SpellBonusDataRepository with RepositoryMixin {
     return SpellBonusDataEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellBonusDataEntity> createSpellBonusData([int entry = 0]) async {
-    return SpellBonusDataEntity(entry: entry);
+  Future<List<SpellBonusDataEntity>> getSpellBonusDatas() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => SpellBonusDataEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSpellBonusData(SpellBonusDataEntity data) async {
+    var existing = await getSpellBonusData(data.entry);
+    if (existing != null) {
+      await updateSpellBonusData(data);
+    } else {
+      await storeSpellBonusData(data);
+    }
   }
 
   Future<void> storeSpellBonusData(SpellBonusDataEntity data) async {
@@ -58,22 +75,5 @@ class SpellBonusDataRepository with RepositoryMixin {
     var json = data.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', data.entry).update(json);
-  }
-
-  Future<void> destroySpellBonusData(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
-  Future<void> copySpellBonusData(int entry) async {
-    throw UnsupportedError('法术加成记录不能自动复制，请为有效法术新增记录。');
-  }
-
-  Future<void> saveSpellBonusData(SpellBonusDataEntity data) async {
-    var existing = await getSpellBonusData(data.entry);
-    if (existing != null) {
-      await updateSpellBonusData(data);
-    } else {
-      await storeSpellBonusData(data);
-    }
   }
 }

@@ -6,6 +6,29 @@ import 'package:laconic/laconic.dart';
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
+  Future<void> copySpellIcon(int id) async {
+    var source = await getSpellIcon(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellIconEntity> createSpellIcon() async {
+    return SpellIconEntity(id: await _getNextId());
+  }
+
+  Future<void> destroySpellIcon(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSpellIconEntity>> getBriefSpellIcons({
     int page = 1,
     SpellIconFilterEntity? filter,
@@ -22,52 +45,15 @@ class SpellIconRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SpellIconEntity>> getSpellIcons() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => SpellIconEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<SpellIconEntity?> getSpellIcon(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return SpellIconEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellIconEntity> createSpellIcon() async {
-    return SpellIconEntity(id: await _getNextId());
-  }
-
-  Future<int> storeSpellIcon(SpellIconEntity icon) async {
-    var json = icon.toJson();
-    final nextId = icon.id > 0 ? icon.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateSpellIcon(SpellIconEntity icon) async {
-    var json = icon.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', icon.id).update(json);
-  }
-
-  Future<void> destroySpellIcon(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpellIcon(int id) async {
-    var source = await getSpellIcon(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<SpellIconEntity>> getSpellIcons() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SpellIconEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveSpellIcon(SpellIconEntity icon) async {
@@ -83,8 +69,18 @@ class SpellIconRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeSpellIcon(SpellIconEntity icon) async {
+    var json = icon.toJson();
+    final nextId = icon.id > 0 ? icon.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateSpellIcon(SpellIconEntity icon) async {
+    var json = icon.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', icon.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -103,5 +99,9 @@ class SpellIconRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

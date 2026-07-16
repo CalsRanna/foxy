@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class DbcEmoteRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes';
 
+  Future<void> copyDbcEmote(int id) async {
+    final source = await getDbcEmote(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countDbcEmotes({DbcEmoteFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<DbcEmoteEntity> createDbcEmote() async =>
+      DbcEmoteEntity(id: await _getNextId());
+
+  Future<void> destroyDbcEmote(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefDbcEmoteEntity>> getBriefDbcEmotes({
     int page = 1,
     DbcEmoteFilterEntity? filter,
@@ -25,21 +42,23 @@ class DbcEmoteRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<DbcEmoteEntity>> getDbcEmotes() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => DbcEmoteEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countDbcEmotes({DbcEmoteFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<DbcEmoteEntity?> getDbcEmote(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : DbcEmoteEntity.fromJson(rows.first.toMap());
   }
 
-  Future<DbcEmoteEntity> createDbcEmote() async =>
-      DbcEmoteEntity(id: await _getNextId());
+  Future<List<DbcEmoteEntity>> getDbcEmotes() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => DbcEmoteEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveDbcEmote(DbcEmoteEntity emote) async {
+    if (await getDbcEmote(emote.id) == null) {
+      await storeDbcEmote(emote);
+    } else {
+      await updateDbcEmote(emote);
+    }
+  }
 
   Future<int> storeDbcEmote(DbcEmoteEntity emote) async {
     final json = emote.toJson();
@@ -53,27 +72,6 @@ class DbcEmoteRepository with RepositoryMixin {
     final json = emote.toJson()..remove('ID');
     await laconic.table(_table).where('ID', emote.id).update(json);
   }
-
-  Future<void> destroyDbcEmote(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyDbcEmote(int id) async {
-    final source = await getDbcEmote(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveDbcEmote(DbcEmoteEntity emote) async {
-    if (await getDbcEmote(emote.id) == null) {
-      await storeDbcEmote(emote);
-    } else {
-      await updateDbcEmote(emote);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -90,4 +88,6 @@ class DbcEmoteRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

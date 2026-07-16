@@ -6,6 +6,10 @@ import 'package:laconic/laconic.dart';
 class HolidayRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_holidays';
 
+  Future<int> countHolidays({HolidayFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
   Future<List<BriefHolidayEntity>> getBriefHolidays({
     int page = 1,
     HolidayFilterEntity? filter,
@@ -23,10 +27,6 @@ class HolidayRepository with RepositoryMixin {
   Future<List<HolidayEntity>> getHolidays() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => HolidayEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countHolidays({HolidayFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, HolidayFilterEntity? filter) {

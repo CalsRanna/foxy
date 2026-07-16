@@ -7,39 +7,20 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
   static const primaryKeyColumns = {'entry', 'ench'};
 
-  static String dbcTableFor(ItemEnchantmentKind kind) =>
-      kind == ItemEnchantmentKind.randomProperty
-      ? 'foxy.dbc_item_random_properties'
-      : 'foxy.dbc_item_random_suffix';
-
-  Future<List<BriefItemEnchantmentTemplateEntity>>
-  getBriefItemEnchantmentTemplates({
-    ItemEnchantmentTemplateFilterEntity? filter,
-    int page = 1,
-    ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = _briefBuilder(kind);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('entry').orderBy('ench');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<BriefItemEnchantmentTemplateEntity>>
-  getBriefItemEnchantmentTemplatesByEntry(
-    int entry, {
+  Future<int> countItemEnchantmentGroups({
     required ItemEnchantmentKind kind,
+    ItemEnchantmentTemplateFilterEntity? filter,
   }) async {
-    var builder = _briefBuilder(kind);
-    builder = builder.where('iet.entry', entry);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
-        .toList();
+    final dbcTable = dbcTableFor(kind);
+    var builder = laconic.table('$_table AS iet');
+    builder = builder.select(['iet.entry']);
+    builder = builder.leftJoin(
+      '$dbcTable AS random_ench',
+      (join) => join.on('iet.ench', 'random_ench.ID'),
+    );
+    builder = builder.whereNotNull('random_ench.ID');
+    builder = _applyFilter(builder, filter).groupBy('iet.entry');
+    return (await builder.get()).length;
   }
 
   Future<int> countItemEnchantmentTemplates({
@@ -55,6 +36,20 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     builder = builder.whereNotNull('random_ench.ID');
     builder = _applyFilter(builder, filter);
     return builder.count();
+  }
+
+  Future<ItemEnchantmentTemplateEntity> createItemEnchantmentTemplate(
+    int entry,
+  ) async {
+    return ItemEnchantmentTemplateEntity(entry: entry);
+  }
+
+  Future<void> destroyItemEnchantmentTemplate(int entry, int ench) async {
+    await laconic
+        .table(_table)
+        .where('entry', entry)
+        .where('ench', ench)
+        .delete();
   }
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
@@ -87,20 +82,34 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countItemEnchantmentGroups({
-    required ItemEnchantmentKind kind,
+  Future<List<BriefItemEnchantmentTemplateEntity>>
+  getBriefItemEnchantmentTemplates({
     ItemEnchantmentTemplateFilterEntity? filter,
+    int page = 1,
+    ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
-    final dbcTable = dbcTableFor(kind);
-    var builder = laconic.table('$_table AS iet');
-    builder = builder.select(['iet.entry']);
-    builder = builder.leftJoin(
-      '$dbcTable AS random_ench',
-      (join) => join.on('iet.ench', 'random_ench.ID'),
-    );
-    builder = builder.whereNotNull('random_ench.ID');
-    builder = _applyFilter(builder, filter).groupBy('iet.entry');
-    return (await builder.get()).length;
+    var offset = (page - 1) * kPageSize;
+    var builder = _briefBuilder(kind);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('entry').orderBy('ench');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<BriefItemEnchantmentTemplateEntity>>
+  getBriefItemEnchantmentTemplatesByEntry(
+    int entry, {
+    required ItemEnchantmentKind kind,
+  }) async {
+    var builder = _briefBuilder(kind);
+    builder = builder.where('iet.entry', entry);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
@@ -117,10 +126,15 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     return ItemEnchantmentTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<ItemEnchantmentTemplateEntity> createItemEnchantmentTemplate(
-    int entry,
+  Future<void> saveItemEnchantmentTemplate(
+    ItemEnchantmentTemplateEntity model,
   ) async {
-    return ItemEnchantmentTemplateEntity(entry: entry);
+    var existing = await getItemEnchantmentTemplate(model.entry, model.ench);
+    if (existing != null) {
+      await updateItemEnchantmentTemplate(model.entry, model.ench, model);
+    } else {
+      await storeItemEnchantmentTemplate(model);
+    }
   }
 
   Future<void> storeItemEnchantmentTemplate(
@@ -144,23 +158,15 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> destroyItemEnchantmentTemplate(int entry, int ench) async {
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('ench', ench)
-        .delete();
-  }
-
-  Future<void> saveItemEnchantmentTemplate(
-    ItemEnchantmentTemplateEntity model,
-  ) async {
-    var existing = await getItemEnchantmentTemplate(model.entry, model.ench);
-    if (existing != null) {
-      await updateItemEnchantmentTemplate(model.entry, model.ench, model);
-    } else {
-      await storeItemEnchantmentTemplate(model);
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ItemEnchantmentTemplateFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('iet.entry', filter.entry);
     }
+    return builder;
   }
 
   QueryBuilder _briefBuilder(ItemEnchantmentKind kind) {
@@ -205,14 +211,8 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ItemEnchantmentTemplateFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.entry.isNotEmpty) {
-      builder = builder.where('iet.entry', filter.entry);
-    }
-    return builder;
-  }
+  static String dbcTableFor(ItemEnchantmentKind kind) =>
+      kind == ItemEnchantmentKind.randomProperty
+      ? 'foxy.dbc_item_random_properties'
+      : 'foxy.dbc_item_random_suffix';
 }

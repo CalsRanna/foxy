@@ -4,6 +4,27 @@ import 'package:foxy/repository/repository_mixin.dart';
 class QuestOfferRewardRepository with RepositoryMixin {
   static const _table = 'quest_offer_reward';
 
+  Future<void> copyQuestOfferReward(int id) async {
+    var source = await getQuestOfferReward(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countQuestOfferRewards() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<QuestOfferRewardEntity> createQuestOfferReward([int id = 0]) async {
+    return QuestOfferRewardEntity(id: id);
+  }
+
+  Future<void> destroyQuestOfferReward(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefQuestOfferRewardEntity>> getBriefQuestOfferRewards({
     int page = 1,
   }) async {
@@ -18,6 +39,12 @@ class QuestOfferRewardRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<QuestOfferRewardEntity?> getQuestOfferReward(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return QuestOfferRewardEntity.fromJson(results.first.toMap());
+  }
+
   Future<List<QuestOfferRewardEntity>> getQuestOfferRewards() async {
     var results = await laconic.table(_table).get();
     return results
@@ -25,18 +52,13 @@ class QuestOfferRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countQuestOfferRewards() async {
-    return laconic.table(_table).count();
-  }
-
-  Future<QuestOfferRewardEntity?> getQuestOfferReward(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestOfferRewardEntity.fromJson(results.first.toMap());
-  }
-
-  Future<QuestOfferRewardEntity> createQuestOfferReward([int id = 0]) async {
-    return QuestOfferRewardEntity(id: id);
+  Future<void> saveQuestOfferReward(QuestOfferRewardEntity model) async {
+    var existing = await getQuestOfferReward(model.id);
+    if (existing != null) {
+      await updateQuestOfferReward(model.id, model);
+    } else {
+      await storeQuestOfferReward(model);
+    }
   }
 
   Future<void> storeQuestOfferReward(QuestOfferRewardEntity model) async {
@@ -50,28 +72,6 @@ class QuestOfferRewardRepository with RepositoryMixin {
     final json = model.toJson();
     json.remove('ID');
     await laconic.table(_table).where('ID', id).update(json);
-  }
-
-  Future<void> destroyQuestOfferReward(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyQuestOfferReward(int id) async {
-    var source = await getQuestOfferReward(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveQuestOfferReward(QuestOfferRewardEntity model) async {
-    var existing = await getQuestOfferReward(model.id);
-    if (existing != null) {
-      await updateQuestOfferReward(model.id, model);
-    } else {
-      await storeQuestOfferReward(model);
-    }
   }
 
   Future<int> _getNextId() async {

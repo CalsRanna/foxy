@@ -4,6 +4,16 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureDefaultTrainerRepository with RepositoryMixin {
   static const _table = 'creature_default_trainer';
 
+  Future<CreatureDefaultTrainerEntity> createCreatureDefaultTrainer(
+    int creatureId,
+  ) async {
+    return CreatureDefaultTrainerEntity(creatureId: creatureId);
+  }
+
+  Future<void> destroyCreatureDefaultTrainer(int creatureId) async {
+    await laconic.table(_table).where('CreatureId', creatureId).delete();
+  }
+
   Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
     int creatureId,
   ) async {
@@ -16,10 +26,15 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
     return CreatureDefaultTrainerEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureDefaultTrainerEntity> createCreatureDefaultTrainer(
-    int creatureId,
+  Future<void> saveCreatureDefaultTrainer(
+    CreatureDefaultTrainerEntity relation,
   ) async {
-    return CreatureDefaultTrainerEntity(creatureId: creatureId);
+    final existing = await getCreatureDefaultTrainer(relation.creatureId);
+    if (existing == null) {
+      await storeCreatureDefaultTrainer(relation);
+    } else {
+      await updateCreatureDefaultTrainer(relation);
+    }
   }
 
   Future<void> storeCreatureDefaultTrainer(
@@ -36,20 +51,5 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
         .table(_table)
         .where('CreatureId', relation.creatureId)
         .update(json);
-  }
-
-  Future<void> destroyCreatureDefaultTrainer(int creatureId) async {
-    await laconic.table(_table).where('CreatureId', creatureId).delete();
-  }
-
-  Future<void> saveCreatureDefaultTrainer(
-    CreatureDefaultTrainerEntity relation,
-  ) async {
-    final existing = await getCreatureDefaultTrainer(relation.creatureId);
-    if (existing == null) {
-      await storeCreatureDefaultTrainer(relation);
-    } else {
-      await updateCreatureDefaultTrainer(relation);
-    }
   }
 }

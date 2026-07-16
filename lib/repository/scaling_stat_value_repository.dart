@@ -6,6 +6,45 @@ import 'package:laconic/laconic.dart';
 class ScalingStatValueRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
+  Future<void> copyScalingStatValue(int id) async {
+    final source = await getScalingStatValue(id);
+    if (source == null) return;
+    await storeScalingStatValue(
+      source.copyWith(
+        id: await _getNextId(),
+        charlevel: await _getNextCharlevel(),
+      ),
+    );
+  }
+
+  Future<int> countScalingStatValues({ScalingStatValueFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<ScalingStatValueEntity> createScalingStatValue() async {
+    return ScalingStatValueEntity(
+      id: await _getNextId(),
+      charlevel: await _getNextCharlevel(),
+    );
+  }
+
+  Future<void> destroyScalingStatValue(int id) async {
+    final source = await getScalingStatValue(id);
+    if (source == null) return;
+    final maxCharlevel = await _getMaximumCharlevel();
+    if (source.charlevel != maxCharlevel) {
+      throw StateError('只能删除最高 Charlevel，避免改变后续 DBC 物理查找顺序');
+    }
+    final references = await laconic
+        .table('item_template')
+        .where('ScalingStatValue', 0, comparator: '!=')
+        .count();
+    if (references > 0) {
+      throw StateError('仍有 $references 个物品使用缩放值，不能删除等级记录');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
     int page = 1,
     ScalingStatValueFilterEntity? filter,
@@ -32,6 +71,13 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<ScalingStatValueEntity?> getScalingStatValue(int id) async {
+    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+    return rows.isEmpty
+        ? null
+        : ScalingStatValueEntity.fromJson(rows.first.toMap());
+  }
+
   Future<List<ScalingStatValueEntity>> getScalingStatValues() async {
     final rows = await laconic
         .table(_table)
@@ -43,22 +89,13 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countScalingStatValues({ScalingStatValueFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
-  Future<ScalingStatValueEntity?> getScalingStatValue(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : ScalingStatValueEntity.fromJson(rows.first.toMap());
-  }
-
-  Future<ScalingStatValueEntity> createScalingStatValue() async {
-    return ScalingStatValueEntity(
-      id: await _getNextId(),
-      charlevel: await _getNextCharlevel(),
-    );
+  Future<void> saveScalingStatValue(ScalingStatValueEntity value) async {
+    final existing = value.id == 0 ? null : await getScalingStatValue(value.id);
+    if (existing == null) {
+      await storeScalingStatValue(value);
+    } else {
+      await updateScalingStatValue(value);
+    }
   }
 
   Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
@@ -82,49 +119,20 @@ class ScalingStatValueRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', value.id).update(json);
   }
 
-  Future<void> destroyScalingStatValue(int id) async {
-    final source = await getScalingStatValue(id);
-    if (source == null) return;
-    final maxCharlevel = await _getMaximumCharlevel();
-    if (source.charlevel != maxCharlevel) {
-      throw StateError('只能删除最高 Charlevel，避免改变后续 DBC 物理查找顺序');
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ScalingStatValueFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.charlevel.isNotEmpty) {
+      builder = builder.where('Charlevel', filter.charlevel);
     }
-    final references = await laconic
-        .table('item_template')
-        .where('ScalingStatValue', 0, comparator: '!=')
-        .count();
-    if (references > 0) {
-      throw StateError('仍有 $references 个物品使用缩放值，不能删除等级记录');
-    }
-    await laconic.table(_table).where('ID', id).delete();
+    return builder;
   }
 
-  Future<void> copyScalingStatValue(int id) async {
-    final source = await getScalingStatValue(id);
-    if (source == null) return;
-    await storeScalingStatValue(
-      source.copyWith(
-        id: await _getNextId(),
-        charlevel: await _getNextCharlevel(),
-      ),
-    );
-  }
-
-  Future<void> saveScalingStatValue(ScalingStatValueEntity value) async {
-    final existing = value.id == 0 ? null : await getScalingStatValue(value.id);
-    if (existing == null) {
-      await storeScalingStatValue(value);
-    } else {
-      await updateScalingStatValue(value);
-    }
-  }
-
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 0x7fffffff) {
-      throw StateError('ScalingStatValues ID 已超出 DBC int32 范围');
-    }
-    return id;
+  Future<int> _getMaximumCharlevel() async {
+    return (await nextMaxPlusOne(_table, 'Charlevel')) - 1;
   }
 
   Future<int> _getNextCharlevel() async {
@@ -135,8 +143,12 @@ class ScalingStatValueRepository with RepositoryMixin {
     return charlevel;
   }
 
-  Future<int> _getMaximumCharlevel() async {
-    return (await nextMaxPlusOne(_table, 'Charlevel')) - 1;
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 0x7fffffff) {
+      throw StateError('ScalingStatValues ID 已超出 DBC int32 范围');
+    }
+    return id;
   }
 
   Future<void> _validateNewCharlevel(ScalingStatValueEntity value) async {
@@ -156,17 +168,5 @@ class ScalingStatValueRepository with RepositoryMixin {
     if (duplicates > 0) {
       throw StateError('Charlevel ${value.charlevel} 已存在');
     }
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ScalingStatValueFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
-    if (filter.charlevel.isNotEmpty) {
-      builder = builder.where('Charlevel', filter.charlevel);
-    }
-    return builder;
   }
 }

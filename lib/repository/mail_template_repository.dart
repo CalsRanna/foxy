@@ -11,6 +11,26 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyMailTemplate(int id) async {
+    final source = await getMailTemplate(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countMailTemplates({MailTemplateFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<MailTemplateEntity> createMailTemplate() async {
+    return MailTemplateEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyMailTemplate(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefMailTemplateEntity>> getBriefMailTemplates({
     int page = 1,
     MailTemplateFilterEntity? filter,
@@ -31,15 +51,6 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<MailTemplateEntity>> getMailTemplates() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => MailTemplateEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countMailTemplates({MailTemplateFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
   Future<MailTemplateEntity?> getMailTemplate(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -47,9 +58,29 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         : MailTemplateEntity.fromJson(rows.first.toMap());
   }
 
-  Future<MailTemplateEntity> createMailTemplate() async {
-    return MailTemplateEntity(id: await _getNextId());
+  Future<List<DbcLocaleFieldValue>> getMailTemplateLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<MailTemplateEntity>> getMailTemplates() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => MailTemplateEntity.fromJson(row.toMap())).toList();
   }
+
+  Future<void> saveMailTemplate(MailTemplateEntity template) async {
+    if (await getMailTemplate(template.id) == null) {
+      await storeMailTemplate(template);
+    } else {
+      await updateMailTemplate(template);
+    }
+  }
+
+  Future<void> saveMailTemplateLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeMailTemplate(MailTemplateEntity template) async {
     final json = template.toJson();
@@ -63,39 +94,6 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final json = template.toJson()..remove('ID');
     await laconic.table(_table).where('ID', template.id).update(json);
   }
-
-  Future<void> destroyMailTemplate(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyMailTemplate(int id) async {
-    final source = await getMailTemplate(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveMailTemplate(MailTemplateEntity template) async {
-    if (await getMailTemplate(template.id) == null) {
-      await storeMailTemplate(template);
-    } else {
-      await updateMailTemplate(template);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getMailTemplateLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveMailTemplateLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -112,4 +110,6 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

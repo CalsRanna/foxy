@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class GameObjectArtKitRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_art_kit';
 
+  Future<void> copyGameObjectArtKit(int id) async {
+    final source = await getGameObjectArtKit(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countGameObjectArtKits({GameObjectArtKitFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<GameObjectArtKitEntity> createGameObjectArtKit() async =>
+      GameObjectArtKitEntity(id: await _getNextId());
+
+  Future<void> destroyGameObjectArtKit(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefGameObjectArtKitEntity>> getBriefGameObjectArtKits({
     int page = 1,
     GameObjectArtKitFilterEntity? filter,
@@ -24,16 +41,6 @@ class GameObjectArtKitRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GameObjectArtKitEntity>> getGameObjectArtKits() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => GameObjectArtKitEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countGameObjectArtKits({GameObjectArtKitFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<GameObjectArtKitEntity?> getGameObjectArtKit(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -41,8 +48,20 @@ class GameObjectArtKitRepository with RepositoryMixin {
         : GameObjectArtKitEntity.fromJson(rows.first.toMap());
   }
 
-  Future<GameObjectArtKitEntity> createGameObjectArtKit() async =>
-      GameObjectArtKitEntity(id: await _getNextId());
+  Future<List<GameObjectArtKitEntity>> getGameObjectArtKits() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => GameObjectArtKitEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveGameObjectArtKit(GameObjectArtKitEntity entity) async {
+    if (await getGameObjectArtKit(entity.id) == null) {
+      await storeGameObjectArtKit(entity);
+    } else {
+      await updateGameObjectArtKit(entity);
+    }
+  }
 
   Future<int> storeGameObjectArtKit(GameObjectArtKitEntity entity) async {
     final json = entity.toJson();
@@ -56,27 +75,6 @@ class GameObjectArtKitRepository with RepositoryMixin {
     final json = entity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
-
-  Future<void> destroyGameObjectArtKit(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyGameObjectArtKit(int id) async {
-    final source = await getGameObjectArtKit(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveGameObjectArtKit(GameObjectArtKitEntity entity) async {
-    if (await getGameObjectArtKit(entity.id) == null) {
-      await storeGameObjectArtKit(entity);
-    } else {
-      await updateGameObjectArtKit(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -93,4 +91,6 @@ class GameObjectArtKitRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

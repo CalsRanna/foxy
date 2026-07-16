@@ -4,6 +4,29 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
 
+  Future<void> copyCreatureOnKillReputation(int creatureID) async {
+    var source = await getCreatureOnKillReputation(creatureID);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextCreatureId();
+    json['creature_id'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureOnKillReputations() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<CreatureOnKillReputationEntity> createCreatureOnKillReputation([
+    int creatureID = 0,
+  ]) async {
+    return CreatureOnKillReputationEntity(creatureID: creatureID);
+  }
+
+  Future<void> destroyCreatureOnKillReputation(int creatureID) async {
+    await laconic.table(_table).where('creature_id', creatureID).delete();
+  }
+
   Future<List<BriefCreatureOnKillReputationEntity>>
   getBriefCreatureOnKillReputations({int page = 1}) async {
     var offset = (page - 1) * kPageSize;
@@ -24,18 +47,6 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CreatureOnKillReputationEntity>>
-  getCreatureOnKillReputations() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => CreatureOnKillReputationEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countCreatureOnKillReputations() async {
-    return laconic.table(_table).count();
-  }
-
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
     int creatureID,
   ) async {
@@ -48,10 +59,23 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     return CreatureOnKillReputationEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureOnKillReputationEntity> createCreatureOnKillReputation([
-    int creatureID = 0,
-  ]) async {
-    return CreatureOnKillReputationEntity(creatureID: creatureID);
+  Future<List<CreatureOnKillReputationEntity>>
+  getCreatureOnKillReputations() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureOnKillReputationEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveCreatureOnKillReputation(
+    CreatureOnKillReputationEntity rep,
+  ) async {
+    var existing = await getCreatureOnKillReputation(rep.creatureID);
+    if (existing != null) {
+      await updateCreatureOnKillReputation(rep);
+    } else {
+      await storeCreatureOnKillReputation(rep);
+    }
   }
 
   Future<void> storeCreatureOnKillReputation(
@@ -69,30 +93,6 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
         .table(_table)
         .where('creature_id', rep.creatureID)
         .update(json);
-  }
-
-  Future<void> destroyCreatureOnKillReputation(int creatureID) async {
-    await laconic.table(_table).where('creature_id', creatureID).delete();
-  }
-
-  Future<void> copyCreatureOnKillReputation(int creatureID) async {
-    var source = await getCreatureOnKillReputation(creatureID);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextCreatureId();
-    json['creature_id'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureOnKillReputation(
-    CreatureOnKillReputationEntity rep,
-  ) async {
-    var existing = await getCreatureOnKillReputation(rep.creatureID);
-    if (existing != null) {
-      await updateCreatureOnKillReputation(rep);
-    } else {
-      await storeCreatureOnKillReputation(rep);
-    }
   }
 
   Future<int> _getNextCreatureId() async {

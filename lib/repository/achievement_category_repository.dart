@@ -12,6 +12,53 @@ class AchievementCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyAchievementCategory(int id) async {
+    final source = await getAchievementCategory(id);
+    if (source == null) return;
+    await storeAchievementCategory(source.copyWith(id: await _getNextId()));
+  }
+
+  Future<int> countAchievementCategories({
+    AchievementCategoryFilterEntity? filter,
+  }) => _applyFilter(laconic.table(_table), filter).count();
+
+  Future<AchievementCategoryEntity> createAchievementCategory() async {
+    return AchievementCategoryEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyAchievementCategory(int id) async {
+    final childCount = await laconic.table(_table).where('Parent', id).count();
+    if (childCount > 0) {
+      throw StateError('成就分类 $id 仍被 $childCount 个子分类引用，不能删除');
+    }
+    final achievementCount = await laconic
+        .table('foxy.dbc_achievement')
+        .where('Category', id)
+        .count();
+    if (achievementCount > 0) {
+      throw StateError('成就分类 $id 仍被 $achievementCount 个成就引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<List<AchievementCategoryEntity>> getAchievementCategories() async {
+    final rows = await laconic.table(_table).orderBy('ID').get();
+    return rows
+        .map((row) => AchievementCategoryEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<AchievementCategoryEntity?> getAchievementCategory(int id) async {
+    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (rows.isEmpty) return null;
+    return AchievementCategoryEntity.fromJson(rows.first.toMap());
+  }
+
+  Future<List<DbcLocaleFieldValue>> getAchievementCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
   Future<List<BriefAchievementCategoryEntity>> getBriefAchievementCategories({
     int page = 1,
     AchievementCategoryFilterEntity? filter,
@@ -29,26 +76,21 @@ class AchievementCategoryRepository
         .toList();
   }
 
-  Future<List<AchievementCategoryEntity>> getAchievementCategories() async {
-    final rows = await laconic.table(_table).orderBy('ID').get();
-    return rows
-        .map((row) => AchievementCategoryEntity.fromJson(row.toMap()))
-        .toList();
+  Future<void> saveAchievementCategory(
+    AchievementCategoryEntity category,
+  ) async {
+    if (category.id == 0 || await getAchievementCategory(category.id) == null) {
+      await storeAchievementCategory(category);
+      return;
+    }
+    await updateAchievementCategory(category);
   }
 
-  Future<int> countAchievementCategories({
-    AchievementCategoryFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
-
-  Future<AchievementCategoryEntity?> getAchievementCategory(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (rows.isEmpty) return null;
-    return AchievementCategoryEntity.fromJson(rows.first.toMap());
-  }
-
-  Future<AchievementCategoryEntity> createAchievementCategory() async {
-    return AchievementCategoryEntity(id: await _getNextId());
-  }
+  Future<void> saveAchievementCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeAchievementCategory(
     AchievementCategoryEntity category,
@@ -74,47 +116,21 @@ class AchievementCategoryRepository
     await laconic.table(_table).where('ID', category.id).update(json);
   }
 
-  Future<void> destroyAchievementCategory(int id) async {
-    final childCount = await laconic.table(_table).where('Parent', id).count();
-    if (childCount > 0) {
-      throw StateError('成就分类 $id 仍被 $childCount 个子分类引用，不能删除');
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    AchievementCategoryFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${filter.name}%',
+        comparator: 'like',
+      );
     }
-    final achievementCount = await laconic
-        .table('foxy.dbc_achievement')
-        .where('Category', id)
-        .count();
-    if (achievementCount > 0) {
-      throw StateError('成就分类 $id 仍被 $achievementCount 个成就引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
+    return builder;
   }
-
-  Future<void> copyAchievementCategory(int id) async {
-    final source = await getAchievementCategory(id);
-    if (source == null) return;
-    await storeAchievementCategory(source.copyWith(id: await _getNextId()));
-  }
-
-  Future<void> saveAchievementCategory(
-    AchievementCategoryEntity category,
-  ) async {
-    if (category.id == 0 || await getAchievementCategory(category.id) == null) {
-      await storeAchievementCategory(category);
-      return;
-    }
-    await updateAchievementCategory(category);
-  }
-
-  Future<List<DbcLocaleFieldValue>> getAchievementCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveAchievementCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
@@ -122,13 +138,6 @@ class AchievementCategoryRepository
       throw StateError('Achievement_Category.dbc 已无可用 int32 ID');
     }
     return id;
-  }
-
-  Future<void> _validateParent(int parent) async {
-    if (parent == -1) return;
-    if (await getAchievementCategory(parent) == null) {
-      throw ArgumentError.value(parent, 'Parent', '引用的成就分类不存在');
-    }
   }
 
   Future<void> _validateNoCycle(int id, int firstParent) async {
@@ -149,19 +158,10 @@ class AchievementCategoryRepository
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    AchievementCategoryFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
-    if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%${filter.name}%',
-        comparator: 'like',
-      );
+  Future<void> _validateParent(int parent) async {
+    if (parent == -1) return;
+    if (await getAchievementCategory(parent) == null) {
+      throw ArgumentError.value(parent, 'Parent', '引用的成就分类不存在');
     }
-    return builder;
   }
 }

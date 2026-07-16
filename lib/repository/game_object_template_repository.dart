@@ -8,6 +8,47 @@ class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
   static const _localeTable = 'gameobject_template_locale';
 
+  Future<void> copyGameObjectTemplate(int entry) async {
+    var template = await getGameObjectTemplate(entry);
+    if (template == null) return;
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countGameObjectTemplates({
+    GameObjectTemplateFilterEntity? filter,
+  }) async {
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.name.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.entry.isNotEmpty) {
+        builder = builder.where('entry', filter.entry);
+      }
+      if (filter != null && filter.name.isNotEmpty) {
+        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table AS gt');
+    builder = builder.leftJoin(
+      'gameobject_template_locale AS gtl',
+      (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
+    );
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<GameObjectTemplateEntity> createGameObjectTemplate() async {
+    return GameObjectTemplateEntity(entry: await _getNextEntry());
+  }
+
+  Future<void> destroyGameObjectTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
   Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
     GameObjectTemplateFilterEntity? filter,
@@ -37,37 +78,6 @@ class GameObjectTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => GameObjectTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countGameObjectTemplates({
-    GameObjectTemplateFilterEntity? filter,
-  }) async {
-    final needsLocaleJoin =
-        localeEnabled && filter != null && filter.name.isNotEmpty;
-    if (!needsLocaleJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('entry', filter.entry);
-      }
-      if (filter != null && filter.name.isNotEmpty) {
-        builder = builder.where('name', '%${filter.name}%', comparator: 'like');
-      }
-      return builder.count();
-    }
-    var builder = laconic.table('$_table AS gt');
-    builder = builder.leftJoin(
-      'gameobject_template_locale AS gtl',
-      (join) => join.on('gt.entry', 'gtl.entry').where('gtl.locale', 'zhCN'),
-    );
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<GameObjectTemplateEntity?> getGameObjectTemplate(int entry) async {
     var results = await laconic
         .table(_table)
@@ -78,39 +88,20 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<GameObjectTemplateEntity> createGameObjectTemplate() async {
-    return GameObjectTemplateEntity(entry: await _getNextEntry());
-  }
-
-  Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
-    var json = template.toJson();
-    final newEntry = template.entry > 0
-        ? template.entry
-        : await _getNextEntry();
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
-    return newEntry;
-  }
-
-  Future<void> updateGameObjectTemplate(
-    GameObjectTemplateEntity template,
+  Future<List<GameObjectTemplateLocaleEntity>> getGameObjectTemplateLocales(
+    int entry,
   ) async {
-    var json = template.toJson();
-    json.remove('entry');
-    await laconic.table(_table).where('entry', template.entry).update(json);
+    var results = await laconic.table(_localeTable).where('entry', entry).get();
+    return results
+        .map((e) => GameObjectTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<void> destroyGameObjectTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
-  Future<void> copyGameObjectTemplate(int entry) async {
-    var template = await getGameObjectTemplate(entry);
-    if (template == null) return;
-    var json = template.toJson();
-    var newEntry = await _getNextEntry();
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
+  Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => GameObjectTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveGameObjectTemplate(GameObjectTemplateEntity template) async {
@@ -124,15 +115,6 @@ class GameObjectTemplateRepository with RepositoryMixin {
     } else {
       await laconic.table(_table).insert([template.toJson()]);
     }
-  }
-
-  Future<List<GameObjectTemplateLocaleEntity>> getGameObjectTemplateLocales(
-    int entry,
-  ) async {
-    var results = await laconic.table(_localeTable).where('entry', entry).get();
-    return results
-        .map((e) => GameObjectTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
   }
 
   Future<void> saveGameObjectTemplateLocales(
@@ -151,8 +133,22 @@ class GameObjectTemplateRepository with RepositoryMixin {
     });
   }
 
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
+  Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
+    var json = template.toJson();
+    final newEntry = template.entry > 0
+        ? template.entry
+        : await _getNextEntry();
+    json['entry'] = newEntry;
+    await laconic.table(_table).insert([json]);
+    return newEntry;
+  }
+
+  Future<void> updateGameObjectTemplate(
+    GameObjectTemplateEntity template,
+  ) async {
+    var json = template.toJson();
+    json.remove('entry');
+    await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -179,5 +175,9 @@ class GameObjectTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  Future<int> _getNextEntry() async {
+    return nextMaxPlusOne(_table, 'entry');
   }
 }

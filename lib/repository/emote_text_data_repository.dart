@@ -11,6 +11,26 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyEmoteTextData(int id) async {
+    final source = await getEmoteTextData(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countEmoteTextDatas({EmoteTextDataFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<EmoteTextDataEntity> createEmoteTextData() async {
+    return EmoteTextDataEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyEmoteTextData(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefEmoteTextDataEntity>> getBriefEmoteTextDatas({
     int page = 1,
     EmoteTextDataFilterEntity? filter,
@@ -27,17 +47,6 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<EmoteTextDataEntity>> getEmoteTextDatas() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => EmoteTextDataEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countEmoteTextDatas({EmoteTextDataFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
   Future<EmoteTextDataEntity?> getEmoteTextData(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -45,9 +54,31 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         : EmoteTextDataEntity.fromJson(rows.first.toMap());
   }
 
-  Future<EmoteTextDataEntity> createEmoteTextData() async {
-    return EmoteTextDataEntity(id: await _getNextId());
+  Future<List<DbcLocaleFieldValue>> getEmoteTextDataLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<EmoteTextDataEntity>> getEmoteTextDatas() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => EmoteTextDataEntity.fromJson(row.toMap()))
+        .toList();
   }
+
+  Future<void> saveEmoteTextData(EmoteTextDataEntity data) async {
+    if (await getEmoteTextData(data.id) == null) {
+      await storeEmoteTextData(data);
+    } else {
+      await updateEmoteTextData(data);
+    }
+  }
+
+  Future<void> saveEmoteTextDataLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeEmoteTextData(EmoteTextDataEntity data) async {
     final json = data.toJson();
@@ -61,39 +92,6 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final json = data.toJson()..remove('ID');
     await laconic.table(_table).where('ID', data.id).update(json);
   }
-
-  Future<void> destroyEmoteTextData(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyEmoteTextData(int id) async {
-    final source = await getEmoteTextData(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveEmoteTextData(EmoteTextDataEntity data) async {
-    if (await getEmoteTextData(data.id) == null) {
-      await storeEmoteTextData(data);
-    } else {
-      await updateEmoteTextData(data);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getEmoteTextDataLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveEmoteTextDataLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -110,4 +108,6 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

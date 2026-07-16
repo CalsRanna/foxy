@@ -12,6 +12,23 @@ class SpellFocusObjectRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copySpellFocusObject(int id) async {
+    final source = await getSpellFocusObject(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSpellFocusObjects({SpellFocusObjectFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<SpellFocusObjectEntity> createSpellFocusObject() async =>
+      SpellFocusObjectEntity(id: await _getNextId());
+
+  Future<void> destroySpellFocusObject(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSpellFocusObjectEntity>> getBriefSpellFocusObjects({
     int page = 1,
     SpellFocusObjectFilterEntity? filter,
@@ -25,16 +42,6 @@ class SpellFocusObjectRepository
         .toList();
   }
 
-  Future<List<SpellFocusObjectEntity>> getSpellFocusObjects() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => SpellFocusObjectEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countSpellFocusObjects({SpellFocusObjectFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<SpellFocusObjectEntity?> getSpellFocusObject(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -42,8 +49,31 @@ class SpellFocusObjectRepository
         : SpellFocusObjectEntity.fromJson(rows.first.toMap());
   }
 
-  Future<SpellFocusObjectEntity> createSpellFocusObject() async =>
-      SpellFocusObjectEntity(id: await _getNextId());
+  Future<List<DbcLocaleFieldValue>> getSpellFocusObjectLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<SpellFocusObjectEntity>> getSpellFocusObjects() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => SpellFocusObjectEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSpellFocusObject(SpellFocusObjectEntity entity) async {
+    if (await getSpellFocusObject(entity.id) == null) {
+      await storeSpellFocusObject(entity);
+    } else {
+      await updateSpellFocusObject(entity);
+    }
+  }
+
+  Future<void> saveSpellFocusObjectLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeSpellFocusObject(SpellFocusObjectEntity entity) async {
     final json = entity.toJson();
@@ -57,38 +87,6 @@ class SpellFocusObjectRepository
     final json = entity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
-
-  Future<void> destroySpellFocusObject(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpellFocusObject(int id) async {
-    final source = await getSpellFocusObject(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveSpellFocusObject(SpellFocusObjectEntity entity) async {
-    if (await getSpellFocusObject(entity.id) == null) {
-      await storeSpellFocusObject(entity);
-    } else {
-      await updateSpellFocusObject(entity);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getSpellFocusObjectLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveSpellFocusObjectLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -105,4 +103,6 @@ class SpellFocusObjectRepository
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

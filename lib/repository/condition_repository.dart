@@ -21,6 +21,42 @@ class ConditionRepository with RepositoryMixin {
     'ConditionValue3',
   ];
 
+  Future<void> copyCondition(Map<String, dynamic> credential) async {
+    var source = await getConditionFromCredential(credential);
+    if (source == null) return;
+    var nextElseGroup = source.elseGroup + 1;
+    while (await getCondition(
+          sourceTypeOrReferenceId: source.sourceTypeOrReferenceId,
+          sourceGroup: source.sourceGroup,
+          sourceEntry: source.sourceEntry,
+          sourceId: source.sourceId,
+          elseGroup: nextElseGroup,
+          conditionTypeOrReference: source.conditionTypeOrReference,
+          conditionTarget: source.conditionTarget,
+          conditionValue1: source.conditionValue1,
+          conditionValue2: source.conditionValue2,
+          conditionValue3: source.conditionValue3,
+        ) !=
+        null) {
+      nextElseGroup++;
+    }
+    await storeCondition(source.copyWith(elseGroup: nextElseGroup));
+  }
+
+  Future<int> countConditions({ConditionFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ConditionEntity> createCondition() async {
+    return const ConditionEntity();
+  }
+
+  Future<void> destroyCondition(Map<String, dynamic> credential) async {
+    await _wherePkFromCredential(laconic.table(_table), credential).delete();
+  }
+
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
     ConditionFilterEntity? filter,
@@ -50,17 +86,6 @@ class ConditionRepository with RepositoryMixin {
     return results
         .map((e) => BriefConditionEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<List<ConditionEntity>> getConditions() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countConditions({ConditionFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
   }
 
   Future<ConditionEntity?> getCondition({
@@ -109,8 +134,19 @@ class ConditionRepository with RepositoryMixin {
     );
   }
 
-  Future<ConditionEntity> createCondition() async {
-    return const ConditionEntity();
+  Future<List<ConditionEntity>> getConditions() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<void> saveCondition(ConditionEntity condition) async {
+    final credential = condition.buildCredential();
+    var existing = await getConditionFromCredential(credential);
+    if (existing != null) {
+      await updateCondition(credential, condition);
+    } else {
+      await storeCondition(condition);
+    }
   }
 
   Future<void> storeCondition(ConditionEntity condition) async {
@@ -131,40 +167,21 @@ class ConditionRepository with RepositoryMixin {
     ).update(json);
   }
 
-  Future<void> destroyCondition(Map<String, dynamic> credential) async {
-    await _wherePkFromCredential(laconic.table(_table), credential).delete();
-  }
-
-  Future<void> copyCondition(Map<String, dynamic> credential) async {
-    var source = await getConditionFromCredential(credential);
-    if (source == null) return;
-    var nextElseGroup = source.elseGroup + 1;
-    while (await getCondition(
-          sourceTypeOrReferenceId: source.sourceTypeOrReferenceId,
-          sourceGroup: source.sourceGroup,
-          sourceEntry: source.sourceEntry,
-          sourceId: source.sourceId,
-          elseGroup: nextElseGroup,
-          conditionTypeOrReference: source.conditionTypeOrReference,
-          conditionTarget: source.conditionTarget,
-          conditionValue1: source.conditionValue1,
-          conditionValue2: source.conditionValue2,
-          conditionValue3: source.conditionValue3,
-        ) !=
-        null) {
-      nextElseGroup++;
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ConditionFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.sourceTypeOrReferenceId.isNotEmpty) {
+      builder = builder.where(
+        'SourceTypeOrReferenceId',
+        filter.sourceTypeOrReferenceId,
+      );
     }
-    await storeCondition(source.copyWith(elseGroup: nextElseGroup));
-  }
-
-  Future<void> saveCondition(ConditionEntity condition) async {
-    final credential = condition.buildCredential();
-    var existing = await getConditionFromCredential(credential);
-    if (existing != null) {
-      await updateCondition(credential, condition);
-    } else {
-      await storeCondition(condition);
+    if (filter.sourceEntry.isNotEmpty) {
+      builder = builder.where('SourceEntry', filter.sourceEntry);
     }
+    return builder;
   }
 
   QueryBuilder _wherePk(
@@ -210,22 +227,5 @@ class ConditionRepository with RepositoryMixin {
       conditionValue2: credential['ConditionValue2'] as int? ?? 0,
       conditionValue3: credential['ConditionValue3'] as int? ?? 0,
     );
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ConditionFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.sourceTypeOrReferenceId.isNotEmpty) {
-      builder = builder.where(
-        'SourceTypeOrReferenceId',
-        filter.sourceTypeOrReferenceId,
-      );
-    }
-    if (filter.sourceEntry.isNotEmpty) {
-      builder = builder.where('SourceEntry', filter.sourceEntry);
-    }
-    return builder;
   }
 }

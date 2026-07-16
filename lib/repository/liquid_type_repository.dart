@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class LiquidTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_liquid_type';
 
+  Future<void> copyLiquidType(int id) async {
+    final source = await getLiquidType(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countLiquidTypes({LiquidTypeFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<LiquidTypeEntity> createLiquidType() async =>
+      LiquidTypeEntity(id: await _getNextId());
+
+  Future<void> destroyLiquidType(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefLiquidTypeEntity>> getBriefLiquidTypes({
     int page = 1,
     LiquidTypeFilterEntity? filter,
@@ -25,21 +42,23 @@ class LiquidTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<LiquidTypeEntity>> getLiquidTypes() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => LiquidTypeEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countLiquidTypes({LiquidTypeFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<LiquidTypeEntity?> getLiquidType(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : LiquidTypeEntity.fromJson(rows.first.toMap());
   }
 
-  Future<LiquidTypeEntity> createLiquidType() async =>
-      LiquidTypeEntity(id: await _getNextId());
+  Future<List<LiquidTypeEntity>> getLiquidTypes() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => LiquidTypeEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveLiquidType(LiquidTypeEntity entity) async {
+    if (await getLiquidType(entity.id) == null) {
+      await storeLiquidType(entity);
+    } else {
+      await updateLiquidType(entity);
+    }
+  }
 
   Future<int> storeLiquidType(LiquidTypeEntity entity) async {
     final json = entity.toJson();
@@ -54,27 +73,6 @@ class LiquidTypeRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroyLiquidType(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyLiquidType(int id) async {
-    final source = await getLiquidType(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveLiquidType(LiquidTypeEntity entity) async {
-    if (await getLiquidType(entity.id) == null) {
-      await storeLiquidType(entity);
-    } else {
-      await updateLiquidType(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     LiquidTypeFilterEntity? filter,
@@ -86,4 +84,6 @@ class LiquidTypeRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

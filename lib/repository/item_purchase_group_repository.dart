@@ -12,6 +12,32 @@ class ItemPurchaseGroupRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyItemPurchaseGroup(int id) async {
+    final source = await getItemPurchaseGroup(id);
+    if (source == null) return;
+    final candidate = source.copyWith(id: await _getNextId());
+    await laconic.table(_table).insert([candidate.toJson()]);
+  }
+
+  Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<ItemPurchaseGroupEntity> createItemPurchaseGroup() async {
+    return ItemPurchaseGroupEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyItemPurchaseGroup(int id) async {
+    final referenceCount = await laconic
+        .table('foxy.dbc_item_extended_cost')
+        .where('ItemPurchaseGroup', id)
+        .count();
+    if (referenceCount > 0) {
+      throw StateError('物品购买组 $id 仍被扩展价格引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefItemPurchaseGroupEntity>> getBriefItemPurchaseGroups({
     int page = 1,
     ItemPurchaseGroupFilterEntity? filter,
@@ -28,17 +54,6 @@ class ItemPurchaseGroupRepository
         .toList();
   }
 
-  Future<List<ItemPurchaseGroupEntity>> getItemPurchaseGroups() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => ItemPurchaseGroupEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
   Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -46,38 +61,16 @@ class ItemPurchaseGroupRepository
         : ItemPurchaseGroupEntity.fromJson(rows.first.toMap());
   }
 
-  Future<ItemPurchaseGroupEntity> createItemPurchaseGroup() async {
-    return ItemPurchaseGroupEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getItemPurchaseGroupLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    final id = group.id > 0 ? group.id : await _getNextId();
-    final candidate = group.copyWith(id: id);
-    await laconic.table(_table).insert([candidate.toJson()]);
-    return id;
-  }
-
-  Future<void> updateItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    final json = group.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', group.id).update(json);
-  }
-
-  Future<void> destroyItemPurchaseGroup(int id) async {
-    final referenceCount = await laconic
-        .table('foxy.dbc_item_extended_cost')
-        .where('ItemPurchaseGroup', id)
-        .count();
-    if (referenceCount > 0) {
-      throw StateError('物品购买组 $id 仍被扩展价格引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyItemPurchaseGroup(int id) async {
-    final source = await getItemPurchaseGroup(id);
-    if (source == null) return;
-    final candidate = source.copyWith(id: await _getNextId());
-    await laconic.table(_table).insert([candidate.toJson()]);
+  Future<List<ItemPurchaseGroupEntity>> getItemPurchaseGroups() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => ItemPurchaseGroupEntity.fromJson(row.toMap()))
+        .toList();
   }
 
   Future<void> saveItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
@@ -92,23 +85,22 @@ class ItemPurchaseGroupRepository
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getItemPurchaseGroupLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveItemPurchaseGroupLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 2147483647) {
-      throw StateError('物品购买组编号已超出 signed int32 范围');
-    }
+  Future<int> storeItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
+    final id = group.id > 0 ? group.id : await _getNextId();
+    final candidate = group.copyWith(id: id);
+    await laconic.table(_table).insert([candidate.toJson()]);
     return id;
+  }
+
+  Future<void> updateItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
+    final json = group.toJson()..remove('ID');
+    await laconic.table(_table).where('ID', group.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -125,5 +117,13 @@ class ItemPurchaseGroupRepository
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 2147483647) {
+      throw StateError('物品购买组编号已超出 signed int32 范围');
+    }
+    return id;
   }
 }

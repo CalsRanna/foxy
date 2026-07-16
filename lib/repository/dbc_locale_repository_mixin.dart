@@ -1,6 +1,6 @@
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/repository/repository_mixin.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
+import 'package:foxy/repository/repository_mixin.dart';
 
 /// DBC 宽表本地化字段的加载/局部更新实现。
 ///

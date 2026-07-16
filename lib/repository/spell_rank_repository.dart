@@ -4,6 +4,22 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellRankRepository with RepositoryMixin {
   static const _table = 'spell_ranks';
 
+  Future<void> copySpellRank(int firstSpellId, int rank) async {
+    throw UnsupportedError('法术等级记录不能自动复制，请新增记录并选择有效法术。');
+  }
+
+  Future<SpellRankEntity> createSpellRank(int firstSpellId) async {
+    return SpellRankEntity(firstSpellId: firstSpellId);
+  }
+
+  Future<void> destroySpellRank(int firstSpellId, int rank) async {
+    await laconic
+        .table(_table)
+        .where('first_spell_id', firstSpellId)
+        .where('`rank`', rank)
+        .delete();
+  }
+
   Future<List<BriefSpellRankEntity>> getBriefSpellRanks(int spellId) async {
     var firstResults = await laconic
         .table(_table)
@@ -52,8 +68,13 @@ class SpellRankRepository with RepositoryMixin {
     return SpellRankEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellRankEntity> createSpellRank(int firstSpellId) async {
-    return SpellRankEntity(firstSpellId: firstSpellId);
+  Future<void> saveSpellRank(SpellRankEntity data) async {
+    var existing = await getSpellRank(data.firstSpellId, data.rank);
+    if (existing != null) {
+      await updateSpellRank(data.firstSpellId, data.rank, data);
+    } else {
+      await storeSpellRank(data);
+    }
   }
 
   Future<void> storeSpellRank(SpellRankEntity data) async {
@@ -74,26 +95,5 @@ class SpellRankRepository with RepositoryMixin {
         .where('first_spell_id', firstSpellId)
         .where('`rank`', rank)
         .update(json);
-  }
-
-  Future<void> destroySpellRank(int firstSpellId, int rank) async {
-    await laconic
-        .table(_table)
-        .where('first_spell_id', firstSpellId)
-        .where('`rank`', rank)
-        .delete();
-  }
-
-  Future<void> copySpellRank(int firstSpellId, int rank) async {
-    throw UnsupportedError('法术等级记录不能自动复制，请新增记录并选择有效法术。');
-  }
-
-  Future<void> saveSpellRank(SpellRankEntity data) async {
-    var existing = await getSpellRank(data.firstSpellId, data.rank);
-    if (existing != null) {
-      await updateSpellRank(data.firstSpellId, data.rank, data);
-    } else {
-      await storeSpellRank(data);
-    }
   }
 }

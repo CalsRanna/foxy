@@ -5,6 +5,18 @@ class NpcTrainerRepository with RepositoryMixin {
   static const _table = 'trainer_spell';
   static const primaryKeyColumns = {'TrainerId', 'SpellId'};
 
+  Future<NpcTrainerEntity> createNpcTrainer(int trainerId) async {
+    return NpcTrainerEntity(trainerId: trainerId);
+  }
+
+  Future<void> destroyNpcTrainer(int trainerId, int spellId) async {
+    await laconic
+        .table(_table)
+        .where('TrainerId', trainerId)
+        .where('SpellId', spellId)
+        .delete();
+  }
+
   Future<List<BriefNpcTrainerEntity>> getBriefNpcTrainers(int trainerId) async {
     var builder = laconic.table('$_table AS ts');
     builder = builder.select([
@@ -35,8 +47,13 @@ class NpcTrainerRepository with RepositoryMixin {
     return NpcTrainerEntity.fromJson(results.first.toMap());
   }
 
-  Future<NpcTrainerEntity> createNpcTrainer(int trainerId) async {
-    return NpcTrainerEntity(trainerId: trainerId);
+  Future<void> saveNpcTrainer(NpcTrainerEntity trainer) async {
+    var existing = await getNpcTrainer(trainer.trainerId, trainer.spellId);
+    if (existing != null) {
+      await updateNpcTrainer(trainer.trainerId, trainer.spellId, trainer);
+    } else {
+      await storeNpcTrainer(trainer);
+    }
   }
 
   Future<void> storeNpcTrainer(NpcTrainerEntity trainer) async {
@@ -56,22 +73,5 @@ class NpcTrainerRepository with RepositoryMixin {
         .where('TrainerId', trainerId)
         .where('SpellId', spellId)
         .update(json);
-  }
-
-  Future<void> destroyNpcTrainer(int trainerId, int spellId) async {
-    await laconic
-        .table(_table)
-        .where('TrainerId', trainerId)
-        .where('SpellId', spellId)
-        .delete();
-  }
-
-  Future<void> saveNpcTrainer(NpcTrainerEntity trainer) async {
-    var existing = await getNpcTrainer(trainer.trainerId, trainer.spellId);
-    if (existing != null) {
-      await updateNpcTrainer(trainer.trainerId, trainer.spellId, trainer);
-    } else {
-      await storeNpcTrainer(trainer);
-    }
   }
 }

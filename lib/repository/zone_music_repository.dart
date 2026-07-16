@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class ZoneMusicRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_zone_music';
 
+  Future<void> copyZoneMusic(int id) async {
+    final source = await getZoneMusic(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countZoneMusics({ZoneMusicFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<ZoneMusicEntity> createZoneMusic() async =>
+      ZoneMusicEntity(id: await _getNextId());
+
+  Future<void> destroyZoneMusic(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefZoneMusicEntity>> getBriefZoneMusics({
     int page = 1,
     ZoneMusicFilterEntity? filter,
@@ -19,21 +36,23 @@ class ZoneMusicRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<ZoneMusicEntity>> getZoneMusics() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => ZoneMusicEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countZoneMusics({ZoneMusicFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<ZoneMusicEntity?> getZoneMusic(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : ZoneMusicEntity.fromJson(rows.first.toMap());
   }
 
-  Future<ZoneMusicEntity> createZoneMusic() async =>
-      ZoneMusicEntity(id: await _getNextId());
+  Future<List<ZoneMusicEntity>> getZoneMusics() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => ZoneMusicEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveZoneMusic(ZoneMusicEntity entity) async {
+    if (await getZoneMusic(entity.id) == null) {
+      await storeZoneMusic(entity);
+    } else {
+      await updateZoneMusic(entity);
+    }
+  }
 
   Future<int> storeZoneMusic(ZoneMusicEntity entity) async {
     final json = entity.toJson();
@@ -47,27 +66,6 @@ class ZoneMusicRepository with RepositoryMixin {
     final json = entity.toJson()..remove('ID');
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
-
-  Future<void> destroyZoneMusic(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyZoneMusic(int id) async {
-    final source = await getZoneMusic(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveZoneMusic(ZoneMusicEntity entity) async {
-    if (await getZoneMusic(entity.id) == null) {
-      await storeZoneMusic(entity);
-    } else {
-      await updateZoneMusic(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -84,4 +82,6 @@ class ZoneMusicRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

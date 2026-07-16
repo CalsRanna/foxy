@@ -11,31 +11,10 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<List<BriefAchievementEntity>> getBriefAchievements({
-    int page = 1,
-    AchievementFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'ID',
-      'Title_lang_zhCN',
-      'Description_lang_zhCN',
-      'Reward_lang_zhCN',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefAchievementEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<AchievementEntity>> getAchievements() async {
-    var results = await laconic.table(_table).orderBy('ID').get();
-    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
+  Future<void> copyAchievement(int id) async {
+    var source = await getAchievement(id);
+    if (source == null) return;
+    await storeAchievement(source.copyWith(id: await _getNextId()));
   }
 
   Future<int> countAchievements({AchievementFilterEntity? filter}) async {
@@ -44,32 +23,8 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder.count();
   }
 
-  Future<AchievementEntity?> getAchievement(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return AchievementEntity.fromJson(results.first.toMap());
-  }
-
   Future<AchievementEntity> createAchievement() async {
     return AchievementEntity(id: await _getNextId());
-  }
-
-  Future<int> storeAchievement(AchievementEntity achievement) async {
-    final stored = achievement.id > 0
-        ? achievement
-        : achievement.copyWith(id: await _getNextId());
-    await _validateReferences(stored, null);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return stored.id;
-  }
-
-  Future<void> updateAchievement(AchievementEntity achievement) async {
-    final existing = await getAchievement(achievement.id);
-    if (existing == null) throw StateError('成就 ${achievement.id} 不存在');
-    await _validateReferences(achievement, existing);
-    var json = achievement.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', achievement.id).update(json);
   }
 
   Future<void> destroyAchievement(int id) async {
@@ -111,10 +66,42 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     await laconic.table(_table).where('ID', id).delete();
   }
 
-  Future<void> copyAchievement(int id) async {
-    var source = await getAchievement(id);
-    if (source == null) return;
-    await storeAchievement(source.copyWith(id: await _getNextId()));
+  Future<AchievementEntity?> getAchievement(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return AchievementEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<DbcLocaleFieldValue>> getAchievementLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<AchievementEntity>> getAchievements() async {
+    var results = await laconic.table(_table).orderBy('ID').get();
+    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<List<BriefAchievementEntity>> getBriefAchievements({
+    int page = 1,
+    AchievementFilterEntity? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    const fields = [
+      'ID',
+      'Title_lang_zhCN',
+      'Description_lang_zhCN',
+      'Reward_lang_zhCN',
+    ];
+    builder = builder.select(fields);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ID');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefAchievementEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveAchievement(AchievementEntity achievement) async {
@@ -125,16 +112,47 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     await updateAchievement(achievement);
   }
 
-  Future<List<DbcLocaleFieldValue>> getAchievementLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveAchievementLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
+
+  Future<int> storeAchievement(AchievementEntity achievement) async {
+    final stored = achievement.id > 0
+        ? achievement
+        : achievement.copyWith(id: await _getNextId());
+    await _validateReferences(stored, null);
+    await laconic.table(_table).insert([stored.toJson()]);
+    return stored.id;
+  }
+
+  Future<void> updateAchievement(AchievementEntity achievement) async {
+    final existing = await getAchievement(achievement.id);
+    if (existing == null) throw StateError('成就 ${achievement.id} 不存在');
+    await _validateReferences(achievement, existing);
+    var json = achievement.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', achievement.id).update(json);
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    AchievementFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.where(
+        'Title_lang_zhCN',
+        '%${filter.title}%',
+        comparator: 'like',
+      );
+    }
+    return builder;
+  }
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
@@ -142,6 +160,60 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       throw StateError('Achievement.dbc 已无可用 smallint unsigned ID');
     }
     return id;
+  }
+
+  Future<bool> _tableExists(String schema, String table) async {
+    final rows = await laconic
+        .table('information_schema.TABLES')
+        .where('TABLE_SCHEMA', schema)
+        .where('TABLE_NAME', table)
+        .limit(1)
+        .get();
+    return rows.isNotEmpty;
+  }
+
+  Future<void> _validateNoCycle(String field, int id, int first) async {
+    var current = first;
+    final visited = <int>{id};
+    while (current != 0) {
+      if (!visited.add(current)) {
+        throw ArgumentError('$field 形成循环引用');
+      }
+      final rows = await laconic
+          .table(_table)
+          .select([field])
+          .where('ID', current)
+          .limit(1)
+          .get();
+      if (rows.isEmpty) return;
+      current = rows.first.toMap()[field] as int? ?? 0;
+    }
+  }
+
+  Future<void> _validateReference({
+    required String table,
+    required String schema,
+    required String shortTable,
+    required String column,
+    required int value,
+    required int? existingValue,
+    required int? sentinel,
+    required String field,
+    required String target,
+    bool requireImportedTable = false,
+  }) async {
+    if (sentinel != null && value == sentinel) return;
+    if (existingValue == value) return;
+    if (!await _tableExists(schema, shortTable)) {
+      if (requireImportedTable) {
+        throw StateError('缺少 $table，请重新导入 required DBC 后再保存');
+      }
+      return;
+    }
+    final count = await laconic.table(table).where(column, value).count();
+    if (count == 0) {
+      throw ArgumentError.value(value, field, '引用的$target不存在');
+    }
   }
 
   Future<void> _validateReferences(
@@ -226,77 +298,5 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         );
       }
     }
-  }
-
-  Future<void> _validateReference({
-    required String table,
-    required String schema,
-    required String shortTable,
-    required String column,
-    required int value,
-    required int? existingValue,
-    required int? sentinel,
-    required String field,
-    required String target,
-    bool requireImportedTable = false,
-  }) async {
-    if (sentinel != null && value == sentinel) return;
-    if (existingValue == value) return;
-    if (!await _tableExists(schema, shortTable)) {
-      if (requireImportedTable) {
-        throw StateError('缺少 $table，请重新导入 required DBC 后再保存');
-      }
-      return;
-    }
-    final count = await laconic.table(table).where(column, value).count();
-    if (count == 0) {
-      throw ArgumentError.value(value, field, '引用的$target不存在');
-    }
-  }
-
-  Future<void> _validateNoCycle(String field, int id, int first) async {
-    var current = first;
-    final visited = <int>{id};
-    while (current != 0) {
-      if (!visited.add(current)) {
-        throw ArgumentError('$field 形成循环引用');
-      }
-      final rows = await laconic
-          .table(_table)
-          .select([field])
-          .where('ID', current)
-          .limit(1)
-          .get();
-      if (rows.isEmpty) return;
-      current = rows.first.toMap()[field] as int? ?? 0;
-    }
-  }
-
-  Future<bool> _tableExists(String schema, String table) async {
-    final rows = await laconic
-        .table('information_schema.TABLES')
-        .where('TABLE_SCHEMA', schema)
-        .where('TABLE_NAME', table)
-        .limit(1)
-        .get();
-    return rows.isNotEmpty;
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    AchievementFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    if (filter.title.isNotEmpty) {
-      builder = builder.where(
-        'Title_lang_zhCN',
-        '%${filter.title}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
   }
 }

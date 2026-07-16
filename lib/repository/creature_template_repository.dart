@@ -8,41 +8,14 @@ class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
   static const _localeTable = 'creature_template_locale';
 
-  Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
-    int page = 1,
-    CreatureTemplateFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS ct');
-    final fields = <String>[
-      'ct.entry',
-      'ct.name',
-      'ct.subname',
-      'ct.minlevel',
-      'ct.maxlevel',
-      if (localeEnabled) ...['ctl.Name', 'ctl.Title'],
-    ];
-    builder = builder.select(fields);
-    if (localeEnabled) {
-      builder = builder.leftJoin(
-        'creature_template_locale AS ctl',
-        (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
-      );
-    }
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ct.entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefCreatureTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => CreatureTemplateEntity.fromJson(e.toMap()))
-        .toList();
+  Future<void> copyCreatureTemplate(int entry) async {
+    var template = await getCreatureTemplate(entry);
+    if (template == null) return;
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    _handleReservedWords(json);
+    await laconic.table(_table).insert([json]);
   }
 
   Future<int> countCreatureTemplates({
@@ -78,6 +51,44 @@ class CreatureTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
+  Future<CreatureTemplateEntity> createCreatureTemplate() async {
+    return CreatureTemplateEntity(entry: await _getNextEntry());
+  }
+
+  Future<void> destroyCreatureTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
+  Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
+    int page = 1,
+    CreatureTemplateFilterEntity? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS ct');
+    final fields = <String>[
+      'ct.entry',
+      'ct.name',
+      'ct.subname',
+      'ct.minlevel',
+      'ct.maxlevel',
+      if (localeEnabled) ...['ctl.Name', 'ctl.Title'],
+    ];
+    builder = builder.select(fields);
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'creature_template_locale AS ctl',
+        (join) => join.on('ct.entry', 'ctl.entry').where('ctl.locale', 'zhCN'),
+      );
+    }
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('ct.entry');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefCreatureTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
   Future<CreatureTemplateEntity?> getCreatureTemplate(int entry) async {
     var results = await laconic
         .table(_table)
@@ -88,40 +99,20 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureTemplateEntity> createCreatureTemplate() async {
-    return CreatureTemplateEntity(entry: await _getNextEntry());
+  Future<List<CreatureTemplateLocaleEntity>> getCreatureTemplateLocales(
+    int entry,
+  ) async {
+    var results = await laconic.table(_localeTable).where('entry', entry).get();
+    return results
+        .map((e) => CreatureTemplateLocaleEntity.fromJson(e.toMap()))
+        .toList();
   }
 
-  Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
-    var json = template.toJson();
-    final newEntry = template.entry > 0
-        ? template.entry
-        : await _getNextEntry();
-    json['entry'] = newEntry;
-    _handleReservedWords(json);
-    await laconic.table(_table).insert([json]);
-    return newEntry;
-  }
-
-  Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {
-    var json = template.toJson();
-    json.remove('entry');
-    _handleReservedWords(json);
-    await laconic.table(_table).where('entry', template.entry).update(json);
-  }
-
-  Future<void> destroyCreatureTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
-  Future<void> copyCreatureTemplate(int entry) async {
-    var template = await getCreatureTemplate(entry);
-    if (template == null) return;
-    var json = template.toJson();
-    var newEntry = await _getNextEntry();
-    json['entry'] = newEntry;
-    _handleReservedWords(json);
-    await laconic.table(_table).insert([json]);
+  Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveCreatureTemplate(CreatureTemplateEntity template) async {
@@ -137,15 +128,6 @@ class CreatureTemplateRepository with RepositoryMixin {
       _handleReservedWords(json);
       await laconic.table(_table).insert([json]);
     }
-  }
-
-  Future<List<CreatureTemplateLocaleEntity>> getCreatureTemplateLocales(
-    int entry,
-  ) async {
-    var results = await laconic.table(_localeTable).where('entry', entry).get();
-    return results
-        .map((e) => CreatureTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
   }
 
   Future<void> saveCreatureTemplateLocales(
@@ -164,8 +146,22 @@ class CreatureTemplateRepository with RepositoryMixin {
     });
   }
 
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
+  Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
+    var json = template.toJson();
+    final newEntry = template.entry > 0
+        ? template.entry
+        : await _getNextEntry();
+    json['entry'] = newEntry;
+    _handleReservedWords(json);
+    await laconic.table(_table).insert([json]);
+    return newEntry;
+  }
+
+  Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {
+    var json = template.toJson();
+    json.remove('entry');
+    _handleReservedWords(json);
+    await laconic.table(_table).where('entry', template.entry).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -207,6 +203,10 @@ class CreatureTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  Future<int> _getNextEntry() async {
+    return nextMaxPlusOne(_table, 'entry');
   }
 
   void _handleReservedWords(Map<String, dynamic> json) {

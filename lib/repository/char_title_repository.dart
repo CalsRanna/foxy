@@ -11,6 +11,29 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyCharTitle(int id) async {
+    var source = await getCharTitle(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCharTitles({CharTitleFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CharTitleEntity> createCharTitle() async {
+    return CharTitleEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCharTitle(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCharTitleEntity>> getBriefCharTitles({
     int page = 1,
     CharTitleFilterEntity? filter,
@@ -27,52 +50,20 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<CharTitleEntity>> getCharTitles() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countCharTitles({CharTitleFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<CharTitleEntity?> getCharTitle(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return CharTitleEntity.fromJson(results.first.toMap());
   }
 
-  Future<CharTitleEntity> createCharTitle() async {
-    return CharTitleEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getCharTitleLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeCharTitle(CharTitleEntity title) async {
-    var json = title.toJson();
-    final nextId = title.id > 0 ? title.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateCharTitle(CharTitleEntity title) async {
-    var json = title.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', title.id).update(json);
-  }
-
-  Future<void> destroyCharTitle(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCharTitle(int id) async {
-    var source = await getCharTitle(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<CharTitleEntity>> getCharTitles() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveCharTitle(CharTitleEntity title) async {
@@ -88,18 +79,24 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getCharTitleLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveCharTitleLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+
+  Future<int> storeCharTitle(CharTitleEntity title) async {
+    var json = title.toJson();
+    final nextId = title.id > 0 ? title.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateCharTitle(CharTitleEntity title) async {
+    var json = title.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', title.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -118,5 +115,9 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

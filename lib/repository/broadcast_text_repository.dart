@@ -6,6 +6,29 @@ import 'package:laconic/laconic.dart';
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
+  Future<void> copyBroadcastText(int id) async {
+    var source = await getBroadcastText(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<BroadcastTextEntity> createBroadcastText() async {
+    return BroadcastTextEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyBroadcastText(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefBroadcastTextEntity>> getBriefBroadcastTexts({
     int page = 1,
     BroadcastTextFilterEntity? filter,
@@ -29,52 +52,15 @@ class BroadcastTextRepository with RepositoryMixin {
     }).toList();
   }
 
-  Future<List<BroadcastTextEntity>> getBroadcastTexts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<BroadcastTextEntity?> getBroadcastText(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return BroadcastTextEntity.fromJson(results.first.toMap());
   }
 
-  Future<BroadcastTextEntity> createBroadcastText() async {
-    return BroadcastTextEntity(id: await _getNextId());
-  }
-
-  Future<int> storeBroadcastText(BroadcastTextEntity text) async {
-    var json = text.toJson();
-    final nextId = text.id > 0 ? text.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateBroadcastText(BroadcastTextEntity text) async {
-    var json = text.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', text.id).update(json);
-  }
-
-  Future<void> destroyBroadcastText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyBroadcastText(int id) async {
-    var source = await getBroadcastText(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<BroadcastTextEntity>> getBroadcastTexts() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveBroadcastText(BroadcastTextEntity text) async {
@@ -90,8 +76,18 @@ class BroadcastTextRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeBroadcastText(BroadcastTextEntity text) async {
+    var json = text.toJson();
+    final nextId = text.id > 0 ? text.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateBroadcastText(BroadcastTextEntity text) async {
+    var json = text.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', text.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -110,5 +106,9 @@ class BroadcastTextRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

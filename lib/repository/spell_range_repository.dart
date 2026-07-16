@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,6 +10,29 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<void> copySpellRange(int id) async {
+    var source = await getSpellRange(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellRangeEntity> createSpellRange() async {
+    return SpellRangeEntity(id: await _getNextId());
+  }
+
+  Future<void> destroySpellRange(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
 
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
     int page = 1,
@@ -32,52 +55,20 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<SpellRangeEntity>> getSpellRanges() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<SpellRangeEntity?> getSpellRange(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return SpellRangeEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellRangeEntity> createSpellRange() async {
-    return SpellRangeEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeSpellRange(SpellRangeEntity range) async {
-    var json = range.toJson();
-    final nextId = range.id > 0 ? range.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateSpellRange(SpellRangeEntity range) async {
-    var json = range.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', range.id).update(json);
-  }
-
-  Future<void> destroySpellRange(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpellRange(int id) async {
-    var source = await getSpellRange(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<SpellRangeEntity>> getSpellRanges() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveSpellRange(SpellRangeEntity range) async {
@@ -93,18 +84,24 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveSpellRangeLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+
+  Future<int> storeSpellRange(SpellRangeEntity range) async {
+    var json = range.toJson();
+    final nextId = range.id > 0 ? range.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateSpellRange(SpellRangeEntity range) async {
+    var json = range.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', range.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -123,5 +120,9 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

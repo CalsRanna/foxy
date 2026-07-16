@@ -12,6 +12,31 @@ class CurrencyCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyCurrencyCategory(int id) async {
+    final source = await getCurrencyCategory(id);
+    if (source == null) return;
+    await storeCurrencyCategory(source.copyWith(id: await _getNextId()));
+  }
+
+  Future<int> countCurrencyCategories({CurrencyCategoryFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<CurrencyCategoryEntity> createCurrencyCategory() async {
+    return CurrencyCategoryEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCurrencyCategory(int id) async {
+    final references = await laconic
+        .table('foxy.dbc_currency_types')
+        .where('CategoryID', id)
+        .count();
+    if (references > 0) {
+      throw StateError('货币分类 $id 仍被 $references 条货币引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCurrencyCategoryEntity>> getBriefCurrencyCategories({
     int page = 1,
     CurrencyCategoryFilterEntity? filter,
@@ -39,10 +64,6 @@ class CurrencyCategoryRepository
         .toList();
   }
 
-  Future<int> countCurrencyCategories({CurrencyCategoryFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
   Future<CurrencyCategoryEntity?> getCurrencyCategory(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -50,38 +71,10 @@ class CurrencyCategoryRepository
         : CurrencyCategoryEntity.fromJson(rows.first.toMap());
   }
 
-  Future<CurrencyCategoryEntity> createCurrencyCategory() async {
-    return CurrencyCategoryEntity(id: await _getNextId());
-  }
-
-  Future<int> storeCurrencyCategory(CurrencyCategoryEntity category) async {
-    final id = category.id > 0 ? category.id : await _getNextId();
-    final stored = category.copyWith(id: id);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateCurrencyCategory(CurrencyCategoryEntity category) async {
-    final json = category.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', category.id).update(json);
-  }
-
-  Future<void> destroyCurrencyCategory(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_currency_types')
-        .where('CategoryID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('货币分类 $id 仍被 $references 条货币引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCurrencyCategory(int id) async {
-    final source = await getCurrencyCategory(id);
-    if (source == null) return;
-    await storeCurrencyCategory(source.copyWith(id: await _getNextId()));
-  }
+  Future<List<DbcLocaleFieldValue>> getCurrencyCategoryLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
   Future<void> saveCurrencyCategory(CurrencyCategoryEntity category) async {
     final existing = category.id == 0
@@ -94,23 +87,22 @@ class CurrencyCategoryRepository
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getCurrencyCategoryLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveCurrencyCategoryLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 0x7fffffff) {
-      throw StateError('CurrencyCategory ID 已超出 DBC int32 范围');
-    }
+  Future<int> storeCurrencyCategory(CurrencyCategoryEntity category) async {
+    final id = category.id > 0 ? category.id : await _getNextId();
+    final stored = category.copyWith(id: id);
+    await laconic.table(_table).insert([stored.toJson()]);
     return id;
+  }
+
+  Future<void> updateCurrencyCategory(CurrencyCategoryEntity category) async {
+    final json = category.toJson()..remove('ID');
+    await laconic.table(_table).where('ID', category.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -127,5 +119,13 @@ class CurrencyCategoryRepository
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 0x7fffffff) {
+      throw StateError('CurrencyCategory ID 已超出 DBC int32 范围');
+    }
+    return id;
   }
 }

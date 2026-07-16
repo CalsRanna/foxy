@@ -4,6 +4,34 @@ import 'package:foxy/repository/repository_mixin.dart';
 class PlayerCreateInfoActionRepository with RepositoryMixin {
   static const _table = 'playercreateinfo_action';
 
+  Future<void> copyPlayerCreateInfoAction(
+    int race,
+    int class_,
+    int button,
+  ) async {
+    throw UnsupportedError('动作按钮编号必须在 0..143 内明确选择，请新增记录。');
+  }
+
+  Future<PlayerCreateInfoActionEntity> createPlayerCreateInfoAction(
+    int race,
+    int class_,
+  ) async {
+    return PlayerCreateInfoActionEntity(race: race, class_: class_);
+  }
+
+  Future<void> destroyPlayerCreateInfoAction(
+    int race,
+    int class_,
+    int button,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('race', race)
+        .where('class', class_)
+        .where('button', button)
+        .delete();
+  }
+
   Future<List<PlayerCreateInfoActionEntity>> getBriefPlayerCreateInfoActions(
     int race,
     int class_,
@@ -34,11 +62,24 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
     return PlayerCreateInfoActionEntity.fromJson(results.first.toMap());
   }
 
-  Future<PlayerCreateInfoActionEntity> createPlayerCreateInfoAction(
-    int race,
-    int class_,
+  Future<void> savePlayerCreateInfoAction(
+    PlayerCreateInfoActionEntity action,
   ) async {
-    return PlayerCreateInfoActionEntity(race: race, class_: class_);
+    var existing = await getPlayerCreateInfoAction(
+      action.race,
+      action.class_,
+      action.button,
+    );
+    if (existing != null) {
+      await updatePlayerCreateInfoAction(
+        action.race,
+        action.class_,
+        action.button,
+        action,
+      );
+    } else {
+      await storePlayerCreateInfoAction(action);
+    }
   }
 
   Future<void> storePlayerCreateInfoAction(
@@ -62,46 +103,5 @@ class PlayerCreateInfoActionRepository with RepositoryMixin {
         .where('class', class_)
         .where('button', button)
         .update(json);
-  }
-
-  Future<void> destroyPlayerCreateInfoAction(
-    int race,
-    int class_,
-    int button,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('race', race)
-        .where('class', class_)
-        .where('button', button)
-        .delete();
-  }
-
-  Future<void> copyPlayerCreateInfoAction(
-    int race,
-    int class_,
-    int button,
-  ) async {
-    throw UnsupportedError('动作按钮编号必须在 0..143 内明确选择，请新增记录。');
-  }
-
-  Future<void> savePlayerCreateInfoAction(
-    PlayerCreateInfoActionEntity action,
-  ) async {
-    var existing = await getPlayerCreateInfoAction(
-      action.race,
-      action.class_,
-      action.button,
-    );
-    if (existing != null) {
-      await updatePlayerCreateInfoAction(
-        action.race,
-        action.class_,
-        action.button,
-        action,
-      );
-    } else {
-      await storePlayerCreateInfoAction(action);
-    }
   }
 }

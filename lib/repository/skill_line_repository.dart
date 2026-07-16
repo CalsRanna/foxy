@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class SkillLineRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_skill_line';
 
+  Future<void> copySkillLine(int id) async {
+    final source = await getSkillLine(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSkillLines({SkillLineFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<SkillLineEntity> createSkillLine() async =>
+      SkillLineEntity(id: await _getNextId());
+
+  Future<void> destroySkillLine(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSkillLineEntity>> getBriefSkillLines({
     int page = 1,
     SkillLineFilterEntity? filter,
@@ -25,21 +42,23 @@ class SkillLineRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SkillLineEntity>> getSkillLines() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => SkillLineEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countSkillLines({SkillLineFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<SkillLineEntity?> getSkillLine(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : SkillLineEntity.fromJson(rows.first.toMap());
   }
 
-  Future<SkillLineEntity> createSkillLine() async =>
-      SkillLineEntity(id: await _getNextId());
+  Future<List<SkillLineEntity>> getSkillLines() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => SkillLineEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveSkillLine(SkillLineEntity skillLine) async {
+    if (await getSkillLine(skillLine.id) == null) {
+      await storeSkillLine(skillLine);
+    } else {
+      await updateSkillLine(skillLine);
+    }
+  }
 
   Future<int> storeSkillLine(SkillLineEntity skillLine) async {
     final json = skillLine.toJson();
@@ -53,27 +72,6 @@ class SkillLineRepository with RepositoryMixin {
     final json = skillLine.toJson()..remove('ID');
     await laconic.table(_table).where('ID', skillLine.id).update(json);
   }
-
-  Future<void> destroySkillLine(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySkillLine(int id) async {
-    final source = await getSkillLine(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveSkillLine(SkillLineEntity skillLine) async {
-    if (await getSkillLine(skillLine.id) == null) {
-      await storeSkillLine(skillLine);
-    } else {
-      await updateSkillLine(skillLine);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
@@ -90,4 +88,6 @@ class SkillLineRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

@@ -6,6 +6,50 @@ import 'package:laconic/laconic.dart';
 class QuestTemplateRepository with RepositoryMixin {
   static const _table = 'quest_template';
 
+  Future<void> copyQuestTemplate(int id) async {
+    var template = await getQuestTemplate(id);
+    if (template == null) return;
+    var json = template.toJson();
+    var newId = await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
+    final needsLocaleJoin =
+        localeEnabled && filter != null && filter.title.isNotEmpty;
+    if (!needsLocaleJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        var idValue = int.tryParse(filter.id) ?? 0;
+        builder = builder.where('ID', idValue);
+      }
+      if (filter != null && filter.title.isNotEmpty) {
+        builder = builder.where(
+          'LogTitle',
+          '%${filter.title}%',
+          comparator: 'like',
+        );
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table AS qt');
+    builder = builder.leftJoin(
+      'quest_template_locale AS qtl',
+      (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
+    );
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<QuestTemplateEntity> createQuestTemplate() async {
+    return QuestTemplateEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyQuestTemplate(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
     QuestTemplateFilterEntity? filter,
@@ -38,73 +82,15 @@ class QuestTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<QuestTemplateEntity>> getQuestTemplates() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
-    final needsLocaleJoin =
-        localeEnabled && filter != null && filter.title.isNotEmpty;
-    if (!needsLocaleJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.id.isNotEmpty) {
-        var idValue = int.tryParse(filter.id) ?? 0;
-        builder = builder.where('ID', idValue);
-      }
-      if (filter != null && filter.title.isNotEmpty) {
-        builder = builder.where(
-          'LogTitle',
-          '%${filter.title}%',
-          comparator: 'like',
-        );
-      }
-      return builder.count();
-    }
-    var builder = laconic.table('$_table AS qt');
-    builder = builder.leftJoin(
-      'quest_template_locale AS qtl',
-      (join) => join.on('qt.ID', 'qtl.ID').where('qtl.locale', 'zhCN'),
-    );
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<QuestTemplateEntity?> getQuestTemplate(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<QuestTemplateEntity> createQuestTemplate() async {
-    return QuestTemplateEntity(id: await _getNextId());
-  }
-
-  Future<int> storeQuestTemplate(QuestTemplateEntity template) async {
-    var json = template.toJson();
-    final newId = template.id > 0 ? template.id : await _getNextId();
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
-    return newId;
-  }
-
-  Future<void> updateQuestTemplate(QuestTemplateEntity template) async {
-    var json = template.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', template.id).update(json);
-  }
-
-  Future<void> destroyQuestTemplate(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyQuestTemplate(int id) async {
-    var template = await getQuestTemplate(id);
-    if (template == null) return;
-    var json = template.toJson();
-    var newId = await _getNextId();
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
+  Future<List<QuestTemplateEntity>> getQuestTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveQuestTemplate(QuestTemplateEntity template) async {
@@ -120,8 +106,18 @@ class QuestTemplateRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeQuestTemplate(QuestTemplateEntity template) async {
+    var json = template.toJson();
+    final newId = template.id > 0 ? template.id : await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
+    return newId;
+  }
+
+  Future<void> updateQuestTemplate(QuestTemplateEntity template) async {
+    var json = template.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', template.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -149,5 +145,9 @@ class QuestTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

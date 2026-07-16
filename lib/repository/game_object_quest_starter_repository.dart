@@ -4,6 +4,16 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectQuestStarterRepository with RepositoryMixin {
   static const _table = 'gameobject_queststarter';
 
+  Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
+    int questId,
+  ) async {
+    return GameObjectQuestStarterEntity(quest: questId);
+  }
+
+  Future<void> destroyGameObjectQuestStarter(int id, int quest) async {
+    await laconic.table(_table).where('id', id).where('quest', quest).delete();
+  }
+
   Future<List<BriefGameObjectQuestStarterEntity>>
   getBriefGameObjectQuestStarters(int questId) async {
     const fields = ['gos.id', 'gos.quest', 'got.name'];
@@ -34,10 +44,15 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
     return GameObjectQuestStarterEntity.fromJson(results.first.toMap());
   }
 
-  Future<GameObjectQuestStarterEntity> createGameObjectQuestStarter(
-    int questId,
+  Future<void> saveGameObjectQuestStarter(
+    GameObjectQuestStarterEntity model,
   ) async {
-    return GameObjectQuestStarterEntity(quest: questId);
+    var existing = await getGameObjectQuestStarter(model.id, model.quest);
+    if (existing != null) {
+      await updateGameObjectQuestStarter(model.id, model.quest, model);
+    } else {
+      await storeGameObjectQuestStarter(model);
+    }
   }
 
   Future<void> storeGameObjectQuestStarter(
@@ -58,21 +73,6 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
         .where('id', id)
         .where('quest', quest)
         .update(model.toJson());
-  }
-
-  Future<void> destroyGameObjectQuestStarter(int id, int quest) async {
-    await laconic.table(_table).where('id', id).where('quest', quest).delete();
-  }
-
-  Future<void> saveGameObjectQuestStarter(
-    GameObjectQuestStarterEntity model,
-  ) async {
-    var existing = await getGameObjectQuestStarter(model.id, model.quest);
-    if (existing != null) {
-      await updateGameObjectQuestStarter(model.id, model.quest, model);
-    } else {
-      await storeGameObjectQuestStarter(model);
-    }
   }
 
   void _validate(int id, int quest) {

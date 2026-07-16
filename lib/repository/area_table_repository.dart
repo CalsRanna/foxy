@@ -11,6 +11,49 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyAreaTable(int id) async {
+    var source = await getAreaTable(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    json['AreaBit'] = await _getNextAreaBit();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<AreaTableEntity> createAreaTable() async {
+    return AreaTableEntity(
+      id: await _getNextId(),
+      areaBit: await _getNextAreaBit(),
+    );
+  }
+
+  Future<void> destroyAreaTable(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
+  Future<AreaTableEntity?> getAreaTable(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return AreaTableEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<DbcLocaleFieldValue>> getAreaTableLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<AreaTableEntity>> getAreaTables() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
+  }
+
   Future<List<BriefAreaTableEntity>> getBriefAreaTables({
     int page = 1,
     AreaTableFilterEntity? filter,
@@ -35,56 +78,13 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<AreaTableEntity>> getAreaTables() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<AreaTableEntity?> getAreaTable(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return AreaTableEntity.fromJson(results.first.toMap());
-  }
-
-  Future<AreaTableEntity> createAreaTable() async {
-    return AreaTableEntity(
-      id: await _getNextId(),
-      areaBit: await _getNextAreaBit(),
-    );
-  }
-
-  Future<int> storeAreaTable(AreaTableEntity area) async {
-    var json = area.toJson();
-    final nextId = area.id > 0 ? area.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateAreaTable(AreaTableEntity area) async {
-    var json = area.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', area.id).update(json);
-  }
-
-  Future<void> destroyAreaTable(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyAreaTable(int id) async {
-    var source = await getAreaTable(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    json['AreaBit'] = await _getNextAreaBit();
-    await laconic.table(_table).insert([json]);
+  Future<bool> isAreaBitAvailable(int areaBit, {required int areaId}) async {
+    final count = await laconic
+        .table(_table)
+        .where('AreaBit', areaBit)
+        .where('ID', areaId, comparator: '!=')
+        .count();
+    return count == 0;
   }
 
   Future<void> saveAreaTable(AreaTableEntity area) async {
@@ -100,32 +100,24 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getAreaTableLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveAreaTableLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<bool> isAreaBitAvailable(int areaBit, {required int areaId}) async {
-    final count = await laconic
-        .table(_table)
-        .where('AreaBit', areaBit)
-        .where('ID', areaId, comparator: '!=')
-        .count();
-    return count == 0;
+  Future<int> storeAreaTable(AreaTableEntity area) async {
+    var json = area.toJson();
+    final nextId = area.id > 0 ? area.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
-  }
-
-  Future<int> _getNextAreaBit() async {
-    return nextMaxPlusOne(_table, 'AreaBit');
+  Future<void> updateAreaTable(AreaTableEntity area) async {
+    var json = area.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', area.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -144,5 +136,13 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextAreaBit() async {
+    return nextMaxPlusOne(_table, 'AreaBit');
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

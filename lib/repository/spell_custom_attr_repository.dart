@@ -4,6 +4,22 @@ import 'package:foxy/repository/repository_mixin.dart';
 class SpellCustomAttrRepository with RepositoryMixin {
   static const _table = 'spell_custom_attr';
 
+  Future<void> copySpellCustomAttr(int spellId) async {
+    throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
+  }
+
+  Future<int> countSpellCustomAttrs() async {
+    return laconic.table(_table).count();
+  }
+
+  Future<SpellCustomAttrEntity> createSpellCustomAttr([int spellId = 0]) async {
+    return SpellCustomAttrEntity(spellId: spellId);
+  }
+
+  Future<void> destroySpellCustomAttr(int spellId) async {
+    await laconic.table(_table).where('spell_id', spellId).delete();
+  }
+
   Future<List<BriefSpellCustomAttrEntity>> getBriefSpellCustomAttrs({
     int page = 1,
   }) async {
@@ -18,17 +34,6 @@ class SpellCustomAttrRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SpellCustomAttrEntity>> getSpellCustomAttrs() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => SpellCustomAttrEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countSpellCustomAttrs() async {
-    return laconic.table(_table).count();
-  }
-
   Future<SpellCustomAttrEntity?> getSpellCustomAttr(int spellId) async {
     var results = await laconic
         .table(_table)
@@ -39,8 +44,20 @@ class SpellCustomAttrRepository with RepositoryMixin {
     return SpellCustomAttrEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellCustomAttrEntity> createSpellCustomAttr([int spellId = 0]) async {
-    return SpellCustomAttrEntity(spellId: spellId);
+  Future<List<SpellCustomAttrEntity>> getSpellCustomAttrs() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => SpellCustomAttrEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSpellCustomAttr(SpellCustomAttrEntity data) async {
+    var existing = await getSpellCustomAttr(data.spellId);
+    if (existing != null) {
+      await updateSpellCustomAttr(data);
+    } else {
+      await storeSpellCustomAttr(data);
+    }
   }
 
   Future<void> storeSpellCustomAttr(SpellCustomAttrEntity data) async {
@@ -51,22 +68,5 @@ class SpellCustomAttrRepository with RepositoryMixin {
     var json = data.toJson();
     json.remove('spell_id');
     await laconic.table(_table).where('spell_id', data.spellId).update(json);
-  }
-
-  Future<void> destroySpellCustomAttr(int spellId) async {
-    await laconic.table(_table).where('spell_id', spellId).delete();
-  }
-
-  Future<void> copySpellCustomAttr(int spellId) async {
-    throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
-  }
-
-  Future<void> saveSpellCustomAttr(SpellCustomAttrEntity data) async {
-    var existing = await getSpellCustomAttr(data.spellId);
-    if (existing != null) {
-      await updateSpellCustomAttr(data);
-    } else {
-      await storeSpellCustomAttr(data);
-    }
   }
 }
