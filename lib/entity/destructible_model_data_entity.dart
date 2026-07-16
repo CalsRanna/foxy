@@ -1,3 +1,21 @@
+class BriefDestructibleModelDataEntity {
+  final int id;
+  final int state1Wmo;
+  final int state2Wmo;
+  final int state3Wmo;
+
+  const BriefDestructibleModelDataEntity({
+    this.id = 0,
+    this.state1Wmo = 0,
+    this.state2Wmo = 0,
+    this.state3Wmo = 0,
+  });
+
+  factory BriefDestructibleModelDataEntity.fromJson(
+    Map<String, dynamic> json,
+  ) => DestructibleModelDataEntity.fromJson(json).toBrief();
+}
+
 class DestructibleModelDataEntity {
   final int id;
   final int state0ImpactEffectDoodadSet;
@@ -86,24 +104,6 @@ class DestructibleModelDataEntity {
     'HealEffect': healEffect,
     'HealEffectSpeed': healEffectSpeed,
   };
-}
-
-class BriefDestructibleModelDataEntity {
-  final int id;
-  final int state1Wmo;
-  final int state2Wmo;
-  final int state3Wmo;
-
-  const BriefDestructibleModelDataEntity({
-    this.id = 0,
-    this.state1Wmo = 0,
-    this.state2Wmo = 0,
-    this.state3Wmo = 0,
-  });
-
-  factory BriefDestructibleModelDataEntity.fromJson(
-    Map<String, dynamic> json,
-  ) => DestructibleModelDataEntity.fromJson(json).toBrief();
 }
 
 extension on DestructibleModelDataEntity {

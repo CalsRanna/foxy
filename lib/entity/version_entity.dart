@@ -20,15 +20,6 @@ class VersionEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'core_version': coreVersion,
-      'core_revision': coreRevision,
-      'db_version': dbVersion,
-      'cache_id': cacheId,
-    };
-  }
-
   VersionEntity copyWith({
     String? coreVersion,
     String? coreRevision,
@@ -41,5 +32,14 @@ class VersionEntity {
       dbVersion: dbVersion ?? this.dbVersion,
       cacheId: cacheId ?? this.cacheId,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'core_version': coreVersion,
+      'core_revision': coreRevision,
+      'db_version': dbVersion,
+      'cache_id': cacheId,
+    };
   }
 }

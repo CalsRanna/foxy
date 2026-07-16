@@ -11,14 +11,14 @@ class ItemDisplayInfoFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
-  }
-
   ItemDisplayInfoFilterEntity copyWith({String? id, String? name}) {
     return ItemDisplayInfoFilterEntity(
       id: id ?? this.id,
       name: name ?? this.name,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
   }
 }

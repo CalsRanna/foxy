@@ -11,14 +11,14 @@ class CreatureDisplayInfoFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'modelName': modelName};
-  }
-
   CreatureDisplayInfoFilterEntity copyWith({String? id, String? modelName}) {
     return CreatureDisplayInfoFilterEntity(
       id: id ?? this.id,
       modelName: modelName ?? this.modelName,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'modelName': modelName};
   }
 }

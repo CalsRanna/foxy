@@ -33,22 +33,6 @@ class ConditionEntity {
     this.comment = '',
   });
 
-  /// 构建用于路由传参的完整 10 列主键 map（与表 PRIMARY KEY 一致）
-  Map<String, dynamic> buildCredential() {
-    return {
-      'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
-      'SourceGroup': sourceGroup,
-      'SourceEntry': sourceEntry,
-      'SourceId': sourceId,
-      'ElseGroup': elseGroup,
-      'ConditionTypeOrReference': conditionTypeOrReference,
-      'ConditionTarget': conditionTarget,
-      'ConditionValue1': conditionValue1,
-      'ConditionValue2': conditionValue2,
-      'ConditionValue3': conditionValue3,
-    };
-  }
-
   factory ConditionEntity.fromJson(Map<String, dynamic> json) {
     return ConditionEntity(
       sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] ?? 0,
@@ -69,7 +53,8 @@ class ConditionEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  /// 构建用于路由传参的完整 10 列主键 map（与表 PRIMARY KEY 一致）
+  Map<String, dynamic> buildCredential() {
     return {
       'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
       'SourceGroup': sourceGroup,
@@ -81,11 +66,6 @@ class ConditionEntity {
       'ConditionValue1': conditionValue1,
       'ConditionValue2': conditionValue2,
       'ConditionValue3': conditionValue3,
-      'NegativeCondition': negativeCondition,
-      'ErrorType': errorType,
-      'ErrorTextId': errorTextId,
-      'ScriptName': scriptName,
-      'Comment': comment,
     };
   }
 
@@ -125,5 +105,25 @@ class ConditionEntity {
       scriptName: scriptName ?? this.scriptName,
       comment: comment ?? this.comment,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
+      'SourceGroup': sourceGroup,
+      'SourceEntry': sourceEntry,
+      'SourceId': sourceId,
+      'ElseGroup': elseGroup,
+      'ConditionTypeOrReference': conditionTypeOrReference,
+      'ConditionTarget': conditionTarget,
+      'ConditionValue1': conditionValue1,
+      'ConditionValue2': conditionValue2,
+      'ConditionValue3': conditionValue3,
+      'NegativeCondition': negativeCondition,
+      'ErrorType': errorType,
+      'ErrorTextId': errorTextId,
+      'ScriptName': scriptName,
+      'Comment': comment,
+    };
   }
 }

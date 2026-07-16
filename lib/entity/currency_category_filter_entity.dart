@@ -11,12 +11,12 @@ class CurrencyCategoryFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name};
-
   CurrencyCategoryFilterEntity copyWith({String? id, String? name}) {
     return CurrencyCategoryFilterEntity(
       id: id ?? this.id,
       name: name ?? this.name,
     );
   }
+
+  Map<String, dynamic> toJson() => {'id': id, 'name': name};
 }

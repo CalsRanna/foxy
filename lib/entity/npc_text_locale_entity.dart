@@ -1,3 +1,19 @@
+class BriefNpcTextLocaleEntity {
+  final int id;
+  final String locale;
+
+  const BriefNpcTextLocaleEntity({this.id = 0, this.locale = 'zhCN'});
+
+  factory BriefNpcTextLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTextLocaleEntity(
+      id: (json['ID'] as num?)?.toInt() ?? (json['id'] as num?)?.toInt() ?? 0,
+      locale: json['Locale']?.toString() ?? 'zhCN',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'ID': id, 'Locale': locale};
+}
+
 class NpcTextLocaleEntity {
   final int id;
   final String locale;
@@ -84,20 +100,4 @@ class NpcTextLocaleEntity {
       'Text7_1': text71,
     };
   }
-}
-
-class BriefNpcTextLocaleEntity {
-  final int id;
-  final String locale;
-
-  const BriefNpcTextLocaleEntity({this.id = 0, this.locale = 'zhCN'});
-
-  factory BriefNpcTextLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefNpcTextLocaleEntity(
-      id: (json['ID'] as num?)?.toInt() ?? (json['id'] as num?)?.toInt() ?? 0,
-      locale: json['Locale']?.toString() ?? 'zhCN',
-    );
-  }
-
-  Map<String, dynamic> toJson() => {'ID': id, 'Locale': locale};
 }

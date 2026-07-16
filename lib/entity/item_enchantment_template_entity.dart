@@ -1,42 +1,3 @@
-enum ItemEnchantmentKind { randomProperty, randomSuffix }
-
-/// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
-class ItemEnchantmentTemplateEntity {
-  final int entry;
-  final int ench;
-  final double chance;
-
-  const ItemEnchantmentTemplateEntity({
-    this.entry = 0,
-    this.ench = 0,
-    this.chance = 0,
-  });
-
-  factory ItemEnchantmentTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return ItemEnchantmentTemplateEntity(
-      entry: json['entry'] ?? 0,
-      ench: json['ench'] ?? 0,
-      chance: ((json['chance'] ?? 0) as num).toDouble(),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'ench': ench, 'chance': chance};
-  }
-
-  ItemEnchantmentTemplateEntity copyWith({
-    int? entry,
-    int? ench,
-    double? chance,
-  }) {
-    return ItemEnchantmentTemplateEntity(
-      entry: entry ?? this.entry,
-      ench: ench ?? this.ench,
-      chance: chance ?? this.chance,
-    );
-  }
-}
-
 /// 物品附魔模板列表展示模型（含 LEFT JOIN dbc_spell_item_enchantment + dbc_item_random_properties 的附魔名）
 class BriefItemEnchantmentTemplateEntity {
   final int entry;
@@ -83,5 +44,44 @@ class BriefItemEnchantmentTemplateEntity {
           : ItemEnchantmentKind.randomProperty,
       itemCount: json['ItemCount'] ?? 0,
     );
+  }
+}
+
+enum ItemEnchantmentKind { randomProperty, randomSuffix }
+
+/// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
+class ItemEnchantmentTemplateEntity {
+  final int entry;
+  final int ench;
+  final double chance;
+
+  const ItemEnchantmentTemplateEntity({
+    this.entry = 0,
+    this.ench = 0,
+    this.chance = 0,
+  });
+
+  factory ItemEnchantmentTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return ItemEnchantmentTemplateEntity(
+      entry: json['entry'] ?? 0,
+      ench: json['ench'] ?? 0,
+      chance: ((json['chance'] ?? 0) as num).toDouble(),
+    );
+  }
+
+  ItemEnchantmentTemplateEntity copyWith({
+    int? entry,
+    int? ench,
+    double? chance,
+  }) {
+    return ItemEnchantmentTemplateEntity(
+      entry: entry ?? this.entry,
+      ench: ench ?? this.ench,
+      chance: chance ?? this.chance,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'ench': ench, 'chance': chance};
   }
 }

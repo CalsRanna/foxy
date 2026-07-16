@@ -68,29 +68,6 @@ class AchievementCategoryEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Parent': parent,
-    'Name_lang_enUS': nameLangEnUS,
-    'Name_lang_koKR': nameLangKoKR,
-    'Name_lang_frFR': nameLangFrFR,
-    'Name_lang_deDE': nameLangDeDE,
-    'Name_lang_zhCN': nameLangZhCN,
-    'Name_lang_zhTW': nameLangZhTW,
-    'Name_lang_esES': nameLangEsES,
-    'Name_lang_esMX': nameLangEsMX,
-    'Name_lang_ruRU': nameLangRuRU,
-    'Name_lang_jaJP': nameLangJaJP,
-    'Name_lang_ptPT': nameLangPtPT,
-    'Name_lang_ptBR': nameLangPtBR,
-    'Name_lang_itIT': nameLangItIT,
-    'Name_lang_unk1': nameLangUnk1,
-    'Name_lang_unk2': nameLangUnk2,
-    'Name_lang_unk3': nameLangUnk3,
-    'Name_lang_Flags': nameLangFlags,
-    'Ui_order': uiOrder,
-  };
-
   AchievementCategoryEntity copyWith({
     int? id,
     int? parent,
@@ -134,6 +111,29 @@ class AchievementCategoryEntity {
     nameLangFlags: nameLangFlags ?? this.nameLangFlags,
     uiOrder: uiOrder ?? this.uiOrder,
   );
+
+  Map<String, dynamic> toJson() => {
+    'ID': id,
+    'Parent': parent,
+    'Name_lang_enUS': nameLangEnUS,
+    'Name_lang_koKR': nameLangKoKR,
+    'Name_lang_frFR': nameLangFrFR,
+    'Name_lang_deDE': nameLangDeDE,
+    'Name_lang_zhCN': nameLangZhCN,
+    'Name_lang_zhTW': nameLangZhTW,
+    'Name_lang_esES': nameLangEsES,
+    'Name_lang_esMX': nameLangEsMX,
+    'Name_lang_ruRU': nameLangRuRU,
+    'Name_lang_jaJP': nameLangJaJP,
+    'Name_lang_ptPT': nameLangPtPT,
+    'Name_lang_ptBR': nameLangPtBR,
+    'Name_lang_itIT': nameLangItIT,
+    'Name_lang_unk1': nameLangUnk1,
+    'Name_lang_unk2': nameLangUnk2,
+    'Name_lang_unk3': nameLangUnk3,
+    'Name_lang_Flags': nameLangFlags,
+    'Ui_order': uiOrder,
+  };
 }
 
 class BriefAchievementCategoryEntity {

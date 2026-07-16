@@ -1,3 +1,23 @@
+class BriefSoundProviderPreferencesEntity {
+  final int id;
+  final String description;
+  final int flags;
+
+  const BriefSoundProviderPreferencesEntity({
+    this.id = 0,
+    this.description = '',
+    this.flags = 0,
+  });
+
+  factory BriefSoundProviderPreferencesEntity.fromJson(
+    Map<String, dynamic> json,
+  ) => BriefSoundProviderPreferencesEntity(
+    id: json['ID'] ?? 0,
+    description: json['Description'] ?? '',
+    flags: json['Flags'] ?? 0,
+  );
+}
+
 class SoundProviderPreferencesEntity {
   final int id;
   final String description;
@@ -110,24 +130,4 @@ class SoundProviderPreferencesEntity {
     'EAX3HFReference': eax3HfReference,
     'EAX3LFReference': eax3LfReference,
   };
-}
-
-class BriefSoundProviderPreferencesEntity {
-  final int id;
-  final String description;
-  final int flags;
-
-  const BriefSoundProviderPreferencesEntity({
-    this.id = 0,
-    this.description = '',
-    this.flags = 0,
-  });
-
-  factory BriefSoundProviderPreferencesEntity.fromJson(
-    Map<String, dynamic> json,
-  ) => BriefSoundProviderPreferencesEntity(
-    id: json['ID'] ?? 0,
-    description: json['Description'] ?? '',
-    flags: json['Flags'] ?? 0,
-  );
 }

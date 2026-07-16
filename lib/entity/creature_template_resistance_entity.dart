@@ -21,15 +21,6 @@ class CreatureTemplateResistanceEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureID': creatureID,
-      'School': school,
-      'Resistance': resistance,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   CreatureTemplateResistanceEntity copyWith({
     int? creatureID,
     int? school,
@@ -42,5 +33,14 @@ class CreatureTemplateResistanceEntity {
       resistance: resistance ?? this.resistance,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'CreatureID': creatureID,
+      'School': school,
+      'Resistance': resistance,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

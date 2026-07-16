@@ -23,16 +23,6 @@ class ItemTemplateFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'name': name,
-      'description': description,
-      'classId': classId,
-      'subclass': subclass,
-    };
-  }
-
   ItemTemplateFilterEntity copyWith({
     String? entry,
     String? name,
@@ -47,5 +37,15 @@ class ItemTemplateFilterEntity {
       classId: classId ?? this.classId,
       subclass: subclass ?? this.subclass,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'description': description,
+      'classId': classId,
+      'subclass': subclass,
+    };
   }
 }

@@ -89,25 +89,6 @@ class GossipMenuOptionEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'MenuID': menuId,
-      'OptionID': optionId,
-      'OptionIcon': optionIcon,
-      'OptionText': optionText,
-      'OptionBroadcastTextID': optionBroadcastTextId,
-      'OptionType': optionType,
-      'OptionNpcFlag': optionNpcFlag,
-      'BoxCoded': boxCoded,
-      'BoxMoney': boxMoney,
-      'BoxText': boxText,
-      'BoxBroadcastTextID': boxBroadcastTextId,
-      'ActionMenuID': actionMenuId,
-      'ActionPoiID': actionPoiId,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   GossipMenuOptionEntity copyWith({
     int? menuId,
     int? optionId,
@@ -141,5 +122,24 @@ class GossipMenuOptionEntity {
       actionPoiId: actionPoiId ?? this.actionPoiId,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'MenuID': menuId,
+      'OptionID': optionId,
+      'OptionIcon': optionIcon,
+      'OptionText': optionText,
+      'OptionBroadcastTextID': optionBroadcastTextId,
+      'OptionType': optionType,
+      'OptionNpcFlag': optionNpcFlag,
+      'BoxCoded': boxCoded,
+      'BoxMoney': boxMoney,
+      'BoxText': boxText,
+      'BoxBroadcastTextID': boxBroadcastTextId,
+      'ActionMenuID': actionMenuId,
+      'ActionPoiID': actionPoiId,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

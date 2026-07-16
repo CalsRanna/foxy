@@ -11,11 +11,11 @@ class QuestSortFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
-  }
-
   QuestSortFilterEntity copyWith({String? id, String? name}) {
     return QuestSortFilterEntity(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
   }
 }

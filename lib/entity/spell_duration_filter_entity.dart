@@ -7,11 +7,11 @@ class SpellDurationFilterEntity {
     return SpellDurationFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   SpellDurationFilterEntity copyWith({String? id}) {
     return SpellDurationFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

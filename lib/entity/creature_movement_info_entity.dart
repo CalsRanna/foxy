@@ -16,10 +16,6 @@ class CreatureMovementInfoEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'SmoothFacingChaseRate': smoothFacingChaseRate};
-  }
-
   CreatureMovementInfoEntity copyWith({
     int? id,
     double? smoothFacingChaseRate,
@@ -29,5 +25,9 @@ class CreatureMovementInfoEntity {
       smoothFacingChaseRate:
           smoothFacingChaseRate ?? this.smoothFacingChaseRate,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'SmoothFacingChaseRate': smoothFacingChaseRate};
   }
 }

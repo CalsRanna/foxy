@@ -4,8 +4,11 @@ class GameObjectTemplateFilterEntity {
 
   const GameObjectTemplateFilterEntity({this.entry = '', this.name = ''});
 
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name};
+  factory GameObjectTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateFilterEntity(
+      entry: json['entry'] ?? '',
+      name: json['name'] ?? '',
+    );
   }
 
   GameObjectTemplateFilterEntity copyWith({String? entry, String? name}) {
@@ -15,10 +18,7 @@ class GameObjectTemplateFilterEntity {
     );
   }
 
-  factory GameObjectTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateFilterEntity(
-      entry: json['entry'] ?? '',
-      name: json['name'] ?? '',
-    );
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'name': name};
   }
 }

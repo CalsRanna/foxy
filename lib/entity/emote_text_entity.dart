@@ -1,3 +1,32 @@
+/// 表情文本列表/Picker 展示模型
+class BriefEmoteTextEntity {
+  final int id;
+  final String name;
+  final int emoteId;
+
+  const BriefEmoteTextEntity({this.id = 0, this.name = '', this.emoteId = 0});
+
+  factory BriefEmoteTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefEmoteTextEntity(
+      id: json['ID'] ?? 0,
+      name: json['Name'] ?? '',
+      emoteId: json['EmoteID'] ?? 0,
+    );
+  }
+
+  BriefEmoteTextEntity copyWith({int? id, String? name, int? emoteId}) {
+    return BriefEmoteTextEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      emoteId: emoteId ?? this.emoteId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Name': name, 'EmoteID': emoteId};
+  }
+}
+
 class EmoteTextEntity {
   final int id;
   final String name;
@@ -65,30 +94,6 @@ class EmoteTextEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name': name,
-      'EmoteID': emoteId,
-      'EmoteText0': emoteText0,
-      'EmoteText1': emoteText1,
-      'EmoteText2': emoteText2,
-      'EmoteText3': emoteText3,
-      'EmoteText4': emoteText4,
-      'EmoteText5': emoteText5,
-      'EmoteText6': emoteText6,
-      'EmoteText7': emoteText7,
-      'EmoteText8': emoteText8,
-      'EmoteText9': emoteText9,
-      'EmoteText10': emoteText10,
-      'EmoteText11': emoteText11,
-      'EmoteText12': emoteText12,
-      'EmoteText13': emoteText13,
-      'EmoteText14': emoteText14,
-      'EmoteText15': emoteText15,
-    };
-  }
-
   EmoteTextEntity copyWith({
     int? id,
     String? name,
@@ -132,33 +137,28 @@ class EmoteTextEntity {
       emoteText15: emoteText15 ?? this.emoteText15,
     );
   }
-}
-
-/// 表情文本列表/Picker 展示模型
-class BriefEmoteTextEntity {
-  final int id;
-  final String name;
-  final int emoteId;
-
-  const BriefEmoteTextEntity({this.id = 0, this.name = '', this.emoteId = 0});
-
-  factory BriefEmoteTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefEmoteTextEntity(
-      id: json['ID'] ?? 0,
-      name: json['Name'] ?? '',
-      emoteId: json['EmoteID'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Name': name, 'EmoteID': emoteId};
-  }
-
-  BriefEmoteTextEntity copyWith({int? id, String? name, int? emoteId}) {
-    return BriefEmoteTextEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      emoteId: emoteId ?? this.emoteId,
-    );
+    return {
+      'ID': id,
+      'Name': name,
+      'EmoteID': emoteId,
+      'EmoteText0': emoteText0,
+      'EmoteText1': emoteText1,
+      'EmoteText2': emoteText2,
+      'EmoteText3': emoteText3,
+      'EmoteText4': emoteText4,
+      'EmoteText5': emoteText5,
+      'EmoteText6': emoteText6,
+      'EmoteText7': emoteText7,
+      'EmoteText8': emoteText8,
+      'EmoteText9': emoteText9,
+      'EmoteText10': emoteText10,
+      'EmoteText11': emoteText11,
+      'EmoteText12': emoteText12,
+      'EmoteText13': emoteText13,
+      'EmoteText14': emoteText14,
+      'EmoteText15': emoteText15,
+    };
   }
 }

@@ -51,16 +51,6 @@ class PointOfInterestEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'PositionX': positionX,
-    'PositionY': positionY,
-    'Icon': icon,
-    'Flags': flags,
-    'Importance': importance,
-    'Name': name,
-  };
-
   PointOfInterestEntity copyWith({
     int? id,
     double? positionX,
@@ -80,4 +70,14 @@ class PointOfInterestEntity {
       name: name ?? this.name,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'ID': id,
+    'PositionX': positionX,
+    'PositionY': positionY,
+    'Icon': icon,
+    'Flags': flags,
+    'Importance': importance,
+    'Name': name,
+  };
 }

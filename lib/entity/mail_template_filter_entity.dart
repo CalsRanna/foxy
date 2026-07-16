@@ -11,12 +11,12 @@ class MailTemplateFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'subject': subject};
-
   MailTemplateFilterEntity copyWith({String? id, String? subject}) {
     return MailTemplateFilterEntity(
       id: id ?? this.id,
       subject: subject ?? this.subject,
     );
   }
+
+  Map<String, dynamic> toJson() => {'id': id, 'subject': subject};
 }

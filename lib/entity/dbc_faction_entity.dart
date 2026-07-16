@@ -1,3 +1,44 @@
+/// 阵营列表/Picker 展示模型
+class BriefDbcFactionEntity {
+  final int id;
+  final String nameLangZhCN;
+  final String descriptionLangZhCN;
+
+  const BriefDbcFactionEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.descriptionLangZhCN = '',
+  });
+
+  factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcFactionEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefDbcFactionEntity copyWith({
+    int? id,
+    String? nameLangZhCN,
+    String? descriptionLangZhCN,
+  }) {
+    return BriefDbcFactionEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Description_lang_zhCN': descriptionLangZhCN,
+    };
+  }
+}
+
 /// DBC 阵营 — 对应 foxy.dbc_faction 表
 class DbcFactionEntity {
   final int id;
@@ -180,68 +221,6 @@ class DbcFactionEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ReputationIndex': reputationIndex,
-      'ReputationRaceMask0': reputationRaceMask0,
-      'ReputationRaceMask1': reputationRaceMask1,
-      'ReputationRaceMask2': reputationRaceMask2,
-      'ReputationRaceMask3': reputationRaceMask3,
-      'ReputationClassMask0': reputationClassMask0,
-      'ReputationClassMask1': reputationClassMask1,
-      'ReputationClassMask2': reputationClassMask2,
-      'ReputationClassMask3': reputationClassMask3,
-      'ReputationBase0': reputationBase0,
-      'ReputationBase1': reputationBase1,
-      'ReputationBase2': reputationBase2,
-      'ReputationBase3': reputationBase3,
-      'ReputationFlags0': reputationFlags0,
-      'ReputationFlags1': reputationFlags1,
-      'ReputationFlags2': reputationFlags2,
-      'ReputationFlags3': reputationFlags3,
-      'ParentFactionID': parentFactionId,
-      'ParentFactionMod0': parentFactionMod0,
-      'ParentFactionMod1': parentFactionMod1,
-      'ParentFactionCap0': parentFactionCap0,
-      'ParentFactionCap1': parentFactionCap1,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-    };
-  }
-
   DbcFactionEntity copyWith({
     int? id,
     int? reputationIndex,
@@ -361,45 +340,66 @@ class DbcFactionEntity {
       descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
     );
   }
-}
-
-/// 阵营列表/Picker 展示模型
-class BriefDbcFactionEntity {
-  final int id;
-  final String nameLangZhCN;
-  final String descriptionLangZhCN;
-
-  const BriefDbcFactionEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.descriptionLangZhCN = '',
-  });
-
-  factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDbcFactionEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
+      'ReputationIndex': reputationIndex,
+      'ReputationRaceMask0': reputationRaceMask0,
+      'ReputationRaceMask1': reputationRaceMask1,
+      'ReputationRaceMask2': reputationRaceMask2,
+      'ReputationRaceMask3': reputationRaceMask3,
+      'ReputationClassMask0': reputationClassMask0,
+      'ReputationClassMask1': reputationClassMask1,
+      'ReputationClassMask2': reputationClassMask2,
+      'ReputationClassMask3': reputationClassMask3,
+      'ReputationBase0': reputationBase0,
+      'ReputationBase1': reputationBase1,
+      'ReputationBase2': reputationBase2,
+      'ReputationBase3': reputationBase3,
+      'ReputationFlags0': reputationFlags0,
+      'ReputationFlags1': reputationFlags1,
+      'ReputationFlags2': reputationFlags2,
+      'ReputationFlags3': reputationFlags3,
+      'ParentFactionID': parentFactionId,
+      'ParentFactionMod0': parentFactionMod0,
+      'ParentFactionMod1': parentFactionMod1,
+      'ParentFactionCap0': parentFactionCap0,
+      'ParentFactionCap1': parentFactionCap1,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
       'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+      'Description_lang_enUS': descriptionLangEnUS,
+      'Description_lang_koKR': descriptionLangKoKR,
+      'Description_lang_frFR': descriptionLangFrFR,
+      'Description_lang_deDE': descriptionLangDeDE,
       'Description_lang_zhCN': descriptionLangZhCN,
+      'Description_lang_zhTW': descriptionLangZhTW,
+      'Description_lang_esES': descriptionLangEsES,
+      'Description_lang_esMX': descriptionLangEsMX,
+      'Description_lang_ruRU': descriptionLangRuRU,
+      'Description_lang_jaJP': descriptionLangJaJP,
+      'Description_lang_ptPT': descriptionLangPtPT,
+      'Description_lang_ptBR': descriptionLangPtBR,
+      'Description_lang_itIT': descriptionLangItIT,
+      'Description_lang_unk1': descriptionLangUnk1,
+      'Description_lang_unk2': descriptionLangUnk2,
+      'Description_lang_unk3': descriptionLangUnk3,
+      'Description_lang_Flags': descriptionLangFlags,
     };
-  }
-
-  BriefDbcFactionEntity copyWith({
-    int? id,
-    String? nameLangZhCN,
-    String? descriptionLangZhCN,
-  }) {
-    return BriefDbcFactionEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
-    );
   }
 }

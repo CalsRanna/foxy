@@ -43,15 +43,6 @@ class ActivityLogEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'module': module,
-      'action_type': actionType.name,
-      'entity_id': entityId,
-      'entity_name': entityName,
-    };
-  }
-
   ActivityLogEntity copyWith({
     int? id,
     String? module,
@@ -68,5 +59,14 @@ class ActivityLogEntity {
       entityName: entityName ?? this.entityName,
       createdAt: createdAt ?? this.createdAt,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'module': module,
+      'action_type': actionType.name,
+      'entity_id': entityId,
+      'entity_name': entityName,
+    };
   }
 }

@@ -9,8 +9,12 @@ class CreatureTemplateFilterEntity {
     this.subName = '',
   });
 
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name, 'subName': subName};
+  factory CreatureTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateFilterEntity(
+      entry: json['entry'] ?? '',
+      name: json['name'] ?? '',
+      subName: json['subName'] ?? '',
+    );
   }
 
   CreatureTemplateFilterEntity copyWith({
@@ -25,11 +29,7 @@ class CreatureTemplateFilterEntity {
     );
   }
 
-  factory CreatureTemplateFilterEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateFilterEntity(
-      entry: json['entry'] ?? '',
-      name: json['name'] ?? '',
-      subName: json['subName'] ?? '',
-    );
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'name': name, 'subName': subName};
   }
 }

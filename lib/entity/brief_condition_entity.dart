@@ -31,11 +31,20 @@ class BriefConditionEntity {
     this.comment = '',
   });
 
-  /// 来源类型标签：非负值映射枚举，负值表示引用
-  String get sourceTypeLabel {
-    final id = sourceTypeOrReferenceId;
-    if (id < 0) return '引用 $id';
-    return kConditionSourceTypeLabels[id] ?? id.toString();
+  factory BriefConditionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefConditionEntity(
+      sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] ?? 0,
+      sourceGroup: json['SourceGroup'] ?? 0,
+      sourceEntry: json['SourceEntry'] ?? 0,
+      sourceId: json['SourceId'] ?? 0,
+      elseGroup: json['ElseGroup'] ?? 0,
+      conditionTypeOrReference: json['ConditionTypeOrReference'] ?? 0,
+      conditionTarget: json['ConditionTarget'] ?? 0,
+      conditionValue1: json['ConditionValue1'] ?? 0,
+      conditionValue2: json['ConditionValue2'] ?? 0,
+      conditionValue3: json['ConditionValue3'] ?? 0,
+      comment: json['Comment'] ?? '',
+    );
   }
 
   /// 条件类型标签：非负值映射枚举，负值表示引用
@@ -43,6 +52,13 @@ class BriefConditionEntity {
     final id = conditionTypeOrReference;
     if (id < 0) return '引用 $id';
     return kConditionTypeLabels[id] ?? id.toString();
+  }
+
+  /// 来源类型标签：非负值映射枚举，负值表示引用
+  String get sourceTypeLabel {
+    final id = sourceTypeOrReferenceId;
+    if (id < 0) return '引用 $id';
+    return kConditionSourceTypeLabels[id] ?? id.toString();
   }
 
   /// 构建用于路由传参的完整 10 列主键 map（与表 PRIMARY KEY 一致）
@@ -59,21 +75,5 @@ class BriefConditionEntity {
       'ConditionValue2': conditionValue2,
       'ConditionValue3': conditionValue3,
     };
-  }
-
-  factory BriefConditionEntity.fromJson(Map<String, dynamic> json) {
-    return BriefConditionEntity(
-      sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] ?? 0,
-      sourceGroup: json['SourceGroup'] ?? 0,
-      sourceEntry: json['SourceEntry'] ?? 0,
-      sourceId: json['SourceId'] ?? 0,
-      elseGroup: json['ElseGroup'] ?? 0,
-      conditionTypeOrReference: json['ConditionTypeOrReference'] ?? 0,
-      conditionTarget: json['ConditionTarget'] ?? 0,
-      conditionValue1: json['ConditionValue1'] ?? 0,
-      conditionValue2: json['ConditionValue2'] ?? 0,
-      conditionValue3: json['ConditionValue3'] ?? 0,
-      comment: json['Comment'] ?? '',
-    );
   }
 }

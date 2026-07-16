@@ -1,3 +1,21 @@
+class BriefItemPurchaseGroupEntity {
+  final int id;
+  final String nameLangZhCN;
+
+  const BriefItemPurchaseGroupEntity({this.id = 0, this.nameLangZhCN = ''});
+
+  factory BriefItemPurchaseGroupEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemPurchaseGroupEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Name_lang_zhCN': nameLangZhCN};
+  }
+}
+
 class ItemPurchaseGroupEntity {
   final int id;
   final int itemID0;
@@ -86,37 +104,6 @@ class ItemPurchaseGroupEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ItemID0': itemID0,
-      'ItemID1': itemID1,
-      'ItemID2': itemID2,
-      'ItemID3': itemID3,
-      'ItemID4': itemID4,
-      'ItemID5': itemID5,
-      'ItemID6': itemID6,
-      'ItemID7': itemID7,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-    };
-  }
-
   ItemPurchaseGroupEntity copyWith({
     int? id,
     int? itemID0,
@@ -174,22 +161,35 @@ class ItemPurchaseGroupEntity {
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
     );
   }
-}
-
-class BriefItemPurchaseGroupEntity {
-  final int id;
-  final String nameLangZhCN;
-
-  const BriefItemPurchaseGroupEntity({this.id = 0, this.nameLangZhCN = ''});
-
-  factory BriefItemPurchaseGroupEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemPurchaseGroupEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Name_lang_zhCN': nameLangZhCN};
+    return {
+      'ID': id,
+      'ItemID0': itemID0,
+      'ItemID1': itemID1,
+      'ItemID2': itemID2,
+      'ItemID3': itemID3,
+      'ItemID4': itemID4,
+      'ItemID5': itemID5,
+      'ItemID6': itemID6,
+      'ItemID7': itemID7,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+    };
   }
 }

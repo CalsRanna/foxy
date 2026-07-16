@@ -101,40 +101,6 @@ class AchievementCriteriaEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Achievement_ID': achievementId,
-    'Type': type,
-    'Asset_ID': assetId,
-    'Quantity': quantity,
-    'Start_event': startEvent,
-    'Start_asset': startAsset,
-    'Fail_event': failEvent,
-    'Fail_asset': failAsset,
-    'Description_lang_enUS': descriptionLangEnUS,
-    'Description_lang_koKR': descriptionLangKoKR,
-    'Description_lang_frFR': descriptionLangFrFR,
-    'Description_lang_deDE': descriptionLangDeDE,
-    'Description_lang_zhCN': descriptionLangZhCN,
-    'Description_lang_zhTW': descriptionLangZhTW,
-    'Description_lang_esES': descriptionLangEsES,
-    'Description_lang_esMX': descriptionLangEsMX,
-    'Description_lang_ruRU': descriptionLangRuRU,
-    'Description_lang_jaJP': descriptionLangJaJP,
-    'Description_lang_ptPT': descriptionLangPtPT,
-    'Description_lang_ptBR': descriptionLangPtBR,
-    'Description_lang_itIT': descriptionLangItIT,
-    'Description_lang_unk1': descriptionLangUnk1,
-    'Description_lang_unk2': descriptionLangUnk2,
-    'Description_lang_unk3': descriptionLangUnk3,
-    'Description_lang_Flags': descriptionLangFlags,
-    'Flags': flags,
-    'Timer_start_event': timerStartEvent,
-    'Timer_asset_ID': timerAssetId,
-    'Timer_time': timerTime,
-    'Ui_order': uiOrder,
-  };
-
   AchievementCriteriaEntity copyWith({
     int? id,
     int? achievementId,
@@ -200,6 +166,40 @@ class AchievementCriteriaEntity {
     timerTime: timerTime ?? this.timerTime,
     uiOrder: uiOrder ?? this.uiOrder,
   );
+
+  Map<String, dynamic> toJson() => {
+    'ID': id,
+    'Achievement_ID': achievementId,
+    'Type': type,
+    'Asset_ID': assetId,
+    'Quantity': quantity,
+    'Start_event': startEvent,
+    'Start_asset': startAsset,
+    'Fail_event': failEvent,
+    'Fail_asset': failAsset,
+    'Description_lang_enUS': descriptionLangEnUS,
+    'Description_lang_koKR': descriptionLangKoKR,
+    'Description_lang_frFR': descriptionLangFrFR,
+    'Description_lang_deDE': descriptionLangDeDE,
+    'Description_lang_zhCN': descriptionLangZhCN,
+    'Description_lang_zhTW': descriptionLangZhTW,
+    'Description_lang_esES': descriptionLangEsES,
+    'Description_lang_esMX': descriptionLangEsMX,
+    'Description_lang_ruRU': descriptionLangRuRU,
+    'Description_lang_jaJP': descriptionLangJaJP,
+    'Description_lang_ptPT': descriptionLangPtPT,
+    'Description_lang_ptBR': descriptionLangPtBR,
+    'Description_lang_itIT': descriptionLangItIT,
+    'Description_lang_unk1': descriptionLangUnk1,
+    'Description_lang_unk2': descriptionLangUnk2,
+    'Description_lang_unk3': descriptionLangUnk3,
+    'Description_lang_Flags': descriptionLangFlags,
+    'Flags': flags,
+    'Timer_start_event': timerStartEvent,
+    'Timer_asset_ID': timerAssetId,
+    'Timer_time': timerTime,
+    'Ui_order': uiOrder,
+  };
 }
 
 class BriefAchievementCriteriaEntity {

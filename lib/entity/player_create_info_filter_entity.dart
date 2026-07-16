@@ -11,14 +11,14 @@ class PlayerCreateInfoFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'race': race, 'class_': class_};
-  }
-
   PlayerCreateInfoFilterEntity copyWith({String? race, String? class_}) {
     return PlayerCreateInfoFilterEntity(
       race: race ?? this.race,
       class_: class_ ?? this.class_,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'race': race, 'class_': class_};
   }
 }

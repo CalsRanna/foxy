@@ -23,16 +23,6 @@ class CreatureTemplateLocaleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'locale': locale,
-      'Name': name,
-      'Title': title,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   CreatureTemplateLocaleEntity copyWith({
     int? entry,
     String? locale,
@@ -47,5 +37,15 @@ class CreatureTemplateLocaleEntity {
       title: title ?? this.title,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'locale': locale,
+      'Name': name,
+      'Title': title,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

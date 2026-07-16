@@ -1,3 +1,44 @@
+/// 物品显示信息列表/Picker 展示模型
+class BriefItemDisplayInfoEntity {
+  final int id;
+  final String modelName0;
+  final String inventoryIcon0;
+
+  const BriefItemDisplayInfoEntity({
+    this.id = 0,
+    this.modelName0 = '',
+    this.inventoryIcon0 = '',
+  });
+
+  factory BriefItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemDisplayInfoEntity(
+      id: json['ID'] ?? 0,
+      modelName0: json['ModelName0'] ?? '',
+      inventoryIcon0: json['InventoryIcon0'] ?? '',
+    );
+  }
+
+  BriefItemDisplayInfoEntity copyWith({
+    int? id,
+    String? modelName0,
+    String? inventoryIcon0,
+  }) {
+    return BriefItemDisplayInfoEntity(
+      id: id ?? this.id,
+      modelName0: modelName0 ?? this.modelName0,
+      inventoryIcon0: inventoryIcon0 ?? this.inventoryIcon0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'ModelName0': modelName0,
+      'InventoryIcon0': inventoryIcon0,
+    };
+  }
+}
+
 class ItemDisplayInfoEntity {
   final int id;
   final String modelName0;
@@ -83,36 +124,6 @@ class ItemDisplayInfoEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ModelName0': modelName0,
-      'ModelName1': modelName1,
-      'ModelTexture0': modelTexture0,
-      'ModelTexture1': modelTexture1,
-      'InventoryIcon0': inventoryIcon0,
-      'InventoryIcon1': inventoryIcon1,
-      'GeosetGroup0': geosetGroup0,
-      'GeosetGroup1': geosetGroup1,
-      'GeosetGroup2': geosetGroup2,
-      'Flags': flags,
-      'SpellVisualID': spellVisualId,
-      'GroupSoundIndex': groupSoundIndex,
-      'HelmetGeosetVisID0': helmetGeosetVisId0,
-      'HelmetGeosetVisID1': helmetGeosetVisId1,
-      'Texture0': texture0,
-      'Texture1': texture1,
-      'Texture2': texture2,
-      'Texture3': texture3,
-      'Texture4': texture4,
-      'Texture5': texture5,
-      'Texture6': texture6,
-      'Texture7': texture7,
-      'ItemVisual': itemVisual,
-      'ParticleColorID': particleColorId,
-    };
-  }
-
   ItemDisplayInfoEntity copyWith({
     int? id,
     String? modelName0,
@@ -168,45 +179,34 @@ class ItemDisplayInfoEntity {
       particleColorId: particleColorId ?? this.particleColorId,
     );
   }
-}
-
-/// 物品显示信息列表/Picker 展示模型
-class BriefItemDisplayInfoEntity {
-  final int id;
-  final String modelName0;
-  final String inventoryIcon0;
-
-  const BriefItemDisplayInfoEntity({
-    this.id = 0,
-    this.modelName0 = '',
-    this.inventoryIcon0 = '',
-  });
-
-  factory BriefItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemDisplayInfoEntity(
-      id: json['ID'] ?? 0,
-      modelName0: json['ModelName0'] ?? '',
-      inventoryIcon0: json['InventoryIcon0'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
       'ModelName0': modelName0,
+      'ModelName1': modelName1,
+      'ModelTexture0': modelTexture0,
+      'ModelTexture1': modelTexture1,
       'InventoryIcon0': inventoryIcon0,
+      'InventoryIcon1': inventoryIcon1,
+      'GeosetGroup0': geosetGroup0,
+      'GeosetGroup1': geosetGroup1,
+      'GeosetGroup2': geosetGroup2,
+      'Flags': flags,
+      'SpellVisualID': spellVisualId,
+      'GroupSoundIndex': groupSoundIndex,
+      'HelmetGeosetVisID0': helmetGeosetVisId0,
+      'HelmetGeosetVisID1': helmetGeosetVisId1,
+      'Texture0': texture0,
+      'Texture1': texture1,
+      'Texture2': texture2,
+      'Texture3': texture3,
+      'Texture4': texture4,
+      'Texture5': texture5,
+      'Texture6': texture6,
+      'Texture7': texture7,
+      'ItemVisual': itemVisual,
+      'ParticleColorID': particleColorId,
     };
-  }
-
-  BriefItemDisplayInfoEntity copyWith({
-    int? id,
-    String? modelName0,
-    String? inventoryIcon0,
-  }) {
-    return BriefItemDisplayInfoEntity(
-      id: id ?? this.id,
-      modelName0: modelName0 ?? this.modelName0,
-      inventoryIcon0: inventoryIcon0 ?? this.inventoryIcon0,
-    );
   }
 }

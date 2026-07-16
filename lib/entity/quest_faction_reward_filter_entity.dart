@@ -7,11 +7,11 @@ class QuestFactionRewardFilterEntity {
     return QuestFactionRewardFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   QuestFactionRewardFilterEntity copyWith({String? id}) {
     return QuestFactionRewardFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

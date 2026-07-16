@@ -34,17 +34,6 @@ class BriefGossipMenuEntity {
     return '';
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'MenuID': menuId,
-      'TextID': textId,
-      'text0_0': text00,
-      'text0_1': text01,
-      'Text0_0': textLocale00,
-      'Text0_1': textLocale01,
-    };
-  }
-
   BriefGossipMenuEntity copyWith({
     int? menuId,
     int? textId,
@@ -62,6 +51,17 @@ class BriefGossipMenuEntity {
       textLocale01: textLocale01 ?? this.textLocale01,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'MenuID': menuId,
+      'TextID': textId,
+      'text0_0': text00,
+      'text0_1': text01,
+      'Text0_0': textLocale00,
+      'Text0_1': textLocale01,
+    };
+  }
 }
 
 /// gossip_menu 主表模型（复合键: MenuID + TextID）。
@@ -78,15 +78,15 @@ class GossipMenuEntity {
     );
   }
 
-  /// 主表仅 MenuID + TextID 两列
-  Map<String, dynamic> toJson() {
-    return {'MenuID': menuId, 'TextID': textId};
-  }
-
   GossipMenuEntity copyWith({int? menuId, int? textId}) {
     return GossipMenuEntity(
       menuId: menuId ?? this.menuId,
       textId: textId ?? this.textId,
     );
+  }
+
+  /// 主表仅 MenuID + TextID 两列
+  Map<String, dynamic> toJson() {
+    return {'MenuID': menuId, 'TextID': textId};
   }
 }

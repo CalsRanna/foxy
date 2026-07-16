@@ -1,3 +1,62 @@
+/// 法术附魔列表展示模型
+class BriefSpellItemEnchantmentEntity {
+  final int id;
+  final String nameLangZhCN;
+  final int charges;
+  final int effect0;
+  final int effect1;
+  final int effect2;
+
+  const BriefSpellItemEnchantmentEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.charges = 0,
+    this.effect0 = 0,
+    this.effect1 = 0,
+    this.effect2 = 0,
+  });
+
+  factory BriefSpellItemEnchantmentEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellItemEnchantmentEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      charges: json['Charges'] ?? 0,
+      effect0: json['Effect0'] ?? 0,
+      effect1: json['Effect1'] ?? 0,
+      effect2: json['Effect2'] ?? 0,
+    );
+  }
+
+  BriefSpellItemEnchantmentEntity copyWith({
+    int? id,
+    String? nameLangZhCN,
+    int? charges,
+    int? effect0,
+    int? effect1,
+    int? effect2,
+  }) {
+    return BriefSpellItemEnchantmentEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      charges: charges ?? this.charges,
+      effect0: effect0 ?? this.effect0,
+      effect1: effect1 ?? this.effect1,
+      effect2: effect2 ?? this.effect2,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Charges': charges,
+      'Effect0': effect0,
+      'Effect1': effect1,
+      'Effect2': effect2,
+    };
+  }
+}
+
 class SpellItemEnchantmentEntity {
   final int id;
   final int charges;
@@ -122,49 +181,6 @@ class SpellItemEnchantmentEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Charges': charges,
-      'Effect0': effect0,
-      'Effect1': effect1,
-      'Effect2': effect2,
-      'EffectPointsMin0': effectPointsMin0,
-      'EffectPointsMin1': effectPointsMin1,
-      'EffectPointsMin2': effectPointsMin2,
-      'EffectPointsMax0': effectPointsMax0,
-      'EffectPointsMax1': effectPointsMax1,
-      'EffectPointsMax2': effectPointsMax2,
-      'EffectArg0': effectArg0,
-      'EffectArg1': effectArg1,
-      'EffectArg2': effectArg2,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'ItemVisual': itemVisual,
-      'Flags': flags,
-      'Src_itemID': srcItemId,
-      'Condition_ID': conditionId,
-      'RequiredSkillID': requiredSkillId,
-      'RequiredSkillRank': requiredSkillRank,
-      'MinLevel': minLevel,
-    };
-  }
-
   SpellItemEnchantmentEntity copyWith({
     int? id,
     int? charges,
@@ -246,63 +262,47 @@ class SpellItemEnchantmentEntity {
       minLevel: minLevel ?? this.minLevel,
     );
   }
-}
-
-/// 法术附魔列表展示模型
-class BriefSpellItemEnchantmentEntity {
-  final int id;
-  final String nameLangZhCN;
-  final int charges;
-  final int effect0;
-  final int effect1;
-  final int effect2;
-
-  const BriefSpellItemEnchantmentEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.charges = 0,
-    this.effect0 = 0,
-    this.effect1 = 0,
-    this.effect2 = 0,
-  });
-
-  factory BriefSpellItemEnchantmentEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSpellItemEnchantmentEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      charges: json['Charges'] ?? 0,
-      effect0: json['Effect0'] ?? 0,
-      effect1: json['Effect1'] ?? 0,
-      effect2: json['Effect2'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'Name_lang_zhCN': nameLangZhCN,
       'Charges': charges,
       'Effect0': effect0,
       'Effect1': effect1,
       'Effect2': effect2,
+      'EffectPointsMin0': effectPointsMin0,
+      'EffectPointsMin1': effectPointsMin1,
+      'EffectPointsMin2': effectPointsMin2,
+      'EffectPointsMax0': effectPointsMax0,
+      'EffectPointsMax1': effectPointsMax1,
+      'EffectPointsMax2': effectPointsMax2,
+      'EffectArg0': effectArg0,
+      'EffectArg1': effectArg1,
+      'EffectArg2': effectArg2,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+      'ItemVisual': itemVisual,
+      'Flags': flags,
+      'Src_itemID': srcItemId,
+      'Condition_ID': conditionId,
+      'RequiredSkillID': requiredSkillId,
+      'RequiredSkillRank': requiredSkillRank,
+      'MinLevel': minLevel,
     };
-  }
-
-  BriefSpellItemEnchantmentEntity copyWith({
-    int? id,
-    String? nameLangZhCN,
-    int? charges,
-    int? effect0,
-    int? effect1,
-    int? effect2,
-  }) {
-    return BriefSpellItemEnchantmentEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      charges: charges ?? this.charges,
-      effect0: effect0 ?? this.effect0,
-      effect1: effect1 ?? this.effect1,
-      effect2: effect2 ?? this.effect2,
-    );
   }
 }

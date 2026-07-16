@@ -9,11 +9,11 @@ class ScalingStatDistributionFilterEntity {
     return ScalingStatDistributionFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   ScalingStatDistributionFilterEntity copyWith({String? id}) {
     return ScalingStatDistributionFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

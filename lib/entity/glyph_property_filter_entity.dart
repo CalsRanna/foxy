@@ -7,11 +7,11 @@ class GlyphPropertyFilterEntity {
     return GlyphPropertyFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   GlyphPropertyFilterEntity copyWith({String? id}) {
     return GlyphPropertyFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

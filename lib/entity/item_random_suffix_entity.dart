@@ -1,3 +1,44 @@
+/// 随机后缀列表/Picker 展示模型
+class BriefItemRandomSuffixEntity {
+  final int id;
+  final String nameLangZhCN;
+  final String internalName;
+
+  const BriefItemRandomSuffixEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.internalName = '',
+  });
+
+  factory BriefItemRandomSuffixEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemRandomSuffixEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      internalName: json['InternalName'] ?? '',
+    );
+  }
+
+  BriefItemRandomSuffixEntity copyWith({
+    int? id,
+    String? nameLangZhCN,
+    String? internalName,
+  }) {
+    return BriefItemRandomSuffixEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      internalName: internalName ?? this.internalName,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCN,
+      'InternalName': internalName,
+    };
+  }
+}
+
 class ItemRandomSuffixEntity {
   final int id;
   final String nameLangEnUS;
@@ -95,40 +136,6 @@ class ItemRandomSuffixEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'InternalName': internalName,
-      'Enchantment0': enchantment0,
-      'Enchantment1': enchantment1,
-      'Enchantment2': enchantment2,
-      'Enchantment3': enchantment3,
-      'Enchantment4': enchantment4,
-      'AllocationPct0': allocationPct0,
-      'AllocationPct1': allocationPct1,
-      'AllocationPct2': allocationPct2,
-      'AllocationPct3': allocationPct3,
-      'AllocationPct4': allocationPct4,
-    };
-  }
-
   ItemRandomSuffixEntity copyWith({
     int? id,
     String? nameLangEnUS,
@@ -192,45 +199,38 @@ class ItemRandomSuffixEntity {
       allocationPct4: allocationPct4 ?? this.allocationPct4,
     );
   }
-}
-
-/// 随机后缀列表/Picker 展示模型
-class BriefItemRandomSuffixEntity {
-  final int id;
-  final String nameLangZhCN;
-  final String internalName;
-
-  const BriefItemRandomSuffixEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.internalName = '',
-  });
-
-  factory BriefItemRandomSuffixEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemRandomSuffixEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      internalName: json['InternalName'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
       'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
       'InternalName': internalName,
+      'Enchantment0': enchantment0,
+      'Enchantment1': enchantment1,
+      'Enchantment2': enchantment2,
+      'Enchantment3': enchantment3,
+      'Enchantment4': enchantment4,
+      'AllocationPct0': allocationPct0,
+      'AllocationPct1': allocationPct1,
+      'AllocationPct2': allocationPct2,
+      'AllocationPct3': allocationPct3,
+      'AllocationPct4': allocationPct4,
     };
-  }
-
-  BriefItemRandomSuffixEntity copyWith({
-    int? id,
-    String? nameLangZhCN,
-    String? internalName,
-  }) {
-    return BriefItemRandomSuffixEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      internalName: internalName ?? this.internalName,
-    );
   }
 }

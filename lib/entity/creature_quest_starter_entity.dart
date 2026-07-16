@@ -1,28 +1,3 @@
-class CreatureQuestStarterEntity {
-  final int id;
-  final int quest;
-
-  const CreatureQuestStarterEntity({this.id = 0, this.quest = 0});
-
-  factory CreatureQuestStarterEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureQuestStarterEntity(
-      id: json['id'] ?? 0,
-      quest: json['quest'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'quest': quest};
-  }
-
-  CreatureQuestStarterEntity copyWith({int? id, int? quest}) {
-    return CreatureQuestStarterEntity(
-      id: id ?? this.id,
-      quest: quest ?? this.quest,
-    );
-  }
-}
-
 class BriefCreatureQuestStarterEntity {
   final int id;
   final int quest;
@@ -47,10 +22,6 @@ class BriefCreatureQuestStarterEntity {
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
-  }
-
   BriefCreatureQuestStarterEntity copyWith({
     int? id,
     int? quest,
@@ -63,5 +34,34 @@ class BriefCreatureQuestStarterEntity {
       name: name ?? this.name,
       localeName: localeName ?? this.localeName,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'quest': quest, 'name': name, 'Name': localeName};
+  }
+}
+
+class CreatureQuestStarterEntity {
+  final int id;
+  final int quest;
+
+  const CreatureQuestStarterEntity({this.id = 0, this.quest = 0});
+
+  factory CreatureQuestStarterEntity.fromJson(Map<String, dynamic> json) {
+    return CreatureQuestStarterEntity(
+      id: json['id'] ?? 0,
+      quest: json['quest'] ?? 0,
+    );
+  }
+
+  CreatureQuestStarterEntity copyWith({int? id, int? quest}) {
+    return CreatureQuestStarterEntity(
+      id: id ?? this.id,
+      quest: quest ?? this.quest,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'quest': quest};
   }
 }

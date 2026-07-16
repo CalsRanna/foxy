@@ -1,3 +1,17 @@
+class BriefEmoteTextDataEntity {
+  final int id;
+  final String textLangZhCN;
+
+  const BriefEmoteTextDataEntity({this.id = 0, this.textLangZhCN = ''});
+
+  factory BriefEmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefEmoteTextDataEntity(
+      id: json['ID'] ?? 0,
+      textLangZhCN: json['Text_lang_zhCN'] ?? '',
+    );
+  }
+}
+
 class EmoteTextDataEntity {
   final int id;
   final String textLangEnUS;
@@ -82,18 +96,4 @@ class EmoteTextDataEntity {
     'Text_lang_unk3': textLangUnk3,
     'Text_lang_Flags': textLangFlags,
   };
-}
-
-class BriefEmoteTextDataEntity {
-  final int id;
-  final String textLangZhCN;
-
-  const BriefEmoteTextDataEntity({this.id = 0, this.textLangZhCN = ''});
-
-  factory BriefEmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
-    return BriefEmoteTextDataEntity(
-      id: json['ID'] ?? 0,
-      textLangZhCN: json['Text_lang_zhCN'] ?? '',
-    );
-  }
 }

@@ -1,3 +1,22 @@
+class BriefDbcEmoteEntity {
+  final int id;
+  final String slashCommand;
+  final int animId;
+
+  const BriefDbcEmoteEntity({
+    this.id = 0,
+    this.slashCommand = '',
+    this.animId = 0,
+  });
+
+  factory BriefDbcEmoteEntity.fromJson(Map<String, dynamic> json) =>
+      BriefDbcEmoteEntity(
+        id: json['ID'] ?? 0,
+        slashCommand: json['EmoteSlashCommand'] ?? '',
+        animId: json['AnimID'] ?? 0,
+      );
+}
+
 class DbcEmoteEntity {
   final int id;
   final String slashCommand;
@@ -36,23 +55,4 @@ class DbcEmoteEntity {
     'EmoteSpecProcParam': specProcParam,
     'EventSoundID': eventSoundId,
   };
-}
-
-class BriefDbcEmoteEntity {
-  final int id;
-  final String slashCommand;
-  final int animId;
-
-  const BriefDbcEmoteEntity({
-    this.id = 0,
-    this.slashCommand = '',
-    this.animId = 0,
-  });
-
-  factory BriefDbcEmoteEntity.fromJson(Map<String, dynamic> json) =>
-      BriefDbcEmoteEntity(
-        id: json['ID'] ?? 0,
-        slashCommand: json['EmoteSlashCommand'] ?? '',
-        animId: json['AnimID'] ?? 0,
-      );
 }

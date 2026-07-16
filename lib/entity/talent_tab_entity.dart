@@ -1,3 +1,55 @@
+class BriefTalentTabEntity {
+  final int id;
+  final String nameLangZhCN;
+  final int classMask;
+  final int categoryEnumId;
+  final int orderIndex;
+
+  const BriefTalentTabEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.classMask = 0,
+    this.categoryEnumId = 0,
+    this.orderIndex = 0,
+  });
+
+  factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
+    return BriefTalentTabEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      classMask: json['ClassMask'] ?? 0,
+      categoryEnumId: json['CategoryEnumID'] ?? 0,
+      orderIndex: json['OrderIndex'] ?? 0,
+    );
+  }
+
+  BriefTalentTabEntity copyWith({
+    int? id,
+    String? nameLangZhCN,
+    int? classMask,
+    int? categoryEnumId,
+    int? orderIndex,
+  }) {
+    return BriefTalentTabEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      classMask: classMask ?? this.classMask,
+      categoryEnumId: categoryEnumId ?? this.categoryEnumId,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCN,
+      'ClassMask': classMask,
+      'CategoryEnumID': categoryEnumId,
+      'OrderIndex': orderIndex,
+    };
+  }
+}
+
 class TalentTabEntity {
   final int id;
   final String nameLangEnUS;
@@ -80,35 +132,6 @@ class TalentTabEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'SpellIconID': spellIconId,
-      'RaceMask': raceMask,
-      'ClassMask': classMask,
-      'CategoryEnumID': categoryEnumId,
-      'OrderIndex': orderIndex,
-      'BackgroundFile': backgroundFile,
-    };
-  }
-
   TalentTabEntity copyWith({
     int? id,
     String? nameLangEnUS,
@@ -162,56 +185,33 @@ class TalentTabEntity {
       backgroundFile: backgroundFile ?? this.backgroundFile,
     );
   }
-}
-
-class BriefTalentTabEntity {
-  final int id;
-  final String nameLangZhCN;
-  final int classMask;
-  final int categoryEnumId;
-  final int orderIndex;
-
-  const BriefTalentTabEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.classMask = 0,
-    this.categoryEnumId = 0,
-    this.orderIndex = 0,
-  });
-
-  factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
-    return BriefTalentTabEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      classMask: json['ClassMask'] ?? 0,
-      categoryEnumId: json['CategoryEnumID'] ?? 0,
-      orderIndex: json['OrderIndex'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
       'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+      'SpellIconID': spellIconId,
+      'RaceMask': raceMask,
       'ClassMask': classMask,
       'CategoryEnumID': categoryEnumId,
       'OrderIndex': orderIndex,
+      'BackgroundFile': backgroundFile,
     };
-  }
-
-  BriefTalentTabEntity copyWith({
-    int? id,
-    String? nameLangZhCN,
-    int? classMask,
-    int? categoryEnumId,
-    int? orderIndex,
-  }) {
-    return BriefTalentTabEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      classMask: classMask ?? this.classMask,
-      categoryEnumId: categoryEnumId ?? this.categoryEnumId,
-      orderIndex: orderIndex ?? this.orderIndex,
-    );
   }
 }

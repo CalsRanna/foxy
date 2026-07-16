@@ -17,10 +17,6 @@ class DbcFactionTemplateFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'faction': faction, 'name': name};
-  }
-
   DbcFactionTemplateFilterEntity copyWith({
     String? id,
     String? faction,
@@ -31,5 +27,9 @@ class DbcFactionTemplateFilterEntity {
       faction: faction ?? this.faction,
       name: name ?? this.name,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'faction': faction, 'name': name};
   }
 }

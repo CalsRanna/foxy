@@ -1,11 +1,10 @@
-// QuestTemplate 模型
-//
-// BriefQuestTemplate — 列表展示用的精简模型，fromJson 兼容 LEFT JOIN
-// quest_template_locale 的附加字段（localeTitle），displayTitle getter 优先
-// locale > 英文。
-// QuestTemplate — 全字段模型（105 字段），用于详情页编辑，fromJson / toJson
-// 保留 DB 列名大小写。
-
+/// QuestTemplate 模型
+///
+/// BriefQuestTemplate — 列表展示用的精简模型，fromJson 兼容 LEFT JOIN
+/// quest_template_locale 的附加字段（localeTitle），displayTitle getter 优先
+/// locale > 英文。
+/// QuestTemplate — 全字段模型（105 字段），用于详情页编辑，fromJson / toJson
+/// 保留 DB 列名大小写。
 class BriefQuestTemplateEntity {
   final int id;
   final String logTitle;
@@ -42,25 +41,12 @@ class BriefQuestTemplateEntity {
     );
   }
 
-  /// 优先本地化标题 > 英文标题
-  String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
-
   /// 优先本地化描述 > 英文描述
   String get displayDescription =>
       localeDetails.isNotEmpty ? localeDetails : questDescription;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'LogTitle': logTitle,
-      'Title': localeTitle,
-      'QuestDescription': questDescription,
-      'Details': localeDetails,
-      'QuestType': questType,
-      'QuestLevel': questLevel,
-      'MinLevel': minLevel,
-    };
-  }
+  /// 优先本地化标题 > 英文标题
+  String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
 
   BriefQuestTemplateEntity copyWith({
     int? id,
@@ -82,6 +68,19 @@ class BriefQuestTemplateEntity {
       questLevel: questLevel ?? this.questLevel,
       minLevel: minLevel ?? this.minLevel,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'LogTitle': logTitle,
+      'Title': localeTitle,
+      'QuestDescription': questDescription,
+      'Details': localeDetails,
+      'QuestType': questType,
+      'QuestLevel': questLevel,
+      'MinLevel': minLevel,
+    };
   }
 }
 
@@ -410,116 +409,6 @@ class QuestTemplateEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'QuestType': questType,
-      'QuestLevel': questLevel,
-      'MinLevel': minLevel,
-      'QuestSortID': questSortId,
-      'QuestInfoID': questInfoId,
-      'SuggestedGroupNum': suggestedGroupNum,
-      'RequiredFactionId1': requiredFactionId1,
-      'RequiredFactionId2': requiredFactionId2,
-      'RequiredFactionValue1': requiredFactionValue1,
-      'RequiredFactionValue2': requiredFactionValue2,
-      'RewardNextQuest': rewardNextQuest,
-      'RewardXPDifficulty': rewardXpDifficulty,
-      'RewardMoney': rewardMoney,
-      'RewardMoneyDifficulty': rewardMoneyDifficulty,
-      'RewardDisplaySpell': rewardDisplaySpell,
-      'RewardSpell': rewardSpell,
-      'RewardHonor': rewardHonor,
-      'RewardKillHonor': rewardKillHonor,
-      'StartItem': startItem,
-      'Flags': flags,
-      'RequiredPlayerKills': requiredPlayerKills,
-      'RewardItem1': rewardItem1,
-      'RewardAmount1': rewardAmount1,
-      'RewardItem2': rewardItem2,
-      'RewardAmount2': rewardAmount2,
-      'RewardItem3': rewardItem3,
-      'RewardAmount3': rewardAmount3,
-      'RewardItem4': rewardItem4,
-      'RewardAmount4': rewardAmount4,
-      'ItemDrop1': itemDrop1,
-      'ItemDropQuantity1': itemDropQuantity1,
-      'ItemDrop2': itemDrop2,
-      'ItemDropQuantity2': itemDropQuantity2,
-      'ItemDrop3': itemDrop3,
-      'ItemDropQuantity3': itemDropQuantity3,
-      'ItemDrop4': itemDrop4,
-      'ItemDropQuantity4': itemDropQuantity4,
-      'RewardChoiceItemID1': rewardChoiceItemId1,
-      'RewardChoiceItemQuantity1': rewardChoiceItemQuantity1,
-      'RewardChoiceItemID2': rewardChoiceItemId2,
-      'RewardChoiceItemQuantity2': rewardChoiceItemQuantity2,
-      'RewardChoiceItemID3': rewardChoiceItemId3,
-      'RewardChoiceItemQuantity3': rewardChoiceItemQuantity3,
-      'RewardChoiceItemID4': rewardChoiceItemId4,
-      'RewardChoiceItemQuantity4': rewardChoiceItemQuantity4,
-      'RewardChoiceItemID5': rewardChoiceItemId5,
-      'RewardChoiceItemQuantity5': rewardChoiceItemQuantity5,
-      'RewardChoiceItemID6': rewardChoiceItemId6,
-      'RewardChoiceItemQuantity6': rewardChoiceItemQuantity6,
-      'POIContinent': poiContinent,
-      'POIx': poiX,
-      'POIy': poiY,
-      'POIPriority': poiPriority,
-      'RewardTitle': rewardTitle,
-      'RewardTalents': rewardTalents,
-      'RewardArenaPoints': rewardArenaPoints,
-      'RewardFactionID1': rewardFactionId1,
-      'RewardFactionValue1': rewardFactionValue1,
-      'RewardFactionOverride1': rewardFactionOverride1,
-      'RewardFactionID2': rewardFactionId2,
-      'RewardFactionValue2': rewardFactionValue2,
-      'RewardFactionOverride2': rewardFactionOverride2,
-      'RewardFactionID3': rewardFactionId3,
-      'RewardFactionValue3': rewardFactionValue3,
-      'RewardFactionOverride3': rewardFactionOverride3,
-      'RewardFactionID4': rewardFactionId4,
-      'RewardFactionValue4': rewardFactionValue4,
-      'RewardFactionOverride4': rewardFactionOverride4,
-      'RewardFactionID5': rewardFactionId5,
-      'RewardFactionValue5': rewardFactionValue5,
-      'RewardFactionOverride5': rewardFactionOverride5,
-      'TimeAllowed': timeAllowed,
-      'AllowableRaces': allowableRaces,
-      'LogTitle': logTitle,
-      'LogDescription': logDescription,
-      'QuestDescription': questDescription,
-      'AreaDescription': areaDescription,
-      'QuestCompletionLog': questCompletionLog,
-      'RequiredNpcOrGo1': requiredNpcOrGo1,
-      'RequiredNpcOrGo2': requiredNpcOrGo2,
-      'RequiredNpcOrGo3': requiredNpcOrGo3,
-      'RequiredNpcOrGo4': requiredNpcOrGo4,
-      'RequiredNpcOrGoCount1': requiredNpcOrGoCount1,
-      'RequiredNpcOrGoCount2': requiredNpcOrGoCount2,
-      'RequiredNpcOrGoCount3': requiredNpcOrGoCount3,
-      'RequiredNpcOrGoCount4': requiredNpcOrGoCount4,
-      'RequiredItemId1': requiredItemId1,
-      'RequiredItemId2': requiredItemId2,
-      'RequiredItemId3': requiredItemId3,
-      'RequiredItemId4': requiredItemId4,
-      'RequiredItemId5': requiredItemId5,
-      'RequiredItemId6': requiredItemId6,
-      'RequiredItemCount1': requiredItemCount1,
-      'RequiredItemCount2': requiredItemCount2,
-      'RequiredItemCount3': requiredItemCount3,
-      'RequiredItemCount4': requiredItemCount4,
-      'RequiredItemCount5': requiredItemCount5,
-      'RequiredItemCount6': requiredItemCount6,
-      'Unknown0': unknown0,
-      'ObjectiveText1': objectiveText1,
-      'ObjectiveText2': objectiveText2,
-      'ObjectiveText3': objectiveText3,
-      'ObjectiveText4': objectiveText4,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   QuestTemplateEntity copyWith({
     int? id,
     int? questType,
@@ -752,5 +641,115 @@ class QuestTemplateEntity {
       objectiveText4: objectiveText4 ?? this.objectiveText4,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'QuestType': questType,
+      'QuestLevel': questLevel,
+      'MinLevel': minLevel,
+      'QuestSortID': questSortId,
+      'QuestInfoID': questInfoId,
+      'SuggestedGroupNum': suggestedGroupNum,
+      'RequiredFactionId1': requiredFactionId1,
+      'RequiredFactionId2': requiredFactionId2,
+      'RequiredFactionValue1': requiredFactionValue1,
+      'RequiredFactionValue2': requiredFactionValue2,
+      'RewardNextQuest': rewardNextQuest,
+      'RewardXPDifficulty': rewardXpDifficulty,
+      'RewardMoney': rewardMoney,
+      'RewardMoneyDifficulty': rewardMoneyDifficulty,
+      'RewardDisplaySpell': rewardDisplaySpell,
+      'RewardSpell': rewardSpell,
+      'RewardHonor': rewardHonor,
+      'RewardKillHonor': rewardKillHonor,
+      'StartItem': startItem,
+      'Flags': flags,
+      'RequiredPlayerKills': requiredPlayerKills,
+      'RewardItem1': rewardItem1,
+      'RewardAmount1': rewardAmount1,
+      'RewardItem2': rewardItem2,
+      'RewardAmount2': rewardAmount2,
+      'RewardItem3': rewardItem3,
+      'RewardAmount3': rewardAmount3,
+      'RewardItem4': rewardItem4,
+      'RewardAmount4': rewardAmount4,
+      'ItemDrop1': itemDrop1,
+      'ItemDropQuantity1': itemDropQuantity1,
+      'ItemDrop2': itemDrop2,
+      'ItemDropQuantity2': itemDropQuantity2,
+      'ItemDrop3': itemDrop3,
+      'ItemDropQuantity3': itemDropQuantity3,
+      'ItemDrop4': itemDrop4,
+      'ItemDropQuantity4': itemDropQuantity4,
+      'RewardChoiceItemID1': rewardChoiceItemId1,
+      'RewardChoiceItemQuantity1': rewardChoiceItemQuantity1,
+      'RewardChoiceItemID2': rewardChoiceItemId2,
+      'RewardChoiceItemQuantity2': rewardChoiceItemQuantity2,
+      'RewardChoiceItemID3': rewardChoiceItemId3,
+      'RewardChoiceItemQuantity3': rewardChoiceItemQuantity3,
+      'RewardChoiceItemID4': rewardChoiceItemId4,
+      'RewardChoiceItemQuantity4': rewardChoiceItemQuantity4,
+      'RewardChoiceItemID5': rewardChoiceItemId5,
+      'RewardChoiceItemQuantity5': rewardChoiceItemQuantity5,
+      'RewardChoiceItemID6': rewardChoiceItemId6,
+      'RewardChoiceItemQuantity6': rewardChoiceItemQuantity6,
+      'POIContinent': poiContinent,
+      'POIx': poiX,
+      'POIy': poiY,
+      'POIPriority': poiPriority,
+      'RewardTitle': rewardTitle,
+      'RewardTalents': rewardTalents,
+      'RewardArenaPoints': rewardArenaPoints,
+      'RewardFactionID1': rewardFactionId1,
+      'RewardFactionValue1': rewardFactionValue1,
+      'RewardFactionOverride1': rewardFactionOverride1,
+      'RewardFactionID2': rewardFactionId2,
+      'RewardFactionValue2': rewardFactionValue2,
+      'RewardFactionOverride2': rewardFactionOverride2,
+      'RewardFactionID3': rewardFactionId3,
+      'RewardFactionValue3': rewardFactionValue3,
+      'RewardFactionOverride3': rewardFactionOverride3,
+      'RewardFactionID4': rewardFactionId4,
+      'RewardFactionValue4': rewardFactionValue4,
+      'RewardFactionOverride4': rewardFactionOverride4,
+      'RewardFactionID5': rewardFactionId5,
+      'RewardFactionValue5': rewardFactionValue5,
+      'RewardFactionOverride5': rewardFactionOverride5,
+      'TimeAllowed': timeAllowed,
+      'AllowableRaces': allowableRaces,
+      'LogTitle': logTitle,
+      'LogDescription': logDescription,
+      'QuestDescription': questDescription,
+      'AreaDescription': areaDescription,
+      'QuestCompletionLog': questCompletionLog,
+      'RequiredNpcOrGo1': requiredNpcOrGo1,
+      'RequiredNpcOrGo2': requiredNpcOrGo2,
+      'RequiredNpcOrGo3': requiredNpcOrGo3,
+      'RequiredNpcOrGo4': requiredNpcOrGo4,
+      'RequiredNpcOrGoCount1': requiredNpcOrGoCount1,
+      'RequiredNpcOrGoCount2': requiredNpcOrGoCount2,
+      'RequiredNpcOrGoCount3': requiredNpcOrGoCount3,
+      'RequiredNpcOrGoCount4': requiredNpcOrGoCount4,
+      'RequiredItemId1': requiredItemId1,
+      'RequiredItemId2': requiredItemId2,
+      'RequiredItemId3': requiredItemId3,
+      'RequiredItemId4': requiredItemId4,
+      'RequiredItemId5': requiredItemId5,
+      'RequiredItemId6': requiredItemId6,
+      'RequiredItemCount1': requiredItemCount1,
+      'RequiredItemCount2': requiredItemCount2,
+      'RequiredItemCount3': requiredItemCount3,
+      'RequiredItemCount4': requiredItemCount4,
+      'RequiredItemCount5': requiredItemCount5,
+      'RequiredItemCount6': requiredItemCount6,
+      'Unknown0': unknown0,
+      'ObjectiveText1': objectiveText1,
+      'ObjectiveText2': objectiveText2,
+      'ObjectiveText3': objectiveText3,
+      'ObjectiveText4': objectiveText4,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

@@ -23,16 +23,6 @@ class GameObjectTemplateLocaleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'locale': locale,
-      'name': name,
-      'castBarCaption': castBarCaption,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   GameObjectTemplateLocaleEntity copyWith({
     int? entry,
     String? locale,
@@ -47,5 +37,15 @@ class GameObjectTemplateLocaleEntity {
       castBarCaption: castBarCaption ?? this.castBarCaption,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'locale': locale,
+      'name': name,
+      'castBarCaption': castBarCaption,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }
