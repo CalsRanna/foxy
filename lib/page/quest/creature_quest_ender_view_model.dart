@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
-import 'package:get_it/get_it.dart';
 
 class CreatureQuestEnderViewModel with FieldControllerMixin {
   final questId = signal(0);

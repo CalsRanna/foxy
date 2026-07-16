@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_area_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_area_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -43,36 +43,6 @@ class SpellAreaViewModel
 
   final _repository = GetIt.instance.get<SpellAreaRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellAreas(spellId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    areaController.init(0);
-    questStartController.init(0);
-    questEndController.init(0);
-    auraSpellController.init(0);
-    racemaskController.init(0);
-    genderController.init(2);
-    autocastController.init(0);
-    questStartStatusController.init(64);
-    questEndStatusController.init(11);
-  }
-
-  void fillForm(SpellAreaEntity data) {
-    areaController.init(data.area);
-    questStartController.init(data.questStart);
-    questEndController.init(data.questEnd);
-    auraSpellController.init(data.auraSpell);
-    racemaskController.init(data.racemask);
-    genderController.init(data.gender);
-    autocastController.init(data.autocast);
-    questStartStatusController.init(data.questStartStatus);
-    questEndStatusController.init(data.questEndStatus);
-  }
-
   SpellAreaEntity collectFromForm() {
     return SpellAreaEntity(
       spell: spellId.value,
@@ -96,13 +66,6 @@ class SpellAreaViewModel
       LoggerUtil.instance.e('法术区域-创建失败: $e');
       DialogUtil.instance.error('法术区域-创建失败: $e');
     }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final area = items.value[index];
-    fillForm(area);
   }
 
   Future<void> delete(BuildContext context) async {
@@ -148,6 +111,62 @@ class SpellAreaViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    final area = items.value[index];
+    fillForm(area);
+  }
+
+  void fillForm(SpellAreaEntity data) {
+    areaController.init(data.area);
+    questStartController.init(data.questStart);
+    questEndController.init(data.questEnd);
+    auraSpellController.init(data.auraSpell);
+    racemaskController.init(data.racemask);
+    genderController.init(data.gender);
+    autocastController.init(data.autocast);
+    questStartStatusController.init(data.questStartStatus);
+    questEndStatusController.init(data.questEndStatus);
+  }
+
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      this.spellId.value = spellId;
+      spellIdController.init(spellId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术区域-初始化失败: $e');
+      DialogUtil.instance.error('法术区域-初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefSpellAreas(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    areaController.init(0);
+    questStartController.init(0);
+    questEndController.init(0);
+    auraSpellController.init(0);
+    racemaskController.init(0);
+    genderController.init(2);
+    autocastController.init(0);
+    questStartStatusController.init(64);
+    questEndStatusController.init(11);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
@@ -161,6 +180,12 @@ class SpellAreaViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -189,30 +214,5 @@ class SpellAreaViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      spellIdController.init(spellId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术区域-初始化失败: $e');
-      DialogUtil.instance.error('法术区域-初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

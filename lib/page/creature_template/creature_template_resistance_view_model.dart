@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -26,30 +26,6 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
   final _repository = GetIt.instance
       .get<CreatureTemplateResistanceRepository>();
 
-  /// 加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getBriefCreatureTemplateResistances(
-      creatureId.value,
-    );
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    schoolController.init(0);
-    resistanceController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  /// 填充表单
-  void fillForm(CreatureTemplateResistanceEntity resistance) {
-    schoolController.init(resistance.school);
-    resistanceController.init(resistance.resistance);
-    verifiedBuildController.init(resistance.verifiedBuild);
-  }
-
   /// 从表单收集数据
   CreatureTemplateResistanceEntity collectFromForm() {
     return CreatureTemplateResistanceEntity(
@@ -58,30 +34,6 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
       resistance: resistanceController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  /// 创建新记录
-  Future<bool> create() async {
-    try {
-      final nextSchool = await _repository.getNextSchool(creatureId.value);
-      resetForm();
-      schoolController.init(nextSchool);
-      selectedIndex.value = null;
-      return true;
-    } catch (e) {
-      LoggerUtil.instance.e('创建生物抗性记录失败: $e');
-      DialogUtil.instance.error('创建生物抗性记录失败: $e');
-      return false;
-    }
-  }
-
-  /// 编辑选中记录
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final r = items.value[index];
-    fillForm(r);
   }
 
   /// 复制记录
@@ -100,6 +52,21 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 创建新记录
+  Future<bool> create() async {
+    try {
+      final nextSchool = await _repository.getNextSchool(creatureId.value);
+      resetForm();
+      schoolController.init(nextSchool);
+      selectedIndex.value = null;
+      return true;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物抗性记录失败: $e');
+      DialogUtil.instance.error('创建生物抗性记录失败: $e');
+      return false;
     }
   }
 
@@ -146,6 +113,61 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
     }
   }
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final r = items.value[index];
+    fillForm(r);
+  }
+
+  /// 填充表单
+  void fillForm(CreatureTemplateResistanceEntity resistance) {
+    schoolController.init(resistance.school);
+    resistanceController.init(resistance.resistance);
+    verifiedBuildController.init(resistance.verifiedBuild);
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物抗性失败: $e');
+      DialogUtil.instance.error('初始化生物抗性失败: $e');
+    }
+  }
+
+  /// 加载数据
+
+  Future<void> load() async {
+    final data = await _repository.getBriefCreatureTemplateResistances(
+      creatureId.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 重置表单
+  void resetForm() {
+    schoolController.init(0);
+    resistanceController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
@@ -159,6 +181,13 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -176,34 +205,5 @@ class CreatureTemplateResistanceViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物抗性失败: $e');
-      DialogUtil.instance.error('初始化生物抗性失败: $e');
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

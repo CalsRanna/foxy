@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -28,6 +28,10 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
 
   int _originalId = 0;
 
+  void dispose() {
+    disposeControllers();
+  }
+
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
@@ -44,6 +48,10 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
     }
+  }
+
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(BuildContext context) async {
@@ -66,23 +74,6 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
     }
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void _initSignals(QuestOfferRewardEntity model) {
-    emote1Controller.init(model.emote1);
-    emote2Controller.init(model.emote2);
-    emote3Controller.init(model.emote3);
-    emote4Controller.init(model.emote4);
-    emoteDelay1Controller.init(model.emoteDelay1);
-    emoteDelay2Controller.init(model.emoteDelay2);
-    emoteDelay3Controller.init(model.emoteDelay3);
-    emoteDelay4Controller.init(model.emoteDelay4);
-    rewardTextController.init(model.rewardText);
-    verifiedBuildController.init(model.verifiedBuild);
-  }
-
   QuestOfferRewardEntity _collect() {
     return QuestOfferRewardEntity(
       id: questId.value,
@@ -99,7 +90,16 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
     );
   }
 
-  void dispose() {
-    disposeControllers();
+  void _initSignals(QuestOfferRewardEntity model) {
+    emote1Controller.init(model.emote1);
+    emote2Controller.init(model.emote2);
+    emote3Controller.init(model.emote3);
+    emote4Controller.init(model.emote4);
+    emoteDelay1Controller.init(model.emoteDelay1);
+    emoteDelay2Controller.init(model.emoteDelay2);
+    emoteDelay3Controller.init(model.emoteDelay3);
+    emoteDelay4Controller.init(model.emoteDelay4);
+    rewardTextController.init(model.rewardText);
+    verifiedBuildController.init(model.verifiedBuild);
   }
 }

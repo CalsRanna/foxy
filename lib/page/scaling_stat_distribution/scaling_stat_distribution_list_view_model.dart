@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -59,17 +59,6 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, int id) {
-    final log = ActivityLogEntity(
-      module: 'scaling_stat_distribution',
-      actionType: action,
-      entityId: id,
-      entityName: '',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
   void dispose() {
     disposeControllers();
   }
@@ -105,10 +94,6 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     );
   }
 
-  ScalingStatDistributionFilterEntity _buildFilter() {
-    return ScalingStatDistributionFilterEntity(id: idController.collect());
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -123,6 +108,21 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  ScalingStatDistributionFilterEntity _buildFilter() {
+    return ScalingStatDistributionFilterEntity(id: idController.collect());
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLogEntity(
+      module: 'scaling_stat_distribution',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {

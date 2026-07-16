@@ -187,6 +187,8 @@ class NpcTextViewModel with FieldControllerMixin {
     StringFieldController(),
   );
 
+  void dispose() => disposeControllers();
+
   Future<void> load(int textId) async {
     if (textId <= 0) return;
     try {
@@ -228,6 +230,25 @@ class NpcTextViewModel with FieldControllerMixin {
       LoggerUtil.instance.e(error.toString());
       DialogUtil.instance.error('保存失败: $error');
     }
+  }
+
+  void _applyLocale(NpcTextLocaleEntity entity) {
+    localeText00Controller.init(entity.text00);
+    localeText01Controller.init(entity.text01);
+    localeText10Controller.init(entity.text10);
+    localeText11Controller.init(entity.text11);
+    localeText20Controller.init(entity.text20);
+    localeText21Controller.init(entity.text21);
+    localeText30Controller.init(entity.text30);
+    localeText31Controller.init(entity.text31);
+    localeText40Controller.init(entity.text40);
+    localeText41Controller.init(entity.text41);
+    localeText50Controller.init(entity.text50);
+    localeText51Controller.init(entity.text51);
+    localeText60Controller.init(entity.text60);
+    localeText61Controller.init(entity.text61);
+    localeText70Controller.init(entity.text70);
+    localeText71Controller.init(entity.text71);
   }
 
   void _applyMain(NpcTextEntity entity) {
@@ -323,23 +344,26 @@ class NpcTextViewModel with FieldControllerMixin {
     verifiedBuildController.init(entity.verifiedBuild);
   }
 
-  void _applyLocale(NpcTextLocaleEntity entity) {
-    localeText00Controller.init(entity.text00);
-    localeText01Controller.init(entity.text01);
-    localeText10Controller.init(entity.text10);
-    localeText11Controller.init(entity.text11);
-    localeText20Controller.init(entity.text20);
-    localeText21Controller.init(entity.text21);
-    localeText30Controller.init(entity.text30);
-    localeText31Controller.init(entity.text31);
-    localeText40Controller.init(entity.text40);
-    localeText41Controller.init(entity.text41);
-    localeText50Controller.init(entity.text50);
-    localeText51Controller.init(entity.text51);
-    localeText60Controller.init(entity.text60);
-    localeText61Controller.init(entity.text61);
-    localeText70Controller.init(entity.text70);
-    localeText71Controller.init(entity.text71);
+  NpcTextLocaleEntity _collectLocale(int id) {
+    return NpcTextLocaleEntity(
+      id: id,
+      text00: localeText00Controller.collect(),
+      text01: localeText01Controller.collect(),
+      text10: localeText10Controller.collect(),
+      text11: localeText11Controller.collect(),
+      text20: localeText20Controller.collect(),
+      text21: localeText21Controller.collect(),
+      text30: localeText30Controller.collect(),
+      text31: localeText31Controller.collect(),
+      text40: localeText40Controller.collect(),
+      text41: localeText41Controller.collect(),
+      text50: localeText50Controller.collect(),
+      text51: localeText51Controller.collect(),
+      text60: localeText60Controller.collect(),
+      text61: localeText61Controller.collect(),
+      text70: localeText70Controller.collect(),
+      text71: localeText71Controller.collect(),
+    );
   }
 
   NpcTextEntity _collectMain() {
@@ -437,28 +461,6 @@ class NpcTextViewModel with FieldControllerMixin {
     );
   }
 
-  NpcTextLocaleEntity _collectLocale(int id) {
-    return NpcTextLocaleEntity(
-      id: id,
-      text00: localeText00Controller.collect(),
-      text01: localeText01Controller.collect(),
-      text10: localeText10Controller.collect(),
-      text11: localeText11Controller.collect(),
-      text20: localeText20Controller.collect(),
-      text21: localeText21Controller.collect(),
-      text30: localeText30Controller.collect(),
-      text31: localeText31Controller.collect(),
-      text40: localeText40Controller.collect(),
-      text41: localeText41Controller.collect(),
-      text50: localeText50Controller.collect(),
-      text51: localeText51Controller.collect(),
-      text60: localeText60Controller.collect(),
-      text61: localeText61Controller.collect(),
-      text70: localeText70Controller.collect(),
-      text71: localeText71Controller.collect(),
-    );
-  }
-
   bool _localeHasText(NpcTextLocaleEntity entity) {
     return entity.text00.isNotEmpty ||
         entity.text01.isNotEmpty ||
@@ -477,6 +479,4 @@ class NpcTextViewModel with FieldControllerMixin {
         entity.text70.isNotEmpty ||
         entity.text71.isNotEmpty;
   }
-
-  void dispose() => disposeControllers();
 }

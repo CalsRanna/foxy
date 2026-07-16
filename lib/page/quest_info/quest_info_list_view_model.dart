@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -60,20 +60,6 @@ class QuestInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, int id) {
-    final infos = this.infos.value;
-    final info = infos.where((i) => i.id == id).firstOrNull;
-    final name = info?.infoNameLangZhCN ?? '';
-    final log = ActivityLogEntity(
-      module: 'quest_info',
-      actionType: action,
-      entityId: id,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
   void dispose() {
     disposeControllers();
   }
@@ -107,13 +93,6 @@ class QuestInfoListViewModel with FieldControllerMixin {
     );
   }
 
-  QuestInfoFilterEntity _buildFilter() {
-    return QuestInfoFilterEntity(
-      id: entryController.collect(),
-      name: nameController.collect(),
-    );
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -129,6 +108,27 @@ class QuestInfoListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  QuestInfoFilterEntity _buildFilter() {
+    return QuestInfoFilterEntity(
+      id: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final infos = this.infos.value;
+    final info = infos.where((i) => i.id == id).firstOrNull;
+    final name = info?.infoNameLangZhCN ?? '';
+    final log = ActivityLogEntity(
+      module: 'quest_info',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {

@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -92,13 +92,6 @@ class AreaTableListViewModel with FieldControllerMixin {
     );
   }
 
-  AreaTableFilterEntity _buildFilter() {
-    return AreaTableFilterEntity(
-      id: entryController.collect(),
-      name: nameController.collect(),
-    );
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -116,6 +109,27 @@ class AreaTableListViewModel with FieldControllerMixin {
     await _refresh();
   }
 
+  AreaTableFilterEntity _buildFilter() {
+    return AreaTableFilterEntity(
+      id: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final areas = this.areas.value;
+    final area = areas.where((a) => a.id == id).firstOrNull;
+    final name = area?.areaNameLangZhCN ?? '';
+    final log = ActivityLogEntity(
+      module: 'area_table',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
   Future<void> _refresh() async {
     final token = ++_refreshToken;
     try {
@@ -131,19 +145,5 @@ class AreaTableListViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('刷新区域表列表失败: $e');
       DialogUtil.instance.error('刷新区域表列表失败: $e');
     }
-  }
-
-  void _logActivity(ActivityActionType action, int id) {
-    final areas = this.areas.value;
-    final area = areas.where((a) => a.id == id).firstOrNull;
-    final name = area?.areaNameLangZhCN ?? '';
-    final log = ActivityLogEntity(
-      module: 'area_table',
-      actionType: action,
-      entityId: id,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

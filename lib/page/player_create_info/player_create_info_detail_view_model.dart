@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -40,6 +40,10 @@ class PlayerCreateInfoDetailViewModel
   int? _origRace;
   int? _origClass;
 
+  void dispose() {
+    disposeControllers();
+  }
+
   Future<void> initSignals({int? race, int? playerClass}) async {
     try {
       if (race == null || playerClass == null) {
@@ -67,16 +71,7 @@ class PlayerCreateInfoDetailViewModel
     }
   }
 
-  void _initControllers(PlayerCreateInfoEntity i) {
-    raceController.init(i.race);
-    playerClassController.init(i.class_);
-    mapController.init(i.map);
-    zoneController.init(i.zone);
-    positionXController.init(i.positionX);
-    positionYController.init(i.positionY);
-    positionZController.init(i.positionZ);
-    orientationController.init(i.orientation);
-  }
+  void pop() => routerFacade.goBack();
 
   Future<void> save(BuildContext context) async {
     try {
@@ -109,19 +104,6 @@ class PlayerCreateInfoDetailViewModel
     }
   }
 
-  void pop() => routerFacade.goBack();
-
-  void _logActivity(ActivityActionType action, PlayerCreateInfoEntity t) {
-    final log = ActivityLogEntity(
-      module: 'player_create_info',
-      actionType: action,
-      entityId: t.race,
-      entityName: '',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
   PlayerCreateInfoEntity _collect() {
     return PlayerCreateInfoEntity(
       race: raceController.collect(),
@@ -135,7 +117,25 @@ class PlayerCreateInfoDetailViewModel
     );
   }
 
-  void dispose() {
-    disposeControllers();
+  void _initControllers(PlayerCreateInfoEntity i) {
+    raceController.init(i.race);
+    playerClassController.init(i.class_);
+    mapController.init(i.map);
+    zoneController.init(i.zone);
+    positionXController.init(i.positionX);
+    positionYController.init(i.positionY);
+    positionZController.init(i.positionZ);
+    orientationController.init(i.orientation);
+  }
+
+  void _logActivity(ActivityActionType action, PlayerCreateInfoEntity t) {
+    final log = ActivityLogEntity(
+      module: 'player_create_info',
+      actionType: action,
+      entityId: t.race,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

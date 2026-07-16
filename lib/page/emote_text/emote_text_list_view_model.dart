@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -60,20 +60,6 @@ class EmoteTextListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, int id) {
-    final templates = emotes.value;
-    final template = templates.where((t) => t.id == id).firstOrNull;
-    final name = template?.name ?? '';
-    final log = ActivityLogEntity(
-      module: 'emote_text',
-      actionType: action,
-      entityId: id,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
   void dispose() {
     disposeControllers();
   }
@@ -106,13 +92,6 @@ class EmoteTextListViewModel with FieldControllerMixin {
     );
   }
 
-  EmoteTextFilterEntity _buildFilter() {
-    return EmoteTextFilterEntity(
-      id: entryController.collect(),
-      name: nameController.collect(),
-    );
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -128,6 +107,27 @@ class EmoteTextListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  EmoteTextFilterEntity _buildFilter() {
+    return EmoteTextFilterEntity(
+      id: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final templates = emotes.value;
+    final template = templates.where((t) => t.id == id).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLogEntity(
+      module: 'emote_text',
+      actionType: action,
+      entityId: id,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {

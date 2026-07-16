@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -22,43 +22,6 @@ class GossipMenuListViewModel with FieldControllerMixin {
   final menus = signal<List<BriefGossipMenuEntity>>([]);
   final page = signal(1);
   final total = signal(0);
-
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (
-        _repository.getBriefGossipMenus(),
-        _repository.countGossipMenus(),
-      ).wait;
-      if (token != _refreshToken) return;
-      menus.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载对话菜单列表失败: $e');
-      DialogUtil.instance.error('加载对话菜单列表失败: $e');
-    }
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    menuIdController.init('');
-    textController.init('');
-    page.value = 1;
-    await _refresh();
-  }
 
   Future<void> copyGossipMenu(int menuId, int textId) async {
     try {
@@ -99,6 +62,26 @@ class GossipMenuListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (
+        _repository.getBriefGossipMenus(),
+        _repository.countGossipMenus(),
+      ).wait;
+      if (token != _refreshToken) return;
+      menus.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载对话菜单列表失败: $e');
+      DialogUtil.instance.error('加载对话菜单列表失败: $e');
+    }
+  }
+
   /// 导航到详情页（null 表示新建）
   void navigateToDetail({int? menuId, int? textId}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
@@ -110,21 +93,21 @@ class GossipMenuListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> _refresh() async {
-    final token = ++_refreshToken;
-    try {
-      final filter = _buildFilter();
-      final (items, count) = await (
-        _repository.getBriefGossipMenus(filter: filter, page: page.value),
-        _repository.countGossipMenus(filter: filter),
-      ).wait;
-      if (token != _refreshToken) return;
-      menus.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('刷新对话菜单列表失败: $e');
-      DialogUtil.instance.error('刷新对话菜单列表失败: $e');
-    }
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    menuIdController.init('');
+    textController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
   }
 
   GossipMenuFilterEntity _buildFilter() {
@@ -148,5 +131,22 @@ class GossipMenuListViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    try {
+      final filter = _buildFilter();
+      final (items, count) = await (
+        _repository.getBriefGossipMenus(filter: filter, page: page.value),
+        _repository.countGossipMenus(filter: filter),
+      ).wait;
+      if (token != _refreshToken) return;
+      menus.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('刷新对话菜单列表失败: $e');
+      DialogUtil.instance.error('刷新对话菜单列表失败: $e');
+    }
   }
 }

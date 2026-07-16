@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -25,34 +25,6 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
 
   final _repository = GetIt.instance.get<CreatureEquipTemplateRepository>();
 
-  /// 加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getBriefCreatureEquipTemplates(
-      creatureId.value,
-    );
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    idController.init(0);
-    itemID1Controller.init(0);
-    itemID2Controller.init(0);
-    itemID3Controller.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  /// 填充表单
-  void fillForm(BriefCreatureEquipTemplateEntity equip) {
-    idController.init(equip.id);
-    itemID1Controller.init(equip.itemID1);
-    itemID2Controller.init(equip.itemID2);
-    itemID3Controller.init(equip.itemID3);
-    verifiedBuildController.init(equip.verifiedBuild);
-  }
-
   /// 从表单收集数据
   CreatureEquipTemplateEntity collectFromForm() {
     final equip = CreatureEquipTemplateEntity(
@@ -64,30 +36,6 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
       verifiedBuild: verifiedBuildController.collect(),
     );
     return equip;
-  }
-
-  /// 创建新记录
-  Future<void> create() async {
-    try {
-      final blank = await _repository.createCreatureEquipTemplate(
-        creatureId.value,
-      );
-      resetForm();
-      idController.init(blank.id);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建生物装备记录失败: $e');
-      DialogUtil.instance.error('创建生物装备记录失败: $e');
-    }
-  }
-
-  /// 编辑选中记录
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final equip = items.value[index];
-    fillForm(equip);
   }
 
   /// 复制记录
@@ -106,6 +54,21 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 创建新记录
+  Future<void> create() async {
+    try {
+      final blank = await _repository.createCreatureEquipTemplate(
+        creatureId.value,
+      );
+      resetForm();
+      idController.init(blank.id);
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物装备记录失败: $e');
+      DialogUtil.instance.error('创建生物装备记录失败: $e');
     }
   }
 
@@ -152,6 +115,65 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
     }
   }
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final equip = items.value[index];
+    fillForm(equip);
+  }
+
+  /// 填充表单
+  void fillForm(BriefCreatureEquipTemplateEntity equip) {
+    idController.init(equip.id);
+    itemID1Controller.init(equip.itemID1);
+    itemID2Controller.init(equip.itemID2);
+    itemID3Controller.init(equip.itemID3);
+    verifiedBuildController.init(equip.verifiedBuild);
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物装备失败: $e');
+      DialogUtil.instance.error('初始化生物装备失败: $e');
+    }
+  }
+
+  /// 加载数据
+
+  Future<void> load() async {
+    final data = await _repository.getBriefCreatureEquipTemplates(
+      creatureId.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 重置表单
+  void resetForm() {
+    idController.init(0);
+    itemID1Controller.init(0);
+    itemID2Controller.init(0);
+    itemID3Controller.init(0);
+    verifiedBuildController.init(0);
+  }
+
   /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
@@ -165,6 +187,13 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -182,34 +211,5 @@ class CreatureEquipTemplateViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物装备失败: $e');
-      DialogUtil.instance.error('初始化生物装备失败: $e');
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

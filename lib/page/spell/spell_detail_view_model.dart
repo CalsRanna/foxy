@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -506,33 +506,48 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   bool _effectSignalsWired = false;
 
-  Future<int?> save(BuildContext context) async {
-    try {
-      var t = _collectFromControllers();
-      final isCreate = (await _repository.getSpell(t.id)) == null;
-      if (isCreate) {
-        final newId = await _repository.storeSpell(t);
-        id.value = newId;
-        idController.init(newId);
-        t = t.copyWith(id: newId);
-      } else {
-        await _repository.updateSpell(t);
-      }
-      spell.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
-      if (!context.mounted) return t.id;
-      var toast = ShadToast(description: Text('法术数据已保存'));
-      ShadSonner.of(context).show(toast);
-      return t.id;
-    } catch (e) {
-      if (!context.mounted) return null;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-      return null;
-    }
+  void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      auraDescriptionLangEnUS: values.valueOf('enUS'),
+      auraDescriptionLangKoKR: values.valueOf('koKR'),
+      auraDescriptionLangFrFR: values.valueOf('frFR'),
+      auraDescriptionLangDeDE: values.valueOf('deDE'),
+      auraDescriptionLangZhCN: values.valueOf('zhCN'),
+      auraDescriptionLangZhTW: values.valueOf('zhTW'),
+      auraDescriptionLangEsES: values.valueOf('esES'),
+      auraDescriptionLangEsMX: values.valueOf('esMX'),
+      auraDescriptionLangRuRU: values.valueOf('ruRU'),
+      auraDescriptionLangJaJP: values.valueOf('jaJP'),
+      auraDescriptionLangPtPT: values.valueOf('ptPT'),
+      auraDescriptionLangPtBR: values.valueOf('ptBR'),
+      auraDescriptionLangItIT: values.valueOf('itIT'),
+      auraDescriptionLangUnk1: values.valueOf('unk1'),
+      auraDescriptionLangUnk2: values.valueOf('unk2'),
+      auraDescriptionLangUnk3: values.valueOf('unk3'),
+    );
+    auraDescriptionLangZhCNController.init(values.zhCN);
+  }
+
+  void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
+    spell.value = spell.value.copyWith(
+      descriptionLangEnUS: values.valueOf('enUS'),
+      descriptionLangKoKR: values.valueOf('koKR'),
+      descriptionLangFrFR: values.valueOf('frFR'),
+      descriptionLangDeDE: values.valueOf('deDE'),
+      descriptionLangZhCN: values.valueOf('zhCN'),
+      descriptionLangZhTW: values.valueOf('zhTW'),
+      descriptionLangEsES: values.valueOf('esES'),
+      descriptionLangEsMX: values.valueOf('esMX'),
+      descriptionLangRuRU: values.valueOf('ruRU'),
+      descriptionLangJaJP: values.valueOf('jaJP'),
+      descriptionLangPtPT: values.valueOf('ptPT'),
+      descriptionLangPtBR: values.valueOf('ptBR'),
+      descriptionLangItIT: values.valueOf('itIT'),
+      descriptionLangUnk1: values.valueOf('unk1'),
+      descriptionLangUnk2: values.valueOf('unk2'),
+      descriptionLangUnk3: values.valueOf('unk3'),
+    );
+    descriptionLangZhCNController.init(values.zhCN);
   }
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
@@ -579,52 +594,62 @@ class SpellDetailViewModel with FieldControllerMixin {
     nameSubtextLangZhCNController.init(values.zhCN);
   }
 
-  void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
-      descriptionLangEnUS: values.valueOf('enUS'),
-      descriptionLangKoKR: values.valueOf('koKR'),
-      descriptionLangFrFR: values.valueOf('frFR'),
-      descriptionLangDeDE: values.valueOf('deDE'),
-      descriptionLangZhCN: values.valueOf('zhCN'),
-      descriptionLangZhTW: values.valueOf('zhTW'),
-      descriptionLangEsES: values.valueOf('esES'),
-      descriptionLangEsMX: values.valueOf('esMX'),
-      descriptionLangRuRU: values.valueOf('ruRU'),
-      descriptionLangJaJP: values.valueOf('jaJP'),
-      descriptionLangPtPT: values.valueOf('ptPT'),
-      descriptionLangPtBR: values.valueOf('ptBR'),
-      descriptionLangItIT: values.valueOf('itIT'),
-      descriptionLangUnk1: values.valueOf('unk1'),
-      descriptionLangUnk2: values.valueOf('unk2'),
-      descriptionLangUnk3: values.valueOf('unk3'),
-    );
-    descriptionLangZhCNController.init(values.zhCN);
+  void dispose() {
+    disposeControllers();
   }
 
-  void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
-      auraDescriptionLangEnUS: values.valueOf('enUS'),
-      auraDescriptionLangKoKR: values.valueOf('koKR'),
-      auraDescriptionLangFrFR: values.valueOf('frFR'),
-      auraDescriptionLangDeDE: values.valueOf('deDE'),
-      auraDescriptionLangZhCN: values.valueOf('zhCN'),
-      auraDescriptionLangZhTW: values.valueOf('zhTW'),
-      auraDescriptionLangEsES: values.valueOf('esES'),
-      auraDescriptionLangEsMX: values.valueOf('esMX'),
-      auraDescriptionLangRuRU: values.valueOf('ruRU'),
-      auraDescriptionLangJaJP: values.valueOf('jaJP'),
-      auraDescriptionLangPtPT: values.valueOf('ptPT'),
-      auraDescriptionLangPtBR: values.valueOf('ptBR'),
-      auraDescriptionLangItIT: values.valueOf('itIT'),
-      auraDescriptionLangUnk1: values.valueOf('unk1'),
-      auraDescriptionLangUnk2: values.valueOf('unk2'),
-      auraDescriptionLangUnk3: values.valueOf('unk3'),
-    );
-    auraDescriptionLangZhCNController.init(values.zhCN);
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createSpell();
+        this.id.value = blank.id;
+        spell.value = blank;
+        _initControllers(blank);
+        _wireEffectSignals();
+        return;
+      }
+      this.id.value = id;
+      final result = await _repository.getSpell(id);
+      if (result == null) return;
+      spell.value = result;
+      _initControllers(result);
+      _wireEffectSignals();
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载法术(id=$id)失败', error: e, stackTrace: s);
+    }
   }
 
   void pop() {
     routerFacade.goBack();
+  }
+
+  Future<int?> save(BuildContext context) async {
+    try {
+      var t = _collectFromControllers();
+      final isCreate = (await _repository.getSpell(t.id)) == null;
+      if (isCreate) {
+        final newId = await _repository.storeSpell(t);
+        id.value = newId;
+        idController.init(newId);
+        t = t.copyWith(id: newId);
+      } else {
+        await _repository.updateSpell(t);
+      }
+      spell.value = t;
+      _logActivity(
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
+      if (!context.mounted) return t.id;
+      var toast = ShadToast(description: Text('法术数据已保存'));
+      ShadSonner.of(context).show(toast);
+      return t.id;
+    } catch (e) {
+      if (!context.mounted) return null;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+      return null;
+    }
   }
 
   SpellEntity _collectFromControllers() {
@@ -844,63 +869,6 @@ class SpellDetailViewModel with FieldControllerMixin {
       shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
       shapeshiftExclude1: shapeshiftExclude1Controller.collect(),
     );
-  }
-
-  void _logActivity(ActivityActionType action, SpellEntity t) {
-    final log = ActivityLogEntity(
-      module: 'spell',
-      actionType: action,
-      entityId: t.id,
-      entityName: t.nameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createSpell();
-        this.id.value = blank.id;
-        spell.value = blank;
-        _initControllers(blank);
-        _wireEffectSignals();
-        return;
-      }
-      this.id.value = id;
-      final result = await _repository.getSpell(id);
-      if (result == null) return;
-      spell.value = result;
-      _initControllers(result);
-      _wireEffectSignals();
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载法术(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
-  /// 监听 SelectFieldController 变化，同步到 signal。
-  ///
-  /// 使用 [SelectFieldController.addListener] 监听联动变化。
-  void _wireEffectSignals() {
-    if (_effectSignalsWired) return;
-    _effectSignalsWired = true;
-
-    void sync(SelectFieldController<int> ctrl, Signal<int> sig) {
-      sig.value = ctrl.collect();
-      ctrl.addListener(() => sig.value = ctrl.collect());
-    }
-
-    sync(effect0Controller, effect0Signal);
-    sync(effect1Controller, effect1Signal);
-    sync(effect2Controller, effect2Signal);
-    sync(effectAura0Controller, effectAura0Signal);
-    sync(effectAura1Controller, effectAura1Signal);
-    sync(effectAura2Controller, effectAura2Signal);
-    sync(spellClassSetController, spellClassSetSignal);
   }
 
   void _initControllers(SpellEntity template) {
@@ -1123,5 +1091,37 @@ class SpellDetailViewModel with FieldControllerMixin {
     shapeshiftMask1Controller.init(template.shapeshiftMask1);
     shapeshiftExclude0Controller.init(template.shapeshiftExclude0);
     shapeshiftExclude1Controller.init(template.shapeshiftExclude1);
+  }
+
+  void _logActivity(ActivityActionType action, SpellEntity t) {
+    final log = ActivityLogEntity(
+      module: 'spell',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  /// 监听 SelectFieldController 变化，同步到 signal。
+  ///
+  /// 使用 [SelectFieldController.addListener] 监听联动变化。
+  void _wireEffectSignals() {
+    if (_effectSignalsWired) return;
+    _effectSignalsWired = true;
+
+    void sync(SelectFieldController<int> ctrl, Signal<int> sig) {
+      sig.value = ctrl.collect();
+      ctrl.addListener(() => sig.value = ctrl.collect());
+    }
+
+    sync(effect0Controller, effect0Signal);
+    sync(effect1Controller, effect1Signal);
+    sync(effect2Controller, effect2Signal);
+    sync(effectAura0Controller, effectAura0Signal);
+    sync(effectAura1Controller, effectAura1Signal);
+    sync(effectAura2Controller, effectAura2Signal);
+    sync(spellClassSetController, spellClassSetSignal);
   }
 }

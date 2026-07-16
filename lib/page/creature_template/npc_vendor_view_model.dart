@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -29,34 +29,6 @@ class NpcVendorViewModel with FieldControllerMixin {
   int? _editingExtendedCost;
 
   final _repository = GetIt.instance.get<NpcVendorRepository>();
-
-  /// 加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getBriefNpcVendors(entry.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    slotController.init(0);
-    itemController.init(0);
-    maxcountController.init(0);
-    incrtimeController.init(0);
-    extendedCostController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  /// 填充表单
-  void fillForm(BriefNpcVendorEntity vendor) {
-    slotController.init(vendor.slot);
-    itemController.init(vendor.item);
-    maxcountController.init(vendor.maxcount);
-    incrtimeController.init(vendor.incrtime);
-    extendedCostController.init(vendor.extendedCost);
-    verifiedBuildController.init(vendor.verifiedBuild);
-  }
 
   /// 从表单收集数据
   NpcVendorEntity collectFromForm() {
@@ -84,17 +56,6 @@ class NpcVendorViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('创建NPC商人记录失败: $e');
       DialogUtil.instance.error('创建NPC商人记录失败: $e');
     }
-  }
-
-  /// 编辑选中记录
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final vendor = items.value[index];
-    fillForm(vendor);
-    _editingItem = vendor.item;
-    _editingExtendedCost = vendor.extendedCost;
   }
 
   /// 删除记录
@@ -141,6 +102,67 @@ class NpcVendorViewModel with FieldControllerMixin {
     }
   }
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final vendor = items.value[index];
+    fillForm(vendor);
+    _editingItem = vendor.item;
+    _editingExtendedCost = vendor.extendedCost;
+  }
+
+  /// 填充表单
+  void fillForm(BriefNpcVendorEntity vendor) {
+    slotController.init(vendor.slot);
+    itemController.init(vendor.item);
+    maxcountController.init(vendor.maxcount);
+    incrtimeController.init(vendor.incrtime);
+    extendedCostController.init(vendor.extendedCost);
+    verifiedBuildController.init(vendor.verifiedBuild);
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      entry.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化NPC商人失败: $e');
+      DialogUtil.instance.error('初始化NPC商人失败: $e');
+    }
+  }
+
+  /// 加载数据
+
+  Future<void> load() async {
+    final data = await _repository.getBriefNpcVendors(entry.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 重置表单
+  void resetForm() {
+    slotController.init(0);
+    itemController.init(0);
+    maxcountController.init(0);
+    incrtimeController.init(0);
+    extendedCostController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   /// 保存记录（新增）
   Future<void> save(BuildContext context) async {
     try {
@@ -154,6 +176,13 @@ class NpcVendorViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -176,34 +205,5 @@ class NpcVendorViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      entry.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化NPC商人失败: $e');
-      DialogUtil.instance.error('初始化NPC商人失败: $e');
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

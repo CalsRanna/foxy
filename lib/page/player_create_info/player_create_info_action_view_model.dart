@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -16,23 +16,65 @@ class PlayerCreateInfoActionViewModel
         ViewModelValidationMixin,
         PlayerCreateInfoActionValidationMixin,
         FieldControllerMixin {
-  PlayerCreateInfoActionViewModel() {
-    typeController.addListener(_syncActionType);
-  }
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoActionRepository>();
-
   final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
+
   final actionType = signal(0);
   int? _race;
   int? _class_;
   int? _oldButton;
-
   late final buttonController = registerController(IntFieldController());
+
   late final actionController = registerController(IntFieldController());
   late final typeController = registerController(IntFieldController());
+  PlayerCreateInfoActionViewModel() {
+    typeController.addListener(_syncActionType);
+  }
 
-  void _syncActionType() => actionType.value = typeController.collect();
+  void create() {
+    _oldButton = null;
+    buttonController.init(0);
+    actionController.init(0);
+    typeController.init(0);
+  }
+
+  Future<void> delete(
+    BuildContext context,
+    PlayerCreateInfoActionEntity item,
+  ) async {
+    if (_race == null || _class_ == null) return;
+    try {
+      await _repository.destroyPlayerCreateInfoAction(
+        _race!,
+        _class_!,
+        item.button,
+      );
+      actions.value = await _repository.getBriefPlayerCreateInfoActions(
+        _race!,
+        _class_!,
+      );
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
+    } catch (e) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
+  void dispose() {
+    typeController.removeListener(_syncActionType);
+    disposeControllers();
+  }
+
+  void edit(int index) {
+    if (index >= actions.value.length) return;
+    final item = actions.value[index];
+    _oldButton = item.button;
+    buttonController.init(item.button);
+    actionController.init(item.action);
+    typeController.init(item.type);
+  }
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
@@ -47,22 +89,6 @@ class PlayerCreateInfoActionViewModel
       LoggerUtil.instance.e('加载角色动作失败: $e');
       DialogUtil.instance.error('加载角色动作失败: $e');
     }
-  }
-
-  void create() {
-    _oldButton = null;
-    buttonController.init(0);
-    actionController.init(0);
-    typeController.init(0);
-  }
-
-  void edit(int index) {
-    if (index >= actions.value.length) return;
-    final item = actions.value[index];
-    _oldButton = item.button;
-    buttonController.init(item.button);
-    actionController.init(item.action);
-    typeController.init(item.type);
   }
 
   Future<void> save(BuildContext context) async {
@@ -106,29 +132,6 @@ class PlayerCreateInfoActionViewModel
     }
   }
 
-  Future<void> delete(
-    BuildContext context,
-    PlayerCreateInfoActionEntity item,
-  ) async {
-    if (_race == null || _class_ == null) return;
-    try {
-      await _repository.destroyPlayerCreateInfoAction(
-        _race!,
-        _class_!,
-        item.button,
-      );
-      actions.value = await _repository.getBriefPlayerCreateInfoActions(
-        _race!,
-        _class_!,
-      );
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    }
-  }
-
   PlayerCreateInfoActionEntity _collect() {
     return PlayerCreateInfoActionEntity(
       race: _race ?? 0,
@@ -139,8 +142,5 @@ class PlayerCreateInfoActionViewModel
     );
   }
 
-  void dispose() {
-    typeController.removeListener(_syncActionType);
-    disposeControllers();
-  }
+  void _syncActionType() => actionType.value = typeController.collect();
 }

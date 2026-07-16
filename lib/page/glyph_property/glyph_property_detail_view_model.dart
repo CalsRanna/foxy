@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/glyph_property_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/glyph_property_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -31,6 +31,30 @@ class GlyphPropertyDetailViewModel
   late final spellIconIdController = registerController(IntFieldController());
 
   final property = signal(GlyphPropertyEntity());
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createGlyphProperty();
+        property.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      property.value = (await _repository.getGlyphProperty(id))!;
+      _initControllers(property.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
 
   Future<void> save(BuildContext context) async {
     try {
@@ -59,11 +83,6 @@ class GlyphPropertyDetailViewModel
     }
   }
 
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
   /// 从所有 Controller 收集数据构建 GlyphProperty
   GlyphPropertyEntity _collectFromControllers() {
     return GlyphPropertyEntity(
@@ -72,6 +91,16 @@ class GlyphPropertyDetailViewModel
       glyphSlotFlags: glyphSlotFlagsController.collect(),
       spellIconId: spellIconIdController.collect(),
     );
+  }
+
+  void _initControllers(GlyphPropertyEntity glyphProperty) {
+    /// Basic
+    idController.init(glyphProperty.id);
+
+    /// Property
+    spellIdController.init(glyphProperty.spellId);
+    glyphSlotFlagsController.init(glyphProperty.glyphSlotFlags);
+    spellIconIdController.init(glyphProperty.spellIconId);
   }
 
   void _logActivity(ActivityActionType action, GlyphPropertyEntity t) {
@@ -83,34 +112,5 @@ class GlyphPropertyDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createGlyphProperty();
-        property.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      property.value = (await _repository.getGlyphProperty(id))!;
-      _initControllers(property.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
-  void _initControllers(GlyphPropertyEntity glyphProperty) {
-    /// Basic
-    idController.init(glyphProperty.id);
-
-    /// Property
-    spellIdController.init(glyphProperty.spellId);
-    glyphSlotFlagsController.init(glyphProperty.glyphSlotFlags);
-    spellIconIdController.init(glyphProperty.spellIconId);
   }
 }

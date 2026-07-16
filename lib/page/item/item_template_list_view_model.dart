@@ -2,14 +2,14 @@ import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -29,13 +29,6 @@ class ItemTemplateListViewModel with FieldControllerMixin {
   final selectedClassId = signal(-1);
   final selectedSubclass = signal(-1);
 
-  /// 当前选中的类别名称
-  String get selectedClassName {
-    return selectedClassId.value >= 0
-        ? kItemClasses[selectedClassId.value]
-        : '';
-  }
-
   /// 获取当前类别下的子类别列表
   List<String> get currentSubclasses {
     if (selectedClassId.value < 0 ||
@@ -45,63 +38,17 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     return kItemSubclasses[selectedClassId.value];
   }
 
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (
-        _repository.getBriefItemTemplates(),
-        _repository.countItemTemplates(),
-      ).wait;
-      if (token != _refreshToken) return;
-      templates.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载物品列表失败: $e');
-      DialogUtil.instance.error('加载物品列表失败: $e');
-    }
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    entryController.init('');
-    nameController.init('');
-    descriptionController.init('');
-    selectedClassId.value = -1;
-    selectedSubclass.value = -1;
-    page.value = 1;
-    await _refresh();
-  }
-
-  /// 选择类别
-  void selectClass(int classId) {
-    selectedClassId.value = classId;
-    selectedSubclass.value = -1;
-    search();
+  /// 当前选中的类别名称
+  String get selectedClassName {
+    return selectedClassId.value >= 0
+        ? kItemClasses[selectedClassId.value]
+        : '';
   }
 
   /// 清除类别选择
   void clearClass() {
     selectedClassId.value = -1;
     selectedSubclass.value = -1;
-    search();
-  }
-
-  /// 选择子类别
-  void selectSubclass(int subclass) {
-    selectedSubclass.value = subclass;
     search();
   }
 
@@ -148,6 +95,26 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (
+        _repository.getBriefItemTemplates(),
+        _repository.countItemTemplates(),
+      ).wait;
+      if (token != _refreshToken) return;
+      templates.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载物品列表失败: $e');
+      DialogUtil.instance.error('加载物品列表失败: $e');
+    }
+  }
+
   void navigateToDetail({int? entry, String? name}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     final id = entry != null ? 'item_$entry' : 'item_new';
@@ -160,15 +127,37 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<List<BriefItemTemplateEntity>> _fetchItems() async {
-    final filter = ItemTemplateFilterEntity(
-      entry: entryController.collect(),
-      name: nameController.collect(),
-      description: descriptionController.collect(),
-      classId: selectedClassId.value,
-      subclass: selectedSubclass.value,
-    );
-    return _repository.getBriefItemTemplates(page: page.value, filter: filter);
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    nameController.init('');
+    descriptionController.init('');
+    selectedClassId.value = -1;
+    selectedSubclass.value = -1;
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
+  }
+
+  /// 选择类别
+  void selectClass(int classId) {
+    selectedClassId.value = classId;
+    selectedSubclass.value = -1;
+    search();
+  }
+
+  /// 选择子类别
+  void selectSubclass(int subclass) {
+    selectedSubclass.value = subclass;
+    search();
   }
 
   Future<int> _count() async {
@@ -182,17 +171,15 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     return _repository.countItemTemplates(filter: filter);
   }
 
-  Future<void> _refresh() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (_fetchItems(), _count()).wait;
-      if (token != _refreshToken) return;
-      templates.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('刷新物品列表失败: $e');
-      DialogUtil.instance.error('刷新物品列表失败: $e');
-    }
+  Future<List<BriefItemTemplateEntity>> _fetchItems() async {
+    final filter = ItemTemplateFilterEntity(
+      entry: entryController.collect(),
+      name: nameController.collect(),
+      description: descriptionController.collect(),
+      classId: selectedClassId.value,
+      subclass: selectedSubclass.value,
+    );
+    return _repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
   void _logActivity(ActivityActionType action, int entry) {
@@ -207,5 +194,18 @@ class ItemTemplateListViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (_fetchItems(), _count()).wait;
+      if (token != _refreshToken) return;
+      templates.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('刷新物品列表失败: $e');
+      DialogUtil.instance.error('刷新物品列表失败: $e');
+    }
   }
 }

@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/game_object_template_addon_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/game_object_template_addon_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -32,6 +32,21 @@ class GameObjectTemplateAddonViewModel
 
   final addon = signal(GameObjectTemplateAddonEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({required int gameObjectId}) async {
+    try {
+      this.gameObjectId.value = gameObjectId;
+      gameObjectIdController.init(gameObjectId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
+  }
+
   Future<void> load() async {
     final data = await _repository.getGameObjectTemplateAddon(
       gameObjectId.value,
@@ -40,6 +55,10 @@ class GameObjectTemplateAddonViewModel
       addon.value = data;
       _initSignals(data);
     }
+  }
+
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(BuildContext context) async {
@@ -55,10 +74,6 @@ class GameObjectTemplateAddonViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void pop() {
-    routerFacade.goBack();
   }
 
   GameObjectTemplateAddonEntity _collectFromControllers() {
@@ -84,20 +99,5 @@ class GameObjectTemplateAddonViewModel
     artkit1Controller.init(data.artkit1);
     artkit2Controller.init(data.artkit2);
     artkit3Controller.init(data.artkit3);
-  }
-
-  Future<void> initSignals({required int gameObjectId}) async {
-    try {
-      this.gameObjectId.value = gameObjectId;
-      gameObjectIdController.init(gameObjectId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化失败: $e');
-      DialogUtil.instance.error('初始化失败: $e');
-    }
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

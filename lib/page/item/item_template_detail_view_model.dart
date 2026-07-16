@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/item_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/item_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -320,13 +320,18 @@ class ItemTemplateDetailViewModel
   final entry = signal<int>(0);
   final template = signal(ItemTemplateEntity());
 
+  bool get hasDisenchantLoot => template.value.disenchantId != 0;
+
   /// Computed conditions
   bool get hasEnchantment =>
       template.value.randomProperty != 0 || template.value.randomSuffix != 0;
   bool get hasItemLoot => (template.value.flags & 4) != 0;
-  bool get hasDisenchantLoot => template.value.disenchantId != 0;
-  bool get hasProspectingLoot => (template.value.flags & 262144) != 0;
   bool get hasMillingLoot => (template.value.flags & 536870912) != 0;
+  bool get hasProspectingLoot => (template.value.flags & 262144) != 0;
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? entry}) async {
     try {
@@ -345,168 +350,35 @@ class ItemTemplateDetailViewModel
     }
   }
 
-  void _initControllers(ItemTemplateEntity template) {
-    /// Card 1: Basic Info
-    entryController.init(template.entry);
-    nameController.init(template.name);
-    descriptionController.init(template.description);
-    qualityController.init(template.quality);
-    classNameController.init(template.className);
-    subclassController.init(template.subclass);
-    soundOverrideSubclassController.init(template.soundOverrideSubclass);
-    materialController.init(template.material);
-    displayIdController.init(template.displayId);
-    inventoryTypeController.init(template.inventoryType);
-    sheathController.init(template.sheath);
+  void pop() {
+    routerFacade.goBack();
+  }
 
-    /// Card 2: Set/Pricing/Container/Misc
-    bondingController.init(template.bonding);
-    itemsetController.init(template.itemset);
-    randomPropertyController.init(template.randomProperty);
-    randomSuffixController.init(template.randomSuffix);
-    maxDurabilityController.init(template.maxDurability);
-    buyPriceController.init(template.buyPrice);
-    sellPriceController.init(template.sellPrice);
-    buyCountController.init(template.buyCount);
-    maxcountController.init(template.maxcount);
-    stackableController.init(template.stackable);
-    totemCategoryController.init(template.totemCategory);
-    foodTypeController.init(template.foodType);
-    bagFamilyController.init(template.bagFamily);
-    containerSlotsController.init(template.containerSlots);
-    itemLimitCategoryController.init(template.itemLimitCategory);
-    startquestController.init(template.startquest);
-    durationController.init(template.duration);
-    disenchantIdController.init(template.disenchantId);
-    minMoneyLootController.init(template.minMoneyLoot);
-    maxMoneyLootController.init(template.maxMoneyLoot);
-
-    /// Card 3: Flags
-    flagsController.init(template.flags);
-    flagsExtraController.init(template.flagsExtra);
-    flagsCustomController.init(template.flagsCustom);
-
-    /// Card 4: Damage/Armor
-    delayController.init(template.delay);
-    rangedModRangeController.init(template.rangedModRange);
-    armorDamageModifierController.init(template.armorDamageModifier);
-    dmgType1Controller.init(template.dmgType1);
-    dmgMin1Controller.init(template.dmgMin1);
-    dmgMax1Controller.init(template.dmgMax1);
-    dmgType2Controller.init(template.dmgType2);
-    dmgMin2Controller.init(template.dmgMin2);
-    dmgMax2Controller.init(template.dmgMax2);
-    ammoTypeController.init(template.ammoType);
-    armorController.init(template.armor);
-    blockController.init(template.block);
-
-    /// Card 5: Scaling Stats
-    scalingStatDistributionController.init(template.scalingStatDistribution);
-    scalingStatValueController.init(template.scalingStatValue);
-
-    /// Card 6: Stats
-    statType1Controller.init(template.statType1);
-    statValue1Controller.init(template.statValue1);
-    statType2Controller.init(template.statType2);
-    statValue2Controller.init(template.statValue2);
-    statType3Controller.init(template.statType3);
-    statValue3Controller.init(template.statValue3);
-    statType4Controller.init(template.statType4);
-    statValue4Controller.init(template.statValue4);
-    statType5Controller.init(template.statType5);
-    statValue5Controller.init(template.statValue5);
-    statType6Controller.init(template.statType6);
-    statValue6Controller.init(template.statValue6);
-    statType7Controller.init(template.statType7);
-    statValue7Controller.init(template.statValue7);
-    statType8Controller.init(template.statType8);
-    statValue8Controller.init(template.statValue8);
-    statType9Controller.init(template.statType9);
-    statValue9Controller.init(template.statValue9);
-    statType10Controller.init(template.statType10);
-    statValue10Controller.init(template.statValue10);
-
-    /// Card 7: Resistances
-    holyResController.init(template.holyRes);
-    fireResController.init(template.fireRes);
-    natureResController.init(template.natureRes);
-    shadowResController.init(template.shadowRes);
-    frostResController.init(template.frostRes);
-    arcaneResController.init(template.arcaneRes);
-
-    /// Card 8: Spells (5 slots)
-    spellId1Controller.init(template.spellId1);
-    spellTrigger1Controller.init(template.spellTrigger1);
-    spellCharge1Controller.init(template.spellCharges1);
-    spellPpmRate1Controller.init(template.spellPpmRate1);
-    spellCooldown1Controller.init(template.spellCooldown1);
-    spellCategory1Controller.init(template.spellCategory1);
-    spellCategoryCooldown1Controller.init(template.spellCategoryCooldown1);
-    spellId2Controller.init(template.spellId2);
-    spellTrigger2Controller.init(template.spellTrigger2);
-    spellCharge2Controller.init(template.spellCharges2);
-    spellPpmRate2Controller.init(template.spellPpmRate2);
-    spellCooldown2Controller.init(template.spellCooldown2);
-    spellCategory2Controller.init(template.spellCategory2);
-    spellCategoryCooldown2Controller.init(template.spellCategoryCooldown2);
-    spellId3Controller.init(template.spellId3);
-    spellTrigger3Controller.init(template.spellTrigger3);
-    spellCharge3Controller.init(template.spellCharges3);
-    spellPpmRate3Controller.init(template.spellPpmRate3);
-    spellCooldown3Controller.init(template.spellCooldown3);
-    spellCategory3Controller.init(template.spellCategory3);
-    spellCategoryCooldown3Controller.init(template.spellCategoryCooldown3);
-    spellId4Controller.init(template.spellId4);
-    spellTrigger4Controller.init(template.spellTrigger4);
-    spellCharge4Controller.init(template.spellCharges4);
-    spellPpmRate4Controller.init(template.spellPpmRate4);
-    spellCooldown4Controller.init(template.spellCooldown4);
-    spellCategory4Controller.init(template.spellCategory4);
-    spellCategoryCooldown4Controller.init(template.spellCategoryCooldown4);
-    spellId5Controller.init(template.spellId5);
-    spellTrigger5Controller.init(template.spellTrigger5);
-    spellCharge5Controller.init(template.spellCharges5);
-    spellPpmRate5Controller.init(template.spellPpmRate5);
-    spellCooldown5Controller.init(template.spellCooldown5);
-    spellCategory5Controller.init(template.spellCategory5);
-    spellCategoryCooldown5Controller.init(template.spellCategoryCooldown5);
-
-    /// Card 9: Requirements
-    allowableClassController.init(template.allowableClass);
-    allowableRaceController.init(template.allowableRace);
-    itemLevelController.init(template.itemLevel);
-    requiredLevelController.init(template.requiredLevel);
-    requiredSkillController.init(template.requiredSkill);
-    requiredSkillRankController.init(template.requiredSkillRank);
-    requiredSpellController.init(template.requiredSpell);
-    requiredHonorRankController.init(template.requiredHonorRank);
-    requiredCityRankController.init(template.requiredCityRank);
-    requiredReputationFactionController.init(
-      template.requiredReputationFaction,
-    );
-    requiredReputationRankController.init(template.requiredReputationRank);
-    requiredDisenchantSkillController.init(template.requiredDisenchantSkill);
-
-    /// Card 10: Socket/Gem
-    lockidController.init(template.lockid);
-    gemPropertiesController.init(template.gemProperties);
-    socketBonusController.init(template.socketBonus);
-    socketColor1Controller.init(template.socketColor1);
-    socketContent1Controller.init(template.socketContent1);
-    socketColor2Controller.init(template.socketColor2);
-    socketContent2Controller.init(template.socketContent2);
-    socketColor3Controller.init(template.socketColor3);
-    socketContent3Controller.init(template.socketContent3);
-
-    /// Card 11: Page/Misc
-    mapIdController.init(template.mapId);
-    areaController.init(template.area);
-    holidayIdController.init(template.holidayId);
-    pageTextController.init(template.pageText);
-    pageMaterialController.init(template.pageMaterial);
-    languageIdController.init(template.languageId);
-    scriptNameController.init(template.scriptName);
-    verifiedBuildController.init(template.verifiedBuild);
+  Future<int?> save(BuildContext context) async {
+    try {
+      final t = _collectFromControllers();
+      validateItemTemplateFields(t);
+      final existed = await _repository.getItemTemplate(t.entry);
+      if (existed == null) {
+        final id = await _repository.storeItemTemplate(t);
+        entryController.init(id);
+        template.value = t.copyWith(entry: id);
+        _logActivity(ActivityActionType.create, template.value);
+      } else {
+        await _repository.updateItemTemplate(t);
+        template.value = t;
+        _logActivity(ActivityActionType.update, t);
+      }
+      if (!context.mounted) return template.value.entry;
+      var toast = ShadToast(description: Text('模板数据已保存'));
+      ShadSonner.of(context).show(toast);
+      return template.value.entry;
+    } catch (e) {
+      if (!context.mounted) return null;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+      return null;
+    }
   }
 
   ItemTemplateEntity _collectFromControllers() {
@@ -673,35 +545,168 @@ class ItemTemplateDetailViewModel
     );
   }
 
-  Future<int?> save(BuildContext context) async {
-    try {
-      final t = _collectFromControllers();
-      validateItemTemplateFields(t);
-      final existed = await _repository.getItemTemplate(t.entry);
-      if (existed == null) {
-        final id = await _repository.storeItemTemplate(t);
-        entryController.init(id);
-        template.value = t.copyWith(entry: id);
-        _logActivity(ActivityActionType.create, template.value);
-      } else {
-        await _repository.updateItemTemplate(t);
-        template.value = t;
-        _logActivity(ActivityActionType.update, t);
-      }
-      if (!context.mounted) return template.value.entry;
-      var toast = ShadToast(description: Text('模板数据已保存'));
-      ShadSonner.of(context).show(toast);
-      return template.value.entry;
-    } catch (e) {
-      if (!context.mounted) return null;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-      return null;
-    }
-  }
+  void _initControllers(ItemTemplateEntity template) {
+    /// Card 1: Basic Info
+    entryController.init(template.entry);
+    nameController.init(template.name);
+    descriptionController.init(template.description);
+    qualityController.init(template.quality);
+    classNameController.init(template.className);
+    subclassController.init(template.subclass);
+    soundOverrideSubclassController.init(template.soundOverrideSubclass);
+    materialController.init(template.material);
+    displayIdController.init(template.displayId);
+    inventoryTypeController.init(template.inventoryType);
+    sheathController.init(template.sheath);
 
-  void pop() {
-    routerFacade.goBack();
+    /// Card 2: Set/Pricing/Container/Misc
+    bondingController.init(template.bonding);
+    itemsetController.init(template.itemset);
+    randomPropertyController.init(template.randomProperty);
+    randomSuffixController.init(template.randomSuffix);
+    maxDurabilityController.init(template.maxDurability);
+    buyPriceController.init(template.buyPrice);
+    sellPriceController.init(template.sellPrice);
+    buyCountController.init(template.buyCount);
+    maxcountController.init(template.maxcount);
+    stackableController.init(template.stackable);
+    totemCategoryController.init(template.totemCategory);
+    foodTypeController.init(template.foodType);
+    bagFamilyController.init(template.bagFamily);
+    containerSlotsController.init(template.containerSlots);
+    itemLimitCategoryController.init(template.itemLimitCategory);
+    startquestController.init(template.startquest);
+    durationController.init(template.duration);
+    disenchantIdController.init(template.disenchantId);
+    minMoneyLootController.init(template.minMoneyLoot);
+    maxMoneyLootController.init(template.maxMoneyLoot);
+
+    /// Card 3: Flags
+    flagsController.init(template.flags);
+    flagsExtraController.init(template.flagsExtra);
+    flagsCustomController.init(template.flagsCustom);
+
+    /// Card 4: Damage/Armor
+    delayController.init(template.delay);
+    rangedModRangeController.init(template.rangedModRange);
+    armorDamageModifierController.init(template.armorDamageModifier);
+    dmgType1Controller.init(template.dmgType1);
+    dmgMin1Controller.init(template.dmgMin1);
+    dmgMax1Controller.init(template.dmgMax1);
+    dmgType2Controller.init(template.dmgType2);
+    dmgMin2Controller.init(template.dmgMin2);
+    dmgMax2Controller.init(template.dmgMax2);
+    ammoTypeController.init(template.ammoType);
+    armorController.init(template.armor);
+    blockController.init(template.block);
+
+    /// Card 5: Scaling Stats
+    scalingStatDistributionController.init(template.scalingStatDistribution);
+    scalingStatValueController.init(template.scalingStatValue);
+
+    /// Card 6: Stats
+    statType1Controller.init(template.statType1);
+    statValue1Controller.init(template.statValue1);
+    statType2Controller.init(template.statType2);
+    statValue2Controller.init(template.statValue2);
+    statType3Controller.init(template.statType3);
+    statValue3Controller.init(template.statValue3);
+    statType4Controller.init(template.statType4);
+    statValue4Controller.init(template.statValue4);
+    statType5Controller.init(template.statType5);
+    statValue5Controller.init(template.statValue5);
+    statType6Controller.init(template.statType6);
+    statValue6Controller.init(template.statValue6);
+    statType7Controller.init(template.statType7);
+    statValue7Controller.init(template.statValue7);
+    statType8Controller.init(template.statType8);
+    statValue8Controller.init(template.statValue8);
+    statType9Controller.init(template.statType9);
+    statValue9Controller.init(template.statValue9);
+    statType10Controller.init(template.statType10);
+    statValue10Controller.init(template.statValue10);
+
+    /// Card 7: Resistances
+    holyResController.init(template.holyRes);
+    fireResController.init(template.fireRes);
+    natureResController.init(template.natureRes);
+    shadowResController.init(template.shadowRes);
+    frostResController.init(template.frostRes);
+    arcaneResController.init(template.arcaneRes);
+
+    /// Card 8: Spells (5 slots)
+    spellId1Controller.init(template.spellId1);
+    spellTrigger1Controller.init(template.spellTrigger1);
+    spellCharge1Controller.init(template.spellCharges1);
+    spellPpmRate1Controller.init(template.spellPpmRate1);
+    spellCooldown1Controller.init(template.spellCooldown1);
+    spellCategory1Controller.init(template.spellCategory1);
+    spellCategoryCooldown1Controller.init(template.spellCategoryCooldown1);
+    spellId2Controller.init(template.spellId2);
+    spellTrigger2Controller.init(template.spellTrigger2);
+    spellCharge2Controller.init(template.spellCharges2);
+    spellPpmRate2Controller.init(template.spellPpmRate2);
+    spellCooldown2Controller.init(template.spellCooldown2);
+    spellCategory2Controller.init(template.spellCategory2);
+    spellCategoryCooldown2Controller.init(template.spellCategoryCooldown2);
+    spellId3Controller.init(template.spellId3);
+    spellTrigger3Controller.init(template.spellTrigger3);
+    spellCharge3Controller.init(template.spellCharges3);
+    spellPpmRate3Controller.init(template.spellPpmRate3);
+    spellCooldown3Controller.init(template.spellCooldown3);
+    spellCategory3Controller.init(template.spellCategory3);
+    spellCategoryCooldown3Controller.init(template.spellCategoryCooldown3);
+    spellId4Controller.init(template.spellId4);
+    spellTrigger4Controller.init(template.spellTrigger4);
+    spellCharge4Controller.init(template.spellCharges4);
+    spellPpmRate4Controller.init(template.spellPpmRate4);
+    spellCooldown4Controller.init(template.spellCooldown4);
+    spellCategory4Controller.init(template.spellCategory4);
+    spellCategoryCooldown4Controller.init(template.spellCategoryCooldown4);
+    spellId5Controller.init(template.spellId5);
+    spellTrigger5Controller.init(template.spellTrigger5);
+    spellCharge5Controller.init(template.spellCharges5);
+    spellPpmRate5Controller.init(template.spellPpmRate5);
+    spellCooldown5Controller.init(template.spellCooldown5);
+    spellCategory5Controller.init(template.spellCategory5);
+    spellCategoryCooldown5Controller.init(template.spellCategoryCooldown5);
+
+    /// Card 9: Requirements
+    allowableClassController.init(template.allowableClass);
+    allowableRaceController.init(template.allowableRace);
+    itemLevelController.init(template.itemLevel);
+    requiredLevelController.init(template.requiredLevel);
+    requiredSkillController.init(template.requiredSkill);
+    requiredSkillRankController.init(template.requiredSkillRank);
+    requiredSpellController.init(template.requiredSpell);
+    requiredHonorRankController.init(template.requiredHonorRank);
+    requiredCityRankController.init(template.requiredCityRank);
+    requiredReputationFactionController.init(
+      template.requiredReputationFaction,
+    );
+    requiredReputationRankController.init(template.requiredReputationRank);
+    requiredDisenchantSkillController.init(template.requiredDisenchantSkill);
+
+    /// Card 10: Socket/Gem
+    lockidController.init(template.lockid);
+    gemPropertiesController.init(template.gemProperties);
+    socketBonusController.init(template.socketBonus);
+    socketColor1Controller.init(template.socketColor1);
+    socketContent1Controller.init(template.socketContent1);
+    socketColor2Controller.init(template.socketColor2);
+    socketContent2Controller.init(template.socketContent2);
+    socketColor3Controller.init(template.socketColor3);
+    socketContent3Controller.init(template.socketContent3);
+
+    /// Card 11: Page/Misc
+    mapIdController.init(template.mapId);
+    areaController.init(template.area);
+    holidayIdController.init(template.holidayId);
+    pageTextController.init(template.pageText);
+    pageMaterialController.init(template.pageMaterial);
+    languageIdController.init(template.languageId);
+    scriptNameController.init(template.scriptName);
+    verifiedBuildController.init(template.verifiedBuild);
   }
 
   void _logActivity(ActivityActionType action, ItemTemplateEntity t) {
@@ -713,9 +718,5 @@ class ItemTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

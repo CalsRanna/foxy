@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -38,41 +38,6 @@ class GameObjectLootTemplateViewModel
 
   final repository = LootTemplateRepository(LootTableType.gameobject);
 
-  Future<void> load() async {
-    items.value = await repository.getBriefLootTemplates(gameObjectId.value);
-    selectedIndex.value = null;
-    editing.value = false;
-    editingItem = null;
-  }
-
-  void resetForm() {
-    itemController.init(0);
-    referenceController.init(0);
-    chanceController.init(100.0);
-    questRequiredController.init(0);
-    lootModeController.init(1);
-    groupIdController.init(0);
-    minCountController.init(1);
-    maxCountController.init(1);
-    commentController.init('');
-    editingItem = null;
-    editing.value = false;
-  }
-
-  void fillForm(BriefLootTemplateEntity loot) {
-    itemController.init(loot.item);
-    referenceController.init(loot.reference);
-    chanceController.init(loot.chance);
-    questRequiredController.init(loot.questRequired ? 1 : 0);
-    lootModeController.init(loot.lootMode);
-    groupIdController.init(loot.groupId);
-    minCountController.init(loot.minCount);
-    maxCountController.init(loot.maxCount);
-    commentController.init(loot.comment);
-    editingItem = loot.item;
-    editing.value = true;
-  }
-
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
       entry: gameObjectId.value,
@@ -88,24 +53,6 @@ class GameObjectLootTemplateViewModel
     );
   }
 
-  Future<void> create() async {
-    try {
-      resetForm();
-      final nextItemId = await repository.getNextItemId(gameObjectId.value);
-      itemController.init(nextItemId);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建失败: $e');
-      DialogUtil.instance.error('创建失败: $e');
-    }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    fillForm(items.value[index]);
-  }
-
   Future<void> copy(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null) return;
@@ -117,6 +64,18 @@ class GameObjectLootTemplateViewModel
     } catch (e) {
       LoggerUtil.instance.e(e.toString());
       DialogUtil.instance.error('复制失败: $e');
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      resetForm();
+      final nextItemId = await repository.getNextItemId(gameObjectId.value);
+      itemController.init(nextItemId);
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
     }
   }
 
@@ -141,6 +100,66 @@ class GameObjectLootTemplateViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    fillForm(items.value[index]);
+  }
+
+  void fillForm(BriefLootTemplateEntity loot) {
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
+    editingItem = loot.item;
+    editing.value = true;
+  }
+
+  Future<void> initSignals({required int gameObjectId}) async {
+    try {
+      this.gameObjectId.value = gameObjectId;
+      gameObjectIdController.init(gameObjectId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    items.value = await repository.getBriefLootTemplates(gameObjectId.value);
+    selectedIndex.value = null;
+    editing.value = false;
+    editingItem = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(100.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
+    editingItem = null;
+    editing.value = false;
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
@@ -154,6 +173,12 @@ class GameObjectLootTemplateViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -175,30 +200,5 @@ class GameObjectLootTemplateViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int gameObjectId}) async {
-    try {
-      this.gameObjectId.value = gameObjectId;
-      gameObjectIdController.init(gameObjectId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化失败: $e');
-      DialogUtil.instance.error('初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

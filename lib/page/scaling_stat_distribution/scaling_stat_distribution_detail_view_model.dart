@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/scaling_stat_distribution_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/scaling_stat_distribution_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -46,6 +46,30 @@ class ScalingStatDistributionDetailViewModel
 
   final distribution = signal(ScalingStatDistributionEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createScalingStatDistribution();
+        distribution.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      distribution.value = (await _repository.getScalingStatDistribution(id))!;
+      _initControllers(distribution.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -73,11 +97,6 @@ class ScalingStatDistributionDetailViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 ScalingStatDistribution
@@ -108,39 +127,6 @@ class ScalingStatDistributionDetailViewModel
     );
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  void _logActivity(
-    ActivityActionType action,
-    ScalingStatDistributionEntity t,
-  ) {
-    final log = ActivityLogEntity(
-      module: 'scaling_stat_distribution',
-      actionType: action,
-      entityId: t.id,
-      entityName: '',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createScalingStatDistribution();
-        distribution.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      distribution.value = (await _repository.getScalingStatDistribution(id))!;
-      _initControllers(distribution.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(ScalingStatDistributionEntity item) {
     idController.init(item.id);
     statId0Controller.init(item.statId0);
@@ -164,5 +150,19 @@ class ScalingStatDistributionDetailViewModel
     bonus8Controller.init(item.bonus8);
     bonus9Controller.init(item.bonus9);
     maxlevelController.init(item.maxlevel);
+  }
+
+  void _logActivity(
+    ActivityActionType action,
+    ScalingStatDistributionEntity t,
+  ) {
+    final log = ActivityLogEntity(
+      module: 'scaling_stat_distribution',
+      actionType: action,
+      entityId: t.id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

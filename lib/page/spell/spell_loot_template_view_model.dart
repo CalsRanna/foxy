@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -37,36 +37,6 @@ class SpellLootTemplateViewModel
 
   final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellLootTemplates(spellId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    itemController.init(0);
-    referenceController.init(0);
-    chanceController.init(100.0);
-    questRequiredController.init(0);
-    lootModeController.init(1);
-    groupIdController.init(0);
-    minCountController.init(1);
-    maxCountController.init(1);
-    commentController.init('');
-  }
-
-  void fillForm(BriefSpellLootTemplateEntity data) {
-    itemController.init(data.item);
-    referenceController.init(data.reference);
-    chanceController.init(data.chance);
-    questRequiredController.init(data.questRequired);
-    lootModeController.init(data.lootMode);
-    groupIdController.init(data.groupId);
-    minCountController.init(data.minCount);
-    maxCountController.init(data.maxCount);
-    commentController.init(data.comment);
-  }
-
   SpellLootTemplateEntity collectFromForm() {
     return SpellLootTemplateEntity(
       entry: spellId.value,
@@ -90,13 +60,6 @@ class SpellLootTemplateViewModel
       LoggerUtil.instance.e('法术掉落模板-创建失败: $e');
       DialogUtil.instance.error('法术掉落模板-创建失败: $e');
     }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final loot = items.value[index];
-    fillForm(loot);
   }
 
   Future<void> delete(BuildContext context) async {
@@ -135,6 +98,62 @@ class SpellLootTemplateViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    final loot = items.value[index];
+    fillForm(loot);
+  }
+
+  void fillForm(BriefSpellLootTemplateEntity data) {
+    itemController.init(data.item);
+    referenceController.init(data.reference);
+    chanceController.init(data.chance);
+    questRequiredController.init(data.questRequired);
+    lootModeController.init(data.lootMode);
+    groupIdController.init(data.groupId);
+    minCountController.init(data.minCount);
+    maxCountController.init(data.maxCount);
+    commentController.init(data.comment);
+  }
+
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      this.spellId.value = spellId;
+      spellIdController.init(spellId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术掉落模板-初始化失败: $e');
+      DialogUtil.instance.error('法术掉落模板-初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefSpellLootTemplates(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(100.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
@@ -148,6 +167,12 @@ class SpellLootTemplateViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -172,30 +197,5 @@ class SpellLootTemplateViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      spellIdController.init(spellId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术掉落模板-初始化失败: $e');
-      DialogUtil.instance.error('法术掉落模板-初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

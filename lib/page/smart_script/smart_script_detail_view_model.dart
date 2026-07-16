@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -64,48 +64,8 @@ class SmartScriptDetailViewModel
   late final targetZController = registerController(DoubleFieldController());
   late final targetOController = registerController(DoubleFieldController());
 
-  Future<void> save(BuildContext context) async {
-    try {
-      var t = _collectFromControllers();
-      final action = isNew.value
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (isNew.value) {
-        final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
-        t = t.copyWith(id: nextId);
-        idController.init(nextId);
-        validateSmartScriptFields(t);
-        await _repository.storeSmartScript(t);
-        _origEntryOrGuid = t.entryOrGuid;
-        _origSourceType = t.sourceType;
-        _origId = t.id;
-        _origLink = t.link;
-        isNew.value = false;
-        script.value = t;
-      } else {
-        validateSmartScriptFields(t);
-        await _repository.updateSmartScript(
-          _origEntryOrGuid!,
-          _origSourceType!,
-          _origId!,
-          _origLink!,
-          t,
-        );
-        script.value = t;
-      }
-      _logActivity(action, t);
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('脚本数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
+  void dispose() {
+    disposeControllers();
   }
 
   Future<void> initSignals({
@@ -148,41 +108,48 @@ class SmartScriptDetailViewModel
     }
   }
 
-  void _initControllers(SmartScriptEntity t) {
-    entryOrGuidController.init(t.entryOrGuid);
-    sourceTypeController.init(t.sourceType);
-    idController.init(t.id);
-    linkController.init(t.link);
-    commentController.init(t.comment);
+  void pop() {
+    routerFacade.goBack();
+  }
 
-    eventTypeController.init(t.eventType);
-    eventPhaseMaskController.init(t.eventPhaseMask);
-    eventChanceController.init(t.eventChance);
-    eventFlagsController.init(t.eventFlags);
-    eventParam1Controller.init(t.eventParam1);
-    eventParam2Controller.init(t.eventParam2);
-    eventParam3Controller.init(t.eventParam3);
-    eventParam4Controller.init(t.eventParam4);
-    eventParam5Controller.init(t.eventParam5);
-    eventParam6Controller.init(t.eventParam6);
-
-    actionTypeController.init(t.actionType);
-    actionParam1Controller.init(t.actionParam1);
-    actionParam2Controller.init(t.actionParam2);
-    actionParam3Controller.init(t.actionParam3);
-    actionParam4Controller.init(t.actionParam4);
-    actionParam5Controller.init(t.actionParam5);
-    actionParam6Controller.init(t.actionParam6);
-
-    targetTypeController.init(t.targetType);
-    targetParam1Controller.init(t.targetParam1);
-    targetParam2Controller.init(t.targetParam2);
-    targetParam3Controller.init(t.targetParam3);
-    targetParam4Controller.init(t.targetParam4);
-    targetXController.init(t.targetX);
-    targetYController.init(t.targetY);
-    targetZController.init(t.targetZ);
-    targetOController.init(t.targetO);
+  Future<void> save(BuildContext context) async {
+    try {
+      var t = _collectFromControllers();
+      final action = isNew.value
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (isNew.value) {
+        final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
+        t = t.copyWith(id: nextId);
+        idController.init(nextId);
+        validateSmartScriptFields(t);
+        await _repository.storeSmartScript(t);
+        _origEntryOrGuid = t.entryOrGuid;
+        _origSourceType = t.sourceType;
+        _origId = t.id;
+        _origLink = t.link;
+        isNew.value = false;
+        script.value = t;
+      } else {
+        validateSmartScriptFields(t);
+        await _repository.updateSmartScript(
+          _origEntryOrGuid!,
+          _origSourceType!,
+          _origId!,
+          _origLink!,
+          t,
+        );
+        script.value = t;
+      }
+      _logActivity(action, t);
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('脚本数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
   }
 
   SmartScriptEntity _collectFromControllers() {
@@ -221,6 +188,43 @@ class SmartScriptDetailViewModel
     );
   }
 
+  void _initControllers(SmartScriptEntity t) {
+    entryOrGuidController.init(t.entryOrGuid);
+    sourceTypeController.init(t.sourceType);
+    idController.init(t.id);
+    linkController.init(t.link);
+    commentController.init(t.comment);
+
+    eventTypeController.init(t.eventType);
+    eventPhaseMaskController.init(t.eventPhaseMask);
+    eventChanceController.init(t.eventChance);
+    eventFlagsController.init(t.eventFlags);
+    eventParam1Controller.init(t.eventParam1);
+    eventParam2Controller.init(t.eventParam2);
+    eventParam3Controller.init(t.eventParam3);
+    eventParam4Controller.init(t.eventParam4);
+    eventParam5Controller.init(t.eventParam5);
+    eventParam6Controller.init(t.eventParam6);
+
+    actionTypeController.init(t.actionType);
+    actionParam1Controller.init(t.actionParam1);
+    actionParam2Controller.init(t.actionParam2);
+    actionParam3Controller.init(t.actionParam3);
+    actionParam4Controller.init(t.actionParam4);
+    actionParam5Controller.init(t.actionParam5);
+    actionParam6Controller.init(t.actionParam6);
+
+    targetTypeController.init(t.targetType);
+    targetParam1Controller.init(t.targetParam1);
+    targetParam2Controller.init(t.targetParam2);
+    targetParam3Controller.init(t.targetParam3);
+    targetParam4Controller.init(t.targetParam4);
+    targetXController.init(t.targetX);
+    targetYController.init(t.targetY);
+    targetZController.init(t.targetZ);
+    targetOController.init(t.targetO);
+  }
+
   void _logActivity(ActivityActionType action, SmartScriptEntity t) {
     final log = ActivityLogEntity(
       module: 'smart_script',
@@ -230,9 +234,5 @@ class SmartScriptDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

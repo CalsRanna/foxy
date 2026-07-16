@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_template_repository.dart';
+import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -42,39 +42,6 @@ class DisenchantLootTemplateViewModel
   final repository = LootTemplateRepository(LootTableType.disenchant);
   final itemRepository = GetIt.instance.get<ItemTemplateRepository>();
 
-  Future<void> load() async {
-    final data = await repository.getBriefLootTemplates(entry.value);
-    items.value = data;
-    selectedIndex.value = null;
-    creating.value = false;
-    editing.value = false;
-    editingItem = null;
-  }
-
-  void resetForm() {
-    itemController.init(0);
-    referenceController.init(0);
-    chanceController.init(0.0);
-    questRequiredController.init(0);
-    lootModeController.init(1);
-    groupIdController.init(0);
-    minCountController.init(1);
-    maxCountController.init(1);
-    commentController.init('');
-  }
-
-  void fillForm(BriefLootTemplateEntity loot) {
-    itemController.init(loot.item);
-    referenceController.init(loot.reference);
-    chanceController.init(loot.chance);
-    questRequiredController.init(loot.questRequired ? 1 : 0);
-    lootModeController.init(loot.lootMode);
-    groupIdController.init(loot.groupId);
-    minCountController.init(loot.minCount);
-    maxCountController.init(loot.maxCount);
-    commentController.init(loot.comment);
-  }
-
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
       entry: entry.value,
@@ -104,17 +71,6 @@ class DisenchantLootTemplateViewModel
       DialogUtil.instance.error('创建失败: $e');
       return false;
     }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
-    fillForm(loot);
-    editing.value = true;
-    creating.value = false;
-    editingItem = loot.item;
   }
 
   Future<void> delete(BuildContext context) async {
@@ -156,6 +112,70 @@ class DisenchantLootTemplateViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final loot = items.value[index];
+    fillForm(loot);
+    editing.value = true;
+    creating.value = false;
+    editingItem = loot.item;
+  }
+
+  void fillForm(BriefLootTemplateEntity loot) {
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
+  }
+
+  Future<void> initSignals({required int itemId}) async {
+    try {
+      final template = await itemRepository.getItemTemplate(itemId);
+      entry.value = template?.disenchantId ?? 0;
+      entryController.init(entry.value);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await repository.getBriefLootTemplates(entry.value);
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+    editingItem = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
@@ -169,6 +189,12 @@ class DisenchantLootTemplateViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -190,31 +216,5 @@ class DisenchantLootTemplateViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int itemId}) async {
-    try {
-      final template = await itemRepository.getItemTemplate(itemId);
-      entry.value = template?.disenchantId ?? 0;
-      entryController.init(entry.value);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化失败: $e');
-      DialogUtil.instance.error('初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

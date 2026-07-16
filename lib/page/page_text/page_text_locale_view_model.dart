@@ -1,11 +1,11 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -47,17 +47,6 @@ class PageTextLocaleViewModel
   final rows = signal<List<PageTextLocaleForm>>([]);
   int _currentId = 0;
 
-  Future<void> initSignals({int? id}) async {
-    if (id == null || id <= 0) return;
-    _currentId = id;
-    try {
-      final locales = await _repository.getPageTextLocales(id);
-      _replaceRows(locales.map(PageTextLocaleForm.new).toList());
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载页面文本本地化(ID=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void addLocale() {
     final used = rows.value
         .map((row) => row.localeController.collect())
@@ -70,6 +59,19 @@ class PageTextLocaleViewModel
       PageTextLocaleEntity(id: _currentId, locale: available.first),
     );
     rows.value = [...rows.value, row];
+  }
+
+  void dispose() => _replaceRows([]);
+
+  Future<void> initSignals({int? id}) async {
+    if (id == null || id <= 0) return;
+    _currentId = id;
+    try {
+      final locales = await _repository.getPageTextLocales(id);
+      _replaceRows(locales.map(PageTextLocaleForm.new).toList());
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载页面文本本地化(ID=$id)失败', error: e, stackTrace: s);
+    }
   }
 
   void removeLocale(PageTextLocaleForm row) {
@@ -98,6 +100,4 @@ class PageTextLocaleViewModel
     }
     rows.value = next;
   }
-
-  void dispose() => _replaceRows([]);
 }

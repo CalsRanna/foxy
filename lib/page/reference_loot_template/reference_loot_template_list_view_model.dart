@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -24,51 +24,6 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
-
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (_searchEntries(), _countEntries()).wait;
-      if (token != _refreshToken) return;
-      templates.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载引用掉落模板列表失败: $e');
-      DialogUtil.instance.error('加载引用掉落模板列表失败: $e');
-    }
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    entryController.init('');
-    nameController.init('');
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  void navigateToDetail({int? entry, int? item, String? label}) {
-    final id = entry != null ? 'ref_loot_$entry' : 'ref_loot_new';
-    final name = label?.isNotEmpty == true ? label! : '新建关联掉落';
-    _routerFacade.navigateToDetail(
-      id: id,
-      label: name,
-      route: ReferenceLootTemplateDetailRoute(
-        entry: entry,
-        item: item,
-        label: label,
-      ),
-      parentMenu: RouterMenu.more,
-    );
-  }
 
   Future<void> copyReferenceLootTemplate(int entry, int item) async {
     try {
@@ -107,6 +62,66 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (_searchEntries(), _countEntries()).wait;
+      if (token != _refreshToken) return;
+      templates.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载引用掉落模板列表失败: $e');
+      DialogUtil.instance.error('加载引用掉落模板列表失败: $e');
+    }
+  }
+
+  void navigateToDetail({int? entry, int? item, String? label}) {
+    final id = entry != null ? 'ref_loot_$entry' : 'ref_loot_new';
+    final name = label?.isNotEmpty == true ? label! : '新建关联掉落';
+    _routerFacade.navigateToDetail(
+      id: id,
+      label: name,
+      route: ReferenceLootTemplateDetailRoute(
+        entry: entry,
+        item: item,
+        label: label,
+      ),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    nameController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
+  }
+
+  LootTemplateFilterEntity _buildFilter() {
+    return LootTemplateFilterEntity(
+      entry: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  Future<int> _countEntries() async {
+    return repository.countLootTemplateRows(filter: _buildFilter());
+  }
+
   void _logActivity(ActivityActionType action, int entry) {
     final templates = this.templates.value;
     final t = templates.where((t) => t.entry == entry).firstOrNull;
@@ -119,24 +134,6 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  Future<List<BriefLootTemplateEntity>> _searchEntries() async {
-    return repository.getBriefLootTemplateRows(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-  }
-
-  Future<int> _countEntries() async {
-    return repository.countLootTemplateRows(filter: _buildFilter());
-  }
-
-  LootTemplateFilterEntity _buildFilter() {
-    return LootTemplateFilterEntity(
-      entry: entryController.collect(),
-      name: nameController.collect(),
-    );
   }
 
   Future<void> _refresh() async {
@@ -152,7 +149,10 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void dispose() {
-    disposeControllers();
+  Future<List<BriefLootTemplateEntity>> _searchEntries() async {
+    return repository.getBriefLootTemplateRows(
+      filter: _buildFilter(),
+      page: page.value,
+    );
   }
 }

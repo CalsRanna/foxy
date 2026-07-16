@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_rank_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_rank_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -27,24 +27,6 @@ class SpellRankViewModel
   late final rankController = registerController(IntFieldController());
 
   final _repository = GetIt.instance.get<SpellRankRepository>();
-
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellRanks(spellId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    firstSpellIdController.init(0);
-    rankSpellIdController.init(0);
-    rankController.init(0);
-  }
-
-  void fillForm(BriefSpellRankEntity data) {
-    firstSpellIdController.init(data.firstSpellId);
-    rankSpellIdController.init(data.spellId);
-    rankController.init(data.rank);
-  }
 
   SpellRankEntity collectFromForm() {
     return SpellRankEntity(
@@ -69,13 +51,6 @@ class SpellRankViewModel
       LoggerUtil.instance.e('法术等级-创建失败: $e');
       DialogUtil.instance.error('法术等级-创建失败: $e');
     }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final rank = items.value[index];
-    fillForm(rank);
   }
 
   Future<void> delete(BuildContext context) async {
@@ -114,6 +89,49 @@ class SpellRankViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    final rank = items.value[index];
+    fillForm(rank);
+  }
+
+  void fillForm(BriefSpellRankEntity data) {
+    firstSpellIdController.init(data.firstSpellId);
+    rankSpellIdController.init(data.spellId);
+    rankController.init(data.rank);
+  }
+
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      this.spellId.value = spellId;
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术等级-初始化失败: $e');
+      DialogUtil.instance.error('法术等级-初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefSpellRanks(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    firstSpellIdController.init(0);
+    rankSpellIdController.init(0);
+    rankController.init(0);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
@@ -127,6 +145,12 @@ class SpellRankViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -151,29 +175,5 @@ class SpellRankViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术等级-初始化失败: $e');
-      DialogUtil.instance.error('法术等级-初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

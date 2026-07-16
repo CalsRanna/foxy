@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -23,30 +23,6 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
 
   final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
-  /// 加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getBriefCreatureQuestItems(
-      creatureEntry.value,
-    );
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    idxController.init(0);
-    itemIdController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  /// 填充表单
-  void fillForm(CreatureQuestItemEntity questItem) {
-    idxController.init(questItem.idx);
-    itemIdController.init(questItem.itemId);
-    verifiedBuildController.init(questItem.verifiedBuild);
-  }
-
   /// 从表单收集数据
   CreatureQuestItemEntity collectFromForm() {
     final questItem = CreatureQuestItemEntity(
@@ -56,30 +32,6 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
       verifiedBuild: verifiedBuildController.collect(),
     );
     return questItem;
-  }
-
-  /// 创建新记录
-  Future<void> create() async {
-    try {
-      final blank = await _repository.createCreatureQuestItem(
-        creatureEntry.value,
-      );
-      resetForm();
-      idxController.init(blank.idx);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建生物任务物品记录失败: $e');
-      DialogUtil.instance.error('创建生物任务物品记录失败: $e');
-    }
-  }
-
-  /// 编辑选中记录
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final questItem = items.value[index];
-    fillForm(questItem);
   }
 
   /// 复制记录
@@ -101,6 +53,21 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 创建新记录
+  Future<void> create() async {
+    try {
+      final blank = await _repository.createCreatureQuestItem(
+        creatureEntry.value,
+      );
+      resetForm();
+      idxController.init(blank.idx);
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物任务物品记录失败: $e');
+      DialogUtil.instance.error('创建生物任务物品记录失败: $e');
     }
   }
 
@@ -147,6 +114,61 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
     }
   }
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final questItem = items.value[index];
+    fillForm(questItem);
+  }
+
+  /// 填充表单
+  void fillForm(CreatureQuestItemEntity questItem) {
+    idxController.init(questItem.idx);
+    itemIdController.init(questItem.itemId);
+    verifiedBuildController.init(questItem.verifiedBuild);
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      creatureEntry.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物任务物品失败: $e');
+      DialogUtil.instance.error('初始化生物任务物品失败: $e');
+    }
+  }
+
+  /// 加载数据
+
+  Future<void> load() async {
+    final data = await _repository.getBriefCreatureQuestItems(
+      creatureEntry.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 重置表单
+  void resetForm() {
+    idxController.init(0);
+    itemIdController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
@@ -160,6 +182,13 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -177,34 +206,5 @@ class CreatureQuestItemViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      creatureEntry.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物任务物品失败: $e');
-      DialogUtil.instance.error('初始化生物任务物品失败: $e');
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

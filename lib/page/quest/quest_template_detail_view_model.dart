@@ -1,14 +1,14 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/quest_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/quest_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -303,6 +303,34 @@ class QuestTemplateDetailViewModel
   );
   late final verifiedBuildController = registerController(IntFieldController());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? questId}) async {
+    try {
+      if (questId == null || questId <= 0) {
+        final blank = await _repository.createQuestTemplate();
+        template.value = blank;
+        entry.value = blank.id;
+        _initSignals(blank);
+        return;
+      }
+      final result = await _repository.getQuestTemplate(questId);
+      if (result == null) return;
+      template.value = result;
+      entry.value = result.id;
+      _initSignals(result);
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务详情失败: $e');
+      DialogUtil.instance.error('加载任务详情失败: $e');
+    }
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<int?> save(BuildContext context) async {
     try {
       final t = _collect();
@@ -332,28 +360,114 @@ class QuestTemplateDetailViewModel
     }
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  Future<void> initSignals({int? questId}) async {
-    try {
-      if (questId == null || questId <= 0) {
-        final blank = await _repository.createQuestTemplate();
-        template.value = blank;
-        entry.value = blank.id;
-        _initSignals(blank);
-        return;
-      }
-      final result = await _repository.getQuestTemplate(questId);
-      if (result == null) return;
-      template.value = result;
-      entry.value = result.id;
-      _initSignals(result);
-    } catch (e) {
-      LoggerUtil.instance.e('加载任务详情失败: $e');
-      DialogUtil.instance.error('加载任务详情失败: $e');
-    }
+  QuestTemplateEntity _collect() {
+    return QuestTemplateEntity(
+      id: idController.collect(),
+      questType: questTypeController.collect(),
+      questLevel: questLevelController.collect(),
+      minLevel: minLevelController.collect(),
+      questSortId: questSortIdController.collect(),
+      questInfoId: questInfoIdController.collect(),
+      suggestedGroupNum: suggestedGroupNumController.collect(),
+      requiredFactionId1: requiredFactionId1Controller.collect(),
+      requiredFactionId2: requiredFactionId2Controller.collect(),
+      requiredFactionValue1: requiredFactionValue1Controller.collect(),
+      requiredFactionValue2: requiredFactionValue2Controller.collect(),
+      rewardNextQuest: rewardNextQuestController.collect(),
+      rewardXpDifficulty: rewardXpDifficultyController.collect(),
+      rewardMoney: rewardMoneyController.collect(),
+      rewardMoneyDifficulty: rewardMoneyDifficultyController.collect(),
+      rewardDisplaySpell: rewardDisplaySpellController.collect(),
+      rewardSpell: rewardSpellController.collect(),
+      rewardHonor: rewardHonorController.collect(),
+      rewardKillHonor: rewardKillHonorController.collect(),
+      startItem: startItemController.collect(),
+      flags: flagsController.collect(),
+      requiredPlayerKills: requiredPlayerKillsController.collect(),
+      rewardItem1: rewardItem1Controller.collect(),
+      rewardAmount1: rewardAmount1Controller.collect(),
+      rewardItem2: rewardItem2Controller.collect(),
+      rewardAmount2: rewardAmount2Controller.collect(),
+      rewardItem3: rewardItem3Controller.collect(),
+      rewardAmount3: rewardAmount3Controller.collect(),
+      rewardItem4: rewardItem4Controller.collect(),
+      rewardAmount4: rewardAmount4Controller.collect(),
+      itemDrop1: itemDrop1Controller.collect(),
+      itemDropQuantity1: itemDropQuantity1Controller.collect(),
+      itemDrop2: itemDrop2Controller.collect(),
+      itemDropQuantity2: itemDropQuantity2Controller.collect(),
+      itemDrop3: itemDrop3Controller.collect(),
+      itemDropQuantity3: itemDropQuantity3Controller.collect(),
+      itemDrop4: itemDrop4Controller.collect(),
+      itemDropQuantity4: itemDropQuantity4Controller.collect(),
+      rewardChoiceItemId1: rewardChoiceItemId1Controller.collect(),
+      rewardChoiceItemQuantity1: rewardChoiceItemQuantity1Controller.collect(),
+      rewardChoiceItemId2: rewardChoiceItemId2Controller.collect(),
+      rewardChoiceItemQuantity2: rewardChoiceItemQuantity2Controller.collect(),
+      rewardChoiceItemId3: rewardChoiceItemId3Controller.collect(),
+      rewardChoiceItemQuantity3: rewardChoiceItemQuantity3Controller.collect(),
+      rewardChoiceItemId4: rewardChoiceItemId4Controller.collect(),
+      rewardChoiceItemQuantity4: rewardChoiceItemQuantity4Controller.collect(),
+      rewardChoiceItemId5: rewardChoiceItemId5Controller.collect(),
+      rewardChoiceItemQuantity5: rewardChoiceItemQuantity5Controller.collect(),
+      rewardChoiceItemId6: rewardChoiceItemId6Controller.collect(),
+      rewardChoiceItemQuantity6: rewardChoiceItemQuantity6Controller.collect(),
+      poiContinent: poiContinentController.collect(),
+      poiX: poiXController.collect(),
+      poiY: poiYController.collect(),
+      poiPriority: poiPriorityController.collect(),
+      rewardTitle: rewardTitleController.collect(),
+      rewardTalents: rewardTalentsController.collect(),
+      rewardArenaPoints: rewardArenaPointsController.collect(),
+      rewardFactionId1: rewardFactionId1Controller.collect(),
+      rewardFactionValue1: rewardFactionValue1Controller.collect(),
+      rewardFactionOverride1: rewardFactionOverride1Controller.collect(),
+      rewardFactionId2: rewardFactionId2Controller.collect(),
+      rewardFactionValue2: rewardFactionValue2Controller.collect(),
+      rewardFactionOverride2: rewardFactionOverride2Controller.collect(),
+      rewardFactionId3: rewardFactionId3Controller.collect(),
+      rewardFactionValue3: rewardFactionValue3Controller.collect(),
+      rewardFactionOverride3: rewardFactionOverride3Controller.collect(),
+      rewardFactionId4: rewardFactionId4Controller.collect(),
+      rewardFactionValue4: rewardFactionValue4Controller.collect(),
+      rewardFactionOverride4: rewardFactionOverride4Controller.collect(),
+      rewardFactionId5: rewardFactionId5Controller.collect(),
+      rewardFactionValue5: rewardFactionValue5Controller.collect(),
+      rewardFactionOverride5: rewardFactionOverride5Controller.collect(),
+      timeAllowed: timeAllowedController.collect(),
+      allowableRaces: allowableRacesController.collect(),
+      logTitle: logTitleController.collect(),
+      logDescription: logDescriptionController.collect(),
+      questDescription: questDescriptionController.collect(),
+      areaDescription: areaDescriptionController.collect(),
+      questCompletionLog: questCompletionLogController.collect(),
+      requiredNpcOrGo1: requiredNpcOrGo1Controller.collect(),
+      requiredNpcOrGo2: requiredNpcOrGo2Controller.collect(),
+      requiredNpcOrGo3: requiredNpcOrGo3Controller.collect(),
+      requiredNpcOrGo4: requiredNpcOrGo4Controller.collect(),
+      requiredNpcOrGoCount1: requiredNpcOrGoCount1Controller.collect(),
+      requiredNpcOrGoCount2: requiredNpcOrGoCount2Controller.collect(),
+      requiredNpcOrGoCount3: requiredNpcOrGoCount3Controller.collect(),
+      requiredNpcOrGoCount4: requiredNpcOrGoCount4Controller.collect(),
+      requiredItemId1: requiredItemId1Controller.collect(),
+      requiredItemId2: requiredItemId2Controller.collect(),
+      requiredItemId3: requiredItemId3Controller.collect(),
+      requiredItemId4: requiredItemId4Controller.collect(),
+      requiredItemId5: requiredItemId5Controller.collect(),
+      requiredItemId6: requiredItemId6Controller.collect(),
+      requiredItemCount1: requiredItemCount1Controller.collect(),
+      requiredItemCount2: requiredItemCount2Controller.collect(),
+      requiredItemCount3: requiredItemCount3Controller.collect(),
+      requiredItemCount4: requiredItemCount4Controller.collect(),
+      requiredItemCount5: requiredItemCount5Controller.collect(),
+      requiredItemCount6: requiredItemCount6Controller.collect(),
+      unknown0: unknown0Controller.collect(),
+      objectiveText1: objectiveText1Controller.collect(),
+      objectiveText2: objectiveText2Controller.collect(),
+      objectiveText3: objectiveText3Controller.collect(),
+      objectiveText4: objectiveText4Controller.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
   }
 
   void _initSignals(QuestTemplateEntity t) {
@@ -476,116 +590,6 @@ class QuestTemplateDetailViewModel
     verifiedBuildController.init(t.verifiedBuild);
   }
 
-  QuestTemplateEntity _collect() {
-    return QuestTemplateEntity(
-      id: idController.collect(),
-      questType: questTypeController.collect(),
-      questLevel: questLevelController.collect(),
-      minLevel: minLevelController.collect(),
-      questSortId: questSortIdController.collect(),
-      questInfoId: questInfoIdController.collect(),
-      suggestedGroupNum: suggestedGroupNumController.collect(),
-      requiredFactionId1: requiredFactionId1Controller.collect(),
-      requiredFactionId2: requiredFactionId2Controller.collect(),
-      requiredFactionValue1: requiredFactionValue1Controller.collect(),
-      requiredFactionValue2: requiredFactionValue2Controller.collect(),
-      rewardNextQuest: rewardNextQuestController.collect(),
-      rewardXpDifficulty: rewardXpDifficultyController.collect(),
-      rewardMoney: rewardMoneyController.collect(),
-      rewardMoneyDifficulty: rewardMoneyDifficultyController.collect(),
-      rewardDisplaySpell: rewardDisplaySpellController.collect(),
-      rewardSpell: rewardSpellController.collect(),
-      rewardHonor: rewardHonorController.collect(),
-      rewardKillHonor: rewardKillHonorController.collect(),
-      startItem: startItemController.collect(),
-      flags: flagsController.collect(),
-      requiredPlayerKills: requiredPlayerKillsController.collect(),
-      rewardItem1: rewardItem1Controller.collect(),
-      rewardAmount1: rewardAmount1Controller.collect(),
-      rewardItem2: rewardItem2Controller.collect(),
-      rewardAmount2: rewardAmount2Controller.collect(),
-      rewardItem3: rewardItem3Controller.collect(),
-      rewardAmount3: rewardAmount3Controller.collect(),
-      rewardItem4: rewardItem4Controller.collect(),
-      rewardAmount4: rewardAmount4Controller.collect(),
-      itemDrop1: itemDrop1Controller.collect(),
-      itemDropQuantity1: itemDropQuantity1Controller.collect(),
-      itemDrop2: itemDrop2Controller.collect(),
-      itemDropQuantity2: itemDropQuantity2Controller.collect(),
-      itemDrop3: itemDrop3Controller.collect(),
-      itemDropQuantity3: itemDropQuantity3Controller.collect(),
-      itemDrop4: itemDrop4Controller.collect(),
-      itemDropQuantity4: itemDropQuantity4Controller.collect(),
-      rewardChoiceItemId1: rewardChoiceItemId1Controller.collect(),
-      rewardChoiceItemQuantity1: rewardChoiceItemQuantity1Controller.collect(),
-      rewardChoiceItemId2: rewardChoiceItemId2Controller.collect(),
-      rewardChoiceItemQuantity2: rewardChoiceItemQuantity2Controller.collect(),
-      rewardChoiceItemId3: rewardChoiceItemId3Controller.collect(),
-      rewardChoiceItemQuantity3: rewardChoiceItemQuantity3Controller.collect(),
-      rewardChoiceItemId4: rewardChoiceItemId4Controller.collect(),
-      rewardChoiceItemQuantity4: rewardChoiceItemQuantity4Controller.collect(),
-      rewardChoiceItemId5: rewardChoiceItemId5Controller.collect(),
-      rewardChoiceItemQuantity5: rewardChoiceItemQuantity5Controller.collect(),
-      rewardChoiceItemId6: rewardChoiceItemId6Controller.collect(),
-      rewardChoiceItemQuantity6: rewardChoiceItemQuantity6Controller.collect(),
-      poiContinent: poiContinentController.collect(),
-      poiX: poiXController.collect(),
-      poiY: poiYController.collect(),
-      poiPriority: poiPriorityController.collect(),
-      rewardTitle: rewardTitleController.collect(),
-      rewardTalents: rewardTalentsController.collect(),
-      rewardArenaPoints: rewardArenaPointsController.collect(),
-      rewardFactionId1: rewardFactionId1Controller.collect(),
-      rewardFactionValue1: rewardFactionValue1Controller.collect(),
-      rewardFactionOverride1: rewardFactionOverride1Controller.collect(),
-      rewardFactionId2: rewardFactionId2Controller.collect(),
-      rewardFactionValue2: rewardFactionValue2Controller.collect(),
-      rewardFactionOverride2: rewardFactionOverride2Controller.collect(),
-      rewardFactionId3: rewardFactionId3Controller.collect(),
-      rewardFactionValue3: rewardFactionValue3Controller.collect(),
-      rewardFactionOverride3: rewardFactionOverride3Controller.collect(),
-      rewardFactionId4: rewardFactionId4Controller.collect(),
-      rewardFactionValue4: rewardFactionValue4Controller.collect(),
-      rewardFactionOverride4: rewardFactionOverride4Controller.collect(),
-      rewardFactionId5: rewardFactionId5Controller.collect(),
-      rewardFactionValue5: rewardFactionValue5Controller.collect(),
-      rewardFactionOverride5: rewardFactionOverride5Controller.collect(),
-      timeAllowed: timeAllowedController.collect(),
-      allowableRaces: allowableRacesController.collect(),
-      logTitle: logTitleController.collect(),
-      logDescription: logDescriptionController.collect(),
-      questDescription: questDescriptionController.collect(),
-      areaDescription: areaDescriptionController.collect(),
-      questCompletionLog: questCompletionLogController.collect(),
-      requiredNpcOrGo1: requiredNpcOrGo1Controller.collect(),
-      requiredNpcOrGo2: requiredNpcOrGo2Controller.collect(),
-      requiredNpcOrGo3: requiredNpcOrGo3Controller.collect(),
-      requiredNpcOrGo4: requiredNpcOrGo4Controller.collect(),
-      requiredNpcOrGoCount1: requiredNpcOrGoCount1Controller.collect(),
-      requiredNpcOrGoCount2: requiredNpcOrGoCount2Controller.collect(),
-      requiredNpcOrGoCount3: requiredNpcOrGoCount3Controller.collect(),
-      requiredNpcOrGoCount4: requiredNpcOrGoCount4Controller.collect(),
-      requiredItemId1: requiredItemId1Controller.collect(),
-      requiredItemId2: requiredItemId2Controller.collect(),
-      requiredItemId3: requiredItemId3Controller.collect(),
-      requiredItemId4: requiredItemId4Controller.collect(),
-      requiredItemId5: requiredItemId5Controller.collect(),
-      requiredItemId6: requiredItemId6Controller.collect(),
-      requiredItemCount1: requiredItemCount1Controller.collect(),
-      requiredItemCount2: requiredItemCount2Controller.collect(),
-      requiredItemCount3: requiredItemCount3Controller.collect(),
-      requiredItemCount4: requiredItemCount4Controller.collect(),
-      requiredItemCount5: requiredItemCount5Controller.collect(),
-      requiredItemCount6: requiredItemCount6Controller.collect(),
-      unknown0: unknown0Controller.collect(),
-      objectiveText1: objectiveText1Controller.collect(),
-      objectiveText2: objectiveText2Controller.collect(),
-      objectiveText3: objectiveText3Controller.collect(),
-      objectiveText4: objectiveText4Controller.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
   void _logActivity(ActivityActionType action, QuestTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_template',
@@ -595,9 +599,5 @@ class QuestTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

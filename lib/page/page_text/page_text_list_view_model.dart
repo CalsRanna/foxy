@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -24,50 +24,6 @@ class PageTextListViewModel with FieldControllerMixin {
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
-
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (
-        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
-        _repository.countPageTexts(filter: _buildFilter()),
-      ).wait;
-      if (token != _refreshToken) return;
-      pages.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载页面文本列表失败: $e');
-      DialogUtil.instance.error('加载页面文本列表失败: $e');
-    }
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    idController.init('');
-    textController.init('');
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  void navigateToDetail({int? id, String? label}) {
-    final routeId = id != null ? 'page_text_$id' : 'page_text_new';
-    final name = label?.isNotEmpty == true ? label! : '新建页面文本';
-    _routerFacade.navigateToDetail(
-      id: routeId,
-      label: name,
-      route: TextContentDetailRoute(id: id, label: label),
-      parentMenu: RouterMenu.more,
-    );
-  }
 
   Future<void> copyPageText(int id) async {
     try {
@@ -106,6 +62,61 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (
+        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
+        _repository.countPageTexts(filter: _buildFilter()),
+      ).wait;
+      if (token != _refreshToken) return;
+      pages.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载页面文本列表失败: $e');
+      DialogUtil.instance.error('加载页面文本列表失败: $e');
+    }
+  }
+
+  void navigateToDetail({int? id, String? label}) {
+    final routeId = id != null ? 'page_text_$id' : 'page_text_new';
+    final name = label?.isNotEmpty == true ? label! : '新建页面文本';
+    _routerFacade.navigateToDetail(
+      id: routeId,
+      label: name,
+      route: TextContentDetailRoute(id: id, label: label),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    idController.init('');
+    textController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
+  }
+
+  PageTextFilterEntity _buildFilter() {
+    return PageTextFilterEntity(
+      id: idController.collect(),
+      text: textController.collect(),
+    );
+  }
+
   void _logActivity(ActivityActionType action, int id) {
     final pages = this.pages.value;
     final page = pages.where((p) => p.id == id).firstOrNull;
@@ -118,13 +129,6 @@ class PageTextListViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  PageTextFilterEntity _buildFilter() {
-    return PageTextFilterEntity(
-      id: idController.collect(),
-      text: textController.collect(),
-    );
   }
 
   Future<void> _refresh() async {
@@ -141,9 +145,5 @@ class PageTextListViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('刷新页面文本列表失败: $e');
       DialogUtil.instance.error('刷新页面文本列表失败: $e');
     }
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -61,6 +61,53 @@ class AreaTableDetailViewModel
 
   final area = signal(AreaTableEntity());
 
+  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
+  void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
+    area.value = area.value.copyWith(
+      areaNameLangEnUS: values.valueOf('enUS'),
+      areaNameLangKoKR: values.valueOf('koKR'),
+      areaNameLangFrFR: values.valueOf('frFR'),
+      areaNameLangDeDE: values.valueOf('deDE'),
+      areaNameLangZhCN: values.valueOf('zhCN'),
+      areaNameLangZhTW: values.valueOf('zhTW'),
+      areaNameLangEsES: values.valueOf('esES'),
+      areaNameLangEsMX: values.valueOf('esMX'),
+      areaNameLangRuRU: values.valueOf('ruRU'),
+      areaNameLangJaJP: values.valueOf('jaJP'),
+      areaNameLangPtPT: values.valueOf('ptPT'),
+      areaNameLangPtBR: values.valueOf('ptBR'),
+      areaNameLangItIT: values.valueOf('itIT'),
+      areaNameLangUnk1: values.valueOf('unk1'),
+      areaNameLangUnk2: values.valueOf('unk2'),
+      areaNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createAreaTable();
+        area.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      area.value = (await _repository.getAreaTable(id))!;
+      _initControllers(area.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载区域(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
@@ -86,34 +133,6 @@ class AreaTableDetailViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
-  void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
-    area.value = area.value.copyWith(
-      areaNameLangEnUS: values.valueOf('enUS'),
-      areaNameLangKoKR: values.valueOf('koKR'),
-      areaNameLangFrFR: values.valueOf('frFR'),
-      areaNameLangDeDE: values.valueOf('deDE'),
-      areaNameLangZhCN: values.valueOf('zhCN'),
-      areaNameLangZhTW: values.valueOf('zhTW'),
-      areaNameLangEsES: values.valueOf('esES'),
-      areaNameLangEsMX: values.valueOf('esMX'),
-      areaNameLangRuRU: values.valueOf('ruRU'),
-      areaNameLangJaJP: values.valueOf('jaJP'),
-      areaNameLangPtPT: values.valueOf('ptPT'),
-      areaNameLangPtBR: values.valueOf('ptBR'),
-      areaNameLangItIT: values.valueOf('itIT'),
-      areaNameLangUnk1: values.valueOf('unk1'),
-      areaNameLangUnk2: values.valueOf('unk2'),
-      areaNameLangUnk3: values.valueOf('unk3'),
-    );
-    nameController.init(values.zhCN);
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 AreaTable
@@ -144,50 +163,6 @@ class AreaTableDetailViewModel
     );
   }
 
-  Future<void> _validate(AreaTableEntity value) async {
-    validateAreaTableFields(value);
-    if (value.parentAreaId > 0 &&
-        await _repository.getAreaTable(value.parentAreaId) == null) {
-      throw StateError('父级区域 ${value.parentAreaId} 不存在');
-    }
-    if (!await _repository.isAreaBitAvailable(
-      value.areaBit,
-      areaId: value.id,
-    )) {
-      throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
-    }
-  }
-
-  void _logActivity(ActivityActionType action, AreaTableEntity t) {
-    final log = ActivityLogEntity(
-      module: 'area_table',
-      actionType: action,
-      entityId: t.id,
-      entityName: t.areaNameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createAreaTable();
-        area.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      area.value = (await _repository.getAreaTable(id))!;
-      _initControllers(area.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载区域(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(AreaTableEntity table) {
     idController.init(table.id);
     nameController.init(table.areaNameLangZhCN);
@@ -211,5 +186,30 @@ class AreaTableDetailViewModel
     liquidTypeId1Controller.init(table.liquidTypeId1);
     liquidTypeId2Controller.init(table.liquidTypeId2);
     liquidTypeId3Controller.init(table.liquidTypeId3);
+  }
+
+  void _logActivity(ActivityActionType action, AreaTableEntity t) {
+    final log = ActivityLogEntity(
+      module: 'area_table',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.areaNameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  Future<void> _validate(AreaTableEntity value) async {
+    validateAreaTableFields(value);
+    if (value.parentAreaId > 0 &&
+        await _repository.getAreaTable(value.parentAreaId) == null) {
+      throw StateError('父级区域 ${value.parentAreaId} 不存在');
+    }
+    if (!await _repository.isAreaBitAvailable(
+      value.areaBit,
+      areaId: value.id,
+    )) {
+      throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
+    }
   }
 }

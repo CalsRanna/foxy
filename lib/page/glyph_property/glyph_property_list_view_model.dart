@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -59,17 +59,6 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, int id) {
-    final log = ActivityLogEntity(
-      module: 'glyph_property',
-      actionType: action,
-      entityId: id,
-      entityName: '',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
   void dispose() {
     disposeControllers();
   }
@@ -103,10 +92,6 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     );
   }
 
-  GlyphPropertyFilterEntity _buildFilter() {
-    return GlyphPropertyFilterEntity(id: entryController.collect());
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -121,6 +106,21 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  GlyphPropertyFilterEntity _buildFilter() {
+    return GlyphPropertyFilterEntity(id: entryController.collect());
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLogEntity(
+      module: 'glyph_property',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {
