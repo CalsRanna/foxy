@@ -98,7 +98,7 @@ lib/
 │   ├── database.dart         MySQL/Laconic connection singleton
 │   ├── migration_runner.dart Migration interface, ordered registry, foxy bootstrap
 │   └── migration/            Timestamp-named foxy schema migrations
-├── entity/                  Immutable full, brief, filter, locale, and support entities
+├── entity/                  Immutable full, key, brief, filter, locale, and support entities
 ├── event/                   EventBus and activity events
 ├── infrastructure/
 │   ├── config/              Root-local config.yaml persistence
@@ -173,9 +173,9 @@ Page / shared Widget
         ↓
 ViewModel (signals + FieldControllers)
         ↓
-Repository (Laconic queries and referential integrity)
+Repository (Laconic queries and single-table persistence)
         ↓
-Entity / Filter / Brief Entity
+Entity / Key / Filter / Brief Entity
         ↓
 Database.instance → MySQL
 ```
@@ -195,11 +195,16 @@ Follow `lib/di.dart` exactly:
 ### State and lifecycle
 
 - Use `signal(...)` for mutable ViewModel state and `Watch((_) => ...)` in reactive UI.
+- Detail routes pass `FooKey?` only as the initial load argument. The detail ViewModel owns a `persistedKey` signal as the runtime source of truth for the currently stored row; pages and child tabs watch it after create or primary-key changes instead of reading stale constructor arguments or replacing the route.
 - Form ViewModels normally mix in `FieldControllerMixin` and declare fields with `registerController(...)`.
 - Use `IntFieldController`, `DoubleFieldController`, `StringFieldController`, `FlagFieldController`, and `SelectFieldController<T>` according to the physical field.
 - Initialize all controllers from the loaded entity, collect all editable values on save, and call `disposeControllers()` from `dispose()`.
+- Standalone detail ViewModels keep the current persisted row locator in `persistedKey`. Inline child-table editors have no detail route and instead keep the selected Brief row's original locator in a separate `editingKey`; they must never use the edited candidate key to locate the old child row.
+- Every physical column represented by a full detail entity's `toJson()` belongs to the editable candidate and must have an editable form control. Do not keep a permanently read-only control for an `AUTO_INCREMENT` column, a column with a database default, a primary key, or a vague module-level semantic restriction.
+- A physical field may be temporarily disabled only when an explicit current type or mode does not use that field. When the type or mode makes the field applicable, the control must become editable again.
+- Brief/list query aliases and computed display getters are presentation data, not read-only detail fields. Keep them outside the full detail candidate and do not create disabled form controls for them.
 - Numeric field parsing is strict: an empty input becomes zero, malformed input throws `FormatException`. Do not reintroduce silent `tryParse(...) ?? 0` in ViewModels.
-- Preserve non-rendered database columns by collecting with `loadedEntity.copyWith(...)`, not by constructing a partial replacement entity.
+- While a legacy module is still being refactored, preserve any not-yet-rendered physical columns with `loadedEntity.copyWith(...)` rather than constructing a partial replacement entity. This is a transition safeguard against data loss, not permission to leave candidate columns without editable controls in the completed module.
 
 ## 7. Database, entity, and validation invariants
 
@@ -212,7 +217,12 @@ These conventions are heavily enforced by contract tests.
 - `toJson()` key order frequently represents the physical column order and is asserted in tests.
 - DBC numeric values that may arrive as either integer or floating-point should use `(json['Column'] as num?)?.toDouble()` where appropriate.
 - Repeated physical slots must remain explicit scalar fields (`itemId1`, `itemId2`, etc.). Do not replace them with `List`, `Map`, loops, `List.generate`, or index-based dispatch merely to reduce code. Tests intentionally enforce explicit physical columns in Entity, ViewModel, and UI.
-- Brief entities contain only list/picker columns. Filter entities generally store text-field input as `String`.
+- Every editable module exposed through a list, entity picker, editable child-table list, or detail navigation must define a dedicated Brief Entity. Do not use the Full Entity as a list-row substitute, even when no Brief Entity exists yet; add the missing Brief Entity as part of the module refactor.
+- Brief entities contain only displayed list/picker columns plus every column required by the table's row locator, including locator columns that are not rendered. Each Brief Entity exposes a strongly typed `FooKey get key` covering that complete locator. Filter entities generally store text-field input as `String`.
+- A `FooKey` normally contains every physical `PRIMARY KEY` column. If a table has no primary key, use every column of a declared non-null `UNIQUE` constraint. Do not silently invent a subset from field names.
+- The existing `playercreateinfo_cast_spell` table has neither a primary key nor a unique constraint. Its explicit exception is a strongly typed full-row locator containing `raceMask`, `classMask`, `spell`, and the exact nullable `note`; update and delete use every original value plus `LIMIT 1`. Refactor its Full Entity, Brief Entity, Key, controller, and `toJson()` so database `NULL` remains distinguishable from `''` and the UI can explicitly preserve or choose either value. Nullable comparisons use MySQL's null-safe equality, and text comparisons use binary semantics so collation does not select a visibly different row. Brief rows for this table therefore contain all physical columns. Use a parameterized result-returning raw write if the Laconic query builder cannot compile write limits; never interpolate values into SQL. Future keyless tables require an equally explicit reviewed strategy rather than a generic Map/reflection fallback.
+- Every `FooKey` is an immutable value object and must explicitly implement `operator ==` and `hashCode` from all locator fields. Equality must not rely on object identity or omit any compound-key component.
+- Do not use `Map<String, dynamic>` to represent or pass a `FooKey` or row locator. This restriction is specific to keys; it does not prohibit unrelated legitimate Map usage elsewhere in the project.
 - Entities must remain pure data objects. Do not add `validate()` methods or business/database dependencies to them.
 
 ### Validation belongs with ViewModels
@@ -221,7 +231,10 @@ These conventions are heavily enforced by contract tests.
 - Reusable entity-field rules are in `lib/widget/form/validation/*_validation_mixin.dart` or a domain validation mixin beside the page, and expose methods such as `validateFooFields`.
 - The detail ViewModel composes the relevant validation mixins and validates after collecting controllers but before any write.
 - Pure range, flags, enum, and cross-field checks do not belong in repositories.
-- Database-backed uniqueness, foreign-key existence, and reverse-reference deletion protection use repository query methods. Some repositories enforce referential integrity inside `store*`, `update*`, or `destroy*`; follow the closest domain precedent.
+- Database-backed uniqueness within the table currently being edited uses repository query methods.
+- Primary-key conflict prechecks are optional for create only. Updates do not precheck the candidate key because Dart equality may not match MySQL collation semantics and a precheck is inherently racy; execute the update and translate the database unique-constraint error instead.
+- Foxy deliberately does not enforce cross-table referential integrity. Do not query other tables to validate foreign-key existence, scan reverse references, block a write/delete because another table may refer to the value, or cascade changes into related tables. The user is responsible for cross-table effects, like in a general database client; actual MySQL constraints still apply.
+- Existing cross-table existence checks and reverse-reference deletion protection are legacy behavior. Remove them when refactoring the affected module instead of copying them into new code.
 - Error messages use `StateError` and are user-facing Chinese in existing modules.
 
 Before changing validation, read both the module's contract test and `test/view_model_validation_contract_test.dart`.
@@ -247,25 +260,30 @@ getFoo / getFoos
 saveFoo
 storeFoo
 updateFoo
-_applyFilter / _getNextId / _validateReference
+_applyFilter / _getNextId / _validateUnique
 ```
 
 Do not introduce synonyms such as `searchFoo`, `deleteFoo`, or `insertFoo` when the established CRUD name applies.
 
 Key behavior:
 
-- List pages and entity pickers use `getBrief*` plus `count*`, pagination, and `kPageSize`; they must not load full tables.
+- List pages, entity pickers, and editable child-table lists use `getBrief*` plus `count*`, pagination, and `kPageSize`; they must not load full tables. A `getBrief*` method must return `Future<List<BriefFooEntity>>`, never `Future<List<FooEntity>>`.
+- Brief queries explicitly select only displayed columns plus every row-locator column. Viewing details, copying, and deleting pass `brief.key` rather than loose scalar arguments or maps.
 - Full `getFoos()` methods are primarily for DBC export/batch work.
-- `createFoo()` creates an unsaved entity and commonly preallocates a read-only key with `MAX(column) + 1`.
-- `storeFoo()` preserves a positive preallocated ID, allocating only if needed, and returns the final ID when callers need to update UI/route state.
-- Primary keys are read-only in the UI. Do not calculate `MAX+1` in a ViewModel.
-- `updateFoo()` removes immutable key columns from the JSON update payload.
-- `destroyFoo()` may first protect reverse references.
+- `createFoo()` creates an unsaved entity and preallocates any key that the database would otherwise generate during insert. For an editable `AUTO_INCREMENT` primary key, this preallocation is mandatory and must produce an explicit nonzero value before the form opens. The preallocated key is only an editable form default; do not calculate `MAX+1` in a ViewModel.
+- The entity collected from the form is the final candidate data. `storeFoo()` returns `Future<void>` and inserts that candidate exactly as supplied; it must not allocate, replace, normalize, or otherwise change its primary key during save. For an editable `AUTO_INCREMENT` key, reject an insert candidate whose value such as `0` or `NULL` would trigger implicit database allocation. Do not use `insertAndGetId()` to repair the candidate after insertion. This rule does not apply to internal append-only tables such as the activity log that have no editable detail candidate.
+- Copy flows must allocate their new explicit key and construct the complete copy candidate before calling `storeFoo()`; insertion must not choose or return a different key.
+- Every physical column in the full detail candidate is editable in the UI, including primary keys and explicitly writable `AUTO_INCREMENT` columns. Being a primary key, having a database default, or normally receiving an automatically allocated value is never by itself a reason to make a field read-only.
+- `updateFoo()` receives the original strongly typed key separately for its `WHERE` clause and writes the complete candidate payload, including changed primary-key columns. It consumes Laconic's update result internally: `matchedRows == 0` means the original row no longer exists, while `matchedRows == 1 && changedRows == 0` is still success. Its public return type remains `Future<void>`.
+- Do not use the candidate's current key to infer create versus update. The presence of an original key in the detail ViewModel determines the operation.
+- For create, an optional candidate-key precheck may improve the error message, but the database unique constraint remains the final concurrency guarantee. Do not perform an update-key conflict precheck.
+- `destroyFoo()` deletes the located row from the current table without scanning reverse references or cascading into other tables. It consumes Laconic's delete result and reports a missing original row when `deletedRows == 0`; activity logging runs only after an actual delete.
 - Compound-key child repositories must filter/update/delete by every key component.
+- Each Repository write method mutates exactly one physical table. A ViewModel may coordinate separate Repository calls, and may wrap explicitly edited base/locale candidates in one transaction, but a Repository must not automatically save locale rows or child rows because a parent key changed.
 - Use `comparator: 'like'` and `%...%` for text filters. Escape/quote reserved columns as the neighboring repository does; `rank` is a known MySQL reserved word.
 - Keep all `foxy`/DBC table names fully qualified. Do not qualify normal world tables with a hard-coded `acore_world` schema because the world schema is configurable.
 
-Activity logging after a successful business write normally uses `ActivityLogRepository.storeActivityLogBestEffort`; logging failure must not turn a successful save into a failed save.
+Activity logs use their own auto-increment `id` as the log row's primary key. They do not store or model the business record's primary key: do not add an `entityId`, `entity_id`, full `FooKey`, representative integer, or stable key encoding for the target record. Each caller supplies a human-readable target label instead. Remove the legacy `entity_id` column through a new migration rather than editing an already-applied migration. Logging after a successful business write normally uses `ActivityLogRepository.storeActivityLogBestEffort`; logging failure must not turn a successful save into a failed save.
 
 ## 8. Locale and DBC rules
 
@@ -293,7 +311,9 @@ DBC import runs in an isolate. Preserve progress/error stream completion and ant
 - Pages exposed to auto_route have `@RoutePage()`.
 - `lib/router/router.gr.dart` is generated **and tracked**. Regenerate it after route/page annotation changes; do not hand-edit it.
 - Feature navigation should go through `RouterFacade`, which owns the route stack's breadcrumb `path` signal and active menu calculation.
-- Use `navigateToMenu`, `navigateToDetail`, `replaceCurrentDetail`, `navigateToBreadcrumb`, and `goBack` as appropriate.
+- Use `navigateToMenu`, `navigateToDetail`, `navigateToBreadcrumb`, and `goBack` as appropriate. Do not replace or rebuild a live detail route after save; update its ViewModel `persistedKey` signal and the breadcrumb label signal instead.
+- `RouterNode` contains navigation state actually consumed by breadcrumbs and routing; it does not carry a redundant string `id`. Initial detail identity is represented by `PageRouteInfo` arguments containing a strongly typed `FooKey`, while the live page identity comes from its ViewModel `persistedKey` signal. Do not add string serialization or a stable-encoding API to `FooKey` merely for routing.
+- `RouterFacade.replaceCurrentDetail` and `RouterNode.id` are legacy unused/rebuild-oriented APIs and must be removed during this refactor.
 - The bootstrap flow's direct `AutoRouter.replaceAll([DashboardRoute()])` is intentional because it clears connection history; it is not the pattern for ordinary feature navigation.
 - Add visible top-level features to `RouterMenu` and, when applicable, to migration-backed `foxy.features` data.
 
@@ -328,7 +348,9 @@ Do not alter an already-applied migration to perform new production work; add a 
 
 For a bug fix, add or adjust the smallest test that reproduces the behavior before changing implementation. For a new domain feature, expect tests at several levels:
 
-- Entity round-trip and exact physical key coverage
+- Full Entity round-trip and exact physical column coverage
+- Brief Entity displayed-column coverage, complete row-locator coverage, and typed `key` construction
+- Strongly typed Key equality and `hashCode` coverage across every row-locator field
 - Constants/enums/flags and 3.3.5a value ranges
 - Validation mixin behavior
 - Repository query/reference/deletion contracts
@@ -364,9 +386,9 @@ Use the nearest complete domain as the template; `area_table`, `gem_property`, `
 
 1. Confirm the exact AzerothCore/DBC 3.3.5a physical schema and semantics.
 2. Add constants/enums/flags only where a dedicated value domain exists.
-3. Add full, brief, filter, and locale entities as needed; preserve exact scalar columns.
+3. Add full, strongly typed key, filter, and locale entities as needed. A dedicated Brief Entity is mandatory for every list/picker/editable child-table/detail-navigation flow; it must contain every row-locator column and expose `FooKey get key`. Preserve exact scalar columns and follow the reviewed full-row-locator exception for a table without a primary or unique key.
 4. Add field-validation mixins and tests; keep Entities pure.
-5. Add the repository with pagination, ID allocation, reference checks, and deletion protection.
+5. Add the repository with pagination, ID allocation, current-table uniqueness checks, and single-table CRUD. Do not add cross-table reference checks or deletion protection.
 6. Add list/detail ViewModels and views using registered FieldControllers and Foxy widgets.
 7. Add entity picker delegates for new reference targets.
 8. Register repository and ViewModels in `lib/di.dart` with the correct lifetimes.
