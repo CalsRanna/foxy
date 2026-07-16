@@ -6,6 +6,39 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const minSchool = 1;
   static const maxSchool = 6;
 
+  Future<void> copyCreatureTemplateResistance(
+    int creatureID,
+    int school,
+  ) async {
+    var source = await getCreatureTemplateResistance(creatureID, school);
+    if (source == null) return;
+    var nextSchool = await getNextSchool(creatureID);
+    var json = source.toJson();
+    json['School'] = nextSchool;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
+    int creatureID,
+  ) async {
+    var nextSchool = await getNextSchool(creatureID);
+    return CreatureTemplateResistanceEntity(
+      creatureID: creatureID,
+      school: nextSchool,
+    );
+  }
+
+  Future<void> destroyCreatureTemplateResistance(
+    int creatureID,
+    int school,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('School', school)
+        .delete();
+  }
+
   Future<List<CreatureTemplateResistanceEntity>>
   getBriefCreatureTemplateResistances(int creatureID) async {
     var builder = laconic.table(_table);
@@ -32,14 +65,29 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     return CreatureTemplateResistanceEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
-    int creatureID,
-  ) async {
-    var nextSchool = await getNextSchool(creatureID);
-    return CreatureTemplateResistanceEntity(
-      creatureID: creatureID,
-      school: nextSchool,
+  Future<int> getNextSchool(int creatureID) async {
+    var results = await laconic
+        .table(_table)
+        .select(['School'])
+        .where('CreatureID', creatureID)
+        .get();
+    return nextAvailableSchool(
+      results.map((result) => result.toMap()['School'] as int),
     );
+  }
+
+  Future<void> saveCreatureTemplateResistance(
+    CreatureTemplateResistanceEntity resistance,
+  ) async {
+    var existing = await getCreatureTemplateResistance(
+      resistance.creatureID,
+      resistance.school,
+    );
+    if (existing != null) {
+      await updateCreatureTemplateResistance(resistance);
+    } else {
+      await storeCreatureTemplateResistance(resistance);
+    }
   }
 
   Future<void> storeCreatureTemplateResistance(
@@ -61,54 +109,6 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
         .where('CreatureID', resistance.creatureID)
         .where('School', resistance.school)
         .update(json);
-  }
-
-  Future<void> destroyCreatureTemplateResistance(
-    int creatureID,
-    int school,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('CreatureID', creatureID)
-        .where('School', school)
-        .delete();
-  }
-
-  Future<void> copyCreatureTemplateResistance(
-    int creatureID,
-    int school,
-  ) async {
-    var source = await getCreatureTemplateResistance(creatureID, school);
-    if (source == null) return;
-    var nextSchool = await getNextSchool(creatureID);
-    var json = source.toJson();
-    json['School'] = nextSchool;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureTemplateResistance(
-    CreatureTemplateResistanceEntity resistance,
-  ) async {
-    var existing = await getCreatureTemplateResistance(
-      resistance.creatureID,
-      resistance.school,
-    );
-    if (existing != null) {
-      await updateCreatureTemplateResistance(resistance);
-    } else {
-      await storeCreatureTemplateResistance(resistance);
-    }
-  }
-
-  Future<int> getNextSchool(int creatureID) async {
-    var results = await laconic
-        .table(_table)
-        .select(['School'])
-        .where('CreatureID', creatureID)
-        .get();
-    return nextAvailableSchool(
-      results.map((result) => result.toMap()['School'] as int),
-    );
   }
 
   static int nextAvailableSchool(Iterable<int> usedSchools) {

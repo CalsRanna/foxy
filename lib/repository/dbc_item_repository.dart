@@ -17,6 +17,23 @@ class DbcItemRepository with RepositoryMixin {
     26,
   ];
 
+  Future<void> copyDbcItem(int id) async {
+    final source = await getDbcItem(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countDbcItems({DbcItemFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<DbcItemEntity> createDbcItem() async =>
+      DbcItemEntity.fromJson({'ID': await _getNextId()});
+
+  Future<void> destroyDbcItem(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefDbcItemEntity>> getBriefDbcItems({
     int page = 1,
     DbcItemFilterEntity? filter,
@@ -36,21 +53,23 @@ class DbcItemRepository with RepositoryMixin {
     return rows.map((row) => BriefDbcItemEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<List<DbcItemEntity>> getDbcItems() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => DbcItemEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countDbcItems({DbcItemFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<DbcItemEntity?> getDbcItem(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : DbcItemEntity.fromJson(rows.first.toMap());
   }
 
-  Future<DbcItemEntity> createDbcItem() async =>
-      DbcItemEntity.fromJson({'ID': await _getNextId()});
+  Future<List<DbcItemEntity>> getDbcItems() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => DbcItemEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveDbcItem(DbcItemEntity item) async {
+    if (await getDbcItem(item.id) == null) {
+      await storeDbcItem(item);
+    } else {
+      await updateDbcItem(item);
+    }
+  }
 
   Future<int> storeDbcItem(DbcItemEntity item) async {
     final json = item.toJson();
@@ -65,27 +84,6 @@ class DbcItemRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', item.id).update(json);
   }
 
-  Future<void> destroyDbcItem(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyDbcItem(int id) async {
-    final source = await getDbcItem(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveDbcItem(DbcItemEntity item) async {
-    if (await getDbcItem(item.id) == null) {
-      await storeDbcItem(item);
-    } else {
-      await updateDbcItem(item);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -94,4 +92,6 @@ class DbcItemRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

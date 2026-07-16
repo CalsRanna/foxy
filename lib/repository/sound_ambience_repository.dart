@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class SoundAmbienceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_ambience';
 
+  Future<void> copySoundAmbience(int id) async {
+    final source = await getSoundAmbience(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSoundAmbiences({SoundAmbienceFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<SoundAmbienceEntity> createSoundAmbience() async =>
+      SoundAmbienceEntity(id: await _getNextId());
+
+  Future<void> destroySoundAmbience(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSoundAmbienceEntity>> getBriefSoundAmbiences({
     int page = 1,
     SoundAmbienceFilterEntity? filter,
@@ -19,16 +36,6 @@ class SoundAmbienceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SoundAmbienceEntity>> getSoundAmbiences() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => SoundAmbienceEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countSoundAmbiences({SoundAmbienceFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<SoundAmbienceEntity?> getSoundAmbience(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -36,8 +43,20 @@ class SoundAmbienceRepository with RepositoryMixin {
         : SoundAmbienceEntity.fromJson(rows.first.toMap());
   }
 
-  Future<SoundAmbienceEntity> createSoundAmbience() async =>
-      SoundAmbienceEntity(id: await _getNextId());
+  Future<List<SoundAmbienceEntity>> getSoundAmbiences() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => SoundAmbienceEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSoundAmbience(SoundAmbienceEntity entity) async {
+    if (await getSoundAmbience(entity.id) == null) {
+      await storeSoundAmbience(entity);
+    } else {
+      await updateSoundAmbience(entity);
+    }
+  }
 
   Future<int> storeSoundAmbience(SoundAmbienceEntity entity) async {
     final json = entity.toJson();
@@ -52,27 +71,6 @@ class SoundAmbienceRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroySoundAmbience(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySoundAmbience(int id) async {
-    final source = await getSoundAmbience(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveSoundAmbience(SoundAmbienceEntity entity) async {
-    if (await getSoundAmbience(entity.id) == null) {
-      await storeSoundAmbience(entity);
-    } else {
-      await updateSoundAmbience(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SoundAmbienceFilterEntity? filter,
@@ -82,4 +80,6 @@ class SoundAmbienceRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

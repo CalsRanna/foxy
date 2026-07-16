@@ -6,6 +6,23 @@ import 'package:laconic/laconic.dart';
 class TaxiPathRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_taxi_path';
 
+  Future<void> copyTaxiPath(int id) async {
+    final source = await getTaxiPath(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countTaxiPaths({TaxiPathFilterEntity? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
+
+  Future<TaxiPathEntity> createTaxiPath() async =>
+      TaxiPathEntity(id: await _getNextId());
+
+  Future<void> destroyTaxiPath(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefTaxiPathEntity>> getBriefTaxiPaths({
     int page = 1,
     TaxiPathFilterEntity? filter,
@@ -19,21 +36,23 @@ class TaxiPathRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<TaxiPathEntity>> getTaxiPaths() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => TaxiPathEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countTaxiPaths({TaxiPathFilterEntity? filter}) =>
-      _applyFilter(laconic.table(_table), filter).count();
-
   Future<TaxiPathEntity?> getTaxiPath(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : TaxiPathEntity.fromJson(rows.first.toMap());
   }
 
-  Future<TaxiPathEntity> createTaxiPath() async =>
-      TaxiPathEntity(id: await _getNextId());
+  Future<List<TaxiPathEntity>> getTaxiPaths() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => TaxiPathEntity.fromJson(row.toMap())).toList();
+  }
+
+  Future<void> saveTaxiPath(TaxiPathEntity entity) async {
+    if (await getTaxiPath(entity.id) == null) {
+      await storeTaxiPath(entity);
+    } else {
+      await updateTaxiPath(entity);
+    }
+  }
 
   Future<int> storeTaxiPath(TaxiPathEntity entity) async {
     final json = entity.toJson();
@@ -48,27 +67,6 @@ class TaxiPathRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroyTaxiPath(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyTaxiPath(int id) async {
-    final source = await getTaxiPath(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveTaxiPath(TaxiPathEntity entity) async {
-    if (await getTaxiPath(entity.id) == null) {
-      await storeTaxiPath(entity);
-    } else {
-      await updateTaxiPath(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     TaxiPathFilterEntity? filter,
@@ -78,4 +76,6 @@ class TaxiPathRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

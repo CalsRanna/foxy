@@ -7,6 +7,40 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_display_info';
   static const _modelDataTable = 'foxy.dbc_creature_model_data';
 
+  Future<void> copyCreatureDisplayInfo(int id) async {
+    var source = await getCreatureDisplayInfo(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureDisplayInfos({
+    CreatureDisplayInfoFilterEntity? filter,
+  }) async {
+    final needsModelJoin = filter != null && filter.modelName.isNotEmpty;
+    if (!needsModelJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        builder = builder.where('ID', filter.id);
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table AS cdi');
+    builder = _joinModelData(builder);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureDisplayInfoEntity> createCreatureDisplayInfo() async {
+    return CreatureDisplayInfoEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCreatureDisplayInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCreatureDisplayInfoEntity>> getBriefCreatureDisplayInfos({
     int page = 1,
     CreatureDisplayInfoFilterEntity? filter,
@@ -31,65 +65,17 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CreatureDisplayInfoEntity>> getCreatureDisplayInfos() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => CreatureDisplayInfoEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countCreatureDisplayInfos({
-    CreatureDisplayInfoFilterEntity? filter,
-  }) async {
-    final needsModelJoin = filter != null && filter.modelName.isNotEmpty;
-    if (!needsModelJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.id.isNotEmpty) {
-        builder = builder.where('ID', filter.id);
-      }
-      return builder.count();
-    }
-    var builder = laconic.table('$_table AS cdi');
-    builder = _joinModelData(builder);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureDisplayInfoEntity> createCreatureDisplayInfo() async {
-    return CreatureDisplayInfoEntity(id: await _getNextId());
-  }
-
-  Future<int> storeCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
-    var json = info.toJson();
-    final nextId = info.id > 0 ? info.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
-    var json = info.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', info.id).update(json);
-  }
-
-  Future<void> destroyCreatureDisplayInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCreatureDisplayInfo(int id) async {
-    var source = await getCreatureDisplayInfo(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<CreatureDisplayInfoEntity>> getCreatureDisplayInfos() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureDisplayInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
@@ -105,15 +91,18 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
+    var json = info.toJson();
+    final nextId = info.id > 0 ? info.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
   }
 
-  QueryBuilder _joinModelData(QueryBuilder builder) {
-    return builder.leftJoin(
-      '$_modelDataTable AS cmd',
-      (join) => join.on('cdi.ModelID', 'cmd.ID'),
-    );
+  Future<void> updateCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
+    var json = info.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', info.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -132,5 +121,16 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
+  }
+
+  QueryBuilder _joinModelData(QueryBuilder builder) {
+    return builder.leftJoin(
+      '$_modelDataTable AS cmd',
+      (join) => join.on('cdi.ModelID', 'cmd.ID'),
+    );
   }
 }

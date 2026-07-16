@@ -6,6 +6,34 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
   static const minIndex = 0;
   static const maxIndex = 7;
 
+  Future<void> copyCreatureTemplateSpell(int creatureID, int index) async {
+    var source = await getCreatureTemplateSpell(creatureID, index);
+    if (source == null) return;
+    var nextIndex = await getNextIndex(creatureID);
+    var json = source.toJson();
+    json['Index'] = nextIndex;
+    json['`Index`'] = json.remove('Index');
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<CreatureTemplateSpellEntity> createCreatureTemplateSpell(
+    int creatureID,
+  ) async {
+    var nextIndex = await getNextIndex(creatureID);
+    return CreatureTemplateSpellEntity(
+      creatureID: creatureID,
+      index: nextIndex,
+    );
+  }
+
+  Future<void> destroyCreatureTemplateSpell(int creatureID, int index) async {
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('`Index`', index)
+        .delete();
+  }
+
   Future<List<CreatureTemplateSpellEntity>> getBriefCreatureTemplateSpells(
     int creatureID,
   ) async {
@@ -42,14 +70,29 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
     return CreatureTemplateSpellEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureTemplateSpellEntity> createCreatureTemplateSpell(
-    int creatureID,
-  ) async {
-    var nextIndex = await getNextIndex(creatureID);
-    return CreatureTemplateSpellEntity(
-      creatureID: creatureID,
-      index: nextIndex,
+  Future<int> getNextIndex(int creatureID) async {
+    var results = await laconic
+        .table(_table)
+        .select(['`Index`'])
+        .where('CreatureID', creatureID)
+        .get();
+    return nextAvailableIndex(
+      results.map((result) => result.toMap()['Index'] as int),
     );
+  }
+
+  Future<void> saveCreatureTemplateSpell(
+    CreatureTemplateSpellEntity spell,
+  ) async {
+    var existing = await getCreatureTemplateSpell(
+      spell.creatureID,
+      spell.index,
+    );
+    if (existing != null) {
+      await updateCreatureTemplateSpell(spell);
+    } else {
+      await storeCreatureTemplateSpell(spell);
+    }
   }
 
   Future<void> storeCreatureTemplateSpell(
@@ -73,49 +116,6 @@ class CreatureTemplateSpellRepository with RepositoryMixin {
         .where('CreatureID', spell.creatureID)
         .where('`Index`', spell.index)
         .update(json);
-  }
-
-  Future<void> destroyCreatureTemplateSpell(int creatureID, int index) async {
-    await laconic
-        .table(_table)
-        .where('CreatureID', creatureID)
-        .where('`Index`', index)
-        .delete();
-  }
-
-  Future<void> copyCreatureTemplateSpell(int creatureID, int index) async {
-    var source = await getCreatureTemplateSpell(creatureID, index);
-    if (source == null) return;
-    var nextIndex = await getNextIndex(creatureID);
-    var json = source.toJson();
-    json['Index'] = nextIndex;
-    json['`Index`'] = json.remove('Index');
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureTemplateSpell(
-    CreatureTemplateSpellEntity spell,
-  ) async {
-    var existing = await getCreatureTemplateSpell(
-      spell.creatureID,
-      spell.index,
-    );
-    if (existing != null) {
-      await updateCreatureTemplateSpell(spell);
-    } else {
-      await storeCreatureTemplateSpell(spell);
-    }
-  }
-
-  Future<int> getNextIndex(int creatureID) async {
-    var results = await laconic
-        .table(_table)
-        .select(['`Index`'])
-        .where('CreatureID', creatureID)
-        .get();
-    return nextAvailableIndex(
-      results.map((result) => result.toMap()['Index'] as int),
-    );
   }
 
   static int nextAvailableIndex(Iterable<int> usedIndexes) {

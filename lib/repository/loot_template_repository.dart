@@ -25,21 +25,42 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
-  static Set<String> primaryKeyColumnsFor(LootTableType tableType) =>
-      tableType == LootTableType.creature
-      ? const {'Entry', 'Item', 'Reference', 'GroupId'}
-      : const {'Entry', 'Item'};
+  Future<void> copyLootTemplate(
+    int entry,
+    int item, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    var source = await getLootTemplate(
+      entry,
+      item,
+      reference: reference,
+      groupId: groupId,
+    );
+    if (source == null) return;
+    var json = source.toJson();
+    if (tableType == LootTableType.reference) {
+      json['Entry'] = await nextMaxPlusOne(_table, 'Entry');
+    } else {
+      var nextItem = await getNextItemId(entry);
+      json['Item'] = nextItem;
+      if (source.reference != 0) {
+        json['Reference'] = nextItem;
+      }
+    }
+    await laconic.table(_table).insert([json]);
+  }
 
-  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(int entry) async {
+  Future<int> countLootTemplateRows({LootTemplateFilterEntity? filter}) async {
+    final needsNameJoin = filter != null && filter.name.isNotEmpty;
+    if (!needsNameJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.entry.isNotEmpty) {
+        builder = builder.where('Entry', filter.entry);
+      }
+      return builder.count();
+    }
     var builder = laconic.table('$_table AS lt');
-    final fields = <String>[
-      'lt.*',
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
-    ];
-    builder = builder.select(fields);
     builder = builder.leftJoin(
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
@@ -50,11 +71,51 @@ class LootTemplateRepository with RepositoryMixin {
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
-    builder = builder.where('lt.Entry', entry);
+    builder = _applyRowFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<int> countLootTemplates({LootTemplateFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    if (filter != null && filter.entry.isNotEmpty) {
+      builder = builder.where('Entry', filter.entry);
+    }
+    builder = builder.groupBy('Entry');
+    return builder.count();
+  }
+
+  Future<LootTemplateEntity> createLootTemplate(int entry) async {
+    return LootTemplateEntity(entry: entry);
+  }
+
+  Future<void> destroyLootTemplate(
+    int entry,
+    int item, {
+    int reference = 0,
+    int groupId = 0,
+  }) async {
+    var builder = laconic
+        .table(_table)
+        .where('Entry', entry)
+        .where('Item', item);
+    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
+    await builder.delete();
+  }
+
+  /// Distinct entry groups for pickers.
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplateEntries({
+    LootTemplateFilterEntity? filter,
+    int page = 1,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table(_table);
+    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
+    if (filter != null && filter.entry.isNotEmpty) {
+      builder = builder.where('Entry', filter.entry);
+    }
+    builder = builder.groupBy('Entry');
+    builder = builder.orderBy('Entry');
+    builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
         .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
@@ -99,45 +160,16 @@ class LootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  /// Distinct entry groups for pickers.
-  Future<List<BriefLootTemplateEntity>> getBriefLootTemplateEntries({
-    LootTemplateFilterEntity? filter,
-    int page = 1,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    builder = builder.orderBy('Entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countLootTemplates({LootTemplateFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    return builder.count();
-  }
-
-  Future<int> countLootTemplateRows({LootTemplateFilterEntity? filter}) async {
-    final needsNameJoin = filter != null && filter.name.isNotEmpty;
-    if (!needsNameJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.entry.isNotEmpty) {
-        builder = builder.where('Entry', filter.entry);
-      }
-      return builder.count();
-    }
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(int entry) async {
     var builder = laconic.table('$_table AS lt');
+    final fields = <String>[
+      'lt.*',
+      'it.name',
+      if (localeEnabled) 'itl.Name AS localeName',
+      'it.Quality',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
     builder = builder.leftJoin(
       'item_template AS it',
       (join) => join.on('lt.Item', 'it.entry'),
@@ -148,8 +180,15 @@ class LootTemplateRepository with RepositoryMixin {
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    builder = _applyRowFilter(builder, filter);
-    return builder.count();
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = builder.where('lt.Entry', entry);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<LootTemplateEntity?> getLootTemplate(
@@ -168,8 +207,34 @@ class LootTemplateRepository with RepositoryMixin {
     return LootTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    return LootTemplateEntity(entry: entry);
+  Future<int> getNextItemId(int entry) async {
+    var maxResult = await laconic
+        .table(_table)
+        .select(['MAX(Item) AS maxItem'])
+        .where('Entry', entry)
+        .first();
+    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
+    return maxItem + 1;
+  }
+
+  Future<void> saveLootTemplate(LootTemplateEntity loot) async {
+    var existing = await getLootTemplate(
+      loot.entry,
+      loot.item,
+      reference: loot.reference,
+      groupId: loot.groupId,
+    );
+    if (existing != null) {
+      await updateLootTemplate(
+        loot.entry,
+        loot.item,
+        loot,
+        reference: loot.reference,
+        groupId: loot.groupId,
+      );
+    } else {
+      await storeLootTemplate(loot);
+    }
   }
 
   Future<void> storeLootTemplate(LootTemplateEntity loot) async {
@@ -193,76 +258,6 @@ class LootTemplateRepository with RepositoryMixin {
         .where('Item', item);
     builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
     await builder.update(json);
-  }
-
-  Future<void> destroyLootTemplate(
-    int entry,
-    int item, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    var builder = laconic
-        .table(_table)
-        .where('Entry', entry)
-        .where('Item', item);
-    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
-    await builder.delete();
-  }
-
-  Future<void> copyLootTemplate(
-    int entry,
-    int item, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    var source = await getLootTemplate(
-      entry,
-      item,
-      reference: reference,
-      groupId: groupId,
-    );
-    if (source == null) return;
-    var json = source.toJson();
-    if (tableType == LootTableType.reference) {
-      json['Entry'] = await nextMaxPlusOne(_table, 'Entry');
-    } else {
-      var nextItem = await getNextItemId(entry);
-      json['Item'] = nextItem;
-      if (source.reference != 0) {
-        json['Reference'] = nextItem;
-      }
-    }
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveLootTemplate(LootTemplateEntity loot) async {
-    var existing = await getLootTemplate(
-      loot.entry,
-      loot.item,
-      reference: loot.reference,
-      groupId: loot.groupId,
-    );
-    if (existing != null) {
-      await updateLootTemplate(
-        loot.entry,
-        loot.item,
-        loot,
-        reference: loot.reference,
-        groupId: loot.groupId,
-      );
-    } else {
-      await storeLootTemplate(loot);
-    }
-  }
-
-  Future<int> getNextItemId(int entry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(Item) AS maxItem'])
-        .where('Entry', entry)
-        .first();
-    var maxItem = (maxResult.toMap()['maxItem'] ?? 0) as int;
-    return maxItem + 1;
   }
 
   QueryBuilder _applyAdditionalPrimaryKey(
@@ -326,4 +321,9 @@ class LootTemplateRepository with RepositoryMixin {
       );
     }
   }
+
+  static Set<String> primaryKeyColumnsFor(LootTableType tableType) =>
+      tableType == LootTableType.creature
+      ? const {'Entry', 'Item', 'Reference', 'GroupId'}
+      : const {'Entry', 'Item'};
 }

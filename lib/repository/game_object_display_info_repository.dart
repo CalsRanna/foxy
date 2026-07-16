@@ -6,6 +6,24 @@ import 'package:laconic/laconic.dart';
 class GameObjectDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_display_info';
 
+  Future<void> copyGameObjectDisplayInfo(int id) async {
+    final source = await getGameObjectDisplayInfo(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countGameObjectDisplayInfos({
+    GameObjectDisplayInfoFilterEntity? filter,
+  }) => _applyFilter(laconic.table(_table), filter).count();
+
+  Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
+      GameObjectDisplayInfoEntity(id: await _getNextId());
+
+  Future<void> destroyGameObjectDisplayInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefGameObjectDisplayInfoEntity>>
   getBriefGameObjectDisplayInfos({
     int page = 1,
@@ -25,17 +43,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GameObjectDisplayInfoEntity>> getGameObjectDisplayInfos() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => GameObjectDisplayInfoEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countGameObjectDisplayInfos({
-    GameObjectDisplayInfoFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
-
   Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty
@@ -43,8 +50,22 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
         : GameObjectDisplayInfoEntity.fromJson(rows.first.toMap());
   }
 
-  Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
-      GameObjectDisplayInfoEntity(id: await _getNextId());
+  Future<List<GameObjectDisplayInfoEntity>> getGameObjectDisplayInfos() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => GameObjectDisplayInfoEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveGameObjectDisplayInfo(
+    GameObjectDisplayInfoEntity entity,
+  ) async {
+    if (await getGameObjectDisplayInfo(entity.id) == null) {
+      await storeGameObjectDisplayInfo(entity);
+    } else {
+      await updateGameObjectDisplayInfo(entity);
+    }
+  }
 
   Future<int> storeGameObjectDisplayInfo(
     GameObjectDisplayInfoEntity entity,
@@ -63,29 +84,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroyGameObjectDisplayInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyGameObjectDisplayInfo(int id) async {
-    final source = await getGameObjectDisplayInfo(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveGameObjectDisplayInfo(
-    GameObjectDisplayInfoEntity entity,
-  ) async {
-    if (await getGameObjectDisplayInfo(entity.id) == null) {
-      await storeGameObjectDisplayInfo(entity);
-    } else {
-      await updateGameObjectDisplayInfo(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     GameObjectDisplayInfoFilterEntity? filter,
@@ -101,4 +99,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

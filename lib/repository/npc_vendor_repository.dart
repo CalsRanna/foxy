@@ -5,6 +5,20 @@ class NpcVendorRepository with RepositoryMixin {
   static const _table = 'npc_vendor';
   static const primaryKeyColumns = {'entry', 'item', 'ExtendedCost'};
 
+  Future<NpcVendorEntity> createNpcVendor(int entry) async {
+    var nextSlot = await getNextSlot(entry);
+    return NpcVendorEntity(entry: entry, slot: nextSlot);
+  }
+
+  Future<void> destroyNpcVendor(int entry, int item, int extendedCost) async {
+    await laconic
+        .table(_table)
+        .where('entry', entry)
+        .where('item', item)
+        .where('ExtendedCost', extendedCost)
+        .delete();
+  }
+
   Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(int entry) async {
     var builder = laconic.table('$_table AS nv');
     final fields = <String>[
@@ -37,6 +51,16 @@ class NpcVendorRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<int> getNextSlot(int entry) async {
+    var maxResult = await laconic
+        .table(_table)
+        .select(['MAX(slot) AS maxSlot'])
+        .where('entry', entry)
+        .first();
+    var maxSlot = (maxResult.toMap()['maxSlot'] ?? -1) as int;
+    return maxSlot + 1;
+  }
+
   Future<NpcVendorEntity?> getNpcVendor(
     int entry,
     int item,
@@ -53,9 +77,23 @@ class NpcVendorRepository with RepositoryMixin {
     return NpcVendorEntity.fromJson(results.first.toMap());
   }
 
-  Future<NpcVendorEntity> createNpcVendor(int entry) async {
-    var nextSlot = await getNextSlot(entry);
-    return NpcVendorEntity(entry: entry, slot: nextSlot);
+  Future<void> saveNpcVendor(NpcVendorEntity vendor) async {
+    _validate(vendor);
+    var existing = await getNpcVendor(
+      vendor.entry,
+      vendor.item,
+      vendor.extendedCost,
+    );
+    if (existing != null) {
+      await updateNpcVendor(
+        vendor.entry,
+        vendor.item,
+        vendor.extendedCost,
+        vendor,
+      );
+    } else {
+      await storeNpcVendor(vendor);
+    }
   }
 
   Future<void> storeNpcVendor(NpcVendorEntity vendor) async {
@@ -78,44 +116,6 @@ class NpcVendorRepository with RepositoryMixin {
         .where('item', item)
         .where('ExtendedCost', extendedCost)
         .update(json);
-  }
-
-  Future<void> destroyNpcVendor(int entry, int item, int extendedCost) async {
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('item', item)
-        .where('ExtendedCost', extendedCost)
-        .delete();
-  }
-
-  Future<void> saveNpcVendor(NpcVendorEntity vendor) async {
-    _validate(vendor);
-    var existing = await getNpcVendor(
-      vendor.entry,
-      vendor.item,
-      vendor.extendedCost,
-    );
-    if (existing != null) {
-      await updateNpcVendor(
-        vendor.entry,
-        vendor.item,
-        vendor.extendedCost,
-        vendor,
-      );
-    } else {
-      await storeNpcVendor(vendor);
-    }
-  }
-
-  Future<int> getNextSlot(int entry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(slot) AS maxSlot'])
-        .where('entry', entry)
-        .first();
-    var maxSlot = (maxResult.toMap()['maxSlot'] ?? -1) as int;
-    return maxSlot + 1;
   }
 
   void _validate(NpcVendorEntity vendor) {

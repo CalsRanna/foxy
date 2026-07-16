@@ -6,6 +6,31 @@ import 'package:laconic/laconic.dart';
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
+  Future<void> copyItemDisplayInfo(int id) async {
+    var source = await getItemDisplayInfo(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countItemDisplayInfos({
+    ItemDisplayInfoFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ItemDisplayInfoEntity> createItemDisplayInfo() async {
+    return ItemDisplayInfoEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyItemDisplayInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefItemDisplayInfoEntity>> getBriefItemDisplayInfos({
     int page = 1,
     ItemDisplayInfoFilterEntity? filter,
@@ -22,56 +47,17 @@ class ItemDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<ItemDisplayInfoEntity>> getItemDisplayInfos() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => ItemDisplayInfoEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countItemDisplayInfos({
-    ItemDisplayInfoFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<ItemDisplayInfoEntity?> getItemDisplayInfo(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<ItemDisplayInfoEntity> createItemDisplayInfo() async {
-    return ItemDisplayInfoEntity(id: await _getNextId());
-  }
-
-  Future<int> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    var json = info.toJson();
-    final nextId = info.id > 0 ? info.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    var json = info.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', info.id).update(json);
-  }
-
-  Future<void> destroyItemDisplayInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyItemDisplayInfo(int id) async {
-    var source = await getItemDisplayInfo(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<ItemDisplayInfoEntity>> getItemDisplayInfos() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => ItemDisplayInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> saveItemDisplayInfo(ItemDisplayInfoEntity info) async {
@@ -87,8 +73,18 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
+    var json = info.toJson();
+    final nextId = info.id > 0 ? info.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateItemDisplayInfo(ItemDisplayInfoEntity info) async {
+    var json = info.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', info.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -107,5 +103,9 @@ class ItemDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

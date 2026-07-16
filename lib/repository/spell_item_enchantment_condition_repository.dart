@@ -6,6 +6,38 @@ import 'package:laconic/laconic.dart';
 class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment_condition';
 
+  Future<void> copySpellItemEnchantmentCondition(int id) async {
+    final source = await getSpellItemEnchantmentCondition(id);
+    if (source == null) return;
+    await storeSpellItemEnchantmentCondition(
+      source.copyWith(id: await _getNextId()),
+    );
+  }
+
+  Future<int> countSpellItemEnchantmentConditions({
+    SpellItemEnchantmentConditionFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellItemEnchantmentConditionEntity>
+  createSpellItemEnchantmentCondition() async {
+    return SpellItemEnchantmentConditionEntity(id: await _getNextId());
+  }
+
+  Future<void> destroySpellItemEnchantmentCondition(int id) async {
+    final references = await laconic
+        .table('foxy.dbc_spell_item_enchantment')
+        .where('Condition_ID', id)
+        .count();
+    if (references > 0) {
+      throw StateError('附魔条件 $id 仍被 $references 条法术附魔引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSpellItemEnchantmentConditionEntity>>
   getBriefSpellItemEnchantmentConditions({
     int page = 1,
@@ -26,22 +58,6 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SpellItemEnchantmentConditionEntity>>
-  getSpellItemEnchantmentConditions() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((row) => SpellItemEnchantmentConditionEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countSpellItemEnchantmentConditions({
-    SpellItemEnchantmentConditionFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<SpellItemEnchantmentConditionEntity?> getSpellItemEnchantmentCondition(
     int id,
   ) async {
@@ -50,9 +66,25 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     return SpellItemEnchantmentConditionEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellItemEnchantmentConditionEntity>
-  createSpellItemEnchantmentCondition() async {
-    return SpellItemEnchantmentConditionEntity(id: await _getNextId());
+  Future<List<SpellItemEnchantmentConditionEntity>>
+  getSpellItemEnchantmentConditions() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((row) => SpellItemEnchantmentConditionEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSpellItemEnchantmentCondition(
+    SpellItemEnchantmentConditionEntity entity,
+  ) async {
+    final existing = entity.id == 0
+        ? null
+        : await getSpellItemEnchantmentCondition(entity.id);
+    if (existing == null) {
+      await storeSpellItemEnchantmentCondition(entity);
+    } else {
+      await updateSpellItemEnchantmentCondition(entity);
+    }
   }
 
   Future<int> storeSpellItemEnchantmentCondition(
@@ -71,40 +103,6 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroySpellItemEnchantmentCondition(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_spell_item_enchantment')
-        .where('Condition_ID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('附魔条件 $id 仍被 $references 条法术附魔引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpellItemEnchantmentCondition(int id) async {
-    final source = await getSpellItemEnchantmentCondition(id);
-    if (source == null) return;
-    await storeSpellItemEnchantmentCondition(
-      source.copyWith(id: await _getNextId()),
-    );
-  }
-
-  Future<void> saveSpellItemEnchantmentCondition(
-    SpellItemEnchantmentConditionEntity entity,
-  ) async {
-    final existing = entity.id == 0
-        ? null
-        : await getSpellItemEnchantmentCondition(entity.id);
-    if (existing == null) {
-      await storeSpellItemEnchantmentCondition(entity);
-    } else {
-      await updateSpellItemEnchantmentCondition(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SpellItemEnchantmentConditionFilterEntity? filter,
@@ -114,4 +112,6 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

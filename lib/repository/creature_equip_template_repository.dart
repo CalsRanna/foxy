@@ -4,6 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureEquipTemplateRepository with RepositoryMixin {
   static const _table = 'creature_equip_template';
 
+  Future<void> copyCreatureEquipTemplate(int creatureID, int id) async {
+    var source = await getCreatureEquipTemplate(creatureID, id);
+    if (source == null) return;
+    var nextId = await getNextId(creatureID);
+    var json = source.toJson();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<CreatureEquipTemplateEntity> createCreatureEquipTemplate(
+    int creatureID,
+  ) async {
+    var nextId = await getNextId(creatureID);
+    return CreatureEquipTemplateEntity(creatureID: creatureID, id: nextId);
+  }
+
+  Future<void> destroyCreatureEquipTemplate(int creatureID, int id) async {
+    await laconic
+        .table(_table)
+        .where('CreatureID', creatureID)
+        .where('ID', id)
+        .delete();
+  }
+
   Future<List<BriefCreatureEquipTemplateEntity>> getBriefCreatureEquipTemplates(
     int creatureID,
   ) async {
@@ -91,11 +115,25 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
     return CreatureEquipTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureEquipTemplateEntity> createCreatureEquipTemplate(
-    int creatureID,
+  Future<int> getNextId(int creatureID) async {
+    var maxResult = await laconic
+        .table(_table)
+        .select(['MAX(ID) AS maxId'])
+        .where('CreatureID', creatureID)
+        .first();
+    var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
+    return maxId + 1;
+  }
+
+  Future<void> saveCreatureEquipTemplate(
+    CreatureEquipTemplateEntity equip,
   ) async {
-    var nextId = await getNextId(creatureID);
-    return CreatureEquipTemplateEntity(creatureID: creatureID, id: nextId);
+    var existing = await getCreatureEquipTemplate(equip.creatureID, equip.id);
+    if (existing != null) {
+      await updateCreatureEquipTemplate(equip);
+    } else {
+      await storeCreatureEquipTemplate(equip);
+    }
   }
 
   Future<void> storeCreatureEquipTemplate(
@@ -115,43 +153,5 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .where('CreatureID', equip.creatureID)
         .where('ID', equip.id)
         .update(json);
-  }
-
-  Future<void> destroyCreatureEquipTemplate(int creatureID, int id) async {
-    await laconic
-        .table(_table)
-        .where('CreatureID', creatureID)
-        .where('ID', id)
-        .delete();
-  }
-
-  Future<void> copyCreatureEquipTemplate(int creatureID, int id) async {
-    var source = await getCreatureEquipTemplate(creatureID, id);
-    if (source == null) return;
-    var nextId = await getNextId(creatureID);
-    var json = source.toJson();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureEquipTemplate(
-    CreatureEquipTemplateEntity equip,
-  ) async {
-    var existing = await getCreatureEquipTemplate(equip.creatureID, equip.id);
-    if (existing != null) {
-      await updateCreatureEquipTemplate(equip);
-    } else {
-      await storeCreatureEquipTemplate(equip);
-    }
-  }
-
-  Future<int> getNextId(int creatureID) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(ID) AS maxId'])
-        .where('CreatureID', creatureID)
-        .first();
-    var maxId = (maxResult.toMap()['maxId'] ?? 0) as int;
-    return maxId + 1;
   }
 }

@@ -6,6 +6,31 @@ import 'package:laconic/laconic.dart';
 class CreatureModelInfoRepository with RepositoryMixin {
   static const _table = 'creature_model_info';
 
+  Future<void> copyCreatureModelInfo(int displayId) async {
+    var source = await getCreatureModelInfo(displayId);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextDisplayId();
+    json['DisplayID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureModelInfos({
+    CreatureModelInfoFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureModelInfoEntity> createCreatureModelInfo() async {
+    return const CreatureModelInfoEntity();
+  }
+
+  Future<void> destroyCreatureModelInfo(int displayId) async {
+    await laconic.table(_table).where('DisplayID', displayId).delete();
+  }
+
   Future<List<BriefCreatureModelInfoEntity>> getBriefCreatureModelInfos({
     int page = 1,
     CreatureModelInfoFilterEntity? filter,
@@ -28,21 +53,6 @@ class CreatureModelInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<CreatureModelInfoEntity>> getCreatureModelInfos() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => CreatureModelInfoEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countCreatureModelInfos({
-    CreatureModelInfoFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<CreatureModelInfoEntity?> getCreatureModelInfo(int displayId) async {
     var results = await laconic
         .table(_table)
@@ -53,8 +63,24 @@ class CreatureModelInfoRepository with RepositoryMixin {
     return CreatureModelInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureModelInfoEntity> createCreatureModelInfo() async {
-    return const CreatureModelInfoEntity();
+  Future<List<CreatureModelInfoEntity>> getCreatureModelInfos() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => CreatureModelInfoEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveCreatureModelInfo(CreatureModelInfoEntity info) async {
+    if (info.displayId == 0) {
+      await storeCreatureModelInfo(info);
+      return;
+    }
+    var existing = await getCreatureModelInfo(info.displayId);
+    if (existing != null) {
+      await updateCreatureModelInfo(info);
+    } else {
+      await laconic.table(_table).insert([info.toJson()]);
+    }
   }
 
   Future<int> storeCreatureModelInfo(CreatureModelInfoEntity info) async {
@@ -71,40 +97,6 @@ class CreatureModelInfoRepository with RepositoryMixin {
     await laconic.table(_table).where('DisplayID', info.displayId).update(json);
   }
 
-  Future<void> destroyCreatureModelInfo(int displayId) async {
-    await laconic.table(_table).where('DisplayID', displayId).delete();
-  }
-
-  Future<void> copyCreatureModelInfo(int displayId) async {
-    var source = await getCreatureModelInfo(displayId);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextDisplayId();
-    json['DisplayID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureModelInfo(CreatureModelInfoEntity info) async {
-    if (info.displayId == 0) {
-      await storeCreatureModelInfo(info);
-      return;
-    }
-    var existing = await getCreatureModelInfo(info.displayId);
-    if (existing != null) {
-      await updateCreatureModelInfo(info);
-    } else {
-      await laconic.table(_table).insert([info.toJson()]);
-    }
-  }
-
-  Future<int> _getNextDisplayId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(DisplayID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureModelInfoFilterEntity? filter,
@@ -114,5 +106,13 @@ class CreatureModelInfoRepository with RepositoryMixin {
       builder = builder.where('DisplayID', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextDisplayId() async {
+    var result = await laconic.table(_table).select([
+      'MAX(DisplayID) as max_id',
+    ]).first();
+    var maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
   }
 }

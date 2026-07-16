@@ -7,47 +7,13 @@ class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
-  Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
-    int page = 1,
-    ItemTemplateFilterEntity? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table('$_table AS it');
-    final fields = <String>[
-      'it.entry',
-      'it.name',
-      'it.Quality',
-      'it.class',
-      'it.subclass',
-      'it.InventoryType',
-      'it.ItemLevel',
-      'it.RequiredLevel',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'didi.InventoryIcon0',
-    ];
-    builder = builder.select(fields);
-    if (localeEnabled) {
-      builder = builder.leftJoin(
-        '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
-      );
-    }
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('it.entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefItemTemplateEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<ItemTemplateEntity>> getItemTemplates() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
+  Future<void> copyItemTemplate(int entry) async {
+    var template = await getItemTemplate(entry);
+    if (template == null) return;
+    var json = template.toJson();
+    var newEntry = await _getNextEntry();
+    json['entry'] = newEntry;
+    await laconic.table(_table).insert([json]);
   }
 
   Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
@@ -93,6 +59,52 @@ class ItemTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
+  Future<ItemTemplateEntity> createItemTemplate() async {
+    return ItemTemplateEntity(entry: await _getNextEntry());
+  }
+
+  Future<void> destroyItemTemplate(int entry) async {
+    await laconic.table(_table).where('entry', entry).delete();
+  }
+
+  Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
+    int page = 1,
+    ItemTemplateFilterEntity? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('$_table AS it');
+    final fields = <String>[
+      'it.entry',
+      'it.name',
+      'it.Quality',
+      'it.class',
+      'it.subclass',
+      'it.InventoryType',
+      'it.ItemLevel',
+      'it.RequiredLevel',
+      if (localeEnabled) 'itl.Name AS localeName',
+      'didi.InventoryIcon0',
+    ];
+    builder = builder.select(fields);
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        '$_localeTable AS itl',
+        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
+      );
+    }
+    builder = builder.leftJoin(
+      'foxy.dbc_item_display_info AS didi',
+      (join) => join.on('it.displayid', 'didi.ID'),
+    );
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('it.entry');
+    builder = builder.limit(kPageSize).offset(offset);
+    var results = await builder.get();
+    return results
+        .map((e) => BriefItemTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
   Future<ItemTemplateEntity?> getItemTemplate(int entry) async {
     var builder = laconic.table('$_table AS it');
     final fields = <String>[
@@ -120,8 +132,22 @@ class ItemTemplateRepository with RepositoryMixin {
     return ItemTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<ItemTemplateEntity> createItemTemplate() async {
-    return ItemTemplateEntity(entry: await _getNextEntry());
+  Future<List<ItemTemplateEntity>> getItemTemplates() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<void> saveItemTemplate(ItemTemplateEntity template) async {
+    if (template.entry == 0) {
+      await storeItemTemplate(template);
+      return;
+    }
+    var existing = await getItemTemplate(template.entry);
+    if (existing != null) {
+      await updateItemTemplate(template);
+    } else {
+      await laconic.table(_table).insert([template.toJson()]);
+    }
   }
 
   Future<int> storeItemTemplate(ItemTemplateEntity template) async {
@@ -138,36 +164,6 @@ class ItemTemplateRepository with RepositoryMixin {
     var json = template.toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', template.entry).update(json);
-  }
-
-  Future<void> destroyItemTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
-  }
-
-  Future<void> copyItemTemplate(int entry) async {
-    var template = await getItemTemplate(entry);
-    if (template == null) return;
-    var json = template.toJson();
-    var newEntry = await _getNextEntry();
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveItemTemplate(ItemTemplateEntity template) async {
-    if (template.entry == 0) {
-      await storeItemTemplate(template);
-      return;
-    }
-    var existing = await getItemTemplate(template.entry);
-    if (existing != null) {
-      await updateItemTemplate(template);
-    } else {
-      await laconic.table(_table).insert([template.toJson()]);
-    }
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 
   QueryBuilder _applyFilter(
@@ -215,5 +211,9 @@ class ItemTemplateRepository with RepositoryMixin {
       builder = builder.where('it.subclass', filter.subclass);
     }
     return builder;
+  }
+
+  Future<int> _getNextEntry() async {
+    return nextMaxPlusOne(_table, 'entry');
   }
 }

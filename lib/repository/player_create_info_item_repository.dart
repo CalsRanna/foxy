@@ -4,6 +4,34 @@ import 'package:foxy/repository/repository_mixin.dart';
 class PlayerCreateInfoItemRepository with RepositoryMixin {
   static const _table = 'playercreateinfo_item';
 
+  Future<void> copyPlayerCreateInfoItem(
+    int race,
+    int class_,
+    int itemid,
+  ) async {
+    throw UnsupportedError('物品 ID 是复合主键的一部分，请新增并选择有效物品。');
+  }
+
+  Future<PlayerCreateInfoItemEntity> createPlayerCreateInfoItem(
+    int race,
+    int class_,
+  ) async {
+    return PlayerCreateInfoItemEntity(race: race, class_: class_);
+  }
+
+  Future<void> destroyPlayerCreateInfoItem(
+    int race,
+    int class_,
+    int itemid,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('race', race)
+        .where('class', class_)
+        .where('itemid', itemid)
+        .delete();
+  }
+
   Future<List<PlayerCreateInfoItemEntity>> getBriefPlayerCreateInfoItems(
     int race,
     int class_,
@@ -37,11 +65,22 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     return PlayerCreateInfoItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<PlayerCreateInfoItemEntity> createPlayerCreateInfoItem(
-    int race,
-    int class_,
-  ) async {
-    return PlayerCreateInfoItemEntity(race: race, class_: class_);
+  Future<void> savePlayerCreateInfoItem(PlayerCreateInfoItemEntity item) async {
+    var existing = await getPlayerCreateInfoItem(
+      item.race,
+      item.class_,
+      item.itemid,
+    );
+    if (existing != null) {
+      await updatePlayerCreateInfoItem(
+        item.race,
+        item.class_,
+        item.itemid,
+        item,
+      );
+    } else {
+      await storePlayerCreateInfoItem(item);
+    }
   }
 
   Future<void> storePlayerCreateInfoItem(
@@ -66,44 +105,5 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
         .where('class', class_)
         .where('itemid', itemid)
         .update(json);
-  }
-
-  Future<void> destroyPlayerCreateInfoItem(
-    int race,
-    int class_,
-    int itemid,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('race', race)
-        .where('class', class_)
-        .where('itemid', itemid)
-        .delete();
-  }
-
-  Future<void> copyPlayerCreateInfoItem(
-    int race,
-    int class_,
-    int itemid,
-  ) async {
-    throw UnsupportedError('物品 ID 是复合主键的一部分，请新增并选择有效物品。');
-  }
-
-  Future<void> savePlayerCreateInfoItem(PlayerCreateInfoItemEntity item) async {
-    var existing = await getPlayerCreateInfoItem(
-      item.race,
-      item.class_,
-      item.itemid,
-    );
-    if (existing != null) {
-      await updatePlayerCreateInfoItem(
-        item.race,
-        item.class_,
-        item.itemid,
-        item,
-      );
-    } else {
-      await storePlayerCreateInfoItem(item);
-    }
   }
 }

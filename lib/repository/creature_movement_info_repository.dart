@@ -6,6 +6,30 @@ import 'package:laconic/laconic.dart';
 class CreatureMovementInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_movement_info';
 
+  Future<void> copyCreatureMovementInfo(int id) async {
+    final source = await getCreatureMovementInfo(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureMovementInfos({
+    CreatureMovementInfoFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureMovementInfoEntity> createCreatureMovementInfo() async {
+    return CreatureMovementInfoEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCreatureMovementInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<CreatureMovementInfoEntity>> getBriefCreatureMovementInfos({
     int page = 1,
     CreatureMovementInfoFilterEntity? filter,
@@ -21,6 +45,12 @@ class CreatureMovementInfoRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<CreatureMovementInfoEntity?> getCreatureMovementInfo(int id) async {
+    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return CreatureMovementInfoEntity.fromJson(results.first.toMap());
+  }
+
   Future<List<CreatureMovementInfoEntity>> getCreatureMovementInfos() async {
     final results = await laconic.table(_table).get();
     return results
@@ -28,22 +58,15 @@ class CreatureMovementInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureMovementInfos({
-    CreatureMovementInfoFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<CreatureMovementInfoEntity?> getCreatureMovementInfo(int id) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureMovementInfoEntity.fromJson(results.first.toMap());
-  }
-
-  Future<CreatureMovementInfoEntity> createCreatureMovementInfo() async {
-    return CreatureMovementInfoEntity(id: await _getNextId());
+  Future<void> saveCreatureMovementInfo(
+    CreatureMovementInfoEntity movementInfo,
+  ) async {
+    final existing = await getCreatureMovementInfo(movementInfo.id);
+    if (existing == null) {
+      await storeCreatureMovementInfo(movementInfo);
+      return;
+    }
+    await updateCreatureMovementInfo(movementInfo);
   }
 
   Future<int> storeCreatureMovementInfo(
@@ -63,33 +86,6 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', movementInfo.id).update(json);
   }
 
-  Future<void> destroyCreatureMovementInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCreatureMovementInfo(int id) async {
-    final source = await getCreatureMovementInfo(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureMovementInfo(
-    CreatureMovementInfoEntity movementInfo,
-  ) async {
-    final existing = await getCreatureMovementInfo(movementInfo.id);
-    if (existing == null) {
-      await storeCreatureMovementInfo(movementInfo);
-      return;
-    }
-    await updateCreatureMovementInfo(movementInfo);
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureMovementInfoFilterEntity? filter,
@@ -99,5 +95,9 @@ class CreatureMovementInfoRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

@@ -6,6 +6,30 @@ import 'package:laconic/laconic.dart';
 class PlayerCreateInfoRepository with RepositoryMixin {
   static const _table = 'playercreateinfo';
 
+  Future<void> copyPlayerCreateInfo(int race, int class_) async {
+    throw UnsupportedError('出生信息使用种族/职业语义主键，请新增有效组合。');
+  }
+
+  Future<int> countPlayerCreateInfos({
+    PlayerCreateInfoFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<PlayerCreateInfoEntity> createPlayerCreateInfo() async {
+    return const PlayerCreateInfoEntity();
+  }
+
+  Future<void> destroyPlayerCreateInfo(int race, int class_) async {
+    await laconic
+        .table(_table)
+        .where('race', race)
+        .where('class', class_)
+        .delete();
+  }
+
   Future<List<PlayerCreateInfoEntity>> getBriefPlayerCreateInfos({
     PlayerCreateInfoFilterEntity? filter,
     int page = 1,
@@ -19,14 +43,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     return results
         .map((e) => PlayerCreateInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<int> countPlayerCreateInfos({
-    PlayerCreateInfoFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
   }
 
   Future<PlayerCreateInfoEntity?> getPlayerCreateInfo(
@@ -43,8 +59,13 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     return PlayerCreateInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<PlayerCreateInfoEntity> createPlayerCreateInfo() async {
-    return const PlayerCreateInfoEntity();
+  Future<void> savePlayerCreateInfo(PlayerCreateInfoEntity info) async {
+    var existing = await getPlayerCreateInfo(info.race, info.class_);
+    if (existing != null) {
+      await updatePlayerCreateInfo(info.race, info.class_, info);
+    } else {
+      await storePlayerCreateInfo(info);
+    }
   }
 
   Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
@@ -64,27 +85,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
         .where('race', race)
         .where('class', class_)
         .update(json);
-  }
-
-  Future<void> destroyPlayerCreateInfo(int race, int class_) async {
-    await laconic
-        .table(_table)
-        .where('race', race)
-        .where('class', class_)
-        .delete();
-  }
-
-  Future<void> copyPlayerCreateInfo(int race, int class_) async {
-    throw UnsupportedError('出生信息使用种族/职业语义主键，请新增有效组合。');
-  }
-
-  Future<void> savePlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    var existing = await getPlayerCreateInfo(info.race, info.class_);
-    if (existing != null) {
-      await updatePlayerCreateInfo(info.race, info.class_, info);
-    } else {
-      await storePlayerCreateInfo(info);
-    }
   }
 
   QueryBuilder _applyFilter(

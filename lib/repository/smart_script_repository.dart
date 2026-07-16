@@ -6,6 +6,54 @@ import 'package:laconic/laconic.dart';
 class SmartScriptRepository with RepositoryMixin {
   static const _table = 'smart_scripts';
 
+  Future<void> copySmartScript(
+    int entryOrGuid,
+    int sourceType,
+    int id,
+    int link,
+  ) async {
+    var script = await getSmartScript(entryOrGuid, sourceType, id, link);
+    if (script == null) return;
+    var json = script.toJson();
+    var nextId = await _getNextId(entryOrGuid, sourceType);
+    json['id'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder.select(['entryorguid']);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SmartScriptEntity> createSmartScript({
+    int entryOrGuid = 0,
+    int sourceType = 0,
+  }) async {
+    var nextId = await _getNextId(entryOrGuid, sourceType);
+    return SmartScriptEntity(
+      entryOrGuid: entryOrGuid,
+      sourceType: sourceType,
+      id: nextId,
+    );
+  }
+
+  Future<void> destroySmartScript(
+    int entryOrGuid,
+    int sourceType,
+    int id,
+    int link,
+  ) async {
+    await laconic
+        .table(_table)
+        .where('entryorguid', entryOrGuid)
+        .where('source_type', sourceType)
+        .where('id', id)
+        .where('link', link)
+        .delete();
+  }
+
   Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
     int page = 1,
     SmartScriptFilterEntity? filter,
@@ -36,18 +84,6 @@ class SmartScriptRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SmartScriptEntity>> getSmartScripts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder.select(['entryorguid']);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<SmartScriptEntity?> getSmartScript(
     int entryOrGuid,
     int sourceType,
@@ -66,16 +102,33 @@ class SmartScriptRepository with RepositoryMixin {
     return SmartScriptEntity.fromJson(results.first.toMap());
   }
 
-  Future<SmartScriptEntity> createSmartScript({
-    int entryOrGuid = 0,
-    int sourceType = 0,
-  }) async {
-    var nextId = await _getNextId(entryOrGuid, sourceType);
-    return SmartScriptEntity(
-      entryOrGuid: entryOrGuid,
-      sourceType: sourceType,
-      id: nextId,
+  Future<List<SmartScriptEntity>> getSmartScripts() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
+  }
+
+  /// 在 (entryorguid, source_type) 范围内取下一 `id`。
+  Future<int> nextIdFor(int entryOrGuid, int sourceType) =>
+      _getNextId(entryOrGuid, sourceType);
+
+  Future<void> saveSmartScript(SmartScriptEntity script) async {
+    var existing = await getSmartScript(
+      script.entryOrGuid,
+      script.sourceType,
+      script.id,
+      script.link,
     );
+    if (existing != null) {
+      await updateSmartScript(
+        script.entryOrGuid,
+        script.sourceType,
+        script.id,
+        script.link,
+        script,
+      );
+    } else {
+      await storeSmartScript(script);
+    }
   }
 
   Future<void> storeSmartScript(SmartScriptEntity script) async {
@@ -103,67 +156,6 @@ class SmartScriptRepository with RepositoryMixin {
         .update(json);
   }
 
-  Future<void> destroySmartScript(
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('entryorguid', entryOrGuid)
-        .where('source_type', sourceType)
-        .where('id', id)
-        .where('link', link)
-        .delete();
-  }
-
-  Future<void> copySmartScript(
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) async {
-    var script = await getSmartScript(entryOrGuid, sourceType, id, link);
-    if (script == null) return;
-    var json = script.toJson();
-    var nextId = await _getNextId(entryOrGuid, sourceType);
-    json['id'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveSmartScript(SmartScriptEntity script) async {
-    var existing = await getSmartScript(
-      script.entryOrGuid,
-      script.sourceType,
-      script.id,
-      script.link,
-    );
-    if (existing != null) {
-      await updateSmartScript(
-        script.entryOrGuid,
-        script.sourceType,
-        script.id,
-        script.link,
-        script,
-      );
-    } else {
-      await storeSmartScript(script);
-    }
-  }
-
-  /// 在 (entryorguid, source_type) 范围内取下一 `id`。
-  Future<int> nextIdFor(int entryOrGuid, int sourceType) =>
-      _getNextId(entryOrGuid, sourceType);
-
-  Future<int> _getNextId(int entryOrGuid, int sourceType) async {
-    return nextMaxPlusOne(
-      _table,
-      'id',
-      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
-    );
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SmartScriptFilterEntity? filter,
@@ -180,5 +172,13 @@ class SmartScriptRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId(int entryOrGuid, int sourceType) async {
+    return nextMaxPlusOne(
+      _table,
+      'id',
+      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
+    );
   }
 }

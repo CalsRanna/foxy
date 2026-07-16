@@ -6,6 +6,25 @@ import 'package:laconic/laconic.dart';
 class SoundProviderPreferencesRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_provider_preferences';
 
+  Future<void> copySoundProviderPreference(int id) async {
+    final source = await getSoundProviderPreference(id);
+    if (source == null) return;
+    final json = source.toJson()..['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSoundProviderPreferences({
+    SoundProviderPreferencesFilterEntity? filter,
+  }) => _applyFilter(laconic.table(_table), filter).count();
+
+  Future<SoundProviderPreferencesEntity>
+  createSoundProviderPreference() async =>
+      SoundProviderPreferencesEntity(id: await _getNextId());
+
+  Future<void> destroySoundProviderPreference(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSoundProviderPreferencesEntity>>
   getBriefSoundProviderPreferences({
     int page = 1,
@@ -20,18 +39,6 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<SoundProviderPreferencesEntity>>
-  getSoundProviderPreferences() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => SoundProviderPreferencesEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countSoundProviderPreferences({
-    SoundProviderPreferencesFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
-
   Future<SoundProviderPreferencesEntity?> getSoundProviderPreference(
     int id,
   ) async {
@@ -41,9 +48,23 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
         : SoundProviderPreferencesEntity.fromJson(rows.first.toMap());
   }
 
-  Future<SoundProviderPreferencesEntity>
-  createSoundProviderPreference() async =>
-      SoundProviderPreferencesEntity(id: await _getNextId());
+  Future<List<SoundProviderPreferencesEntity>>
+  getSoundProviderPreferences() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => SoundProviderPreferencesEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveSoundProviderPreference(
+    SoundProviderPreferencesEntity entity,
+  ) async {
+    if (await getSoundProviderPreference(entity.id) == null) {
+      await storeSoundProviderPreference(entity);
+    } else {
+      await updateSoundProviderPreference(entity);
+    }
+  }
 
   Future<int> storeSoundProviderPreference(
     SoundProviderPreferencesEntity entity,
@@ -62,29 +83,6 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', entity.id).update(json);
   }
 
-  Future<void> destroySoundProviderPreference(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySoundProviderPreference(int id) async {
-    final source = await getSoundProviderPreference(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveSoundProviderPreference(
-    SoundProviderPreferencesEntity entity,
-  ) async {
-    if (await getSoundProviderPreference(entity.id) == null) {
-      await storeSoundProviderPreference(entity);
-    } else {
-      await updateSoundProviderPreference(entity);
-    }
-  }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SoundProviderPreferencesFilterEntity? filter,
@@ -100,4 +98,6 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
     }
     return builder;
   }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

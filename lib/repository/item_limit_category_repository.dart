@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,6 +11,12 @@ class ItemLimitCategoryRepository
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<int> countItemLimitCategories({
+    ItemLimitCategoryFilterEntity? filter,
+  }) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
 
   Future<List<BriefItemLimitCategoryEntity>> getBriefItemLimitCategories({
     int page = 1,
@@ -33,12 +39,6 @@ class ItemLimitCategoryRepository
     return rows
         .map((row) => ItemLimitCategoryEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<int> countItemLimitCategories({
-    ItemLimitCategoryFilterEntity? filter,
-  }) {
-    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<List<DbcLocaleFieldValue>> getItemLimitCategoryLocales(

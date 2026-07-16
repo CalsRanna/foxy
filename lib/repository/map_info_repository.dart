@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,6 +10,35 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<void> copyMapInfo(int id) async {
+    var source = await getMapInfo(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countMapInfos({
+    MapInfoFilterEntity? filter,
+    bool nonInstanceableOnly = false,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    if (nonInstanceableOnly) {
+      builder = builder.whereNotIn('InstanceType', [1, 2, 3, 4]);
+    }
+    return builder.count();
+  }
+
+  Future<MapInfoEntity> createMapInfo() async {
+    return MapInfoEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyMapInfo(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
 
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
     int page = 1,
@@ -34,58 +63,20 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<MapInfoEntity>> getMapInfos() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countMapInfos({
-    MapInfoFilterEntity? filter,
-    bool nonInstanceableOnly = false,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    if (nonInstanceableOnly) {
-      builder = builder.whereNotIn('InstanceType', [1, 2, 3, 4]);
-    }
-    return builder.count();
-  }
-
   Future<MapInfoEntity?> getMapInfo(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return MapInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<MapInfoEntity> createMapInfo() async {
-    return MapInfoEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeMapInfo(MapInfoEntity map) async {
-    var json = map.toJson();
-    final nextId = map.id > 0 ? map.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateMapInfo(MapInfoEntity map) async {
-    var json = map.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', map.id).update(json);
-  }
-
-  Future<void> destroyMapInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyMapInfo(int id) async {
-    var source = await getMapInfo(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<MapInfoEntity>> getMapInfos() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveMapInfo(MapInfoEntity map) async {
@@ -101,18 +92,24 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveMapInfoLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+
+  Future<int> storeMapInfo(MapInfoEntity map) async {
+    var json = map.toJson();
+    final nextId = map.id > 0 ? map.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateMapInfo(MapInfoEntity map) async {
+    var json = map.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', map.id).update(json);
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilterEntity? filter) {
@@ -128,5 +125,9 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

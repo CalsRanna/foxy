@@ -5,6 +5,33 @@ class GossipMenuOptionRepository with RepositoryMixin {
   static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
 
+  Future<int?> copyGossipMenuOption(int menuId, int optionId) async {
+    final original = await getGossipMenuOption(menuId, optionId);
+    if (original == null) return null;
+    final next = await createGossipMenuOption(original.menuId);
+    final json = original.toJson();
+    json['OptionID'] = next.optionId;
+    await laconic.table(_table).insert([json]);
+    return next.optionId;
+  }
+
+  Future<int> countGossipMenuOptions(int menuId) async {
+    return laconic.table(_table).where('MenuID', menuId).count();
+  }
+
+  Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
+    final nextOptionId = await _getNextOptionId(menuId);
+    return GossipMenuOptionEntity(menuId: menuId, optionId: nextOptionId);
+  }
+
+  Future<void> destroyGossipMenuOption(int menuId, int optionId) async {
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('OptionID', optionId)
+        .delete();
+  }
+
   Future<List<BriefGossipMenuOptionEntity>> getBriefGossipMenuOptions(
     int menuId,
   ) async {
@@ -36,17 +63,6 @@ class GossipMenuOptionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GossipMenuOptionEntity>> getGossipMenuOptions() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((row) => GossipMenuOptionEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<int> countGossipMenuOptions(int menuId) async {
-    return laconic.table(_table).where('MenuID', menuId).count();
-  }
-
   Future<GossipMenuOptionEntity?> getGossipMenuOption(
     int menuId,
     int optionId,
@@ -61,9 +77,20 @@ class GossipMenuOptionRepository with RepositoryMixin {
     return GossipMenuOptionEntity.fromJson(results.first.toMap());
   }
 
-  Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
-    final nextOptionId = await _getNextOptionId(menuId);
-    return GossipMenuOptionEntity(menuId: menuId, optionId: nextOptionId);
+  Future<List<GossipMenuOptionEntity>> getGossipMenuOptions() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((row) => GossipMenuOptionEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
+  Future<void> saveGossipMenuOption(GossipMenuOptionEntity model) async {
+    var existing = await getGossipMenuOption(model.menuId, model.optionId);
+    if (existing != null) {
+      await updateGossipMenuOption(model.menuId, model.optionId, model);
+    } else {
+      await storeGossipMenuOption(model);
+    }
   }
 
   Future<void> storeGossipMenuOption(GossipMenuOptionEntity model) async {
@@ -83,33 +110,6 @@ class GossipMenuOptionRepository with RepositoryMixin {
         .where('MenuID', menuId)
         .where('OptionID', optionId)
         .update(json);
-  }
-
-  Future<void> destroyGossipMenuOption(int menuId, int optionId) async {
-    await laconic
-        .table(_table)
-        .where('MenuID', menuId)
-        .where('OptionID', optionId)
-        .delete();
-  }
-
-  Future<int?> copyGossipMenuOption(int menuId, int optionId) async {
-    final original = await getGossipMenuOption(menuId, optionId);
-    if (original == null) return null;
-    final next = await createGossipMenuOption(original.menuId);
-    final json = original.toJson();
-    json['OptionID'] = next.optionId;
-    await laconic.table(_table).insert([json]);
-    return next.optionId;
-  }
-
-  Future<void> saveGossipMenuOption(GossipMenuOptionEntity model) async {
-    var existing = await getGossipMenuOption(model.menuId, model.optionId);
-    if (existing != null) {
-      await updateGossipMenuOption(model.menuId, model.optionId, model);
-    } else {
-      await storeGossipMenuOption(model);
-    }
   }
 
   Future<int> _getNextOptionId(int menuId) async {

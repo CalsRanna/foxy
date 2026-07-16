@@ -4,6 +4,30 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
 
+  Future<void> copyCreatureQuestItem(int creatureEntry, int idx) async {
+    var source = await getCreatureQuestItem(creatureEntry, idx);
+    if (source == null) return;
+    var nextIdx = await getNextIdx(creatureEntry);
+    var json = source.toJson();
+    json['Idx'] = nextIdx;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<CreatureQuestItemEntity> createCreatureQuestItem(
+    int creatureEntry,
+  ) async {
+    var nextIdx = await getNextIdx(creatureEntry);
+    return CreatureQuestItemEntity(creatureEntry: creatureEntry, idx: nextIdx);
+  }
+
+  Future<void> destroyCreatureQuestItem(int creatureEntry, int idx) async {
+    await laconic
+        .table(_table)
+        .where('CreatureEntry', creatureEntry)
+        .where('Idx', idx)
+        .delete();
+  }
+
   Future<List<CreatureQuestItemEntity>> getBriefCreatureQuestItems(
     int creatureEntry,
   ) async {
@@ -52,11 +76,26 @@ class CreatureQuestItemRepository with RepositoryMixin {
     return CreatureQuestItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureQuestItemEntity> createCreatureQuestItem(
-    int creatureEntry,
-  ) async {
-    var nextIdx = await getNextIdx(creatureEntry);
-    return CreatureQuestItemEntity(creatureEntry: creatureEntry, idx: nextIdx);
+  Future<int> getNextIdx(int creatureEntry) async {
+    var maxResult = await laconic
+        .table(_table)
+        .select(['MAX(Idx) AS maxIdx'])
+        .where('CreatureEntry', creatureEntry)
+        .first();
+    var maxIdx = (maxResult.toMap()['maxIdx'] ?? 0) as int;
+    return maxIdx + 1;
+  }
+
+  Future<void> saveCreatureQuestItem(CreatureQuestItemEntity questItem) async {
+    var existing = await getCreatureQuestItem(
+      questItem.creatureEntry,
+      questItem.idx,
+    );
+    if (existing != null) {
+      await updateCreatureQuestItem(questItem);
+    } else {
+      await storeCreatureQuestItem(questItem);
+    }
   }
 
   Future<void> storeCreatureQuestItem(CreatureQuestItemEntity questItem) async {
@@ -74,44 +113,5 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .where('CreatureEntry', questItem.creatureEntry)
         .where('Idx', questItem.idx)
         .update(json);
-  }
-
-  Future<void> destroyCreatureQuestItem(int creatureEntry, int idx) async {
-    await laconic
-        .table(_table)
-        .where('CreatureEntry', creatureEntry)
-        .where('Idx', idx)
-        .delete();
-  }
-
-  Future<void> copyCreatureQuestItem(int creatureEntry, int idx) async {
-    var source = await getCreatureQuestItem(creatureEntry, idx);
-    if (source == null) return;
-    var nextIdx = await getNextIdx(creatureEntry);
-    var json = source.toJson();
-    json['Idx'] = nextIdx;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureQuestItem(CreatureQuestItemEntity questItem) async {
-    var existing = await getCreatureQuestItem(
-      questItem.creatureEntry,
-      questItem.idx,
-    );
-    if (existing != null) {
-      await updateCreatureQuestItem(questItem);
-    } else {
-      await storeCreatureQuestItem(questItem);
-    }
-  }
-
-  Future<int> getNextIdx(int creatureEntry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(Idx) AS maxIdx'])
-        .where('CreatureEntry', creatureEntry)
-        .first();
-    var maxIdx = (maxResult.toMap()['maxIdx'] ?? 0) as int;
-    return maxIdx + 1;
   }
 }

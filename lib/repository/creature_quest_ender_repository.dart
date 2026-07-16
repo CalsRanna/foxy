@@ -4,6 +4,14 @@ import 'package:foxy/repository/repository_mixin.dart';
 class CreatureQuestEnderRepository with RepositoryMixin {
   static const _table = 'creature_questender';
 
+  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
+    return CreatureQuestEnderEntity(quest: questId);
+  }
+
+  Future<void> destroyCreatureQuestEnder(int id, int quest) async {
+    await laconic.table(_table).where('id', id).where('quest', quest).delete();
+  }
+
   Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
     int questId,
   ) async {
@@ -46,8 +54,13 @@ class CreatureQuestEnderRepository with RepositoryMixin {
     return CreatureQuestEnderEntity.fromJson(results.first.toMap());
   }
 
-  Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
-    return CreatureQuestEnderEntity(quest: questId);
+  Future<void> saveCreatureQuestEnder(CreatureQuestEnderEntity model) async {
+    var existing = await getCreatureQuestEnder(model.id, model.quest);
+    if (existing != null) {
+      await updateCreatureQuestEnder(model.id, model.quest, model);
+    } else {
+      await storeCreatureQuestEnder(model);
+    }
   }
 
   Future<void> storeCreatureQuestEnder(CreatureQuestEnderEntity model) async {
@@ -66,19 +79,6 @@ class CreatureQuestEnderRepository with RepositoryMixin {
         .where('id', id)
         .where('quest', quest)
         .update(model.toJson());
-  }
-
-  Future<void> destroyCreatureQuestEnder(int id, int quest) async {
-    await laconic.table(_table).where('id', id).where('quest', quest).delete();
-  }
-
-  Future<void> saveCreatureQuestEnder(CreatureQuestEnderEntity model) async {
-    var existing = await getCreatureQuestEnder(model.id, model.quest);
-    if (existing != null) {
-      await updateCreatureQuestEnder(model.id, model.quest, model);
-    } else {
-      await storeCreatureQuestEnder(model);
-    }
   }
 
   void _validate(int id, int quest) {

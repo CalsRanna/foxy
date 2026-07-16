@@ -4,6 +4,33 @@ import 'package:foxy/repository/repository_mixin.dart';
 class GameObjectQuestItemRepository with RepositoryMixin {
   static const _table = 'gameobject_questitem';
 
+  Future<void> copyGameObjectQuestItem(int gameObjectEntry, int idx) async {
+    var source = await getGameObjectQuestItem(gameObjectEntry, idx);
+    if (source == null) return;
+    var nextIdx = await getNextIdx(gameObjectEntry);
+    var json = source.toJson();
+    json['Idx'] = nextIdx;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<GameObjectQuestItemEntity> createGameObjectQuestItem(
+    int gameObjectEntry,
+  ) async {
+    var nextIdx = await getNextIdx(gameObjectEntry);
+    return GameObjectQuestItemEntity(
+      gameObjectEntry: gameObjectEntry,
+      idx: nextIdx,
+    );
+  }
+
+  Future<void> destroyGameObjectQuestItem(int gameObjectEntry, int idx) async {
+    await laconic
+        .table(_table)
+        .where('GameObjectEntry', gameObjectEntry)
+        .where('Idx', idx)
+        .delete();
+  }
+
   Future<List<BriefGameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
     int gameObjectEntry,
   ) async {
@@ -52,14 +79,32 @@ class GameObjectQuestItemRepository with RepositoryMixin {
     return GameObjectQuestItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<GameObjectQuestItemEntity> createGameObjectQuestItem(
-    int gameObjectEntry,
+  Future<int> getNextIdx(int gameObjectEntry) async {
+    final rows = await laconic
+        .table(_table)
+        .select(['Idx'])
+        .where('GameObjectEntry', gameObjectEntry)
+        .orderBy('Idx')
+        .get();
+    final occupied = rows.map((row) => row.toMap()['Idx'] as int).toSet();
+    for (var idx = 0; idx < 6; idx++) {
+      if (!occupied.contains(idx)) return idx;
+    }
+    throw StateError('该游戏对象的 6 个任务物品槽位已全部占用');
+  }
+
+  Future<void> saveGameObjectQuestItem(
+    GameObjectQuestItemEntity questItem,
   ) async {
-    var nextIdx = await getNextIdx(gameObjectEntry);
-    return GameObjectQuestItemEntity(
-      gameObjectEntry: gameObjectEntry,
-      idx: nextIdx,
+    var existing = await getGameObjectQuestItem(
+      questItem.gameObjectEntry,
+      questItem.idx,
     );
+    if (existing != null) {
+      await updateGameObjectQuestItem(questItem);
+    } else {
+      await storeGameObjectQuestItem(questItem);
+    }
   }
 
   Future<void> storeGameObjectQuestItem(
@@ -79,50 +124,5 @@ class GameObjectQuestItemRepository with RepositoryMixin {
         .where('GameObjectEntry', questItem.gameObjectEntry)
         .where('Idx', questItem.idx)
         .update(json);
-  }
-
-  Future<void> destroyGameObjectQuestItem(int gameObjectEntry, int idx) async {
-    await laconic
-        .table(_table)
-        .where('GameObjectEntry', gameObjectEntry)
-        .where('Idx', idx)
-        .delete();
-  }
-
-  Future<void> copyGameObjectQuestItem(int gameObjectEntry, int idx) async {
-    var source = await getGameObjectQuestItem(gameObjectEntry, idx);
-    if (source == null) return;
-    var nextIdx = await getNextIdx(gameObjectEntry);
-    var json = source.toJson();
-    json['Idx'] = nextIdx;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveGameObjectQuestItem(
-    GameObjectQuestItemEntity questItem,
-  ) async {
-    var existing = await getGameObjectQuestItem(
-      questItem.gameObjectEntry,
-      questItem.idx,
-    );
-    if (existing != null) {
-      await updateGameObjectQuestItem(questItem);
-    } else {
-      await storeGameObjectQuestItem(questItem);
-    }
-  }
-
-  Future<int> getNextIdx(int gameObjectEntry) async {
-    final rows = await laconic
-        .table(_table)
-        .select(['Idx'])
-        .where('GameObjectEntry', gameObjectEntry)
-        .orderBy('Idx')
-        .get();
-    final occupied = rows.map((row) => row.toMap()['Idx'] as int).toSet();
-    for (var idx = 0; idx < 6; idx++) {
-      if (!occupied.contains(idx)) return idx;
-    }
-    throw StateError('该游戏对象的 6 个任务物品槽位已全部占用');
   }
 }

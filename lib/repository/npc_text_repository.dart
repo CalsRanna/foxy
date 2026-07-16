@@ -6,6 +6,29 @@ import 'package:laconic/laconic.dart';
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
+  Future<void> copyNpcText(int id) async {
+    var source = await getNpcText(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<NpcTextEntity> createNpcText() async {
+    return NpcTextEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyNpcText(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefNpcTextEntity>> getBriefNpcTexts({
     int page = 1,
     NpcTextFilterEntity? filter,
@@ -21,25 +44,28 @@ class NpcTextRepository with RepositoryMixin {
     return results.map((e) => BriefNpcTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<NpcTextEntity>> getNpcTexts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<NpcTextEntity?> getNpcText(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTextEntity.fromJson(results.first.toMap());
   }
 
-  Future<NpcTextEntity> createNpcText() async {
-    return NpcTextEntity(id: await _getNextId());
+  Future<List<NpcTextEntity>> getNpcTexts() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<void> saveNpcText(NpcTextEntity npcText) async {
+    if (npcText.id == 0) {
+      await storeNpcText(npcText);
+      return;
+    }
+    var existing = await getNpcText(npcText.id);
+    if (existing != null) {
+      await updateNpcText(npcText);
+    } else {
+      await laconic.table(_table).insert([npcText.toJson()]);
+    }
   }
 
   Future<int> storeNpcText(NpcTextEntity npcText) async {
@@ -56,36 +82,6 @@ class NpcTextRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', npcText.id).update(json);
   }
 
-  Future<void> destroyNpcText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyNpcText(int id) async {
-    var source = await getNpcText(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveNpcText(NpcTextEntity npcText) async {
-    if (npcText.id == 0) {
-      await storeNpcText(npcText);
-      return;
-    }
-    var existing = await getNpcText(npcText.id);
-    if (existing != null) {
-      await updateNpcText(npcText);
-    } else {
-      await laconic.table(_table).insert([npcText.toJson()]);
-    }
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilterEntity? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -99,5 +95,9 @@ class NpcTextRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

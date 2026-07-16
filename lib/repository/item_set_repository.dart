@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,6 +10,33 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<void> copyItemSet(int id) async {
+    var source = await getItemSet(id);
+    if (source == null) return;
+    await storeItemSet(source.copyWith(id: await _getNextId()));
+  }
+
+  Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ItemSetEntity> createItemSet() async {
+    return ItemSetEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyItemSet(int id) async {
+    final references = await laconic
+        .table('item_template')
+        .where('itemset', id)
+        .count();
+    if (references > 0) {
+      throw StateError('套装 $id 仍被 $references 个物品模板引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
 
   Future<List<BriefItemSetEntity>> getBriefItemSets({
     int page = 1,
@@ -31,26 +58,35 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<ItemSetEntity>> getItemSets() async {
-    var results = await laconic.table(_table).orderBy('ID').get();
-    return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<ItemSetEntity?> getItemSet(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return ItemSetEntity.fromJson(results.first.toMap());
   }
 
-  Future<ItemSetEntity> createItemSet() async {
-    return ItemSetEntity(id: await _getNextId());
+  Future<List<DbcLocaleFieldValue>> getItemSetLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<ItemSetEntity>> getItemSets() async {
+    var results = await laconic.table(_table).orderBy('ID').get();
+    return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
   }
+
+  Future<void> saveItemSet(ItemSetEntity itemSet) async {
+    if (itemSet.id == 0 || await getItemSet(itemSet.id) == null) {
+      await storeItemSet(itemSet);
+      return;
+    }
+    await updateItemSet(itemSet);
+  }
+
+  Future<void> saveItemSetLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeItemSet(ItemSetEntity itemSet) async {
     final stored = itemSet.id > 0
@@ -70,46 +106,57 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     await laconic.table(_table).where('ID', itemSet.id).update(json);
   }
 
-  Future<void> destroyItemSet(int id) async {
-    final references = await laconic
-        .table('item_template')
-        .where('itemset', id)
-        .count();
-    if (references > 0) {
-      throw StateError('套装 $id 仍被 $references 个物品模板引用，不能删除');
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilterEntity? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyItemSet(int id) async {
-    var source = await getItemSet(id);
-    if (source == null) return;
-    await storeItemSet(source.copyWith(id: await _getNextId()));
-  }
-
-  Future<void> saveItemSet(ItemSetEntity itemSet) async {
-    if (itemSet.id == 0 || await getItemSet(itemSet.id) == null) {
-      await storeItemSet(itemSet);
-      return;
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${filter.name}%',
+        comparator: 'like',
+      );
     }
-    await updateItemSet(itemSet);
+    return builder;
   }
-
-  Future<List<DbcLocaleFieldValue>> getItemSetLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveItemSetLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7FFFFFFF) throw StateError('ItemSet.dbc 已无可用 int32 ID');
     return id;
+  }
+
+  Future<bool> _tableExists(String qualifiedTable) async {
+    final parts = qualifiedTable.split('.');
+    final schema = parts.length == 2 ? parts[0] : 'acore_world';
+    final table = parts.length == 2 ? parts[1] : parts[0];
+    final rows = await laconic.select(
+      '''
+SELECT COUNT(*) AS table_count
+FROM information_schema.TABLES
+WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
+''',
+      [schema, table],
+    );
+    return (rows.single['table_count'] as num).toInt() > 0;
+  }
+
+  Future<void> _validateReference({
+    required String table,
+    required String column,
+    required int value,
+    required int? existingValue,
+    required String field,
+    required String target,
+    bool requireImportedTable = false,
+  }) async {
+    if (value == 0 || value == existingValue) return;
+    if (requireImportedTable && !await _tableExists(table)) {
+      throw StateError('缺少 $table，请重新导入 required DBC 后再修改 $field');
+    }
+    final references = await laconic.table(table).where(column, value).count();
+    if (references == 0) throw StateError('$field 引用的$target $value 不存在');
   }
 
   Future<void> _validateReferences(
@@ -325,52 +372,5 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       target: '技能线',
       requireImportedTable: true,
     );
-  }
-
-  Future<void> _validateReference({
-    required String table,
-    required String column,
-    required int value,
-    required int? existingValue,
-    required String field,
-    required String target,
-    bool requireImportedTable = false,
-  }) async {
-    if (value == 0 || value == existingValue) return;
-    if (requireImportedTable && !await _tableExists(table)) {
-      throw StateError('缺少 $table，请重新导入 required DBC 后再修改 $field');
-    }
-    final references = await laconic.table(table).where(column, value).count();
-    if (references == 0) throw StateError('$field 引用的$target $value 不存在');
-  }
-
-  Future<bool> _tableExists(String qualifiedTable) async {
-    final parts = qualifiedTable.split('.');
-    final schema = parts.length == 2 ? parts[0] : 'acore_world';
-    final table = parts.length == 2 ? parts[1] : parts[0];
-    final rows = await laconic.select(
-      '''
-SELECT COUNT(*) AS table_count
-FROM information_schema.TABLES
-WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
-''',
-      [schema, table],
-    );
-    return (rows.single['table_count'] as num).toInt() > 0;
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilterEntity? filter) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%${filter.name}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
   }
 }

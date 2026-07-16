@@ -6,6 +6,37 @@ import 'package:laconic/laconic.dart';
 class ScalingStatDistributionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
+  Future<void> copyScalingStatDistribution(int id) async {
+    var source = await getScalingStatDistribution(id);
+    if (source == null) return;
+    final nextId = await _getNextId();
+    final copied = source.copyWith(id: nextId);
+    await laconic.table(_table).insert([copied.toJson()]);
+  }
+
+  Future<int> countScalingStatDistributions({
+    ScalingStatDistributionFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
+    return ScalingStatDistributionEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyScalingStatDistribution(int id) async {
+    final references = await laconic
+        .table('item_template')
+        .where('ScalingStatDistribution', id)
+        .count();
+    if (references > 0) {
+      throw StateError('该属性缩放分布仍被 $references 个物品模板引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefScalingStatDistributionEntity>>
   getBriefScalingStatDistributions({
     int page = 1,
@@ -47,22 +78,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<ScalingStatDistributionEntity>>
-  getScalingStatDistributions() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<int> countScalingStatDistributions({
-    ScalingStatDistributionFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<ScalingStatDistributionEntity?> getScalingStatDistribution(
     int id,
   ) async {
@@ -71,8 +86,27 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     return ScalingStatDistributionEntity.fromJson(results.first.toMap());
   }
 
-  Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
-    return ScalingStatDistributionEntity(id: await _getNextId());
+  Future<List<ScalingStatDistributionEntity>>
+  getScalingStatDistributions() async {
+    var results = await laconic.table(_table).get();
+    return results
+        .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<void> saveScalingStatDistribution(
+    ScalingStatDistributionEntity distribution,
+  ) async {
+    if (distribution.id == 0) {
+      await storeScalingStatDistribution(distribution);
+      return;
+    }
+    var existing = await getScalingStatDistribution(distribution.id);
+    if (existing != null) {
+      await updateScalingStatDistribution(distribution);
+    } else {
+      await laconic.table(_table).insert([distribution.toJson()]);
+    }
   }
 
   Future<int> storeScalingStatDistribution(
@@ -92,48 +126,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', distribution.id).update(json);
   }
 
-  Future<void> destroyScalingStatDistribution(int id) async {
-    final references = await laconic
-        .table('item_template')
-        .where('ScalingStatDistribution', id)
-        .count();
-    if (references > 0) {
-      throw StateError('该属性缩放分布仍被 $references 个物品模板引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyScalingStatDistribution(int id) async {
-    var source = await getScalingStatDistribution(id);
-    if (source == null) return;
-    final nextId = await _getNextId();
-    final copied = source.copyWith(id: nextId);
-    await laconic.table(_table).insert([copied.toJson()]);
-  }
-
-  Future<void> saveScalingStatDistribution(
-    ScalingStatDistributionEntity distribution,
-  ) async {
-    if (distribution.id == 0) {
-      await storeScalingStatDistribution(distribution);
-      return;
-    }
-    var existing = await getScalingStatDistribution(distribution.id);
-    if (existing != null) {
-      await updateScalingStatDistribution(distribution);
-    } else {
-      await laconic.table(_table).insert([distribution.toJson()]);
-    }
-  }
-
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 32767) {
-      throw StateError('ScalingStatDistribution ID 已超出物品模板可引用范围');
-    }
-    return id;
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ScalingStatDistributionFilterEntity? filter,
@@ -143,5 +135,13 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 32767) {
+      throw StateError('ScalingStatDistribution ID 已超出物品模板可引用范围');
+    }
+    return id;
   }
 }

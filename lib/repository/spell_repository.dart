@@ -11,6 +11,30 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copySpell(int id) async {
+    var source = await getSpell(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var newId = await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countSpells({SpellFilterEntity? filter}) async {
+    var builder = laconic.table('$_table AS ds');
+    builder.select(['ds.ID']);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellEntity> createSpell() async {
+    return SpellEntity(id: await _getNextId());
+  }
+
+  Future<void> destroySpell(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSpellEntity>> getBriefSpells({
     int page = 1,
     SpellFilterEntity? filter,
@@ -45,53 +69,20 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<SpellEntity>> getSpells() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countSpells({SpellFilterEntity? filter}) async {
-    var builder = laconic.table('$_table AS ds');
-    builder.select(['ds.ID']);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<SpellEntity?> getSpell(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return SpellEntity.fromJson(results.first.toMap());
   }
 
-  Future<SpellEntity> createSpell() async {
-    return SpellEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getSpellLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeSpell(SpellEntity spell) async {
-    var json = spell.toJson();
-    final newId = spell.id > 0 ? spell.id : await _getNextId();
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
-    return newId;
-  }
-
-  Future<void> updateSpell(SpellEntity spell) async {
-    var json = spell.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', spell.id).update(json);
-  }
-
-  Future<void> destroySpell(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpell(int id) async {
-    var source = await getSpell(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var newId = await _getNextId();
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
+  Future<List<SpellEntity>> getSpells() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveSpell(SpellEntity spell) async {
@@ -107,19 +98,24 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getSpellLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveSpellLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+  Future<int> storeSpell(SpellEntity spell) async {
+    var json = spell.toJson();
+    final newId = spell.id > 0 ? spell.id : await _getNextId();
+    json['ID'] = newId;
+    await laconic.table(_table).insert([json]);
+    return newId;
+  }
+
+  Future<void> updateSpell(SpellEntity spell) async {
+    var json = spell.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', spell.id).update(json);
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilterEntity? filter) {
@@ -135,5 +131,9 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

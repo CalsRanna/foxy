@@ -11,6 +11,29 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyDbcFaction(int id) async {
+    var source = await getDbcFaction(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<DbcFactionEntity> createDbcFaction() async {
+    return DbcFactionEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyDbcFaction(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
     int page = 1,
     DbcFactionFilterEntity? filter,
@@ -27,52 +50,20 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<DbcFactionEntity>> getDbcFactions() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<DbcFactionEntity?> getDbcFaction(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return DbcFactionEntity.fromJson(results.first.toMap());
   }
 
-  Future<DbcFactionEntity> createDbcFaction() async {
-    return DbcFactionEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeDbcFaction(DbcFactionEntity faction) async {
-    var json = faction.toJson();
-    final nextId = faction.id > 0 ? faction.id : await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateDbcFaction(DbcFactionEntity faction) async {
-    var json = faction.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', faction.id).update(json);
-  }
-
-  Future<void> destroyDbcFaction(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyDbcFaction(int id) async {
-    var source = await getDbcFaction(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<List<DbcFactionEntity>> getDbcFactions() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveDbcFaction(DbcFactionEntity faction) async {
@@ -88,18 +79,24 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveDbcFactionLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
+
+  Future<int> storeDbcFaction(DbcFactionEntity faction) async {
+    var json = faction.toJson();
+    final nextId = faction.id > 0 ? faction.id : await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+    return nextId;
+  }
+
+  Future<void> updateDbcFaction(DbcFactionEntity faction) async {
+    var json = faction.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', faction.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -118,5 +115,9 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

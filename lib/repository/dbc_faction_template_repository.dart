@@ -7,6 +7,33 @@ class DbcFactionTemplateRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_faction_template';
   static const _factionTable = 'foxy.dbc_faction';
 
+  Future<void> copyDbcFactionTemplate(int id) async {
+    final source = await getDbcFactionTemplate(id);
+    if (source == null) return;
+    final json = source.toJson();
+    json['ID'] = await _getNextId();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countDbcFactionTemplates({
+    DbcFactionTemplateFilterEntity? filter,
+  }) async {
+    var builder = laconic.table('$_table AS dft');
+    if (filter != null && filter.name.isNotEmpty) {
+      builder = _joinFaction(builder);
+    }
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<DbcFactionTemplateEntity> createDbcFactionTemplate() async {
+    return DbcFactionTemplateEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyDbcFactionTemplate(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefDbcFactionTemplateEntity>> getBriefDbcFactionTemplates({
     int page = 1,
     DbcFactionTemplateFilterEntity? filter,
@@ -33,6 +60,12 @@ class DbcFactionTemplateRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(int id) async {
+    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return DbcFactionTemplateEntity.fromJson(results.first.toMap());
+  }
+
   Future<List<DbcFactionTemplateEntity>> getDbcFactionTemplates() async {
     final results = await laconic.table(_table).get();
     return results
@@ -40,25 +73,15 @@ class DbcFactionTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countDbcFactionTemplates({
-    DbcFactionTemplateFilterEntity? filter,
-  }) async {
-    var builder = laconic.table('$_table AS dft');
-    if (filter != null && filter.name.isNotEmpty) {
-      builder = _joinFaction(builder);
+  Future<void> saveDbcFactionTemplate(
+    DbcFactionTemplateEntity factionTemplate,
+  ) async {
+    final existing = await getDbcFactionTemplate(factionTemplate.id);
+    if (existing == null) {
+      await storeDbcFactionTemplate(factionTemplate);
+      return;
     }
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(int id) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return DbcFactionTemplateEntity.fromJson(results.first.toMap());
-  }
-
-  Future<DbcFactionTemplateEntity> createDbcFactionTemplate() async {
-    return DbcFactionTemplateEntity(id: await _getNextId());
+    await updateDbcFactionTemplate(factionTemplate);
   }
 
   Future<int> storeDbcFactionTemplate(
@@ -80,40 +103,6 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', factionTemplate.id).update(json);
   }
 
-  Future<void> destroyDbcFactionTemplate(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyDbcFactionTemplate(int id) async {
-    final source = await getDbcFactionTemplate(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await _getNextId();
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveDbcFactionTemplate(
-    DbcFactionTemplateEntity factionTemplate,
-  ) async {
-    final existing = await getDbcFactionTemplate(factionTemplate.id);
-    if (existing == null) {
-      await storeDbcFactionTemplate(factionTemplate);
-      return;
-    }
-    await updateDbcFactionTemplate(factionTemplate);
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
-  }
-
-  QueryBuilder _joinFaction(QueryBuilder builder) {
-    return builder.leftJoin(
-      '$_factionTable AS df',
-      (join) => join.on('dft.Faction', 'df.ID'),
-    );
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     DbcFactionTemplateFilterEntity? filter,
@@ -133,5 +122,16 @@ class DbcFactionTemplateRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
+  }
+
+  QueryBuilder _joinFaction(QueryBuilder builder) {
+    return builder.leftJoin(
+      '$_factionTable AS df',
+      (join) => join.on('dft.Faction', 'df.ID'),
+    );
   }
 }

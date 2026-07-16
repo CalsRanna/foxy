@@ -6,6 +6,52 @@ import 'package:laconic/laconic.dart';
 class GossipMenuRepository with RepositoryMixin {
   static const _table = 'gossip_menu';
 
+  Future<void> copyGossipMenu(int menuId, int textId) async {
+    final original = await getGossipMenu(menuId, textId);
+    if (original == null) return;
+    final newMenuId = await getNextMenuId();
+    await laconic.table(_table).insert([
+      {'MenuID': newMenuId, 'TextID': original.textId},
+    ]);
+  }
+
+  Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
+    final needsTextJoin = filter != null && filter.text.isNotEmpty;
+    if (!needsTextJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.menuId.isNotEmpty) {
+        builder = builder.where('MenuID', filter.menuId);
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table AS gm');
+    builder = builder.leftJoin(
+      'npc_text AS nt',
+      (join) => join.on('gm.TextID', 'nt.ID'),
+    );
+    if (localeEnabled) {
+      builder = builder.leftJoin(
+        'npc_text_locale AS ntl',
+        (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
+      );
+    }
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<GossipMenuEntity> createGossipMenu() async {
+    final nextMenuId = await getNextMenuId();
+    return GossipMenuEntity(menuId: nextMenuId);
+  }
+
+  Future<void> destroyGossipMenu(int menuId, int textId) async {
+    await laconic
+        .table(_table)
+        .where('MenuID', menuId)
+        .where('TextID', textId)
+        .delete();
+  }
+
   Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilterEntity? filter,
@@ -39,35 +85,6 @@ class GossipMenuRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<GossipMenuEntity>> getGossipMenus() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
-    final needsTextJoin = filter != null && filter.text.isNotEmpty;
-    if (!needsTextJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.menuId.isNotEmpty) {
-        builder = builder.where('MenuID', filter.menuId);
-      }
-      return builder.count();
-    }
-    var builder = laconic.table('$_table AS gm');
-    builder = builder.leftJoin(
-      'npc_text AS nt',
-      (join) => join.on('gm.TextID', 'nt.ID'),
-    );
-    if (localeEnabled) {
-      builder = builder.leftJoin(
-        'npc_text_locale AS ntl',
-        (join) => join.on('gm.TextID', 'ntl.ID').where('ntl.Locale', 'zhCN'),
-      );
-    }
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<GossipMenuEntity?> getGossipMenu(int menuId, int textId) async {
     var results = await laconic
         .table(_table)
@@ -79,9 +96,32 @@ class GossipMenuRepository with RepositoryMixin {
     return GossipMenuEntity.fromJson(results.first.toMap());
   }
 
-  Future<GossipMenuEntity> createGossipMenu() async {
-    final nextMenuId = await getNextMenuId();
-    return GossipMenuEntity(menuId: nextMenuId);
+  Future<List<GossipMenuEntity>> getGossipMenus() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<int> getNextMenuId() async {
+    final result = await laconic.table(_table).select([
+      'MAX(MenuID) as max_id',
+    ]).first();
+    final maxId = result.toMap()['max_id'] as int?;
+    return (maxId ?? 0) + 1;
+  }
+
+  Future<void> saveGossipMenu(GossipMenuEntity menu) async {
+    if (menu.menuId == 0) {
+      await storeGossipMenu(menu);
+      return;
+    }
+    var existing = await getGossipMenu(menu.menuId, menu.textId);
+    if (existing != null) {
+      await updateGossipMenu(menu.menuId, menu.textId, menu);
+    } else {
+      await laconic.table(_table).insert([
+        {'MenuID': menu.menuId, 'TextID': menu.textId},
+      ]);
+    }
   }
 
   Future<int> storeGossipMenu(GossipMenuEntity menu) async {
@@ -103,46 +143,6 @@ class GossipMenuRepository with RepositoryMixin {
         .where('MenuID', menuId)
         .where('TextID', textId)
         .update({'MenuID': menu.menuId, 'TextID': menu.textId});
-  }
-
-  Future<void> destroyGossipMenu(int menuId, int textId) async {
-    await laconic
-        .table(_table)
-        .where('MenuID', menuId)
-        .where('TextID', textId)
-        .delete();
-  }
-
-  Future<void> copyGossipMenu(int menuId, int textId) async {
-    final original = await getGossipMenu(menuId, textId);
-    if (original == null) return;
-    final newMenuId = await getNextMenuId();
-    await laconic.table(_table).insert([
-      {'MenuID': newMenuId, 'TextID': original.textId},
-    ]);
-  }
-
-  Future<void> saveGossipMenu(GossipMenuEntity menu) async {
-    if (menu.menuId == 0) {
-      await storeGossipMenu(menu);
-      return;
-    }
-    var existing = await getGossipMenu(menu.menuId, menu.textId);
-    if (existing != null) {
-      await updateGossipMenu(menu.menuId, menu.textId, menu);
-    } else {
-      await laconic.table(_table).insert([
-        {'MenuID': menu.menuId, 'TextID': menu.textId},
-      ]);
-    }
-  }
-
-  Future<int> getNextMenuId() async {
-    final result = await laconic.table(_table).select([
-      'MAX(MenuID) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
   }
 
   QueryBuilder _applyFilter(

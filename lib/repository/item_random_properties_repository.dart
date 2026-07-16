@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_properties_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,6 +11,31 @@ class ItemRandomPropertiesRepository
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<void> copyItemRandomProperty(int id) async {
+    var source = await getItemRandomProperty(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countItemRandomProperties({
+    ItemRandomPropertiesFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<ItemRandomPropertiesEntity> createItemRandomProperty() async {
+    return ItemRandomPropertiesEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyItemRandomProperty(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
 
   Future<List<BriefItemRandomPropertiesEntity>> getBriefItemRandomProperties({
     int page = 1,
@@ -35,13 +60,10 @@ class ItemRandomPropertiesRepository
         .toList();
   }
 
-  Future<int> countItemRandomProperties({
-    ItemRandomPropertiesFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
+  Future<List<DbcLocaleFieldValue>> getItemRandomPropertiesLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
   Future<ItemRandomPropertiesEntity?> getItemRandomProperty(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
@@ -49,8 +71,25 @@ class ItemRandomPropertiesRepository
     return ItemRandomPropertiesEntity.fromJson(results.first.toMap());
   }
 
-  Future<ItemRandomPropertiesEntity> createItemRandomProperty() async {
-    return ItemRandomPropertiesEntity(id: await _getNextId());
+  Future<void> saveItemRandomPropertiesLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
+
+  Future<void> saveItemRandomProperty(
+    ItemRandomPropertiesEntity property,
+  ) async {
+    if (property.id == 0) {
+      await storeItemRandomProperty(property);
+      return;
+    }
+    var existing = await getItemRandomProperty(property.id);
+    if (existing != null) {
+      await updateItemRandomProperty(property);
+    } else {
+      await laconic.table(_table).insert([property.toJson()]);
+    }
   }
 
   Future<int> storeItemRandomProperty(
@@ -71,48 +110,6 @@ class ItemRandomPropertiesRepository
     await laconic.table(_table).where('ID', property.id).update(json);
   }
 
-  Future<void> destroyItemRandomProperty(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyItemRandomProperty(int id) async {
-    var source = await getItemRandomProperty(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveItemRandomProperty(
-    ItemRandomPropertiesEntity property,
-  ) async {
-    if (property.id == 0) {
-      await storeItemRandomProperty(property);
-      return;
-    }
-    var existing = await getItemRandomProperty(property.id);
-    if (existing != null) {
-      await updateItemRandomProperty(property);
-    } else {
-      await laconic.table(_table).insert([property.toJson()]);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getItemRandomPropertiesLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveItemRandomPropertiesLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemRandomPropertiesFilterEntity? filter,
@@ -129,5 +126,9 @@ class ItemRandomPropertiesRepository
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    return nextMaxPlusOne(_table, 'ID');
   }
 }

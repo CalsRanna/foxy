@@ -7,6 +7,40 @@ class CreatureSpellDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_spell_data';
   static const _spellTable = 'foxy.dbc_spell';
 
+  Future<void> copyCreatureSpellData(int id) async {
+    var source = await getCreatureSpellData(id);
+    if (source == null) return;
+    var json = source.toJson();
+    var nextId = await _getNextId();
+    json['ID'] = nextId;
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countCreatureSpellDatas({
+    CreatureSpellDataFilterEntity? filter,
+  }) async {
+    final needsSpellJoin = filter != null && filter.spell.isNotEmpty;
+    if (!needsSpellJoin) {
+      var builder = laconic.table(_table);
+      if (filter != null && filter.id.isNotEmpty) {
+        builder = builder.where('ID', filter.id);
+      }
+      return builder.count();
+    }
+    var builder = laconic.table('$_table AS dcsd');
+    builder = _joinSpells(builder);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<CreatureSpellDataEntity> createCreatureSpellData() async {
+    return CreatureSpellDataEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyCreatureSpellData(int id) async {
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefCreatureSpellDataEntity>> getBriefCreatureSpellDatas({
     int page = 1,
     CreatureSpellDataFilterEntity? filter,
@@ -39,6 +73,12 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<CreatureSpellDataEntity?> getCreatureSpellData(int id) async {
+    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return CreatureSpellDataEntity.fromJson(results.first.toMap());
+  }
+
   Future<List<CreatureSpellDataEntity>> getCreatureSpellDatas() async {
     var results = await laconic.table(_table).get();
     return results
@@ -46,31 +86,17 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> countCreatureSpellDatas({
-    CreatureSpellDataFilterEntity? filter,
-  }) async {
-    final needsSpellJoin = filter != null && filter.spell.isNotEmpty;
-    if (!needsSpellJoin) {
-      var builder = laconic.table(_table);
-      if (filter != null && filter.id.isNotEmpty) {
-        builder = builder.where('ID', filter.id);
-      }
-      return builder.count();
+  Future<void> saveCreatureSpellData(CreatureSpellDataEntity data) async {
+    if (data.id == 0) {
+      await storeCreatureSpellData(data);
+      return;
     }
-    var builder = laconic.table('$_table AS dcsd');
-    builder = _joinSpells(builder);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
-  Future<CreatureSpellDataEntity?> getCreatureSpellData(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureSpellDataEntity.fromJson(results.first.toMap());
-  }
-
-  Future<CreatureSpellDataEntity> createCreatureSpellData() async {
-    return CreatureSpellDataEntity(id: await _getNextId());
+    var existing = await getCreatureSpellData(data.id);
+    if (existing != null) {
+      await updateCreatureSpellData(data);
+    } else {
+      await laconic.table(_table).insert([data.toJson()]);
+    }
   }
 
   Future<int> storeCreatureSpellData(CreatureSpellDataEntity data) async {
@@ -87,30 +113,27 @@ class CreatureSpellDataRepository with RepositoryMixin {
     await laconic.table(_table).where('ID', data.id).update(json);
   }
 
-  Future<void> destroyCreatureSpellData(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyCreatureSpellData(int id) async {
-    var source = await getCreatureSpellData(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await _getNextId();
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-  }
-
-  Future<void> saveCreatureSpellData(CreatureSpellDataEntity data) async {
-    if (data.id == 0) {
-      await storeCreatureSpellData(data);
-      return;
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CreatureSpellDataFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('dcsd.ID', filter.id);
     }
-    var existing = await getCreatureSpellData(data.id);
-    if (existing != null) {
-      await updateCreatureSpellData(data);
-    } else {
-      await laconic.table(_table).insert([data.toJson()]);
+    if (filter.spell.isNotEmpty) {
+      builder = builder.whereAny(
+        [
+          'ds_1.Name_lang_zhCN',
+          'ds_2.Name_lang_zhCN',
+          'ds_3.Name_lang_zhCN',
+          'ds_4.Name_lang_zhCN',
+        ],
+        '%${filter.spell}%',
+        comparator: 'like',
+      );
     }
+    return builder;
   }
 
   Future<int> _getNextId() async {
@@ -134,29 +157,6 @@ class CreatureSpellDataRepository with RepositoryMixin {
       '$_spellTable AS ds_4',
       (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
     );
-    return builder;
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    CreatureSpellDataFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('dcsd.ID', filter.id);
-    }
-    if (filter.spell.isNotEmpty) {
-      builder = builder.whereAny(
-        [
-          'ds_1.Name_lang_zhCN',
-          'ds_2.Name_lang_zhCN',
-          'ds_3.Name_lang_zhCN',
-          'ds_4.Name_lang_zhCN',
-        ],
-        '%${filter.spell}%',
-        comparator: 'like',
-      );
-    }
     return builder;
   }
 }

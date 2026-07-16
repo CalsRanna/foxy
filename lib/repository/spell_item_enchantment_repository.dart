@@ -13,6 +13,32 @@ class SpellItemEnchantmentRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copySpellItemEnchantment(int id) async {
+    final source = await getSpellItemEnchantment(id);
+    if (source == null) return;
+    await storeSpellItemEnchantment(source.copyWith(id: await _getNextId()));
+  }
+
+  Future<int> countSpellItemEnchantments({
+    SpellItemEnchantmentFilterEntity? filter,
+  }) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<SpellItemEnchantmentEntity> createSpellItemEnchantment() async {
+    return SpellItemEnchantmentEntity(id: await _getNextId());
+  }
+
+  Future<void> destroySpellItemEnchantment(int id) async {
+    final references = await _countReferences(id);
+    if (references > 0) {
+      throw StateError('法术附魔 $id 仍被 $references 条数据引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefSpellItemEnchantmentEntity>> getBriefSpellItemEnchantments({
     int page = 1,
     SpellItemEnchantmentFilterEntity? filter,
@@ -36,6 +62,17 @@ class SpellItemEnchantmentRepository
         .toList();
   }
 
+  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int id) async {
+    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+    if (results.isEmpty) return null;
+    return SpellItemEnchantmentEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
   Future<List<SpellItemEnchantmentEntity>> getSpellItemEnchantments() async {
     final results = await laconic.table(_table).get();
     return results
@@ -43,23 +80,24 @@ class SpellItemEnchantmentRepository
         .toList();
   }
 
-  Future<int> countSpellItemEnchantments({
-    SpellItemEnchantmentFilterEntity? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
+  Future<void> saveSpellItemEnchantment(
+    SpellItemEnchantmentEntity spellItemEnchantment,
+  ) async {
+    final existing = spellItemEnchantment.id == 0
+        ? null
+        : await getSpellItemEnchantment(spellItemEnchantment.id);
+    if (existing == null) {
+      await storeSpellItemEnchantment(spellItemEnchantment);
+    } else {
+      await updateSpellItemEnchantment(spellItemEnchantment);
+    }
   }
 
-  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int id) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellItemEnchantmentEntity.fromJson(results.first.toMap());
-  }
-
-  Future<SpellItemEnchantmentEntity> createSpellItemEnchantment() async {
-    return SpellItemEnchantmentEntity(id: await _getNextId());
-  }
+  Future<void> saveSpellItemEnchantmentLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeSpellItemEnchantment(
     SpellItemEnchantmentEntity spellItemEnchantment,
@@ -84,103 +122,26 @@ class SpellItemEnchantmentRepository
         .update(json);
   }
 
-  Future<void> destroySpellItemEnchantment(int id) async {
-    final references = await _countReferences(id);
-    if (references > 0) {
-      throw StateError('法术附魔 $id 仍被 $references 条数据引用，不能删除');
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    SpellItemEnchantmentFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('ID', filter.id);
     }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copySpellItemEnchantment(int id) async {
-    final source = await getSpellItemEnchantment(id);
-    if (source == null) return;
-    await storeSpellItemEnchantment(source.copyWith(id: await _getNextId()));
-  }
-
-  Future<void> saveSpellItemEnchantment(
-    SpellItemEnchantmentEntity spellItemEnchantment,
-  ) async {
-    final existing = spellItemEnchantment.id == 0
-        ? null
-        : await getSpellItemEnchantment(spellItemEnchantment.id);
-    if (existing == null) {
-      await storeSpellItemEnchantment(spellItemEnchantment);
-    } else {
-      await updateSpellItemEnchantment(spellItemEnchantment);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveSpellItemEnchantmentLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
-
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 0xffff) {
-      throw StateError('SpellItemEnchantment ID 已超出客户端可引用范围');
-    }
-    return id;
-  }
-
-  Future<void> _validateReferences(
-    SpellItemEnchantmentEntity spellItemEnchantment,
-  ) async {
-    if (spellItemEnchantment.srcItemId == 0) return;
-    final count = await laconic
-        .table('item_template')
-        .where('entry', spellItemEnchantment.srcItemId)
-        .count();
-    if (count == 0) {
-      throw StateError(
-        'Src_itemID 引用的物品 ${spellItemEnchantment.srcItemId} 不存在',
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${filter.name}%',
+        comparator: 'like',
       );
     }
+    return builder;
   }
 
-  Future<int> _countReferences(int id) async {
-    final socketBonus = await laconic
-        .table('item_template')
-        .where('socketBonus', id)
-        .count();
-    final gems = await laconic
-        .table('foxy.dbc_gem_properties')
-        .where('Enchant_ID', id)
-        .count();
-    final procData = await laconic
-        .table('spell_enchant_proc_data')
-        .where('entry', id)
-        .count();
-    final spell0 = await laconic
-        .table('foxy.dbc_spell')
-        .whereIn('Effect0', _spellEffects)
-        .where('EffectMiscValue0', id)
-        .count();
-    final spell1 = await laconic
-        .table('foxy.dbc_spell')
-        .whereIn('Effect1', _spellEffects)
-        .where('EffectMiscValue1', id)
-        .count();
-    final spell2 = await laconic
-        .table('foxy.dbc_spell')
-        .whereIn('Effect2', _spellEffects)
-        .where('EffectMiscValue2', id)
-        .count();
-    return socketBonus +
-        gems +
-        procData +
-        spell0 +
-        spell1 +
-        spell2 +
-        await _countRandomPropertyReferences(id) +
-        await _countRandomSuffixReferences(id);
+  Future<int> _countColumnReference(String table, String column, int id) {
+    return laconic.table(table).where(column, id).count();
   }
 
   Future<int> _countRandomPropertyReferences(int id) async {
@@ -249,25 +210,64 @@ class SpellItemEnchantmentRepository
         enchantment4;
   }
 
-  Future<int> _countColumnReference(String table, String column, int id) {
-    return laconic.table(table).where(column, id).count();
+  Future<int> _countReferences(int id) async {
+    final socketBonus = await laconic
+        .table('item_template')
+        .where('socketBonus', id)
+        .count();
+    final gems = await laconic
+        .table('foxy.dbc_gem_properties')
+        .where('Enchant_ID', id)
+        .count();
+    final procData = await laconic
+        .table('spell_enchant_proc_data')
+        .where('entry', id)
+        .count();
+    final spell0 = await laconic
+        .table('foxy.dbc_spell')
+        .whereIn('Effect0', _spellEffects)
+        .where('EffectMiscValue0', id)
+        .count();
+    final spell1 = await laconic
+        .table('foxy.dbc_spell')
+        .whereIn('Effect1', _spellEffects)
+        .where('EffectMiscValue1', id)
+        .count();
+    final spell2 = await laconic
+        .table('foxy.dbc_spell')
+        .whereIn('Effect2', _spellEffects)
+        .where('EffectMiscValue2', id)
+        .count();
+    return socketBonus +
+        gems +
+        procData +
+        spell0 +
+        spell1 +
+        spell2 +
+        await _countRandomPropertyReferences(id) +
+        await _countRandomSuffixReferences(id);
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SpellItemEnchantmentFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 0xffff) {
+      throw StateError('SpellItemEnchantment ID 已超出客户端可引用范围');
     }
-    if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%${filter.name}%',
-        comparator: 'like',
+    return id;
+  }
+
+  Future<void> _validateReferences(
+    SpellItemEnchantmentEntity spellItemEnchantment,
+  ) async {
+    if (spellItemEnchantment.srcItemId == 0) return;
+    final count = await laconic
+        .table('item_template')
+        .where('entry', spellItemEnchantment.srcItemId)
+        .count();
+    if (count == 0) {
+      throw StateError(
+        'Src_itemID 引用的物品 ${spellItemEnchantment.srcItemId} 不存在',
       );
     }
-    return builder;
   }
 }

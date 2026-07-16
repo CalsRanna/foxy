@@ -11,6 +11,31 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
+  Future<void> copyTalentTab(int id) async {
+    final source = await getTalentTab(id);
+    if (source == null) return;
+    await storeTalentTab(source.copyWith(id: await _getNextId()));
+  }
+
+  Future<int> countTalentTabs({TalentTabFilterEntity? filter}) {
+    return _applyFilter(laconic.table(_table), filter).count();
+  }
+
+  Future<TalentTabEntity> createTalentTab() async {
+    return TalentTabEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyTalentTab(int id) async {
+    final references = await laconic
+        .table('foxy.dbc_talent')
+        .where('TabID', id)
+        .count();
+    if (references > 0) {
+      throw StateError('天赋页 $id 仍被 $references 条天赋引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
+
   Future<List<BriefTalentTabEntity>> getBriefTalentTabs({
     int page = 1,
     TalentTabFilterEntity? filter,
@@ -33,23 +58,37 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<TalentTabEntity>> getTalentTabs() async {
-    final rows = await laconic.table(_table).get();
-    return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<int> countTalentTabs({TalentTabFilterEntity? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
   Future<TalentTabEntity?> getTalentTab(int id) async {
     final rows = await laconic.table(_table).where('ID', id).limit(1).get();
     return rows.isEmpty ? null : TalentTabEntity.fromJson(rows.first.toMap());
   }
 
-  Future<TalentTabEntity> createTalentTab() async {
-    return TalentTabEntity(id: await _getNextId());
+  Future<List<DbcLocaleFieldValue>> getTalentTabLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
+
+  Future<List<TalentTabEntity>> getTalentTabs() async {
+    final rows = await laconic.table(_table).get();
+    return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
   }
+
+  Future<void> saveTalentTab(TalentTabEntity talentTab) async {
+    final existing = talentTab.id == 0
+        ? null
+        : await getTalentTab(talentTab.id);
+    if (existing == null) {
+      await storeTalentTab(talentTab);
+    } else {
+      await updateTalentTab(talentTab);
+    }
+  }
+
+  Future<void> saveTalentTabLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+    List<DbcLocaleFieldValue> locales,
+  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> storeTalentTab(TalentTabEntity talentTab) async {
     final id = talentTab.id > 0 ? talentTab.id : await _getNextId();
@@ -65,44 +104,21 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     await laconic.table(_table).where('ID', talentTab.id).update(json);
   }
 
-  Future<void> destroyTalentTab(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_talent')
-        .where('TabID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('天赋页 $id 仍被 $references 条天赋引用，不能删除');
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    TalentTabFilterEntity? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
+    if (filter.name.isNotEmpty) {
+      builder = builder.where(
+        'Name_lang_zhCN',
+        '%${filter.name}%',
+        comparator: 'like',
+      );
     }
-    await laconic.table(_table).where('ID', id).delete();
+    return builder;
   }
-
-  Future<void> copyTalentTab(int id) async {
-    final source = await getTalentTab(id);
-    if (source == null) return;
-    await storeTalentTab(source.copyWith(id: await _getNextId()));
-  }
-
-  Future<void> saveTalentTab(TalentTabEntity talentTab) async {
-    final existing = talentTab.id == 0
-        ? null
-        : await getTalentTab(talentTab.id);
-    if (existing == null) {
-      await storeTalentTab(talentTab);
-    } else {
-      await updateTalentTab(talentTab);
-    }
-  }
-
-  Future<List<DbcLocaleFieldValue>> getTalentTabLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
-  Future<void> saveTalentTabLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-    List<DbcLocaleFieldValue> locales,
-  ) => storeDbcLocaleField(id, field, locales);
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
@@ -127,21 +143,5 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       if (existing?.spellIconId == talentTab.spellIconId) return;
     }
     throw StateError('SpellIconID 引用的法术图标 ${talentTab.spellIconId} 不存在');
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    TalentTabFilterEntity? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
-    if (filter.name.isNotEmpty) {
-      builder = builder.where(
-        'Name_lang_zhCN',
-        '%${filter.name}%',
-        comparator: 'like',
-      );
-    }
-    return builder;
   }
 }

@@ -1,6 +1,6 @@
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,6 +10,32 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   @override
   String get dbcLocaleTableName => _table;
+
+  Future<void> copyQuestSort(int id) async {
+    var source = await getQuestSort(id);
+    if (source == null) return;
+    final nextId = await _getNextId();
+    final candidate = source.copyWith(id: nextId);
+    var json = candidate.toJson();
+    await laconic.table(_table).insert([json]);
+  }
+
+  Future<int> countQuestSorts({QuestSortFilterEntity? filter}) async {
+    var builder = laconic.table(_table);
+    builder = _applyFilter(builder, filter);
+    return builder.count();
+  }
+
+  Future<QuestSortEntity> createQuestSort() async {
+    return QuestSortEntity(id: await _getNextId());
+  }
+
+  Future<void> destroyQuestSort(int id) async {
+    if (await _isReferencedByQuest(id)) {
+      throw StateError('任务排序 $id 仍被任务模板引用，不能删除');
+    }
+    await laconic.table(_table).where('ID', id).delete();
+  }
 
   Future<List<BriefQuestSortEntity>> getBriefQuestSorts({
     int page = 1,
@@ -28,55 +54,20 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<List<QuestSortEntity>> getQuestSorts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => QuestSortEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<int> countQuestSorts({QuestSortFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
   Future<QuestSortEntity?> getQuestSort(int id) async {
     var results = await laconic.table(_table).where('ID', id).limit(1).get();
     if (results.isEmpty) return null;
     return QuestSortEntity.fromJson(results.first.toMap());
   }
 
-  Future<QuestSortEntity> createQuestSort() async {
-    return QuestSortEntity(id: await _getNextId());
-  }
+  Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
+    int id,
+    DbcLocaleFieldDefinition field,
+  ) => loadDbcLocaleField(id, field);
 
-  Future<int> storeQuestSort(QuestSortEntity questSort) async {
-    final id = questSort.id > 0 ? questSort.id : await _getNextId();
-    final candidate = questSort.copyWith(id: id);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateQuestSort(QuestSortEntity questSort) async {
-    var json = questSort.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', questSort.id).update(json);
-  }
-
-  Future<void> destroyQuestSort(int id) async {
-    if (await _isReferencedByQuest(id)) {
-      throw StateError('任务排序 $id 仍被任务模板引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
-  }
-
-  Future<void> copyQuestSort(int id) async {
-    var source = await getQuestSort(id);
-    if (source == null) return;
-    final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
+  Future<List<QuestSortEntity>> getQuestSorts() async {
+    var results = await laconic.table(_table).get();
+    return results.map((e) => QuestSortEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> saveQuestSort(QuestSortEntity questSort) async {
@@ -92,31 +83,24 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
-    int id,
-    DbcLocaleFieldDefinition field,
-  ) => loadDbcLocaleField(id, field);
-
   Future<void> saveQuestSortLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> _getNextId() async {
-    final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 32768) {
-      throw StateError('任务排序编号已超出 QuestSortID 可引用范围');
-    }
+  Future<int> storeQuestSort(QuestSortEntity questSort) async {
+    final id = questSort.id > 0 ? questSort.id : await _getNextId();
+    final candidate = questSort.copyWith(id: id);
+    var json = candidate.toJson();
+    await laconic.table(_table).insert([json]);
     return id;
   }
 
-  Future<bool> _isReferencedByQuest(int id) async {
-    final count = await laconic
-        .table('quest_template')
-        .where('QuestSortID', -id)
-        .count();
-    return count > 0;
+  Future<void> updateQuestSort(QuestSortEntity questSort) async {
+    var json = questSort.toJson();
+    json.remove('ID');
+    await laconic.table(_table).where('ID', questSort.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -135,5 +119,21 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() async {
+    final id = await nextMaxPlusOne(_table, 'ID');
+    if (id > 32768) {
+      throw StateError('任务排序编号已超出 QuestSortID 可引用范围');
+    }
+    return id;
+  }
+
+  Future<bool> _isReferencedByQuest(int id) async {
+    final count = await laconic
+        .table('quest_template')
+        .where('QuestSortID', -id)
+        .count();
+    return count > 0;
   }
 }
