@@ -9,7 +9,7 @@ class DbcEmoteRepository with RepositoryMixin {
   Future<void> copyDbcEmote(int id) async {
     final source = await getDbcEmote(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -17,7 +17,7 @@ class DbcEmoteRepository with RepositoryMixin {
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<DbcEmoteEntity> createDbcEmote() async =>
-      DbcEmoteEntity(id: await _getNextId());
+      DbcEmoteEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroyDbcEmote(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -62,7 +62,7 @@ class DbcEmoteRepository with RepositoryMixin {
 
   Future<int> storeDbcEmote(DbcEmoteEntity emote) async {
     final json = emote.toJson();
-    final id = emote.id > 0 ? emote.id : await _getNextId();
+    final id = emote.id > 0 ? emote.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -88,6 +88,4 @@ class DbcEmoteRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

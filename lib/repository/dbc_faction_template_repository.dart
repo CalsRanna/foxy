@@ -11,7 +11,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     final source = await getDbcFactionTemplate(id);
     if (source == null) return;
     final json = source.toJson();
-    json['ID'] = await _getNextId();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -27,7 +27,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
   }
 
   Future<DbcFactionTemplateEntity> createDbcFactionTemplate() async {
-    return DbcFactionTemplateEntity(id: await _getNextId());
+    return DbcFactionTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyDbcFactionTemplate(int id) async {
@@ -90,7 +90,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     final json = factionTemplate.toJson();
     final nextId = factionTemplate.id > 0
         ? factionTemplate.id
-        : await _getNextId();
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -122,10 +122,6 @@ class DbcFactionTemplateRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _joinFaction(QueryBuilder builder) {

@@ -10,7 +10,7 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     final source = await getSpellItemEnchantmentCondition(id);
     if (source == null) return;
     await storeSpellItemEnchantmentCondition(
-      source.copyWith(id: await _getNextId()),
+      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
     );
   }
 
@@ -24,7 +24,9 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
 
   Future<SpellItemEnchantmentConditionEntity>
   createSpellItemEnchantmentCondition() async {
-    return SpellItemEnchantmentConditionEntity(id: await _getNextId());
+    return SpellItemEnchantmentConditionEntity(
+      id: await nextMaxPlusOne(_table, 'ID'),
+    );
   }
 
   Future<void> destroySpellItemEnchantmentCondition(int id) async {
@@ -90,7 +92,7 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   Future<int> storeSpellItemEnchantmentCondition(
     SpellItemEnchantmentConditionEntity entity,
   ) async {
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     final stored = entity.copyWith(id: id);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
@@ -112,6 +114,4 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

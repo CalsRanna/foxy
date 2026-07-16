@@ -9,7 +9,7 @@ class SkillLineRepository with RepositoryMixin {
   Future<void> copySkillLine(int id) async {
     final source = await getSkillLine(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -17,7 +17,7 @@ class SkillLineRepository with RepositoryMixin {
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<SkillLineEntity> createSkillLine() async =>
-      SkillLineEntity(id: await _getNextId());
+      SkillLineEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroySkillLine(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -62,7 +62,9 @@ class SkillLineRepository with RepositoryMixin {
 
   Future<int> storeSkillLine(SkillLineEntity skillLine) async {
     final json = skillLine.toJson();
-    final id = skillLine.id > 0 ? skillLine.id : await _getNextId();
+    final id = skillLine.id > 0
+        ? skillLine.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -88,6 +90,4 @@ class SkillLineRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

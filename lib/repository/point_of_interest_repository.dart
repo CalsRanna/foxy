@@ -10,7 +10,9 @@ class PointOfInterestRepository with RepositoryMixin {
   Future<void> copyPointOfInterest(int id) async {
     final source = await getPointOfInterest(id);
     if (source == null) return;
-    await storePointOfInterest(source.copyWith(id: await _getNextId()));
+    await storePointOfInterest(
+      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
+    );
   }
 
   Future<int> countPointsOfInterest({
@@ -22,7 +24,7 @@ class PointOfInterestRepository with RepositoryMixin {
   }
 
   Future<PointOfInterestEntity> createPointOfInterest() async {
-    return PointOfInterestEntity(id: await _getNextId());
+    return PointOfInterestEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyPointOfInterest(int id) async {
@@ -78,7 +80,7 @@ class PointOfInterestRepository with RepositoryMixin {
   }
 
   Future<int> storePointOfInterest(PointOfInterestEntity entity) async {
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     final json = entity.toJson()..['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -104,6 +106,4 @@ class PointOfInterestRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

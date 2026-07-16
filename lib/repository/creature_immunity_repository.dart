@@ -10,7 +10,7 @@ class CreatureImmunityRepository with RepositoryMixin {
     final source = await getCreatureImmunity(id);
     if (source == null) return;
     final json = source.toJson();
-    json['ID'] = await _getNextId();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -23,7 +23,7 @@ class CreatureImmunityRepository with RepositoryMixin {
   }
 
   Future<CreatureImmunityEntity> createCreatureImmunity() async {
-    return CreatureImmunityEntity(id: await _getNextId());
+    return CreatureImmunityEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyCreatureImmunity(int id) async {
@@ -77,7 +77,9 @@ class CreatureImmunityRepository with RepositoryMixin {
 
   Future<int> storeCreatureImmunity(CreatureImmunityEntity immunity) async {
     final json = immunity.toJson();
-    final nextId = immunity.id != 0 ? immunity.id : await _getNextId();
+    final nextId = immunity.id != 0
+        ? immunity.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -104,9 +106,5 @@ class CreatureImmunityRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

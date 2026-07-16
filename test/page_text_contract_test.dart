@@ -88,18 +88,17 @@ void main() {
     );
   });
 
-  test('Repository 校验链路、复合键并保护全部反向引用', () {
+  test('Repository 保持单表写入边界并校验页内引用与 locale 复合键', () {
     final source = File(
       'lib/repository/page_text_repository.dart',
     ).readAsStringSync();
     expect(source, contains('await _validateNextPage('));
-    expect(source, contains(".where('NextPageID', id)"));
-    expect(source, contains(".table('item_template')"));
-    expect(source, contains(".where('PageText', id)"));
-    expect(source, contains(".where('type', 9)"));
-    expect(source, contains(".where('Data0', id)"));
-    expect(source, contains(".where('type', 10)"));
-    expect(source, contains(".where('Data7', id)"));
+    expect(source, isNot(contains(".table('item_template')")));
+    expect(source, isNot(contains(".table('gameobject_template')")));
+    expect(source, isNot(contains('仍有 \$references 条引用')));
+    expect(source, isNot(contains('getPageTextLocales(id)')));
+    expect(source, isNot(contains('不存在，不能保存本地化')));
+    expect(source, contains("laconic.table(_table).where('ID', id).delete()"));
     expect(source, contains(".table(_localeTable).where('ID', id).delete()"));
     expect(source, contains('final localeKeys = <String>{};'));
     expect(source, isNot(contains('.validate()')));
@@ -107,7 +106,7 @@ void main() {
       'lib/page/page_text/page_text_detail_view_model.dart',
     ).readAsStringSync();
     expect(viewModel, contains('validatePageTextFields(data);'));
-    expect(source, contains('final locales = _prepareLocales('));
+    expect(source, contains('final stored = _prepareLocales('));
   });
 
   test('主表和 locale 表单每行均为四列等宽且使用正确控件', () {

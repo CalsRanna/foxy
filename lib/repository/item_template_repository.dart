@@ -11,7 +11,7 @@ class ItemTemplateRepository with RepositoryMixin {
     var template = await getItemTemplate(entry);
     if (template == null) return;
     var json = template.toJson();
-    var newEntry = await _getNextEntry();
+    var newEntry = await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
   }
@@ -60,7 +60,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<ItemTemplateEntity> createItemTemplate() async {
-    return ItemTemplateEntity(entry: await _getNextEntry());
+    return ItemTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
   Future<void> destroyItemTemplate(int entry) async {
@@ -154,7 +154,7 @@ class ItemTemplateRepository with RepositoryMixin {
     var json = template.toJson();
     final newEntry = template.entry > 0
         ? template.entry
-        : await _getNextEntry();
+        : await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
     return newEntry;
@@ -211,9 +211,5 @@ class ItemTemplateRepository with RepositoryMixin {
       builder = builder.where('it.subclass', filter.subclass);
     }
     return builder;
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 }

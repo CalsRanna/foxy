@@ -9,7 +9,9 @@ class ItemVisualEffectRepository with RepositoryMixin {
   Future<void> copyItemVisualEffect(int id) async {
     final source = await getItemVisualEffect(id);
     if (source == null) return;
-    await storeItemVisualEffect(source.copyWith(id: await _getNextId()));
+    await storeItemVisualEffect(
+      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
+    );
   }
 
   Future<int> countItemVisualEffects({
@@ -21,7 +23,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
   }
 
   Future<ItemVisualEffectEntity> createItemVisualEffect() async {
-    return ItemVisualEffectEntity(id: await _getNextId());
+    return ItemVisualEffectEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemVisualEffect(int id) async {
@@ -78,7 +80,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
   }
 
   Future<int> storeItemVisualEffect(ItemVisualEffectEntity entity) async {
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     final stored = entity.copyWith(id: id);
     await laconic.table(_table).insert([stored.toJson()]);
     return id;
@@ -106,6 +108,4 @@ class ItemVisualEffectRepository with RepositoryMixin {
   Future<int> _countSlot(String column, int id) {
     return laconic.table('foxy.dbc_item_visuals').where(column, id).count();
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

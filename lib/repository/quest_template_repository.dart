@@ -10,7 +10,7 @@ class QuestTemplateRepository with RepositoryMixin {
     var template = await getQuestTemplate(id);
     if (template == null) return;
     var json = template.toJson();
-    var newId = await _getNextId();
+    var newId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
@@ -43,7 +43,7 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<QuestTemplateEntity> createQuestTemplate() async {
-    return QuestTemplateEntity(id: await _getNextId());
+    return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyQuestTemplate(int id) async {
@@ -108,7 +108,9 @@ class QuestTemplateRepository with RepositoryMixin {
 
   Future<int> storeQuestTemplate(QuestTemplateEntity template) async {
     var json = template.toJson();
-    final newId = template.id > 0 ? template.id : await _getNextId();
+    final newId = template.id > 0
+        ? template.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
     return newId;
@@ -145,9 +147,5 @@ class QuestTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

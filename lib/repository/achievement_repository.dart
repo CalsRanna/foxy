@@ -28,41 +28,6 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> destroyAchievement(int id) async {
-    final supercedesCount = await laconic
-        .table(_table)
-        .where('Supercedes', id)
-        .count();
-    final sharesCount = await laconic
-        .table(_table)
-        .where('Shares_criteria', id)
-        .count();
-    final criteriaCount = await _tableExists('foxy', 'dbc_achievement_criteria')
-        ? await laconic
-              .table('foxy.dbc_achievement_criteria')
-              .where('Achievement_ID', id)
-              .count()
-        : 0;
-    final rewardCount = await laconic
-        .table('achievement_reward')
-        .where('ID', id)
-        .count();
-    final completionCount = await laconic
-        .table('acore_characters.character_achievement')
-        .where('achievement', id)
-        .count();
-    final references =
-        supercedesCount +
-        sharesCount +
-        criteriaCount +
-        rewardCount +
-        completionCount;
-    if (references > 0) {
-      throw StateError(
-        '成就 $id 仍被前置成就 $supercedesCount 条、共享条件 $sharesCount 条、'
-        '成就条件 $criteriaCount 条、奖励 $rewardCount 条、角色完成记录 '
-        '$completionCount 条引用，不能删除',
-      );
-    }
     await laconic.table(_table).where('ID', id).delete();
   }
 

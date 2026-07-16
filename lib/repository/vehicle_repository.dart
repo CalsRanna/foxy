@@ -10,7 +10,7 @@ class VehicleRepository with RepositoryMixin {
     var source = await getVehicle(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class VehicleRepository with RepositoryMixin {
   }
 
   Future<VehicleEntity> createVehicle() async {
-    return VehicleEntity(id: await _getNextId());
+    return VehicleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyVehicle(int id) async {
@@ -69,7 +69,9 @@ class VehicleRepository with RepositoryMixin {
 
   Future<int> storeVehicle(VehicleEntity vehicle) async {
     var json = vehicle.toJson();
-    final nextId = vehicle.id > 0 ? vehicle.id : await _getNextId();
+    final nextId = vehicle.id > 0
+        ? vehicle.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -87,9 +89,5 @@ class VehicleRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

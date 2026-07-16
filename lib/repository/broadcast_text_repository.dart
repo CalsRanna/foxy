@@ -10,7 +10,7 @@ class BroadcastTextRepository with RepositoryMixin {
     var source = await getBroadcastText(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class BroadcastTextRepository with RepositoryMixin {
   }
 
   Future<BroadcastTextEntity> createBroadcastText() async {
-    return BroadcastTextEntity(id: await _getNextId());
+    return BroadcastTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyBroadcastText(int id) async {
@@ -78,7 +78,7 @@ class BroadcastTextRepository with RepositoryMixin {
 
   Future<int> storeBroadcastText(BroadcastTextEntity text) async {
     var json = text.toJson();
-    final nextId = text.id > 0 ? text.id : await _getNextId();
+    final nextId = text.id > 0 ? text.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -106,9 +106,5 @@ class BroadcastTextRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

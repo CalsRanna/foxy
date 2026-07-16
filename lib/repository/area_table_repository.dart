@@ -15,9 +15,9 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getAreaTable(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
-    json['AreaBit'] = await _getNextAreaBit();
+    json['AreaBit'] = await nextMaxPlusOne(_table, 'AreaBit');
     await laconic.table(_table).insert([json]);
   }
 
@@ -29,8 +29,8 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<AreaTableEntity> createAreaTable() async {
     return AreaTableEntity(
-      id: await _getNextId(),
-      areaBit: await _getNextAreaBit(),
+      id: await nextMaxPlusOne(_table, 'ID'),
+      areaBit: await nextMaxPlusOne(_table, 'AreaBit'),
     );
   }
 
@@ -108,7 +108,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeAreaTable(AreaTableEntity area) async {
     var json = area.toJson();
-    final nextId = area.id > 0 ? area.id : await _getNextId();
+    final nextId = area.id > 0 ? area.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -136,13 +136,5 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextAreaBit() async {
-    return nextMaxPlusOne(_table, 'AreaBit');
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

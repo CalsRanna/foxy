@@ -51,15 +51,8 @@ class NpcVendorRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<int> getNextSlot(int entry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(slot) AS maxSlot'])
-        .where('entry', entry)
-        .first();
-    var maxSlot = (maxResult.toMap()['maxSlot'] ?? -1) as int;
-    return maxSlot + 1;
-  }
+  Future<int> getNextSlot(int entry) =>
+      nextMaxPlusOne(_table, 'slot', where: {'entry': entry}, firstValue: 0);
 
   Future<NpcVendorEntity?> getNpcVendor(
     int entry,

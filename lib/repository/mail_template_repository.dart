@@ -15,7 +15,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final source = await getMailTemplate(id);
     if (source == null) return;
     final json = source.toJson();
-    json['ID'] = await _getNextId();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -24,7 +24,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<MailTemplateEntity> createMailTemplate() async {
-    return MailTemplateEntity(id: await _getNextId());
+    return MailTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyMailTemplate(int id) async {
@@ -84,7 +84,9 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeMailTemplate(MailTemplateEntity template) async {
     final json = template.toJson();
-    final id = template.id > 0 ? template.id : await _getNextId();
+    final id = template.id > 0
+        ? template.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -110,6 +112,4 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }

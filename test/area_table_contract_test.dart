@@ -184,8 +184,14 @@ void main() {
     final source = File(
       'lib/repository/area_table_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('areaBit: await _getNextAreaBit()'));
-    expect(source, contains("json['AreaBit'] = await _getNextAreaBit()"));
+    expect(
+      source,
+      contains("areaBit: await nextMaxPlusOne(_table, 'AreaBit')"),
+    );
+    expect(
+      source,
+      contains("json['AreaBit'] = await nextMaxPlusOne(_table, 'AreaBit')"),
+    );
     expect(source, contains('isAreaBitAvailable'));
   });
 

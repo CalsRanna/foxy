@@ -161,9 +161,12 @@ void main() {
     expect('Expanded('.allMatches(view), hasLength(24));
   });
 
-  test('Repository 统一校验引用、条件数量与所有删除关系', () {
+  test('Repository 保持成就与条件的单表删除边界', () {
     final repository = File(
       'lib/repository/achievement_repository.dart',
+    ).readAsStringSync();
+    final criteriaRepository = File(
+      'lib/repository/achievement_criteria_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
       'lib/page/achievement/achievement_detail_view_model.dart',
@@ -174,11 +177,20 @@ void main() {
     expect(repository, contains("table: 'foxy.dbc_map'"));
     expect(repository, contains("table: 'foxy.dbc_achievement_category'"));
     expect(repository, contains("table: 'foxy.dbc_spell_icon'"));
-    expect(repository, contains(".table('foxy.dbc_achievement_criteria')"));
-    expect(repository, contains(".table('achievement_reward')"));
+    expect(repository, isNot(contains(".table('achievement_reward')")));
+    expect(repository, isNot(contains('acore_characters')));
+    expect(criteriaRepository, isNot(contains('acore_characters')));
+    expect(
+      criteriaRepository,
+      isNot(contains(".table('achievement_criteria_data')")),
+    );
     expect(
       repository,
-      contains(".table('acore_characters.character_achievement')"),
+      contains("laconic.table(_table).where('ID', id).delete()"),
+    );
+    expect(
+      criteriaRepository,
+      contains("laconic.table(_table).where('ID', id).delete()"),
     );
     expect(repository, contains('requireImportedTable: true'));
     expect(repository, contains(".orderBy('ID')"));

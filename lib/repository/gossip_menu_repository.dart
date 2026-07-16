@@ -101,13 +101,7 @@ class GossipMenuRepository with RepositoryMixin {
     return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<int> getNextMenuId() async {
-    final result = await laconic.table(_table).select([
-      'MAX(MenuID) as max_id',
-    ]).first();
-    final maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
-  }
+  Future<int> getNextMenuId() => nextMaxPlusOne(_table, 'MenuID');
 
   Future<void> saveGossipMenu(GossipMenuEntity menu) async {
     if (menu.menuId == 0) {

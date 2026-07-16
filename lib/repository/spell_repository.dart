@@ -15,7 +15,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var source = await getSpell(id);
     if (source == null) return;
     var json = source.toJson();
-    var newId = await _getNextId();
+    var newId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
   }
@@ -28,7 +28,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<SpellEntity> createSpell() async {
-    return SpellEntity(id: await _getNextId());
+    return SpellEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroySpell(int id) async {
@@ -106,7 +106,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> storeSpell(SpellEntity spell) async {
     var json = spell.toJson();
-    final newId = spell.id > 0 ? spell.id : await _getNextId();
+    final newId = spell.id > 0 ? spell.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = newId;
     await laconic.table(_table).insert([json]);
     return newId;
@@ -131,9 +131,5 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

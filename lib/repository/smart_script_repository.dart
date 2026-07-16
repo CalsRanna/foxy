@@ -15,7 +15,11 @@ class SmartScriptRepository with RepositoryMixin {
     var script = await getSmartScript(entryOrGuid, sourceType, id, link);
     if (script == null) return;
     var json = script.toJson();
-    var nextId = await _getNextId(entryOrGuid, sourceType);
+    var nextId = await nextMaxPlusOne(
+      _table,
+      'id',
+      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
+    );
     json['id'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -31,7 +35,11 @@ class SmartScriptRepository with RepositoryMixin {
     int entryOrGuid = 0,
     int sourceType = 0,
   }) async {
-    var nextId = await _getNextId(entryOrGuid, sourceType);
+    var nextId = await nextMaxPlusOne(
+      _table,
+      'id',
+      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
+    );
     return SmartScriptEntity(
       entryOrGuid: entryOrGuid,
       sourceType: sourceType,
@@ -108,8 +116,11 @@ class SmartScriptRepository with RepositoryMixin {
   }
 
   /// 在 (entryorguid, source_type) 范围内取下一 `id`。
-  Future<int> nextIdFor(int entryOrGuid, int sourceType) =>
-      _getNextId(entryOrGuid, sourceType);
+  Future<int> nextIdFor(int entryOrGuid, int sourceType) => nextMaxPlusOne(
+    _table,
+    'id',
+    where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
+  );
 
   Future<void> saveSmartScript(SmartScriptEntity script) async {
     var existing = await getSmartScript(
@@ -172,13 +183,5 @@ class SmartScriptRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId(int entryOrGuid, int sourceType) async {
-    return nextMaxPlusOne(
-      _table,
-      'id',
-      where: {'entryorguid': entryOrGuid, 'source_type': sourceType},
-    );
   }
 }

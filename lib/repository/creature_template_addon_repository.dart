@@ -8,7 +8,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
     var source = await getCreatureTemplateAddon(entry);
     if (source == null) return;
     var json = source.toJson();
-    var nextEntry = await _getNextEntry();
+    var nextEntry = await nextMaxPlusOne(_table, 'entry');
     json['entry'] = nextEntry;
     await laconic.table(_table).insert([json]);
   }
@@ -83,10 +83,6 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
     var json = _validated(addon).toJson();
     json.remove('entry');
     await laconic.table(_table).where('entry', addon.entry).update(json);
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 
   CreatureTemplateAddonEntity _validated(CreatureTemplateAddonEntity addon) {

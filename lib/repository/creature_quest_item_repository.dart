@@ -76,15 +76,8 @@ class CreatureQuestItemRepository with RepositoryMixin {
     return CreatureQuestItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> getNextIdx(int creatureEntry) async {
-    var maxResult = await laconic
-        .table(_table)
-        .select(['MAX(Idx) AS maxIdx'])
-        .where('CreatureEntry', creatureEntry)
-        .first();
-    var maxIdx = (maxResult.toMap()['maxIdx'] ?? 0) as int;
-    return maxIdx + 1;
-  }
+  Future<int> getNextIdx(int creatureEntry) =>
+      nextMaxPlusOne(_table, 'Idx', where: {'CreatureEntry': creatureEntry});
 
   Future<void> saveCreatureQuestItem(CreatureQuestItemEntity questItem) async {
     var existing = await getCreatureQuestItem(

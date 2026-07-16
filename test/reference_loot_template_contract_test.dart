@@ -163,8 +163,20 @@ void main() {
     expect(source, contains(".table(LootTableType.reference.tableName)"));
     expect(source, contains(".where('Entry', loot.reference.abs())"));
     expect(source, contains("builder = builder.groupBy('Entry')"));
-    expect(source, contains('if (tableType == LootTableType.reference)'));
+    expect(source, contains('tableType == LootTableType.reference'));
     expect(source, contains("nextMaxPlusOne(_table, 'Entry')"));
+  });
+
+  test('Repository 复制行时保留 Reference 并复用引用校验写入路径', () {
+    final source = File(
+      'lib/repository/loot_template_repository.dart',
+    ).readAsStringSync();
+    expect(
+      source,
+      contains('source.copyWith(item: await getNextItemId(entry))'),
+    );
+    expect(source, contains('await storeLootTemplate(copied);'));
+    expect(source, isNot(contains("json['Reference'] = nextItem")));
   });
 
   test('详情表单按字段语义使用 Picker/Flags 且每行四列等宽', () {

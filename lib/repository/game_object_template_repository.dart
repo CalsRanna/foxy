@@ -12,7 +12,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     var template = await getGameObjectTemplate(entry);
     if (template == null) return;
     var json = template.toJson();
-    var newEntry = await _getNextEntry();
+    var newEntry = await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
   }
@@ -42,7 +42,9 @@ class GameObjectTemplateRepository with RepositoryMixin {
   }
 
   Future<GameObjectTemplateEntity> createGameObjectTemplate() async {
-    return GameObjectTemplateEntity(entry: await _getNextEntry());
+    return GameObjectTemplateEntity(
+      entry: await nextMaxPlusOne(_table, 'entry'),
+    );
   }
 
   Future<void> destroyGameObjectTemplate(int entry) async {
@@ -137,7 +139,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     var json = template.toJson();
     final newEntry = template.entry > 0
         ? template.entry
-        : await _getNextEntry();
+        : await nextMaxPlusOne(_table, 'entry');
     json['entry'] = newEntry;
     await laconic.table(_table).insert([json]);
     return newEntry;
@@ -175,9 +177,5 @@ class GameObjectTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  Future<int> _getNextEntry() async {
-    return nextMaxPlusOne(_table, 'entry');
   }
 }

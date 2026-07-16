@@ -11,7 +11,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     var source = await getCreatureDisplayInfo(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -34,7 +34,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<CreatureDisplayInfoEntity> createCreatureDisplayInfo() async {
-    return CreatureDisplayInfoEntity(id: await _getNextId());
+    return CreatureDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyCreatureDisplayInfo(int id) async {
@@ -93,7 +93,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
 
   Future<int> storeCreatureDisplayInfo(CreatureDisplayInfoEntity info) async {
     var json = info.toJson();
-    final nextId = info.id > 0 ? info.id : await _getNextId();
+    final nextId = info.id > 0 ? info.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -121,10 +121,6 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 
   QueryBuilder _joinModelData(QueryBuilder builder) {

@@ -10,7 +10,7 @@ class NpcTextRepository with RepositoryMixin {
     var source = await getNpcText(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -22,7 +22,7 @@ class NpcTextRepository with RepositoryMixin {
   }
 
   Future<NpcTextEntity> createNpcText() async {
-    return NpcTextEntity(id: await _getNextId());
+    return NpcTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyNpcText(int id) async {
@@ -70,7 +70,9 @@ class NpcTextRepository with RepositoryMixin {
 
   Future<int> storeNpcText(NpcTextEntity npcText) async {
     var json = npcText.toJson();
-    final nextId = npcText.id > 0 ? npcText.id : await _getNextId();
+    final nextId = npcText.id > 0
+        ? npcText.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -95,9 +97,5 @@ class NpcTextRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

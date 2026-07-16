@@ -16,7 +16,7 @@ class ItemRandomSuffixRepository
     var source = await getItemRandomSuffix(id);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextId();
+    var nextId = await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -30,7 +30,7 @@ class ItemRandomSuffixRepository
   }
 
   Future<ItemRandomSuffixEntity> createItemRandomSuffix() async {
-    return ItemRandomSuffixEntity(id: await _getNextId());
+    return ItemRandomSuffixEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemRandomSuffix(int id) async {
@@ -92,7 +92,9 @@ class ItemRandomSuffixRepository
 
   Future<int> storeItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
     var json = suffix.toJson();
-    final nextId = suffix.id > 0 ? suffix.id : await _getNextId();
+    final nextId = suffix.id > 0
+        ? suffix.id
+        : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -120,9 +122,5 @@ class ItemRandomSuffixRepository
       );
     }
     return builder;
-  }
-
-  Future<int> _getNextId() async {
-    return nextMaxPlusOne(_table, 'ID');
   }
 }

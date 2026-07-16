@@ -10,7 +10,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     var source = await getCreatureModelInfo(displayId);
     if (source == null) return;
     var json = source.toJson();
-    var nextId = await _getNextDisplayId();
+    var nextId = await nextMaxPlusOne(_table, 'DisplayID');
     json['DisplayID'] = nextId;
     await laconic.table(_table).insert([json]);
   }
@@ -85,7 +85,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
 
   Future<int> storeCreatureModelInfo(CreatureModelInfoEntity info) async {
     var json = info.toJson();
-    var nextId = await _getNextDisplayId();
+    var nextId = await nextMaxPlusOne(_table, 'DisplayID');
     json['DisplayID'] = nextId;
     await laconic.table(_table).insert([json]);
     return nextId;
@@ -106,13 +106,5 @@ class CreatureModelInfoRepository with RepositoryMixin {
       builder = builder.where('DisplayID', filter.id);
     }
     return builder;
-  }
-
-  Future<int> _getNextDisplayId() async {
-    var result = await laconic.table(_table).select([
-      'MAX(DisplayID) as max_id',
-    ]).first();
-    var maxId = result.toMap()['max_id'] as int?;
-    return (maxId ?? 0) + 1;
   }
 }

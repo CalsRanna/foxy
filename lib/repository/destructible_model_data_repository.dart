@@ -9,7 +9,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   Future<void> copyDestructibleModelData(int id) async {
     final source = await getDestructibleModelData(id);
     if (source == null) return;
-    final json = source.toJson()..['ID'] = await _getNextId();
+    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
     await laconic.table(_table).insert([json]);
   }
 
@@ -18,7 +18,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   }) => _applyFilter(laconic.table(_table), filter).count();
 
   Future<DestructibleModelDataEntity> createDestructibleModelData() async =>
-      DestructibleModelDataEntity(id: await _getNextId());
+      DestructibleModelDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
   Future<void> destroyDestructibleModelData(int id) async {
     await laconic.table(_table).where('ID', id).delete();
@@ -71,7 +71,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
     DestructibleModelDataEntity entity,
   ) async {
     final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await _getNextId();
+    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
     json['ID'] = id;
     await laconic.table(_table).insert([json]);
     return id;
@@ -93,6 +93,4 @@ class DestructibleModelDataRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 }
