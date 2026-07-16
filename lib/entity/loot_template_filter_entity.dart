@@ -11,14 +11,14 @@ class LootTemplateFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name};
-  }
-
   LootTemplateFilterEntity copyWith({String? entry, String? name}) {
     return LootTemplateFilterEntity(
       entry: entry ?? this.entry,
       name: name ?? this.name,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'name': name};
   }
 }

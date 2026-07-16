@@ -7,11 +7,11 @@ class VehicleFilterEntity {
     return VehicleFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   VehicleFilterEntity copyWith({String? id}) {
     return VehicleFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

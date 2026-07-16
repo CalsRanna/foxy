@@ -7,11 +7,11 @@ class LockFilterEntity {
     return LockFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   LockFilterEntity copyWith({String? id}) {
     return LockFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

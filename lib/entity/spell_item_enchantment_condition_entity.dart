@@ -1,3 +1,15 @@
+class BriefSpellItemEnchantmentConditionEntity {
+  final int id;
+
+  const BriefSpellItemEnchantmentConditionEntity({this.id = 0});
+
+  factory BriefSpellItemEnchantmentConditionEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefSpellItemEnchantmentConditionEntity(id: json['ID'] ?? 0);
+  }
+}
+
 class SpellItemEnchantmentConditionEntity {
   final int id;
   final int ltOperandType0;
@@ -103,40 +115,6 @@ class SpellItemEnchantmentConditionEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Lt_operandType0': ltOperandType0,
-    'Lt_operandType1': ltOperandType1,
-    'Lt_operandType2': ltOperandType2,
-    'Lt_operandType3': ltOperandType3,
-    'Lt_operandType4': ltOperandType4,
-    'Lt_operand0': ltOperand0,
-    'Lt_operand1': ltOperand1,
-    'Lt_operand2': ltOperand2,
-    'Lt_operand3': ltOperand3,
-    'Lt_operand4': ltOperand4,
-    'Operator0': operator0,
-    'Operator1': operator1,
-    'Operator2': operator2,
-    'Operator3': operator3,
-    'Operator4': operator4,
-    'Rt_operandType0': rtOperandType0,
-    'Rt_operandType1': rtOperandType1,
-    'Rt_operandType2': rtOperandType2,
-    'Rt_operandType3': rtOperandType3,
-    'Rt_operandType4': rtOperandType4,
-    'Rt_operand0': rtOperand0,
-    'Rt_operand1': rtOperand1,
-    'Rt_operand2': rtOperand2,
-    'Rt_operand3': rtOperand3,
-    'Rt_operand4': rtOperand4,
-    'Logic0': logic0,
-    'Logic1': logic1,
-    'Logic2': logic2,
-    'Logic3': logic3,
-    'Logic4': logic4,
-  };
-
   SpellItemEnchantmentConditionEntity copyWith({
     int? id,
     int? ltOperandType0,
@@ -204,16 +182,38 @@ class SpellItemEnchantmentConditionEntity {
       logic4: logic4 ?? this.logic4,
     );
   }
-}
 
-class BriefSpellItemEnchantmentConditionEntity {
-  final int id;
-
-  const BriefSpellItemEnchantmentConditionEntity({this.id = 0});
-
-  factory BriefSpellItemEnchantmentConditionEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefSpellItemEnchantmentConditionEntity(id: json['ID'] ?? 0);
-  }
+  Map<String, dynamic> toJson() => {
+    'ID': id,
+    'Lt_operandType0': ltOperandType0,
+    'Lt_operandType1': ltOperandType1,
+    'Lt_operandType2': ltOperandType2,
+    'Lt_operandType3': ltOperandType3,
+    'Lt_operandType4': ltOperandType4,
+    'Lt_operand0': ltOperand0,
+    'Lt_operand1': ltOperand1,
+    'Lt_operand2': ltOperand2,
+    'Lt_operand3': ltOperand3,
+    'Lt_operand4': ltOperand4,
+    'Operator0': operator0,
+    'Operator1': operator1,
+    'Operator2': operator2,
+    'Operator3': operator3,
+    'Operator4': operator4,
+    'Rt_operandType0': rtOperandType0,
+    'Rt_operandType1': rtOperandType1,
+    'Rt_operandType2': rtOperandType2,
+    'Rt_operandType3': rtOperandType3,
+    'Rt_operandType4': rtOperandType4,
+    'Rt_operand0': rtOperand0,
+    'Rt_operand1': rtOperand1,
+    'Rt_operand2': rtOperand2,
+    'Rt_operand3': rtOperand3,
+    'Rt_operand4': rtOperand4,
+    'Logic0': logic0,
+    'Logic1': logic1,
+    'Logic2': logic2,
+    'Logic3': logic3,
+    'Logic4': logic4,
+  };
 }

@@ -1,3 +1,40 @@
+/// 广播文本列表/Picker 展示模型
+class BriefBroadcastTextEntity {
+  final int id;
+  final String maleText;
+  final int languageId;
+
+  const BriefBroadcastTextEntity({
+    this.id = 0,
+    this.maleText = '',
+    this.languageId = 0,
+  });
+
+  factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefBroadcastTextEntity(
+      id: json['ID'] ?? 0,
+      maleText: json['MaleText'] ?? json['display_text'] ?? '',
+      languageId: json['LanguageID'] ?? 0,
+    );
+  }
+
+  BriefBroadcastTextEntity copyWith({
+    int? id,
+    String? maleText,
+    int? languageId,
+  }) {
+    return BriefBroadcastTextEntity(
+      id: id ?? this.id,
+      maleText: maleText ?? this.maleText,
+      languageId: languageId ?? this.languageId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'MaleText': maleText, 'LanguageID': languageId};
+  }
+}
+
 class BroadcastTextEntity {
   final int id;
   final int languageId;
@@ -25,15 +62,6 @@ class BroadcastTextEntity {
     return femaleText;
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'LanguageID': languageId,
-      'MaleText': maleText,
-      'FemaleText': femaleText,
-    };
-  }
-
   BroadcastTextEntity copyWith({
     int? id,
     int? languageId,
@@ -47,41 +75,13 @@ class BroadcastTextEntity {
       femaleText: femaleText ?? this.femaleText,
     );
   }
-}
-
-/// 广播文本列表/Picker 展示模型
-class BriefBroadcastTextEntity {
-  final int id;
-  final String maleText;
-  final int languageId;
-
-  const BriefBroadcastTextEntity({
-    this.id = 0,
-    this.maleText = '',
-    this.languageId = 0,
-  });
-
-  factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefBroadcastTextEntity(
-      id: json['ID'] ?? 0,
-      maleText: json['MaleText'] ?? json['display_text'] ?? '',
-      languageId: json['LanguageID'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'MaleText': maleText, 'LanguageID': languageId};
-  }
-
-  BriefBroadcastTextEntity copyWith({
-    int? id,
-    String? maleText,
-    int? languageId,
-  }) {
-    return BriefBroadcastTextEntity(
-      id: id ?? this.id,
-      maleText: maleText ?? this.maleText,
-      languageId: languageId ?? this.languageId,
-    );
+    return {
+      'ID': id,
+      'LanguageID': languageId,
+      'MaleText': maleText,
+      'FemaleText': femaleText,
+    };
   }
 }

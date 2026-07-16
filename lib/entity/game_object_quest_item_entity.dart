@@ -58,13 +58,6 @@ class GameObjectQuestItemEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'GameObjectEntry': gameObjectEntry,
-    'Idx': idx,
-    'ItemId': itemId,
-    'VerifiedBuild': verifiedBuild,
-  };
-
   GameObjectQuestItemEntity copyWith({
     int? gameObjectEntry,
     int? idx,
@@ -78,4 +71,11 @@ class GameObjectQuestItemEntity {
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'GameObjectEntry': gameObjectEntry,
+    'Idx': idx,
+    'ItemId': itemId,
+    'VerifiedBuild': verifiedBuild,
+  };
 }

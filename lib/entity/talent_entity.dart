@@ -1,3 +1,55 @@
+class BriefTalentEntity {
+  final int id;
+  final int tabId;
+  final int tierId;
+  final int columnIndex;
+  final int spellRank0;
+
+  const BriefTalentEntity({
+    this.id = 0,
+    this.tabId = 0,
+    this.tierId = 0,
+    this.columnIndex = 0,
+    this.spellRank0 = 0,
+  });
+
+  factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
+    return BriefTalentEntity(
+      id: json['ID'] ?? 0,
+      tabId: json['TabID'] ?? 0,
+      tierId: json['TierID'] ?? 0,
+      columnIndex: json['ColumnIndex'] ?? 0,
+      spellRank0: json['SpellRank0'] ?? 0,
+    );
+  }
+
+  BriefTalentEntity copyWith({
+    int? id,
+    int? tabId,
+    int? tierId,
+    int? columnIndex,
+    int? spellRank0,
+  }) {
+    return BriefTalentEntity(
+      id: id ?? this.id,
+      tabId: tabId ?? this.tabId,
+      tierId: tierId ?? this.tierId,
+      columnIndex: columnIndex ?? this.columnIndex,
+      spellRank0: spellRank0 ?? this.spellRank0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'TabID': tabId,
+      'TierID': tierId,
+      'ColumnIndex': columnIndex,
+      'SpellRank0': spellRank0,
+    };
+  }
+}
+
 class TalentEntity {
   final int id;
   final int tabId;
@@ -77,34 +129,6 @@ class TalentEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'TabID': tabId,
-      'TierID': tierId,
-      'ColumnIndex': columnIndex,
-      'SpellRank0': spellRank0,
-      'SpellRank1': spellRank1,
-      'SpellRank2': spellRank2,
-      'SpellRank3': spellRank3,
-      'SpellRank4': spellRank4,
-      'SpellRank5': spellRank5,
-      'SpellRank6': spellRank6,
-      'SpellRank7': spellRank7,
-      'SpellRank8': spellRank8,
-      'PrereqTalent0': prereqTalent0,
-      'PrereqTalent1': prereqTalent1,
-      'PrereqTalent2': prereqTalent2,
-      'PrereqRank0': prereqRank0,
-      'PrereqRank1': prereqRank1,
-      'PrereqRank2': prereqRank2,
-      'Flags': flags,
-      'RequiredSpellID': requiredSpellId,
-      'CategoryMask0': categoryMask0,
-      'CategoryMask1': categoryMask1,
-    };
-  }
-
   TalentEntity copyWith({
     int? id,
     int? tabId,
@@ -156,32 +180,6 @@ class TalentEntity {
       categoryMask1: categoryMask1 ?? this.categoryMask1,
     );
   }
-}
-
-class BriefTalentEntity {
-  final int id;
-  final int tabId;
-  final int tierId;
-  final int columnIndex;
-  final int spellRank0;
-
-  const BriefTalentEntity({
-    this.id = 0,
-    this.tabId = 0,
-    this.tierId = 0,
-    this.columnIndex = 0,
-    this.spellRank0 = 0,
-  });
-
-  factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
-    return BriefTalentEntity(
-      id: json['ID'] ?? 0,
-      tabId: json['TabID'] ?? 0,
-      tierId: json['TierID'] ?? 0,
-      columnIndex: json['ColumnIndex'] ?? 0,
-      spellRank0: json['SpellRank0'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -190,22 +188,24 @@ class BriefTalentEntity {
       'TierID': tierId,
       'ColumnIndex': columnIndex,
       'SpellRank0': spellRank0,
+      'SpellRank1': spellRank1,
+      'SpellRank2': spellRank2,
+      'SpellRank3': spellRank3,
+      'SpellRank4': spellRank4,
+      'SpellRank5': spellRank5,
+      'SpellRank6': spellRank6,
+      'SpellRank7': spellRank7,
+      'SpellRank8': spellRank8,
+      'PrereqTalent0': prereqTalent0,
+      'PrereqTalent1': prereqTalent1,
+      'PrereqTalent2': prereqTalent2,
+      'PrereqRank0': prereqRank0,
+      'PrereqRank1': prereqRank1,
+      'PrereqRank2': prereqRank2,
+      'Flags': flags,
+      'RequiredSpellID': requiredSpellId,
+      'CategoryMask0': categoryMask0,
+      'CategoryMask1': categoryMask1,
     };
-  }
-
-  BriefTalentEntity copyWith({
-    int? id,
-    int? tabId,
-    int? tierId,
-    int? columnIndex,
-    int? spellRank0,
-  }) {
-    return BriefTalentEntity(
-      id: id ?? this.id,
-      tabId: tabId ?? this.tabId,
-      tierId: tierId ?? this.tierId,
-      columnIndex: columnIndex ?? this.columnIndex,
-      spellRank0: spellRank0 ?? this.spellRank0,
-    );
   }
 }

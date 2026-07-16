@@ -12,14 +12,14 @@ class SpellGroupEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'spell_id': spellId};
-  }
-
   SpellGroupEntity copyWith({int? id, int? spellId}) {
     return SpellGroupEntity(
       id: id ?? this.id,
       spellId: spellId ?? this.spellId,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'spell_id': spellId};
   }
 }

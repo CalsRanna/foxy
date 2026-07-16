@@ -194,73 +194,6 @@ class AchievementEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Faction': faction,
-      'Instance_ID': instanceId,
-      'Supercedes': supercedes,
-      'Title_lang_enUS': titleLangEnUS,
-      'Title_lang_koKR': titleLangKoKR,
-      'Title_lang_frFR': titleLangFrFR,
-      'Title_lang_deDE': titleLangDeDE,
-      'Title_lang_zhCN': titleLangZhCN,
-      'Title_lang_zhTW': titleLangZhTW,
-      'Title_lang_esES': titleLangEsES,
-      'Title_lang_esMX': titleLangEsMX,
-      'Title_lang_ruRU': titleLangRuRU,
-      'Title_lang_jaJP': titleLangJaJP,
-      'Title_lang_ptPT': titleLangPtPT,
-      'Title_lang_ptBR': titleLangPtBR,
-      'Title_lang_itIT': titleLangItIT,
-      'Title_lang_unk1': titleLangUnk1,
-      'Title_lang_unk2': titleLangUnk2,
-      'Title_lang_unk3': titleLangUnk3,
-      'Title_lang_Flags': titleLangFlags,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-      'Category': category,
-      'Points': points,
-      'Ui_order': uiOrder,
-      'Flags': flags,
-      'IconID': iconId,
-      'Reward_lang_enUS': rewardLangEnUS,
-      'Reward_lang_koKR': rewardLangKoKR,
-      'Reward_lang_frFR': rewardLangFrFR,
-      'Reward_lang_deDE': rewardLangDeDE,
-      'Reward_lang_zhCN': rewardLangZhCN,
-      'Reward_lang_zhTW': rewardLangZhTW,
-      'Reward_lang_esES': rewardLangEsES,
-      'Reward_lang_esMX': rewardLangEsMX,
-      'Reward_lang_ruRU': rewardLangRuRU,
-      'Reward_lang_jaJP': rewardLangJaJP,
-      'Reward_lang_ptPT': rewardLangPtPT,
-      'Reward_lang_ptBR': rewardLangPtBR,
-      'Reward_lang_itIT': rewardLangItIT,
-      'Reward_lang_unk1': rewardLangUnk1,
-      'Reward_lang_unk2': rewardLangUnk2,
-      'Reward_lang_unk3': rewardLangUnk3,
-      'Reward_lang_Flags': rewardLangFlags,
-      'Minimum_criteria': minimumCriteria,
-      'Shares_criteria': sharesCriteria,
-    };
-  }
-
   AchievementEntity copyWith({
     int? id,
     int? faction,
@@ -390,6 +323,73 @@ class AchievementEntity {
       sharesCriteria: sharesCriteria ?? this.sharesCriteria,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Faction': faction,
+      'Instance_ID': instanceId,
+      'Supercedes': supercedes,
+      'Title_lang_enUS': titleLangEnUS,
+      'Title_lang_koKR': titleLangKoKR,
+      'Title_lang_frFR': titleLangFrFR,
+      'Title_lang_deDE': titleLangDeDE,
+      'Title_lang_zhCN': titleLangZhCN,
+      'Title_lang_zhTW': titleLangZhTW,
+      'Title_lang_esES': titleLangEsES,
+      'Title_lang_esMX': titleLangEsMX,
+      'Title_lang_ruRU': titleLangRuRU,
+      'Title_lang_jaJP': titleLangJaJP,
+      'Title_lang_ptPT': titleLangPtPT,
+      'Title_lang_ptBR': titleLangPtBR,
+      'Title_lang_itIT': titleLangItIT,
+      'Title_lang_unk1': titleLangUnk1,
+      'Title_lang_unk2': titleLangUnk2,
+      'Title_lang_unk3': titleLangUnk3,
+      'Title_lang_Flags': titleLangFlags,
+      'Description_lang_enUS': descriptionLangEnUS,
+      'Description_lang_koKR': descriptionLangKoKR,
+      'Description_lang_frFR': descriptionLangFrFR,
+      'Description_lang_deDE': descriptionLangDeDE,
+      'Description_lang_zhCN': descriptionLangZhCN,
+      'Description_lang_zhTW': descriptionLangZhTW,
+      'Description_lang_esES': descriptionLangEsES,
+      'Description_lang_esMX': descriptionLangEsMX,
+      'Description_lang_ruRU': descriptionLangRuRU,
+      'Description_lang_jaJP': descriptionLangJaJP,
+      'Description_lang_ptPT': descriptionLangPtPT,
+      'Description_lang_ptBR': descriptionLangPtBR,
+      'Description_lang_itIT': descriptionLangItIT,
+      'Description_lang_unk1': descriptionLangUnk1,
+      'Description_lang_unk2': descriptionLangUnk2,
+      'Description_lang_unk3': descriptionLangUnk3,
+      'Description_lang_Flags': descriptionLangFlags,
+      'Category': category,
+      'Points': points,
+      'Ui_order': uiOrder,
+      'Flags': flags,
+      'IconID': iconId,
+      'Reward_lang_enUS': rewardLangEnUS,
+      'Reward_lang_koKR': rewardLangKoKR,
+      'Reward_lang_frFR': rewardLangFrFR,
+      'Reward_lang_deDE': rewardLangDeDE,
+      'Reward_lang_zhCN': rewardLangZhCN,
+      'Reward_lang_zhTW': rewardLangZhTW,
+      'Reward_lang_esES': rewardLangEsES,
+      'Reward_lang_esMX': rewardLangEsMX,
+      'Reward_lang_ruRU': rewardLangRuRU,
+      'Reward_lang_jaJP': rewardLangJaJP,
+      'Reward_lang_ptPT': rewardLangPtPT,
+      'Reward_lang_ptBR': rewardLangPtBR,
+      'Reward_lang_itIT': rewardLangItIT,
+      'Reward_lang_unk1': rewardLangUnk1,
+      'Reward_lang_unk2': rewardLangUnk2,
+      'Reward_lang_unk3': rewardLangUnk3,
+      'Reward_lang_Flags': rewardLangFlags,
+      'Minimum_criteria': minimumCriteria,
+      'Shares_criteria': sharesCriteria,
+    };
+  }
 }
 
 class BriefAchievementEntity {
@@ -414,15 +414,6 @@ class BriefAchievementEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Title_lang_zhCN': titleLangZhCN,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Reward_lang_zhCN': rewardLangZhCN,
-    };
-  }
-
   BriefAchievementEntity copyWith({
     int? id,
     String? titleLangZhCN,
@@ -435,5 +426,14 @@ class BriefAchievementEntity {
       descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
       rewardLangZhCN: rewardLangZhCN ?? this.rewardLangZhCN,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Title_lang_zhCN': titleLangZhCN,
+      'Description_lang_zhCN': descriptionLangZhCN,
+      'Reward_lang_zhCN': rewardLangZhCN,
+    };
   }
 }

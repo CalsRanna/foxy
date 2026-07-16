@@ -117,47 +117,6 @@ class AreaTableEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ContinentID': continentId,
-      'ParentAreaID': parentAreaId,
-      'AreaBit': areaBit,
-      'Flags': flags,
-      'SoundProviderPref': soundProviderPref,
-      'SoundProviderPrefUnderwater': soundProviderPrefUnderwater,
-      'AmbienceID': ambienceId,
-      'ZoneMusic': zoneMusic,
-      'IntroSound': introSound,
-      'ExplorationLevel': explorationLevel,
-      'AreaName_lang_enUS': areaNameLangEnUS,
-      'AreaName_lang_koKR': areaNameLangKoKR,
-      'AreaName_lang_frFR': areaNameLangFrFR,
-      'AreaName_lang_deDE': areaNameLangDeDE,
-      'AreaName_lang_zhCN': areaNameLangZhCN,
-      'AreaName_lang_zhTW': areaNameLangZhTW,
-      'AreaName_lang_esES': areaNameLangEsES,
-      'AreaName_lang_esMX': areaNameLangEsMX,
-      'AreaName_lang_ruRU': areaNameLangRuRU,
-      'AreaName_lang_jaJP': areaNameLangJaJP,
-      'AreaName_lang_ptPT': areaNameLangPtPT,
-      'AreaName_lang_ptBR': areaNameLangPtBR,
-      'AreaName_lang_itIT': areaNameLangItIT,
-      'AreaName_lang_unk1': areaNameLangUnk1,
-      'AreaName_lang_unk2': areaNameLangUnk2,
-      'AreaName_lang_unk3': areaNameLangUnk3,
-      'AreaName_lang_Flags': areaNameLangFlags,
-      'FactionGroupMask': factionGroupMask,
-      'LiquidTypeID0': liquidTypeId0,
-      'LiquidTypeID1': liquidTypeId1,
-      'LiquidTypeID2': liquidTypeId2,
-      'LiquidTypeID3': liquidTypeId3,
-      'MinElevation': minElevation,
-      'Ambient_multiplier': ambientMultiplier,
-      'LightID': lightId,
-    };
-  }
-
   AreaTableEntity copyWith({
     int? id,
     int? continentId,
@@ -236,6 +195,47 @@ class AreaTableEntity {
       lightId: lightId ?? this.lightId,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'ContinentID': continentId,
+      'ParentAreaID': parentAreaId,
+      'AreaBit': areaBit,
+      'Flags': flags,
+      'SoundProviderPref': soundProviderPref,
+      'SoundProviderPrefUnderwater': soundProviderPrefUnderwater,
+      'AmbienceID': ambienceId,
+      'ZoneMusic': zoneMusic,
+      'IntroSound': introSound,
+      'ExplorationLevel': explorationLevel,
+      'AreaName_lang_enUS': areaNameLangEnUS,
+      'AreaName_lang_koKR': areaNameLangKoKR,
+      'AreaName_lang_frFR': areaNameLangFrFR,
+      'AreaName_lang_deDE': areaNameLangDeDE,
+      'AreaName_lang_zhCN': areaNameLangZhCN,
+      'AreaName_lang_zhTW': areaNameLangZhTW,
+      'AreaName_lang_esES': areaNameLangEsES,
+      'AreaName_lang_esMX': areaNameLangEsMX,
+      'AreaName_lang_ruRU': areaNameLangRuRU,
+      'AreaName_lang_jaJP': areaNameLangJaJP,
+      'AreaName_lang_ptPT': areaNameLangPtPT,
+      'AreaName_lang_ptBR': areaNameLangPtBR,
+      'AreaName_lang_itIT': areaNameLangItIT,
+      'AreaName_lang_unk1': areaNameLangUnk1,
+      'AreaName_lang_unk2': areaNameLangUnk2,
+      'AreaName_lang_unk3': areaNameLangUnk3,
+      'AreaName_lang_Flags': areaNameLangFlags,
+      'FactionGroupMask': factionGroupMask,
+      'LiquidTypeID0': liquidTypeId0,
+      'LiquidTypeID1': liquidTypeId1,
+      'LiquidTypeID2': liquidTypeId2,
+      'LiquidTypeID3': liquidTypeId3,
+      'MinElevation': minElevation,
+      'Ambient_multiplier': ambientMultiplier,
+      'LightID': lightId,
+    };
+  }
 }
 
 class BriefAreaTableEntity {
@@ -266,17 +266,6 @@ class BriefAreaTableEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'AreaName_lang_zhCN': areaNameLangZhCN,
-      'ContinentID': continentId,
-      'MinElevation': minElevation,
-      'ZoneMusic': zoneMusic,
-      'ExplorationLevel': explorationLevel,
-    };
-  }
-
   BriefAreaTableEntity copyWith({
     int? id,
     String? areaNameLangZhCN,
@@ -293,5 +282,16 @@ class BriefAreaTableEntity {
       zoneMusic: zoneMusic ?? this.zoneMusic,
       explorationLevel: explorationLevel ?? this.explorationLevel,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'AreaName_lang_zhCN': areaNameLangZhCN,
+      'ContinentID': continentId,
+      'MinElevation': minElevation,
+      'ZoneMusic': zoneMusic,
+      'ExplorationLevel': explorationLevel,
+    };
   }
 }

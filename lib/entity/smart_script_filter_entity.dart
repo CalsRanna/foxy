@@ -4,8 +4,11 @@ class SmartScriptFilterEntity {
 
   const SmartScriptFilterEntity({this.entryOrGuid = '', this.comment = ''});
 
-  Map<String, dynamic> toJson() {
-    return {'entryOrGuid': entryOrGuid, 'comment': comment};
+  factory SmartScriptFilterEntity.fromJson(Map<String, dynamic> json) {
+    return SmartScriptFilterEntity(
+      entryOrGuid: json['entryOrGuid'] ?? '',
+      comment: json['comment'] ?? '',
+    );
   }
 
   SmartScriptFilterEntity copyWith({String? entryOrGuid, String? comment}) {
@@ -15,10 +18,7 @@ class SmartScriptFilterEntity {
     );
   }
 
-  factory SmartScriptFilterEntity.fromJson(Map<String, dynamic> json) {
-    return SmartScriptFilterEntity(
-      entryOrGuid: json['entryOrGuid'] ?? '',
-      comment: json['comment'] ?? '',
-    );
+  Map<String, dynamic> toJson() {
+    return {'entryOrGuid': entryOrGuid, 'comment': comment};
   }
 }

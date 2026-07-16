@@ -1,3 +1,39 @@
+class BriefCurrencyCategoryEntity {
+  final int id;
+  final int flags;
+  final String nameLangZhCN;
+
+  const BriefCurrencyCategoryEntity({
+    this.id = 0,
+    this.flags = 0,
+    this.nameLangZhCN = '',
+  });
+
+  factory BriefCurrencyCategoryEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCurrencyCategoryEntity(
+      id: json['ID'] ?? 0,
+      flags: json['Flags'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefCurrencyCategoryEntity copyWith({
+    int? id,
+    int? flags,
+    String? nameLangZhCN,
+  }) {
+    return BriefCurrencyCategoryEntity(
+      id: id ?? this.id,
+      flags: flags ?? this.flags,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Flags': flags, 'Name_lang_zhCN': nameLangZhCN};
+  }
+}
+
 class CurrencyCategoryEntity {
   final int id;
   final int flags;
@@ -65,30 +101,6 @@ class CurrencyCategoryEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-    };
-  }
-
   CurrencyCategoryEntity copyWith({
     int? id,
     int? flags,
@@ -132,40 +144,28 @@ class CurrencyCategoryEntity {
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
     );
   }
-}
-
-class BriefCurrencyCategoryEntity {
-  final int id;
-  final int flags;
-  final String nameLangZhCN;
-
-  const BriefCurrencyCategoryEntity({
-    this.id = 0,
-    this.flags = 0,
-    this.nameLangZhCN = '',
-  });
-
-  factory BriefCurrencyCategoryEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCurrencyCategoryEntity(
-      id: json['ID'] ?? 0,
-      flags: json['Flags'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Flags': flags, 'Name_lang_zhCN': nameLangZhCN};
-  }
-
-  BriefCurrencyCategoryEntity copyWith({
-    int? id,
-    int? flags,
-    String? nameLangZhCN,
-  }) {
-    return BriefCurrencyCategoryEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-    );
+    return {
+      'ID': id,
+      'Flags': flags,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+    };
   }
 }

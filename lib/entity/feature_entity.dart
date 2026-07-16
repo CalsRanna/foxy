@@ -41,20 +41,6 @@ class FeatureEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'icon': icon,
-      'router_menu': routerMenu,
-      'category': category,
-      'is_pinned': isPinned ? 1 : 0,
-      'is_favorite': isFavorite ? 1 : 0,
-      'sort_order': sortOrder,
-    };
-  }
-
   FeatureEntity copyWith({
     int? id,
     String? name,
@@ -81,5 +67,19 @@ class FeatureEntity {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'icon': icon,
+      'router_menu': routerMenu,
+      'category': category,
+      'is_pinned': isPinned ? 1 : 0,
+      'is_favorite': isFavorite ? 1 : 0,
+      'sort_order': sortOrder,
+    };
   }
 }

@@ -8,9 +8,6 @@ class CreatureQuestItemEntity {
   final int itemQuality;
   final String itemIcon;
 
-  String get displayName =>
-      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
-
   const CreatureQuestItemEntity({
     this.creatureEntry = 0,
     this.idx = 0,
@@ -35,14 +32,8 @@ class CreatureQuestItemEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureEntry': creatureEntry,
-      'Idx': idx,
-      'ItemId': itemId,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 
   CreatureQuestItemEntity copyWith({
     int? creatureEntry,
@@ -64,5 +55,14 @@ class CreatureQuestItemEntity {
       itemQuality: itemQuality ?? this.itemQuality,
       itemIcon: itemIcon ?? this.itemIcon,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'CreatureEntry': creatureEntry,
+      'Idx': idx,
+      'ItemId': itemId,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

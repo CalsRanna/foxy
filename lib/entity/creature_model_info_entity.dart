@@ -1,3 +1,56 @@
+/// 生物模型信息列表/Picker 展示模型
+class BriefCreatureModelInfoEntity {
+  final int displayId;
+  final double boundingRadius;
+  final double combatReach;
+  final int gender;
+  final int displayIdOtherGender;
+
+  const BriefCreatureModelInfoEntity({
+    this.displayId = 0,
+    this.boundingRadius = 0.0,
+    this.combatReach = 0.0,
+    this.gender = 0,
+    this.displayIdOtherGender = 0,
+  });
+
+  factory BriefCreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureModelInfoEntity(
+      displayId: json['DisplayID'] ?? 0,
+      boundingRadius: (json['BoundingRadius'] ?? 0.0),
+      combatReach: (json['CombatReach'] ?? 0.0),
+      gender: json['Gender'] ?? 0,
+      displayIdOtherGender: json['DisplayID_Other_Gender'] ?? 0,
+    );
+  }
+
+  BriefCreatureModelInfoEntity copyWith({
+    int? displayId,
+    double? boundingRadius,
+    double? combatReach,
+    int? gender,
+    int? displayIdOtherGender,
+  }) {
+    return BriefCreatureModelInfoEntity(
+      displayId: displayId ?? this.displayId,
+      boundingRadius: boundingRadius ?? this.boundingRadius,
+      combatReach: combatReach ?? this.combatReach,
+      gender: gender ?? this.gender,
+      displayIdOtherGender: displayIdOtherGender ?? this.displayIdOtherGender,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'DisplayID': displayId,
+      'BoundingRadius': boundingRadius,
+      'CombatReach': combatReach,
+      'Gender': gender,
+      'DisplayID_Other_Gender': displayIdOtherGender,
+    };
+  }
+}
+
 class CreatureModelInfoEntity {
   final int displayId;
   final double boundingRadius;
@@ -26,17 +79,6 @@ class CreatureModelInfoEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'DisplayID': displayId,
-      'BoundingRadius': boundingRadius,
-      'CombatReach': combatReach,
-      'Gender': gender,
-      'DisplayID_Other_Gender': displayIdOtherGender,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   CreatureModelInfoEntity copyWith({
     int? displayId,
     double? boundingRadius,
@@ -54,33 +96,6 @@ class CreatureModelInfoEntity {
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
   }
-}
-
-/// 生物模型信息列表/Picker 展示模型
-class BriefCreatureModelInfoEntity {
-  final int displayId;
-  final double boundingRadius;
-  final double combatReach;
-  final int gender;
-  final int displayIdOtherGender;
-
-  const BriefCreatureModelInfoEntity({
-    this.displayId = 0,
-    this.boundingRadius = 0.0,
-    this.combatReach = 0.0,
-    this.gender = 0,
-    this.displayIdOtherGender = 0,
-  });
-
-  factory BriefCreatureModelInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureModelInfoEntity(
-      displayId: json['DisplayID'] ?? 0,
-      boundingRadius: (json['BoundingRadius'] ?? 0.0),
-      combatReach: (json['CombatReach'] ?? 0.0),
-      gender: json['Gender'] ?? 0,
-      displayIdOtherGender: json['DisplayID_Other_Gender'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -89,22 +104,7 @@ class BriefCreatureModelInfoEntity {
       'CombatReach': combatReach,
       'Gender': gender,
       'DisplayID_Other_Gender': displayIdOtherGender,
+      'VerifiedBuild': verifiedBuild,
     };
-  }
-
-  BriefCreatureModelInfoEntity copyWith({
-    int? displayId,
-    double? boundingRadius,
-    double? combatReach,
-    int? gender,
-    int? displayIdOtherGender,
-  }) {
-    return BriefCreatureModelInfoEntity(
-      displayId: displayId ?? this.displayId,
-      boundingRadius: boundingRadius ?? this.boundingRadius,
-      combatReach: combatReach ?? this.combatReach,
-      gender: gender ?? this.gender,
-      displayIdOtherGender: displayIdOtherGender ?? this.displayIdOtherGender,
-    );
   }
 }

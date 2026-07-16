@@ -1,28 +1,3 @@
-class SpellIconEntity {
-  final int id;
-  final String textureFilename;
-
-  const SpellIconEntity({this.id = 0, this.textureFilename = ''});
-
-  factory SpellIconEntity.fromJson(Map<String, dynamic> json) {
-    return SpellIconEntity(
-      id: json['ID'] ?? 0,
-      textureFilename: json['TextureFilename'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'TextureFilename': textureFilename};
-  }
-
-  SpellIconEntity copyWith({int? id, String? textureFilename}) {
-    return SpellIconEntity(
-      id: id ?? this.id,
-      textureFilename: textureFilename ?? this.textureFilename,
-    );
-  }
-}
-
 /// 法术图标列表/Picker 展示模型
 class BriefSpellIconEntity {
   final int id;
@@ -37,14 +12,39 @@ class BriefSpellIconEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'TextureFilename': textureFilename};
-  }
-
   BriefSpellIconEntity copyWith({int? id, String? textureFilename}) {
     return BriefSpellIconEntity(
       id: id ?? this.id,
       textureFilename: textureFilename ?? this.textureFilename,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'TextureFilename': textureFilename};
+  }
+}
+
+class SpellIconEntity {
+  final int id;
+  final String textureFilename;
+
+  const SpellIconEntity({this.id = 0, this.textureFilename = ''});
+
+  factory SpellIconEntity.fromJson(Map<String, dynamic> json) {
+    return SpellIconEntity(
+      id: json['ID'] ?? 0,
+      textureFilename: json['TextureFilename'] ?? '',
+    );
+  }
+
+  SpellIconEntity copyWith({int? id, String? textureFilename}) {
+    return SpellIconEntity(
+      id: id ?? this.id,
+      textureFilename: textureFilename ?? this.textureFilename,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'TextureFilename': textureFilename};
   }
 }

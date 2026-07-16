@@ -1,3 +1,50 @@
+/// 地图列表/Picker 展示模型
+class BriefMapInfoEntity {
+  final int id;
+  final String mapNameLangZhCN;
+  final int instanceType;
+  final int pvp;
+
+  const BriefMapInfoEntity({
+    this.id = 0,
+    this.mapNameLangZhCN = '',
+    this.instanceType = 0,
+    this.pvp = 0,
+  });
+
+  factory BriefMapInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefMapInfoEntity(
+      id: json['ID'] ?? 0,
+      mapNameLangZhCN: json['MapName_lang_zhCN'] ?? '',
+      instanceType: json['InstanceType'] ?? 0,
+      pvp: json['PVP'] ?? 0,
+    );
+  }
+
+  BriefMapInfoEntity copyWith({
+    int? id,
+    String? mapNameLangZhCN,
+    int? instanceType,
+    int? pvp,
+  }) {
+    return BriefMapInfoEntity(
+      id: id ?? this.id,
+      mapNameLangZhCN: mapNameLangZhCN ?? this.mapNameLangZhCN,
+      instanceType: instanceType ?? this.instanceType,
+      pvp: pvp ?? this.pvp,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'MapName_lang_zhCN': mapNameLangZhCN,
+      'InstanceType': instanceType,
+      'PVP': pvp,
+    };
+  }
+}
+
 class MapInfoEntity {
   final int id;
   final String directory;
@@ -206,77 +253,6 @@ class MapInfoEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Directory': directory,
-      'InstanceType': instanceType,
-      'Flags': flags,
-      'PVP': pvp,
-      'MapName_lang_enUS': mapNameLangEnUS,
-      'MapName_lang_koKR': mapNameLangKoKR,
-      'MapName_lang_frFR': mapNameLangFrFR,
-      'MapName_lang_deDE': mapNameLangDeDE,
-      'MapName_lang_zhCN': mapNameLangZhCN,
-      'MapName_lang_zhTW': mapNameLangZhTW,
-      'MapName_lang_esES': mapNameLangEsES,
-      'MapName_lang_esMX': mapNameLangEsMX,
-      'MapName_lang_ruRU': mapNameLangRuRU,
-      'MapName_lang_jaJP': mapNameLangJaJP,
-      'MapName_lang_ptPT': mapNameLangPtPT,
-      'MapName_lang_ptBR': mapNameLangPtBR,
-      'MapName_lang_itIT': mapNameLangItIT,
-      'MapName_lang_unk1': mapNameLangUnk1,
-      'MapName_lang_unk2': mapNameLangUnk2,
-      'MapName_lang_unk3': mapNameLangUnk3,
-      'MapName_lang_Flags': mapNameLangFlags,
-      'AreaTableID': areaTableId,
-      'MapDescription0_lang_enUS': mapDescription0LangEnUS,
-      'MapDescription0_lang_koKR': mapDescription0LangKoKR,
-      'MapDescription0_lang_frFR': mapDescription0LangFrFR,
-      'MapDescription0_lang_deDE': mapDescription0LangDeDE,
-      'MapDescription0_lang_zhCN': mapDescription0LangZhCN,
-      'MapDescription0_lang_zhTW': mapDescription0LangZhTW,
-      'MapDescription0_lang_esES': mapDescription0LangEsES,
-      'MapDescription0_lang_esMX': mapDescription0LangEsMX,
-      'MapDescription0_lang_ruRU': mapDescription0LangRuRU,
-      'MapDescription0_lang_jaJP': mapDescription0LangJaJP,
-      'MapDescription0_lang_ptPT': mapDescription0LangPtPT,
-      'MapDescription0_lang_ptBR': mapDescription0LangPtBR,
-      'MapDescription0_lang_itIT': mapDescription0LangItIT,
-      'MapDescription0_lang_unk1': mapDescription0LangUnk1,
-      'MapDescription0_lang_unk2': mapDescription0LangUnk2,
-      'MapDescription0_lang_unk3': mapDescription0LangUnk3,
-      'MapDescription0_lang_Flags': mapDescription0LangFlags,
-      'MapDescription1_lang_enUS': mapDescription1LangEnUS,
-      'MapDescription1_lang_koKR': mapDescription1LangKoKR,
-      'MapDescription1_lang_frFR': mapDescription1LangFrFR,
-      'MapDescription1_lang_deDE': mapDescription1LangDeDE,
-      'MapDescription1_lang_zhCN': mapDescription1LangZhCN,
-      'MapDescription1_lang_zhTW': mapDescription1LangZhTW,
-      'MapDescription1_lang_esES': mapDescription1LangEsES,
-      'MapDescription1_lang_esMX': mapDescription1LangEsMX,
-      'MapDescription1_lang_ruRU': mapDescription1LangRuRU,
-      'MapDescription1_lang_jaJP': mapDescription1LangJaJP,
-      'MapDescription1_lang_ptPT': mapDescription1LangPtPT,
-      'MapDescription1_lang_ptBR': mapDescription1LangPtBR,
-      'MapDescription1_lang_itIT': mapDescription1LangItIT,
-      'MapDescription1_lang_unk1': mapDescription1LangUnk1,
-      'MapDescription1_lang_unk2': mapDescription1LangUnk2,
-      'MapDescription1_lang_unk3': mapDescription1LangUnk3,
-      'MapDescription1_lang_Flags': mapDescription1LangFlags,
-      'LoadingScreenID': loadingScreenId,
-      'MinimapIconScale': minimapIconScale,
-      'CorpseMapID': corpseMapId,
-      'Corpse0': corpse0,
-      'Corpse1': corpse1,
-      'TimeOfDayOverride': timeOfDayOverride,
-      'ExpansionID': expansionId,
-      'RaidOffset': raidOffset,
-      'MaxPlayers': maxPlayers,
-    };
-  }
-
   MapInfoEntity copyWith({
     int? id,
     String? directory,
@@ -448,51 +424,75 @@ class MapInfoEntity {
       maxPlayers: maxPlayers ?? this.maxPlayers,
     );
   }
-}
-
-/// 地图列表/Picker 展示模型
-class BriefMapInfoEntity {
-  final int id;
-  final String mapNameLangZhCN;
-  final int instanceType;
-  final int pvp;
-
-  const BriefMapInfoEntity({
-    this.id = 0,
-    this.mapNameLangZhCN = '',
-    this.instanceType = 0,
-    this.pvp = 0,
-  });
-
-  factory BriefMapInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefMapInfoEntity(
-      id: json['ID'] ?? 0,
-      mapNameLangZhCN: json['MapName_lang_zhCN'] ?? '',
-      instanceType: json['InstanceType'] ?? 0,
-      pvp: json['PVP'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
-      'MapName_lang_zhCN': mapNameLangZhCN,
+      'Directory': directory,
       'InstanceType': instanceType,
+      'Flags': flags,
       'PVP': pvp,
+      'MapName_lang_enUS': mapNameLangEnUS,
+      'MapName_lang_koKR': mapNameLangKoKR,
+      'MapName_lang_frFR': mapNameLangFrFR,
+      'MapName_lang_deDE': mapNameLangDeDE,
+      'MapName_lang_zhCN': mapNameLangZhCN,
+      'MapName_lang_zhTW': mapNameLangZhTW,
+      'MapName_lang_esES': mapNameLangEsES,
+      'MapName_lang_esMX': mapNameLangEsMX,
+      'MapName_lang_ruRU': mapNameLangRuRU,
+      'MapName_lang_jaJP': mapNameLangJaJP,
+      'MapName_lang_ptPT': mapNameLangPtPT,
+      'MapName_lang_ptBR': mapNameLangPtBR,
+      'MapName_lang_itIT': mapNameLangItIT,
+      'MapName_lang_unk1': mapNameLangUnk1,
+      'MapName_lang_unk2': mapNameLangUnk2,
+      'MapName_lang_unk3': mapNameLangUnk3,
+      'MapName_lang_Flags': mapNameLangFlags,
+      'AreaTableID': areaTableId,
+      'MapDescription0_lang_enUS': mapDescription0LangEnUS,
+      'MapDescription0_lang_koKR': mapDescription0LangKoKR,
+      'MapDescription0_lang_frFR': mapDescription0LangFrFR,
+      'MapDescription0_lang_deDE': mapDescription0LangDeDE,
+      'MapDescription0_lang_zhCN': mapDescription0LangZhCN,
+      'MapDescription0_lang_zhTW': mapDescription0LangZhTW,
+      'MapDescription0_lang_esES': mapDescription0LangEsES,
+      'MapDescription0_lang_esMX': mapDescription0LangEsMX,
+      'MapDescription0_lang_ruRU': mapDescription0LangRuRU,
+      'MapDescription0_lang_jaJP': mapDescription0LangJaJP,
+      'MapDescription0_lang_ptPT': mapDescription0LangPtPT,
+      'MapDescription0_lang_ptBR': mapDescription0LangPtBR,
+      'MapDescription0_lang_itIT': mapDescription0LangItIT,
+      'MapDescription0_lang_unk1': mapDescription0LangUnk1,
+      'MapDescription0_lang_unk2': mapDescription0LangUnk2,
+      'MapDescription0_lang_unk3': mapDescription0LangUnk3,
+      'MapDescription0_lang_Flags': mapDescription0LangFlags,
+      'MapDescription1_lang_enUS': mapDescription1LangEnUS,
+      'MapDescription1_lang_koKR': mapDescription1LangKoKR,
+      'MapDescription1_lang_frFR': mapDescription1LangFrFR,
+      'MapDescription1_lang_deDE': mapDescription1LangDeDE,
+      'MapDescription1_lang_zhCN': mapDescription1LangZhCN,
+      'MapDescription1_lang_zhTW': mapDescription1LangZhTW,
+      'MapDescription1_lang_esES': mapDescription1LangEsES,
+      'MapDescription1_lang_esMX': mapDescription1LangEsMX,
+      'MapDescription1_lang_ruRU': mapDescription1LangRuRU,
+      'MapDescription1_lang_jaJP': mapDescription1LangJaJP,
+      'MapDescription1_lang_ptPT': mapDescription1LangPtPT,
+      'MapDescription1_lang_ptBR': mapDescription1LangPtBR,
+      'MapDescription1_lang_itIT': mapDescription1LangItIT,
+      'MapDescription1_lang_unk1': mapDescription1LangUnk1,
+      'MapDescription1_lang_unk2': mapDescription1LangUnk2,
+      'MapDescription1_lang_unk3': mapDescription1LangUnk3,
+      'MapDescription1_lang_Flags': mapDescription1LangFlags,
+      'LoadingScreenID': loadingScreenId,
+      'MinimapIconScale': minimapIconScale,
+      'CorpseMapID': corpseMapId,
+      'Corpse0': corpse0,
+      'Corpse1': corpse1,
+      'TimeOfDayOverride': timeOfDayOverride,
+      'ExpansionID': expansionId,
+      'RaidOffset': raidOffset,
+      'MaxPlayers': maxPlayers,
     };
-  }
-
-  BriefMapInfoEntity copyWith({
-    int? id,
-    String? mapNameLangZhCN,
-    int? instanceType,
-    int? pvp,
-  }) {
-    return BriefMapInfoEntity(
-      id: id ?? this.id,
-      mapNameLangZhCN: mapNameLangZhCN ?? this.mapNameLangZhCN,
-      instanceType: instanceType ?? this.instanceType,
-      pvp: pvp ?? this.pvp,
-    );
   }
 }

@@ -1,3 +1,87 @@
+/// 物品模板简要信息（用于列表显示）
+class BriefItemTemplateEntity {
+  final int entry;
+  final String name;
+  final String localeName;
+  final int quality;
+  final int classId;
+  final int subclass;
+  final int inventoryType;
+  final int itemLevel;
+  final int requiredLevel;
+  final String inventoryIcon;
+
+  const BriefItemTemplateEntity({
+    this.entry = 0,
+    this.name = '',
+    this.localeName = '',
+    this.quality = 0,
+    this.classId = 0,
+    this.subclass = 0,
+    this.inventoryType = 0,
+    this.itemLevel = 0,
+    this.requiredLevel = 0,
+    this.inventoryIcon = '',
+  });
+
+  factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplateEntity(
+      entry: json['entry'] ?? 0,
+      name: json['name'] ?? '',
+      localeName: json['localeName'] ?? json['Name'] ?? '',
+      quality: json['Quality'] ?? json['quality'] ?? 0,
+      classId: json['class'] ?? json['classId'] ?? 0,
+      subclass: json['subclass'] ?? 0,
+      inventoryType: json['InventoryType'] ?? json['inventoryType'] ?? 0,
+      itemLevel: json['ItemLevel'] ?? json['itemLevel'] ?? 0,
+      requiredLevel: json['RequiredLevel'] ?? json['requiredLevel'] ?? 0,
+      inventoryIcon: json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '',
+    );
+  }
+
+  /// 显示名称（优先显示本地化名称）
+  String get displayName => localeName.isNotEmpty ? localeName : name;
+
+  BriefItemTemplateEntity copyWith({
+    int? entry,
+    String? name,
+    String? localeName,
+    int? quality,
+    int? classId,
+    int? subclass,
+    int? inventoryType,
+    int? itemLevel,
+    int? requiredLevel,
+    String? inventoryIcon,
+  }) {
+    return BriefItemTemplateEntity(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+      localeName: localeName ?? this.localeName,
+      quality: quality ?? this.quality,
+      classId: classId ?? this.classId,
+      subclass: subclass ?? this.subclass,
+      inventoryType: inventoryType ?? this.inventoryType,
+      itemLevel: itemLevel ?? this.itemLevel,
+      requiredLevel: requiredLevel ?? this.requiredLevel,
+      inventoryIcon: inventoryIcon ?? this.inventoryIcon,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'quality': quality,
+      'class': classId,
+      'subclass': subclass,
+      'InventoryType': inventoryType,
+      'ItemLevel': itemLevel,
+      'RequiredLevel': requiredLevel,
+    };
+  }
+}
+
 /// 物品模板（完整字段，对应 AzerothCore item_template 表）
 class ItemTemplateEntity {
   // --- 基础标识 ---
@@ -176,26 +260,6 @@ class ItemTemplateEntity {
   // --- 脚本与验证 ---
   final String scriptName;
   final int verifiedBuild;
-
-  /// 显示名称（优先显示本地化名称）
-  String get displayName => localeName.isNotEmpty ? localeName : name;
-
-  /// 显示描述（优先显示本地化描述）
-  String get displayDescription =>
-      localeDescription.isNotEmpty ? localeDescription : description;
-
-  /// AzerothCore derives StatsCount from non-zero stat values at load time.
-  int get statsCount =>
-      (statValue1 != 0 ? 1 : 0) +
-      (statValue2 != 0 ? 1 : 0) +
-      (statValue3 != 0 ? 1 : 0) +
-      (statValue4 != 0 ? 1 : 0) +
-      (statValue5 != 0 ? 1 : 0) +
-      (statValue6 != 0 ? 1 : 0) +
-      (statValue7 != 0 ? 1 : 0) +
-      (statValue8 != 0 ? 1 : 0) +
-      (statValue9 != 0 ? 1 : 0) +
-      (statValue10 != 0 ? 1 : 0);
 
   const ItemTemplateEntity({
     // --- 基础标识 ---
@@ -569,181 +633,25 @@ class ItemTemplateEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      // --- 基础标识 ---
-      'entry': entry,
-      'name': name,
-      'description': description,
+  /// 显示描述（优先显示本地化描述）
+  String get displayDescription =>
+      localeDescription.isNotEmpty ? localeDescription : description;
 
-      // --- 物品属性 ---
-      'Quality': quality,
-      'class': className,
-      'subclass': subclass,
-      'SoundOverrideSubclass': soundOverrideSubclass,
-      'Material': material,
-      'displayid': displayId,
-      'InventoryType': inventoryType,
-      'sheath': sheath,
+  /// 显示名称（优先显示本地化名称）
+  String get displayName => localeName.isNotEmpty ? localeName : name;
 
-      // --- 经济与绑定 ---
-      'bonding': bonding,
-      'itemset': itemset,
-      'RandomProperty': randomProperty,
-      'RandomSuffix': randomSuffix,
-      'MaxDurability': maxDurability,
-      'BuyPrice': buyPrice,
-      'SellPrice': sellPrice,
-      'BuyCount': buyCount,
-      'maxcount': maxcount,
-      'stackable': stackable,
-
-      // --- 分类与容器 ---
-      'TotemCategory': totemCategory,
-      'FoodType': foodType,
-      'BagFamily': bagFamily,
-      'ContainerSlots': containerSlots,
-      'ItemLimitCategory': itemLimitCategory,
-
-      // --- 任务与限时 ---
-      'startquest': startquest,
-      'duration': duration,
-      'DisenchantID': disenchantId,
-      'minMoneyLoot': minMoneyLoot,
-      'maxMoneyLoot': maxMoneyLoot,
-
-      // --- 标志位 ---
-      'Flags': flags,
-      'FlagsExtra': flagsExtra,
-      'flagsCustom': flagsCustom,
-
-      // --- 武器与伤害 ---
-      'delay': delay,
-      'RangedModRange': rangedModRange,
-      'ArmorDamageModifier': armorDamageModifier,
-      'dmg_type1': dmgType1,
-      'dmg_min1': dmgMin1,
-      'dmg_max1': dmgMax1,
-      'dmg_type2': dmgType2,
-      'dmg_min2': dmgMin2,
-      'dmg_max2': dmgMax2,
-      'ammo_type': ammoType,
-      'armor': armor,
-      'block': block,
-
-      // --- 缩放属性 ---
-      'ScalingStatDistribution': scalingStatDistribution,
-      'ScalingStatValue': scalingStatValue,
-
-      // --- 统计属性 ---
-      'stat_type1': statType1,
-      'stat_value1': statValue1,
-      'stat_type2': statType2,
-      'stat_value2': statValue2,
-      'stat_type3': statType3,
-      'stat_value3': statValue3,
-      'stat_type4': statType4,
-      'stat_value4': statValue4,
-      'stat_type5': statType5,
-      'stat_value5': statValue5,
-      'stat_type6': statType6,
-      'stat_value6': statValue6,
-      'stat_type7': statType7,
-      'stat_value7': statValue7,
-      'stat_type8': statType8,
-      'stat_value8': statValue8,
-      'stat_type9': statType9,
-      'stat_value9': statValue9,
-      'stat_type10': statType10,
-      'stat_value10': statValue10,
-    };
-
-    // --- 抗性 ---
-    result['holy_res'] = holyRes;
-    result['fire_res'] = fireRes;
-    result['nature_res'] = natureRes;
-    result['shadow_res'] = shadowRes;
-    result['frost_res'] = frostRes;
-    result['arcane_res'] = arcaneRes;
-
-    // --- 法术效果（5 组）---
-    result['spellid_1'] = spellId1;
-    result['spelltrigger_1'] = spellTrigger1;
-    result['spellcharges_1'] = spellCharges1;
-    result['spellppmRate_1'] = spellPpmRate1;
-    result['spellcooldown_1'] = spellCooldown1;
-    result['spellcategory_1'] = spellCategory1;
-    result['spellcategorycooldown_1'] = spellCategoryCooldown1;
-    result['spellid_2'] = spellId2;
-    result['spelltrigger_2'] = spellTrigger2;
-    result['spellcharges_2'] = spellCharges2;
-    result['spellppmRate_2'] = spellPpmRate2;
-    result['spellcooldown_2'] = spellCooldown2;
-    result['spellcategory_2'] = spellCategory2;
-    result['spellcategorycooldown_2'] = spellCategoryCooldown2;
-    result['spellid_3'] = spellId3;
-    result['spelltrigger_3'] = spellTrigger3;
-    result['spellcharges_3'] = spellCharges3;
-    result['spellppmRate_3'] = spellPpmRate3;
-    result['spellcooldown_3'] = spellCooldown3;
-    result['spellcategory_3'] = spellCategory3;
-    result['spellcategorycooldown_3'] = spellCategoryCooldown3;
-    result['spellid_4'] = spellId4;
-    result['spelltrigger_4'] = spellTrigger4;
-    result['spellcharges_4'] = spellCharges4;
-    result['spellppmRate_4'] = spellPpmRate4;
-    result['spellcooldown_4'] = spellCooldown4;
-    result['spellcategory_4'] = spellCategory4;
-    result['spellcategorycooldown_4'] = spellCategoryCooldown4;
-    result['spellid_5'] = spellId5;
-    result['spelltrigger_5'] = spellTrigger5;
-    result['spellcharges_5'] = spellCharges5;
-    result['spellppmRate_5'] = spellPpmRate5;
-    result['spellcooldown_5'] = spellCooldown5;
-    result['spellcategory_5'] = spellCategory5;
-    result['spellcategorycooldown_5'] = spellCategoryCooldown5;
-
-    // --- 使用限制 ---
-    result['AllowableClass'] = allowableClass;
-    result['AllowableRace'] = allowableRace;
-    result['ItemLevel'] = itemLevel;
-    result['RequiredLevel'] = requiredLevel;
-    result['RequiredSkill'] = requiredSkill;
-    result['RequiredSkillRank'] = requiredSkillRank;
-    result['requiredspell'] = requiredSpell;
-    result['requiredhonorrank'] = requiredHonorRank;
-    result['RequiredCityRank'] = requiredCityRank;
-    result['RequiredReputationFaction'] = requiredReputationFaction;
-    result['RequiredReputationRank'] = requiredReputationRank;
-    result['RequiredDisenchantSkill'] = requiredDisenchantSkill;
-
-    // --- 区域与节日 ---
-    result['Map'] = mapId;
-    result['area'] = area;
-    result['HolidayId'] = holidayId;
-
-    // --- 锁与宝石 ---
-    result['lockid'] = lockid;
-    result['GemProperties'] = gemProperties;
-    result['socketBonus'] = socketBonus;
-    result['socketColor_1'] = socketColor1;
-    result['socketContent_1'] = socketContent1;
-    result['socketColor_2'] = socketColor2;
-    result['socketContent_2'] = socketContent2;
-    result['socketColor_3'] = socketColor3;
-    result['socketContent_3'] = socketContent3;
-
-    // --- 书页信息 ---
-    result['PageText'] = pageText;
-    result['PageMaterial'] = pageMaterial;
-    result['LanguageID'] = languageId;
-
-    // --- 脚本与验证 ---
-    result['ScriptName'] = scriptName;
-    result['VerifiedBuild'] = verifiedBuild;
-
-    return result;
-  }
+  /// AzerothCore derives StatsCount from non-zero stat values at load time.
+  int get statsCount =>
+      (statValue1 != 0 ? 1 : 0) +
+      (statValue2 != 0 ? 1 : 0) +
+      (statValue3 != 0 ? 1 : 0) +
+      (statValue4 != 0 ? 1 : 0) +
+      (statValue5 != 0 ? 1 : 0) +
+      (statValue6 != 0 ? 1 : 0) +
+      (statValue7 != 0 ? 1 : 0) +
+      (statValue8 != 0 ? 1 : 0) +
+      (statValue9 != 0 ? 1 : 0) +
+      (statValue10 != 0 ? 1 : 0);
 
   ItemTemplateEntity copyWith({
     int? entry,
@@ -1042,88 +950,180 @@ class ItemTemplateEntity {
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
   }
-}
-
-/// 物品模板简要信息（用于列表显示）
-class BriefItemTemplateEntity {
-  final int entry;
-  final String name;
-  final String localeName;
-  final int quality;
-  final int classId;
-  final int subclass;
-  final int inventoryType;
-  final int itemLevel;
-  final int requiredLevel;
-  final String inventoryIcon;
-
-  /// 显示名称（优先显示本地化名称）
-  String get displayName => localeName.isNotEmpty ? localeName : name;
-
-  const BriefItemTemplateEntity({
-    this.entry = 0,
-    this.name = '',
-    this.localeName = '',
-    this.quality = 0,
-    this.classId = 0,
-    this.subclass = 0,
-    this.inventoryType = 0,
-    this.itemLevel = 0,
-    this.requiredLevel = 0,
-    this.inventoryIcon = '',
-  });
-
-  factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemTemplateEntity(
-      entry: json['entry'] ?? 0,
-      name: json['name'] ?? '',
-      localeName: json['localeName'] ?? json['Name'] ?? '',
-      quality: json['Quality'] ?? json['quality'] ?? 0,
-      classId: json['class'] ?? json['classId'] ?? 0,
-      subclass: json['subclass'] ?? 0,
-      inventoryType: json['InventoryType'] ?? json['inventoryType'] ?? 0,
-      itemLevel: json['ItemLevel'] ?? json['itemLevel'] ?? 0,
-      requiredLevel: json['RequiredLevel'] ?? json['requiredLevel'] ?? 0,
-      inventoryIcon: json['InventoryIcon0'] ?? json['inventoryIcon'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {
+    final result = <String, dynamic>{
+      // --- 基础标识 ---
       'entry': entry,
       'name': name,
-      'quality': quality,
-      'class': classId,
-      'subclass': subclass,
-      'InventoryType': inventoryType,
-      'ItemLevel': itemLevel,
-      'RequiredLevel': requiredLevel,
-    };
-  }
+      'description': description,
 
-  BriefItemTemplateEntity copyWith({
-    int? entry,
-    String? name,
-    String? localeName,
-    int? quality,
-    int? classId,
-    int? subclass,
-    int? inventoryType,
-    int? itemLevel,
-    int? requiredLevel,
-    String? inventoryIcon,
-  }) {
-    return BriefItemTemplateEntity(
-      entry: entry ?? this.entry,
-      name: name ?? this.name,
-      localeName: localeName ?? this.localeName,
-      quality: quality ?? this.quality,
-      classId: classId ?? this.classId,
-      subclass: subclass ?? this.subclass,
-      inventoryType: inventoryType ?? this.inventoryType,
-      itemLevel: itemLevel ?? this.itemLevel,
-      requiredLevel: requiredLevel ?? this.requiredLevel,
-      inventoryIcon: inventoryIcon ?? this.inventoryIcon,
-    );
+      // --- 物品属性 ---
+      'Quality': quality,
+      'class': className,
+      'subclass': subclass,
+      'SoundOverrideSubclass': soundOverrideSubclass,
+      'Material': material,
+      'displayid': displayId,
+      'InventoryType': inventoryType,
+      'sheath': sheath,
+
+      // --- 经济与绑定 ---
+      'bonding': bonding,
+      'itemset': itemset,
+      'RandomProperty': randomProperty,
+      'RandomSuffix': randomSuffix,
+      'MaxDurability': maxDurability,
+      'BuyPrice': buyPrice,
+      'SellPrice': sellPrice,
+      'BuyCount': buyCount,
+      'maxcount': maxcount,
+      'stackable': stackable,
+
+      // --- 分类与容器 ---
+      'TotemCategory': totemCategory,
+      'FoodType': foodType,
+      'BagFamily': bagFamily,
+      'ContainerSlots': containerSlots,
+      'ItemLimitCategory': itemLimitCategory,
+
+      // --- 任务与限时 ---
+      'startquest': startquest,
+      'duration': duration,
+      'DisenchantID': disenchantId,
+      'minMoneyLoot': minMoneyLoot,
+      'maxMoneyLoot': maxMoneyLoot,
+
+      // --- 标志位 ---
+      'Flags': flags,
+      'FlagsExtra': flagsExtra,
+      'flagsCustom': flagsCustom,
+
+      // --- 武器与伤害 ---
+      'delay': delay,
+      'RangedModRange': rangedModRange,
+      'ArmorDamageModifier': armorDamageModifier,
+      'dmg_type1': dmgType1,
+      'dmg_min1': dmgMin1,
+      'dmg_max1': dmgMax1,
+      'dmg_type2': dmgType2,
+      'dmg_min2': dmgMin2,
+      'dmg_max2': dmgMax2,
+      'ammo_type': ammoType,
+      'armor': armor,
+      'block': block,
+
+      // --- 缩放属性 ---
+      'ScalingStatDistribution': scalingStatDistribution,
+      'ScalingStatValue': scalingStatValue,
+
+      // --- 统计属性 ---
+      'stat_type1': statType1,
+      'stat_value1': statValue1,
+      'stat_type2': statType2,
+      'stat_value2': statValue2,
+      'stat_type3': statType3,
+      'stat_value3': statValue3,
+      'stat_type4': statType4,
+      'stat_value4': statValue4,
+      'stat_type5': statType5,
+      'stat_value5': statValue5,
+      'stat_type6': statType6,
+      'stat_value6': statValue6,
+      'stat_type7': statType7,
+      'stat_value7': statValue7,
+      'stat_type8': statType8,
+      'stat_value8': statValue8,
+      'stat_type9': statType9,
+      'stat_value9': statValue9,
+      'stat_type10': statType10,
+      'stat_value10': statValue10,
+    };
+
+    // --- 抗性 ---
+    result['holy_res'] = holyRes;
+    result['fire_res'] = fireRes;
+    result['nature_res'] = natureRes;
+    result['shadow_res'] = shadowRes;
+    result['frost_res'] = frostRes;
+    result['arcane_res'] = arcaneRes;
+
+    // --- 法术效果（5 组）---
+    result['spellid_1'] = spellId1;
+    result['spelltrigger_1'] = spellTrigger1;
+    result['spellcharges_1'] = spellCharges1;
+    result['spellppmRate_1'] = spellPpmRate1;
+    result['spellcooldown_1'] = spellCooldown1;
+    result['spellcategory_1'] = spellCategory1;
+    result['spellcategorycooldown_1'] = spellCategoryCooldown1;
+    result['spellid_2'] = spellId2;
+    result['spelltrigger_2'] = spellTrigger2;
+    result['spellcharges_2'] = spellCharges2;
+    result['spellppmRate_2'] = spellPpmRate2;
+    result['spellcooldown_2'] = spellCooldown2;
+    result['spellcategory_2'] = spellCategory2;
+    result['spellcategorycooldown_2'] = spellCategoryCooldown2;
+    result['spellid_3'] = spellId3;
+    result['spelltrigger_3'] = spellTrigger3;
+    result['spellcharges_3'] = spellCharges3;
+    result['spellppmRate_3'] = spellPpmRate3;
+    result['spellcooldown_3'] = spellCooldown3;
+    result['spellcategory_3'] = spellCategory3;
+    result['spellcategorycooldown_3'] = spellCategoryCooldown3;
+    result['spellid_4'] = spellId4;
+    result['spelltrigger_4'] = spellTrigger4;
+    result['spellcharges_4'] = spellCharges4;
+    result['spellppmRate_4'] = spellPpmRate4;
+    result['spellcooldown_4'] = spellCooldown4;
+    result['spellcategory_4'] = spellCategory4;
+    result['spellcategorycooldown_4'] = spellCategoryCooldown4;
+    result['spellid_5'] = spellId5;
+    result['spelltrigger_5'] = spellTrigger5;
+    result['spellcharges_5'] = spellCharges5;
+    result['spellppmRate_5'] = spellPpmRate5;
+    result['spellcooldown_5'] = spellCooldown5;
+    result['spellcategory_5'] = spellCategory5;
+    result['spellcategorycooldown_5'] = spellCategoryCooldown5;
+
+    // --- 使用限制 ---
+    result['AllowableClass'] = allowableClass;
+    result['AllowableRace'] = allowableRace;
+    result['ItemLevel'] = itemLevel;
+    result['RequiredLevel'] = requiredLevel;
+    result['RequiredSkill'] = requiredSkill;
+    result['RequiredSkillRank'] = requiredSkillRank;
+    result['requiredspell'] = requiredSpell;
+    result['requiredhonorrank'] = requiredHonorRank;
+    result['RequiredCityRank'] = requiredCityRank;
+    result['RequiredReputationFaction'] = requiredReputationFaction;
+    result['RequiredReputationRank'] = requiredReputationRank;
+    result['RequiredDisenchantSkill'] = requiredDisenchantSkill;
+
+    // --- 区域与节日 ---
+    result['Map'] = mapId;
+    result['area'] = area;
+    result['HolidayId'] = holidayId;
+
+    // --- 锁与宝石 ---
+    result['lockid'] = lockid;
+    result['GemProperties'] = gemProperties;
+    result['socketBonus'] = socketBonus;
+    result['socketColor_1'] = socketColor1;
+    result['socketContent_1'] = socketContent1;
+    result['socketColor_2'] = socketColor2;
+    result['socketContent_2'] = socketContent2;
+    result['socketColor_3'] = socketColor3;
+    result['socketContent_3'] = socketContent3;
+
+    // --- 书页信息 ---
+    result['PageText'] = pageText;
+    result['PageMaterial'] = pageMaterial;
+    result['LanguageID'] = languageId;
+
+    // --- 脚本与验证 ---
+    result['ScriptName'] = scriptName;
+    result['VerifiedBuild'] = verifiedBuild;
+
+    return result;
   }
 }

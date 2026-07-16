@@ -1,3 +1,49 @@
+class BriefItemSetEntity {
+  final int id;
+  final String nameLangZhCN;
+  final int requiredSkill;
+  final int requiredSkillRank;
+
+  const BriefItemSetEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.requiredSkill = 0,
+    this.requiredSkillRank = 0,
+  });
+
+  factory BriefItemSetEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemSetEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+      requiredSkill: json['RequiredSkill'] ?? 0,
+      requiredSkillRank: json['RequiredSkillRank'] ?? 0,
+    );
+  }
+
+  BriefItemSetEntity copyWith({
+    int? id,
+    String? nameLangZhCN,
+    int? requiredSkill,
+    int? requiredSkillRank,
+  }) {
+    return BriefItemSetEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+      requiredSkill: requiredSkill ?? this.requiredSkill,
+      requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Name_lang_zhCN': nameLangZhCN,
+      'RequiredSkill': requiredSkill,
+      'RequiredSkillRank': requiredSkillRank,
+    };
+  }
+}
+
 class ItemSetEntity {
   final int id;
   final String nameLangEnUS;
@@ -167,64 +213,6 @@ class ItemSetEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'ItemID0': itemId0,
-      'ItemID1': itemId1,
-      'ItemID2': itemId2,
-      'ItemID3': itemId3,
-      'ItemID4': itemId4,
-      'ItemID5': itemId5,
-      'ItemID6': itemId6,
-      'ItemID7': itemId7,
-      'ItemID8': itemId8,
-      'ItemID9': itemId9,
-      'ItemID10': itemId10,
-      'ItemID11': itemId11,
-      'ItemID12': itemId12,
-      'ItemID13': itemId13,
-      'ItemID14': itemId14,
-      'ItemID15': itemId15,
-      'ItemID16': itemId16,
-      'SetSpellID0': setSpellId0,
-      'SetSpellID1': setSpellId1,
-      'SetSpellID2': setSpellId2,
-      'SetSpellID3': setSpellId3,
-      'SetSpellID4': setSpellId4,
-      'SetSpellID5': setSpellId5,
-      'SetSpellID6': setSpellId6,
-      'SetSpellID7': setSpellId7,
-      'SetThreshold0': setThreshold0,
-      'SetThreshold1': setThreshold1,
-      'SetThreshold2': setThreshold2,
-      'SetThreshold3': setThreshold3,
-      'SetThreshold4': setThreshold4,
-      'SetThreshold5': setThreshold5,
-      'SetThreshold6': setThreshold6,
-      'SetThreshold7': setThreshold7,
-      'RequiredSkill': requiredSkill,
-      'RequiredSkillRank': requiredSkillRank,
-    };
-  }
-
   ItemSetEntity copyWith({
     int? id,
     String? nameLangEnUS,
@@ -336,50 +324,62 @@ class ItemSetEntity {
       requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
     );
   }
-}
-
-class BriefItemSetEntity {
-  final int id;
-  final String nameLangZhCN;
-  final int requiredSkill;
-  final int requiredSkillRank;
-
-  const BriefItemSetEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.requiredSkill = 0,
-    this.requiredSkillRank = 0,
-  });
-
-  factory BriefItemSetEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemSetEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      requiredSkill: json['RequiredSkill'] ?? 0,
-      requiredSkillRank: json['RequiredSkillRank'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
       'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+      'ItemID0': itemId0,
+      'ItemID1': itemId1,
+      'ItemID2': itemId2,
+      'ItemID3': itemId3,
+      'ItemID4': itemId4,
+      'ItemID5': itemId5,
+      'ItemID6': itemId6,
+      'ItemID7': itemId7,
+      'ItemID8': itemId8,
+      'ItemID9': itemId9,
+      'ItemID10': itemId10,
+      'ItemID11': itemId11,
+      'ItemID12': itemId12,
+      'ItemID13': itemId13,
+      'ItemID14': itemId14,
+      'ItemID15': itemId15,
+      'ItemID16': itemId16,
+      'SetSpellID0': setSpellId0,
+      'SetSpellID1': setSpellId1,
+      'SetSpellID2': setSpellId2,
+      'SetSpellID3': setSpellId3,
+      'SetSpellID4': setSpellId4,
+      'SetSpellID5': setSpellId5,
+      'SetSpellID6': setSpellId6,
+      'SetSpellID7': setSpellId7,
+      'SetThreshold0': setThreshold0,
+      'SetThreshold1': setThreshold1,
+      'SetThreshold2': setThreshold2,
+      'SetThreshold3': setThreshold3,
+      'SetThreshold4': setThreshold4,
+      'SetThreshold5': setThreshold5,
+      'SetThreshold6': setThreshold6,
+      'SetThreshold7': setThreshold7,
       'RequiredSkill': requiredSkill,
       'RequiredSkillRank': requiredSkillRank,
     };
-  }
-
-  BriefItemSetEntity copyWith({
-    int? id,
-    String? nameLangZhCN,
-    int? requiredSkill,
-    int? requiredSkillRank,
-  }) {
-    return BriefItemSetEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      requiredSkill: requiredSkill ?? this.requiredSkill,
-      requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
-    );
   }
 }

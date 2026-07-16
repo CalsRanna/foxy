@@ -1,14 +1,3 @@
-class DbcItemEntity {
-  final Map<String, dynamic> values;
-
-  DbcItemEntity.fromJson(Map<String, dynamic> json)
-    : values = Map.unmodifiable(Map<String, dynamic>.from(json));
-
-  int get id => values['ID'] ?? 0;
-  int get inventoryType => values['InventoryType'] ?? 0;
-  Map<String, dynamic> toJson() => Map<String, dynamic>.from(values);
-}
-
 class BriefDbcItemEntity {
   final int id;
   final int classId;
@@ -32,4 +21,15 @@ class BriefDbcItemEntity {
         displayInfoId: json['DisplayInfoID'] ?? 0,
         inventoryType: json['InventoryType'] ?? 0,
       );
+}
+
+class DbcItemEntity {
+  final Map<String, dynamic> values;
+
+  DbcItemEntity.fromJson(Map<String, dynamic> json)
+    : values = Map.unmodifiable(Map<String, dynamic>.from(json));
+
+  int get id => values['ID'] ?? 0;
+  int get inventoryType => values['InventoryType'] ?? 0;
+  Map<String, dynamic> toJson() => Map<String, dynamic>.from(values);
 }

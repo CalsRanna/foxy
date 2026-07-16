@@ -1,3 +1,126 @@
+String _appendDisplayItem(String current, int itemId, int count) {
+  if (itemId == 0) return current;
+  final value = '${itemId}x$count';
+  return current.isEmpty ? value : '$current, $value';
+}
+
+/// 扩展价格列表/Picker 展示模型
+class BriefItemExtendedCostEntity {
+  final int id;
+  final int honorPoints;
+  final int arenaPoints;
+  final int arenaBracket;
+  final int itemID0;
+  final int itemID1;
+  final int itemID2;
+  final int itemID3;
+  final int itemID4;
+  final int itemCount0;
+  final int itemCount1;
+  final int itemCount2;
+  final int itemCount3;
+  final int itemCount4;
+
+  const BriefItemExtendedCostEntity({
+    this.id = 0,
+    this.honorPoints = 0,
+    this.arenaPoints = 0,
+    this.arenaBracket = 0,
+    this.itemID0 = 0,
+    this.itemID1 = 0,
+    this.itemID2 = 0,
+    this.itemID3 = 0,
+    this.itemID4 = 0,
+    this.itemCount0 = 0,
+    this.itemCount1 = 0,
+    this.itemCount2 = 0,
+    this.itemCount3 = 0,
+    this.itemCount4 = 0,
+  });
+
+  factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemExtendedCostEntity(
+      id: json['ID'] ?? 0,
+      honorPoints: json['HonorPoints'] ?? 0,
+      arenaPoints: json['ArenaPoints'] ?? 0,
+      arenaBracket: json['ArenaBracket'] ?? 0,
+      itemID0: json['ItemID0'] ?? 0,
+      itemID1: json['ItemID1'] ?? 0,
+      itemID2: json['ItemID2'] ?? 0,
+      itemID3: json['ItemID3'] ?? 0,
+      itemID4: json['ItemID4'] ?? 0,
+      itemCount0: json['ItemCount0'] ?? 0,
+      itemCount1: json['ItemCount1'] ?? 0,
+      itemCount2: json['ItemCount2'] ?? 0,
+      itemCount3: json['ItemCount3'] ?? 0,
+      itemCount4: json['ItemCount4'] ?? 0,
+    );
+  }
+
+  String get displayItems {
+    var result = '';
+    result = _appendDisplayItem(result, itemID0, itemCount0);
+    result = _appendDisplayItem(result, itemID1, itemCount1);
+    result = _appendDisplayItem(result, itemID2, itemCount2);
+    result = _appendDisplayItem(result, itemID3, itemCount3);
+    result = _appendDisplayItem(result, itemID4, itemCount4);
+    return result.isEmpty ? '-' : result;
+  }
+
+  BriefItemExtendedCostEntity copyWith({
+    int? id,
+    int? honorPoints,
+    int? arenaPoints,
+    int? arenaBracket,
+    int? itemID0,
+    int? itemID1,
+    int? itemID2,
+    int? itemID3,
+    int? itemID4,
+    int? itemCount0,
+    int? itemCount1,
+    int? itemCount2,
+    int? itemCount3,
+    int? itemCount4,
+  }) {
+    return BriefItemExtendedCostEntity(
+      id: id ?? this.id,
+      honorPoints: honorPoints ?? this.honorPoints,
+      arenaPoints: arenaPoints ?? this.arenaPoints,
+      arenaBracket: arenaBracket ?? this.arenaBracket,
+      itemID0: itemID0 ?? this.itemID0,
+      itemID1: itemID1 ?? this.itemID1,
+      itemID2: itemID2 ?? this.itemID2,
+      itemID3: itemID3 ?? this.itemID3,
+      itemID4: itemID4 ?? this.itemID4,
+      itemCount0: itemCount0 ?? this.itemCount0,
+      itemCount1: itemCount1 ?? this.itemCount1,
+      itemCount2: itemCount2 ?? this.itemCount2,
+      itemCount3: itemCount3 ?? this.itemCount3,
+      itemCount4: itemCount4 ?? this.itemCount4,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'HonorPoints': honorPoints,
+      'ArenaPoints': arenaPoints,
+      'ArenaBracket': arenaBracket,
+      'ItemID0': itemID0,
+      'ItemID1': itemID1,
+      'ItemID2': itemID2,
+      'ItemID3': itemID3,
+      'ItemID4': itemID4,
+      'ItemCount0': itemCount0,
+      'ItemCount1': itemCount1,
+      'ItemCount2': itemCount2,
+      'ItemCount3': itemCount3,
+      'ItemCount4': itemCount4,
+    };
+  }
+}
+
 /// 扩展价格
 class ItemExtendedCostEntity {
   final int id;
@@ -57,27 +180,6 @@ class ItemExtendedCostEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'HonorPoints': honorPoints,
-      'ArenaPoints': arenaPoints,
-      'ArenaBracket': arenaBracket,
-      'ItemID0': itemID0,
-      'ItemID1': itemID1,
-      'ItemID2': itemID2,
-      'ItemID3': itemID3,
-      'ItemID4': itemID4,
-      'ItemCount0': itemCount0,
-      'ItemCount1': itemCount1,
-      'ItemCount2': itemCount2,
-      'ItemCount3': itemCount3,
-      'ItemCount4': itemCount4,
-      'RequiredArenaRating': requiredArenaRating,
-      'ItemPurchaseGroup': itemPurchaseGroup,
-    };
-  }
-
   ItemExtendedCostEntity copyWith({
     int? id,
     int? honorPoints,
@@ -115,60 +217,6 @@ class ItemExtendedCostEntity {
       itemPurchaseGroup: itemPurchaseGroup ?? this.itemPurchaseGroup,
     );
   }
-}
-
-/// 扩展价格列表/Picker 展示模型
-class BriefItemExtendedCostEntity {
-  final int id;
-  final int honorPoints;
-  final int arenaPoints;
-  final int arenaBracket;
-  final int itemID0;
-  final int itemID1;
-  final int itemID2;
-  final int itemID3;
-  final int itemID4;
-  final int itemCount0;
-  final int itemCount1;
-  final int itemCount2;
-  final int itemCount3;
-  final int itemCount4;
-
-  const BriefItemExtendedCostEntity({
-    this.id = 0,
-    this.honorPoints = 0,
-    this.arenaPoints = 0,
-    this.arenaBracket = 0,
-    this.itemID0 = 0,
-    this.itemID1 = 0,
-    this.itemID2 = 0,
-    this.itemID3 = 0,
-    this.itemID4 = 0,
-    this.itemCount0 = 0,
-    this.itemCount1 = 0,
-    this.itemCount2 = 0,
-    this.itemCount3 = 0,
-    this.itemCount4 = 0,
-  });
-
-  factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemExtendedCostEntity(
-      id: json['ID'] ?? 0,
-      honorPoints: json['HonorPoints'] ?? 0,
-      arenaPoints: json['ArenaPoints'] ?? 0,
-      arenaBracket: json['ArenaBracket'] ?? 0,
-      itemID0: json['ItemID0'] ?? 0,
-      itemID1: json['ItemID1'] ?? 0,
-      itemID2: json['ItemID2'] ?? 0,
-      itemID3: json['ItemID3'] ?? 0,
-      itemID4: json['ItemID4'] ?? 0,
-      itemCount0: json['ItemCount0'] ?? 0,
-      itemCount1: json['ItemCount1'] ?? 0,
-      itemCount2: json['ItemCount2'] ?? 0,
-      itemCount3: json['ItemCount3'] ?? 0,
-      itemCount4: json['ItemCount4'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -186,56 +234,8 @@ class BriefItemExtendedCostEntity {
       'ItemCount2': itemCount2,
       'ItemCount3': itemCount3,
       'ItemCount4': itemCount4,
+      'RequiredArenaRating': requiredArenaRating,
+      'ItemPurchaseGroup': itemPurchaseGroup,
     };
   }
-
-  String get displayItems {
-    var result = '';
-    result = _appendDisplayItem(result, itemID0, itemCount0);
-    result = _appendDisplayItem(result, itemID1, itemCount1);
-    result = _appendDisplayItem(result, itemID2, itemCount2);
-    result = _appendDisplayItem(result, itemID3, itemCount3);
-    result = _appendDisplayItem(result, itemID4, itemCount4);
-    return result.isEmpty ? '-' : result;
-  }
-
-  BriefItemExtendedCostEntity copyWith({
-    int? id,
-    int? honorPoints,
-    int? arenaPoints,
-    int? arenaBracket,
-    int? itemID0,
-    int? itemID1,
-    int? itemID2,
-    int? itemID3,
-    int? itemID4,
-    int? itemCount0,
-    int? itemCount1,
-    int? itemCount2,
-    int? itemCount3,
-    int? itemCount4,
-  }) {
-    return BriefItemExtendedCostEntity(
-      id: id ?? this.id,
-      honorPoints: honorPoints ?? this.honorPoints,
-      arenaPoints: arenaPoints ?? this.arenaPoints,
-      arenaBracket: arenaBracket ?? this.arenaBracket,
-      itemID0: itemID0 ?? this.itemID0,
-      itemID1: itemID1 ?? this.itemID1,
-      itemID2: itemID2 ?? this.itemID2,
-      itemID3: itemID3 ?? this.itemID3,
-      itemID4: itemID4 ?? this.itemID4,
-      itemCount0: itemCount0 ?? this.itemCount0,
-      itemCount1: itemCount1 ?? this.itemCount1,
-      itemCount2: itemCount2 ?? this.itemCount2,
-      itemCount3: itemCount3 ?? this.itemCount3,
-      itemCount4: itemCount4 ?? this.itemCount4,
-    );
-  }
-}
-
-String _appendDisplayItem(String current, int itemId, int count) {
-  if (itemId == 0) return current;
-  final value = '${itemId}x$count';
-  return current.isEmpty ? value : '$current, $value';
 }

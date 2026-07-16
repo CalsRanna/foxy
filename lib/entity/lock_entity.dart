@@ -1,3 +1,40 @@
+/// 锁列表/Picker 展示模型
+class BriefLockEntity {
+  final int id;
+  final int type0;
+  final int index0;
+  final int skill0;
+
+  const BriefLockEntity({
+    this.id = 0,
+    this.type0 = 0,
+    this.index0 = 0,
+    this.skill0 = 0,
+  });
+
+  factory BriefLockEntity.fromJson(Map<String, dynamic> json) {
+    return BriefLockEntity(
+      id: json['ID'] ?? 0,
+      type0: json['Type0'] ?? 0,
+      index0: json['Index0'] ?? 0,
+      skill0: json['Skill0'] ?? 0,
+    );
+  }
+
+  BriefLockEntity copyWith({int? id, int? type0, int? index0, int? skill0}) {
+    return BriefLockEntity(
+      id: id ?? this.id,
+      type0: type0 ?? this.type0,
+      index0: index0 ?? this.index0,
+      skill0: skill0 ?? this.skill0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Type0': type0, 'Index0': index0, 'Skill0': skill0};
+  }
+}
+
 class LockEntity {
   final int id;
   final int type0;
@@ -107,44 +144,6 @@ class LockEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Type0': type0,
-      'Type1': type1,
-      'Type2': type2,
-      'Type3': type3,
-      'Type4': type4,
-      'Type5': type5,
-      'Type6': type6,
-      'Type7': type7,
-      'Index0': index0,
-      'Index1': index1,
-      'Index2': index2,
-      'Index3': index3,
-      'Index4': index4,
-      'Index5': index5,
-      'Index6': index6,
-      'Index7': index7,
-      'Skill0': skill0,
-      'Skill1': skill1,
-      'Skill2': skill2,
-      'Skill3': skill3,
-      'Skill4': skill4,
-      'Skill5': skill5,
-      'Skill6': skill6,
-      'Skill7': skill7,
-      'Action0': action0,
-      'Action1': action1,
-      'Action2': action2,
-      'Action3': action3,
-      'Action4': action4,
-      'Action5': action5,
-      'Action6': action6,
-      'Action7': action7,
-    };
-  }
-
   LockEntity copyWith({
     int? id,
     int? type0,
@@ -216,41 +215,42 @@ class LockEntity {
       action7: action7 ?? this.action7,
     );
   }
-}
-
-/// 锁列表/Picker 展示模型
-class BriefLockEntity {
-  final int id;
-  final int type0;
-  final int index0;
-  final int skill0;
-
-  const BriefLockEntity({
-    this.id = 0,
-    this.type0 = 0,
-    this.index0 = 0,
-    this.skill0 = 0,
-  });
-
-  factory BriefLockEntity.fromJson(Map<String, dynamic> json) {
-    return BriefLockEntity(
-      id: json['ID'] ?? 0,
-      type0: json['Type0'] ?? 0,
-      index0: json['Index0'] ?? 0,
-      skill0: json['Skill0'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Type0': type0, 'Index0': index0, 'Skill0': skill0};
-  }
-
-  BriefLockEntity copyWith({int? id, int? type0, int? index0, int? skill0}) {
-    return BriefLockEntity(
-      id: id ?? this.id,
-      type0: type0 ?? this.type0,
-      index0: index0 ?? this.index0,
-      skill0: skill0 ?? this.skill0,
-    );
+    return {
+      'ID': id,
+      'Type0': type0,
+      'Type1': type1,
+      'Type2': type2,
+      'Type3': type3,
+      'Type4': type4,
+      'Type5': type5,
+      'Type6': type6,
+      'Type7': type7,
+      'Index0': index0,
+      'Index1': index1,
+      'Index2': index2,
+      'Index3': index3,
+      'Index4': index4,
+      'Index5': index5,
+      'Index6': index6,
+      'Index7': index7,
+      'Skill0': skill0,
+      'Skill1': skill1,
+      'Skill2': skill2,
+      'Skill3': skill3,
+      'Skill4': skill4,
+      'Skill5': skill5,
+      'Skill6': skill6,
+      'Skill7': skill7,
+      'Action0': action0,
+      'Action1': action1,
+      'Action2': action2,
+      'Action3': action3,
+      'Action4': action4,
+      'Action5': action5,
+      'Action6': action6,
+      'Action7': action7,
+    };
   }
 }

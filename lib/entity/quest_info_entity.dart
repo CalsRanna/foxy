@@ -1,3 +1,29 @@
+/// 任务信息列表/Picker 展示模型
+class BriefQuestInfoEntity {
+  final int id;
+  final String infoNameLangZhCN;
+
+  const BriefQuestInfoEntity({this.id = 0, this.infoNameLangZhCN = ''});
+
+  factory BriefQuestInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestInfoEntity(
+      id: json['ID'] ?? 0,
+      infoNameLangZhCN: json['InfoName_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefQuestInfoEntity copyWith({int? id, String? infoNameLangZhCN}) {
+    return BriefQuestInfoEntity(
+      id: id ?? this.id,
+      infoNameLangZhCN: infoNameLangZhCN ?? this.infoNameLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'InfoName_lang_zhCN': infoNameLangZhCN};
+  }
+}
+
 class QuestInfoEntity {
   final int id;
   final String infoNameLangEnUS;
@@ -62,29 +88,6 @@ class QuestInfoEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'InfoName_lang_enUS': infoNameLangEnUS,
-      'InfoName_lang_koKR': infoNameLangKoKR,
-      'InfoName_lang_frFR': infoNameLangFrFR,
-      'InfoName_lang_deDE': infoNameLangDeDE,
-      'InfoName_lang_zhCN': infoNameLangZhCN,
-      'InfoName_lang_zhTW': infoNameLangZhTW,
-      'InfoName_lang_esES': infoNameLangEsES,
-      'InfoName_lang_esMX': infoNameLangEsMX,
-      'InfoName_lang_ruRU': infoNameLangRuRU,
-      'InfoName_lang_jaJP': infoNameLangJaJP,
-      'InfoName_lang_ptPT': infoNameLangPtPT,
-      'InfoName_lang_ptBR': infoNameLangPtBR,
-      'InfoName_lang_itIT': infoNameLangItIT,
-      'InfoName_lang_unk1': infoNameLangUnk1,
-      'InfoName_lang_unk2': infoNameLangUnk2,
-      'InfoName_lang_unk3': infoNameLangUnk3,
-      'InfoName_lang_Flags': infoNameLangFlags,
-    };
-  }
-
   QuestInfoEntity copyWith({
     int? id,
     String? infoNameLangEnUS,
@@ -126,30 +129,27 @@ class QuestInfoEntity {
       infoNameLangFlags: infoNameLangFlags ?? this.infoNameLangFlags,
     );
   }
-}
-
-/// 任务信息列表/Picker 展示模型
-class BriefQuestInfoEntity {
-  final int id;
-  final String infoNameLangZhCN;
-
-  const BriefQuestInfoEntity({this.id = 0, this.infoNameLangZhCN = ''});
-
-  factory BriefQuestInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestInfoEntity(
-      id: json['ID'] ?? 0,
-      infoNameLangZhCN: json['InfoName_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'InfoName_lang_zhCN': infoNameLangZhCN};
-  }
-
-  BriefQuestInfoEntity copyWith({int? id, String? infoNameLangZhCN}) {
-    return BriefQuestInfoEntity(
-      id: id ?? this.id,
-      infoNameLangZhCN: infoNameLangZhCN ?? this.infoNameLangZhCN,
-    );
+    return {
+      'ID': id,
+      'InfoName_lang_enUS': infoNameLangEnUS,
+      'InfoName_lang_koKR': infoNameLangKoKR,
+      'InfoName_lang_frFR': infoNameLangFrFR,
+      'InfoName_lang_deDE': infoNameLangDeDE,
+      'InfoName_lang_zhCN': infoNameLangZhCN,
+      'InfoName_lang_zhTW': infoNameLangZhTW,
+      'InfoName_lang_esES': infoNameLangEsES,
+      'InfoName_lang_esMX': infoNameLangEsMX,
+      'InfoName_lang_ruRU': infoNameLangRuRU,
+      'InfoName_lang_jaJP': infoNameLangJaJP,
+      'InfoName_lang_ptPT': infoNameLangPtPT,
+      'InfoName_lang_ptBR': infoNameLangPtBR,
+      'InfoName_lang_itIT': infoNameLangItIT,
+      'InfoName_lang_unk1': infoNameLangUnk1,
+      'InfoName_lang_unk2': infoNameLangUnk2,
+      'InfoName_lang_unk3': infoNameLangUnk3,
+      'InfoName_lang_Flags': infoNameLangFlags,
+    };
   }
 }

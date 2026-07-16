@@ -11,14 +11,14 @@ class ScalingStatValueFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'charlevel': charlevel};
-  }
-
   ScalingStatValueFilterEntity copyWith({String? id, String? charlevel}) {
     return ScalingStatValueFilterEntity(
       id: id ?? this.id,
       charlevel: charlevel ?? this.charlevel,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'charlevel': charlevel};
   }
 }

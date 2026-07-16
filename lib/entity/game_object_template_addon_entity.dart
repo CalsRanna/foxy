@@ -1,3 +1,42 @@
+/// 游戏对象模板附加数据列表/Picker 展示模型
+class BriefGameObjectTemplateAddonEntity {
+  final int entry;
+  final int faction;
+  final int flags;
+  final int minGold;
+  final int maxGold;
+
+  const BriefGameObjectTemplateAddonEntity({
+    this.entry = 0,
+    this.faction = 0,
+    this.flags = 0,
+    this.minGold = 0,
+    this.maxGold = 0,
+  });
+
+  factory BriefGameObjectTemplateAddonEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefGameObjectTemplateAddonEntity(
+      entry: json['entry'] ?? 0,
+      faction: json['faction'] ?? 0,
+      flags: json['flags'] ?? 0,
+      minGold: json['mingold'] ?? json['Mingold'] ?? 0,
+      maxGold: json['maxgold'] ?? json['Maxgold'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'faction': faction,
+      'flags': flags,
+      'mingold': minGold,
+      'maxgold': maxGold,
+    };
+  }
+}
+
 class GameObjectTemplateAddonEntity {
   final int entry;
   final int faction;
@@ -35,20 +74,6 @@ class GameObjectTemplateAddonEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'faction': faction,
-      'flags': flags,
-      'mingold': minGold,
-      'maxgold': maxGold,
-      'artkit0': artkit0,
-      'artkit1': artkit1,
-      'artkit2': artkit2,
-      'artkit3': artkit3,
-    };
-  }
-
   GameObjectTemplateAddonEntity copyWith({
     int? entry,
     int? faction,
@@ -72,35 +97,6 @@ class GameObjectTemplateAddonEntity {
       artkit3: artkit3 ?? this.artkit3,
     );
   }
-}
-
-/// 游戏对象模板附加数据列表/Picker 展示模型
-class BriefGameObjectTemplateAddonEntity {
-  final int entry;
-  final int faction;
-  final int flags;
-  final int minGold;
-  final int maxGold;
-
-  const BriefGameObjectTemplateAddonEntity({
-    this.entry = 0,
-    this.faction = 0,
-    this.flags = 0,
-    this.minGold = 0,
-    this.maxGold = 0,
-  });
-
-  factory BriefGameObjectTemplateAddonEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefGameObjectTemplateAddonEntity(
-      entry: json['entry'] ?? 0,
-      faction: json['faction'] ?? 0,
-      flags: json['flags'] ?? 0,
-      minGold: json['mingold'] ?? json['Mingold'] ?? 0,
-      maxGold: json['maxgold'] ?? json['Maxgold'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -109,6 +105,10 @@ class BriefGameObjectTemplateAddonEntity {
       'flags': flags,
       'mingold': minGold,
       'maxgold': maxGold,
+      'artkit0': artkit0,
+      'artkit1': artkit1,
+      'artkit2': artkit2,
+      'artkit3': artkit3,
     };
   }
 }

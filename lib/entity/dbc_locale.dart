@@ -1,22 +1,34 @@
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:warcrafty/warcrafty.dart';
 
+/// 从 [DbcSchema] 中发现全部本地化字段前缀（如 `Name_lang`）。
+///
+/// 通过匹配 `*_lang_enUS` 字符串列推断，用于覆盖完整性测试。
+Set<String> discoverDbcLocaleColumnPrefixes(DbcSchema schema) {
+  final prefixes = <String>{};
+  for (final field in schema.fields) {
+    if (!field.type.isString) continue;
+    const suffix = '_enUS';
+    if (!field.name.endsWith(suffix)) continue;
+    // Name_lang_enUS → Name_lang
+    final withoutLocale = field.name.substring(
+      0,
+      field.name.length - suffix.length,
+    );
+    if (!withoutLocale.endsWith('_lang')) continue;
+    prefixes.add(withoutLocale);
+  }
+  return prefixes;
+}
+
 /// DBC 固定语言槽位（与 warcrafty `localeNames` 顺序一致）。
 class DbcLocale {
-  final int index;
-  final String code;
-  final String label;
-
-  const DbcLocale({
-    required this.index,
-    required this.code,
-    required this.label,
-  });
-
   static const enUS = DbcLocale(index: 0, code: 'enUS', label: '美式英语');
   static const koKR = DbcLocale(index: 1, code: 'koKR', label: '韩语');
   static const frFR = DbcLocale(index: 2, code: 'frFR', label: '法语');
+
   static const deDE = DbcLocale(index: 3, code: 'deDE', label: '德语');
+
   static const zhCN = DbcLocale(index: 4, code: 'zhCN', label: '简体中文');
   static const zhTW = DbcLocale(index: 5, code: 'zhTW', label: '繁体中文');
   static const esES = DbcLocale(index: 6, code: 'esES', label: '西班牙语');
@@ -49,6 +61,15 @@ class DbcLocale {
     unk2,
     unk3,
   ];
+  final int index;
+  final String code;
+  final String label;
+
+  const DbcLocale({
+    required this.index,
+    required this.code,
+    required this.label,
+  });
 
   /// 弹窗第一列展示：`0 · enUS`。
   String get displayCode => '$index · $code';
@@ -70,13 +91,6 @@ class DbcLocaleFieldDefinition {
 
   /// 是否使用多行输入（描述类字段）。
   final bool multiline;
-
-  DbcLocaleFieldDefinition._({
-    required this.tableName,
-    required this.columnPrefix,
-    required this.label,
-    required this.multiline,
-  });
 
   /// 创建并校验字段定义：确保 Schema 中存在全部 16 个字符串语言列。
   factory DbcLocaleFieldDefinition({
@@ -112,15 +126,22 @@ class DbcLocaleFieldDefinition {
     );
   }
 
+  DbcLocaleFieldDefinition._({
+    required this.tableName,
+    required this.columnPrefix,
+    required this.label,
+    required this.multiline,
+  });
+
   /// 16 个语言列的物理列名（不含 Flags）。
   List<String> get columnNames => [
     for (final locale in DbcLocale.values) columnFor(locale),
   ];
 
-  String columnFor(DbcLocale locale) => '${columnPrefix}_${locale.code}';
-
   /// Flags 列名（本编辑器不读写，仅供引用）。
   String get flagsColumn => '${columnPrefix}_Flags';
+
+  String columnFor(DbcLocale locale) => '${columnPrefix}_${locale.code}';
 
   @override
   String toString() =>
@@ -134,6 +155,16 @@ class DbcLocaleFieldValue {
 
   const DbcLocaleFieldValue({required this.locale, required this.value});
 
+  @override
+  int get hashCode => Object.hash(locale.index, value);
+
+  @override
+  bool operator ==(Object other) {
+    return other is DbcLocaleFieldValue &&
+        other.locale.index == locale.index &&
+        other.value == value;
+  }
+
   DbcLocaleFieldValue copyWith({DbcLocale? locale, String? value}) {
     return DbcLocaleFieldValue(
       locale: locale ?? this.locale,
@@ -143,28 +174,18 @@ class DbcLocaleFieldValue {
 
   @override
   String toString() => 'DbcLocaleFieldValue(${locale.code}: $value)';
-
-  @override
-  bool operator ==(Object other) {
-    return other is DbcLocaleFieldValue &&
-        other.locale.index == locale.index &&
-        other.value == value;
-  }
-
-  @override
-  int get hashCode => Object.hash(locale.index, value);
 }
 
 /// 从 16 行值中按语言代码取值。
 extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
+  String get zhCN => valueOf('zhCN');
+
   String valueOf(String code) {
     for (final item in this) {
       if (item.locale.code == code) return item.value;
     }
     return '';
   }
-
-  String get zhCN => valueOf('zhCN');
 
   /// 用主语言草稿覆盖对应槽位（默认 [zhCN]）。
   ///
@@ -179,24 +200,4 @@ extension DbcLocaleFieldValueListX on List<DbcLocaleFieldValue> {
         item.locale.code == primaryCode ? item.copyWith(value: draft) : item,
     ];
   }
-}
-
-/// 从 [DbcSchema] 中发现全部本地化字段前缀（如 `Name_lang`）。
-///
-/// 通过匹配 `*_lang_enUS` 字符串列推断，用于覆盖完整性测试。
-Set<String> discoverDbcLocaleColumnPrefixes(DbcSchema schema) {
-  final prefixes = <String>{};
-  for (final field in schema.fields) {
-    if (!field.type.isString) continue;
-    const suffix = '_enUS';
-    if (!field.name.endsWith(suffix)) continue;
-    // Name_lang_enUS → Name_lang
-    final withoutLocale = field.name.substring(
-      0,
-      field.name.length - suffix.length,
-    );
-    if (!withoutLocale.endsWith('_lang')) continue;
-    prefixes.add(withoutLocale);
-  }
-  return prefixes;
 }

@@ -1,3 +1,40 @@
+/// 随机属性列表/Picker 展示模型
+class BriefItemRandomPropertiesEntity {
+  final int id;
+  final String name;
+  final String nameLangZhCN;
+
+  const BriefItemRandomPropertiesEntity({
+    this.id = 0,
+    this.name = '',
+    this.nameLangZhCN = '',
+  });
+
+  factory BriefItemRandomPropertiesEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemRandomPropertiesEntity(
+      id: json['ID'] ?? 0,
+      name: json['Name'] ?? '',
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefItemRandomPropertiesEntity copyWith({
+    int? id,
+    String? name,
+    String? nameLangZhCN,
+  }) {
+    return BriefItemRandomPropertiesEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Name': name, 'Name_lang_zhCN': nameLangZhCN};
+  }
+}
+
 class ItemRandomPropertiesEntity {
   final int id;
   final String name;
@@ -80,35 +117,6 @@ class ItemRandomPropertiesEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name': name,
-      'Enchantment0': enchantment0,
-      'Enchantment1': enchantment1,
-      'Enchantment2': enchantment2,
-      'Enchantment3': enchantment3,
-      'Enchantment4': enchantment4,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-    };
-  }
-
   ItemRandomPropertiesEntity copyWith({
     int? id,
     String? name,
@@ -162,41 +170,33 @@ class ItemRandomPropertiesEntity {
       nameLangFlags: nameLangFlags ?? this.nameLangFlags,
     );
   }
-}
-
-/// 随机属性列表/Picker 展示模型
-class BriefItemRandomPropertiesEntity {
-  final int id;
-  final String name;
-  final String nameLangZhCN;
-
-  const BriefItemRandomPropertiesEntity({
-    this.id = 0,
-    this.name = '',
-    this.nameLangZhCN = '',
-  });
-
-  factory BriefItemRandomPropertiesEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemRandomPropertiesEntity(
-      id: json['ID'] ?? 0,
-      name: json['Name'] ?? '',
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Name': name, 'Name_lang_zhCN': nameLangZhCN};
-  }
-
-  BriefItemRandomPropertiesEntity copyWith({
-    int? id,
-    String? name,
-    String? nameLangZhCN,
-  }) {
-    return BriefItemRandomPropertiesEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-    );
+    return {
+      'ID': id,
+      'Name': name,
+      'Enchantment0': enchantment0,
+      'Enchantment1': enchantment1,
+      'Enchantment2': enchantment2,
+      'Enchantment3': enchantment3,
+      'Enchantment4': enchantment4,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+    };
   }
 }

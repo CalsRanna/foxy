@@ -1,3 +1,29 @@
+/// 称号列表/Picker 展示模型
+class BriefCharTitleEntity {
+  final int id;
+  final String nameLangZhCN;
+
+  const BriefCharTitleEntity({this.id = 0, this.nameLangZhCN = ''});
+
+  factory BriefCharTitleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCharTitleEntity(
+      id: json['ID'] ?? 0,
+      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefCharTitleEntity copyWith({int? id, String? nameLangZhCN}) {
+    return BriefCharTitleEntity(
+      id: id ?? this.id,
+      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Name_lang_zhCN': nameLangZhCN};
+  }
+}
+
 class CharTitleEntity {
   final int id;
   final int conditionId;
@@ -119,48 +145,6 @@ class CharTitleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Condition_ID': conditionId,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'Name1_lang_enUS': name1LangEnUS,
-      'Name1_lang_koKR': name1LangKoKR,
-      'Name1_lang_frFR': name1LangFrFR,
-      'Name1_lang_deDE': name1LangDeDE,
-      'Name1_lang_zhCN': name1LangZhCN,
-      'Name1_lang_zhTW': name1LangZhTW,
-      'Name1_lang_esES': name1LangEsES,
-      'Name1_lang_esMX': name1LangEsMX,
-      'Name1_lang_ruRU': name1LangRuRU,
-      'Name1_lang_jaJP': name1LangJaJP,
-      'Name1_lang_ptPT': name1LangPtPT,
-      'Name1_lang_ptBR': name1LangPtBR,
-      'Name1_lang_itIT': name1LangItIT,
-      'Name1_lang_unk1': name1LangUnk1,
-      'Name1_lang_unk2': name1LangUnk2,
-      'Name1_lang_unk3': name1LangUnk3,
-      'Name1_lang_Flags': name1LangFlags,
-      'Mask_ID': maskId,
-    };
-  }
-
   CharTitleEntity copyWith({
     int? id,
     int? conditionId,
@@ -240,30 +224,46 @@ class CharTitleEntity {
       maskId: maskId ?? this.maskId,
     );
   }
-}
-
-/// 称号列表/Picker 展示模型
-class BriefCharTitleEntity {
-  final int id;
-  final String nameLangZhCN;
-
-  const BriefCharTitleEntity({this.id = 0, this.nameLangZhCN = ''});
-
-  factory BriefCharTitleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCharTitleEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Name_lang_zhCN': nameLangZhCN};
-  }
-
-  BriefCharTitleEntity copyWith({int? id, String? nameLangZhCN}) {
-    return BriefCharTitleEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-    );
+    return {
+      'ID': id,
+      'Condition_ID': conditionId,
+      'Name_lang_enUS': nameLangEnUS,
+      'Name_lang_koKR': nameLangKoKR,
+      'Name_lang_frFR': nameLangFrFR,
+      'Name_lang_deDE': nameLangDeDE,
+      'Name_lang_zhCN': nameLangZhCN,
+      'Name_lang_zhTW': nameLangZhTW,
+      'Name_lang_esES': nameLangEsES,
+      'Name_lang_esMX': nameLangEsMX,
+      'Name_lang_ruRU': nameLangRuRU,
+      'Name_lang_jaJP': nameLangJaJP,
+      'Name_lang_ptPT': nameLangPtPT,
+      'Name_lang_ptBR': nameLangPtBR,
+      'Name_lang_itIT': nameLangItIT,
+      'Name_lang_unk1': nameLangUnk1,
+      'Name_lang_unk2': nameLangUnk2,
+      'Name_lang_unk3': nameLangUnk3,
+      'Name_lang_Flags': nameLangFlags,
+      'Name1_lang_enUS': name1LangEnUS,
+      'Name1_lang_koKR': name1LangKoKR,
+      'Name1_lang_frFR': name1LangFrFR,
+      'Name1_lang_deDE': name1LangDeDE,
+      'Name1_lang_zhCN': name1LangZhCN,
+      'Name1_lang_zhTW': name1LangZhTW,
+      'Name1_lang_esES': name1LangEsES,
+      'Name1_lang_esMX': name1LangEsMX,
+      'Name1_lang_ruRU': name1LangRuRU,
+      'Name1_lang_jaJP': name1LangJaJP,
+      'Name1_lang_ptPT': name1LangPtPT,
+      'Name1_lang_ptBR': name1LangPtBR,
+      'Name1_lang_itIT': name1LangItIT,
+      'Name1_lang_unk1': name1LangUnk1,
+      'Name1_lang_unk2': name1LangUnk2,
+      'Name1_lang_unk3': name1LangUnk3,
+      'Name1_lang_Flags': name1LangFlags,
+      'Mask_ID': maskId,
+    };
   }
 }

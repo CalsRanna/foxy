@@ -20,15 +20,6 @@ class PageTextLocaleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'Text': text,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   PageTextLocaleEntity copyWith({
     int? id,
     String? locale,
@@ -41,5 +32,14 @@ class PageTextLocaleEntity {
       text: text ?? this.text,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'locale': locale,
+      'Text': text,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

@@ -8,11 +8,11 @@ class NpcTextFilterEntity {
     return NpcTextFilterEntity(id: json['id'] ?? '', text: json['text'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'text': text};
-  }
-
   NpcTextFilterEntity copyWith({String? id, String? text}) {
     return NpcTextFilterEntity(id: id ?? this.id, text: text ?? this.text);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'text': text};
   }
 }

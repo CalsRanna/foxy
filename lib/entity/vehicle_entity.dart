@@ -1,3 +1,32 @@
+/// 载具列表/Picker 展示模型
+class BriefVehicleEntity {
+  final int id;
+  final int flags;
+  final double turnSpeed;
+
+  const BriefVehicleEntity({this.id = 0, this.flags = 0, this.turnSpeed = 0});
+
+  factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefVehicleEntity(
+      id: json['ID'] ?? json['id'] ?? 0,
+      flags: json['Flags'] ?? json['flags'] ?? 0,
+      turnSpeed: json['TurnSpeed'] ?? json['turnSpeed'] ?? 0,
+    );
+  }
+
+  BriefVehicleEntity copyWith({int? id, int? flags, double? turnSpeed}) {
+    return BriefVehicleEntity(
+      id: id ?? this.id,
+      flags: flags ?? this.flags,
+      turnSpeed: turnSpeed ?? this.turnSpeed,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'Flags': flags, 'TurnSpeed': turnSpeed};
+  }
+}
+
 /// 载具数据
 class VehicleEntity {
   final int id;
@@ -129,51 +158,6 @@ class VehicleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'TurnSpeed': turnSpeed,
-      'PitchSpeed': pitchSpeed,
-      'PitchMin': pitchMin,
-      'PitchMax': pitchMax,
-      'SeatID0': seatID0,
-      'SeatID1': seatID1,
-      'SeatID2': seatID2,
-      'SeatID3': seatID3,
-      'SeatID4': seatID4,
-      'SeatID5': seatID5,
-      'SeatID6': seatID6,
-      'SeatID7': seatID7,
-      'MouseLookOffsetPitch': mouseLookOffsetPitch,
-      'CameraFadeDistScalarMin': cameraFadeDistScalarMin,
-      'CameraFadeDistScalarMax': cameraFadeDistScalarMax,
-      'CameraPitchOffset': cameraPitchOffset,
-      'FacingLimitRight': facingLimitRight,
-      'FacingLimitLeft': facingLimitLeft,
-      'MsslTrgtTurnLingering': msslTrgtTurnLingering,
-      'MsslTrgtPitchLingering': msslTrgtPitchLingering,
-      'MsslTrgtMouseLingering': msslTrgtMouseLingering,
-      'MsslTrgtEndOpacity': msslTrgtEndOpacity,
-      'MsslTrgtArcSpeed': msslTrgtArcSpeed,
-      'MsslTrgtArcRepeat': msslTrgtArcRepeat,
-      'MsslTrgtArcWidth': msslTrgtArcWidth,
-      'MsslTrgtImpactRadius0': msslTrgtImpactRadius0,
-      'MsslTrgtImpactRadius1': msslTrgtImpactRadius1,
-      'MsslTrgtArcTexture': msslTrgtArcTexture,
-      'MsslTrgtImpactTexture': msslTrgtImpactTexture,
-      'MsslTrgtImpactModel0': msslTrgtImpactModel0,
-      'MsslTrgtImpactModel1': msslTrgtImpactModel1,
-      'CameraYawOffset': cameraYawOffset,
-      'UiLocomotionType': uiLocomotionType,
-      'MsslTrgtImpactTexRadius': msslTrgtImpactTexRadius,
-      'VehicleUIIndicatorID': vehicleUIIndicatorID,
-      'PowerDisplayID0': powerDisplayID0,
-      'PowerDisplayID1': powerDisplayID1,
-      'PowerDisplayID2': powerDisplayID2,
-    };
-  }
-
   VehicleEntity copyWith({
     int? id,
     int? flags,
@@ -268,33 +252,49 @@ class VehicleEntity {
       powerDisplayID2: powerDisplayID2 ?? this.powerDisplayID2,
     );
   }
-}
-
-/// 载具列表/Picker 展示模型
-class BriefVehicleEntity {
-  final int id;
-  final int flags;
-  final double turnSpeed;
-
-  const BriefVehicleEntity({this.id = 0, this.flags = 0, this.turnSpeed = 0});
-
-  factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefVehicleEntity(
-      id: json['ID'] ?? json['id'] ?? 0,
-      flags: json['Flags'] ?? json['flags'] ?? 0,
-      turnSpeed: json['TurnSpeed'] ?? json['turnSpeed'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Flags': flags, 'TurnSpeed': turnSpeed};
-  }
-
-  BriefVehicleEntity copyWith({int? id, int? flags, double? turnSpeed}) {
-    return BriefVehicleEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      turnSpeed: turnSpeed ?? this.turnSpeed,
-    );
+    return {
+      'ID': id,
+      'Flags': flags,
+      'TurnSpeed': turnSpeed,
+      'PitchSpeed': pitchSpeed,
+      'PitchMin': pitchMin,
+      'PitchMax': pitchMax,
+      'SeatID0': seatID0,
+      'SeatID1': seatID1,
+      'SeatID2': seatID2,
+      'SeatID3': seatID3,
+      'SeatID4': seatID4,
+      'SeatID5': seatID5,
+      'SeatID6': seatID6,
+      'SeatID7': seatID7,
+      'MouseLookOffsetPitch': mouseLookOffsetPitch,
+      'CameraFadeDistScalarMin': cameraFadeDistScalarMin,
+      'CameraFadeDistScalarMax': cameraFadeDistScalarMax,
+      'CameraPitchOffset': cameraPitchOffset,
+      'FacingLimitRight': facingLimitRight,
+      'FacingLimitLeft': facingLimitLeft,
+      'MsslTrgtTurnLingering': msslTrgtTurnLingering,
+      'MsslTrgtPitchLingering': msslTrgtPitchLingering,
+      'MsslTrgtMouseLingering': msslTrgtMouseLingering,
+      'MsslTrgtEndOpacity': msslTrgtEndOpacity,
+      'MsslTrgtArcSpeed': msslTrgtArcSpeed,
+      'MsslTrgtArcRepeat': msslTrgtArcRepeat,
+      'MsslTrgtArcWidth': msslTrgtArcWidth,
+      'MsslTrgtImpactRadius0': msslTrgtImpactRadius0,
+      'MsslTrgtImpactRadius1': msslTrgtImpactRadius1,
+      'MsslTrgtArcTexture': msslTrgtArcTexture,
+      'MsslTrgtImpactTexture': msslTrgtImpactTexture,
+      'MsslTrgtImpactModel0': msslTrgtImpactModel0,
+      'MsslTrgtImpactModel1': msslTrgtImpactModel1,
+      'CameraYawOffset': cameraYawOffset,
+      'UiLocomotionType': uiLocomotionType,
+      'MsslTrgtImpactTexRadius': msslTrgtImpactTexRadius,
+      'VehicleUIIndicatorID': vehicleUIIndicatorID,
+      'PowerDisplayID0': powerDisplayID0,
+      'PowerDisplayID1': powerDisplayID1,
+      'PowerDisplayID2': powerDisplayID2,
+    };
   }
 }

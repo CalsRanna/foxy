@@ -1,5 +1,29 @@
-// item_template_locale 表模型（1:N locale，复合主键 ID + Locale）
+/// 列表 / Picker 精简行：ID + locale + 展示名
+class BriefItemTemplateLocaleEntity {
+  final int id;
+  final String locale;
+  final String name;
 
+  const BriefItemTemplateLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.name = '',
+  });
+
+  factory BriefItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplateLocaleEntity(
+      id: (json['ID'] ?? json['id'] ?? 0) as int,
+      locale: json['locale']?.toString() ?? 'zhCN',
+      name: json['Name']?.toString() ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'ID': id, 'locale': locale, 'Name': name};
+  }
+}
+
+/// item_template_locale 表模型（1:N locale，复合主键 ID + Locale）
 class ItemTemplateLocaleEntity {
   final int id;
   final String locale;
@@ -25,16 +49,6 @@ class ItemTemplateLocaleEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'Name': name,
-      'Description': description,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   ItemTemplateLocaleEntity copyWith({
     int? id,
     String? locale,
@@ -50,29 +64,14 @@ class ItemTemplateLocaleEntity {
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
   }
-}
-
-/// 列表 / Picker 精简行：ID + locale + 展示名
-class BriefItemTemplateLocaleEntity {
-  final int id;
-  final String locale;
-  final String name;
-
-  const BriefItemTemplateLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.name = '',
-  });
-
-  factory BriefItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemTemplateLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      name: json['Name']?.toString() ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'locale': locale, 'Name': name};
+    return {
+      'ID': id,
+      'locale': locale,
+      'Name': name,
+      'Description': description,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

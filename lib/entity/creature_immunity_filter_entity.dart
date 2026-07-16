@@ -11,12 +11,12 @@ class CreatureImmunityFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() => {'id': id, 'comment': comment};
-
   CreatureImmunityFilterEntity copyWith({String? id, String? comment}) {
     return CreatureImmunityFilterEntity(
       id: id ?? this.id,
       comment: comment ?? this.comment,
     );
   }
+
+  Map<String, dynamic> toJson() => {'id': id, 'comment': comment};
 }

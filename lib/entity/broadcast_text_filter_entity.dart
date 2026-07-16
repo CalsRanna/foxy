@@ -11,14 +11,14 @@ class BroadcastTextFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'text': text};
-  }
-
   BroadcastTextFilterEntity copyWith({String? id, String? text}) {
     return BroadcastTextFilterEntity(
       id: id ?? this.id,
       text: text ?? this.text,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'text': text};
   }
 }

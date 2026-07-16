@@ -11,11 +11,11 @@ class SpellIconFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
-  }
-
   SpellIconFilterEntity copyWith({String? id, String? name}) {
     return SpellIconFilterEntity(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
   }
 }

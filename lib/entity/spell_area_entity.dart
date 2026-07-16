@@ -39,21 +39,6 @@ class SpellAreaEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'spell': spell,
-      'area': area,
-      'quest_start': questStart,
-      'quest_end': questEnd,
-      'aura_spell': auraSpell,
-      'racemask': racemask,
-      'gender': gender,
-      'autocast': autocast,
-      'quest_start_status': questStartStatus,
-      'quest_end_status': questEndStatus,
-    };
-  }
-
   SpellAreaEntity copyWith({
     int? spell,
     int? area,
@@ -78,5 +63,20 @@ class SpellAreaEntity {
       questStartStatus: questStartStatus ?? this.questStartStatus,
       questEndStatus: questEndStatus ?? this.questEndStatus,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'spell': spell,
+      'area': area,
+      'quest_start': questStart,
+      'quest_end': questEnd,
+      'aura_spell': auraSpell,
+      'racemask': racemask,
+      'gender': gender,
+      'autocast': autocast,
+      'quest_start_status': questStartStatus,
+      'quest_end_status': questEndStatus,
+    };
   }
 }

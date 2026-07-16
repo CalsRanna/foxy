@@ -29,15 +29,6 @@ class CreatureTemplateSpellEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureID': creatureID,
-      'Index': index,
-      'Spell': spell,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   CreatureTemplateSpellEntity copyWith({
     int? creatureID,
     int? index,
@@ -54,5 +45,14 @@ class CreatureTemplateSpellEntity {
       spellName: spellName ?? this.spellName,
       spellSubtext: spellSubtext ?? this.spellSubtext,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'CreatureID': creatureID,
+      'Index': index,
+      'Spell': spell,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

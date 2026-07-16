@@ -8,11 +8,11 @@ class TalentFilterEntity {
     return TalentFilterEntity(id: json['id'] ?? '', spell: json['spell'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'spell': spell};
-  }
-
   TalentFilterEntity copyWith({String? id, String? spell}) {
     return TalentFilterEntity(id: id ?? this.id, spell: spell ?? this.spell);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'spell': spell};
   }
 }

@@ -118,39 +118,6 @@ class CreatureModelDataEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'ModelName': modelName,
-      'SizeClass': sizeClass,
-      'ModelScale': modelScale,
-      'BloodID': bloodId,
-      'FootprintTextureID': footprintTextureId,
-      'FootprintTextureLength': footprintTextureLength,
-      'FootprintTextureWidth': footprintTextureWidth,
-      'FootprintParticleScale': footprintParticleScale,
-      'FoleyMaterialID': foleyMaterialId,
-      'FootstepShakeSize': footstepShakeSize,
-      'DeathThudShakeSize': deathThudShakeSize,
-      'SoundID': soundId,
-      'CollisionWidth': collisionWidth,
-      'CollisionHeight': collisionHeight,
-      'MountHeight': mountHeight,
-      'GeoBoxMinX': geoBoxMinX,
-      'GeoBoxMinY': geoBoxMinY,
-      'GeoBoxMinZ': geoBoxMinZ,
-      'GeoBoxMaxX': geoBoxMaxX,
-      'GeoBoxMaxY': geoBoxMaxY,
-      'GeoBoxMaxZ': geoBoxMaxZ,
-      'WorldEffectScale': worldEffectScale,
-      'AttachedEffectScale': attachedEffectScale,
-      'MissileCollisionRadius': missileCollisionRadius,
-      'MissileCollisionPush': missileCollisionPush,
-      'MissileCollisionRaise': missileCollisionRaise,
-    };
-  }
-
   CreatureModelDataEntity copyWith({
     int? id,
     int? flags,
@@ -216,5 +183,38 @@ class CreatureModelDataEntity {
       missileCollisionRaise:
           missileCollisionRaise ?? this.missileCollisionRaise,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Flags': flags,
+      'ModelName': modelName,
+      'SizeClass': sizeClass,
+      'ModelScale': modelScale,
+      'BloodID': bloodId,
+      'FootprintTextureID': footprintTextureId,
+      'FootprintTextureLength': footprintTextureLength,
+      'FootprintTextureWidth': footprintTextureWidth,
+      'FootprintParticleScale': footprintParticleScale,
+      'FoleyMaterialID': foleyMaterialId,
+      'FootstepShakeSize': footstepShakeSize,
+      'DeathThudShakeSize': deathThudShakeSize,
+      'SoundID': soundId,
+      'CollisionWidth': collisionWidth,
+      'CollisionHeight': collisionHeight,
+      'MountHeight': mountHeight,
+      'GeoBoxMinX': geoBoxMinX,
+      'GeoBoxMinY': geoBoxMinY,
+      'GeoBoxMinZ': geoBoxMinZ,
+      'GeoBoxMaxX': geoBoxMaxX,
+      'GeoBoxMaxY': geoBoxMaxY,
+      'GeoBoxMaxZ': geoBoxMaxZ,
+      'WorldEffectScale': worldEffectScale,
+      'AttachedEffectScale': attachedEffectScale,
+      'MissileCollisionRadius': missileCollisionRadius,
+      'MissileCollisionPush': missileCollisionPush,
+      'MissileCollisionRaise': missileCollisionRaise,
+    };
   }
 }

@@ -11,14 +11,14 @@ class CreatureSpellDataFilterEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'spell': spell};
-  }
-
   CreatureSpellDataFilterEntity copyWith({String? id, String? spell}) {
     return CreatureSpellDataFilterEntity(
       id: id ?? this.id,
       spell: spell ?? this.spell,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'spell': spell};
   }
 }

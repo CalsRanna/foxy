@@ -1,3 +1,73 @@
+class BriefScalingStatValueEntity {
+  final int id;
+  final int charlevel;
+  final int primaryBudget;
+  final int tertiaryBudget;
+  final int shoulderBudget;
+  final int trinketBudget;
+  final int weaponBudget1H;
+  final int rangedBudget;
+
+  const BriefScalingStatValueEntity({
+    this.id = 0,
+    this.charlevel = 0,
+    this.primaryBudget = 0,
+    this.tertiaryBudget = 0,
+    this.shoulderBudget = 0,
+    this.trinketBudget = 0,
+    this.weaponBudget1H = 0,
+    this.rangedBudget = 0,
+  });
+
+  factory BriefScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
+    return BriefScalingStatValueEntity(
+      id: json['ID'] ?? 0,
+      charlevel: json['Charlevel'] ?? 0,
+      primaryBudget: json['PrimaryBudget'] ?? 0,
+      tertiaryBudget: json['TertiaryBudget'] ?? 0,
+      shoulderBudget: json['ShoulderBudget'] ?? 0,
+      trinketBudget: json['TrinketBudget'] ?? 0,
+      weaponBudget1H: json['WeaponBudget1H'] ?? 0,
+      rangedBudget: json['RangedBudget'] ?? 0,
+    );
+  }
+
+  BriefScalingStatValueEntity copyWith({
+    int? id,
+    int? charlevel,
+    int? primaryBudget,
+    int? tertiaryBudget,
+    int? shoulderBudget,
+    int? trinketBudget,
+    int? weaponBudget1H,
+    int? rangedBudget,
+  }) {
+    return BriefScalingStatValueEntity(
+      id: id ?? this.id,
+      charlevel: charlevel ?? this.charlevel,
+      primaryBudget: primaryBudget ?? this.primaryBudget,
+      tertiaryBudget: tertiaryBudget ?? this.tertiaryBudget,
+      shoulderBudget: shoulderBudget ?? this.shoulderBudget,
+      trinketBudget: trinketBudget ?? this.trinketBudget,
+      weaponBudget1H: weaponBudget1H ?? this.weaponBudget1H,
+      rangedBudget: rangedBudget ?? this.rangedBudget,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Charlevel': charlevel,
+      'PrimaryBudget': primaryBudget,
+      'TertiaryBudget': tertiaryBudget,
+      'ShoulderBudget': shoulderBudget,
+      'TrinketBudget': trinketBudget,
+      'WeaponBudget1H': weaponBudget1H,
+      'RangedBudget': rangedBudget,
+    };
+  }
+}
+
 class ScalingStatValueEntity {
   final int id;
   final int charlevel;
@@ -80,35 +150,6 @@ class ScalingStatValueEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Charlevel': charlevel,
-      'ShoulderBudget': shoulderBudget,
-      'TrinketBudget': trinketBudget,
-      'WeaponBudget1H': weaponBudget1H,
-      'RangedBudget': rangedBudget,
-      'ClothShoulderArmor': clothShoulderArmor,
-      'LeatherShoulderArmor': leatherShoulderArmor,
-      'MailShoulderArmor': mailShoulderArmor,
-      'PlateShoulderArmor': plateShoulderArmor,
-      'WeaponDPS1H': weaponDPS1H,
-      'WeaponDPS2H': weaponDPS2H,
-      'SpellcasterDPS1H': spellcasterDPS1H,
-      'SpellcasterDPS2H': spellcasterDPS2H,
-      'RangedDPS': rangedDPS,
-      'WandDPS': wandDPS,
-      'SpellPower': spellPower,
-      'PrimaryBudget': primaryBudget,
-      'TertiaryBudget': tertiaryBudget,
-      'ClothCloakArmor': clothCloakArmor,
-      'ClothChestArmor': clothChestArmor,
-      'LeatherChestArmor': leatherChestArmor,
-      'MailChestArmor': mailChestArmor,
-      'PlateChestArmor': plateChestArmor,
-    };
-  }
-
   ScalingStatValueEntity copyWith({
     int? id,
     int? charlevel,
@@ -162,74 +203,33 @@ class ScalingStatValueEntity {
       plateChestArmor: plateChestArmor ?? this.plateChestArmor,
     );
   }
-}
-
-class BriefScalingStatValueEntity {
-  final int id;
-  final int charlevel;
-  final int primaryBudget;
-  final int tertiaryBudget;
-  final int shoulderBudget;
-  final int trinketBudget;
-  final int weaponBudget1H;
-  final int rangedBudget;
-
-  const BriefScalingStatValueEntity({
-    this.id = 0,
-    this.charlevel = 0,
-    this.primaryBudget = 0,
-    this.tertiaryBudget = 0,
-    this.shoulderBudget = 0,
-    this.trinketBudget = 0,
-    this.weaponBudget1H = 0,
-    this.rangedBudget = 0,
-  });
-
-  factory BriefScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
-    return BriefScalingStatValueEntity(
-      id: json['ID'] ?? 0,
-      charlevel: json['Charlevel'] ?? 0,
-      primaryBudget: json['PrimaryBudget'] ?? 0,
-      tertiaryBudget: json['TertiaryBudget'] ?? 0,
-      shoulderBudget: json['ShoulderBudget'] ?? 0,
-      trinketBudget: json['TrinketBudget'] ?? 0,
-      weaponBudget1H: json['WeaponBudget1H'] ?? 0,
-      rangedBudget: json['RangedBudget'] ?? 0,
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
       'Charlevel': charlevel,
-      'PrimaryBudget': primaryBudget,
-      'TertiaryBudget': tertiaryBudget,
       'ShoulderBudget': shoulderBudget,
       'TrinketBudget': trinketBudget,
       'WeaponBudget1H': weaponBudget1H,
       'RangedBudget': rangedBudget,
+      'ClothShoulderArmor': clothShoulderArmor,
+      'LeatherShoulderArmor': leatherShoulderArmor,
+      'MailShoulderArmor': mailShoulderArmor,
+      'PlateShoulderArmor': plateShoulderArmor,
+      'WeaponDPS1H': weaponDPS1H,
+      'WeaponDPS2H': weaponDPS2H,
+      'SpellcasterDPS1H': spellcasterDPS1H,
+      'SpellcasterDPS2H': spellcasterDPS2H,
+      'RangedDPS': rangedDPS,
+      'WandDPS': wandDPS,
+      'SpellPower': spellPower,
+      'PrimaryBudget': primaryBudget,
+      'TertiaryBudget': tertiaryBudget,
+      'ClothCloakArmor': clothCloakArmor,
+      'ClothChestArmor': clothChestArmor,
+      'LeatherChestArmor': leatherChestArmor,
+      'MailChestArmor': mailChestArmor,
+      'PlateChestArmor': plateChestArmor,
     };
-  }
-
-  BriefScalingStatValueEntity copyWith({
-    int? id,
-    int? charlevel,
-    int? primaryBudget,
-    int? tertiaryBudget,
-    int? shoulderBudget,
-    int? trinketBudget,
-    int? weaponBudget1H,
-    int? rangedBudget,
-  }) {
-    return BriefScalingStatValueEntity(
-      id: id ?? this.id,
-      charlevel: charlevel ?? this.charlevel,
-      primaryBudget: primaryBudget ?? this.primaryBudget,
-      tertiaryBudget: tertiaryBudget ?? this.tertiaryBudget,
-      shoulderBudget: shoulderBudget ?? this.shoulderBudget,
-      trinketBudget: trinketBudget ?? this.trinketBudget,
-      weaponBudget1H: weaponBudget1H ?? this.weaponBudget1H,
-      rangedBudget: rangedBudget ?? this.rangedBudget,
-    );
   }
 }

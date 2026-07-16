@@ -7,11 +7,11 @@ class WaypointDataFilterEntity {
     return WaypointDataFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   WaypointDataFilterEntity copyWith({String? id}) {
     return WaypointDataFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

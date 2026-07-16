@@ -25,16 +25,6 @@ class BriefGameObjectTemplateEntity {
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'name': name,
-      'Name': localeName,
-      'type': type,
-      'size': size,
-    };
-  }
-
   BriefGameObjectTemplateEntity copyWith({
     int? entry,
     String? name,
@@ -49,6 +39,16 @@ class BriefGameObjectTemplateEntity {
       type: type ?? this.type,
       size: size ?? this.size,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'Name': localeName,
+      'type': type,
+      'size': size,
+    };
   }
 }
 
@@ -167,46 +167,6 @@ class GameObjectTemplateEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'type': type,
-      'displayId': displayId,
-      'name': name,
-      'IconName': iconName,
-      'castBarCaption': castBarCaption,
-      'unk1': unk1,
-      'size': size,
-      'Data0': data0,
-      'Data1': data1,
-      'Data2': data2,
-      'Data3': data3,
-      'Data4': data4,
-      'Data5': data5,
-      'Data6': data6,
-      'Data7': data7,
-      'Data8': data8,
-      'Data9': data9,
-      'Data10': data10,
-      'Data11': data11,
-      'Data12': data12,
-      'Data13': data13,
-      'Data14': data14,
-      'Data15': data15,
-      'Data16': data16,
-      'Data17': data17,
-      'Data18': data18,
-      'Data19': data19,
-      'Data20': data20,
-      'Data21': data21,
-      'Data22': data22,
-      'Data23': data23,
-      'AIName': aiName,
-      'ScriptName': scriptName,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
   GameObjectTemplateEntity copyWith({
     int? entry,
     int? type,
@@ -281,5 +241,45 @@ class GameObjectTemplateEntity {
       scriptName: scriptName ?? this.scriptName,
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'type': type,
+      'displayId': displayId,
+      'name': name,
+      'IconName': iconName,
+      'castBarCaption': castBarCaption,
+      'unk1': unk1,
+      'size': size,
+      'Data0': data0,
+      'Data1': data1,
+      'Data2': data2,
+      'Data3': data3,
+      'Data4': data4,
+      'Data5': data5,
+      'Data6': data6,
+      'Data7': data7,
+      'Data8': data8,
+      'Data9': data9,
+      'Data10': data10,
+      'Data11': data11,
+      'Data12': data12,
+      'Data13': data13,
+      'Data14': data14,
+      'Data15': data15,
+      'Data16': data16,
+      'Data17': data17,
+      'Data18': data18,
+      'Data19': data19,
+      'Data20': data20,
+      'Data21': data21,
+      'Data22': data22,
+      'Data23': data23,
+      'AIName': aiName,
+      'ScriptName': scriptName,
+      'VerifiedBuild': verifiedBuild,
+    };
   }
 }

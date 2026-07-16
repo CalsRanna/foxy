@@ -4,8 +4,11 @@ class GossipMenuFilterEntity {
 
   const GossipMenuFilterEntity({this.menuId = '', this.text = ''});
 
-  Map<String, dynamic> toJson() {
-    return {'menuId': menuId, 'text': text};
+  factory GossipMenuFilterEntity.fromJson(Map<String, dynamic> json) {
+    return GossipMenuFilterEntity(
+      menuId: json['menuId'] ?? '',
+      text: json['text'] ?? '',
+    );
   }
 
   GossipMenuFilterEntity copyWith({String? menuId, String? text}) {
@@ -15,10 +18,7 @@ class GossipMenuFilterEntity {
     );
   }
 
-  factory GossipMenuFilterEntity.fromJson(Map<String, dynamic> json) {
-    return GossipMenuFilterEntity(
-      menuId: json['menuId'] ?? '',
-      text: json['text'] ?? '',
-    );
+  Map<String, dynamic> toJson() {
+    return {'menuId': menuId, 'text': text};
   }
 }

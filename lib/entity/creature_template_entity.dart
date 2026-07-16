@@ -33,18 +33,6 @@ class BriefCreatureTemplateEntity {
   String get displaySubName =>
       localeSubName.isNotEmpty ? localeSubName : subName;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'name': name,
-      'subname': subName,
-      'Name': localeName,
-      'Title': localeSubName,
-      'minlevel': minLevel,
-      'maxlevel': maxLevel,
-    };
-  }
-
   BriefCreatureTemplateEntity copyWith({
     int? entry,
     String? name,
@@ -63,6 +51,18 @@ class BriefCreatureTemplateEntity {
       minLevel: minLevel ?? this.minLevel,
       maxLevel: maxLevel ?? this.maxLevel,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entry': entry,
+      'name': name,
+      'subname': subName,
+      'Name': localeName,
+      'Title': localeSubName,
+      'minlevel': minLevel,
+      'maxlevel': maxLevel,
+    };
   }
 }
 
@@ -241,66 +241,6 @@ class CreatureTemplateEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'AIName': aiName,
-      'ArmorModifier': armorModifier,
-      'BaseAttackTime': baseAttackTime,
-      'BaseVariance': baseVariance,
-      'DamageModifier': damageModifier,
-      'difficulty_entry_1': difficultyEntry1,
-      'difficulty_entry_2': difficultyEntry2,
-      'difficulty_entry_3': difficultyEntry3,
-      'dmgschool': damageSchool,
-      'detection_range': detectionRange,
-      'dynamicflags': dynamicFlags,
-      'entry': entry,
-      'exp': exp,
-      'ExperienceModifier': experienceModifier,
-      'faction': faction,
-      'family': family,
-      'flags_extra': flagsExtra,
-      'gossip_menu_id': gossipMenuId,
-      'HealthModifier': healthModifier,
-      'HoverHeight': hoverHeight,
-      'IconName': iconName,
-      'KillCredit1': killCredit1,
-      'KillCredit2': killCredit2,
-      'lootid': lootId,
-      'maxgold': maxGold,
-      'maxlevel': maxLevel,
-      'ManaModifier': manaModifier,
-      'minlevel': minLevel,
-      'mingold': minGold,
-      'movementId': movementId,
-      'MovementType': movementType,
-      'name': name,
-      'npcflag': npcFlag,
-      'PetSpellDataId': petSpellDataId,
-      'pickpocketloot': pickpocketLoot,
-      'RacialLeader': racialLeader,
-      'RangeAttackTime': rangeAttackTime,
-      'RangeVariance': rangeVariance,
-      'rank': rank,
-      'RegenHealth': regenHealth,
-      'ScriptName': scriptName,
-      'skinloot': skinLoot,
-      'speed_flight': speedFlight,
-      'speed_run': speedRun,
-      'speed_swim': speedSwim,
-      'speed_walk': speedWalk,
-      'subname': subName,
-      'type': type,
-      'type_flags': typeFlags,
-      'unit_class': unitClass,
-      'unit_flags': unitFlags,
-      'unit_flags2': unitFlags2,
-      'VehicleId': vehicleId,
-      'VerifiedBuild': verifiedBuild,
-      'CreatureImmunitiesId': creatureImmunitiesId,
-    };
-  }
-
   CreatureTemplateEntity copyWith({
     String? aiName,
     double? armorModifier,
@@ -415,5 +355,65 @@ class CreatureTemplateEntity {
       verifiedBuild: verifiedBuild ?? this.verifiedBuild,
       creatureImmunitiesId: creatureImmunitiesId ?? this.creatureImmunitiesId,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'AIName': aiName,
+      'ArmorModifier': armorModifier,
+      'BaseAttackTime': baseAttackTime,
+      'BaseVariance': baseVariance,
+      'DamageModifier': damageModifier,
+      'difficulty_entry_1': difficultyEntry1,
+      'difficulty_entry_2': difficultyEntry2,
+      'difficulty_entry_3': difficultyEntry3,
+      'dmgschool': damageSchool,
+      'detection_range': detectionRange,
+      'dynamicflags': dynamicFlags,
+      'entry': entry,
+      'exp': exp,
+      'ExperienceModifier': experienceModifier,
+      'faction': faction,
+      'family': family,
+      'flags_extra': flagsExtra,
+      'gossip_menu_id': gossipMenuId,
+      'HealthModifier': healthModifier,
+      'HoverHeight': hoverHeight,
+      'IconName': iconName,
+      'KillCredit1': killCredit1,
+      'KillCredit2': killCredit2,
+      'lootid': lootId,
+      'maxgold': maxGold,
+      'maxlevel': maxLevel,
+      'ManaModifier': manaModifier,
+      'minlevel': minLevel,
+      'mingold': minGold,
+      'movementId': movementId,
+      'MovementType': movementType,
+      'name': name,
+      'npcflag': npcFlag,
+      'PetSpellDataId': petSpellDataId,
+      'pickpocketloot': pickpocketLoot,
+      'RacialLeader': racialLeader,
+      'RangeAttackTime': rangeAttackTime,
+      'RangeVariance': rangeVariance,
+      'rank': rank,
+      'RegenHealth': regenHealth,
+      'ScriptName': scriptName,
+      'skinloot': skinLoot,
+      'speed_flight': speedFlight,
+      'speed_run': speedRun,
+      'speed_swim': speedSwim,
+      'speed_walk': speedWalk,
+      'subname': subName,
+      'type': type,
+      'type_flags': typeFlags,
+      'unit_class': unitClass,
+      'unit_flags': unitFlags,
+      'unit_flags2': unitFlags2,
+      'VehicleId': vehicleId,
+      'VerifiedBuild': verifiedBuild,
+      'CreatureImmunitiesId': creatureImmunitiesId,
+    };
   }
 }

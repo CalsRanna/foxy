@@ -7,9 +7,9 @@ class CreatureMovementInfoFilterEntity {
     return CreatureMovementInfoFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() => {'id': id};
-
   CreatureMovementInfoFilterEntity copyWith({String? id}) {
     return CreatureMovementInfoFilterEntity(id: id ?? this.id);
   }
+
+  Map<String, dynamic> toJson() => {'id': id};
 }

@@ -7,11 +7,11 @@ class GemPropertyFilterEntity {
     return GemPropertyFilterEntity(id: json['id'] ?? '');
   }
 
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-
   GemPropertyFilterEntity copyWith({String? id}) {
     return GemPropertyFilterEntity(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
   }
 }

@@ -1,3 +1,50 @@
+/// 法术射程列表/Picker 展示模型
+class BriefSpellRangeEntity {
+  final int id;
+  final double rangeMin0;
+  final double rangeMax0;
+  final String displayNameLangZhCN;
+
+  const BriefSpellRangeEntity({
+    this.id = 0,
+    this.rangeMin0 = 0.0,
+    this.rangeMax0 = 0.0,
+    this.displayNameLangZhCN = '',
+  });
+
+  factory BriefSpellRangeEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellRangeEntity(
+      id: json['ID'] ?? 0,
+      rangeMin0: (json['RangeMin0'] ?? 0.0),
+      rangeMax0: (json['RangeMax0'] ?? 0.0),
+      displayNameLangZhCN: json['DisplayName_lang_zhCN'] ?? '',
+    );
+  }
+
+  BriefSpellRangeEntity copyWith({
+    int? id,
+    double? rangeMin0,
+    double? rangeMax0,
+    String? displayNameLangZhCN,
+  }) {
+    return BriefSpellRangeEntity(
+      id: id ?? this.id,
+      rangeMin0: rangeMin0 ?? this.rangeMin0,
+      rangeMax0: rangeMax0 ?? this.rangeMax0,
+      displayNameLangZhCN: displayNameLangZhCN ?? this.displayNameLangZhCN,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'RangeMin0': rangeMin0,
+      'RangeMax0': rangeMax0,
+      'DisplayName_lang_zhCN': displayNameLangZhCN,
+    };
+  }
+}
+
 class SpellRangeEntity {
   final int id;
   final double rangeMin0;
@@ -128,51 +175,6 @@ class SpellRangeEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'RangeMin0': rangeMin0,
-      'RangeMin1': rangeMin1,
-      'RangeMax0': rangeMax0,
-      'RangeMax1': rangeMax1,
-      'Flags': flags,
-      'DisplayName_lang_enUS': displayNameLangEnUS,
-      'DisplayName_lang_koKR': displayNameLangKoKR,
-      'DisplayName_lang_frFR': displayNameLangFrFR,
-      'DisplayName_lang_deDE': displayNameLangDeDE,
-      'DisplayName_lang_zhCN': displayNameLangZhCN,
-      'DisplayName_lang_zhTW': displayNameLangZhTW,
-      'DisplayName_lang_esES': displayNameLangEsES,
-      'DisplayName_lang_esMX': displayNameLangEsMX,
-      'DisplayName_lang_ruRU': displayNameLangRuRU,
-      'DisplayName_lang_jaJP': displayNameLangJaJP,
-      'DisplayName_lang_ptPT': displayNameLangPtPT,
-      'DisplayName_lang_ptBR': displayNameLangPtBR,
-      'DisplayName_lang_itIT': displayNameLangItIT,
-      'DisplayName_lang_unk1': displayNameLangUnk1,
-      'DisplayName_lang_unk2': displayNameLangUnk2,
-      'DisplayName_lang_unk3': displayNameLangUnk3,
-      'DisplayName_lang_Flags': displayNameLangFlags,
-      'DisplayNameShort_lang_enUS': displayNameShortLangEnUS,
-      'DisplayNameShort_lang_koKR': displayNameShortLangKoKR,
-      'DisplayNameShort_lang_frFR': displayNameShortLangFrFR,
-      'DisplayNameShort_lang_deDE': displayNameShortLangDeDE,
-      'DisplayNameShort_lang_zhCN': displayNameShortLangZhCN,
-      'DisplayNameShort_lang_zhTW': displayNameShortLangZhTW,
-      'DisplayNameShort_lang_esES': displayNameShortLangEsES,
-      'DisplayNameShort_lang_esMX': displayNameShortLangEsMX,
-      'DisplayNameShort_lang_ruRU': displayNameShortLangRuRU,
-      'DisplayNameShort_lang_jaJP': displayNameShortLangJaJP,
-      'DisplayNameShort_lang_ptPT': displayNameShortLangPtPT,
-      'DisplayNameShort_lang_ptBR': displayNameShortLangPtBR,
-      'DisplayNameShort_lang_itIT': displayNameShortLangItIT,
-      'DisplayNameShort_lang_unk1': displayNameShortLangUnk1,
-      'DisplayNameShort_lang_unk2': displayNameShortLangUnk2,
-      'DisplayNameShort_lang_unk3': displayNameShortLangUnk3,
-      'DisplayNameShort_lang_Flags': displayNameShortLangFlags,
-    };
-  }
-
   SpellRangeEntity copyWith({
     int? id,
     double? rangeMin0,
@@ -275,51 +277,49 @@ class SpellRangeEntity {
           displayNameShortLangFlags ?? this.displayNameShortLangFlags,
     );
   }
-}
-
-/// 法术射程列表/Picker 展示模型
-class BriefSpellRangeEntity {
-  final int id;
-  final double rangeMin0;
-  final double rangeMax0;
-  final String displayNameLangZhCN;
-
-  const BriefSpellRangeEntity({
-    this.id = 0,
-    this.rangeMin0 = 0.0,
-    this.rangeMax0 = 0.0,
-    this.displayNameLangZhCN = '',
-  });
-
-  factory BriefSpellRangeEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSpellRangeEntity(
-      id: json['ID'] ?? 0,
-      rangeMin0: (json['RangeMin0'] ?? 0.0),
-      rangeMax0: (json['RangeMax0'] ?? 0.0),
-      displayNameLangZhCN: json['DisplayName_lang_zhCN'] ?? '',
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'ID': id,
       'RangeMin0': rangeMin0,
+      'RangeMin1': rangeMin1,
       'RangeMax0': rangeMax0,
+      'RangeMax1': rangeMax1,
+      'Flags': flags,
+      'DisplayName_lang_enUS': displayNameLangEnUS,
+      'DisplayName_lang_koKR': displayNameLangKoKR,
+      'DisplayName_lang_frFR': displayNameLangFrFR,
+      'DisplayName_lang_deDE': displayNameLangDeDE,
       'DisplayName_lang_zhCN': displayNameLangZhCN,
+      'DisplayName_lang_zhTW': displayNameLangZhTW,
+      'DisplayName_lang_esES': displayNameLangEsES,
+      'DisplayName_lang_esMX': displayNameLangEsMX,
+      'DisplayName_lang_ruRU': displayNameLangRuRU,
+      'DisplayName_lang_jaJP': displayNameLangJaJP,
+      'DisplayName_lang_ptPT': displayNameLangPtPT,
+      'DisplayName_lang_ptBR': displayNameLangPtBR,
+      'DisplayName_lang_itIT': displayNameLangItIT,
+      'DisplayName_lang_unk1': displayNameLangUnk1,
+      'DisplayName_lang_unk2': displayNameLangUnk2,
+      'DisplayName_lang_unk3': displayNameLangUnk3,
+      'DisplayName_lang_Flags': displayNameLangFlags,
+      'DisplayNameShort_lang_enUS': displayNameShortLangEnUS,
+      'DisplayNameShort_lang_koKR': displayNameShortLangKoKR,
+      'DisplayNameShort_lang_frFR': displayNameShortLangFrFR,
+      'DisplayNameShort_lang_deDE': displayNameShortLangDeDE,
+      'DisplayNameShort_lang_zhCN': displayNameShortLangZhCN,
+      'DisplayNameShort_lang_zhTW': displayNameShortLangZhTW,
+      'DisplayNameShort_lang_esES': displayNameShortLangEsES,
+      'DisplayNameShort_lang_esMX': displayNameShortLangEsMX,
+      'DisplayNameShort_lang_ruRU': displayNameShortLangRuRU,
+      'DisplayNameShort_lang_jaJP': displayNameShortLangJaJP,
+      'DisplayNameShort_lang_ptPT': displayNameShortLangPtPT,
+      'DisplayNameShort_lang_ptBR': displayNameShortLangPtBR,
+      'DisplayNameShort_lang_itIT': displayNameShortLangItIT,
+      'DisplayNameShort_lang_unk1': displayNameShortLangUnk1,
+      'DisplayNameShort_lang_unk2': displayNameShortLangUnk2,
+      'DisplayNameShort_lang_unk3': displayNameShortLangUnk3,
+      'DisplayNameShort_lang_Flags': displayNameShortLangFlags,
     };
-  }
-
-  BriefSpellRangeEntity copyWith({
-    int? id,
-    double? rangeMin0,
-    double? rangeMax0,
-    String? displayNameLangZhCN,
-  }) {
-    return BriefSpellRangeEntity(
-      id: id ?? this.id,
-      rangeMin0: rangeMin0 ?? this.rangeMin0,
-      rangeMax0: rangeMax0 ?? this.rangeMax0,
-      displayNameLangZhCN: displayNameLangZhCN ?? this.displayNameLangZhCN,
-    );
   }
 }

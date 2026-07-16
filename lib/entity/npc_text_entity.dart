@@ -1,3 +1,27 @@
+class BriefNpcTextEntity {
+  final int id;
+  final String text0;
+  final String text1;
+
+  const BriefNpcTextEntity({this.id = 0, this.text0 = '', this.text1 = ''});
+
+  factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTextEntity(
+      id: (json['ID'] as num?)?.toInt() ?? (json['id'] as num?)?.toInt() ?? 0,
+      text0: json['text0_0']?.toString() ?? '',
+      text1: json['text0_1']?.toString() ?? '',
+    );
+  }
+
+  String get displayText => text0.isNotEmpty ? text0 : text1;
+
+  Map<String, dynamic> toJson() => {
+    'ID': id,
+    'text0_0': text0,
+    'text0_1': text1,
+  };
+}
+
 class NpcTextEntity {
   final int id;
   final String text00;
@@ -373,31 +397,7 @@ class NpcTextEntity {
     };
   }
 
-  static int _int(dynamic value) => (value as num?)?.toInt() ?? 0;
-
   static double _double(dynamic value) => (value as num?)?.toDouble() ?? 0;
-}
 
-class BriefNpcTextEntity {
-  final int id;
-  final String text0;
-  final String text1;
-
-  const BriefNpcTextEntity({this.id = 0, this.text0 = '', this.text1 = ''});
-
-  factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefNpcTextEntity(
-      id: (json['ID'] as num?)?.toInt() ?? (json['id'] as num?)?.toInt() ?? 0,
-      text0: json['text0_0']?.toString() ?? '',
-      text1: json['text0_1']?.toString() ?? '',
-    );
-  }
-
-  String get displayText => text0.isNotEmpty ? text0 : text1;
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'text0_0': text0,
-    'text0_1': text1,
-  };
+  static int _int(dynamic value) => (value as num?)?.toInt() ?? 0;
 }

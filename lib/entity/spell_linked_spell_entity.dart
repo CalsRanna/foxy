@@ -21,15 +21,6 @@ class SpellLinkedSpellEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'spell_trigger': spellTrigger,
-      'spell_effect': spellEffect,
-      'type': type,
-      'comment': comment,
-    };
-  }
-
   SpellLinkedSpellEntity copyWith({
     int? spellTrigger,
     int? spellEffect,
@@ -42,5 +33,14 @@ class SpellLinkedSpellEntity {
       type: type ?? this.type,
       comment: comment ?? this.comment,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'spell_trigger': spellTrigger,
+      'spell_effect': spellEffect,
+      'type': type,
+      'comment': comment,
+    };
   }
 }

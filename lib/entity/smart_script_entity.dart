@@ -151,42 +151,6 @@ class SmartScriptEntity {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'entryorguid': entryOrGuid,
-      'source_type': sourceType,
-      'id': id,
-      'link': link,
-      'event_type': eventType,
-      'event_phase_mask': eventPhaseMask,
-      'event_chance': eventChance,
-      'event_flags': eventFlags,
-      'event_param1': eventParam1,
-      'event_param2': eventParam2,
-      'event_param3': eventParam3,
-      'event_param4': eventParam4,
-      'event_param5': eventParam5,
-      'event_param6': eventParam6,
-      'action_type': actionType,
-      'action_param1': actionParam1,
-      'action_param2': actionParam2,
-      'action_param3': actionParam3,
-      'action_param4': actionParam4,
-      'action_param5': actionParam5,
-      'action_param6': actionParam6,
-      'target_type': targetType,
-      'target_param1': targetParam1,
-      'target_param2': targetParam2,
-      'target_param3': targetParam3,
-      'target_param4': targetParam4,
-      'target_x': targetX,
-      'target_y': targetY,
-      'target_z': targetZ,
-      'target_o': targetO,
-      'comment': comment,
-    };
-  }
-
   SmartScriptEntity copyWith({
     int? entryOrGuid,
     int? sourceType,
@@ -253,5 +217,41 @@ class SmartScriptEntity {
       targetO: targetO ?? this.targetO,
       comment: comment ?? this.comment,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'entryorguid': entryOrGuid,
+      'source_type': sourceType,
+      'id': id,
+      'link': link,
+      'event_type': eventType,
+      'event_phase_mask': eventPhaseMask,
+      'event_chance': eventChance,
+      'event_flags': eventFlags,
+      'event_param1': eventParam1,
+      'event_param2': eventParam2,
+      'event_param3': eventParam3,
+      'event_param4': eventParam4,
+      'event_param5': eventParam5,
+      'event_param6': eventParam6,
+      'action_type': actionType,
+      'action_param1': actionParam1,
+      'action_param2': actionParam2,
+      'action_param3': actionParam3,
+      'action_param4': actionParam4,
+      'action_param5': actionParam5,
+      'action_param6': actionParam6,
+      'target_type': targetType,
+      'target_param1': targetParam1,
+      'target_param2': targetParam2,
+      'target_param3': targetParam3,
+      'target_param4': targetParam4,
+      'target_x': targetX,
+      'target_y': targetY,
+      'target_z': targetZ,
+      'target_o': targetO,
+      'comment': comment,
+    };
   }
 }
