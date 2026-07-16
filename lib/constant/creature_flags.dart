@@ -3,107 +3,6 @@
 
 import 'package:foxy/constant/flag_item.dart';
 
-const kLootModeFlagOptions = [
-  FlagItem(0x0001, '默认'),
-  FlagItem(0x0002, '困难模式 1'),
-  FlagItem(0x0004, '困难模式 2'),
-  FlagItem(0x0008, '困难模式 3'),
-  FlagItem(0x0010, '困难模式 4'),
-  // SharedDefines.h 未命名，但 core base 用于戈多克贡品第 5 档。
-  FlagItem(0x0020, '额外掉落模式 5'),
-  FlagItem(0x8000, '垃圾鱼'),
-];
-
-/// NPC 标识选项
-const kNpcFlagOptions = [
-  FlagItem(0x00000001, '对话', '基础功能'), // Gossip
-  FlagItem(0x00000002, '任务', '基础功能'), // Quest Giver
-  FlagItem(0x00000004, 'UNK1'),
-  FlagItem(0x00000008, 'UNK2'),
-  FlagItem(0x00000010, '训练师', '训练师'), // Trainer
-  FlagItem(0x00000020, '职业训练师', '训练师'), // Class Trainer
-  FlagItem(0x00000040, '专业训练师', '训练师'), // Profession Trainer
-  FlagItem(0x00000080, '商人', '商人'), // Vendor
-  FlagItem(0x00000100, '弹药商人', '商人'), // Vendor Ammo
-  FlagItem(0x00000200, '食物商人', '商人'), // Vendor Food
-  FlagItem(0x00000400, '毒药商人', '商人'), // Vendor Poison
-  FlagItem(0x00000800, '材料商人', '商人'), // Vendor Reagent
-  FlagItem(0x00001000, '修理', '服务'), // Repair
-  FlagItem(0x00002000, '飞行管理员', '服务'), // Flight Master
-  FlagItem(0x00004000, '灵魂医者', '服务'), // Spirit Healer
-  FlagItem(0x00008000, '灵魂向导', '服务'), // Spirit Guide
-  FlagItem(0x00010000, '旅店老板', '服务'), // Innkeeper
-  FlagItem(0x00020000, '银行', '服务'), // Banker
-  FlagItem(0x00040000, '公会请愿人', '服务'), // Petitioner
-  FlagItem(0x00080000, '公会徽章设计师', '服务'), // Tabard Designer
-  FlagItem(0x00100000, '战场军需官', '服务'), // Battlemaster
-  FlagItem(0x00200000, '拍卖师', '服务'), // Auctioneer
-  FlagItem(0x00400000, '兽栏管理员', '服务'), // Stable Master
-  FlagItem(0x00800000, '公会银行', '服务'), // Guild Banker
-  FlagItem(0x01000000, '法术点击', '特殊'), // Spellclick
-  FlagItem(0x02000000, '玩家载具', '特殊'), // Player Vehicle
-  FlagItem(0x04000000, '邮箱', '服务'), // Mailbox
-];
-
-/// 单位标识选项
-const kUnitFlagOptions = [
-  FlagItem(0x00000001, '服务器控制'), // Server Controlled
-  FlagItem(0x00000002, '不可攻击'), // Non Attackable
-  FlagItem(0x00000004, '禁止移动'), // Disable Move
-  FlagItem(0x00000008, '玩家控制'), // Player Controlled
-  FlagItem(0x00000010, '可重命名'), // Rename
-  FlagItem(0x00000020, '准备状态'), // Preparation
-  FlagItem(0x00000040, 'UNK_6'),
-  FlagItem(0x00000080, '不可攻击1'), // Not Attackable 1
-  FlagItem(0x00000100, '对玩家免疫'), // Immune To PC
-  FlagItem(0x00000200, '对NPC免疫'), // Immune To NPC
-  FlagItem(0x00000400, '拾取中'), // Looting
-  FlagItem(0x00000800, '宠物战斗中'), // Pet In Combat
-  FlagItem(0x00001000, 'PVP'),
-  FlagItem(0x00002000, '沉默'), // Silenced
-  FlagItem(0x00004000, '不能游泳'), // Cannot Swim
-  FlagItem(0x00008000, '游泳中'), // Swimming
-  FlagItem(0x00010000, '不可攻击2'), // Not Attackable 2
-  FlagItem(0x00020000, '无法攻击'), // Pacified
-  FlagItem(0x00040000, '昏迷'), // Stunned
-  FlagItem(0x00080000, '战斗中'), // In Combat
-  FlagItem(0x00100000, '飞行中'), // Taxi Flight
-  FlagItem(0x00200000, '缴械'), // Disarmed
-  FlagItem(0x00400000, '混乱'), // Confused
-  FlagItem(0x00800000, '恐惧'), // Fleeing
-  FlagItem(0x01000000, '玩家控制中'), // Possessed
-  FlagItem(0x02000000, '不可选择'), // Not Selectable
-  FlagItem(0x04000000, '可剥皮'), // Skinnable
-  FlagItem(0x08000000, '坐骑'), // Mount
-  FlagItem(0x10000000, 'UNK_28'),
-  FlagItem(0x20000000, '阻止聊天文本触发表情'), // Prevent Emotes From Chat Text
-  FlagItem(0x40000000, '收起武器'), // Sheathe
-  FlagItem(0x80000000, '免疫伤害'), // Immune
-];
-
-/// 单位标识2选项
-const kUnitFlag2Options = [
-  FlagItem(0x00000001, '假死'), // Feign Death
-  FlagItem(0x00000002, '隐藏身体'), // Hide Body
-  FlagItem(0x00000004, '忽略声望'), // Ignore Reputation
-  FlagItem(0x00000008, '理解语言'), // Comprehend Lang
-  FlagItem(0x00000010, '镜像'), // Mirror Image
-  FlagItem(0x00000020, '不淡入'), // Do Not Fade In
-  FlagItem(0x00000040, '强制移动'), // Force Movement
-  FlagItem(0x00000080, '缴械副手'), // Disarm Offhand
-  FlagItem(0x00000100, '禁用预测状态'), // Disable Pred Stats
-  FlagItem(0x00000400, '缴械远程'), // Disarm Ranged
-  FlagItem(0x00000800, '回复能量'), // Regenerate Power
-  FlagItem(0x00001000, '限制队伍交互'), // Restrict Party Interaction
-  FlagItem(0x00002000, '阻止法术点击'), // Prevent Spell Click
-  FlagItem(0x00004000, '允许敌对交互'), // Allow Enemy Interact
-  FlagItem(0x00008000, '不能转向'), // Cannot Turn
-  FlagItem(0x00010000, 'UNK2'),
-  FlagItem(0x00020000, '播放死亡动画'), // Play Death Anim
-  FlagItem(0x00040000, '允许作弊法术'), // Allow Cheat Spells
-  FlagItem(0x01000000, '未使用 6'), // Unused 6
-];
-
 /// 类型标识选项
 const kCreatureTypeFlagOptions = [
   FlagItem(0x00000001, '可驯服'), // Tameable
@@ -188,6 +87,24 @@ const kFlagsExtraOptions = [
   FlagItem(0x80000000, '强制完全重置'), // Hard Reset
 ];
 
+/// 栖息类型选项
+const kInhabitTypeOptions = [
+  FlagItem(0x01, '地面'), // Ground
+  FlagItem(0x02, '水中'), // Water
+  FlagItem(0x04, '飞行'), // Flying
+];
+
+const kLootModeFlagOptions = [
+  FlagItem(0x0001, '默认'),
+  FlagItem(0x0002, '困难模式 1'),
+  FlagItem(0x0004, '困难模式 2'),
+  FlagItem(0x0008, '困难模式 3'),
+  FlagItem(0x0010, '困难模式 4'),
+  // SharedDefines.h 未命名，但 core base 用于戈多克贡品第 5 档。
+  FlagItem(0x0020, '额外掉落模式 5'),
+  FlagItem(0x8000, '垃圾鱼'),
+];
+
 /// 免疫机制选项
 const kMechanicImmuneMaskOptions = [
   FlagItem(0x00000001, '魅惑'), // Charm
@@ -223,6 +140,37 @@ const kMechanicImmuneMaskOptions = [
   FlagItem(0x40000000, '狂怒'), // Enraged
 ];
 
+/// NPC 标识选项
+const kNpcFlagOptions = [
+  FlagItem(0x00000001, '对话', '基础功能'), // Gossip
+  FlagItem(0x00000002, '任务', '基础功能'), // Quest Giver
+  FlagItem(0x00000004, 'UNK1'),
+  FlagItem(0x00000008, 'UNK2'),
+  FlagItem(0x00000010, '训练师', '训练师'), // Trainer
+  FlagItem(0x00000020, '职业训练师', '训练师'), // Class Trainer
+  FlagItem(0x00000040, '专业训练师', '训练师'), // Profession Trainer
+  FlagItem(0x00000080, '商人', '商人'), // Vendor
+  FlagItem(0x00000100, '弹药商人', '商人'), // Vendor Ammo
+  FlagItem(0x00000200, '食物商人', '商人'), // Vendor Food
+  FlagItem(0x00000400, '毒药商人', '商人'), // Vendor Poison
+  FlagItem(0x00000800, '材料商人', '商人'), // Vendor Reagent
+  FlagItem(0x00001000, '修理', '服务'), // Repair
+  FlagItem(0x00002000, '飞行管理员', '服务'), // Flight Master
+  FlagItem(0x00004000, '灵魂医者', '服务'), // Spirit Healer
+  FlagItem(0x00008000, '灵魂向导', '服务'), // Spirit Guide
+  FlagItem(0x00010000, '旅店老板', '服务'), // Innkeeper
+  FlagItem(0x00020000, '银行', '服务'), // Banker
+  FlagItem(0x00040000, '公会请愿人', '服务'), // Petitioner
+  FlagItem(0x00080000, '公会徽章设计师', '服务'), // Tabard Designer
+  FlagItem(0x00100000, '战场军需官', '服务'), // Battlemaster
+  FlagItem(0x00200000, '拍卖师', '服务'), // Auctioneer
+  FlagItem(0x00400000, '兽栏管理员', '服务'), // Stable Master
+  FlagItem(0x00800000, '公会银行', '服务'), // Guild Banker
+  FlagItem(0x01000000, '法术点击', '特殊'), // Spellclick
+  FlagItem(0x02000000, '玩家载具', '特殊'), // Player Vehicle
+  FlagItem(0x04000000, '邮箱', '服务'), // Mailbox
+];
+
 /// 免疫法术类型选项
 const kSpellSchoolImmuneMaskOptions = [
   FlagItem(0x01, '物理'), // Physical
@@ -234,9 +182,61 @@ const kSpellSchoolImmuneMaskOptions = [
   FlagItem(0x40, '奥术'), // Arcane
 ];
 
-/// 栖息类型选项
-const kInhabitTypeOptions = [
-  FlagItem(0x01, '地面'), // Ground
-  FlagItem(0x02, '水中'), // Water
-  FlagItem(0x04, '飞行'), // Flying
+/// 单位标识2选项
+const kUnitFlag2Options = [
+  FlagItem(0x00000001, '假死'), // Feign Death
+  FlagItem(0x00000002, '隐藏身体'), // Hide Body
+  FlagItem(0x00000004, '忽略声望'), // Ignore Reputation
+  FlagItem(0x00000008, '理解语言'), // Comprehend Lang
+  FlagItem(0x00000010, '镜像'), // Mirror Image
+  FlagItem(0x00000020, '不淡入'), // Do Not Fade In
+  FlagItem(0x00000040, '强制移动'), // Force Movement
+  FlagItem(0x00000080, '缴械副手'), // Disarm Offhand
+  FlagItem(0x00000100, '禁用预测状态'), // Disable Pred Stats
+  FlagItem(0x00000400, '缴械远程'), // Disarm Ranged
+  FlagItem(0x00000800, '回复能量'), // Regenerate Power
+  FlagItem(0x00001000, '限制队伍交互'), // Restrict Party Interaction
+  FlagItem(0x00002000, '阻止法术点击'), // Prevent Spell Click
+  FlagItem(0x00004000, '允许敌对交互'), // Allow Enemy Interact
+  FlagItem(0x00008000, '不能转向'), // Cannot Turn
+  FlagItem(0x00010000, 'UNK2'),
+  FlagItem(0x00020000, '播放死亡动画'), // Play Death Anim
+  FlagItem(0x00040000, '允许作弊法术'), // Allow Cheat Spells
+  FlagItem(0x01000000, '未使用 6'), // Unused 6
+];
+
+/// 单位标识选项
+const kUnitFlagOptions = [
+  FlagItem(0x00000001, '服务器控制'), // Server Controlled
+  FlagItem(0x00000002, '不可攻击'), // Non Attackable
+  FlagItem(0x00000004, '禁止移动'), // Disable Move
+  FlagItem(0x00000008, '玩家控制'), // Player Controlled
+  FlagItem(0x00000010, '可重命名'), // Rename
+  FlagItem(0x00000020, '准备状态'), // Preparation
+  FlagItem(0x00000040, 'UNK_6'),
+  FlagItem(0x00000080, '不可攻击1'), // Not Attackable 1
+  FlagItem(0x00000100, '对玩家免疫'), // Immune To PC
+  FlagItem(0x00000200, '对NPC免疫'), // Immune To NPC
+  FlagItem(0x00000400, '拾取中'), // Looting
+  FlagItem(0x00000800, '宠物战斗中'), // Pet In Combat
+  FlagItem(0x00001000, 'PVP'),
+  FlagItem(0x00002000, '沉默'), // Silenced
+  FlagItem(0x00004000, '不能游泳'), // Cannot Swim
+  FlagItem(0x00008000, '游泳中'), // Swimming
+  FlagItem(0x00010000, '不可攻击2'), // Not Attackable 2
+  FlagItem(0x00020000, '无法攻击'), // Pacified
+  FlagItem(0x00040000, '昏迷'), // Stunned
+  FlagItem(0x00080000, '战斗中'), // In Combat
+  FlagItem(0x00100000, '飞行中'), // Taxi Flight
+  FlagItem(0x00200000, '缴械'), // Disarmed
+  FlagItem(0x00400000, '混乱'), // Confused
+  FlagItem(0x00800000, '恐惧'), // Fleeing
+  FlagItem(0x01000000, '玩家控制中'), // Possessed
+  FlagItem(0x02000000, '不可选择'), // Not Selectable
+  FlagItem(0x04000000, '可剥皮'), // Skinnable
+  FlagItem(0x08000000, '坐骑'), // Mount
+  FlagItem(0x10000000, 'UNK_28'),
+  FlagItem(0x20000000, '阻止聊天文本触发表情'), // Prevent Emotes From Chat Text
+  FlagItem(0x40000000, '收起武器'), // Sheathe
+  FlagItem(0x80000000, '免疫伤害'), // Immune
 ];

@@ -1,23 +1,7 @@
 import 'package:foxy/constant/flag_item.dart';
 
-/// AzerothCore DBCEnums.h::AchievementFaction.
-const kAchievementFactionOptions = {-1: '双方', 0: '部落', 1: '联盟'};
-
-/// AzerothCore DBCEnums.h::AchievementFlags for client build 3.3.5.12340.
-const kAchievementFlagOptions = [
-  FlagItem(0x00000001, '统计计数'),
-  FlagItem(0x00000002, '隐藏'),
-  FlagItem(0x00000004, '保存最大值'),
-  FlagItem(0x00000008, '条件值求和'),
-  FlagItem(0x00000010, '显示最大条件值'),
-  FlagItem(0x00000020, '使用条件数量'),
-  FlagItem(0x00000040, '显示平均值'),
-  FlagItem(0x00000080, '显示进度条'),
-  FlagItem(0x00000100, '服务器首次达成'),
-  FlagItem(0x00000200, '服务器首次击杀'),
-];
-
-const kAchievementKnownFlagMask = 0x000003ff;
+/// AchievementCriteriaCondition values used by Start/Fail event fields.
+const kAchievementCriteriaConditions = {0, 1, 2, 3, 4, 9, 10, 13};
 
 /// AzerothCore DBCEnums.h::AchievementCriteriaFlags.
 const kAchievementCriteriaKnownFlagMask = 0x0000003f;
@@ -138,5 +122,21 @@ const kAchievementCriteriaStoredTypes = {
 /// AchievementCriteriaTimedTypes; zero means no timer.
 const kAchievementCriteriaTimedTypes = {0, 1, 2, 5, 6, 7, 9};
 
-/// AchievementCriteriaCondition values used by Start/Fail event fields.
-const kAchievementCriteriaConditions = {0, 1, 2, 3, 4, 9, 10, 13};
+/// AzerothCore DBCEnums.h::AchievementFaction.
+const kAchievementFactionOptions = {-1: '双方', 0: '部落', 1: '联盟'};
+
+/// AzerothCore DBCEnums.h::AchievementFlags for client build 3.3.5.12340.
+const kAchievementFlagOptions = [
+  FlagItem(0x00000001, '统计计数'),
+  FlagItem(0x00000002, '隐藏'),
+  FlagItem(0x00000004, '保存最大值'),
+  FlagItem(0x00000008, '条件值求和'),
+  FlagItem(0x00000010, '显示最大条件值'),
+  FlagItem(0x00000020, '使用条件数量'),
+  FlagItem(0x00000040, '显示平均值'),
+  FlagItem(0x00000080, '显示进度条'),
+  FlagItem(0x00000100, '服务器首次达成'),
+  FlagItem(0x00000200, '服务器首次击杀'),
+];
+
+const kAchievementKnownFlagMask = 0x000003ff;

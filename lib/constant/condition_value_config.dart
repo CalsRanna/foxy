@@ -2,71 +2,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/spell_enums.dart';
 
-enum ConditionValueReference {
-  none,
-  achievement,
-  area,
-  creature,
-  faction,
-  gameObject,
-  item,
-  map,
-  quest,
-  skill,
-  spell,
-  title,
-}
-
-class ConditionValueFieldConfig {
-  final String label;
-  final bool editable;
-  final ConditionValueReference reference;
-  final Map<int, String>? options;
-  final List<FlagItem>? flags;
-
-  const ConditionValueFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = ConditionValueReference.none,
-    this.options,
-    this.flags,
-  });
-}
-
-class ConditionValueConfig {
-  final ConditionValueFieldConfig value1;
-  final ConditionValueFieldConfig value2;
-  final ConditionValueFieldConfig value3;
-
-  const ConditionValueConfig(this.value1, this.value2, this.value3);
-}
-
 const kConditionBooleanOptions = <int, String>{0: '否', 1: '是'};
-const kConditionTargetOptions = <int, String>{0: '目标 0', 1: '目标 1', 2: '目标 2'};
-const kConditionComparisonOptions = <int, String>{
-  0: '等于',
-  1: '大于',
-  2: '小于',
-  3: '大于等于',
-  4: '小于等于',
-};
-const kConditionDifficultyOptions = <int, String>{
-  0: '普通 / 10人普通',
-  1: '英雄 / 25人普通',
-  2: '史诗 / 10人英雄',
-  3: '25人英雄',
-};
-
-const kConditionReputationRankFlags = <FlagItem>[
-  FlagItem(0x01, '仇恨'),
-  FlagItem(0x02, '敌对'),
-  FlagItem(0x04, '冷淡'),
-  FlagItem(0x08, '中立'),
-  FlagItem(0x10, '友善'),
-  FlagItem(0x20, '尊敬'),
-  FlagItem(0x40, '崇敬'),
-  FlagItem(0x80, '崇拜'),
-];
 
 const kConditionClassFlags = <FlagItem>[
   FlagItem(0x001, '战士'),
@@ -79,6 +15,38 @@ const kConditionClassFlags = <FlagItem>[
   FlagItem(0x080, '法师'),
   FlagItem(0x100, '术士'),
   FlagItem(0x400, '德鲁伊'),
+];
+
+const kConditionComparisonOptions = <int, String>{
+  0: '等于',
+  1: '大于',
+  2: '小于',
+  3: '大于等于',
+  4: '小于等于',
+};
+
+const kConditionDifficultyOptions = <int, String>{
+  0: '普通 / 10人普通',
+  1: '英雄 / 25人普通',
+  2: '史诗 / 10人英雄',
+  3: '25人英雄',
+};
+const kConditionObjectTypeMaskFlags = <FlagItem>[
+  FlagItem(0x08, '单位'),
+  FlagItem(0x10, '玩家'),
+  FlagItem(0x20, '游戏对象'),
+  FlagItem(0x80, '尸体'),
+];
+const kConditionPetTypeFlags = <FlagItem>[
+  FlagItem(0x01, '召唤宠物'),
+  FlagItem(0x02, '猎人宠物'),
+];
+const kConditionQuestStatusFlags = <FlagItem>[
+  FlagItem(0x01, '无任务'),
+  FlagItem(0x02, '已完成'),
+  FlagItem(0x08, '未完成'),
+  FlagItem(0x20, '失败'),
+  FlagItem(0x40, '已奖励'),
 ];
 
 const kConditionRaceFlags = <FlagItem>[
@@ -94,6 +62,17 @@ const kConditionRaceFlags = <FlagItem>[
   FlagItem(0x400, '德莱尼'),
 ];
 
+const kConditionReputationRankFlags = <FlagItem>[
+  FlagItem(0x01, '仇恨'),
+  FlagItem(0x02, '敌对'),
+  FlagItem(0x04, '冷淡'),
+  FlagItem(0x08, '中立'),
+  FlagItem(0x10, '友善'),
+  FlagItem(0x20, '尊敬'),
+  FlagItem(0x40, '崇敬'),
+  FlagItem(0x80, '崇拜'),
+];
+
 const kConditionSpawnMaskFlags = <FlagItem>[
   FlagItem(0x01, '普通 / 10人普通'),
   FlagItem(0x02, '英雄 / 25人普通'),
@@ -101,25 +80,7 @@ const kConditionSpawnMaskFlags = <FlagItem>[
   FlagItem(0x08, '25人英雄'),
 ];
 
-const kConditionObjectTypeMaskFlags = <FlagItem>[
-  FlagItem(0x08, '单位'),
-  FlagItem(0x10, '玩家'),
-  FlagItem(0x20, '游戏对象'),
-  FlagItem(0x80, '尸体'),
-];
-
-const kConditionQuestStatusFlags = <FlagItem>[
-  FlagItem(0x01, '无任务'),
-  FlagItem(0x02, '已完成'),
-  FlagItem(0x08, '未完成'),
-  FlagItem(0x20, '失败'),
-  FlagItem(0x40, '已奖励'),
-];
-
-const kConditionPetTypeFlags = <FlagItem>[
-  FlagItem(0x01, '召唤宠物'),
-  FlagItem(0x02, '猎人宠物'),
-];
+const kConditionTargetOptions = <int, String>{0: '目标 0', 1: '目标 1', 2: '目标 2'};
 
 const kConditionUnitStateFlags = <FlagItem>[
   FlagItem(0x00000001, '死亡'),
@@ -152,22 +113,11 @@ const kConditionUnitStateFlags = <FlagItem>[
   FlagItem(0x20000000, '不更新环境'),
 ];
 
+const _unused = ConditionValueFieldConfig('未使用', editable: false);
+
 final kConditionAuraTypeOptions = Map<int, String>.unmodifiable(
   Map<int, String>.from(kSpellAuraTypeOptions)..remove(0),
 );
-
-const _unused = ConditionValueFieldConfig('未使用', editable: false);
-
-ConditionValueFieldConfig _reference(
-  String label,
-  ConditionValueReference reference,
-) => ConditionValueFieldConfig(label, reference: reference);
-
-ConditionValueConfig _config(
-  ConditionValueFieldConfig value1, [
-  ConditionValueFieldConfig value2 = _unused,
-  ConditionValueFieldConfig value3 = _unused,
-]) => ConditionValueConfig(value1, value2, value3);
 
 ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
   if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
@@ -442,4 +392,54 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
       const ConditionValueFieldConfig('参数 3'),
     ),
   };
+}
+
+ConditionValueConfig _config(
+  ConditionValueFieldConfig value1, [
+  ConditionValueFieldConfig value2 = _unused,
+  ConditionValueFieldConfig value3 = _unused,
+]) => ConditionValueConfig(value1, value2, value3);
+
+ConditionValueFieldConfig _reference(
+  String label,
+  ConditionValueReference reference,
+) => ConditionValueFieldConfig(label, reference: reference);
+
+class ConditionValueConfig {
+  final ConditionValueFieldConfig value1;
+  final ConditionValueFieldConfig value2;
+  final ConditionValueFieldConfig value3;
+
+  const ConditionValueConfig(this.value1, this.value2, this.value3);
+}
+
+class ConditionValueFieldConfig {
+  final String label;
+  final bool editable;
+  final ConditionValueReference reference;
+  final Map<int, String>? options;
+  final List<FlagItem>? flags;
+
+  const ConditionValueFieldConfig(
+    this.label, {
+    this.editable = true,
+    this.reference = ConditionValueReference.none,
+    this.options,
+    this.flags,
+  });
+}
+
+enum ConditionValueReference {
+  none,
+  achievement,
+  area,
+  creature,
+  faction,
+  gameObject,
+  item,
+  map,
+  quest,
+  skill,
+  spell,
+  title,
 }

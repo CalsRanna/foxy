@@ -3,15 +3,79 @@
 
 import 'package:foxy/constant/flag_item.dart';
 
-/// 法术类型掩码（SchoolMask）
-const kSpellSchoolMaskOptions = [
-  FlagItem(0x01, '物理', '基础'),
-  FlagItem(0x02, '神圣', '基础'),
-  FlagItem(0x04, '火焰', '基础'),
-  FlagItem(0x08, '自然', '基础'),
-  FlagItem(0x10, '冰霜', '基础'),
-  FlagItem(0x20, '暗影', '基础'),
-  FlagItem(0x40, '奥术', '基础'),
+/// 装备栏位掩码（InventoryType）
+const kInventoryTypeOptions = [
+  FlagItem(0x00000001, '头部'),
+  FlagItem(0x00000002, '颈部'),
+  FlagItem(0x00000004, '肩部'),
+  FlagItem(0x00000008, '衬衣'),
+  FlagItem(0x00000010, '胸部'),
+  FlagItem(0x00000020, '腰部'),
+  FlagItem(0x00000040, '腿部'),
+  FlagItem(0x00000080, '脚部'),
+  FlagItem(0x00000100, '手腕'),
+  FlagItem(0x00000200, '手部'),
+  FlagItem(0x00000400, '手指'),
+  FlagItem(0x00000800, '饰品'),
+  FlagItem(0x00001000, '武器'),
+  FlagItem(0x00002000, '盾牌'),
+  FlagItem(0x00004000, '远程'),
+  FlagItem(0x00008000, '背部'),
+  FlagItem(0x00010000, '双手武器'),
+  FlagItem(0x00020000, '背包'),
+  FlagItem(0x00040000, '战袍'),
+  FlagItem(0x00080000, '长袍'),
+  FlagItem(0x00100000, '主手武器'),
+  FlagItem(0x00200000, '副手武器'),
+  FlagItem(0x00400000, '可持有'),
+  FlagItem(0x00800000, '弹药'),
+  FlagItem(0x01000000, '投掷武器'),
+  FlagItem(0x02000000, '远程武器'),
+  FlagItem(0x04000000, '箭袋'),
+  FlagItem(0x08000000, '圣物'),
+];
+
+/// 变形掩码（ShapeshiftForm）
+const kShapeshiftFormMaskOptions = [
+  FlagItem(0x00000001, '猫形态'),
+  FlagItem(0x00000002, '树人形态'),
+  FlagItem(0x00000004, '旅行形态'),
+  FlagItem(0x00000008, '水栖形态'),
+  FlagItem(0x00000010, '熊形态'),
+  FlagItem(0x00000020, '环境'),
+  FlagItem(0x00000040, '食尸鬼'),
+  FlagItem(0x00000080, '巨熊形态'),
+  FlagItem(0x00000100, '史蒂夫食尸鬼'),
+  FlagItem(0x00000200, '萨隆亚骷髅'),
+  FlagItem(0x00000400, '力量试炼'),
+  FlagItem(0x00000800, 'BLB玩家'),
+  FlagItem(0x00001000, '影舞'),
+  FlagItem(0x00002000, '生物熊'),
+  FlagItem(0x00004000, '生物猫'),
+  FlagItem(0x00008000, '幽灵狼'),
+  FlagItem(0x00010000, '战斗姿态'),
+  FlagItem(0x00020000, '防御姿态'),
+  FlagItem(0x00040000, '狂暴姿态'),
+  FlagItem(0x00080000, '测试'),
+  FlagItem(0x00100000, '丧尸'),
+  FlagItem(0x00200000, '恶魔变形'),
+  FlagItem(0x01000000, '亡灵'),
+  FlagItem(0x02000000, '钓鱼大师'),
+  FlagItem(0x04000000, '史诗飞行'),
+  FlagItem(0x08000000, '暗影'),
+  FlagItem(0x10000000, '飞行'),
+  FlagItem(0x20000000, '潜行'),
+  FlagItem(0x40000000, '枭兽'),
+  FlagItem(0x80000000, '救赎之魂'),
+];
+
+/// QuestDef.h QuestStatus 的位掩码，spell_area 保存 1 << QuestStatus。
+const kSpellAreaQuestStatusOptions = [
+  FlagItem(0x01, '未接取'),
+  FlagItem(0x02, '已完成'),
+  FlagItem(0x08, '进行中'),
+  FlagItem(0x20, '失败'),
+  FlagItem(0x40, '已奖励'),
 ];
 
 /// Attributes (SpellAttr0) — 法术属性标志
@@ -298,16 +362,6 @@ const kSpellAttr7Options = [
   FlagItem(0x80000000, '始终记录施放', '客户端'),
 ];
 
-/// 打断标志（SpellInterruptFlags）
-const kSpellInterruptFlagsOptions = [
-  FlagItem(0x01, '移动打断'),
-  FlagItem(0x02, '击退打断'),
-  FlagItem(0x04, '未知3'),
-  FlagItem(0x08, '打断'),
-  FlagItem(0x10, '直接伤害打断'),
-  FlagItem(0x20, '雕文相关'),
-];
-
 /// 光环打断标志（SpellAuraInterruptFlags）
 const kSpellAuraInterruptFlagsOptions = [
   FlagItem(0x00000001, '被负面法术击中'),
@@ -339,12 +393,6 @@ const kSpellAuraInterruptFlagsOptions = [
   FlagItem(0x80000000, '离开战斗'),
 ];
 
-/// 引导打断标志（SpellChannelInterruptFlags）
-const kSpellChannelInterruptFlagsOptions = [
-  FlagItem(0x0008, '打断'),
-  FlagItem(0x4000, '延迟'),
-];
-
 /// 目标限制标志（SpellCastTargetFlags）
 const kSpellCastTargetFlagsOptions = [
   FlagItem(0x00000002, '单位'),
@@ -368,103 +416,11 @@ const kSpellCastTargetFlagsOptions = [
   FlagItem(0x00100000, '载具乘客'),
 ];
 
-/// 触发类型掩码（ProcFlags）
-const kSpellProcFlagsOptions = [
-  FlagItem(0x00000001, '击杀目标(被杀)'),
-  FlagItem(0x00000002, '击杀目标(获得荣誉/经验)'),
-  FlagItem(0x00000004, '造成近战自动攻击'),
-  FlagItem(0x00000008, '受到近战自动攻击'),
-  FlagItem(0x00000010, '造成近战类法术伤害'),
-  FlagItem(0x00000020, '受到近战类法术伤害'),
-  FlagItem(0x00000040, '造成远程自动攻击'),
-  FlagItem(0x00000080, '受到远程自动攻击'),
-  FlagItem(0x00000100, '造成远程类法术伤害'),
-  FlagItem(0x00000200, '受到远程类法术伤害'),
-  FlagItem(0x00000400, '造成有益无类型法术'),
-  FlagItem(0x00000800, '受到有益无类型法术'),
-  FlagItem(0x00001000, '造成有害无类型法术'),
-  FlagItem(0x00002000, '受到有害无类型法术'),
-  FlagItem(0x00004000, '造成有益魔法'),
-  FlagItem(0x00008000, '受到有益魔法'),
-  FlagItem(0x00010000, '造成有害魔法'),
-  FlagItem(0x00020000, '受到有害魔法'),
-  FlagItem(0x00040000, '造成周期性效果'),
-  FlagItem(0x00080000, '受到周期性效果'),
-  FlagItem(0x00100000, '受到任何伤害'),
-  FlagItem(0x00200000, '陷阱激活'),
-  FlagItem(0x00400000, '造成主手攻击'),
-  FlagItem(0x00800000, '造成副手攻击'),
-  FlagItem(0x01000000, '死亡'),
+/// 引导打断标志（SpellChannelInterruptFlags）
+const kSpellChannelInterruptFlagsOptions = [
+  FlagItem(0x0008, '打断'),
+  FlagItem(0x4000, '延迟'),
 ];
-
-/// 变形掩码（ShapeshiftForm）
-const kShapeshiftFormMaskOptions = [
-  FlagItem(0x00000001, '猫形态'),
-  FlagItem(0x00000002, '树人形态'),
-  FlagItem(0x00000004, '旅行形态'),
-  FlagItem(0x00000008, '水栖形态'),
-  FlagItem(0x00000010, '熊形态'),
-  FlagItem(0x00000020, '环境'),
-  FlagItem(0x00000040, '食尸鬼'),
-  FlagItem(0x00000080, '巨熊形态'),
-  FlagItem(0x00000100, '史蒂夫食尸鬼'),
-  FlagItem(0x00000200, '萨隆亚骷髅'),
-  FlagItem(0x00000400, '力量试炼'),
-  FlagItem(0x00000800, 'BLB玩家'),
-  FlagItem(0x00001000, '影舞'),
-  FlagItem(0x00002000, '生物熊'),
-  FlagItem(0x00004000, '生物猫'),
-  FlagItem(0x00008000, '幽灵狼'),
-  FlagItem(0x00010000, '战斗姿态'),
-  FlagItem(0x00020000, '防御姿态'),
-  FlagItem(0x00040000, '狂暴姿态'),
-  FlagItem(0x00080000, '测试'),
-  FlagItem(0x00100000, '丧尸'),
-  FlagItem(0x00200000, '恶魔变形'),
-  FlagItem(0x01000000, '亡灵'),
-  FlagItem(0x02000000, '钓鱼大师'),
-  FlagItem(0x04000000, '史诗飞行'),
-  FlagItem(0x08000000, '暗影'),
-  FlagItem(0x10000000, '飞行'),
-  FlagItem(0x20000000, '潜行'),
-  FlagItem(0x40000000, '枭兽'),
-  FlagItem(0x80000000, '救赎之魂'),
-];
-
-/// 装备栏位掩码（InventoryType）
-const kInventoryTypeOptions = [
-  FlagItem(0x00000001, '头部'),
-  FlagItem(0x00000002, '颈部'),
-  FlagItem(0x00000004, '肩部'),
-  FlagItem(0x00000008, '衬衣'),
-  FlagItem(0x00000010, '胸部'),
-  FlagItem(0x00000020, '腰部'),
-  FlagItem(0x00000040, '腿部'),
-  FlagItem(0x00000080, '脚部'),
-  FlagItem(0x00000100, '手腕'),
-  FlagItem(0x00000200, '手部'),
-  FlagItem(0x00000400, '手指'),
-  FlagItem(0x00000800, '饰品'),
-  FlagItem(0x00001000, '武器'),
-  FlagItem(0x00002000, '盾牌'),
-  FlagItem(0x00004000, '远程'),
-  FlagItem(0x00008000, '背部'),
-  FlagItem(0x00010000, '双手武器'),
-  FlagItem(0x00020000, '背包'),
-  FlagItem(0x00040000, '战袍'),
-  FlagItem(0x00080000, '长袍'),
-  FlagItem(0x00100000, '主手武器'),
-  FlagItem(0x00200000, '副手武器'),
-  FlagItem(0x00400000, '可持有'),
-  FlagItem(0x00800000, '弹药'),
-  FlagItem(0x01000000, '投掷武器'),
-  FlagItem(0x02000000, '远程武器'),
-  FlagItem(0x04000000, '箭袋'),
-  FlagItem(0x08000000, '圣物'),
-];
-
-/// 施法朝向标志（SpellFacingFlags）
-const kSpellFacingFlagsOptions = [FlagItem(0x0001, '必须在正面')];
 
 /// 分类掩码位（每bit对应法术族内一个具体法术）
 const kSpellClassMaskBits = [
@@ -539,11 +495,55 @@ const kSpellCustomAttributeOptions = [
   FlagItem(0x80000000, '绕过机制免疫'),
 ];
 
-/// QuestDef.h QuestStatus 的位掩码，spell_area 保存 1 << QuestStatus。
-const kSpellAreaQuestStatusOptions = [
-  FlagItem(0x01, '未接取'),
-  FlagItem(0x02, '已完成'),
-  FlagItem(0x08, '进行中'),
-  FlagItem(0x20, '失败'),
-  FlagItem(0x40, '已奖励'),
+/// 施法朝向标志（SpellFacingFlags）
+const kSpellFacingFlagsOptions = [FlagItem(0x0001, '必须在正面')];
+
+/// 打断标志（SpellInterruptFlags）
+const kSpellInterruptFlagsOptions = [
+  FlagItem(0x01, '移动打断'),
+  FlagItem(0x02, '击退打断'),
+  FlagItem(0x04, '未知3'),
+  FlagItem(0x08, '打断'),
+  FlagItem(0x10, '直接伤害打断'),
+  FlagItem(0x20, '雕文相关'),
+];
+
+/// 触发类型掩码（ProcFlags）
+const kSpellProcFlagsOptions = [
+  FlagItem(0x00000001, '击杀目标(被杀)'),
+  FlagItem(0x00000002, '击杀目标(获得荣誉/经验)'),
+  FlagItem(0x00000004, '造成近战自动攻击'),
+  FlagItem(0x00000008, '受到近战自动攻击'),
+  FlagItem(0x00000010, '造成近战类法术伤害'),
+  FlagItem(0x00000020, '受到近战类法术伤害'),
+  FlagItem(0x00000040, '造成远程自动攻击'),
+  FlagItem(0x00000080, '受到远程自动攻击'),
+  FlagItem(0x00000100, '造成远程类法术伤害'),
+  FlagItem(0x00000200, '受到远程类法术伤害'),
+  FlagItem(0x00000400, '造成有益无类型法术'),
+  FlagItem(0x00000800, '受到有益无类型法术'),
+  FlagItem(0x00001000, '造成有害无类型法术'),
+  FlagItem(0x00002000, '受到有害无类型法术'),
+  FlagItem(0x00004000, '造成有益魔法'),
+  FlagItem(0x00008000, '受到有益魔法'),
+  FlagItem(0x00010000, '造成有害魔法'),
+  FlagItem(0x00020000, '受到有害魔法'),
+  FlagItem(0x00040000, '造成周期性效果'),
+  FlagItem(0x00080000, '受到周期性效果'),
+  FlagItem(0x00100000, '受到任何伤害'),
+  FlagItem(0x00200000, '陷阱激活'),
+  FlagItem(0x00400000, '造成主手攻击'),
+  FlagItem(0x00800000, '造成副手攻击'),
+  FlagItem(0x01000000, '死亡'),
+];
+
+/// 法术类型掩码（SchoolMask）
+const kSpellSchoolMaskOptions = [
+  FlagItem(0x01, '物理', '基础'),
+  FlagItem(0x02, '神圣', '基础'),
+  FlagItem(0x04, '火焰', '基础'),
+  FlagItem(0x08, '自然', '基础'),
+  FlagItem(0x10, '冰霜', '基础'),
+  FlagItem(0x20, '暗影', '基础'),
+  FlagItem(0x40, '奥术', '基础'),
 ];

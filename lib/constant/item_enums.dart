@@ -1,6 +1,29 @@
 // Item Template 枚举常量定义
 // 数据来源：AzerothCore SharedDefines.h, ItemDefines.h
 
+/// Bonding 绑定类型选项
+const kItemBondingOptions = {
+  0: '不绑定', // No Bind
+  1: '拾取时绑定', // Bind on Pickup
+  2: '装备后绑定', // Bind on Equip
+  3: '使用后绑定', // Bind on Use
+  4: '任务物品', // Quest Item
+  5: '任务物品1', // Quest Item 1
+};
+
+/// FoodType 食物类型选项
+const kItemFoodTypeOptions = {
+  0: '无', // None
+  1: '肉', // Meat
+  2: '鱼', // Fish
+  3: '芝士', // Cheese
+  4: '面包', // Bread
+  5: '菌类', // Fungus
+  6: '水果', // Fruit
+  7: '生肉', // Raw Meat
+  8: '生鱼', // Raw Fish
+};
+
 /// Material 材质类型选项
 const kItemMaterialOptions = {
   -1: '消耗品', // Consumable
@@ -15,14 +38,28 @@ const kItemMaterialOptions = {
   8: '皮甲', // Leather
 };
 
-/// Bonding 绑定类型选项
-const kItemBondingOptions = {
-  0: '不绑定', // No Bind
-  1: '拾取时绑定', // Bind on Pickup
-  2: '装备后绑定', // Bind on Equip
-  3: '使用后绑定', // Bind on Use
-  4: '任务物品', // Quest Item
-  5: '任务物品1', // Quest Item 1
+/// Quality 物品品质选项
+const kItemQualityOptions = {
+  0: '粗糙', // Poor
+  1: '普通', // Common
+  2: '优秀', // Uncommon
+  3: '精良', // Rare
+  4: '史诗', // Epic
+  5: '传说', // Legendary
+  6: '神器', // Artifact
+  7: '传家宝', // Heirloom
+};
+
+/// ReputationRank，AzerothCore MAX_REPUTATION_RANK = 8。
+const kItemReputationRankOptions = {
+  0: '仇恨',
+  1: '敌对',
+  2: '冷淡',
+  3: '中立',
+  4: '友善',
+  5: '尊敬',
+  6: '崇敬',
+  7: '崇拜',
 };
 
 /// Sheath 武器挂载类型选项
@@ -36,17 +73,14 @@ const kItemSheathOptions = {
   6: '拳套/火把/锄头等', // Fist Weapon
 };
 
-/// FoodType 食物类型选项
-const kItemFoodTypeOptions = {
-  0: '无', // None
-  1: '肉', // Meat
-  2: '鱼', // Fish
-  3: '芝士', // Cheese
-  4: '面包', // Bread
-  5: '菌类', // Fungus
-  6: '水果', // Fruit
-  7: '生肉', // Raw Meat
-  8: '生鱼', // Raw Fish
+/// SpellTrigger 法术触发类型选项
+const kItemSpellTriggerOptions = {
+  0: '使用', // Use
+  1: '装备', // Equip
+  2: '击中时可能', // Chance on Hit
+  4: '灵魂石', // Soul Stone
+  5: '使用无延迟', // Use No Delay
+  6: '学习法术', // Learn Spell
 };
 
 /// StatType 属性类型选项
@@ -100,38 +134,4 @@ const kItemStatTypeOptions = {
   46: '生命回复', // Health Regeneration
   47: '法术穿透', // Spell Penetration
   48: '格挡值', // Block Value
-};
-
-/// SpellTrigger 法术触发类型选项
-const kItemSpellTriggerOptions = {
-  0: '使用', // Use
-  1: '装备', // Equip
-  2: '击中时可能', // Chance on Hit
-  4: '灵魂石', // Soul Stone
-  5: '使用无延迟', // Use No Delay
-  6: '学习法术', // Learn Spell
-};
-
-/// Quality 物品品质选项
-const kItemQualityOptions = {
-  0: '粗糙', // Poor
-  1: '普通', // Common
-  2: '优秀', // Uncommon
-  3: '精良', // Rare
-  4: '史诗', // Epic
-  5: '传说', // Legendary
-  6: '神器', // Artifact
-  7: '传家宝', // Heirloom
-};
-
-/// ReputationRank，AzerothCore MAX_REPUTATION_RANK = 8。
-const kItemReputationRankOptions = {
-  0: '仇恨',
-  1: '敌对',
-  2: '冷淡',
-  3: '中立',
-  4: '友善',
-  5: '尊敬',
-  6: '崇敬',
-  7: '崇拜',
 };

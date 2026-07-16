@@ -1,8 +1,5 @@
 import 'package:foxy/constant/flag_item.dart';
 
-/// AzerothCore DBCEnums.h::AreaTeams used by AreaTableEntry::team.
-const kAreaTeamOptions = {0: '无阵营', 2: '联盟', 4: '部落', 6: '双方'};
-
 /// AzerothCore DBCEnums.h::AreaFlags for the 3.3.5a AreaTable DBC.
 const kAreaFlagOptions = [
   FlagItem(0x00000001, '未知 0'),
@@ -38,4 +35,8 @@ const kAreaFlagOptions = [
 ];
 
 const kAreaTableKnownFlagMask = 0x6FFFFFFF;
+
 const kAreaTableMaxAreaBit = 4095;
+
+/// AzerothCore DBCEnums.h::AreaTeams used by AreaTableEntry::team.
+const kAreaTeamOptions = {0: '无阵营', 2: '联盟', 4: '部落', 6: '双方'};

@@ -13,6 +13,13 @@ const kSpellItemEnchantmentEffectTypeOptions = <int, String>{
   8: '棱彩插槽',
 };
 
+const kSpellItemEnchantmentFlagOptions = <FlagItem>[
+  FlagItem(0x01, '可使物品灵魂绑定'),
+  FlagItem(0x02, '客户端标志 0x02'),
+  FlagItem(0x04, '客户端标志 0x04'),
+  FlagItem(0x08, '客户端标志 0x08'),
+];
+
 /// `SpellSchools` values consumed by the enchantment resistance branch.
 const kSpellItemEnchantmentSchoolOptions = <int, String>{
   0: '物理',
@@ -61,10 +68,3 @@ const kSpellItemEnchantmentStatOptions = <int, String>{
   47: '法术穿透',
   48: '格挡值',
 };
-
-const kSpellItemEnchantmentFlagOptions = <FlagItem>[
-  FlagItem(0x01, '可使物品灵魂绑定'),
-  FlagItem(0x02, '客户端标志 0x02'),
-  FlagItem(0x04, '客户端标志 0x04'),
-  FlagItem(0x08, '客户端标志 0x08'),
-];

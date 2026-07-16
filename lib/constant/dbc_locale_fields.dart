@@ -5,14 +5,13 @@ import 'package:foxy/entity/dbc_locale.dart';
 /// 创建时通过 Schema 校验 16 个语言列；覆盖完整性由测试保证：
 /// Schema 中出现但未在此注册的本地化前缀会使测试失败。
 class DbcLocaleFields {
-  DbcLocaleFields._();
-
   // --- achievement ---
   static final achievementTitle = DbcLocaleFieldDefinition(
     tableName: 'dbc_achievement',
     columnPrefix: 'Title_lang',
     label: '标题',
   );
+
   static final achievementDescription = DbcLocaleFieldDefinition(
     tableName: 'dbc_achievement',
     columnPrefix: 'Description_lang',
@@ -36,7 +35,6 @@ class DbcLocaleFields {
     label: '成就条件描述',
     multiline: true,
   );
-
   // --- area_table ---
   static final areaTableAreaName = DbcLocaleFieldDefinition(
     tableName: 'dbc_area_table',
@@ -50,12 +48,12 @@ class DbcLocaleFields {
     columnPrefix: 'Name_lang',
     label: '男性称号',
   );
+
   static final charTitlesName1 = DbcLocaleFieldDefinition(
     tableName: 'dbc_char_titles',
     columnPrefix: 'Name1_lang',
     label: '女性称号',
   );
-
   // --- currency_category ---
   static final currencyCategoryName = DbcLocaleFieldDefinition(
     tableName: 'dbc_currency_category',
@@ -69,13 +67,13 @@ class DbcLocaleFields {
     columnPrefix: 'Name_lang',
     label: '阵营名称',
   );
+
   static final factionDescription = DbcLocaleFieldDefinition(
     tableName: 'dbc_faction',
     columnPrefix: 'Description_lang',
     label: '阵营描述',
     multiline: true,
   );
-
   // --- emotes_text_data ---
   static final emotesTextDataText = DbcLocaleFieldDefinition(
     tableName: 'dbc_emotes_text_data',
@@ -132,6 +130,7 @@ class DbcLocaleFields {
     columnPrefix: 'MapName_lang',
     label: '地图名称',
   );
+
   static final mapMapDescription0 = DbcLocaleFieldDefinition(
     tableName: 'dbc_map',
     columnPrefix: 'MapDescription0_lang',
@@ -144,20 +143,19 @@ class DbcLocaleFields {
     label: '地图描述 2',
     multiline: true,
   );
-
   // --- mail_template ---
   static final mailTemplateSubject = DbcLocaleFieldDefinition(
     tableName: 'dbc_mail_template',
     columnPrefix: 'Subject_lang',
     label: '邮件主题',
   );
+
   static final mailTemplateBody = DbcLocaleFieldDefinition(
     tableName: 'dbc_mail_template',
     columnPrefix: 'Body_lang',
     label: '邮件正文',
     multiline: true,
   );
-
   // --- quest_info ---
   static final questInfoInfoName = DbcLocaleFieldDefinition(
     tableName: 'dbc_quest_info',
@@ -178,6 +176,7 @@ class DbcLocaleFields {
     columnPrefix: 'Name_lang',
     label: '法术名称',
   );
+
   static final spellNameSubtext = DbcLocaleFieldDefinition(
     tableName: 'dbc_spell',
     columnPrefix: 'NameSubtext_lang',
@@ -195,7 +194,6 @@ class DbcLocaleFields {
     label: '光环描述',
     multiline: true,
   );
-
   // --- spell_focus_object ---
   static final spellFocusObjectName = DbcLocaleFieldDefinition(
     tableName: 'dbc_spell_focus_object',
@@ -216,18 +214,19 @@ class DbcLocaleFields {
     columnPrefix: 'DisplayName_lang',
     label: '距离名称',
   );
+
   static final spellRangeDisplayNameShort = DbcLocaleFieldDefinition(
     tableName: 'dbc_spell_range',
     columnPrefix: 'DisplayNameShort_lang',
     label: '距离简称',
   );
-
   // --- skill_line ---
   static final skillLineDisplayName = DbcLocaleFieldDefinition(
     tableName: 'dbc_skill_line',
     columnPrefix: 'DisplayName_lang',
     label: '技能线名称',
   );
+
   static final skillLineDescription = DbcLocaleFieldDefinition(
     tableName: 'dbc_skill_line',
     columnPrefix: 'Description_lang',
@@ -239,7 +238,6 @@ class DbcLocaleFields {
     columnPrefix: 'AlternateVerb_lang',
     label: '备选动词',
   );
-
   // --- talent_tab ---
   static final talentTabName = DbcLocaleFieldDefinition(
     tableName: 'dbc_talent_tab',
@@ -295,4 +293,6 @@ class DbcLocaleFields {
     talentTabName,
     totemCategoryName,
   ];
+
+  DbcLocaleFields._();
 }

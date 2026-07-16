@@ -3,6 +3,53 @@
 
 import 'package:foxy/constant/flag_item.dart';
 
+/// AllowableClass 职业标识选项
+const kAllowableClassOptions = [
+  FlagItem(1, '战士'), // Warrior
+  FlagItem(2, '圣骑士'), // Paladin
+  FlagItem(4, '猎人'), // Hunter
+  FlagItem(8, '盗贼'), // Rogue
+  FlagItem(16, '牧师'), // Priest
+  FlagItem(32, '死亡骑士'), // Death Knight
+  FlagItem(64, '萨满'), // Shaman
+  FlagItem(128, '法师'), // Mage
+  FlagItem(256, '术士'), // Warlock
+  FlagItem(1024, '德鲁伊'), // Druid
+];
+
+/// AllowableRace 种族标识选项
+const kAllowableRaceOptions = [
+  FlagItem(1, '人类'), // Human
+  FlagItem(2, '矮人'), // Dwarf
+  FlagItem(4, '暗夜精灵'), // Night Elf
+  FlagItem(8, '亡灵'), // Undead
+  FlagItem(16, '牛头人'), // Tauren
+  FlagItem(32, '巨魔'), // Troll
+  FlagItem(64, '侏儒'), // Gnome
+  FlagItem(128, '兽人'), // Orc
+  FlagItem(512, '血精灵'), // Blood Elf
+  FlagItem(1024, '德莱尼'), // Draenei
+];
+
+/// BagFamily 背包类别标识选项
+const kItemBagFamilyOptions = [
+  FlagItem(1, '箭袋'), // Quiver
+  FlagItem(2, '弹药袋'), // Ammo Pouch
+  FlagItem(4, '灵魂碎片'), // Soul Shard
+  FlagItem(8, '皮革用品'), // Leatherworking
+  FlagItem(16, '铭文袋'), // Inscription
+  FlagItem(32, '草药袋'), // Herb
+  FlagItem(64, '附魔袋'), // Enchanting
+  FlagItem(128, '工程袋'), // Engineering
+  FlagItem(256, '钥匙袋'), // Key
+  FlagItem(512, '珠宝袋'), // Jewelcrafting
+  FlagItem(1024, '矿石袋'), // Mining
+  FlagItem(2048, '灵魂绑定'), // Soulbound
+  FlagItem(4096, '宠物栏'), // Pet
+  FlagItem(8192, '钱袋'), // Money
+  FlagItem(16384, '任务物品'), // Quest
+];
+
 /// Item Flags 物品标识选项
 const kItemFlagOptions = [
   FlagItem(1, '不可拾取'),
@@ -39,6 +86,13 @@ const kItemFlagOptions = [
   FlagItem(2147483648, '禁用渐进掉落'),
 ];
 
+/// Item flagsCustom 自定义标识选项
+const kItemFlagsCustomOptions = [
+  FlagItem(1, '玩家下线也计时'), // Duration Real Time
+  FlagItem(2, '掉落时不检测任务状态'), // Ignore Quest Status
+  FlagItem(4, '点贪婪前遵守掉落规则'), // No Loot Animation
+];
+
 /// Item FlagsExtra 额外标识选项
 const kItemFlagsExtraOptions = [
   FlagItem(1, '部落'), // Horde
@@ -73,60 +127,6 @@ const kItemFlagsExtraOptions = [
   FlagItem(536870912, '掉落界面不堆叠'),
   FlagItem(1073741824, '分解到掉落模板'),
   FlagItem(2147483648, '用于专业技能'),
-];
-
-/// Item flagsCustom 自定义标识选项
-const kItemFlagsCustomOptions = [
-  FlagItem(1, '玩家下线也计时'), // Duration Real Time
-  FlagItem(2, '掉落时不检测任务状态'), // Ignore Quest Status
-  FlagItem(4, '点贪婪前遵守掉落规则'), // No Loot Animation
-];
-
-/// BagFamily 背包类别标识选项
-const kItemBagFamilyOptions = [
-  FlagItem(1, '箭袋'), // Quiver
-  FlagItem(2, '弹药袋'), // Ammo Pouch
-  FlagItem(4, '灵魂碎片'), // Soul Shard
-  FlagItem(8, '皮革用品'), // Leatherworking
-  FlagItem(16, '铭文袋'), // Inscription
-  FlagItem(32, '草药袋'), // Herb
-  FlagItem(64, '附魔袋'), // Enchanting
-  FlagItem(128, '工程袋'), // Engineering
-  FlagItem(256, '钥匙袋'), // Key
-  FlagItem(512, '珠宝袋'), // Jewelcrafting
-  FlagItem(1024, '矿石袋'), // Mining
-  FlagItem(2048, '灵魂绑定'), // Soulbound
-  FlagItem(4096, '宠物栏'), // Pet
-  FlagItem(8192, '钱袋'), // Money
-  FlagItem(16384, '任务物品'), // Quest
-];
-
-/// AllowableClass 职业标识选项
-const kAllowableClassOptions = [
-  FlagItem(1, '战士'), // Warrior
-  FlagItem(2, '圣骑士'), // Paladin
-  FlagItem(4, '猎人'), // Hunter
-  FlagItem(8, '盗贼'), // Rogue
-  FlagItem(16, '牧师'), // Priest
-  FlagItem(32, '死亡骑士'), // Death Knight
-  FlagItem(64, '萨满'), // Shaman
-  FlagItem(128, '法师'), // Mage
-  FlagItem(256, '术士'), // Warlock
-  FlagItem(1024, '德鲁伊'), // Druid
-];
-
-/// AllowableRace 种族标识选项
-const kAllowableRaceOptions = [
-  FlagItem(1, '人类'), // Human
-  FlagItem(2, '矮人'), // Dwarf
-  FlagItem(4, '暗夜精灵'), // Night Elf
-  FlagItem(8, '亡灵'), // Undead
-  FlagItem(16, '牛头人'), // Tauren
-  FlagItem(32, '巨魔'), // Troll
-  FlagItem(64, '侏儒'), // Gnome
-  FlagItem(128, '兽人'), // Orc
-  FlagItem(512, '血精灵'), // Blood Elf
-  FlagItem(1024, '德莱尼'), // Draenei
 ];
 
 /// ScalingStatValue 缩放属性标识选项
