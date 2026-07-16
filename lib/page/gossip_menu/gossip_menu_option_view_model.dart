@@ -56,9 +56,35 @@ class GossipMenuOptionViewModel with FieldControllerMixin {
   var _originalOptionId = 0;
   var _localeExists = false;
 
-  Future<void> search(int menuId) async {
-    currentMenuId.value = menuId;
-    options.value = await _repository.getBriefGossipMenuOptions(menuId);
+  void cancel() {
+    creating.value = false;
+    editing.value = false;
+  }
+
+  Future<void> copy(int menuId, int optionId) async {
+    try {
+      final confirmed = await DialogUtil.instance.confirm(
+        title: '确认复制',
+        description: '确认复制该选项？',
+        confirmText: '复制',
+      );
+      if (!confirmed) return;
+      final targetOptionId = await _repository.copyGossipMenuOption(
+        menuId,
+        optionId,
+      );
+      if (targetOptionId == null) return;
+      await _localeRepository.copyGossipMenuOptionLocales(
+        menuId,
+        optionId,
+        targetOptionId,
+      );
+      DialogUtil.instance.success('复制成功');
+      await search(currentMenuId.value);
+    } catch (error) {
+      LoggerUtil.instance.e(error.toString());
+      DialogUtil.instance.error('复制失败: $error');
+    }
   }
 
   Future<void> create() async {
@@ -79,6 +105,27 @@ class GossipMenuOptionViewModel with FieldControllerMixin {
       DialogUtil.instance.error('创建对话菜单选项失败: $error');
     }
   }
+
+  Future<void> delete(int menuId, int optionId) async {
+    try {
+      final confirmed = await DialogUtil.instance.confirm(
+        title: '确认删除',
+        description: '将永久删除该选项，确认继续？',
+        confirmText: '删除',
+        destructive: true,
+      );
+      if (!confirmed) return;
+      await _localeRepository.destroyGossipMenuOptionLocales(menuId, optionId);
+      await _repository.destroyGossipMenuOption(menuId, optionId);
+      DialogUtil.instance.success('删除成功');
+      await search(currentMenuId.value);
+    } catch (error) {
+      LoggerUtil.instance.e(error.toString());
+      DialogUtil.instance.error('删除失败: $error');
+    }
+  }
+
+  void dispose() => disposeControllers();
 
   Future<void> edit(int menuId, int optionId) async {
     try {
@@ -127,54 +174,9 @@ class GossipMenuOptionViewModel with FieldControllerMixin {
     }
   }
 
-  void cancel() {
-    creating.value = false;
-    editing.value = false;
-  }
-
-  Future<void> copy(int menuId, int optionId) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '确认复制该选项？',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      final targetOptionId = await _repository.copyGossipMenuOption(
-        menuId,
-        optionId,
-      );
-      if (targetOptionId == null) return;
-      await _localeRepository.copyGossipMenuOptionLocales(
-        menuId,
-        optionId,
-        targetOptionId,
-      );
-      DialogUtil.instance.success('复制成功');
-      await search(currentMenuId.value);
-    } catch (error) {
-      LoggerUtil.instance.e(error.toString());
-      DialogUtil.instance.error('复制失败: $error');
-    }
-  }
-
-  Future<void> delete(int menuId, int optionId) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认删除',
-        description: '将永久删除该选项，确认继续？',
-        confirmText: '删除',
-        destructive: true,
-      );
-      if (!confirmed) return;
-      await _localeRepository.destroyGossipMenuOptionLocales(menuId, optionId);
-      await _repository.destroyGossipMenuOption(menuId, optionId);
-      DialogUtil.instance.success('删除成功');
-      await search(currentMenuId.value);
-    } catch (error) {
-      LoggerUtil.instance.e(error.toString());
-      DialogUtil.instance.error('删除失败: $error');
-    }
+  Future<void> search(int menuId) async {
+    currentMenuId.value = menuId;
+    options.value = await _repository.getBriefGossipMenuOptions(menuId);
   }
 
   void _applyToControllers(GossipMenuOptionEntity entity) {
@@ -257,6 +259,4 @@ class GossipMenuOptionViewModel with FieldControllerMixin {
       throw StateError('无符号字段不能为负数');
     }
   }
-
-  void dispose() => disposeControllers();
 }

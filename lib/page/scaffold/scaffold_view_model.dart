@@ -1,15 +1,35 @@
 import 'dart:async';
 
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/feature_repository.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:signals/signals.dart';
+
+/// 将 error / incompatible 检查结果格式化为用户可读摘要。
+String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
+  final hasIncompatible = blocking.any(
+    (result) => result.state == DbcTableState.incompatible,
+  );
+  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+  final details = blocking
+      .take(5)
+      .map((result) {
+        final message = result.message;
+        if (message == null || message.isEmpty) {
+          return '${result.tableName} (${result.state.name})';
+        }
+        return '${result.tableName}: $message';
+      })
+      .join('\n');
+  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
+  return '$title\n$details$suffix';
+}
 
 class ScaffoldViewModel {
   final _featureRepository = GetIt.instance.get<FeatureRepository>();
@@ -28,44 +48,12 @@ class ScaffoldViewModel {
     () => allFeatures.value.where((feature) => feature.isFavorite).toList(),
   );
 
-  Future<void> loadFeatures() async {
-    allFeatures.value = await _featureRepository.getFeatures();
-  }
-
-  Future<void> togglePinned(int id) async {
-    final features = allFeatures.value;
-    final index = features.indexWhere((feature) => feature.id == id);
-    if (index == -1) return;
-
-    final feature = features[index];
-    final newValue = !feature.isPinned;
-    await _featureRepository.updatePinned(id, newValue);
-
-    final updated = feature.copyWith(isPinned: newValue);
-    final newList = [...features];
-    newList[index] = updated;
-    allFeatures.value = newList;
-  }
-
-  Future<void> toggleFavorite(int id) async {
-    final features = allFeatures.value;
-    final index = features.indexWhere((feature) => feature.id == id);
-    if (index == -1) return;
-
-    final feature = features[index];
-    final newValue = !feature.isFavorite;
-    await _featureRepository.updateFavorite(id, newValue);
-
-    final updated = feature.copyWith(isFavorite: newValue);
-    final newList = [...features];
-    newList[index] = updated;
-    allFeatures.value = newList;
-  }
-
   // ========== DBC 导入 ==========
 
   final dbcImported = signal(false);
+
   final dbcPath = signal<String?>(null);
+
   final dbcImportError = signal<String?>(null);
 
   /// 表检查本身失败（查询错误 / 结构不兼容），与「表缺失待导入」区分。
@@ -74,10 +62,17 @@ class ScaffoldViewModel {
   /// 是否因表结构不兼容阻塞（可引导用户重新导入修复）。
   final dbcCheckIncompatible = signal(false);
   final dbcImporting = signal(false);
+
   final dbcImportCancelling = signal(false);
+
   final dbcProgress = signal<double?>(null);
   final dbcProgressLabel = signal('');
   final dbcProgressDetail = signal('');
+  Future<void> cancelImport() async {
+    if (!dbcImporting.value || dbcImportCancelling.value) return;
+    dbcImportCancelling.value = true;
+    await _dbcSync.cancel();
+  }
 
   Future<void> checkAndImport() async {
     try {
@@ -132,6 +127,10 @@ class ScaffoldViewModel {
     dbcCheckIncompatible.value = false;
   }
 
+  Future<void> loadFeatures() async {
+    allFeatures.value = await _featureRepository.getFeatures();
+  }
+
   /// 允许用户在检查失败后仍尝试重新导入。
   /// 若已配置路径则直接启动导入，避免对话框停在假进度。
   Future<void> prepareManualImport({bool startIfPathReady = false}) async {
@@ -150,8 +149,12 @@ class ScaffoldViewModel {
     }
   }
 
-  void startImport() {
-    if (dbcPath.value == null || dbcImporting.value) return;
+  Future<void> retryImport() async {
+    if (dbcPath.value == null) {
+      dbcImportError.value = null;
+      return;
+    }
+    dbcImportError.value = null;
     _startImportWorker();
   }
 
@@ -171,32 +174,69 @@ class ScaffoldViewModel {
     }
   }
 
-  Future<void> retryImport() async {
-    if (dbcPath.value == null) {
-      dbcImportError.value = null;
-      return;
-    }
-    dbcImportError.value = null;
+  void startImport() {
+    if (dbcPath.value == null || dbcImporting.value) return;
     _startImportWorker();
   }
 
-  Future<void> cancelImport() async {
-    if (!dbcImporting.value || dbcImportCancelling.value) return;
-    dbcImportCancelling.value = true;
-    await _dbcSync.cancel();
+  Future<void> toggleFavorite(int id) async {
+    final features = allFeatures.value;
+    final index = features.indexWhere((feature) => feature.id == id);
+    if (index == -1) return;
+
+    final feature = features[index];
+    final newValue = !feature.isFavorite;
+    await _featureRepository.updateFavorite(id, newValue);
+
+    final updated = feature.copyWith(isFavorite: newValue);
+    final newList = [...features];
+    newList[index] = updated;
+    allFeatures.value = newList;
   }
 
-  void _startImportWorker() {
-    if (dbcImporting.value) return;
-    final path = dbcPath.value;
-    if (path == null) return;
-    dbcImporting.value = true;
+  Future<void> togglePinned(int id) async {
+    final features = allFeatures.value;
+    final index = features.indexWhere((feature) => feature.id == id);
+    if (index == -1) return;
+
+    final feature = features[index];
+    final newValue = !feature.isPinned;
+    await _featureRepository.updatePinned(id, newValue);
+
+    final updated = feature.copyWith(isPinned: newValue);
+    final newList = [...features];
+    newList[index] = updated;
+    allFeatures.value = newList;
+  }
+
+  Future<void> _handleImportResult(DbcSyncResult result) async {
+    if (result.cancelled) {
+      _resetImportProgress();
+      dbcImportError.value = '导入已取消';
+      return;
+    }
+
+    if (result.success) {
+      await _verifyImportCompleted(
+        completed: result.completed,
+        skipped: result.skipped,
+      );
+      return;
+    }
+
+    _resetImportProgress();
+    final top = result.errors.take(3).join('\n');
+    dbcImportError.value =
+        '导入完成，部分文件失败：\n$top'
+        '${result.errors.length > 3 ? '\n...等 ${result.errors.length} 个错误' : ''}';
+  }
+
+  void _resetImportProgress() {
+    dbcImporting.value = false;
     dbcImportCancelling.value = false;
     dbcProgress.value = null;
-    dbcProgressLabel.value = '准备导入...';
+    dbcProgressLabel.value = '';
     dbcProgressDetail.value = '';
-    dbcImportError.value = null;
-    unawaited(_runImport(path));
   }
 
   Future<void> _runImport(String directory) async {
@@ -251,31 +291,17 @@ class ScaffoldViewModel {
     }
   }
 
-  Future<void> _handleImportResult(DbcSyncResult result) async {
-    if (result.cancelled) {
-      _resetImportProgress();
-      dbcImportError.value = '导入已取消';
-      return;
-    }
-
-    if (result.success) {
-      await _verifyImportCompleted(
-        completed: result.completed,
-        skipped: result.skipped,
-      );
-      return;
-    }
-
-    _resetImportProgress();
-    final top = result.errors.take(3).join('\n');
-    dbcImportError.value =
-        '导入完成，部分文件失败：\n$top'
-        '${result.errors.length > 3 ? '\n...等 ${result.errors.length} 个错误' : ''}';
-  }
-
-  static int _parsePort(Object? value) {
-    if (value is int) return value;
-    return int.tryParse(value?.toString() ?? '') ?? 3306;
+  void _startImportWorker() {
+    if (dbcImporting.value) return;
+    final path = dbcPath.value;
+    if (path == null) return;
+    dbcImporting.value = true;
+    dbcImportCancelling.value = false;
+    dbcProgress.value = null;
+    dbcProgressLabel.value = '准备导入...';
+    dbcProgressDetail.value = '';
+    dbcImportError.value = null;
+    unawaited(_runImport(path));
   }
 
   Future<void> _verifyImportCompleted({
@@ -300,31 +326,8 @@ class ScaffoldViewModel {
     }
   }
 
-  void _resetImportProgress() {
-    dbcImporting.value = false;
-    dbcImportCancelling.value = false;
-    dbcProgress.value = null;
-    dbcProgressLabel.value = '';
-    dbcProgressDetail.value = '';
+  static int _parsePort(Object? value) {
+    if (value is int) return value;
+    return int.tryParse(value?.toString() ?? '') ?? 3306;
   }
-}
-
-/// 将 error / incompatible 检查结果格式化为用户可读摘要。
-String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
-  final hasIncompatible = blocking.any(
-    (result) => result.state == DbcTableState.incompatible,
-  );
-  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
-  final details = blocking
-      .take(5)
-      .map((result) {
-        final message = result.message;
-        if (message == null || message.isEmpty) {
-          return '${result.tableName} (${result.state.name})';
-        }
-        return '${result.tableName}: $message';
-      })
-      .join('\n');
-  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
-  return '$title\n$details$suffix';
 }

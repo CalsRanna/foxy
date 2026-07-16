@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -9,7 +10,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -93,13 +93,6 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  GameObjectTemplateFilterEntity _buildFilter() {
-    return GameObjectTemplateFilterEntity(
-      entry: entryController.collect(),
-      name: nameController.collect(),
-    );
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -115,6 +108,27 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  GameObjectTemplateFilterEntity _buildFilter() {
+    return GameObjectTemplateFilterEntity(
+      entry: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, int entry) {
+    final all = templates.value;
+    final template = all.where((t) => t.entry == entry).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLogEntity(
+      module: 'gameobject_template',
+      actionType: action,
+      entityId: entry,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {
@@ -135,19 +149,5 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('刷新游戏对象列表失败: $e');
       DialogUtil.instance.error('刷新游戏对象列表失败: $e');
     }
-  }
-
-  void _logActivity(ActivityActionType action, int entry) {
-    final all = templates.value;
-    final template = all.where((t) => t.entry == entry).firstOrNull;
-    final name = template?.name ?? '';
-    final log = ActivityLogEntity(
-      module: 'gameobject_template',
-      actionType: action,
-      entityId: entry,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

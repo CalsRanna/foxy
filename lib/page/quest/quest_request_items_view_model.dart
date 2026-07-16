@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -28,6 +28,10 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
 
   int _originalId = 0;
 
+  void dispose() {
+    disposeControllers();
+  }
+
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
@@ -44,6 +48,10 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
     }
+  }
+
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(BuildContext context) async {
@@ -66,17 +74,6 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
     }
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void _initSignals(QuestRequestItemsEntity model) {
-    emoteOnCompleteController.init(model.emoteOnComplete);
-    emoteOnIncompleteController.init(model.emoteOnIncomplete);
-    completionTextController.init(model.completionText);
-    verifiedBuildController.init(model.verifiedBuild);
-  }
-
   QuestRequestItemsEntity _collect() {
     return QuestRequestItemsEntity(
       id: questId.value,
@@ -87,7 +84,10 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
     );
   }
 
-  void dispose() {
-    disposeControllers();
+  void _initSignals(QuestRequestItemsEntity model) {
+    emoteOnCompleteController.init(model.emoteOnComplete);
+    emoteOnIncompleteController.init(model.emoteOnIncomplete);
+    completionTextController.init(model.completionText);
+    verifiedBuildController.init(model.verifiedBuild);
   }
 }

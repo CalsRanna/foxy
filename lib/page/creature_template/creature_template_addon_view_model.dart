@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -26,6 +26,22 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
 
   final addon = signal(CreatureTemplateAddonEntity());
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 初始化 ViewModel
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物附加失败: $e');
+      DialogUtil.instance.error('初始化生物附加失败: $e');
+    }
+  }
+
   /// 从数据库加载数据
 
   Future<void> load() async {
@@ -43,6 +59,11 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
     }
   }
 
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   /// 保存数据到数据库
   Future<void> save(BuildContext context) async {
     try {
@@ -56,11 +77,6 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从 Controller 收集数据构建 CreatureTemplateAddon
@@ -88,21 +104,5 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
     bytes2Controller.init(data.bytes2);
     visibilityDistanceTypeController.init(data.visibilityDistanceType);
     aurasController.init(data.auras);
-  }
-
-  /// 初始化 ViewModel
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物附加失败: $e');
-      DialogUtil.instance.error('初始化生物附加失败: $e');
-    }
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

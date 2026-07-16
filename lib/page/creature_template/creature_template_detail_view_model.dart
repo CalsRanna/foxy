@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -134,6 +134,35 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? entry}) async {
+    try {
+      // 路由/页面常把 null 落成 0，一律视为新建
+      if (entry == null || entry <= 0) {
+        final blank = await _repository.createCreatureTemplate();
+        template.value = blank;
+        this.entry.value = blank.entry;
+        _initControllers(blank);
+        return;
+      }
+      final result = await _repository.getCreatureTemplate(entry);
+      if (result == null) return;
+      template.value = result;
+      this.entry.value = result.entry;
+      _initControllers(result);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -158,11 +187,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有字段收集数据构建 CreatureTemplate
@@ -224,30 +248,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
       scriptName: scriptNameController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? entry}) async {
-    try {
-      // 路由/页面常把 null 落成 0，一律视为新建
-      if (entry == null || entry <= 0) {
-        final blank = await _repository.createCreatureTemplate();
-        template.value = blank;
-        this.entry.value = blank.entry;
-        _initControllers(blank);
-        return;
-      }
-      final result = await _repository.getCreatureTemplate(entry);
-      if (result == null) return;
-      template.value = result;
-      this.entry.value = result.entry;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
-    }
   }
 
   void _initControllers(CreatureTemplateEntity template) {

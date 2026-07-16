@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -25,40 +25,8 @@ class SpellBonusDataViewModel with FieldControllerMixin {
 
   final bonusData = signal(SpellBonusDataEntity());
 
-  Future<void> load() async {
-    final data = await _repository.getSpellBonusData(spellId.value);
-    if (data != null) {
-      bonusData.value = data;
-    }
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      final data = _collectFromControllers();
-      await _repository.saveSpellBonusData(data);
-      bonusData.value = data;
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('奖励系数已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  SpellBonusDataEntity _collectFromControllers() {
-    return SpellBonusDataEntity(
-      entry: spellId.value,
-      directBonus: directBonusController.collect(),
-      dotBonus: dotBonusController.collect(),
-      apBonus: apBonusController.collect(),
-      apDotBonus: apDotBonusController.collect(),
-      comments: commentsController.collect(),
-    );
+  void dispose() {
+    disposeControllers();
   }
 
   void initControllers(SpellBonusDataEntity data) {
@@ -81,7 +49,39 @@ class SpellBonusDataViewModel with FieldControllerMixin {
     }
   }
 
-  void dispose() {
-    disposeControllers();
+  Future<void> load() async {
+    final data = await _repository.getSpellBonusData(spellId.value);
+    if (data != null) {
+      bonusData.value = data;
+    }
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  Future<void> save(BuildContext context) async {
+    try {
+      final data = _collectFromControllers();
+      await _repository.saveSpellBonusData(data);
+      bonusData.value = data;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('奖励系数已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  SpellBonusDataEntity _collectFromControllers() {
+    return SpellBonusDataEntity(
+      entry: spellId.value,
+      directBonus: directBonusController.collect(),
+      dotBonus: dotBonusController.collect(),
+      apBonus: apBonusController.collect(),
+      apDotBonus: apDotBonusController.collect(),
+      comments: commentsController.collect(),
+    );
   }
 }

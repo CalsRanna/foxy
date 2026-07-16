@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/currency_type_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/currency_type_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -26,6 +26,30 @@ class CurrencyTypeDetailViewModel
   late final bitIndexController = registerController(IntFieldController());
 
   final currencyType = signal(CurrencyTypeEntity());
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createCurrencyType();
+        currencyType.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      currencyType.value = (await _repository.getCurrencyType(id))!;
+      _initControllers(currencyType.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载货币(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
 
   Future<void> save(BuildContext context) async {
     try {
@@ -56,11 +80,6 @@ class CurrencyTypeDetailViewModel
     }
   }
 
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
   /// 从所有 Controller 收集数据构建 CurrencyType
   CurrencyTypeEntity _collectFromControllers() {
     return CurrencyTypeEntity(
@@ -69,6 +88,13 @@ class CurrencyTypeDetailViewModel
       categoryId: categoryIdController.collect(),
       bitIndex: bitIndexController.collect(),
     );
+  }
+
+  void _initControllers(CurrencyTypeEntity currencyType) {
+    idController.init(currencyType.id);
+    itemIdController.init(currencyType.itemId);
+    categoryIdController.init(currencyType.categoryId);
+    bitIndexController.init(currencyType.bitIndex);
   }
 
   void _logActivity(ActivityActionType action, CurrencyTypeEntity t) {
@@ -80,31 +106,5 @@ class CurrencyTypeDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createCurrencyType();
-        currencyType.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      currencyType.value = (await _repository.getCurrencyType(id))!;
-      _initControllers(currencyType.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载货币(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
-  void _initControllers(CurrencyTypeEntity currencyType) {
-    idController.init(currencyType.id);
-    itemIdController.init(currencyType.itemId);
-    categoryIdController.init(currencyType.categoryId);
-    bitIndexController.init(currencyType.bitIndex);
   }
 }

@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/item_enchantment_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/item_enchantment_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -34,28 +34,6 @@ class ItemEnchantmentTemplateViewModel
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
   final _itemRepository = GetIt.instance.get<ItemTemplateRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
-      entry.value,
-      kind: kind.value,
-    );
-    items.value = data;
-    selectedIndex.value = null;
-    creating.value = false;
-    editing.value = false;
-    editingEnch = null;
-  }
-
-  void resetForm() {
-    enchController.init(0);
-    chanceController.init(0.0);
-  }
-
-  void fillForm(BriefItemEnchantmentTemplateEntity model) {
-    enchController.init(model.ench);
-    chanceController.init(model.chance);
-  }
-
   ItemEnchantmentTemplateEntity collectFromForm() {
     return ItemEnchantmentTemplateEntity(
       entry: entry.value,
@@ -80,17 +58,6 @@ class ItemEnchantmentTemplateViewModel
       DialogUtil.instance.error('创建失败: $e');
       return false;
     }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final model = items.value[index];
-    fillForm(model);
-    editing.value = true;
-    creating.value = false;
-    editingEnch = model.ench;
   }
 
   Future<void> delete(BuildContext context) async {
@@ -135,46 +102,24 @@ class ItemEnchantmentTemplateViewModel
     }
   }
 
-  Future<void> save(BuildContext context) async {
-    try {
-      final model = collectFromForm();
-      validateItemEnchantmentTemplateFields(model);
-      await _repository.storeItemEnchantmentTemplate(model);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+  void dispose() {
+    disposeControllers();
   }
 
-  Future<void> update(BuildContext context) async {
-    try {
-      final model = collectFromForm();
-      validateItemEnchantmentTemplateFields(model);
-      await _repository.updateItemEnchantmentTemplate(
-        model.entry,
-        editingEnch ?? model.ench,
-        model,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final model = items.value[index];
+    fillForm(model);
+    editing.value = true;
+    creating.value = false;
+    editingEnch = model.ench;
   }
 
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
+  void fillForm(BriefItemEnchantmentTemplateEntity model) {
+    enchController.init(model.ench);
+    chanceController.init(model.chance);
   }
 
   Future<void> initSignals({required int entry}) async {
@@ -196,11 +141,66 @@ class ItemEnchantmentTemplateViewModel
     }
   }
 
+  Future<void> load() async {
+    final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
+      entry.value,
+      kind: kind.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+    editingEnch = null;
+  }
+
   void pop() {
     routerFacade.goBack();
   }
 
-  void dispose() {
-    disposeControllers();
+  void resetForm() {
+    enchController.init(0);
+    chanceController.init(0.0);
+  }
+
+  Future<void> save(BuildContext context) async {
+    try {
+      final model = collectFromForm();
+      validateItemEnchantmentTemplateFields(model);
+      await _repository.storeItemEnchantmentTemplate(model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  Future<void> update(BuildContext context) async {
+    try {
+      final model = collectFromForm();
+      validateItemEnchantmentTemplateFields(model);
+      await _repository.updateItemEnchantmentTemplate(
+        model.entry,
+        editingEnch ?? model.ench,
+        model,
+      );
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
   }
 }

@@ -1,14 +1,14 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/game_object_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/game_object_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -65,6 +65,32 @@ class GameObjectTemplateDetailViewModel
 
   final template = signal(GameObjectTemplateEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? entry}) async {
+    try {
+      if (entry == null || entry <= 0) {
+        final blank = await _repository.createGameObjectTemplate();
+        template.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      final result = await _repository.getGameObjectTemplate(entry);
+      if (result == null) return;
+      template.value = result;
+      _initControllers(result);
+    } catch (e) {
+      LoggerUtil.instance.e('加载游戏对象详情失败: $e');
+      DialogUtil.instance.error('加载游戏对象详情失败: $e');
+    }
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<int?> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -90,10 +116,6 @@ class GameObjectTemplateDetailViewModel
       ShadSonner.of(context).show(toast);
       return null;
     }
-  }
-
-  void pop() {
-    routerFacade.goBack();
   }
 
   GameObjectTemplateEntity _collectFromControllers() {
@@ -134,28 +156,6 @@ class GameObjectTemplateDetailViewModel
       scriptName: scriptNameController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? entry}) async {
-    try {
-      if (entry == null || entry <= 0) {
-        final blank = await _repository.createGameObjectTemplate();
-        template.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      final result = await _repository.getGameObjectTemplate(entry);
-      if (result == null) return;
-      template.value = result;
-      _initControllers(result);
-    } catch (e) {
-      LoggerUtil.instance.e('加载游戏对象详情失败: $e');
-      DialogUtil.instance.error('加载游戏对象详情失败: $e');
-    }
   }
 
   void _initControllers(GameObjectTemplateEntity template) {

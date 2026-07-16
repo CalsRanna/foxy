@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -44,51 +44,9 @@ class CreatureOnKillReputationViewModel with FieldControllerMixin {
 
   final reputation = signal(CreatureOnKillReputationEntity());
 
-  /// 从数据库加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getCreatureOnKillReputation(
-      creatureIdController.collect(),
-    );
-    if (data != null) {
-      reputation.value = data;
-    }
-  }
-
-  /// 保存数据到数据库
-  Future<void> save(BuildContext context) async {
-    try {
-      final repData = _collectFromControllers();
-      await _repository.saveCreatureOnKillReputation(repData);
-      reputation.value = repData;
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('击杀声望数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 从 Controller 收集数据构建 CreatureOnKillReputation
-  CreatureOnKillReputationEntity _collectFromControllers() {
-    return CreatureOnKillReputationEntity(
-      creatureID: creatureIdController.collect(),
-      rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
-      rewOnKillRepFaction2: rewOnKillRepFaction2Controller.collect(),
-      maxStanding1: maxStanding1Controller.collect(),
-      maxStanding2: maxStanding2Controller.collect(),
-      isTeamAward1: isTeamAward1Controller.collect() == 1,
-      isTeamAward2: isTeamAward2Controller.collect() == 1,
-      rewOnKillRepValue1: rewOnKillRepValue1Controller.collect(),
-      rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
-      teamDependent: teamDependentController.collect(),
-    );
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
   }
 
   /// 初始化 Controller 的值
@@ -115,8 +73,50 @@ class CreatureOnKillReputationViewModel with FieldControllerMixin {
     }
   }
 
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
+  /// 从数据库加载数据
+
+  Future<void> load() async {
+    final data = await _repository.getCreatureOnKillReputation(
+      creatureIdController.collect(),
+    );
+    if (data != null) {
+      reputation.value = data;
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 保存数据到数据库
+  Future<void> save(BuildContext context) async {
+    try {
+      final repData = _collectFromControllers();
+      await _repository.saveCreatureOnKillReputation(repData);
+      reputation.value = repData;
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('击杀声望数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 从 Controller 收集数据构建 CreatureOnKillReputation
+  CreatureOnKillReputationEntity _collectFromControllers() {
+    return CreatureOnKillReputationEntity(
+      creatureID: creatureIdController.collect(),
+      rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
+      rewOnKillRepFaction2: rewOnKillRepFaction2Controller.collect(),
+      maxStanding1: maxStanding1Controller.collect(),
+      maxStanding2: maxStanding2Controller.collect(),
+      isTeamAward1: isTeamAward1Controller.collect() == 1,
+      isTeamAward2: isTeamAward2Controller.collect() == 1,
+      rewOnKillRepValue1: rewOnKillRepValue1Controller.collect(),
+      rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
+      teamDependent: teamDependentController.collect(),
+    );
   }
 }

@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/game_object_quest_item_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/game_object_quest_item_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -28,25 +28,6 @@ class GameObjectQuestItemViewModel
 
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
-  Future<void> load() async {
-    items.value = await _repository.getBriefGameObjectQuestItems(
-      gameObjectEntry.value,
-    );
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    idxController.init(0);
-    itemIdController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  void fillForm(BriefGameObjectQuestItemEntity questItem) {
-    idxController.init(questItem.idx);
-    itemIdController.init(questItem.itemId);
-    verifiedBuildController.init(questItem.verifiedBuild);
-  }
-
   GameObjectQuestItemEntity collectFromForm() {
     return GameObjectQuestItemEntity(
       gameObjectEntry: gameObjectEntry.value,
@@ -54,24 +35,6 @@ class GameObjectQuestItemViewModel
       itemId: itemIdController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  Future<void> create() async {
-    try {
-      resetForm();
-      final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
-      idxController.init(nextIdx);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建失败: $e');
-      DialogUtil.instance.error('创建失败: $e');
-    }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    fillForm(items.value[index]);
   }
 
   Future<void> copy(BuildContext context) async {
@@ -84,6 +47,18 @@ class GameObjectQuestItemViewModel
       await load();
     } catch (e) {
       DialogUtil.instance.error('复制失败: $e');
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      resetForm();
+      final nextIdx = await _repository.getNextIdx(gameObjectEntry.value);
+      idxController.init(nextIdx);
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('创建失败: $e');
+      DialogUtil.instance.error('创建失败: $e');
     }
   }
 
@@ -110,6 +85,50 @@ class GameObjectQuestItemViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    fillForm(items.value[index]);
+  }
+
+  void fillForm(BriefGameObjectQuestItemEntity questItem) {
+    idxController.init(questItem.idx);
+    itemIdController.init(questItem.itemId);
+    verifiedBuildController.init(questItem.verifiedBuild);
+  }
+
+  Future<void> initSignals({required int gameObjectId}) async {
+    try {
+      gameObjectEntry.value = gameObjectId;
+      gameObjectIdController.init(gameObjectId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化失败: $e');
+      DialogUtil.instance.error('初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    items.value = await _repository.getBriefGameObjectQuestItems(
+      gameObjectEntry.value,
+    );
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    idxController.init(0);
+    itemIdController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final questItem = collectFromForm();
@@ -123,6 +142,12 @@ class GameObjectQuestItemViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -140,30 +165,5 @@ class GameObjectQuestItemViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int gameObjectId}) async {
-    try {
-      gameObjectEntry.value = gameObjectId;
-      gameObjectIdController.init(gameObjectId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化失败: $e');
-      DialogUtil.instance.error('初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

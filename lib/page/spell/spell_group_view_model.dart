@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_group_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_group_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -27,44 +27,11 @@ class SpellGroupViewModel
 
   final _repository = GetIt.instance.get<SpellGroupRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellGroups(spellId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    groupIdController.init(0);
-  }
-
-  void fillForm(SpellGroupEntity data) {
-    groupIdController.init(data.id);
-  }
-
   SpellGroupEntity collectFromForm() {
     return SpellGroupEntity(
       spellId: spellId.value,
       id: groupIdController.collect(),
     );
-  }
-
-  Future<void> create() async {
-    try {
-      final blank = await _repository.createSpellGroup(spellId.value);
-      resetForm();
-      groupIdController.init(blank.id);
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('法术组-创建失败: $e');
-      DialogUtil.instance.error('法术组-创建失败: $e');
-    }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final group = items.value[index];
-    fillForm(group);
   }
 
   Future<void> copy(BuildContext context) async {
@@ -81,6 +48,18 @@ class SpellGroupViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      final blank = await _repository.createSpellGroup(spellId.value);
+      resetForm();
+      groupIdController.init(blank.id);
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('法术组-创建失败: $e');
+      DialogUtil.instance.error('法术组-创建失败: $e');
     }
   }
 
@@ -120,6 +99,46 @@ class SpellGroupViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    final group = items.value[index];
+    fillForm(group);
+  }
+
+  void fillForm(SpellGroupEntity data) {
+    groupIdController.init(data.id);
+  }
+
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      this.spellId.value = spellId;
+      spellIdController.init(spellId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术组-初始化失败: $e');
+      DialogUtil.instance.error('法术组-初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefSpellGroups(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    groupIdController.init(0);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
@@ -133,6 +152,12 @@ class SpellGroupViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -153,30 +178,5 @@ class SpellGroupViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      spellIdController.init(spellId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术组-初始化失败: $e');
-      DialogUtil.instance.error('法术组-初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

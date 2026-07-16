@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/emote_text/emote_text_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -45,6 +45,30 @@ class EmoteTextDetailViewModel
 
   final emote = signal(EmoteTextEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createEmoteText();
+        emote.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      emote.value = (await _repository.getEmoteText(id))!;
+      _initControllers(emote.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
@@ -72,11 +96,6 @@ class EmoteTextDetailViewModel
     }
   }
 
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
   /// 从所有 Controller 收集数据构建 EmoteText
   EmoteTextEntity _collectFromControllers() {
     return EmoteTextEntity(
@@ -102,36 +121,6 @@ class EmoteTextDetailViewModel
     );
   }
 
-  void _logActivity(ActivityActionType action, EmoteTextEntity t) {
-    final log = ActivityLogEntity(
-      module: 'emote_text',
-      actionType: action,
-      entityId: t.id,
-      entityName: t.name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createEmoteText();
-        emote.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      emote.value = (await _repository.getEmoteText(id))!;
-      _initControllers(emote.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(EmoteTextEntity emoteText) {
     idController.init(emoteText.id);
     nameController.init(emoteText.name);
@@ -152,5 +141,16 @@ class EmoteTextDetailViewModel
     emoteText13Controller.init(emoteText.emoteText13);
     emoteText14Controller.init(emoteText.emoteText14);
     emoteText15Controller.init(emoteText.emoteText15);
+  }
+
+  void _logActivity(ActivityActionType action, EmoteTextEntity t) {
+    final log = ActivityLogEntity(
+      module: 'emote_text',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

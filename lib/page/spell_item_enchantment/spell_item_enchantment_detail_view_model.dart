@@ -1,14 +1,14 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_item_enchantment_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_item_enchantment_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -73,6 +73,52 @@ class SpellItemEnchantmentDetailViewModel
 
   final enchantment = signal(SpellItemEnchantmentEntity());
 
+  void applyNameLocales(List<DbcLocaleFieldValue> values) {
+    enchantment.value = enchantment.value.copyWith(
+      nameLangEnUS: values.valueOf('enUS'),
+      nameLangKoKR: values.valueOf('koKR'),
+      nameLangFrFR: values.valueOf('frFR'),
+      nameLangDeDE: values.valueOf('deDE'),
+      nameLangZhCN: values.valueOf('zhCN'),
+      nameLangZhTW: values.valueOf('zhTW'),
+      nameLangEsES: values.valueOf('esES'),
+      nameLangEsMX: values.valueOf('esMX'),
+      nameLangRuRU: values.valueOf('ruRU'),
+      nameLangJaJP: values.valueOf('jaJP'),
+      nameLangPtPT: values.valueOf('ptPT'),
+      nameLangPtBR: values.valueOf('ptBR'),
+      nameLangItIT: values.valueOf('itIT'),
+      nameLangUnk1: values.valueOf('unk1'),
+      nameLangUnk2: values.valueOf('unk2'),
+      nameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createSpellItemEnchantment();
+        enchantment.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      enchantment.value = (await _repository.getSpellItemEnchantment(id))!;
+      _initControllers(enchantment.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       var t = _collectFromControllers();
@@ -99,33 +145,6 @@ class SpellItemEnchantmentDetailViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void applyNameLocales(List<DbcLocaleFieldValue> values) {
-    enchantment.value = enchantment.value.copyWith(
-      nameLangEnUS: values.valueOf('enUS'),
-      nameLangKoKR: values.valueOf('koKR'),
-      nameLangFrFR: values.valueOf('frFR'),
-      nameLangDeDE: values.valueOf('deDE'),
-      nameLangZhCN: values.valueOf('zhCN'),
-      nameLangZhTW: values.valueOf('zhTW'),
-      nameLangEsES: values.valueOf('esES'),
-      nameLangEsMX: values.valueOf('esMX'),
-      nameLangRuRU: values.valueOf('ruRU'),
-      nameLangJaJP: values.valueOf('jaJP'),
-      nameLangPtPT: values.valueOf('ptPT'),
-      nameLangPtBR: values.valueOf('ptBR'),
-      nameLangItIT: values.valueOf('itIT'),
-      nameLangUnk1: values.valueOf('unk1'),
-      nameLangUnk2: values.valueOf('unk2'),
-      nameLangUnk3: values.valueOf('unk3'),
-    );
-    nameController.init(values.zhCN);
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
@@ -157,36 +176,6 @@ class SpellItemEnchantmentDetailViewModel
     );
   }
 
-  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
-    final log = ActivityLogEntity(
-      module: 'spell_item_enchantment',
-      actionType: action,
-      entityId: t.id,
-      entityName: t.nameLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createSpellItemEnchantment();
-        enchantment.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      enchantment.value = (await _repository.getSpellItemEnchantment(id))!;
-      _initControllers(enchantment.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(SpellItemEnchantmentEntity entry) {
     idController.init(entry.id);
     nameController.init(entry.nameLangZhCN);
@@ -210,5 +199,16 @@ class SpellItemEnchantmentDetailViewModel
     requiredSkillIdController.init(entry.requiredSkillId);
     requiredSkillRankController.init(entry.requiredSkillRank);
     minLevelController.init(entry.minLevel);
+  }
+
+  void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
+    final log = ActivityLogEntity(
+      module: 'spell_item_enchantment',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.nameLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

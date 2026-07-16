@@ -1,14 +1,14 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -23,36 +23,6 @@ class QuestTemplateListViewModel with FieldControllerMixin {
   final templates = signal<List<BriefQuestTemplateEntity>>([]);
   final page = signal(1);
   final total = signal(0);
-
-  Future<void> initSignals() async {
-    try {
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e('加载任务列表失败: $e');
-      DialogUtil.instance.error('加载任务列表失败: $e');
-    }
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    idController.init('');
-    titleController.init('');
-    page.value = 1;
-    await _refresh();
-  }
 
   Future<void> copyQuestTemplate(int id) async {
     try {
@@ -91,6 +61,19 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    try {
+      await _refresh();
+    } catch (e) {
+      LoggerUtil.instance.e('加载任务列表失败: $e');
+      DialogUtil.instance.error('加载任务列表失败: $e');
+    }
+  }
+
   /// 导航到详情页（null 表示新建）
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务';
@@ -103,21 +86,21 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<void> _refresh() async {
-    final token = ++_refreshToken;
-    try {
-      final filter = _buildFilter();
-      final (items, count) = await (
-        _repository.getBriefQuestTemplates(filter: filter, page: page.value),
-        _repository.countQuestTemplates(filter: filter),
-      ).wait;
-      if (token != _refreshToken) return;
-      templates.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('刷新任务列表失败: $e');
-      DialogUtil.instance.error('刷新任务列表失败: $e');
-    }
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    idController.init('');
+    titleController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
   }
 
   QuestTemplateFilterEntity _buildFilter() {
@@ -139,5 +122,22 @@ class QuestTemplateListViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    try {
+      final filter = _buildFilter();
+      final (items, count) = await (
+        _repository.getBriefQuestTemplates(filter: filter, page: page.value),
+        _repository.countQuestTemplates(filter: filter),
+      ).wait;
+      if (token != _refreshToken) return;
+      templates.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('刷新任务列表失败: $e');
+      DialogUtil.instance.error('刷新任务列表失败: $e');
+    }
   }
 }

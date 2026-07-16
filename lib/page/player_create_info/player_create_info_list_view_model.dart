@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -24,51 +24,6 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
-
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (_search(), _count()).wait;
-      if (token != _refreshToken) return;
-      infos.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载角色创建信息列表失败: $e');
-      DialogUtil.instance.error('加载角色创建信息列表失败: $e');
-    }
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    raceController.init('');
-    classController.init('');
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  void navigateToDetail({PlayerCreateInfoEntity? info}) {
-    final id = info != null ? 'pci_${info.race}_${info.class_}' : 'pci_new';
-    final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
-    _routerFacade.navigateToDetail(
-      id: id,
-      label: label,
-      route: PlayerCreateInfoDetailRoute(
-        race: info?.race,
-        playerClass: info?.class_,
-        label: label,
-      ),
-      parentMenu: RouterMenu.more,
-    );
-  }
 
   Future<void> deletePlayerCreateInfo(PlayerCreateInfoEntity info) async {
     try {
@@ -89,15 +44,53 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, int id) {
-    final log = ActivityLogEntity(
-      module: 'player_create_info',
-      actionType: action,
-      entityId: id,
-      entityName: '',
-      createdAt: DateTime.now(),
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
+      infos.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载角色创建信息列表失败: $e');
+      DialogUtil.instance.error('加载角色创建信息列表失败: $e');
+    }
+  }
+
+  void navigateToDetail({PlayerCreateInfoEntity? info}) {
+    final id = info != null ? 'pci_${info.race}_${info.class_}' : 'pci_new';
+    final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
+    _routerFacade.navigateToDetail(
+      id: id,
+      label: label,
+      route: PlayerCreateInfoDetailRoute(
+        race: info?.race,
+        playerClass: info?.class_,
+        label: label,
+      ),
+      parentMenu: RouterMenu.more,
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    raceController.init('');
+    classController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
   }
 
   PlayerCreateInfoFilterEntity _buildFilter() {
@@ -107,15 +100,19 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<List<PlayerCreateInfoEntity>> _search() async {
-    return _repository.getBriefPlayerCreateInfos(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-  }
-
   Future<int> _count() async {
     return _repository.countPlayerCreateInfos(filter: _buildFilter());
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLogEntity(
+      module: 'player_create_info',
+      actionType: action,
+      entityId: id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {
@@ -131,7 +128,10 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  void dispose() {
-    disposeControllers();
+  Future<List<PlayerCreateInfoEntity>> _search() async {
+    return _repository.getBriefPlayerCreateInfos(
+      filter: _buildFilter(),
+      page: page.value,
+    );
   }
 }

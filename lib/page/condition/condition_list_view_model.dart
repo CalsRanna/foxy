@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -26,57 +26,6 @@ class ConditionListViewModel with FieldControllerMixin {
   final total = signal(0);
 
   final routerFacade = GetIt.instance.get<RouterFacade>();
-
-  Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (_search(), _count()).wait;
-      if (token != _refreshToken) return;
-      conditions.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载条件列表失败: $e');
-      DialogUtil.instance.error('加载条件列表失败: $e');
-    }
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    sourceTypeController.init('');
-    sourceEntryController.init('');
-    page.value = 1;
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    await _refresh();
-  }
-
-  void navigateToDetail({BriefConditionEntity? condition}) {
-    final id = condition != null
-        ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
-        : 'condition_new';
-    final label = condition != null
-        ? (condition.comment.isNotEmpty
-              ? condition.comment
-              : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
-        : '新建条件';
-
-    // 用主键 credential 序列化传递给详情页
-    final credential = condition?.buildCredential();
-
-    routerFacade.navigateToDetail(
-      id: id,
-      label: label,
-      route: ConditionDetailRoute(credential: credential),
-      parentMenu: RouterMenu.more,
-    );
-  }
 
   Future<void> copyCondition(BriefConditionEntity condition) async {
     try {
@@ -115,6 +64,61 @@ class ConditionListViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    final token = ++_refreshToken;
+    try {
+      final (items, count) = await (_search(), _count()).wait;
+      if (token != _refreshToken) return;
+      conditions.value = items;
+      total.value = count;
+    } catch (e) {
+      LoggerUtil.instance.e('加载条件列表失败: $e');
+      DialogUtil.instance.error('加载条件列表失败: $e');
+    }
+  }
+
+  void navigateToDetail({BriefConditionEntity? condition}) {
+    final id = condition != null
+        ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
+        : 'condition_new';
+    final label = condition != null
+        ? (condition.comment.isNotEmpty
+              ? condition.comment
+              : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
+        : '新建条件';
+
+    // 用主键 credential 序列化传递给详情页
+    final credential = condition?.buildCredential();
+
+    routerFacade.navigateToDetail(
+      id: id,
+      label: label,
+      route: ConditionDetailRoute(credential: credential),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    sourceTypeController.init('');
+    sourceEntryController.init('');
+    page.value = 1;
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    await _refresh();
+  }
+
   ConditionFilterEntity _buildFilter() {
     return ConditionFilterEntity(
       sourceTypeOrReferenceId: sourceTypeController.collect(),
@@ -122,15 +126,19 @@ class ConditionListViewModel with FieldControllerMixin {
     );
   }
 
-  Future<List<BriefConditionEntity>> _search() async {
-    return _repository.getBriefConditions(
-      filter: _buildFilter(),
-      page: page.value,
-    );
-  }
-
   Future<int> _count() async {
     return _repository.countConditions(filter: _buildFilter());
+  }
+
+  void _logActivity(ActivityActionType action, BriefConditionEntity c) {
+    final log = ActivityLogEntity(
+      module: 'conditions',
+      actionType: action,
+      entityId: c.sourceTypeOrReferenceId,
+      entityName: c.comment,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {
@@ -146,18 +154,10 @@ class ConditionListViewModel with FieldControllerMixin {
     }
   }
 
-  void _logActivity(ActivityActionType action, BriefConditionEntity c) {
-    final log = ActivityLogEntity(
-      module: 'conditions',
-      actionType: action,
-      entityId: c.sourceTypeOrReferenceId,
-      entityName: c.comment,
-      createdAt: DateTime.now(),
+  Future<List<BriefConditionEntity>> _search() async {
+    return _repository.getBriefConditions(
+      filter: _buildFilter(),
+      page: page.value,
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

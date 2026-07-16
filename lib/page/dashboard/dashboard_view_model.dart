@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/activity_logged_event.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
-import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/repository/version_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:signals/signals.dart';
@@ -32,15 +32,8 @@ class DashboardViewModel {
   final featureCount = signal(0);
   final activityCount = signal(0);
 
-  void navigateToMenu(RouterMenu menu) {
-    final feature = scaffoldViewModel.allFeatures.value
-        .where((f) => f.routerMenu == menu.name)
-        .firstOrNull;
-    final isPinned = feature?.isPinned ?? true;
-    routerFacade.navigateToMenu(
-      menu,
-      parentMenu: isPinned ? null : RouterMenu.more,
-    );
+  void dispose() {
+    _activitySub?.cancel();
   }
 
   Future<void> initSignals() async {
@@ -64,6 +57,17 @@ class DashboardViewModel {
     }
   }
 
+  void navigateToMenu(RouterMenu menu) {
+    final feature = scaffoldViewModel.allFeatures.value
+        .where((f) => f.routerMenu == menu.name)
+        .firstOrNull;
+    final isPinned = feature?.isPinned ?? true;
+    routerFacade.navigateToMenu(
+      menu,
+      parentMenu: isPinned ? null : RouterMenu.more,
+    );
+  }
+
   Future<void> _loadRecentActivities() async {
     try {
       recentActivities.value = await _activityRepo.getActivityLogs();
@@ -80,9 +84,5 @@ class DashboardViewModel {
     if (updated.length > 20) updated.removeRange(20, updated.length);
     recentActivities.value = updated;
     activityCount.value += 1;
-  }
-
-  void dispose() {
-    _activitySub?.cancel();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -10,7 +11,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -28,6 +28,10 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
   int? _originalMenuId;
   int? _originalTextId;
   int? _reservedTextId;
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? menuId, int? textId}) async {
     try {
@@ -57,6 +61,10 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('加载对话菜单详情失败: $e');
       DialogUtil.instance.error('加载对话菜单详情失败: $e');
     }
+  }
+
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(
@@ -119,10 +127,6 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
     }
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
   GossipMenuEntity _collectFromControllers() {
     return GossipMenuEntity(
       menuId: menuIdController.collect(),
@@ -139,9 +143,5 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

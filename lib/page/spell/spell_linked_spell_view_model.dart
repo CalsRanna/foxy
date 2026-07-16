@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/spell_linked_spell_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/spell_linked_spell_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -31,26 +31,6 @@ class SpellLinkedSpellViewModel
 
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellLinkedSpells(spellId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    spellTriggerController.init(spellId.value);
-    spellEffectController.init(0);
-    typeController.init(0);
-    commentController.init('');
-  }
-
-  void fillForm(SpellLinkedSpellEntity data) {
-    spellTriggerController.init(data.spellTrigger);
-    spellEffectController.init(data.spellEffect);
-    typeController.init(data.type);
-    commentController.init(data.comment);
-  }
-
   SpellLinkedSpellEntity collectFromForm() {
     final trigger = spellTriggerController.collect();
     if (trigger.abs() != spellId.value) {
@@ -62,23 +42,6 @@ class SpellLinkedSpellViewModel
       type: typeController.collect(),
       comment: commentController.collect(),
     );
-  }
-
-  Future<void> create() async {
-    try {
-      resetForm();
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('法术链接-创建失败: $e');
-      DialogUtil.instance.error('法术链接-创建失败: $e');
-    }
-  }
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final linked = items.value[index];
-    fillForm(linked);
   }
 
   Future<void> copy(BuildContext context) async {
@@ -99,6 +62,16 @@ class SpellLinkedSpellViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      resetForm();
+      selectedIndex.value = null;
+    } catch (e) {
+      LoggerUtil.instance.e('法术链接-创建失败: $e');
+      DialogUtil.instance.error('法术链接-创建失败: $e');
     }
   }
 
@@ -142,6 +115,52 @@ class SpellLinkedSpellViewModel
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    final linked = items.value[index];
+    fillForm(linked);
+  }
+
+  void fillForm(SpellLinkedSpellEntity data) {
+    spellTriggerController.init(data.spellTrigger);
+    spellEffectController.init(data.spellEffect);
+    typeController.init(data.type);
+    commentController.init(data.comment);
+  }
+
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      this.spellId.value = spellId;
+      spellTriggerController.init(spellId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('法术链接-初始化失败: $e');
+      DialogUtil.instance.error('法术链接-初始化失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefSpellLinkedSpells(spellId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    spellTriggerController.init(spellId.value);
+    spellEffectController.init(0);
+    typeController.init(0);
+    commentController.init('');
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final data = collectFromForm();
@@ -155,6 +174,12 @@ class SpellLinkedSpellViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -180,30 +205,5 @@ class SpellLinkedSpellViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      spellTriggerController.init(spellId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术链接-初始化失败: $e');
-      DialogUtil.instance.error('法术链接-初始化失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

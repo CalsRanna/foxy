@@ -1,14 +1,14 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -47,51 +47,6 @@ class CreatureLootTemplateViewModel
   final repository = LootTemplateRepository(LootTableType.creature);
   final _creatureRepository = GetIt.instance.get<CreatureTemplateRepository>();
 
-  /// 加载数据
-
-  Future<void> load() async {
-    final template = await _creatureRepository.getCreatureTemplate(
-      creatureId.value,
-    );
-    if (template == null) return;
-    creatureTemplate.value = template;
-
-    final data = await repository.getBriefLootTemplates(template.lootId);
-    items.value = data;
-    selectedIndex.value = null;
-    creating.value = false;
-    editing.value = false;
-    editingItem = null;
-    editingReference = null;
-    editingGroupId = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    itemController.init(0);
-    referenceController.init(0);
-    chanceController.init(0.0);
-    questRequiredController.init(0);
-    lootModeController.init(1);
-    groupIdController.init(0);
-    minCountController.init(1);
-    maxCountController.init(1);
-    commentController.init('');
-  }
-
-  /// 填充表单
-  void fillForm(BriefLootTemplateEntity loot) {
-    itemController.init(loot.item);
-    referenceController.init(loot.reference);
-    chanceController.init(loot.chance);
-    questRequiredController.init(loot.questRequired ? 1 : 0);
-    lootModeController.init(loot.lootMode);
-    groupIdController.init(loot.groupId);
-    minCountController.init(loot.minCount);
-    maxCountController.init(loot.maxCount);
-    commentController.init(loot.comment);
-  }
-
   /// 从表单收集数据
   LootTemplateEntity collectFromForm() {
     final template = creatureTemplate.value;
@@ -122,20 +77,6 @@ class CreatureLootTemplateViewModel
     editingItem = null;
     editingReference = null;
     editingGroupId = null;
-  }
-
-  /// 编辑选中记录
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
-    fillForm(loot);
-    editing.value = true;
-    creating.value = false;
-    editingItem = loot.item;
-    editingReference = loot.reference;
-    editingGroupId = loot.groupId;
   }
 
   /// 删除记录
@@ -183,6 +124,87 @@ class CreatureLootTemplateViewModel
     }
   }
 
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+
+    final loot = items.value[index];
+    fillForm(loot);
+    editing.value = true;
+    creating.value = false;
+    editingItem = loot.item;
+    editingReference = loot.reference;
+    editingGroupId = loot.groupId;
+  }
+
+  /// 填充表单
+  void fillForm(BriefLootTemplateEntity loot) {
+    itemController.init(loot.item);
+    referenceController.init(loot.reference);
+    chanceController.init(loot.chance);
+    questRequiredController.init(loot.questRequired ? 1 : 0);
+    lootModeController.init(loot.lootMode);
+    groupIdController.init(loot.groupId);
+    minCountController.init(loot.minCount);
+    maxCountController.init(loot.maxCount);
+    commentController.init(loot.comment);
+  }
+
+  /// 初始化
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物掉落失败: $e');
+      DialogUtil.instance.error('初始化生物掉落失败: $e');
+    }
+  }
+
+  /// 加载数据
+
+  Future<void> load() async {
+    final template = await _creatureRepository.getCreatureTemplate(
+      creatureId.value,
+    );
+    if (template == null) return;
+    creatureTemplate.value = template;
+
+    final data = await repository.getBriefLootTemplates(template.lootId);
+    items.value = data;
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+    editingItem = null;
+    editingReference = null;
+    editingGroupId = null;
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  /// 重置表单
+  void resetForm() {
+    itemController.init(0);
+    referenceController.init(0);
+    chanceController.init(0.0);
+    questRequiredController.init(0);
+    lootModeController.init(1);
+    groupIdController.init(0);
+    minCountController.init(1);
+    maxCountController.init(1);
+    commentController.init('');
+  }
+
   /// 保存记录
   Future<void> save(BuildContext context) async {
     try {
@@ -197,6 +219,13 @@ class CreatureLootTemplateViewModel
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -221,34 +250,5 @@ class CreatureLootTemplateViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物掉落失败: $e');
-      DialogUtil.instance.error('初始化生物掉落失败: $e');
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

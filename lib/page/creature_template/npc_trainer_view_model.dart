@@ -32,45 +32,6 @@ class NpcTrainerViewModel with FieldControllerMixin {
   final _relationRepository = GetIt.instance
       .get<CreatureDefaultTrainerRepository>();
 
-  Future<void> load() async {
-    final relation = await _relationRepository.getCreatureDefaultTrainer(
-      creatureId.value,
-    );
-    trainerIdController.init(relation?.trainerId ?? 0);
-    items.value = relation == null
-        ? []
-        : await _repository.getBriefNpcTrainers(relation.trainerId);
-    selectedIndex.value = null;
-    creating.value = false;
-    editing.value = false;
-  }
-
-  void resetForm() {
-    trainerIdController.init(0);
-    spellIdController.init(0);
-    moneyCostController.init(0);
-    reqSkillLineController.init(0);
-    reqSkillRankController.init(0);
-    reqAbility1Controller.init(0);
-    reqAbility2Controller.init(0);
-    reqAbility3Controller.init(0);
-    reqLevelController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  void fillForm(BriefNpcTrainerEntity trainer) {
-    trainerIdController.init(trainer.trainerId);
-    spellIdController.init(trainer.spellId);
-    moneyCostController.init(trainer.moneyCost);
-    reqSkillLineController.init(trainer.reqSkillLine);
-    reqSkillRankController.init(trainer.reqSkillRank);
-    reqAbility1Controller.init(trainer.reqAbility1);
-    reqAbility2Controller.init(trainer.reqAbility2);
-    reqAbility3Controller.init(trainer.reqAbility3);
-    reqLevelController.init(trainer.reqLevel);
-    verifiedBuildController.init(trainer.verifiedBuild);
-  }
-
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
       trainerId: trainerIdController.collect(),
@@ -108,14 +69,6 @@ class NpcTrainerViewModel with FieldControllerMixin {
     }
   }
 
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    fillForm(items.value[index]);
-    editing.value = true;
-    creating.value = false;
-  }
-
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
@@ -149,6 +102,66 @@ class NpcTrainerViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() => disposeControllers();
+
+  void edit() {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return;
+    fillForm(items.value[index]);
+    editing.value = true;
+    creating.value = false;
+  }
+
+  void fillForm(BriefNpcTrainerEntity trainer) {
+    trainerIdController.init(trainer.trainerId);
+    spellIdController.init(trainer.spellId);
+    moneyCostController.init(trainer.moneyCost);
+    reqSkillLineController.init(trainer.reqSkillLine);
+    reqSkillRankController.init(trainer.reqSkillRank);
+    reqAbility1Controller.init(trainer.reqAbility1);
+    reqAbility2Controller.init(trainer.reqAbility2);
+    reqAbility3Controller.init(trainer.reqAbility3);
+    reqLevelController.init(trainer.reqLevel);
+    verifiedBuildController.init(trainer.verifiedBuild);
+  }
+
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化NPC训练师失败: $e');
+      DialogUtil.instance.error('初始化NPC训练师失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final relation = await _relationRepository.getCreatureDefaultTrainer(
+      creatureId.value,
+    );
+    trainerIdController.init(relation?.trainerId ?? 0);
+    items.value = relation == null
+        ? []
+        : await _repository.getBriefNpcTrainers(relation.trainerId);
+    selectedIndex.value = null;
+    creating.value = false;
+    editing.value = false;
+  }
+
+  void resetForm() {
+    trainerIdController.init(0);
+    spellIdController.init(0);
+    moneyCostController.init(0);
+    reqSkillLineController.init(0);
+    reqSkillRankController.init(0);
+    reqAbility1Controller.init(0);
+    reqAbility2Controller.init(0);
+    reqAbility3Controller.init(0);
+    reqLevelController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       await _repository.storeNpcTrainer(collectFromForm());
@@ -158,6 +171,12 @@ class NpcTrainerViewModel with FieldControllerMixin {
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -177,23 +196,4 @@ class NpcTrainerViewModel with FieldControllerMixin {
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
     }
   }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化NPC训练师失败: $e');
-      DialogUtil.instance.error('初始化NPC训练师失败: $e');
-    }
-  }
-
-  void dispose() => disposeControllers();
 }

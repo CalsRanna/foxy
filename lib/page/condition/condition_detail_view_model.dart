@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -66,6 +66,15 @@ class ConditionDetailViewModel
   final isExisting = signal(false);
   Map<String, dynamic>? _originalCredential;
 
+  void dispose() {
+    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
+    sourceGroupController.removeListener(_onSourceGroupChange);
+    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
+    conditionValue1Controller.removeListener(_onConditionValue1Change);
+    errorTypeController.removeListener(_onErrorTypeChange);
+    disposeControllers();
+  }
+
   Future<void> initSignals({Map<String, dynamic>? credential}) async {
     sourceTypeOrReferenceIdController.addListener(_onSourceTypeChange);
     sourceGroupController.addListener(_onSourceGroupChange);
@@ -93,47 +102,8 @@ class ConditionDetailViewModel
     }
   }
 
-  void _onConditionTypeChange() {
-    selectedConditionType.value = conditionTypeOrReferenceController.collect();
-  }
-
-  void _onSourceTypeChange() {
-    selectedSourceType.value = sourceTypeOrReferenceIdController.collect();
-  }
-
-  void _onSourceGroupChange() {
-    selectedSourceGroup.value = sourceGroupController.collect();
-  }
-
-  void _onConditionValue1Change() {
-    selectedConditionValue1.value = conditionValue1Controller.collect();
-  }
-
-  void _onErrorTypeChange() {
-    selectedErrorType.value = errorTypeController.collect();
-  }
-
-  void _initControllers(ConditionEntity c) {
-    sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
-    selectedSourceType.value = c.sourceTypeOrReferenceId;
-    sourceGroupController.init(c.sourceGroup);
-    selectedSourceGroup.value = c.sourceGroup;
-    sourceEntryController.init(c.sourceEntry);
-    sourceIdController.init(c.sourceId);
-    elseGroupController.init(c.elseGroup);
-    conditionTypeOrReferenceController.init(c.conditionTypeOrReference);
-    selectedConditionType.value = c.conditionTypeOrReference;
-    conditionTargetController.init(c.conditionTarget);
-    conditionValue1Controller.init(c.conditionValue1);
-    selectedConditionValue1.value = c.conditionValue1;
-    conditionValue2Controller.init(c.conditionValue2);
-    conditionValue3Controller.init(c.conditionValue3);
-    negativeConditionController.init(c.negativeCondition);
-    errorTypeController.init(c.errorType);
-    selectedErrorType.value = c.errorType;
-    errorTextIdController.init(c.errorTextId);
-    scriptNameController.init(c.scriptName);
-    commentController.init(c.comment);
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(BuildContext context) async {
@@ -161,10 +131,6 @@ class ConditionDetailViewModel
     }
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
   ConditionEntity _collectFromControllers() {
     return ConditionEntity(
       sourceTypeOrReferenceId: sourceTypeOrReferenceIdController.collect(),
@@ -185,6 +151,29 @@ class ConditionDetailViewModel
     );
   }
 
+  void _initControllers(ConditionEntity c) {
+    sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
+    selectedSourceType.value = c.sourceTypeOrReferenceId;
+    sourceGroupController.init(c.sourceGroup);
+    selectedSourceGroup.value = c.sourceGroup;
+    sourceEntryController.init(c.sourceEntry);
+    sourceIdController.init(c.sourceId);
+    elseGroupController.init(c.elseGroup);
+    conditionTypeOrReferenceController.init(c.conditionTypeOrReference);
+    selectedConditionType.value = c.conditionTypeOrReference;
+    conditionTargetController.init(c.conditionTarget);
+    conditionValue1Controller.init(c.conditionValue1);
+    selectedConditionValue1.value = c.conditionValue1;
+    conditionValue2Controller.init(c.conditionValue2);
+    conditionValue3Controller.init(c.conditionValue3);
+    negativeConditionController.init(c.negativeCondition);
+    errorTypeController.init(c.errorType);
+    selectedErrorType.value = c.errorType;
+    errorTextIdController.init(c.errorTextId);
+    scriptNameController.init(c.scriptName);
+    commentController.init(c.comment);
+  }
+
   void _logActivity(ActivityActionType action, ConditionEntity c) {
     final log = ActivityLogEntity(
       module: 'conditions',
@@ -196,12 +185,23 @@ class ConditionDetailViewModel
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
-  void dispose() {
-    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
-    sourceGroupController.removeListener(_onSourceGroupChange);
-    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
-    conditionValue1Controller.removeListener(_onConditionValue1Change);
-    errorTypeController.removeListener(_onErrorTypeChange);
-    disposeControllers();
+  void _onConditionTypeChange() {
+    selectedConditionType.value = conditionTypeOrReferenceController.collect();
+  }
+
+  void _onConditionValue1Change() {
+    selectedConditionValue1.value = conditionValue1Controller.collect();
+  }
+
+  void _onErrorTypeChange() {
+    selectedErrorType.value = errorTypeController.collect();
+  }
+
+  void _onSourceGroupChange() {
+    selectedSourceGroup.value = sourceGroupController.collect();
+  }
+
+  void _onSourceTypeChange() {
+    selectedSourceType.value = sourceTypeOrReferenceIdController.collect();
   }
 }

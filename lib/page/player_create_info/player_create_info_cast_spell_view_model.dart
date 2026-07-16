@@ -1,11 +1,11 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/player_create_info_cast_spell_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -27,13 +27,6 @@ class PlayerCreateInfoCastSpellViewModel
   late final spellController = registerController(IntFieldController());
   late final noteController = registerController(StringFieldController());
 
-  Future<void> initSignals({int? race, int? playerClass}) async {
-    _race = race;
-    _playerClass = playerClass;
-    if (race == null || playerClass == null) return;
-    await _refresh();
-  }
-
   Future<void> create() async {
     if (_race == null || _playerClass == null) return;
     _editing = null;
@@ -42,9 +35,33 @@ class PlayerCreateInfoCastSpellViewModel
     );
   }
 
+  Future<void> delete(
+    BuildContext context,
+    PlayerCreateInfoCastSpellEntity entity,
+  ) async {
+    await _repository.destroyPlayerCreateInfoCastSpell(
+      entity.raceMask,
+      entity.classMask,
+      entity.spell,
+    );
+    await _refresh();
+    if (context.mounted) {
+      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
+    }
+  }
+
+  void dispose() => disposeControllers();
+
   void edit(PlayerCreateInfoCastSpellEntity entity) {
     _editing = entity;
     _initControllers(entity);
+  }
+
+  Future<void> initSignals({int? race, int? playerClass}) async {
+    _race = race;
+    _playerClass = playerClass;
+    if (race == null || playerClass == null) return;
+    await _refresh();
   }
 
   Future<void> save(BuildContext context) async {
@@ -78,19 +95,18 @@ class PlayerCreateInfoCastSpellViewModel
     }
   }
 
-  Future<void> delete(
-    BuildContext context,
-    PlayerCreateInfoCastSpellEntity entity,
-  ) async {
-    await _repository.destroyPlayerCreateInfoCastSpell(
-      entity.raceMask,
-      entity.classMask,
-      entity.spell,
-    );
-    await _refresh();
-    if (context.mounted) {
-      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
-    }
+  PlayerCreateInfoCastSpellEntity _collect() => PlayerCreateInfoCastSpellEntity(
+    raceMask: raceMaskController.collect(),
+    classMask: classMaskController.collect(),
+    spell: spellController.collect(),
+    note: noteController.collect(),
+  );
+
+  void _initControllers(PlayerCreateInfoCastSpellEntity entity) {
+    raceMaskController.init(entity.raceMask);
+    classMaskController.init(entity.classMask);
+    spellController.init(entity.spell);
+    noteController.init(entity.note);
   }
 
   Future<void> _refresh() async {
@@ -100,20 +116,4 @@ class PlayerCreateInfoCastSpellViewModel
       _playerClass!,
     );
   }
-
-  void _initControllers(PlayerCreateInfoCastSpellEntity entity) {
-    raceMaskController.init(entity.raceMask);
-    classMaskController.init(entity.classMask);
-    spellController.init(entity.spell);
-    noteController.init(entity.note);
-  }
-
-  PlayerCreateInfoCastSpellEntity _collect() => PlayerCreateInfoCastSpellEntity(
-    raceMask: raceMaskController.collect(),
-    classMask: classMaskController.collect(),
-    spell: spellController.collect(),
-    note: noteController.collect(),
-  );
-
-  void dispose() => disposeControllers();
 }

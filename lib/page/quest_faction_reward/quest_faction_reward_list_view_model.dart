@@ -1,12 +1,12 @@
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -55,10 +55,6 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     );
   }
 
-  QuestFactionRewardFilterEntity _buildFilter() {
-    return QuestFactionRewardFilterEntity(id: entryController.collect());
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -73,6 +69,10 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
   Future<void> search() async {
     page.value = 1;
     await _refresh();
+  }
+
+  QuestFactionRewardFilterEntity _buildFilter() {
+    return QuestFactionRewardFilterEntity(id: entryController.collect());
   }
 
   Future<void> _refresh() async {

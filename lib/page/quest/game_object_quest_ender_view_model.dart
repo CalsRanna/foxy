@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
-import 'package:get_it/get_it.dart';
 
 class GameObjectQuestEnderViewModel with FieldControllerMixin {
   final questId = signal(0);
@@ -19,24 +19,6 @@ class GameObjectQuestEnderViewModel with FieldControllerMixin {
   int _originalQuest = 0;
 
   final _repository = GetIt.instance.get<GameObjectQuestEnderRepository>();
-
-  Future<void> load() async {
-    final data = await _repository.getBriefGameObjectQuestEnders(questId.value);
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 重置表单
-  void resetForm() {
-    idController.init(0);
-    questController.init(0);
-  }
-
-  /// 填充表单
-  void fillForm(GameObjectQuestEnderEntity model) {
-    idController.init(model.id);
-    questController.init(model.quest);
-  }
 
   /// 从表单收集数据
   GameObjectQuestEnderEntity collectFromForm() {
@@ -58,63 +40,6 @@ class GameObjectQuestEnderViewModel with FieldControllerMixin {
     } catch (e) {
       LoggerUtil.instance.e('创建失败: $e');
       DialogUtil.instance.error('创建失败: $e');
-    }
-  }
-
-  /// 编辑选中记录
-  Future<void> edit() async {
-    try {
-      final index = selectedIndex.value;
-      if (index == null || index < 0 || index >= items.value.length) return;
-
-      final item = items.value[index];
-      final existing = await _repository.getGameObjectQuestEnder(
-        item.id,
-        item.quest,
-      );
-      if (existing == null) return;
-      fillForm(existing);
-      _originalId = item.id;
-      _originalQuest = item.quest;
-    } catch (e) {
-      LoggerUtil.instance.e('编辑失败: $e');
-      DialogUtil.instance.error('编辑失败: $e');
-    }
-  }
-
-  /// 保存新记录
-  Future<void> save(BuildContext context) async {
-    try {
-      final model = collectFromForm();
-      await _repository.storeGameObjectQuestEnder(model);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  /// 更新记录
-  Future<void> update(BuildContext context) async {
-    try {
-      final model = collectFromForm();
-      await _repository.updateGameObjectQuestEnder(
-        _originalId,
-        _originalQuest,
-        model,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
     }
   }
 
@@ -157,11 +82,36 @@ class GameObjectQuestEnderViewModel with FieldControllerMixin {
     }
   }
 
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
+  /// 编辑选中记录
+  Future<void> edit() async {
+    try {
+      final index = selectedIndex.value;
+      if (index == null || index < 0 || index >= items.value.length) return;
+
+      final item = items.value[index];
+      final existing = await _repository.getGameObjectQuestEnder(
+        item.id,
+        item.quest,
+      );
+      if (existing == null) return;
+      fillForm(existing);
+      _originalId = item.id;
+      _originalQuest = item.quest;
+    } catch (e) {
+      LoggerUtil.instance.e('编辑失败: $e');
+      DialogUtil.instance.error('编辑失败: $e');
     }
+  }
+
+  /// 填充表单
+  void fillForm(GameObjectQuestEnderEntity model) {
+    idController.init(model.id);
+    questController.init(model.quest);
   }
 
   /// 初始化
@@ -175,8 +125,58 @@ class GameObjectQuestEnderViewModel with FieldControllerMixin {
     }
   }
 
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
+  Future<void> load() async {
+    final data = await _repository.getBriefGameObjectQuestEnders(questId.value);
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  /// 重置表单
+  void resetForm() {
+    idController.init(0);
+    questController.init(0);
+  }
+
+  /// 保存新记录
+  Future<void> save(BuildContext context) async {
+    try {
+      final model = collectFromForm();
+      await _repository.storeGameObjectQuestEnder(model);
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('保存成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
+  /// 选择行
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  /// 更新记录
+  Future<void> update(BuildContext context) async {
+    try {
+      final model = collectFromForm();
+      await _repository.updateGameObjectQuestEnder(
+        _originalId,
+        _originalQuest,
+        model,
+      );
+      await load();
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('更新成功'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
   }
 }

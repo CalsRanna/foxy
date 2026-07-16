@@ -1,12 +1,12 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/quest_template_addon_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/quest_template_addon_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -66,6 +66,10 @@ class QuestTemplateAddonViewModel
 
   int _originalId = 0;
 
+  void dispose() {
+    disposeControllers();
+  }
+
   Future<void> initSignals({required int questId}) async {
     try {
       this.questId.value = questId;
@@ -82,6 +86,10 @@ class QuestTemplateAddonViewModel
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
     }
+  }
+
+  void pop() {
+    routerFacade.goBack();
   }
 
   Future<void> save(BuildContext context) async {
@@ -103,31 +111,6 @@ class QuestTemplateAddonViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void _initSignals(QuestTemplateAddonEntity addon) {
-    idController.init(addon.id);
-    maxLevelController.init(addon.maxLevel);
-    allowableClassesController.init(addon.allowableClasses);
-    sourceSpellIdController.init(addon.sourceSpellId);
-    prevQuestIdController.init(addon.prevQuestId);
-    nextQuestIdController.init(addon.nextQuestId);
-    exclusiveGroupController.init(addon.exclusiveGroup);
-    breadcrumbForQuestIdController.init(addon.breadcrumbForQuestId);
-    rewardMailTemplateIdController.init(addon.rewardMailTemplateId);
-    rewardMailDelayController.init(addon.rewardMailDelay);
-    requiredSkillIdController.init(addon.requiredSkillId);
-    requiredSkillPointsController.init(addon.requiredSkillPoints);
-    requiredMinRepFactionController.init(addon.requiredMinRepFaction);
-    requiredMaxRepFactionController.init(addon.requiredMaxRepFaction);
-    requiredMinRepValueController.init(addon.requiredMinRepValue);
-    requiredMaxRepValueController.init(addon.requiredMaxRepValue);
-    providedItemCountController.init(addon.providedItemCount);
-    specialFlagsController.init(addon.specialFlags);
   }
 
   QuestTemplateAddonEntity _collect() {
@@ -153,7 +136,24 @@ class QuestTemplateAddonViewModel
     );
   }
 
-  void dispose() {
-    disposeControllers();
+  void _initSignals(QuestTemplateAddonEntity addon) {
+    idController.init(addon.id);
+    maxLevelController.init(addon.maxLevel);
+    allowableClassesController.init(addon.allowableClasses);
+    sourceSpellIdController.init(addon.sourceSpellId);
+    prevQuestIdController.init(addon.prevQuestId);
+    nextQuestIdController.init(addon.nextQuestId);
+    exclusiveGroupController.init(addon.exclusiveGroup);
+    breadcrumbForQuestIdController.init(addon.breadcrumbForQuestId);
+    rewardMailTemplateIdController.init(addon.rewardMailTemplateId);
+    rewardMailDelayController.init(addon.rewardMailDelay);
+    requiredSkillIdController.init(addon.requiredSkillId);
+    requiredSkillPointsController.init(addon.requiredSkillPoints);
+    requiredMinRepFactionController.init(addon.requiredMinRepFaction);
+    requiredMaxRepFactionController.init(addon.requiredMaxRepFaction);
+    requiredMinRepValueController.init(addon.requiredMinRepValue);
+    requiredMaxRepValueController.init(addon.requiredMaxRepValue);
+    providedItemCountController.init(addon.providedItemCount);
+    specialFlagsController.init(addon.specialFlags);
   }
 }

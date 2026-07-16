@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/page_text_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/page_text_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -27,6 +27,10 @@ class PageTextDetailViewModel
 
   final page = signal<PageTextEntity?>(null);
 
+  void dispose() {
+    disposeControllers();
+  }
+
   Future<void> initSignals({int? id}) async {
     try {
       if (id == null || id <= 0) {
@@ -44,12 +48,7 @@ class PageTextDetailViewModel
     }
   }
 
-  void _initControllers(PageTextEntity pt) {
-    idController.init(pt.id);
-    textController.init(pt.text);
-    nextPageIdController.init(pt.nextPageId);
-    verifiedBuildController.init(pt.verifiedBuild);
-  }
+  void pop() => routerFacade.goBack();
 
   Future<int?> save(BuildContext context) async {
     try {
@@ -81,7 +80,21 @@ class PageTextDetailViewModel
     }
   }
 
-  void pop() => routerFacade.goBack();
+  PageTextEntity _collect() {
+    return PageTextEntity(
+      id: idController.collect(),
+      text: textController.collect(),
+      nextPageId: nextPageIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
+
+  void _initControllers(PageTextEntity pt) {
+    idController.init(pt.id);
+    textController.init(pt.text);
+    nextPageIdController.init(pt.nextPageId);
+    verifiedBuildController.init(pt.verifiedBuild);
+  }
 
   void _logActivity(ActivityActionType action, PageTextEntity t) {
     final log = ActivityLogEntity(
@@ -92,18 +105,5 @@ class PageTextDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  PageTextEntity _collect() {
-    return PageTextEntity(
-      id: idController.collect(),
-      text: textController.collect(),
-      nextPageId: nextPageIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

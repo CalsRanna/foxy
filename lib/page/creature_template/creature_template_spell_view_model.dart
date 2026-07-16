@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -22,26 +22,6 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
 
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
 
-  Future<void> load() async {
-    final data = await _repository.getBriefCreatureTemplateSpells(
-      creatureId.value,
-    );
-    items.value = data;
-    selectedIndex.value = null;
-  }
-
-  void resetForm() {
-    indexController.init(0);
-    spellController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  void fillForm(CreatureTemplateSpellEntity spell) {
-    indexController.init(spell.index);
-    spellController.init(spell.spell);
-    verifiedBuildController.init(spell.verifiedBuild);
-  }
-
   CreatureTemplateSpellEntity collectFromForm() {
     return CreatureTemplateSpellEntity(
       creatureID: creatureId.value,
@@ -49,29 +29,6 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
       spell: spellController.collect(),
       verifiedBuild: verifiedBuildController.collect(),
     );
-  }
-
-  Future<bool> create() async {
-    try {
-      final blank = await _repository.createCreatureTemplateSpell(
-        creatureId.value,
-      );
-      fillForm(blank);
-      selectedIndex.value = null;
-      return true;
-    } catch (e) {
-      LoggerUtil.instance.e('创建生物法术记录失败: $e');
-      DialogUtil.instance.error('创建生物法术记录失败: $e');
-      return false;
-    }
-  }
-
-  void edit() {
-    final idx = selectedIndex.value;
-    if (idx == null || idx < 0 || idx >= items.value.length) return;
-
-    final spell = items.value[idx];
-    fillForm(spell);
   }
 
   Future<void> copy(BuildContext context) async {
@@ -92,6 +49,21 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  Future<bool> create() async {
+    try {
+      final blank = await _repository.createCreatureTemplateSpell(
+        creatureId.value,
+      );
+      fillForm(blank);
+      selectedIndex.value = null;
+      return true;
+    } catch (e) {
+      LoggerUtil.instance.e('创建生物法术记录失败: $e');
+      DialogUtil.instance.error('创建生物法术记录失败: $e');
+      return false;
     }
   }
 
@@ -137,6 +109,53 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  void edit() {
+    final idx = selectedIndex.value;
+    if (idx == null || idx < 0 || idx >= items.value.length) return;
+
+    final spell = items.value[idx];
+    fillForm(spell);
+  }
+
+  void fillForm(CreatureTemplateSpellEntity spell) {
+    indexController.init(spell.index);
+    spellController.init(spell.spell);
+    verifiedBuildController.init(spell.verifiedBuild);
+  }
+
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      this.creatureId.value = creatureId;
+      creatureIdController.init(creatureId);
+      await load();
+    } catch (e) {
+      LoggerUtil.instance.e('初始化生物法术失败: $e');
+      DialogUtil.instance.error('初始化生物法术失败: $e');
+    }
+  }
+
+  Future<void> load() async {
+    final data = await _repository.getBriefCreatureTemplateSpells(
+      creatureId.value,
+    );
+    items.value = data;
+    selectedIndex.value = null;
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    indexController.init(0);
+    spellController.init(0);
+    verifiedBuildController.init(0);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final spell = collectFromForm();
@@ -149,6 +168,12 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
     }
   }
 
@@ -165,30 +190,5 @@ class CreatureTemplateSpellViewModel with FieldControllerMixin {
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物法术失败: $e');
-      DialogUtil.instance.error('初始化生物法术失败: $e');
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

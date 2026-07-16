@@ -1,14 +1,14 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/achievement_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/achievement_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -199,57 +199,6 @@ class AchievementDetailViewModel
 
   final achievement = signal(AchievementEntity());
 
-  Future<void> save(BuildContext context) async {
-    try {
-      var t = _collectFromControllers();
-      validateAchievementFields(t);
-      validateAchievementFields(t);
-      final isCreate = (await _repository.getAchievement(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeAchievement(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateAchievement(t);
-      }
-      achievement.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('成就数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void applyTitleLocales(List<DbcLocaleFieldValue> values) {
-    _applyLangControllers(
-      values,
-      enUS: titleLangEnUSController,
-      koKR: titleLangKoKRController,
-      frFR: titleLangFrFRController,
-      deDE: titleLangDeDEController,
-      zhCN: titleLangZhCNController,
-      zhTW: titleLangZhTWController,
-      esES: titleLangEsESController,
-      esMX: titleLangEsMXController,
-      ruRU: titleLangRuRUController,
-      jaJP: titleLangJaJPController,
-      ptPT: titleLangPtPTController,
-      ptBR: titleLangPtBRController,
-      itIT: titleLangItITController,
-      unk1: titleLangUnk1Controller,
-      unk2: titleLangUnk2Controller,
-      unk3: titleLangUnk3Controller,
-    );
-    achievement.value = _collectFromControllers();
-  }
-
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
     _applyLangControllers(
       values,
@@ -296,6 +245,81 @@ class AchievementDetailViewModel
     achievement.value = _collectFromControllers();
   }
 
+  void applyTitleLocales(List<DbcLocaleFieldValue> values) {
+    _applyLangControllers(
+      values,
+      enUS: titleLangEnUSController,
+      koKR: titleLangKoKRController,
+      frFR: titleLangFrFRController,
+      deDE: titleLangDeDEController,
+      zhCN: titleLangZhCNController,
+      zhTW: titleLangZhTWController,
+      esES: titleLangEsESController,
+      esMX: titleLangEsMXController,
+      ruRU: titleLangRuRUController,
+      jaJP: titleLangJaJPController,
+      ptPT: titleLangPtPTController,
+      ptBR: titleLangPtBRController,
+      itIT: titleLangItITController,
+      unk1: titleLangUnk1Controller,
+      unk2: titleLangUnk2Controller,
+      unk3: titleLangUnk3Controller,
+    );
+    achievement.value = _collectFromControllers();
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createAchievement();
+        achievement.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      achievement.value = (await _repository.getAchievement(id))!;
+      _initControllers(achievement.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载成就(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  Future<void> save(BuildContext context) async {
+    try {
+      var t = _collectFromControllers();
+      validateAchievementFields(t);
+      validateAchievementFields(t);
+      final isCreate = (await _repository.getAchievement(t.id)) == null;
+      if (isCreate) {
+        final id = await _repository.storeAchievement(t);
+        t = t.copyWith(id: id);
+        idController.init(id);
+      } else {
+        await _repository.updateAchievement(t);
+      }
+      achievement.value = t;
+      _logActivity(
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        t,
+      );
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text('成就数据已保存'));
+      ShadSonner.of(context).show(toast);
+    } catch (e) {
+      if (!context.mounted) return;
+      var toast = ShadToast(description: Text(e.toString()));
+      ShadSonner.of(context).show(toast);
+    }
+  }
+
   void _applyLangControllers(
     List<DbcLocaleFieldValue> values, {
     required StringFieldController enUS,
@@ -331,11 +355,6 @@ class AchievementDetailViewModel
     unk1.init(values.valueOf('unk1'));
     unk2.init(values.valueOf('unk2'));
     unk3.init(values.valueOf('unk3'));
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 AchievementEntity
@@ -406,36 +425,6 @@ class AchievementDetailViewModel
     );
   }
 
-  void _logActivity(ActivityActionType action, AchievementEntity t) {
-    final log = ActivityLogEntity(
-      module: 'achievement',
-      actionType: action,
-      entityId: t.id,
-      entityName: t.titleLangZhCN,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createAchievement();
-        achievement.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      achievement.value = (await _repository.getAchievement(id))!;
-      _initControllers(achievement.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载成就(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(AchievementEntity achievement) {
     idController.init(achievement.id);
     factionController.init(achievement.faction);
@@ -499,5 +488,16 @@ class AchievementDetailViewModel
     rewardLangFlags.value = achievement.rewardLangFlags;
     minimumCriteriaController.init(achievement.minimumCriteria);
     sharesCriteriaController.init(achievement.sharesCriteria);
+  }
+
+  void _logActivity(ActivityActionType action, AchievementEntity t) {
+    final log = ActivityLogEntity(
+      module: 'achievement',
+      actionType: action,
+      entityId: t.id,
+      entityName: t.titleLangZhCN,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

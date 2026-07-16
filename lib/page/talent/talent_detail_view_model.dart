@@ -1,13 +1,13 @@
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
-import 'package:foxy/widget/form/validation/talent_entity_validation_mixin.dart';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/form/validation/talent_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
@@ -46,6 +46,30 @@ class TalentDetailViewModel
 
   final talent = signal(TalentEntity());
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? id}) async {
+    try {
+      if (id == null || id <= 0) {
+        final blank = await _repository.createTalent();
+        talent.value = blank;
+        _initControllers(blank);
+        return;
+      }
+      talent.value = (await _repository.getTalent(id))!;
+      _initControllers(talent.value);
+    } catch (e, s) {
+      LoggerUtil.instance.e('加载天赋(id=$id)失败', error: e, stackTrace: s);
+    }
+  }
+
+  /// 退出页面
+  void pop() {
+    routerFacade.goBack();
+  }
+
   Future<void> save(BuildContext context) async {
     try {
       final t = _collectFromControllers();
@@ -73,11 +97,6 @@ class TalentDetailViewModel
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
   }
 
   /// 从所有 Controller 收集数据构建 Talent
@@ -109,36 +128,6 @@ class TalentDetailViewModel
     );
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  void _logActivity(ActivityActionType action, TalentEntity t) {
-    final log = ActivityLogEntity(
-      module: 'talent',
-      actionType: action,
-      entityId: t.id,
-      entityName: '',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  Future<void> initSignals({int? id}) async {
-    try {
-      if (id == null || id <= 0) {
-        final blank = await _repository.createTalent();
-        talent.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      talent.value = (await _repository.getTalent(id))!;
-      _initControllers(talent.value);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载天赋(id=$id)失败', error: e, stackTrace: s);
-    }
-  }
-
   void _initControllers(TalentEntity talent) {
     idController.init(talent.id);
     tabIdController.init(talent.tabId);
@@ -163,5 +152,16 @@ class TalentDetailViewModel
     requiredSpellIdController.init(talent.requiredSpellId);
     categoryMask0Controller.init(talent.categoryMask0);
     categoryMask1Controller.init(talent.categoryMask1);
+  }
+
+  void _logActivity(ActivityActionType action, TalentEntity t) {
+    final log = ActivityLogEntity(
+      module: 'talent',
+      actionType: action,
+      entityId: t.id,
+      entityName: '',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -8,7 +9,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -92,13 +92,6 @@ class ItemSetListViewModel with FieldControllerMixin {
     );
   }
 
-  ItemSetFilterEntity _buildFilter() {
-    return ItemSetFilterEntity(
-      id: entryController.collect(),
-      name: nameController.collect(),
-    );
-  }
-
   Future<void> paginate(int page) async {
     this.page.value = page;
     await _refresh();
@@ -116,6 +109,24 @@ class ItemSetListViewModel with FieldControllerMixin {
     await _refresh();
   }
 
+  ItemSetFilterEntity _buildFilter() {
+    return ItemSetFilterEntity(
+      id: entryController.collect(),
+      name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, int id) {
+    final log = ActivityLogEntity(
+      module: 'item_set',
+      actionType: action,
+      entityId: id,
+      entityName: id.toString(),
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
   Future<void> _refresh() async {
     final token = ++_refreshToken;
     try {
@@ -131,16 +142,5 @@ class ItemSetListViewModel with FieldControllerMixin {
       LoggerUtil.instance.e('刷新套装列表失败: $e');
       DialogUtil.instance.error('刷新套装列表失败: $e');
     }
-  }
-
-  void _logActivity(ActivityActionType action, int id) {
-    final log = ActivityLogEntity(
-      module: 'item_set',
-      actionType: action,
-      entityId: id,
-      entityName: id.toString(),
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 }
