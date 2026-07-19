@@ -16,7 +16,7 @@ import 'package:foxy/entity/creature_immunity_entity.dart';
 import 'package:foxy/entity/creature_immunity_filter_entity.dart';
 import 'package:foxy/entity/brief_creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
-import 'package:foxy/entity/creature_spell_data_entity.dart';
+import 'package:foxy/entity/brief_creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
