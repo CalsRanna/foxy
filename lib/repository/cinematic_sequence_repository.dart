@@ -1,16 +1,27 @@
+import 'package:foxy/entity/brief_cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
+import 'package:foxy/entity/cinematic_sequence_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class CinematicSequenceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_cinematic_sequences';
 
-  Future<void> copyCinematicSequence(int id) async {
-    final source = await getCinematicSequence(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<CinematicSequenceKey> copyCinematicSequence(
+    CinematicSequenceKey key,
+  ) async {
+    final source = await getCinematicSequence(key);
+    if (source == null) {
+      throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
+    }
+    final copied = CinematicSequenceEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeCinematicSequence(copied);
+    return CinematicSequenceKey.fromEntity(copied);
   }
 
   Future<int> countCinematicSequences({
@@ -20,8 +31,11 @@ class CinematicSequenceRepository with RepositoryMixin {
   Future<CinematicSequenceEntity> createCinematicSequence() async =>
       CinematicSequenceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyCinematicSequence(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyCinematicSequence(CinematicSequenceKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCinematicSequenceEntity>> getBriefCinematicSequences({
@@ -37,8 +51,10 @@ class CinematicSequenceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CinematicSequenceEntity?> getCinematicSequence(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<CinematicSequenceEntity?> getCinematicSequence(
+    CinematicSequenceKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : CinematicSequenceEntity.fromJson(rows.first.toMap());
@@ -51,25 +67,38 @@ class CinematicSequenceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveCinematicSequence(CinematicSequenceEntity entity) async {
-    if (await getCinematicSequence(entity.id) == null) {
-      await storeCinematicSequence(entity);
-    } else {
-      await updateCinematicSequence(entity);
+  Future<void> storeCinematicSequence(CinematicSequenceEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('过场动画序列 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('过场动画序列 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeCinematicSequence(CinematicSequenceEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateCinematicSequence(CinematicSequenceEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateCinematicSequence(
+    CinematicSequenceKey originalKey,
+    CinematicSequenceEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的过场动画序列 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -80,5 +109,9 @@ class CinematicSequenceRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CinematicSequenceKey key) {
+    return builder.where('ID', key.id);
   }
 }
