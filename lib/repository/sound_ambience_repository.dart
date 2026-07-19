@@ -1,16 +1,22 @@
+import 'package:foxy/entity/brief_sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_filter_entity.dart';
+import 'package:foxy/entity/sound_ambience_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class SoundAmbienceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_ambience';
 
-  Future<void> copySoundAmbience(int id) async {
-    final source = await getSoundAmbience(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<SoundAmbienceKey> copySoundAmbience(SoundAmbienceKey key) async {
+    final source = await getSoundAmbience(key);
+    if (source == null) {
+      throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeSoundAmbience(copied);
+    return SoundAmbienceKey.fromEntity(copied);
   }
 
   Future<int> countSoundAmbiences({SoundAmbienceFilterEntity? filter}) =>
@@ -19,8 +25,11 @@ class SoundAmbienceRepository with RepositoryMixin {
   Future<SoundAmbienceEntity> createSoundAmbience() async =>
       SoundAmbienceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySoundAmbience(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroySoundAmbience(SoundAmbienceKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSoundAmbienceEntity>> getBriefSoundAmbiences({
@@ -36,8 +45,8 @@ class SoundAmbienceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SoundAmbienceEntity?> getSoundAmbience(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<SoundAmbienceEntity?> getSoundAmbience(SoundAmbienceKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : SoundAmbienceEntity.fromJson(rows.first.toMap());
@@ -50,25 +59,38 @@ class SoundAmbienceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveSoundAmbience(SoundAmbienceEntity entity) async {
-    if (await getSoundAmbience(entity.id) == null) {
-      await storeSoundAmbience(entity);
-    } else {
-      await updateSoundAmbience(entity);
+  Future<void> storeSoundAmbience(SoundAmbienceEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('环境声音 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('环境声音 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeSoundAmbience(SoundAmbienceEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateSoundAmbience(SoundAmbienceEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateSoundAmbience(
+    SoundAmbienceKey originalKey,
+    SoundAmbienceEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的环境声音 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -79,5 +101,9 @@ class SoundAmbienceRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, SoundAmbienceKey key) {
+    return builder.where('ID', key.id);
   }
 }
