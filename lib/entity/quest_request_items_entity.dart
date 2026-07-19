@@ -31,33 +31,6 @@ class BriefQuestRequestItemsEntity {
   }
 }
 
-/// 列表 / Picker 精简行：ID + locale + 完成文本
-class BriefQuestRequestItemsLocaleEntity {
-  final int id;
-  final String locale;
-  final String completionText;
-
-  const BriefQuestRequestItemsLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.completionText = '',
-  });
-
-  factory BriefQuestRequestItemsLocaleEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefQuestRequestItemsLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      completionText: json['CompletionText']?.toString() ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'locale': locale, 'CompletionText': completionText};
-  }
-}
-
 /// QuestRequestItems 模型
 /// quest_request_items 表，1:1 关系与 quest_template，共享 ID 主键。
 class QuestRequestItemsEntity {

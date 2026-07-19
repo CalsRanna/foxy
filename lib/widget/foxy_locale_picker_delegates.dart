@@ -7,6 +7,7 @@ import 'package:foxy/entity/item_template_locale_key.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_key.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/entity/quest_request_items_locale_key.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/achievement_category_repository.dart';
@@ -374,36 +375,47 @@ class FoxyLocalePickerDelegates {
   static final questRequestItems = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'completionText'],
     fieldLabels: ['语言', '完成文本'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
-      final locales = await repo.getQuestRequestItemsLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'completionText': e.completionText,
-            }),
-          )
-          .toList();
-    },
+    onLoad: _loadQuestRequestItemsLocaleRows,
     onSave: (entry, changes) async {
       final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
-      final existing = await repo.getQuestRequestItemsLocales(entry);
-      final locales = changes.rows.map((row) {
+      final creations = <QuestRequestItemsLocaleEntity>[];
+      final updates =
+          <QuestRequestItemsLocaleKey, QuestRequestItemsLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return QuestRequestItemsLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            QuestRequestItemsLocaleEntity(
+              id: entry,
+              locale: d['locale'] ?? '',
+              completionText: d['completionText'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = QuestRequestItemsLocaleKey(
           id: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getQuestRequestItemsLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
           completionText: d['completionText'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
         );
-      }).toList();
-      await repo.saveQuestRequestItemsLocales(entry, locales);
+      }
+      await repo.applyQuestRequestItemsLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map(
+              (locale) => QuestRequestItemsLocaleKey(id: entry, locale: locale),
+            )
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -685,6 +697,31 @@ class FoxyLocalePickerDelegates {
         return DatabaseLocaleRow.persisted({
           'locale': locale.locale,
           'rewardText': locale.rewardText,
+        });
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadQuestRequestItemsLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefQuestRequestItemsLocales(id: entry),
+      repo.countQuestRequestItemsLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('任务物品本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getQuestRequestItemsLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'completionText': locale.completionText,
         });
       }),
     );
