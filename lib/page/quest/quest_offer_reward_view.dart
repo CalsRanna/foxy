@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class QuestOfferRewardView extends StatefulWidget {
   final int questId;
@@ -44,10 +45,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '编号',
-              child: FoxyNumberInput<int>(
-                controller: vm.idController,
-                readOnly: true,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.idController),
             ),
           ),
           Expanded(
@@ -155,12 +153,14 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
           Expanded(
             child: FoxyFormItem(
               label: '奖励文本',
-              child: FoxyLocalePicker(
-                entry: widget.questId,
-                controller: vm.rewardTextController,
-                delegate: FoxyLocalePickerDelegates.questOfferReward,
-                placeholder: 'RewardText',
-                title: '奖励文本',
+              child: Watch(
+                (_) => FoxyLocalePicker(
+                  entry: vm.editingKey.value?.id,
+                  controller: vm.rewardTextController,
+                  delegate: FoxyLocalePickerDelegates.questOfferReward,
+                  placeholder: 'RewardText',
+                  title: '奖励文本',
+                ),
               ),
             ),
           ),

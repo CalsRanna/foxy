@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/entity/quest_request_items_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -12,7 +13,7 @@ import 'package:signals/signals.dart';
 class QuestRequestItemsViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final questId = signal(0);
+  final editingKey = signal<QuestRequestItemsKey?>(null);
 
   late final idController = registerController(IntFieldController());
   late final emoteOnCompleteController = registerController(
@@ -26,24 +27,22 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
   );
   late final verifiedBuildController = registerController(IntFieldController());
 
-  int _originalId = 0;
-
   void dispose() {
     disposeControllers();
   }
 
   Future<void> initSignals({required int questId}) async {
     try {
-      this.questId.value = questId;
-      final existing = await _repository.getQuestRequestItems(questId);
+      final key = QuestRequestItemsKey(id: questId);
+      final existing = await _repository.getQuestRequestItems(key);
       if (existing != null) {
-        _originalId = existing.id;
+        editingKey.value = key;
         _initSignals(existing);
       } else {
+        editingKey.value = null;
         final blank = await _repository.createQuestRequestItems(questId);
         _initSignals(blank);
       }
-      idController.init(questId);
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
@@ -57,12 +56,13 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final model = _collect();
-      if (_originalId == 0) {
+      final originalKey = editingKey.value;
+      if (originalKey == null) {
         await _repository.storeQuestRequestItems(model);
       } else {
-        await _repository.updateQuestRequestItems(_originalId, model);
+        await _repository.updateQuestRequestItems(originalKey, model);
       }
-      _originalId = model.id;
+      editingKey.value = QuestRequestItemsKey.fromEntity(model);
 
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('提交物品数据已保存'));
@@ -76,7 +76,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
 
   QuestRequestItemsEntity _collect() {
     return QuestRequestItemsEntity(
-      id: questId.value,
+      id: idController.collect(),
       emoteOnComplete: emoteOnCompleteController.collect(),
       emoteOnIncomplete: emoteOnIncompleteController.collect(),
       completionText: completionTextController.collect(),
@@ -85,6 +85,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
   }
 
   void _initSignals(QuestRequestItemsEntity model) {
+    idController.init(model.id);
     emoteOnCompleteController.init(model.emoteOnComplete);
     emoteOnIncompleteController.init(model.emoteOnIncomplete);
     completionTextController.init(model.completionText);

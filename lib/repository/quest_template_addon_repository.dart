@@ -1,84 +1,113 @@
+import 'package:foxy/entity/brief_quest_template_addon_entity.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
+import 'package:foxy/entity/quest_template_addon_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestTemplateAddonRepository with RepositoryMixin {
   static const _table = 'quest_template_addon';
 
-  Future<void> copyQuestTemplateAddon(int id) async {
-    var source = await getQuestTemplateAddon(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<QuestTemplateAddonKey> copyQuestTemplateAddon(
+    QuestTemplateAddonKey key,
+  ) async {
+    final source = await getQuestTemplateAddon(key);
+    if (source == null) {
+      throw StateError('原任务模板附加数据不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeQuestTemplateAddon(copied);
+    return QuestTemplateAddonKey.fromEntity(copied);
   }
 
-  Future<int> countQuestTemplateAddons() async {
+  Future<int> countQuestTemplateAddons() {
     return laconic.table(_table).count();
   }
 
-  Future<QuestTemplateAddonEntity> createQuestTemplateAddon([
-    int id = 0,
-  ]) async {
-    return QuestTemplateAddonEntity(id: id);
+  Future<QuestTemplateAddonEntity> createQuestTemplateAddon([int? id]) async {
+    return QuestTemplateAddonEntity(
+      id: id ?? await nextMaxPlusOne(_table, 'ID'),
+    );
   }
 
-  Future<void> destroyQuestTemplateAddon(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyQuestTemplateAddon(QuestTemplateAddonKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务模板附加数据不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefQuestTemplateAddonEntity>> getBriefQuestTemplateAddons({
     int page = 1,
   }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select([
-      'ID',
-      'MaxLevel',
-      'PrevQuestID',
-      'NextQuestID',
-      'SpecialFlags',
-    ]);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select([
+          'ID',
+          'MaxLevel',
+          'PrevQuestID',
+          'NextQuestID',
+          'SpecialFlags',
+        ])
+        .orderBy('ID')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefQuestTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => BriefQuestTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(
+    QuestTemplateAddonKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
   Future<List<QuestTemplateAddonEntity>> getQuestTemplateAddons() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => QuestTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => QuestTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<void> saveQuestTemplateAddon(QuestTemplateAddonEntity model) async {
-    var existing = await getQuestTemplateAddon(model.id);
-    if (existing != null) {
-      await updateQuestTemplateAddon(model.id, model);
-    } else {
-      await storeQuestTemplateAddon(model);
+  Future<void> storeQuestTemplateAddon(QuestTemplateAddonEntity model) async {
+    if (model.id <= 0) {
+      throw StateError('任务模板附加数据 ID 必须显式指定');
+    }
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务模板附加数据 ${model.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<void> storeQuestTemplateAddon(QuestTemplateAddonEntity model) async {
-    await laconic.table(_table).insert([model.toJson()]);
-  }
-
   Future<void> updateQuestTemplateAddon(
-    int id,
+    QuestTemplateAddonKey originalKey,
     QuestTemplateAddonEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务模板附加数据不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务模板附加数据 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, QuestTemplateAddonKey key) {
+    return builder.where('ID', key.id);
   }
 }

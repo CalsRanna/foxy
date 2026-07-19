@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class QuestRequestItemsView extends StatefulWidget {
   final int questId;
@@ -44,10 +45,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           Expanded(
             child: FoxyFormItem(
               label: '编号',
-              child: FoxyNumberInput<int>(
-                controller: vm.idController,
-                readOnly: true,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.idController),
             ),
           ),
           Expanded(
@@ -87,12 +85,14 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
           Expanded(
             child: FoxyFormItem(
               label: '完成文本',
-              child: FoxyLocalePicker(
-                entry: widget.questId,
-                controller: vm.completionTextController,
-                delegate: FoxyLocalePickerDelegates.questRequestItems,
-                placeholder: 'CompletionText',
-                title: '完成文本',
+              child: Watch(
+                (_) => FoxyLocalePicker(
+                  entry: vm.editingKey.value?.id,
+                  controller: vm.completionTextController,
+                  delegate: FoxyLocalePickerDelegates.questRequestItems,
+                  placeholder: 'CompletionText',
+                  title: '完成文本',
+                ),
               ),
             ),
           ),

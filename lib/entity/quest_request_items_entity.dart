@@ -1,36 +1,3 @@
-/// 任务请求物品文本列表/Picker 展示模型
-class BriefQuestRequestItemsEntity {
-  final int id;
-  final int emoteOnComplete;
-  final int emoteOnIncomplete;
-  final String completionText;
-
-  const BriefQuestRequestItemsEntity({
-    this.id = 0,
-    this.emoteOnComplete = 0,
-    this.emoteOnIncomplete = 0,
-    this.completionText = '',
-  });
-
-  factory BriefQuestRequestItemsEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestRequestItemsEntity(
-      id: json['ID'] ?? 0,
-      emoteOnComplete: json['EmoteOnComplete'] ?? 0,
-      emoteOnIncomplete: json['EmoteOnIncomplete'] ?? 0,
-      completionText: json['CompletionText']?.toString() ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'EmoteOnComplete': emoteOnComplete,
-      'EmoteOnIncomplete': emoteOnIncomplete,
-      'CompletionText': completionText,
-    };
-  }
-}
-
 /// QuestRequestItems 模型
 /// quest_request_items 表，1:1 关系与 quest_template，共享 ID 主键。
 class QuestRequestItemsEntity {
