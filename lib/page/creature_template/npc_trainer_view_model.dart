@@ -1,22 +1,38 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_npc_trainer_entity.dart';
+import 'package:foxy/entity/creature_default_trainer_key.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
+import 'package:foxy/entity/npc_trainer_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/npc_trainer_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class NpcTrainerViewModel with FieldControllerMixin {
-  final creatureId = signal(0);
-  final items = signal<List<BriefNpcTrainerEntity>>([]);
-  final selectedIndex = signal<int?>(null);
-  final creating = signal(false);
-  final editing = signal(false);
+class NpcTrainerViewModel
+    with
+        ViewModelValidationMixin,
+        NpcTrainerValidationMixin,
+        FieldControllerMixin {
+  final _repository = GetIt.instance.get<NpcTrainerRepository>();
+  final _relationRepository = GetIt.instance
+      .get<CreatureDefaultTrainerRepository>();
 
-  late final creatureIdController = registerController(IntFieldController());
+  final creatureId = signal(0);
+  final editingKey = signal<NpcTrainerKey?>(null);
+  final items = signal<List<BriefNpcTrainerEntity>>([]);
+  final page = signal(1);
+  final relationTrainerId = signal<int?>(null);
+  final selectedIndex = signal<int?>(null);
+  final total = signal(0);
+
   late final trainerIdController = registerController(IntFieldController());
   late final spellIdController = registerController(IntFieldController());
   late final moneyCostController = registerController(IntFieldController());
@@ -28,9 +44,7 @@ class NpcTrainerViewModel with FieldControllerMixin {
   late final reqLevelController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  final _repository = GetIt.instance.get<NpcTrainerRepository>();
-  final _relationRepository = GetIt.instance
-      .get<CreatureDefaultTrainerRepository>();
+  int _refreshToken = 0;
 
   NpcTrainerEntity collectFromForm() {
     return NpcTrainerEntity(
@@ -49,22 +63,17 @@ class NpcTrainerViewModel with FieldControllerMixin {
 
   Future<bool> create() async {
     try {
-      final relation = await _relationRepository.getCreatureDefaultTrainer(
-        creatureId.value,
-      );
-      if (relation == null) {
+      final trainerId = relationTrainerId.value;
+      if (trainerId == null) {
         throw StateError('该生物未配置 creature_default_trainer');
       }
-      final blank = await _repository.createNpcTrainer(relation.trainerId);
-      resetForm();
-      trainerIdController.init(blank.trainerId);
-      creating.value = true;
-      editing.value = false;
-      selectedIndex.value = null;
+      final blank = await _repository.createNpcTrainer(trainerId);
+      _clearEditingState();
+      _initControllers(blank);
       return true;
-    } catch (e) {
-      LoggerUtil.instance.e('创建训练师技能记录失败: $e');
-      DialogUtil.instance.error('创建训练师技能记录失败: $e');
+    } catch (error) {
+      LoggerUtil.instance.e('创建训练师技能记录失败: $error');
+      DialogUtil.instance.error('创建训练师技能记录失败: $error');
       return false;
     }
   }
@@ -76,43 +85,126 @@ class NpcTrainerViewModel with FieldControllerMixin {
     final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
-        title: Text('确认删除'),
-        description: Text('确定要删除这条训练师技能记录吗？'),
+        title: const Text('确认删除'),
+        description: const Text('确定要删除这条训练师技能记录吗？'),
         actions: [
           ShadButton.outline(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
+            child: const Text('取消'),
           ),
           ShadButton.destructive(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('删除'),
+            child: const Text('删除'),
           ),
         ],
       ),
     );
     if (confirmed != true) return;
     try {
-      await _repository.destroyNpcTrainer(trainer.trainerId, trainer.spellId);
+      await _repository.destroyNpcTrainer(trainer.key);
       await load();
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
-    } catch (e) {
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
     }
   }
 
-  void dispose() => disposeControllers();
-
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    fillForm(items.value[index]);
-    editing.value = true;
-    creating.value = false;
+  void dispose() {
+    disposeControllers();
   }
 
-  void fillForm(BriefNpcTrainerEntity trainer) {
+  Future<bool> edit() async {
+    final index = selectedIndex.value;
+    if (index == null || index < 0 || index >= items.value.length) return false;
+    final key = items.value[index].key;
+    editingKey.value = key;
+    try {
+      final trainer = await _repository.getNpcTrainer(key);
+      if (trainer == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(trainer);
+      return true;
+    } catch (error) {
+      _clearEditingState();
+      LoggerUtil.instance.e('加载训练师技能记录失败: $error');
+      DialogUtil.instance.error('加载训练师技能记录失败: $error');
+      return false;
+    }
+  }
+
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      await setParentCreatureId(creatureId);
+    } catch (error) {
+      LoggerUtil.instance.e('初始化 NPC 训练师失败: $error');
+      DialogUtil.instance.error('初始化 NPC 训练师失败: $error');
+    }
+  }
+
+  Future<void> load() => _refresh();
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> persist() async {
+    final candidate = collectFromForm();
+    validateNpcTrainerFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storeNpcTrainer(candidate);
+    } else {
+      await _repository.updateNpcTrainer(originalKey, candidate);
+    }
+    editingKey.value = NpcTrainerKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  void resetForm() {
+    _initControllers(NpcTrainerEntity(trainerId: relationTrainerId.value ?? 0));
+  }
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+      return false;
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  Future<void> setParentCreatureId(int creatureId) async {
+    if (this.creatureId.value != creatureId) page.value = 1;
+    this.creatureId.value = creatureId;
+    _clearEditingState(resetForm: true);
+    await _refresh();
+  }
+
+  void _clearEditingState({bool resetForm = false}) {
+    editingKey.value = null;
+    selectedIndex.value = null;
+    if (resetForm) this.resetForm();
+  }
+
+  void _initControllers(NpcTrainerEntity trainer) {
     trainerIdController.init(trainer.trainerId);
     spellIdController.init(trainer.spellId);
     moneyCostController.init(trainer.moneyCost);
@@ -125,75 +217,27 @@ class NpcTrainerViewModel with FieldControllerMixin {
     verifiedBuildController.init(trainer.verifiedBuild);
   }
 
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      this.creatureId.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化NPC训练师失败: $e');
-      DialogUtil.instance.error('初始化NPC训练师失败: $e');
-    }
-  }
-
-  Future<void> load() async {
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final parentCreatureId = creatureId.value;
     final relation = await _relationRepository.getCreatureDefaultTrainer(
-      creatureId.value,
+      CreatureDefaultTrainerKey(creatureId: parentCreatureId),
     );
-    trainerIdController.init(relation?.trainerId ?? 0);
-    items.value = relation == null
-        ? []
-        : await _repository.getBriefNpcTrainers(relation.trainerId);
-    selectedIndex.value = null;
-    creating.value = false;
-    editing.value = false;
-  }
-
-  void resetForm() {
-    trainerIdController.init(0);
-    spellIdController.init(0);
-    moneyCostController.init(0);
-    reqSkillLineController.init(0);
-    reqSkillRankController.init(0);
-    reqAbility1Controller.init(0);
-    reqAbility2Controller.init(0);
-    reqAbility3Controller.init(0);
-    reqLevelController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      await _repository.storeNpcTrainer(collectFromForm());
-      await load();
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
-    try {
-      final trainer = collectFromForm();
-      await _repository.updateNpcTrainer(
-        trainer.trainerId,
-        trainer.spellId,
-        trainer,
-      );
-      await load();
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
-    }
+    if (token != _refreshToken) return;
+    final trainerId = relation?.trainerId;
+    final count = trainerId == null
+        ? 0
+        : await _repository.countNpcTrainers(trainerId);
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = trainerId == null
+        ? <BriefNpcTrainerEntity>[]
+        : await _repository.getBriefNpcTrainers(trainerId, page: page.value);
+    if (token != _refreshToken) return;
+    relationTrainerId.value = trainerId;
+    items.value = data;
+    total.value = count;
+    _clearEditingState(resetForm: true);
   }
 }

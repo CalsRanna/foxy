@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -31,6 +32,14 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   }
 
   @override
+  void didUpdateWidget(covariant NpcTrainerView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.creatureId != widget.creatureId) {
+      viewModel.setParentCreatureId(widget.creatureId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -44,14 +53,18 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   }
 
   Widget _buildTable() {
-    // 新增按钮
-    var createButton = ShadButton(
-      onPressed: _showCreateDialog,
-      child: Text('新增'),
+    final toolbar = Row(
+      children: [
+        ShadButton(onPressed: _showCreateDialog, child: const Text('新增')),
+        const Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
     );
-
-    // 工具栏
-    final toolbar = Row(children: [createButton, Spacer()]);
 
     final items = viewModel.items.value;
     final headers = ['技能ID', '技能名称', '金币花费', '技能线', '等级要求'];
@@ -93,16 +106,16 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
+            viewModel.selectRow(row);
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.selectRow(row);
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (!await viewModel.edit() || !mounted) return;
+                    _showEditDialog();
                   },
                   child: Text('编辑'),
                 ),
@@ -139,7 +152,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
   }
 
   /// 显示编辑对话框
-  void _showEditDialog(BuildContext context) {
+  void _showEditDialog() {
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -152,7 +165,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
 
   /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editing.value;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500, maxHeight: 680),
@@ -162,20 +175,10 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FoxyFormItem(
-              label: '生物ID',
-              child: FoxyNumberInput<int>(
-                controller: viewModel.creatureIdController,
-                placeholder: 'CreatureId',
-                readOnly: true,
-              ),
-            ),
-            SizedBox(height: 16),
-            FoxyFormItem(
               label: '训练师ID',
               child: FoxyNumberInput<int>(
                 controller: viewModel.trainerIdController,
                 placeholder: 'TrainerId',
-                readOnly: true,
               ),
             ),
             SizedBox(height: 16),
@@ -186,7 +189,6 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                 delegate: FoxyEntityPickerDelegates.spell,
                 controller: viewModel.spellIdController,
                 placeholder: 'SpellId',
-                readOnly: isEditing,
               ),
             ),
             SizedBox(height: 16),
@@ -272,12 +274,8 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                 SizedBox(width: 8),
                 ShadButton(
                   onPressed: () async {
-                    if (isEditing) {
-                      await viewModel.update(dialogContext);
-                    } else {
-                      await viewModel.save(dialogContext);
-                    }
-                    if (!dialogContext.mounted) return;
+                    final saved = await viewModel.save(dialogContext);
+                    if (!saved || !dialogContext.mounted) return;
                     Navigator.of(dialogContext).pop();
                   },
                   child: Text(isEditing ? '更新' : '保存'),
