@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -317,8 +318,8 @@ class ItemTemplateDetailViewModel
   late final verifiedBuildController = registerController(IntFieldController());
 
   /// Signals
-  final entry = signal<int>(0);
   final template = signal(ItemTemplateEntity());
+  final persistedKey = signal<ItemTemplateKey?>(null);
 
   bool get hasDisenchantLoot => template.value.disenchantId != 0;
 
@@ -333,20 +334,24 @@ class ItemTemplateDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? entry}) async {
+  Future<void> initSignals({ItemTemplateKey? key}) async {
     try {
-      if (entry == null || entry <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createItemTemplate();
         template.value = blank;
         _initControllers(blank);
         return;
       }
-      final result = await _repository.getItemTemplate(entry);
-      if (result == null) return;
+      persistedKey.value = key;
+      final result = await _repository.getItemTemplate(key);
+      if (result == null) {
+        throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
+      }
       template.value = result;
       _initControllers(result);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载物品模板(entry=$entry)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载物品模板(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -354,30 +359,34 @@ class ItemTemplateDetailViewModel
     routerFacade.goBack();
   }
 
-  Future<int?> save(BuildContext context) async {
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateItemTemplateFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeItemTemplate(candidate);
+    } else {
+      await _repository.updateItemTemplate(originalKey, candidate);
+    }
+    persistedKey.value = ItemTemplateKey.fromEntity(candidate);
+    template.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
+  Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      validateItemTemplateFields(t);
-      final existed = await _repository.getItemTemplate(t.entry);
-      if (existed == null) {
-        final id = await _repository.storeItemTemplate(t);
-        entryController.init(id);
-        template.value = t.copyWith(entry: id);
-        _logActivity(ActivityActionType.create, template.value);
-      } else {
-        await _repository.updateItemTemplate(t);
-        template.value = t;
-        _logActivity(ActivityActionType.update, t);
-      }
-      if (!context.mounted) return template.value.entry;
+      await persist();
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
-      return template.value.entry;
     } catch (e) {
-      if (!context.mounted) return null;
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-      return null;
     }
   }
 
@@ -717,5 +726,9 @@ class ItemTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(ItemTemplateEntity template) {
+    return template.name.isNotEmpty ? template.name : '物品 #${template.entry}';
   }
 }

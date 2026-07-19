@@ -15,33 +15,13 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class ItemTemplateView extends StatefulWidget {
-  final int? entry;
-  final ValueChanged<int>? onSaved;
-  const ItemTemplateView({super.key, this.entry, this.onSaved});
+class ItemTemplateView extends StatelessWidget {
+  final ItemTemplateDetailViewModel viewModel;
 
-  @override
-  State<ItemTemplateView> createState() => _ItemTemplateViewState();
-}
-
-class _ItemTemplateViewState extends State<ItemTemplateView> {
-  final viewModel = GetIt.instance.get<ItemTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(entry: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const ItemTemplateView({super.key, required this.viewModel});
 
   // Convert kItemClasses List<String> to Map<int, String>
   Map<int, String> get _itemClassOptions => _kItemClassOptions;
@@ -223,13 +203,12 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
       child: FoxyNumberInput<int>(
         controller: viewModel.entryController,
         placeholder: 'entry',
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
-        entry: widget.entry,
+        entry: viewModel.persistedKey.value?.entry,
         controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.itemName,
         placeholder: 'name',
@@ -239,7 +218,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
     final descriptionInput = FoxyFormItem(
       label: '描述',
       child: FoxyLocalePicker(
-        entry: widget.entry,
+        entry: viewModel.persistedKey.value?.entry,
         controller: viewModel.descriptionController,
         delegate: FoxyLocalePickerDelegates.itemDescription,
         placeholder: 'description',
@@ -1236,10 +1215,7 @@ class _ItemTemplateViewState extends State<ItemTemplateView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () async {
-                  final entry = await viewModel.save(context);
-                  if (entry != null) widget.onSaved?.call(entry);
-                },
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               const SizedBox(width: 8),
