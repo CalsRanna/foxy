@@ -1,20 +1,27 @@
+import 'package:foxy/entity/brief_scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
+import 'package:foxy/entity/scaling_stat_value_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ScalingStatValueRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
-  Future<void> copyScalingStatValue(int id) async {
-    final source = await getScalingStatValue(id);
-    if (source == null) return;
-    await storeScalingStatValue(
-      source.copyWith(
-        id: await _getNextId(),
-        charlevel: await _getNextCharlevel(),
-      ),
+  Future<ScalingStatValueKey> copyScalingStatValue(
+    ScalingStatValueKey key,
+  ) async {
+    final source = await getScalingStatValue(key);
+    if (source == null) {
+      throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(
+      id: await _getNextId(),
+      charlevel: await _getNextCharlevel(),
     );
+    await storeScalingStatValue(copied);
+    return ScalingStatValueKey.fromEntity(copied);
   }
 
   Future<int> countScalingStatValues({ScalingStatValueFilterEntity? filter}) {
@@ -28,21 +35,11 @@ class ScalingStatValueRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyScalingStatValue(int id) async {
-    final source = await getScalingStatValue(id);
-    if (source == null) return;
-    final maxCharlevel = await _getMaximumCharlevel();
-    if (source.charlevel != maxCharlevel) {
-      throw StateError('只能删除最高 Charlevel，避免改变后续 DBC 物理查找顺序');
+  Future<void> destroyScalingStatValue(ScalingStatValueKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
     }
-    final references = await laconic
-        .table('item_template')
-        .where('ScalingStatValue', 0, comparator: '!=')
-        .count();
-    if (references > 0) {
-      throw StateError('仍有 $references 个物品使用缩放值，不能删除等级记录');
-    }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
@@ -71,8 +68,10 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ScalingStatValueEntity?> getScalingStatValue(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ScalingStatValueEntity?> getScalingStatValue(
+    ScalingStatValueKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : ScalingStatValueEntity.fromJson(rows.first.toMap());
@@ -89,34 +88,40 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveScalingStatValue(ScalingStatValueEntity value) async {
-    final existing = value.id == 0 ? null : await getScalingStatValue(value.id);
-    if (existing == null) {
-      await storeScalingStatValue(value);
-    } else {
-      await updateScalingStatValue(value);
-    }
-  }
-
-  Future<int> storeScalingStatValue(ScalingStatValueEntity value) async {
-    final id = value.id > 0 ? value.id : await _getNextId();
-    final stored = value.copyWith(id: id);
-    await _validateNewCharlevel(stored);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateScalingStatValue(ScalingStatValueEntity value) async {
-    final existing = await getScalingStatValue(value.id);
-    if (existing == null) {
-      throw StateError('缩放属性值 ${value.id} 不存在');
-    }
-    if (existing.charlevel != value.charlevel) {
-      throw StateError('Charlevel 决定 DBC 物理查找顺序，不能修改既有等级');
+  Future<void> storeScalingStatValue(ScalingStatValueEntity value) async {
+    if (value.id <= 0) {
+      throw StateError('缩放属性值 ID 必须在新建表单打开时显式分配');
     }
     await _validateUniqueCharlevel(value);
-    final json = value.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', value.id).update(json);
+    try {
+      await laconic.table(_table).insert([value.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('缩放属性值 ${value.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateScalingStatValue(
+    ScalingStatValueKey originalKey,
+    ScalingStatValueEntity value,
+  ) async {
+    await _validateUniqueCharlevel(value, originalKey: originalKey);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(value.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的缩放属性值 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -129,10 +134,6 @@ class ScalingStatValueRepository with RepositoryMixin {
       builder = builder.where('Charlevel', filter.charlevel);
     }
     return builder;
-  }
-
-  Future<int> _getMaximumCharlevel() async {
-    return (await nextMaxPlusOne(_table, 'Charlevel')) - 1;
   }
 
   Future<int> _getNextCharlevel() async {
@@ -151,22 +152,21 @@ class ScalingStatValueRepository with RepositoryMixin {
     return id;
   }
 
-  Future<void> _validateNewCharlevel(ScalingStatValueEntity value) async {
-    final nextCharlevel = await _getNextCharlevel();
-    if (value.charlevel != nextCharlevel) {
-      throw StateError('新记录 Charlevel 必须是连续的下一等级 $nextCharlevel');
+  Future<void> _validateUniqueCharlevel(
+    ScalingStatValueEntity value, {
+    ScalingStatValueKey? originalKey,
+  }) async {
+    var builder = laconic.table(_table).where('Charlevel', value.charlevel);
+    if (originalKey != null) {
+      builder = builder.where('ID', originalKey.id, comparator: '!=');
     }
-    await _validateUniqueCharlevel(value);
-  }
-
-  Future<void> _validateUniqueCharlevel(ScalingStatValueEntity value) async {
-    final duplicates = await laconic
-        .table(_table)
-        .where('Charlevel', value.charlevel)
-        .where('ID', value.id, comparator: '!=')
-        .count();
+    final duplicates = await builder.count();
     if (duplicates > 0) {
       throw StateError('Charlevel ${value.charlevel} 已存在');
     }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ScalingStatValueKey key) {
+    return builder.where('ID', key.id);
   }
 }

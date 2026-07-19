@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
+import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
@@ -75,23 +76,30 @@ class ScalingStatValueDetailViewModel
   late final wandDPSController = registerController(IntFieldController());
 
   final scalingStatValue = signal(ScalingStatValueEntity());
+  final persistedKey = signal<ScalingStatValueKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({ScalingStatValueKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createScalingStatValue();
         scalingStatValue.value = blank;
         _initControllers(blank);
         return;
       }
-      scalingStatValue.value = (await _repository.getScalingStatValue(id))!;
-      _initControllers(scalingStatValue.value);
+      persistedKey.value = key;
+      final entity = await _repository.getScalingStatValue(key);
+      if (entity == null) {
+        throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
+      }
+      scalingStatValue.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载缩放属性值(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载缩放属性值(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -100,25 +108,27 @@ class ScalingStatValueDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateScalingStatValueFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeScalingStatValue(candidate);
+    } else {
+      await _repository.updateScalingStatValue(originalKey, candidate);
+    }
+    persistedKey.value = ScalingStatValueKey.fromEntity(candidate);
+    scalingStatValue.value = candidate;
+    routerFacade.updateCurrentLabel('缩放属性值 #${candidate.id}');
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      validateScalingStatValueFields(t);
-      final existed = await _repository.getScalingStatValue(t.id);
-      if (existed == null) {
-        final id = await _repository.storeScalingStatValue(t);
-        idController.init(id);
-      } else {
-        await _repository.updateScalingStatValue(t);
-      }
-      final isCreate = existed == null;
-      scalingStatValue.value = isCreate
-          ? t.copyWith(id: idController.collect())
-          : t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        scalingStatValue.value,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('缩放属性值数据已保存'));
       ShadSonner.of(context).show(toast);

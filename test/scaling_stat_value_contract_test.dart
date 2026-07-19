@@ -139,22 +139,18 @@ void main() {
     }
   });
 
-  test('详情页逐字段展示、八行四列等宽且 Charlevel 只读', () {
+  test('详情页逐字段展示、八行四列等宽且全部物理字段可编辑', () {
     final view = File(
       'lib/page/scaling_stat_value/scaling_stat_value_view.dart',
     ).readAsStringSync();
     expect('Expanded(child:'.allMatches(view), hasLength(32));
     expect(view, isNot(contains('flex:')));
     expect(view, isNot(contains('description:')));
-    expect(
-      view,
-      contains(
-        'controller: viewModel.charlevelController,\n        readOnly: true,',
-      ),
-    );
+    expect(view, contains('controller: viewModel.charlevelController'));
+    expect(view, isNot(contains('readOnly: true')));
   });
 
-  test('Repository 按 Charlevel 导出并保护连续等级与共享引用', () {
+  test('Repository 按 Charlevel 导出并使用原始键写入当前表', () {
     final repository = File(
       'lib/repository/scaling_stat_value_repository.dart',
     ).readAsStringSync();
@@ -163,25 +159,28 @@ void main() {
     ).readAsStringSync();
     expect(repository, contains(".orderBy('Charlevel')"));
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateScalingStatValueFields(t);'));
-    expect(repository, contains('_validateNewCharlevel(stored)'));
-    expect(repository, contains('Charlevel 决定 DBC 物理查找顺序'));
-    expect(repository, contains(".where('ScalingStatValue', 0"));
+    expect(viewModel, contains('validateScalingStatValueFields(candidate);'));
+    expect(repository, contains('ScalingStatValueKey originalKey'));
+    expect(repository, contains('.update(value.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('item_template')")));
+    expect(repository, isNot(contains("remove('ID')")));
     expect(repository, contains('charlevel: await _getNextCharlevel()'));
   });
 
-  test('新建保存回填最终 ID 并按存在性记录 create 活动', () {
+  test('详情使用 persistedKey 区分增改并在成功后切换身份', () {
     final viewModel = File(
       'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('final isCreate = existed == null;'));
-    expect(viewModel, contains('t.copyWith(id: idController.collect())'));
+    expect(viewModel, contains('signal<ScalingStatValueKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
-      contains(
-        'isCreate ? ActivityActionType.create : ActivityActionType.update',
-      ),
+      contains('updateScalingStatValue(originalKey, candidate)'),
     );
+    expect(viewModel, contains('persistedKey.value = ScalingStatValueKey'));
   });
 
   test('DBC definition 使用 3.3.5.12340 的 24 列物理格式', () {

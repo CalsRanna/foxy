@@ -3,31 +3,12 @@ import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_mode
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class ScalingStatValueView extends StatefulWidget {
-  final int? entry;
-  const ScalingStatValueView({super.key, this.entry});
+class ScalingStatValueView extends StatelessWidget {
+  final ScalingStatValueDetailViewModel viewModel;
 
-  @override
-  State<ScalingStatValueView> createState() => _ScalingStatValueViewState();
-}
-
-class _ScalingStatValueViewState extends State<ScalingStatValueView> {
-  final viewModel = GetIt.instance.get<ScalingStatValueDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const ScalingStatValueView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +18,6 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final charlevelInput = FoxyFormItem(
@@ -45,7 +25,6 @@ class _ScalingStatValueViewState extends State<ScalingStatValueView> {
       child: FoxyNumberInput<int>(
         placeholder: 'Charlevel',
         controller: viewModel.charlevelController,
-        readOnly: true,
       ),
     );
 
