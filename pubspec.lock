@@ -521,10 +521,10 @@ packages:
     dependency: "direct main"
     description:
       name: laconic_mysql
-      sha256: "65c7a69fcad0fad2d8df1699a613eee357f18596aa2beb77196a4f4e2994cb64"
+      sha256: "21f048991b3f98ddeb88cfc9e0ab2c5a9de431bad09c7fff9495aced1c557a59"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -621,13 +621,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  mysql_client:
-    dependency: "direct main"
-    description:
-      path: "third_party/mysql_client"
-      relative: true
-    source: path
-    version: "0.0.27+foxy.1"
   package_config:
     dependency: transitive
     description:

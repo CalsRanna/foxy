@@ -1,5 +1,5 @@
 import 'package:laconic/laconic.dart';
-import 'package:mysql_client/exception.dart';
+import 'package:laconic_mysql/laconic_mysql.dart';
 
 abstract final class MysqlErrorUtil {
   static const duplicateEntryCode = 1062;

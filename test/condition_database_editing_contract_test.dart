@@ -14,7 +14,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import 'package:mysql_client/exception.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
