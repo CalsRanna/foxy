@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
+import 'package:foxy/entity/vehicle_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class VehicleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_vehicle';
 
-  Future<void> copyVehicle(int id) async {
-    var source = await getVehicle(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<VehicleKey> copyVehicle(VehicleKey key) async {
+    final source = await getVehicle(key);
+    if (source == null) {
+      throw StateError('原载具不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeVehicle(copied);
+    return VehicleKey.fromEntity(copied);
   }
 
   Future<int> countVehicles({VehicleFilterEntity? filter}) async {
@@ -22,11 +26,14 @@ class VehicleRepository with RepositoryMixin {
   }
 
   Future<VehicleEntity> createVehicle() async {
-    return VehicleEntity(id: await nextMaxPlusOne(_table, 'ID'));
+    return VehicleEntity(id: await _getNextId());
   }
 
-  Future<void> destroyVehicle(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyVehicle(VehicleKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原载具不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefVehicleEntity>> getBriefVehicles({
@@ -43,8 +50,8 @@ class VehicleRepository with RepositoryMixin {
     return results.map((e) => BriefVehicleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<VehicleEntity?> getVehicle(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<VehicleEntity?> getVehicle(VehicleKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return VehicleEntity.fromJson(results.first.toMap());
   }
@@ -54,33 +61,38 @@ class VehicleRepository with RepositoryMixin {
     return results.map((e) => VehicleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveVehicle(VehicleEntity vehicle) async {
-    if (vehicle.id == 0) {
-      await storeVehicle(vehicle);
-      return;
+  Future<void> storeVehicle(VehicleEntity vehicle) async {
+    if (vehicle.id <= 0) {
+      throw StateError('载具 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getVehicle(vehicle.id);
-    if (existing != null) {
-      await updateVehicle(vehicle);
-    } else {
+    try {
       await laconic.table(_table).insert([vehicle.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('载具 ${vehicle.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeVehicle(VehicleEntity vehicle) async {
-    var json = vehicle.toJson();
-    final nextId = vehicle.id > 0
-        ? vehicle.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateVehicle(VehicleEntity vehicle) async {
-    var json = vehicle.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', vehicle.id).update(json);
+  Future<void> updateVehicle(
+    VehicleKey originalKey,
+    VehicleEntity vehicle,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(vehicle.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原载具不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的载具 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilterEntity? filter) {
@@ -89,5 +101,11 @@ class VehicleRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
+
+  QueryBuilder _whereKey(QueryBuilder builder, VehicleKey key) {
+    return builder.where('ID', key.id);
   }
 }

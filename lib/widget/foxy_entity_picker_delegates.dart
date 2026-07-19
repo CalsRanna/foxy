@@ -123,7 +123,7 @@ import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_filter_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
-import 'package:foxy/entity/vehicle_entity.dart';
+import 'package:foxy/entity/brief_vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/entity/brief_zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
