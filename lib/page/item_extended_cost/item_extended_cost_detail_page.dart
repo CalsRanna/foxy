@@ -1,13 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/item_extended_cost_key.dart';
+import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ItemExtendedCostDetailPage extends StatefulWidget {
-  final int? id;
+  final ItemExtendedCostKey? itemExtendedCostKey;
 
-  const ItemExtendedCostDetailPage({super.key, this.id});
+  const ItemExtendedCostDetailPage({super.key, this.itemExtendedCostKey});
 
   @override
   State<ItemExtendedCostDetailPage> createState() =>
@@ -16,25 +20,41 @@ class ItemExtendedCostDetailPage extends StatefulWidget {
 
 class _ItemExtendedCostDetailPageState
     extends State<ItemExtendedCostDetailPage> {
+  final viewModel = GetIt.instance.get<ItemExtendedCostDetailViewModel>();
+
   @override
-  Widget build(BuildContext context) {
-    var tabs = [Text('扩展价格')];
-
-    var tabContents = [ItemExtendedCostView(entry: widget.id)];
-
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [_buildHeader(), tabBar],
-    );
+  void initState() {
+    super.initState();
+    viewModel.initSignals(key: widget.itemExtendedCostKey);
   }
 
-  Widget _buildHeader() {
-    var name = widget.id != null ? '扩展价格 #${widget.id}' : '新建扩展价格';
-    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-    var text = Text(name, style: textStyle);
-    var edgeInsets = EdgeInsets.only(bottom: 12);
-    return Padding(padding: edgeInsets, child: text);
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Watch((_) {
+      final key = viewModel.persistedKey.value;
+      final name = key == null ? '新建扩展价格' : '扩展价格 #${key.id}';
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          FoxyTab(
+            tabs: const [Text('扩展价格')],
+            contents: [ItemExtendedCostView(viewModel: viewModel)],
+          ),
+        ],
+      );
+    });
   }
 }
