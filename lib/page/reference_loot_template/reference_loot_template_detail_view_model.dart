@@ -43,37 +43,29 @@ class ReferenceLootTemplateDetailViewModel
     referenceController.addListener(_syncReferenceState);
   }
 
-  /// 复合主键 (Entry, Item) 均为业务语义键：新建可填，编辑只读。
-  bool get isNew => persistedKey.value == null;
-
   void dispose() {
     referenceController.removeListener(_syncReferenceState);
     disposeControllers();
   }
 
-  Future<void> initSignals({int? entry, int? item}) async {
+  Future<void> initSignals({LootTemplateKey? key}) async {
     try {
-      // 新建：不预填伪 Item 号；Entry/Item 由用户指定（Item 用实体选择器）
-      if (entry == null || item == null) {
+      if (key == null) {
         persistedKey.value = null;
         final blank = const LootTemplateEntity();
         template.value = blank;
         _initControllers(blank);
         return;
       }
-      final key = StandardLootTemplateKey(entry: entry, item: item);
       persistedKey.value = key;
       final result = await repository.getLootTemplate(key);
-      if (result != null) {
-        template.value = result;
-        _initControllers(result);
+      if (result == null) {
+        throw StateError('原关联掉落不存在，可能已被其他操作修改或删除');
       }
+      template.value = result;
+      _initControllers(result);
     } catch (e, s) {
-      LoggerUtil.instance.e(
-        '加载关联掉落(Entry=$entry, Item=$item)失败',
-        error: e,
-        stackTrace: s,
-      );
+      LoggerUtil.instance.e('加载关联掉落(key=$key)失败', error: e, stackTrace: s);
     }
   }
 

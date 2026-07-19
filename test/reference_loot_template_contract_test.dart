@@ -206,4 +206,28 @@ void main() {
     expect(source, contains('reference: referenceController.collect()'));
     expect(source, contains('lootMode: lootModeController.collect()'));
   });
+
+  test('详情路由只携带 typed key 且页面持有实时 persistedKey', () {
+    final page = File(
+      'lib/page/reference_loot_template/'
+      'reference_loot_template_detail_page.dart',
+    ).readAsStringSync();
+    final list = File(
+      'lib/page/reference_loot_template/'
+      'reference_loot_template_list_page.dart',
+    ).readAsStringSync();
+    final view = File(
+      'lib/page/reference_loot_template/reference_loot_template_view.dart',
+    ).readAsStringSync();
+
+    expect(page, contains('final LootTemplateKey? referenceLootTemplateKey'));
+    expect(page, contains('viewModel.persistedKey.value'));
+    expect(page, contains('ReferenceLootTemplateView(viewModel: viewModel)'));
+    expect(list, contains('key: templates[row].key'));
+    expect(
+      view,
+      contains('final ReferenceLootTemplateDetailViewModel viewModel'),
+    );
+    expect(view, isNot(contains('GetIt.instance')));
+  });
 }

@@ -20,15 +20,16 @@ import 'package:foxy/entity/gem_property_key.dart' as _i65;
 import 'package:foxy/entity/glyph_property_key.dart' as _i66;
 import 'package:foxy/entity/item_extended_cost_key.dart' as _i67;
 import 'package:foxy/entity/item_set_key.dart' as _i68;
-import 'package:foxy/entity/page_text_key.dart' as _i77;
+import 'package:foxy/entity/loot_template_key.dart' as _i72;
+import 'package:foxy/entity/page_text_key.dart' as _i78;
 import 'package:foxy/entity/quest_faction_reward_key.dart' as _i69;
 import 'package:foxy/entity/quest_info_key.dart' as _i70;
 import 'package:foxy/entity/quest_sort_key.dart' as _i71;
-import 'package:foxy/entity/scaling_stat_distribution_key.dart' as _i72;
-import 'package:foxy/entity/scaling_stat_value_key.dart' as _i73;
-import 'package:foxy/entity/smart_script_key.dart' as _i74;
-import 'package:foxy/entity/spell_item_enchantment_key.dart' as _i75;
-import 'package:foxy/entity/talent_key.dart' as _i76;
+import 'package:foxy/entity/scaling_stat_distribution_key.dart' as _i73;
+import 'package:foxy/entity/scaling_stat_value_key.dart' as _i74;
+import 'package:foxy/entity/smart_script_key.dart' as _i75;
+import 'package:foxy/entity/spell_item_enchantment_key.dart' as _i76;
+import 'package:foxy/entity/talent_key.dart' as _i77;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1474,17 +1475,13 @@ class ReferenceLootTemplateDetailRoute
     extends _i58.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
   ReferenceLootTemplateDetailRoute({
     _i59.Key? key,
-    int? entry,
-    int? item,
-    String? label,
+    _i72.LootTemplateKey? referenceLootTemplateKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ReferenceLootTemplateDetailRoute.name,
          args: ReferenceLootTemplateDetailRouteArgs(
            key: key,
-           entry: entry,
-           item: item,
-           label: label,
+           referenceLootTemplateKey: referenceLootTemplateKey,
          ),
          initialChildren: children,
        );
@@ -1499,9 +1496,7 @@ class ReferenceLootTemplateDetailRoute
       );
       return _i40.ReferenceLootTemplateDetailPage(
         key: args.key,
-        entry: args.entry,
-        item: args.item,
-        label: args.label,
+        referenceLootTemplateKey: args.referenceLootTemplateKey,
       );
     },
   );
@@ -1510,22 +1505,16 @@ class ReferenceLootTemplateDetailRoute
 class ReferenceLootTemplateDetailRouteArgs {
   const ReferenceLootTemplateDetailRouteArgs({
     this.key,
-    this.entry,
-    this.item,
-    this.label,
+    this.referenceLootTemplateKey,
   });
 
   final _i59.Key? key;
 
-  final int? entry;
-
-  final int? item;
-
-  final String? label;
+  final _i72.LootTemplateKey? referenceLootTemplateKey;
 
   @override
   String toString() {
-    return 'ReferenceLootTemplateDetailRouteArgs{key: $key, entry: $entry, item: $item, label: $label}';
+    return 'ReferenceLootTemplateDetailRouteArgs{key: $key, referenceLootTemplateKey: $referenceLootTemplateKey}';
   }
 
   @override
@@ -1533,14 +1522,11 @@ class ReferenceLootTemplateDetailRouteArgs {
     if (identical(this, other)) return true;
     if (other is! ReferenceLootTemplateDetailRouteArgs) return false;
     return key == other.key &&
-        entry == other.entry &&
-        item == other.item &&
-        label == other.label;
+        referenceLootTemplateKey == other.referenceLootTemplateKey;
   }
 
   @override
-  int get hashCode =>
-      key.hashCode ^ entry.hashCode ^ item.hashCode ^ label.hashCode;
+  int get hashCode => key.hashCode ^ referenceLootTemplateKey.hashCode;
 }
 
 /// generated route for
@@ -1581,7 +1567,7 @@ class ScalingStatDistributionDetailRoute
     extends _i58.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
   ScalingStatDistributionDetailRoute({
     _i59.Key? key,
-    _i72.ScalingStatDistributionKey? scalingStatDistributionKey,
+    _i73.ScalingStatDistributionKey? scalingStatDistributionKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ScalingStatDistributionDetailRoute.name,
@@ -1616,7 +1602,7 @@ class ScalingStatDistributionDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i72.ScalingStatDistributionKey? scalingStatDistributionKey;
+  final _i73.ScalingStatDistributionKey? scalingStatDistributionKey;
 
   @override
   String toString() {
@@ -1657,7 +1643,7 @@ class ScalingStatValueDetailRoute
     extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
   ScalingStatValueDetailRoute({
     _i59.Key? key,
-    _i73.ScalingStatValueKey? scalingStatValueKey,
+    _i74.ScalingStatValueKey? scalingStatValueKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ScalingStatValueDetailRoute.name,
@@ -1689,7 +1675,7 @@ class ScalingStatValueDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i73.ScalingStatValueKey? scalingStatValueKey;
+  final _i74.ScalingStatValueKey? scalingStatValueKey;
 
   @override
   String toString() {
@@ -1745,7 +1731,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i74.SmartScriptKey? scriptKey,
+    _i75.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1774,7 +1760,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i74.SmartScriptKey? scriptKey;
+  final _i75.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1866,7 +1852,7 @@ class SpellItemEnchantmentDetailRoute
     extends _i58.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
   SpellItemEnchantmentDetailRoute({
     _i59.Key? key,
-    _i75.SpellItemEnchantmentKey? spellItemEnchantmentKey,
+    _i76.SpellItemEnchantmentKey? spellItemEnchantmentKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SpellItemEnchantmentDetailRoute.name,
@@ -1901,7 +1887,7 @@ class SpellItemEnchantmentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i75.SpellItemEnchantmentKey? spellItemEnchantmentKey;
+  final _i76.SpellItemEnchantmentKey? spellItemEnchantmentKey;
 
   @override
   String toString() {
@@ -1957,7 +1943,7 @@ class SpellListRoute extends _i58.PageRouteInfo<void> {
 class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
   TalentDetailRoute({
     _i59.Key? key,
-    _i76.TalentKey? talentKey,
+    _i77.TalentKey? talentKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TalentDetailRoute.name,
@@ -1983,7 +1969,7 @@ class TalentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i76.TalentKey? talentKey;
+  final _i77.TalentKey? talentKey;
 
   @override
   String toString() {
@@ -2023,7 +2009,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i77.PageTextKey? pageTextKey,
+    _i78.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2052,7 +2038,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i77.PageTextKey? pageTextKey;
+  final _i78.PageTextKey? pageTextKey;
 
   @override
   String toString() {
