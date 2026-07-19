@@ -319,7 +319,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'creature_template',
       actionType: action,
-      entityId: t.entry,
       entityName: t.name,
       createdAt: DateTime.now(),
     );

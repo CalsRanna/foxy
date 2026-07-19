@@ -190,8 +190,7 @@ class ScalingStatValueDetailViewModel
     final log = ActivityLogEntity(
       module: 'scaling_stat_value',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'ScalingStatValue ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

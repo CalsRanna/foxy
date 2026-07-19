@@ -116,8 +116,7 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'glyph_property',
       actionType: action,
-      entityId: id,
-      entityName: '',
+      entityName: 'GlyphProperty $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

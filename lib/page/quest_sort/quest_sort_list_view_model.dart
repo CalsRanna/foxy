@@ -124,7 +124,6 @@ class QuestSortListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

@@ -53,10 +53,6 @@ class _TrendItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
 
-    final name = activity.entityName.isNotEmpty
-        ? activity.entityName
-        : '#${activity.entityId}';
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Row(
@@ -69,7 +65,7 @@ class _TrendItem extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '${activity.actionType.label} $name',
+              '${activity.actionType.label} ${activity.entityName}',
               style: theme.textTheme.small,
               overflow: TextOverflow.ellipsis,
             ),

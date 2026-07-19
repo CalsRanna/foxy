@@ -101,8 +101,7 @@ class CurrencyTypeDetailViewModel
     final log = ActivityLogEntity(
       module: 'currency_type',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'CurrencyType ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

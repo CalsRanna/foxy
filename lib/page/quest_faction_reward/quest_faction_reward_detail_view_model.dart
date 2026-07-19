@@ -123,8 +123,7 @@ class QuestFactionRewardDetailViewModel
     final log = ActivityLogEntity(
       module: 'quest_faction_reward',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'QuestFactionReward ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

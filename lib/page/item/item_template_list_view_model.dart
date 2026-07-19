@@ -189,7 +189,6 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'item_template',
       actionType: action,
-      entityId: entry,
       entityName: name,
       createdAt: DateTime.now(),
     );

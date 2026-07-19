@@ -144,8 +144,7 @@ class ItemExtendedCostDetailViewModel
     final log = ActivityLogEntity(
       module: 'item_extended_cost',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'ItemExtendedCost ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

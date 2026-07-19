@@ -120,8 +120,7 @@ class TalentListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'talent',
       actionType: action,
-      entityId: id,
-      entityName: id.toString(),
+      entityName: 'Talent $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

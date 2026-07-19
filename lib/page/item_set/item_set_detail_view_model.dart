@@ -312,8 +312,7 @@ class ItemSetDetailViewModel
     final log = ActivityLogEntity(
       module: 'item_set',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'ItemSet ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

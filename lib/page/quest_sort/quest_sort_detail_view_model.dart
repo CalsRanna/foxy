@@ -119,7 +119,6 @@ class QuestSortDetailViewModel
     final log = ActivityLogEntity(
       module: 'quest_sort',
       actionType: action,
-      entityId: t.id,
       entityName: t.sortNameLangZhCN,
       createdAt: DateTime.now(),
     );

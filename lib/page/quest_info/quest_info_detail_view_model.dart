@@ -119,7 +119,6 @@ class QuestInfoDetailViewModel
     final log = ActivityLogEntity(
       module: 'quest_info',
       actionType: action,
-      entityId: t.id,
       entityName: t.infoNameLangZhCN,
       createdAt: DateTime.now(),
     );

@@ -123,7 +123,6 @@ class SpellListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'spell',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

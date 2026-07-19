@@ -118,8 +118,7 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'scaling_stat_distribution',
       actionType: action,
-      entityId: id,
-      entityName: '',
+      entityName: 'ScalingStatDistribution $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

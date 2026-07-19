@@ -200,7 +200,6 @@ class GameObjectTemplateDetailViewModel
     final log = ActivityLogEntity(
       module: 'gameobject_template',
       actionType: action,
-      entityId: t.entry,
       entityName: t.name,
       createdAt: DateTime.now(),
     );

@@ -1097,7 +1097,6 @@ class SpellDetailViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'spell',
       actionType: action,
-      entityId: t.id,
       entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );

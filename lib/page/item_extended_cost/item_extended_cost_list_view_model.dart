@@ -118,8 +118,7 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'item_extended_cost',
       actionType: action,
-      entityId: id,
-      entityName: '',
+      entityName: 'ItemExtendedCost $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

@@ -120,8 +120,7 @@ class ItemSetListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'item_set',
       actionType: action,
-      entityId: id,
-      entityName: id.toString(),
+      entityName: 'ItemSet $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

@@ -205,7 +205,6 @@ class SpellItemEnchantmentDetailViewModel
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
-      entityId: t.id,
       entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );

@@ -168,8 +168,9 @@ class SmartScriptListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
-      entityId: entryOrGuid,
-      entityName: name,
+      entityName:
+          'SmartScript $entryOrGuid/$sourceType/$id/$link'
+          '${name.isEmpty ? '' : ' - $name'}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

@@ -594,7 +594,6 @@ class QuestTemplateDetailViewModel
     final log = ActivityLogEntity(
       module: 'quest_template',
       actionType: action,
-      entityId: t.id,
       entityName: t.logTitle,
       createdAt: DateTime.now(),
     );

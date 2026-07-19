@@ -100,7 +100,6 @@ class PageTextDetailViewModel
     final log = ActivityLogEntity(
       module: 'page_text',
       actionType: action,
-      entityId: t.id,
       entityName: t.text,
       createdAt: DateTime.now(),
     );

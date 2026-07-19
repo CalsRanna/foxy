@@ -117,7 +117,6 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'quest_template',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

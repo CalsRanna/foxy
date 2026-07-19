@@ -19,7 +19,6 @@ class ActivityLogEntity {
   final int id;
   final String module;
   final ActivityActionType actionType;
-  final int entityId;
   final String entityName;
   final DateTime createdAt;
 
@@ -27,8 +26,7 @@ class ActivityLogEntity {
     this.id = 0,
     required this.module,
     required this.actionType,
-    required this.entityId,
-    this.entityName = '',
+    required this.entityName,
     required this.createdAt,
   });
 
@@ -37,7 +35,6 @@ class ActivityLogEntity {
       id: json['id'] as int,
       module: json['module'] as String,
       actionType: ActivityActionType.fromString(json['action_type'] as String),
-      entityId: json['entity_id'] as int,
       entityName: (json['entity_name'] as String?) ?? '',
       createdAt: DateTime.parse(json['created_at'] as String),
     );
@@ -47,7 +44,6 @@ class ActivityLogEntity {
     int? id,
     String? module,
     ActivityActionType? actionType,
-    int? entityId,
     String? entityName,
     DateTime? createdAt,
   }) {
@@ -55,7 +51,6 @@ class ActivityLogEntity {
       id: id ?? this.id,
       module: module ?? this.module,
       actionType: actionType ?? this.actionType,
-      entityId: entityId ?? this.entityId,
       entityName: entityName ?? this.entityName,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -65,7 +60,6 @@ class ActivityLogEntity {
     return {
       'module': module,
       'action_type': actionType.name,
-      'entity_id': entityId,
       'entity_name': entityName,
     };
   }
