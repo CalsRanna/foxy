@@ -79,7 +79,6 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     final label = name?.isNotEmpty == true ? name! : '新建任务';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: id?.toString() ?? 'new',
       label: label,
       route: QuestTemplateDetailRoute(entry: id, name: name),
       parentMenu: RouterMenu.questTemplate,

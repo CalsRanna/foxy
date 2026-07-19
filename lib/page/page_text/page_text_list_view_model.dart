@@ -83,10 +83,8 @@ class PageTextListViewModel with FieldControllerMixin {
   }
 
   void navigateToDetail({int? id, String? label}) {
-    final routeId = id != null ? 'page_text_$id' : 'page_text_new';
     final name = label?.isNotEmpty == true ? label! : '新建页面文本';
     _routerFacade.navigateToDetail(
-      id: routeId,
       label: name,
       route: TextContentDetailRoute(id: id, label: label),
       parentMenu: RouterMenu.more,

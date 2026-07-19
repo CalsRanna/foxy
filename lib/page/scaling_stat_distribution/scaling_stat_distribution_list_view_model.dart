@@ -82,12 +82,8 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '属性缩放分布 #$id' : '新建属性缩放分布';
-    final routeId = id != null
-        ? 'scaling_stat_distribution_$id'
-        : 'scaling_stat_distribution_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: ScalingStatDistributionDetailRoute(id: id),
       parentMenu: RouterMenu.scalingStatDistribution,

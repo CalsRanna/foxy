@@ -83,10 +83,8 @@ class QuestInfoListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务信息';
-    final routeId = id != null ? 'quest_info_$id' : 'quest_info_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: QuestInfoDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.questInfo,

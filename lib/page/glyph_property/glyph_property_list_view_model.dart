@@ -82,10 +82,8 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '雕文属性 #$id' : '新建雕文属性';
-    final routeId = id != null ? 'glyph_property_$id' : 'glyph_property_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: GlyphPropertyDetailRoute(id: id),
       parentMenu: RouterMenu.glyphProperty,

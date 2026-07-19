@@ -81,10 +81,8 @@ class GemPropertyListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '宝石属性 #$id' : '新建宝石属性';
-    final routeId = id != null ? 'gem_property_$id' : 'gem_property_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: GemPropertyDetailRoute(id: id),
       parentMenu: RouterMenu.gemProperty,

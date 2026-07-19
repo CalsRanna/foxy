@@ -64,10 +64,8 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '货币 #$id' : '新建货币';
-    final routeId = id != null ? 'currency_type_$id' : 'currency_type_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: CurrencyTypeDetailRoute(id: id),
       parentMenu: RouterMenu.currencyType,

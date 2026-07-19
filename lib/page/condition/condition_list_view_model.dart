@@ -82,9 +82,6 @@ class ConditionListViewModel with FieldControllerMixin {
   }
 
   void navigateToDetail({BriefConditionEntity? condition}) {
-    final id = condition != null
-        ? 'condition_${condition.sourceTypeOrReferenceId}_${condition.sourceEntry}'
-        : 'condition_new';
     final label = condition != null
         ? (condition.comment.isNotEmpty
               ? condition.comment
@@ -92,7 +89,6 @@ class ConditionListViewModel with FieldControllerMixin {
         : '新建条件';
 
     routerFacade.navigateToDetail(
-      id: id,
       label: label,
       route: ConditionDetailRoute(conditionKey: condition?.key),
       parentMenu: RouterMenu.more,

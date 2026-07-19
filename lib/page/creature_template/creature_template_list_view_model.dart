@@ -83,10 +83,8 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? entry, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建生物';
-    final id = entry != null ? 'creature_$entry' : 'creature_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: id,
       label: label,
       route: CreatureTemplateDetailRoute(entry: entry, name: name),
       parentMenu: RouterMenu.creatureTemplate,

@@ -6,9 +6,7 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -82,7 +80,6 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
         await _npcTextRepository.storeNpcText(NpcTextEntity(id: t.textId));
       }
       final wasNew = _originalMenuId == null;
-      final prevTextId = _originalTextId;
       if (wasNew) {
         final id = await _repository.storeGossipMenu(t);
         menuIdController.init(id);
@@ -108,18 +105,7 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);
-      // 新建保存后，或 TextID 变更后：替换路由参数，让各 Tab 用真实 ID 重新初始化
-      if (wasNew || prevTextId != saved.textId) {
-        routerFacade.replaceCurrentDetail(
-          id: '${saved.menuId}',
-          label: '对话 ${saved.menuId}',
-          route: GossipMenuDetailRoute(
-            menuId: saved.menuId,
-            textId: saved.textId,
-          ),
-          parentMenu: RouterMenu.gossipMenu,
-        );
-      }
+      routerFacade.updateCurrentLabel('对话 ${saved.menuId}');
     } catch (e) {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));

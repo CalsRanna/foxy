@@ -62,10 +62,8 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
   }
 
   void navigateToDetail({PlayerCreateInfoEntity? info}) {
-    final id = info != null ? 'pci_${info.race}_${info.class_}' : 'pci_new';
     final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
     _routerFacade.navigateToDetail(
-      id: id,
       label: label,
       route: PlayerCreateInfoDetailRoute(
         race: info?.race,

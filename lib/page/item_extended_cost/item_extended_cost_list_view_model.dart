@@ -82,12 +82,8 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '扩展价格 #$id' : '新建扩展价格';
-    final routeId = id != null
-        ? 'item_extended_cost_$id'
-        : 'item_extended_cost_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: ItemExtendedCostDetailRoute(id: id),
       parentMenu: RouterMenu.itemExtendedCost,
