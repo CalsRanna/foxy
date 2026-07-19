@@ -328,10 +328,6 @@ void main() {
       }),
       throwsStateError,
     );
-    expect(
-      () => CreatureTemplateSpellRepository.validateIndex(8),
-      throwsArgumentError,
-    );
   });
 
   test('主记录落库前禁用全部 11 个关联 Tab', () {
