@@ -1,16 +1,27 @@
+import 'package:foxy/entity/brief_game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
+import 'package:foxy/entity/game_object_display_info_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GameObjectDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_display_info';
 
-  Future<void> copyGameObjectDisplayInfo(int id) async {
-    final source = await getGameObjectDisplayInfo(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<GameObjectDisplayInfoKey> copyGameObjectDisplayInfo(
+    GameObjectDisplayInfoKey key,
+  ) async {
+    final source = await getGameObjectDisplayInfo(key);
+    if (source == null) {
+      throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
+    }
+    final copied = GameObjectDisplayInfoEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeGameObjectDisplayInfo(copied);
+    return GameObjectDisplayInfoKey.fromEntity(copied);
   }
 
   Future<int> countGameObjectDisplayInfos({
@@ -20,8 +31,13 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
       GameObjectDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyGameObjectDisplayInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyGameObjectDisplayInfo(
+    GameObjectDisplayInfoKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefGameObjectDisplayInfoEntity>>
@@ -43,8 +59,10 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(
+    GameObjectDisplayInfoKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : GameObjectDisplayInfoEntity.fromJson(rows.first.toMap());
@@ -57,31 +75,40 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveGameObjectDisplayInfo(
+  Future<void> storeGameObjectDisplayInfo(
     GameObjectDisplayInfoEntity entity,
   ) async {
-    if (await getGameObjectDisplayInfo(entity.id) == null) {
-      await storeGameObjectDisplayInfo(entity);
-    } else {
-      await updateGameObjectDisplayInfo(entity);
+    if (entity.id <= 0) {
+      throw StateError('游戏物体显示信息 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('游戏物体显示信息 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeGameObjectDisplayInfo(
-    GameObjectDisplayInfoEntity entity,
-  ) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
   Future<void> updateGameObjectDisplayInfo(
+    GameObjectDisplayInfoKey originalKey,
     GameObjectDisplayInfoEntity entity,
   ) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的游戏物体显示信息 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -98,5 +125,9 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, GameObjectDisplayInfoKey key) {
+    return builder.where('ID', key.id);
   }
 }
