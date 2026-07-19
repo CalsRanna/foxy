@@ -1,94 +1,103 @@
+import 'package:foxy/entity/brief_npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
+import 'package:foxy/entity/npc_text_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
-  Future<void> copyNpcText(int id) async {
-    var source = await getNpcText(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<NpcTextKey> copyNpcText(NpcTextKey key) async {
+    final source = await getNpcText(key);
+    if (source == null) {
+      throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
+    }
+    final json = source.toJson();
+    json['ID'] = await nextMaxPlusOne(_table, 'ID');
+    final copied = NpcTextEntity.fromJson(json);
+    await storeNpcText(copied);
+    return NpcTextKey.fromEntity(copied);
   }
 
   Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
+    return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<NpcTextEntity> createNpcText() async {
     return NpcTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyNpcText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyNpcText(NpcTextKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefNpcTextEntity>> getBriefNpcTexts({
     int page = 1,
     NpcTextFilterEntity? filter,
   }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = ['ID', 'text0_0', 'text0_1'];
-    builder = builder.select(fields);
+    var builder = laconic.table(_table).select(['ID', 'text0_0', 'text0_1']);
     builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results.map((e) => BriefNpcTextEntity.fromJson(e.toMap())).toList();
+    final results = await builder
+        .orderBy('ID')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
+    return results
+        .map((row) => BriefNpcTextEntity.fromJson(row.toMap()))
+        .toList();
   }
 
-  Future<NpcTextEntity?> getNpcText(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<NpcTextEntity?> getNpcText(NpcTextKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTextEntity.fromJson(results.first.toMap());
   }
 
   Future<List<NpcTextEntity>> getNpcTexts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => NpcTextEntity.fromJson(e.toMap())).toList();
+    final results = await laconic.table(_table).get();
+    return results.map((row) => NpcTextEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveNpcText(NpcTextEntity npcText) async {
-    if (npcText.id == 0) {
-      await storeNpcText(npcText);
-      return;
-    }
-    var existing = await getNpcText(npcText.id);
-    if (existing != null) {
-      await updateNpcText(npcText);
-    } else {
+  Future<void> storeNpcText(NpcTextEntity npcText) async {
+    if (npcText.id <= 0) throw StateError('NPC 文本 ID 必须大于 0');
+    try {
       await laconic.table(_table).insert([npcText.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同 NPC 文本 ID 的记录已存在');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeNpcText(NpcTextEntity npcText) async {
-    var json = npcText.toJson();
-    final nextId = npcText.id > 0
-        ? npcText.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateNpcText(NpcTextEntity npcText) async {
-    var json = npcText.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', npcText.id).update(json);
+  Future<void> updateNpcText(
+    NpcTextKey originalKey,
+    NpcTextEntity npcText,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(npcText.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的 NPC 文本 ID 已存在');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilterEntity? filter) {
     if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
+    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.text.isNotEmpty) {
       builder = builder.whereAny(
         ['text0_0', 'text0_1'],
@@ -97,5 +106,9 @@ class NpcTextRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, NpcTextKey key) {
+    return builder.where('ID', key.id);
   }
 }

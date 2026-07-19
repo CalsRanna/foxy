@@ -51,12 +51,12 @@ void main() {
     );
     expect(
       source,
-      contains('updateNpcTextLocale(\n            originalLocaleKey,'),
+      contains('updateNpcTextLocale(\n              originalLocaleKey,'),
     );
     expect(source, contains('destroyNpcTextLocale(originalLocaleKey)'));
     final updateIndex = source.indexOf('updateNpcTextLocale(');
     final replaceIndex = source.indexOf(
-      'localeEditingKey.value = NpcTextLocaleKey.fromEntity(locale);',
+      'localeEditingKey.value = hasLocaleText',
     );
     expect(replaceIndex, greaterThan(updateIndex));
     expect(source, isNot(contains('localeExists')));

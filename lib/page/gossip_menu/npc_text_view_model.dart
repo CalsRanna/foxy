@@ -1,4 +1,5 @@
 import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/entity/npc_text_key.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/npc_text_locale_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -13,9 +14,8 @@ class NpcTextViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<NpcTextRepository>();
   final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
 
-  final creating = signal(false);
-  final currentTextId = signal(0);
   final localeEditingKey = signal<NpcTextLocaleKey?>(null);
+  final persistedKey = signal<NpcTextKey?>(null);
 
   late final idController = registerController(IntFieldController());
   late final text00Controller = registerController(StringFieldController());
@@ -193,10 +193,10 @@ class NpcTextViewModel with FieldControllerMixin {
   Future<void> load(int textId) async {
     if (textId <= 0) return;
     try {
-      currentTextId.value = textId;
       localeEditingKey.value = null;
-      final entity = await _repository.getNpcText(textId);
-      creating.value = entity == null;
+      final key = NpcTextKey(id: textId);
+      final entity = await _repository.getNpcText(key);
+      persistedKey.value = entity == null ? null : key;
       _applyMain(entity ?? NpcTextEntity(id: textId));
       final localeKey = NpcTextLocaleKey(id: textId, locale: 'zhCN');
       final locale = await _localeRepository.getNpcTextLocale(localeKey);
@@ -212,30 +212,33 @@ class NpcTextViewModel with FieldControllerMixin {
     try {
       final entity = _collectMain();
       if (entity.id <= 0) throw StateError('请先保存对话菜单并选择有效文本');
-      if (creating.value) {
-        await _repository.storeNpcText(entity);
-      } else {
-        await _repository.updateNpcText(entity);
-      }
-      creating.value = false;
-      currentTextId.value = entity.id;
-
       final locale = _collectLocale(entity.id);
+      final originalKey = persistedKey.value;
       final originalLocaleKey = localeEditingKey.value;
-      if (_localeHasText(locale)) {
-        if (originalLocaleKey == null) {
-          await _localeRepository.storeNpcTextLocale(locale);
+      final hasLocaleText = _localeHasText(locale);
+      await _repository.laconic.transaction(() async {
+        if (originalKey == null) {
+          await _repository.storeNpcText(entity);
         } else {
-          await _localeRepository.updateNpcTextLocale(
-            originalLocaleKey,
-            locale,
-          );
+          await _repository.updateNpcText(originalKey, entity);
         }
-        localeEditingKey.value = NpcTextLocaleKey.fromEntity(locale);
-      } else if (originalLocaleKey != null) {
-        await _localeRepository.destroyNpcTextLocale(originalLocaleKey);
-        localeEditingKey.value = null;
-      }
+        if (hasLocaleText) {
+          if (originalLocaleKey == null) {
+            await _localeRepository.storeNpcTextLocale(locale);
+          } else {
+            await _localeRepository.updateNpcTextLocale(
+              originalLocaleKey,
+              locale,
+            );
+          }
+        } else if (originalLocaleKey != null) {
+          await _localeRepository.destroyNpcTextLocale(originalLocaleKey);
+        }
+      });
+      persistedKey.value = NpcTextKey.fromEntity(entity);
+      localeEditingKey.value = hasLocaleText
+          ? NpcTextLocaleKey.fromEntity(locale)
+          : null;
       DialogUtil.instance.success('保存成功');
     } catch (error) {
       LoggerUtil.instance.e(error.toString());
