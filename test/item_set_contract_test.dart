@@ -102,9 +102,11 @@ void main() {
       expect(view, contains("'SetThreshold$index'"));
     }
     expect('Row('.allMatches(view), hasLength(12));
+    expect(view, isNot(contains('readOnly: true')));
+    expect(view, contains('viewModel.persistedKey.value?.id'));
   });
 
-  test('Repository 统一校验引用、处理缺失 SkillLine 镜像并保护删除', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final repository = File(
       'lib/repository/item_set_repository.dart',
     ).readAsStringSync();
@@ -112,14 +114,21 @@ void main() {
       'lib/page/item_set/item_set_detail_view_model.dart',
     ).readAsStringSync();
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateItemSetFields(t);'));
-    expect(repository, contains('await _validateReferences(stored, null);'));
-    expect(repository, contains("table: 'item_template'"));
-    expect(repository, contains("table: 'foxy.dbc_spell'"));
-    expect(repository, contains("table: 'foxy.dbc_skill_line'"));
-    expect(repository, contains('requireImportedTable: true'));
-    expect(repository, contains(".where('itemset', id)"));
+    expect(viewModel, contains('validateItemSetFields(candidate);'));
+    expect(repository, contains('ItemSetKey originalKey'));
+    expect(repository, contains('.update(itemSet.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('item_template')")));
+    expect(repository, isNot(contains("table('foxy.dbc_spell')")));
+    expect(repository, isNot(contains("table('foxy.dbc_skill_line')")));
+    expect(repository, isNot(contains("remove('ID')")));
     expect(repository, contains(".orderBy('ID')"));
+    expect(viewModel, contains('signal<ItemSetKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateItemSet(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = ItemSetKey'));
   });
 
   test('DBC definitions 使用 3.3.5.12340 的精确物理格式', () {

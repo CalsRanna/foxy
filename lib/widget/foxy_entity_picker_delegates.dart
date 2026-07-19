@@ -64,7 +64,7 @@ import 'package:foxy/entity/brief_item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_properties_filter_entity.dart';
 import 'package:foxy/entity/brief_item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
-import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
 import 'package:foxy/entity/brief_item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_filter_entity.dart';

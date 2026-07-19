@@ -128,7 +128,7 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: items[row].id);
+            viewModel.navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -138,21 +138,21 @@ class _ItemSetListPageState extends State<ItemSetListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: items[row].id);
+                    viewModel.navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyItemSet(items[row].id);
+                    viewModel.copyItemSet(items[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteItemSet(items[row].id);
+                    viewModel.deleteItemSet(items[row].key);
                   },
                   child: Text('删除'),
                 ),
