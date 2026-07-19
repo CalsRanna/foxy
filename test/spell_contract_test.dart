@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
+import 'package:foxy/entity/spell_area_key.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/entity/spell_bonus_data_key.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
@@ -182,7 +183,16 @@ void main() {
       throwsA(isA<UnsupportedError>()),
     );
     await expectLater(
-      SpellAreaRepository().copySpellArea(1, 1, 0, 0, 0, 2),
+      SpellAreaRepository().copySpellArea(
+        const SpellAreaKey(
+          spell: 1,
+          area: 1,
+          questStart: 0,
+          auraSpell: 0,
+          racemask: 0,
+          gender: 2,
+        ),
+      ),
       throwsA(isA<UnsupportedError>()),
     );
     await expectLater(
