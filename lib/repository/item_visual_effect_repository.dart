@@ -1,17 +1,24 @@
+import 'package:foxy/entity/brief_item_visual_effect_entity.dart';
 import 'package:foxy/entity/item_visual_effect_entity.dart';
 import 'package:foxy/entity/item_visual_effect_filter_entity.dart';
+import 'package:foxy/entity/item_visual_effect_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ItemVisualEffectRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_visual_effects';
 
-  Future<void> copyItemVisualEffect(int id) async {
-    final source = await getItemVisualEffect(id);
-    if (source == null) return;
-    await storeItemVisualEffect(
-      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
-    );
+  Future<ItemVisualEffectKey> copyItemVisualEffect(
+    ItemVisualEffectKey key,
+  ) async {
+    final source = await getItemVisualEffect(key);
+    if (source == null) {
+      throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeItemVisualEffect(copied);
+    return ItemVisualEffectKey.fromEntity(copied);
   }
 
   Future<int> countItemVisualEffects({
@@ -26,17 +33,11 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return ItemVisualEffectEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemVisualEffect(int id) async {
-    final slot0 = await _countSlot('Slot0', id);
-    final slot1 = await _countSlot('Slot1', id);
-    final slot2 = await _countSlot('Slot2', id);
-    final slot3 = await _countSlot('Slot3', id);
-    final slot4 = await _countSlot('Slot4', id);
-    final references = slot0 + slot1 + slot2 + slot3 + slot4;
-    if (references > 0) {
-      throw StateError('物品视觉效果 $id 仍被 $references 个视觉槽引用，不能删除');
+  Future<void> destroyItemVisualEffect(ItemVisualEffectKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefItemVisualEffectEntity>> getBriefItemVisualEffects({
@@ -55,8 +56,10 @@ class ItemVisualEffectRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemVisualEffectEntity?> getItemVisualEffect(int id) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemVisualEffectEntity?> getItemVisualEffect(
+    ItemVisualEffectKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemVisualEffectEntity.fromJson(results.first.toMap());
   }
@@ -68,27 +71,38 @@ class ItemVisualEffectRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveItemVisualEffect(ItemVisualEffectEntity entity) async {
-    final existing = entity.id == 0
-        ? null
-        : await getItemVisualEffect(entity.id);
-    if (existing == null) {
-      await storeItemVisualEffect(entity);
-    } else {
-      await updateItemVisualEffect(entity);
+  Future<void> storeItemVisualEffect(ItemVisualEffectEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('物品视觉效果 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('物品视觉效果 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeItemVisualEffect(ItemVisualEffectEntity entity) async {
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    final stored = entity.copyWith(id: id);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateItemVisualEffect(ItemVisualEffectEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateItemVisualEffect(
+    ItemVisualEffectKey originalKey,
+    ItemVisualEffectEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的物品视觉效果 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -105,7 +119,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return builder;
   }
 
-  Future<int> _countSlot(String column, int id) {
-    return laconic.table('foxy.dbc_item_visuals').where(column, id).count();
+  QueryBuilder _whereKey(QueryBuilder builder, ItemVisualEffectKey key) {
+    return builder.where('ID', key.id);
   }
 }
