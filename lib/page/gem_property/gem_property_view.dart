@@ -7,31 +7,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class GemPropertyView extends StatefulWidget {
-  final int? entry;
-  const GemPropertyView({super.key, this.entry});
+class GemPropertyView extends StatelessWidget {
+  final GemPropertyDetailViewModel viewModel;
 
-  @override
-  State<GemPropertyView> createState() => _GemPropertyViewState();
-}
-
-class _GemPropertyViewState extends State<GemPropertyView> {
-  final viewModel = GetIt.instance.get<GemPropertyDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const GemPropertyView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +21,6 @@ class _GemPropertyViewState extends State<GemPropertyView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final enchantIdInput = FoxyFormItem(

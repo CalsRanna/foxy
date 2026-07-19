@@ -13,9 +13,10 @@ import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/area_table_key.dart' as _i60;
 import 'package:foxy/entity/condition_key.dart' as _i61;
-import 'package:foxy/entity/glyph_property_key.dart' as _i62;
-import 'package:foxy/entity/page_text_key.dart' as _i64;
-import 'package:foxy/entity/smart_script_key.dart' as _i63;
+import 'package:foxy/entity/gem_property_key.dart' as _i62;
+import 'package:foxy/entity/glyph_property_key.dart' as _i63;
+import 'package:foxy/entity/page_text_key.dart' as _i65;
+import 'package:foxy/entity/smart_script_key.dart' as _i64;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -628,11 +629,14 @@ class GemPropertyDetailRoute
     extends _i58.PageRouteInfo<GemPropertyDetailRouteArgs> {
   GemPropertyDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i62.GemPropertyKey? gemPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GemPropertyDetailRoute.name,
-         args: GemPropertyDetailRouteArgs(key: key, id: id),
+         args: GemPropertyDetailRouteArgs(
+           key: key,
+           gemPropertyKey: gemPropertyKey,
+         ),
          initialChildren: children,
        );
 
@@ -644,32 +648,35 @@ class GemPropertyDetailRoute
       final args = data.argsAs<GemPropertyDetailRouteArgs>(
         orElse: () => const GemPropertyDetailRouteArgs(),
       );
-      return _i17.GemPropertyDetailPage(key: args.key, id: args.id);
+      return _i17.GemPropertyDetailPage(
+        key: args.key,
+        gemPropertyKey: args.gemPropertyKey,
+      );
     },
   );
 }
 
 class GemPropertyDetailRouteArgs {
-  const GemPropertyDetailRouteArgs({this.key, this.id});
+  const GemPropertyDetailRouteArgs({this.key, this.gemPropertyKey});
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i62.GemPropertyKey? gemPropertyKey;
 
   @override
   String toString() {
-    return 'GemPropertyDetailRouteArgs{key: $key, id: $id}';
+    return 'GemPropertyDetailRouteArgs{key: $key, gemPropertyKey: $gemPropertyKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! GemPropertyDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && gemPropertyKey == other.gemPropertyKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ gemPropertyKey.hashCode;
 }
 
 /// generated route for
@@ -694,7 +701,7 @@ class GlyphPropertyDetailRoute
     extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
   GlyphPropertyDetailRoute({
     _i59.Key? key,
-    _i62.GlyphPropertyKey? glyphPropertyKey,
+    _i63.GlyphPropertyKey? glyphPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GlyphPropertyDetailRoute.name,
@@ -726,7 +733,7 @@ class GlyphPropertyDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i62.GlyphPropertyKey? glyphPropertyKey;
+  final _i63.GlyphPropertyKey? glyphPropertyKey;
 
   @override
   String toString() {
@@ -1694,7 +1701,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i63.SmartScriptKey? scriptKey,
+    _i64.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1723,7 +1730,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i63.SmartScriptKey? scriptKey;
+  final _i64.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1973,7 +1980,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i64.PageTextKey? pageTextKey,
+    _i65.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2002,7 +2009,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i64.PageTextKey? pageTextKey;
+  final _i65.PageTextKey? pageTextKey;
 
   @override
   String toString() {

@@ -76,38 +76,51 @@ void main() {
     expect(view, isNot(contains('description:')));
   });
 
-  test('Repository 校验写入、保留预分配 ID 并保护物品模板引用', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final repository = File(
       'lib/repository/gem_property_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
       'lib/page/gem_property/gem_property_detail_view_model.dart',
     ).readAsStringSync();
-    expect(repository, contains('gemProperty.id > 0'));
+    expect(repository, contains('gemProperty.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateGemPropertyFields(t);'));
-    expect(repository, contains(".table('item_template')"));
-    expect(repository, contains(".where('GemProperties', id)"));
-    expect(repository, contains('preserveExisting: true'));
+    expect(viewModel, contains('validateGemPropertyFields(candidate);'));
+    expect(repository, contains('GemPropertyKey originalKey'));
+    expect(repository, contains('.update(gemProperty.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('item_template')")));
     expect(
       repository,
-      contains('existing?.enchantId == gemProperty.enchantId'),
+      isNot(contains("table('foxy.dbc_spell_item_enchantment')")),
     );
-    expect(repository, contains('Enchant_ID 引用的法术物品附魔'));
+    expect(repository, isNot(contains("remove('ID')")));
   });
 
-  test('新建保存回填最终 ID 并记录 create 活动', () {
+  test('详情使用 persistedKey 区分增改并在成功后切换身份', () {
     final viewModel = File(
       'lib/page/gem_property/gem_property_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('final isCreate ='));
-    expect(viewModel, contains('t = t.copyWith(id: id);'));
-    expect(
-      viewModel,
-      contains(
-        'isCreate ? ActivityActionType.create : ActivityActionType.update',
-      ),
-    );
+    final page = File(
+      'lib/page/gem_property/gem_property_detail_page.dart',
+    ).readAsStringSync();
+    final view = File(
+      'lib/page/gem_property/gem_property_view.dart',
+    ).readAsStringSync();
+    final list = File(
+      'lib/page/gem_property/gem_property_list_page.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('signal<GemPropertyKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateGemProperty(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = GemPropertyKey'));
+    expect(viewModel, isNot(contains('getGemProperty(candidate.id)')));
+    expect(page, contains('final GemPropertyKey? gemPropertyKey'));
+    expect(page, contains('viewModel.persistedKey.value'));
+    expect(view, isNot(contains('readOnly: true')));
+    expect(list, contains('items[row].key'));
   });
 
   test('DBC definition 使用 3.3.5.12340 的 5 列物理格式', () {

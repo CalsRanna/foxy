@@ -128,7 +128,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: items[row].id);
+            viewModel.navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -138,21 +138,21 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: items[row].id);
+                    viewModel.navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyGemProperty(items[row].id);
+                    viewModel.copyGemProperty(items[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteGemProperty(items[row].id);
+                    viewModel.deleteGemProperty(items[row].key);
                   },
                   child: Text('删除'),
                 ),
