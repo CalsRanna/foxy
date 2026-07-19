@@ -1,6 +1,9 @@
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_category_filter_entity.dart';
+import 'package:foxy/entity/achievement_category_key.dart';
+import 'package:foxy/entity/brief_achievement_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -12,10 +15,16 @@ class AchievementCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyAchievementCategory(int id) async {
-    final source = await getAchievementCategory(id);
-    if (source == null) return;
-    await storeAchievementCategory(source.copyWith(id: await _getNextId()));
+  Future<AchievementCategoryKey> copyAchievementCategory(
+    AchievementCategoryKey key,
+  ) async {
+    final source = await getAchievementCategory(key);
+    if (source == null) {
+      throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeAchievementCategory(copied);
+    return AchievementCategoryKey.fromEntity(copied);
   }
 
   Future<int> countAchievementCategories({
@@ -26,19 +35,11 @@ class AchievementCategoryRepository
     return AchievementCategoryEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievementCategory(int id) async {
-    final childCount = await laconic.table(_table).where('Parent', id).count();
-    if (childCount > 0) {
-      throw StateError('成就分类 $id 仍被 $childCount 个子分类引用，不能删除');
+  Future<void> destroyAchievementCategory(AchievementCategoryKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
     }
-    final achievementCount = await laconic
-        .table('foxy.dbc_achievement')
-        .where('Category', id)
-        .count();
-    if (achievementCount > 0) {
-      throw StateError('成就分类 $id 仍被 $achievementCount 个成就引用，不能删除');
-    }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<AchievementCategoryEntity>> getAchievementCategories() async {
@@ -48,8 +49,10 @@ class AchievementCategoryRepository
         .toList();
   }
 
-  Future<AchievementCategoryEntity?> getAchievementCategory(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<AchievementCategoryEntity?> getAchievementCategory(
+    AchievementCategoryKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (rows.isEmpty) return null;
     return AchievementCategoryEntity.fromJson(rows.first.toMap());
   }
@@ -76,44 +79,46 @@ class AchievementCategoryRepository
         .toList();
   }
 
-  Future<void> saveAchievementCategory(
-    AchievementCategoryEntity category,
-  ) async {
-    if (category.id == 0 || await getAchievementCategory(category.id) == null) {
-      await storeAchievementCategory(category);
-      return;
-    }
-    await updateAchievementCategory(category);
-  }
-
   Future<void> saveAchievementCategoryLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeAchievementCategory(
+  Future<void> storeAchievementCategory(
     AchievementCategoryEntity category,
   ) async {
-    final stored = category.id > 0
-        ? category
-        : category.copyWith(id: await _getNextId());
-    await _validateParent(stored.parent);
-    await _validateNoCycle(stored.id, stored.parent);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return stored.id;
+    if (category.id <= 0) {
+      throw StateError('成就分类 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([category.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('成就分类 ${category.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateAchievementCategory(
+    AchievementCategoryKey originalKey,
     AchievementCategoryEntity category,
   ) async {
-    if (await getAchievementCategory(category.id) == null) {
-      throw StateError('成就分类 ${category.id} 不存在');
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(category.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的成就分类 ID 已存在，无法保存');
+      }
+      rethrow;
     }
-    await _validateParent(category.parent);
-    await _validateNoCycle(category.id, category.parent);
-    final json = category.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', category.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -140,28 +145,7 @@ class AchievementCategoryRepository
     return id;
   }
 
-  Future<void> _validateNoCycle(int id, int firstParent) async {
-    var current = firstParent;
-    final visited = <int>{id};
-    while (current != -1) {
-      if (!visited.add(current)) {
-        throw ArgumentError('Parent 形成循环引用');
-      }
-      final rows = await laconic
-          .table(_table)
-          .select(['Parent'])
-          .where('ID', current)
-          .limit(1)
-          .get();
-      if (rows.isEmpty) return;
-      current = rows.first.toMap()['Parent'] as int? ?? -1;
-    }
-  }
-
-  Future<void> _validateParent(int parent) async {
-    if (parent == -1) return;
-    if (await getAchievementCategory(parent) == null) {
-      throw ArgumentError.value(parent, 'Parent', '引用的成就分类不存在');
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, AchievementCategoryKey key) {
+    return builder.where('ID', key.id);
   }
 }
