@@ -8,7 +8,7 @@ import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_category_filter_entity.dart';
 import 'package:foxy/entity/brief_broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
-import 'package:foxy/entity/char_title_entity.dart';
+import 'package:foxy/entity/brief_char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
 import 'package:foxy/entity/brief_cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';

@@ -1,29 +1,3 @@
-/// 称号列表/Picker 展示模型
-class BriefCharTitleEntity {
-  final int id;
-  final String nameLangZhCN;
-
-  const BriefCharTitleEntity({this.id = 0, this.nameLangZhCN = ''});
-
-  factory BriefCharTitleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCharTitleEntity(
-      id: json['ID'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
-
-  BriefCharTitleEntity copyWith({int? id, String? nameLangZhCN}) {
-    return BriefCharTitleEntity(
-      id: id ?? this.id,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'Name_lang_zhCN': nameLangZhCN};
-  }
-}
-
 class CharTitleEntity {
   final int id;
   final int conditionId;
