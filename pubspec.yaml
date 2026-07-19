@@ -12,8 +12,9 @@ dependencies:
 
   auto_route: ^10.2.0
   get_it: ^9.0.5
-  laconic: ^2.3.0
-  laconic_mysql: ^1.3.2
+  laconic: ^3.0.0
+  laconic_mysql: ^2.0.0
+  mysql_client: ^0.0.27
   logger: ^2.4.0
   lucide_icons_flutter: ^3.1.14
   package_info_plus: ^9.0.0
