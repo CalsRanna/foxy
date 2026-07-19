@@ -12,6 +12,7 @@
 import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/condition_key.dart' as _i60;
+import 'package:foxy/entity/smart_script_key.dart' as _i61;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1688,20 +1689,11 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    int? entryOrGuid,
-    int? sourceType,
-    int? id,
-    int? link,
+    _i61.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
-         args: SmartScriptDetailRouteArgs(
-           key: key,
-           entryOrGuid: entryOrGuid,
-           sourceType: sourceType,
-           id: id,
-           link: link,
-         ),
+         args: SmartScriptDetailRouteArgs(key: key, scriptKey: scriptKey),
          initialChildren: children,
        );
 
@@ -1715,57 +1707,33 @@ class SmartScriptDetailRoute
       );
       return _i48.SmartScriptDetailPage(
         key: args.key,
-        entryOrGuid: args.entryOrGuid,
-        sourceType: args.sourceType,
-        id: args.id,
-        link: args.link,
+        scriptKey: args.scriptKey,
       );
     },
   );
 }
 
 class SmartScriptDetailRouteArgs {
-  const SmartScriptDetailRouteArgs({
-    this.key,
-    this.entryOrGuid,
-    this.sourceType,
-    this.id,
-    this.link,
-  });
+  const SmartScriptDetailRouteArgs({this.key, this.scriptKey});
 
   final _i59.Key? key;
 
-  final int? entryOrGuid;
-
-  final int? sourceType;
-
-  final int? id;
-
-  final int? link;
+  final _i61.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
-    return 'SmartScriptDetailRouteArgs{key: $key, entryOrGuid: $entryOrGuid, sourceType: $sourceType, id: $id, link: $link}';
+    return 'SmartScriptDetailRouteArgs{key: $key, scriptKey: $scriptKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! SmartScriptDetailRouteArgs) return false;
-    return key == other.key &&
-        entryOrGuid == other.entryOrGuid &&
-        sourceType == other.sourceType &&
-        id == other.id &&
-        link == other.link;
+    return key == other.key && scriptKey == other.scriptKey;
   }
 
   @override
-  int get hashCode =>
-      key.hashCode ^
-      entryOrGuid.hashCode ^
-      sourceType.hashCode ^
-      id.hashCode ^
-      link.hashCode;
+  int get hashCode => key.hashCode ^ scriptKey.hashCode;
 }
 
 /// generated route for

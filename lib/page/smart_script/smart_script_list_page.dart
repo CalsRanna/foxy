@@ -162,12 +162,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           },
           onRowDoubleTap: (row) {
             final s = templates[row];
-            viewModel.navigateToDetail(
-              entryOrGuid: s.entryOrGuid,
-              sourceType: s.sourceType,
-              id: s.id,
-              link: s.link,
-            );
+            viewModel.navigateToDetail(key: s.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final s = templates[row];
@@ -178,36 +173,21 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      entryOrGuid: s.entryOrGuid,
-                      sourceType: s.sourceType,
-                      id: s.id,
-                      link: s.link,
-                    );
+                    viewModel.navigateToDetail(key: s.key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copySmartScript(
-                      s.entryOrGuid,
-                      s.sourceType,
-                      s.id,
-                      s.link,
-                    );
+                    viewModel.copySmartScript(s.key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteSmartScript(
-                      s.entryOrGuid,
-                      s.sourceType,
-                      s.id,
-                      s.link,
-                    );
+                    viewModel.deleteSmartScript(s.key);
                   },
                   child: Text('删除'),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
+import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -20,12 +21,9 @@ class SmartScriptDetailViewModel
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
+  final persistedKey = signal<SmartScriptKey?>(null);
   final script = signal(SmartScriptEntity());
   final isNew = signal(true);
-  int? _origEntryOrGuid;
-  int? _origSourceType;
-  int? _origId;
-  int? _origLink;
 
   late final entryOrGuidController = registerController(IntFieldController());
   late final sourceTypeController = registerController(IntFieldController());
@@ -68,43 +66,26 @@ class SmartScriptDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({
-    int? entryOrGuid,
-    int? sourceType,
-    int? id,
-    int? link,
-  }) async {
+  Future<void> initSignals({SmartScriptKey? key}) async {
     try {
-      if (entryOrGuid == null ||
-          sourceType == null ||
-          id == null ||
-          link == null) {
+      if (key == null) {
         isNew.value = true;
+        persistedKey.value = null;
         final blank = await _repository.createSmartScript();
         script.value = blank;
         _initControllers(blank);
         return;
       }
-      _origEntryOrGuid = entryOrGuid;
-      _origSourceType = sourceType;
-      _origId = id;
-      _origLink = link;
+      persistedKey.value = key;
       isNew.value = false;
-      final result = await _repository.getSmartScript(
-        entryOrGuid,
-        sourceType,
-        id,
-        link,
-      );
-      if (result == null) return;
+      final result = await _repository.getSmartScript(key);
+      if (result == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
       script.value = result;
       _initControllers(result);
     } catch (e, s) {
-      LoggerUtil.instance.e(
-        '加载脚本(entryOrGuid=$entryOrGuid, id=$id)失败',
-        error: e,
-        stackTrace: s,
-      );
+      LoggerUtil.instance.e('加载脚本(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -112,36 +93,29 @@ class SmartScriptDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateSmartScriptFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeSmartScript(candidate);
+    } else {
+      await _repository.updateSmartScript(originalKey, candidate);
+    }
+    final newKey = SmartScriptKey.fromEntity(candidate);
+    persistedKey.value = newKey;
+    isNew.value = false;
+    script.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(newKey));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      final action = isNew.value
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (isNew.value) {
-        final nextId = await _repository.nextIdFor(t.entryOrGuid, t.sourceType);
-        t = t.copyWith(id: nextId);
-        idController.init(nextId);
-        validateSmartScriptFields(t);
-        await _repository.storeSmartScript(t);
-        _origEntryOrGuid = t.entryOrGuid;
-        _origSourceType = t.sourceType;
-        _origId = t.id;
-        _origLink = t.link;
-        isNew.value = false;
-        script.value = t;
-      } else {
-        validateSmartScriptFields(t);
-        await _repository.updateSmartScript(
-          _origEntryOrGuid!,
-          _origSourceType!,
-          _origId!,
-          _origLink!,
-          t,
-        );
-        script.value = t;
-      }
-      _logActivity(action, t);
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('脚本数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -236,4 +210,7 @@ class SmartScriptDetailViewModel
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
+
+  String _labelFor(SmartScriptKey key) =>
+      '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
 }

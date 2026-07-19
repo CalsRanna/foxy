@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/smart_script_entity.dart';
+import 'package:foxy/entity/brief_smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
+import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -25,21 +26,16 @@ class SmartScriptListViewModel with FieldControllerMixin {
   final scripts = signal(<BriefSmartScriptEntity>[]);
   final total = signal(0);
 
-  Future<void> copySmartScript(
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) async {
+  Future<void> copySmartScript(SmartScriptKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制该脚本行（entryorguid=$entryOrGuid, id=$id）？',
+        description: '是否复制该脚本行（entryorguid=${key.entryOrGuid}, id=${key.id}）？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copySmartScript(entryOrGuid, sourceType, id, link);
-      _logActivity(ActivityActionType.copy, entryOrGuid, sourceType, id, link);
+      await _repository.copySmartScript(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -48,28 +44,18 @@ class SmartScriptListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteSmartScript(
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) async {
+  Future<void> deleteSmartScript(SmartScriptKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除脚本行（entryorguid=$entryOrGuid, id=$id）？此操作不可撤销。',
+        description:
+            '是否删除脚本行（entryorguid=${key.entryOrGuid}, id=${key.id}）？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroySmartScript(entryOrGuid, sourceType, id, link);
-      _logActivity(
-        ActivityActionType.delete,
-        entryOrGuid,
-        sourceType,
-        id,
-        link,
-      );
+      await _repository.destroySmartScript(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -98,23 +84,14 @@ class SmartScriptListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({
-    int? entryOrGuid,
-    int? sourceType,
-    int? id,
-    int? link,
-  }) {
+  void navigateToDetail({SmartScriptKey? key}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
-    final isNew = entryOrGuid == null;
-    final label = isNew ? '新建脚本' : '脚本 $entryOrGuid/$sourceType/$id/$link';
+    final label = key == null
+        ? '新建脚本'
+        : '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
     routerFacade.navigateToDetail(
       label: label,
-      route: SmartScriptDetailRoute(
-        entryOrGuid: entryOrGuid,
-        sourceType: sourceType,
-        id: id,
-        link: link,
-      ),
+      route: SmartScriptDetailRoute(scriptKey: key),
       parentMenu: RouterMenu.smartScript,
     );
   }
@@ -143,29 +120,15 @@ class SmartScriptListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(
-    ActivityActionType action,
-    int entryOrGuid,
-    int sourceType,
-    int id,
-    int link,
-  ) {
+  void _logActivity(ActivityActionType action, SmartScriptKey key) {
     final templates = scripts.value;
-    final template = templates
-        .where(
-          (t) =>
-              t.entryOrGuid == entryOrGuid &&
-              t.sourceType == sourceType &&
-              t.id == id &&
-              t.link == link,
-        )
-        .firstOrNull;
+    final template = templates.where((t) => t.key == key).firstOrNull;
     final name = template?.comment ?? '';
     final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
       entityName:
-          'SmartScript $entryOrGuid/$sourceType/$id/$link'
+          'SmartScript ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}'
           '${name.isEmpty ? '' : ' - $name'}',
       createdAt: DateTime.now(),
     );
