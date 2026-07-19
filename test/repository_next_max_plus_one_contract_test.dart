@@ -31,7 +31,6 @@ void main() {
       'lib/repository/creature_equip_template_repository.dart',
       'lib/repository/creature_model_info_repository.dart',
       'lib/repository/creature_quest_item_repository.dart',
-      'lib/repository/waypoint_data_repository.dart',
     ];
 
     for (final path in repositoryPaths) {
