@@ -52,6 +52,7 @@ import 'package:foxy/entity/holiday_entity.dart';
 import 'package:foxy/entity/holiday_filter_entity.dart';
 import 'package:foxy/entity/brief_item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_filter_entity.dart';
+import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/entity/brief_item_extended_cost_entity.dart';
