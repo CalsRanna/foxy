@@ -14,7 +14,7 @@ class VehicleRepository with RepositoryMixin {
     if (source == null) {
       throw StateError('原载具不存在，可能已被其他操作修改或删除');
     }
-    final copied = source.copyWith(id: await _getNextId());
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeVehicle(copied);
     return VehicleKey.fromEntity(copied);
   }
@@ -26,7 +26,7 @@ class VehicleRepository with RepositoryMixin {
   }
 
   Future<VehicleEntity> createVehicle() async {
-    return VehicleEntity(id: await _getNextId());
+    return VehicleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyVehicle(VehicleKey key) async {
@@ -102,8 +102,6 @@ class VehicleRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _whereKey(QueryBuilder builder, VehicleKey key) {
     return builder.where('ID', key.id);
