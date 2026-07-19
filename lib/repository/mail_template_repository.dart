@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_mail_template_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/mail_template_filter_entity.dart';
+import 'package:foxy/entity/mail_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,12 +14,17 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyMailTemplate(int id) async {
-    final source = await getMailTemplate(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<MailTemplateKey> copyMailTemplate(MailTemplateKey key) async {
+    final source = await getMailTemplate(key);
+    if (source == null) {
+      throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
+    }
+    final copied = MailTemplateEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeMailTemplate(copied);
+    return MailTemplateKey.fromEntity(copied);
   }
 
   Future<int> countMailTemplates({MailTemplateFilterEntity? filter}) {
@@ -27,8 +35,11 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return MailTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyMailTemplate(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyMailTemplate(MailTemplateKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefMailTemplateEntity>> getBriefMailTemplates({
@@ -51,8 +62,8 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<MailTemplateEntity?> getMailTemplate(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<MailTemplateEntity?> getMailTemplate(MailTemplateKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : MailTemplateEntity.fromJson(rows.first.toMap());
@@ -68,33 +79,44 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return rows.map((row) => MailTemplateEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveMailTemplate(MailTemplateEntity template) async {
-    if (await getMailTemplate(template.id) == null) {
-      await storeMailTemplate(template);
-    } else {
-      await updateMailTemplate(template);
-    }
-  }
-
   Future<void> saveMailTemplateLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeMailTemplate(MailTemplateEntity template) async {
-    final json = template.toJson();
-    final id = template.id > 0
-        ? template.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
+  Future<void> storeMailTemplate(MailTemplateEntity template) async {
+    if (template.id <= 0) {
+      throw StateError('邮件模板 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([template.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('邮件模板 ${template.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateMailTemplate(MailTemplateEntity template) async {
-    final json = template.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', template.id).update(json);
+  Future<void> updateMailTemplate(
+    MailTemplateKey originalKey,
+    MailTemplateEntity template,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(template.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的邮件模板 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -111,5 +133,9 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, MailTemplateKey key) {
+    return builder.where('ID', key.id);
   }
 }

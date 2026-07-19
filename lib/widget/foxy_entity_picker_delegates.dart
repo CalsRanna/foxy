@@ -81,7 +81,7 @@ import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
-import 'package:foxy/entity/mail_template_entity.dart';
+import 'package:foxy/entity/brief_mail_template_entity.dart';
 import 'package:foxy/entity/mail_template_filter_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
