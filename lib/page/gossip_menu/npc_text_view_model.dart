@@ -1,5 +1,6 @@
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
+import 'package:foxy/entity/npc_text_locale_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -14,7 +15,7 @@ class NpcTextViewModel with FieldControllerMixin {
 
   final creating = signal(false);
   final currentTextId = signal(0);
-  final localeExists = signal(false);
+  final localeEditingKey = signal<NpcTextLocaleKey?>(null);
 
   late final idController = registerController(IntFieldController());
   late final text00Controller = registerController(StringFieldController());
@@ -193,11 +194,13 @@ class NpcTextViewModel with FieldControllerMixin {
     if (textId <= 0) return;
     try {
       currentTextId.value = textId;
+      localeEditingKey.value = null;
       final entity = await _repository.getNpcText(textId);
       creating.value = entity == null;
       _applyMain(entity ?? NpcTextEntity(id: textId));
-      final locale = await _localeRepository.getNpcTextLocale(textId, 'zhCN');
-      localeExists.value = locale != null;
+      final localeKey = NpcTextLocaleKey(id: textId, locale: 'zhCN');
+      final locale = await _localeRepository.getNpcTextLocale(localeKey);
+      localeEditingKey.value = locale == null ? null : localeKey;
       _applyLocale(locale ?? NpcTextLocaleEntity(id: textId));
     } catch (error) {
       LoggerUtil.instance.e('加载 NPC 文本失败: $error');
@@ -218,12 +221,20 @@ class NpcTextViewModel with FieldControllerMixin {
       currentTextId.value = entity.id;
 
       final locale = _collectLocale(entity.id);
+      final originalLocaleKey = localeEditingKey.value;
       if (_localeHasText(locale)) {
-        await _localeRepository.saveNpcTextLocale(locale);
-        localeExists.value = true;
-      } else if (localeExists.value) {
-        await _localeRepository.destroyNpcTextLocale(entity.id, 'zhCN');
-        localeExists.value = false;
+        if (originalLocaleKey == null) {
+          await _localeRepository.storeNpcTextLocale(locale);
+        } else {
+          await _localeRepository.updateNpcTextLocale(
+            originalLocaleKey,
+            locale,
+          );
+        }
+        localeEditingKey.value = NpcTextLocaleKey.fromEntity(locale);
+      } else if (originalLocaleKey != null) {
+        await _localeRepository.destroyNpcTextLocale(originalLocaleKey);
+        localeEditingKey.value = null;
       }
       DialogUtil.instance.success('保存成功');
     } catch (error) {
