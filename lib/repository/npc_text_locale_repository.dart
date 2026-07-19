@@ -1,11 +1,16 @@
+import 'package:foxy/entity/brief_npc_text_locale_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
+import 'package:foxy/entity/npc_text_locale_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class NpcTextLocaleRepository with RepositoryMixin {
   static const _table = 'npc_text_locale';
+  static const primaryKeyColumns = {'ID', 'Locale'};
 
-  Future<int> countNpcTextLocales() async {
-    return laconic.table(_table).count();
+  Future<int> countNpcTextLocales({required int id}) async {
+    return laconic.table(_table).where('ID', id).count();
   }
 
   Future<NpcTextLocaleEntity> createNpcTextLocale(
@@ -15,22 +20,23 @@ class NpcTextLocaleRepository with RepositoryMixin {
     return NpcTextLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> destroyNpcTextLocale(int id, String locale) async {
-    await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('Locale', locale)
-        .delete();
+  Future<void> destroyNpcTextLocale(NpcTextLocaleKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原 NPC 文本本地化记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefNpcTextLocaleEntity>> getBriefNpcTextLocales({
+    required int id,
     int page = 1,
   }) async {
     final offset = (page - 1) * kPageSize;
     final results = await laconic
         .table(_table)
         .select(['ID', 'Locale'])
-        .orderBy('ID')
+        .where('ID', id)
+        .orderBy('Locale')
         .limit(kPageSize)
         .offset(offset)
         .get();
@@ -39,13 +45,8 @@ class NpcTextLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<NpcTextLocaleEntity?> getNpcTextLocale(int id, String locale) async {
-    var results = await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('Locale', locale)
-        .limit(1)
-        .get();
+  Future<NpcTextLocaleEntity?> getNpcTextLocale(NpcTextLocaleKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTextLocaleEntity.fromJson(results.first.toMap());
   }
@@ -55,52 +56,38 @@ class NpcTextLocaleRepository with RepositoryMixin {
     return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<List<NpcTextLocaleEntity>> getNpcTextLocales(int id) async {
-    final results = await laconic.table(_table).where('ID', id).get();
-    return results.map((e) => NpcTextLocaleEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> saveNpcTextLocale(NpcTextLocaleEntity model) async {
-    final existing = await getNpcTextLocale(model.id, model.locale);
-    if (existing == null) {
-      await storeNpcTextLocale(model);
-    } else {
-      await updateNpcTextLocale(model.id, model.locale, model);
+  Future<void> storeNpcTextLocale(NpcTextLocaleEntity model) async {
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('NPC 文本本地化主键已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<void> saveNpcTextLocales(
-    int id,
-    List<NpcTextLocaleEntity> locales,
-  ) async {
-    await laconic.transaction(() async {
-      await laconic.table(_table).where('ID', id).delete();
-      if (locales.isEmpty) return;
-      final jsons = locales.map((e) {
-        final json = e.toJson();
-        json['ID'] = id;
-        return json;
-      }).toList();
-      await laconic.table(_table).insert(jsons);
-    });
-  }
-
-  Future<void> storeNpcTextLocale(NpcTextLocaleEntity model) async {
-    await laconic.table(_table).insert([model.toJson()]);
-  }
-
   Future<void> updateNpcTextLocale(
-    int id,
-    String locale,
+    NpcTextLocaleKey originalKey,
     NpcTextLocaleEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('ID');
-    json.remove('Locale');
-    await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('Locale', locale)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原 NPC 文本本地化记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的 NPC 文本本地化主键已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, NpcTextLocaleKey key) {
+    return builder.where('ID', key.id).where('Locale', key.locale);
   }
 }
