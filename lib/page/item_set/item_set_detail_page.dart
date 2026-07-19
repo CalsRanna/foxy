@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
 import 'package:foxy/page/item_set/item_set_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ItemSetDetailPage extends StatefulWidget {
-  final ItemSetKey? itemSetKey;
+  final int? itemSetKey;
 
   const ItemSetDetailPage({super.key, this.itemSetKey});
 
@@ -41,7 +40,7 @@ class _ItemSetDetailPageState extends State<ItemSetDetailPage> {
           ? '新建套装'
           : entity.nameLangZhCN.isNotEmpty
           ? entity.nameLangZhCN
-          : '套装 #${key.id}';
+          : '套装 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
-import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
 
-  Future<CreatureTemplateKey> copyCreatureTemplate(
-    CreatureTemplateKey key,
-  ) async {
+  Future<int> copyCreatureTemplate(int key) async {
     final source = await getCreatureTemplate(key);
     if (source == null) {
       throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
@@ -20,7 +17,7 @@ class CreatureTemplateRepository with RepositoryMixin {
       entry: await nextMaxPlusOne(_table, 'entry'),
     );
     await storeCreatureTemplate(copied);
-    return CreatureTemplateKey.fromEntity(copied);
+    return copied.entry;
   }
 
   Future<int> countCreatureTemplates({
@@ -60,7 +57,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
-  Future<void> destroyCreatureTemplate(CreatureTemplateKey key) async {
+  Future<void> destroyCreatureTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
@@ -97,9 +94,7 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureTemplateEntity?> getCreatureTemplate(
-    CreatureTemplateKey key,
-  ) async {
+  Future<CreatureTemplateEntity?> getCreatureTemplate(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateEntity.fromJson(results.first.toMap());
@@ -129,7 +124,7 @@ class CreatureTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureTemplate(
-    CreatureTemplateKey originalKey,
+    int originalKey,
     CreatureTemplateEntity template,
   ) async {
     final json = template.toJson();
@@ -197,7 +192,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

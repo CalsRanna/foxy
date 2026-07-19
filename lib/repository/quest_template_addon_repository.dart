@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_quest_template_addon_entity.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
-import 'package:foxy/entity/quest_template_addon_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,16 +7,14 @@ import 'package:laconic/laconic.dart';
 class QuestTemplateAddonRepository with RepositoryMixin {
   static const _table = 'quest_template_addon';
 
-  Future<QuestTemplateAddonKey> copyQuestTemplateAddon(
-    QuestTemplateAddonKey key,
-  ) async {
+  Future<int> copyQuestTemplateAddon(int key) async {
     final source = await getQuestTemplateAddon(key);
     if (source == null) {
       throw StateError('原任务模板附加数据不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeQuestTemplateAddon(copied);
-    return QuestTemplateAddonKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestTemplateAddons() {
@@ -30,7 +27,7 @@ class QuestTemplateAddonRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyQuestTemplateAddon(QuestTemplateAddonKey key) async {
+  Future<void> destroyQuestTemplateAddon(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务模板附加数据不存在，可能已被其他操作修改或删除');
@@ -58,9 +55,7 @@ class QuestTemplateAddonRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(
-    QuestTemplateAddonKey key,
-  ) async {
+  Future<QuestTemplateAddonEntity?> getQuestTemplateAddon(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateAddonEntity.fromJson(results.first.toMap());
@@ -88,7 +83,7 @@ class QuestTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestTemplateAddon(
-    QuestTemplateAddonKey originalKey,
+    int originalKey,
     QuestTemplateAddonEntity model,
   ) async {
     try {
@@ -107,7 +102,7 @@ class QuestTemplateAddonRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestTemplateAddonKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

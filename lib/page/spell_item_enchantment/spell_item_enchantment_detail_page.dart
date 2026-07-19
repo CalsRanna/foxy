@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_item_enchantment_key.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class SpellItemEnchantmentDetailPage extends StatefulWidget {
-  final SpellItemEnchantmentKey? spellItemEnchantmentKey;
+  final int? spellItemEnchantmentKey;
 
   const SpellItemEnchantmentDetailPage({
     super.key,
@@ -46,7 +45,7 @@ class _SpellItemEnchantmentDetailPageState
           ? '新建法术附魔'
           : entity.nameLangZhCN.isNotEmpty
           ? entity.nameLangZhCN
-          : '法术附魔 #${key.id}';
+          : '法术附魔 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

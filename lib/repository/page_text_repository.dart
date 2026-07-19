@@ -2,7 +2,6 @@ import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
-import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,7 +10,7 @@ class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
-  Future<PageTextKey> copyPageText(PageTextKey key) async {
+  Future<int> copyPageText(int key) async {
     final source = await getPageText(key);
     if (source == null) {
       throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
@@ -20,7 +19,7 @@ class PageTextRepository with RepositoryMixin {
     final copied = source.copyWith(id: nextId);
     await _validateNextPage(copied.id, copied.nextPageId);
     await storePageText(copied);
-    return PageTextKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
@@ -49,7 +48,7 @@ class PageTextRepository with RepositoryMixin {
     return PageTextEntity(id: await _getNextId());
   }
 
-  Future<void> destroyPageText(PageTextKey key) async {
+  Future<void> destroyPageText(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
@@ -82,7 +81,7 @@ class PageTextRepository with RepositoryMixin {
     return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<PageTextEntity?> getPageText(PageTextKey key) async {
+  Future<PageTextEntity?> getPageText(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PageTextEntity.fromJson(results.first.toMap());
@@ -108,10 +107,7 @@ class PageTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updatePageText(
-    PageTextKey originalKey,
-    PageTextEntity pageText,
-  ) async {
+  Future<void> updatePageText(int originalKey, PageTextEntity pageText) async {
     await _validateNextPage(pageText.id, pageText.nextPageId);
     try {
       final matchedRows = await _whereKey(
@@ -171,7 +167,7 @@ class PageTextRepository with RepositoryMixin {
       if (!visited.add(current)) {
         throw StateError('NextPageID 形成循环引用');
       }
-      final page = await getPageText(PageTextKey(id: current));
+      final page = await getPageText(current);
       if (page == null) {
         throw StateError('NextPageID 引用的页面文本 $current 不存在');
       }
@@ -179,7 +175,7 @@ class PageTextRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, PageTextKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

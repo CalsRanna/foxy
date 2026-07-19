@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_purchase_group_key.dart';
-
 class BriefItemPurchaseGroupEntity {
   final int id;
   final String nameLangZhCN;
@@ -13,5 +11,5 @@ class BriefItemPurchaseGroupEntity {
     );
   }
 
-  ItemPurchaseGroupKey get key => ItemPurchaseGroupKey(id: id);
+  int get key => id;
 }

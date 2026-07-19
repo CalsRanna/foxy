@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/area_table_key.dart';
 import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
 import 'package:foxy/page/area_table/area_table_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class AreaTableDetailPage extends StatefulWidget {
-  final AreaTableKey? areaTableKey;
+  final int? areaTableKey;
 
   const AreaTableDetailPage({super.key, this.areaTableKey});
 
@@ -41,7 +40,7 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
           ? '新建区域'
           : entity.areaNameLangZhCN.isNotEmpty
           ? entity.areaNameLangZhCN
-          : '区域 #${key.id}';
+          : '区域 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

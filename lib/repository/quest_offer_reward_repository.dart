@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_quest_offer_reward_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
-import 'package:foxy/entity/quest_offer_reward_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,16 +7,14 @@ import 'package:laconic/laconic.dart';
 class QuestOfferRewardRepository with RepositoryMixin {
   static const _table = 'quest_offer_reward';
 
-  Future<QuestOfferRewardKey> copyQuestOfferReward(
-    QuestOfferRewardKey key,
-  ) async {
+  Future<int> copyQuestOfferReward(int key) async {
     final source = await getQuestOfferReward(key);
     if (source == null) {
       throw StateError('原任务奖励数据不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeQuestOfferReward(copied);
-    return QuestOfferRewardKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestOfferRewards() {
@@ -28,7 +25,7 @@ class QuestOfferRewardRepository with RepositoryMixin {
     return QuestOfferRewardEntity(id: id ?? await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyQuestOfferReward(QuestOfferRewardKey key) async {
+  Future<void> destroyQuestOfferReward(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务奖励数据不存在，可能已被其他操作修改或删除');
@@ -50,9 +47,7 @@ class QuestOfferRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestOfferRewardEntity?> getQuestOfferReward(
-    QuestOfferRewardKey key,
-  ) async {
+  Future<QuestOfferRewardEntity?> getQuestOfferReward(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestOfferRewardEntity.fromJson(results.first.toMap());
@@ -80,7 +75,7 @@ class QuestOfferRewardRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestOfferReward(
-    QuestOfferRewardKey originalKey,
+    int originalKey,
     QuestOfferRewardEntity model,
   ) async {
     try {
@@ -99,7 +94,7 @@ class QuestOfferRewardRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestOfferRewardKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

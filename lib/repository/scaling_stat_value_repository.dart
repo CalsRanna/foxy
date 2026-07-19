@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
-import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class ScalingStatValueRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
-  Future<ScalingStatValueKey> copyScalingStatValue(
-    ScalingStatValueKey key,
-  ) async {
+  Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
     if (source == null) {
       throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class ScalingStatValueRepository with RepositoryMixin {
       charlevel: await _getNextCharlevel(),
     );
     await storeScalingStatValue(copied);
-    return ScalingStatValueKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countScalingStatValues({ScalingStatValueFilterEntity? filter}) {
@@ -35,7 +32,7 @@ class ScalingStatValueRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyScalingStatValue(ScalingStatValueKey key) async {
+  Future<void> destroyScalingStatValue(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
@@ -68,9 +65,7 @@ class ScalingStatValueRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ScalingStatValueEntity?> getScalingStatValue(
-    ScalingStatValueKey key,
-  ) async {
+  Future<ScalingStatValueEntity?> getScalingStatValue(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -104,7 +99,7 @@ class ScalingStatValueRepository with RepositoryMixin {
   }
 
   Future<void> updateScalingStatValue(
-    ScalingStatValueKey originalKey,
+    int originalKey,
     ScalingStatValueEntity value,
   ) async {
     await _validateUniqueCharlevel(value, originalKey: originalKey);
@@ -154,11 +149,11 @@ class ScalingStatValueRepository with RepositoryMixin {
 
   Future<void> _validateUniqueCharlevel(
     ScalingStatValueEntity value, {
-    ScalingStatValueKey? originalKey,
+    int? originalKey,
   }) async {
     var builder = laconic.table(_table).where('Charlevel', value.charlevel);
     if (originalKey != null) {
-      builder = builder.where('ID', originalKey.id, comparator: '!=');
+      builder = builder.where('ID', originalKey, comparator: '!=');
     }
     final duplicates = await builder.count();
     if (duplicates > 0) {
@@ -166,7 +161,7 @@ class ScalingStatValueRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ScalingStatValueKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/achievement_key.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
 import 'package:foxy/page/achievement/achievement_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class AchievementDetailPage extends StatefulWidget {
-  final AchievementKey? achievementKey;
+  final int? achievementKey;
 
   const AchievementDetailPage({super.key, this.achievementKey});
 
@@ -41,7 +40,7 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
           ? '新建成就'
           : entity.titleLangZhCN.isNotEmpty
           ? entity.titleLangZhCN
-          : '成就 #${key.id}';
+          : '成就 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_key.dart';
-
 /// 法术（技能）简要模型 - 列表展示用
 class BriefSpellEntity {
   final int id;
@@ -50,5 +48,5 @@ class BriefSpellEntity {
   String get displaySubtext =>
       localeSubtext.isNotEmpty ? localeSubtext : subtext;
 
-  SpellKey get key => SpellKey(id: id);
+  int get key => id;
 }

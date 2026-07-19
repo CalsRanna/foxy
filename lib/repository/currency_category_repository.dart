@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_currency_category_entity.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
 import 'package:foxy/entity/currency_category_filter_entity.dart';
-import 'package:foxy/entity/currency_category_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
@@ -15,16 +14,14 @@ class CurrencyCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<CurrencyCategoryKey> copyCurrencyCategory(
-    CurrencyCategoryKey key,
-  ) async {
+  Future<int> copyCurrencyCategory(int key) async {
     final source = await getCurrencyCategory(key);
     if (source == null) {
       throw StateError('原货币分类不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeCurrencyCategory(copied);
-    return CurrencyCategoryKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCurrencyCategories({CurrencyCategoryFilterEntity? filter}) {
@@ -35,7 +32,7 @@ class CurrencyCategoryRepository
     return CurrencyCategoryEntity(id: await _getNextId());
   }
 
-  Future<void> destroyCurrencyCategory(CurrencyCategoryKey key) async {
+  Future<void> destroyCurrencyCategory(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原货币分类不存在，可能已被其他操作修改或删除');
@@ -69,9 +66,7 @@ class CurrencyCategoryRepository
         .toList();
   }
 
-  Future<CurrencyCategoryEntity?> getCurrencyCategory(
-    CurrencyCategoryKey key,
-  ) async {
+  Future<CurrencyCategoryEntity?> getCurrencyCategory(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -104,7 +99,7 @@ class CurrencyCategoryRepository
   }
 
   Future<void> updateCurrencyCategory(
-    CurrencyCategoryKey originalKey,
+    int originalKey,
     CurrencyCategoryEntity category,
   ) async {
     try {
@@ -147,7 +142,7 @@ class CurrencyCategoryRepository
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CurrencyCategoryKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

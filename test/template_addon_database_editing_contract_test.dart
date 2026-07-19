@@ -4,24 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_template_addon_entity.dart';
 import 'package:foxy/entity/brief_game_object_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
-import 'package:foxy/entity/creature_template_addon_key.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
-import 'package:foxy/entity/game_object_template_addon_key.dart';
 
 void main() {
-  test('两张模板附加表的 Key 和 Brief 精确暴露 entry 定位器', () {
-    const creatureKey = CreatureTemplateAddonKey(entry: 11);
-    const gameObjectKey = GameObjectTemplateAddonKey(entry: 12);
+  test('两张模板附加表的 Brief key 直接返回物理 entry 标量', () {
+    const creatureKey = 11;
+    const gameObjectKey = 12;
+    expect((const CreatureTemplateAddonEntity(entry: 11)).entry, creatureKey);
     expect(
-      CreatureTemplateAddonKey.fromEntity(
-        const CreatureTemplateAddonEntity(entry: 11),
-      ),
-      creatureKey,
-    );
-    expect(
-      GameObjectTemplateAddonKey.fromEntity(
-        const GameObjectTemplateAddonEntity(entry: 12),
-      ),
+      (const GameObjectTemplateAddonEntity(entry: 12)).entry,
       gameObjectKey,
     );
     expect(const BriefCreatureTemplateAddonEntity(entry: 11).key, creatureKey);
@@ -31,7 +22,7 @@ void main() {
     );
   });
 
-  test('两张模板附加表按原 typed key 更新完整 candidate', () {
+  test('两张模板附加表按原始标量 key 更新完整 candidate', () {
     for (final stem in [
       'creature_template_addon',
       'game_object_template_addon',

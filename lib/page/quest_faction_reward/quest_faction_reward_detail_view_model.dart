@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
-import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -37,13 +36,13 @@ class QuestFactionRewardDetailViewModel
   late final difficulty9Controller = registerController(IntFieldController());
 
   final reward = signal(QuestFactionRewardEntity());
-  final persistedKey = signal<QuestFactionRewardKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({QuestFactionRewardKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -81,7 +80,7 @@ class QuestFactionRewardDetailViewModel
     } else {
       await _repository.updateQuestFactionReward(originalKey, candidate);
     }
-    persistedKey.value = QuestFactionRewardKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     reward.value = candidate;
     routerFacade.updateCurrentLabel('任务声望 #${candidate.id}');
     _logActivity(action, candidate);

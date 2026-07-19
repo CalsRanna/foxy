@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
-import 'package:foxy/entity/item_extended_cost_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,16 +8,14 @@ import 'package:laconic/laconic.dart';
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
-  Future<ItemExtendedCostKey> copyItemExtendedCost(
-    ItemExtendedCostKey key,
-  ) async {
+  Future<int> copyItemExtendedCost(int key) async {
     final source = await getItemExtendedCost(key);
     if (source == null) {
       throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeItemExtendedCost(copied);
-    return ItemExtendedCostKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemExtendedCosts({
@@ -33,7 +30,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return ItemExtendedCostEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemExtendedCost(ItemExtendedCostKey key) async {
+  Future<void> destroyItemExtendedCost(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
@@ -72,9 +69,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemExtendedCostEntity?> getItemExtendedCost(
-    ItemExtendedCostKey key,
-  ) async {
+  Future<ItemExtendedCostEntity?> getItemExtendedCost(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemExtendedCostEntity.fromJson(results.first.toMap());
@@ -104,7 +99,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
   }
 
   Future<void> updateItemExtendedCost(
-    ItemExtendedCostKey originalKey,
+    int originalKey,
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
     try {
@@ -142,7 +137,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemExtendedCostKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
-import 'package:foxy/entity/sound_provider_preferences_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class SoundProviderPreferencesRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_provider_preferences';
 
-  Future<SoundProviderPreferencesKey> copySoundProviderPreference(
-    SoundProviderPreferencesKey key,
-  ) async {
+  Future<int> copySoundProviderPreference(int key) async {
     final source = await getSoundProviderPreference(key);
     if (source == null) {
       throw StateError('原声音提供器偏好不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeSoundProviderPreference(copied);
-    return SoundProviderPreferencesKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSoundProviderPreferences({
@@ -32,9 +29,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
   createSoundProviderPreference() async =>
       SoundProviderPreferencesEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySoundProviderPreference(
-    SoundProviderPreferencesKey key,
-  ) async {
+  Future<void> destroySoundProviderPreference(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原声音提供器偏好不存在，可能已被其他操作修改或删除');
@@ -56,7 +51,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
   }
 
   Future<SoundProviderPreferencesEntity?> getSoundProviderPreference(
-    SoundProviderPreferencesKey key,
+    int key,
   ) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
@@ -89,7 +84,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
   }
 
   Future<void> updateSoundProviderPreference(
-    SoundProviderPreferencesKey originalKey,
+    int originalKey,
     SoundProviderPreferencesEntity entity,
   ) async {
     try {
@@ -124,10 +119,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(
-    QueryBuilder builder,
-    SoundProviderPreferencesKey key,
-  ) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

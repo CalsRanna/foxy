@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_spell_data_key.dart';
-
 /// 宠物技能数据列表展示模型（含 LEFT JOIN foxy.dbc_spell 的法术名）。
 class BriefCreatureSpellDataEntity {
   final int id;
@@ -38,5 +36,5 @@ class BriefCreatureSpellDataEntity {
     );
   }
 
-  CreatureSpellDataKey get key => CreatureSpellDataKey(id: id);
+  int get key => id;
 }

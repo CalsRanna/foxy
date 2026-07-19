@@ -5,9 +5,7 @@ import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/entity/spell_area_key.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/entity/spell_bonus_data_key.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/entity/spell_custom_attr_key.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
@@ -171,15 +169,11 @@ void main() {
 
   test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {
     await expectLater(
-      SpellBonusDataRepository().copySpellBonusData(
-        const SpellBonusDataKey(entry: 1),
-      ),
+      SpellBonusDataRepository().copySpellBonusData(1),
       throwsA(isA<UnsupportedError>()),
     );
     await expectLater(
-      SpellCustomAttrRepository().copySpellCustomAttr(
-        const SpellCustomAttrKey(spellId: 1),
-      ),
+      SpellCustomAttrRepository().copySpellCustomAttr(1),
       throwsA(isA<UnsupportedError>()),
     );
     await expectLater(

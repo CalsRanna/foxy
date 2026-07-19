@@ -1,5 +1,3 @@
-import 'package:foxy/entity/game_object_art_kit_key.dart';
-
 class BriefGameObjectArtKitEntity {
   final int id;
   final String textureVariation0;
@@ -19,5 +17,5 @@ class BriefGameObjectArtKitEntity {
     );
   }
 
-  GameObjectArtKitKey get key => GameObjectArtKitKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
@@ -46,13 +45,13 @@ class ScalingStatDistributionDetailViewModel
   late final maxlevelController = registerController(IntFieldController());
 
   final distribution = signal(ScalingStatDistributionEntity());
-  final persistedKey = signal<ScalingStatDistributionKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({ScalingStatDistributionKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -90,7 +89,7 @@ class ScalingStatDistributionDetailViewModel
     } else {
       await _repository.updateScalingStatDistribution(originalKey, candidate);
     }
-    persistedKey.value = ScalingStatDistributionKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     distribution.value = candidate;
     routerFacade.updateCurrentLabel('属性缩放分布 #${candidate.id}');
     _logActivity(action, candidate);

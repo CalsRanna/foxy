@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_destructible_model_data_entity.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
 import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
-import 'package:foxy/entity/destructible_model_data_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class DestructibleModelDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_destructible_model_data';
 
-  Future<DestructibleModelDataKey> copyDestructibleModelData(
-    DestructibleModelDataKey key,
-  ) async {
+  Future<int> copyDestructibleModelData(int key) async {
     final source = await getDestructibleModelData(key);
     if (source == null) {
       throw StateError('原可破坏模型数据不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeDestructibleModelData(copied);
-    return DestructibleModelDataKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countDestructibleModelDatas({
@@ -31,9 +28,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   Future<DestructibleModelDataEntity> createDestructibleModelData() async =>
       DestructibleModelDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDestructibleModelData(
-    DestructibleModelDataKey key,
-  ) async {
+  Future<void> destroyDestructibleModelData(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原可破坏模型数据不存在，可能已被其他操作修改或删除');
@@ -59,9 +54,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<DestructibleModelDataEntity?> getDestructibleModelData(
-    DestructibleModelDataKey key,
-  ) async {
+  Future<DestructibleModelDataEntity?> getDestructibleModelData(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -92,7 +85,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   }
 
   Future<void> updateDestructibleModelData(
-    DestructibleModelDataKey originalKey,
+    int originalKey,
     DestructibleModelDataEntity entity,
   ) async {
     try {
@@ -121,7 +114,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, DestructibleModelDataKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

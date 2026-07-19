@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_template_key.dart';
-
 class BriefCreatureTemplateEntity {
   final int entry;
   final String name;
@@ -35,5 +33,5 @@ class BriefCreatureTemplateEntity {
   String get displaySubName =>
       localeSubName.isNotEmpty ? localeSubName : subName;
 
-  CreatureTemplateKey get key => CreatureTemplateKey(entry: entry);
+  int get key => entry;
 }

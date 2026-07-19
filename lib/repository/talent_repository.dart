@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_talent_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
-import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class TalentRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_talent';
 
-  Future<TalentKey> copyTalent(TalentKey key) async {
+  Future<int> copyTalent(int key) async {
     final source = await getTalent(key);
     if (source == null) {
       throw StateError('原天赋不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeTalent(copied);
-    return TalentKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countTalents({TalentFilterEntity? filter}) {
@@ -27,7 +26,7 @@ class TalentRepository with RepositoryMixin {
     return TalentEntity(id: await _getNextId());
   }
 
-  Future<void> destroyTalent(TalentKey key) async {
+  Future<void> destroyTalent(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原天赋不存在，可能已被其他操作修改或删除');
@@ -54,7 +53,7 @@ class TalentRepository with RepositoryMixin {
     return rows.map((row) => BriefTalentEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<TalentEntity?> getTalent(TalentKey key) async {
+  Future<TalentEntity?> getTalent(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : TalentEntity.fromJson(rows.first.toMap());
   }
@@ -78,7 +77,7 @@ class TalentRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateTalent(TalentKey originalKey, TalentEntity talent) async {
+  Future<void> updateTalent(int originalKey, TalentEntity talent) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -123,7 +122,7 @@ class TalentRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, TalentKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

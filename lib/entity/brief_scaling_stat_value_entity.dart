@@ -1,5 +1,3 @@
-import 'package:foxy/entity/scaling_stat_value_key.dart';
-
 class BriefScalingStatValueEntity {
   final int id;
   final int charlevel;
@@ -34,5 +32,5 @@ class BriefScalingStatValueEntity {
     );
   }
 
-  ScalingStatValueKey get key => ScalingStatValueKey(id: id);
+  int get key => id;
 }

@@ -69,7 +69,7 @@ void main() {
       'lib/repository/quest_sort_repository.dart',
     ).readAsStringSync();
     expect(source, isNot(contains('.validate()')));
-    expect(source, contains('QuestSortKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(questSort.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
@@ -102,12 +102,12 @@ void main() {
     expect(viewModel, contains('sortNameLangFlagsController.collect()'));
     expect(viewModel, contains('sortNameLangFlagsController.init('));
     expect(viewModel, contains('validateQuestSortFields(candidate)'));
-    expect(viewModel, contains('signal<QuestSortKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateQuestSort(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = QuestSortKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('viewModel.persistedKey.value?.id'));
+    expect(view, contains('viewModel.persistedKey.value'));
   });
 
   test('Entity 源码没有数组或 Map 字段', () {

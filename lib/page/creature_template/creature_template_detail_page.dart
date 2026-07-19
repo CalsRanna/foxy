@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
@@ -25,7 +24,7 @@ Set<int> creatureTemplateDisabledTabIndexes(int? entry, int tabCount) {
 
 @RoutePage()
 class CreatureTemplateDetailPage extends StatefulWidget {
-  final CreatureTemplateKey? creatureTemplateKey;
+  final int? creatureTemplateKey;
 
   const CreatureTemplateDetailPage({super.key, this.creatureTemplateKey});
 
@@ -55,12 +54,12 @@ class _CreatureTemplateDetailPageState
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final template = viewModel.template.value;
-      final creatureId = key?.entry ?? 0;
+      final creatureId = key ?? 0;
       final name = key == null
           ? '新建生物'
           : template.name.isNotEmpty
           ? template.name
-          : '生物 #${key.entry}';
+          : '生物 #$key';
       const tabs = [
         Text('生物模板'),
         Text('模板补充'),
@@ -135,7 +134,7 @@ class _CreatureTemplateDetailPageState
               ),
             ],
             disabledIndexes: creatureTemplateDisabledTabIndexes(
-              key?.entry,
+              key,
               tabs.length,
             ),
           ),

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/liquid_type_key.dart';
-
 class BriefLiquidTypeEntity {
   final int id;
   final String name;
@@ -25,5 +23,5 @@ class BriefLiquidTypeEntity {
     );
   }
 
-  LiquidTypeKey get key => LiquidTypeKey(id: id);
+  int get key => id;
 }

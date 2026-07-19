@@ -1,5 +1,3 @@
-import 'package:foxy/entity/npc_text_key.dart';
-
 class BriefNpcTextEntity {
   final int id;
   final String text0;
@@ -16,5 +14,5 @@ class BriefNpcTextEntity {
 
   String get displayText => text0.isNotEmpty ? text0 : text1;
 
-  NpcTextKey get key => NpcTextKey(id: id);
+  int get key => id;
 }

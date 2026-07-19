@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/brief_npc_trainer_entity.dart';
-import 'package:foxy/entity/creature_default_trainer_key.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -221,7 +220,7 @@ class NpcTrainerViewModel
     final token = ++_refreshToken;
     final parentCreatureId = creatureId.value;
     final relation = await _relationRepository.getCreatureDefaultTrainer(
-      CreatureDefaultTrainerKey(creatureId: parentCreatureId),
+      parentCreatureId,
     );
     if (token != _refreshToken) return;
     final trainerId = relation?.trainerId;

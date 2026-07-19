@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/area_table_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
@@ -64,7 +63,7 @@ class AreaTableDetailViewModel
   late final liquidTypeId3Controller = registerController(IntFieldController());
 
   final area = signal(AreaTableEntity());
-  final persistedKey = signal<AreaTableKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
   void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
@@ -93,7 +92,7 @@ class AreaTableDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({AreaTableKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -131,7 +130,7 @@ class AreaTableDetailViewModel
     } else {
       await _repository.updateAreaTable(originalKey, candidate);
     }
-    final newKey = AreaTableKey.fromEntity(candidate);
+    final newKey = candidate.id;
     persistedKey.value = newKey;
     area.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
@@ -224,12 +223,11 @@ class AreaTableDetailViewModel
 
   Future<void> _validate(
     AreaTableEntity value, {
-    required AreaTableKey? originalKey,
+    required int? originalKey,
   }) async {
     validateAreaTableFields(value);
     if (value.parentAreaId > 0 &&
-        await _repository.getAreaTable(AreaTableKey(id: value.parentAreaId)) ==
-            null) {
+        await _repository.getAreaTable(value.parentAreaId) == null) {
       throw StateError('父级区域 ${value.parentAreaId} 不存在');
     }
     if (!await _repository.isAreaBitAvailable(

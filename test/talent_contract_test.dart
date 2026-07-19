@@ -190,7 +190,7 @@ void main() {
     ).readAsStringSync();
     expect(viewModel, contains('final originalKey = persistedKey.value;'));
     expect(viewModel, contains('updateTalent(originalKey, t)'));
-    expect(viewModel, contains('persistedKey.value = TalentKey.fromEntity(t)'));
+    expect(viewModel, contains('persistedKey.value = t.id'));
     expect(viewModel, contains('routerFacade.updateCurrentLabel('));
   });
 

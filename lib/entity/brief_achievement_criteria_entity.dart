@@ -1,5 +1,3 @@
-import 'package:foxy/entity/achievement_criteria_key.dart';
-
 class BriefAchievementCriteriaEntity {
   final int id;
   final int achievementId;
@@ -22,5 +20,5 @@ class BriefAchievementCriteriaEntity {
     );
   }
 
-  AchievementCriteriaKey get key => AchievementCriteriaKey(id: id);
+  int get key => id;
 }

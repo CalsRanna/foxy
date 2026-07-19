@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_display_info_entity.dart';
-import 'package:foxy/entity/creature_display_info_key.dart';
 
 void main() {
-  test('CreatureDisplayInfoKey 使用 ID 值相等且 Brief 安全解码', () {
-    const key = CreatureDisplayInfoKey(id: 7);
-    expect(key, const CreatureDisplayInfoKey(id: 7));
-    expect(key.hashCode, const CreatureDisplayInfoKey(id: 7).hashCode);
+  test('Brief 安全解码并返回物理 ID 标量', () {
+    const key = 7;
     final brief = BriefCreatureDisplayInfoEntity.fromJson(const {
       'ID': 7,
       'CreatureModelScale': 2,
@@ -21,9 +18,9 @@ void main() {
     final source = File(
       'lib/repository/creature_display_info_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('CreatureDisplayInfoKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeCreatureDisplayInfo('));
-    expect(source, contains('CreatureDisplayInfoKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(info.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

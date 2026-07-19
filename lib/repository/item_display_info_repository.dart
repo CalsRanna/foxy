@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_filter_entity.dart';
-import 'package:foxy/entity/item_display_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
-  Future<ItemDisplayInfoKey> copyItemDisplayInfo(ItemDisplayInfoKey key) async {
+  Future<int> copyItemDisplayInfo(int key) async {
     final source = await getItemDisplayInfo(key);
     if (source == null) {
       throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeItemDisplayInfo(copied);
-    return ItemDisplayInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemDisplayInfos({
@@ -34,7 +33,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return ItemDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemDisplayInfo(ItemDisplayInfoKey key) async {
+  Future<void> destroyItemDisplayInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
@@ -57,9 +56,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemDisplayInfoEntity?> getItemDisplayInfo(
-    ItemDisplayInfoKey key,
-  ) async {
+  Future<ItemDisplayInfoEntity?> getItemDisplayInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
@@ -87,7 +84,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<void> updateItemDisplayInfo(
-    ItemDisplayInfoKey originalKey,
+    int originalKey,
     ItemDisplayInfoEntity info,
   ) async {
     try {
@@ -124,7 +121,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemDisplayInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

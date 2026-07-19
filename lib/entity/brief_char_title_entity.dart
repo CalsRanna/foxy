@@ -1,5 +1,3 @@
-import 'package:foxy/entity/char_title_key.dart';
-
 class BriefCharTitleEntity {
   final int id;
   final String nameLangZhCN;
@@ -13,5 +11,5 @@ class BriefCharTitleEntity {
     );
   }
 
-  CharTitleKey get key => CharTitleKey(id: id);
+  int get key => id;
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/emote_text_key.dart';
 import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class EmoteTextDetailPage extends StatefulWidget {
-  final EmoteTextKey? emoteTextKey;
+  final int? emoteTextKey;
 
   const EmoteTextDetailPage({super.key, this.emoteTextKey});
 
@@ -41,7 +40,7 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
           ? '新建表情文本'
           : entity.name.isNotEmpty
           ? entity.name
-          : '表情文本 #${key.id}';
+          : '表情文本 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

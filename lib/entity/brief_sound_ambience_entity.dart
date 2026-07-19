@@ -1,5 +1,3 @@
-import 'package:foxy/entity/sound_ambience_key.dart';
-
 class BriefSoundAmbienceEntity {
   final int id;
   final int ambienceId0;
@@ -19,5 +17,5 @@ class BriefSoundAmbienceEntity {
     );
   }
 
-  SoundAmbienceKey get key => SoundAmbienceKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
-import 'package:foxy/entity/item_extended_cost_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
@@ -23,11 +22,11 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
   final costs = signal(<BriefItemExtendedCostEntity>[]);
   final total = signal(0);
 
-  Future<void> copyItemExtendedCost(ItemExtendedCostKey key) async {
+  Future<void> copyItemExtendedCost(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的扩展价格？',
+        description: '是否复制编号为 $key 的扩展价格？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -41,11 +40,11 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteItemExtendedCost(ItemExtendedCostKey key) async {
+  Future<void> deleteItemExtendedCost(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的扩展价格？此操作不可撤销。',
+        description: '是否删除编号为 $key 的扩展价格？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({ItemExtendedCostKey? key}) {
-    final label = key != null ? '扩展价格 #${key.id}' : '新建扩展价格';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '扩展价格 #$key' : '新建扩展价格';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -111,11 +110,11 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
     return ItemExtendedCostFilterEntity(id: entryController.collect());
   }
 
-  void _logActivity(ActivityActionType action, ItemExtendedCostKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'item_extended_cost',
       actionType: action,
-      entityName: 'ItemExtendedCost ${key.id}',
+      entityName: 'ItemExtendedCost $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

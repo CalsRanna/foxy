@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_model_data_entity.dart';
 import 'package:foxy/entity/creature_model_data_entity.dart';
 import 'package:foxy/entity/creature_model_data_filter_entity.dart';
-import 'package:foxy/entity/creature_model_data_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class CreatureModelDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_model_data';
 
-  Future<CreatureModelDataKey> copyCreatureModelData(
-    CreatureModelDataKey key,
-  ) async {
+  Future<int> copyCreatureModelData(int key) async {
     final source = await getCreatureModelData(key);
     if (source == null) {
       throw StateError('原生物模型数据不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class CreatureModelDataRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeCreatureModelData(copied);
-    return CreatureModelDataKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCreatureModelDatas({
@@ -36,7 +33,7 @@ class CreatureModelDataRepository with RepositoryMixin {
     return CreatureModelDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureModelData(CreatureModelDataKey key) async {
+  Future<void> destroyCreatureModelData(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物模型数据不存在，可能已被其他操作修改或删除');
@@ -65,9 +62,7 @@ class CreatureModelDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureModelDataEntity?> getCreatureModelData(
-    CreatureModelDataKey key,
-  ) async {
+  Future<CreatureModelDataEntity?> getCreatureModelData(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureModelDataEntity.fromJson(results.first.toMap());
@@ -95,7 +90,7 @@ class CreatureModelDataRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureModelData(
-    CreatureModelDataKey originalKey,
+    int originalKey,
     CreatureModelDataEntity entity,
   ) async {
     try {
@@ -132,7 +127,7 @@ class CreatureModelDataRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureModelDataKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

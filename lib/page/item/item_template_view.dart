@@ -208,7 +208,7 @@ class ItemTemplateView extends StatelessWidget {
     final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
-        entry: viewModel.persistedKey.value?.entry,
+        entry: viewModel.persistedKey.value,
         controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.itemName,
         placeholder: 'name',
@@ -218,7 +218,7 @@ class ItemTemplateView extends StatelessWidget {
     final descriptionInput = FoxyFormItem(
       label: '描述',
       child: FoxyLocalePicker(
-        entry: viewModel.persistedKey.value?.entry,
+        entry: viewModel.persistedKey.value,
         controller: viewModel.descriptionController,
         delegate: FoxyLocalePickerDelegates.itemDescription,
         placeholder: 'description',

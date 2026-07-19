@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
-import 'package:foxy/entity/skill_line_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class SkillLineRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_skill_line';
 
-  Future<SkillLineKey> copySkillLine(SkillLineKey key) async {
+  Future<int> copySkillLine(int key) async {
     final source = await getSkillLine(key);
     if (source == null) {
       throw StateError('原技能线不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class SkillLineRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeSkillLine(copied);
-    return SkillLineKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSkillLines({SkillLineFilterEntity? filter}) =>
@@ -28,7 +27,7 @@ class SkillLineRepository with RepositoryMixin {
   Future<SkillLineEntity> createSkillLine() async =>
       SkillLineEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySkillLine(SkillLineKey key) async {
+  Future<void> destroySkillLine(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原技能线不存在，可能已被其他操作修改或删除');
@@ -54,7 +53,7 @@ class SkillLineRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SkillLineEntity?> getSkillLine(SkillLineKey key) async {
+  Future<SkillLineEntity?> getSkillLine(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : SkillLineEntity.fromJson(rows.first.toMap());
   }
@@ -79,7 +78,7 @@ class SkillLineRepository with RepositoryMixin {
   }
 
   Future<void> updateSkillLine(
-    SkillLineKey originalKey,
+    int originalKey,
     SkillLineEntity skillLine,
   ) async {
     try {
@@ -114,7 +113,7 @@ class SkillLineRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SkillLineKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

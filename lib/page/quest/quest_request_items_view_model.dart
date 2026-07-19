@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
-import 'package:foxy/entity/quest_request_items_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -13,7 +12,7 @@ import 'package:signals/signals.dart';
 class QuestRequestItemsViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final editingKey = signal<QuestRequestItemsKey?>(null);
+  final editingKey = signal<int?>(null);
 
   late final idController = registerController(IntFieldController());
   late final emoteOnCompleteController = registerController(
@@ -33,7 +32,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
 
   Future<void> initSignals({required int questId}) async {
     try {
-      final key = QuestRequestItemsKey(id: questId);
+      final key = questId;
       final existing = await _repository.getQuestRequestItems(key);
       if (existing != null) {
         editingKey.value = key;
@@ -62,7 +61,7 @@ class QuestRequestItemsViewModel with FieldControllerMixin {
       } else {
         await _repository.updateQuestRequestItems(originalKey, model);
       }
-      editingKey.value = QuestRequestItemsKey.fromEntity(model);
+      editingKey.value = model.id;
 
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('提交物品数据已保存'));

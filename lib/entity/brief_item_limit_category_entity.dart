@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_limit_category_key.dart';
-
 class BriefItemLimitCategoryEntity {
   final int id;
   final String name;
@@ -21,5 +19,5 @@ class BriefItemLimitCategoryEntity {
         flags: json['Flags'] ?? 0,
       );
 
-  ItemLimitCategoryKey get key => ItemLimitCategoryKey(id: id);
+  int get key => id;
 }

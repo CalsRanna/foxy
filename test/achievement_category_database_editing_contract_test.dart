@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/achievement_category_key.dart';
 import 'package:foxy/entity/brief_achievement_category_entity.dart';
 
 void main() {
-  test('AchievementCategoryKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = AchievementCategoryKey(id: 7);
-    expect(key, const AchievementCategoryKey(id: 7));
-    expect(key.hashCode, const AchievementCategoryKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefAchievementCategoryEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/achievement_category_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('AchievementCategoryKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeAchievementCategory('));
-    expect(source, contains('AchievementCategoryKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(category.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

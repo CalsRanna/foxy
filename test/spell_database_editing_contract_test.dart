@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/entity/spell_key.dart';
 
 void main() {
-  test('SpellKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = SpellKey(id: 7);
-    expect(key, const SpellKey(id: 7));
-    expect(key.hashCode, const SpellKey(id: 7).hashCode);
-    expect(SpellKey.fromEntity(const SpellEntity(id: 7)), key);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
+    expect((const SpellEntity(id: 7)).id, key);
     expect(const BriefSpellEntity(id: 7).key, key);
   });
 
@@ -18,7 +15,7 @@ void main() {
     final source = File(
       'lib/repository/spell_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('SpellKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains(').update(spell.toJson())'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
@@ -27,7 +24,7 @@ void main() {
     expect(source, isNot(contains("json.remove('ID')")));
   });
 
-  test('详情路由只携带 typed key，主键可编辑且 locale 使用持久化 ID', () {
+  test('详情路由只携带标量 key，主键可编辑且 locale 使用持久化 ID', () {
     final page = File(
       'lib/page/spell/spell_detail_page.dart',
     ).readAsStringSync();
@@ -36,10 +33,10 @@ void main() {
     final viewModel = File(
       'lib/page/spell/spell_detail_view_model.dart',
     ).readAsStringSync();
-    expect(page, contains('final SpellKey? spellKey'));
+    expect(page, contains('final int? spellKey'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(list, contains('templates[row].key'));
-    expect(view, contains('vm.persistedKey.value?.id'));
+    expect(view, contains('vm.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
     expect(viewModel, contains('id: idController.collect()'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));

@@ -160,7 +160,7 @@ void main() {
     expect('Row('.allMatches(view), hasLength(7));
     expect('Expanded('.allMatches(view), hasLength(24));
     expect(view, isNot(contains('readOnly: true')));
-    expect('viewModel.persistedKey.value?.id'.allMatches(view), hasLength(3));
+    expect('viewModel.persistedKey.value'.allMatches(view), hasLength(3));
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
@@ -175,7 +175,7 @@ void main() {
     ).readAsStringSync();
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateAchievementFields(candidate);'));
-    expect(repository, contains('AchievementKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(achievement.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -194,13 +194,13 @@ void main() {
       criteriaRepository,
       isNot(contains(".table('achievement_criteria_data')")),
     );
-    expect(criteriaRepository, contains('AchievementCriteriaKey key'));
+    expect(criteriaRepository, contains('int key'));
     expect(criteriaRepository, contains('deletedRows == 0'));
     expect(repository, contains(".orderBy('ID')"));
-    expect(viewModel, contains('signal<AchievementKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateAchievement(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = AchievementKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 
   test('Achievement 三张 DBC definitions 使用 3.3.5.12340 精确格式', () {

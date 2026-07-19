@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
-import 'package:foxy/entity/spell_icon_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
-  Future<SpellIconKey> copySpellIcon(SpellIconKey key) async {
+  Future<int> copySpellIcon(int key) async {
     final source = await getSpellIcon(key);
     if (source == null) {
       throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeSpellIcon(copied);
-    return SpellIconKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class SpellIconRepository with RepositoryMixin {
     return SpellIconEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellIcon(SpellIconKey key) async {
+  Future<void> destroySpellIcon(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
@@ -52,7 +51,7 @@ class SpellIconRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellIconEntity?> getSpellIcon(SpellIconKey key) async {
+  Future<SpellIconEntity?> getSpellIcon(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellIconEntity.fromJson(results.first.toMap());
@@ -77,10 +76,7 @@ class SpellIconRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateSpellIcon(
-    SpellIconKey originalKey,
-    SpellIconEntity icon,
-  ) async {
+  Future<void> updateSpellIcon(int originalKey, SpellIconEntity icon) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -115,7 +111,7 @@ class SpellIconRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellIconKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_talent_tab_entity.dart';
-import 'package:foxy/entity/talent_tab_key.dart';
 
 void main() {
-  test('TalentTabKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = TalentTabKey(id: 7);
-    expect(key, const TalentTabKey(id: 7));
-    expect(key.hashCode, const TalentTabKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefTalentTabEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/talent_tab_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('TalentTabKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeTalentTab('));
-    expect(source, contains('TalentTabKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(talentTab.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

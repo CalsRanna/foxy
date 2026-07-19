@@ -1,5 +1,3 @@
-import 'package:foxy/entity/gem_property_key.dart';
-
 class BriefGemPropertyEntity {
   final int id;
   final int enchantId;
@@ -25,5 +23,5 @@ class BriefGemPropertyEntity {
     );
   }
 
-  GemPropertyKey get key => GemPropertyKey(id: id);
+  int get key => id;
 }

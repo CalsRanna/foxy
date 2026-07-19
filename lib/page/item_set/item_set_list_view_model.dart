@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
-import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -24,11 +23,11 @@ class ItemSetListViewModel with FieldControllerMixin {
   final itemSets = signal(<BriefItemSetEntity>[]);
   final total = signal(0);
 
-  Future<void> copyItemSet(ItemSetKey key) async {
+  Future<void> copyItemSet(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的套装？',
+        description: '是否复制编号为 $key 的套装？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class ItemSetListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteItemSet(ItemSetKey key) async {
+  Future<void> deleteItemSet(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的套装？此操作不可撤销。',
+        description: '是否删除编号为 $key 的套装？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class ItemSetListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({ItemSetKey? key}) {
-    final label = key != null ? '套装 #${key.id}' : '新建套装';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '套装 #$key' : '新建套装';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -115,11 +114,11 @@ class ItemSetListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, ItemSetKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'item_set',
       actionType: action,
-      entityName: 'ItemSet ${key.id}',
+      entityName: 'ItemSet $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

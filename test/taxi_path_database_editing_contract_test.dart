@@ -3,15 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
-import 'package:foxy/entity/taxi_path_key.dart';
 
 void main() {
-  test('TaxiPathKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const first = TaxiPathKey(id: 21);
-    expect(first, const TaxiPathKey(id: 21));
-    expect(first.hashCode, const TaxiPathKey(id: 21).hashCode);
-    expect(first, isNot(const TaxiPathKey(id: 22)));
-    expect(TaxiPathKey.fromEntity(const TaxiPathEntity(id: 21)), first);
+  test('Brief key 返回物理 ID 标量', () {
+    const first = 21;
+    expect((const TaxiPathEntity(id: 21)).id, first);
     expect(const BriefTaxiPathEntity(id: 21).key, first);
   });
 
@@ -19,7 +15,7 @@ void main() {
     final source = File(
       'lib/repository/taxi_path_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('Future<TaxiPathKey> copyTaxiPath('));
+    expect(source, contains('Future<int> copyTaxiPath('));
     expect(source, contains("laconic.table(_table).select(["));
     expect(source, contains("'FromTaxiNode'"));
     expect(source, contains("'ToTaxiNode'"));
@@ -29,7 +25,7 @@ void main() {
     expect(source, contains('insert([entity.toJson()])'));
     expect(source, isNot(contains('Future<int> storeTaxiPath')));
     expect(source, isNot(contains('saveTaxiPath(')));
-    expect(source, contains('TaxiPathKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(entity.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

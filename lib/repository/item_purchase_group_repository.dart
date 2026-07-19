@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_item_purchase_group_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
-import 'package:foxy/entity/item_purchase_group_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -15,16 +14,14 @@ class ItemPurchaseGroupRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<ItemPurchaseGroupKey> copyItemPurchaseGroup(
-    ItemPurchaseGroupKey key,
-  ) async {
+  Future<int> copyItemPurchaseGroup(int key) async {
     final source = await getItemPurchaseGroup(key);
     if (source == null) {
       throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
     }
     final candidate = source.copyWith(id: await _getNextId());
     await storeItemPurchaseGroup(candidate);
-    return ItemPurchaseGroupKey.fromEntity(candidate);
+    return candidate.id;
   }
 
   Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilterEntity? filter}) {
@@ -35,7 +32,7 @@ class ItemPurchaseGroupRepository
     return ItemPurchaseGroupEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemPurchaseGroup(ItemPurchaseGroupKey key) async {
+  Future<void> destroyItemPurchaseGroup(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
@@ -58,9 +55,7 @@ class ItemPurchaseGroupRepository
         .toList();
   }
 
-  Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(
-    ItemPurchaseGroupKey key,
-  ) async {
+  Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -100,7 +95,7 @@ class ItemPurchaseGroupRepository
   }
 
   Future<void> updateItemPurchaseGroup(
-    ItemPurchaseGroupKey originalKey,
+    int originalKey,
     ItemPurchaseGroupEntity group,
   ) async {
     try {
@@ -143,7 +138,7 @@ class ItemPurchaseGroupRepository
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemPurchaseGroupKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

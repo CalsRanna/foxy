@@ -25,7 +25,7 @@ class QuestSortView extends StatelessWidget {
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final id = viewModel.persistedKey.value?.id;
+        final id = viewModel.persistedKey.value;
         return FoxyLocalePicker(
           entry: id,
           controller: viewModel.nameController,

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
-import 'package:foxy/entity/currency_type_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
@@ -24,11 +23,11 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
   final currencyTypes = signal(<BriefCurrencyTypeEntity>[]);
   final total = signal(0);
 
-  Future<void> deleteCurrencyType(CurrencyTypeKey key) async {
+  Future<void> deleteCurrencyType(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的货币？此操作不可撤销。',
+        description: '是否删除编号为 $key 的货币？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -63,8 +62,8 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({CurrencyTypeKey? key}) {
-    final label = key != null ? '货币 #${key.id}' : '新建货币';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '货币 #$key' : '新建货币';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -97,11 +96,11 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, CurrencyTypeKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'currency_type',
       actionType: action,
-      entityName: 'CurrencyType ${key.id}',
+      entityName: 'CurrencyType $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

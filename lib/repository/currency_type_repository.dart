@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
-import 'package:foxy/entity/currency_type_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -30,7 +29,7 @@ class CurrencyTypeRepository with RepositoryMixin {
     return CurrencyTypeEntity(id: await _getNextId());
   }
 
-  Future<void> destroyCurrencyType(CurrencyTypeKey key) async {
+  Future<void> destroyCurrencyType(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原货币不存在，可能已被其他操作修改或删除');
@@ -71,7 +70,7 @@ class CurrencyTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CurrencyTypeEntity?> getCurrencyType(CurrencyTypeKey key) async {
+  Future<CurrencyTypeEntity?> getCurrencyType(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -98,7 +97,7 @@ class CurrencyTypeRepository with RepositoryMixin {
   }
 
   Future<void> updateCurrencyType(
-    CurrencyTypeKey originalKey,
+    int originalKey,
     CurrencyTypeEntity currencyType,
   ) async {
     try {
@@ -143,7 +142,7 @@ class CurrencyTypeRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CurrencyTypeKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

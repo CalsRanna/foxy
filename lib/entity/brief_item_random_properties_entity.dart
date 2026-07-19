@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_random_properties_key.dart';
-
 class BriefItemRandomPropertiesEntity {
   final int id;
   final String name;
@@ -19,5 +17,5 @@ class BriefItemRandomPropertiesEntity {
     );
   }
 
-  ItemRandomPropertiesKey get key => ItemRandomPropertiesKey(id: id);
+  int get key => id;
 }

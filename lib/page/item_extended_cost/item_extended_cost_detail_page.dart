@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_extended_cost_key.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ItemExtendedCostDetailPage extends StatefulWidget {
-  final ItemExtendedCostKey? itemExtendedCostKey;
+  final int? itemExtendedCostKey;
 
   const ItemExtendedCostDetailPage({super.key, this.itemExtendedCostKey});
 
@@ -38,7 +37,7 @@ class _ItemExtendedCostDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建扩展价格' : '扩展价格 #${key.id}';
+      final name = key == null ? '新建扩展价格' : '扩展价格 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

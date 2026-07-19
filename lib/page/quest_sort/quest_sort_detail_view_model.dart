@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
-import 'package:foxy/entity/quest_sort_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
@@ -29,7 +28,7 @@ class QuestSortDetailViewModel
   );
 
   final sort = signal(QuestSortEntity());
-  final persistedKey = signal<QuestSortKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void applySortNameLocales(List<DbcLocaleFieldValue> values) {
     sort.value = sort.value.copyWith(
@@ -57,7 +56,7 @@ class QuestSortDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({QuestSortKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -94,7 +93,7 @@ class QuestSortDetailViewModel
     } else {
       await _repository.updateQuestSort(originalKey, candidate);
     }
-    persistedKey.value = QuestSortKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     sort.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_duration_key.dart';
-
 /// 法术持续时间列表/Picker 展示模型。
 class BriefSpellDurationEntity {
   final int id;
@@ -23,5 +21,5 @@ class BriefSpellDurationEntity {
     );
   }
 
-  SpellDurationKey get key => SpellDurationKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
-import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -24,11 +23,11 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
   final templates = signal(<BriefGameObjectTemplateEntity>[]);
   final total = signal(0);
 
-  Future<void> copyGameObjectTemplate(GameObjectTemplateKey key) async {
+  Future<void> copyGameObjectTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.entry} 的游戏对象模板？',
+        description: '是否复制编号为 $key 的游戏对象模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGameObjectTemplate(GameObjectTemplateKey key) async {
+  Future<void> deleteGameObjectTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.entry} 的游戏对象模板？此操作不可撤销。',
+        description: '是否删除编号为 $key 的游戏对象模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,12 +80,12 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({GameObjectTemplateKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = key == null
         ? '新建游戏对象'
         : name?.isNotEmpty == true
         ? name!
-        : '游戏对象 #${key.entry}';
+        : '游戏对象 #$key';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -119,9 +118,9 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, GameObjectTemplateKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final all = templates.value;
-    final template = all.where((t) => t.entry == key.entry).firstOrNull;
+    final template = all.where((t) => t.entry == key).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'gameobject_template',

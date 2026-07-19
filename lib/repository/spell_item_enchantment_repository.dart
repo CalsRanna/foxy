@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -15,16 +14,14 @@ class SpellItemEnchantmentRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<SpellItemEnchantmentKey> copySpellItemEnchantment(
-    SpellItemEnchantmentKey key,
-  ) async {
+  Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
       throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeSpellItemEnchantment(copied);
-    return SpellItemEnchantmentKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSpellItemEnchantments({
@@ -37,7 +34,7 @@ class SpellItemEnchantmentRepository
     return SpellItemEnchantmentEntity(id: await _getNextId());
   }
 
-  Future<void> destroySpellItemEnchantment(SpellItemEnchantmentKey key) async {
+  Future<void> destroySpellItemEnchantment(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
@@ -67,9 +64,7 @@ class SpellItemEnchantmentRepository
         .toList();
   }
 
-  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(
-    SpellItemEnchantmentKey key,
-  ) async {
+  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellItemEnchantmentEntity.fromJson(results.first.toMap());
@@ -110,7 +105,7 @@ class SpellItemEnchantmentRepository
   }
 
   Future<void> updateSpellItemEnchantment(
-    SpellItemEnchantmentKey originalKey,
+    int originalKey,
     SpellItemEnchantmentEntity spellItemEnchantment,
   ) async {
     try {
@@ -153,7 +148,7 @@ class SpellItemEnchantmentRepository
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellItemEnchantmentKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

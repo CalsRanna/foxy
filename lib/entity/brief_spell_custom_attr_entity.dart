@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_custom_attr_key.dart';
-
 class BriefSpellCustomAttrEntity {
   final int spellId;
   final int attributes;
@@ -13,5 +11,5 @@ class BriefSpellCustomAttrEntity {
     );
   }
 
-  SpellCustomAttrKey get key => SpellCustomAttrKey(spellId: spellId);
+  int get key => spellId;
 }

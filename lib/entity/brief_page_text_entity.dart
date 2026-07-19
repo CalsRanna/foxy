@@ -1,5 +1,3 @@
-import 'package:foxy/entity/page_text_key.dart';
-
 /// 页面文本列表和 Picker 展示模型。
 class BriefPageTextEntity {
   final int id;
@@ -25,5 +23,5 @@ class BriefPageTextEntity {
 
   String get displayText => localeText.isNotEmpty ? localeText : text;
 
-  PageTextKey get key => PageTextKey(id: id);
+  int get key => id;
 }

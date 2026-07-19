@@ -1,6 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
-import 'package:foxy/entity/area_table_key.dart';
 import 'package:foxy/entity/brief_area_table_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -24,11 +23,11 @@ class AreaTableListViewModel with FieldControllerMixin {
   final areas = signal(<BriefAreaTableEntity>[]);
   final total = signal(0);
 
-  Future<void> copyAreaTable(AreaTableKey key) async {
+  Future<void> copyAreaTable(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的区域？',
+        description: '是否复制编号为 $key 的区域？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class AreaTableListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteAreaTable(AreaTableKey key) async {
+  Future<void> deleteAreaTable(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的区域？此操作不可撤销。',
+        description: '是否删除编号为 $key 的区域？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,7 +80,7 @@ class AreaTableListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({AreaTableKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建区域';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
@@ -115,7 +114,7 @@ class AreaTableListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, AreaTableKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final areas = this.areas.value;
     final area = areas.where((a) => a.key == key).firstOrNull;
     final name = area?.areaNameLangZhCN ?? '';

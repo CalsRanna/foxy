@@ -1,5 +1,3 @@
-import 'package:foxy/entity/vehicle_key.dart';
-
 class BriefVehicleEntity {
   final int id;
   final int flags;
@@ -15,5 +13,5 @@ class BriefVehicleEntity {
     );
   }
 
-  VehicleKey get key => VehicleKey(id: id);
+  int get key => id;
 }

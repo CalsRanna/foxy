@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_item_random_properties_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_properties_filter_entity.dart';
-import 'package:foxy/entity/item_random_properties_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -15,16 +14,14 @@ class ItemRandomPropertiesRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<ItemRandomPropertiesKey> copyItemRandomProperty(
-    ItemRandomPropertiesKey key,
-  ) async {
+  Future<int> copyItemRandomProperty(int key) async {
     final source = await getItemRandomProperty(key);
     if (source == null) {
       throw StateError('原随机属性不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemRandomProperty(copied);
-    return ItemRandomPropertiesKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemRandomProperties({
@@ -39,7 +36,7 @@ class ItemRandomPropertiesRepository
     return ItemRandomPropertiesEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemRandomProperty(ItemRandomPropertiesKey key) async {
+  Future<void> destroyItemRandomProperty(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原随机属性不存在，可能已被其他操作修改或删除');
@@ -74,9 +71,7 @@ class ItemRandomPropertiesRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<ItemRandomPropertiesEntity?> getItemRandomProperty(
-    ItemRandomPropertiesKey key,
-  ) async {
+  Future<ItemRandomPropertiesEntity?> getItemRandomProperty(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemRandomPropertiesEntity.fromJson(results.first.toMap());
@@ -105,7 +100,7 @@ class ItemRandomPropertiesRepository
   }
 
   Future<void> updateItemRandomProperty(
-    ItemRandomPropertiesKey originalKey,
+    int originalKey,
     ItemRandomPropertiesEntity property,
   ) async {
     try {
@@ -142,7 +137,7 @@ class ItemRandomPropertiesRepository
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemRandomPropertiesKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

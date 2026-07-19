@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_range_key.dart';
-
 /// 法术射程列表/Picker 展示模型。
 class BriefSpellRangeEntity {
   final int id;
@@ -23,5 +21,5 @@ class BriefSpellRangeEntity {
     );
   }
 
-  SpellRangeKey get key => SpellRangeKey(id: id);
+  int get key => id;
 }

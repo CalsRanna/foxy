@@ -3,15 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
-import 'package:foxy/entity/spell_range_key.dart';
 
 void main() {
-  test('SpellRangeKey 使用 ID 值相等且 Brief 安全解码并暴露定位器', () {
-    const first = SpellRangeKey(id: 91);
-    expect(first, const SpellRangeKey(id: 91));
-    expect(first.hashCode, const SpellRangeKey(id: 91).hashCode);
-    expect(first, isNot(const SpellRangeKey(id: 92)));
-    expect(SpellRangeKey.fromEntity(const SpellRangeEntity(id: 91)), first);
+  test('Brief 安全解码并返回物理 ID 标量', () {
+    const first = 91;
+    expect((const SpellRangeEntity(id: 91)).id, first);
     final brief = BriefSpellRangeEntity.fromJson({
       'ID': 91,
       'RangeMin0': 1,
@@ -26,13 +22,13 @@ void main() {
     final source = File(
       'lib/repository/spell_range_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('Future<SpellRangeKey> copySpellRange('));
+    expect(source, contains('Future<int> copySpellRange('));
     expect(source, contains('Future<void> storeSpellRange('));
     expect(source, contains('if (range.id <= 0)'));
     expect(source, contains('insert([range.toJson()])'));
     expect(source, isNot(contains('Future<int> storeSpellRange')));
     expect(source, isNot(contains('saveSpellRange(')));
-    expect(source, contains('SpellRangeKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(range.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

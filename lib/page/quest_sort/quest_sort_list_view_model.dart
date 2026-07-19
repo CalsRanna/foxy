@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
-import 'package:foxy/entity/quest_sort_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
@@ -24,11 +23,11 @@ class QuestSortListViewModel with FieldControllerMixin {
   final sorts = signal(<BriefQuestSortEntity>[]);
   final total = signal(0);
 
-  Future<void> copyQuestSort(QuestSortKey key) async {
+  Future<void> copyQuestSort(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的任务排序？',
+        description: '是否复制编号为 $key 的任务排序？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class QuestSortListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteQuestSort(QuestSortKey key) async {
+  Future<void> deleteQuestSort(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的任务排序？此操作不可撤销。',
+        description: '是否删除编号为 $key 的任务排序？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -82,7 +81,7 @@ class QuestSortListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({QuestSortKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务排序';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
@@ -116,7 +115,7 @@ class QuestSortListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, QuestSortKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final sorts = this.sorts.value;
     final sort = sorts.where((s) => s.key == key).firstOrNull;
     final name = sort?.sortNameLangZhCN ?? '';

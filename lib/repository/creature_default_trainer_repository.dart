@@ -1,5 +1,4 @@
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
-import 'package:foxy/entity/creature_default_trainer_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -14,9 +13,7 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
     return CreatureDefaultTrainerEntity(creatureId: creatureId);
   }
 
-  Future<void> destroyCreatureDefaultTrainer(
-    CreatureDefaultTrainerKey key,
-  ) async {
+  Future<void> destroyCreatureDefaultTrainer(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -24,7 +21,7 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
   }
 
   Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
-    CreatureDefaultTrainerKey key,
+    int key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
@@ -45,7 +42,7 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureDefaultTrainer(
-    CreatureDefaultTrainerKey originalKey,
+    int originalKey,
     CreatureDefaultTrainerEntity relation,
   ) async {
     try {
@@ -64,7 +61,7 @@ class CreatureDefaultTrainerRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureDefaultTrainerKey key) {
-    return builder.where('CreatureId', key.creatureId);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('CreatureId', key);
   }
 }

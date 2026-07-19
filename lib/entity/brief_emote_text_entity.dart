@@ -1,5 +1,3 @@
-import 'package:foxy/entity/emote_text_key.dart';
-
 class BriefEmoteTextEntity {
   final int id;
   final String name;
@@ -15,5 +13,5 @@ class BriefEmoteTextEntity {
     );
   }
 
-  EmoteTextKey get key => EmoteTextKey(id: id);
+  int get key => id;
 }

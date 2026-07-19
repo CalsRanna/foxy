@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
-import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
@@ -24,11 +23,11 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
   final scalingStatValues = signal(<BriefScalingStatValueEntity>[]);
   final total = signal(0);
 
-  Future<void> copyScalingStatValue(ScalingStatValueKey key) async {
+  Future<void> copyScalingStatValue(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的缩放属性值？',
+        description: '是否复制编号为 $key 的缩放属性值？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteScalingStatValue(ScalingStatValueKey key) async {
+  Future<void> deleteScalingStatValue(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的缩放属性值？此操作不可撤销。',
+        description: '是否删除编号为 $key 的缩放属性值？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({ScalingStatValueKey? key}) {
-    final label = key != null ? '缩放属性值 #${key.id}' : '新建缩放属性值';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '缩放属性值 #$key' : '新建缩放属性值';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -115,11 +114,11 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, ScalingStatValueKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'scaling_stat_value',
       actionType: action,
-      entityName: 'ScalingStatValue ${key.id}',
+      entityName: 'ScalingStatValue $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

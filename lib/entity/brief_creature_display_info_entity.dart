@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_display_info_key.dart';
-
 /// 生物显示信息列表展示模型（含 LEFT JOIN 模型名）。
 class BriefCreatureDisplayInfoEntity {
   final int id;
@@ -30,5 +28,5 @@ class BriefCreatureDisplayInfoEntity {
     );
   }
 
-  CreatureDisplayInfoKey get key => CreatureDisplayInfoKey(id: id);
+  int get key => id;
 }

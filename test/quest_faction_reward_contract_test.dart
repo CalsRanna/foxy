@@ -86,9 +86,9 @@ void main() {
     final source = File(
       'lib/repository/quest_faction_reward_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('QuestFactionRewardKey(id: 1)'));
-    expect(source, contains('QuestFactionRewardKey(id: 2)'));
-    expect(source, contains('QuestFactionRewardKey originalKey'));
+    expect(source, contains('1'));
+    expect(source, contains('2'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(questFactionReward.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
@@ -116,13 +116,13 @@ void main() {
     expect('Expanded(child:'.allMatches(view), hasLength(16));
     expect(viewModel, isNot(contains('List.generate')));
     expect(viewModel, contains('validateQuestFactionRewardFields(candidate)'));
-    expect(viewModel, contains('signal<QuestFactionRewardKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
       contains('updateQuestFactionReward(originalKey, candidate)'),
     );
-    expect(viewModel, contains('persistedKey.value = QuestFactionRewardKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(view, isNot(contains('readOnly: true')));
   });
 

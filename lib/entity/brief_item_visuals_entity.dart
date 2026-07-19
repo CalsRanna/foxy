@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_visuals_key.dart';
-
 class BriefItemVisualsEntity {
   final int id;
   final int slot0;
@@ -28,5 +26,5 @@ class BriefItemVisualsEntity {
     );
   }
 
-  ItemVisualsKey get key => ItemVisualsKey(id: id);
+  int get key => id;
 }

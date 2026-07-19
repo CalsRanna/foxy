@@ -1,5 +1,3 @@
-import 'package:foxy/entity/map_info_key.dart';
-
 class BriefMapInfoEntity {
   final int id;
   final String mapNameLangZhCN;
@@ -22,5 +20,5 @@ class BriefMapInfoEntity {
     );
   }
 
-  MapInfoKey get key => MapInfoKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
-import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
@@ -76,13 +75,13 @@ class ScalingStatValueDetailViewModel
   late final wandDPSController = registerController(IntFieldController());
 
   final scalingStatValue = signal(ScalingStatValueEntity());
-  final persistedKey = signal<ScalingStatValueKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({ScalingStatValueKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -120,7 +119,7 @@ class ScalingStatValueDetailViewModel
     } else {
       await _repository.updateScalingStatValue(originalKey, candidate);
     }
-    persistedKey.value = ScalingStatValueKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     scalingStatValue.value = candidate;
     routerFacade.updateCurrentLabel('缩放属性值 #${candidate.id}');
     _logActivity(action, candidate);

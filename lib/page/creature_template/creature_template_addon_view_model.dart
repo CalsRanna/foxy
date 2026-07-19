@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
-import 'package:foxy/entity/creature_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -32,7 +31,7 @@ class CreatureTemplateAddonViewModel
   late final aurasController = registerController(StringFieldController());
 
   final addon = signal(CreatureTemplateAddonEntity());
-  final editingKey = signal<CreatureTemplateAddonKey?>(null);
+  final editingKey = signal<int?>(null);
 
   /// 清理资源
   void dispose() {
@@ -42,7 +41,7 @@ class CreatureTemplateAddonViewModel
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
     try {
-      final key = CreatureTemplateAddonKey(entry: creatureId);
+      final key = creatureId;
       final data = await _repository.getCreatureTemplateAddon(key);
       if (data == null) {
         editingKey.value = null;
@@ -76,7 +75,7 @@ class CreatureTemplateAddonViewModel
       } else {
         await _repository.updateCreatureTemplateAddon(originalKey, addonData);
       }
-      editingKey.value = CreatureTemplateAddonKey.fromEntity(addonData);
+      editingKey.value = addonData.entry;
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

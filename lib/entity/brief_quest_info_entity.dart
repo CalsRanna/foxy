@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_info_key.dart';
-
 class BriefQuestInfoEntity {
   final int id;
   final String infoNameLangZhCN;
@@ -13,5 +11,5 @@ class BriefQuestInfoEntity {
     );
   }
 
-  QuestInfoKey get key => QuestInfoKey(id: id);
+  int get key => id;
 }

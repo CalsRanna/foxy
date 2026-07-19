@@ -1,5 +1,3 @@
-import 'package:foxy/entity/currency_type_key.dart';
-
 class BriefCurrencyTypeEntity {
   final int id;
   final int itemId;
@@ -31,5 +29,5 @@ class BriefCurrencyTypeEntity {
   String get displayItemName =>
       localeItemName.isNotEmpty ? localeItemName : itemName;
 
-  CurrencyTypeKey get key => CurrencyTypeKey(id: id);
+  int get key => id;
 }

@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_dbc_faction_template_entity.dart';
-import 'package:foxy/entity/dbc_faction_template_key.dart';
 
 void main() {
-  test('DbcFactionTemplateKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = DbcFactionTemplateKey(id: 7);
-    expect(key, const DbcFactionTemplateKey(id: 7));
-    expect(key.hashCode, const DbcFactionTemplateKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefDbcFactionTemplateEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/dbc_faction_template_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('DbcFactionTemplateKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeDbcFactionTemplate('));
-    expect(source, contains('DbcFactionTemplateKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(factionTemplate.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

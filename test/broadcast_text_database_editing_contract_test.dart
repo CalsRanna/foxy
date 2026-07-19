@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_broadcast_text_entity.dart';
-import 'package:foxy/entity/broadcast_text_key.dart';
 
 void main() {
-  test('BroadcastTextKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = BroadcastTextKey(id: 7);
-    expect(key, const BroadcastTextKey(id: 7));
-    expect(key.hashCode, const BroadcastTextKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefBroadcastTextEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/broadcast_text_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('BroadcastTextKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeBroadcastText('));
-    expect(source, contains('BroadcastTextKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(text.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

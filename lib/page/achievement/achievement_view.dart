@@ -97,7 +97,7 @@ class AchievementView extends StatelessWidget {
               child: FoxyFormItem(
                 label: '标题',
                 child: Watch((_) {
-                  final id = viewModel.persistedKey.value?.id;
+                  final id = viewModel.persistedKey.value;
                   return FoxyLocalePicker(
                     entry: id,
                     controller: viewModel.titleLangZhCNController,
@@ -129,7 +129,7 @@ class AchievementView extends StatelessWidget {
               child: FoxyFormItem(
                 label: '描述',
                 child: Watch((_) {
-                  final id = viewModel.persistedKey.value?.id;
+                  final id = viewModel.persistedKey.value;
                   return FoxyLocalePicker(
                     entry: id,
                     controller: viewModel.descriptionLangZhCNController,
@@ -162,7 +162,7 @@ class AchievementView extends StatelessWidget {
               child: FoxyFormItem(
                 label: '奖励',
                 child: Watch((_) {
-                  final id = viewModel.persistedKey.value?.id;
+                  final id = viewModel.persistedKey.value;
                   return FoxyLocalePicker(
                     entry: id,
                     controller: viewModel.rewardLangZhCNController,

@@ -3,18 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
-import 'package:foxy/entity/spell_focus_object_key.dart';
 
 void main() {
-  test('SpellFocusObjectKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const first = SpellFocusObjectKey(id: 61);
-    expect(first, const SpellFocusObjectKey(id: 61));
-    expect(first.hashCode, const SpellFocusObjectKey(id: 61).hashCode);
-    expect(first, isNot(const SpellFocusObjectKey(id: 62)));
-    expect(
-      SpellFocusObjectKey.fromEntity(const SpellFocusObjectEntity(id: 61)),
-      first,
-    );
+  test('Brief key 返回物理 ID 标量', () {
+    const first = 61;
+    expect((const SpellFocusObjectEntity(id: 61)).id, first);
     expect(const BriefSpellFocusObjectEntity(id: 61).key, first);
   });
 
@@ -22,16 +15,13 @@ void main() {
     final source = File(
       'lib/repository/spell_focus_object_repository.dart',
     ).readAsStringSync();
-    expect(
-      source,
-      contains('Future<SpellFocusObjectKey> copySpellFocusObject('),
-    );
+    expect(source, contains('Future<int> copySpellFocusObject('));
     expect(source, contains('Future<void> storeSpellFocusObject('));
     expect(source, contains('if (entity.id <= 0)'));
     expect(source, contains('insert([entity.toJson()])'));
     expect(source, isNot(contains('Future<int> storeSpellFocusObject')));
     expect(source, isNot(contains('saveSpellFocusObject(')));
-    expect(source, contains('SpellFocusObjectKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(entity.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/dbc_item_key.dart';
-
 class BriefDbcItemEntity {
   final int id;
   final int classId;
@@ -25,5 +23,5 @@ class BriefDbcItemEntity {
     );
   }
 
-  DbcItemKey get key => DbcItemKey(id: id);
+  int get key => id;
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/page/talent/talent_detail_view_model.dart';
 import 'package:foxy/page/talent/talent_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class TalentDetailPage extends StatefulWidget {
-  final TalentKey? talentKey;
+  final int? talentKey;
 
   const TalentDetailPage({super.key, this.talentKey});
 
@@ -36,7 +35,7 @@ class _TalentDetailPageState extends State<TalentDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建天赋' : '天赋 #${key.id}';
+      final name = key == null ? '新建天赋' : '天赋 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

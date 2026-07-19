@@ -6,7 +6,6 @@ import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/brief_page_text_locale_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/entity/page_text_locale_key.dart';
 
@@ -41,7 +40,7 @@ void main() {
       'VerifiedBuild': 12340,
     });
     expect(brief.displayText, '本地化第一页');
-    expect(brief.key, const PageTextKey(id: 15));
+    expect(brief.key, 15);
     expect(
       File('lib/entity/page_text_entity.dart').readAsStringSync(),
       isNot(contains('class BriefPageTextEntity')),
@@ -78,12 +77,9 @@ void main() {
   });
 
   test('主表和 locale Key 对全部定位列实现值相等', () {
-    expect(const PageTextKey(id: 1), const PageTextKey(id: 1));
-    expect(
-      const PageTextKey(id: 1).hashCode,
-      const PageTextKey(id: 1).hashCode,
-    );
-    expect(const PageTextKey(id: 1), isNot(const PageTextKey(id: 2)));
+    expect(1, 1);
+    expect(1.hashCode, 1.hashCode);
+    expect(1, isNot(2));
 
     const first = PageTextLocaleKey(id: 1, locale: 'zhCN');
     const same = PageTextLocaleKey(id: 1, locale: 'zhCN');
@@ -145,10 +141,10 @@ void main() {
     expect(source, isNot(contains(".table('gameobject_template')")));
     expect(source, isNot(contains('仍有 \$references 条引用')));
     expect(source, isNot(contains('getPageTextLocales(id)')));
-    expect(source, contains('destroyPageText(PageTextKey key)'));
+    expect(source, contains('destroyPageText(int key)'));
     expect(source, contains('final deletedRows ='));
     expect(source, contains('if (deletedRows == 0)'));
-    expect(source, contains('PageTextKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains(').update(pageText.toJson())'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('Future<void> storePageText('));
@@ -164,7 +160,7 @@ void main() {
       'lib/page/page_text/page_text_detail_view_model.dart',
     ).readAsStringSync();
     expect(viewModel, contains('validatePageTextFields(data);'));
-    expect(viewModel, contains('signal<PageTextKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value;'));
     expect(viewModel, contains('updatePageText(originalKey, data)'));
     expect(viewModel, contains('persistedKey.value = newKey;'));
@@ -227,10 +223,10 @@ void main() {
     final page = File(
       'lib/page/page_text/page_text_detail_page.dart',
     ).readAsStringSync();
-    expect(page, contains('final PageTextKey? pageTextKey;'));
+    expect(page, contains('final int? pageTextKey;'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(page, contains('disabledIndexes: key == null'));
-    expect(page, contains('PageTextLocaleView(id: key?.id)'));
+    expect(page, contains('PageTextLocaleView(id: key)'));
     expect(page, contains('PageTextView(viewModel: viewModel)'));
   });
 

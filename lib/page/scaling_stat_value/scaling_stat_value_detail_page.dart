@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ScalingStatValueDetailPage extends StatefulWidget {
-  final ScalingStatValueKey? scalingStatValueKey;
+  final int? scalingStatValueKey;
 
   const ScalingStatValueDetailPage({super.key, this.scalingStatValueKey});
 
@@ -38,7 +37,7 @@ class _ScalingStatValueDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建缩放属性值' : '缩放属性值 #${key.id}';
+      final name = key == null ? '新建缩放属性值' : '缩放属性值 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

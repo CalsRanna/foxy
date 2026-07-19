@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_item_template_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
-import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,7 +9,7 @@ class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
-  Future<ItemTemplateKey> copyItemTemplate(ItemTemplateKey key) async {
+  Future<int> copyItemTemplate(int key) async {
     final source = await getItemTemplate(key);
     if (source == null) {
       throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class ItemTemplateRepository with RepositoryMixin {
       entry: await nextMaxPlusOne(_table, 'entry'),
     );
     await storeItemTemplate(copied);
-    return ItemTemplateKey.fromEntity(copied);
+    return copied.entry;
   }
 
   Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
@@ -69,7 +68,7 @@ class ItemTemplateRepository with RepositoryMixin {
     return ItemTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
-  Future<void> destroyItemTemplate(ItemTemplateKey key) async {
+  Future<void> destroyItemTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
@@ -114,7 +113,7 @@ class ItemTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemTemplateEntity?> getItemTemplate(ItemTemplateKey key) async {
+  Future<ItemTemplateEntity?> getItemTemplate(int key) async {
     var builder = laconic.table('$_table AS it');
     final fields = <String>[
       'it.*',
@@ -135,7 +134,7 @@ class ItemTemplateRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
-    builder = builder.where('it.entry', key.entry).limit(1);
+    builder = builder.where('it.entry', key).limit(1);
     var results = await builder.get();
     if (results.isEmpty) return null;
     return ItemTemplateEntity.fromJson(results.first.toMap());
@@ -161,7 +160,7 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateItemTemplate(
-    ItemTemplateKey originalKey,
+    int originalKey,
     ItemTemplateEntity template,
   ) async {
     try {
@@ -227,7 +226,7 @@ class ItemTemplateRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemTemplateKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

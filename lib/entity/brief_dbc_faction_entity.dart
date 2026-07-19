@@ -1,5 +1,3 @@
-import 'package:foxy/entity/dbc_faction_key.dart';
-
 class BriefDbcFactionEntity {
   final int id;
   final String nameLangZhCN;
@@ -19,5 +17,5 @@ class BriefDbcFactionEntity {
     );
   }
 
-  DbcFactionKey get key => DbcFactionKey(id: id);
+  int get key => id;
 }

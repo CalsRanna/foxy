@@ -5,36 +5,24 @@ import 'package:foxy/entity/brief_quest_offer_reward_entity.dart';
 import 'package:foxy/entity/brief_quest_request_items_entity.dart';
 import 'package:foxy/entity/brief_quest_template_addon_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
-import 'package:foxy/entity/quest_offer_reward_key.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
-import 'package:foxy/entity/quest_request_items_key.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
-import 'package:foxy/entity/quest_template_addon_key.dart';
 
 void main() {
-  test('三张任务子表的 Key 和 Brief 精确暴露单列定位器', () {
-    const addonKey = QuestTemplateAddonKey(id: 11);
-    const requestKey = QuestRequestItemsKey(id: 12);
-    const rewardKey = QuestOfferRewardKey(id: 13);
+  test('三张任务子表的 Brief key 直接返回物理 ID 标量', () {
+    const addonKey = 11;
+    const requestKey = 12;
+    const rewardKey = 13;
 
-    expect(
-      addonKey,
-      QuestTemplateAddonKey.fromEntity(const QuestTemplateAddonEntity(id: 11)),
-    );
-    expect(
-      requestKey,
-      QuestRequestItemsKey.fromEntity(const QuestRequestItemsEntity(id: 12)),
-    );
-    expect(
-      rewardKey,
-      QuestOfferRewardKey.fromEntity(const QuestOfferRewardEntity(id: 13)),
-    );
+    expect(addonKey, (const QuestTemplateAddonEntity(id: 11)).id);
+    expect(requestKey, (const QuestRequestItemsEntity(id: 12)).id);
+    expect(rewardKey, (const QuestOfferRewardEntity(id: 13)).id);
     expect(const BriefQuestTemplateAddonEntity(id: 11).key, addonKey);
     expect(const BriefQuestRequestItemsEntity(id: 12).key, requestKey);
     expect(const BriefQuestOfferRewardEntity(id: 13).key, rewardKey);
   });
 
-  test('三张任务子表按原 typed key 更新完整 candidate 并检查写入结果', () {
+  test('三张任务子表按原始标量 key 更新完整 candidate 并检查写入结果', () {
     for (final stem in [
       'quest_template_addon',
       'quest_request_items',
@@ -75,8 +63,8 @@ void main() {
     final rewardView = File(
       'lib/page/quest/quest_offer_reward_view.dart',
     ).readAsStringSync();
-    expect(requestView, contains('entry: vm.editingKey.value?.id'));
-    expect(rewardView, contains('entry: vm.editingKey.value?.id'));
+    expect(requestView, contains('entry: vm.editingKey.value'));
+    expect(rewardView, contains('entry: vm.editingKey.value'));
   });
 
   test('三张独立 Brief 不暴露候选写入 API', () {

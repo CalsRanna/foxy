@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_offer_reward_key.dart';
-
 class BriefQuestOfferRewardEntity {
   final int id;
   final int emote1;
@@ -19,5 +17,5 @@ class BriefQuestOfferRewardEntity {
     );
   }
 
-  QuestOfferRewardKey get key => QuestOfferRewardKey(id: id);
+  int get key => id;
 }

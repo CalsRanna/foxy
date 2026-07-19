@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_spell_bonus_data_entity.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/entity/spell_bonus_data_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,7 +7,7 @@ import 'package:laconic/laconic.dart';
 class SpellBonusDataRepository with RepositoryMixin {
   static const _table = 'spell_bonus_data';
 
-  Future<void> copySpellBonusData(SpellBonusDataKey key) async {
+  Future<void> copySpellBonusData(int key) async {
     throw UnsupportedError('法术加成记录不能自动复制，请为有效法术新增记录。');
   }
 
@@ -22,7 +21,7 @@ class SpellBonusDataRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroySpellBonusData(SpellBonusDataKey key) async {
+  Future<void> destroySpellBonusData(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术奖励系数不存在，可能已被其他操作修改或删除');
@@ -51,7 +50,7 @@ class SpellBonusDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellBonusDataEntity?> getSpellBonusData(SpellBonusDataKey key) async {
+  Future<SpellBonusDataEntity?> getSpellBonusData(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellBonusDataEntity.fromJson(results.first.toMap());
@@ -79,7 +78,7 @@ class SpellBonusDataRepository with RepositoryMixin {
   }
 
   Future<void> updateSpellBonusData(
-    SpellBonusDataKey originalKey,
+    int originalKey,
     SpellBonusDataEntity data,
   ) async {
     try {
@@ -98,7 +97,7 @@ class SpellBonusDataRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellBonusDataKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

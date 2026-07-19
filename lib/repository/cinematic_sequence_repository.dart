@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
-import 'package:foxy/entity/cinematic_sequence_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class CinematicSequenceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_cinematic_sequences';
 
-  Future<CinematicSequenceKey> copyCinematicSequence(
-    CinematicSequenceKey key,
-  ) async {
+  Future<int> copyCinematicSequence(int key) async {
     final source = await getCinematicSequence(key);
     if (source == null) {
       throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class CinematicSequenceRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeCinematicSequence(copied);
-    return CinematicSequenceKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCinematicSequences({
@@ -31,7 +28,7 @@ class CinematicSequenceRepository with RepositoryMixin {
   Future<CinematicSequenceEntity> createCinematicSequence() async =>
       CinematicSequenceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyCinematicSequence(CinematicSequenceKey key) async {
+  Future<void> destroyCinematicSequence(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
@@ -51,9 +48,7 @@ class CinematicSequenceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CinematicSequenceEntity?> getCinematicSequence(
-    CinematicSequenceKey key,
-  ) async {
+  Future<CinematicSequenceEntity?> getCinematicSequence(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -82,7 +77,7 @@ class CinematicSequenceRepository with RepositoryMixin {
   }
 
   Future<void> updateCinematicSequence(
-    CinematicSequenceKey originalKey,
+    int originalKey,
     CinematicSequenceEntity entity,
   ) async {
     try {
@@ -111,7 +106,7 @@ class CinematicSequenceRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CinematicSequenceKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

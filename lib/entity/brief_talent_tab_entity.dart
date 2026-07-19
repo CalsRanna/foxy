@@ -1,5 +1,3 @@
-import 'package:foxy/entity/talent_tab_key.dart';
-
 class BriefTalentTabEntity {
   final int id;
   final String nameLangZhCN;
@@ -25,5 +23,5 @@ class BriefTalentTabEntity {
     );
   }
 
-  TalentTabKey get key => TalentTabKey(id: id);
+  int get key => id;
 }

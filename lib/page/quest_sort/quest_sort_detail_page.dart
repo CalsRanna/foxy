@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_sort_key.dart';
 import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/page/quest_sort/quest_sort_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestSortDetailPage extends StatefulWidget {
-  final QuestSortKey? questSortKey;
+  final int? questSortKey;
 
   const QuestSortDetailPage({super.key, this.questSortKey});
 
@@ -41,7 +40,7 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
           ? '新建任务排序'
           : entity.sortNameLangZhCN.isNotEmpty
           ? entity.sortNameLangZhCN
-          : '任务排序 #${key.id}';
+          : '任务排序 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_emote_text_data_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/emote_text_data_filter_entity.dart';
-import 'package:foxy/entity/emote_text_data_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,7 +13,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<EmoteTextDataKey> copyEmoteTextData(EmoteTextDataKey key) async {
+  Future<int> copyEmoteTextData(int key) async {
     final source = await getEmoteTextData(key);
     if (source == null) {
       throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeEmoteTextData(copied);
-    return EmoteTextDataKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countEmoteTextDatas({EmoteTextDataFilterEntity? filter}) {
@@ -35,7 +34,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return EmoteTextDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyEmoteTextData(EmoteTextDataKey key) async {
+  Future<void> destroyEmoteTextData(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
@@ -58,7 +57,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<EmoteTextDataEntity?> getEmoteTextData(EmoteTextDataKey key) async {
+  Future<EmoteTextDataEntity?> getEmoteTextData(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -98,7 +97,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateEmoteTextData(
-    EmoteTextDataKey originalKey,
+    int originalKey,
     EmoteTextDataEntity data,
   ) async {
     try {
@@ -133,7 +132,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, EmoteTextDataKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

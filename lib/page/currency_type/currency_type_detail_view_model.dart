@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
-import 'package:foxy/entity/currency_type_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
@@ -27,13 +26,13 @@ class CurrencyTypeDetailViewModel
   late final bitIndexController = registerController(IntFieldController());
 
   final currencyType = signal(CurrencyTypeEntity());
-  final persistedKey = signal<CurrencyTypeKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({CurrencyTypeKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -71,7 +70,7 @@ class CurrencyTypeDetailViewModel
     } else {
       await _repository.updateCurrencyType(originalKey, candidate);
     }
-    persistedKey.value = CurrencyTypeKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     currencyType.value = candidate;
     routerFacade.updateCurrentLabel('货币 #${candidate.id}');
     _logActivity(action, candidate);

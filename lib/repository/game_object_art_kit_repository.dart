@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
-import 'package:foxy/entity/game_object_art_kit_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class GameObjectArtKitRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_art_kit';
 
-  Future<GameObjectArtKitKey> copyGameObjectArtKit(
-    GameObjectArtKitKey key,
-  ) async {
+  Future<int> copyGameObjectArtKit(int key) async {
     final source = await getGameObjectArtKit(key);
     if (source == null) {
       throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeGameObjectArtKit(copied);
-    return GameObjectArtKitKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countGameObjectArtKits({GameObjectArtKitFilterEntity? filter}) =>
@@ -30,7 +27,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
   Future<GameObjectArtKitEntity> createGameObjectArtKit() async =>
       GameObjectArtKitEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyGameObjectArtKit(GameObjectArtKitKey key) async {
+  Future<void> destroyGameObjectArtKit(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
@@ -55,9 +52,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectArtKitEntity?> getGameObjectArtKit(
-    GameObjectArtKitKey key,
-  ) async {
+  Future<GameObjectArtKitEntity?> getGameObjectArtKit(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -86,7 +81,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
   }
 
   Future<void> updateGameObjectArtKit(
-    GameObjectArtKitKey originalKey,
+    int originalKey,
     GameObjectArtKitEntity entity,
   ) async {
     try {
@@ -121,7 +116,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectArtKitKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

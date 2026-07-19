@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
-import 'package:foxy/entity/emote_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/emote_text/emote_text_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -45,13 +44,13 @@ class EmoteTextDetailViewModel
   late final emoteText15Controller = registerController(IntFieldController());
 
   final emote = signal(EmoteTextEntity());
-  final persistedKey = signal<EmoteTextKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({EmoteTextKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -89,7 +88,7 @@ class EmoteTextDetailViewModel
     } else {
       await _repository.updateEmoteText(originalKey, candidate);
     }
-    persistedKey.value = EmoteTextKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     emote.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

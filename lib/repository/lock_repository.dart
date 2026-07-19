@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_lock_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
-import 'package:foxy/entity/lock_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
-  Future<LockKey> copyLock(LockKey key) async {
+  Future<int> copyLock(int key) async {
     final source = await getLock(key);
     if (source == null) {
       throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeLock(copied);
-    return LockKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countLocks({LockFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class LockRepository with RepositoryMixin {
     return LockEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyLock(LockKey key) async {
+  Future<void> destroyLock(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
@@ -50,7 +49,7 @@ class LockRepository with RepositoryMixin {
     return results.map((e) => BriefLockEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<LockEntity?> getLock(LockKey key) async {
+  Future<LockEntity?> getLock(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return LockEntity.fromJson(results.first.toMap());
@@ -75,7 +74,7 @@ class LockRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateLock(LockKey originalKey, LockEntity lock) async {
+  Future<void> updateLock(int originalKey, LockEntity lock) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -100,7 +99,7 @@ class LockRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, LockKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

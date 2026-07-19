@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_char_title_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
-import 'package:foxy/entity/char_title_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
@@ -14,7 +13,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<CharTitleKey> copyCharTitle(CharTitleKey key) async {
+  Future<int> copyCharTitle(int key) async {
     final source = await getCharTitle(key);
     if (source == null) {
       throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeCharTitle(copied);
-    return CharTitleKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCharTitles({CharTitleFilterEntity? filter}) async {
@@ -37,7 +36,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return CharTitleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCharTitle(CharTitleKey key) async {
+  Future<void> destroyCharTitle(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
@@ -60,7 +59,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<CharTitleEntity?> getCharTitle(CharTitleKey key) async {
+  Future<CharTitleEntity?> getCharTitle(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CharTitleEntity.fromJson(results.first.toMap());
@@ -96,10 +95,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateCharTitle(
-    CharTitleKey originalKey,
-    CharTitleEntity title,
-  ) async {
+  Future<void> updateCharTitle(int originalKey, CharTitleEntity title) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -134,7 +130,7 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CharTitleKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestFactionRewardDetailPage extends StatefulWidget {
-  final QuestFactionRewardKey? questFactionRewardKey;
+  final int? questFactionRewardKey;
 
   const QuestFactionRewardDetailPage({super.key, this.questFactionRewardKey});
 
@@ -38,7 +37,7 @@ class _QuestFactionRewardDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建任务声望' : '任务声望 #${key.id}';
+      final name = key == null ? '新建任务声望' : '任务声望 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

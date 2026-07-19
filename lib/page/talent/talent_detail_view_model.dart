@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
@@ -46,13 +45,13 @@ class TalentDetailViewModel
   late final categoryMask1Controller = registerController(IntFieldController());
 
   final talent = signal(TalentEntity());
-  final persistedKey = signal<TalentKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({TalentKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -90,7 +89,7 @@ class TalentDetailViewModel
     } else {
       await _repository.updateTalent(originalKey, t);
     }
-    persistedKey.value = TalentKey.fromEntity(t);
+    persistedKey.value = t.id;
     talent.value = t;
     routerFacade.updateCurrentLabel(_labelFor(t));
     _logActivity(action, t);

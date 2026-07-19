@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
-import 'package:foxy/entity/gem_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
@@ -23,11 +22,11 @@ class GemPropertyListViewModel with FieldControllerMixin {
   final properties = signal(<BriefGemPropertyEntity>[]);
   final total = signal(0);
 
-  Future<void> copyGemProperty(GemPropertyKey key) async {
+  Future<void> copyGemProperty(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的宝石属性？',
+        description: '是否复制编号为 $key 的宝石属性？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -41,11 +40,11 @@ class GemPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGemProperty(GemPropertyKey key) async {
+  Future<void> deleteGemProperty(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的宝石属性？此操作不可撤销。',
+        description: '是否删除编号为 $key 的宝石属性？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -80,8 +79,8 @@ class GemPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({GemPropertyKey? key}) {
-    final label = key != null ? '宝石属性 #${key.id}' : '新建宝石属性';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '宝石属性 #$key' : '新建宝石属性';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -110,11 +109,11 @@ class GemPropertyListViewModel with FieldControllerMixin {
     return GemPropertyFilterEntity(id: entryController.collect());
   }
 
-  void _logActivity(ActivityActionType action, GemPropertyKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
-      entityName: 'GemProperty ${key.id}',
+      entityName: 'GemProperty $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

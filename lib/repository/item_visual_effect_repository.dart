@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_item_visual_effect_entity.dart';
 import 'package:foxy/entity/item_visual_effect_entity.dart';
 import 'package:foxy/entity/item_visual_effect_filter_entity.dart';
-import 'package:foxy/entity/item_visual_effect_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,16 +8,14 @@ import 'package:laconic/laconic.dart';
 class ItemVisualEffectRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_visual_effects';
 
-  Future<ItemVisualEffectKey> copyItemVisualEffect(
-    ItemVisualEffectKey key,
-  ) async {
+  Future<int> copyItemVisualEffect(int key) async {
     final source = await getItemVisualEffect(key);
     if (source == null) {
       throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemVisualEffect(copied);
-    return ItemVisualEffectKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemVisualEffects({
@@ -33,7 +30,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return ItemVisualEffectEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemVisualEffect(ItemVisualEffectKey key) async {
+  Future<void> destroyItemVisualEffect(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
@@ -56,9 +53,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemVisualEffectEntity?> getItemVisualEffect(
-    ItemVisualEffectKey key,
-  ) async {
+  Future<ItemVisualEffectEntity?> getItemVisualEffect(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemVisualEffectEntity.fromJson(results.first.toMap());
@@ -86,7 +81,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
   }
 
   Future<void> updateItemVisualEffect(
-    ItemVisualEffectKey originalKey,
+    int originalKey,
     ItemVisualEffectEntity entity,
   ) async {
     try {
@@ -119,7 +114,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemVisualEffectKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

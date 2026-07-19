@@ -1,5 +1,3 @@
-import 'package:foxy/entity/game_object_template_addon_key.dart';
-
 class BriefGameObjectTemplateAddonEntity {
   final int entry;
   final int faction;
@@ -27,6 +25,5 @@ class BriefGameObjectTemplateAddonEntity {
     );
   }
 
-  GameObjectTemplateAddonKey get key =>
-      GameObjectTemplateAddonKey(entry: entry);
+  int get key => entry;
 }

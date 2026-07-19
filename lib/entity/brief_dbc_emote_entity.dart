@@ -1,5 +1,3 @@
-import 'package:foxy/entity/dbc_emote_key.dart';
-
 class BriefDbcEmoteEntity {
   final int id;
   final String slashCommand;
@@ -19,5 +17,5 @@ class BriefDbcEmoteEntity {
     );
   }
 
-  DbcEmoteKey get key => DbcEmoteKey(id: id);
+  int get key => id;
 }

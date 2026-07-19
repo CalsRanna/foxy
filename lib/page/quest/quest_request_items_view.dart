@@ -87,7 +87,7 @@ class _QuestRequestItemsViewState extends State<QuestRequestItemsView> {
               label: '完成文本',
               child: Watch(
                 (_) => FoxyLocalePicker(
-                  entry: vm.editingKey.value?.id,
+                  entry: vm.editingKey.value,
                   controller: vm.completionTextController,
                   delegate: FoxyLocalePickerDelegates.questRequestItems,
                   placeholder: 'CompletionText',

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_extended_cost_key.dart';
-
 String _appendDisplayItem(String current, int itemId, int count) {
   if (itemId == 0) return current;
   final value = '${itemId}x$count';
@@ -58,7 +56,7 @@ class BriefItemExtendedCostEntity {
     );
   }
 
-  ItemExtendedCostKey get key => ItemExtendedCostKey(id: id);
+  int get key => id;
 
   String get displayItems {
     var result = '';

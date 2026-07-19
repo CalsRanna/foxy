@@ -1,5 +1,3 @@
-import 'package:foxy/entity/lock_key.dart';
-
 class BriefLockEntity {
   final int id;
   final int type0;
@@ -22,5 +20,5 @@ class BriefLockEntity {
     );
   }
 
-  LockKey get key => LockKey(id: id);
+  int get key => id;
 }

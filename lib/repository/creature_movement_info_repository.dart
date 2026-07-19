@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
-import 'package:foxy/entity/creature_movement_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,16 +8,14 @@ import 'package:laconic/laconic.dart';
 class CreatureMovementInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_movement_info';
 
-  Future<CreatureMovementInfoKey> copyCreatureMovementInfo(
-    CreatureMovementInfoKey key,
-  ) async {
+  Future<int> copyCreatureMovementInfo(int key) async {
     final source = await getCreatureMovementInfo(key);
     if (source == null) {
       throw StateError('原生物移动信息不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeCreatureMovementInfo(copied);
-    return CreatureMovementInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCreatureMovementInfos({
@@ -33,7 +30,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     return CreatureMovementInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureMovementInfo(CreatureMovementInfoKey key) async {
+  Future<void> destroyCreatureMovementInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物移动信息不存在，可能已被其他操作修改或删除');
@@ -55,9 +52,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureMovementInfoEntity?> getCreatureMovementInfo(
-    CreatureMovementInfoKey key,
-  ) async {
+  Future<CreatureMovementInfoEntity?> getCreatureMovementInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureMovementInfoEntity.fromJson(results.first.toMap());
@@ -87,7 +82,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureMovementInfo(
-    CreatureMovementInfoKey originalKey,
+    int originalKey,
     CreatureMovementInfoEntity movementInfo,
   ) async {
     try {
@@ -117,7 +112,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureMovementInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

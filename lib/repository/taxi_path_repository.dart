@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_filter_entity.dart';
-import 'package:foxy/entity/taxi_path_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class TaxiPathRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_taxi_path';
 
-  Future<TaxiPathKey> copyTaxiPath(TaxiPathKey key) async {
+  Future<int> copyTaxiPath(int key) async {
     final source = await getTaxiPath(key);
     if (source == null) {
       throw StateError('原飞行路径不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class TaxiPathRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeTaxiPath(copied);
-    return TaxiPathKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countTaxiPaths({TaxiPathFilterEntity? filter}) =>
@@ -28,7 +27,7 @@ class TaxiPathRepository with RepositoryMixin {
   Future<TaxiPathEntity> createTaxiPath() async =>
       TaxiPathEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyTaxiPath(TaxiPathKey key) async {
+  Future<void> destroyTaxiPath(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原飞行路径不存在，可能已被其他操作修改或删除');
@@ -53,7 +52,7 @@ class TaxiPathRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<TaxiPathEntity?> getTaxiPath(TaxiPathKey key) async {
+  Future<TaxiPathEntity?> getTaxiPath(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : TaxiPathEntity.fromJson(rows.first.toMap());
   }
@@ -77,10 +76,7 @@ class TaxiPathRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateTaxiPath(
-    TaxiPathKey originalKey,
-    TaxiPathEntity entity,
-  ) async {
+  Future<void> updateTaxiPath(int originalKey, TaxiPathEntity entity) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -107,7 +103,7 @@ class TaxiPathRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, TaxiPathKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

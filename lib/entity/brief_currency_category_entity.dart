@@ -1,5 +1,3 @@
-import 'package:foxy/entity/currency_category_key.dart';
-
 class BriefCurrencyCategoryEntity {
   final int id;
   final int flags;
@@ -19,5 +17,5 @@ class BriefCurrencyCategoryEntity {
     );
   }
 
-  CurrencyCategoryKey get key => CurrencyCategoryKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
-import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
@@ -26,11 +25,11 @@ class PageTextListViewModel with FieldControllerMixin {
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
-  Future<void> copyPageText(PageTextKey key) async {
+  Future<void> copyPageText(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制页面文本 ID=${key.id}？',
+        description: '是否复制页面文本 ID=$key？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -44,11 +43,11 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deletePageText(PageTextKey key) async {
+  Future<void> deletePageText(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除页面文本 ID=${key.id}？此操作不可撤销。',
+        description: '是否删除页面文本 ID=$key？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -83,7 +82,7 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({PageTextKey? key, String? label}) {
+  void navigateToDetail({int? key, String? label}) {
     final name = label?.isNotEmpty == true ? label! : '新建页面文本';
     _routerFacade.navigateToDetail(
       label: name,
@@ -116,7 +115,7 @@ class PageTextListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, PageTextKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final pages = this.pages.value;
     final page = pages.where((p) => p.key == key).firstOrNull;
     final name = page?.text ?? '';

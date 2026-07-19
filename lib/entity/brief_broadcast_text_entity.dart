@@ -1,5 +1,3 @@
-import 'package:foxy/entity/broadcast_text_key.dart';
-
 class BriefBroadcastTextEntity {
   final int id;
   final String maleText;
@@ -19,5 +17,5 @@ class BriefBroadcastTextEntity {
     );
   }
 
-  BroadcastTextKey get key => BroadcastTextKey(id: id);
+  int get key => id;
 }

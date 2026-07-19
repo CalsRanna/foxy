@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/entity/item_extended_cost_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
@@ -48,13 +47,13 @@ class ItemExtendedCostDetailViewModel
   late final itemCount4Controller = registerController(IntFieldController());
 
   final cost = signal(ItemExtendedCostEntity());
-  final persistedKey = signal<ItemExtendedCostKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({ItemExtendedCostKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -92,7 +91,7 @@ class ItemExtendedCostDetailViewModel
     } else {
       await _repository.updateItemExtendedCost(originalKey, candidate);
     }
-    persistedKey.value = ItemExtendedCostKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     cost.value = candidate;
     routerFacade.updateCurrentLabel('扩展价格 #${candidate.id}');
     _logActivity(action, candidate);

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_display_info_key.dart';
-
 class BriefItemDisplayInfoEntity {
   final int id;
   final String modelName0;
@@ -19,5 +17,5 @@ class BriefItemDisplayInfoEntity {
     );
   }
 
-  ItemDisplayInfoKey get key => ItemDisplayInfoKey(id: id);
+  int get key => id;
 }

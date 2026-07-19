@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_info_key.dart';
 import 'package:foxy/page/quest_info/quest_info_detail_view_model.dart';
 import 'package:foxy/page/quest_info/quest_info_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestInfoDetailPage extends StatefulWidget {
-  final QuestInfoKey? questInfoKey;
+  final int? questInfoKey;
 
   const QuestInfoDetailPage({super.key, this.questInfoKey});
 
@@ -41,7 +40,7 @@ class _QuestInfoDetailPageState extends State<QuestInfoDetailPage> {
           ? '新建任务信息'
           : entity.infoNameLangZhCN.isNotEmpty
           ? entity.infoNameLangZhCN
-          : '任务信息 #${key.id}';
+          : '任务信息 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

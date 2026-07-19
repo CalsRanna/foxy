@@ -1,5 +1,3 @@
-import 'package:foxy/entity/totem_category_key.dart';
-
 class BriefTotemCategoryEntity {
   final int id;
   final String name;
@@ -21,5 +19,5 @@ class BriefTotemCategoryEntity {
         categoryMask: json['TotemCategoryMask'] ?? 0,
       );
 
-  TotemCategoryKey get key => TotemCategoryKey(id: id);
+  int get key => id;
 }

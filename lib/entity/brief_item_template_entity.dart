@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_template_key.dart';
-
 class BriefItemTemplateEntity {
   final int entry;
   final String name;
@@ -42,5 +40,5 @@ class BriefItemTemplateEntity {
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  ItemTemplateKey get key => ItemTemplateKey(entry: entry);
+  int get key => entry;
 }

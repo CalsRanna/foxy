@@ -38,7 +38,7 @@ class SpellView extends StatelessWidget {
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final entry = vm.persistedKey.value?.id;
+        final entry = vm.persistedKey.value;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.nameLangZhCNController,
@@ -52,7 +52,7 @@ class SpellView extends StatelessWidget {
     final subtextInput = FoxyFormItem(
       label: '子名称',
       child: Watch((_) {
-        final entry = vm.persistedKey.value?.id;
+        final entry = vm.persistedKey.value;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.nameSubtextLangZhCNController,
@@ -66,7 +66,7 @@ class SpellView extends StatelessWidget {
     final descriptionInput = FoxyFormItem(
       label: '描述',
       child: Watch((_) {
-        final entry = vm.persistedKey.value?.id;
+        final entry = vm.persistedKey.value;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.descriptionLangZhCNController,
@@ -80,7 +80,7 @@ class SpellView extends StatelessWidget {
     final auraDescriptionInput = FoxyFormItem(
       label: 'Buff描述',
       child: Watch((_) {
-        final entry = vm.persistedKey.value?.id;
+        final entry = vm.persistedKey.value;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.auraDescriptionLangZhCNController,

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
-import 'package:foxy/entity/dbc_item_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -20,14 +19,14 @@ class DbcItemRepository with RepositoryMixin {
     26,
   ];
 
-  Future<DbcItemKey> copyDbcItem(DbcItemKey key) async {
+  Future<int> copyDbcItem(int key) async {
     final source = await getDbcItem(key);
     if (source == null) {
       throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeDbcItem(copied);
-    return DbcItemKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countDbcItems({DbcItemFilterEntity? filter}) =>
@@ -36,7 +35,7 @@ class DbcItemRepository with RepositoryMixin {
   Future<DbcItemEntity> createDbcItem() async =>
       DbcItemEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDbcItem(DbcItemKey key) async {
+  Future<void> destroyDbcItem(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
@@ -62,7 +61,7 @@ class DbcItemRepository with RepositoryMixin {
     return rows.map((row) => BriefDbcItemEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<DbcItemEntity?> getDbcItem(DbcItemKey key) async {
+  Future<DbcItemEntity?> getDbcItem(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : DbcItemEntity.fromJson(rows.first.toMap());
   }
@@ -86,7 +85,7 @@ class DbcItemRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateDbcItem(DbcItemKey originalKey, DbcItemEntity item) async {
+  Future<void> updateDbcItem(int originalKey, DbcItemEntity item) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -112,7 +111,7 @@ class DbcItemRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, DbcItemKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

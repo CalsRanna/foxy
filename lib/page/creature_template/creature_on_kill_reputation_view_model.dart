@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
-import 'package:foxy/entity/creature_on_kill_reputation_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -20,7 +19,7 @@ class CreatureOnKillReputationViewModel
   final _repository = GetIt.instance.get<CreatureOnKillReputationRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final editingKey = signal<CreatureOnKillReputationKey?>(null);
+  final editingKey = signal<int?>(null);
   final parentCreatureID = signal(0);
 
   late final creatureIdController = registerController(IntFieldController());
@@ -89,7 +88,7 @@ class CreatureOnKillReputationViewModel
     } else {
       await _repository.updateCreatureOnKillReputation(originalKey, candidate);
     }
-    editingKey.value = CreatureOnKillReputationKey.fromEntity(candidate);
+    editingKey.value = candidate.creatureID;
     await _refresh();
   }
 
@@ -132,9 +131,7 @@ class CreatureOnKillReputationViewModel
   }
 
   Future<void> _refresh() async {
-    final parentKey = CreatureOnKillReputationKey(
-      creatureID: parentCreatureID.value,
-    );
+    final parentKey = parentCreatureID.value;
     final data = await _repository.getCreatureOnKillReputation(parentKey);
     if (data == null) {
       editingKey.value = null;

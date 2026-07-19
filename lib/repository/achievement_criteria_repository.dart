@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_criteria_filter_entity.dart';
-import 'package:foxy/entity/achievement_criteria_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
@@ -15,16 +14,14 @@ class AchievementCriteriaRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<AchievementCriteriaKey> copyAchievementCriterion(
-    AchievementCriteriaKey key,
-  ) async {
+  Future<int> copyAchievementCriterion(int key) async {
     final source = await getAchievementCriterion(key);
     if (source == null) {
       throw StateError('原成就条件不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeAchievementCriterion(copied);
-    return AchievementCriteriaKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countAchievementCriteria({
@@ -35,7 +32,7 @@ class AchievementCriteriaRepository
     return AchievementCriteriaEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievementCriterion(AchievementCriteriaKey key) async {
+  Future<void> destroyAchievementCriterion(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原成就条件不存在，可能已被其他操作修改或删除');
@@ -54,9 +51,7 @@ class AchievementCriteriaRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<AchievementCriteriaEntity?> getAchievementCriterion(
-    AchievementCriteriaKey key,
-  ) async {
+  Future<AchievementCriteriaEntity?> getAchievementCriterion(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (rows.isEmpty) return null;
     return AchievementCriteriaEntity.fromJson(rows.first.toMap());
@@ -101,7 +96,7 @@ class AchievementCriteriaRepository
   }
 
   Future<void> updateAchievementCriterion(
-    AchievementCriteriaKey originalKey,
+    int originalKey,
     AchievementCriteriaEntity criterion,
   ) async {
     try {
@@ -148,7 +143,7 @@ class AchievementCriteriaRepository
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, AchievementCriteriaKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
@@ -73,7 +72,7 @@ class SpellItemEnchantmentDetailViewModel
   late final minLevelController = registerController(IntFieldController());
 
   final enchantment = signal(SpellItemEnchantmentEntity());
-  final persistedKey = signal<SpellItemEnchantmentKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
     enchantment.value = enchantment.value.copyWith(
@@ -101,7 +100,7 @@ class SpellItemEnchantmentDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({SpellItemEnchantmentKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -139,7 +138,7 @@ class SpellItemEnchantmentDetailViewModel
     } else {
       await _repository.updateSpellItemEnchantment(originalKey, candidate);
     }
-    persistedKey.value = SpellItemEnchantmentKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     enchantment.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

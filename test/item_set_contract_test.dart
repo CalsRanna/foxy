@@ -103,7 +103,7 @@ void main() {
     }
     expect('Row('.allMatches(view), hasLength(12));
     expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('viewModel.persistedKey.value?.id'));
+    expect(view, contains('viewModel.persistedKey.value'));
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
@@ -115,7 +115,7 @@ void main() {
     ).readAsStringSync();
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateItemSetFields(candidate);'));
-    expect(repository, contains('ItemSetKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(itemSet.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -125,10 +125,10 @@ void main() {
     expect(repository, isNot(contains("table('foxy.dbc_skill_line')")));
     expect(repository, isNot(contains("remove('ID')")));
     expect(repository, contains(".orderBy('ID')"));
-    expect(viewModel, contains('signal<ItemSetKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateItemSet(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = ItemSetKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 
   test('DBC definitions 使用 3.3.5.12340 的精确物理格式', () {

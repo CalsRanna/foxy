@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_template_addon_key.dart';
-
 class BriefCreatureTemplateAddonEntity {
   final int entry;
   final int pathId;
@@ -25,5 +23,5 @@ class BriefCreatureTemplateAddonEntity {
     );
   }
 
-  CreatureTemplateAddonKey get key => CreatureTemplateAddonKey(entry: entry);
+  int get key => entry;
 }

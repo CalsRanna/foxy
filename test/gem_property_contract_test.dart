@@ -86,7 +86,7 @@ void main() {
     expect(repository, contains('gemProperty.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateGemPropertyFields(candidate);'));
-    expect(repository, contains('GemPropertyKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(gemProperty.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -112,12 +112,12 @@ void main() {
     final list = File(
       'lib/page/gem_property/gem_property_list_page.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('signal<GemPropertyKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateGemProperty(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = GemPropertyKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(viewModel, isNot(contains('getGemProperty(candidate.id)')));
-    expect(page, contains('final GemPropertyKey? gemPropertyKey'));
+    expect(page, contains('final int? gemPropertyKey'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
     expect(list, contains('items[row].key'));

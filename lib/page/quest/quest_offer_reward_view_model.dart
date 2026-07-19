@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
-import 'package:foxy/entity/quest_offer_reward_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -13,7 +12,7 @@ import 'package:signals/signals.dart';
 class QuestOfferRewardViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestOfferRewardRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final editingKey = signal<QuestOfferRewardKey?>(null);
+  final editingKey = signal<int?>(null);
 
   late final idController = registerController(IntFieldController());
   late final emote1Controller = registerController(IntFieldController());
@@ -33,7 +32,7 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
 
   Future<void> initSignals({required int questId}) async {
     try {
-      final key = QuestOfferRewardKey(id: questId);
+      final key = questId;
       final existing = await _repository.getQuestOfferReward(key);
       if (existing != null) {
         editingKey.value = key;
@@ -62,7 +61,7 @@ class QuestOfferRewardViewModel with FieldControllerMixin {
       } else {
         await _repository.updateQuestOfferReward(originalKey, model);
       }
-      editingKey.value = QuestOfferRewardKey.fromEntity(model);
+      editingKey.value = model.id;
 
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('发放奖励数据已保存'));

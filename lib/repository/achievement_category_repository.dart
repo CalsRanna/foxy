@@ -1,6 +1,5 @@
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_category_filter_entity.dart';
-import 'package:foxy/entity/achievement_category_key.dart';
 import 'package:foxy/entity/brief_achievement_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -15,16 +14,14 @@ class AchievementCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<AchievementCategoryKey> copyAchievementCategory(
-    AchievementCategoryKey key,
-  ) async {
+  Future<int> copyAchievementCategory(int key) async {
     final source = await getAchievementCategory(key);
     if (source == null) {
       throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeAchievementCategory(copied);
-    return AchievementCategoryKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countAchievementCategories({
@@ -35,7 +32,7 @@ class AchievementCategoryRepository
     return AchievementCategoryEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievementCategory(AchievementCategoryKey key) async {
+  Future<void> destroyAchievementCategory(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
@@ -49,9 +46,7 @@ class AchievementCategoryRepository
         .toList();
   }
 
-  Future<AchievementCategoryEntity?> getAchievementCategory(
-    AchievementCategoryKey key,
-  ) async {
+  Future<AchievementCategoryEntity?> getAchievementCategory(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (rows.isEmpty) return null;
     return AchievementCategoryEntity.fromJson(rows.first.toMap());
@@ -102,7 +97,7 @@ class AchievementCategoryRepository
   }
 
   Future<void> updateAchievementCategory(
-    AchievementCategoryKey originalKey,
+    int originalKey,
     AchievementCategoryEntity category,
   ) async {
     try {
@@ -145,7 +140,7 @@ class AchievementCategoryRepository
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, AchievementCategoryKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

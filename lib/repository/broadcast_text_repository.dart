@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
-import 'package:foxy/entity/broadcast_text_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
-  Future<BroadcastTextKey> copyBroadcastText(BroadcastTextKey key) async {
+  Future<int> copyBroadcastText(int key) async {
     final source = await getBroadcastText(key);
     if (source == null) {
       throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeBroadcastText(copied);
-    return BroadcastTextKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class BroadcastTextRepository with RepositoryMixin {
     return BroadcastTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyBroadcastText(BroadcastTextKey key) async {
+  Future<void> destroyBroadcastText(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
@@ -59,7 +58,7 @@ class BroadcastTextRepository with RepositoryMixin {
     }).toList();
   }
 
-  Future<BroadcastTextEntity?> getBroadcastText(BroadcastTextKey key) async {
+  Future<BroadcastTextEntity?> getBroadcastText(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return BroadcastTextEntity.fromJson(results.first.toMap());
@@ -85,7 +84,7 @@ class BroadcastTextRepository with RepositoryMixin {
   }
 
   Future<void> updateBroadcastText(
-    BroadcastTextKey originalKey,
+    int originalKey,
     BroadcastTextEntity text,
   ) async {
     try {
@@ -122,7 +121,7 @@ class BroadcastTextRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, BroadcastTextKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

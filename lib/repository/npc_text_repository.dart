@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
-import 'package:foxy/entity/npc_text_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
-  Future<NpcTextKey> copyNpcText(NpcTextKey key) async {
+  Future<int> copyNpcText(int key) async {
     final source = await getNpcText(key);
     if (source == null) {
       throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
@@ -18,7 +17,7 @@ class NpcTextRepository with RepositoryMixin {
     json['ID'] = await nextMaxPlusOne(_table, 'ID');
     final copied = NpcTextEntity.fromJson(json);
     await storeNpcText(copied);
-    return NpcTextKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class NpcTextRepository with RepositoryMixin {
     return NpcTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyNpcText(NpcTextKey key) async {
+  Future<void> destroyNpcText(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
@@ -52,7 +51,7 @@ class NpcTextRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<NpcTextEntity?> getNpcText(NpcTextKey key) async {
+  Future<NpcTextEntity?> getNpcText(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcTextEntity.fromJson(results.first.toMap());
@@ -75,10 +74,7 @@ class NpcTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateNpcText(
-    NpcTextKey originalKey,
-    NpcTextEntity npcText,
-  ) async {
+  Future<void> updateNpcText(int originalKey, NpcTextEntity npcText) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -108,7 +104,7 @@ class NpcTextRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, NpcTextKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

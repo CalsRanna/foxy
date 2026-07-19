@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/entity/gem_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
@@ -31,13 +30,13 @@ class GemPropertyDetailViewModel
   late final typeController = registerController(IntFieldController());
 
   final property = signal(GemPropertyEntity());
-  final persistedKey = signal<GemPropertyKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({GemPropertyKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -75,7 +74,7 @@ class GemPropertyDetailViewModel
     } else {
       await _repository.updateGemProperty(originalKey, candidate);
     }
-    persistedKey.value = GemPropertyKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     property.value = candidate;
     routerFacade.updateCurrentLabel('宝石属性 #${candidate.id}');
     _logActivity(action, candidate);

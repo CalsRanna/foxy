@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
-import 'package:foxy/entity/currency_type_key.dart';
 
 void main() {
-  test('CurrencyTypeKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = CurrencyTypeKey(id: 7);
-    expect(key, const CurrencyTypeKey(id: 7));
-    expect(key.hashCode, const CurrencyTypeKey(id: 7).hashCode);
-    expect(CurrencyTypeKey.fromEntity(const CurrencyTypeEntity(id: 7)), key);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
+    expect((const CurrencyTypeEntity(id: 7)).id, key);
     expect(const BriefCurrencyTypeEntity(id: 7).key, key);
   });
 

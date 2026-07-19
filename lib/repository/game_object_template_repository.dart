@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
-import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
 
-  Future<GameObjectTemplateKey> copyGameObjectTemplate(
-    GameObjectTemplateKey key,
-  ) async {
+  Future<int> copyGameObjectTemplate(int key) async {
     final source = await getGameObjectTemplate(key);
     if (source == null) {
       throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
@@ -20,7 +17,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       entry: await nextMaxPlusOne(_table, 'entry'),
     );
     await storeGameObjectTemplate(copied);
-    return GameObjectTemplateKey.fromEntity(copied);
+    return copied.entry;
   }
 
   Future<int> countGameObjectTemplates({
@@ -53,7 +50,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyGameObjectTemplate(GameObjectTemplateKey key) async {
+  Future<void> destroyGameObjectTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
@@ -88,9 +85,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectTemplateEntity?> getGameObjectTemplate(
-    GameObjectTemplateKey key,
-  ) async {
+  Future<GameObjectTemplateEntity?> getGameObjectTemplate(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
@@ -120,7 +115,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateGameObjectTemplate(
-    GameObjectTemplateKey originalKey,
+    int originalKey,
     GameObjectTemplateEntity template,
   ) async {
     try {
@@ -165,7 +160,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectTemplateKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

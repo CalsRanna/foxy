@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_movement_info_key.dart';
-
 class BriefCreatureMovementInfoEntity {
   final int id;
   final double smoothFacingChaseRate;
@@ -16,5 +14,5 @@ class BriefCreatureMovementInfoEntity {
             (json['SmoothFacingChaseRate'] as num?)?.toDouble() ?? 0,
       );
 
-  CreatureMovementInfoKey get key => CreatureMovementInfoKey(id: id);
+  int get key => id;
 }

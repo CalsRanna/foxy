@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_item_enchantment_key.dart';
-
 class BriefSpellItemEnchantmentEntity {
   final int id;
   final String nameLangZhCN;
@@ -28,5 +26,5 @@ class BriefSpellItemEnchantmentEntity {
     );
   }
 
-  SpellItemEnchantmentKey get key => SpellItemEnchantmentKey(id: id);
+  int get key => id;
 }

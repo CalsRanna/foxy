@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_spell_range_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
-import 'package:foxy/entity/spell_range_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,7 +13,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<SpellRangeKey> copySpellRange(SpellRangeKey key) async {
+  Future<int> copySpellRange(int key) async {
     final source = await getSpellRange(key);
     if (source == null) {
       throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeSpellRange(copied);
-    return SpellRangeKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
@@ -37,7 +36,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return SpellRangeEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellRange(SpellRangeKey key) async {
+  Future<void> destroySpellRange(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
@@ -65,7 +64,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<SpellRangeEntity?> getSpellRange(SpellRangeKey key) async {
+  Future<SpellRangeEntity?> getSpellRange(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellRangeEntity.fromJson(results.first.toMap());
@@ -101,10 +100,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateSpellRange(
-    SpellRangeKey originalKey,
-    SpellRangeEntity range,
-  ) async {
+  Future<void> updateSpellRange(int originalKey, SpellRangeEntity range) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -139,7 +135,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellRangeKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }
