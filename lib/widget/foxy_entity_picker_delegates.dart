@@ -26,7 +26,7 @@ import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
-import 'package:foxy/entity/dbc_faction_template_entity.dart';
+import 'package:foxy/entity/brief_dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
