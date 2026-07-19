@@ -1,18 +1,25 @@
+import 'package:foxy/entity/brief_item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_display_info_filter_entity.dart';
+import 'package:foxy/entity/item_display_info_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
-  Future<void> copyItemDisplayInfo(int id) async {
-    var source = await getItemDisplayInfo(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<ItemDisplayInfoKey> copyItemDisplayInfo(ItemDisplayInfoKey key) async {
+    final source = await getItemDisplayInfo(key);
+    if (source == null) {
+      throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
+    }
+    final copied = ItemDisplayInfoEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeItemDisplayInfo(copied);
+    return ItemDisplayInfoKey.fromEntity(copied);
   }
 
   Future<int> countItemDisplayInfos({
@@ -27,8 +34,11 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return ItemDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemDisplayInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyItemDisplayInfo(ItemDisplayInfoKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefItemDisplayInfoEntity>> getBriefItemDisplayInfos({
@@ -47,8 +57,10 @@ class ItemDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemDisplayInfoEntity?> getItemDisplayInfo(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemDisplayInfoEntity?> getItemDisplayInfo(
+    ItemDisplayInfoKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
@@ -60,31 +72,38 @@ class ItemDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    if (info.id == 0) {
-      await storeItemDisplayInfo(info);
-      return;
+  Future<void> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
+    if (info.id <= 0) {
+      throw StateError('物品显示信息 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getItemDisplayInfo(info.id);
-    if (existing != null) {
-      await updateItemDisplayInfo(info);
-    } else {
+    try {
       await laconic.table(_table).insert([info.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('物品显示信息 ${info.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    var json = info.toJson();
-    final nextId = info.id > 0 ? info.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    var json = info.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', info.id).update(json);
+  Future<void> updateItemDisplayInfo(
+    ItemDisplayInfoKey originalKey,
+    ItemDisplayInfoEntity info,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(info.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的物品显示信息 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -103,5 +122,9 @@ class ItemDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemDisplayInfoKey key) {
+    return builder.where('ID', key.id);
   }
 }
