@@ -20,13 +20,14 @@ import 'package:foxy/entity/gem_property_key.dart' as _i65;
 import 'package:foxy/entity/glyph_property_key.dart' as _i66;
 import 'package:foxy/entity/item_extended_cost_key.dart' as _i67;
 import 'package:foxy/entity/item_set_key.dart' as _i68;
-import 'package:foxy/entity/page_text_key.dart' as _i75;
+import 'package:foxy/entity/page_text_key.dart' as _i76;
 import 'package:foxy/entity/quest_faction_reward_key.dart' as _i69;
 import 'package:foxy/entity/quest_info_key.dart' as _i70;
 import 'package:foxy/entity/quest_sort_key.dart' as _i71;
 import 'package:foxy/entity/scaling_stat_distribution_key.dart' as _i72;
 import 'package:foxy/entity/scaling_stat_value_key.dart' as _i73;
 import 'package:foxy/entity/smart_script_key.dart' as _i74;
+import 'package:foxy/entity/spell_item_enchantment_key.dart' as _i75;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1864,15 +1865,13 @@ class SpellItemEnchantmentDetailRoute
     extends _i58.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
   SpellItemEnchantmentDetailRoute({
     _i59.Key? key,
-    int? id,
-    String? name,
+    _i75.SpellItemEnchantmentKey? spellItemEnchantmentKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SpellItemEnchantmentDetailRoute.name,
          args: SpellItemEnchantmentDetailRouteArgs(
            key: key,
-           id: id,
-           name: name,
+           spellItemEnchantmentKey: spellItemEnchantmentKey,
          ),
          initialChildren: children,
        );
@@ -1887,36 +1886,37 @@ class SpellItemEnchantmentDetailRoute
       );
       return _i51.SpellItemEnchantmentDetailPage(
         key: args.key,
-        id: args.id,
-        name: args.name,
+        spellItemEnchantmentKey: args.spellItemEnchantmentKey,
       );
     },
   );
 }
 
 class SpellItemEnchantmentDetailRouteArgs {
-  const SpellItemEnchantmentDetailRouteArgs({this.key, this.id, this.name});
+  const SpellItemEnchantmentDetailRouteArgs({
+    this.key,
+    this.spellItemEnchantmentKey,
+  });
 
   final _i59.Key? key;
 
-  final int? id;
-
-  final String? name;
+  final _i75.SpellItemEnchantmentKey? spellItemEnchantmentKey;
 
   @override
   String toString() {
-    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, id: $id, name: $name}';
+    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, spellItemEnchantmentKey: $spellItemEnchantmentKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! SpellItemEnchantmentDetailRouteArgs) return false;
-    return key == other.key && id == other.id && name == other.name;
+    return key == other.key &&
+        spellItemEnchantmentKey == other.spellItemEnchantmentKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
+  int get hashCode => key.hashCode ^ spellItemEnchantmentKey.hashCode;
 }
 
 /// generated route for
@@ -2022,7 +2022,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i75.PageTextKey? pageTextKey,
+    _i76.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2051,7 +2051,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i75.PageTextKey? pageTextKey;
+  final _i76.PageTextKey? pageTextKey;
 
   @override
   String toString() {

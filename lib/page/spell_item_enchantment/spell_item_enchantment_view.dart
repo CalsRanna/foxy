@@ -11,34 +11,13 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class SpellItemEnchantmentView extends StatefulWidget {
-  final int? entry;
+class SpellItemEnchantmentView extends StatelessWidget {
+  final SpellItemEnchantmentDetailViewModel viewModel;
 
-  const SpellItemEnchantmentView({super.key, this.entry});
-
-  @override
-  State<SpellItemEnchantmentView> createState() =>
-      _SpellItemEnchantmentViewState();
-}
-
-class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
-  final viewModel = GetIt.instance.get<SpellItemEnchantmentDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const SpellItemEnchantmentView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +26,14 @@ class _SpellItemEnchantmentViewState extends State<SpellItemEnchantmentView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final id = viewModel.enchantment.value.id;
+        final id = viewModel.persistedKey.value?.id;
         return FoxyLocalePicker(
-          entry: id == 0 ? null : id,
+          entry: id,
           controller: viewModel.nameController,
           title: '附魔名称本地化',
           placeholder: 'Name_lang_zhCN',

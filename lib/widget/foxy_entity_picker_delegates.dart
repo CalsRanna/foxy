@@ -103,7 +103,7 @@ import 'package:foxy/entity/brief_spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/entity/brief_spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/entity/brief_spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/entity/brief_spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
