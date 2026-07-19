@@ -6,6 +6,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -68,6 +69,12 @@ class _GameObjectLootTemplateViewState
               child: Text('编辑'),
             ),
             const Spacer(),
+            FoxyPagination(
+              page: viewModel.page.value,
+              pageSize: 50,
+              total: viewModel.total.value,
+              onChange: viewModel.paginate,
+            ),
             ShadButton.destructive(
               leading: Icon(LucideIcons.trash, size: 16),
               onPressed: selectedIndex != null
@@ -125,9 +132,9 @@ class _GameObjectLootTemplateViewState
                 return ShadTableCell.header(child: Text(headers[index]));
               },
               onRowTap: (row) => viewModel.selectRow(row),
-              onRowDoubleTap: (row) {
+              onRowDoubleTap: (row) async {
                 viewModel.selectRow(row);
-                _showEditDialog();
+                await _showEditDialog();
               },
               pinnedRowCount: 1,
               rowCount: items.length,
@@ -151,8 +158,8 @@ class _GameObjectLootTemplateViewState
     );
   }
 
-  void _showEditDialog() {
-    viewModel.edit();
+  Future<void> _showEditDialog() async {
+    if (!await viewModel.edit() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -181,7 +188,6 @@ class _GameObjectLootTemplateViewState
                   child: FoxyNumberInput<int>(
                     controller: viewModel.gameObjectIdController,
                     placeholder: 'Entry',
-                    readOnly: true,
                   ),
                 ),
               ),
@@ -296,12 +302,10 @@ class _GameObjectLootTemplateViewState
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = isEditing
+                      ? await viewModel.update(dialogContext)
+                      : await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),

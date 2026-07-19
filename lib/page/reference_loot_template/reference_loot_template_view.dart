@@ -43,19 +43,16 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      // 复合主键 (Entry, Item)：新建可填，编辑只读
-      final pkReadOnly = !viewModel.isNew;
-      return _buildBody(context, pkReadOnly: pkReadOnly);
+      return _buildBody(context);
     });
   }
 
-  Widget _buildBody(BuildContext context, {required bool pkReadOnly}) {
+  Widget _buildBody(BuildContext context) {
     final entryInput = FoxyFormItem(
       label: 'Entry',
       child: FoxyNumberInput<int>(
         placeholder: 'Entry',
         controller: viewModel.entryController,
-        readOnly: pkReadOnly,
       ),
     );
     final itemInput = FoxyFormItem(
@@ -64,13 +61,11 @@ class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
           ? FoxyNumberInput<int>(
               placeholder: 'Item',
               controller: viewModel.itemController,
-              readOnly: pkReadOnly,
             )
           : FoxyEntityPicker(
               delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
-              readOnly: pkReadOnly,
             ),
     );
     final referenceInput = FoxyFormItem(

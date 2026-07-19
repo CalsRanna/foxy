@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 
@@ -151,7 +152,7 @@ void main() {
     );
   });
 
-  test('Repository 使用正确复合主键并按行类型校验真实引用', () {
+  test('Repository 使用正确复合主键并保持单表写入边界', () {
     expect(
       LootTemplateRepository.primaryKeyColumnsFor(LootTableType.reference),
       {'Entry', 'Item'},
@@ -159,21 +160,20 @@ void main() {
     final source = File(
       'lib/repository/loot_template_repository.dart',
     ).readAsStringSync();
-    expect(source, contains(".table('item_template')"));
-    expect(source, contains(".table(LootTableType.reference.tableName)"));
-    expect(source, contains(".where('Entry', loot.reference.abs())"));
+    expect(source, isNot(contains(".table('item_template')")));
+    expect(source, isNot(contains('reference.abs()')));
     expect(source, contains("builder = builder.groupBy('Entry')"));
     expect(source, contains('tableType == LootTableType.reference'));
     expect(source, contains("nextMaxPlusOne(_table, 'Entry')"));
   });
 
-  test('Repository 复制行时保留 Reference 并复用引用校验写入路径', () {
+  test('Repository 复制行时保留 Reference 并复用单表写入路径', () {
     final source = File(
       'lib/repository/loot_template_repository.dart',
     ).readAsStringSync();
     expect(
       source,
-      contains('source.copyWith(item: await getNextItemId(entry))'),
+      contains('source.copyWith(item: await getNextItemId(source.entry))'),
     );
     expect(source, contains('await storeLootTemplate(copied);'));
     expect(source, isNot(contains("json['Reference'] = nextItem")));

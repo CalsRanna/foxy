@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -35,15 +37,14 @@ class ReferenceLootTemplateDetailViewModel
   late final commentController = registerController(StringFieldController());
   final template = signal<LootTemplateEntity?>(null);
 
-  final originalEntry = signal<int?>(null);
-  final originalItem = signal<int?>(null);
+  final persistedKey = signal<LootTemplateKey?>(null);
   final hasReference = signal(false);
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
   }
 
   /// 复合主键 (Entry, Item) 均为业务语义键：新建可填，编辑只读。
-  bool get isNew => originalItem.value == null;
+  bool get isNew => persistedKey.value == null;
 
   void dispose() {
     referenceController.removeListener(_syncReferenceState);
@@ -54,16 +55,15 @@ class ReferenceLootTemplateDetailViewModel
     try {
       // 新建：不预填伪 Item 号；Entry/Item 由用户指定（Item 用实体选择器）
       if (entry == null || item == null) {
-        originalEntry.value = null;
-        originalItem.value = null;
+        persistedKey.value = null;
         final blank = const LootTemplateEntity();
         template.value = blank;
         _initControllers(blank);
         return;
       }
-      originalEntry.value = entry;
-      originalItem.value = item;
-      final result = await repository.getLootTemplate(entry, item);
+      final key = StandardLootTemplateKey(entry: entry, item: item);
+      persistedKey.value = key;
+      final result = await repository.getLootTemplate(key);
       if (result != null) {
         template.value = result;
         _initControllers(result);
@@ -82,28 +82,33 @@ class ReferenceLootTemplateDetailViewModel
   }
 
   Future<void> save(BuildContext context) async {
-    final oEntry = originalEntry.value;
-    final oItem = originalItem.value;
+    final originalKey = persistedKey.value;
     try {
       final data = _collectFromControllers();
       validateLootTemplateFields(data);
-      if (oItem != null && oEntry != null) {
-        await repository.updateLootTemplate(oEntry, oItem, data);
+      if (originalKey != null) {
+        await repository.updateLootTemplate(originalKey, data);
         template.value = data;
-        originalEntry.value = data.entry;
-        originalItem.value = data.item;
+        persistedKey.value = LootTemplateKey.fromEntity(
+          LootTableType.reference,
+          data,
+        );
         _logActivity(ActivityActionType.update, data);
       } else {
-        final existed = await repository.getLootTemplate(data.entry, data.item);
+        final candidateKey = LootTemplateKey.fromEntity(
+          LootTableType.reference,
+          data,
+        );
+        final existed = await repository.getLootTemplate(candidateKey);
         if (existed != null) {
           throw Exception('Entry=${data.entry}, Item=${data.item} 已存在');
         }
         await repository.storeLootTemplate(data);
         template.value = data;
-        originalEntry.value = data.entry;
-        originalItem.value = data.item;
+        persistedKey.value = candidateKey;
         _logActivity(ActivityActionType.create, data);
       }
+      routerFacade.updateCurrentLabel('关联掉落 ${data.entry}-${data.item}');
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
     } catch (e) {

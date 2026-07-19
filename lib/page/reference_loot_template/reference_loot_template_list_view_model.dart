@@ -1,6 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/brief_loot_template_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
+import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -25,16 +27,16 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
-  Future<void> copyReferenceLootTemplate(int entry, int item) async {
+  Future<void> copyReferenceLootTemplate(LootTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制关联掉落模板 Entry=$entry, Item=$item？',
+        description: '是否复制关联掉落模板 Entry=${key.entry}, Item=${key.item}？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await repository.copyLootTemplate(entry, item);
-      _logActivity(ActivityActionType.copy, entry);
+      await repository.copyLootTemplate(key);
+      _logActivity(ActivityActionType.copy, key.entry);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -43,17 +45,17 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteReferenceLootTemplate(int entry, int item) async {
+  Future<void> deleteReferenceLootTemplate(LootTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除关联掉落记录 Entry=$entry, Item=$item？此操作不可撤销。',
+        description: '是否删除关联掉落记录 Entry=${key.entry}, Item=${key.item}？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyLootTemplate(entry, item);
-      _logActivity(ActivityActionType.delete, entry);
+      await repository.destroyLootTemplate(key);
+      _logActivity(ActivityActionType.delete, key.entry);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {

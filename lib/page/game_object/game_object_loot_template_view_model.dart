@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_loot_template_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -18,10 +23,12 @@ class GameObjectLootTemplateViewModel
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
+  final editingKey = signal<LootTemplateKey?>(null);
   final items = signal<List<BriefLootTemplateEntity>>([]);
+  final page = signal(1);
   final selectedIndex = signal<int?>(null);
+  final total = signal(0);
   final editing = signal(false);
-  int? editingItem;
 
   late final gameObjectIdController = registerController(IntFieldController());
   late final itemController = registerController(IntFieldController());
@@ -40,7 +47,7 @@ class GameObjectLootTemplateViewModel
 
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
-      entry: gameObjectId.value,
+      entry: gameObjectIdController.collect(),
       item: itemController.collect(),
       reference: referenceController.collect(),
       chance: chanceController.collect(),
@@ -58,7 +65,7 @@ class GameObjectLootTemplateViewModel
     if (index == null) return;
     try {
       final item = items.value[index];
-      await repository.copyLootTemplate(item.entry, item.item);
+      await repository.copyLootTemplate(item.key);
       DialogUtil.instance.success('复制成功');
       await load();
     } catch (e) {
@@ -91,7 +98,7 @@ class GameObjectLootTemplateViewModel
         destructive: true,
       );
       if (!confirmed) return;
-      await repository.destroyLootTemplate(item.entry, item.item);
+      await repository.destroyLootTemplate(item.key);
       DialogUtil.instance.success('删除成功');
       await load();
     } catch (e) {
@@ -104,13 +111,24 @@ class GameObjectLootTemplateViewModel
     disposeControllers();
   }
 
-  void edit() {
+  Future<bool> edit() async {
     final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    fillForm(items.value[index]);
+    if (index == null || index < 0 || index >= items.value.length) return false;
+    final key = items.value[index].key;
+    editingKey.value = key;
+    final loot = await repository.getLootTemplate(key);
+    if (loot == null) {
+      editingKey.value = null;
+      DialogUtil.instance.error('原记录不存在，可能已被其他操作修改或删除');
+      return false;
+    }
+    fillForm(loot);
+    editing.value = true;
+    return true;
   }
 
-  void fillForm(BriefLootTemplateEntity loot) {
+  void fillForm(LootTemplateEntity loot) {
+    gameObjectIdController.init(loot.entry);
     itemController.init(loot.item);
     referenceController.init(loot.reference);
     chanceController.init(loot.chance);
@@ -120,8 +138,6 @@ class GameObjectLootTemplateViewModel
     minCountController.init(loot.minCount);
     maxCountController.init(loot.maxCount);
     commentController.init(loot.comment);
-    editingItem = loot.item;
-    editing.value = true;
   }
 
   Future<void> initSignals({required int gameObjectId}) async {
@@ -136,17 +152,32 @@ class GameObjectLootTemplateViewModel
   }
 
   Future<void> load() async {
-    items.value = await repository.getBriefLootTemplates(gameObjectId.value);
+    final count = await repository.countLootTemplatesForEntry(
+      gameObjectId.value,
+    );
+    final lastPage = max(1, (count / repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    items.value = await repository.getBriefLootTemplates(
+      gameObjectId.value,
+      page: page.value,
+    );
+    total.value = count;
     selectedIndex.value = null;
     editing.value = false;
-    editingItem = null;
+    editingKey.value = null;
   }
 
   void pop() {
     routerFacade.goBack();
   }
 
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await load();
+  }
+
   void resetForm() {
+    gameObjectIdController.init(gameObjectId.value);
     itemController.init(0);
     referenceController.init(0);
     chanceController.init(100.0);
@@ -156,23 +187,25 @@ class GameObjectLootTemplateViewModel
     minCountController.init(1);
     maxCountController.init(1);
     commentController.init('');
-    editingItem = null;
+    editingKey.value = null;
     editing.value = false;
   }
 
-  Future<void> save(BuildContext context) async {
+  Future<bool> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
       validateLootTemplateFields(loot);
       await repository.storeLootTemplate(loot);
       await load();
-      if (!context.mounted) return;
+      if (!context.mounted) return true;
       var toast = ShadToast(description: Text('保存成功'));
       ShadSonner.of(context).show(toast);
+      return true;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return false;
     }
   }
 
@@ -182,23 +215,23 @@ class GameObjectLootTemplateViewModel
     }
   }
 
-  Future<void> update(BuildContext context) async {
+  Future<bool> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
       validateLootTemplateFields(loot);
-      await repository.updateLootTemplate(
-        loot.entry,
-        editingItem ?? loot.item,
-        loot,
-      );
+      final originalKey = editingKey.value;
+      if (originalKey == null) throw StateError('未选择要更新的掉落记录');
+      await repository.updateLootTemplate(originalKey, loot);
       await load();
-      if (!context.mounted) return;
+      if (!context.mounted) return true;
       var toast = ShadToast(description: Text('更新成功'));
       ShadSonner.of(context).show(toast);
+      return true;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return false;
     }
   }
 }
