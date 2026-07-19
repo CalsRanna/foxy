@@ -88,7 +88,12 @@ class LootTemplateRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => BriefLootTemplateEntryEntity.fromJson(e.toMap()))
+        .map(
+          (e) => BriefLootTemplateEntryEntity.fromJson(
+            e.toMap(),
+            tableType: tableType,
+          ),
+        )
         .toList();
   }
 

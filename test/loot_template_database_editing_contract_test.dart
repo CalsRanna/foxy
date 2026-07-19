@@ -5,6 +5,7 @@ import 'package:foxy/entity/brief_loot_template_entity.dart';
 import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
 import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_entry_key.dart';
 import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:laconic/laconic.dart';
@@ -100,7 +101,7 @@ void main() {
       final entryBrief = BriefLootTemplateEntryEntity.fromJson(const {
         'Entry': 10,
         'ItemCount': 5,
-      });
+      }, tableType: LootTableType.reference);
 
       expect(
         creatureBrief.key,
@@ -117,6 +118,13 @@ void main() {
       );
       expect(entryBrief.entry, 10);
       expect(entryBrief.itemCount, 5);
+      expect(
+        entryBrief.key,
+        const LootTemplateEntryKey(
+          tableType: LootTableType.reference,
+          entry: 10,
+        ),
+      );
     });
   });
 
