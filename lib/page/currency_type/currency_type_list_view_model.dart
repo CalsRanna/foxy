@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/currency_type_entity.dart';
+import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
+import 'package:foxy/entity/currency_type_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
@@ -23,17 +24,17 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
   final currencyTypes = signal(<BriefCurrencyTypeEntity>[]);
   final total = signal(0);
 
-  Future<void> deleteCurrencyType(int id) async {
+  Future<void> deleteCurrencyType(CurrencyTypeKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的货币？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的货币？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyCurrencyType(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyCurrencyType(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -62,12 +63,12 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '货币 #$id' : '新建货币';
+  void navigateToDetail({CurrencyTypeKey? key}) {
+    final label = key != null ? '货币 #${key.id}' : '新建货币';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: CurrencyTypeDetailRoute(id: id),
+      route: CurrencyTypeDetailRoute(currencyTypeKey: key),
       parentMenu: RouterMenu.currencyType,
     );
   }
@@ -96,11 +97,11 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, CurrencyTypeKey key) {
     final log = ActivityLogEntity(
       module: 'currency_type',
       actionType: action,
-      entityName: 'CurrencyType $id',
+      entityName: 'CurrencyType ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

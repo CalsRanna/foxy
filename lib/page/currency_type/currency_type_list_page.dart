@@ -129,7 +129,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: items[row].id);
+            viewModel.navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -139,14 +139,14 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: items[row].id);
+                    viewModel.navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteCurrencyType(items[row].id);
+                    viewModel.deleteCurrencyType(items[row].key);
                   },
                   child: Text('删除'),
                 ),

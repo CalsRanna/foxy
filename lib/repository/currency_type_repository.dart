@@ -1,16 +1,13 @@
-import 'package:foxy/constant/currency_type_constants.dart';
+import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
+import 'package:foxy/entity/currency_type_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class CurrencyTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
-
-  Future<void> copyCurrencyType(int id) async {
-    if (await getCurrencyType(id) == null) return;
-    throw StateError('CurrencyTypes 的 ItemID 和 BitIndex 必须唯一，请使用新增并选择新值');
-  }
 
   Future<int> countCurrencyTypes({CurrencyTypeFilterEntity? filter}) {
     final joinLocale = localeEnabled;
@@ -33,21 +30,11 @@ class CurrencyTypeRepository with RepositoryMixin {
     return CurrencyTypeEntity(id: await _getNextId());
   }
 
-  Future<void> destroyCurrencyType(int id) async {
-    final source = await getCurrencyType(id);
-    if (source == null) return;
-    if (await _isCurrencyTokenItem(source.itemId)) {
-      throw StateError('物品 ${source.itemId} 仍使用货币背包位，不能删除对应货币');
+  Future<void> destroyCurrencyType(CurrencyTypeKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原货币不存在，可能已被其他操作修改或删除');
     }
-    final characterReferences = await _countKnownCurrencyReferences(
-      source.bitIndex,
-    );
-    if (characterReferences > 0) {
-      throw StateError(
-        '货币位 ${source.bitIndex} 仍被 $characterReferences 个角色记录引用，不能删除',
-      );
-    }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
@@ -84,8 +71,8 @@ class CurrencyTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CurrencyTypeEntity?> getCurrencyType(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<CurrencyTypeEntity?> getCurrencyType(CurrencyTypeKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : CurrencyTypeEntity.fromJson(rows.first.toMap());
@@ -96,35 +83,38 @@ class CurrencyTypeRepository with RepositoryMixin {
     return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveCurrencyType(CurrencyTypeEntity currencyType) async {
-    final existing = currencyType.id == 0
-        ? null
-        : await getCurrencyType(currencyType.id);
-    if (existing == null) {
-      await storeCurrencyType(currencyType);
-    } else {
-      await updateCurrencyType(currencyType);
+  Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
+    if (currencyType.id <= 0) {
+      throw StateError('货币 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([currencyType.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('货币 ID、物品或位索引已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeCurrencyType(CurrencyTypeEntity currencyType) async {
-    final id = currencyType.id > 0 ? currencyType.id : await _getNextId();
-    final stored = currencyType.copyWith(id: id);
-    await _validateReferences(stored, preserveExisting: false);
-    await _validateUniqueness(stored);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateCurrencyType(CurrencyTypeEntity currencyType) async {
-    final existing = await getCurrencyType(currencyType.id);
-    await _validateReferences(currencyType, preserveExisting: true);
-    await _validateUniqueness(currencyType);
-    if (existing != null) {
-      await _validateKeyChanges(existing, currencyType);
+  Future<void> updateCurrencyType(
+    CurrencyTypeKey originalKey,
+    CurrencyTypeEntity currencyType,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(currencyType.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原货币不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的货币 ID、物品或位索引已存在，无法保存');
+      }
+      rethrow;
     }
-    final json = currencyType.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', currencyType.id).update(json);
   }
 
   QueryBuilder _applyFilter(
@@ -145,24 +135,6 @@ class CurrencyTypeRepository with RepositoryMixin {
     return builder;
   }
 
-  Future<int> _countKnownCurrencyReferences(int bitIndex) async {
-    final schemas = await laconic.select('''
-SELECT DISTINCT TABLE_SCHEMA
-FROM information_schema.COLUMNS
-WHERE TABLE_NAME = 'characters' AND COLUMN_NAME = 'knownCurrencies'
-''');
-    var references = 0;
-    for (final row in schemas) {
-      final schema = row['TABLE_SCHEMA'] as String;
-      if (!RegExp(r'^[0-9A-Za-z_$]+$').hasMatch(schema)) continue;
-      references += await laconic.table('$schema.characters').whereRaw(
-        '(`knownCurrencies` & (CAST(1 AS UNSIGNED) << ?)) <> 0',
-        [bitIndex - 1],
-      ).count();
-    }
-    return references;
-  }
-
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
@@ -171,95 +143,7 @@ WHERE TABLE_NAME = 'characters' AND COLUMN_NAME = 'knownCurrencies'
     return id;
   }
 
-  Future<bool> _isCurrencyTokenItem(int itemId) async {
-    final count = await laconic
-        .table('item_template')
-        .where('entry', itemId)
-        .whereRaw('(`BagFamily` & ?) <> 0', [kCurrencyTokenBagFamilyMask])
-        .count();
-    return count > 0;
-  }
-
-  Future<void> _validateKeyChanges(
-    CurrencyTypeEntity existing,
-    CurrencyTypeEntity changed,
-  ) async {
-    if (existing.itemId != changed.itemId &&
-        await _isCurrencyTokenItem(existing.itemId)) {
-      throw StateError('原物品 ${existing.itemId} 仍使用货币背包位，不能更换 ItemID');
-    }
-    if (existing.bitIndex != changed.bitIndex) {
-      final references = await _countKnownCurrencyReferences(existing.bitIndex);
-      if (references > 0) {
-        throw StateError(
-          '原货币位 ${existing.bitIndex} 仍被 $references 个角色记录引用，不能更换 BitIndex',
-        );
-      }
-    }
-  }
-
-  Future<void> _validateReference({
-    required String table,
-    required String column,
-    required int value,
-    required int? existingValue,
-    required String field,
-    required String target,
-  }) async {
-    if (existingValue == value) return;
-    final references = await laconic.table(table).where(column, value).count();
-    if (references > 0) return;
-    throw StateError('$field 引用的$target $value 不存在');
-  }
-
-  Future<void> _validateReferences(
-    CurrencyTypeEntity currencyType, {
-    required bool preserveExisting,
-  }) async {
-    final existing = preserveExisting
-        ? await getCurrencyType(currencyType.id)
-        : null;
-    await _validateReference(
-      table: 'item_template',
-      column: 'entry',
-      value: currencyType.itemId,
-      existingValue: existing?.itemId,
-      field: 'ItemID',
-      target: '物品',
-    );
-    await _validateReference(
-      table: 'foxy.dbc_currency_category',
-      column: 'ID',
-      value: currencyType.categoryId,
-      existingValue: existing?.categoryId,
-      field: 'CategoryID',
-      target: '货币分类',
-    );
-    if (!await _isCurrencyTokenItem(currencyType.itemId) &&
-        existing?.itemId != currencyType.itemId) {
-      throw StateError(
-        'ItemID 引用的物品 ${currencyType.itemId} 未设置货币背包位 '
-        '0x${kCurrencyTokenBagFamilyMask.toRadixString(16)}',
-      );
-    }
-  }
-
-  Future<void> _validateUniqueness(CurrencyTypeEntity currencyType) async {
-    final itemDuplicates = await laconic
-        .table(_table)
-        .where('ItemID', currencyType.itemId)
-        .where('ID', currencyType.id, comparator: '!=')
-        .count();
-    if (itemDuplicates > 0) {
-      throw StateError('ItemID ${currencyType.itemId} 已被其他货币使用');
-    }
-    final bitDuplicates = await laconic
-        .table(_table)
-        .where('BitIndex', currencyType.bitIndex)
-        .where('ID', currencyType.id, comparator: '!=')
-        .count();
-    if (bitDuplicates > 0) {
-      throw StateError('BitIndex ${currencyType.bitIndex} 已被其他货币使用');
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, CurrencyTypeKey key) {
+    return builder.where('ID', key.id);
   }
 }
