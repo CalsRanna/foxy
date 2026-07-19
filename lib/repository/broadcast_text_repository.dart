@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
+import 'package:foxy/entity/broadcast_text_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
-  Future<void> copyBroadcastText(int id) async {
-    var source = await getBroadcastText(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<BroadcastTextKey> copyBroadcastText(BroadcastTextKey key) async {
+    final source = await getBroadcastText(key);
+    if (source == null) {
+      throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeBroadcastText(copied);
+    return BroadcastTextKey.fromEntity(copied);
   }
 
   Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
@@ -25,8 +29,11 @@ class BroadcastTextRepository with RepositoryMixin {
     return BroadcastTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyBroadcastText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyBroadcastText(BroadcastTextKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefBroadcastTextEntity>> getBriefBroadcastTexts({
@@ -52,8 +59,8 @@ class BroadcastTextRepository with RepositoryMixin {
     }).toList();
   }
 
-  Future<BroadcastTextEntity?> getBroadcastText(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<BroadcastTextEntity?> getBroadcastText(BroadcastTextKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return BroadcastTextEntity.fromJson(results.first.toMap());
   }
@@ -63,31 +70,38 @@ class BroadcastTextRepository with RepositoryMixin {
     return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveBroadcastText(BroadcastTextEntity text) async {
-    if (text.id == 0) {
-      await storeBroadcastText(text);
-      return;
+  Future<void> storeBroadcastText(BroadcastTextEntity text) async {
+    if (text.id <= 0) {
+      throw StateError('广播文本 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getBroadcastText(text.id);
-    if (existing != null) {
-      await updateBroadcastText(text);
-    } else {
+    try {
       await laconic.table(_table).insert([text.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('广播文本 ${text.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeBroadcastText(BroadcastTextEntity text) async {
-    var json = text.toJson();
-    final nextId = text.id > 0 ? text.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateBroadcastText(BroadcastTextEntity text) async {
-    var json = text.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', text.id).update(json);
+  Future<void> updateBroadcastText(
+    BroadcastTextKey originalKey,
+    BroadcastTextEntity text,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(text.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的广播文本 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -106,5 +120,9 @@ class BroadcastTextRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, BroadcastTextKey key) {
+    return builder.where('ID', key.id);
   }
 }
