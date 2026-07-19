@@ -7,6 +7,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,6 +33,14 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   }
 
   @override
+  void didUpdateWidget(covariant CreatureQuestItemView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.creatureId != widget.creatureId) {
+      viewModel.setParentCreatureEntry(widget.creatureId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -52,7 +61,18 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
     );
 
     // 工具栏
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['索引', '物品名称', '验证版本'];
@@ -101,9 +121,9 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
+                  onPressed: () async {
                     viewModel.selectRow(row);
-                    viewModel.edit();
+                    if (!await viewModel.edit() || !context.mounted) return;
                     _showEditDialog(context);
                   },
                   child: Text('编辑'),
@@ -134,8 +154,8 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   }
 
   /// 显示新增对话框
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -160,7 +180,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
 
   /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -168,23 +188,21 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID（只读）
+          // 生物ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
               placeholder: 'CreatureEntry',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
-          // 索引（主键序号，create 时 MAX+1，始终只读）
+          // 索引（主键序号）
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
               controller: viewModel.idxController,
               placeholder: 'Idx',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
@@ -218,12 +236,8 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
