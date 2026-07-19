@@ -1,12 +1,10 @@
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
-import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
-  static const _localeTable = 'creature_template_locale';
 
   Future<void> copyCreatureTemplate(int entry) async {
     var template = await getCreatureTemplate(entry);
@@ -99,15 +97,6 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<List<CreatureTemplateLocaleEntity>> getCreatureTemplateLocales(
-    int entry,
-  ) async {
-    var results = await laconic.table(_localeTable).where('entry', entry).get();
-    return results
-        .map((e) => CreatureTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
   Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
     var results = await laconic.table(_table).get();
     return results
@@ -128,22 +117,6 @@ class CreatureTemplateRepository with RepositoryMixin {
       _handleReservedWords(json);
       await laconic.table(_table).insert([json]);
     }
-  }
-
-  Future<void> saveCreatureTemplateLocales(
-    int entry,
-    List<CreatureTemplateLocaleEntity> locales,
-  ) async {
-    await laconic.transaction(() async {
-      await laconic.table(_localeTable).where('entry', entry).delete();
-      if (locales.isEmpty) return;
-      var jsons = locales.map((e) {
-        var json = e.toJson();
-        json['entry'] = entry;
-        return json;
-      }).toList();
-      await laconic.table(_localeTable).insert(jsons);
-    });
   }
 
   Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {

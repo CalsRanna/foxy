@@ -118,6 +118,7 @@ import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
+import 'package:foxy/repository/creature_template_locale_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
@@ -257,6 +258,7 @@ class DI {
     _instance.registerLazySingleton(() => CreatureQuestStarterRepository());
     _instance.registerLazySingleton(() => CreatureSpellDataRepository());
     _instance.registerLazySingleton(() => CreatureTemplateAddonRepository());
+    _instance.registerLazySingleton(() => CreatureTemplateLocaleRepository());
     _instance.registerLazySingleton(() => CreatureTemplateRepository());
     _instance.registerLazySingleton(
       () => CreatureTemplateResistanceRepository(),

@@ -1,5 +1,6 @@
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
+import 'package:foxy/entity/creature_template_locale_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
@@ -15,7 +16,7 @@ import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/achievement_criteria_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
-import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/repository/creature_template_locale_repository.dart';
 import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/emote_text_data_repository.dart';
@@ -47,38 +48,50 @@ class FoxyLocalePickerDelegates {
   static final creatureTemplateName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name', 'title'],
     fieldLabels: ['语言', '名称', '称号'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<CreatureTemplateRepository>();
-      final locales = await repo.getCreatureTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'name': e.name,
-              'title': e.title,
-            }),
-          )
-          .toList();
-    },
+    onLoad: _loadCreatureTemplateLocaleRows,
     onSave: (entry, changes) async {
-      final repo = GetIt.instance.get<CreatureTemplateRepository>();
-      final existing = await repo.getCreatureTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final repo = GetIt.instance.get<CreatureTemplateLocaleRepository>();
+      final creations = <CreatureTemplateLocaleEntity>[];
+      final updates =
+          <CreatureTemplateLocaleKey, CreatureTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return CreatureTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            CreatureTemplateLocaleEntity(
+              entry: entry,
+              locale: d['locale'] ?? '',
+              name: d['name'] ?? '',
+              title: d['title'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = CreatureTemplateLocaleKey(
           entry: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getCreatureTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
           name: d['name'] ?? '',
           title: d['title'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
         );
-      }).toList();
-      await repo.saveCreatureTemplateLocales(entry, locales);
+      }
+      await repo.applyCreatureTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map(
+              (locale) =>
+                  CreatureTemplateLocaleKey(entry: entry, locale: locale),
+            )
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -668,6 +681,32 @@ class FoxyLocalePickerDelegates {
           throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
         }
         return DatabaseLocaleRow.persisted(valuesOf(locale));
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadCreatureTemplateLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<CreatureTemplateLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefCreatureTemplateLocales(entry: entry),
+      repo.countCreatureTemplateLocales(entry: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('生物模板本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getCreatureTemplateLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'name': locale.name,
+          'title': locale.title,
+        });
       }),
     );
   }
