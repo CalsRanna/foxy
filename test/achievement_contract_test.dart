@@ -159,9 +159,11 @@ void main() {
     );
     expect('Row('.allMatches(view), hasLength(7));
     expect('Expanded('.allMatches(view), hasLength(24));
+    expect(view, isNot(contains('readOnly: true')));
+    expect('viewModel.persistedKey.value?.id'.allMatches(view), hasLength(3));
   });
 
-  test('Repository 保持成就与条件的单表删除边界', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final repository = File(
       'lib/repository/achievement_repository.dart',
     ).readAsStringSync();
@@ -172,11 +174,19 @@ void main() {
       'lib/page/achievement/achievement_detail_view_model.dart',
     ).readAsStringSync();
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateAchievementFields(t);'));
-    expect(repository, contains('await _validateReferences(stored, null);'));
-    expect(repository, contains("table: 'foxy.dbc_map'"));
-    expect(repository, contains("table: 'foxy.dbc_achievement_category'"));
-    expect(repository, contains("table: 'foxy.dbc_spell_icon'"));
+    expect(viewModel, contains('validateAchievementFields(candidate);'));
+    expect(repository, contains('AchievementKey originalKey'));
+    expect(repository, contains('.update(achievement.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('foxy.dbc_map')")));
+    expect(
+      repository,
+      isNot(contains("table('foxy.dbc_achievement_category')")),
+    );
+    expect(repository, isNot(contains("table('foxy.dbc_spell_icon')")));
+    expect(repository, isNot(contains("remove('ID')")));
     expect(repository, isNot(contains(".table('achievement_reward')")));
     expect(repository, isNot(contains('acore_characters')));
     expect(criteriaRepository, isNot(contains('acore_characters')));
@@ -184,14 +194,13 @@ void main() {
       criteriaRepository,
       isNot(contains(".table('achievement_criteria_data')")),
     );
-    expect(
-      repository,
-      contains("laconic.table(_table).where('ID', id).delete()"),
-    );
     expect(criteriaRepository, contains('AchievementCriteriaKey key'));
     expect(criteriaRepository, contains('deletedRows == 0'));
-    expect(repository, contains('requireImportedTable: true'));
     expect(repository, contains(".orderBy('ID')"));
+    expect(viewModel, contains('signal<AchievementKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateAchievement(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = AchievementKey'));
   });
 
   test('Achievement 三张 DBC definitions 使用 3.3.5.12340 精确格式', () {
