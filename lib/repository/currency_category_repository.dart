@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_currency_category_entity.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
 import 'package:foxy/entity/currency_category_filter_entity.dart';
+import 'package:foxy/entity/currency_category_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -12,10 +15,16 @@ class CurrencyCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyCurrencyCategory(int id) async {
-    final source = await getCurrencyCategory(id);
-    if (source == null) return;
-    await storeCurrencyCategory(source.copyWith(id: await _getNextId()));
+  Future<CurrencyCategoryKey> copyCurrencyCategory(
+    CurrencyCategoryKey key,
+  ) async {
+    final source = await getCurrencyCategory(key);
+    if (source == null) {
+      throw StateError('原货币分类不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeCurrencyCategory(copied);
+    return CurrencyCategoryKey.fromEntity(copied);
   }
 
   Future<int> countCurrencyCategories({CurrencyCategoryFilterEntity? filter}) {
@@ -26,15 +35,11 @@ class CurrencyCategoryRepository
     return CurrencyCategoryEntity(id: await _getNextId());
   }
 
-  Future<void> destroyCurrencyCategory(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_currency_types')
-        .where('CategoryID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('货币分类 $id 仍被 $references 条货币引用，不能删除');
+  Future<void> destroyCurrencyCategory(CurrencyCategoryKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原货币分类不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefCurrencyCategoryEntity>> getBriefCurrencyCategories({
@@ -64,8 +69,10 @@ class CurrencyCategoryRepository
         .toList();
   }
 
-  Future<CurrencyCategoryEntity?> getCurrencyCategory(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<CurrencyCategoryEntity?> getCurrencyCategory(
+    CurrencyCategoryKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : CurrencyCategoryEntity.fromJson(rows.first.toMap());
@@ -76,33 +83,44 @@ class CurrencyCategoryRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<void> saveCurrencyCategory(CurrencyCategoryEntity category) async {
-    final existing = category.id == 0
-        ? null
-        : await getCurrencyCategory(category.id);
-    if (existing == null) {
-      await storeCurrencyCategory(category);
-    } else {
-      await updateCurrencyCategory(category);
-    }
-  }
-
   Future<void> saveCurrencyCategoryLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeCurrencyCategory(CurrencyCategoryEntity category) async {
-    final id = category.id > 0 ? category.id : await _getNextId();
-    final stored = category.copyWith(id: id);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
+  Future<void> storeCurrencyCategory(CurrencyCategoryEntity category) async {
+    if (category.id <= 0) {
+      throw StateError('货币分类 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([category.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('货币分类 ${category.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateCurrencyCategory(CurrencyCategoryEntity category) async {
-    final json = category.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', category.id).update(json);
+  Future<void> updateCurrencyCategory(
+    CurrencyCategoryKey originalKey,
+    CurrencyCategoryEntity category,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(category.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原货币分类不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的货币分类 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -127,5 +145,9 @@ class CurrencyCategoryRepository
       throw StateError('CurrencyCategory ID 已超出 DBC int32 范围');
     }
     return id;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CurrencyCategoryKey key) {
+    return builder.where('ID', key.id);
   }
 }
