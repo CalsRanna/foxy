@@ -35,8 +35,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
   @override
   Widget build(BuildContext context) {
     return Watch((context) {
-      final data = viewModel.customAttr.value;
-      viewModel.initControllers(data);
+      viewModel.customAttr.value;
 
       return SingleChildScrollView(
         padding: EdgeInsets.only(top: 16),
@@ -58,7 +57,6 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
                           child: FoxyNumberInput<int>(
                             controller: viewModel.spellIdController,
                             placeholder: 'spell_id',
-                            readOnly: true,
                           ),
                         ),
                       ),

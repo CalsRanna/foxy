@@ -34,8 +34,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
   @override
   Widget build(BuildContext context) {
     return Watch((context) {
-      final data = viewModel.bonusData.value;
-      viewModel.initControllers(data);
+      viewModel.bonusData.value;
 
       return SingleChildScrollView(
         padding: EdgeInsets.only(top: 16),
@@ -57,7 +56,6 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                           child: FoxyNumberInput<int>(
                             controller: viewModel.spellIdController,
                             placeholder: 'entry',
-                            readOnly: true,
                           ),
                         ),
                       ),

@@ -1,0 +1,66 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/entity/brief_spell_bonus_data_entity.dart';
+import 'package:foxy/entity/brief_spell_custom_attr_entity.dart';
+import 'package:foxy/entity/spell_bonus_data_entity.dart';
+import 'package:foxy/entity/spell_bonus_data_key.dart';
+import 'package:foxy/entity/spell_custom_attr_entity.dart';
+import 'package:foxy/entity/spell_custom_attr_key.dart';
+
+void main() {
+  test('两张法术单行子表的 Key 和 Brief 精确暴露定位器', () {
+    const bonusKey = SpellBonusDataKey(entry: 11);
+    const customKey = SpellCustomAttrKey(spellId: 12);
+    expect(
+      SpellBonusDataKey.fromEntity(const SpellBonusDataEntity(entry: 11)),
+      bonusKey,
+    );
+    expect(
+      SpellCustomAttrKey.fromEntity(const SpellCustomAttrEntity(spellId: 12)),
+      customKey,
+    );
+    expect(const BriefSpellBonusDataEntity(entry: 11).key, bonusKey);
+    expect(const BriefSpellCustomAttrEntity(spellId: 12).key, customKey);
+  });
+
+  test('两张法术单行子表按原 typed key 更新完整 candidate', () {
+    for (final stem in ['spell_bonus_data', 'spell_custom_attr']) {
+      final source = File(
+        'lib/repository/${stem}_repository.dart',
+      ).readAsStringSync();
+      expect(source, contains('originalKey'));
+      expect(source, contains('.update(data.toJson())'));
+      expect(source, contains('if (matchedRows == 0)'));
+      expect(source, contains('if (deletedRows == 0)'));
+      expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+      expect(source, isNot(contains('saveSpell')));
+      expect(source, isNot(contains('json.remove(')));
+    }
+  });
+
+  test('子编辑器使用 editingKey，主键由可编辑 Controller 收集', () {
+    for (final stem in ['spell_bonus_data', 'spell_custom_attr']) {
+      final viewModel = File(
+        'lib/page/spell/${stem}_view_model.dart',
+      ).readAsStringSync();
+      final view = File('lib/page/spell/${stem}_view.dart').readAsStringSync();
+      expect(viewModel, contains('editingKey = signal<'));
+      expect(viewModel, contains('final originalKey = editingKey.value'));
+      expect(viewModel, contains('spellIdController.collect()'));
+      expect(view, isNot(contains('readOnly: true')));
+      expect(view, isNot(contains('initControllers(data)')));
+    }
+  });
+
+  test('两张独立 Brief 不暴露候选写入 API', () {
+    for (final stem in [
+      'brief_spell_bonus_data_entity',
+      'brief_spell_custom_attr_entity',
+    ]) {
+      final source = File('lib/entity/$stem.dart').readAsStringSync();
+      expect(source, isNot(contains('toJson(')));
+      expect(source, isNot(contains('copyWith(')));
+    }
+  });
+}

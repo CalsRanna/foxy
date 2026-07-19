@@ -1,72 +1,99 @@
+import 'package:foxy/entity/brief_spell_custom_attr_entity.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
+import 'package:foxy/entity/spell_custom_attr_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class SpellCustomAttrRepository with RepositoryMixin {
   static const _table = 'spell_custom_attr';
 
-  Future<void> copySpellCustomAttr(int spellId) async {
+  Future<void> copySpellCustomAttr(SpellCustomAttrKey key) async {
     throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
   }
 
-  Future<int> countSpellCustomAttrs() async {
+  Future<int> countSpellCustomAttrs() {
     return laconic.table(_table).count();
   }
 
-  Future<SpellCustomAttrEntity> createSpellCustomAttr([int spellId = 0]) async {
-    return SpellCustomAttrEntity(spellId: spellId);
+  Future<SpellCustomAttrEntity> createSpellCustomAttr([int? spellId]) async {
+    return SpellCustomAttrEntity(
+      spellId: spellId ?? await nextMaxPlusOne(_table, 'spell_id'),
+    );
   }
 
-  Future<void> destroySpellCustomAttr(int spellId) async {
-    await laconic.table(_table).where('spell_id', spellId).delete();
+  Future<void> destroySpellCustomAttr(SpellCustomAttrKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术自定义属性不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSpellCustomAttrEntity>> getBriefSpellCustomAttrs({
     int page = 1,
   }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['spell_id', 'attributes']);
-    builder = builder.orderBy('spell_id');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select(['spell_id', 'attributes'])
+        .orderBy('spell_id')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefSpellCustomAttrEntity.fromJson(e.toMap()))
+        .map((row) => BriefSpellCustomAttrEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<SpellCustomAttrEntity?> getSpellCustomAttr(int spellId) async {
-    var results = await laconic
-        .table(_table)
-        .where('spell_id', spellId)
-        .limit(1)
-        .get();
+  Future<SpellCustomAttrEntity?> getSpellCustomAttr(
+    SpellCustomAttrKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellCustomAttrEntity.fromJson(results.first.toMap());
   }
 
   Future<List<SpellCustomAttrEntity>> getSpellCustomAttrs() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => SpellCustomAttrEntity.fromJson(e.toMap()))
+        .map((row) => SpellCustomAttrEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<void> saveSpellCustomAttr(SpellCustomAttrEntity data) async {
-    var existing = await getSpellCustomAttr(data.spellId);
-    if (existing != null) {
-      await updateSpellCustomAttr(data);
-    } else {
-      await storeSpellCustomAttr(data);
+  Future<void> storeSpellCustomAttr(SpellCustomAttrEntity data) async {
+    if (data.spellId <= 0) {
+      throw StateError('法术自定义属性 spell_id 必须显式指定');
+    }
+    try {
+      await laconic.table(_table).insert([data.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术自定义属性 ${data.spellId} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<void> storeSpellCustomAttr(SpellCustomAttrEntity data) async {
-    await laconic.table(_table).insert([data.toJson()]);
+  Future<void> updateSpellCustomAttr(
+    SpellCustomAttrKey originalKey,
+    SpellCustomAttrEntity data,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(data.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术自定义属性不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术自定义属性 spell_id 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateSpellCustomAttr(SpellCustomAttrEntity data) async {
-    var json = data.toJson();
-    json.remove('spell_id');
-    await laconic.table(_table).where('spell_id', data.spellId).update(json);
+  QueryBuilder _whereKey(QueryBuilder builder, SpellCustomAttrKey key) {
+    return builder.where('spell_id', key.spellId);
   }
 }
