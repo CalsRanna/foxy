@@ -1,16 +1,27 @@
+import 'package:foxy/entity/brief_game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
+import 'package:foxy/entity/game_object_art_kit_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GameObjectArtKitRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_art_kit';
 
-  Future<void> copyGameObjectArtKit(int id) async {
-    final source = await getGameObjectArtKit(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<GameObjectArtKitKey> copyGameObjectArtKit(
+    GameObjectArtKitKey key,
+  ) async {
+    final source = await getGameObjectArtKit(key);
+    if (source == null) {
+      throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
+    }
+    final copied = GameObjectArtKitEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeGameObjectArtKit(copied);
+    return GameObjectArtKitKey.fromEntity(copied);
   }
 
   Future<int> countGameObjectArtKits({GameObjectArtKitFilterEntity? filter}) =>
@@ -19,8 +30,11 @@ class GameObjectArtKitRepository with RepositoryMixin {
   Future<GameObjectArtKitEntity> createGameObjectArtKit() async =>
       GameObjectArtKitEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyGameObjectArtKit(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyGameObjectArtKit(GameObjectArtKitKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefGameObjectArtKitEntity>> getBriefGameObjectArtKits({
@@ -41,8 +55,10 @@ class GameObjectArtKitRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectArtKitEntity?> getGameObjectArtKit(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<GameObjectArtKitEntity?> getGameObjectArtKit(
+    GameObjectArtKitKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : GameObjectArtKitEntity.fromJson(rows.first.toMap());
@@ -55,25 +71,38 @@ class GameObjectArtKitRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveGameObjectArtKit(GameObjectArtKitEntity entity) async {
-    if (await getGameObjectArtKit(entity.id) == null) {
-      await storeGameObjectArtKit(entity);
-    } else {
-      await updateGameObjectArtKit(entity);
+  Future<void> storeGameObjectArtKit(GameObjectArtKitEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('游戏物体美术套件 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('游戏物体美术套件 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeGameObjectArtKit(GameObjectArtKitEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateGameObjectArtKit(GameObjectArtKitEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateGameObjectArtKit(
+    GameObjectArtKitKey originalKey,
+    GameObjectArtKitEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的游戏物体美术套件 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -90,5 +119,9 @@ class GameObjectArtKitRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, GameObjectArtKitKey key) {
+    return builder.where('ID', key.id);
   }
 }
