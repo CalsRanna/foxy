@@ -1,16 +1,22 @@
+import 'package:foxy/entity/brief_zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
+import 'package:foxy/entity/zone_intro_music_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ZoneIntroMusicRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_zone_intro_music_table';
 
-  Future<void> copyZoneIntroMusic(int id) async {
-    final source = await getZoneIntroMusic(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<ZoneIntroMusicKey> copyZoneIntroMusic(ZoneIntroMusicKey key) async {
+    final source = await getZoneIntroMusic(key);
+    if (source == null) {
+      throw StateError('原区域进入音乐不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeZoneIntroMusic(copied);
+    return ZoneIntroMusicKey.fromEntity(copied);
   }
 
   Future<int> countZoneIntroMusics({ZoneIntroMusicFilterEntity? filter}) =>
@@ -19,8 +25,11 @@ class ZoneIntroMusicRepository with RepositoryMixin {
   Future<ZoneIntroMusicEntity> createZoneIntroMusic() async =>
       ZoneIntroMusicEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyZoneIntroMusic(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyZoneIntroMusic(ZoneIntroMusicKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原区域进入音乐不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefZoneIntroMusicEntity>> getBriefZoneIntroMusics({
@@ -36,8 +45,8 @@ class ZoneIntroMusicRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ZoneIntroMusicEntity?> getZoneIntroMusic(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ZoneIntroMusicEntity?> getZoneIntroMusic(ZoneIntroMusicKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : ZoneIntroMusicEntity.fromJson(rows.first.toMap());
@@ -50,25 +59,38 @@ class ZoneIntroMusicRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveZoneIntroMusic(ZoneIntroMusicEntity entity) async {
-    if (await getZoneIntroMusic(entity.id) == null) {
-      await storeZoneIntroMusic(entity);
-    } else {
-      await updateZoneIntroMusic(entity);
+  Future<void> storeZoneIntroMusic(ZoneIntroMusicEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('区域进入音乐 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('区域进入音乐 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeZoneIntroMusic(ZoneIntroMusicEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateZoneIntroMusic(ZoneIntroMusicEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateZoneIntroMusic(
+    ZoneIntroMusicKey originalKey,
+    ZoneIntroMusicEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原区域进入音乐不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的区域进入音乐 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -81,5 +103,9 @@ class ZoneIntroMusicRepository with RepositoryMixin {
       builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ZoneIntroMusicKey key) {
+    return builder.where('ID', key.id);
   }
 }
