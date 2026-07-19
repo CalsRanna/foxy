@@ -1,5 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/brief_player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -20,12 +20,12 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
 
   final page = signal(1);
-  final infos = signal<List<PlayerCreateInfoEntity>>([]);
+  final infos = signal<List<BriefPlayerCreateInfoEntity>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
-  Future<void> deletePlayerCreateInfo(PlayerCreateInfoEntity info) async {
+  Future<void> deletePlayerCreateInfo(BriefPlayerCreateInfoEntity info) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -34,7 +34,7 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyPlayerCreateInfo(info.race, info.class_);
+      await _repository.destroyPlayerCreateInfo(info.key);
       _logActivity(ActivityActionType.delete, info);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -61,15 +61,11 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({PlayerCreateInfoEntity? info}) {
+  void navigateToDetail({BriefPlayerCreateInfoEntity? info}) {
     final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
     _routerFacade.navigateToDetail(
       label: label,
-      route: PlayerCreateInfoDetailRoute(
-        race: info?.race,
-        playerClass: info?.class_,
-        label: label,
-      ),
+      route: PlayerCreateInfoDetailRoute(playerCreateInfoKey: info?.key),
       parentMenu: RouterMenu.more,
     );
   }
@@ -102,7 +98,10 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     return _repository.countPlayerCreateInfos(filter: _buildFilter());
   }
 
-  void _logActivity(ActivityActionType action, PlayerCreateInfoEntity info) {
+  void _logActivity(
+    ActivityActionType action,
+    BriefPlayerCreateInfoEntity info,
+  ) {
     final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
@@ -125,7 +124,7 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<List<PlayerCreateInfoEntity>> _search() async {
+  Future<List<BriefPlayerCreateInfoEntity>> _search() async {
     return _repository.getBriefPlayerCreateInfos(
       filter: _buildFilter(),
       page: page.value,

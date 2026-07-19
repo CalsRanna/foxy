@@ -7,44 +7,15 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
-class PlayerCreateInfoView extends StatefulWidget {
-  final int? race;
-  final int? playerClass;
-  const PlayerCreateInfoView({super.key, this.race, this.playerClass});
+class PlayerCreateInfoView extends StatelessWidget {
+  final PlayerCreateInfoDetailViewModel viewModel;
 
-  @override
-  State<PlayerCreateInfoView> createState() => _PlayerCreateInfoViewState();
-}
-
-class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
-  final viewModel = GetIt.instance.get<PlayerCreateInfoDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(race: widget.race, playerClass: widget.playerClass);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const PlayerCreateInfoView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) {
-      // 复合主键 (race, class)：新建可改，编辑只读
-      final pkReadOnly = !viewModel.isNew.value;
-      return _buildBody(context, pkReadOnly: pkReadOnly);
-    });
-  }
-
-  Widget _buildBody(BuildContext context, {required bool pkReadOnly}) {
     return SingleChildScrollView(
       padding: EdgeInsets.only(top: 16),
       child: Column(
@@ -64,7 +35,6 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                         controller: viewModel.raceController,
                         options: kPlayerRaceOptions,
                         placeholder: const Text('race'),
-                        enabled: !pkReadOnly,
                       ),
                     ),
                   ),
@@ -75,7 +45,6 @@ class _PlayerCreateInfoViewState extends State<PlayerCreateInfoView> {
                         controller: viewModel.playerClassController,
                         options: kPlayerClassOptions,
                         placeholder: const Text('class'),
-                        enabled: !pkReadOnly,
                       ),
                     ),
                   ),
