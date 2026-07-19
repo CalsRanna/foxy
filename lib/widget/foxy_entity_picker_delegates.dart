@@ -70,7 +70,7 @@ import 'package:foxy/entity/brief_item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_filter_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
-import 'package:foxy/entity/lock_entity.dart';
+import 'package:foxy/entity/brief_lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
 import 'package:foxy/entity/brief_light_entity.dart';
 import 'package:foxy/entity/light_filter_entity.dart';
