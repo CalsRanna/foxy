@@ -3,31 +3,12 @@ import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class QuestFactionRewardView extends StatefulWidget {
-  final int? entry;
-  const QuestFactionRewardView({super.key, this.entry});
+class QuestFactionRewardView extends StatelessWidget {
+  final QuestFactionRewardDetailViewModel viewModel;
 
-  @override
-  State<QuestFactionRewardView> createState() => _QuestFactionRewardViewState();
-}
-
-class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
-  final viewModel = GetIt.instance.get<QuestFactionRewardDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const QuestFactionRewardView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +18,6 @@ class _QuestFactionRewardViewState extends State<QuestFactionRewardView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
 

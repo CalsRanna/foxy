@@ -82,14 +82,18 @@ void main() {
     );
   });
 
-  test('Repository 只补固定 ID 并禁止复制删除', () {
+  test('Repository 预分配固定 ID 并使用原始键写入当前表', () {
     final source = File(
       'lib/repository/quest_faction_reward_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('getQuestFactionReward(1)'));
-    expect(source, contains('getQuestFactionReward(2)'));
-    expect(source, contains('任务声望固定记录不能删除'));
-    expect(source, contains('任务声望固定记录不能复制'));
+    expect(source, contains('QuestFactionRewardKey(id: 1)'));
+    expect(source, contains('QuestFactionRewardKey(id: 2)'));
+    expect(source, contains('QuestFactionRewardKey originalKey'));
+    expect(source, contains('.update(questFactionReward.toJson())'));
+    expect(source, contains('matchedRows == 0'));
+    expect(source, contains('deletedRows == 0'));
+    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(source, isNot(contains("remove('ID')")));
     expect(source, isNot(contains('nextMaxPlusOne')));
     expect(source, isNot(contains('.validate()')));
   });
@@ -111,10 +115,18 @@ void main() {
     expect(view, isNot(contains('flex:')));
     expect('Expanded(child:'.allMatches(view), hasLength(16));
     expect(viewModel, isNot(contains('List.generate')));
-    expect(viewModel, contains('validateQuestFactionRewardFields(t)'));
+    expect(viewModel, contains('validateQuestFactionRewardFields(candidate)'));
+    expect(viewModel, contains('signal<QuestFactionRewardKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(
+      viewModel,
+      contains('updateQuestFactionReward(originalKey, candidate)'),
+    );
+    expect(viewModel, contains('persistedKey.value = QuestFactionRewardKey'));
+    expect(view, isNot(contains('readOnly: true')));
   });
 
-  test('列表只保留编辑并仅在缺少固定记录时允许新增', () {
+  test('列表允许编辑删除并仅在缺少固定记录时允许新增', () {
     final page = File(
       'lib/page/quest_faction_reward/quest_faction_reward_list_page.dart',
     ).readAsStringSync();
@@ -124,9 +136,9 @@ void main() {
     expect(page, contains('reward.id == 1'));
     expect(page, contains('reward.id == 2'));
     expect(page, isNot(contains('LucideIcons.copy')));
-    expect(page, isNot(contains('LucideIcons.trash')));
+    expect(page, contains('LucideIcons.trash'));
     expect(viewModel, isNot(contains('copyQuestFactionReward')));
-    expect(viewModel, isNot(contains('deleteQuestFactionReward')));
+    expect(viewModel, contains('deleteQuestFactionReward'));
   });
 
   test('Entity 源码没有数组或 Map 字段', () {

@@ -1,6 +1,9 @@
-import 'package:foxy/entity/quest_faction_reward_entity.dart';
+import 'package:foxy/entity/activity_log_entity.dart';
+import 'package:foxy/entity/brief_quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
+import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -41,12 +44,31 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '#$id' : '新建任务声望';
+  Future<void> deleteQuestFactionReward(QuestFactionRewardKey key) async {
+    try {
+      final confirmed = await DialogUtil.instance.confirm(
+        title: '确认删除',
+        description: '是否删除编号为 ${key.id} 的任务声望？此操作不可撤销。',
+        confirmText: '删除',
+        destructive: true,
+      );
+      if (!confirmed) return;
+      await _repository.destroyQuestFactionReward(key);
+      _logActivity(ActivityActionType.delete, key);
+      DialogUtil.instance.success('删除成功');
+      await _refresh();
+    } catch (e) {
+      LoggerUtil.instance.e(e.toString());
+      DialogUtil.instance.error('删除失败: ${e.toString()}');
+    }
+  }
+
+  void navigateToDetail({QuestFactionRewardKey? key}) {
+    final label = key != null ? '#${key.id}' : '新建任务声望';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: QuestFactionRewardDetailRoute(id: id),
+      route: QuestFactionRewardDetailRoute(questFactionRewardKey: key),
       parentMenu: RouterMenu.questFactionReward,
     );
   }
@@ -69,6 +91,16 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
 
   QuestFactionRewardFilterEntity _buildFilter() {
     return QuestFactionRewardFilterEntity(id: entryController.collect());
+  }
+
+  void _logActivity(ActivityActionType action, QuestFactionRewardKey key) {
+    final log = ActivityLogEntity(
+      module: 'quest_faction_reward',
+      actionType: action,
+      entityName: 'QuestFactionReward ${key.id}',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
   Future<void> _refresh() async {

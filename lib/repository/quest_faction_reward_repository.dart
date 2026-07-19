@@ -1,14 +1,13 @@
+import 'package:foxy/entity/brief_quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
+import 'package:foxy/entity/quest_faction_reward_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class QuestFactionRewardRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
-
-  Future<void> copyQuestFactionReward(int id) async {
-    throw StateError('任务声望固定记录不能复制');
-  }
 
   Future<int> countQuestFactionRewards({
     QuestFactionRewardFilterEntity? filter,
@@ -22,8 +21,11 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return QuestFactionRewardEntity(id: await _getAvailableId());
   }
 
-  Future<void> destroyQuestFactionReward(int id) async {
-    throw StateError('任务声望固定记录不能删除');
+  Future<void> destroyQuestFactionReward(QuestFactionRewardKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefQuestFactionRewardEntity>> getBriefQuestFactionRewards({
@@ -55,8 +57,10 @@ class QuestFactionRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestFactionRewardEntity?> getQuestFactionReward(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestFactionRewardEntity?> getQuestFactionReward(
+    QuestFactionRewardKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestFactionRewardEntity.fromJson(results.first.toMap());
   }
@@ -68,39 +72,40 @@ class QuestFactionRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveQuestFactionReward(
+  Future<void> storeQuestFactionReward(
     QuestFactionRewardEntity questFactionReward,
   ) async {
-    if (questFactionReward.id == 0) {
-      await storeQuestFactionReward(questFactionReward);
-      return;
+    if (questFactionReward.id <= 0) {
+      throw StateError('任务声望 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getQuestFactionReward(questFactionReward.id);
-    if (existing != null) {
-      await updateQuestFactionReward(questFactionReward);
-    } else {
+    try {
       await laconic.table(_table).insert([questFactionReward.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务声望 ${questFactionReward.id} 已存在，无法新建');
+      }
+      rethrow;
     }
-  }
-
-  Future<int> storeQuestFactionReward(
-    QuestFactionRewardEntity questFactionReward,
-  ) async {
-    final id = questFactionReward.id > 0
-        ? questFactionReward.id
-        : await _getAvailableId();
-    final candidate = questFactionReward.copyWith(id: id);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
-    return id;
   }
 
   Future<void> updateQuestFactionReward(
+    QuestFactionRewardKey originalKey,
     QuestFactionRewardEntity questFactionReward,
   ) async {
-    var json = questFactionReward.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', questFactionReward.id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(questFactionReward.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务声望 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -115,8 +120,18 @@ class QuestFactionRewardRepository with RepositoryMixin {
   }
 
   Future<int> _getAvailableId() async {
-    if (await getQuestFactionReward(1) == null) return 1;
-    if (await getQuestFactionReward(2) == null) return 2;
+    if (await getQuestFactionReward(const QuestFactionRewardKey(id: 1)) ==
+        null) {
+      return 1;
+    }
+    if (await getQuestFactionReward(const QuestFactionRewardKey(id: 2)) ==
+        null) {
+      return 2;
+    }
     throw StateError('任务声望固定记录 1 和 2 已存在，不能继续新增');
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, QuestFactionRewardKey key) {
+    return builder.where('ID', key.id);
   }
 }

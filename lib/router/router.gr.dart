@@ -17,10 +17,11 @@ import 'package:foxy/entity/currency_type_key.dart' as _i62;
 import 'package:foxy/entity/emote_text_key.dart' as _i63;
 import 'package:foxy/entity/gem_property_key.dart' as _i64;
 import 'package:foxy/entity/glyph_property_key.dart' as _i65;
-import 'package:foxy/entity/page_text_key.dart' as _i69;
-import 'package:foxy/entity/quest_info_key.dart' as _i66;
-import 'package:foxy/entity/quest_sort_key.dart' as _i67;
-import 'package:foxy/entity/smart_script_key.dart' as _i68;
+import 'package:foxy/entity/page_text_key.dart' as _i70;
+import 'package:foxy/entity/quest_faction_reward_key.dart' as _i66;
+import 'package:foxy/entity/quest_info_key.dart' as _i67;
+import 'package:foxy/entity/quest_sort_key.dart' as _i68;
+import 'package:foxy/entity/smart_script_key.dart' as _i69;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1167,11 +1168,14 @@ class QuestFactionRewardDetailRoute
     extends _i58.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
   QuestFactionRewardDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i66.QuestFactionRewardKey? questFactionRewardKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          QuestFactionRewardDetailRoute.name,
-         args: QuestFactionRewardDetailRouteArgs(key: key, id: id),
+         args: QuestFactionRewardDetailRouteArgs(
+           key: key,
+           questFactionRewardKey: questFactionRewardKey,
+         ),
          initialChildren: children,
        );
 
@@ -1183,32 +1187,39 @@ class QuestFactionRewardDetailRoute
       final args = data.argsAs<QuestFactionRewardDetailRouteArgs>(
         orElse: () => const QuestFactionRewardDetailRouteArgs(),
       );
-      return _i32.QuestFactionRewardDetailPage(key: args.key, id: args.id);
+      return _i32.QuestFactionRewardDetailPage(
+        key: args.key,
+        questFactionRewardKey: args.questFactionRewardKey,
+      );
     },
   );
 }
 
 class QuestFactionRewardDetailRouteArgs {
-  const QuestFactionRewardDetailRouteArgs({this.key, this.id});
+  const QuestFactionRewardDetailRouteArgs({
+    this.key,
+    this.questFactionRewardKey,
+  });
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i66.QuestFactionRewardKey? questFactionRewardKey;
 
   @override
   String toString() {
-    return 'QuestFactionRewardDetailRouteArgs{key: $key, id: $id}';
+    return 'QuestFactionRewardDetailRouteArgs{key: $key, questFactionRewardKey: $questFactionRewardKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! QuestFactionRewardDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key &&
+        questFactionRewardKey == other.questFactionRewardKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ questFactionRewardKey.hashCode;
 }
 
 /// generated route for
@@ -1233,7 +1244,7 @@ class QuestInfoDetailRoute
     extends _i58.PageRouteInfo<QuestInfoDetailRouteArgs> {
   QuestInfoDetailRoute({
     _i59.Key? key,
-    _i66.QuestInfoKey? questInfoKey,
+    _i67.QuestInfoKey? questInfoKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          QuestInfoDetailRoute.name,
@@ -1262,7 +1273,7 @@ class QuestInfoDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i66.QuestInfoKey? questInfoKey;
+  final _i67.QuestInfoKey? questInfoKey;
 
   @override
   String toString() {
@@ -1302,7 +1313,7 @@ class QuestSortDetailRoute
     extends _i58.PageRouteInfo<QuestSortDetailRouteArgs> {
   QuestSortDetailRoute({
     _i59.Key? key,
-    _i67.QuestSortKey? questSortKey,
+    _i68.QuestSortKey? questSortKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          QuestSortDetailRoute.name,
@@ -1331,7 +1342,7 @@ class QuestSortDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i67.QuestSortKey? questSortKey;
+  final _i68.QuestSortKey? questSortKey;
 
   @override
   String toString() {
@@ -1699,7 +1710,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i68.SmartScriptKey? scriptKey,
+    _i69.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1728,7 +1739,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i68.SmartScriptKey? scriptKey;
+  final _i69.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1978,7 +1989,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i69.PageTextKey? pageTextKey,
+    _i70.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2007,7 +2018,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i69.PageTextKey? pageTextKey;
+  final _i70.PageTextKey? pageTextKey;
 
   @override
   String toString() {

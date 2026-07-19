@@ -142,7 +142,7 @@ class _QuestFactionRewardListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: rewards[row].id);
+            viewModel.navigateToDetail(key: rewards[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -152,9 +152,16 @@ class _QuestFactionRewardListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: rewards[row].id);
+                    viewModel.navigateToDetail(key: rewards[row].key);
                   },
                   child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () {
+                    viewModel.deleteQuestFactionReward(rewards[row].key);
+                  },
+                  child: Text('删除'),
                 ),
               ],
             );
