@@ -111,7 +111,7 @@ import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/entity/brief_sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_filter_entity.dart';
-import 'package:foxy/entity/sound_provider_preferences_entity.dart';
+import 'package:foxy/entity/brief_sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
