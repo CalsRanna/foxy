@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_emote_text_data_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/emote_text_data_filter_entity.dart';
+import 'package:foxy/entity/emote_text_data_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,12 +14,17 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyEmoteTextData(int id) async {
-    final source = await getEmoteTextData(id);
-    if (source == null) return;
-    final json = source.toJson();
-    json['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<EmoteTextDataKey> copyEmoteTextData(EmoteTextDataKey key) async {
+    final source = await getEmoteTextData(key);
+    if (source == null) {
+      throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
+    }
+    final copied = EmoteTextDataEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeEmoteTextData(copied);
+    return EmoteTextDataKey.fromEntity(copied);
   }
 
   Future<int> countEmoteTextDatas({EmoteTextDataFilterEntity? filter}) {
@@ -27,8 +35,11 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return EmoteTextDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyEmoteTextData(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyEmoteTextData(EmoteTextDataKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefEmoteTextDataEntity>> getBriefEmoteTextDatas({
@@ -47,8 +58,8 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<EmoteTextDataEntity?> getEmoteTextData(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<EmoteTextDataEntity?> getEmoteTextData(EmoteTextDataKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : EmoteTextDataEntity.fromJson(rows.first.toMap());
@@ -66,31 +77,44 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<void> saveEmoteTextData(EmoteTextDataEntity data) async {
-    if (await getEmoteTextData(data.id) == null) {
-      await storeEmoteTextData(data);
-    } else {
-      await updateEmoteTextData(data);
-    }
-  }
-
   Future<void> saveEmoteTextDataLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeEmoteTextData(EmoteTextDataEntity data) async {
-    final json = data.toJson();
-    final id = data.id > 0 ? data.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
+  Future<void> storeEmoteTextData(EmoteTextDataEntity data) async {
+    if (data.id <= 0) {
+      throw StateError('表情文本内容 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([data.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('表情文本内容 ${data.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateEmoteTextData(EmoteTextDataEntity data) async {
-    final json = data.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', data.id).update(json);
+  Future<void> updateEmoteTextData(
+    EmoteTextDataKey originalKey,
+    EmoteTextDataEntity data,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(data.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的表情文本内容 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -107,5 +131,9 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, EmoteTextDataKey key) {
+    return builder.where('ID', key.id);
   }
 }
