@@ -3,6 +3,7 @@ import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -31,6 +32,14 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   }
 
   @override
+  void didUpdateWidget(covariant SpellLinkedSpellView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.spellId != widget.spellId) {
+      viewModel.setParentSpellId(widget.spellId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -49,7 +58,18 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
       child: Text('新增'),
     );
 
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['链接技能', '类型', '注解'];
@@ -91,9 +111,10 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (await viewModel.edit() && context.mounted) {
+                      _showEditDialog(context);
+                    }
                   },
                   child: Text('编辑'),
                 ),
@@ -121,8 +142,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -206,12 +227,8 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
