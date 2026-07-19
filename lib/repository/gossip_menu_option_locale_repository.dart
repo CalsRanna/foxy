@@ -61,16 +61,6 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
     }
   }
 
-  Future<void> destroyGossipMenuOptionLocales(
-    GossipMenuOptionKey optionKey,
-  ) async {
-    await laconic
-        .table(_table)
-        .where('MenuID', optionKey.menuId)
-        .where('OptionID', optionKey.optionId)
-        .delete();
-  }
-
   Future<List<BriefGossipMenuOptionLocaleEntity>>
   getBriefGossipMenuOptionLocales({int page = 1}) async {
     final results = await laconic

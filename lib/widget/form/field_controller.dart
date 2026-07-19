@@ -108,7 +108,7 @@ class FlagFieldController extends TextBackedFieldController<int> {
 
   /// 将 [formatFlagValue] 产生的显示文本解析回整数值。
   static int parseFlagValue(String text) {
-    return int.tryParse(text.split(' ').first) ?? 0;
+    return parseIntField(text.split(' ').first);
   }
 
   @override

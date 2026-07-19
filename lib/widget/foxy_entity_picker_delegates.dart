@@ -385,7 +385,7 @@ class FoxyEntityPickerDelegates {
             text: (BriefLootTemplateEntryEntity t) => t.itemCount.toString(),
           ),
         ],
-        idOf: (BriefLootTemplateEntryEntity t) => t.entry,
+        idOf: (BriefLootTemplateEntryEntity t) => t.key.entry,
         fetch: (page, v) =>
             _referenceLootRepository.getBriefLootTemplateEntries(
               page: page,
@@ -1701,7 +1701,7 @@ class FoxyEntityPickerDelegates {
                 row.itemCount.toString(),
           ),
         ],
-        idOf: (BriefLootTemplateEntryEntity row) => row.entry,
+        idOf: (BriefLootTemplateEntryEntity row) => row.key.entry,
         fetch: (page, values) =>
             _disenchantLootRepository.getBriefLootTemplateEntries(
               page: page,
@@ -2216,7 +2216,7 @@ class FoxyEntityPickerDelegates {
           text: (BriefLootTemplateEntryEntity t) => t.itemCount.toString(),
         ),
       ],
-      idOf: (BriefLootTemplateEntryEntity t) => t.entry,
+      idOf: (BriefLootTemplateEntryEntity t) => t.key.entry,
       fetch: (page, v) => repository.getBriefLootTemplateEntries(
         filter: LootTemplateFilterEntity(entry: v[0]),
         page: page,
