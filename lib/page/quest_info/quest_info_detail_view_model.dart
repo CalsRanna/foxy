@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
+import 'package:foxy/entity/quest_info_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -28,6 +29,7 @@ class QuestInfoDetailViewModel
   );
 
   final info = signal(QuestInfoEntity());
+  final persistedKey = signal<QuestInfoKey?>(null);
 
   void applyInfoNameLocales(List<DbcLocaleFieldValue> values) {
     info.value = info.value.copyWith(
@@ -55,18 +57,24 @@ class QuestInfoDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({QuestInfoKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createQuestInfo();
         info.value = blank;
         _initControllers(blank);
         return;
       }
-      info.value = (await _repository.getQuestInfo(id))!;
-      _initControllers(info.value);
+      persistedKey.value = key;
+      final entity = await _repository.getQuestInfo(key);
+      if (entity == null) {
+        throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
+      }
+      info.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载任务信息(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载任务信息(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -74,23 +82,27 @@ class QuestInfoDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateQuestInfoFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeQuestInfo(candidate);
+    } else {
+      await _repository.updateQuestInfo(originalKey, candidate);
+    }
+    persistedKey.value = QuestInfoKey.fromEntity(candidate);
+    info.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateQuestInfoFields(t);
-      final isCreate = (await _repository.getQuestInfo(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeQuestInfo(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateQuestInfo(t);
-      }
-      info.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务信息数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -123,5 +135,11 @@ class QuestInfoDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(QuestInfoEntity value) {
+    return value.infoNameLangZhCN.isNotEmpty
+        ? value.infoNameLangZhCN
+        : '任务信息 #${value.id}';
   }
 }
