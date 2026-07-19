@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
+import 'package:foxy/entity/spell_focus_object_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -12,11 +15,19 @@ class SpellFocusObjectRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copySpellFocusObject(int id) async {
-    final source = await getSpellFocusObject(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<SpellFocusObjectKey> copySpellFocusObject(
+    SpellFocusObjectKey key,
+  ) async {
+    final source = await getSpellFocusObject(key);
+    if (source == null) {
+      throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
+    }
+    final copied = SpellFocusObjectEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeSpellFocusObject(copied);
+    return SpellFocusObjectKey.fromEntity(copied);
   }
 
   Future<int> countSpellFocusObjects({SpellFocusObjectFilterEntity? filter}) =>
@@ -25,8 +36,11 @@ class SpellFocusObjectRepository
   Future<SpellFocusObjectEntity> createSpellFocusObject() async =>
       SpellFocusObjectEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySpellFocusObject(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroySpellFocusObject(SpellFocusObjectKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSpellFocusObjectEntity>> getBriefSpellFocusObjects({
@@ -42,8 +56,10 @@ class SpellFocusObjectRepository
         .toList();
   }
 
-  Future<SpellFocusObjectEntity?> getSpellFocusObject(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<SpellFocusObjectEntity?> getSpellFocusObject(
+    SpellFocusObjectKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : SpellFocusObjectEntity.fromJson(rows.first.toMap());
@@ -61,31 +77,44 @@ class SpellFocusObjectRepository
         .toList();
   }
 
-  Future<void> saveSpellFocusObject(SpellFocusObjectEntity entity) async {
-    if (await getSpellFocusObject(entity.id) == null) {
-      await storeSpellFocusObject(entity);
-    } else {
-      await updateSpellFocusObject(entity);
-    }
-  }
-
   Future<void> saveSpellFocusObjectLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeSpellFocusObject(SpellFocusObjectEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
+  Future<void> storeSpellFocusObject(SpellFocusObjectEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('法术焦点 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术焦点 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateSpellFocusObject(SpellFocusObjectEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateSpellFocusObject(
+    SpellFocusObjectKey originalKey,
+    SpellFocusObjectEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术焦点 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -102,5 +131,9 @@ class SpellFocusObjectRepository
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, SpellFocusObjectKey key) {
+    return builder.where('ID', key.id);
   }
 }
