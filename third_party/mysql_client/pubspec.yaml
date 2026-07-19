@@ -1,0 +1,14 @@
+name: mysql_client
+description: Foxy-maintained fork of mysql_client 0.0.27 with CLIENT_FOUND_ROWS enabled.
+version: 0.0.27+foxy.1
+homepage: https://github.com/zim32/mysql.dart
+repository: https://github.com/zim32/mysql.dart
+publish_to: none
+
+environment:
+  sdk: '>=3.9.2 <4.0.0'
+
+dependencies:
+  buffer: ^1.1.1
+  crypto: ^3.0.1
+  tuple: ^2.0.0
