@@ -93,7 +93,7 @@ import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
-import 'package:foxy/entity/spell_duration_entity.dart';
+import 'package:foxy/entity/brief_spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
