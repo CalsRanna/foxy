@@ -1,5 +1,6 @@
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
+import 'package:foxy/entity/condition_key.dart';
 
 /// 条件列表页用的精简实体
 /// 携带全部 10 列主键（用于导航/复制/删除）+ Comment（人类可读说明）
@@ -61,19 +62,16 @@ class BriefConditionEntity {
     return kConditionSourceTypeLabels[id] ?? id.toString();
   }
 
-  /// 构建用于路由传参的完整 10 列主键 map（与表 PRIMARY KEY 一致）
-  Map<String, dynamic> buildCredential() {
-    return {
-      'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
-      'SourceGroup': sourceGroup,
-      'SourceEntry': sourceEntry,
-      'SourceId': sourceId,
-      'ElseGroup': elseGroup,
-      'ConditionTypeOrReference': conditionTypeOrReference,
-      'ConditionTarget': conditionTarget,
-      'ConditionValue1': conditionValue1,
-      'ConditionValue2': conditionValue2,
-      'ConditionValue3': conditionValue3,
-    };
-  }
+  ConditionKey get key => ConditionKey(
+    sourceTypeOrReferenceId: sourceTypeOrReferenceId,
+    sourceGroup: sourceGroup,
+    sourceEntry: sourceEntry,
+    sourceId: sourceId,
+    elseGroup: elseGroup,
+    conditionTypeOrReference: conditionTypeOrReference,
+    conditionTarget: conditionTarget,
+    conditionValue1: conditionValue1,
+    conditionValue2: conditionValue2,
+    conditionValue3: conditionValue3,
+  );
 }

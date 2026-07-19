@@ -35,7 +35,7 @@ class ConditionListViewModel with FieldControllerMixin {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyCondition(condition.buildCredential());
+      await _repository.copyCondition(condition.key);
       _logActivity(ActivityActionType.copy, condition);
       DialogUtil.instance.success('复制成功');
       await _refresh();
@@ -54,7 +54,7 @@ class ConditionListViewModel with FieldControllerMixin {
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyCondition(condition.buildCredential());
+      await _repository.destroyCondition(condition.key);
       _logActivity(ActivityActionType.delete, condition);
       DialogUtil.instance.success('删除成功');
       await _refresh();
@@ -91,13 +91,10 @@ class ConditionListViewModel with FieldControllerMixin {
               : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
         : '新建条件';
 
-    // 用主键 credential 序列化传递给详情页
-    final credential = condition?.buildCredential();
-
     routerFacade.navigateToDetail(
       id: id,
       label: label,
-      route: ConditionDetailRoute(credential: credential),
+      route: ConditionDetailRoute(conditionKey: condition?.key),
       parentMenu: RouterMenu.more,
     );
   }
