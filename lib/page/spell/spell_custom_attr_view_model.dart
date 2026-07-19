@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
+import 'package:foxy/entity/spell_custom_attr_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -18,37 +19,33 @@ class SpellCustomAttrViewModel
         FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final spellId = signal(0);
-
   late final spellIdController = registerController(IntFieldController());
   late final attributesController = registerController(FlagFieldController());
 
   final customAttr = signal(SpellCustomAttrEntity());
+  final editingKey = signal<SpellCustomAttrKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  void initControllers(SpellCustomAttrEntity data) {
-    spellIdController.init(spellId.value);
-    attributesController.init(data.attributes);
-  }
-
   Future<void> initSignals({required int spellId}) async {
     try {
-      this.spellId.value = spellId;
-      spellIdController.init(spellId);
-      await load();
+      final key = SpellCustomAttrKey(spellId: spellId);
+      final data = await _repository.getSpellCustomAttr(key);
+      if (data == null) {
+        editingKey.value = null;
+        final blank = await _repository.createSpellCustomAttr(spellId);
+        customAttr.value = blank;
+        _initControllers(blank);
+      } else {
+        editingKey.value = key;
+        customAttr.value = data;
+        _initControllers(data);
+      }
     } catch (e) {
       LoggerUtil.instance.e('法术自定义属性-初始化失败: $e');
       DialogUtil.instance.error('法术自定义属性-初始化失败: $e');
-    }
-  }
-
-  Future<void> load() async {
-    final data = await _repository.getSpellCustomAttr(spellId.value);
-    if (data != null) {
-      customAttr.value = data;
     }
   }
 
@@ -60,12 +57,19 @@ class SpellCustomAttrViewModel
     try {
       final data = _collectFromControllers();
       validateSpellCustomAttrFields(data);
-      await _repository.saveSpellCustomAttr(data);
+      final originalKey = editingKey.value;
+      if (originalKey == null) {
+        await _repository.storeSpellCustomAttr(data);
+      } else {
+        await _repository.updateSpellCustomAttr(originalKey, data);
+      }
+      editingKey.value = SpellCustomAttrKey.fromEntity(data);
       customAttr.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('自定义属性已保存'));
       ShadSonner.of(context).show(toast);
     } catch (e) {
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
@@ -73,8 +77,13 @@ class SpellCustomAttrViewModel
 
   SpellCustomAttrEntity _collectFromControllers() {
     return SpellCustomAttrEntity(
-      spellId: spellId.value,
+      spellId: spellIdController.collect(),
       attributes: attributesController.collect(),
     );
+  }
+
+  void _initControllers(SpellCustomAttrEntity data) {
+    spellIdController.init(data.spellId);
+    attributesController.init(data.attributes);
   }
 }
