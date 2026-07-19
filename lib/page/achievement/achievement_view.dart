@@ -10,32 +10,13 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class AchievementView extends StatefulWidget {
-  final int? entry;
-  const AchievementView({super.key, this.entry});
+class AchievementView extends StatelessWidget {
+  final AchievementDetailViewModel viewModel;
 
-  @override
-  State<AchievementView> createState() => _AchievementViewState();
-}
-
-class _AchievementViewState extends State<AchievementView> {
-  final viewModel = GetIt.instance.get<AchievementDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const AchievementView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +31,7 @@ class _AchievementViewState extends State<AchievementView> {
           _buildDescriptionCard(),
           _buildRewardCard(),
           _buildOtherCard(),
-          _buildActions(),
+          _buildActions(context),
         ],
       ),
     );
@@ -62,7 +43,6 @@ class _AchievementViewState extends State<AchievementView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final factionInput = FoxyFormItem(
@@ -117,9 +97,9 @@ class _AchievementViewState extends State<AchievementView> {
               child: FoxyFormItem(
                 label: '标题',
                 child: Watch((_) {
-                  final id = viewModel.achievement.value.id;
+                  final id = viewModel.persistedKey.value?.id;
                   return FoxyLocalePicker(
-                    entry: id == 0 ? null : id,
+                    entry: id,
                     controller: viewModel.titleLangZhCNController,
                     title: '标题本地化',
                     placeholder: 'Title_lang_zhCN',
@@ -149,9 +129,9 @@ class _AchievementViewState extends State<AchievementView> {
               child: FoxyFormItem(
                 label: '描述',
                 child: Watch((_) {
-                  final id = viewModel.achievement.value.id;
+                  final id = viewModel.persistedKey.value?.id;
                   return FoxyLocalePicker(
-                    entry: id == 0 ? null : id,
+                    entry: id,
                     controller: viewModel.descriptionLangZhCNController,
                     title: '描述本地化',
                     placeholder: 'Description_lang_zhCN',
@@ -182,9 +162,9 @@ class _AchievementViewState extends State<AchievementView> {
               child: FoxyFormItem(
                 label: '奖励',
                 child: Watch((_) {
-                  final id = viewModel.achievement.value.id;
+                  final id = viewModel.persistedKey.value?.id;
                   return FoxyLocalePicker(
-                    entry: id == 0 ? null : id,
+                    entry: id,
                     controller: viewModel.rewardLangZhCNController,
                     title: '奖励文本本地化',
                     placeholder: 'Reward_lang_zhCN',
@@ -284,7 +264,7 @@ class _AchievementViewState extends State<AchievementView> {
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(BuildContext context) {
     return Row(
       children: [
         ShadButton(onPressed: () => viewModel.save(context), child: Text('保存')),

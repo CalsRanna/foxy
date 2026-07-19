@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
+import 'package:foxy/entity/achievement_key.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -198,6 +199,7 @@ class AchievementDetailViewModel
   );
 
   final achievement = signal(AchievementEntity());
+  final persistedKey = signal<AchievementKey?>(null);
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
     _applyLangControllers(
@@ -272,18 +274,24 @@ class AchievementDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({AchievementKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createAchievement();
         achievement.value = blank;
         _initControllers(blank);
         return;
       }
-      achievement.value = (await _repository.getAchievement(id))!;
-      _initControllers(achievement.value);
+      persistedKey.value = key;
+      final entity = await _repository.getAchievement(key);
+      if (entity == null) {
+        throw StateError('原成就不存在，可能已被其他操作修改或删除');
+      }
+      achievement.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载成就(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载成就(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -292,24 +300,27 @@ class AchievementDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateAchievementFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeAchievement(candidate);
+    } else {
+      await _repository.updateAchievement(originalKey, candidate);
+    }
+    persistedKey.value = AchievementKey.fromEntity(candidate);
+    achievement.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateAchievementFields(t);
-      validateAchievementFields(t);
-      final isCreate = (await _repository.getAchievement(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeAchievement(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateAchievement(t);
-      }
-      achievement.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('成就数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -498,5 +509,11 @@ class AchievementDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(AchievementEntity value) {
+    return value.titleLangZhCN.isNotEmpty
+        ? value.titleLangZhCN
+        : '成就 #${value.id}';
   }
 }
