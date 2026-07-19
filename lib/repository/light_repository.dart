@@ -1,16 +1,25 @@
+import 'package:foxy/entity/brief_light_entity.dart';
 import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/entity/light_filter_entity.dart';
+import 'package:foxy/entity/light_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class LightRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_light';
 
-  Future<void> copyLight(int id) async {
-    final source = await getLight(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<LightKey> copyLight(LightKey key) async {
+    final source = await getLight(key);
+    if (source == null) {
+      throw StateError('原光照不存在，可能已被其他操作修改或删除');
+    }
+    final copied = LightEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeLight(copied);
+    return LightKey.fromEntity(copied);
   }
 
   Future<int> countLights({LightFilterEntity? filter}) =>
@@ -19,8 +28,11 @@ class LightRepository with RepositoryMixin {
   Future<LightEntity> createLight() async =>
       LightEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyLight(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyLight(LightKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原光照不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefLightEntity>> getBriefLights({
@@ -40,8 +52,8 @@ class LightRepository with RepositoryMixin {
     return rows.map((row) => BriefLightEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<LightEntity?> getLight(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<LightEntity?> getLight(LightKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : LightEntity.fromJson(rows.first.toMap());
   }
 
@@ -50,25 +62,35 @@ class LightRepository with RepositoryMixin {
     return rows.map((row) => LightEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveLight(LightEntity entity) async {
-    if (await getLight(entity.id) == null) {
-      await storeLight(entity);
-    } else {
-      await updateLight(entity);
+  Future<void> storeLight(LightEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('光照 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('光照 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeLight(LightEntity entity) async {
-    final json = entity.toJson();
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateLight(LightEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateLight(LightKey originalKey, LightEntity entity) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原光照不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的光照 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, LightFilterEntity? filter) {
@@ -78,5 +100,9 @@ class LightRepository with RepositoryMixin {
       builder = builder.where('ContinentID', filter.continentId);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, LightKey key) {
+    return builder.where('ID', key.id);
   }
 }
