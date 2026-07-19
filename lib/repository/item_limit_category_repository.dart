@@ -1,3 +1,4 @@
+import 'package:foxy/entity/brief_item_limit_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
