@@ -1,8 +1,17 @@
+import 'package:foxy/entity/brief_creature_quest_starter_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
+import 'package:foxy/entity/creature_quest_starter_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureQuestStarterRepository with RepositoryMixin {
   static const _table = 'creature_queststarter';
+  static const primaryKeyColumns = {'id', 'quest'};
+
+  Future<int> countCreatureQuestStarters(int questId) {
+    return laconic.table(_table).where('quest', questId).count();
+  }
 
   Future<CreatureQuestStarterEntity> createCreatureQuestStarter(
     int questId,
@@ -10,13 +19,17 @@ class CreatureQuestStarterRepository with RepositoryMixin {
     return CreatureQuestStarterEntity(quest: questId);
   }
 
-  Future<void> destroyCreatureQuestStarter(int id, int quest) async {
-    await laconic.table(_table).where('id', id).where('quest', quest).delete();
+  Future<void> destroyCreatureQuestStarter(CreatureQuestStarterKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureQuestStarterEntity>> getBriefCreatureQuestStarters(
-    int questId,
-  ) async {
+    int questId, {
+    int page = 1,
+  }) async {
     final fields = <String>[
       'cqs.id',
       'cqs.quest',
@@ -36,6 +49,8 @@ class CreatureQuestStarterRepository with RepositoryMixin {
       );
     }
     builder = builder.where('cqs.quest', questId);
+    builder = builder.orderBy('cqs.id');
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();
     return results
         .map((e) => BriefCreatureQuestStarterEntity.fromJson(e.toMap()))
@@ -43,53 +58,47 @@ class CreatureQuestStarterRepository with RepositoryMixin {
   }
 
   Future<CreatureQuestStarterEntity?> getCreatureQuestStarter(
-    int id,
-    int quest,
+    CreatureQuestStarterKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('id', id)
-        .where('quest', quest)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestStarterEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> saveCreatureQuestStarter(
-    CreatureQuestStarterEntity model,
-  ) async {
-    var existing = await getCreatureQuestStarter(model.id, model.quest);
-    if (existing != null) {
-      await updateCreatureQuestStarter(model.id, model.quest, model);
-    } else {
-      await storeCreatureQuestStarter(model);
-    }
   }
 
   Future<void> storeCreatureQuestStarter(
     CreatureQuestStarterEntity model,
   ) async {
-    _validate(model.id, model.quest);
-    await laconic.table(_table).insert([model.toJson()]);
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物任务开始关系主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureQuestStarter(
-    int id,
-    int quest,
+    CreatureQuestStarterKey originalKey,
     CreatureQuestStarterEntity model,
   ) async {
-    _validate(model.id, model.quest);
-    await laconic
-        .table(_table)
-        .where('id', id)
-        .where('quest', quest)
-        .update(model.toJson());
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物任务开始关系主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  void _validate(int id, int quest) {
-    if (id <= 0 || quest <= 0) {
-      throw ArgumentError('生物编号和任务编号必须大于 0');
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestStarterKey key) {
+    return builder.where('id', key.id).where('quest', key.quest);
   }
 }

@@ -1,20 +1,33 @@
+import 'package:foxy/entity/brief_creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
+import 'package:foxy/entity/creature_quest_ender_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureQuestEnderRepository with RepositoryMixin {
   static const _table = 'creature_questender';
+  static const primaryKeyColumns = {'id', 'quest'};
+
+  Future<int> countCreatureQuestEnders(int questId) {
+    return laconic.table(_table).where('quest', questId).count();
+  }
 
   Future<CreatureQuestEnderEntity> createCreatureQuestEnder(int questId) async {
     return CreatureQuestEnderEntity(quest: questId);
   }
 
-  Future<void> destroyCreatureQuestEnder(int id, int quest) async {
-    await laconic.table(_table).where('id', id).where('quest', quest).delete();
+  Future<void> destroyCreatureQuestEnder(CreatureQuestEnderKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
-    int questId,
-  ) async {
+    int questId, {
+    int page = 1,
+  }) async {
     final fields = <String>[
       'cqe.id',
       'cqe.quest',
@@ -34,6 +47,8 @@ class CreatureQuestEnderRepository with RepositoryMixin {
       );
     }
     builder = builder.where('cqe.quest', questId);
+    builder = builder.orderBy('cqe.id');
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();
     return results
         .map((e) => BriefCreatureQuestEnderEntity.fromJson(e.toMap()))
@@ -41,49 +56,45 @@ class CreatureQuestEnderRepository with RepositoryMixin {
   }
 
   Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
-    int id,
-    int quest,
+    CreatureQuestEnderKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('id', id)
-        .where('quest', quest)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestEnderEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> saveCreatureQuestEnder(CreatureQuestEnderEntity model) async {
-    var existing = await getCreatureQuestEnder(model.id, model.quest);
-    if (existing != null) {
-      await updateCreatureQuestEnder(model.id, model.quest, model);
-    } else {
-      await storeCreatureQuestEnder(model);
-    }
-  }
-
   Future<void> storeCreatureQuestEnder(CreatureQuestEnderEntity model) async {
-    _validate(model.id, model.quest);
-    await laconic.table(_table).insert([model.toJson()]);
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物任务结束关系主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureQuestEnder(
-    int id,
-    int quest,
+    CreatureQuestEnderKey originalKey,
     CreatureQuestEnderEntity model,
   ) async {
-    _validate(model.id, model.quest);
-    await laconic
-        .table(_table)
-        .where('id', id)
-        .where('quest', quest)
-        .update(model.toJson());
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物任务结束关系主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  void _validate(int id, int quest) {
-    if (id <= 0 || quest <= 0) {
-      throw ArgumentError('生物编号和任务编号必须大于 0');
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestEnderKey key) {
+    return builder.where('id', key.id).where('quest', key.quest);
   }
 }
