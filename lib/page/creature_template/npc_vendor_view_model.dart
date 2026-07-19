@@ -1,21 +1,35 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
+import 'package:foxy/entity/npc_vendor_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/npc_vendor_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class NpcVendorViewModel with FieldControllerMixin {
+class NpcVendorViewModel
+    with
+        ViewModelValidationMixin,
+        NpcVendorValidationMixin,
+        FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _repository = GetIt.instance.get<NpcVendorRepository>();
 
   final entry = signal(0);
+  final editingKey = signal<NpcVendorKey?>(null);
   final items = signal<List<BriefNpcVendorEntity>>([]);
+  final page = signal(1);
   final selectedIndex = signal<int?>(null);
-  // 表单控制器
+  final total = signal(0);
+
   late final creatureIdController = registerController(IntFieldController());
   late final slotController = registerController(IntFieldController());
   late final itemController = registerController(IntFieldController());
@@ -24,16 +38,11 @@ class NpcVendorViewModel with FieldControllerMixin {
   late final extendedCostController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  // 内部状态
-  int? _editingItem;
-  int? _editingExtendedCost;
+  int _refreshToken = 0;
 
-  final _repository = GetIt.instance.get<NpcVendorRepository>();
-
-  /// 从表单收集数据
   NpcVendorEntity collectFromForm() {
     return NpcVendorEntity(
-      entry: entry.value,
+      entry: creatureIdController.collect(),
       slot: slotController.collect(),
       item: itemController.collect(),
       maxcount: maxcountController.collect(),
@@ -43,83 +52,152 @@ class NpcVendorViewModel with FieldControllerMixin {
     );
   }
 
-  /// 创建新记录
-  Future<void> create() async {
+  Future<bool> create() async {
     try {
-      final nextSlot = await _repository.getNextSlot(entry.value);
-      resetForm();
-      slotController.init(nextSlot);
-      selectedIndex.value = null;
-      _editingItem = null;
-      _editingExtendedCost = null;
-    } catch (e) {
-      LoggerUtil.instance.e('创建NPC商人记录失败: $e');
-      DialogUtil.instance.error('创建NPC商人记录失败: $e');
+      final blank = await _repository.createNpcVendor(entry.value);
+      _clearEditingState();
+      _initControllers(blank);
+      return true;
+    } catch (error) {
+      LoggerUtil.instance.e('创建 NPC 商人记录失败: $error');
+      DialogUtil.instance.error('创建 NPC 商人记录失败: $error');
+      return false;
     }
   }
 
-  /// 删除记录
   Future<void> delete(BuildContext context) async {
     final index = selectedIndex.value;
     if (index == null || index < 0 || index >= items.value.length) return;
-
     final vendor = items.value[index];
-
     final confirmed = await showFoxyDialog<bool>(
       context: context,
       builder: (context) => ShadDialog.alert(
-        title: Text('确认删除'),
-        description: Text('确定要删除这条商品记录吗？'),
+        title: const Text('确认删除'),
+        description: const Text('确定要删除这条商品记录吗？'),
         actions: [
           ShadButton.outline(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
+            child: const Text('取消'),
           ),
           ShadButton.destructive(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('删除'),
+            child: const Text('删除'),
           ),
         ],
       ),
     );
 
-    if (confirmed == true) {
-      try {
-        await _repository.destroyNpcVendor(
-          vendor.entry,
-          vendor.item,
-          vendor.extendedCost,
-        );
-        await load();
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text('删除成功'));
-        ShadSonner.of(context).show(toast);
-      } catch (e) {
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text(e.toString()));
-        ShadSonner.of(context).show(toast);
-      }
+    if (confirmed != true) return;
+    try {
+      await _repository.destroyNpcVendor(vendor.key);
+      await load();
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
     }
   }
 
-  /// 清理资源
   void dispose() {
     disposeControllers();
   }
 
-  /// 编辑选中记录
-  void edit() {
+  Future<bool> edit() async {
     final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final vendor = items.value[index];
-    fillForm(vendor);
-    _editingItem = vendor.item;
-    _editingExtendedCost = vendor.extendedCost;
+    if (index == null || index < 0 || index >= items.value.length) return false;
+    final key = items.value[index].key;
+    editingKey.value = key;
+    try {
+      final vendor = await _repository.getNpcVendor(key);
+      if (vendor == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(vendor);
+      return true;
+    } catch (error) {
+      _clearEditingState();
+      LoggerUtil.instance.e('加载 NPC 商人记录失败: $error');
+      DialogUtil.instance.error('加载 NPC 商人记录失败: $error');
+      return false;
+    }
   }
 
-  /// 填充表单
-  void fillForm(BriefNpcVendorEntity vendor) {
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      await setParentEntry(creatureId);
+    } catch (error) {
+      LoggerUtil.instance.e('初始化 NPC 商人失败: $error');
+      DialogUtil.instance.error('初始化 NPC 商人失败: $error');
+    }
+  }
+
+  Future<void> load() => _refresh();
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> persist() async {
+    final candidate = collectFromForm();
+    validateNpcVendorFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storeNpcVendor(candidate);
+    } else {
+      await _repository.updateNpcVendor(originalKey, candidate);
+    }
+    editingKey.value = NpcVendorKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  void pop() {
+    routerFacade.goBack();
+  }
+
+  void resetForm() {
+    _initControllers(NpcVendorEntity(entry: entry.value));
+  }
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+      return false;
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  Future<void> setParentEntry(int creatureId) async {
+    if (entry.value != creatureId) page.value = 1;
+    entry.value = creatureId;
+    _clearEditingState(resetForm: true);
+    await _refresh();
+  }
+
+  void _clearEditingState({bool resetForm = false}) {
+    editingKey.value = null;
+    selectedIndex.value = null;
+    if (resetForm) this.resetForm();
+  }
+
+  void _initControllers(NpcVendorEntity vendor) {
+    creatureIdController.init(vendor.entry);
     slotController.init(vendor.slot);
     itemController.init(vendor.item);
     maxcountController.init(vendor.maxcount);
@@ -128,82 +206,20 @@ class NpcVendorViewModel with FieldControllerMixin {
     verifiedBuildController.init(vendor.verifiedBuild);
   }
 
-  /// 初始化
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      entry.value = creatureId;
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化NPC商人失败: $e');
-      DialogUtil.instance.error('初始化NPC商人失败: $e');
-    }
-  }
-
-  /// 加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getBriefNpcVendors(entry.value);
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final parentEntry = entry.value;
+    final count = await _repository.countNpcVendors(parentEntry);
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await _repository.getBriefNpcVendors(
+      parentEntry,
+      page: page.value,
+    );
+    if (token != _refreshToken) return;
     items.value = data;
-    selectedIndex.value = null;
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 重置表单
-  void resetForm() {
-    slotController.init(0);
-    itemController.init(0);
-    maxcountController.init(0);
-    incrtimeController.init(0);
-    extendedCostController.init(0);
-    verifiedBuildController.init(0);
-  }
-
-  /// 保存记录（新增）
-  Future<void> save(BuildContext context) async {
-    try {
-      final vendor = collectFromForm();
-      await _repository.storeNpcVendor(vendor);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  /// 选择行
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  /// 更新记录
-  Future<void> update(BuildContext context) async {
-    try {
-      final vendor = collectFromForm();
-      await _repository.updateNpcVendor(
-        entry.value,
-        _editingItem ?? vendor.item,
-        _editingExtendedCost ?? vendor.extendedCost,
-        vendor,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+    total.value = count;
+    _clearEditingState(resetForm: true);
   }
 }
