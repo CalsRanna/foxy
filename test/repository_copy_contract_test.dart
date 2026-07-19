@@ -25,7 +25,8 @@ void main() {
       'lib/repository/gossip_menu_option_locale_repository.dart',
     ).readAsStringSync();
     expect(source, contains('copyGossipMenuOptionLocales('));
-    expect(source, contains("json['OptionID'] = targetOptionId"));
+    expect(source, contains("json['MenuID'] = targetKey.menuId"));
+    expect(source, contains("json['OptionID'] = targetKey.optionId"));
     expect(source, contains('table(_table).insert(jsons)'));
   });
 }

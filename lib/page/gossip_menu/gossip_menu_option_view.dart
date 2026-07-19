@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -38,6 +39,14 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   }
 
   @override
+  void didUpdateWidget(covariant GossipMenuOptionView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.menuId != widget.menuId) {
+      viewModel.setParentMenuId(widget.menuId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -46,7 +55,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      if (viewModel.editing.value || viewModel.creating.value) {
+      if (viewModel.formVisible.value) {
         return _buildForm();
       }
       return _buildList();
@@ -59,7 +68,18 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       onPressed: viewModel.create,
       child: Text('新增'),
     );
-    final toolbar = Row(children: [createBtn]);
+    final toolbar = Row(
+      children: [
+        createBtn,
+        const Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final options = viewModel.options.value;
     final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
@@ -112,7 +132,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           },
           onRowDoubleTap: (row) {
             final o = options[row];
-            viewModel.edit(o.menuId, o.optionId);
+            viewModel.edit(o);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final o = options[row];
@@ -122,17 +142,17 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.edit(o.menuId, o.optionId),
+                  onPressed: () => viewModel.edit(o),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(o.menuId, o.optionId),
+                  onPressed: () => viewModel.copy(o),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(o.menuId, o.optionId),
+                  onPressed: () => viewModel.delete(o),
                   child: Text('删除'),
                 ),
               ],
@@ -170,7 +190,6 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       child: FoxyNumberInput<int>(
                         controller: viewModel.optionIdController,
                         placeholder: 'OptionID',
-                        readOnly: true,
                       ),
                     ),
                   ),
@@ -180,7 +199,6 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                       child: FoxyNumberInput<int>(
                         controller: viewModel.menuIdController,
                         placeholder: 'MenuID',
-                        readOnly: true,
                       ),
                     ),
                   ),
