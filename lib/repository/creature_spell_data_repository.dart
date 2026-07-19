@@ -1,5 +1,8 @@
+import 'package:foxy/entity/brief_creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
+import 'package:foxy/entity/creature_spell_data_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -7,13 +10,16 @@ class CreatureSpellDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_spell_data';
   static const _spellTable = 'foxy.dbc_spell';
 
-  Future<void> copyCreatureSpellData(int id) async {
-    var source = await getCreatureSpellData(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<CreatureSpellDataKey> copyCreatureSpellData(
+    CreatureSpellDataKey key,
+  ) async {
+    final source = await getCreatureSpellData(key);
+    if (source == null) {
+      throw StateError('原生物技能数据不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeCreatureSpellData(copied);
+    return CreatureSpellDataKey.fromEntity(copied);
   }
 
   Future<int> countCreatureSpellDatas({
@@ -37,8 +43,11 @@ class CreatureSpellDataRepository with RepositoryMixin {
     return CreatureSpellDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureSpellData(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyCreatureSpellData(CreatureSpellDataKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原生物技能数据不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureSpellDataEntity>> getBriefCreatureSpellDatas({
@@ -73,8 +82,10 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureSpellDataEntity?> getCreatureSpellData(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<CreatureSpellDataEntity?> getCreatureSpellData(
+    CreatureSpellDataKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureSpellDataEntity.fromJson(results.first.toMap());
   }
@@ -86,31 +97,38 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveCreatureSpellData(CreatureSpellDataEntity data) async {
-    if (data.id == 0) {
-      await storeCreatureSpellData(data);
-      return;
+  Future<void> storeCreatureSpellData(CreatureSpellDataEntity data) async {
+    if (data.id <= 0) {
+      throw StateError('生物技能数据 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getCreatureSpellData(data.id);
-    if (existing != null) {
-      await updateCreatureSpellData(data);
-    } else {
+    try {
       await laconic.table(_table).insert([data.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物技能数据 ${data.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeCreatureSpellData(CreatureSpellDataEntity data) async {
-    var json = data.toJson();
-    final nextId = data.id > 0 ? data.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateCreatureSpellData(CreatureSpellDataEntity data) async {
-    var json = data.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', data.id).update(json);
+  Future<void> updateCreatureSpellData(
+    CreatureSpellDataKey originalKey,
+    CreatureSpellDataEntity data,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(data.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原生物技能数据不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物技能数据 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -154,5 +172,9 @@ class CreatureSpellDataRepository with RepositoryMixin {
       (join) => join.on('dcsd.Spells3', 'ds_4.ID'),
     );
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureSpellDataKey key) {
+    return builder.where('ID', key.id);
   }
 }
