@@ -54,13 +54,13 @@ class PlayerCreateInfoCastSpellEntity {
   final int raceMask;
   final int classMask;
   final int spell;
-  final String note;
+  final String? note;
 
   const PlayerCreateInfoCastSpellEntity({
     this.raceMask = 0,
     this.classMask = 0,
     this.spell = 0,
-    this.note = '',
+    this.note,
   });
 
   factory PlayerCreateInfoCastSpellEntity.fromJson(Map<String, dynamic> json) {
@@ -68,7 +68,7 @@ class PlayerCreateInfoCastSpellEntity {
       raceMask: json['raceMask'] ?? 0,
       classMask: json['classMask'] ?? 0,
       spell: json['spell'] ?? 0,
-      note: json['note'] ?? '',
+      note: json['note'] as String?,
     );
   }
 
