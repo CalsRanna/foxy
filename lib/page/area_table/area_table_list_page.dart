@@ -134,7 +134,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              id: areas[row].id,
+              key: areas[row].key,
               name: areas[row].areaNameLangZhCN,
             );
           },
@@ -147,7 +147,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      id: areas[row].id,
+                      key: areas[row].key,
                       name: areas[row].areaNameLangZhCN,
                     );
                   },
@@ -156,14 +156,14 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyAreaTable(areas[row].id);
+                    viewModel.copyAreaTable(areas[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteAreaTable(areas[row].id);
+                    viewModel.deleteAreaTable(areas[row].key);
                   },
                   child: Text('删除'),
                 ),

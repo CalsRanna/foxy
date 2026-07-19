@@ -1,6 +1,9 @@
+import 'package:foxy/entity/area_table_key.dart';
+import 'package:foxy/entity/brief_area_table_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,14 +14,17 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyAreaTable(int id) async {
-    var source = await getAreaTable(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    json['AreaBit'] = await nextMaxPlusOne(_table, 'AreaBit');
-    await laconic.table(_table).insert([json]);
+  Future<AreaTableKey> copyAreaTable(AreaTableKey key) async {
+    final source = await getAreaTable(key);
+    if (source == null) {
+      throw StateError('原区域不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(
+      id: await nextMaxPlusOne(_table, 'ID'),
+      areaBit: await nextMaxPlusOne(_table, 'AreaBit'),
+    );
+    await storeAreaTable(copied);
+    return AreaTableKey.fromEntity(copied);
   }
 
   Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
@@ -34,12 +40,15 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     );
   }
 
-  Future<void> destroyAreaTable(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyAreaTable(AreaTableKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原区域不存在，可能已被其他操作修改或删除');
+    }
   }
 
-  Future<AreaTableEntity?> getAreaTable(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<AreaTableEntity?> getAreaTable(AreaTableKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return AreaTableEntity.fromJson(results.first.toMap());
   }
@@ -78,26 +87,16 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<bool> isAreaBitAvailable(int areaBit, {required int areaId}) async {
-    final count = await laconic
-        .table(_table)
-        .where('AreaBit', areaBit)
-        .where('ID', areaId, comparator: '!=')
-        .count();
+  Future<bool> isAreaBitAvailable(
+    int areaBit, {
+    AreaTableKey? excludingKey,
+  }) async {
+    var builder = laconic.table(_table).where('AreaBit', areaBit);
+    if (excludingKey != null) {
+      builder = builder.where('ID', excludingKey.id, comparator: '!=');
+    }
+    final count = await builder.count();
     return count == 0;
-  }
-
-  Future<void> saveAreaTable(AreaTableEntity area) async {
-    if (area.id == 0) {
-      await storeAreaTable(area);
-      return;
-    }
-    var existing = await getAreaTable(area.id);
-    if (existing != null) {
-      await updateAreaTable(area);
-    } else {
-      await laconic.table(_table).insert([area.toJson()]);
-    }
   }
 
   Future<void> saveAreaTableLocales(
@@ -106,18 +105,38 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeAreaTable(AreaTableEntity area) async {
-    var json = area.toJson();
-    final nextId = area.id > 0 ? area.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeAreaTable(AreaTableEntity area) async {
+    if (area.id <= 0) {
+      throw StateError('区域 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([area.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('区域 ${area.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateAreaTable(AreaTableEntity area) async {
-    var json = area.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', area.id).update(json);
+  Future<void> updateAreaTable(
+    AreaTableKey originalKey,
+    AreaTableEntity area,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(area.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原区域不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的区域 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -136,5 +155,9 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, AreaTableKey key) {
+    return builder.where('ID', key.id);
   }
 }

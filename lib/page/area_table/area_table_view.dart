@@ -10,32 +10,13 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class AreaTableView extends StatefulWidget {
-  final int? entry;
-  const AreaTableView({super.key, this.entry});
+class AreaTableView extends StatelessWidget {
+  final AreaTableDetailViewModel viewModel;
 
-  @override
-  State<AreaTableView> createState() => _AreaTableViewState();
-}
-
-class _AreaTableViewState extends State<AreaTableView> {
-  final viewModel = GetIt.instance.get<AreaTableDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const AreaTableView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +26,14 @@ class _AreaTableViewState extends State<AreaTableView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final id = viewModel.area.value.id;
+        final id = viewModel.persistedKey.value?.id;
         return FoxyLocalePicker(
-          entry: id == 0 ? null : id,
+          entry: id,
           controller: viewModel.nameController,
           title: '区域名称本地化',
           placeholder: 'AreaName_lang_zhCN',
@@ -107,6 +87,13 @@ class _AreaTableViewState extends State<AreaTableView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ExplorationLevel',
         controller: viewModel.explorationLevelController,
+      ),
+    );
+    final areaNameLangFlagsInput = FoxyFormItem(
+      label: '名称语言标志',
+      child: FoxyNumberInput<int>(
+        placeholder: 'AreaName_lang_Flags',
+        controller: viewModel.areaNameLangFlagsController,
       ),
     );
 
@@ -226,6 +213,15 @@ class _AreaTableViewState extends State<AreaTableView> {
           Expanded(child: flagsInput),
           Expanded(child: factionGroupMaskInput),
           Expanded(child: explorationLevelInput),
+        ],
+      ),
+      Row(
+        spacing: 8,
+        children: [
+          Expanded(child: areaNameLangFlagsInput),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
         ],
       ),
     ];
