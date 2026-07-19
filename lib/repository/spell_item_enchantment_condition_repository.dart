@@ -1,17 +1,24 @@
+import 'package:foxy/entity/brief_spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_condition_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment_condition';
 
-  Future<void> copySpellItemEnchantmentCondition(int id) async {
-    final source = await getSpellItemEnchantmentCondition(id);
-    if (source == null) return;
-    await storeSpellItemEnchantmentCondition(
-      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
-    );
+  Future<SpellItemEnchantmentConditionKey> copySpellItemEnchantmentCondition(
+    SpellItemEnchantmentConditionKey key,
+  ) async {
+    final source = await getSpellItemEnchantmentCondition(key);
+    if (source == null) {
+      throw StateError('原法术附魔条件不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeSpellItemEnchantmentCondition(copied);
+    return SpellItemEnchantmentConditionKey.fromEntity(copied);
   }
 
   Future<int> countSpellItemEnchantmentConditions({
@@ -29,15 +36,13 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroySpellItemEnchantmentCondition(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_spell_item_enchantment')
-        .where('Condition_ID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('附魔条件 $id 仍被 $references 条法术附魔引用，不能删除');
+  Future<void> destroySpellItemEnchantmentCondition(
+    SpellItemEnchantmentConditionKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术附魔条件不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefSpellItemEnchantmentConditionEntity>>
@@ -61,9 +66,9 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   }
 
   Future<SpellItemEnchantmentConditionEntity?> getSpellItemEnchantmentCondition(
-    int id,
+    SpellItemEnchantmentConditionKey key,
   ) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellItemEnchantmentConditionEntity.fromJson(results.first.toMap());
   }
@@ -76,33 +81,40 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveSpellItemEnchantmentCondition(
+  Future<void> storeSpellItemEnchantmentCondition(
     SpellItemEnchantmentConditionEntity entity,
   ) async {
-    final existing = entity.id == 0
-        ? null
-        : await getSpellItemEnchantmentCondition(entity.id);
-    if (existing == null) {
-      await storeSpellItemEnchantmentCondition(entity);
-    } else {
-      await updateSpellItemEnchantmentCondition(entity);
+    if (entity.id <= 0) {
+      throw StateError('法术附魔条件 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术附魔条件 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeSpellItemEnchantmentCondition(
-    SpellItemEnchantmentConditionEntity entity,
-  ) async {
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    final stored = entity.copyWith(id: id);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
   Future<void> updateSpellItemEnchantmentCondition(
+    SpellItemEnchantmentConditionKey originalKey,
     SpellItemEnchantmentConditionEntity entity,
   ) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术附魔条件不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术附魔条件 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -113,5 +125,12 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(
+    QueryBuilder builder,
+    SpellItemEnchantmentConditionKey key,
+  ) {
+    return builder.where('ID', key.id);
   }
 }
