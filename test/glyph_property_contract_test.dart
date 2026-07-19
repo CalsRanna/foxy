@@ -64,38 +64,48 @@ void main() {
     expect(view, isNot(contains('description:')));
   });
 
-  test('Repository 写入校验引用并保护法术效果和角色雕文引用', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final repository = File(
       'lib/repository/glyph_property_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
       'lib/page/glyph_property/glyph_property_detail_view_model.dart',
     ).readAsStringSync();
-    expect(repository, contains('glyphProperty.id > 0'));
+    expect(repository, contains('glyphProperty.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateGlyphPropertyFields(t);'));
-    expect(repository, contains("table: 'foxy.dbc_spell'"));
-    expect(repository, contains("table: 'foxy.dbc_spell_icon'"));
-    expect(repository, contains('allowZero: false'));
-    expect(repository, contains('allowZero: true'));
-    expect(repository, contains('existing?.glyphSlotFlags'));
-    expect(repository, contains(".where('Effect0', kApplyGlyphSpellEffect)"));
-    expect(repository, contains("TABLE_NAME = 'character_glyphs'"));
-    expect(repository, contains(".orWhere('glyph6', id)"));
+    expect(viewModel, contains('validateGlyphPropertyFields(candidate);'));
+    expect(repository, contains('GlyphPropertyKey originalKey'));
+    expect(repository, contains('.update(glyphProperty.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('foxy.dbc_spell')")));
+    expect(repository, isNot(contains('character_glyphs')));
+    expect(repository, isNot(contains("remove('ID')")));
   });
 
-  test('新建保存回填最终 ID 并记录 create 活动', () {
+  test('详情使用 persistedKey 区分增改并在成功后切换身份', () {
     final viewModel = File(
       'lib/page/glyph_property/glyph_property_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('final isCreate ='));
-    expect(viewModel, contains('t = t.copyWith(id: id);'));
-    expect(
-      viewModel,
-      contains(
-        'isCreate ? ActivityActionType.create : ActivityActionType.update',
-      ),
-    );
+    final page = File(
+      'lib/page/glyph_property/glyph_property_detail_page.dart',
+    ).readAsStringSync();
+    final view = File(
+      'lib/page/glyph_property/glyph_property_view.dart',
+    ).readAsStringSync();
+    final list = File(
+      'lib/page/glyph_property/glyph_property_list_page.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('signal<GlyphPropertyKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateGlyphProperty(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = GlyphPropertyKey'));
+    expect(viewModel, isNot(contains('getGlyphProperty(candidate.id)')));
+    expect(page, contains('final GlyphPropertyKey? glyphPropertyKey'));
+    expect(page, contains('viewModel.persistedKey.value'));
+    expect(view, isNot(contains('readOnly: true')));
+    expect(list, contains('items[row].key'));
   });
 
   test('DBC definition 使用 3.3.5.12340 的 4 列物理格式', () {

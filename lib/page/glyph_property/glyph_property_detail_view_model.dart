@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
+import 'package:foxy/entity/glyph_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -31,23 +32,30 @@ class GlyphPropertyDetailViewModel
   late final spellIconIdController = registerController(IntFieldController());
 
   final property = signal(GlyphPropertyEntity());
+  final persistedKey = signal<GlyphPropertyKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({GlyphPropertyKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createGlyphProperty();
         property.value = blank;
         _initControllers(blank);
         return;
       }
-      property.value = (await _repository.getGlyphProperty(id))!;
-      _initControllers(property.value);
+      persistedKey.value = key;
+      final entity = await _repository.getGlyphProperty(key);
+      if (entity == null) {
+        throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
+      }
+      property.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载雕文属性(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载雕文属性(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -56,23 +64,27 @@ class GlyphPropertyDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateGlyphPropertyFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeGlyphProperty(candidate);
+    } else {
+      await _repository.updateGlyphProperty(originalKey, candidate);
+    }
+    persistedKey.value = GlyphPropertyKey.fromEntity(candidate);
+    property.value = candidate;
+    routerFacade.updateCurrentLabel('雕文属性 #${candidate.id}');
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateGlyphPropertyFields(t);
-      final isCreate = (await _repository.getGlyphProperty(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeGlyphProperty(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateGlyphProperty(t);
-      }
-      property.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('雕文属性数据已保存'));
       ShadSonner.of(context).show(toast);
