@@ -127,7 +127,7 @@ import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/entity/brief_zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
-import 'package:foxy/entity/zone_music_entity.dart';
+import 'package:foxy/entity/brief_zone_music_entity.dart';
 import 'package:foxy/entity/zone_music_filter_entity.dart';
 import 'package:foxy/entity/waypoint_data_entity.dart';
 import 'package:foxy/entity/waypoint_data_filter_entity.dart';
