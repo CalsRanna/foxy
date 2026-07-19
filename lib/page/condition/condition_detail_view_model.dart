@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/entity/condition_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -54,6 +55,7 @@ class ConditionDetailViewModel
   late final commentController = registerController(StringFieldController());
 
   final condition = signal<ConditionEntity?>(null);
+  final persistedKey = signal<ConditionKey?>(null);
 
   /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
   final selectedConditionType = signal(0);
@@ -61,10 +63,6 @@ class ConditionDetailViewModel
   final selectedSourceGroup = signal(0);
   final selectedConditionValue1 = signal(0);
   final selectedErrorType = signal(0);
-
-  /// 现有记录：完整 10 列主键只读
-  final isExisting = signal(false);
-  Map<String, dynamic>? _originalCredential;
 
   void dispose() {
     sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
@@ -75,25 +73,21 @@ class ConditionDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({Map<String, dynamic>? credential}) async {
+  Future<void> initSignals({ConditionKey? conditionKey}) async {
     sourceTypeOrReferenceIdController.addListener(_onSourceTypeChange);
     sourceGroupController.addListener(_onSourceGroupChange);
     conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
     conditionValue1Controller.addListener(_onConditionValue1Change);
     errorTypeController.addListener(_onErrorTypeChange);
     try {
-      // 复合主键均为语义列：新建可编辑；编辑锁定。无简单 MAX+1。
-      if (credential == null) {
-        isExisting.value = false;
-        _originalCredential = null;
+      persistedKey.value = conditionKey;
+      if (conditionKey == null) {
         final blank = await _repository.createCondition();
         condition.value = blank;
         _initControllers(blank);
         return;
       }
-      isExisting.value = true;
-      _originalCredential = credential;
-      final result = await _repository.getConditionFromCredential(credential);
+      final result = await _repository.getCondition(conditionKey);
       if (result == null) return;
       condition.value = result;
       _initControllers(result);
@@ -108,27 +102,37 @@ class ConditionDetailViewModel
 
   Future<void> save(BuildContext context) async {
     try {
-      final data = _collectFromControllers();
-      validateConditionFields(data);
-      final isCreate = _originalCredential == null;
-      if (isCreate) {
-        await _repository.storeCondition(data);
-        _originalCredential = data.buildCredential();
-        isExisting.value = true;
-      } else {
-        await _repository.updateCondition(_originalCredential!, data);
-      }
-      condition.value = data;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        data,
-      );
+      await persist();
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text('条件已保存')));
     } catch (e) {
       if (!context.mounted) return;
       ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
     }
+  }
+
+  Future<void> persist() async {
+    final data = _collectFromControllers();
+    validateConditionFields(data);
+    final originalKey = persistedKey.value;
+    final newKey = ConditionKey.fromEntity(data);
+    final isCreate = originalKey == null;
+    if (isCreate) {
+      await _repository.storeCondition(data);
+    } else {
+      await _repository.updateCondition(originalKey, data);
+    }
+    persistedKey.value = newKey;
+    condition.value = data;
+    routerFacade.updateCurrentLabel(
+      data.comment.isNotEmpty
+          ? data.comment
+          : 'Condition ${data.sourceTypeOrReferenceId}-${data.sourceEntry}',
+    );
+    _logActivity(
+      isCreate ? ActivityActionType.create : ActivityActionType.update,
+      data,
+    );
   }
 
   ConditionEntity _collectFromControllers() {
@@ -175,14 +179,20 @@ class ConditionDetailViewModel
   }
 
   void _logActivity(ActivityActionType action, ConditionEntity c) {
-    final log = ActivityLogEntity(
-      module: 'conditions',
-      actionType: action,
-      entityId: c.sourceTypeOrReferenceId,
-      entityName: c.comment,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    try {
+      final log = ActivityLogEntity(
+        module: 'conditions',
+        actionType: action,
+        entityId: c.sourceTypeOrReferenceId,
+        entityName: c.comment,
+        createdAt: DateTime.now(),
+      );
+      GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(
+        log,
+      );
+    } catch (e) {
+      LoggerUtil.instance.e('记录条件活动失败: $e');
+    }
   }
 
   void _onConditionTypeChange() {

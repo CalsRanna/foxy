@@ -10,8 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i58;
-import 'package:collection/collection.dart' as _i60;
 import 'package:flutter/material.dart' as _i59;
+import 'package:foxy/entity/condition_key.dart' as _i60;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -250,11 +250,11 @@ class ConditionDetailRoute
     extends _i58.PageRouteInfo<ConditionDetailRouteArgs> {
   ConditionDetailRoute({
     _i59.Key? key,
-    Map<String, dynamic>? credential,
+    _i60.ConditionKey? conditionKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ConditionDetailRoute.name,
-         args: ConditionDetailRouteArgs(key: key, credential: credential),
+         args: ConditionDetailRouteArgs(key: key, conditionKey: conditionKey),
          initialChildren: children,
        );
 
@@ -268,38 +268,33 @@ class ConditionDetailRoute
       );
       return _i6.ConditionDetailPage(
         key: args.key,
-        credential: args.credential,
+        conditionKey: args.conditionKey,
       );
     },
   );
 }
 
 class ConditionDetailRouteArgs {
-  const ConditionDetailRouteArgs({this.key, this.credential});
+  const ConditionDetailRouteArgs({this.key, this.conditionKey});
 
   final _i59.Key? key;
 
-  final Map<String, dynamic>? credential;
+  final _i60.ConditionKey? conditionKey;
 
   @override
   String toString() {
-    return 'ConditionDetailRouteArgs{key: $key, credential: $credential}';
+    return 'ConditionDetailRouteArgs{key: $key, conditionKey: $conditionKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! ConditionDetailRouteArgs) return false;
-    return key == other.key &&
-        const _i60.MapEquality<String, dynamic>().equals(
-          credential,
-          other.credential,
-        );
+    return key == other.key && conditionKey == other.conditionKey;
   }
 
   @override
-  int get hashCode =>
-      key.hashCode ^ const _i60.MapEquality<String, dynamic>().hash(credential);
+  int get hashCode => key.hashCode ^ conditionKey.hashCode;
 }
 
 /// generated route for

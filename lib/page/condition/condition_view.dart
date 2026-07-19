@@ -14,38 +14,17 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class ConditionView extends StatefulWidget {
-  final Map<String, dynamic>? credential;
+class ConditionView extends StatelessWidget {
+  final ConditionDetailViewModel viewModel;
 
-  const ConditionView({super.key, this.credential});
-
-  @override
-  State<ConditionView> createState() => _ConditionViewState();
-}
-
-class _ConditionViewState extends State<ConditionView> {
-  final viewModel = GetIt.instance.get<ConditionDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(credential: widget.credential);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const ConditionView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
     return Watch((_) {
-      final pkReadOnly = viewModel.isExisting.value;
       final sourceType = viewModel.selectedSourceType.value;
       final sourceGroup = viewModel.selectedSourceGroup.value;
       final conditionType = viewModel.selectedConditionType.value;
@@ -75,23 +54,19 @@ class _ConditionViewState extends State<ConditionView> {
                       options: kConditionSourceTypeLabels,
                       placeholder: 'SourceTypeOrReferenceId',
                       title: '来源类型',
-                      readOnly: pkReadOnly,
                     ),
                   ),
                   _sourceGroupItem(
                     sourceType,
-                    pkReadOnly: pkReadOnly,
                     referenceTemplate: referenceTemplate,
                   ),
                   _sourceEntryItem(
                     sourceType,
                     sourceGroup,
-                    pkReadOnly: pkReadOnly,
                     referenceTemplate: referenceTemplate,
                   ),
                   _sourceIdItem(
                     sourceType,
-                    pkReadOnly: pkReadOnly,
                     referenceTemplate: referenceTemplate,
                   ),
                 ),
@@ -100,7 +75,6 @@ class _ConditionViewState extends State<ConditionView> {
                     '逻辑分组',
                     'ElseGroup',
                     viewModel.elseGroupController,
-                    readOnly: pkReadOnly,
                   ),
                   const SizedBox(),
                   const SizedBox(),
@@ -119,7 +93,6 @@ class _ConditionViewState extends State<ConditionView> {
                       options: kConditionTypeLabels,
                       placeholder: 'ConditionTypeOrReference',
                       title: '条件类型',
-                      readOnly: pkReadOnly,
                     ),
                   ),
                   FoxyFormItem(
@@ -128,7 +101,7 @@ class _ConditionViewState extends State<ConditionView> {
                       controller: viewModel.conditionTargetController,
                       options: _targetOptions(sourceType),
                       placeholder: const Text('ConditionTarget'),
-                      enabled: !pkReadOnly && !referenceCondition,
+                      enabled: !referenceCondition,
                     ),
                   ),
                   FoxyFormItem(
@@ -147,19 +120,16 @@ class _ConditionViewState extends State<ConditionView> {
                     'ConditionValue1',
                     valueConfig.value1,
                     viewModel.conditionValue1Controller,
-                    pkReadOnly: pkReadOnly,
                   ),
                   _valueItem(
                     'ConditionValue2',
                     valueConfig.value2,
                     viewModel.conditionValue2Controller,
-                    pkReadOnly: pkReadOnly,
                   ),
                   _valueItem(
                     'ConditionValue3',
                     valueConfig.value3,
                     viewModel.conditionValue3Controller,
-                    pkReadOnly: pkReadOnly,
                   ),
                   const SizedBox(),
                 ),
@@ -260,7 +230,6 @@ class _ConditionViewState extends State<ConditionView> {
 
   FoxyFormItem _sourceGroupItem(
     int sourceType, {
-    required bool pkReadOnly,
     required bool referenceTemplate,
   }) {
     if (sourceType == 30) {
@@ -270,7 +239,7 @@ class _ConditionViewState extends State<ConditionView> {
           controller: viewModel.sourceGroupController,
           options: const {0: '生物', 1: '游戏对象'},
           placeholder: const Text('SourceGroup'),
-          enabled: !pkReadOnly && !referenceTemplate,
+          enabled: !referenceTemplate,
         ),
       );
     }
@@ -290,14 +259,13 @@ class _ConditionViewState extends State<ConditionView> {
       label,
       'SourceGroup',
       viewModel.sourceGroupController,
-      readOnly: pkReadOnly || referenceTemplate || !canEdit,
+      readOnly: referenceTemplate || !canEdit,
     );
   }
 
   FoxyFormItem _sourceEntryItem(
     int sourceType,
     int sourceGroup, {
-    required bool pkReadOnly,
     required bool referenceTemplate,
   }) {
     final delegate = switch (sourceType) {
@@ -328,7 +296,7 @@ class _ConditionViewState extends State<ConditionView> {
           controller: viewModel.sourceEntryController,
           delegate: delegate,
           placeholder: 'SourceEntry',
-          readOnly: pkReadOnly || referenceTemplate,
+          readOnly: referenceTemplate,
         ),
       );
     }
@@ -336,13 +304,12 @@ class _ConditionViewState extends State<ConditionView> {
       label,
       'SourceEntry',
       viewModel.sourceEntryController,
-      readOnly: pkReadOnly || referenceTemplate,
+      readOnly: referenceTemplate,
     );
   }
 
   FoxyFormItem _sourceIdItem(
     int sourceType, {
-    required bool pkReadOnly,
     required bool referenceTemplate,
   }) {
     if (sourceType == 22) {
@@ -352,7 +319,7 @@ class _ConditionViewState extends State<ConditionView> {
           controller: viewModel.sourceIdController,
           options: kSourceTypes,
           placeholder: const Text('SourceId'),
-          enabled: !pkReadOnly && !referenceTemplate,
+          enabled: !referenceTemplate,
         ),
       );
     }
@@ -361,7 +328,6 @@ class _ConditionViewState extends State<ConditionView> {
       'SourceId',
       viewModel.sourceIdController,
       readOnly:
-          pkReadOnly ||
           referenceTemplate ||
           !kConditionSourceTypesWithSourceId.contains(sourceType),
     );
@@ -370,10 +336,9 @@ class _ConditionViewState extends State<ConditionView> {
   FoxyFormItem _valueItem(
     String column,
     ConditionValueFieldConfig config,
-    IntFieldController controller, {
-    required bool pkReadOnly,
-  }) {
-    final readOnly = pkReadOnly || !config.editable;
+    IntFieldController controller,
+  ) {
+    final readOnly = !config.editable;
     return FoxyFormItem(
       label: config.label,
       child: _valueEditor(column, config, controller, readOnly: readOnly),
