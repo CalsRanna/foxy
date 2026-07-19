@@ -4,6 +4,7 @@ import 'package:foxy/page/player_create_info/player_create_info_action_view_mode
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -34,6 +35,15 @@ class _PlayerCreateInfoActionViewState
   }
 
   @override
+  void didUpdateWidget(covariant PlayerCreateInfoActionView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.race != widget.race ||
+        oldWidget.playerClass != widget.playerClass) {
+      viewModel.setParent(race: widget.race, class_: widget.playerClass);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -41,21 +51,32 @@ class _PlayerCreateInfoActionViewState
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Column(
-        spacing: 16,
-        children: [
-          Row(
-            children: [
-              ShadButton(
-                onPressed: widget.race == null ? null : _showCreateDialog,
-                child: Text('新增'),
-              ),
-            ],
-          ),
-          Watch((_) => _buildTable()),
-        ],
+    return Watch(
+      (_) => Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          spacing: 16,
+          children: [
+            Row(
+              children: [
+                ShadButton(
+                  onPressed: widget.race == null || widget.playerClass == null
+                      ? null
+                      : _showCreateDialog,
+                  child: Text('新增'),
+                ),
+                const Spacer(),
+                FoxyPagination(
+                  page: viewModel.page.value,
+                  pageSize: 50,
+                  total: viewModel.total.value,
+                  onChange: viewModel.paginate,
+                ),
+              ],
+            ),
+            _buildTable(),
+          ],
+        ),
       ),
     );
   }
@@ -92,7 +113,11 @@ class _PlayerCreateInfoActionViewState
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _showEditDialog(row),
+                  onPressed: () async {
+                    if (await viewModel.edit(actions[row]) && context.mounted) {
+                      _showDialog(isEditing: true);
+                    }
+                  },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
@@ -110,19 +135,15 @@ class _PlayerCreateInfoActionViewState
     );
   }
 
-  void _showCreateDialog() {
-    viewModel.create();
-    showFoxyDialog(
-      context: context,
-      builder: (c) => _buildDialog(c, isEditing: false),
-    );
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
+    _showDialog(isEditing: false);
   }
 
-  void _showEditDialog(int index) {
-    viewModel.edit(index);
+  void _showDialog({required bool isEditing}) {
     showFoxyDialog(
       context: context,
-      builder: (c) => _buildDialog(c, isEditing: true),
+      builder: (c) => _buildDialog(c, isEditing: isEditing),
     );
   }
 
@@ -140,11 +161,30 @@ class _PlayerCreateInfoActionViewState
               children: [
                 Expanded(
                   child: FoxyFormItem(
+                    label: '种族',
+                    child: FoxyIntShadSelect(
+                      controller: viewModel.raceController,
+                      options: kPlayerRaceOptions,
+                      placeholder: const Text('race'),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: FoxyFormItem(
+                    label: '职业',
+                    child: FoxyIntShadSelect(
+                      controller: viewModel.classController,
+                      options: kPlayerClassOptions,
+                      placeholder: const Text('class'),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: FoxyFormItem(
                     label: '按钮',
                     child: FoxyNumberInput<int>(
                       placeholder: 'button (0..143)',
                       controller: viewModel.buttonController,
-                      readOnly: isEditing,
                     ),
                   ),
                 ),
@@ -154,6 +194,11 @@ class _PlayerCreateInfoActionViewState
                     child: Watch((_) => _buildActionInput()),
                   ),
                 ),
+              ],
+            ),
+            Row(
+              spacing: 8,
+              children: [
                 Expanded(
                   child: FoxyFormItem(
                     label: '类型',
@@ -164,6 +209,8 @@ class _PlayerCreateInfoActionViewState
                     ),
                   ),
                 ),
+                const Expanded(child: SizedBox()),
+                const Expanded(child: SizedBox()),
                 const Expanded(child: SizedBox()),
               ],
             ),
@@ -177,12 +224,8 @@ class _PlayerCreateInfoActionViewState
                 SizedBox(width: 8),
                 ShadButton(
                   onPressed: () async {
-                    if (isEditing) {
-                      await viewModel.update(dialogContext);
-                    } else {
-                      await viewModel.save(dialogContext);
-                    }
-                    if (!dialogContext.mounted) return;
+                    final saved = await viewModel.save(dialogContext);
+                    if (!saved || !dialogContext.mounted) return;
                     Navigator.of(dialogContext).pop();
                   },
                   child: Text(isEditing ? '更新' : '保存'),
