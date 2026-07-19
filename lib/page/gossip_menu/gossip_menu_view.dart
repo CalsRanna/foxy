@@ -5,39 +5,12 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class GossipMenuView extends StatefulWidget {
-  final int? menuId;
-  final int? textId;
-  final void Function(int menuId, int textId) onSaved;
+class GossipMenuView extends StatelessWidget {
+  final GossipMenuDetailViewModel viewModel;
 
-  const GossipMenuView({
-    super.key,
-    this.menuId,
-    this.textId,
-    required this.onSaved,
-  });
-
-  @override
-  State<GossipMenuView> createState() => _GossipMenuViewState();
-}
-
-class _GossipMenuViewState extends State<GossipMenuView> {
-  final viewModel = GetIt.instance.get<GossipMenuDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(menuId: widget.menuId, textId: widget.textId);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const GossipMenuView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +19,6 @@ class _GossipMenuViewState extends State<GossipMenuView> {
       child: FoxyNumberInput<int>(
         controller: viewModel.menuIdController,
         placeholder: 'MenuID',
-        readOnly: true,
       ),
     );
     final textIdInput = FoxyFormItem(
@@ -81,8 +53,7 @@ class _GossipMenuViewState extends State<GossipMenuView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () =>
-                    viewModel.save(context, onSaved: widget.onSaved),
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               const SizedBox(width: 8),

@@ -38,7 +38,7 @@ import 'package:foxy/entity/brief_dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
 import 'package:foxy/entity/brief_destructible_model_data_entity.dart';
 import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
-import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/entity/brief_gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';

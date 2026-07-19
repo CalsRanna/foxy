@@ -136,10 +136,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
           },
           onRowDoubleTap: (row) {
             final item = templates[row];
-            viewModel.navigateToDetail(
-              menuId: item.menuId,
-              textId: item.textId,
-            );
+            viewModel.navigateToDetail(key: item.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final item = templates[row];
@@ -149,22 +146,17 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(
-                    menuId: item.menuId,
-                    textId: item.textId,
-                  ),
+                  onPressed: () => viewModel.navigateToDetail(key: item.key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () =>
-                      viewModel.copyGossipMenu(item.menuId, item.textId),
+                  onPressed: () => viewModel.copyGossipMenu(item.key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () =>
-                      viewModel.deleteGossipMenu(item.menuId, item.textId),
+                  onPressed: () => viewModel.deleteGossipMenu(item.key),
                   child: Text('删除'),
                 ),
               ],

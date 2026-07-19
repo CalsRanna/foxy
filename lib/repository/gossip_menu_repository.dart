@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/entity/gossip_menu_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GossipMenuRepository with RepositoryMixin {
   static const _table = 'gossip_menu';
 
-  Future<void> copyGossipMenu(int menuId, int textId) async {
-    final original = await getGossipMenu(menuId, textId);
-    if (original == null) return;
-    final newMenuId = await getNextMenuId();
-    await laconic.table(_table).insert([
-      {'MenuID': newMenuId, 'TextID': original.textId},
-    ]);
+  Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
+    final source = await getGossipMenu(key);
+    if (source == null) {
+      throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(menuId: await getNextMenuId());
+    await storeGossipMenu(copied);
+    return GossipMenuKey.fromEntity(copied);
   }
 
   Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
@@ -40,23 +44,20 @@ class GossipMenuRepository with RepositoryMixin {
   }
 
   Future<GossipMenuEntity> createGossipMenu() async {
-    final nextMenuId = await getNextMenuId();
-    return GossipMenuEntity(menuId: nextMenuId);
+    return GossipMenuEntity(menuId: await getNextMenuId());
   }
 
-  Future<void> destroyGossipMenu(int menuId, int textId) async {
-    await laconic
-        .table(_table)
-        .where('MenuID', menuId)
-        .where('TextID', textId)
-        .delete();
+  Future<void> destroyGossipMenu(GossipMenuKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilterEntity? filter,
   }) async {
-    final offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS gm');
     final fields = <String>[
       'gm.MenuID',
@@ -78,65 +79,62 @@ class GossipMenuRepository with RepositoryMixin {
     }
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('gm.MenuID').orderBy('gm.TextID');
-    builder = builder.limit(kPageSize).offset(offset);
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     final results = await builder.get();
     return results
         .map((e) => BriefGossipMenuEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<GossipMenuEntity?> getGossipMenu(int menuId, int textId) async {
-    var results = await laconic
-        .table(_table)
-        .where('MenuID', menuId)
-        .where('TextID', textId)
-        .limit(1)
-        .get();
+  Future<GossipMenuEntity?> getGossipMenu(GossipMenuKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GossipMenuEntity.fromJson(results.first.toMap());
   }
 
   Future<List<GossipMenuEntity>> getGossipMenus() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic
+        .table(_table)
+        .orderBy('MenuID')
+        .orderBy('TextID')
+        .get();
     return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
   }
 
   Future<int> getNextMenuId() => nextMaxPlusOne(_table, 'MenuID');
 
-  Future<void> saveGossipMenu(GossipMenuEntity menu) async {
-    if (menu.menuId == 0) {
-      await storeGossipMenu(menu);
-      return;
+  Future<void> storeGossipMenu(GossipMenuEntity menu) async {
+    if (menu.menuId <= 0) {
+      throw StateError('对话菜单 MenuID 必须在新建表单打开时显式分配');
     }
-    var existing = await getGossipMenu(menu.menuId, menu.textId);
-    if (existing != null) {
-      await updateGossipMenu(menu.menuId, menu.textId, menu);
-    } else {
-      await laconic.table(_table).insert([
-        {'MenuID': menu.menuId, 'TextID': menu.textId},
-      ]);
+    try {
+      await laconic.table(_table).insert([menu.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('对话菜单 ${menu.menuId}/${menu.textId} 已存在，无法新建');
+      }
+      rethrow;
     }
-  }
-
-  Future<int> storeGossipMenu(GossipMenuEntity menu) async {
-    final newMenuId = menu.menuId > 0 ? menu.menuId : await getNextMenuId();
-    await laconic.table(_table).insert([
-      {'MenuID': newMenuId, 'TextID': menu.textId},
-    ]);
-    return newMenuId;
   }
 
   Future<void> updateGossipMenu(
-    int menuId,
-    int textId,
+    GossipMenuKey originalKey,
     GossipMenuEntity menu,
   ) async {
-    // Composite PK only; allow re-keying MenuID/TextID from entity values.
-    await laconic
-        .table(_table)
-        .where('MenuID', menuId)
-        .where('TextID', textId)
-        .update({'MenuID': menu.menuId, 'TextID': menu.textId});
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(menu.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的对话菜单主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -158,5 +156,9 @@ class GossipMenuRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, GossipMenuKey key) {
+    return builder.where('MenuID', key.menuId).where('TextID', key.textId);
   }
 }
