@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
+import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
@@ -19,7 +20,7 @@ void main() {
       fields: ['locale', 'name'],
       fieldLabels: ['语言', '名称'],
       onLoad: (entry) async => [
-        {'locale': 'zhCN', 'name': '测试'},
+        DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
       ],
       onSave: (entry, data) async {},
     );
@@ -41,6 +42,72 @@ void main() {
     expect(find.byType(DatabaseLocaleEditor), findsOneWidget);
     expect(find.text('添加'), findsOneWidget);
     expect(find.byIcon(LucideIcons.trash), findsOneWidget);
+  });
+
+  testWidgets('普通数据库编辑行修改 locale 后保留原始身份', (tester) async {
+    DatabaseLocaleChanges? saved;
+    final delegate = DatabaseLocaleEditorDelegate(
+      fields: ['locale', 'name'],
+      fieldLabels: ['语言', '名称'],
+      onLoad: (entry) async => [
+        DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
+      ],
+      onSave: (entry, changes) async => saved = changes,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        FoxyLocalePicker(
+          entry: 1,
+          controller: StringFieldController()..init('测试'),
+          title: '名称',
+          delegate: delegate,
+        ),
+      ),
+    );
+    await tester.tap(find.byIcon(LucideIcons.globe));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(ShadInput, 'zhCN'), 'deDE');
+    await tester.tap(find.widgetWithText(ShadButton, '保存'));
+    await tester.pumpAndSettle();
+
+    expect(saved, isNotNull);
+    expect(saved!.rows.single.originalLocale, 'zhCN');
+    expect(saved!.rows.single.values['locale'], 'deDE');
+    expect(saved!.deletedLocales, isEmpty);
+  });
+
+  testWidgets('普通数据库编辑器显式报告被删除行的原始 locale', (tester) async {
+    DatabaseLocaleChanges? saved;
+    final delegate = DatabaseLocaleEditorDelegate(
+      fields: ['locale', 'name'],
+      fieldLabels: ['语言', '名称'],
+      onLoad: (entry) async => [
+        DatabaseLocaleRow.persisted({'locale': 'zhCN', 'name': '测试'}),
+      ],
+      onSave: (entry, changes) async => saved = changes,
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        FoxyLocalePicker(
+          entry: 1,
+          controller: StringFieldController()..init('测试'),
+          title: '名称',
+          delegate: delegate,
+        ),
+      ),
+    );
+    await tester.tap(find.byIcon(LucideIcons.globe));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(LucideIcons.trash));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ShadButton, '保存'));
+    await tester.pumpAndSettle();
+
+    expect(saved, isNotNull);
+    expect(saved!.rows, isEmpty);
+    expect(saved!.deletedLocales, ['zhCN']);
   });
 
   testWidgets('DBC Delegate 打开固定行编辑器且无添加删除', (tester) async {
