@@ -74,7 +74,7 @@ import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
 import 'package:foxy/entity/brief_light_entity.dart';
 import 'package:foxy/entity/light_filter_entity.dart';
-import 'package:foxy/entity/liquid_type_entity.dart';
+import 'package:foxy/entity/brief_liquid_type_entity.dart';
 import 'package:foxy/entity/liquid_type_filter_entity.dart';
 import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
 import 'package:foxy/entity/loot_table_type.dart';
