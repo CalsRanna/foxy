@@ -97,7 +97,7 @@ import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
-import 'package:foxy/entity/spell_focus_object_entity.dart';
+import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
