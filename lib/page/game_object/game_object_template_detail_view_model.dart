@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -64,21 +65,26 @@ class GameObjectTemplateDetailViewModel
   late final verifiedBuildController = registerController(IntFieldController());
 
   final template = signal(GameObjectTemplateEntity());
+  final persistedKey = signal<GameObjectTemplateKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? entry}) async {
+  Future<void> initSignals({GameObjectTemplateKey? key}) async {
     try {
-      if (entry == null || entry <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createGameObjectTemplate();
         template.value = blank;
         _initControllers(blank);
         return;
       }
-      final result = await _repository.getGameObjectTemplate(entry);
-      if (result == null) return;
+      persistedKey.value = key;
+      final result = await _repository.getGameObjectTemplate(key);
+      if (result == null) {
+        throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
+      }
       template.value = result;
       _initControllers(result);
     } catch (e) {
@@ -91,30 +97,34 @@ class GameObjectTemplateDetailViewModel
     routerFacade.goBack();
   }
 
-  Future<int?> save(BuildContext context) async {
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateGameObjectTemplateFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeGameObjectTemplate(candidate);
+    } else {
+      await _repository.updateGameObjectTemplate(originalKey, candidate);
+    }
+    persistedKey.value = GameObjectTemplateKey.fromEntity(candidate);
+    template.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
+  Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      validateGameObjectTemplateFields(t);
-      final existed = await _repository.getGameObjectTemplate(t.entry);
-      if (existed == null) {
-        final id = await _repository.storeGameObjectTemplate(t);
-        entryController.init(id);
-        template.value = t.copyWith(entry: id);
-        _logActivity(ActivityActionType.create, template.value);
-      } else {
-        await _repository.updateGameObjectTemplate(t);
-        template.value = t;
-        _logActivity(ActivityActionType.update, t);
-      }
-      if (!context.mounted) return template.value.entry;
+      await persist();
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
-      return template.value.entry;
     } catch (e) {
-      if (!context.mounted) return null;
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-      return null;
     }
   }
 
@@ -204,5 +214,9 @@ class GameObjectTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(GameObjectTemplateEntity template) {
+    return template.name.isNotEmpty ? template.name : '游戏对象 #${template.entry}';
   }
 }

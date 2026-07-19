@@ -1,7 +1,7 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -24,17 +24,17 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
   final templates = signal(<BriefGameObjectTemplateEntity>[]);
   final total = signal(0);
 
-  Future<void> copyGameObjectTemplate(int entry) async {
+  Future<void> copyGameObjectTemplate(GameObjectTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $entry 的游戏对象模板？',
+        description: '是否复制编号为 ${key.entry} 的游戏对象模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyGameObjectTemplate(entry);
+      await _repository.copyGameObjectTemplate(key);
       DialogUtil.instance.success('复制成功');
-      _logActivity(ActivityActionType.copy, entry);
+      _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (e) {
       LoggerUtil.instance.e(e.toString());
@@ -42,18 +42,18 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGameObjectTemplate(int entry) async {
+  Future<void> deleteGameObjectTemplate(GameObjectTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $entry 的游戏对象模板？此操作不可撤销。',
+        description: '是否删除编号为 ${key.entry} 的游戏对象模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyGameObjectTemplate(entry);
+      await _repository.destroyGameObjectTemplate(key);
       DialogUtil.instance.success('删除成功');
-      _logActivity(ActivityActionType.delete, entry);
+      _logActivity(ActivityActionType.delete, key);
       await _refresh();
     } catch (e) {
       LoggerUtil.instance.e(e.toString());
@@ -81,12 +81,16 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail(BuildContext context, {int? entry, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建游戏对象';
+  void navigateToDetail({GameObjectTemplateKey? key, String? name}) {
+    final label = key == null
+        ? '新建游戏对象'
+        : name?.isNotEmpty == true
+        ? name!
+        : '游戏对象 #${key.entry}';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: GameObjectTemplateDetailRoute(entry: entry, name: name),
+      route: GameObjectTemplateDetailRoute(gameObjectTemplateKey: key),
       parentMenu: RouterMenu.gameObjectTemplate,
     );
   }
@@ -115,9 +119,9 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int entry) {
+  void _logActivity(ActivityActionType action, GameObjectTemplateKey key) {
     final all = templates.value;
-    final template = all.where((t) => t.entry == entry).firstOrNull;
+    final template = all.where((t) => t.entry == key.entry).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'gameobject_template',

@@ -1,18 +1,26 @@
+import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/entity/game_object_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
 
-  Future<void> copyGameObjectTemplate(int entry) async {
-    var template = await getGameObjectTemplate(entry);
-    if (template == null) return;
-    var json = template.toJson();
-    var newEntry = await nextMaxPlusOne(_table, 'entry');
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
+  Future<GameObjectTemplateKey> copyGameObjectTemplate(
+    GameObjectTemplateKey key,
+  ) async {
+    final source = await getGameObjectTemplate(key);
+    if (source == null) {
+      throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(
+      entry: await nextMaxPlusOne(_table, 'entry'),
+    );
+    await storeGameObjectTemplate(copied);
+    return GameObjectTemplateKey.fromEntity(copied);
   }
 
   Future<int> countGameObjectTemplates({
@@ -45,15 +53,17 @@ class GameObjectTemplateRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyGameObjectTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
+  Future<void> destroyGameObjectTemplate(GameObjectTemplateKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
     GameObjectTemplateFilterEntity? filter,
   }) async {
-    var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS gt');
     final fields = <String>[
       'gt.entry',
@@ -71,59 +81,62 @@ class GameObjectTemplateRepository with RepositoryMixin {
     }
     builder = _applyFilter(builder, filter);
     builder = builder.orderBy('gt.entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
+    final results = await builder.get();
     return results
         .map((e) => BriefGameObjectTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<GameObjectTemplateEntity?> getGameObjectTemplate(int entry) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .limit(1)
-        .get();
+  Future<GameObjectTemplateEntity?> getGameObjectTemplate(
+    GameObjectTemplateKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).orderBy('entry').get();
     return results
         .map((e) => GameObjectTemplateEntity.fromJson(e.toMap()))
         .toList();
   }
 
-  Future<void> saveGameObjectTemplate(GameObjectTemplateEntity template) async {
-    if (template.entry == 0) {
-      await storeGameObjectTemplate(template);
-      return;
+  Future<void> storeGameObjectTemplate(
+    GameObjectTemplateEntity template,
+  ) async {
+    if (template.entry <= 0) {
+      throw StateError('游戏对象模板 entry 必须在新建表单打开时显式分配');
     }
-    var existing = await getGameObjectTemplate(template.entry);
-    if (existing != null) {
-      await updateGameObjectTemplate(template);
-    } else {
+    try {
       await laconic.table(_table).insert([template.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('游戏对象模板 ${template.entry} 已存在，无法新建');
+      }
+      rethrow;
     }
-  }
-
-  Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
-    var json = template.toJson();
-    final newEntry = template.entry > 0
-        ? template.entry
-        : await nextMaxPlusOne(_table, 'entry');
-    json['entry'] = newEntry;
-    await laconic.table(_table).insert([json]);
-    return newEntry;
   }
 
   Future<void> updateGameObjectTemplate(
+    GameObjectTemplateKey originalKey,
     GameObjectTemplateEntity template,
   ) async {
-    var json = template.toJson();
-    json.remove('entry');
-    await laconic.table(_table).where('entry', template.entry).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(template.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的游戏对象模板 entry 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -150,5 +163,9 @@ class GameObjectTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, GameObjectTemplateKey key) {
+    return builder.where('entry', key.entry);
   }
 }
