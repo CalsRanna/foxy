@@ -12,6 +12,13 @@ class CreatureDefaultTrainerEntity {
     );
   }
 
+  CreatureDefaultTrainerEntity copyWith({int? creatureId, int? trainerId}) {
+    return CreatureDefaultTrainerEntity(
+      creatureId: creatureId ?? this.creatureId,
+      trainerId: trainerId ?? this.trainerId,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {'CreatureId': creatureId, 'TrainerId': trainerId};
   }
