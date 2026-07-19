@@ -7,6 +7,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -33,6 +34,14 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   }
 
   @override
+  void didUpdateWidget(covariant CreatureEquipTemplateView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.creatureId != widget.creatureId) {
+      viewModel.setParentCreatureId(widget.creatureId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -53,7 +62,18 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
     );
 
     // 工具栏
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['ID', '主手武器', '副手武器', '远程武器', '验证版本'];
@@ -117,9 +137,9 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
+                  onPressed: () async {
                     viewModel.selectRow(row);
-                    viewModel.edit();
+                    if (!await viewModel.edit() || !context.mounted) return;
                     _showEditDialog(context);
                   },
                   child: Text('编辑'),
@@ -155,8 +175,8 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   }
 
   /// 显示新增对话框
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -181,7 +201,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
 
   /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -189,23 +209,21 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID（只读）
+          // 生物ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
-          // 模板ID（主键序号，create 时 MAX+1，始终只读）
+          // 模板ID（主键序号）
           FoxyFormItem(
             label: '模板ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.idController,
               placeholder: 'ID',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
@@ -259,12 +277,8 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
