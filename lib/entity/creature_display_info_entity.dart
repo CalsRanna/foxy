@@ -1,33 +1,3 @@
-/// 生物显示信息列表展示模型（含 LEFT JOIN foxy.dbc_creature_model_data 的模型名）
-class BriefCreatureDisplayInfoEntity {
-  final int id;
-  final int modelId;
-  final double creatureModelScale;
-  final int sizeClass;
-  final int bloodID;
-  final String modelName;
-
-  const BriefCreatureDisplayInfoEntity({
-    this.id = 0,
-    this.modelId = 0,
-    this.creatureModelScale = 1.0,
-    this.sizeClass = 0,
-    this.bloodID = 0,
-    this.modelName = '',
-  });
-
-  factory BriefCreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureDisplayInfoEntity(
-      id: json['ID'] ?? 0,
-      modelId: json['ModelID'] ?? 0,
-      creatureModelScale: json['CreatureModelScale'] ?? 1.0,
-      sizeClass: json['SizeClass'] ?? 0,
-      bloodID: json['BloodID'] ?? 0,
-      modelName: json['ModelName'] ?? '',
-    );
-  }
-}
-
 /// 生物显示信息 — 对应 foxy.dbc_creature_display_info 表
 class CreatureDisplayInfoEntity {
   final int id;
