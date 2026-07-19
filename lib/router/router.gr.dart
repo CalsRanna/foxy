@@ -20,7 +20,7 @@ import 'package:foxy/entity/gem_property_key.dart' as _i65;
 import 'package:foxy/entity/glyph_property_key.dart' as _i66;
 import 'package:foxy/entity/item_extended_cost_key.dart' as _i67;
 import 'package:foxy/entity/item_set_key.dart' as _i68;
-import 'package:foxy/entity/page_text_key.dart' as _i76;
+import 'package:foxy/entity/page_text_key.dart' as _i77;
 import 'package:foxy/entity/quest_faction_reward_key.dart' as _i69;
 import 'package:foxy/entity/quest_info_key.dart' as _i70;
 import 'package:foxy/entity/quest_sort_key.dart' as _i71;
@@ -28,6 +28,7 @@ import 'package:foxy/entity/scaling_stat_distribution_key.dart' as _i72;
 import 'package:foxy/entity/scaling_stat_value_key.dart' as _i73;
 import 'package:foxy/entity/smart_script_key.dart' as _i74;
 import 'package:foxy/entity/spell_item_enchantment_key.dart' as _i75;
+import 'package:foxy/entity/talent_key.dart' as _i76;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1956,11 +1957,11 @@ class SpellListRoute extends _i58.PageRouteInfo<void> {
 class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
   TalentDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i76.TalentKey? talentKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TalentDetailRoute.name,
-         args: TalentDetailRouteArgs(key: key, id: id),
+         args: TalentDetailRouteArgs(key: key, talentKey: talentKey),
          initialChildren: children,
        );
 
@@ -1972,32 +1973,32 @@ class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
       final args = data.argsAs<TalentDetailRouteArgs>(
         orElse: () => const TalentDetailRouteArgs(),
       );
-      return _i54.TalentDetailPage(key: args.key, id: args.id);
+      return _i54.TalentDetailPage(key: args.key, talentKey: args.talentKey);
     },
   );
 }
 
 class TalentDetailRouteArgs {
-  const TalentDetailRouteArgs({this.key, this.id});
+  const TalentDetailRouteArgs({this.key, this.talentKey});
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i76.TalentKey? talentKey;
 
   @override
   String toString() {
-    return 'TalentDetailRouteArgs{key: $key, id: $id}';
+    return 'TalentDetailRouteArgs{key: $key, talentKey: $talentKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! TalentDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && talentKey == other.talentKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ talentKey.hashCode;
 }
 
 /// generated route for
@@ -2022,7 +2023,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i76.PageTextKey? pageTextKey,
+    _i77.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2051,7 +2052,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i76.PageTextKey? pageTextKey;
+  final _i77.PageTextKey? pageTextKey;
 
   @override
   String toString() {
