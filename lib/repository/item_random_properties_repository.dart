@@ -22,7 +22,7 @@ class ItemRandomPropertiesRepository
     if (source == null) {
       throw StateError('原随机属性不存在，可能已被其他操作修改或删除');
     }
-    final copied = source.copyWith(id: await _getNextId());
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemRandomProperty(copied);
     return ItemRandomPropertiesKey.fromEntity(copied);
   }
@@ -36,7 +36,7 @@ class ItemRandomPropertiesRepository
   }
 
   Future<ItemRandomPropertiesEntity> createItemRandomProperty() async {
-    return ItemRandomPropertiesEntity(id: await _getNextId());
+    return ItemRandomPropertiesEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyItemRandomProperty(ItemRandomPropertiesKey key) async {
@@ -141,8 +141,6 @@ class ItemRandomPropertiesRepository
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _whereKey(QueryBuilder builder, ItemRandomPropertiesKey key) {
     return builder.where('ID', key.id);

@@ -14,7 +14,7 @@ class LockRepository with RepositoryMixin {
     if (source == null) {
       throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
     }
-    final copied = source.copyWith(id: await _getNextId());
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeLock(copied);
     return LockKey.fromEntity(copied);
   }
@@ -26,7 +26,7 @@ class LockRepository with RepositoryMixin {
   }
 
   Future<LockEntity> createLock() async {
-    return LockEntity(id: await _getNextId());
+    return LockEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyLock(LockKey key) async {
@@ -99,8 +99,6 @@ class LockRepository with RepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _whereKey(QueryBuilder builder, LockKey key) {
     return builder.where('ID', key.id);

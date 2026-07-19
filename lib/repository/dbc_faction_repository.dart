@@ -19,7 +19,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     if (source == null) {
       throw StateError('原阵营不存在，可能已被其他操作修改或删除');
     }
-    final copied = source.copyWith(id: await _getNextId());
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeDbcFaction(copied);
     return DbcFactionKey.fromEntity(copied);
   }
@@ -31,7 +31,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<DbcFactionEntity> createDbcFaction() async {
-    return DbcFactionEntity(id: await _getNextId());
+    return DbcFactionEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyDbcFaction(DbcFactionKey key) async {
@@ -130,8 +130,6 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
     return builder;
   }
-
-  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
 
   QueryBuilder _whereKey(QueryBuilder builder, DbcFactionKey key) {
     return builder.where('ID', key.id);
