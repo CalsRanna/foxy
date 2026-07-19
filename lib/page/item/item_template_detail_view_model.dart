@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -319,7 +318,7 @@ class ItemTemplateDetailViewModel
 
   /// Signals
   final template = signal(ItemTemplateEntity());
-  final persistedKey = signal<ItemTemplateKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   bool get hasDisenchantLoot => template.value.disenchantId != 0;
 
@@ -334,7 +333,7 @@ class ItemTemplateDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({ItemTemplateKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -371,7 +370,7 @@ class ItemTemplateDetailViewModel
     } else {
       await _repository.updateItemTemplate(originalKey, candidate);
     }
-    persistedKey.value = ItemTemplateKey.fromEntity(candidate);
+    persistedKey.value = candidate.entry;
     template.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

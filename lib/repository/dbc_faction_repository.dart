@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
-import 'package:foxy/entity/dbc_faction_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
@@ -14,14 +13,14 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<DbcFactionKey> copyDbcFaction(DbcFactionKey key) async {
+  Future<int> copyDbcFaction(int key) async {
     final source = await getDbcFaction(key);
     if (source == null) {
       throw StateError('原阵营不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeDbcFaction(copied);
-    return DbcFactionKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
@@ -34,7 +33,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return DbcFactionEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyDbcFaction(DbcFactionKey key) async {
+  Future<void> destroyDbcFaction(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原阵营不存在，可能已被其他操作修改或删除');
@@ -57,7 +56,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<DbcFactionEntity?> getDbcFaction(DbcFactionKey key) async {
+  Future<DbcFactionEntity?> getDbcFaction(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DbcFactionEntity.fromJson(results.first.toMap());
@@ -94,7 +93,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateDbcFaction(
-    DbcFactionKey originalKey,
+    int originalKey,
     DbcFactionEntity faction,
   ) async {
     try {
@@ -131,7 +130,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, DbcFactionKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

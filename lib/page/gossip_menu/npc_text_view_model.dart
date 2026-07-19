@@ -1,5 +1,4 @@
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/entity/npc_text_key.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/npc_text_locale_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -15,7 +14,7 @@ class NpcTextViewModel with FieldControllerMixin {
   final _localeRepository = GetIt.instance.get<NpcTextLocaleRepository>();
 
   final localeEditingKey = signal<NpcTextLocaleKey?>(null);
-  final persistedKey = signal<NpcTextKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   late final idController = registerController(IntFieldController());
   late final text00Controller = registerController(StringFieldController());
@@ -194,7 +193,7 @@ class NpcTextViewModel with FieldControllerMixin {
     if (textId <= 0) return;
     try {
       localeEditingKey.value = null;
-      final key = NpcTextKey(id: textId);
+      final key = textId;
       final entity = await _repository.getNpcText(key);
       persistedKey.value = entity == null ? null : key;
       _applyMain(entity ?? NpcTextEntity(id: textId));
@@ -235,7 +234,7 @@ class NpcTextViewModel with FieldControllerMixin {
           await _localeRepository.destroyNpcTextLocale(originalLocaleKey);
         }
       });
-      persistedKey.value = NpcTextKey.fromEntity(entity);
+      persistedKey.value = entity.id;
       localeEditingKey.value = hasLocaleText
           ? NpcTextLocaleKey.fromEntity(locale)
           : null;

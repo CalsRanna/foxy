@@ -1,5 +1,3 @@
-import 'package:foxy/entity/achievement_key.dart';
-
 class BriefAchievementEntity {
   final int id;
   final String titleLangZhCN;
@@ -22,5 +20,5 @@ class BriefAchievementEntity {
     );
   }
 
-  AchievementKey get key => AchievementKey(id: id);
+  int get key => id;
 }

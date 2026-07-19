@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_quest_info_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
-import 'package:foxy/entity/quest_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,14 +13,14 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<QuestInfoKey> copyQuestInfo(QuestInfoKey key) async {
+  Future<int> copyQuestInfo(int key) async {
     final source = await getQuestInfo(key);
     if (source == null) {
       throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeQuestInfo(copied);
-    return QuestInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestInfos({QuestInfoFilterEntity? filter}) async {
@@ -34,7 +33,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestInfoEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestInfo(QuestInfoKey key) async {
+  Future<void> destroyQuestInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
@@ -58,7 +57,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<QuestInfoEntity?> getQuestInfo(QuestInfoKey key) async {
+  Future<QuestInfoEntity?> getQuestInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestInfoEntity.fromJson(results.first.toMap());
@@ -95,7 +94,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateQuestInfo(
-    QuestInfoKey originalKey,
+    int originalKey,
     QuestInfoEntity questInfo,
   ) async {
     try {
@@ -140,7 +139,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

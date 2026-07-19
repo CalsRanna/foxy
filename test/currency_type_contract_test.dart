@@ -132,7 +132,7 @@ void main() {
     expect(repository, contains('currencyType.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateCurrencyTypeFields(candidate);'));
-    expect(repository, contains('CurrencyTypeKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(currencyType.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -174,12 +174,12 @@ void main() {
     final list = File(
       'lib/page/currency_type/currency_type_list_page.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('signal<CurrencyTypeKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateCurrencyType(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = CurrencyTypeKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(viewModel, isNot(contains('getCurrencyType(candidate.id)')));
-    expect(page, contains('final CurrencyTypeKey? currencyTypeKey'));
+    expect(page, contains('final int? currencyTypeKey'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
     expect(list, contains('items[row].key'));

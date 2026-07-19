@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
-import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -25,11 +24,11 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
   final templates = signal(<BriefCreatureTemplateEntity>[]);
   final total = signal(0);
 
-  Future<void> copyCreatureTemplate(CreatureTemplateKey key) async {
+  Future<void> copyCreatureTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.entry} 的生物模板？',
+        description: '是否复制编号为 $key 的生物模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -43,11 +42,11 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteCreatureTemplate(CreatureTemplateKey key) async {
+  Future<void> deleteCreatureTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.entry} 的生物模板？此操作不可撤销。',
+        description: '是否删除编号为 $key 的生物模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -82,12 +81,12 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({CreatureTemplateKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = key == null
         ? '新建生物'
         : name?.isNotEmpty == true
         ? name!
-        : '生物 #${key.entry}';
+        : '生物 #$key';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -122,9 +121,9 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, CreatureTemplateKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final templates = this.templates.value;
-    final template = templates.where((t) => t.entry == key.entry).firstOrNull;
+    final template = templates.where((t) => t.entry == key).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'creature_template',

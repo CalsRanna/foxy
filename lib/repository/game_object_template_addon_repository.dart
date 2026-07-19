@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_game_object_template_addon_entity.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
-import 'package:foxy/entity/game_object_template_addon_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,7 +7,7 @@ import 'package:laconic/laconic.dart';
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
-  Future<void> copyGameObjectTemplateAddon(GameObjectTemplateAddonKey key) {
+  Future<void> copyGameObjectTemplateAddon(int key) {
     throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
   }
 
@@ -24,9 +23,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyGameObjectTemplateAddon(
-    GameObjectTemplateAddonKey key,
-  ) async {
+  Future<void> destroyGameObjectTemplateAddon(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原游戏对象模板附加数据不存在，可能已被其他操作修改或删除');
@@ -48,7 +45,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
-    GameObjectTemplateAddonKey key,
+    int key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
@@ -80,7 +77,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> updateGameObjectTemplateAddon(
-    GameObjectTemplateAddonKey originalKey,
+    int originalKey,
     GameObjectTemplateAddonEntity addon,
   ) async {
     try {
@@ -99,7 +96,7 @@ class GameObjectTemplateAddonRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectTemplateAddonKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

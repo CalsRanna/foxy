@@ -1,5 +1,3 @@
-import 'package:foxy/entity/taxi_path_key.dart';
-
 class BriefTaxiPathEntity {
   final int id;
   final int fromTaxiNode;
@@ -22,5 +20,5 @@ class BriefTaxiPathEntity {
     );
   }
 
-  TaxiPathKey get key => TaxiPathKey(id: id);
+  int get key => id;
 }

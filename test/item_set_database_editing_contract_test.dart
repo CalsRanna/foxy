@@ -3,25 +3,22 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
-import 'package:foxy/entity/item_set_key.dart';
 
 void main() {
-  test('ItemSetKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = ItemSetKey(id: 7);
-    expect(key, const ItemSetKey(id: 7));
-    expect(key.hashCode, const ItemSetKey(id: 7).hashCode);
-    expect(ItemSetKey.fromEntity(const ItemSetEntity(id: 7)), key);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
+    expect((const ItemSetEntity(id: 7)).id, key);
     expect(const BriefItemSetEntity(id: 7).key, key);
   });
 
-  test('ItemSet 路由只携带 typed key 且列表传 brief.key', () {
+  test('ItemSet 路由只携带标量 key 且列表传 brief.key', () {
     final page = File(
       'lib/page/item_set/item_set_detail_page.dart',
     ).readAsStringSync();
     final list = File(
       'lib/page/item_set/item_set_list_page.dart',
     ).readAsStringSync();
-    expect(page, contains('final ItemSetKey? itemSetKey'));
+    expect(page, contains('final int? itemSetKey'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(list, contains('items[row].key'));
   });

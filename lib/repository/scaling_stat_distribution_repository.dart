@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,16 +8,14 @@ import 'package:laconic/laconic.dart';
 class ScalingStatDistributionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
-  Future<ScalingStatDistributionKey> copyScalingStatDistribution(
-    ScalingStatDistributionKey key,
-  ) async {
+  Future<int> copyScalingStatDistribution(int key) async {
     final source = await getScalingStatDistribution(key);
     if (source == null) {
       throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeScalingStatDistribution(copied);
-    return ScalingStatDistributionKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countScalingStatDistributions({
@@ -33,9 +30,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     return ScalingStatDistributionEntity(id: await _getNextId());
   }
 
-  Future<void> destroyScalingStatDistribution(
-    ScalingStatDistributionKey key,
-  ) async {
+  Future<void> destroyScalingStatDistribution(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
@@ -84,7 +79,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   }
 
   Future<ScalingStatDistributionEntity?> getScalingStatDistribution(
-    ScalingStatDistributionKey key,
+    int key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
@@ -116,7 +111,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   }
 
   Future<void> updateScalingStatDistribution(
-    ScalingStatDistributionKey originalKey,
+    int originalKey,
     ScalingStatDistributionEntity distribution,
   ) async {
     try {
@@ -154,7 +149,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ScalingStatDistributionKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

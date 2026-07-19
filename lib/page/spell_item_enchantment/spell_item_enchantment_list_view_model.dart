@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
@@ -24,11 +23,11 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
   final enchantments = signal(<BriefSpellItemEnchantmentEntity>[]);
   final total = signal(0);
 
-  Future<void> copySpellItemEnchantment(SpellItemEnchantmentKey key) async {
+  Future<void> copySpellItemEnchantment(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的法术附魔？',
+        description: '是否复制编号为 $key 的法术附魔？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteSpellItemEnchantment(SpellItemEnchantmentKey key) async {
+  Future<void> deleteSpellItemEnchantment(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的法术附魔？此操作不可撤销。',
+        description: '是否删除编号为 $key 的法术附魔？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -82,7 +81,7 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({SpellItemEnchantmentKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术附魔';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
@@ -116,7 +115,7 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, SpellItemEnchantmentKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final enchantments = this.enchantments.value;
     final enchantment = enchantments.where((e) => e.key == key).firstOrNull;
     final name = enchantment?.nameLangZhCN ?? '';

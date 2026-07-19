@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_item_purchase_group_entity.dart';
-import 'package:foxy/entity/item_purchase_group_key.dart';
 
 void main() {
-  test('ItemPurchaseGroupKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = ItemPurchaseGroupKey(id: 7);
-    expect(key, const ItemPurchaseGroupKey(id: 7));
-    expect(key.hashCode, const ItemPurchaseGroupKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefItemPurchaseGroupEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/item_purchase_group_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('ItemPurchaseGroupKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeItemPurchaseGroup('));
-    expect(source, contains('ItemPurchaseGroupKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(group.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

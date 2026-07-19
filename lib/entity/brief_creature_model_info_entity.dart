@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_model_info_key.dart';
-
 class BriefCreatureModelInfoEntity {
   final int displayId;
   final double boundingRadius;
@@ -25,5 +23,5 @@ class BriefCreatureModelInfoEntity {
     );
   }
 
-  CreatureModelInfoKey get key => CreatureModelInfoKey(displayId: displayId);
+  int get key => displayId;
 }

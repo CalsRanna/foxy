@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
-import 'package:foxy/entity/quest_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
@@ -23,7 +22,7 @@ class QuestTemplateDetailViewModel
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final template = signal(QuestTemplateEntity());
-  final persistedKey = signal<QuestTemplateKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   /// Basic (ints)
   late final idController = registerController(IntFieldController());
@@ -308,7 +307,7 @@ class QuestTemplateDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({QuestTemplateKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -346,7 +345,7 @@ class QuestTemplateDetailViewModel
     } else {
       await _repository.updateQuestTemplate(originalKey, candidate);
     }
-    persistedKey.value = QuestTemplateKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     template.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

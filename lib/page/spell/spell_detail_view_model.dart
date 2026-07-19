@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/entity/spell_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -494,7 +493,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   );
 
   final spell = signal(SpellEntity());
-  final persistedKey = signal<SpellKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   // === 联动信号：跟踪当前选择的枚举值，用于控制子字段 readonly/enabled ===
   final effect0Signal = signal<int>(0);
@@ -599,7 +598,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     disposeControllers();
   }
 
-  Future<void> initSignals({SpellKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -618,7 +617,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       _initControllers(result);
       _wireEffectSignals();
     } catch (e, s) {
-      LoggerUtil.instance.e('加载法术(id=${key?.id})失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载法术(id=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -637,7 +636,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     } else {
       await _repository.updateSpell(originalKey, candidate);
     }
-    persistedKey.value = SpellKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     spell.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

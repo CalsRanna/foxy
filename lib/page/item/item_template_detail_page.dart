@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
 import 'package:foxy/page/item/item_loot_template_view.dart';
@@ -14,7 +13,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ItemTemplateDetailPage extends StatefulWidget {
-  final ItemTemplateKey? itemTemplateKey;
+  final int? itemTemplateKey;
 
   const ItemTemplateDetailPage({super.key, this.itemTemplateKey});
 
@@ -42,12 +41,12 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final template = viewModel.template.value;
-      final entry = key?.entry ?? 0;
+      final entry = key ?? 0;
       final name = key == null
           ? '新建物品'
           : template.name.isNotEmpty
           ? template.name
-          : '物品 #${key.entry}';
+          : '物品 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -26,16 +26,16 @@ void main() {
       .where((file) => file.path.endsWith('.dart'))
       .toList();
 
-  test('全部 Brief Entity 独立成文件并暴露强类型身份', () {
+  test('全部 Brief Entity 独立成文件并暴露完整标量或专用身份', () {
     final keyPattern = RegExp(
-      r'(?:final\s+\w+Key\s+key;|\w+Key\s+get\s+key\s*=>)',
+      r'(?:(?:final\s+)?(?:int|String|\w+Key)\s+key;|(?:int|String|\w+Key)\s+get\s+key\s*=>)',
     );
 
     for (final file in briefFiles) {
       expect(
         file.readAsStringSync(),
         matches(keyPattern),
-        reason: '${file.path} 缺少强类型 key',
+        reason: '${file.path} 缺少完整标量或专用 key',
       );
     }
     for (final file in entityFiles.where(
@@ -64,7 +64,7 @@ void main() {
     expect(pageLimits, briefMethods);
   });
 
-  test('全部候选 UPDATE 和行 DELETE 使用强类型原始 Key 与写入结果', () {
+  test('全部候选 UPDATE 和行 DELETE 使用独立完整 locator 与写入结果', () {
     final updatePattern = RegExp(
       r'Future<void>\s+(update\w+)\s*\((.*?)\)\s*async\s*\{',
       dotAll: true,
@@ -84,16 +84,16 @@ void main() {
         updateCount++;
         expect(
           match.group(2),
-          matches(RegExp(r'\w+Key\s+originalKey')),
-          reason: '${file.path}:${match.group(1)} 未接收原始强类型 Key',
+          matches(RegExp(r'(?:int|String|\w+Key)\s+originalKey')),
+          reason: '${file.path}:${match.group(1)} 未接收独立 originalKey',
         );
       }
       for (final match in destroyPattern.allMatches(source)) {
         destroyCount++;
         expect(
           match.group(2),
-          matches(RegExp(r'\w+Key\s+key')),
-          reason: '${file.path}:${match.group(1)} 未接收强类型 Key',
+          matches(RegExp(r'(?:int|String|\w+Key)\s+key')),
+          reason: '${file.path}:${match.group(1)} 未接收完整 locator',
         );
       }
       matchedChecks += RegExp(
@@ -115,6 +115,66 @@ void main() {
 
     expect(matchedChecks, updateCount);
     expect(deletedChecks, destroyCount);
+  });
+
+  test('专用 Key 清单只保留联合或特殊定位器', () {
+    const retainedKeyFiles = {
+      'condition_key.dart',
+      'creature_equip_template_key.dart',
+      'creature_quest_ender_key.dart',
+      'creature_quest_item_key.dart',
+      'creature_quest_starter_key.dart',
+      'creature_template_locale_key.dart',
+      'creature_template_resistance_key.dart',
+      'creature_template_spell_key.dart',
+      'game_object_quest_ender_key.dart',
+      'game_object_quest_item_key.dart',
+      'game_object_quest_starter_key.dart',
+      'game_object_template_locale_key.dart',
+      'gossip_menu_key.dart',
+      'gossip_menu_option_key.dart',
+      'gossip_menu_option_locale_key.dart',
+      'item_enchantment_template_key.dart',
+      'item_template_locale_key.dart',
+      'loot_template_entry_key.dart',
+      'loot_template_key.dart',
+      'npc_text_locale_key.dart',
+      'npc_trainer_key.dart',
+      'npc_vendor_key.dart',
+      'page_text_locale_key.dart',
+      'player_create_info_action_key.dart',
+      'player_create_info_cast_spell_key.dart',
+      'player_create_info_item_key.dart',
+      'player_create_info_key.dart',
+      'player_create_info_skill_key.dart',
+      'player_create_info_spell_custom_key.dart',
+      'quest_offer_reward_locale_key.dart',
+      'quest_request_items_locale_key.dart',
+      'quest_template_locale_key.dart',
+      'smart_script_key.dart',
+      'spell_area_key.dart',
+      'spell_group_key.dart',
+      'spell_linked_spell_key.dart',
+      'spell_loot_template_key.dart',
+      'spell_rank_key.dart',
+      'waypoint_data_key.dart',
+    };
+    final actualKeyFiles = entityFiles
+        .map((file) => file.uri.pathSegments.last)
+        .where((name) => name.endsWith('_key.dart'))
+        .toSet();
+
+    expect(actualKeyFiles, retainedKeyFiles);
+    expect(
+      File(
+        'lib/entity/player_create_info_cast_spell_key.dart',
+      ).readAsStringSync(),
+      contains('final String? note;'),
+    );
+    expect(
+      File('lib/entity/waypoint_data_key.dart').readAsStringSync(),
+      contains('不是单个 waypoint_data 物理行主键'),
+    );
   });
 
   test('Repository 不再推断保存身份、返回替代键或执行隐式跨表删除', () {

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_model_info_entity.dart';
 import 'package:foxy/entity/creature_model_info_entity.dart';
 import 'package:foxy/entity/creature_model_info_filter_entity.dart';
-import 'package:foxy/entity/creature_model_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class CreatureModelInfoRepository with RepositoryMixin {
   static const _table = 'creature_model_info';
 
-  Future<CreatureModelInfoKey> copyCreatureModelInfo(
-    CreatureModelInfoKey key,
-  ) async {
+  Future<int> copyCreatureModelInfo(int key) async {
     final source = await getCreatureModelInfo(key);
     if (source == null) {
       throw StateError('原生物模型信息不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
       'DisplayID': await nextMaxPlusOne(_table, 'DisplayID'),
     });
     await storeCreatureModelInfo(copied);
-    return CreatureModelInfoKey.fromEntity(copied);
+    return copied.displayId;
   }
 
   Future<int> countCreatureModelInfos({
@@ -38,7 +35,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyCreatureModelInfo(CreatureModelInfoKey key) async {
+  Future<void> destroyCreatureModelInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物模型信息不存在，可能已被其他操作修改或删除');
@@ -67,9 +64,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureModelInfoEntity?> getCreatureModelInfo(
-    CreatureModelInfoKey key,
-  ) async {
+  Future<CreatureModelInfoEntity?> getCreatureModelInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureModelInfoEntity.fromJson(results.first.toMap());
@@ -97,7 +92,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureModelInfo(
-    CreatureModelInfoKey originalKey,
+    int originalKey,
     CreatureModelInfoEntity info,
   ) async {
     try {
@@ -127,7 +122,7 @@ class CreatureModelInfoRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureModelInfoKey key) {
-    return builder.where('DisplayID', key.displayId);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('DisplayID', key);
   }
 }

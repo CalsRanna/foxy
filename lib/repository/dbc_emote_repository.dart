@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_emote_filter_entity.dart';
-import 'package:foxy/entity/dbc_emote_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class DbcEmoteRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes';
 
-  Future<DbcEmoteKey> copyDbcEmote(DbcEmoteKey key) async {
+  Future<int> copyDbcEmote(int key) async {
     final source = await getDbcEmote(key);
     if (source == null) {
       throw StateError('原表情不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class DbcEmoteRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeDbcEmote(copied);
-    return DbcEmoteKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countDbcEmotes({DbcEmoteFilterEntity? filter}) =>
@@ -28,7 +27,7 @@ class DbcEmoteRepository with RepositoryMixin {
   Future<DbcEmoteEntity> createDbcEmote() async =>
       DbcEmoteEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDbcEmote(DbcEmoteKey key) async {
+  Future<void> destroyDbcEmote(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原表情不存在，可能已被其他操作修改或删除');
@@ -54,7 +53,7 @@ class DbcEmoteRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<DbcEmoteEntity?> getDbcEmote(DbcEmoteKey key) async {
+  Future<DbcEmoteEntity?> getDbcEmote(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : DbcEmoteEntity.fromJson(rows.first.toMap());
   }
@@ -78,10 +77,7 @@ class DbcEmoteRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateDbcEmote(
-    DbcEmoteKey originalKey,
-    DbcEmoteEntity emote,
-  ) async {
+  Future<void> updateDbcEmote(int originalKey, DbcEmoteEntity emote) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -114,7 +110,7 @@ class DbcEmoteRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, DbcEmoteKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

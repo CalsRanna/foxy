@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
-import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -44,11 +43,11 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteQuestFactionReward(QuestFactionRewardKey key) async {
+  Future<void> deleteQuestFactionReward(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的任务声望？此操作不可撤销。',
+        description: '是否删除编号为 $key 的任务声望？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -63,8 +62,8 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({QuestFactionRewardKey? key}) {
-    final label = key != null ? '#${key.id}' : '新建任务声望';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '#$key' : '新建任务声望';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -93,11 +92,11 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     return QuestFactionRewardFilterEntity(id: entryController.collect());
   }
 
-  void _logActivity(ActivityActionType action, QuestFactionRewardKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'quest_faction_reward',
       actionType: action,
-      entityName: 'QuestFactionReward ${key.id}',
+      entityName: 'QuestFactionReward $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

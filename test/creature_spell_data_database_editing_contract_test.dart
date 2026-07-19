@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_spell_data_entity.dart';
-import 'package:foxy/entity/creature_spell_data_key.dart';
 
 void main() {
-  test('CreatureSpellDataKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = CreatureSpellDataKey(id: 7);
-    expect(key, const CreatureSpellDataKey(id: 7));
-    expect(key.hashCode, const CreatureSpellDataKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefCreatureSpellDataEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/creature_spell_data_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('CreatureSpellDataKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeCreatureSpellData('));
-    expect(source, contains('CreatureSpellDataKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(data.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

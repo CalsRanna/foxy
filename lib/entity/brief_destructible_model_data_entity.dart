@@ -1,5 +1,3 @@
-import 'package:foxy/entity/destructible_model_data_key.dart';
-
 class BriefDestructibleModelDataEntity {
   final int id;
   final int state1Wmo;
@@ -22,5 +20,5 @@ class BriefDestructibleModelDataEntity {
     state3Wmo: json['State3WMO'] ?? 0,
   );
 
-  DestructibleModelDataKey get key => DestructibleModelDataKey(id: id);
+  int get key => id;
 }

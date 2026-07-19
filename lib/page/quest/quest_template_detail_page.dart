@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/quest_template_key.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_view.dart';
@@ -16,7 +15,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class QuestTemplateDetailPage extends StatefulWidget {
-  final QuestTemplateKey? questTemplateKey;
+  final int? questTemplateKey;
 
   const QuestTemplateDetailPage({super.key, this.questTemplateKey});
 
@@ -45,12 +44,12 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final template = viewModel.template.value;
-      final questId = key?.id ?? 0;
+      final questId = key ?? 0;
       final name = key == null
           ? '新建任务'
           : template.logTitle.isNotEmpty
           ? template.logTitle
-          : '任务 #${key.id}';
+          : '任务 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

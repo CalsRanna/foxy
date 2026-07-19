@@ -1,5 +1,3 @@
-import 'package:foxy/entity/scaling_stat_distribution_key.dart';
-
 class BriefScalingStatDistributionEntity {
   final int id;
   final int statId0;
@@ -78,7 +76,7 @@ class BriefScalingStatDistributionEntity {
     );
   }
 
-  ScalingStatDistributionKey get key => ScalingStatDistributionKey(id: id);
+  int get key => id;
 
   String get displayStats {
     final result = StringBuffer();

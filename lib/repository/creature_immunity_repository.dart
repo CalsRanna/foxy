@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_immunity_entity.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
 import 'package:foxy/entity/creature_immunity_filter_entity.dart';
-import 'package:foxy/entity/creature_immunity_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class CreatureImmunityRepository with RepositoryMixin {
   static const _table = 'creature_immunities';
 
-  Future<CreatureImmunityKey> copyCreatureImmunity(
-    CreatureImmunityKey key,
-  ) async {
+  Future<int> copyCreatureImmunity(int key) async {
     final source = await getCreatureImmunity(key);
     if (source == null) {
       throw StateError('原生物免疫配置不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class CreatureImmunityRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeCreatureImmunity(copied);
-    return CreatureImmunityKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCreatureImmunities({
@@ -36,7 +33,7 @@ class CreatureImmunityRepository with RepositoryMixin {
     return CreatureImmunityEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureImmunity(CreatureImmunityKey key) async {
+  Future<void> destroyCreatureImmunity(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物免疫配置不存在，可能已被其他操作修改或删除');
@@ -73,9 +70,7 @@ class CreatureImmunityRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureImmunityEntity?> getCreatureImmunity(
-    CreatureImmunityKey key,
-  ) async {
+  Future<CreatureImmunityEntity?> getCreatureImmunity(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureImmunityEntity.fromJson(results.first.toMap());
@@ -96,7 +91,7 @@ class CreatureImmunityRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureImmunity(
-    CreatureImmunityKey originalKey,
+    int originalKey,
     CreatureImmunityEntity immunity,
   ) async {
     try {
@@ -133,7 +128,7 @@ class CreatureImmunityRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureImmunityKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

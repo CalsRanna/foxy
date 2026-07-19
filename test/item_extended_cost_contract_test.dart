@@ -145,7 +145,7 @@ void main() {
     final source = File(
       'lib/repository/item_extended_cost_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('ItemExtendedCostKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(itemExtendedCost.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
@@ -159,12 +159,12 @@ void main() {
     final viewModel = File(
       'lib/page/item_extended_cost/item_extended_cost_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('signal<ItemExtendedCostKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
       contains('updateItemExtendedCost(originalKey, candidate)'),
     );
-    expect(viewModel, contains('persistedKey.value = ItemExtendedCostKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 }

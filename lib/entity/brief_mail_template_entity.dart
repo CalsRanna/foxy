@@ -1,5 +1,3 @@
-import 'package:foxy/entity/mail_template_key.dart';
-
 class BriefMailTemplateEntity {
   final int id;
   final String subjectLangZhCN;
@@ -19,5 +17,5 @@ class BriefMailTemplateEntity {
     );
   }
 
-  MailTemplateKey get key => MailTemplateKey(id: id);
+  int get key => id;
 }

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_visual_effect_key.dart';
-
 class BriefItemVisualEffectEntity {
   final int id;
   final String model;
@@ -13,5 +11,5 @@ class BriefItemVisualEffectEntity {
     );
   }
 
-  ItemVisualEffectKey get key => ItemVisualEffectKey(id: id);
+  int get key => id;
 }

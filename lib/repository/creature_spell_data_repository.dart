@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
-import 'package:foxy/entity/creature_spell_data_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,16 +9,14 @@ class CreatureSpellDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_spell_data';
   static const _spellTable = 'foxy.dbc_spell';
 
-  Future<CreatureSpellDataKey> copyCreatureSpellData(
-    CreatureSpellDataKey key,
-  ) async {
+  Future<int> copyCreatureSpellData(int key) async {
     final source = await getCreatureSpellData(key);
     if (source == null) {
       throw StateError('原生物技能数据不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeCreatureSpellData(copied);
-    return CreatureSpellDataKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCreatureSpellDatas({
@@ -43,7 +40,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     return CreatureSpellDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureSpellData(CreatureSpellDataKey key) async {
+  Future<void> destroyCreatureSpellData(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物技能数据不存在，可能已被其他操作修改或删除');
@@ -82,9 +79,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureSpellDataEntity?> getCreatureSpellData(
-    CreatureSpellDataKey key,
-  ) async {
+  Future<CreatureSpellDataEntity?> getCreatureSpellData(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureSpellDataEntity.fromJson(results.first.toMap());
@@ -112,7 +107,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureSpellData(
-    CreatureSpellDataKey originalKey,
+    int originalKey,
     CreatureSpellDataEntity data,
   ) async {
     try {
@@ -174,7 +169,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureSpellDataKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

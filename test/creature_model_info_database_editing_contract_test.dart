@@ -2,12 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_model_info_entity.dart';
-import 'package:foxy/entity/creature_model_info_key.dart';
 
 void main() {
-  test('CreatureModelInfoKey 使用 DisplayID 值相等且 Brief 安全解码', () {
-    const key = CreatureModelInfoKey(displayId: 7);
-    expect(key, const CreatureModelInfoKey(displayId: 7));
+  test('Brief 安全解码并返回物理 DisplayID 标量', () {
+    const key = 7;
     final brief = BriefCreatureModelInfoEntity.fromJson(const {
       'DisplayID': 7,
       'BoundingRadius': 2,
@@ -26,7 +24,7 @@ void main() {
       contains("displayId: await nextMaxPlusOne(_table, 'DisplayID')"),
     );
     expect(source, contains('Future<void> storeCreatureModelInfo('));
-    expect(source, contains('CreatureModelInfoKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(info.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

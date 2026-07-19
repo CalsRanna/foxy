@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_spell_custom_attr_entity.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/entity/spell_custom_attr_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,7 +7,7 @@ import 'package:laconic/laconic.dart';
 class SpellCustomAttrRepository with RepositoryMixin {
   static const _table = 'spell_custom_attr';
 
-  Future<void> copySpellCustomAttr(SpellCustomAttrKey key) async {
+  Future<void> copySpellCustomAttr(int key) async {
     throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
   }
 
@@ -22,7 +21,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroySpellCustomAttr(SpellCustomAttrKey key) async {
+  Future<void> destroySpellCustomAttr(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术自定义属性不存在，可能已被其他操作修改或删除');
@@ -44,9 +43,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellCustomAttrEntity?> getSpellCustomAttr(
-    SpellCustomAttrKey key,
-  ) async {
+  Future<SpellCustomAttrEntity?> getSpellCustomAttr(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellCustomAttrEntity.fromJson(results.first.toMap());
@@ -74,7 +71,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
   }
 
   Future<void> updateSpellCustomAttr(
-    SpellCustomAttrKey originalKey,
+    int originalKey,
     SpellCustomAttrEntity data,
   ) async {
     try {
@@ -93,7 +90,7 @@ class SpellCustomAttrRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellCustomAttrKey key) {
-    return builder.where('spell_id', key.spellId);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('spell_id', key);
   }
 }

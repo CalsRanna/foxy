@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
-import 'package:foxy/entity/glyph_property_key.dart';
 
 void main() {
-  test('GlyphPropertyKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = GlyphPropertyKey(id: 7);
-    expect(key, const GlyphPropertyKey(id: 7));
-    expect(key.hashCode, const GlyphPropertyKey(id: 7).hashCode);
-    expect(GlyphPropertyKey.fromEntity(const GlyphPropertyEntity(id: 7)), key);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
+    expect((const GlyphPropertyEntity(id: 7)).id, key);
     expect(const BriefGlyphPropertyEntity(id: 7).key, key);
   });
 

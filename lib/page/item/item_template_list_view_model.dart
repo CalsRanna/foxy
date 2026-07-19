@@ -2,7 +2,6 @@ import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
-import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -59,11 +58,11 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     search();
   }
 
-  Future<void> copyItemTemplate(ItemTemplateKey key) async {
+  Future<void> copyItemTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.entry} 的物品模板？',
+        description: '是否复制编号为 $key 的物品模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -77,11 +76,11 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteItemTemplate(ItemTemplateKey key) async {
+  Future<void> deleteItemTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.entry} 的物品模板？此操作不可撤销。',
+        description: '是否删除编号为 $key 的物品模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -116,13 +115,13 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({ItemTemplateKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     final label = key == null
         ? '新建物品'
         : name?.isNotEmpty == true
         ? name!
-        : '物品 #${key.entry}';
+        : '物品 #$key';
     routerFacade.navigateToDetail(
       label: label,
       route: ItemTemplateDetailRoute(itemTemplateKey: key),
@@ -185,9 +184,9 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     return _repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
-  void _logActivity(ActivityActionType action, ItemTemplateKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final templates = this.templates.value;
-    final template = templates.where((t) => t.entry == key.entry).firstOrNull;
+    final template = templates.where((t) => t.entry == key).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'item_template',

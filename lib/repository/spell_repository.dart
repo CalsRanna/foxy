@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_spell_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
-import 'package:foxy/entity/spell_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,14 +13,14 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<SpellKey> copySpell(SpellKey key) async {
+  Future<int> copySpell(int key) async {
     final source = await getSpell(key);
     if (source == null) {
       throw StateError('原法术不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeSpell(copied);
-    return SpellKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSpells({SpellFilterEntity? filter}) async {
@@ -35,7 +34,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return SpellEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpell(SpellKey key) async {
+  Future<void> destroySpell(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术不存在，可能已被其他操作修改或删除');
@@ -76,7 +75,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<SpellEntity?> getSpell(SpellKey key) async {
+  Future<SpellEntity?> getSpell(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellEntity.fromJson(results.first.toMap());
@@ -112,7 +111,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateSpell(SpellKey originalKey, SpellEntity spell) async {
+  Future<void> updateSpell(int originalKey, SpellEntity spell) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -144,7 +143,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

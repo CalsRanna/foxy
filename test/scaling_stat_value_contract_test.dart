@@ -160,7 +160,7 @@ void main() {
     expect(repository, contains(".orderBy('Charlevel')"));
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateScalingStatValueFields(candidate);'));
-    expect(repository, contains('ScalingStatValueKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(value.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -174,13 +174,13 @@ void main() {
     final viewModel = File(
       'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('signal<ScalingStatValueKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
       contains('updateScalingStatValue(originalKey, candidate)'),
     );
-    expect(viewModel, contains('persistedKey.value = ScalingStatValueKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 
   test('DBC definition 使用 3.3.5.12340 的 24 列物理格式', () {

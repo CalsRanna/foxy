@@ -1,5 +1,3 @@
-import 'package:foxy/entity/skill_line_key.dart';
-
 class BriefSkillLineEntity {
   final int id;
   final int categoryId;
@@ -18,5 +16,5 @@ class BriefSkillLineEntity {
         displayNameZhCN: json['DisplayName_lang_zhCN'] ?? '',
       );
 
-  SkillLineKey get key => SkillLineKey(id: id);
+  int get key => id;
 }

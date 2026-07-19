@@ -1,5 +1,3 @@
-import 'package:foxy/entity/emote_text_data_key.dart';
-
 class BriefEmoteTextDataEntity {
   final int id;
   final String textLangZhCN;
@@ -13,5 +11,5 @@ class BriefEmoteTextDataEntity {
     );
   }
 
-  EmoteTextDataKey get key => EmoteTextDataKey(id: id);
+  int get key => id;
 }

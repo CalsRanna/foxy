@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_liquid_type_entity.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
 import 'package:foxy/entity/liquid_type_filter_entity.dart';
-import 'package:foxy/entity/liquid_type_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,7 +8,7 @@ import 'package:laconic/laconic.dart';
 class LiquidTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_liquid_type';
 
-  Future<LiquidTypeKey> copyLiquidType(LiquidTypeKey key) async {
+  Future<int> copyLiquidType(int key) async {
     final source = await getLiquidType(key);
     if (source == null) {
       throw StateError('原液体类型不存在，可能已被其他操作修改或删除');
@@ -19,7 +18,7 @@ class LiquidTypeRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeLiquidType(copied);
-    return LiquidTypeKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countLiquidTypes({LiquidTypeFilterEntity? filter}) =>
@@ -28,7 +27,7 @@ class LiquidTypeRepository with RepositoryMixin {
   Future<LiquidTypeEntity> createLiquidType() async =>
       LiquidTypeEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyLiquidType(LiquidTypeKey key) async {
+  Future<void> destroyLiquidType(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原液体类型不存在，可能已被其他操作修改或删除');
@@ -54,7 +53,7 @@ class LiquidTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<LiquidTypeEntity?> getLiquidType(LiquidTypeKey key) async {
+  Future<LiquidTypeEntity?> getLiquidType(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : LiquidTypeEntity.fromJson(rows.first.toMap());
   }
@@ -79,7 +78,7 @@ class LiquidTypeRepository with RepositoryMixin {
   }
 
   Future<void> updateLiquidType(
-    LiquidTypeKey originalKey,
+    int originalKey,
     LiquidTypeEntity entity,
   ) async {
     try {
@@ -110,7 +109,7 @@ class LiquidTypeRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, LiquidTypeKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_filter_entity.dart';
-import 'package:foxy/entity/creature_display_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,16 +9,14 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_display_info';
   static const _modelDataTable = 'foxy.dbc_creature_model_data';
 
-  Future<CreatureDisplayInfoKey> copyCreatureDisplayInfo(
-    CreatureDisplayInfoKey key,
-  ) async {
+  Future<int> copyCreatureDisplayInfo(int key) async {
     final source = await getCreatureDisplayInfo(key);
     if (source == null) {
       throw StateError('原生物显示信息不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeCreatureDisplayInfo(copied);
-    return CreatureDisplayInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countCreatureDisplayInfos({
@@ -43,7 +40,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     return CreatureDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureDisplayInfo(CreatureDisplayInfoKey key) async {
+  Future<void> destroyCreatureDisplayInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物显示信息不存在，可能已被其他操作修改或删除');
@@ -74,9 +71,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(
-    CreatureDisplayInfoKey key,
-  ) async {
+  Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureDisplayInfoEntity.fromJson(results.first.toMap());
@@ -104,7 +99,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureDisplayInfo(
-    CreatureDisplayInfoKey originalKey,
+    int originalKey,
     CreatureDisplayInfoEntity info,
   ) async {
     try {
@@ -148,7 +143,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     );
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureDisplayInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_item_random_suffix_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
-import 'package:foxy/entity/item_random_suffix_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -15,16 +14,14 @@ class ItemRandomSuffixRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<ItemRandomSuffixKey> copyItemRandomSuffix(
-    ItemRandomSuffixKey key,
-  ) async {
+  Future<int> copyItemRandomSuffix(int key) async {
     final source = await getItemRandomSuffix(key);
     if (source == null) {
       throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemRandomSuffix(copied);
-    return ItemRandomSuffixKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemRandomSuffixes({
@@ -39,7 +36,7 @@ class ItemRandomSuffixRepository
     return ItemRandomSuffixEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemRandomSuffix(ItemRandomSuffixKey key) async {
+  Future<void> destroyItemRandomSuffix(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
@@ -62,9 +59,7 @@ class ItemRandomSuffixRepository
         .toList();
   }
 
-  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(
-    ItemRandomSuffixKey key,
-  ) async {
+  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemRandomSuffixEntity.fromJson(results.first.toMap());
@@ -103,7 +98,7 @@ class ItemRandomSuffixRepository
   }
 
   Future<void> updateItemRandomSuffix(
-    ItemRandomSuffixKey originalKey,
+    int originalKey,
     ItemRandomSuffixEntity suffix,
   ) async {
     try {
@@ -140,7 +135,7 @@ class ItemRandomSuffixRepository
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemRandomSuffixKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

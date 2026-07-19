@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_focus_object_key.dart';
-
 class BriefSpellFocusObjectEntity {
   final int id;
   final String nameLangZhCN;
@@ -22,5 +20,5 @@ class BriefSpellFocusObjectEntity {
   String get displayName =>
       nameLangZhCN.isNotEmpty ? nameLangZhCN : nameLangEnUS;
 
-  SpellFocusObjectKey get key => SpellFocusObjectKey(id: id);
+  int get key => id;
 }

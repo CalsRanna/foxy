@@ -1,5 +1,3 @@
-import 'package:foxy/entity/sound_provider_preferences_key.dart';
-
 class BriefSoundProviderPreferencesEntity {
   final int id;
   final String description;
@@ -21,5 +19,5 @@ class BriefSoundProviderPreferencesEntity {
     );
   }
 
-  SoundProviderPreferencesKey get key => SoundProviderPreferencesKey(id: id);
+  int get key => id;
 }

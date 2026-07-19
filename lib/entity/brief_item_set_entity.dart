@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_set_key.dart';
-
 class BriefItemSetEntity {
   final int id;
   final String nameLangZhCN;
@@ -22,5 +20,5 @@ class BriefItemSetEntity {
     );
   }
 
-  ItemSetKey get key => ItemSetKey(id: id);
+  int get key => id;
 }

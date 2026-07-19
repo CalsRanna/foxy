@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_on_kill_reputation_key.dart';
-
 /// 击杀声望列表与 Picker 展示模型。
 class BriefCreatureOnKillReputationEntity {
   final int creatureID;
@@ -35,6 +33,5 @@ class BriefCreatureOnKillReputationEntity {
     );
   }
 
-  CreatureOnKillReputationKey get key =>
-      CreatureOnKillReputationKey(creatureID: creatureID);
+  int get key => creatureID;
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
@@ -27,13 +26,13 @@ class PageTextDetailViewModel
   late final verifiedBuildController = registerController(IntFieldController());
 
   final page = signal<PageTextEntity?>(null);
-  final persistedKey = signal<PageTextKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({PageTextKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -68,7 +67,7 @@ class PageTextDetailViewModel
     } else {
       await _repository.updatePageText(originalKey, data);
     }
-    final newKey = PageTextKey.fromEntity(data);
+    final newKey = data.id;
     persistedKey.value = newKey;
     page.value = data;
     routerFacade.updateCurrentLabel(_labelFor(newKey));
@@ -116,5 +115,5 @@ class PageTextDetailViewModel
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
-  String _labelFor(PageTextKey key) => '页面文本 ${key.id}';
+  String _labelFor(int key) => '页面文本 $key';
 }

@@ -3,17 +3,15 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_liquid_type_entity.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
-import 'package:foxy/entity/liquid_type_key.dart';
 
 void main() {
-  test('LiquidTypeKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const first = LiquidTypeKey(id: 11);
-    const same = LiquidTypeKey(id: 11);
+  test('Brief key 返回物理 ID 标量', () {
+    const first = 11;
+    const same = 11;
 
     expect(first, same);
     expect(first.hashCode, same.hashCode);
-    expect(first, isNot(const LiquidTypeKey(id: 12)));
-    expect(LiquidTypeKey.fromEntity(const LiquidTypeEntity(id: 11)), first);
+    expect((const LiquidTypeEntity(id: 11)).id, first);
     expect(const BriefLiquidTypeEntity(id: 11).key, first);
   });
 
@@ -22,7 +20,7 @@ void main() {
       'lib/repository/liquid_type_repository.dart',
     ).readAsStringSync();
 
-    expect(source, contains('Future<LiquidTypeKey> copyLiquidType('));
+    expect(source, contains('Future<int> copyLiquidType('));
     expect(source, contains('Future<void> storeLiquidType('));
     expect(source, contains('if (entity.id <= 0)'));
     expect(source, contains('insert([entity.toJson()])'));
@@ -30,7 +28,7 @@ void main() {
     expect(source, isNot(contains('saveLiquidType(')));
     expect(source, isNot(contains('insertAndGetId')));
 
-    expect(source, contains('LiquidTypeKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(entity.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

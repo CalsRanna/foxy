@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
-import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -122,7 +121,7 @@ class ItemSetDetailViewModel
   );
 
   final itemSet = signal(ItemSetEntity());
-  final persistedKey = signal<ItemSetKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
     nameLangEnUSController.init(values.valueOf('enUS'));
@@ -148,7 +147,7 @@ class ItemSetDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({ItemSetKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -186,7 +185,7 @@ class ItemSetDetailViewModel
     } else {
       await _repository.updateItemSet(originalKey, candidate);
     }
-    persistedKey.value = ItemSetKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     itemSet.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

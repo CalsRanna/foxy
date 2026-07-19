@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
-import 'package:foxy/entity/quest_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
@@ -25,11 +24,11 @@ class QuestTemplateListViewModel with FieldControllerMixin {
   final page = signal(1);
   final total = signal(0);
 
-  Future<void> copyQuestTemplate(QuestTemplateKey key) async {
+  Future<void> copyQuestTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '此操作将复制 ID=${key.id} 的任务记录，确认继续？',
+        description: '此操作将复制 ID=$key 的任务记录，确认继续？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -43,11 +42,11 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteQuestTemplate(QuestTemplateKey key) async {
+  Future<void> deleteQuestTemplate(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '将永久删除 ID=${key.id} 的任务记录，此操作不可撤销。',
+        description: '将永久删除 ID=$key 的任务记录，此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -76,12 +75,12 @@ class QuestTemplateListViewModel with FieldControllerMixin {
   }
 
   /// 导航到详情页（null 表示新建）
-  void navigateToDetail({QuestTemplateKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = key == null
         ? '新建任务'
         : name?.isNotEmpty == true
         ? name!
-        : '任务 #${key.id}';
+        : '任务 #$key';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -114,9 +113,9 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, QuestTemplateKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final templates = this.templates.value;
-    final template = templates.where((t) => t.id == key.id).firstOrNull;
+    final template = templates.where((t) => t.id == key).firstOrNull;
     final name = template?.logTitle ?? '';
     final log = ActivityLogEntity(
       module: 'quest_template',

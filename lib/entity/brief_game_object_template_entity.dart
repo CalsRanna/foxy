@@ -1,5 +1,3 @@
-import 'package:foxy/entity/game_object_template_key.dart';
-
 class BriefGameObjectTemplateEntity {
   final int entry;
   final String name;
@@ -27,5 +25,5 @@ class BriefGameObjectTemplateEntity {
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  GameObjectTemplateKey get key => GameObjectTemplateKey(entry: entry);
+  int get key => entry;
 }

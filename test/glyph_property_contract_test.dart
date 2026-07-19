@@ -74,7 +74,7 @@ void main() {
     expect(repository, contains('glyphProperty.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateGlyphPropertyFields(candidate);'));
-    expect(repository, contains('GlyphPropertyKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(glyphProperty.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -97,12 +97,12 @@ void main() {
     final list = File(
       'lib/page/glyph_property/glyph_property_list_page.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('signal<GlyphPropertyKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateGlyphProperty(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = GlyphPropertyKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(viewModel, isNot(contains('getGlyphProperty(candidate.id)')));
-    expect(page, contains('final GlyphPropertyKey? glyphPropertyKey'));
+    expect(page, contains('final int? glyphPropertyKey'));
     expect(page, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
     expect(list, contains('items[row].key'));

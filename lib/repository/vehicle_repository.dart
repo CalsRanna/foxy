@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
-import 'package:foxy/entity/vehicle_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class VehicleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_vehicle';
 
-  Future<VehicleKey> copyVehicle(VehicleKey key) async {
+  Future<int> copyVehicle(int key) async {
     final source = await getVehicle(key);
     if (source == null) {
       throw StateError('原载具不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeVehicle(copied);
-    return VehicleKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countVehicles({VehicleFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class VehicleRepository with RepositoryMixin {
     return VehicleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyVehicle(VehicleKey key) async {
+  Future<void> destroyVehicle(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原载具不存在，可能已被其他操作修改或删除');
@@ -50,7 +49,7 @@ class VehicleRepository with RepositoryMixin {
     return results.map((e) => BriefVehicleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<VehicleEntity?> getVehicle(VehicleKey key) async {
+  Future<VehicleEntity?> getVehicle(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return VehicleEntity.fromJson(results.first.toMap());
@@ -75,10 +74,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateVehicle(
-    VehicleKey originalKey,
-    VehicleEntity vehicle,
-  ) async {
+  Future<void> updateVehicle(int originalKey, VehicleEntity vehicle) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -103,7 +99,7 @@ class VehicleRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, VehicleKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
-import 'package:foxy/entity/quest_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -20,7 +19,7 @@ class QuestTemplateAddonViewModel
   final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final addon = signal(QuestTemplateAddonEntity());
-  final editingKey = signal<QuestTemplateAddonKey?>(null);
+  final editingKey = signal<int?>(null);
 
   late final idController = registerController(IntFieldController());
   late final maxLevelController = registerController(IntFieldController());
@@ -71,7 +70,7 @@ class QuestTemplateAddonViewModel
 
   Future<void> initSignals({required int questId}) async {
     try {
-      final key = QuestTemplateAddonKey(id: questId);
+      final key = questId;
       final existing = await _repository.getQuestTemplateAddon(key);
       if (existing != null) {
         editingKey.value = key;
@@ -102,7 +101,7 @@ class QuestTemplateAddonViewModel
       } else {
         await _repository.updateQuestTemplateAddon(originalKey, model);
       }
-      editingKey.value = QuestTemplateAddonKey.fromEntity(model);
+      editingKey.value = model.id;
       addon.value = model;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模版补充数据已保存'));

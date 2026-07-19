@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_mail_template_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/mail_template_filter_entity.dart';
-import 'package:foxy/entity/mail_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,7 +13,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<MailTemplateKey> copyMailTemplate(MailTemplateKey key) async {
+  Future<int> copyMailTemplate(int key) async {
     final source = await getMailTemplate(key);
     if (source == null) {
       throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeMailTemplate(copied);
-    return MailTemplateKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countMailTemplates({MailTemplateFilterEntity? filter}) {
@@ -35,7 +34,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return MailTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyMailTemplate(MailTemplateKey key) async {
+  Future<void> destroyMailTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
@@ -62,7 +61,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<MailTemplateEntity?> getMailTemplate(MailTemplateKey key) async {
+  Future<MailTemplateEntity?> getMailTemplate(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -100,7 +99,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateMailTemplate(
-    MailTemplateKey originalKey,
+    int originalKey,
     MailTemplateEntity template,
   ) async {
     try {
@@ -135,7 +134,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, MailTemplateKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

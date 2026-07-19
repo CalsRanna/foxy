@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_filter_entity.dart';
-import 'package:foxy/entity/point_of_interest_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,14 +9,14 @@ class PointOfInterestRepository with RepositoryMixin {
   static const _table = 'points_of_interest';
   static const _localeTable = 'points_of_interest_locale';
 
-  Future<PointOfInterestKey> copyPointOfInterest(PointOfInterestKey key) async {
+  Future<int> copyPointOfInterest(int key) async {
     final source = await getPointOfInterest(key);
     if (source == null) {
       throw StateError('原兴趣点不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storePointOfInterest(copied);
-    return PointOfInterestKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countPointsOfInterest({
@@ -32,7 +31,7 @@ class PointOfInterestRepository with RepositoryMixin {
     return PointOfInterestEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyPointOfInterest(PointOfInterestKey key) async {
+  Future<void> destroyPointOfInterest(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原兴趣点不存在，可能已被其他操作修改或删除');
@@ -65,9 +64,7 @@ class PointOfInterestRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<PointOfInterestEntity?> getPointOfInterest(
-    PointOfInterestKey key,
-  ) async {
+  Future<PointOfInterestEntity?> getPointOfInterest(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PointOfInterestEntity.fromJson(results.first.toMap());
@@ -95,7 +92,7 @@ class PointOfInterestRepository with RepositoryMixin {
   }
 
   Future<void> updatePointOfInterest(
-    PointOfInterestKey originalKey,
+    int originalKey,
     PointOfInterestEntity entity,
   ) async {
     try {
@@ -130,7 +127,7 @@ class PointOfInterestRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, PointOfInterestKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

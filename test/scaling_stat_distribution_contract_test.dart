@@ -136,7 +136,7 @@ void main() {
       ).existsSync(),
       isFalse,
     );
-    expect(repository, contains('ScalingStatDistributionKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(distribution.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -146,16 +146,13 @@ void main() {
       viewModel,
       contains('validateScalingStatDistributionFields(candidate);'),
     );
-    expect(viewModel, contains('signal<ScalingStatDistributionKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
       contains('updateScalingStatDistribution(originalKey, candidate)'),
     );
-    expect(
-      viewModel,
-      contains('persistedKey.value = ScalingStatDistributionKey'),
-    );
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(repository, isNot(contains("table('item_template')")));
     expect(repository, isNot(contains("remove('ID')")));
     expect(

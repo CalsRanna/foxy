@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_sort_key.dart';
-
 class BriefQuestSortEntity {
   final int id;
   final String sortNameLangZhCN;
@@ -13,5 +11,5 @@ class BriefQuestSortEntity {
     );
   }
 
-  QuestSortKey get key => QuestSortKey(id: id);
+  int get key => id;
 }

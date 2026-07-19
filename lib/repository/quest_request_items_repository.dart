@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
-import 'package:foxy/entity/quest_request_items_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,16 +7,14 @@ import 'package:laconic/laconic.dart';
 class QuestRequestItemsRepository with RepositoryMixin {
   static const _table = 'quest_request_items';
 
-  Future<QuestRequestItemsKey> copyQuestRequestItems(
-    QuestRequestItemsKey key,
-  ) async {
+  Future<int> copyQuestRequestItems(int key) async {
     final source = await getQuestRequestItems(key);
     if (source == null) {
       throw StateError('原任务提交物品数据不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeQuestRequestItems(copied);
-    return QuestRequestItemsKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestRequestItems() {
@@ -30,7 +27,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyQuestRequestItems(QuestRequestItemsKey key) async {
+  Future<void> destroyQuestRequestItems(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务提交物品数据不存在，可能已被其他操作修改或删除');
@@ -57,9 +54,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestRequestItemsEntity?> getQuestRequestItems(
-    QuestRequestItemsKey key,
-  ) async {
+  Future<QuestRequestItemsEntity?> getQuestRequestItems(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestRequestItemsEntity.fromJson(results.first.toMap());
@@ -87,7 +82,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestRequestItems(
-    QuestRequestItemsKey originalKey,
+    int originalKey,
     QuestRequestItemsEntity model,
   ) async {
     try {
@@ -106,7 +101,7 @@ class QuestRequestItemsRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestRequestItemsKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

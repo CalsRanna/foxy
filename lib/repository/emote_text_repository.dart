@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
-import 'package:foxy/entity/emote_text_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class EmoteTextRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
-  Future<EmoteTextKey> copyEmoteText(EmoteTextKey key) async {
+  Future<int> copyEmoteText(int key) async {
     final source = await getEmoteText(key);
     if (source == null) {
       throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeEmoteText(copied);
-    return EmoteTextKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countEmoteTexts({EmoteTextFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class EmoteTextRepository with RepositoryMixin {
     return EmoteTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyEmoteText(EmoteTextKey key) async {
+  Future<void> destroyEmoteText(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
@@ -53,7 +52,7 @@ class EmoteTextRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<EmoteTextEntity?> getEmoteText(EmoteTextKey key) async {
+  Future<EmoteTextEntity?> getEmoteText(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return EmoteTextEntity.fromJson(results.first.toMap());
@@ -79,7 +78,7 @@ class EmoteTextRepository with RepositoryMixin {
   }
 
   Future<void> updateEmoteText(
-    EmoteTextKey originalKey,
+    int originalKey,
     EmoteTextEntity emoteText,
   ) async {
     try {
@@ -112,7 +111,7 @@ class EmoteTextRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, EmoteTextKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

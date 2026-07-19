@@ -1,5 +1,3 @@
-import 'package:foxy/entity/point_of_interest_key.dart';
-
 class BriefPointOfInterestEntity {
   final int id;
   final String name;
@@ -21,5 +19,5 @@ class BriefPointOfInterestEntity {
 
   String get displayName => localeName.isNotEmpty ? localeName : name;
 
-  PointOfInterestKey get key => PointOfInterestKey(id: id);
+  int get key => id;
 }

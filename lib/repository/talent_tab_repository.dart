@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_talent_tab_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/talent_tab_filter_entity.dart';
-import 'package:foxy/entity/talent_tab_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,14 +13,14 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<TalentTabKey> copyTalentTab(TalentTabKey key) async {
+  Future<int> copyTalentTab(int key) async {
     final source = await getTalentTab(key);
     if (source == null) {
       throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeTalentTab(copied);
-    return TalentTabKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countTalentTabs({TalentTabFilterEntity? filter}) {
@@ -32,7 +31,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return TalentTabEntity(id: await _getNextId());
   }
 
-  Future<void> destroyTalentTab(TalentTabKey key) async {
+  Future<void> destroyTalentTab(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
@@ -61,7 +60,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<TalentTabEntity?> getTalentTab(TalentTabKey key) async {
+  Future<TalentTabEntity?> getTalentTab(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : TalentTabEntity.fromJson(rows.first.toMap());
   }
@@ -97,7 +96,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateTalentTab(
-    TalentTabKey originalKey,
+    int originalKey,
     TalentTabEntity talentTab,
   ) async {
     try {
@@ -140,7 +139,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, TalentTabKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

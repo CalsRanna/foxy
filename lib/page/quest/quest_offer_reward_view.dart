@@ -155,7 +155,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
               label: '奖励文本',
               child: Watch(
                 (_) => FoxyLocalePicker(
-                  entry: vm.editingKey.value?.id,
+                  entry: vm.editingKey.value,
                   controller: vm.rewardTextController,
                   delegate: FoxyLocalePickerDelegates.questOfferReward,
                   placeholder: 'RewardText',

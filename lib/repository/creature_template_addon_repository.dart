@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_creature_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
-import 'package:foxy/entity/creature_template_addon_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -8,9 +7,7 @@ import 'package:laconic/laconic.dart';
 class CreatureTemplateAddonRepository with RepositoryMixin {
   static const _table = 'creature_template_addon';
 
-  Future<CreatureTemplateAddonKey> copyCreatureTemplateAddon(
-    CreatureTemplateAddonKey key,
-  ) async {
+  Future<int> copyCreatureTemplateAddon(int key) async {
     final source = await getCreatureTemplateAddon(key);
     if (source == null) {
       throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
@@ -19,7 +16,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
       entry: await nextMaxPlusOne(_table, 'entry'),
     );
     await storeCreatureTemplateAddon(copied);
-    return CreatureTemplateAddonKey.fromEntity(copied);
+    return copied.entry;
   }
 
   Future<int> countCreatureTemplateAddons() {
@@ -34,9 +31,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyCreatureTemplateAddon(
-    CreatureTemplateAddonKey key,
-  ) async {
+  Future<void> destroyCreatureTemplateAddon(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
@@ -57,9 +52,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(
-    CreatureTemplateAddonKey key,
-  ) async {
+  Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateAddonEntity.fromJson(results.first.toMap());
@@ -89,7 +82,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureTemplateAddon(
-    CreatureTemplateAddonKey originalKey,
+    int originalKey,
     CreatureTemplateAddonEntity addon,
   ) async {
     try {
@@ -108,7 +101,7 @@ class CreatureTemplateAddonRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateAddonKey key) {
-    return builder.where('entry', key.entry);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('entry', key);
   }
 }

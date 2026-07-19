@@ -1,5 +1,3 @@
-import 'package:foxy/entity/spell_bonus_data_key.dart';
-
 class BriefSpellBonusDataEntity {
   final int entry;
   final double directBonus;
@@ -28,5 +26,5 @@ class BriefSpellBonusDataEntity {
     );
   }
 
-  SpellBonusDataKey get key => SpellBonusDataKey(entry: entry);
+  int get key => entry;
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_key.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
@@ -16,7 +15,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class SpellDetailPage extends StatefulWidget {
-  final SpellKey? spellKey;
+  final int? spellKey;
 
   const SpellDetailPage({super.key, this.spellKey});
 
@@ -44,14 +43,14 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final spell = viewModel.spell.value;
-      final spellId = key?.id ?? 0;
+      final spellId = key ?? 0;
       final name = spell.nameLangZhCN.isNotEmpty
           ? spell.nameLangZhCN
           : spell.nameLangEnUS.isNotEmpty
           ? spell.nameLangEnUS
           : key == null
           ? '新建法术'
-          : '法术 #${key.id}';
+          : '法术 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

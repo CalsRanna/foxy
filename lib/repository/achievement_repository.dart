@@ -1,6 +1,5 @@
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/achievement_filter_entity.dart';
-import 'package:foxy/entity/achievement_key.dart';
 import 'package:foxy/entity/brief_achievement_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -14,14 +13,14 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<AchievementKey> copyAchievement(AchievementKey key) async {
+  Future<int> copyAchievement(int key) async {
     final source = await getAchievement(key);
     if (source == null) {
       throw StateError('原成就不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeAchievement(copied);
-    return AchievementKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countAchievements({AchievementFilterEntity? filter}) async {
@@ -32,14 +31,14 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return AchievementEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievement(AchievementKey key) async {
+  Future<void> destroyAchievement(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原成就不存在，可能已被其他操作修改或删除');
     }
   }
 
-  Future<AchievementEntity?> getAchievement(AchievementKey key) async {
+  Future<AchievementEntity?> getAchievement(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return AchievementEntity.fromJson(results.first.toMap());
@@ -97,7 +96,7 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateAchievement(
-    AchievementKey originalKey,
+    int originalKey,
     AchievementEntity achievement,
   ) async {
     try {
@@ -140,7 +139,7 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, AchievementKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

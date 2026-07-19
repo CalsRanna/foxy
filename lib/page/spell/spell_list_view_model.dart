@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_spell_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
-import 'package:foxy/entity/spell_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -24,11 +23,11 @@ class SpellListViewModel with FieldControllerMixin {
   final spells = signal(<BriefSpellEntity>[]);
   final total = signal(0);
 
-  Future<void> copySpell(SpellKey key) async {
+  Future<void> copySpell(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的法术？',
+        description: '是否复制编号为 $key 的法术？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class SpellListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteSpell(SpellKey key) async {
+  Future<void> deleteSpell(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的法术？此操作不可撤销。',
+        description: '是否删除编号为 $key 的法术？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,12 +80,12 @@ class SpellListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({SpellKey? key, String? name}) {
+  void navigateToDetail({int? key, String? name}) {
     final label = key == null
         ? '新建法术'
         : name?.isNotEmpty == true
         ? name!
-        : '法术 #${key.id}';
+        : '法术 #$key';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -119,9 +118,9 @@ class SpellListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, SpellKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final templates = spells.value;
-    final template = templates.where((t) => t.id == key.id).firstOrNull;
+    final template = templates.where((t) => t.id == key).firstOrNull;
     final name = template?.displayName ?? '';
     final log = ActivityLogEntity(
       module: 'spell',

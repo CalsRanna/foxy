@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_filter_entity.dart';
-import 'package:foxy/entity/sound_ambience_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class SoundAmbienceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_ambience';
 
-  Future<SoundAmbienceKey> copySoundAmbience(SoundAmbienceKey key) async {
+  Future<int> copySoundAmbience(int key) async {
     final source = await getSoundAmbience(key);
     if (source == null) {
       throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeSoundAmbience(copied);
-    return SoundAmbienceKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSoundAmbiences({SoundAmbienceFilterEntity? filter}) =>
@@ -25,7 +24,7 @@ class SoundAmbienceRepository with RepositoryMixin {
   Future<SoundAmbienceEntity> createSoundAmbience() async =>
       SoundAmbienceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySoundAmbience(SoundAmbienceKey key) async {
+  Future<void> destroySoundAmbience(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
@@ -45,7 +44,7 @@ class SoundAmbienceRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SoundAmbienceEntity?> getSoundAmbience(SoundAmbienceKey key) async {
+  Future<SoundAmbienceEntity?> getSoundAmbience(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -74,7 +73,7 @@ class SoundAmbienceRepository with RepositoryMixin {
   }
 
   Future<void> updateSoundAmbience(
-    SoundAmbienceKey originalKey,
+    int originalKey,
     SoundAmbienceEntity entity,
   ) async {
     try {
@@ -103,7 +102,7 @@ class SoundAmbienceRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SoundAmbienceKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

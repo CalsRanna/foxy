@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/entity/achievement_key.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -199,7 +198,7 @@ class AchievementDetailViewModel
   );
 
   final achievement = signal(AchievementEntity());
-  final persistedKey = signal<AchievementKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
     _applyLangControllers(
@@ -274,7 +273,7 @@ class AchievementDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({AchievementKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -312,7 +311,7 @@ class AchievementDetailViewModel
     } else {
       await _repository.updateAchievement(originalKey, candidate);
     }
-    persistedKey.value = AchievementKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     achievement.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

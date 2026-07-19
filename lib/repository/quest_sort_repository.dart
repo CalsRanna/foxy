@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_quest_sort_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
-import 'package:foxy/entity/quest_sort_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,14 +13,14 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<QuestSortKey> copyQuestSort(QuestSortKey key) async {
+  Future<int> copyQuestSort(int key) async {
     final source = await getQuestSort(key);
     if (source == null) {
       throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeQuestSort(copied);
-    return QuestSortKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestSorts({QuestSortFilterEntity? filter}) async {
@@ -34,7 +33,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestSortEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestSort(QuestSortKey key) async {
+  Future<void> destroyQuestSort(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
@@ -58,7 +57,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<QuestSortEntity?> getQuestSort(QuestSortKey key) async {
+  Future<QuestSortEntity?> getQuestSort(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestSortEntity.fromJson(results.first.toMap());
@@ -95,7 +94,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<void> updateQuestSort(
-    QuestSortKey originalKey,
+    int originalKey,
     QuestSortEntity questSort,
   ) async {
     try {
@@ -140,7 +139,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestSortKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

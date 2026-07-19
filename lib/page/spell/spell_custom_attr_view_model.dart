@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/entity/spell_custom_attr_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -23,7 +22,7 @@ class SpellCustomAttrViewModel
   late final attributesController = registerController(FlagFieldController());
 
   final customAttr = signal(SpellCustomAttrEntity());
-  final editingKey = signal<SpellCustomAttrKey?>(null);
+  final editingKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
@@ -31,7 +30,7 @@ class SpellCustomAttrViewModel
 
   Future<void> initSignals({required int spellId}) async {
     try {
-      final key = SpellCustomAttrKey(spellId: spellId);
+      final key = spellId;
       final data = await _repository.getSpellCustomAttr(key);
       if (data == null) {
         editingKey.value = null;
@@ -63,7 +62,7 @@ class SpellCustomAttrViewModel
       } else {
         await _repository.updateSpellCustomAttr(originalKey, data);
       }
-      editingKey.value = SpellCustomAttrKey.fromEntity(data);
+      editingKey.value = data.spellId;
       customAttr.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('自定义属性已保存'));

@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
-import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,14 +13,14 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<ItemSetKey> copyItemSet(ItemSetKey key) async {
+  Future<int> copyItemSet(int key) async {
     final source = await getItemSet(key);
     if (source == null) {
       throw StateError('原套装不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeItemSet(copied);
-    return ItemSetKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
@@ -34,7 +33,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return ItemSetEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemSet(ItemSetKey key) async {
+  Future<void> destroyItemSet(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原套装不存在，可能已被其他操作修改或删除');
@@ -60,7 +59,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<ItemSetEntity?> getItemSet(ItemSetKey key) async {
+  Future<ItemSetEntity?> getItemSet(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemSetEntity.fromJson(results.first.toMap());
@@ -96,10 +95,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateItemSet(
-    ItemSetKey originalKey,
-    ItemSetEntity itemSet,
-  ) async {
+  Future<void> updateItemSet(int originalKey, ItemSetEntity itemSet) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -135,7 +131,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ItemSetKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

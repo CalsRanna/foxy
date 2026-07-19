@@ -1,5 +1,3 @@
-import 'package:foxy/entity/zone_music_key.dart';
-
 class BriefZoneMusicEntity {
   final int id;
   final String setName;
@@ -22,5 +20,5 @@ class BriefZoneMusicEntity {
     );
   }
 
-  ZoneMusicKey get key => ZoneMusicKey(id: id);
+  int get key => id;
 }

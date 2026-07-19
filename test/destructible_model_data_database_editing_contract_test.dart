@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_destructible_model_data_entity.dart';
-import 'package:foxy/entity/destructible_model_data_key.dart';
 
 void main() {
-  test('DestructibleModelDataKey 使用 ID 值相等且 Brief 直接解码定位器', () {
-    const key = DestructibleModelDataKey(id: 7);
-    expect(key, const DestructibleModelDataKey(id: 7));
-    expect(key.hashCode, const DestructibleModelDataKey(id: 7).hashCode);
+  test('Brief key 直接解码物理 ID 标量', () {
+    const key = 7;
     final brief = BriefDestructibleModelDataEntity.fromJson(const {
       'ID': 7,
       'State1WMO': 1,
@@ -23,9 +20,9 @@ void main() {
     final source = File(
       'lib/repository/destructible_model_data_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('DestructibleModelDataKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeDestructibleModelData('));
-    expect(source, contains('DestructibleModelDataKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(entity.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

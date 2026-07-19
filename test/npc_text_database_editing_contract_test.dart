@@ -3,23 +3,21 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/entity/npc_text_key.dart';
 
 void main() {
-  test('NpcTextKey 和 Brief 覆盖 ID', () {
-    const key = NpcTextKey(id: 33);
-    expect(NpcTextKey.fromEntity(const NpcTextEntity(id: 33)), key);
+  test('int 和 Brief 覆盖 ID', () {
+    const key = 33;
+    expect((const NpcTextEntity(id: 33)).id, key);
     expect(const BriefNpcTextEntity(id: 33).key, key);
-    expect(key, isNot(const NpcTextKey(id: 34)));
   });
 
   test('Repository 使用旧 key、完整 candidate 和写入结果', () {
     final source = File(
       'lib/repository/npc_text_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('NpcTextKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(npcText.toJson())'));
-    expect(source, contains("where('ID', key.id)"));
+    expect(source, contains("where('ID', key)"));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
@@ -35,14 +33,11 @@ void main() {
     final view = File(
       'lib/page/gossip_menu/npc_text_view.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('persistedKey = signal<NpcTextKey?>'));
+    expect(viewModel, contains('persistedKey = signal<int?>'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(viewModel, contains('updateNpcText(originalKey, entity)'));
     expect(viewModel, contains('_repository.laconic.transaction'));
-    expect(
-      viewModel,
-      contains('persistedKey.value = NpcTextKey.fromEntity(entity)'),
-    );
+    expect(viewModel, contains('persistedKey.value = entity.id'));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, contains('didUpdateWidget'));
   });

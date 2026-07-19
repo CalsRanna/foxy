@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
@@ -12,7 +11,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class GameObjectTemplateDetailPage extends StatefulWidget {
-  final GameObjectTemplateKey? gameObjectTemplateKey;
+  final int? gameObjectTemplateKey;
 
   const GameObjectTemplateDetailPage({super.key, this.gameObjectTemplateKey});
 
@@ -42,12 +41,12 @@ class _GameObjectTemplateDetailPageState
     return Watch((_) {
       final key = viewModel.persistedKey.value;
       final template = viewModel.template.value;
-      final entry = key?.entry;
+      final entry = key;
       final name = key == null
           ? '新建游戏对象'
           : template.name.isNotEmpty
           ? template.name
-          : '游戏对象 #${key.entry}';
+          : '游戏对象 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

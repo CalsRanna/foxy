@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_model_data_key.dart';
-
 class BriefCreatureModelDataEntity {
   final int id;
   final String modelName;
@@ -22,5 +20,5 @@ class BriefCreatureModelDataEntity {
     );
   }
 
-  CreatureModelDataKey get key => CreatureModelDataKey(id: id);
+  int get key => id;
 }

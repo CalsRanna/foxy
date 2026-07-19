@@ -1,4 +1,3 @@
-import 'package:foxy/entity/area_table_key.dart';
 import 'package:foxy/entity/brief_area_table_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
@@ -14,7 +13,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<AreaTableKey> copyAreaTable(AreaTableKey key) async {
+  Future<int> copyAreaTable(int key) async {
     final source = await getAreaTable(key);
     if (source == null) {
       throw StateError('原区域不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       areaBit: await nextMaxPlusOne(_table, 'AreaBit'),
     );
     await storeAreaTable(copied);
-    return AreaTableKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
@@ -40,14 +39,14 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     );
   }
 
-  Future<void> destroyAreaTable(AreaTableKey key) async {
+  Future<void> destroyAreaTable(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原区域不存在，可能已被其他操作修改或删除');
     }
   }
 
-  Future<AreaTableEntity?> getAreaTable(AreaTableKey key) async {
+  Future<AreaTableEntity?> getAreaTable(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return AreaTableEntity.fromJson(results.first.toMap());
@@ -87,13 +86,10 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<bool> isAreaBitAvailable(
-    int areaBit, {
-    AreaTableKey? excludingKey,
-  }) async {
+  Future<bool> isAreaBitAvailable(int areaBit, {int? excludingKey}) async {
     var builder = laconic.table(_table).where('AreaBit', areaBit);
     if (excludingKey != null) {
-      builder = builder.where('ID', excludingKey.id, comparator: '!=');
+      builder = builder.where('ID', excludingKey, comparator: '!=');
     }
     final count = await builder.count();
     return count == 0;
@@ -119,10 +115,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateAreaTable(
-    AreaTableKey originalKey,
-    AreaTableEntity area,
-  ) async {
+  Future<void> updateAreaTable(int originalKey, AreaTableEntity area) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -157,7 +150,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, AreaTableKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

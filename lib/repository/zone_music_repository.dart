@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_zone_music_entity.dart';
 import 'package:foxy/entity/zone_music_entity.dart';
 import 'package:foxy/entity/zone_music_filter_entity.dart';
-import 'package:foxy/entity/zone_music_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class ZoneMusicRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_zone_music';
 
-  Future<ZoneMusicKey> copyZoneMusic(ZoneMusicKey key) async {
+  Future<int> copyZoneMusic(int key) async {
     final source = await getZoneMusic(key);
     if (source == null) {
       throw StateError('原区域音乐不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeZoneMusic(copied);
-    return ZoneMusicKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countZoneMusics({ZoneMusicFilterEntity? filter}) =>
@@ -25,7 +24,7 @@ class ZoneMusicRepository with RepositoryMixin {
   Future<ZoneMusicEntity> createZoneMusic() async =>
       ZoneMusicEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyZoneMusic(ZoneMusicKey key) async {
+  Future<void> destroyZoneMusic(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原区域音乐不存在，可能已被其他操作修改或删除');
@@ -45,7 +44,7 @@ class ZoneMusicRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ZoneMusicEntity?> getZoneMusic(ZoneMusicKey key) async {
+  Future<ZoneMusicEntity?> getZoneMusic(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : ZoneMusicEntity.fromJson(rows.first.toMap());
   }
@@ -69,10 +68,7 @@ class ZoneMusicRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateZoneMusic(
-    ZoneMusicKey originalKey,
-    ZoneMusicEntity entity,
-  ) async {
+  Future<void> updateZoneMusic(int originalKey, ZoneMusicEntity entity) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -105,7 +101,7 @@ class ZoneMusicRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, ZoneMusicKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

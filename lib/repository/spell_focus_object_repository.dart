@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
-import 'package:foxy/entity/spell_focus_object_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -15,9 +14,7 @@ class SpellFocusObjectRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<SpellFocusObjectKey> copySpellFocusObject(
-    SpellFocusObjectKey key,
-  ) async {
+  Future<int> copySpellFocusObject(int key) async {
     final source = await getSpellFocusObject(key);
     if (source == null) {
       throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
@@ -27,7 +24,7 @@ class SpellFocusObjectRepository
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeSpellFocusObject(copied);
-    return SpellFocusObjectKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countSpellFocusObjects({SpellFocusObjectFilterEntity? filter}) =>
@@ -36,7 +33,7 @@ class SpellFocusObjectRepository
   Future<SpellFocusObjectEntity> createSpellFocusObject() async =>
       SpellFocusObjectEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySpellFocusObject(SpellFocusObjectKey key) async {
+  Future<void> destroySpellFocusObject(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
@@ -56,9 +53,7 @@ class SpellFocusObjectRepository
         .toList();
   }
 
-  Future<SpellFocusObjectEntity?> getSpellFocusObject(
-    SpellFocusObjectKey key,
-  ) async {
+  Future<SpellFocusObjectEntity?> getSpellFocusObject(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -98,7 +93,7 @@ class SpellFocusObjectRepository
   }
 
   Future<void> updateSpellFocusObject(
-    SpellFocusObjectKey originalKey,
+    int originalKey,
     SpellFocusObjectEntity entity,
   ) async {
     try {
@@ -133,7 +128,7 @@ class SpellFocusObjectRepository
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, SpellFocusObjectKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

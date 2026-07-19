@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
@@ -65,13 +64,13 @@ class GameObjectTemplateDetailViewModel
   late final verifiedBuildController = registerController(IntFieldController());
 
   final template = signal(GameObjectTemplateEntity());
-  final persistedKey = signal<GameObjectTemplateKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({GameObjectTemplateKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -109,7 +108,7 @@ class GameObjectTemplateDetailViewModel
     } else {
       await _repository.updateGameObjectTemplate(originalKey, candidate);
     }
-    persistedKey.value = GameObjectTemplateKey.fromEntity(candidate);
+    persistedKey.value = candidate.entry;
     template.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

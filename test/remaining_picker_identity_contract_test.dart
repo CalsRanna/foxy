@@ -5,22 +5,13 @@ import 'package:foxy/entity/brief_holiday_entity.dart';
 import 'package:foxy/entity/brief_item_limit_category_entity.dart';
 import 'package:foxy/entity/brief_totem_category_entity.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
-import 'package:foxy/entity/holiday_key.dart';
-import 'package:foxy/entity/item_limit_category_key.dart';
-import 'package:foxy/entity/totem_category_key.dart';
 import 'package:foxy/entity/waypoint_data_key.dart';
 
 void main() {
-  test('剩余 DBC Picker Brief 实体暴露完整强类型主键', () {
-    expect(BriefHolidayEntity.fromJson({'ID': 7}).key, const HolidayKey(id: 7));
-    expect(
-      BriefItemLimitCategoryEntity.fromJson({'ID': 8}).key,
-      const ItemLimitCategoryKey(id: 8),
-    );
-    expect(
-      BriefTotemCategoryEntity.fromJson({'ID': 9}).key,
-      const TotemCategoryKey(id: 9),
-    );
+  test('剩余 DBC Picker Brief 实体直接暴露物理标量主键', () {
+    expect(BriefHolidayEntity.fromJson({'ID': 7}).key, 7);
+    expect(BriefItemLimitCategoryEntity.fromJson({'ID': 8}).key, 8);
+    expect(BriefTotemCategoryEntity.fromJson({'ID': 9}).key, 9);
   });
 
   test('waypoint Picker 使用只读分组标识且仓储不暴露伪 CRUD', () {

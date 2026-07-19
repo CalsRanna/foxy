@@ -87,7 +87,7 @@ class ItemSetView extends StatelessWidget {
               child: FoxyFormItem(
                 label: '名称',
                 child: Watch((_) {
-                  final id = viewModel.persistedKey.value?.id;
+                  final id = viewModel.persistedKey.value;
                   return FoxyLocalePicker(
                     entry: id,
                     controller: viewModel.nameLangZhCNController,

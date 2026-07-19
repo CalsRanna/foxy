@@ -1010,7 +1010,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '日志标题',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.logTitleController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogTitle',
@@ -1022,7 +1022,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '日志描述',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.logDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogDescription',
@@ -1041,7 +1041,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '任务描述',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.questDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestDescription',
@@ -1053,7 +1053,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '区域描述',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.areaDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'AreaDescription',
@@ -1072,7 +1072,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '完成日志',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.questCompletionLogController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestCompletionLog',
@@ -1092,7 +1092,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '目标文本1',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText1Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText1',
@@ -1104,7 +1104,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '目标文本2',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText2Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText2',
@@ -1116,7 +1116,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '目标文本3',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText3Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText3',
@@ -1128,7 +1128,7 @@ class QuestTemplateView extends StatelessWidget {
             child: FoxyFormItem(
               label: '目标文本4',
               child: FoxyLocalePicker(
-                entry: viewModel.persistedKey.value?.id,
+                entry: viewModel.persistedKey.value,
                 controller: vm.objectiveText4Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText4',

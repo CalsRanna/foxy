@@ -1,5 +1,3 @@
-import 'package:foxy/entity/cinematic_sequence_key.dart';
-
 class BriefCinematicSequenceEntity {
   final int id;
   final int soundId;
@@ -19,5 +17,5 @@ class BriefCinematicSequenceEntity {
     );
   }
 
-  CinematicSequenceKey get key => CinematicSequenceKey(id: id);
+  int get key => id;
 }

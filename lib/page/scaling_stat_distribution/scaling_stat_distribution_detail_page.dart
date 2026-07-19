@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/scaling_stat_distribution_key.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -9,7 +8,7 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ScalingStatDistributionDetailPage extends StatefulWidget {
-  final ScalingStatDistributionKey? scalingStatDistributionKey;
+  final int? scalingStatDistributionKey;
 
   const ScalingStatDistributionDetailPage({
     super.key,
@@ -42,7 +41,7 @@ class _ScalingStatDistributionDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final name = key == null ? '新建属性缩放分布' : '属性缩放分布 #${key.id}';
+      final name = key == null ? '新建属性缩放分布' : '属性缩放分布 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [

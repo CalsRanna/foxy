@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_creature_on_kill_reputation_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
-import 'package:foxy/entity/creature_on_kill_reputation_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
   static const primaryKeyColumns = {'creature_id'};
 
-  Future<CreatureOnKillReputationKey> copyCreatureOnKillReputation(
-    CreatureOnKillReputationKey sourceKey,
-  ) async {
+  Future<int> copyCreatureOnKillReputation(int sourceKey) async {
     final source = await getCreatureOnKillReputation(sourceKey);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -20,7 +17,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
       creatureID: await nextMaxPlusOne(_table, 'creature_id'),
     );
     await storeCreatureOnKillReputation(candidate);
-    return CreatureOnKillReputationKey.fromEntity(candidate);
+    return candidate.creatureID;
   }
 
   Future<int> countCreatureOnKillReputations() {
@@ -33,9 +30,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     return CreatureOnKillReputationEntity(creatureID: creatureID);
   }
 
-  Future<void> destroyCreatureOnKillReputation(
-    CreatureOnKillReputationKey key,
-  ) async {
+  Future<void> destroyCreatureOnKillReputation(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -67,7 +62,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   }
 
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
-    CreatureOnKillReputationKey key,
+    int key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
@@ -98,7 +93,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
   }
 
   Future<void> updateCreatureOnKillReputation(
-    CreatureOnKillReputationKey originalKey,
+    int originalKey,
     CreatureOnKillReputationEntity rep,
   ) async {
     try {
@@ -117,10 +112,7 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _whereKey(
-    QueryBuilder builder,
-    CreatureOnKillReputationKey key,
-  ) {
-    return builder.where('creature_id', key.creatureID);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('creature_id', key);
   }
 }

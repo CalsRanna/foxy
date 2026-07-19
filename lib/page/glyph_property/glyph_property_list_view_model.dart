@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_filter_entity.dart';
-import 'package:foxy/entity/glyph_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -23,11 +22,11 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
   final properties = signal(<BriefGlyphPropertyEntity>[]);
   final total = signal(0);
 
-  Future<void> copyGlyphProperty(GlyphPropertyKey key) async {
+  Future<void> copyGlyphProperty(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的雕文属性？',
+        description: '是否复制编号为 $key 的雕文属性？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -41,11 +40,11 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGlyphProperty(GlyphPropertyKey key) async {
+  Future<void> deleteGlyphProperty(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的雕文属性？此操作不可撤销。',
+        description: '是否删除编号为 $key 的雕文属性？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({GlyphPropertyKey? key}) {
-    final label = key != null ? '雕文属性 #${key.id}' : '新建雕文属性';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '雕文属性 #$key' : '新建雕文属性';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -111,11 +110,11 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     return GlyphPropertyFilterEntity(id: entryController.collect());
   }
 
-  void _logActivity(ActivityActionType action, GlyphPropertyKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'glyph_property',
       actionType: action,
-      entityName: 'GlyphProperty ${key.id}',
+      entityName: 'GlyphProperty $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

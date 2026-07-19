@@ -1,5 +1,3 @@
-import 'package:foxy/entity/glyph_property_key.dart';
-
 class BriefGlyphPropertyEntity {
   final int id;
   final int spellId;
@@ -22,5 +20,5 @@ class BriefGlyphPropertyEntity {
     );
   }
 
-  GlyphPropertyKey get key => GlyphPropertyKey(id: id);
+  int get key => id;
 }

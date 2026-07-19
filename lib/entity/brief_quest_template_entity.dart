@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_template_key.dart';
-
 class BriefQuestTemplateEntity {
   final int id;
   final String logTitle;
@@ -39,5 +37,5 @@ class BriefQuestTemplateEntity {
 
   String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
 
-  QuestTemplateKey get key => QuestTemplateKey(id: id);
+  int get key => id;
 }

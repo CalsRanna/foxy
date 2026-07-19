@@ -1,5 +1,3 @@
-import 'package:foxy/entity/creature_immunity_key.dart';
-
 class BriefCreatureImmunityEntity {
   final int id;
   final int schoolMask;
@@ -28,5 +26,5 @@ class BriefCreatureImmunityEntity {
     );
   }
 
-  CreatureImmunityKey get key => CreatureImmunityKey(id: id);
+  int get key => id;
 }

@@ -3,17 +3,15 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_light_entity.dart';
 import 'package:foxy/entity/light_entity.dart';
-import 'package:foxy/entity/light_key.dart';
 
 void main() {
-  test('LightKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const first = LightKey(id: 9);
-    const same = LightKey(id: 9);
+  test('Brief key 返回物理 ID 标量', () {
+    const first = 9;
+    const same = 9;
 
     expect(first, same);
     expect(first.hashCode, same.hashCode);
-    expect(first, isNot(const LightKey(id: 10)));
-    expect(LightKey.fromEntity(const LightEntity(id: 9)), first);
+    expect((const LightEntity(id: 9)).id, first);
     expect(const BriefLightEntity(id: 9).key, first);
   });
 
@@ -22,7 +20,7 @@ void main() {
       'lib/repository/light_repository.dart',
     ).readAsStringSync();
 
-    expect(source, contains('Future<LightKey> copyLight('));
+    expect(source, contains('Future<int> copyLight('));
     expect(source, contains('Future<void> storeLight('));
     expect(source, contains('if (entity.id <= 0)'));
     expect(source, contains('insert([entity.toJson()])'));
@@ -30,7 +28,7 @@ void main() {
     expect(source, isNot(contains('saveLight(')));
     expect(source, isNot(contains('insertAndGetId')));
 
-    expect(source, contains('LightKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(entity.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

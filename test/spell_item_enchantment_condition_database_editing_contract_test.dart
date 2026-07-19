@@ -2,16 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_item_enchantment_condition_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_condition_key.dart';
 
 void main() {
-  test('SpellItemEnchantmentConditionKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = SpellItemEnchantmentConditionKey(id: 7);
-    expect(key, const SpellItemEnchantmentConditionKey(id: 7));
-    expect(
-      key.hashCode,
-      const SpellItemEnchantmentConditionKey(id: 7).hashCode,
-    );
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefSpellItemEnchantmentConditionEntity(id: 7).key, key);
   });
 
@@ -19,12 +13,12 @@ void main() {
     final source = File(
       'lib/repository/spell_item_enchantment_condition_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('SpellItemEnchantmentConditionKey key'));
+    expect(source, contains('int key'));
     expect(
       source,
       contains('Future<void> storeSpellItemEnchantmentCondition('),
     );
-    expect(source, contains('SpellItemEnchantmentConditionKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(entity.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

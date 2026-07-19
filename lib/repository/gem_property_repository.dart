@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
-import 'package:foxy/entity/gem_property_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
-  Future<GemPropertyKey> copyGemProperty(GemPropertyKey key) async {
+  Future<int> copyGemProperty(int key) async {
     final source = await getGemProperty(key);
     if (source == null) {
       throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeGemProperty(copied);
-    return GemPropertyKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class GemPropertyRepository with RepositoryMixin {
     return GemPropertyEntity(id: await _getNextId());
   }
 
-  Future<void> destroyGemProperty(GemPropertyKey key) async {
+  Future<void> destroyGemProperty(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
@@ -64,7 +63,7 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<GemPropertyEntity?> getGemProperty(GemPropertyKey key) async {
+  Future<GemPropertyEntity?> getGemProperty(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GemPropertyEntity.fromJson(results.first.toMap());
@@ -85,7 +84,7 @@ class GemPropertyRepository with RepositoryMixin {
   }
 
   Future<void> updateGemProperty(
-    GemPropertyKey originalKey,
+    int originalKey,
     GemPropertyEntity gemProperty,
   ) async {
     try {
@@ -123,7 +122,7 @@ class GemPropertyRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GemPropertyKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

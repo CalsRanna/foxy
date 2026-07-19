@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_npc_trainer_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
-import 'package:foxy/entity/creature_default_trainer_key.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_key.dart';
 import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
@@ -38,24 +37,17 @@ void main() {
       expect(brief.key, key);
     });
 
-    test('CreatureDefaultTrainerKey 使用 CreatureId 定位', () {
+    test('CreatureId 使用物理 int 标量定位', () {
       const entity = CreatureDefaultTrainerEntity(
         creatureId: 10,
         trainerId: 20,
       );
-      final key = CreatureDefaultTrainerKey.fromEntity(entity);
-      final same = CreatureDefaultTrainerKey.fromEntity(
-        entity.copyWith(trainerId: 21),
-      );
+      final key = entity.creatureId;
+      final same = (entity.copyWith(trainerId: 21)).creatureId;
 
       expect(key, same);
       expect(key.hashCode, same.hashCode);
-      expect(
-        key,
-        isNot(
-          CreatureDefaultTrainerKey.fromEntity(entity.copyWith(creatureId: 11)),
-        ),
-      );
+      expect(key, isNot((entity.copyWith(creatureId: 11)).creatureId));
     });
   });
 
@@ -94,7 +86,7 @@ void main() {
       final repository = _TestCreatureDefaultTrainerRepository(
         Laconic(_RecordingDriver(), listen: queries.add),
       );
-      const originalKey = CreatureDefaultTrainerKey(creatureId: 10);
+      const originalKey = 10;
       const candidate = CreatureDefaultTrainerEntity(
         creatureId: 11,
         trainerId: 20,
@@ -104,7 +96,7 @@ void main() {
 
       expect(queries.single.bindings, [
         ...candidate.toJson().values,
-        originalKey.creatureId,
+        originalKey,
       ]);
     });
 
@@ -113,7 +105,7 @@ void main() {
       final trainerRepository = _TestNpcTrainerRepository(laconic);
       final relationRepository = _TestCreatureDefaultTrainerRepository(laconic);
       const trainerKey = NpcTrainerKey(trainerId: 10, spellId: 20);
-      const relationKey = CreatureDefaultTrainerKey(creatureId: 10);
+      const relationKey = 10;
 
       await expectLater(
         trainerRepository.updateNpcTrainer(
@@ -340,9 +332,9 @@ class _FakeCreatureDefaultTrainerRepository
 
   @override
   Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
-    CreatureDefaultTrainerKey key,
+    int key,
   ) async {
-    return rows[key.creatureId];
+    return rows[key];
   }
 }
 

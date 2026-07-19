@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_faction_reward_key.dart';
-
 class BriefQuestFactionRewardEntity {
   final int id;
   final int difficulty0;
@@ -43,5 +41,5 @@ class BriefQuestFactionRewardEntity {
     );
   }
 
-  QuestFactionRewardKey get key => QuestFactionRewardKey(id: id);
+  int get key => id;
 }

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
-import 'package:foxy/entity/quest_info_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -29,7 +28,7 @@ class QuestInfoDetailViewModel
   );
 
   final info = signal(QuestInfoEntity());
-  final persistedKey = signal<QuestInfoKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void applyInfoNameLocales(List<DbcLocaleFieldValue> values) {
     info.value = info.value.copyWith(
@@ -57,7 +56,7 @@ class QuestInfoDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({QuestInfoKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -94,7 +93,7 @@ class QuestInfoDetailViewModel
     } else {
       await _repository.updateQuestInfo(originalKey, candidate);
     }
-    persistedKey.value = QuestInfoKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     info.value = candidate;
     routerFacade.updateCurrentLabel(_labelFor(candidate));
     _logActivity(action, candidate);

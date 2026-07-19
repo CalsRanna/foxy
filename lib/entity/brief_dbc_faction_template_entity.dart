@@ -1,5 +1,3 @@
-import 'package:foxy/entity/dbc_faction_template_key.dart';
-
 class BriefDbcFactionTemplateEntity {
   final int id;
   final int faction;
@@ -37,5 +35,5 @@ class BriefDbcFactionTemplateEntity {
   String get displayName =>
       factionNameZhCN.isNotEmpty ? factionNameZhCN : factionNameEnUS;
 
-  DbcFactionTemplateKey get key => DbcFactionTemplateKey(id: id);
+  int get key => id;
 }

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/item_random_suffix_key.dart';
-
 class BriefItemRandomSuffixEntity {
   final int id;
   final String nameLangZhCN;
@@ -19,5 +17,5 @@ class BriefItemRandomSuffixEntity {
     );
   }
 
-  ItemRandomSuffixKey get key => ItemRandomSuffixKey(id: id);
+  int get key => id;
 }

@@ -3,21 +3,17 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
-import 'package:foxy/entity/zone_intro_music_key.dart';
 
 void main() {
-  test('ZoneIntroMusicKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const first = ZoneIntroMusicKey(id: 12);
-    const same = ZoneIntroMusicKey(id: 12);
-    const other = ZoneIntroMusicKey(id: 13);
+  test('Brief key 返回物理 ID 标量', () {
+    const first = 12;
+    const same = 12;
+    const other = 13;
 
     expect(first, same);
     expect(first.hashCode, same.hashCode);
     expect(first, isNot(other));
-    expect(
-      ZoneIntroMusicKey.fromEntity(const ZoneIntroMusicEntity(id: 12)),
-      first,
-    );
+    expect((const ZoneIntroMusicEntity(id: 12)).id, first);
     expect(const BriefZoneIntroMusicEntity(id: 12).key, first);
   });
 
@@ -26,7 +22,7 @@ void main() {
       'lib/repository/zone_intro_music_repository.dart',
     ).readAsStringSync();
 
-    expect(source, contains('Future<ZoneIntroMusicKey> copyZoneIntroMusic('));
+    expect(source, contains('Future<int> copyZoneIntroMusic('));
     expect(source, contains('Future<void> storeZoneIntroMusic('));
     expect(source, contains('if (entity.id <= 0)'));
     expect(source, contains('insert([entity.toJson()])'));
@@ -34,7 +30,7 @@ void main() {
     expect(source, isNot(contains('saveZoneIntroMusic(')));
     expect(source, isNot(contains('insertAndGetId')));
 
-    expect(source, contains('ZoneIntroMusicKey originalKey,'));
+    expect(source, contains('int originalKey,'));
     expect(source, contains(').update(entity.toJson())'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));

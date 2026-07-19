@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_template_addon_key.dart';
-
 class BriefQuestTemplateAddonEntity {
   final int id;
   final int maxLevel;
@@ -25,5 +23,5 @@ class BriefQuestTemplateAddonEntity {
     );
   }
 
-  QuestTemplateAddonKey get key => QuestTemplateAddonKey(id: id);
+  int get key => id;
 }

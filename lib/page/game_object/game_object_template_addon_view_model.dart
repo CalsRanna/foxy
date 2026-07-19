@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
-import 'package:foxy/entity/game_object_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -30,7 +29,7 @@ class GameObjectTemplateAddonViewModel
   late final artkit3Controller = registerController(IntFieldController());
 
   final addon = signal(GameObjectTemplateAddonEntity());
-  final editingKey = signal<GameObjectTemplateAddonKey?>(null);
+  final editingKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
@@ -38,7 +37,7 @@ class GameObjectTemplateAddonViewModel
 
   Future<void> initSignals({required int gameObjectId}) async {
     try {
-      final key = GameObjectTemplateAddonKey(entry: gameObjectId);
+      final key = gameObjectId;
       final data = await _repository.getGameObjectTemplateAddon(key);
       if (data == null) {
         editingKey.value = null;
@@ -72,7 +71,7 @@ class GameObjectTemplateAddonViewModel
       } else {
         await _repository.updateGameObjectTemplateAddon(originalKey, addonData);
       }
-      editingKey.value = GameObjectTemplateAddonKey.fromEntity(addonData);
+      editingKey.value = addonData.entry;
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));

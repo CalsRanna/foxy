@@ -1,4 +1,3 @@
-import 'package:foxy/entity/achievement_key.dart';
 import 'package:foxy/entity/achievement_filter_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_achievement_entity.dart';
@@ -24,11 +23,11 @@ class AchievementListViewModel with FieldControllerMixin {
   final achievements = signal(<BriefAchievementEntity>[]);
   final total = signal(0);
 
-  Future<void> copyAchievement(AchievementKey key) async {
+  Future<void> copyAchievement(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的成就？',
+        description: '是否复制编号为 $key 的成就？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class AchievementListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteAchievement(AchievementKey key) async {
+  Future<void> deleteAchievement(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的成就？此操作不可撤销。',
+        description: '是否删除编号为 $key 的成就？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class AchievementListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({AchievementKey? key}) {
-    final label = key != null ? '成就 #${key.id}' : '新建成就';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '成就 #$key' : '新建成就';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -115,11 +114,11 @@ class AchievementListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, AchievementKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'achievement',
       actionType: action,
-      entityName: 'Achievement ${key.id}',
+      entityName: 'Achievement $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

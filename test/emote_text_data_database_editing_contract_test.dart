@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_emote_text_data_entity.dart';
-import 'package:foxy/entity/emote_text_data_key.dart';
 
 void main() {
-  test('EmoteTextDataKey 使用 ID 值相等且 Brief 暴露定位器', () {
-    const key = EmoteTextDataKey(id: 7);
-    expect(key, const EmoteTextDataKey(id: 7));
-    expect(key.hashCode, const EmoteTextDataKey(id: 7).hashCode);
+  test('Brief key 返回物理 ID 标量', () {
+    const key = 7;
     expect(const BriefEmoteTextDataEntity(id: 7).key, key);
   });
 
@@ -16,9 +13,9 @@ void main() {
     final source = File(
       'lib/repository/emote_text_data_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('EmoteTextDataKey key'));
+    expect(source, contains('int key'));
     expect(source, contains('Future<void> storeEmoteTextData('));
-    expect(source, contains('EmoteTextDataKey originalKey'));
+    expect(source, contains('int originalKey'));
     expect(source, contains('.update(data.toJson())'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));

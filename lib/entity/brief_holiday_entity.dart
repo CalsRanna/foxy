@@ -1,5 +1,3 @@
-import 'package:foxy/entity/holiday_key.dart';
-
 class BriefHolidayEntity {
   final int id;
   final int holidayNameId;
@@ -18,5 +16,5 @@ class BriefHolidayEntity {
         textureFileName: json['TextureFileName'] ?? '',
       );
 
-  HolidayKey get key => HolidayKey(id: id);
+  int get key => id;
 }

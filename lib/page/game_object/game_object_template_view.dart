@@ -49,7 +49,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    final savedEntry = viewModel.persistedKey.value?.entry;
+    final savedEntry = viewModel.persistedKey.value;
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 16),
       child: Column(

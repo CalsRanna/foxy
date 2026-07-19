@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/entity/spell_bonus_data_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -23,7 +22,7 @@ class SpellBonusDataViewModel with FieldControllerMixin {
   late final commentsController = registerController(StringFieldController());
 
   final bonusData = signal(SpellBonusDataEntity());
-  final editingKey = signal<SpellBonusDataKey?>(null);
+  final editingKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
@@ -31,7 +30,7 @@ class SpellBonusDataViewModel with FieldControllerMixin {
 
   Future<void> initSignals({required int spellId}) async {
     try {
-      final key = SpellBonusDataKey(entry: spellId);
+      final key = spellId;
       final data = await _repository.getSpellBonusData(key);
       if (data == null) {
         editingKey.value = null;
@@ -62,7 +61,7 @@ class SpellBonusDataViewModel with FieldControllerMixin {
       } else {
         await _repository.updateSpellBonusData(originalKey, data);
       }
-      editingKey.value = SpellBonusDataKey.fromEntity(data);
+      editingKey.value = data.entry;
       bonusData.value = data;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('奖励系数已保存'));

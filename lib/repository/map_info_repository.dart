@@ -2,7 +2,6 @@ import 'package:foxy/entity/brief_map_info_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
-import 'package:foxy/entity/map_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -14,7 +13,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<MapInfoKey> copyMapInfo(MapInfoKey key) async {
+  Future<int> copyMapInfo(int key) async {
     final source = await getMapInfo(key);
     if (source == null) {
       throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
@@ -24,7 +23,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeMapInfo(copied);
-    return MapInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countMapInfos({
@@ -43,7 +42,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return MapInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyMapInfo(MapInfoKey key) async {
+  Future<void> destroyMapInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
@@ -73,7 +72,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<MapInfoEntity?> getMapInfo(MapInfoKey key) async {
+  Future<MapInfoEntity?> getMapInfo(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return MapInfoEntity.fromJson(results.first.toMap());
@@ -109,7 +108,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateMapInfo(MapInfoKey originalKey, MapInfoEntity map) async {
+  Future<void> updateMapInfo(int originalKey, MapInfoEntity map) async {
     try {
       final matchedRows = await _whereKey(
         laconic.table(_table),
@@ -141,7 +140,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, MapInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,5 +1,3 @@
-import 'package:foxy/entity/light_key.dart';
-
 class BriefLightEntity {
   final int id;
   final int continentId;
@@ -25,5 +23,5 @@ class BriefLightEntity {
     );
   }
 
-  LightKey get key => LightKey(id: id);
+  int get key => id;
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
-import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -21,7 +20,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
     return QuestFactionRewardEntity(id: await _getAvailableId());
   }
 
-  Future<void> destroyQuestFactionReward(QuestFactionRewardKey key) async {
+  Future<void> destroyQuestFactionReward(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
@@ -57,9 +56,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestFactionRewardEntity?> getQuestFactionReward(
-    QuestFactionRewardKey key,
-  ) async {
+  Future<QuestFactionRewardEntity?> getQuestFactionReward(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestFactionRewardEntity.fromJson(results.first.toMap());
@@ -89,7 +86,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestFactionReward(
-    QuestFactionRewardKey originalKey,
+    int originalKey,
     QuestFactionRewardEntity questFactionReward,
   ) async {
     try {
@@ -120,18 +117,16 @@ class QuestFactionRewardRepository with RepositoryMixin {
   }
 
   Future<int> _getAvailableId() async {
-    if (await getQuestFactionReward(const QuestFactionRewardKey(id: 1)) ==
-        null) {
+    if (await getQuestFactionReward(1) == null) {
       return 1;
     }
-    if (await getQuestFactionReward(const QuestFactionRewardKey(id: 2)) ==
-        null) {
+    if (await getQuestFactionReward(2) == null) {
       return 2;
     }
     throw StateError('任务声望固定记录 1 和 2 已存在，不能继续新增');
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestFactionRewardKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

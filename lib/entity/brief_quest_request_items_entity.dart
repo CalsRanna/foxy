@@ -1,5 +1,3 @@
-import 'package:foxy/entity/quest_request_items_key.dart';
-
 class BriefQuestRequestItemsEntity {
   final int id;
   final int emoteOnComplete;
@@ -22,5 +20,5 @@ class BriefQuestRequestItemsEntity {
     );
   }
 
-  QuestRequestItemsKey get key => QuestRequestItemsKey(id: id);
+  int get key => id;
 }

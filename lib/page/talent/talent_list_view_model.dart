@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
-import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
@@ -24,11 +23,11 @@ class TalentListViewModel with FieldControllerMixin {
   final talents = signal(<BriefTalentEntity>[]);
   final total = signal(0);
 
-  Future<void> copyTalent(TalentKey key) async {
+  Future<void> copyTalent(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 ${key.id} 的天赋？',
+        description: '是否复制编号为 $key 的天赋？',
         confirmText: '复制',
       );
       if (!confirmed) return;
@@ -42,11 +41,11 @@ class TalentListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteTalent(TalentKey key) async {
+  Future<void> deleteTalent(int key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 ${key.id} 的天赋？此操作不可撤销。',
+        description: '是否删除编号为 $key 的天赋？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
@@ -81,8 +80,8 @@ class TalentListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({TalentKey? key}) {
-    final label = key != null ? '天赋 #${key.id}' : '新建天赋';
+  void navigateToDetail({int? key}) {
+    final label = key != null ? '天赋 #$key' : '新建天赋';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
@@ -115,11 +114,11 @@ class TalentListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, TalentKey key) {
+  void _logActivity(ActivityActionType action, int key) {
     final log = ActivityLogEntity(
       module: 'talent',
       actionType: action,
-      entityName: 'Talent ${key.id}',
+      entityName: 'Talent $key',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

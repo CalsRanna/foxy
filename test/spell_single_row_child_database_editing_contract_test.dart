@@ -4,27 +4,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_bonus_data_entity.dart';
 import 'package:foxy/entity/brief_spell_custom_attr_entity.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/entity/spell_bonus_data_key.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/entity/spell_custom_attr_key.dart';
 
 void main() {
-  test('两张法术单行子表的 Key 和 Brief 精确暴露定位器', () {
-    const bonusKey = SpellBonusDataKey(entry: 11);
-    const customKey = SpellCustomAttrKey(spellId: 12);
-    expect(
-      SpellBonusDataKey.fromEntity(const SpellBonusDataEntity(entry: 11)),
-      bonusKey,
-    );
-    expect(
-      SpellCustomAttrKey.fromEntity(const SpellCustomAttrEntity(spellId: 12)),
-      customKey,
-    );
+  test('两张法术单行子表的 Brief key 直接返回物理标量', () {
+    const bonusKey = 11;
+    const customKey = 12;
+    expect((const SpellBonusDataEntity(entry: 11)).entry, bonusKey);
+    expect((const SpellCustomAttrEntity(spellId: 12)).spellId, customKey);
     expect(const BriefSpellBonusDataEntity(entry: 11).key, bonusKey);
     expect(const BriefSpellCustomAttrEntity(spellId: 12).key, customKey);
   });
 
-  test('两张法术单行子表按原 typed key 更新完整 candidate', () {
+  test('两张法术单行子表按原始标量 key 更新完整 candidate', () {
     for (final stem in ['spell_bonus_data', 'spell_custom_attr']) {
       final source = File(
         'lib/repository/${stem}_repository.dart',

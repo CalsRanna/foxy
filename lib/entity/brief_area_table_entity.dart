@@ -1,5 +1,3 @@
-import 'package:foxy/entity/area_table_key.dart';
-
 class BriefAreaTableEntity {
   final int id;
   final String areaNameLangZhCN;
@@ -28,5 +26,5 @@ class BriefAreaTableEntity {
     );
   }
 
-  AreaTableKey get key => AreaTableKey(id: id);
+  int get key => id;
 }

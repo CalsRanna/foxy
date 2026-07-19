@@ -5,7 +5,6 @@ import 'package:foxy/entity/brief_loot_template_entity.dart';
 import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_key.dart';
-import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -156,9 +155,7 @@ class DisenchantLootTemplateViewModel
 
   Future<void> initSignals({required int itemId}) async {
     try {
-      final template = await itemRepository.getItemTemplate(
-        ItemTemplateKey(entry: itemId),
-      );
+      final template = await itemRepository.getItemTemplate(itemId);
       entry.value = template?.disenchantId ?? 0;
       entryController.init(entry.value);
       await load();

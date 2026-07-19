@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
-import 'package:foxy/entity/glyph_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -32,13 +31,13 @@ class GlyphPropertyDetailViewModel
   late final spellIconIdController = registerController(IntFieldController());
 
   final property = signal(GlyphPropertyEntity());
-  final persistedKey = signal<GlyphPropertyKey?>(null);
+  final persistedKey = signal<int?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({GlyphPropertyKey? key}) async {
+  Future<void> initSignals({int? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -76,7 +75,7 @@ class GlyphPropertyDetailViewModel
     } else {
       await _repository.updateGlyphProperty(originalKey, candidate);
     }
-    persistedKey.value = GlyphPropertyKey.fromEntity(candidate);
+    persistedKey.value = candidate.id;
     property.value = candidate;
     routerFacade.updateCurrentLabel('雕文属性 #${candidate.id}');
     _logActivity(action, candidate);

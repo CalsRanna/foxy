@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
-import 'package:foxy/entity/dbc_faction_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -10,9 +9,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_faction_template';
   static const _factionTable = 'foxy.dbc_faction';
 
-  Future<DbcFactionTemplateKey> copyDbcFactionTemplate(
-    DbcFactionTemplateKey key,
-  ) async {
+  Future<int> copyDbcFactionTemplate(int key) async {
     final source = await getDbcFactionTemplate(key);
     if (source == null) {
       throw StateError('原阵营模板不存在，可能已被其他操作修改或删除');
@@ -22,7 +19,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeDbcFactionTemplate(copied);
-    return DbcFactionTemplateKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countDbcFactionTemplates({
@@ -40,7 +37,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     return DbcFactionTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyDbcFactionTemplate(DbcFactionTemplateKey key) async {
+  Future<void> destroyDbcFactionTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原阵营模板不存在，可能已被其他操作修改或删除');
@@ -73,9 +70,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(
-    DbcFactionTemplateKey key,
-  ) async {
+  Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DbcFactionTemplateEntity.fromJson(results.first.toMap());
@@ -105,7 +100,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateDbcFactionTemplate(
-    DbcFactionTemplateKey originalKey,
+    int originalKey,
     DbcFactionTemplateEntity factionTemplate,
   ) async {
     try {
@@ -152,7 +147,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     );
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, DbcFactionTemplateKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

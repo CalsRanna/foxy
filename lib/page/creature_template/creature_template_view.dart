@@ -33,7 +33,7 @@ class CreatureTemplateView extends StatelessWidget {
     final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
-        entry: viewModel.persistedKey.value?.entry,
+        entry: viewModel.persistedKey.value,
         controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'name',
@@ -43,7 +43,7 @@ class CreatureTemplateView extends StatelessWidget {
     final subNameInput = FoxyFormItem(
       label: '称号',
       child: FoxyLocalePicker(
-        entry: viewModel.persistedKey.value?.entry,
+        entry: viewModel.persistedKey.value,
         controller: viewModel.subNameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'subname',

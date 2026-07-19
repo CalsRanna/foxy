@@ -163,7 +163,7 @@ void main() {
     expect(view, isNot(contains('flex:')));
     expect(view, isNot(contains('Text(\'有效')));
     expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('viewModel.persistedKey.value?.id'));
+    expect(view, contains('viewModel.persistedKey.value'));
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
@@ -185,7 +185,7 @@ void main() {
       viewModel,
       contains('validateSpellItemEnchantmentFields(candidate);'),
     );
-    expect(repository, contains('SpellItemEnchantmentKey originalKey'));
+    expect(repository, contains('int originalKey'));
     expect(repository, contains('.update(spellItemEnchantment.toJson())'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
@@ -194,13 +194,13 @@ void main() {
     expect(repository, isNot(contains('dbc_item_random_properties')));
     expect(repository, isNot(contains('dbc_item_random_suffix')));
     expect(repository, isNot(contains("remove('ID')")));
-    expect(viewModel, contains('signal<SpellItemEnchantmentKey?>(null)'));
+    expect(viewModel, contains('signal<int?>(null)'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
     expect(
       viewModel,
       contains('updateSpellItemEnchantment(originalKey, candidate)'),
     );
-    expect(viewModel, contains('persistedKey.value = SpellItemEnchantmentKey'));
+    expect(viewModel, contains('persistedKey.value = candidate.id'));
     expect(
       'registerLazySingleton(() => SpellItemEnchantmentRepository())'
           .allMatches(di),

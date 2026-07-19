@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
-import 'package:foxy/entity/game_object_display_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,9 +8,7 @@ import 'package:laconic/laconic.dart';
 class GameObjectDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_display_info';
 
-  Future<GameObjectDisplayInfoKey> copyGameObjectDisplayInfo(
-    GameObjectDisplayInfoKey key,
-  ) async {
+  Future<int> copyGameObjectDisplayInfo(int key) async {
     final source = await getGameObjectDisplayInfo(key);
     if (source == null) {
       throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
@@ -21,7 +18,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
       'ID': await nextMaxPlusOne(_table, 'ID'),
     });
     await storeGameObjectDisplayInfo(copied);
-    return GameObjectDisplayInfoKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countGameObjectDisplayInfos({
@@ -31,9 +28,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
       GameObjectDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyGameObjectDisplayInfo(
-    GameObjectDisplayInfoKey key,
-  ) async {
+  Future<void> destroyGameObjectDisplayInfo(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
@@ -59,9 +54,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(
-    GameObjectDisplayInfoKey key,
-  ) async {
+  Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(int key) async {
     final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
@@ -92,7 +85,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<void> updateGameObjectDisplayInfo(
-    GameObjectDisplayInfoKey originalKey,
+    int originalKey,
     GameObjectDisplayInfoEntity entity,
   ) async {
     try {
@@ -127,7 +120,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectDisplayInfoKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

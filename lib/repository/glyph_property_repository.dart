@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/glyph_property_filter_entity.dart';
-import 'package:foxy/entity/glyph_property_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
-  Future<GlyphPropertyKey> copyGlyphProperty(GlyphPropertyKey key) async {
+  Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);
     if (source == null) {
       throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeGlyphProperty(copied);
-    return GlyphPropertyKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countGlyphProperties({GlyphPropertyFilterEntity? filter}) async {
@@ -29,7 +28,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     return GlyphPropertyEntity(id: await _getNextId());
   }
 
-  Future<void> destroyGlyphProperty(GlyphPropertyKey key) async {
+  Future<void> destroyGlyphProperty(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
@@ -58,7 +57,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<GlyphPropertyEntity?> getGlyphProperty(GlyphPropertyKey key) async {
+  Future<GlyphPropertyEntity?> getGlyphProperty(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GlyphPropertyEntity.fromJson(results.first.toMap());
@@ -79,7 +78,7 @@ class GlyphPropertyRepository with RepositoryMixin {
   }
 
   Future<void> updateGlyphProperty(
-    GlyphPropertyKey originalKey,
+    int originalKey,
     GlyphPropertyEntity glyphProperty,
   ) async {
     try {
@@ -117,7 +116,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     return id;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, GlyphPropertyKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:foxy/entity/brief_quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
-import 'package:foxy/entity/quest_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -9,14 +8,14 @@ import 'package:laconic/laconic.dart';
 class QuestTemplateRepository with RepositoryMixin {
   static const _table = 'quest_template';
 
-  Future<QuestTemplateKey> copyQuestTemplate(QuestTemplateKey key) async {
+  Future<int> copyQuestTemplate(int key) async {
     final source = await getQuestTemplate(key);
     if (source == null) {
       throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeQuestTemplate(copied);
-    return QuestTemplateKey.fromEntity(copied);
+    return copied.id;
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
@@ -50,7 +49,7 @@ class QuestTemplateRepository with RepositoryMixin {
     return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyQuestTemplate(QuestTemplateKey key) async {
+  Future<void> destroyQuestTemplate(int key) async {
     final deletedRows = await _whereKey(laconic.table(_table), key).delete();
     if (deletedRows == 0) {
       throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
@@ -89,7 +88,7 @@ class QuestTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestTemplateEntity?> getQuestTemplate(QuestTemplateKey key) async {
+  Future<QuestTemplateEntity?> getQuestTemplate(int key) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateEntity.fromJson(results.first.toMap());
@@ -115,7 +114,7 @@ class QuestTemplateRepository with RepositoryMixin {
   }
 
   Future<void> updateQuestTemplate(
-    QuestTemplateKey originalKey,
+    int originalKey,
     QuestTemplateEntity template,
   ) async {
     try {
@@ -161,7 +160,7 @@ class QuestTemplateRepository with RepositoryMixin {
     return builder;
   }
 
-  QueryBuilder _whereKey(QueryBuilder builder, QuestTemplateKey key) {
-    return builder.where('ID', key.id);
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
   }
 }
