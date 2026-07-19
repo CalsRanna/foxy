@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/entity/brief_gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/entity/gossip_menu_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
@@ -23,7 +24,7 @@ class GossipMenuListViewModel with FieldControllerMixin {
   final page = signal(1);
   final total = signal(0);
 
-  Future<void> copyGossipMenu(int menuId, int textId) async {
+  Future<void> copyGossipMenu(GossipMenuKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -31,8 +32,8 @@ class GossipMenuListViewModel with FieldControllerMixin {
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyGossipMenu(menuId, textId);
-      _logActivity(ActivityActionType.copy, menuId, textId);
+      await _repository.copyGossipMenu(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,19 +42,19 @@ class GossipMenuListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGossipMenu(int menuId, int textId) async {
+  Future<void> deleteGossipMenu(GossipMenuKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
         description:
-            '将永久删除 MenuID=$menuId / TextID=$textId 的对话主记录。\n'
+            '将永久删除 MenuID=${key.menuId} / TextID=${key.textId} 的对话主记录。\n'
             '为避免误操作，不会级联删除 npc_text / gossip_menu_option。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyGossipMenu(menuId, textId);
-      _logActivity(ActivityActionType.delete, menuId, textId);
+      await _repository.destroyGossipMenu(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -83,11 +84,11 @@ class GossipMenuListViewModel with FieldControllerMixin {
   }
 
   /// 导航到详情页（null 表示新建）
-  void navigateToDetail({int? menuId, int? textId}) {
+  void navigateToDetail({GossipMenuKey? key}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      label: menuId != null ? '对话 $menuId' : '新建对话',
-      route: GossipMenuDetailRoute(menuId: menuId, textId: textId),
+      label: key != null ? '对话 ${key.menuId}' : '新建对话',
+      route: GossipMenuDetailRoute(gossipMenuKey: key),
       parentMenu: RouterMenu.gossipMenu,
     );
   }
@@ -116,16 +117,15 @@ class GossipMenuListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int menuId, int textId) {
+  void _logActivity(ActivityActionType action, GossipMenuKey key) {
     final templates = menus.value;
-    final template = templates
-        .where((t) => t.menuId == menuId && t.textId == textId)
-        .firstOrNull;
+    final template = templates.where((t) => t.key == key).firstOrNull;
     final name = template?.text ?? '';
     final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,
-      entityName: 'GossipMenu $menuId/$textId${name.isEmpty ? '' : ' - $name'}',
+      entityName:
+          'GossipMenu ${key.menuId}/${key.textId}${name.isEmpty ? '' : ' - $name'}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

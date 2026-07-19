@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/entity/gossip_menu_key.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -21,40 +22,36 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
   late final menuIdController = registerController(IntFieldController());
   late final textIdController = registerController(IntFieldController());
 
-  final menuId = signal(0);
   final menu = signal(GossipMenuEntity());
-  int? _originalMenuId;
-  int? _originalTextId;
+  final persistedKey = signal<GossipMenuKey?>(null);
   int? _reservedTextId;
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? menuId, int? textId}) async {
+  Future<void> initSignals({GossipMenuKey? key}) async {
     try {
-      if (menuId == null) {
+      if (key == null) {
+        persistedKey.value = null;
         final reservedText = await _npcTextRepository.createNpcText();
         final blank = (await _repository.createGossipMenu()).copyWith(
           textId: reservedText.id,
         );
         _reservedTextId = reservedText.id;
-        this.menuId.value = blank.menuId;
         menu.value = blank;
-        _originalMenuId = null;
-        _originalTextId = null;
         menuIdController.init(blank.menuId);
         textIdController.init(blank.textId);
         return;
       }
-      _originalMenuId = menuId;
-      _originalTextId = textId ?? 0;
-      final existing = await _repository.getGossipMenu(menuId, textId ?? 0);
-      if (existing == null) return;
-      this.menuId.value = existing.menuId;
+      persistedKey.value = key;
+      final existing = await _repository.getGossipMenu(key);
+      if (existing == null) {
+        throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+      }
       textIdController.init(existing.textId);
       menu.value = existing;
-      menuIdController.init(this.menuId.value);
+      menuIdController.init(existing.menuId);
     } catch (e) {
       LoggerUtil.instance.e('加载对话菜单详情失败: $e');
       DialogUtil.instance.error('加载对话菜单详情失败: $e');
@@ -65,47 +62,36 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
     routerFacade.goBack();
   }
 
-  Future<void> save(
-    BuildContext context, {
-    required void Function(int menuId, int textId) onSaved,
-  }) async {
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    if (candidate.menuId <= 0) throw StateError('请输入有效的 MenuID');
+    if (candidate.textId <= 0) throw StateError('请选择有效的 NPC 文本');
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null && candidate.textId == _reservedTextId) {
+      await _npcTextRepository.storeNpcText(
+        NpcTextEntity(id: candidate.textId),
+      );
+    }
+    if (originalKey == null) {
+      await _repository.storeGossipMenu(candidate);
+    } else {
+      await _repository.updateGossipMenu(originalKey, candidate);
+    }
+    persistedKey.value = GossipMenuKey.fromEntity(candidate);
+    menu.value = candidate;
+    routerFacade.updateCurrentLabel('对话 ${candidate.menuId}');
+    _logActivity(action, candidate);
+  }
+
+  Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      if (t.textId <= 0) throw StateError('请选择有效的 NPC 文本');
-      final npcText = await _npcTextRepository.getNpcText(t.textId);
-      if (npcText == null) {
-        if (t.textId != _reservedTextId) {
-          throw StateError('TextID ${t.textId} 在 npc_text 中不存在');
-        }
-        await _npcTextRepository.storeNpcText(NpcTextEntity(id: t.textId));
-      }
-      final wasNew = _originalMenuId == null;
-      if (wasNew) {
-        final id = await _repository.storeGossipMenu(t);
-        menuIdController.init(id);
-        menuId.value = id;
-        menu.value = t.copyWith(menuId: id);
-        _logActivity(ActivityActionType.create, menu.value);
-        _originalMenuId = id;
-        _originalTextId = t.textId;
-      } else {
-        await _repository.updateGossipMenu(
-          _originalMenuId!,
-          _originalTextId!,
-          t,
-        );
-        menu.value = t;
-        _logActivity(ActivityActionType.update, t);
-        _originalTextId = t.textId;
-      }
-      final saved = menu.value;
-      menuId.value = saved.menuId;
-      textIdController.init(saved.textId);
-      onSaved(saved.menuId, saved.textId);
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('对话菜单数据已保存'));
       ShadSonner.of(context).show(toast);
-      routerFacade.updateCurrentLabel('对话 ${saved.menuId}');
     } catch (e) {
       if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
