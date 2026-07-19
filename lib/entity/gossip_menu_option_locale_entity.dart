@@ -1,38 +1,3 @@
-/// 列表 / Picker 精简行：复合键 + OptionText
-class BriefGossipMenuOptionLocaleEntity {
-  final int menuId;
-  final int optionId;
-  final String locale;
-  final String optionText;
-
-  const BriefGossipMenuOptionLocaleEntity({
-    this.menuId = 0,
-    this.optionId = 0,
-    this.locale = 'zhCN',
-    this.optionText = '',
-  });
-
-  factory BriefGossipMenuOptionLocaleEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefGossipMenuOptionLocaleEntity(
-      menuId: json['MenuID'] ?? 0,
-      optionId: json['OptionID'] ?? 0,
-      locale: json['Locale']?.toString() ?? 'zhCN',
-      optionText: json['OptionText']?.toString() ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'MenuID': menuId,
-      'OptionID': optionId,
-      'Locale': locale,
-      'OptionText': optionText,
-    };
-  }
-}
-
 /// gossip_menu_option_locale 本地化模型
 /// 复合键: MenuID + OptionID + Locale
 class GossipMenuOptionLocaleEntity {
