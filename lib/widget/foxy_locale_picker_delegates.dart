@@ -3,6 +3,7 @@ import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
+import 'package:foxy/entity/item_template_locale_key.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
@@ -157,74 +158,94 @@ class FoxyLocalePickerDelegates {
   static final itemName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final locales = await repo.getItemTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'name': e.name,
-            }),
-          )
-          .toList();
-    },
+    onLoad: (entry) => _loadItemTemplateLocaleRows(
+      entry,
+      (locale) => {'locale': locale.locale, 'name': locale.name},
+    ),
     onSave: (entry, changes) async {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final existing = await repo.getItemTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final creations = <ItemTemplateLocaleEntity>[];
+      final updates = <ItemTemplateLocaleKey, ItemTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return ItemTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            ItemTemplateLocaleEntity(
+              id: entry,
+              locale: d['locale'] ?? '',
+              name: d['name'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = ItemTemplateLocaleKey(
           id: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getItemTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
           name: d['name'] ?? '',
-          description: preserved?.description ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
         );
-      }).toList();
-      await repo.saveItemTemplateLocales(entry, locales);
+      }
+      await repo.applyItemTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map((locale) => ItemTemplateLocaleKey(id: entry, locale: locale))
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
   static final itemDescription = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'description'],
     fieldLabels: ['语言', '描述'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final locales = await repo.getItemTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'description': e.description,
-            }),
-          )
-          .toList();
-    },
+    onLoad: (entry) => _loadItemTemplateLocaleRows(
+      entry,
+      (locale) => {'locale': locale.locale, 'description': locale.description},
+    ),
     onSave: (entry, changes) async {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final existing = await repo.getItemTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final creations = <ItemTemplateLocaleEntity>[];
+      final updates = <ItemTemplateLocaleKey, ItemTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return ItemTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            ItemTemplateLocaleEntity(
+              id: entry,
+              locale: d['locale'] ?? '',
+              description: d['description'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = ItemTemplateLocaleKey(
           id: entry,
-          locale: d['locale'] ?? '',
-          name: preserved?.name ?? '',
-          description: d['description'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
+          locale: originalLocale,
         );
-      }).toList();
-      await repo.saveItemTemplateLocales(entry, locales);
+        final existing = await repo.getItemTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
+          locale: d['locale'] ?? '',
+          description: d['description'] ?? '',
+        );
+      }
+      await repo.applyItemTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map((locale) => ItemTemplateLocaleKey(id: entry, locale: locale))
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -607,6 +628,29 @@ class FoxyLocalePickerDelegates {
       if (localeOf(row) == originalLocale) return row;
     }
     return null;
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadItemTemplateLocaleRows(
+    int entry,
+    Map<String, String> Function(ItemTemplateLocaleEntity locale) valuesOf,
+  ) async {
+    final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefItemTemplateLocales(id: entry),
+      repo.countItemTemplateLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('物品本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getItemTemplateLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted(valuesOf(locale));
+      }),
+    );
   }
 
   static DbcLocaleFieldEditorDelegate _dbc<T>(
