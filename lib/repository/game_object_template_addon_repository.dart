@@ -1,88 +1,105 @@
+import 'package:foxy/entity/brief_game_object_template_addon_entity.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
+import 'package:foxy/entity/game_object_template_addon_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class GameObjectTemplateAddonRepository with RepositoryMixin {
   static const _table = 'gameobject_template_addon';
 
-  Future<void> copyGameObjectTemplateAddon(int entry) async {
+  Future<void> copyGameObjectTemplateAddon(GameObjectTemplateAddonKey key) {
     throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
   }
 
-  Future<int> countGameObjectTemplateAddons() async {
+  Future<int> countGameObjectTemplateAddons() {
     return laconic.table(_table).count();
   }
 
   Future<GameObjectTemplateAddonEntity> createGameObjectTemplateAddon([
-    int entry = 0,
+    int? entry,
   ]) async {
-    return GameObjectTemplateAddonEntity(entry: entry);
+    return GameObjectTemplateAddonEntity(
+      entry: entry ?? await nextMaxPlusOne(_table, 'entry'),
+    );
   }
 
-  Future<void> destroyGameObjectTemplateAddon(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
+  Future<void> destroyGameObjectTemplateAddon(
+    GameObjectTemplateAddonKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原游戏对象模板附加数据不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefGameObjectTemplateAddonEntity>>
   getBriefGameObjectTemplateAddons({int page = 1}) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select([
-      'entry',
-      'faction',
-      'flags',
-      'mingold',
-      'maxgold',
-    ]);
-    builder = builder.orderBy('entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select(['entry', 'faction', 'flags', 'mingold', 'maxgold'])
+        .orderBy('entry')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefGameObjectTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => BriefGameObjectTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
   }
 
   Future<GameObjectTemplateAddonEntity?> getGameObjectTemplateAddon(
-    int entry,
+    GameObjectTemplateAddonKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GameObjectTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
   Future<List<GameObjectTemplateAddonEntity>>
   getGameObjectTemplateAddons() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => GameObjectTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => GameObjectTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<void> saveGameObjectTemplateAddon(
-    GameObjectTemplateAddonEntity addon,
-  ) async {
-    var existing = await getGameObjectTemplateAddon(addon.entry);
-    if (existing != null) {
-      await updateGameObjectTemplateAddon(addon);
-    } else {
-      await storeGameObjectTemplateAddon(addon);
-    }
   }
 
   Future<void> storeGameObjectTemplateAddon(
     GameObjectTemplateAddonEntity addon,
   ) async {
-    await laconic.table(_table).insert([addon.toJson()]);
+    if (addon.entry <= 0) {
+      throw StateError('游戏对象模板附加数据 entry 必须显式指定');
+    }
+    try {
+      await laconic.table(_table).insert([addon.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('游戏对象模板附加数据 ${addon.entry} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateGameObjectTemplateAddon(
+    GameObjectTemplateAddonKey originalKey,
     GameObjectTemplateAddonEntity addon,
   ) async {
-    var json = addon.toJson();
-    json.remove('entry');
-    await laconic.table(_table).where('entry', addon.entry).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(addon.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原游戏对象模板附加数据不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的游戏对象模板附加数据 entry 已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, GameObjectTemplateAddonKey key) {
+    return builder.where('entry', key.entry);
   }
 }

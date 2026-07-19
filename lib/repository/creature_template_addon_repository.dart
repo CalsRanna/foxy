@@ -1,101 +1,114 @@
+import 'package:foxy/entity/brief_creature_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
+import 'package:foxy/entity/creature_template_addon_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureTemplateAddonRepository with RepositoryMixin {
   static const _table = 'creature_template_addon';
 
-  Future<void> copyCreatureTemplateAddon(int entry) async {
-    var source = await getCreatureTemplateAddon(entry);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextEntry = await nextMaxPlusOne(_table, 'entry');
-    json['entry'] = nextEntry;
-    await laconic.table(_table).insert([json]);
+  Future<CreatureTemplateAddonKey> copyCreatureTemplateAddon(
+    CreatureTemplateAddonKey key,
+  ) async {
+    final source = await getCreatureTemplateAddon(key);
+    if (source == null) {
+      throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(
+      entry: await nextMaxPlusOne(_table, 'entry'),
+    );
+    await storeCreatureTemplateAddon(copied);
+    return CreatureTemplateAddonKey.fromEntity(copied);
   }
 
-  Future<int> countCreatureTemplateAddons() async {
+  Future<int> countCreatureTemplateAddons() {
     return laconic.table(_table).count();
   }
 
   Future<CreatureTemplateAddonEntity> createCreatureTemplateAddon([
-    int entry = 0,
+    int? entry,
   ]) async {
-    return CreatureTemplateAddonEntity(entry: entry);
+    return CreatureTemplateAddonEntity(
+      entry: entry ?? await nextMaxPlusOne(_table, 'entry'),
+    );
   }
 
-  Future<void> destroyCreatureTemplateAddon(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
+  Future<void> destroyCreatureTemplateAddon(
+    CreatureTemplateAddonKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureTemplateAddonEntity>>
   getBriefCreatureTemplateAddons({int page = 1}) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['entry', 'path_id', 'mount', 'emote', 'auras']);
-    builder = builder.orderBy('entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select(['entry', 'path_id', 'mount', 'emote', 'auras'])
+        .orderBy('entry')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefCreatureTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => BriefCreatureTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
   }
 
   Future<CreatureTemplateAddonEntity?> getCreatureTemplateAddon(
-    int entry,
+    CreatureTemplateAddonKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateAddonEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureTemplateAddonEntity>> getCreatureTemplateAddons() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => CreatureTemplateAddonEntity.fromJson(e.toMap()))
+        .map((row) => CreatureTemplateAddonEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<void> saveCreatureTemplateAddon(
-    CreatureTemplateAddonEntity addon,
-  ) async {
-    final validated = _validated(addon);
-    var existing = await getCreatureTemplateAddon(validated.entry);
-    if (existing != null) {
-      await updateCreatureTemplateAddon(validated);
-    } else {
-      await storeCreatureTemplateAddon(validated);
-    }
   }
 
   Future<void> storeCreatureTemplateAddon(
     CreatureTemplateAddonEntity addon,
   ) async {
-    await laconic.table(_table).insert([_validated(addon).toJson()]);
+    if (addon.entry <= 0) {
+      throw StateError('生物模板附加数据 entry 必须显式指定');
+    }
+    try {
+      await laconic.table(_table).insert([addon.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物模板附加数据 ${addon.entry} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureTemplateAddon(
+    CreatureTemplateAddonKey originalKey,
     CreatureTemplateAddonEntity addon,
   ) async {
-    var json = _validated(addon).toJson();
-    json.remove('entry');
-    await laconic.table(_table).where('entry', addon.entry).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(addon.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物模板附加数据 entry 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  CreatureTemplateAddonEntity _validated(CreatureTemplateAddonEntity addon) {
-    if (addon.visibilityDistanceType < 0 || addon.visibilityDistanceType > 5) {
-      throw RangeError.range(
-        addon.visibilityDistanceType,
-        0,
-        5,
-        'visibilityDistanceType',
-      );
-    }
-    return addon.copyWith(
-      auras: CreatureTemplateAddonEntity.normalizeAuras(addon.auras),
-    );
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateAddonKey key) {
+    return builder.where('entry', key.entry);
   }
 }

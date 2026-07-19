@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
+import 'package:foxy/entity/game_object_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -18,8 +19,6 @@ class GameObjectTemplateAddonViewModel
         FieldControllerMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final gameObjectId = signal<int>(0);
-
   late final factionController = registerController(IntFieldController());
   late final flagsController = registerController(FlagFieldController());
   late final gameObjectIdController = registerController(IntFieldController());
@@ -31,6 +30,7 @@ class GameObjectTemplateAddonViewModel
   late final artkit3Controller = registerController(IntFieldController());
 
   final addon = signal(GameObjectTemplateAddonEntity());
+  final editingKey = signal<GameObjectTemplateAddonKey?>(null);
 
   void dispose() {
     disposeControllers();
@@ -38,22 +38,23 @@ class GameObjectTemplateAddonViewModel
 
   Future<void> initSignals({required int gameObjectId}) async {
     try {
-      this.gameObjectId.value = gameObjectId;
-      gameObjectIdController.init(gameObjectId);
-      await load();
+      final key = GameObjectTemplateAddonKey(entry: gameObjectId);
+      final data = await _repository.getGameObjectTemplateAddon(key);
+      if (data == null) {
+        editingKey.value = null;
+        final blank = await _repository.createGameObjectTemplateAddon(
+          gameObjectId,
+        );
+        addon.value = blank;
+        _initSignals(blank);
+      } else {
+        editingKey.value = key;
+        addon.value = data;
+        _initSignals(data);
+      }
     } catch (e) {
       LoggerUtil.instance.e('初始化失败: $e');
       DialogUtil.instance.error('初始化失败: $e');
-    }
-  }
-
-  Future<void> load() async {
-    final data = await _repository.getGameObjectTemplateAddon(
-      gameObjectId.value,
-    );
-    if (data != null) {
-      addon.value = data;
-      _initSignals(data);
     }
   }
 
@@ -65,12 +66,19 @@ class GameObjectTemplateAddonViewModel
     try {
       final addonData = _collectFromControllers();
       validateGameObjectTemplateAddonFields(addonData);
-      await _repository.saveGameObjectTemplateAddon(addonData);
+      final originalKey = editingKey.value;
+      if (originalKey == null) {
+        await _repository.storeGameObjectTemplateAddon(addonData);
+      } else {
+        await _repository.updateGameObjectTemplateAddon(originalKey, addonData);
+      }
+      editingKey.value = GameObjectTemplateAddonKey.fromEntity(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));
       ShadSonner.of(context).show(toast);
     } catch (e) {
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
@@ -78,7 +86,7 @@ class GameObjectTemplateAddonViewModel
 
   GameObjectTemplateAddonEntity _collectFromControllers() {
     return GameObjectTemplateAddonEntity(
-      entry: gameObjectId.value,
+      entry: gameObjectIdController.collect(),
       faction: factionController.collect(),
       flags: flagsController.collect(),
       minGold: minGoldController.collect(),
@@ -91,6 +99,7 @@ class GameObjectTemplateAddonViewModel
   }
 
   void _initSignals(GameObjectTemplateAddonEntity data) {
+    gameObjectIdController.init(data.entry);
     factionController.init(data.faction);
     flagsController.init(data.flags);
     minGoldController.init(data.minGold);
