@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
+import 'package:foxy/entity/spell_icon_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
-  Future<void> copySpellIcon(int id) async {
-    var source = await getSpellIcon(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<SpellIconKey> copySpellIcon(SpellIconKey key) async {
+    final source = await getSpellIcon(key);
+    if (source == null) {
+      throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeSpellIcon(copied);
+    return SpellIconKey.fromEntity(copied);
   }
 
   Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
@@ -25,8 +29,11 @@ class SpellIconRepository with RepositoryMixin {
     return SpellIconEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellIcon(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroySpellIcon(SpellIconKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSpellIconEntity>> getBriefSpellIcons({
@@ -45,8 +52,8 @@ class SpellIconRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellIconEntity?> getSpellIcon(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<SpellIconEntity?> getSpellIcon(SpellIconKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellIconEntity.fromJson(results.first.toMap());
   }
@@ -56,31 +63,38 @@ class SpellIconRepository with RepositoryMixin {
     return results.map((e) => SpellIconEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveSpellIcon(SpellIconEntity icon) async {
-    if (icon.id == 0) {
-      await storeSpellIcon(icon);
-      return;
+  Future<void> storeSpellIcon(SpellIconEntity icon) async {
+    if (icon.id <= 0) {
+      throw StateError('法术图标 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getSpellIcon(icon.id);
-    if (existing != null) {
-      await updateSpellIcon(icon);
-    } else {
+    try {
       await laconic.table(_table).insert([icon.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术图标 ${icon.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeSpellIcon(SpellIconEntity icon) async {
-    var json = icon.toJson();
-    final nextId = icon.id > 0 ? icon.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateSpellIcon(SpellIconEntity icon) async {
-    var json = icon.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', icon.id).update(json);
+  Future<void> updateSpellIcon(
+    SpellIconKey originalKey,
+    SpellIconEntity icon,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(icon.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术图标 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -99,5 +113,9 @@ class SpellIconRepository with RepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, SpellIconKey key) {
+    return builder.where('ID', key.id);
   }
 }
