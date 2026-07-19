@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
+import 'package:foxy/entity/dbc_faction_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,14 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyDbcFaction(int id) async {
-    var source = await getDbcFaction(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<DbcFactionKey> copyDbcFaction(DbcFactionKey key) async {
+    final source = await getDbcFaction(key);
+    if (source == null) {
+      throw StateError('原阵营不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeDbcFaction(copied);
+    return DbcFactionKey.fromEntity(copied);
   }
 
   Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
@@ -27,11 +31,14 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<DbcFactionEntity> createDbcFaction() async {
-    return DbcFactionEntity(id: await nextMaxPlusOne(_table, 'ID'));
+    return DbcFactionEntity(id: await _getNextId());
   }
 
-  Future<void> destroyDbcFaction(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyDbcFaction(DbcFactionKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原阵营不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
@@ -50,8 +57,8 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<DbcFactionEntity?> getDbcFaction(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<DbcFactionEntity?> getDbcFaction(DbcFactionKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return DbcFactionEntity.fromJson(results.first.toMap());
   }
@@ -66,39 +73,44 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => DbcFactionEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveDbcFaction(DbcFactionEntity faction) async {
-    if (faction.id == 0) {
-      await storeDbcFaction(faction);
-      return;
-    }
-    var existing = await getDbcFaction(faction.id);
-    if (existing != null) {
-      await updateDbcFaction(faction);
-    } else {
-      await laconic.table(_table).insert([faction.toJson()]);
-    }
-  }
-
   Future<void> saveDbcFactionLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeDbcFaction(DbcFactionEntity faction) async {
-    var json = faction.toJson();
-    final nextId = faction.id > 0
-        ? faction.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeDbcFaction(DbcFactionEntity faction) async {
+    if (faction.id <= 0) {
+      throw StateError('阵营 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([faction.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('阵营 ${faction.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateDbcFaction(DbcFactionEntity faction) async {
-    var json = faction.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', faction.id).update(json);
+  Future<void> updateDbcFaction(
+    DbcFactionKey originalKey,
+    DbcFactionEntity faction,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(faction.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原阵营不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的阵营 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -117,5 +129,11 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
+
+  QueryBuilder _whereKey(QueryBuilder builder, DbcFactionKey key) {
+    return builder.where('ID', key.id);
   }
 }
