@@ -6,7 +6,7 @@ import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/achievement_filter_entity.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_category_filter_entity.dart';
-import 'package:foxy/entity/broadcast_text_entity.dart';
+import 'package:foxy/entity/brief_broadcast_text_entity.dart';
 import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
