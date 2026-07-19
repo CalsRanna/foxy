@@ -119,9 +119,10 @@ void main() {
     expect('Expanded(child:'.allMatches(view), hasLength(24));
     expect(view, isNot(contains('flex:')));
     expect(view, isNot(contains('有效属性数量')));
+    expect(view, isNot(contains('readOnly: true')));
   });
 
-  test('Repository 唯一并校验写入、保留预分配 ID、保护物品引用', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final repository = File(
       'lib/repository/scaling_stat_distribution_repository.dart',
     ).readAsStringSync();
@@ -135,12 +136,28 @@ void main() {
       ).existsSync(),
       isFalse,
     );
-    expect(repository, contains('distribution.id > 0'));
+    expect(repository, contains('ScalingStatDistributionKey originalKey'));
+    expect(repository, contains('.update(distribution.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateScalingStatDistributionFields(t);'));
-    expect(repository, contains(".table('item_template')"));
-    expect(repository, contains(".where('ScalingStatDistribution', id)"));
-    expect(repository, contains(r'仍被 $references 个物品模板引用，不能删除'));
+    expect(
+      viewModel,
+      contains('validateScalingStatDistributionFields(candidate);'),
+    );
+    expect(viewModel, contains('signal<ScalingStatDistributionKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(
+      viewModel,
+      contains('updateScalingStatDistribution(originalKey, candidate)'),
+    );
+    expect(
+      viewModel,
+      contains('persistedKey.value = ScalingStatDistributionKey'),
+    );
+    expect(repository, isNot(contains("table('item_template')")));
+    expect(repository, isNot(contains("remove('ID')")));
     expect(
       'registerLazySingleton(() => ScalingStatDistributionRepository())'
           .allMatches(di),

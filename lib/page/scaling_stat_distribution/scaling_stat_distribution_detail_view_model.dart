@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'package:foxy/entity/scaling_stat_distribution_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
@@ -45,23 +46,30 @@ class ScalingStatDistributionDetailViewModel
   late final maxlevelController = registerController(IntFieldController());
 
   final distribution = signal(ScalingStatDistributionEntity());
+  final persistedKey = signal<ScalingStatDistributionKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({ScalingStatDistributionKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createScalingStatDistribution();
         distribution.value = blank;
         _initControllers(blank);
         return;
       }
-      distribution.value = (await _repository.getScalingStatDistribution(id))!;
-      _initControllers(distribution.value);
+      persistedKey.value = key;
+      final entity = await _repository.getScalingStatDistribution(key);
+      if (entity == null) {
+        throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
+      }
+      distribution.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载属性缩放分布(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载属性缩放分布(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -70,25 +78,27 @@ class ScalingStatDistributionDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateScalingStatDistributionFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeScalingStatDistribution(candidate);
+    } else {
+      await _repository.updateScalingStatDistribution(originalKey, candidate);
+    }
+    persistedKey.value = ScalingStatDistributionKey.fromEntity(candidate);
+    distribution.value = candidate;
+    routerFacade.updateCurrentLabel('属性缩放分布 #${candidate.id}');
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      validateScalingStatDistributionFields(t);
-      final existed = await _repository.getScalingStatDistribution(t.id);
-      final isCreate = existed == null;
-      var saved = t;
-      if (existed == null) {
-        final id = await _repository.storeScalingStatDistribution(t);
-        idController.init(id);
-        saved = t.copyWith(id: id);
-      } else {
-        await _repository.updateScalingStatDistribution(t);
-      }
-      distribution.value = saved;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        saved,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('属性缩放分布数据已保存'));
       ShadSonner.of(context).show(toast);

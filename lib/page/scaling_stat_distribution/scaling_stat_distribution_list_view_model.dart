@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'package:foxy/entity/brief_scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/entity/scaling_stat_distribution_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
@@ -22,16 +23,18 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
   final distributions = signal(<BriefScalingStatDistributionEntity>[]);
   final total = signal(0);
 
-  Future<void> copyScalingStatDistribution(int id) async {
+  Future<void> copyScalingStatDistribution(
+    ScalingStatDistributionKey key,
+  ) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的属性缩放分布？',
+        description: '是否复制编号为 ${key.id} 的属性缩放分布？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyScalingStatDistribution(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyScalingStatDistribution(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -40,17 +43,19 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteScalingStatDistribution(int id) async {
+  Future<void> deleteScalingStatDistribution(
+    ScalingStatDistributionKey key,
+  ) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的属性缩放分布？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的属性缩放分布？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyScalingStatDistribution(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyScalingStatDistribution(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -80,12 +85,14 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '属性缩放分布 #$id' : '新建属性缩放分布';
+  void navigateToDetail({ScalingStatDistributionKey? key}) {
+    final label = key != null ? '属性缩放分布 #${key.id}' : '新建属性缩放分布';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: ScalingStatDistributionDetailRoute(id: id),
+      route: ScalingStatDistributionDetailRoute(
+        scalingStatDistributionKey: key,
+      ),
       parentMenu: RouterMenu.scalingStatDistribution,
     );
   }
@@ -110,11 +117,11 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     return ScalingStatDistributionFilterEntity(id: idController.collect());
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, ScalingStatDistributionKey key) {
     final log = ActivityLogEntity(
       module: 'scaling_stat_distribution',
       actionType: action,
-      entityName: 'ScalingStatDistribution $id',
+      entityName: 'ScalingStatDistribution ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
