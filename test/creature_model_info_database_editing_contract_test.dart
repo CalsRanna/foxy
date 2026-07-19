@@ -1,0 +1,45 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/entity/brief_creature_model_info_entity.dart';
+import 'package:foxy/entity/creature_model_info_key.dart';
+
+void main() {
+  test('CreatureModelInfoKey 使用 DisplayID 值相等且 Brief 安全解码', () {
+    const key = CreatureModelInfoKey(displayId: 7);
+    expect(key, const CreatureModelInfoKey(displayId: 7));
+    final brief = BriefCreatureModelInfoEntity.fromJson(const {
+      'DisplayID': 7,
+      'BoundingRadius': 2,
+      'CombatReach': 3,
+    });
+    expect(brief.key, key);
+    expect([brief.boundingRadius, brief.combatReach], [2.0, 3.0]);
+  });
+
+  test('CreatureModelInfo Repository 预分配并原始键更新完整 candidate', () {
+    final source = File(
+      'lib/repository/creature_model_info_repository.dart',
+    ).readAsStringSync();
+    expect(
+      source,
+      contains("displayId: await nextMaxPlusOne(_table, 'DisplayID')"),
+    );
+    expect(source, contains('Future<void> storeCreatureModelInfo('));
+    expect(source, contains('CreatureModelInfoKey originalKey'));
+    expect(source, contains('.update(info.toJson())'));
+    expect(source, contains('matchedRows == 0'));
+    expect(source, contains('deletedRows == 0'));
+    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(source, isNot(contains('saveCreatureModelInfo(')));
+    expect(source, isNot(contains("remove('DisplayID')")));
+  });
+
+  test('BriefCreatureModelInfo 不暴露候选写入 API', () {
+    final source = File(
+      'lib/entity/brief_creature_model_info_entity.dart',
+    ).readAsStringSync();
+    expect(source, isNot(contains('toJson(')));
+    expect(source, isNot(contains('copyWith(')));
+  });
+}
