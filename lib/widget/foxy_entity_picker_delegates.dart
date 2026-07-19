@@ -14,7 +14,7 @@ import 'package:foxy/entity/brief_cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
 import 'package:foxy/entity/creature_immunity_filter_entity.dart';
-import 'package:foxy/entity/creature_movement_info_entity.dart';
+import 'package:foxy/entity/brief_creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
@@ -1007,7 +1007,7 @@ class FoxyEntityPickerDelegates {
       );
 
   static final creatureMovementInfo =
-      FoxyEntityPickerDelegate<CreatureMovementInfoEntity>(
+      FoxyEntityPickerDelegate<BriefCreatureMovementInfoEntity>(
         title: '生物移动信息',
         errorLabel: '搜索生物移动信息失败',
         filters: const [FoxyEntityPickerFilter('编号')],
@@ -1015,15 +1015,15 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '编号',
             width: 120,
-            text: (CreatureMovementInfoEntity t) => t.id.toString(),
+            text: (BriefCreatureMovementInfoEntity t) => t.id.toString(),
           ),
           FoxyEntityPickerColumn(
             header: '平滑转向追逐速率',
-            text: (CreatureMovementInfoEntity t) =>
+            text: (BriefCreatureMovementInfoEntity t) =>
                 t.smoothFacingChaseRate.toString(),
           ),
         ],
-        idOf: (CreatureMovementInfoEntity t) => t.id,
+        idOf: (BriefCreatureMovementInfoEntity t) => t.id,
         fetch: (page, v) => GetIt.instance
             .get<CreatureMovementInfoRepository>()
             .getBriefCreatureMovementInfos(
