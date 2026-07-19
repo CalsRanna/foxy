@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -31,6 +32,14 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   }
 
   @override
+  void didUpdateWidget(covariant SpellLootTemplateView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.spellId != widget.spellId) {
+      viewModel.setParentSpellId(widget.spellId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -49,7 +58,18 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       child: Text('新增'),
     );
 
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['编号', '名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
@@ -104,9 +124,10 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (await viewModel.edit() && context.mounted) {
+                      _showEditDialog(context);
+                    }
                   },
                   child: Text('编辑'),
                 ),
@@ -129,8 +150,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -170,7 +191,6 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                   child: FoxyNumberInput<int>(
                     controller: viewModel.spellIdController,
                     placeholder: 'Entry',
-                    readOnly: true,
                   ),
                 ),
               ),
@@ -283,12 +303,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
