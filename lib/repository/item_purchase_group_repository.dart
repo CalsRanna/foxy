@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_item_purchase_group_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
+import 'package:foxy/entity/item_purchase_group_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -12,11 +15,16 @@ class ItemPurchaseGroupRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyItemPurchaseGroup(int id) async {
-    final source = await getItemPurchaseGroup(id);
-    if (source == null) return;
+  Future<ItemPurchaseGroupKey> copyItemPurchaseGroup(
+    ItemPurchaseGroupKey key,
+  ) async {
+    final source = await getItemPurchaseGroup(key);
+    if (source == null) {
+      throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
+    }
     final candidate = source.copyWith(id: await _getNextId());
-    await laconic.table(_table).insert([candidate.toJson()]);
+    await storeItemPurchaseGroup(candidate);
+    return ItemPurchaseGroupKey.fromEntity(candidate);
   }
 
   Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilterEntity? filter}) {
@@ -27,15 +35,11 @@ class ItemPurchaseGroupRepository
     return ItemPurchaseGroupEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemPurchaseGroup(int id) async {
-    final referenceCount = await laconic
-        .table('foxy.dbc_item_extended_cost')
-        .where('ItemPurchaseGroup', id)
-        .count();
-    if (referenceCount > 0) {
-      throw StateError('物品购买组 $id 仍被扩展价格引用，不能删除');
+  Future<void> destroyItemPurchaseGroup(ItemPurchaseGroupKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefItemPurchaseGroupEntity>> getBriefItemPurchaseGroups({
@@ -54,8 +58,10 @@ class ItemPurchaseGroupRepository
         .toList();
   }
 
-  Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(
+    ItemPurchaseGroupKey key,
+  ) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty
         ? null
         : ItemPurchaseGroupEntity.fromJson(rows.first.toMap());
@@ -73,34 +79,44 @@ class ItemPurchaseGroupRepository
         .toList();
   }
 
-  Future<void> saveItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    if (group.id == 0) {
-      await storeItemPurchaseGroup(group);
-      return;
-    }
-    if (await getItemPurchaseGroup(group.id) == null) {
-      await storeItemPurchaseGroup(group);
-    } else {
-      await updateItemPurchaseGroup(group);
-    }
-  }
-
   Future<void> saveItemPurchaseGroupLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    final id = group.id > 0 ? group.id : await _getNextId();
-    final candidate = group.copyWith(id: id);
-    await laconic.table(_table).insert([candidate.toJson()]);
-    return id;
+  Future<void> storeItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
+    if (group.id <= 0) {
+      throw StateError('物品购买组 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([group.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('物品购买组 ${group.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateItemPurchaseGroup(ItemPurchaseGroupEntity group) async {
-    final json = group.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', group.id).update(json);
+  Future<void> updateItemPurchaseGroup(
+    ItemPurchaseGroupKey originalKey,
+    ItemPurchaseGroupEntity group,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(group.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的物品购买组 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -125,5 +141,9 @@ class ItemPurchaseGroupRepository
       throw StateError('物品购买组编号已超出 signed int32 范围');
     }
     return id;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemPurchaseGroupKey key) {
+    return builder.where('ID', key.id);
   }
 }

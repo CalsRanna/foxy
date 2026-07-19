@@ -56,7 +56,7 @@ import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
-import 'package:foxy/entity/item_purchase_group_entity.dart';
+import 'package:foxy/entity/brief_item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
