@@ -126,7 +126,7 @@ class _ScalingStatDistributionListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: items[row].id);
+            viewModel.navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -136,21 +136,21 @@ class _ScalingStatDistributionListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: items[row].id);
+                    viewModel.navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyScalingStatDistribution(items[row].id);
+                    viewModel.copyScalingStatDistribution(items[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteScalingStatDistribution(items[row].id);
+                    viewModel.deleteScalingStatDistribution(items[row].key);
                   },
                   child: Text('删除'),
                 ),

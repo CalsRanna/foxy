@@ -17,12 +17,13 @@ import 'package:foxy/entity/currency_type_key.dart' as _i62;
 import 'package:foxy/entity/emote_text_key.dart' as _i63;
 import 'package:foxy/entity/gem_property_key.dart' as _i64;
 import 'package:foxy/entity/glyph_property_key.dart' as _i65;
-import 'package:foxy/entity/page_text_key.dart' as _i71;
+import 'package:foxy/entity/page_text_key.dart' as _i72;
 import 'package:foxy/entity/quest_faction_reward_key.dart' as _i66;
 import 'package:foxy/entity/quest_info_key.dart' as _i67;
 import 'package:foxy/entity/quest_sort_key.dart' as _i68;
-import 'package:foxy/entity/scaling_stat_value_key.dart' as _i69;
-import 'package:foxy/entity/smart_script_key.dart' as _i70;
+import 'package:foxy/entity/scaling_stat_distribution_key.dart' as _i69;
+import 'package:foxy/entity/scaling_stat_value_key.dart' as _i70;
+import 'package:foxy/entity/smart_script_key.dart' as _i71;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1563,11 +1564,14 @@ class ScalingStatDistributionDetailRoute
     extends _i58.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
   ScalingStatDistributionDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i69.ScalingStatDistributionKey? scalingStatDistributionKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ScalingStatDistributionDetailRoute.name,
-         args: ScalingStatDistributionDetailRouteArgs(key: key, id: id),
+         args: ScalingStatDistributionDetailRouteArgs(
+           key: key,
+           scalingStatDistributionKey: scalingStatDistributionKey,
+         ),
          initialChildren: children,
        );
 
@@ -1579,32 +1583,39 @@ class ScalingStatDistributionDetailRoute
       final args = data.argsAs<ScalingStatDistributionDetailRouteArgs>(
         orElse: () => const ScalingStatDistributionDetailRouteArgs(),
       );
-      return _i43.ScalingStatDistributionDetailPage(key: args.key, id: args.id);
+      return _i43.ScalingStatDistributionDetailPage(
+        key: args.key,
+        scalingStatDistributionKey: args.scalingStatDistributionKey,
+      );
     },
   );
 }
 
 class ScalingStatDistributionDetailRouteArgs {
-  const ScalingStatDistributionDetailRouteArgs({this.key, this.id});
+  const ScalingStatDistributionDetailRouteArgs({
+    this.key,
+    this.scalingStatDistributionKey,
+  });
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i69.ScalingStatDistributionKey? scalingStatDistributionKey;
 
   @override
   String toString() {
-    return 'ScalingStatDistributionDetailRouteArgs{key: $key, id: $id}';
+    return 'ScalingStatDistributionDetailRouteArgs{key: $key, scalingStatDistributionKey: $scalingStatDistributionKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! ScalingStatDistributionDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key &&
+        scalingStatDistributionKey == other.scalingStatDistributionKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ scalingStatDistributionKey.hashCode;
 }
 
 /// generated route for
@@ -1629,7 +1640,7 @@ class ScalingStatValueDetailRoute
     extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
   ScalingStatValueDetailRoute({
     _i59.Key? key,
-    _i69.ScalingStatValueKey? scalingStatValueKey,
+    _i70.ScalingStatValueKey? scalingStatValueKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ScalingStatValueDetailRoute.name,
@@ -1661,7 +1672,7 @@ class ScalingStatValueDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i69.ScalingStatValueKey? scalingStatValueKey;
+  final _i70.ScalingStatValueKey? scalingStatValueKey;
 
   @override
   String toString() {
@@ -1717,7 +1728,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i70.SmartScriptKey? scriptKey,
+    _i71.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1746,7 +1757,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i70.SmartScriptKey? scriptKey;
+  final _i71.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1996,7 +2007,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i71.PageTextKey? pageTextKey,
+    _i72.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2025,7 +2036,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i71.PageTextKey? pageTextKey;
+  final _i72.PageTextKey? pageTextKey;
 
   @override
   String toString() {

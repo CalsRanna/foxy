@@ -5,34 +5,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class ScalingStatDistributionView extends StatefulWidget {
-  final int? entry;
-  const ScalingStatDistributionView({super.key, this.entry});
+class ScalingStatDistributionView extends StatelessWidget {
+  final ScalingStatDistributionDetailViewModel viewModel;
 
-  @override
-  State<ScalingStatDistributionView> createState() =>
-      _ScalingStatDistributionViewState();
-}
-
-class _ScalingStatDistributionViewState
-    extends State<ScalingStatDistributionView> {
-  final viewModel = GetIt.instance
-      .get<ScalingStatDistributionDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const ScalingStatDistributionView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +19,6 @@ class _ScalingStatDistributionViewState
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final maxlevelInput = FoxyFormItem(
