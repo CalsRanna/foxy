@@ -115,7 +115,7 @@ import 'package:foxy/entity/brief_sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
-import 'package:foxy/entity/talent_tab_entity.dart';
+import 'package:foxy/entity/brief_talent_tab_entity.dart';
 import 'package:foxy/entity/talent_tab_filter_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';

@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_talent_tab_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/talent_tab_filter_entity.dart';
+import 'package:foxy/entity/talent_tab_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,10 +14,14 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyTalentTab(int id) async {
-    final source = await getTalentTab(id);
-    if (source == null) return;
-    await storeTalentTab(source.copyWith(id: await _getNextId()));
+  Future<TalentTabKey> copyTalentTab(TalentTabKey key) async {
+    final source = await getTalentTab(key);
+    if (source == null) {
+      throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeTalentTab(copied);
+    return TalentTabKey.fromEntity(copied);
   }
 
   Future<int> countTalentTabs({TalentTabFilterEntity? filter}) {
@@ -25,15 +32,11 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return TalentTabEntity(id: await _getNextId());
   }
 
-  Future<void> destroyTalentTab(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_talent')
-        .where('TabID', id)
-        .count();
-    if (references > 0) {
-      throw StateError('天赋页 $id 仍被 $references 条天赋引用，不能删除');
+  Future<void> destroyTalentTab(TalentTabKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefTalentTabEntity>> getBriefTalentTabs({
@@ -58,8 +61,8 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<TalentTabEntity?> getTalentTab(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<TalentTabEntity?> getTalentTab(TalentTabKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : TalentTabEntity.fromJson(rows.first.toMap());
   }
 
@@ -73,35 +76,44 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return rows.map((row) => TalentTabEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveTalentTab(TalentTabEntity talentTab) async {
-    final existing = talentTab.id == 0
-        ? null
-        : await getTalentTab(talentTab.id);
-    if (existing == null) {
-      await storeTalentTab(talentTab);
-    } else {
-      await updateTalentTab(talentTab);
-    }
-  }
-
   Future<void> saveTalentTabLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeTalentTab(TalentTabEntity talentTab) async {
-    final id = talentTab.id > 0 ? talentTab.id : await _getNextId();
-    final stored = talentTab.copyWith(id: id);
-    await _validateSpellIcon(stored, preserveExisting: false);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
+  Future<void> storeTalentTab(TalentTabEntity talentTab) async {
+    if (talentTab.id <= 0) {
+      throw StateError('天赋页 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([talentTab.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('天赋页 ${talentTab.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateTalentTab(TalentTabEntity talentTab) async {
-    await _validateSpellIcon(talentTab, preserveExisting: true);
-    final json = talentTab.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', talentTab.id).update(json);
+  Future<void> updateTalentTab(
+    TalentTabKey originalKey,
+    TalentTabEntity talentTab,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(talentTab.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的天赋页 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -128,20 +140,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  Future<void> _validateSpellIcon(
-    TalentTabEntity talentTab, {
-    required bool preserveExisting,
-  }) async {
-    if (talentTab.spellIconId == 0) return;
-    final references = await laconic
-        .table('foxy.dbc_spell_icon')
-        .where('ID', talentTab.spellIconId)
-        .count();
-    if (references > 0) return;
-    if (preserveExisting) {
-      final existing = await getTalentTab(talentTab.id);
-      if (existing?.spellIconId == talentTab.spellIconId) return;
-    }
-    throw StateError('SpellIconID 引用的法术图标 ${talentTab.spellIconId} 不存在');
+  QueryBuilder _whereKey(QueryBuilder builder, TalentTabKey key) {
+    return builder.where('ID', key.id);
   }
 }
