@@ -1,19 +1,29 @@
+import 'package:foxy/entity/brief_creature_on_kill_reputation_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
+import 'package:foxy/entity/creature_on_kill_reputation_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureOnKillReputationRepository with RepositoryMixin {
   static const _table = 'creature_onkill_reputation';
+  static const primaryKeyColumns = {'creature_id'};
 
-  Future<void> copyCreatureOnKillReputation(int creatureID) async {
-    var source = await getCreatureOnKillReputation(creatureID);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'creature_id');
-    json['creature_id'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<CreatureOnKillReputationKey> copyCreatureOnKillReputation(
+    CreatureOnKillReputationKey sourceKey,
+  ) async {
+    final source = await getCreatureOnKillReputation(sourceKey);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final candidate = source.copyWith(
+      creatureID: await nextMaxPlusOne(_table, 'creature_id'),
+    );
+    await storeCreatureOnKillReputation(candidate);
+    return CreatureOnKillReputationKey.fromEntity(candidate);
   }
 
-  Future<int> countCreatureOnKillReputations() async {
+  Future<int> countCreatureOnKillReputations() {
     return laconic.table(_table).count();
   }
 
@@ -23,75 +33,94 @@ class CreatureOnKillReputationRepository with RepositoryMixin {
     return CreatureOnKillReputationEntity(creatureID: creatureID);
   }
 
-  Future<void> destroyCreatureOnKillReputation(int creatureID) async {
-    await laconic.table(_table).where('creature_id', creatureID).delete();
+  Future<void> destroyCreatureOnKillReputation(
+    CreatureOnKillReputationKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureOnKillReputationEntity>>
   getBriefCreatureOnKillReputations({int page = 1}) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select([
-      'creature_id',
-      'RewOnKillRepFaction1',
-      'RewOnKillRepFaction2',
-      'RewOnKillRepValue1',
-      'RewOnKillRepValue2',
-      'TeamDependent',
-    ]);
-    builder = builder.orderBy('creature_id');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select([
+          'creature_id',
+          'RewOnKillRepFaction1',
+          'RewOnKillRepFaction2',
+          'RewOnKillRepValue1',
+          'RewOnKillRepValue2',
+          'TeamDependent',
+        ])
+        .orderBy('creature_id')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefCreatureOnKillReputationEntity.fromJson(e.toMap()))
+        .map(
+          (result) =>
+              BriefCreatureOnKillReputationEntity.fromJson(result.toMap()),
+        )
         .toList();
   }
 
   Future<CreatureOnKillReputationEntity?> getCreatureOnKillReputation(
-    int creatureID,
+    CreatureOnKillReputationKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('creature_id', creatureID)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureOnKillReputationEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureOnKillReputationEntity>>
   getCreatureOnKillReputations() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => CreatureOnKillReputationEntity.fromJson(e.toMap()))
+        .map(
+          (result) => CreatureOnKillReputationEntity.fromJson(result.toMap()),
+        )
         .toList();
-  }
-
-  Future<void> saveCreatureOnKillReputation(
-    CreatureOnKillReputationEntity rep,
-  ) async {
-    var existing = await getCreatureOnKillReputation(rep.creatureID);
-    if (existing != null) {
-      await updateCreatureOnKillReputation(rep);
-    } else {
-      await storeCreatureOnKillReputation(rep);
-    }
   }
 
   Future<void> storeCreatureOnKillReputation(
     CreatureOnKillReputationEntity rep,
   ) async {
-    await laconic.table(_table).insert([rep.toJson()]);
+    try {
+      await laconic.table(_table).insert([rep.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('击杀声望主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureOnKillReputation(
+    CreatureOnKillReputationKey originalKey,
     CreatureOnKillReputationEntity rep,
   ) async {
-    var json = rep.toJson();
-    json.remove('creature_id');
-    await laconic
-        .table(_table)
-        .where('creature_id', rep.creatureID)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(rep.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的击杀声望主键已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(
+    QueryBuilder builder,
+    CreatureOnKillReputationKey key,
+  ) {
+    return builder.where('creature_id', key.creatureID);
   }
 }

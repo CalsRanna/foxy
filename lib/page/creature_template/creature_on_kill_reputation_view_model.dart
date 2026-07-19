@@ -1,19 +1,29 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
+import 'package:foxy/entity/creature_on_kill_reputation_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/creature_on_kill_reputation_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureOnKillReputationViewModel with FieldControllerMixin {
+class CreatureOnKillReputationViewModel
+    with
+        ViewModelValidationMixin,
+        CreatureOnKillReputationValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureOnKillReputationRepository>();
-  late final creatureIdController = registerController(IntFieldController());
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
+  final editingKey = signal<CreatureOnKillReputationKey?>(null);
+  final parentCreatureID = signal(0);
+
+  late final creatureIdController = registerController(IntFieldController());
   late final rewOnKillRepFaction1Controller = registerController(
     IntFieldController(),
   );
@@ -42,70 +52,7 @@ class CreatureOnKillReputationViewModel with FieldControllerMixin {
     SelectFieldController<int>(fallback: 0),
   );
 
-  final reputation = signal(CreatureOnKillReputationEntity());
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
-  }
-
-  /// 初始化 Controller 的值
-  void initControllers(CreatureOnKillReputationEntity data) {
-    rewOnKillRepFaction1Controller.init(data.rewOnKillRepFaction1);
-    rewOnKillRepFaction2Controller.init(data.rewOnKillRepFaction2);
-    maxStanding1Controller.init(data.maxStanding1);
-    maxStanding2Controller.init(data.maxStanding2);
-    isTeamAward1Controller.init(data.isTeamAward1 ? 1 : 0);
-    isTeamAward2Controller.init(data.isTeamAward2 ? 1 : 0);
-    rewOnKillRepValue1Controller.init(data.rewOnKillRepValue1);
-    rewOnKillRepValue2Controller.init(data.rewOnKillRepValue2);
-    teamDependentController.init(data.teamDependent);
-  }
-
-  /// 初始化 ViewModel
-  Future<void> initSignals({required int creatureId}) async {
-    try {
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化击杀声望失败: $e');
-      DialogUtil.instance.error('初始化击杀声望失败: $e');
-    }
-  }
-
-  /// 从数据库加载数据
-
-  Future<void> load() async {
-    final data = await _repository.getCreatureOnKillReputation(
-      creatureIdController.collect(),
-    );
-    if (data != null) {
-      reputation.value = data;
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  /// 保存数据到数据库
-  Future<void> save(BuildContext context) async {
-    try {
-      final repData = _collectFromControllers();
-      await _repository.saveCreatureOnKillReputation(repData);
-      reputation.value = repData;
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('击杀声望数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  /// 从 Controller 收集数据构建 CreatureOnKillReputation
-  CreatureOnKillReputationEntity _collectFromControllers() {
+  CreatureOnKillReputationEntity collectFromForm() {
     return CreatureOnKillReputationEntity(
       creatureID: creatureIdController.collect(),
       rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
@@ -118,5 +65,85 @@ class CreatureOnKillReputationViewModel with FieldControllerMixin {
       rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
       teamDependent: teamDependentController.collect(),
     );
+  }
+
+  void dispose() => disposeControllers();
+
+  Future<void> initSignals({required int creatureId}) async {
+    try {
+      await setParentCreatureID(creatureId);
+    } catch (error) {
+      LoggerUtil.instance.e('初始化击杀声望失败: $error');
+      DialogUtil.instance.error('初始化击杀声望失败: $error');
+    }
+  }
+
+  Future<void> load() => _refresh();
+
+  Future<void> persist() async {
+    final candidate = collectFromForm();
+    validateCreatureOnKillReputationFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storeCreatureOnKillReputation(candidate);
+    } else {
+      await _repository.updateCreatureOnKillReputation(originalKey, candidate);
+    }
+    editingKey.value = CreatureOnKillReputationKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  void pop() => routerFacade.goBack();
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('击杀声望数据已保存')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+      return false;
+    }
+  }
+
+  Future<void> setParentCreatureID(int creatureID) async {
+    parentCreatureID.value = creatureID;
+    editingKey.value = null;
+    await _refresh();
+  }
+
+  void _initControllers(CreatureOnKillReputationEntity data) {
+    creatureIdController.init(data.creatureID);
+    rewOnKillRepFaction1Controller.init(data.rewOnKillRepFaction1);
+    rewOnKillRepFaction2Controller.init(data.rewOnKillRepFaction2);
+    maxStanding1Controller.init(data.maxStanding1);
+    maxStanding2Controller.init(data.maxStanding2);
+    isTeamAward1Controller.init(data.isTeamAward1 ? 1 : 0);
+    isTeamAward2Controller.init(data.isTeamAward2 ? 1 : 0);
+    rewOnKillRepValue1Controller.init(data.rewOnKillRepValue1);
+    rewOnKillRepValue2Controller.init(data.rewOnKillRepValue2);
+    teamDependentController.init(data.teamDependent);
+  }
+
+  Future<void> _refresh() async {
+    final parentKey = CreatureOnKillReputationKey(
+      creatureID: parentCreatureID.value,
+    );
+    final data = await _repository.getCreatureOnKillReputation(parentKey);
+    if (data == null) {
+      editingKey.value = null;
+      _initControllers(
+        CreatureOnKillReputationEntity(creatureID: parentCreatureID.value),
+      );
+      return;
+    }
+    editingKey.value = parentKey;
+    _initControllers(data);
   }
 }
