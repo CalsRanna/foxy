@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -11,8 +12,8 @@ class DatabaseLocaleEditor extends StatefulWidget {
   final int entry;
   final List<String> fields;
   final List<String> fieldLabels;
-  final List<List<String>> initialRows;
-  final Future<void> Function(List<Map<String, String>> data) onSave;
+  final List<DatabaseLocaleRow> initialRows;
+  final Future<void> Function(DatabaseLocaleChanges changes) onSave;
 
   const DatabaseLocaleEditor({
     super.key,
@@ -26,20 +27,20 @@ class DatabaseLocaleEditor extends StatefulWidget {
 
   /// 弹出多语言编辑对话框。
   ///
-  /// [onLoad] 返回已有的多语言数据（List<Map>）。
-  /// [onSave] 接收编辑后的数据，由调用方负责持久化。
+  /// [onLoad] 返回带原始 locale 身份的已有行。
+  /// [onSave] 接收显式行变更，由调用方负责转成领域强类型 Key 并持久化。
   static Future<bool?> show(
     BuildContext context, {
     required String title,
     required int entry,
     required List<String> fields,
     required List<String> fieldLabels,
-    required Future<List<Map<String, String>>> Function() onLoad,
-    required Future<void> Function(List<Map<String, String>> data) onSave,
+    required Future<List<DatabaseLocaleRow>> Function() onLoad,
+    required Future<void> Function(DatabaseLocaleChanges changes) onSave,
   }) async {
-    late final List<Map<String, String>> jsonList;
+    late final List<DatabaseLocaleRow> loadedRows;
     try {
-      jsonList = await onLoad();
+      loadedRows = await onLoad();
     } catch (e, s) {
       LoggerUtil.instance.e('加载多语言失败: $title', error: e, stackTrace: s);
       if (!context.mounted) return null;
@@ -49,9 +50,6 @@ class DatabaseLocaleEditor extends StatefulWidget {
       return null;
     }
     if (!context.mounted) return null;
-    final initialRows = jsonList.map((json) {
-      return fields.map((f) => json[f] ?? '').toList();
-    }).toList();
     return showFoxyDialog<bool>(
       context: context,
       builder: (_) => DatabaseLocaleEditor(
@@ -59,7 +57,7 @@ class DatabaseLocaleEditor extends StatefulWidget {
         entry: entry,
         fields: fields,
         fieldLabels: fieldLabels,
-        initialRows: initialRows,
+        initialRows: loadedRows,
         onSave: onSave,
       ),
     );
@@ -73,39 +71,54 @@ class DatabaseLocaleEditor extends StatefulWidget {
 typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
 
 class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
-  late List<List<TextEditingController>> _rows;
+  late List<_DatabaseLocaleEditingRow> _rows;
+  late Set<String> _initialLocales;
   bool _saving = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
+    _initialLocales = widget.initialRows
+        .map((row) => row.originalLocale)
+        .whereType<String>()
+        .toSet();
     _rows = widget.initialRows.map((row) {
-      return row.map((v) => TextEditingController(text: v)).toList();
+      return _DatabaseLocaleEditingRow(
+        originalLocale: row.originalLocale,
+        controllers: widget.fields
+            .map(
+              (field) => TextEditingController(text: row.values[field] ?? ''),
+            )
+            .toList(),
+      );
     }).toList();
   }
 
   @override
   void dispose() {
     for (var row in _rows) {
-      for (var c in row) {
-        c.dispose();
-      }
+      row.dispose();
     }
     super.dispose();
   }
 
   void _addRow() {
     setState(() {
-      _rows.add(widget.fields.map((_) => TextEditingController()).toList());
+      _rows.add(
+        _DatabaseLocaleEditingRow(
+          originalLocale: null,
+          controllers: widget.fields
+              .map((_) => TextEditingController())
+              .toList(),
+        ),
+      );
     });
   }
 
   void _removeRow(int index) {
     setState(() {
-      for (var c in _rows[index]) {
-        c.dispose();
-      }
+      _rows[index].dispose();
       _rows.removeAt(index);
     });
   }
@@ -116,14 +129,27 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       _errorMessage = null;
     });
     try {
-      final data = _rows.map((row) {
+      final rows = _rows.map((row) {
         final map = <String, String>{};
         for (var i = 0; i < widget.fields.length; i++) {
-          map[widget.fields[i]] = row[i].text;
+          map[widget.fields[i]] = row.controllers[i].text;
         }
-        return map;
+        return DatabaseLocaleRow(
+          originalLocale: row.originalLocale,
+          values: Map.unmodifiable(map),
+        );
       }).toList();
-      await widget.onSave(data);
+      final retainedLocales = rows
+          .map((row) => row.originalLocale)
+          .whereType<String>()
+          .toSet();
+      final changes = DatabaseLocaleChanges(
+        rows: List.unmodifiable(rows),
+        deletedLocales: List.unmodifiable(
+          _initialLocales.difference(retainedLocales),
+        ),
+      );
+      await widget.onSave(changes);
       if (mounted) {
         Navigator.of(context).pop(true);
       }
@@ -227,7 +253,8 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
           child: Row(
             spacing: 16,
             children: [
-              for (var c in row) Expanded(child: ShadInput(controller: c)),
+              for (var c in row.controllers)
+                Expanded(child: ShadInput(controller: c)),
               SizedBox(
                 width: 40,
                 child: ShadButton.ghost(
@@ -242,5 +269,21 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         );
       },
     );
+  }
+}
+
+final class _DatabaseLocaleEditingRow {
+  final String? originalLocale;
+  final List<TextEditingController> controllers;
+
+  _DatabaseLocaleEditingRow({
+    required this.originalLocale,
+    required this.controllers,
+  });
+
+  void dispose() {
+    for (final controller in controllers) {
+      controller.dispose();
+    }
   }
 }

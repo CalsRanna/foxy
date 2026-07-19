@@ -31,6 +31,7 @@ import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/talent_tab_repository.dart';
+import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:get_it/get_it.dart';
 
@@ -46,21 +47,33 @@ class FoxyLocalePickerDelegates {
       final repo = GetIt.instance.get<CreatureTemplateRepository>();
       final locales = await repo.getCreatureTemplateLocales(entry);
       return locales
-          .map((e) => {'locale': e.locale, 'name': e.name, 'title': e.title})
-          .toList();
-    },
-    onSave: (entry, data) async {
-      final repo = GetIt.instance.get<CreatureTemplateRepository>();
-      final locales = data
           .map(
-            (d) => CreatureTemplateLocaleEntity(
-              entry: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-              title: d['title'] ?? '',
-            ),
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'name': e.name,
+              'title': e.title,
+            }),
           )
           .toList();
+    },
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<CreatureTemplateRepository>();
+      final existing = await repo.getCreatureTemplateLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return CreatureTemplateLocaleEntity(
+          entry: entry,
+          locale: d['locale'] ?? '',
+          name: d['name'] ?? '',
+          title: d['title'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveCreatureTemplateLocales(entry, locales);
     },
   );
@@ -71,15 +84,26 @@ class FoxyLocalePickerDelegates {
     onLoad: (entry) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
+      return locales
+          .map(
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'name': e.name,
+            }),
+          )
+          .toList();
     },
-    onSave: (entry, data) async {
+    onSave: (entry, changes) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final existing = await repo.getGameObjectTemplateLocales(entry);
-      final locales = data.map((d) {
+      final locales = changes.rows.map((row) {
+        final d = row.values;
         final locale = d['locale'] ?? '';
-        final current = existing.where((row) => row.locale == locale);
-        final preserved = current.isEmpty ? null : current.first;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
         return GameObjectTemplateLocaleEntity(
           entry: entry,
           locale: locale,
@@ -99,16 +123,25 @@ class FoxyLocalePickerDelegates {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final locales = await repo.getGameObjectTemplateLocales(entry);
       return locales
-          .map((e) => {'locale': e.locale, 'castBarCaption': e.castBarCaption})
+          .map(
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'castBarCaption': e.castBarCaption,
+            }),
+          )
           .toList();
     },
-    onSave: (entry, data) async {
+    onSave: (entry, changes) async {
       final repo = GetIt.instance.get<GameObjectTemplateRepository>();
       final existing = await repo.getGameObjectTemplateLocales(entry);
-      final locales = data.map((d) {
+      final locales = changes.rows.map((row) {
+        final d = row.values;
         final locale = d['locale'] ?? '';
-        final current = existing.where((row) => row.locale == locale);
-        final preserved = current.isEmpty ? null : current.first;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
         return GameObjectTemplateLocaleEntity(
           entry: entry,
           locale: locale,
@@ -127,19 +160,33 @@ class FoxyLocalePickerDelegates {
     onLoad: (entry) async {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
       final locales = await repo.getItemTemplateLocales(entry);
-      return locales.map((e) => {'locale': e.locale, 'name': e.name}).toList();
-    },
-    onSave: (entry, data) async {
-      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final locales = data
+      return locales
           .map(
-            (d) => ItemTemplateLocaleEntity(
-              id: entry,
-              locale: d['locale'] ?? '',
-              name: d['name'] ?? '',
-            ),
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'name': e.name,
+            }),
           )
           .toList();
+    },
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
+      final existing = await repo.getItemTemplateLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return ItemTemplateLocaleEntity(
+          id: entry,
+          locale: d['locale'] ?? '',
+          name: d['name'] ?? '',
+          description: preserved?.description ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveItemTemplateLocales(entry, locales);
     },
   );
@@ -151,20 +198,32 @@ class FoxyLocalePickerDelegates {
       final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
       final locales = await repo.getItemTemplateLocales(entry);
       return locales
-          .map((e) => {'locale': e.locale, 'description': e.description})
-          .toList();
-    },
-    onSave: (entry, data) async {
-      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-      final locales = data
           .map(
-            (d) => ItemTemplateLocaleEntity(
-              id: entry,
-              locale: d['locale'] ?? '',
-              description: d['description'] ?? '',
-            ),
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'description': e.description,
+            }),
           )
           .toList();
+    },
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
+      final existing = await repo.getItemTemplateLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return ItemTemplateLocaleEntity(
+          id: entry,
+          locale: d['locale'] ?? '',
+          name: preserved?.name ?? '',
+          description: d['description'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveItemTemplateLocales(entry, locales);
     },
   );
@@ -199,7 +258,7 @@ class FoxyLocalePickerDelegates {
       final locales = await repo.getQuestTemplateLocales(entry);
       return locales
           .map(
-            (e) => {
+            (e) => DatabaseLocaleRow.persisted({
               'locale': e.locale,
               'title': e.title,
               'details': e.details,
@@ -210,29 +269,35 @@ class FoxyLocalePickerDelegates {
               'objectiveText2': e.objectiveText2,
               'objectiveText3': e.objectiveText3,
               'objectiveText4': e.objectiveText4,
-            },
+            }),
           )
           .toList();
     },
-    onSave: (entry, data) async {
+    onSave: (entry, changes) async {
       final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
-      final locales = data
-          .map(
-            (d) => QuestTemplateLocaleEntity(
-              id: entry,
-              locale: d['locale'] ?? '',
-              title: d['title'] ?? '',
-              details: d['details'] ?? '',
-              objectives: d['objectives'] ?? '',
-              endText: d['endText'] ?? '',
-              completedText: d['completedText'] ?? '',
-              objectiveText1: d['objectiveText1'] ?? '',
-              objectiveText2: d['objectiveText2'] ?? '',
-              objectiveText3: d['objectiveText3'] ?? '',
-              objectiveText4: d['objectiveText4'] ?? '',
-            ),
-          )
-          .toList();
+      final existing = await repo.getQuestTemplateLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return QuestTemplateLocaleEntity(
+          id: entry,
+          locale: d['locale'] ?? '',
+          title: d['title'] ?? '',
+          details: d['details'] ?? '',
+          objectives: d['objectives'] ?? '',
+          endText: d['endText'] ?? '',
+          completedText: d['completedText'] ?? '',
+          objectiveText1: d['objectiveText1'] ?? '',
+          objectiveText2: d['objectiveText2'] ?? '',
+          objectiveText3: d['objectiveText3'] ?? '',
+          objectiveText4: d['objectiveText4'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveQuestTemplateLocales(entry, locales);
     },
   );
@@ -244,20 +309,31 @@ class FoxyLocalePickerDelegates {
       final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
       final locales = await repo.getQuestOfferRewardLocales(entry);
       return locales
-          .map((e) => {'locale': e.locale, 'rewardText': e.rewardText})
-          .toList();
-    },
-    onSave: (entry, data) async {
-      final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
-      final locales = data
           .map(
-            (d) => QuestOfferRewardLocaleEntity(
-              id: entry,
-              locale: d['locale'] ?? '',
-              rewardText: d['rewardText'] ?? '',
-            ),
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'rewardText': e.rewardText,
+            }),
           )
           .toList();
+    },
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
+      final existing = await repo.getQuestOfferRewardLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return QuestOfferRewardLocaleEntity(
+          id: entry,
+          locale: d['locale'] ?? '',
+          rewardText: d['rewardText'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveQuestOfferRewardLocales(entry, locales);
     },
   );
@@ -269,20 +345,31 @@ class FoxyLocalePickerDelegates {
       final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
       final locales = await repo.getQuestRequestItemsLocales(entry);
       return locales
-          .map((e) => {'locale': e.locale, 'completionText': e.completionText})
-          .toList();
-    },
-    onSave: (entry, data) async {
-      final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
-      final locales = data
           .map(
-            (d) => QuestRequestItemsLocaleEntity(
-              id: entry,
-              locale: d['locale'] ?? '',
-              completionText: d['completionText'] ?? '',
-            ),
+            (e) => DatabaseLocaleRow.persisted({
+              'locale': e.locale,
+              'completionText': e.completionText,
+            }),
           )
           .toList();
+    },
+    onSave: (entry, changes) async {
+      final repo = GetIt.instance.get<QuestRequestItemsLocaleRepository>();
+      final existing = await repo.getQuestRequestItemsLocales(entry);
+      final locales = changes.rows.map((row) {
+        final d = row.values;
+        final preserved = _findOriginal(
+          existing,
+          row.originalLocale,
+          (value) => value.locale,
+        );
+        return QuestRequestItemsLocaleEntity(
+          id: entry,
+          locale: d['locale'] ?? '',
+          completionText: d['completionText'] ?? '',
+          verifiedBuild: preserved?.verifiedBuild ?? 0,
+        );
+      }).toList();
       await repo.saveQuestRequestItemsLocales(entry, locales);
     },
   );
@@ -509,6 +596,18 @@ class FoxyLocalePickerDelegates {
     (repo, id, field) => repo.getSpellRangeLocales(id, field),
     (repo, id, field, values) => repo.saveSpellRangeLocales(id, field, values),
   );
+
+  static T? _findOriginal<T>(
+    List<T> rows,
+    String? originalLocale,
+    String Function(T value) localeOf,
+  ) {
+    if (originalLocale == null) return null;
+    for (final row in rows) {
+      if (localeOf(row) == originalLocale) return row;
+    }
+    return null;
+  }
 
   static DbcLocaleFieldEditorDelegate _dbc<T>(
     DbcLocaleFieldDefinition field,

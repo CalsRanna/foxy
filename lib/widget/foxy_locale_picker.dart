@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
@@ -22,11 +23,11 @@ final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
   /// 字段在弹窗表头中的显示文案，长度与 [fields] 一致。
   final List<String> fieldLabels;
 
-  /// 加载指定 entry 的多语言数据，返回 List<Map>（键为 [fields]）。
-  final Future<List<Map<String, String>>> Function(int entry) onLoad;
+  /// 加载指定 entry 的多语言数据。
+  final Future<List<DatabaseLocaleRow>> Function(int entry) onLoad;
 
-  /// 保存指定 entry 的多语言数据（data 键为 [fields]）。
-  final Future<void> Function(int entry, List<Map<String, String>> data) onSave;
+  /// 保存指定 entry 的多语言变更。
+  final Future<void> Function(int entry, DatabaseLocaleChanges changes) onSave;
 
   const DatabaseLocaleEditorDelegate({
     required this.fields,
@@ -147,7 +148,7 @@ class _FoxyLocalePickerState extends State<FoxyLocalePicker> {
           fields: fields,
           fieldLabels: fieldLabels,
           onLoad: () => onLoad(entry),
-          onSave: (data) => onSave(entry, data),
+          onSave: (changes) => onSave(entry, changes),
         );
       case DbcLocaleFieldEditorDelegate(
         :final field,
