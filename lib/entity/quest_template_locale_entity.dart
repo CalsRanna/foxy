@@ -1,30 +1,5 @@
 // quest_template_locale 表模型（1:N locale，复合主键 ID + Locale）
 
-/// 列表 / Picker 精简行：ID + locale + 标题
-class BriefQuestTemplateLocaleEntity {
-  final int id;
-  final String locale;
-  final String title;
-
-  const BriefQuestTemplateLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.title = '',
-  });
-
-  factory BriefQuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestTemplateLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      title: json['Title']?.toString() ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'locale': locale, 'Title': title};
-  }
-}
-
 class QuestTemplateLocaleEntity {
   final int id;
   final String locale;
