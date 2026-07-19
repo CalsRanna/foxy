@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_quest_sort_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
+import 'package:foxy/entity/quest_sort_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,14 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyQuestSort(int id) async {
-    var source = await getQuestSort(id);
-    if (source == null) return;
-    final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
+  Future<QuestSortKey> copyQuestSort(QuestSortKey key) async {
+    final source = await getQuestSort(key);
+    if (source == null) {
+      throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeQuestSort(copied);
+    return QuestSortKey.fromEntity(copied);
   }
 
   Future<int> countQuestSorts({QuestSortFilterEntity? filter}) async {
@@ -30,11 +34,11 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestSortEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestSort(int id) async {
-    if (await _isReferencedByQuest(id)) {
-      throw StateError('任务排序 $id 仍被任务模板引用，不能删除');
+  Future<void> destroyQuestSort(QuestSortKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefQuestSortEntity>> getBriefQuestSorts({
@@ -54,8 +58,8 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<QuestSortEntity?> getQuestSort(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestSortEntity?> getQuestSort(QuestSortKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestSortEntity.fromJson(results.first.toMap());
   }
@@ -70,37 +74,44 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => QuestSortEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveQuestSort(QuestSortEntity questSort) async {
-    if (questSort.id == 0) {
-      await storeQuestSort(questSort);
-      return;
-    }
-    var existing = await getQuestSort(questSort.id);
-    if (existing != null) {
-      await updateQuestSort(questSort);
-    } else {
-      await laconic.table(_table).insert([questSort.toJson()]);
-    }
-  }
-
   Future<void> saveQuestSortLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeQuestSort(QuestSortEntity questSort) async {
-    final id = questSort.id > 0 ? questSort.id : await _getNextId();
-    final candidate = questSort.copyWith(id: id);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
-    return id;
+  Future<void> storeQuestSort(QuestSortEntity questSort) async {
+    if (questSort.id <= 0) {
+      throw StateError('任务排序 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([questSort.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务排序 ${questSort.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateQuestSort(QuestSortEntity questSort) async {
-    var json = questSort.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', questSort.id).update(json);
+  Future<void> updateQuestSort(
+    QuestSortKey originalKey,
+    QuestSortEntity questSort,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(questSort.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务排序 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -129,11 +140,7 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  Future<bool> _isReferencedByQuest(int id) async {
-    final count = await laconic
-        .table('quest_template')
-        .where('QuestSortID', -id)
-        .count();
-    return count > 0;
+  QueryBuilder _whereKey(QueryBuilder builder, QuestSortKey key) {
+    return builder.where('ID', key.id);
   }
 }

@@ -5,32 +5,13 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class QuestSortView extends StatefulWidget {
-  final int? entry;
-  const QuestSortView({super.key, this.entry});
+class QuestSortView extends StatelessWidget {
+  final QuestSortDetailViewModel viewModel;
 
-  @override
-  State<QuestSortView> createState() => _QuestSortViewState();
-}
-
-class _QuestSortViewState extends State<QuestSortView> {
-  final viewModel = GetIt.instance.get<QuestSortDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const QuestSortView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +20,14 @@ class _QuestSortViewState extends State<QuestSortView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final id = viewModel.sort.value.id;
+        final id = viewModel.persistedKey.value?.id;
         return FoxyLocalePicker(
-          entry: id == 0 ? null : id,
+          entry: id,
           controller: viewModel.nameController,
           title: '任务分类名称本地化',
           placeholder: 'SortName_lang_zhCN',
