@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -121,6 +122,7 @@ class ItemSetDetailViewModel
   );
 
   final itemSet = signal(ItemSetEntity());
+  final persistedKey = signal<ItemSetKey?>(null);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
     nameLangEnUSController.init(values.valueOf('enUS'));
@@ -146,18 +148,24 @@ class ItemSetDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({ItemSetKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createItemSet();
         itemSet.value = blank;
         _initControllers(blank);
         return;
       }
-      itemSet.value = (await _repository.getItemSet(id))!;
-      _initControllers(itemSet.value);
+      persistedKey.value = key;
+      final entity = await _repository.getItemSet(key);
+      if (entity == null) {
+        throw StateError('原套装不存在，可能已被其他操作修改或删除');
+      }
+      itemSet.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载套装(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载套装(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -166,23 +174,27 @@ class ItemSetDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateItemSetFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeItemSet(candidate);
+    } else {
+      await _repository.updateItemSet(originalKey, candidate);
+    }
+    persistedKey.value = ItemSetKey.fromEntity(candidate);
+    itemSet.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateItemSetFields(t);
-      final isCreate = (await _repository.getItemSet(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeItemSet(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateItemSet(t);
-      }
-      itemSet.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('套装数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -316,5 +328,11 @@ class ItemSetDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(ItemSetEntity value) {
+    return value.nameLangZhCN.isNotEmpty
+        ? value.nameLangZhCN
+        : '套装 #${value.id}';
   }
 }

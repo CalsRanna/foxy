@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/item_set_filter_entity.dart';
+import 'package:foxy/entity/item_set_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -23,16 +24,16 @@ class ItemSetListViewModel with FieldControllerMixin {
   final itemSets = signal(<BriefItemSetEntity>[]);
   final total = signal(0);
 
-  Future<void> copyItemSet(int id) async {
+  Future<void> copyItemSet(ItemSetKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的套装？',
+        description: '是否复制编号为 ${key.id} 的套装？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyItemSet(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyItemSet(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,17 +42,17 @@ class ItemSetListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteItemSet(int id) async {
+  Future<void> deleteItemSet(ItemSetKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的套装？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的套装？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyItemSet(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyItemSet(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -80,12 +81,12 @@ class ItemSetListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '套装 #$id' : '新建套装';
+  void navigateToDetail({ItemSetKey? key}) {
+    final label = key != null ? '套装 #${key.id}' : '新建套装';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: ItemSetDetailRoute(id: id),
+      route: ItemSetDetailRoute(itemSetKey: key),
       parentMenu: RouterMenu.itemSet,
     );
   }
@@ -114,11 +115,11 @@ class ItemSetListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, ItemSetKey key) {
     final log = ActivityLogEntity(
       module: 'item_set',
       actionType: action,
-      entityName: 'ItemSet $id',
+      entityName: 'ItemSet ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
