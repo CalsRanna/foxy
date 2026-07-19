@@ -1,5 +1,8 @@
+import 'package:foxy/entity/brief_dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
+import 'package:foxy/entity/dbc_item_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -17,21 +20,27 @@ class DbcItemRepository with RepositoryMixin {
     26,
   ];
 
-  Future<void> copyDbcItem(int id) async {
-    final source = await getDbcItem(id);
-    if (source == null) return;
-    final json = source.toJson()..['ID'] = await nextMaxPlusOne(_table, 'ID');
-    await laconic.table(_table).insert([json]);
+  Future<DbcItemKey> copyDbcItem(DbcItemKey key) async {
+    final source = await getDbcItem(key);
+    if (source == null) {
+      throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeDbcItem(copied);
+    return DbcItemKey.fromEntity(copied);
   }
 
   Future<int> countDbcItems({DbcItemFilterEntity? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<DbcItemEntity> createDbcItem() async =>
-      DbcItemEntity.fromJson({'ID': await nextMaxPlusOne(_table, 'ID')});
+      DbcItemEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDbcItem(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyDbcItem(DbcItemKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefDbcItemEntity>> getBriefDbcItems({
@@ -53,8 +62,8 @@ class DbcItemRepository with RepositoryMixin {
     return rows.map((row) => BriefDbcItemEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<DbcItemEntity?> getDbcItem(int id) async {
-    final rows = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<DbcItemEntity?> getDbcItem(DbcItemKey key) async {
+    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
     return rows.isEmpty ? null : DbcItemEntity.fromJson(rows.first.toMap());
   }
 
@@ -63,25 +72,35 @@ class DbcItemRepository with RepositoryMixin {
     return rows.map((row) => DbcItemEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<void> saveDbcItem(DbcItemEntity item) async {
-    if (await getDbcItem(item.id) == null) {
-      await storeDbcItem(item);
-    } else {
-      await updateDbcItem(item);
+  Future<void> storeDbcItem(DbcItemEntity item) async {
+    if (item.id <= 0) {
+      throw StateError('DBC 物品 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([item.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('DBC 物品 ${item.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeDbcItem(DbcItemEntity item) async {
-    final json = item.toJson();
-    final id = item.id > 0 ? item.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = id;
-    await laconic.table(_table).insert([json]);
-    return id;
-  }
-
-  Future<void> updateDbcItem(DbcItemEntity item) async {
-    final json = item.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', item.id).update(json);
+  Future<void> updateDbcItem(DbcItemKey originalKey, DbcItemEntity item) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(item.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的 DBC 物品 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilterEntity? filter) {
@@ -91,5 +110,9 @@ class DbcItemRepository with RepositoryMixin {
       builder = builder.whereIn('InventoryType', handEquippableInventoryTypes);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, DbcItemKey key) {
+    return builder.where('ID', key.id);
   }
 }
