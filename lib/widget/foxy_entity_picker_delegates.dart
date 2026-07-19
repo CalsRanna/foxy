@@ -24,7 +24,7 @@ import 'package:foxy/entity/brief_currency_category_entity.dart';
 import 'package:foxy/entity/currency_category_filter_entity.dart';
 import 'package:foxy/entity/brief_creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_filter_entity.dart';
-import 'package:foxy/entity/dbc_faction_entity.dart';
+import 'package:foxy/entity/brief_dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
 import 'package:foxy/entity/brief_dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
