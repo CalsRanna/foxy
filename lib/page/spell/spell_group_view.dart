@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/spell/spell_group_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
@@ -28,6 +29,14 @@ class _SpellGroupViewState extends State<SpellGroupView> {
   }
 
   @override
+  void didUpdateWidget(covariant SpellGroupView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.spellId != widget.spellId) {
+      viewModel.setParentSpellId(widget.spellId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -46,7 +55,18 @@ class _SpellGroupViewState extends State<SpellGroupView> {
       child: Text('新增'),
     );
 
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['技能组'];
@@ -83,9 +103,10 @@ class _SpellGroupViewState extends State<SpellGroupView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (await viewModel.edit() && context.mounted) {
+                      _showEditDialog(context);
+                    }
                   },
                   child: Text('编辑'),
                 ),
@@ -113,8 +134,8 @@ class _SpellGroupViewState extends State<SpellGroupView> {
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -154,7 +175,6 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                   child: FoxyNumberInput<int>(
                     controller: viewModel.spellIdController,
                     placeholder: 'spell_id',
-                    readOnly: true,
                   ),
                 ),
               ),
@@ -182,12 +202,8 @@ class _SpellGroupViewState extends State<SpellGroupView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
