@@ -114,10 +114,6 @@ class PlayerCreateInfoEntity {
     );
   }
 
-  Map<String, dynamic> buildCredential() {
-    return {'race': race, 'class': class_};
-  }
-
   PlayerCreateInfoEntity copyWith({
     int? race,
     int? class_,
