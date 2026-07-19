@@ -1,22 +1,3 @@
-class BriefZoneIntroMusicEntity {
-  final int id;
-  final String name;
-  final int soundId;
-
-  const BriefZoneIntroMusicEntity({
-    this.id = 0,
-    this.name = '',
-    this.soundId = 0,
-  });
-
-  factory BriefZoneIntroMusicEntity.fromJson(Map<String, dynamic> json) =>
-      BriefZoneIntroMusicEntity(
-        id: json['ID'] ?? 0,
-        name: json['Name'] ?? '',
-        soundId: json['SoundID'] ?? 0,
-      );
-}
-
 class ZoneIntroMusicEntity {
   final int id;
   final String name;
@@ -40,6 +21,22 @@ class ZoneIntroMusicEntity {
         priority: json['Priority'] ?? 0,
         minDelayMinutes: json['MinDelayMinutes'] ?? 0,
       );
+
+  ZoneIntroMusicEntity copyWith({
+    int? id,
+    String? name,
+    int? soundId,
+    int? priority,
+    int? minDelayMinutes,
+  }) {
+    return ZoneIntroMusicEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      soundId: soundId ?? this.soundId,
+      priority: priority ?? this.priority,
+      minDelayMinutes: minDelayMinutes ?? this.minDelayMinutes,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'ID': id,
