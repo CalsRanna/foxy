@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_item_random_suffix_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
+import 'package:foxy/entity/item_random_suffix_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -12,13 +15,16 @@ class ItemRandomSuffixRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyItemRandomSuffix(int id) async {
-    var source = await getItemRandomSuffix(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<ItemRandomSuffixKey> copyItemRandomSuffix(
+    ItemRandomSuffixKey key,
+  ) async {
+    final source = await getItemRandomSuffix(key);
+    if (source == null) {
+      throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeItemRandomSuffix(copied);
+    return ItemRandomSuffixKey.fromEntity(copied);
   }
 
   Future<int> countItemRandomSuffixes({
@@ -30,11 +36,14 @@ class ItemRandomSuffixRepository
   }
 
   Future<ItemRandomSuffixEntity> createItemRandomSuffix() async {
-    return ItemRandomSuffixEntity(id: await nextMaxPlusOne(_table, 'ID'));
+    return ItemRandomSuffixEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemRandomSuffix(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyItemRandomSuffix(ItemRandomSuffixKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
@@ -53,8 +62,10 @@ class ItemRandomSuffixRepository
         .toList();
   }
 
-  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(
+    ItemRandomSuffixKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemRandomSuffixEntity.fromJson(results.first.toMap());
   }
@@ -71,39 +82,44 @@ class ItemRandomSuffixRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<void> saveItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
-    if (suffix.id == 0) {
-      await storeItemRandomSuffix(suffix);
-      return;
-    }
-    var existing = await getItemRandomSuffix(suffix.id);
-    if (existing != null) {
-      await updateItemRandomSuffix(suffix);
-    } else {
-      await laconic.table(_table).insert([suffix.toJson()]);
-    }
-  }
-
   Future<void> saveItemRandomSuffixLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
-    var json = suffix.toJson();
-    final nextId = suffix.id > 0
-        ? suffix.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
+    if (suffix.id <= 0) {
+      throw StateError('随机后缀 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([suffix.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('随机后缀 ${suffix.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateItemRandomSuffix(ItemRandomSuffixEntity suffix) async {
-    var json = suffix.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', suffix.id).update(json);
+  Future<void> updateItemRandomSuffix(
+    ItemRandomSuffixKey originalKey,
+    ItemRandomSuffixEntity suffix,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(suffix.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的随机后缀 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -122,5 +138,11 @@ class ItemRandomSuffixRepository
       );
     }
     return builder;
+  }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemRandomSuffixKey key) {
+    return builder.where('ID', key.id);
   }
 }
