@@ -57,7 +57,6 @@ class _GameObjectTemplateAddonViewState
                       child: FoxyNumberInput<int>(
                         placeholder: 'entry',
                         controller: viewModel.gameObjectIdController,
-                        readOnly: true,
                       ),
                     ),
                   ),

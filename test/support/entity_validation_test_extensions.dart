@@ -7,6 +7,8 @@ import 'package:foxy/widget/form/validation/achievement_entity_validation_mixin.
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.dart';
 import 'package:foxy/entity/condition_entity.dart';
+import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
+import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/widget/form/validation/currency_category_entity_validation_mixin.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
 import 'package:foxy/widget/form/validation/currency_type_entity_validation_mixin.dart';
@@ -85,6 +87,7 @@ class _ValidationViewModel
         AchievementCriteriaValidationMixin,
         AchievementValidationMixin,
         ConditionValidationMixin,
+        CreatureTemplateAddonValidationMixin,
         CurrencyCategoryValidationMixin,
         CurrencyTypeValidationMixin,
         GameObjectQuestItemValidationMixin,
@@ -144,6 +147,12 @@ extension AchievementEntityTestValidation on AchievementEntity {
 
 extension ConditionEntityTestValidation on ConditionEntity {
   void validate() => _validationViewModel.validateConditionFields(this);
+}
+
+extension CreatureTemplateAddonEntityTestValidation
+    on CreatureTemplateAddonEntity {
+  void validate() =>
+      _validationViewModel.validateCreatureTemplateAddonFields(this);
 }
 
 extension CurrencyCategoryEntityTestValidation on CurrencyCategoryEntity {

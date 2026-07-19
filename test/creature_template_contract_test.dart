@@ -22,6 +22,7 @@ import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
+import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
 
 void main() {
   test('CreatureTemplateEntity 覆盖 creature_template 的 55 个字段且类型正确', () {
@@ -255,17 +256,21 @@ void main() {
   });
 
   test('光环列表按服务端空格语法规范化并拒绝无效值', () {
+    expect(normalizeCreatureTemplateAddonAuras('  123   456 '), '123 456');
     expect(
-      CreatureTemplateAddonEntity.normalizeAuras('  123   456 '),
-      '123 456',
-    );
-    expect(
-      () => CreatureTemplateAddonEntity.normalizeAuras('123 123'),
+      () => normalizeCreatureTemplateAddonAuras('123 123'),
       throwsFormatException,
     );
     expect(
-      () => CreatureTemplateAddonEntity.normalizeAuras('123 abc'),
+      () => normalizeCreatureTemplateAddonAuras('123 abc'),
       throwsFormatException,
+    );
+    expect(
+      () => const CreatureTemplateAddonEntity(
+        entry: 1,
+        visibilityDistanceType: 6,
+      ).validate(),
+      throwsRangeError,
     );
   });
 

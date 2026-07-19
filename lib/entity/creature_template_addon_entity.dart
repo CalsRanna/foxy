@@ -1,40 +1,3 @@
-/// 生物模板附加数据列表/Picker 展示模型
-class BriefCreatureTemplateAddonEntity {
-  final int entry;
-  final int pathId;
-  final int mount;
-  final int emote;
-  final String auras;
-
-  const BriefCreatureTemplateAddonEntity({
-    this.entry = 0,
-    this.pathId = 0,
-    this.mount = 0,
-    this.emote = 0,
-    this.auras = '',
-  });
-
-  factory BriefCreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureTemplateAddonEntity(
-      entry: json['entry'] ?? 0,
-      pathId: json['path_id'] ?? 0,
-      mount: json['mount'] ?? 0,
-      emote: json['emote'] ?? 0,
-      auras: json['auras'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'path_id': pathId,
-      'mount': mount,
-      'emote': emote,
-      'auras': auras,
-    };
-  }
-}
-
 /// 生物模板附加数据
 class CreatureTemplateAddonEntity {
   final int entry;
@@ -104,24 +67,5 @@ class CreatureTemplateAddonEntity {
       'visibilityDistanceType': visibilityDistanceType,
       'auras': auras,
     };
-  }
-
-  static String normalizeAuras(String value) {
-    final tokens = value.trim().isEmpty
-        ? const <String>[]
-        : value.trim().split(RegExp(r'\s+'));
-    final spellIds = <int>[];
-    final seen = <int>{};
-    for (final token in tokens) {
-      final spellId = int.tryParse(token);
-      if (spellId == null || spellId <= 0) {
-        throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
-      }
-      if (!seen.add(spellId)) {
-        throw FormatException('光环列表不能包含重复法术 ID: $spellId');
-      }
-      spellIds.add(spellId);
-    }
-    return spellIds.join(' ');
   }
 }

@@ -1,15 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
+import 'package:foxy/entity/creature_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
+import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
-class CreatureTemplateAddonViewModel with FieldControllerMixin {
+class CreatureTemplateAddonViewModel
+    with
+        ViewModelValidationMixin,
+        CreatureTemplateAddonValidationMixin,
+        FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
   late final creatureIdController = registerController(IntFieldController());
@@ -25,6 +32,7 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
   late final aurasController = registerController(StringFieldController());
 
   final addon = signal(CreatureTemplateAddonEntity());
+  final editingKey = signal<CreatureTemplateAddonKey?>(null);
 
   /// 清理资源
   void dispose() {
@@ -34,28 +42,21 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
   /// 初始化 ViewModel
   Future<void> initSignals({required int creatureId}) async {
     try {
-      creatureIdController.init(creatureId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('初始化生物附加失败: $e');
-      DialogUtil.instance.error('初始化生物附加失败: $e');
-    }
-  }
-
-  /// 从数据库加载数据
-
-  Future<void> load() async {
-    try {
-      final data = await _repository.getCreatureTemplateAddon(
-        creatureIdController.collect(),
-      );
-      if (data != null) {
+      final key = CreatureTemplateAddonKey(entry: creatureId);
+      final data = await _repository.getCreatureTemplateAddon(key);
+      if (data == null) {
+        editingKey.value = null;
+        final blank = await _repository.createCreatureTemplateAddon(creatureId);
+        addon.value = blank;
+        _initSignals(blank);
+      } else {
+        editingKey.value = key;
         addon.value = data;
         _initSignals(data);
       }
     } catch (e) {
-      LoggerUtil.instance.e('加载生物附加数据失败: $e');
-      DialogUtil.instance.error('加载生物附加数据失败: $e');
+      LoggerUtil.instance.e('初始化生物附加失败: $e');
+      DialogUtil.instance.error('初始化生物附加失败: $e');
     }
   }
 
@@ -68,12 +69,20 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
   Future<void> save(BuildContext context) async {
     try {
       final addonData = _collectFromControllers();
-      await _repository.saveCreatureTemplateAddon(addonData);
+      validateCreatureTemplateAddonFields(addonData);
+      final originalKey = editingKey.value;
+      if (originalKey == null) {
+        await _repository.storeCreatureTemplateAddon(addonData);
+      } else {
+        await _repository.updateCreatureTemplateAddon(originalKey, addonData);
+      }
+      editingKey.value = CreatureTemplateAddonKey.fromEntity(addonData);
       addon.value = addonData;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板补充数据已保存'));
       ShadSonner.of(context).show(toast);
     } catch (e) {
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
     }
@@ -89,14 +98,13 @@ class CreatureTemplateAddonViewModel with FieldControllerMixin {
       bytes1: bytes1Controller.collect(),
       bytes2: bytes2Controller.collect(),
       visibilityDistanceType: visibilityDistanceTypeController.collect(),
-      auras: CreatureTemplateAddonEntity.normalizeAuras(
-        aurasController.collect(),
-      ),
+      auras: normalizeCreatureTemplateAddonAuras(aurasController.collect()),
     );
   }
 
   /// 初始化 Controller 的值
   void _initSignals(CreatureTemplateAddonEntity data) {
+    creatureIdController.init(data.entry);
     pathIdController.init(data.pathId);
     mountController.init(data.mount);
     emoteController.init(data.emote);
