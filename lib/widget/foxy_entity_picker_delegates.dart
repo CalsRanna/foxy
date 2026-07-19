@@ -107,7 +107,7 @@ import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
-import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/brief_skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/entity/brief_sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_ambience_filter_entity.dart';
