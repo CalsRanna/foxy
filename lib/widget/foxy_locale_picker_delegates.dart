@@ -9,6 +9,7 @@ import 'package:foxy/entity/quest_offer_reward_locale_key.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_key.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
+import 'package:foxy/entity/quest_template_locale_key.dart';
 import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/achievement_criteria_repository.dart';
@@ -276,38 +277,27 @@ class FoxyLocalePickerDelegates {
       '目标文本3',
       '目标文本4',
     ],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
-      final locales = await repo.getQuestTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'title': e.title,
-              'details': e.details,
-              'objectives': e.objectives,
-              'endText': e.endText,
-              'completedText': e.completedText,
-              'objectiveText1': e.objectiveText1,
-              'objectiveText2': e.objectiveText2,
-              'objectiveText3': e.objectiveText3,
-              'objectiveText4': e.objectiveText4,
-            }),
-          )
-          .toList();
-    },
+    onLoad: _loadQuestTemplateLocaleRows,
     onSave: (entry, changes) async {
       final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
-      final existing = await repo.getQuestTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final creations = <QuestTemplateLocaleEntity>[];
+      final updates = <QuestTemplateLocaleKey, QuestTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return QuestTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(_questTemplateLocaleFromValues(entry, d));
+          continue;
+        }
+        final originalKey = QuestTemplateLocaleKey(
           id: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getQuestTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原任务模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
           title: d['title'] ?? '',
           details: d['details'] ?? '',
@@ -318,10 +308,15 @@ class FoxyLocalePickerDelegates {
           objectiveText2: d['objectiveText2'] ?? '',
           objectiveText3: d['objectiveText3'] ?? '',
           objectiveText4: d['objectiveText4'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
         );
-      }).toList();
-      await repo.saveQuestTemplateLocales(entry, locales);
+      }
+      await repo.applyQuestTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map((locale) => QuestTemplateLocaleKey(id: entry, locale: locale))
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -724,6 +719,58 @@ class FoxyLocalePickerDelegates {
           'completionText': locale.completionText,
         });
       }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadQuestTemplateLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<QuestTemplateLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefQuestTemplateLocales(id: entry),
+      repo.countQuestTemplateLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('任务模板本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getQuestTemplateLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原任务模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'title': locale.title,
+          'details': locale.details,
+          'objectives': locale.objectives,
+          'endText': locale.endText,
+          'completedText': locale.completedText,
+          'objectiveText1': locale.objectiveText1,
+          'objectiveText2': locale.objectiveText2,
+          'objectiveText3': locale.objectiveText3,
+          'objectiveText4': locale.objectiveText4,
+        });
+      }),
+    );
+  }
+
+  static QuestTemplateLocaleEntity _questTemplateLocaleFromValues(
+    int entry,
+    Map<String, String> values,
+  ) {
+    return QuestTemplateLocaleEntity(
+      id: entry,
+      locale: values['locale'] ?? '',
+      title: values['title'] ?? '',
+      details: values['details'] ?? '',
+      objectives: values['objectives'] ?? '',
+      endText: values['endText'] ?? '',
+      completedText: values['completedText'] ?? '',
+      objectiveText1: values['objectiveText1'] ?? '',
+      objectiveText2: values['objectiveText2'] ?? '',
+      objectiveText3: values['objectiveText3'] ?? '',
+      objectiveText4: values['objectiveText4'] ?? '',
     );
   }
 
