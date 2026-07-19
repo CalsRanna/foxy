@@ -62,14 +62,12 @@ class RouterFacade {
 
   /// 导航到详情页面（列表页跳转）
   void navigateToDetail({
-    required String id,
     required String label,
     required PageRouteInfo route,
     required RouterMenu parentMenu,
   }) {
     final currentPath = path.value;
     final detailNode = RouterNode(
-      id: id,
       label: label,
       route: route,
       parentMenu: parentMenu,
@@ -93,34 +91,6 @@ class RouterFacade {
 
     path.value = newNodes;
     _router?.push(route);
-  }
-
-  /// 用新路由参数替换当前详情页（不额外压栈）。
-  ///
-  /// 用于新建保存后把 null 参数换成真实 ID，或主键字段变更后刷新各 Tab。
-  void replaceCurrentDetail({
-    required String id,
-    required String label,
-    required PageRouteInfo route,
-    required RouterMenu parentMenu,
-  }) {
-    final detailNode = RouterNode(
-      id: id,
-      label: label,
-      route: route,
-      parentMenu: parentMenu,
-    );
-    final currentPath = path.value;
-    if (currentPath.isEmpty) {
-      path.value = [
-        RouterMenu.dashboard.toNode(),
-        parentMenu.toNode(),
-        detailNode,
-      ];
-    } else {
-      path.value = [...currentPath.take(currentPath.length - 1), detailNode];
-    }
-    _router?.replace(route);
   }
 
   /// 导航到顶级菜单页面（侧边栏点击）

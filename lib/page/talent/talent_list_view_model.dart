@@ -82,10 +82,8 @@ class TalentListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '天赋 #$id' : '新建天赋';
-    final routeId = id != null ? 'talent_$id' : 'talent_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: TalentDetailRoute(id: id),
       parentMenu: RouterMenu.talent,

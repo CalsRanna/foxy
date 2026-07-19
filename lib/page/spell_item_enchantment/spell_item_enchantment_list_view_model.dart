@@ -83,12 +83,8 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术附魔';
-    final routeId = id != null
-        ? 'spell_item_enchantment_$id'
-        : 'spell_item_enchantment_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: SpellItemEnchantmentDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.spellItemEnchantment,

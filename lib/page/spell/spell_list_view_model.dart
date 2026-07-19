@@ -82,10 +82,8 @@ class SpellListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建法术';
-    final detailId = id != null ? 'spell_$id' : 'spell_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: detailId,
       label: label,
       route: SpellDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.spell,

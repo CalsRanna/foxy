@@ -3,9 +3,6 @@ import 'package:foxy/router/router_menu.dart';
 
 /// 导航节点，表示面包屑中的一个层级
 class RouterNode {
-  /// 节点唯一标识符（详情页使用）
-  final String? id;
-
   /// 关联的菜单（顶级菜单使用）
   final RouterMenu? menu;
 
@@ -19,7 +16,6 @@ class RouterNode {
   final RouterMenu? parentMenu;
 
   const RouterNode({
-    this.id,
     this.menu,
     required this.label,
     required this.route,
@@ -27,14 +23,12 @@ class RouterNode {
   });
 
   RouterNode copyWith({
-    String? id,
     RouterMenu? menu,
     String? label,
     PageRouteInfo? route,
     RouterMenu? parentMenu,
   }) {
     return RouterNode(
-      id: id ?? this.id,
       menu: menu ?? this.menu,
       label: label ?? this.label,
       route: route ?? this.route,

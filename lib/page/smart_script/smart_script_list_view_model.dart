@@ -107,11 +107,7 @@ class SmartScriptListViewModel with FieldControllerMixin {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     final isNew = entryOrGuid == null;
     final label = isNew ? '新建脚本' : '脚本 $entryOrGuid/$sourceType/$id/$link';
-    final detailId = isNew
-        ? 'smart_new'
-        : 'smart_${entryOrGuid}_${sourceType}_${id}_$link';
     routerFacade.navigateToDetail(
-      id: detailId,
       label: label,
       route: SmartScriptDetailRoute(
         entryOrGuid: entryOrGuid,

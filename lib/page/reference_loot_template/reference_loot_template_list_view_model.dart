@@ -80,10 +80,8 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
   }
 
   void navigateToDetail({int? entry, int? item, String? label}) {
-    final id = entry != null ? 'ref_loot_$entry' : 'ref_loot_new';
     final name = label?.isNotEmpty == true ? label! : '新建关联掉落';
     _routerFacade.navigateToDetail(
-      id: id,
       label: name,
       route: ReferenceLootTemplateDetailRoute(
         entry: entry,

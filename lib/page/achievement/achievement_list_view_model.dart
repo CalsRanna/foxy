@@ -82,10 +82,8 @@ class AchievementListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '成就 #$id' : '新建成就';
-    final routeId = id != null ? 'achievement_$id' : 'achievement_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: AchievementDetailRoute(id: id),
       parentMenu: RouterMenu.achievement,

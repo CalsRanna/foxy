@@ -83,10 +83,8 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
 
   void navigateToDetail(BuildContext context, {int? entry, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建游戏对象';
-    final id = entry != null ? 'gameobject_$entry' : 'gameobject_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: id,
       label: label,
       route: GameObjectTemplateDetailRoute(entry: entry, name: name),
       parentMenu: RouterMenu.gameObjectTemplate,

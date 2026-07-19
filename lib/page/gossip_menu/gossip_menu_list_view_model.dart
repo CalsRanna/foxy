@@ -86,7 +86,6 @@ class GossipMenuListViewModel with FieldControllerMixin {
   void navigateToDetail({int? menuId, int? textId}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: menuId?.toString() ?? 'new',
       label: menuId != null ? '对话 $menuId' : '新建对话',
       route: GossipMenuDetailRoute(menuId: menuId, textId: textId),
       parentMenu: RouterMenu.gossipMenu,

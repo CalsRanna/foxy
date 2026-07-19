@@ -82,10 +82,8 @@ class AreaTableListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建区域';
-    final routeId = id != null ? 'area_$id' : 'area_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: AreaTableDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.areaTable,

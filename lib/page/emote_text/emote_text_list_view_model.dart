@@ -82,10 +82,8 @@ class EmoteTextListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建表情文本';
-    final routeId = id != null ? 'emote_text_$id' : 'emote_text_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: EmoteTextDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.emoteText,

@@ -82,10 +82,8 @@ class ItemSetListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id}) {
     final label = id != null ? '套装 #$id' : '新建套装';
-    final routeId = id != null ? 'item_set_$id' : 'item_set_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: ItemSetDetailRoute(id: id),
       parentMenu: RouterMenu.itemSet,

@@ -83,10 +83,8 @@ class QuestSortListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? id, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务排序';
-    final routeId = id != null ? 'quest_sort_$id' : 'quest_sort_new';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
-      id: routeId,
       label: label,
       route: QuestSortDetailRoute(id: id, name: name),
       parentMenu: RouterMenu.questSort,

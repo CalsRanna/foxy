@@ -117,10 +117,8 @@ class ItemTemplateListViewModel with FieldControllerMixin {
 
   void navigateToDetail({int? entry, String? name}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
-    final id = entry != null ? 'item_$entry' : 'item_new';
     final label = name?.isNotEmpty == true ? name! : '新建物品';
     routerFacade.navigateToDetail(
-      id: id,
       label: label,
       route: ItemTemplateDetailRoute(entry: entry, name: name),
       parentMenu: RouterMenu.itemTemplate,
