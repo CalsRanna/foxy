@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
+import 'package:foxy/entity/area_table_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
@@ -34,6 +35,9 @@ class AreaTableDetailViewModel
   late final explorationLevelController = registerController(
     IntFieldController(),
   );
+  late final areaNameLangFlagsController = registerController(
+    IntFieldController(),
+  );
 
   /// Sound
   late final soundProviderPrefController = registerController(
@@ -60,6 +64,7 @@ class AreaTableDetailViewModel
   late final liquidTypeId3Controller = registerController(IntFieldController());
 
   final area = signal(AreaTableEntity());
+  final persistedKey = signal<AreaTableKey?>(null);
 
   /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
   void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
@@ -88,18 +93,24 @@ class AreaTableDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({AreaTableKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createAreaTable();
         area.value = blank;
         _initControllers(blank);
         return;
       }
-      area.value = (await _repository.getAreaTable(id))!;
-      _initControllers(area.value);
+      persistedKey.value = key;
+      final entity = await _repository.getAreaTable(key);
+      if (entity == null) {
+        throw StateError('原区域不存在，可能已被其他操作修改或删除');
+      }
+      area.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载区域(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载区域(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -108,23 +119,28 @@ class AreaTableDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    final originalKey = persistedKey.value;
+    await _validate(candidate, originalKey: originalKey);
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeAreaTable(candidate);
+    } else {
+      await _repository.updateAreaTable(originalKey, candidate);
+    }
+    final newKey = AreaTableKey.fromEntity(candidate);
+    persistedKey.value = newKey;
+    area.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      await _validate(t);
-      final isCreate = (await _repository.getAreaTable(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeAreaTable(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateAreaTable(t);
-      }
-      area.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('区域数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -147,6 +163,7 @@ class AreaTableDetailViewModel
       flags: flagsController.collect(),
       factionGroupMask: factionGroupMaskController.collect(),
       explorationLevel: explorationLevelController.collect(),
+      areaNameLangFlags: areaNameLangFlagsController.collect(),
       soundProviderPref: soundProviderPrefController.collect(),
       soundProviderPrefUnderwater: soundProviderPrefUnderwaterController
           .collect(),
@@ -172,6 +189,7 @@ class AreaTableDetailViewModel
     flagsController.init(table.flags);
     factionGroupMaskController.init(table.factionGroupMask);
     explorationLevelController.init(table.explorationLevel);
+    areaNameLangFlagsController.init(table.areaNameLangFlags);
     soundProviderPrefController.init(table.soundProviderPref);
     soundProviderPrefUnderwaterController.init(
       table.soundProviderPrefUnderwater,
@@ -198,15 +216,25 @@ class AreaTableDetailViewModel
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
 
-  Future<void> _validate(AreaTableEntity value) async {
+  String _labelFor(AreaTableEntity value) {
+    return value.areaNameLangZhCN.isNotEmpty
+        ? value.areaNameLangZhCN
+        : '区域 ${value.id}';
+  }
+
+  Future<void> _validate(
+    AreaTableEntity value, {
+    required AreaTableKey? originalKey,
+  }) async {
     validateAreaTableFields(value);
     if (value.parentAreaId > 0 &&
-        await _repository.getAreaTable(value.parentAreaId) == null) {
+        await _repository.getAreaTable(AreaTableKey(id: value.parentAreaId)) ==
+            null) {
       throw StateError('父级区域 ${value.parentAreaId} 不存在');
     }
     if (!await _repository.isAreaBitAvailable(
       value.areaBit,
-      areaId: value.id,
+      excludingKey: originalKey,
     )) {
       throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
     }

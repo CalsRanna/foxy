@@ -190,7 +190,7 @@ void main() {
     );
     expect(
       source,
-      contains("json['AreaBit'] = await nextMaxPlusOne(_table, 'AreaBit')"),
+      contains("areaBit: await nextMaxPlusOne(_table, 'AreaBit')"),
     );
     expect(source, contains('isAreaBitAvailable'));
   });
@@ -220,9 +220,11 @@ void main() {
     expect(view, contains("label: '海洋覆盖'"));
     expect(view, contains("label: '岩浆覆盖'"));
     expect(view, contains("label: '软泥覆盖'"));
+    expect(view, contains("label: '名称语言标志'"));
     expect(view, isNot(contains('flex:')));
-    expect('Expanded(child:'.allMatches(view), hasLength(20));
+    expect('Expanded(child:'.allMatches(view), hasLength(24));
     expect(viewModel, contains('FlagFieldController()'));
+    expect(viewModel, contains('areaNameLangFlagsController'));
     expect(viewModel, isNot(contains('List.generate')));
   });
 }

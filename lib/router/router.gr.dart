@@ -11,9 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
-import 'package:foxy/entity/condition_key.dart' as _i60;
-import 'package:foxy/entity/page_text_key.dart' as _i62;
-import 'package:foxy/entity/smart_script_key.dart' as _i61;
+import 'package:foxy/entity/area_table_key.dart' as _i60;
+import 'package:foxy/entity/condition_key.dart' as _i61;
+import 'package:foxy/entity/page_text_key.dart' as _i63;
+import 'package:foxy/entity/smart_script_key.dart' as _i62;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -163,12 +164,11 @@ class AreaTableDetailRoute
     extends _i58.PageRouteInfo<AreaTableDetailRouteArgs> {
   AreaTableDetailRoute({
     _i59.Key? key,
-    int? id,
-    String? name,
+    _i60.AreaTableKey? areaTableKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          AreaTableDetailRoute.name,
-         args: AreaTableDetailRouteArgs(key: key, id: id, name: name),
+         args: AreaTableDetailRouteArgs(key: key, areaTableKey: areaTableKey),
          initialChildren: children,
        );
 
@@ -182,36 +182,33 @@ class AreaTableDetailRoute
       );
       return _i3.AreaTableDetailPage(
         key: args.key,
-        id: args.id,
-        name: args.name,
+        areaTableKey: args.areaTableKey,
       );
     },
   );
 }
 
 class AreaTableDetailRouteArgs {
-  const AreaTableDetailRouteArgs({this.key, this.id, this.name});
+  const AreaTableDetailRouteArgs({this.key, this.areaTableKey});
 
   final _i59.Key? key;
 
-  final int? id;
-
-  final String? name;
+  final _i60.AreaTableKey? areaTableKey;
 
   @override
   String toString() {
-    return 'AreaTableDetailRouteArgs{key: $key, id: $id, name: $name}';
+    return 'AreaTableDetailRouteArgs{key: $key, areaTableKey: $areaTableKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AreaTableDetailRouteArgs) return false;
-    return key == other.key && id == other.id && name == other.name;
+    return key == other.key && areaTableKey == other.areaTableKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
+  int get hashCode => key.hashCode ^ areaTableKey.hashCode;
 }
 
 /// generated route for
@@ -252,7 +249,7 @@ class ConditionDetailRoute
     extends _i58.PageRouteInfo<ConditionDetailRouteArgs> {
   ConditionDetailRoute({
     _i59.Key? key,
-    _i60.ConditionKey? conditionKey,
+    _i61.ConditionKey? conditionKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ConditionDetailRoute.name,
@@ -281,7 +278,7 @@ class ConditionDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i60.ConditionKey? conditionKey;
+  final _i61.ConditionKey? conditionKey;
 
   @override
   String toString() {
@@ -1690,7 +1687,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i61.SmartScriptKey? scriptKey,
+    _i62.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1719,7 +1716,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i61.SmartScriptKey? scriptKey;
+  final _i62.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1969,7 +1966,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i62.PageTextKey? pageTextKey,
+    _i63.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -1998,7 +1995,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i62.PageTextKey? pageTextKey;
+  final _i63.PageTextKey? pageTextKey;
 
   @override
   String toString() {
