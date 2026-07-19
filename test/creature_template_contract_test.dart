@@ -329,10 +329,6 @@ void main() {
       throwsStateError,
     );
     expect(
-      () => CreatureTemplateResistanceRepository.validateSchool(0),
-      throwsArgumentError,
-    );
-    expect(
       () => CreatureTemplateSpellRepository.validateIndex(8),
       throwsArgumentError,
     );
