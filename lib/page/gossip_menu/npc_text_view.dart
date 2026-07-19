@@ -32,6 +32,12 @@ class _NpcTextViewState extends State<NpcTextView> {
   }
 
   @override
+  void didUpdateWidget(covariant NpcTextView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.textId != widget.textId) viewModel.load(widget.textId);
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -193,7 +199,6 @@ class _NpcTextViewState extends State<NpcTextView> {
                 child: FoxyNumberInput<int>(
                   controller: viewModel.idController,
                   placeholder: 'ID',
-                  readOnly: true,
                 ),
               ),
             ),
