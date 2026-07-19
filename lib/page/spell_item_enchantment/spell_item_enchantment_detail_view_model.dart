@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
@@ -72,6 +73,7 @@ class SpellItemEnchantmentDetailViewModel
   late final minLevelController = registerController(IntFieldController());
 
   final enchantment = signal(SpellItemEnchantmentEntity());
+  final persistedKey = signal<SpellItemEnchantmentKey?>(null);
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
     enchantment.value = enchantment.value.copyWith(
@@ -99,18 +101,24 @@ class SpellItemEnchantmentDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({SpellItemEnchantmentKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createSpellItemEnchantment();
         enchantment.value = blank;
         _initControllers(blank);
         return;
       }
-      enchantment.value = (await _repository.getSpellItemEnchantment(id))!;
-      _initControllers(enchantment.value);
+      persistedKey.value = key;
+      final entity = await _repository.getSpellItemEnchantment(key);
+      if (entity == null) {
+        throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
+      }
+      enchantment.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载法术附魔(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载法术附魔(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -119,24 +127,27 @@ class SpellItemEnchantmentDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateSpellItemEnchantmentFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeSpellItemEnchantment(candidate);
+    } else {
+      await _repository.updateSpellItemEnchantment(originalKey, candidate);
+    }
+    persistedKey.value = SpellItemEnchantmentKey.fromEntity(candidate);
+    enchantment.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateSpellItemEnchantmentFields(t);
-      final isCreate =
-          (await _repository.getSpellItemEnchantment(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeSpellItemEnchantment(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateSpellItemEnchantment(t);
-      }
-      enchantment.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术附魔数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -209,5 +220,11 @@ class SpellItemEnchantmentDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(SpellItemEnchantmentEntity value) {
+    return value.nameLangZhCN.isNotEmpty
+        ? value.nameLangZhCN
+        : '法术附魔 #${value.id}';
   }
 }
