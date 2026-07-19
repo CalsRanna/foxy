@@ -12,17 +12,17 @@
 
 | 方案 | 负责的问题 | 状态 |
 | --- | --- | --- |
-| [database_write_result_plan.md](database_write_result_plan.md) | Laconic 写入结果、matched-row、删除行数、参数化 raw write、重复键识别 | 待实施 |
-| [row_locator_plan.md](row_locator_plan.md) | 强类型 Key、物理主键/唯一键选择、值相等、Repository 行定位 | 待实施 |
-| [primary_key_editing_plan.md](primary_key_editing_plan.md) | 使用原始 Key 定位旧行并写入完整 candidate | 待实施 |
-| [persisted_identity_plan.md](persisted_identity_plan.md) | 独立详情页 `persistedKey`、连续操作、面包屑和路由生命周期 | 待实施 |
-| [inline_row_editing_plan.md](inline_row_editing_plan.md) | 内嵌子表编辑器的 `editingKey`、选择和刷新状态 | 待实施 |
-| [explicit_key_creation_plan.md](explicit_key_creation_plan.md) | AUTO_INCREMENT 显式预分配、新建和复制流程 | 待实施 |
-| [brief_entity_plan.md](brief_entity_plan.md) | 独立 Brief Entity、`brief.key`、分页列表与 Picker 查询 | 待实施 |
-| [keyless_table_editing_plan.md](keyless_table_editing_plan.md) | `playercreateinfo_cast_spell` 的全行定位与 `LIMIT 1` 写入 | 待实施 |
-| [repository_boundary_plan.md](repository_boundary_plan.md) | 单 Repository 单表、不扫描引用、不隐式级联 | 待实施 |
-| [activity_log_identity_plan.md](activity_log_identity_plan.md) | 移除业务 `entity_id`，改用可读目标标签 | 待实施 |
-| [full_field_editability_plan.md](full_field_editability_plan.md) | 完整详情 candidate 的物理字段与可编辑控件覆盖 | 待实施 |
+| [database_write_result_plan.md](database_write_result_plan.md) | Laconic 写入结果、matched-row、删除行数、参数化 raw write、重复键识别 | 已完成 |
+| [row_locator_plan.md](row_locator_plan.md) | 强类型 Key、物理主键/唯一键选择、值相等、Repository 行定位 | 已完成 |
+| [primary_key_editing_plan.md](primary_key_editing_plan.md) | 使用原始 Key 定位旧行并写入完整 candidate | 已完成 |
+| [persisted_identity_plan.md](persisted_identity_plan.md) | 独立详情页 `persistedKey`、连续操作、面包屑和路由生命周期 | 已完成 |
+| [inline_row_editing_plan.md](inline_row_editing_plan.md) | 内嵌子表编辑器的 `editingKey`、选择和刷新状态 | 已完成 |
+| [explicit_key_creation_plan.md](explicit_key_creation_plan.md) | AUTO_INCREMENT 显式预分配、新建和复制流程 | 已完成 |
+| [brief_entity_plan.md](brief_entity_plan.md) | 独立 Brief Entity、`brief.key`、分页列表与 Picker 查询 | 已完成 |
+| [keyless_table_editing_plan.md](keyless_table_editing_plan.md) | `playercreateinfo_cast_spell` 的全行定位与 `LIMIT 1` 写入 | 已完成 |
+| [repository_boundary_plan.md](repository_boundary_plan.md) | 单 Repository 单表、不扫描引用、不隐式级联 | 已完成 |
+| [activity_log_identity_plan.md](activity_log_identity_plan.md) | 移除业务 `entity_id`，改用可读目标标签 | 已完成 |
+| [full_field_editability_plan.md](full_field_editability_plan.md) | 完整详情 candidate 的物理字段与可编辑控件覆盖 | 已完成 |
 
 ## 3. 依赖关系
 
@@ -77,16 +77,19 @@ full_field_editability
 
 在参数化 raw write 和 matched-row 能力稳定后实施无键表方案。Brief、Repository 边界、活动日志和完整字段可编辑性按各自方案独立收敛。
 
-## 5. 渐进式合同测试
+## 5. 全局合同测试
 
-每份方案维护自己的“已迁移模块”清单或遗留 allowlist：
+渐进式迁移已于 2026-07-19 收敛，遗留 allowlist 已移除。`test/database_editing_global_contract_test.dart` 现在无例外检查：
 
-- 合同只对已迁移模块强制执行。
-- allowlist 只能缩小，不能在没有说明的情况下扩大。
-- 单个模块完成后必须能独立通过测试并合并。
-- 只有对应方案全项目完成后，才移除 allowlist 并启用无例外全局合同。
+- 117 个 Brief Entity 文件均独立定义并暴露强类型身份。
+- 120 个 `getBrief*` 查询均返回 Brief Entity 并使用 `kPageSize` 分页。
+- 113 个候选 UPDATE 均接收 `originalKey`，并检查 matched/affected rows。
+- 113 个单行 DELETE 均接收强类型 Key，并检查 deleted/affected rows。
+- 26 个独立详情 ViewModel 均使用 `persistedKey`，路由层不再维护第二套详情身份。
+- Repository 不再暴露候选身份推断式 `save*`、替代键返回式 `store*` 或空 UPDATE。
+- 页面不再包含永久 `readOnly: true` 的物理字段，数值控制器拒绝非法输入。
 
-不得在第一阶段加入会使未迁移模块长期失败的全局源码合同。
+各模块的 `*_database_editing_contract_test.dart` 继续覆盖物理列、复合键、完整 candidate、`editingKey`、写入失败重试和 UI 控件等领域细节。
 
 ## 6. 总体验收
 
@@ -98,3 +101,9 @@ full_field_editability
 - 列表、Picker 和详情读取不会混用 Full/Brief Entity。
 - Repository 写入边界、活动日志身份和表单字段完整性分别符合对应方案。
 - `flutter analyze` 和相关测试通过，完整测试不引入超出已知基线的新失败。
+
+2026-07-19 最终验收结果：
+
+- `flutter analyze`：通过，无问题。
+- 数据库编辑专项合同：385 项通过。
+- 完整测试：707 项通过，5 项按条件跳过；仅保留仓库指南已记录的 `dbc_sync_util_test.dart` 多文件匹配基线失败。
