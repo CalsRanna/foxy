@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest/game_object_quest_starter_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -29,6 +30,14 @@ class _GameObjectQuestStarterViewState
   }
 
   @override
+  void didUpdateWidget(covariant GameObjectQuestStarterView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.questId != widget.questId) {
+      viewModel.setParentQuestId(widget.questId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -47,7 +56,18 @@ class _GameObjectQuestStarterViewState
       leading: Icon(LucideIcons.plus, size: 16),
       child: Text('新增'),
     );
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['编号', '名称'];
@@ -92,9 +112,10 @@ class _GameObjectQuestStarterViewState
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (await viewModel.edit() && context.mounted) {
+                      _showEditDialog(context);
+                    }
                   },
                   child: Text('编辑'),
                 ),
@@ -117,8 +138,8 @@ class _GameObjectQuestStarterViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -156,10 +177,7 @@ class _GameObjectQuestStarterViewState
           SizedBox(height: 16),
           FoxyFormItem(
             label: '任务编号',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.questController,
-              readOnly: true,
-            ),
+            child: FoxyNumberInput<int>(controller: viewModel.questController),
           ),
           SizedBox(height: 24),
           Row(
@@ -172,12 +190,8 @@ class _GameObjectQuestStarterViewState
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
