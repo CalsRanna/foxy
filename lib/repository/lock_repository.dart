@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_lock_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
+import 'package:foxy/entity/lock_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
-  Future<void> copyLock(int id) async {
-    var source = await getLock(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<LockKey> copyLock(LockKey key) async {
+    final source = await getLock(key);
+    if (source == null) {
+      throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeLock(copied);
+    return LockKey.fromEntity(copied);
   }
 
   Future<int> countLocks({LockFilterEntity? filter}) async {
@@ -22,11 +26,14 @@ class LockRepository with RepositoryMixin {
   }
 
   Future<LockEntity> createLock() async {
-    return LockEntity(id: await nextMaxPlusOne(_table, 'ID'));
+    return LockEntity(id: await _getNextId());
   }
 
-  Future<void> destroyLock(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyLock(LockKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefLockEntity>> getBriefLocks({
@@ -43,8 +50,8 @@ class LockRepository with RepositoryMixin {
     return results.map((e) => BriefLockEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<LockEntity?> getLock(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<LockEntity?> getLock(LockKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return LockEntity.fromJson(results.first.toMap());
   }
@@ -54,31 +61,35 @@ class LockRepository with RepositoryMixin {
     return results.map((e) => LockEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveLock(LockEntity lock) async {
-    if (lock.id == 0) {
-      await storeLock(lock);
-      return;
+  Future<void> storeLock(LockEntity lock) async {
+    if (lock.id <= 0) {
+      throw StateError('锁定义 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getLock(lock.id);
-    if (existing != null) {
-      await updateLock(lock);
-    } else {
+    try {
       await laconic.table(_table).insert([lock.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('锁定义 ${lock.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeLock(LockEntity lock) async {
-    var json = lock.toJson();
-    final nextId = lock.id > 0 ? lock.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateLock(LockEntity lock) async {
-    var json = lock.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', lock.id).update(json);
+  Future<void> updateLock(LockKey originalKey, LockEntity lock) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(lock.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的锁定义 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, LockFilterEntity? filter) {
@@ -87,5 +98,11 @@ class LockRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  Future<int> _getNextId() => nextMaxPlusOne(_table, 'ID');
+
+  QueryBuilder _whereKey(QueryBuilder builder, LockKey key) {
+    return builder.where('ID', key.id);
   }
 }
