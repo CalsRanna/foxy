@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/gem_property_entity.dart';
+import 'package:foxy/entity/brief_gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
+import 'package:foxy/entity/gem_property_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
@@ -22,16 +23,16 @@ class GemPropertyListViewModel with FieldControllerMixin {
   final properties = signal(<BriefGemPropertyEntity>[]);
   final total = signal(0);
 
-  Future<void> copyGemProperty(int id) async {
+  Future<void> copyGemProperty(GemPropertyKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的宝石属性？',
+        description: '是否复制编号为 ${key.id} 的宝石属性？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyGemProperty(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyGemProperty(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -40,17 +41,17 @@ class GemPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteGemProperty(int id) async {
+  Future<void> deleteGemProperty(GemPropertyKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的宝石属性？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的宝石属性？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyGemProperty(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyGemProperty(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -79,12 +80,12 @@ class GemPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '宝石属性 #$id' : '新建宝石属性';
+  void navigateToDetail({GemPropertyKey? key}) {
+    final label = key != null ? '宝石属性 #${key.id}' : '新建宝石属性';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: GemPropertyDetailRoute(id: id),
+      route: GemPropertyDetailRoute(gemPropertyKey: key),
       parentMenu: RouterMenu.gemProperty,
     );
   }
@@ -109,11 +110,11 @@ class GemPropertyListViewModel with FieldControllerMixin {
     return GemPropertyFilterEntity(id: entryController.collect());
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, GemPropertyKey key) {
     final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
-      entityName: 'GemProperty $id',
+      entityName: 'GemProperty ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

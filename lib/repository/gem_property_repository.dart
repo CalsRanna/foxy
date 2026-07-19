@@ -1,15 +1,22 @@
+import 'package:foxy/entity/brief_gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_filter_entity.dart';
+import 'package:foxy/entity/gem_property_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
-  Future<void> copyGemProperty(int id) async {
-    var source = await getGemProperty(id);
-    if (source == null) return;
-    await storeGemProperty(source.copyWith(id: await _getNextId()));
+  Future<GemPropertyKey> copyGemProperty(GemPropertyKey key) async {
+    final source = await getGemProperty(key);
+    if (source == null) {
+      throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeGemProperty(copied);
+    return GemPropertyKey.fromEntity(copied);
   }
 
   Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {
@@ -22,15 +29,11 @@ class GemPropertyRepository with RepositoryMixin {
     return GemPropertyEntity(id: await _getNextId());
   }
 
-  Future<void> destroyGemProperty(int id) async {
-    final references = await laconic
-        .table('item_template')
-        .where('GemProperties', id)
-        .count();
-    if (references > 0) {
-      throw StateError('宝石属性 $id 仍被 $references 个物品模板引用，不能删除');
+  Future<void> destroyGemProperty(GemPropertyKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
@@ -61,35 +64,44 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<GemPropertyEntity?> getGemProperty(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<GemPropertyEntity?> getGemProperty(GemPropertyKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return GemPropertyEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> saveGemProperty(GemPropertyEntity gemProperty) async {
-    final existing = gemProperty.id == 0
-        ? null
-        : await getGemProperty(gemProperty.id);
-    if (existing == null) {
-      await storeGemProperty(gemProperty);
-    } else {
-      await updateGemProperty(gemProperty);
+  Future<void> storeGemProperty(GemPropertyEntity gemProperty) async {
+    if (gemProperty.id <= 0) {
+      throw StateError('宝石属性 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([gemProperty.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('宝石属性 ${gemProperty.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeGemProperty(GemPropertyEntity gemProperty) async {
-    final id = gemProperty.id > 0 ? gemProperty.id : await _getNextId();
-    final stored = gemProperty.copyWith(id: id);
-    await _validateEnchantReference(stored, preserveExisting: false);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateGemProperty(GemPropertyEntity gemProperty) async {
-    await _validateEnchantReference(gemProperty, preserveExisting: true);
-    final json = gemProperty.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', gemProperty.id).update(json);
+  Future<void> updateGemProperty(
+    GemPropertyKey originalKey,
+    GemPropertyEntity gemProperty,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(gemProperty.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的宝石属性 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -111,20 +123,7 @@ class GemPropertyRepository with RepositoryMixin {
     return id;
   }
 
-  Future<void> _validateEnchantReference(
-    GemPropertyEntity gemProperty, {
-    required bool preserveExisting,
-  }) async {
-    if (gemProperty.enchantId == 0) return;
-    final references = await laconic
-        .table('foxy.dbc_spell_item_enchantment')
-        .where('ID', gemProperty.enchantId)
-        .count();
-    if (references > 0) return;
-    if (preserveExisting) {
-      final existing = await getGemProperty(gemProperty.id);
-      if (existing?.enchantId == gemProperty.enchantId) return;
-    }
-    throw StateError('Enchant_ID 引用的法术物品附魔 ${gemProperty.enchantId} 不存在');
+  QueryBuilder _whereKey(QueryBuilder builder, GemPropertyKey key) {
+    return builder.where('ID', key.id);
   }
 }
