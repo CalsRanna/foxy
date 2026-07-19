@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/page/player_create_info/player_create_info_cast_spell_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -8,8 +7,9 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_nullable_string_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -36,27 +36,47 @@ class _PlayerCreateInfoCastSpellViewState
   }
 
   @override
+  void didUpdateWidget(covariant PlayerCreateInfoCastSpellView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.race != widget.race ||
+        oldWidget.playerClass != widget.playerClass) {
+      viewModel.setParent(race: widget.race, playerClass: widget.playerClass);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 16),
-    child: Column(
-      spacing: 16,
-      children: [
-        Row(
-          children: [
-            ShadButton(
-              onPressed: widget.race == null ? null : _showCreateDialog,
-              child: const Text('新增'),
-            ),
-          ],
-        ),
-        Watch((_) => _buildTable()),
-      ],
+  Widget build(BuildContext context) => Watch(
+    (_) => Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              ShadButton(
+                onPressed: widget.race == null || widget.playerClass == null
+                    ? null
+                    : _showCreateDialog,
+                child: const Text('新增'),
+              ),
+              const Spacer(),
+              FoxyPagination(
+                page: viewModel.page.value,
+                pageSize: 50,
+                total: viewModel.total.value,
+                onChange: viewModel.paginate,
+              ),
+            ],
+          ),
+          _buildTable(),
+        ],
+      ),
     ),
   );
 
@@ -71,7 +91,7 @@ class _PlayerCreateInfoCastSpellViewState
             0 => row.raceMask.toString(),
             1 => row.classMask.toString(),
             2 => row.spell.toString(),
-            3 => row.note,
+            3 => row.note ?? 'NULL',
             _ => '',
           }),
         );
@@ -87,7 +107,11 @@ class _PlayerCreateInfoCastSpellViewState
           items: [
             ShadContextMenuItem(
               leading: const Icon(LucideIcons.squarePen, size: 16),
-              onPressed: () => _showEditDialog(rows[row]),
+              onPressed: () async {
+                if (await viewModel.edit(rows[row]) && context.mounted) {
+                  _showDialog('编辑登录施法');
+                }
+              },
               child: const Text('编辑'),
             ),
             ShadContextMenuItem(
@@ -104,13 +128,7 @@ class _PlayerCreateInfoCastSpellViewState
   }
 
   Future<void> _showCreateDialog() async {
-    await viewModel.create();
-    if (mounted) _showDialog('新增登录施法');
-  }
-
-  void _showEditDialog(PlayerCreateInfoCastSpellEntity entity) {
-    viewModel.edit(entity);
-    _showDialog('编辑登录施法');
+    if (await viewModel.create() && mounted) _showDialog('新增登录施法');
   }
 
   void _showDialog(String title) {
@@ -159,7 +177,7 @@ class _PlayerCreateInfoCastSpellViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '备注',
-                    child: FoxyStringInput(
+                    child: FoxyNullableStringInput(
                       controller: viewModel.noteController,
                       placeholder: 'note',
                     ),
@@ -177,10 +195,9 @@ class _PlayerCreateInfoCastSpellViewState
                 const SizedBox(width: 8),
                 ShadButton(
                   onPressed: () async {
-                    await viewModel.save(dialogContext);
-                    if (dialogContext.mounted) {
-                      Navigator.of(dialogContext).pop();
-                    }
+                    final saved = await viewModel.save(dialogContext);
+                    if (!saved || !dialogContext.mounted) return;
+                    Navigator.of(dialogContext).pop();
                   },
                   child: const Text('保存'),
                 ),

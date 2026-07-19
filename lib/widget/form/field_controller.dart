@@ -127,6 +127,46 @@ class StringFieldController extends TextBackedFieldController<String> {
   String parse(String text) => text;
 }
 
+/// 可空文本字段：通过独立的 NULL 状态保留数据库 `NULL` 与空字符串的区别。
+class NullableStringFieldController extends TextBackedFieldController<String?> {
+  final isNull = ValueNotifier(false);
+
+  @override
+  void init(String? value) {
+    isNull.value = value == null;
+    controller.text = value ?? '';
+  }
+
+  @override
+  String? collect() => isNull.value ? null : controller.text;
+
+  void setNull(bool value) => isNull.value = value;
+
+  @override
+  void addListener(VoidCallback listener) {
+    controller.addListener(listener);
+    isNull.addListener(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    controller.removeListener(listener);
+    isNull.removeListener(listener);
+  }
+
+  @override
+  void dispose() {
+    isNull.dispose();
+    super.dispose();
+  }
+
+  @override
+  String format(String? value) => value ?? '';
+
+  @override
+  String? parse(String text) => text;
+}
+
 /// ViewModel 侧 FieldController 生命周期管理。
 ///
 /// 提供「声明即注册」能力，替代手工 [FieldController] 列表与 dispose 循环：
