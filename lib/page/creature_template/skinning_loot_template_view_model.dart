@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/brief_loot_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_key.dart';
@@ -167,7 +168,7 @@ class SkinningLootTemplateViewModel
 
   Future<void> load() async {
     final template = await _creatureRepository.getCreatureTemplate(
-      creatureId.value,
+      CreatureTemplateKey(entry: creatureId.value),
     );
     if (template == null) return;
     creatureTemplate.value = template;
