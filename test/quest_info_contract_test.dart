@@ -64,14 +64,18 @@ void main() {
     );
   });
 
-  test('Repository 写入统一校验并阻止删除仍被任务引用的类型', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final source = File(
       'lib/repository/quest_info_repository.dart',
     ).readAsStringSync();
     expect(source, isNot(contains('.validate()')));
-    expect(source, contains(".table('quest_template')"));
-    expect(source, contains(".where('QuestInfoID', id)"));
-    expect(source, contains('仍被任务模板引用，不能删除'));
+    expect(source, contains('QuestInfoKey originalKey'));
+    expect(source, contains('.update(questInfo.toJson())'));
+    expect(source, contains('matchedRows == 0'));
+    expect(source, contains('deletedRows == 0'));
+    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(source, isNot(contains("table('quest_template')")));
+    expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('id > 65535'));
   });
 
@@ -97,7 +101,13 @@ void main() {
     expect('Expanded(child:'.allMatches(view), hasLength(4));
     expect(viewModel, contains('infoNameLangFlagsController.collect()'));
     expect(viewModel, contains('infoNameLangFlagsController.init('));
-    expect(viewModel, contains('validateQuestInfoFields(t)'));
+    expect(viewModel, contains('validateQuestInfoFields(candidate)'));
+    expect(viewModel, contains('signal<QuestInfoKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateQuestInfo(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = QuestInfoKey'));
+    expect(view, isNot(contains('readOnly: true')));
+    expect(view, contains('viewModel.persistedKey.value?.id'));
   });
 
   test('Entity 源码没有数组或 Map 字段', () {

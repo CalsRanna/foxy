@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_quest_info_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
+import 'package:foxy/entity/quest_info_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,14 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyQuestInfo(int id) async {
-    var source = await getQuestInfo(id);
-    if (source == null) return;
-    final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
+  Future<QuestInfoKey> copyQuestInfo(QuestInfoKey key) async {
+    final source = await getQuestInfo(key);
+    if (source == null) {
+      throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeQuestInfo(copied);
+    return QuestInfoKey.fromEntity(copied);
   }
 
   Future<int> countQuestInfos({QuestInfoFilterEntity? filter}) async {
@@ -30,11 +34,11 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestInfoEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestInfo(int id) async {
-    if (await _isReferencedByQuest(id)) {
-      throw StateError('任务信息 $id 仍被任务模板引用，不能删除');
+  Future<void> destroyQuestInfo(QuestInfoKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefQuestInfoEntity>> getBriefQuestInfos({
@@ -54,8 +58,8 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<QuestInfoEntity?> getQuestInfo(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestInfoEntity?> getQuestInfo(QuestInfoKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestInfoEntity.fromJson(results.first.toMap());
   }
@@ -70,37 +74,44 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => QuestInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveQuestInfo(QuestInfoEntity questInfo) async {
-    if (questInfo.id == 0) {
-      await storeQuestInfo(questInfo);
-      return;
-    }
-    var existing = await getQuestInfo(questInfo.id);
-    if (existing != null) {
-      await updateQuestInfo(questInfo);
-    } else {
-      await laconic.table(_table).insert([questInfo.toJson()]);
-    }
-  }
-
   Future<void> saveQuestInfoLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeQuestInfo(QuestInfoEntity questInfo) async {
-    final id = questInfo.id > 0 ? questInfo.id : await _getNextId();
-    final candidate = questInfo.copyWith(id: id);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
-    return id;
+  Future<void> storeQuestInfo(QuestInfoEntity questInfo) async {
+    if (questInfo.id <= 0) {
+      throw StateError('任务信息 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([questInfo.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务信息 ${questInfo.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateQuestInfo(QuestInfoEntity questInfo) async {
-    var json = questInfo.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', questInfo.id).update(json);
+  Future<void> updateQuestInfo(
+    QuestInfoKey originalKey,
+    QuestInfoEntity questInfo,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(questInfo.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务信息 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -129,11 +140,7 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return id;
   }
 
-  Future<bool> _isReferencedByQuest(int id) async {
-    final count = await laconic
-        .table('quest_template')
-        .where('QuestInfoID', id)
-        .count();
-    return count > 0;
+  QueryBuilder _whereKey(QueryBuilder builder, QuestInfoKey key) {
+    return builder.where('ID', key.id);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/quest_info_entity.dart';
+import 'package:foxy/entity/brief_quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
+import 'package:foxy/entity/quest_info_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
@@ -23,16 +24,16 @@ class QuestInfoListViewModel with FieldControllerMixin {
   final infos = signal(<BriefQuestInfoEntity>[]);
   final total = signal(0);
 
-  Future<void> copyQuestInfo(int id) async {
+  Future<void> copyQuestInfo(QuestInfoKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的任务信息？',
+        description: '是否复制编号为 ${key.id} 的任务信息？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyQuestInfo(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyQuestInfo(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,17 +42,17 @@ class QuestInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteQuestInfo(int id) async {
+  Future<void> deleteQuestInfo(QuestInfoKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的任务信息？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的任务信息？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyQuestInfo(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyQuestInfo(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -81,12 +82,12 @@ class QuestInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id, String? name}) {
+  void navigateToDetail({QuestInfoKey? key, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建任务信息';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: QuestInfoDetailRoute(id: id, name: name),
+      route: QuestInfoDetailRoute(questInfoKey: key),
       parentMenu: RouterMenu.questInfo,
     );
   }
@@ -115,9 +116,9 @@ class QuestInfoListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, QuestInfoKey key) {
     final infos = this.infos.value;
-    final info = infos.where((i) => i.id == id).firstOrNull;
+    final info = infos.where((i) => i.key == key).firstOrNull;
     final name = info?.infoNameLangZhCN ?? '';
     final log = ActivityLogEntity(
       module: 'quest_info',

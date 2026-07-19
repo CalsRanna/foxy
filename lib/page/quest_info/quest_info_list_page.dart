@@ -123,7 +123,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              id: infos[row].id,
+              key: infos[row].key,
               name: infos[row].infoNameLangZhCN,
             );
           },
@@ -136,7 +136,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      id: infos[row].id,
+                      key: infos[row].key,
                       name: infos[row].infoNameLangZhCN,
                     );
                   },
@@ -145,14 +145,14 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyQuestInfo(infos[row].id);
+                    viewModel.copyQuestInfo(infos[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteQuestInfo(infos[row].id);
+                    viewModel.deleteQuestInfo(infos[row].key);
                   },
                   child: Text('删除'),
                 ),

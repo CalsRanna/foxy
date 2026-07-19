@@ -5,32 +5,13 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class QuestInfoView extends StatefulWidget {
-  final int? entry;
-  const QuestInfoView({super.key, this.entry});
+class QuestInfoView extends StatelessWidget {
+  final QuestInfoDetailViewModel viewModel;
 
-  @override
-  State<QuestInfoView> createState() => _QuestInfoViewState();
-}
-
-class _QuestInfoViewState extends State<QuestInfoView> {
-  final viewModel = GetIt.instance.get<QuestInfoDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const QuestInfoView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +20,14 @@ class _QuestInfoViewState extends State<QuestInfoView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final id = viewModel.info.value.id;
+        final id = viewModel.persistedKey.value?.id;
         return FoxyLocalePicker(
-          entry: id == 0 ? null : id,
+          entry: id,
           controller: viewModel.nameController,
           title: '任务类型名称本地化',
           placeholder: 'InfoName_lang_zhCN',
