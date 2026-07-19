@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';
+import 'package:foxy/entity/quest_template_addon_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -18,8 +19,8 @@ class QuestTemplateAddonViewModel
         FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
-  final questId = signal(0);
   final addon = signal(QuestTemplateAddonEntity());
+  final editingKey = signal<QuestTemplateAddonKey?>(null);
 
   late final idController = registerController(IntFieldController());
   late final maxLevelController = registerController(IntFieldController());
@@ -64,20 +65,19 @@ class QuestTemplateAddonViewModel
   );
   late final specialFlagsController = registerController(FlagFieldController());
 
-  int _originalId = 0;
-
   void dispose() {
     disposeControllers();
   }
 
   Future<void> initSignals({required int questId}) async {
     try {
-      this.questId.value = questId;
-      final existing = await _repository.getQuestTemplateAddon(questId);
+      final key = QuestTemplateAddonKey(id: questId);
+      final existing = await _repository.getQuestTemplateAddon(key);
       if (existing != null) {
-        _originalId = existing.id;
+        editingKey.value = key;
         addon.value = existing;
       } else {
+        editingKey.value = null;
         final blank = await _repository.createQuestTemplateAddon(questId);
         addon.value = blank;
       }
@@ -96,12 +96,13 @@ class QuestTemplateAddonViewModel
     try {
       final model = _collect();
       validateQuestTemplateAddonFields(model);
-      if (_originalId == 0) {
+      final originalKey = editingKey.value;
+      if (originalKey == null) {
         await _repository.storeQuestTemplateAddon(model);
       } else {
-        await _repository.updateQuestTemplateAddon(_originalId, model);
+        await _repository.updateQuestTemplateAddon(originalKey, model);
       }
-      _originalId = model.id;
+      editingKey.value = QuestTemplateAddonKey.fromEntity(model);
       addon.value = model;
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模版补充数据已保存'));
@@ -115,7 +116,7 @@ class QuestTemplateAddonViewModel
 
   QuestTemplateAddonEntity _collect() {
     return QuestTemplateAddonEntity(
-      id: questId.value,
+      id: idController.collect(),
       maxLevel: maxLevelController.collect(),
       allowableClasses: allowableClassesController.collect(),
       sourceSpellId: sourceSpellIdController.collect(),

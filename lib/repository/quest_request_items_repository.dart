@@ -1,81 +1,112 @@
+import 'package:foxy/entity/brief_quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/entity/quest_request_items_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestRequestItemsRepository with RepositoryMixin {
   static const _table = 'quest_request_items';
 
-  Future<void> copyQuestRequestItems(int id) async {
-    var source = await getQuestRequestItems(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<QuestRequestItemsKey> copyQuestRequestItems(
+    QuestRequestItemsKey key,
+  ) async {
+    final source = await getQuestRequestItems(key);
+    if (source == null) {
+      throw StateError('原任务提交物品数据不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeQuestRequestItems(copied);
+    return QuestRequestItemsKey.fromEntity(copied);
   }
 
-  Future<int> countQuestRequestItems() async {
+  Future<int> countQuestRequestItems() {
     return laconic.table(_table).count();
   }
 
-  Future<QuestRequestItemsEntity> createQuestRequestItems([int id = 0]) async {
-    return QuestRequestItemsEntity(id: id);
+  Future<QuestRequestItemsEntity> createQuestRequestItems([int? id]) async {
+    return QuestRequestItemsEntity(
+      id: id ?? await nextMaxPlusOne(_table, 'ID'),
+    );
   }
 
-  Future<void> destroyQuestRequestItems(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyQuestRequestItems(QuestRequestItemsKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务提交物品数据不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefQuestRequestItemsEntity>> getBriefQuestRequestItems({
     int page = 1,
   }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select([
-      'ID',
-      'EmoteOnComplete',
-      'EmoteOnIncomplete',
-      'CompletionText',
-    ]);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
+    final results = await laconic
+        .table(_table)
+        .select([
+          'ID',
+          'EmoteOnComplete',
+          'EmoteOnIncomplete',
+          'CompletionText',
+        ])
+        .orderBy('ID')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => BriefQuestRequestItemsEntity.fromJson(e.toMap()))
+        .map((row) => BriefQuestRequestItemsEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<QuestRequestItemsEntity?> getQuestRequestItems(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestRequestItemsEntity?> getQuestRequestItems(
+    QuestRequestItemsKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestRequestItemsEntity.fromJson(results.first.toMap());
   }
 
   Future<List<QuestRequestItemsEntity>> getQuestRequestItemsList() async {
-    var results = await laconic.table(_table).get();
+    final results = await laconic.table(_table).get();
     return results
-        .map((e) => QuestRequestItemsEntity.fromJson(e.toMap()))
+        .map((row) => QuestRequestItemsEntity.fromJson(row.toMap()))
         .toList();
   }
 
-  Future<void> saveQuestRequestItems(QuestRequestItemsEntity model) async {
-    var existing = await getQuestRequestItems(model.id);
-    if (existing != null) {
-      await updateQuestRequestItems(model.id, model);
-    } else {
-      await storeQuestRequestItems(model);
+  Future<void> storeQuestRequestItems(QuestRequestItemsEntity model) async {
+    if (model.id <= 0) {
+      throw StateError('任务提交物品数据 ID 必须显式指定');
+    }
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务提交物品数据 ${model.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<void> storeQuestRequestItems(QuestRequestItemsEntity model) async {
-    await laconic.table(_table).insert([model.toJson()]);
-  }
-
   Future<void> updateQuestRequestItems(
-    int id,
+    QuestRequestItemsKey originalKey,
     QuestRequestItemsEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务提交物品数据不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务提交物品数据 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, QuestRequestItemsKey key) {
+    return builder.where('ID', key.id);
   }
 }

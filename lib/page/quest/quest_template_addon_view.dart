@@ -45,10 +45,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           Expanded(
             child: FoxyFormItem(
               label: '编号',
-              child: FoxyNumberInput<int>(
-                controller: vm.idController,
-                readOnly: true,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.idController),
             ),
           ),
           Expanded(
