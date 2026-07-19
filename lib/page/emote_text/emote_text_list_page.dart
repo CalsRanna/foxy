@@ -125,7 +125,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              id: emotes[row].id,
+              key: emotes[row].key,
               name: emotes[row].name,
             );
           },
@@ -138,7 +138,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      id: emotes[row].id,
+                      key: emotes[row].key,
                       name: emotes[row].name,
                     );
                   },
@@ -147,14 +147,14 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyEmoteText(emotes[row].id);
+                    viewModel.copyEmoteText(emotes[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteEmoteText(emotes[row].id);
+                    viewModel.deleteEmoteText(emotes[row].key);
                   },
                   child: Text('删除'),
                 ),

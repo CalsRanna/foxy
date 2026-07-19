@@ -14,10 +14,11 @@ import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/area_table_key.dart' as _i60;
 import 'package:foxy/entity/condition_key.dart' as _i61;
 import 'package:foxy/entity/currency_type_key.dart' as _i62;
-import 'package:foxy/entity/gem_property_key.dart' as _i63;
-import 'package:foxy/entity/glyph_property_key.dart' as _i64;
-import 'package:foxy/entity/page_text_key.dart' as _i66;
-import 'package:foxy/entity/smart_script_key.dart' as _i65;
+import 'package:foxy/entity/emote_text_key.dart' as _i63;
+import 'package:foxy/entity/gem_property_key.dart' as _i64;
+import 'package:foxy/entity/glyph_property_key.dart' as _i65;
+import 'package:foxy/entity/page_text_key.dart' as _i67;
+import 'package:foxy/entity/smart_script_key.dart' as _i66;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -486,12 +487,11 @@ class EmoteTextDetailRoute
     extends _i58.PageRouteInfo<EmoteTextDetailRouteArgs> {
   EmoteTextDetailRoute({
     _i59.Key? key,
-    int? id,
-    String? name,
+    _i63.EmoteTextKey? emoteTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          EmoteTextDetailRoute.name,
-         args: EmoteTextDetailRouteArgs(key: key, id: id, name: name),
+         args: EmoteTextDetailRouteArgs(key: key, emoteTextKey: emoteTextKey),
          initialChildren: children,
        );
 
@@ -505,36 +505,33 @@ class EmoteTextDetailRoute
       );
       return _i13.EmoteTextDetailPage(
         key: args.key,
-        id: args.id,
-        name: args.name,
+        emoteTextKey: args.emoteTextKey,
       );
     },
   );
 }
 
 class EmoteTextDetailRouteArgs {
-  const EmoteTextDetailRouteArgs({this.key, this.id, this.name});
+  const EmoteTextDetailRouteArgs({this.key, this.emoteTextKey});
 
   final _i59.Key? key;
 
-  final int? id;
-
-  final String? name;
+  final _i63.EmoteTextKey? emoteTextKey;
 
   @override
   String toString() {
-    return 'EmoteTextDetailRouteArgs{key: $key, id: $id, name: $name}';
+    return 'EmoteTextDetailRouteArgs{key: $key, emoteTextKey: $emoteTextKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! EmoteTextDetailRouteArgs) return false;
-    return key == other.key && id == other.id && name == other.name;
+    return key == other.key && emoteTextKey == other.emoteTextKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
+  int get hashCode => key.hashCode ^ emoteTextKey.hashCode;
 }
 
 /// generated route for
@@ -636,7 +633,7 @@ class GemPropertyDetailRoute
     extends _i58.PageRouteInfo<GemPropertyDetailRouteArgs> {
   GemPropertyDetailRoute({
     _i59.Key? key,
-    _i63.GemPropertyKey? gemPropertyKey,
+    _i64.GemPropertyKey? gemPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GemPropertyDetailRoute.name,
@@ -668,7 +665,7 @@ class GemPropertyDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i63.GemPropertyKey? gemPropertyKey;
+  final _i64.GemPropertyKey? gemPropertyKey;
 
   @override
   String toString() {
@@ -708,7 +705,7 @@ class GlyphPropertyDetailRoute
     extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
   GlyphPropertyDetailRoute({
     _i59.Key? key,
-    _i64.GlyphPropertyKey? glyphPropertyKey,
+    _i65.GlyphPropertyKey? glyphPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GlyphPropertyDetailRoute.name,
@@ -740,7 +737,7 @@ class GlyphPropertyDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i64.GlyphPropertyKey? glyphPropertyKey;
+  final _i65.GlyphPropertyKey? glyphPropertyKey;
 
   @override
   String toString() {
@@ -1708,7 +1705,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i65.SmartScriptKey? scriptKey,
+    _i66.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1737,7 +1734,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i65.SmartScriptKey? scriptKey;
+  final _i66.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1987,7 +1984,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i66.PageTextKey? pageTextKey,
+    _i67.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2016,7 +2013,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i66.PageTextKey? pageTextKey;
+  final _i67.PageTextKey? pageTextKey;
 
   @override
   String toString() {

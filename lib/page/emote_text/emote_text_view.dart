@@ -6,31 +6,12 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class EmoteTextView extends StatefulWidget {
-  final int? entry;
-  const EmoteTextView({super.key, this.entry});
+class EmoteTextView extends StatelessWidget {
+  final EmoteTextDetailViewModel viewModel;
 
-  @override
-  State<EmoteTextView> createState() => _EmoteTextViewState();
-}
-
-class _EmoteTextViewState extends State<EmoteTextView> {
-  final viewModel = GetIt.instance.get<EmoteTextDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const EmoteTextView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +20,6 @@ class _EmoteTextViewState extends State<EmoteTextView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(

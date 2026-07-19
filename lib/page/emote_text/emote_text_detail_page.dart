@@ -1,41 +1,63 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/emote_text_key.dart';
+import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class EmoteTextDetailPage extends StatefulWidget {
-  final int? id;
-  final String? name;
+  final EmoteTextKey? emoteTextKey;
 
-  const EmoteTextDetailPage({super.key, this.id, this.name});
+  const EmoteTextDetailPage({super.key, this.emoteTextKey});
 
   @override
   State<EmoteTextDetailPage> createState() => _EmoteTextDetailPageState();
 }
 
 class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
+  final viewModel = GetIt.instance.get<EmoteTextDetailViewModel>();
+
   @override
-  Widget build(BuildContext context) {
-    var tabs = [Text('表情文本')];
-
-    var tabContents = [EmoteTextView(entry: widget.id)];
-
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [_buildHeader(), tabBar],
-    );
+  void initState() {
+    super.initState();
+    viewModel.initSignals(key: widget.emoteTextKey);
   }
 
-  Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true
-        ? widget.name!
-        : (widget.id != null ? '表情文本 #${widget.id}' : '新建表情文本');
-    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-    var text = Text(name, style: textStyle);
-    var edgeInsets = EdgeInsets.only(bottom: 12);
-    return Padding(padding: edgeInsets, child: text);
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Watch((_) {
+      final key = viewModel.persistedKey.value;
+      final entity = viewModel.emote.value;
+      final name = key == null
+          ? '新建表情文本'
+          : entity.name.isNotEmpty
+          ? entity.name
+          : '表情文本 #${key.id}';
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          FoxyTab(
+            tabs: const [Text('表情文本')],
+            contents: [EmoteTextView(viewModel: viewModel)],
+          ),
+        ],
+      );
+    });
   }
 }
