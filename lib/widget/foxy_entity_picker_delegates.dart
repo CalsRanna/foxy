@@ -91,7 +91,7 @@ import 'package:foxy/entity/brief_point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_filter_entity.dart';
 import 'package:foxy/entity/brief_quest_info_entity.dart';
 import 'package:foxy/entity/quest_info_filter_entity.dart';
-import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy/entity/brief_quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/entity/brief_spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_filter_entity.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy/entity/quest_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_template_repository.dart';
@@ -21,8 +22,8 @@ class QuestTemplateDetailViewModel
   final _repository = GetIt.instance.get<QuestTemplateRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final entry = signal(0);
   final template = signal(QuestTemplateEntity());
+  final persistedKey = signal<QuestTemplateKey?>(null);
 
   /// Basic (ints)
   late final idController = registerController(IntFieldController());
@@ -307,19 +308,21 @@ class QuestTemplateDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? questId}) async {
+  Future<void> initSignals({QuestTemplateKey? key}) async {
     try {
-      if (questId == null || questId <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createQuestTemplate();
         template.value = blank;
-        entry.value = blank.id;
         _initSignals(blank);
         return;
       }
-      final result = await _repository.getQuestTemplate(questId);
-      if (result == null) return;
+      persistedKey.value = key;
+      final result = await _repository.getQuestTemplate(key);
+      if (result == null) {
+        throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
+      }
       template.value = result;
-      entry.value = result.id;
       _initSignals(result);
     } catch (e) {
       LoggerUtil.instance.e('加载任务详情失败: $e');
@@ -331,32 +334,34 @@ class QuestTemplateDetailViewModel
     routerFacade.goBack();
   }
 
-  Future<int?> save(BuildContext context) async {
+  Future<void> persist() async {
+    final candidate = _collect();
+    validateQuestTemplateFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeQuestTemplate(candidate);
+    } else {
+      await _repository.updateQuestTemplate(originalKey, candidate);
+    }
+    persistedKey.value = QuestTemplateKey.fromEntity(candidate);
+    template.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
+  Future<void> save(BuildContext context) async {
     try {
-      final t = _collect();
-      validateQuestTemplateFields(t);
-      final existed = await _repository.getQuestTemplate(t.id);
-      if (existed == null) {
-        final id = await _repository.storeQuestTemplate(t);
-        idController.init(id);
-        template.value = t.copyWith(id: id);
-        entry.value = id;
-        _logActivity(ActivityActionType.create, template.value);
-      } else {
-        await _repository.updateQuestTemplate(t);
-        template.value = t;
-        entry.value = t.id;
-        _logActivity(ActivityActionType.update, t);
-      }
-      if (!context.mounted) return null;
+      await persist();
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
-      return entry.value;
     } catch (e) {
-      if (!context.mounted) return null;
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-      return null;
     }
   }
 
@@ -598,5 +603,11 @@ class QuestTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(QuestTemplateEntity template) {
+    return template.logTitle.isNotEmpty
+        ? template.logTitle
+        : '任务 #${template.id}';
   }
 }
