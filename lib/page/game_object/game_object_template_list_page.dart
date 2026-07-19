@@ -84,7 +84,7 @@ class _GameObjectTemplateListPageState
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(context),
+      onPressed: () => viewModel.navigateToDetail(),
       child: Text('新增'),
     );
     final templates = viewModel.templates.value;
@@ -129,8 +129,7 @@ class _GameObjectTemplateListPageState
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              context,
-              entry: templates[row].entry,
+              key: templates[row].key,
               name: templates[row].displayName,
             );
           },
@@ -143,8 +142,7 @@ class _GameObjectTemplateListPageState
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      context,
-                      entry: templates[row].entry,
+                      key: templates[row].key,
                       name: templates[row].displayName,
                     );
                   },
@@ -153,14 +151,14 @@ class _GameObjectTemplateListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyGameObjectTemplate(templates[row].entry);
+                    viewModel.copyGameObjectTemplate(templates[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteGameObjectTemplate(templates[row].entry);
+                    viewModel.deleteGameObjectTemplate(templates[row].key);
                   },
                   child: Text('删除'),
                 ),

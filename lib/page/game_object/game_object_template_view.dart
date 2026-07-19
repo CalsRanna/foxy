@@ -12,33 +12,29 @@ import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class GameObjectTemplateView extends StatefulWidget {
-  final int? entry;
-  final ValueChanged<int>? onSaved;
+  final GameObjectTemplateDetailViewModel viewModel;
 
-  const GameObjectTemplateView({super.key, this.entry, this.onSaved});
+  const GameObjectTemplateView({super.key, required this.viewModel});
 
   @override
   State<GameObjectTemplateView> createState() => _GameObjectTemplateViewState();
 }
 
 class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
-  final viewModel = GetIt.instance.get<GameObjectTemplateDetailViewModel>();
+  GameObjectTemplateDetailViewModel get viewModel => widget.viewModel;
+
   late final gameObjectLootDelegate = FoxyEntityPickerDelegates.lootTemplate(
     LootTableType.gameobject,
     '游戏对象掉落模板',
   );
-  int? savedEntry;
 
   @override
   void initState() {
     super.initState();
-    savedEntry = widget.entry;
     viewModel.typeController.addListener(_typeChanged);
-    viewModel.initSignals(entry: widget.entry);
   }
 
   void _typeChanged() {
@@ -48,12 +44,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   @override
   void dispose() {
     viewModel.typeController.removeListener(_typeChanged);
-    viewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final savedEntry = viewModel.persistedKey.value?.entry;
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 16),
       child: Column(
@@ -72,7 +68,6 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
                       child: FoxyNumberInput<int>(
                         placeholder: 'entry',
                         controller: viewModel.entryController,
-                        readOnly: true,
                       ),
                     ),
                   ),
@@ -244,12 +239,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () async {
-                  final entry = await viewModel.save(context);
-                  if (entry == null || !mounted) return;
-                  setState(() => savedEntry = entry);
-                  widget.onSaved?.call(entry);
-                },
+                onPressed: () => viewModel.save(context),
                 child: const Text('保存'),
               ),
               const SizedBox(width: 8),

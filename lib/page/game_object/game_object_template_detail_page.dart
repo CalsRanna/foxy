@@ -1,17 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/game_object/game_object_template_view.dart';
-import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
-import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
+import 'package:foxy/entity/game_object_template_key.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
+import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
+import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
+import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
+import 'package:foxy/page/game_object/game_object_template_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class GameObjectTemplateDetailPage extends StatefulWidget {
-  final int? entry;
-  final String? name;
+  final GameObjectTemplateKey? gameObjectTemplateKey;
 
-  const GameObjectTemplateDetailPage({super.key, this.entry, this.name});
+  const GameObjectTemplateDetailPage({super.key, this.gameObjectTemplateKey});
 
   @override
   State<GameObjectTemplateDetailPage> createState() =>
@@ -20,50 +23,67 @@ class GameObjectTemplateDetailPage extends StatefulWidget {
 
 class _GameObjectTemplateDetailPageState
     extends State<GameObjectTemplateDetailPage> {
-  late int? gameObjectEntry = widget.entry;
+  final viewModel = GetIt.instance.get<GameObjectTemplateDetailViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals(key: widget.gameObjectTemplateKey);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var tabs = [Text('游戏对象模板'), Text('模版补充'), Text('任务物品'), Text('物品掉落')];
-
-    var tabContents = [
-      GameObjectTemplateView(
-        entry: gameObjectEntry,
-        onSaved: (entry) => setState(() => gameObjectEntry = entry),
-      ),
-      GameObjectTemplateAddonView(
-        key: ValueKey('addon-$gameObjectEntry'),
-        gameObjectId: gameObjectEntry ?? 0,
-      ),
-      GameObjectQuestItemView(
-        key: ValueKey('quest-item-$gameObjectEntry'),
-        gameObjectId: gameObjectEntry ?? 0,
-      ),
-      GameObjectLootTemplateView(
-        key: ValueKey('loot-$gameObjectEntry'),
-        gameObjectId: gameObjectEntry ?? 0,
-      ),
-    ];
-
-    var tabBar = FoxyTab(
-      tabs: tabs,
-      contents: tabContents,
-      disabledIndexes: gameObjectEntry == null || gameObjectEntry! <= 0
-          ? const {1, 2, 3}
-          : const {},
-    );
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [_buildHeader(), tabBar],
-    );
-  }
-
-  Widget _buildHeader() {
-    var name = widget.name?.isNotEmpty == true ? widget.name! : '新建游戏对象';
-    var textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
-    var text = Text(name, style: textStyle);
-    var edgeInsets = EdgeInsets.only(bottom: 12);
-    return Padding(padding: edgeInsets, child: text);
+    return Watch((_) {
+      final key = viewModel.persistedKey.value;
+      final template = viewModel.template.value;
+      final entry = key?.entry;
+      final name = key == null
+          ? '新建游戏对象'
+          : template.name.isNotEmpty
+          ? template.name
+          : '游戏对象 #${key.entry}';
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          FoxyTab(
+            tabs: const [
+              Text('游戏对象模板'),
+              Text('模版补充'),
+              Text('任务物品'),
+              Text('物品掉落'),
+            ],
+            contents: [
+              GameObjectTemplateView(viewModel: viewModel),
+              GameObjectTemplateAddonView(
+                key: ValueKey('addon-$entry'),
+                gameObjectId: entry ?? 0,
+              ),
+              GameObjectQuestItemView(
+                key: ValueKey('quest-item-$entry'),
+                gameObjectId: entry ?? 0,
+              ),
+              GameObjectLootTemplateView(
+                key: ValueKey('loot-$entry'),
+                gameObjectId: entry ?? 0,
+              ),
+            ],
+            disabledIndexes: key == null ? const {1, 2, 3} : const {},
+          ),
+        ],
+      );
+    });
   }
 }
