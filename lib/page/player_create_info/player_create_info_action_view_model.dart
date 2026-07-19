@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_player_create_info_action_entity.dart';
+import 'package:foxy/entity/player_create_info_action_key.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
@@ -18,47 +22,58 @@ class PlayerCreateInfoActionViewModel
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoActionRepository>();
-  final actions = signal<List<PlayerCreateInfoActionEntity>>([]);
 
   final actionType = signal(0);
+  final actions = signal<List<BriefPlayerCreateInfoActionEntity>>([]);
+  final editingKey = signal<PlayerCreateInfoActionKey?>(null);
+  final page = signal(1);
+  final total = signal(0);
+
   int? _race;
   int? _class_;
-  int? _oldButton;
-  late final buttonController = registerController(IntFieldController());
+  int _refreshToken = 0;
 
+  late final raceController = registerController(IntFieldController());
+  late final classController = registerController(IntFieldController());
+  late final buttonController = registerController(IntFieldController());
   late final actionController = registerController(IntFieldController());
   late final typeController = registerController(IntFieldController());
+
   PlayerCreateInfoActionViewModel() {
     typeController.addListener(_syncActionType);
   }
 
-  void create() {
-    _oldButton = null;
-    buttonController.init(0);
-    actionController.init(0);
-    typeController.init(0);
+  Future<bool> create() async {
+    final race = _race;
+    final class_ = _class_;
+    if (race == null || class_ == null) return false;
+    try {
+      final candidate = await _repository.createPlayerCreateInfoAction(
+        race,
+        class_,
+      );
+      editingKey.value = null;
+      _initControllers(candidate);
+      return true;
+    } catch (error) {
+      LoggerUtil.instance.e('创建角色动作失败: $error');
+      DialogUtil.instance.error('创建角色动作失败: $error');
+      return false;
+    }
   }
 
   Future<void> delete(
     BuildContext context,
-    PlayerCreateInfoActionEntity item,
+    BriefPlayerCreateInfoActionEntity item,
   ) async {
-    if (_race == null || _class_ == null) return;
     try {
-      await _repository.destroyPlayerCreateInfoAction(
-        _race!,
-        _class_!,
-        item.button,
-      );
-      actions.value = await _repository.getBriefPlayerCreateInfoActions(
-        _race!,
-        _class_!,
-      );
+      await _repository.destroyPlayerCreateInfoAction(item.key);
+      await _refresh();
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
-    } catch (e) {
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
       if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
     }
   }
 
@@ -67,79 +82,112 @@ class PlayerCreateInfoActionViewModel
     disposeControllers();
   }
 
-  void edit(int index) {
-    if (index >= actions.value.length) return;
-    final item = actions.value[index];
-    _oldButton = item.button;
-    buttonController.init(item.button);
-    actionController.init(item.action);
-    typeController.init(item.type);
+  Future<bool> edit(BriefPlayerCreateInfoActionEntity item) async {
+    final key = item.key;
+    editingKey.value = key;
+    try {
+      final entity = await _repository.getPlayerCreateInfoAction(key);
+      if (entity == null) {
+        throw StateError('原角色动作记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(entity);
+      return true;
+    } catch (error) {
+      editingKey.value = null;
+      LoggerUtil.instance.e('加载角色动作失败: $error');
+      DialogUtil.instance.error('加载角色动作失败: $error');
+      return false;
+    }
   }
 
   Future<void> initSignals({int? race, int? class_}) async {
     try {
-      _race = race;
-      _class_ = class_;
-      if (race == null || class_ == null) return;
-      actions.value = await _repository.getBriefPlayerCreateInfoActions(
-        race,
-        class_,
-      );
-    } catch (e) {
-      LoggerUtil.instance.e('加载角色动作失败: $e');
-      DialogUtil.instance.error('加载角色动作失败: $e');
+      await setParent(race: race, class_: class_);
+    } catch (error) {
+      LoggerUtil.instance.e('加载角色动作失败: $error');
+      DialogUtil.instance.error('加载角色动作失败: $error');
     }
   }
 
-  Future<void> save(BuildContext context) async {
-    if (_race == null || _class_ == null) return;
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> persist() async {
+    final candidate = _collect();
+    validatePlayerCreateInfoActionFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storePlayerCreateInfoAction(candidate);
+    } else {
+      await _repository.updatePlayerCreateInfoAction(originalKey, candidate);
+    }
+    editingKey.value = PlayerCreateInfoActionKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  Future<bool> save(BuildContext context) async {
     try {
-      final item = _collect();
-      validatePlayerCreateInfoActionFields(item);
-      await _repository.storePlayerCreateInfoAction(item);
-      actions.value = await _repository.getBriefPlayerCreateInfoActions(
-        _race!,
-        _class_!,
-      );
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
+      return false;
     }
   }
 
-  Future<void> update(BuildContext context) async {
-    if (_race == null || _class_ == null) return;
-    try {
-      final item = _collect();
-      validatePlayerCreateInfoActionFields(item);
-      await _repository.updatePlayerCreateInfoAction(
-        _race!,
-        _class_!,
-        _oldButton ?? item.button,
-        item,
-      );
-      actions.value = await _repository.getBriefPlayerCreateInfoActions(
-        _race!,
-        _class_!,
-      );
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('更新成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+  Future<void> setParent({int? race, int? class_}) async {
+    if (_race != race || _class_ != class_) page.value = 1;
+    _race = race;
+    _class_ = class_;
+    editingKey.value = null;
+    if (race == null || class_ == null) {
+      actions.value = [];
+      total.value = 0;
+      return;
     }
+    await _refresh();
   }
 
-  PlayerCreateInfoActionEntity _collect() {
-    return PlayerCreateInfoActionEntity(
-      race: _race ?? 0,
-      class_: _class_ ?? 0,
-      button: buttonController.collect(),
-      action: actionController.collect(),
-      type: typeController.collect(),
+  PlayerCreateInfoActionEntity _collect() => PlayerCreateInfoActionEntity(
+    race: raceController.collect(),
+    class_: classController.collect(),
+    button: buttonController.collect(),
+    action: actionController.collect(),
+    type: typeController.collect(),
+  );
+
+  void _initControllers(PlayerCreateInfoActionEntity item) {
+    raceController.init(item.race);
+    classController.init(item.class_);
+    buttonController.init(item.button);
+    actionController.init(item.action);
+    typeController.init(item.type);
+    actionType.value = item.type;
+  }
+
+  Future<void> _refresh() async {
+    final race = _race;
+    final class_ = _class_;
+    if (race == null || class_ == null) return;
+    final token = ++_refreshToken;
+    final count = await _repository.countPlayerCreateInfoActions(race, class_);
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await _repository.getBriefPlayerCreateInfoActions(
+      race,
+      class_,
+      page: page.value,
     );
+    if (token != _refreshToken) return;
+    actions.value = data;
+    total.value = count;
+    editingKey.value = null;
   }
 
   void _syncActionType() => actionType.value = typeController.collect();
