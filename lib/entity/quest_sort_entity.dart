@@ -1,29 +1,3 @@
-/// 任务排序列表/Picker 展示模型
-class BriefQuestSortEntity {
-  final int id;
-  final String sortNameLangZhCN;
-
-  const BriefQuestSortEntity({this.id = 0, this.sortNameLangZhCN = ''});
-
-  factory BriefQuestSortEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestSortEntity(
-      id: json['ID'] ?? 0,
-      sortNameLangZhCN: json['SortName_lang_zhCN'] ?? '',
-    );
-  }
-
-  BriefQuestSortEntity copyWith({int? id, String? sortNameLangZhCN}) {
-    return BriefQuestSortEntity(
-      id: id ?? this.id,
-      sortNameLangZhCN: sortNameLangZhCN ?? this.sortNameLangZhCN,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'SortName_lang_zhCN': sortNameLangZhCN};
-  }
-}
-
 class QuestSortEntity {
   final int id;
   final String sortNameLangEnUS;

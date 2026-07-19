@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
+import 'package:foxy/entity/quest_sort_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
@@ -28,6 +29,7 @@ class QuestSortDetailViewModel
   );
 
   final sort = signal(QuestSortEntity());
+  final persistedKey = signal<QuestSortKey?>(null);
 
   void applySortNameLocales(List<DbcLocaleFieldValue> values) {
     sort.value = sort.value.copyWith(
@@ -55,18 +57,24 @@ class QuestSortDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({QuestSortKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createQuestSort();
         sort.value = blank;
         _initControllers(blank);
         return;
       }
-      sort.value = (await _repository.getQuestSort(id))!;
-      _initControllers(sort.value);
+      persistedKey.value = key;
+      final entity = await _repository.getQuestSort(key);
+      if (entity == null) {
+        throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
+      }
+      sort.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载任务排序(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载任务排序(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -74,23 +82,27 @@ class QuestSortDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateQuestSortFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeQuestSort(candidate);
+    } else {
+      await _repository.updateQuestSort(originalKey, candidate);
+    }
+    persistedKey.value = QuestSortKey.fromEntity(candidate);
+    sort.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateQuestSortFields(t);
-      final isCreate = (await _repository.getQuestSort(t.id)) == null;
-      if (isCreate) {
-        final id = await _repository.storeQuestSort(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateQuestSort(t);
-      }
-      sort.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务排序数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -123,5 +135,11 @@ class QuestSortDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(QuestSortEntity value) {
+    return value.sortNameLangZhCN.isNotEmpty
+        ? value.sortNameLangZhCN
+        : '任务排序 #${value.id}';
   }
 }

@@ -17,9 +17,10 @@ import 'package:foxy/entity/currency_type_key.dart' as _i62;
 import 'package:foxy/entity/emote_text_key.dart' as _i63;
 import 'package:foxy/entity/gem_property_key.dart' as _i64;
 import 'package:foxy/entity/glyph_property_key.dart' as _i65;
-import 'package:foxy/entity/page_text_key.dart' as _i68;
+import 'package:foxy/entity/page_text_key.dart' as _i69;
 import 'package:foxy/entity/quest_info_key.dart' as _i66;
-import 'package:foxy/entity/smart_script_key.dart' as _i67;
+import 'package:foxy/entity/quest_sort_key.dart' as _i67;
+import 'package:foxy/entity/smart_script_key.dart' as _i68;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1301,12 +1302,11 @@ class QuestSortDetailRoute
     extends _i58.PageRouteInfo<QuestSortDetailRouteArgs> {
   QuestSortDetailRoute({
     _i59.Key? key,
-    int? id,
-    String? name,
+    _i67.QuestSortKey? questSortKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          QuestSortDetailRoute.name,
-         args: QuestSortDetailRouteArgs(key: key, id: id, name: name),
+         args: QuestSortDetailRouteArgs(key: key, questSortKey: questSortKey),
          initialChildren: children,
        );
 
@@ -1320,36 +1320,33 @@ class QuestSortDetailRoute
       );
       return _i36.QuestSortDetailPage(
         key: args.key,
-        id: args.id,
-        name: args.name,
+        questSortKey: args.questSortKey,
       );
     },
   );
 }
 
 class QuestSortDetailRouteArgs {
-  const QuestSortDetailRouteArgs({this.key, this.id, this.name});
+  const QuestSortDetailRouteArgs({this.key, this.questSortKey});
 
   final _i59.Key? key;
 
-  final int? id;
-
-  final String? name;
+  final _i67.QuestSortKey? questSortKey;
 
   @override
   String toString() {
-    return 'QuestSortDetailRouteArgs{key: $key, id: $id, name: $name}';
+    return 'QuestSortDetailRouteArgs{key: $key, questSortKey: $questSortKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! QuestSortDetailRouteArgs) return false;
-    return key == other.key && id == other.id && name == other.name;
+    return key == other.key && questSortKey == other.questSortKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode ^ name.hashCode;
+  int get hashCode => key.hashCode ^ questSortKey.hashCode;
 }
 
 /// generated route for
@@ -1702,7 +1699,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i67.SmartScriptKey? scriptKey,
+    _i68.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1731,7 +1728,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i67.SmartScriptKey? scriptKey;
+  final _i68.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1981,7 +1978,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i68.PageTextKey? pageTextKey,
+    _i69.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2010,7 +2007,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i68.PageTextKey? pageTextKey;
+  final _i69.PageTextKey? pageTextKey;
 
   @override
   String toString() {
