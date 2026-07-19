@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
+import 'package:foxy/entity/quest_faction_reward_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
@@ -36,23 +37,30 @@ class QuestFactionRewardDetailViewModel
   late final difficulty9Controller = registerController(IntFieldController());
 
   final reward = signal(QuestFactionRewardEntity());
+  final persistedKey = signal<QuestFactionRewardKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({QuestFactionRewardKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createQuestFactionReward();
         reward.value = blank;
         _initControllers(blank);
         return;
       }
-      reward.value = (await _repository.getQuestFactionReward(id))!;
-      _initControllers(reward.value);
+      persistedKey.value = key;
+      final entity = await _repository.getQuestFactionReward(key);
+      if (entity == null) {
+        throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
+      }
+      reward.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载任务声望(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载任务声望(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -61,23 +69,27 @@ class QuestFactionRewardDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateQuestFactionRewardFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeQuestFactionReward(candidate);
+    } else {
+      await _repository.updateQuestFactionReward(originalKey, candidate);
+    }
+    persistedKey.value = QuestFactionRewardKey.fromEntity(candidate);
+    reward.value = candidate;
+    routerFacade.updateCurrentLabel('任务声望 #${candidate.id}');
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateQuestFactionRewardFields(t);
-      final isCreate = await _repository.getQuestFactionReward(t.id) == null;
-      if (isCreate) {
-        final id = await _repository.storeQuestFactionReward(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateQuestFactionReward(t);
-      }
-      reward.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('任务声望数据已保存'));
       ShadSonner.of(context).show(toast);
