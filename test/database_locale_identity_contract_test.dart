@@ -29,11 +29,15 @@ void main() {
       'lib/widget/foxy_locale_picker_delegates.dart',
     ).readAsStringSync();
     expect(source, contains('row.originalLocale'));
-    expect(source, contains('description: preserved?.description ??'));
+    expect(source, contains('castBarCaption: preserved?.castBarCaption ??'));
     expect(source, contains('name: preserved?.name ??'));
     expect(
       'verifiedBuild: preserved?.verifiedBuild'.allMatches(source).length,
-      greaterThanOrEqualTo(7),
+      greaterThanOrEqualTo(6),
+    );
+    expect(
+      'updates[originalKey] = existing.copyWith('.allMatches(source).length,
+      greaterThanOrEqualTo(2),
     );
     expect(source, isNot(contains('row.locale == locale')));
   });
