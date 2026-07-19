@@ -120,8 +120,7 @@ class AchievementListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'achievement',
       actionType: action,
-      entityId: id,
-      entityName: id.toString(),
+      entityName: 'Achievement $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

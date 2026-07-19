@@ -192,7 +192,6 @@ class AreaTableDetailViewModel
     final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,
-      entityId: t.id,
       entityName: t.areaNameLangZhCN,
       createdAt: DateTime.now(),
     );

@@ -126,7 +126,6 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

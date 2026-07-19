@@ -124,7 +124,6 @@ class PageTextListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'page_text',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

@@ -132,8 +132,7 @@ class PlayerCreateInfoDetailViewModel
     final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
-      entityId: t.race,
-      entityName: '',
+      entityName: 'PlayerCreateInfo ${t.race}/${t.class_}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

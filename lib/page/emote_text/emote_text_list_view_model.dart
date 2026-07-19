@@ -123,7 +123,6 @@ class EmoteTextListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'emote_text',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

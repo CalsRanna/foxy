@@ -183,8 +183,10 @@ class ConditionDetailViewModel
       final log = ActivityLogEntity(
         module: 'conditions',
         actionType: action,
-        entityId: c.sourceTypeOrReferenceId,
-        entityName: c.comment,
+        entityName:
+            'Condition ${c.sourceTypeOrReferenceId}/${c.sourceGroup}/'
+            '${c.sourceEntry}/${c.sourceId}/${c.elseGroup}'
+            '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
         createdAt: DateTime.now(),
       );
       GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(

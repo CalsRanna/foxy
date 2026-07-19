@@ -102,8 +102,7 @@ class CurrencyTypeListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'currency_type',
       actionType: action,
-      entityId: id,
-      entityName: id.toString(),
+      entityName: 'CurrencyType $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

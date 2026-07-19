@@ -126,8 +126,7 @@ class GossipMenuListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'gossip_menu',
       actionType: action,
-      entityId: menuId,
-      entityName: name,
+      entityName: 'GossipMenu $menuId/$textId${name.isEmpty ? '' : ' - $name'}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

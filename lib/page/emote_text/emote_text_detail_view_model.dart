@@ -147,7 +147,6 @@ class EmoteTextDetailViewModel
     final log = ActivityLogEntity(
       module: 'emote_text',
       actionType: action,
-      entityId: t.id,
       entityName: t.name,
       createdAt: DateTime.now(),
     );

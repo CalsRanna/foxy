@@ -494,7 +494,6 @@ class AchievementDetailViewModel
     final log = ActivityLogEntity(
       module: 'achievement',
       actionType: action,
-      entityId: t.id,
       entityName: t.titleLangZhCN,
       createdAt: DateTime.now(),
     );

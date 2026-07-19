@@ -123,7 +123,6 @@ class AreaTableListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'area_table',
       actionType: action,
-      entityId: id,
       entityName: name,
       createdAt: DateTime.now(),
     );

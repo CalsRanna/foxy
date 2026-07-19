@@ -115,8 +115,7 @@ class GemPropertyListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
-      entityId: id,
-      entityName: id.toString(),
+      entityName: 'GemProperty $id',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

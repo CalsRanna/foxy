@@ -107,8 +107,7 @@ class GlyphPropertyDetailViewModel
     final log = ActivityLogEntity(
       module: 'glyph_property',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'GlyphProperty ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

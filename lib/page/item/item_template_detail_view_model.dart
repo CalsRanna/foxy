@@ -713,7 +713,6 @@ class ItemTemplateDetailViewModel
     final log = ActivityLogEntity(
       module: 'item_template',
       actionType: action,
-      entityId: t.entry,
       entityName: t.name,
       createdAt: DateTime.now(),
     );

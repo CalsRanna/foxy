@@ -144,8 +144,8 @@ class ReferenceLootTemplateDetailViewModel
     final log = ActivityLogEntity(
       module: 'reference_loot_template',
       actionType: action,
-      entityId: t.entry,
-      entityName: t.item.toString(),
+      entityName:
+          'ReferenceLoot ${t.entry}/${t.item}/${t.reference}/${t.groupId}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

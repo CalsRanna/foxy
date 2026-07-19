@@ -105,8 +105,7 @@ class GemPropertyDetailViewModel
     final log = ActivityLogEntity(
       module: 'gem_property',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'GemProperty ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

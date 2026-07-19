@@ -124,7 +124,6 @@ class GameObjectTemplateListViewModel with FieldControllerMixin {
     final log = ActivityLogEntity(
       module: 'gameobject_template',
       actionType: action,
-      entityId: entry,
       entityName: name,
       createdAt: DateTime.now(),
     );

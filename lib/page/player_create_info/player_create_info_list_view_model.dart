@@ -35,7 +35,7 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
       );
       if (!confirmed) return;
       await _repository.destroyPlayerCreateInfo(info.race, info.class_);
-      _logActivity(ActivityActionType.delete, info.race);
+      _logActivity(ActivityActionType.delete, info);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -104,12 +104,11 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     return _repository.countPlayerCreateInfos(filter: _buildFilter());
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, PlayerCreateInfoEntity info) {
     final log = ActivityLogEntity(
       module: 'player_create_info',
       actionType: action,
-      entityId: id,
-      entityName: '',
+      entityName: 'PlayerCreateInfo ${info.race}/${info.class_}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

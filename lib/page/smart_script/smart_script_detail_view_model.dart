@@ -229,8 +229,9 @@ class SmartScriptDetailViewModel
     final log = ActivityLogEntity(
       module: 'smart_script',
       actionType: action,
-      entityId: t.entryOrGuid,
-      entityName: t.comment,
+      entityName:
+          'SmartScript ${t.entryOrGuid}/${t.sourceType}/${t.id}/${t.link}'
+          '${t.comment.isEmpty ? '' : ' - ${t.comment}'}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

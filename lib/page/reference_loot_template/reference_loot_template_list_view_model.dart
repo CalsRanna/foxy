@@ -125,12 +125,11 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
   void _logActivity(ActivityActionType action, int entry) {
     final templates = this.templates.value;
     final t = templates.where((t) => t.entry == entry).firstOrNull;
-    final name = t?.item.toString() ?? '';
+    final item = t?.item;
     final log = ActivityLogEntity(
       module: 'reference_loot_template',
       actionType: action,
-      entityId: entry,
-      entityName: name,
+      entityName: 'ReferenceLoot $entry${item == null ? '' : '/$item'}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);

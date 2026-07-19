@@ -158,8 +158,7 @@ class TalentDetailViewModel
     final log = ActivityLogEntity(
       module: 'talent',
       actionType: action,
-      entityId: t.id,
-      entityName: '',
+      entityName: 'Talent ${t.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
