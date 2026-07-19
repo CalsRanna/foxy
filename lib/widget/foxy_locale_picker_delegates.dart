@@ -5,6 +5,7 @@ import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_key.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
+import 'package:foxy/entity/quest_offer_reward_locale_key.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
 import 'package:foxy/repository/achievement_repository.dart';
@@ -326,36 +327,47 @@ class FoxyLocalePickerDelegates {
   static final questOfferReward = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'rewardText'],
     fieldLabels: ['语言', '奖励文本'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
-      final locales = await repo.getQuestOfferRewardLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'rewardText': e.rewardText,
-            }),
-          )
-          .toList();
-    },
+    onLoad: _loadQuestOfferRewardLocaleRows,
     onSave: (entry, changes) async {
       final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
-      final existing = await repo.getQuestOfferRewardLocales(entry);
-      final locales = changes.rows.map((row) {
+      final creations = <QuestOfferRewardLocaleEntity>[];
+      final updates =
+          <QuestOfferRewardLocaleKey, QuestOfferRewardLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return QuestOfferRewardLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            QuestOfferRewardLocaleEntity(
+              id: entry,
+              locale: d['locale'] ?? '',
+              rewardText: d['rewardText'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = QuestOfferRewardLocaleKey(
           id: entry,
+          locale: originalLocale,
+        );
+        final existing = await repo.getQuestOfferRewardLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
           rewardText: d['rewardText'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
         );
-      }).toList();
-      await repo.saveQuestOfferRewardLocales(entry, locales);
+      }
+      await repo.applyQuestOfferRewardLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map(
+              (locale) => QuestOfferRewardLocaleKey(id: entry, locale: locale),
+            )
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -649,6 +661,31 @@ class FoxyLocalePickerDelegates {
           throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
         }
         return DatabaseLocaleRow.persisted(valuesOf(locale));
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadQuestOfferRewardLocaleRows(
+    int entry,
+  ) async {
+    final repo = GetIt.instance.get<QuestOfferRewardLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefQuestOfferRewardLocales(id: entry),
+      repo.countQuestOfferRewardLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('任务奖励本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getQuestOfferRewardLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted({
+          'locale': locale.locale,
+          'rewardText': locale.rewardText,
+        });
       }),
     );
   }
