@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/brief_player_create_info_skill_entity.dart';
 import 'package:foxy/page/player_create_info/player_create_info_skill_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -9,6 +9,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
@@ -36,27 +37,47 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
   }
 
   @override
+  void didUpdateWidget(covariant PlayerCreateInfoSkillView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.race != widget.race ||
+        oldWidget.playerClass != widget.playerClass) {
+      viewModel.setParent(race: widget.race, playerClass: widget.playerClass);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 16),
-    child: Column(
-      spacing: 16,
-      children: [
-        Row(
-          children: [
-            ShadButton(
-              onPressed: widget.race == null ? null : _showCreateDialog,
-              child: const Text('新增'),
-            ),
-          ],
-        ),
-        Watch((_) => _buildTable()),
-      ],
+  Widget build(BuildContext context) => Watch(
+    (_) => Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        spacing: 16,
+        children: [
+          Row(
+            children: [
+              ShadButton(
+                onPressed: widget.race == null || widget.playerClass == null
+                    ? null
+                    : _showCreateDialog,
+                child: const Text('新增'),
+              ),
+              const Spacer(),
+              FoxyPagination(
+                page: viewModel.page.value,
+                pageSize: 50,
+                total: viewModel.total.value,
+                onChange: viewModel.paginate,
+              ),
+            ],
+          ),
+          _buildTable(),
+        ],
+      ),
     ),
   );
 
@@ -105,13 +126,12 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
   }
 
   Future<void> _showCreateDialog() async {
-    await viewModel.create();
-    if (!mounted) return;
+    if (!await viewModel.create() || !mounted) return;
     _showDialog('新增技能');
   }
 
-  void _showEditDialog(PlayerCreateInfoSkillEntity entity) {
-    viewModel.edit(entity);
+  Future<void> _showEditDialog(BriefPlayerCreateInfoSkillEntity entity) async {
+    if (!await viewModel.edit(entity) || !mounted) return;
     _showDialog('编辑技能');
   }
 
@@ -203,8 +223,9 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       const SizedBox(width: 8),
       ShadButton(
         onPressed: () async {
-          await viewModel.save(dialogContext);
-          if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+          final saved = await viewModel.save(dialogContext);
+          if (!saved || !dialogContext.mounted) return;
+          Navigator.of(dialogContext).pop();
         },
         child: const Text('保存'),
       ),
