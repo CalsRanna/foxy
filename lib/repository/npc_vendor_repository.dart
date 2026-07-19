@@ -1,32 +1,50 @@
+import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
+import 'package:foxy/entity/npc_vendor_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class NpcVendorRepository with RepositoryMixin {
   static const _table = 'npc_vendor';
   static const primaryKeyColumns = {'entry', 'item', 'ExtendedCost'};
 
+  Future<int> countNpcVendors(int entry) {
+    return laconic.table(_table).where('entry', entry).count();
+  }
+
   Future<NpcVendorEntity> createNpcVendor(int entry) async {
-    var nextSlot = await getNextSlot(entry);
+    final nextSlot = await nextMaxPlusOne(
+      _table,
+      'slot',
+      where: {'entry': entry},
+      firstValue: 0,
+    );
     return NpcVendorEntity(entry: entry, slot: nextSlot);
   }
 
-  Future<void> destroyNpcVendor(int entry, int item, int extendedCost) async {
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('item', item)
-        .where('ExtendedCost', extendedCost)
-        .delete();
+  Future<void> destroyNpcVendor(NpcVendorKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
-  Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(int entry) async {
+  Future<List<BriefNpcVendorEntity>> getBriefNpcVendors(
+    int entry, {
+    int page = 1,
+  }) async {
     var builder = laconic.table('$_table AS nv');
     final fields = <String>[
-      'nv.*',
+      'nv.entry',
+      'nv.slot',
+      'nv.item',
+      'nv.maxcount',
+      'nv.incrtime',
+      'nv.ExtendedCost',
       'it.name',
       if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
-      'didi.InventoryIcon0',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
@@ -39,84 +57,56 @@ class NpcVendorRepository with RepositoryMixin {
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
     builder = builder.where('nv.entry', entry);
-    builder = builder.orderBy('nv.slot');
-    var results = await builder.get();
+    builder = builder.orderBy('nv.slot').orderBy('nv.item');
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
+    final results = await builder.get();
     return results
-        .map((e) => BriefNpcVendorEntity.fromJson(e.toMap()))
+        .map((result) => BriefNpcVendorEntity.fromJson(result.toMap()))
         .toList();
   }
 
-  Future<int> getNextSlot(int entry) =>
-      nextMaxPlusOne(_table, 'slot', where: {'entry': entry}, firstValue: 0);
-
-  Future<NpcVendorEntity?> getNpcVendor(
-    int entry,
-    int item,
-    int extendedCost,
-  ) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('item', item)
-        .where('ExtendedCost', extendedCost)
-        .limit(1)
-        .get();
+  Future<NpcVendorEntity?> getNpcVendor(NpcVendorKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return NpcVendorEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> saveNpcVendor(NpcVendorEntity vendor) async {
-    _validate(vendor);
-    var existing = await getNpcVendor(
-      vendor.entry,
-      vendor.item,
-      vendor.extendedCost,
-    );
-    if (existing != null) {
-      await updateNpcVendor(
-        vendor.entry,
-        vendor.item,
-        vendor.extendedCost,
-        vendor,
-      );
-    } else {
-      await storeNpcVendor(vendor);
-    }
-  }
-
   Future<void> storeNpcVendor(NpcVendorEntity vendor) async {
-    _validate(vendor);
-    await laconic.table(_table).insert([vendor.toJson()]);
+    try {
+      await laconic.table(_table).insert([vendor.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('商人物品主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateNpcVendor(
-    int entry,
-    int item,
-    int extendedCost,
+    NpcVendorKey originalKey,
     NpcVendorEntity vendor,
   ) async {
-    _validate(vendor);
-    var json = vendor.toJson();
-    json.remove('entry');
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('item', item)
-        .where('ExtendedCost', extendedCost)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(vendor.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  void _validate(NpcVendorEntity vendor) {
-    if (vendor.maxcount > 0 && vendor.incrtime == 0) {
-      throw StateError('maxcount 大于 0 时 incrtime 必须大于 0');
-    }
-    if (vendor.maxcount == 0 && vendor.incrtime > 0) {
-      throw StateError('maxcount 为 0 时 incrtime 也必须为 0');
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, NpcVendorKey key) {
+    return builder
+        .where('entry', key.entry)
+        .where('item', key.item)
+        .where('ExtendedCost', key.extendedCost);
   }
 }
