@@ -32,7 +32,7 @@ import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/emote_text_data_filter_entity.dart';
-import 'package:foxy/entity/dbc_emote_entity.dart';
+import 'package:foxy/entity/brief_dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_emote_filter_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_filter_entity.dart';
