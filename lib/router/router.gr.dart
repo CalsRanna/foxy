@@ -13,10 +13,11 @@ import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/area_table_key.dart' as _i60;
 import 'package:foxy/entity/condition_key.dart' as _i61;
-import 'package:foxy/entity/gem_property_key.dart' as _i62;
-import 'package:foxy/entity/glyph_property_key.dart' as _i63;
-import 'package:foxy/entity/page_text_key.dart' as _i65;
-import 'package:foxy/entity/smart_script_key.dart' as _i64;
+import 'package:foxy/entity/currency_type_key.dart' as _i62;
+import 'package:foxy/entity/gem_property_key.dart' as _i63;
+import 'package:foxy/entity/glyph_property_key.dart' as _i64;
+import 'package:foxy/entity/page_text_key.dart' as _i66;
+import 'package:foxy/entity/smart_script_key.dart' as _i65;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -397,11 +398,14 @@ class CurrencyTypeDetailRoute
     extends _i58.PageRouteInfo<CurrencyTypeDetailRouteArgs> {
   CurrencyTypeDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i62.CurrencyTypeKey? currencyTypeKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          CurrencyTypeDetailRoute.name,
-         args: CurrencyTypeDetailRouteArgs(key: key, id: id),
+         args: CurrencyTypeDetailRouteArgs(
+           key: key,
+           currencyTypeKey: currencyTypeKey,
+         ),
          initialChildren: children,
        );
 
@@ -413,32 +417,35 @@ class CurrencyTypeDetailRoute
       final args = data.argsAs<CurrencyTypeDetailRouteArgs>(
         orElse: () => const CurrencyTypeDetailRouteArgs(),
       );
-      return _i10.CurrencyTypeDetailPage(key: args.key, id: args.id);
+      return _i10.CurrencyTypeDetailPage(
+        key: args.key,
+        currencyTypeKey: args.currencyTypeKey,
+      );
     },
   );
 }
 
 class CurrencyTypeDetailRouteArgs {
-  const CurrencyTypeDetailRouteArgs({this.key, this.id});
+  const CurrencyTypeDetailRouteArgs({this.key, this.currencyTypeKey});
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i62.CurrencyTypeKey? currencyTypeKey;
 
   @override
   String toString() {
-    return 'CurrencyTypeDetailRouteArgs{key: $key, id: $id}';
+    return 'CurrencyTypeDetailRouteArgs{key: $key, currencyTypeKey: $currencyTypeKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! CurrencyTypeDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && currencyTypeKey == other.currencyTypeKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ currencyTypeKey.hashCode;
 }
 
 /// generated route for
@@ -629,7 +636,7 @@ class GemPropertyDetailRoute
     extends _i58.PageRouteInfo<GemPropertyDetailRouteArgs> {
   GemPropertyDetailRoute({
     _i59.Key? key,
-    _i62.GemPropertyKey? gemPropertyKey,
+    _i63.GemPropertyKey? gemPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GemPropertyDetailRoute.name,
@@ -661,7 +668,7 @@ class GemPropertyDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i62.GemPropertyKey? gemPropertyKey;
+  final _i63.GemPropertyKey? gemPropertyKey;
 
   @override
   String toString() {
@@ -701,7 +708,7 @@ class GlyphPropertyDetailRoute
     extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
   GlyphPropertyDetailRoute({
     _i59.Key? key,
-    _i63.GlyphPropertyKey? glyphPropertyKey,
+    _i64.GlyphPropertyKey? glyphPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GlyphPropertyDetailRoute.name,
@@ -733,7 +740,7 @@ class GlyphPropertyDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i63.GlyphPropertyKey? glyphPropertyKey;
+  final _i64.GlyphPropertyKey? glyphPropertyKey;
 
   @override
   String toString() {
@@ -1701,7 +1708,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i64.SmartScriptKey? scriptKey,
+    _i65.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1730,7 +1737,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i64.SmartScriptKey? scriptKey;
+  final _i65.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1980,7 +1987,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i65.PageTextKey? pageTextKey,
+    _i66.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2009,7 +2016,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i65.PageTextKey? pageTextKey;
+  final _i66.PageTextKey? pageTextKey;
 
   @override
   String toString() {

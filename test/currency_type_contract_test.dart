@@ -122,25 +122,25 @@ void main() {
     }
   });
 
-  test('Repository 校验引用、唯一性、货币背包位和角色位引用', () {
+  test('Repository 使用原始键、数据库唯一约束和单表边界', () {
     final repository = File(
       'lib/repository/currency_type_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
       'lib/page/currency_type/currency_type_detail_view_model.dart',
     ).readAsStringSync();
-    expect(repository, contains('currencyType.id > 0'));
+    expect(repository, contains('currencyType.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateCurrencyTypeFields(t);'));
-    expect(repository, contains("table: 'item_template'"));
-    expect(repository, contains("table: 'foxy.dbc_currency_category'"));
-    expect(repository, contains(".where('ItemID', currencyType.itemId)"));
-    expect(repository, contains(".where('BitIndex', currencyType.bitIndex)"));
-    expect(repository, contains("TABLE_NAME = 'characters'"));
-    expect(repository, contains("COLUMN_NAME = 'knownCurrencies'"));
-    expect(repository, contains('CAST(1 AS UNSIGNED) << ?'));
-    expect(repository, contains('kCurrencyTokenBagFamilyMask'));
-    expect(repository, contains('if (existingValue == value) return;'));
+    expect(viewModel, contains('validateCurrencyTypeFields(candidate);'));
+    expect(repository, contains('CurrencyTypeKey originalKey'));
+    expect(repository, contains('.update(currencyType.toJson())'));
+    expect(repository, contains('matchedRows == 0'));
+    expect(repository, contains('deletedRows == 0'));
+    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(repository, isNot(contains("table('item_template')")));
+    expect(repository, isNot(contains("table('foxy.dbc_currency_category')")));
+    expect(repository, isNot(contains('knownCurrencies')));
+    expect(repository, isNot(contains("remove('ID')")));
   });
 
   test('列表 locale JOIN 限定 zhCN、名称筛选生效且无复制入口', () {
@@ -161,18 +161,28 @@ void main() {
     expect(page, isNot(contains("child: Text('复制')")));
   });
 
-  test('新建保存回填最终 ID 并按存在性记录 create 活动', () {
+  test('详情使用 persistedKey 区分增改并在成功后切换身份', () {
     final viewModel = File(
       'lib/page/currency_type/currency_type_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('final isCreate = existed == null;'));
-    expect(viewModel, contains('t.copyWith(id: idController.collect())'));
-    expect(
-      viewModel,
-      contains(
-        'isCreate ? ActivityActionType.create : ActivityActionType.update',
-      ),
-    );
+    final page = File(
+      'lib/page/currency_type/currency_type_detail_page.dart',
+    ).readAsStringSync();
+    final view = File(
+      'lib/page/currency_type/currency_type_view.dart',
+    ).readAsStringSync();
+    final list = File(
+      'lib/page/currency_type/currency_type_list_page.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('signal<CurrencyTypeKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(viewModel, contains('updateCurrencyType(originalKey, candidate)'));
+    expect(viewModel, contains('persistedKey.value = CurrencyTypeKey'));
+    expect(viewModel, isNot(contains('getCurrencyType(candidate.id)')));
+    expect(page, contains('final CurrencyTypeKey? currencyTypeKey'));
+    expect(page, contains('viewModel.persistedKey.value'));
+    expect(view, isNot(contains('readOnly: true')));
+    expect(list, contains('items[row].key'));
   });
 
   test('CurrencyTypes 与 CurrencyCategory 使用 3.3.5.12340 物理格式', () {

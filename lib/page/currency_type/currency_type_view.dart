@@ -5,31 +5,12 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class CurrencyTypeView extends StatefulWidget {
-  final int? entry;
-  const CurrencyTypeView({super.key, this.entry});
+class CurrencyTypeView extends StatelessWidget {
+  final CurrencyTypeDetailViewModel viewModel;
 
-  @override
-  State<CurrencyTypeView> createState() => _CurrencyTypeViewState();
-}
-
-class _CurrencyTypeViewState extends State<CurrencyTypeView> {
-  final viewModel = GetIt.instance.get<CurrencyTypeDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const CurrencyTypeView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +19,6 @@ class _CurrencyTypeViewState extends State<CurrencyTypeView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final itemIdInput = FoxyFormItem(
