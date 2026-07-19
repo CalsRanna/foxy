@@ -1,17 +1,22 @@
+import 'package:foxy/entity/brief_item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_filter_entity.dart';
+import 'package:foxy/entity/item_visuals_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ItemVisualsRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_visuals';
 
-  Future<void> copyItemVisual(int id) async {
-    final source = await getItemVisual(id);
-    if (source == null) return;
-    await storeItemVisual(
-      source.copyWith(id: await nextMaxPlusOne(_table, 'ID')),
-    );
+  Future<ItemVisualsKey> copyItemVisual(ItemVisualsKey key) async {
+    final source = await getItemVisual(key);
+    if (source == null) {
+      throw StateError('原物品视觉不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeItemVisual(copied);
+    return ItemVisualsKey.fromEntity(copied);
   }
 
   Future<int> countItemVisuals({ItemVisualsFilterEntity? filter}) async {
@@ -24,15 +29,11 @@ class ItemVisualsRepository with RepositoryMixin {
     return ItemVisualsEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemVisual(int id) async {
-    final references = await laconic
-        .table('foxy.dbc_spell_item_enchantment')
-        .where('ItemVisual', id)
-        .count();
-    if (references > 0) {
-      throw StateError('物品视觉 $id 仍被 $references 条法术附魔引用，不能删除');
+  Future<void> destroyItemVisual(ItemVisualsKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原物品视觉不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefItemVisualsEntity>> getBriefItemVisuals({
@@ -58,8 +59,8 @@ class ItemVisualsRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemVisualsEntity?> getItemVisual(int id) async {
-    final results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemVisualsEntity?> getItemVisual(ItemVisualsKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemVisualsEntity.fromJson(results.first.toMap());
   }
@@ -71,25 +72,38 @@ class ItemVisualsRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveItemVisual(ItemVisualsEntity entity) async {
-    final existing = entity.id == 0 ? null : await getItemVisual(entity.id);
-    if (existing == null) {
-      await storeItemVisual(entity);
-    } else {
-      await updateItemVisual(entity);
+  Future<void> storeItemVisual(ItemVisualsEntity entity) async {
+    if (entity.id <= 0) {
+      throw StateError('物品视觉 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([entity.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('物品视觉 ${entity.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeItemVisual(ItemVisualsEntity entity) async {
-    final id = entity.id > 0 ? entity.id : await nextMaxPlusOne(_table, 'ID');
-    final stored = entity.copyWith(id: id);
-    await laconic.table(_table).insert([stored.toJson()]);
-    return id;
-  }
-
-  Future<void> updateItemVisual(ItemVisualsEntity entity) async {
-    final json = entity.toJson()..remove('ID');
-    await laconic.table(_table).where('ID', entity.id).update(json);
+  Future<void> updateItemVisual(
+    ItemVisualsKey originalKey,
+    ItemVisualsEntity entity,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原物品视觉不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的物品视觉 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -100,5 +114,9 @@ class ItemVisualsRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemVisualsKey key) {
+    return builder.where('ID', key.id);
   }
 }
