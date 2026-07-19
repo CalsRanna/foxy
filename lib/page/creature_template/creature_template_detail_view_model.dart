@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -131,30 +132,31 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
 
   late final verifiedBuildController = registerController(IntFieldController());
 
-  final entry = signal(0);
   final template = signal(CreatureTemplateEntity());
+  final persistedKey = signal<CreatureTemplateKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? entry}) async {
+  Future<void> initSignals({CreatureTemplateKey? key}) async {
     try {
-      // 路由/页面常把 null 落成 0，一律视为新建
-      if (entry == null || entry <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createCreatureTemplate();
         template.value = blank;
-        this.entry.value = blank.entry;
         _initControllers(blank);
         return;
       }
-      final result = await _repository.getCreatureTemplate(entry);
-      if (result == null) return;
+      persistedKey.value = key;
+      final result = await _repository.getCreatureTemplate(key);
+      if (result == null) {
+        throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
+      }
       template.value = result;
-      this.entry.value = result.entry;
       _initControllers(result);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载生物模板(entry=$entry)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载生物模板(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -163,22 +165,27 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    if (candidate.entry <= 0) throw StateError('请输入有效的生物模板 entry');
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeCreatureTemplate(candidate);
+    } else {
+      await _repository.updateCreatureTemplate(originalKey, candidate);
+    }
+    persistedKey.value = CreatureTemplateKey.fromEntity(candidate);
+    template.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      // 不能用 entry==0 判断新建：create* 已预填 MAX+1
-      final existed = await _repository.getCreatureTemplate(t.entry);
-      if (existed == null) {
-        final id = await _repository.storeCreatureTemplate(t);
-        entryController.init(id);
-        template.value = t.copyWith(entry: id);
-        entry.value = id;
-        _logActivity(ActivityActionType.create, template.value);
-      } else {
-        await _repository.updateCreatureTemplate(t);
-        template.value = t;
-        _logActivity(ActivityActionType.update, t);
-      }
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('模板数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -323,5 +330,9 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(CreatureTemplateEntity template) {
+    return template.name.isNotEmpty ? template.name : '生物 #${template.entry}';
   }
 }

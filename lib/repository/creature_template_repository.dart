@@ -1,19 +1,26 @@
+import 'package:foxy/entity/brief_creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/entity/creature_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
 
-  Future<void> copyCreatureTemplate(int entry) async {
-    var template = await getCreatureTemplate(entry);
-    if (template == null) return;
-    var json = template.toJson();
-    var newEntry = await nextMaxPlusOne(_table, 'entry');
-    json['entry'] = newEntry;
-    _handleReservedWords(json);
-    await laconic.table(_table).insert([json]);
+  Future<CreatureTemplateKey> copyCreatureTemplate(
+    CreatureTemplateKey key,
+  ) async {
+    final source = await getCreatureTemplate(key);
+    if (source == null) {
+      throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(
+      entry: await nextMaxPlusOne(_table, 'entry'),
+    );
+    await storeCreatureTemplate(copied);
+    return CreatureTemplateKey.fromEntity(copied);
   }
 
   Future<int> countCreatureTemplates({
@@ -53,8 +60,11 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
-  Future<void> destroyCreatureTemplate(int entry) async {
-    await laconic.table(_table).where('entry', entry).delete();
+  Future<void> destroyCreatureTemplate(CreatureTemplateKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
@@ -87,12 +97,10 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureTemplateEntity?> getCreatureTemplate(int entry) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .limit(1)
-        .get();
+  Future<CreatureTemplateEntity?> getCreatureTemplate(
+    CreatureTemplateKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateEntity.fromJson(results.first.toMap());
   }
@@ -104,37 +112,42 @@ class CreatureTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveCreatureTemplate(CreatureTemplateEntity template) async {
-    if (template.entry == 0) {
-      await storeCreatureTemplate(template);
-      return;
+  Future<void> storeCreatureTemplate(CreatureTemplateEntity template) async {
+    if (template.entry <= 0) {
+      throw StateError('生物模板 entry 必须在新建表单打开时显式分配');
     }
-    var existing = await getCreatureTemplate(template.entry);
-    if (existing != null) {
-      await updateCreatureTemplate(template);
-    } else {
-      var json = template.toJson();
-      _handleReservedWords(json);
+    final json = template.toJson();
+    _handleReservedWords(json);
+    try {
       await laconic.table(_table).insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物模板 ${template.entry} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeCreatureTemplate(CreatureTemplateEntity template) async {
-    var json = template.toJson();
-    final newEntry = template.entry > 0
-        ? template.entry
-        : await nextMaxPlusOne(_table, 'entry');
-    json['entry'] = newEntry;
+  Future<void> updateCreatureTemplate(
+    CreatureTemplateKey originalKey,
+    CreatureTemplateEntity template,
+  ) async {
+    final json = template.toJson();
     _handleReservedWords(json);
-    await laconic.table(_table).insert([json]);
-    return newEntry;
-  }
-
-  Future<void> updateCreatureTemplate(CreatureTemplateEntity template) async {
-    var json = template.toJson();
-    json.remove('entry');
-    _handleReservedWords(json);
-    await laconic.table(_table).where('entry', template.entry).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(json);
+      if (matchedRows == 0) {
+        throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物模板 entry 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -182,5 +195,9 @@ class CreatureTemplateRepository with RepositoryMixin {
     if (json.containsKey('rank')) {
       json['`rank`'] = json.remove('rank');
     }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateKey key) {
+    return builder.where('entry', key.entry);
   }
 }

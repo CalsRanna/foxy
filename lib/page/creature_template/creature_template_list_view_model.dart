@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/entity/brief_creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/entity/creature_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
@@ -24,16 +25,16 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
   final templates = signal(<BriefCreatureTemplateEntity>[]);
   final total = signal(0);
 
-  Future<void> copyCreatureTemplate(int entry) async {
+  Future<void> copyCreatureTemplate(CreatureTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $entry 的生物模板？',
+        description: '是否复制编号为 ${key.entry} 的生物模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyCreatureTemplate(entry);
-      _logActivity(ActivityActionType.copy, entry);
+      await _repository.copyCreatureTemplate(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -42,17 +43,17 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteCreatureTemplate(int entry) async {
+  Future<void> deleteCreatureTemplate(CreatureTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $entry 的生物模板？此操作不可撤销。',
+        description: '是否删除编号为 ${key.entry} 的生物模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyCreatureTemplate(entry);
-      _logActivity(ActivityActionType.delete, entry);
+      await _repository.destroyCreatureTemplate(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -81,12 +82,16 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? entry, String? name}) {
-    final label = name?.isNotEmpty == true ? name! : '新建生物';
+  void navigateToDetail({CreatureTemplateKey? key, String? name}) {
+    final label = key == null
+        ? '新建生物'
+        : name?.isNotEmpty == true
+        ? name!
+        : '生物 #${key.entry}';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: CreatureTemplateDetailRoute(entry: entry, name: name),
+      route: CreatureTemplateDetailRoute(creatureTemplateKey: key),
       parentMenu: RouterMenu.creatureTemplate,
     );
   }
@@ -117,9 +122,9 @@ class CreatureTemplateListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int entry) {
+  void _logActivity(ActivityActionType action, CreatureTemplateKey key) {
     final templates = this.templates.value;
-    final template = templates.where((t) => t.entry == entry).firstOrNull;
+    final template = templates.where((t) => t.entry == key.entry).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'creature_template',

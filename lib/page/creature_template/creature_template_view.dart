@@ -13,31 +13,12 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class CreatureTemplateView extends StatefulWidget {
-  final int? entry;
-  const CreatureTemplateView({super.key, this.entry});
+class CreatureTemplateView extends StatelessWidget {
+  final CreatureTemplateDetailViewModel viewModel;
 
-  @override
-  State<CreatureTemplateView> createState() => _CreatureTemplateViewState();
-}
-
-class _CreatureTemplateViewState extends State<CreatureTemplateView> {
-  final viewModel = GetIt.instance.get<CreatureTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(entry: widget.entry);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const CreatureTemplateView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +28,12 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
       child: FoxyNumberInput<int>(
         controller: viewModel.entryController,
         placeholder: 'entry',
-        readOnly: true,
       ),
     );
     final nameInput = FoxyFormItem(
       label: '名称',
       child: FoxyLocalePicker(
-        entry: widget.entry,
+        entry: viewModel.persistedKey.value?.entry,
         controller: viewModel.nameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'name',
@@ -63,7 +43,7 @@ class _CreatureTemplateViewState extends State<CreatureTemplateView> {
     final subNameInput = FoxyFormItem(
       label: '称号',
       child: FoxyLocalePicker(
-        entry: widget.entry,
+        entry: viewModel.persistedKey.value?.entry,
         controller: viewModel.subNameController,
         delegate: FoxyLocalePickerDelegates.creatureTemplateName,
         placeholder: 'subname',

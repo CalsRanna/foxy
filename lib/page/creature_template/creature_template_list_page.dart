@@ -138,7 +138,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              entry: templates[row].entry,
+              key: templates[row].key,
               name: templates[row].displayName,
             );
           },
@@ -151,7 +151,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      entry: templates[row].entry,
+                      key: templates[row].key,
                       name: templates[row].displayName,
                     );
                   },
@@ -160,14 +160,14 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyCreatureTemplate(templates[row].entry);
+                    viewModel.copyCreatureTemplate(templates[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteCreatureTemplate(templates[row].entry);
+                    viewModel.deleteCreatureTemplate(templates[row].key);
                   },
                   child: Text('删除'),
                 ),
