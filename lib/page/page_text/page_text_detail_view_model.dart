@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
@@ -26,57 +27,66 @@ class PageTextDetailViewModel
   late final verifiedBuildController = registerController(IntFieldController());
 
   final page = signal<PageTextEntity?>(null);
+  final persistedKey = signal<PageTextKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({PageTextKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createPageText();
         page.value = blank;
         _initControllers(blank);
         return;
       }
-      final entity = await _repository.getPageText(id);
-      if (entity == null) return;
+      persistedKey.value = key;
+      final entity = await _repository.getPageText(key);
+      if (entity == null) {
+        throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
+      }
       page.value = entity;
       _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载页面文本(ID=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载页面文本(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
   void pop() => routerFacade.goBack();
 
-  Future<int?> save(BuildContext context) async {
+  Future<void> persist() async {
+    final data = _collect();
+    validatePageTextFields(data);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storePageText(data);
+    } else {
+      await _repository.updatePageText(originalKey, data);
+    }
+    final newKey = PageTextKey.fromEntity(data);
+    persistedKey.value = newKey;
+    page.value = data;
+    routerFacade.updateCurrentLabel(_labelFor(newKey));
+    _logActivity(action, data);
+  }
+
+  Future<bool> save(BuildContext context) async {
     try {
-      final data = _collect();
-      validatePageTextFields(data);
-      final existed = await _repository.getPageText(data.id);
-      late final PageTextEntity saved;
-      if (existed == null) {
-        final id = await _repository.storePageText(data);
-        idController.init(id);
-        saved = data.copyWith(id: id);
-        page.value = saved;
-        _logActivity(ActivityActionType.create, saved);
-      } else {
-        saved = data.copyWith(id: existed.id);
-        await _repository.updatePageText(saved);
-        page.value = saved;
-        _logActivity(ActivityActionType.update, saved);
-      }
+      await persist();
       if (context.mounted) {
         ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
       }
-      return saved.id;
+      return true;
     } catch (e) {
       if (context.mounted) {
         ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
       }
-      return null;
+      return false;
     }
   }
 
@@ -105,4 +115,6 @@ class PageTextDetailViewModel
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
+
+  String _labelFor(PageTextKey key) => '页面文本 ${key.id}';
 }

@@ -34,6 +34,14 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
   }
 
   @override
+  void didUpdateWidget(covariant PageTextLocaleView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.id != widget.id) {
+      viewModel.initSignals(id: widget.id);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Watch((_) {
       final rows = viewModel.rows.value;
@@ -60,7 +68,6 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                             child: FoxyNumberInput<int>(
                               controller: row.idController,
                               placeholder: 'ID',
-                              readOnly: true,
                             ),
                           ),
                         ),

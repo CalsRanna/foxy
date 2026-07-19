@@ -6,33 +6,19 @@ import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class PageTextView extends StatefulWidget {
-  final int? id;
-  final ValueChanged<int>? onSaved;
+  final PageTextDetailViewModel viewModel;
 
-  const PageTextView({super.key, this.id, this.onSaved});
+  const PageTextView({super.key, required this.viewModel});
 
   @override
   State<PageTextView> createState() => _PageTextViewState();
 }
 
 class _PageTextViewState extends State<PageTextView> {
-  final viewModel = GetIt.instance.get<PageTextDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.id);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  PageTextDetailViewModel get viewModel => widget.viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +27,6 @@ class _PageTextViewState extends State<PageTextView> {
       child: FoxyNumberInput<int>(
         placeholder: 'ID',
         controller: viewModel.idController,
-        readOnly: true,
       ),
     );
     final textInput = FoxyFormItem(
@@ -90,10 +75,7 @@ class _PageTextViewState extends State<PageTextView> {
           Row(
             children: [
               ShadButton(
-                onPressed: () async {
-                  final id = await viewModel.save(context);
-                  if (id != null && mounted) widget.onSaved?.call(id);
-                },
+                onPressed: () => viewModel.save(context),
                 child: Text('保存'),
               ),
               SizedBox(width: 8),

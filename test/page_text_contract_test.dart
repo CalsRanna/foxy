@@ -3,8 +3,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/page_text_constants.dart';
+import 'package:foxy/entity/brief_page_text_entity.dart';
+import 'package:foxy/entity/brief_page_text_locale_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'package:foxy/entity/page_text_locale_key.dart';
 
 void main() {
   test('page_text Entity 精确覆盖四个标量物理列', () {
@@ -28,6 +32,22 @@ void main() {
     });
   });
 
+  test('主表 Brief 独立于完整 Entity 并暴露强类型定位器', () {
+    final brief = BriefPageTextEntity.fromJson({
+      'ID': 15,
+      'Text': '第一页',
+      'NextPageID': 16,
+      'localeText': '本地化第一页',
+      'VerifiedBuild': 12340,
+    });
+    expect(brief.displayText, '本地化第一页');
+    expect(brief.key, const PageTextKey(id: 15));
+    expect(
+      File('lib/entity/page_text_entity.dart').readAsStringSync(),
+      isNot(contains('class BriefPageTextEntity')),
+    );
+  });
+
   test('page_text_locale Entity 精确覆盖复合键及四个标量物理列', () {
     final entity = PageTextLocaleEntity.fromJson({
       'ID': 15,
@@ -43,6 +63,34 @@ void main() {
     });
     expect(entity.toJson().values.whereType<List<Object?>>(), isEmpty);
     expect(entity.toJson().values.whereType<Map<Object?, Object?>>(), isEmpty);
+  });
+
+  test('locale Brief 包含展示列和完整联合定位器', () {
+    final brief = BriefPageTextLocaleEntity.fromJson({
+      'ID': 15,
+      'locale': 'zhCN',
+      'Text': '本地化文本',
+      'VerifiedBuild': 12340,
+    });
+    expect(brief.key, const PageTextLocaleKey(id: 15, locale: 'zhCN'));
+    expect(brief.text, '本地化文本');
+    expect(brief.verifiedBuild, 12340);
+  });
+
+  test('主表和 locale Key 对全部定位列实现值相等', () {
+    expect(const PageTextKey(id: 1), const PageTextKey(id: 1));
+    expect(
+      const PageTextKey(id: 1).hashCode,
+      const PageTextKey(id: 1).hashCode,
+    );
+    expect(const PageTextKey(id: 1), isNot(const PageTextKey(id: 2)));
+
+    const first = PageTextLocaleKey(id: 1, locale: 'zhCN');
+    const same = PageTextLocaleKey(id: 1, locale: 'zhCN');
+    expect(first, same);
+    expect(first.hashCode, same.hashCode);
+    expect(first, isNot(const PageTextLocaleKey(id: 2, locale: 'zhCN')));
+    expect(first, isNot(const PageTextLocaleKey(id: 1, locale: 'deDE')));
   });
 
   test('字段范围与 AzerothCore page text 加载约束一致', () {
@@ -88,7 +136,7 @@ void main() {
     );
   });
 
-  test('Repository 保持单表写入边界并校验页内引用与 locale 复合键', () {
+  test('主表 Repository 使用原始 Key、完整 candidate 和写入结果', () {
     final source = File(
       'lib/repository/page_text_repository.dart',
     ).readAsStringSync();
@@ -97,16 +145,47 @@ void main() {
     expect(source, isNot(contains(".table('gameobject_template')")));
     expect(source, isNot(contains('仍有 \$references 条引用')));
     expect(source, isNot(contains('getPageTextLocales(id)')));
-    expect(source, isNot(contains('不存在，不能保存本地化')));
-    expect(source, contains("laconic.table(_table).where('ID', id).delete()"));
-    expect(source, contains(".table(_localeTable).where('ID', id).delete()"));
-    expect(source, contains('final localeKeys = <String>{};'));
+    expect(source, contains('destroyPageText(PageTextKey key)'));
+    expect(source, contains('final deletedRows ='));
+    expect(source, contains('if (deletedRows == 0)'));
+    expect(source, contains('PageTextKey originalKey'));
+    expect(source, contains(').update(pageText.toJson())'));
+    expect(source, contains('if (matchedRows == 0)'));
+    expect(source, contains('Future<void> storePageText('));
+    expect(source, isNot(contains('Future<int> storePageText(')));
+    expect(source, isNot(contains('savePageText(')));
+    expect(source, isNot(contains('savePageTextLocales(')));
+    expect(
+      source,
+      isNot(contains(".table(_localeTable).where('ID', id).delete()")),
+    );
     expect(source, isNot(contains('.validate()')));
     final viewModel = File(
       'lib/page/page_text/page_text_detail_view_model.dart',
     ).readAsStringSync();
     expect(viewModel, contains('validatePageTextFields(data);'));
-    expect(source, contains('final stored = _prepareLocales('));
+    expect(viewModel, contains('signal<PageTextKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value;'));
+    expect(viewModel, contains('updatePageText(originalKey, data)'));
+    expect(viewModel, contains('persistedKey.value = newKey;'));
+  });
+
+  test('locale Repository 独立写表并按原始联合 Key 定位', () {
+    final source = File(
+      'lib/repository/page_text_locale_repository.dart',
+    ).readAsStringSync();
+    expect(source, contains("static const _table = 'page_text_locale';"));
+    expect(source, contains("{'ID', 'locale'}"));
+    expect(source, contains('Future<List<BriefPageTextLocaleEntity>>'));
+    expect(
+      source,
+      contains(".select(['ID', 'locale', 'Text', 'VerifiedBuild'])"),
+    );
+    expect(source, contains('PageTextLocaleKey originalKey'));
+    expect(source, contains(').update(locale.toJson())'));
+    expect(source, contains('final matchedRows ='));
+    expect(source, contains('final deletedRows ='));
+    expect(source, isNot(contains(".table('page_text')")));
   });
 
   test('主表和 locale 表单每行均为四列等宽且使用正确控件', () {
@@ -126,6 +205,7 @@ void main() {
     expect(localeView, contains("placeholder: const Text('locale')"));
     expect(localeView, contains("placeholder: 'Text'"));
     expect(localeView, contains("placeholder: 'VerifiedBuild'"));
+    expect(localeView, isNot(contains('readOnly: true')));
     expect(localeView, isNot(contains('flex:')));
     expect(localeView, isNot(contains('description:')));
   });
@@ -143,13 +223,29 @@ void main() {
     expect(source, isNot(contains('for (var i = 0; i < 16; i++)')));
   });
 
-  test('新建主记录保存前禁用 locale Tab，保存后使用真实 ID 启用', () {
+  test('详情页使用 persistedKey 控制 locale Tab 和实时父 ID', () {
     final page = File(
       'lib/page/page_text/page_text_detail_page.dart',
     ).readAsStringSync();
-    expect(page, contains('disabledIndexes: savedId == null'));
-    expect(page, contains('onSaved: (id) => setState(() => savedId = id)'));
-    expect(page, contains('PageTextLocaleView(id: savedId)'));
+    expect(page, contains('final PageTextKey? pageTextKey;'));
+    expect(page, contains('viewModel.persistedKey.value'));
+    expect(page, contains('disabledIndexes: key == null'));
+    expect(page, contains('PageTextLocaleView(id: key?.id)'));
+    expect(page, contains('PageTextView(viewModel: viewModel)'));
+  });
+
+  test('locale 每行保留 editingKey 且保存失败前不清理原始身份', () {
+    final source = File(
+      'lib/page/page_text/page_text_locale_view_model.dart',
+    ).readAsStringSync();
+    expect(source, contains('PageTextLocaleKey? editingKey;'));
+    expect(source, contains('editingKey: brief.key'));
+    expect(source, contains('final _deletedKeys = <PageTextLocaleKey>[];'));
+    expect(source, contains('updates[editingKey] = locales[index];'));
+    expect(source, contains('applyPageTextLocaleChanges('));
+    final applyIndex = source.indexOf('applyPageTextLocaleChanges(');
+    final reloadIndex = source.indexOf('await _load(_currentId);', applyIndex);
+    expect(reloadIndex, greaterThan(applyIndex));
   });
 
   test('共享页面文本 Picker 同时按 ID 和文本分页筛选', () {

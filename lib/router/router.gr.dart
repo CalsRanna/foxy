@@ -12,6 +12,7 @@
 import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/condition_key.dart' as _i60;
+import 'package:foxy/entity/page_text_key.dart' as _i62;
 import 'package:foxy/entity/smart_script_key.dart' as _i61;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
@@ -1968,12 +1969,11 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    int? id,
-    String? label,
+    _i62.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
-         args: TextContentDetailRouteArgs(key: key, id: id, label: label),
+         args: TextContentDetailRouteArgs(key: key, pageTextKey: pageTextKey),
          initialChildren: children,
        );
 
@@ -1987,36 +1987,33 @@ class TextContentDetailRoute
       );
       return _i56.TextContentDetailPage(
         key: args.key,
-        id: args.id,
-        label: args.label,
+        pageTextKey: args.pageTextKey,
       );
     },
   );
 }
 
 class TextContentDetailRouteArgs {
-  const TextContentDetailRouteArgs({this.key, this.id, this.label});
+  const TextContentDetailRouteArgs({this.key, this.pageTextKey});
 
   final _i59.Key? key;
 
-  final int? id;
-
-  final String? label;
+  final _i62.PageTextKey? pageTextKey;
 
   @override
   String toString() {
-    return 'TextContentDetailRouteArgs{key: $key, id: $id, label: $label}';
+    return 'TextContentDetailRouteArgs{key: $key, pageTextKey: $pageTextKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! TextContentDetailRouteArgs) return false;
-    return key == other.key && id == other.id && label == other.label;
+    return key == other.key && pageTextKey == other.pageTextKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode ^ label.hashCode;
+  int get hashCode => key.hashCode ^ pageTextKey.hashCode;
 }
 
 /// generated route for

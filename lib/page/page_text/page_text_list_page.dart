@@ -134,7 +134,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              id: pages[row].id,
+              key: pages[row].key,
               label: pages[row].displayText,
             );
           },
@@ -146,19 +146,19 @@ class _TextContentListPageState extends State<TextContentListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () => viewModel.navigateToDetail(
-                    id: pages[row].id,
+                    key: pages[row].key,
                     label: pages[row].displayText,
                   ),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyPageText(pages[row].id),
+                  onPressed: () => viewModel.copyPageText(pages[row].key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deletePageText(pages[row].id),
+                  onPressed: () => viewModel.deletePageText(pages[row].key),
                   child: Text('删除'),
                 ),
               ],
