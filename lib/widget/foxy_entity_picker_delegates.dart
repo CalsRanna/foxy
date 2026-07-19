@@ -119,7 +119,7 @@ import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/talent_tab_filter_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';
-import 'package:foxy/entity/taxi_path_entity.dart';
+import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_filter_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
