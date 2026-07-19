@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_player_create_info_skill_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_skill_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/player_create_info_skill_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -16,11 +20,15 @@ class PlayerCreateInfoSkillViewModel
         PlayerCreateInfoSkillValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoSkillRepository>();
-  final skills = signal(<PlayerCreateInfoSkillEntity>[]);
+
+  final editingKey = signal<PlayerCreateInfoSkillKey?>(null);
+  final page = signal(1);
+  final skills = signal(<BriefPlayerCreateInfoSkillEntity>[]);
+  final total = signal(0);
 
   int? _race;
   int? _playerClass;
-  PlayerCreateInfoSkillEntity? _editing;
+  int _refreshToken = 0;
 
   late final raceMaskController = registerController(FlagFieldController());
   late final classMaskController = registerController(FlagFieldController());
@@ -28,68 +36,111 @@ class PlayerCreateInfoSkillViewModel
   late final rankController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  Future<void> create() async {
-    if (_race == null || _playerClass == null) return;
-    _editing = null;
-    final entity = await _repository.createPlayerCreateInfoSkill(
-      _race!,
-      _playerClass!,
-    );
-    _initControllers(entity);
+  Future<bool> create() async {
+    final race = _race;
+    final playerClass = _playerClass;
+    if (race == null || playerClass == null) return false;
+    try {
+      final entity = await _repository.createPlayerCreateInfoSkill(
+        race,
+        playerClass,
+      );
+      editingKey.value = null;
+      _initControllers(entity);
+      return true;
+    } catch (error) {
+      LoggerUtil.instance.e('创建出生技能失败: $error');
+      DialogUtil.instance.error('创建出生技能失败: $error');
+      return false;
+    }
   }
 
   Future<void> delete(
     BuildContext context,
-    PlayerCreateInfoSkillEntity entity,
+    BriefPlayerCreateInfoSkillEntity entity,
   ) async {
-    await _repository.destroyPlayerCreateInfoSkill(
-      entity.raceMask,
-      entity.classMask,
-      entity.skill,
-    );
-    await _refresh();
-    if (context.mounted) {
-      ShadSonner.of(context).show(ShadToast(description: Text('删除成功')));
+    try {
+      await _repository.destroyPlayerCreateInfoSkill(entity.key);
+      await _refresh();
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
     }
   }
 
   void dispose() => disposeControllers();
 
-  void edit(PlayerCreateInfoSkillEntity entity) {
-    _editing = entity;
-    _initControllers(entity);
+  Future<bool> edit(BriefPlayerCreateInfoSkillEntity entity) async {
+    final key = entity.key;
+    editingKey.value = key;
+    try {
+      final full = await _repository.getPlayerCreateInfoSkill(key);
+      if (full == null) {
+        throw StateError('原出生技能记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(full);
+      return true;
+    } catch (error) {
+      editingKey.value = null;
+      LoggerUtil.instance.e('加载出生技能失败: $error');
+      DialogUtil.instance.error('加载出生技能失败: $error');
+      return false;
+    }
   }
 
   Future<void> initSignals({int? race, int? playerClass}) async {
-    _race = race;
-    _playerClass = playerClass;
-    if (race == null || playerClass == null) return;
+    try {
+      await setParent(race: race, playerClass: playerClass);
+    } catch (error) {
+      LoggerUtil.instance.e('加载出生技能失败: $error');
+      DialogUtil.instance.error('加载出生技能失败: $error');
+    }
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
     await _refresh();
   }
 
-  Future<void> save(BuildContext context) async {
-    try {
-      final entity = _collect();
-      validatePlayerCreateInfoSkillFields(entity);
-      if (_editing == null) {
-        await _repository.storePlayerCreateInfoSkill(entity);
-      } else {
-        await _repository.updatePlayerCreateInfoSkill(
-          _editing!.raceMask,
-          _editing!.classMask,
-          _editing!.skill,
-          entity,
-        );
-      }
-      await _refresh();
-      if (context.mounted) {
-        ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
-      }
-    } catch (e, s) {
-      LoggerUtil.instance.e('保存出生技能失败', error: e, stackTrace: s);
-      if (context.mounted) DialogUtil.instance.error(e.toString());
-      rethrow;
+  Future<void> persist() async {
+    final candidate = _collect();
+    validatePlayerCreateInfoSkillFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storePlayerCreateInfoSkill(candidate);
+    } else {
+      await _repository.updatePlayerCreateInfoSkill(originalKey, candidate);
     }
+    editingKey.value = PlayerCreateInfoSkillKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error, stackTrace) {
+      LoggerUtil.instance.e('保存出生技能失败', error: error, stackTrace: stackTrace);
+      if (context.mounted) DialogUtil.instance.error('$error');
+      return false;
+    }
+  }
+
+  Future<void> setParent({int? race, int? playerClass}) async {
+    if (_race != race || _playerClass != playerClass) page.value = 1;
+    _race = race;
+    _playerClass = playerClass;
+    editingKey.value = null;
+    if (race == null || playerClass == null) {
+      skills.value = [];
+      total.value = 0;
+      return;
+    }
+    await _refresh();
   }
 
   PlayerCreateInfoSkillEntity _collect() => PlayerCreateInfoSkillEntity(
@@ -109,10 +160,25 @@ class PlayerCreateInfoSkillViewModel
   }
 
   Future<void> _refresh() async {
-    if (_race == null || _playerClass == null) return;
-    skills.value = await _repository.getBriefPlayerCreateInfoSkills(
-      _race!,
-      _playerClass!,
+    final race = _race;
+    final playerClass = _playerClass;
+    if (race == null || playerClass == null) return;
+    final token = ++_refreshToken;
+    final count = await _repository.countPlayerCreateInfoSkills(
+      race,
+      playerClass,
     );
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await _repository.getBriefPlayerCreateInfoSkills(
+      race,
+      playerClass,
+      page: page.value,
+    );
+    if (token != _refreshToken) return;
+    skills.value = data;
+    total.value = count;
+    editingKey.value = null;
   }
 }
