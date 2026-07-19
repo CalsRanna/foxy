@@ -60,7 +60,7 @@ import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
-import 'package:foxy/entity/item_random_properties_entity.dart';
+import 'package:foxy/entity/brief_item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_properties_filter_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
