@@ -1,11 +1,35 @@
+import 'package:foxy/entity/brief_quest_offer_reward_locale_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
+import 'package:foxy/entity/quest_offer_reward_locale_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class QuestOfferRewardLocaleRepository with RepositoryMixin {
   static const _table = 'quest_offer_reward_locale';
+  static const primaryKeyColumns = {'ID', 'locale'};
 
-  Future<int> countQuestOfferRewardLocales() async {
-    return laconic.table(_table).count();
+  Future<void> applyQuestOfferRewardLocaleChanges({
+    required List<QuestOfferRewardLocaleEntity> creations,
+    required List<QuestOfferRewardLocaleKey> deletions,
+    required Map<QuestOfferRewardLocaleKey, QuestOfferRewardLocaleEntity>
+    updates,
+  }) async {
+    await laconic.transaction(() async {
+      for (final key in deletions) {
+        await destroyQuestOfferRewardLocale(key);
+      }
+      for (final update in updates.entries) {
+        await updateQuestOfferRewardLocale(update.key, update.value);
+      }
+      for (final locale in creations) {
+        await storeQuestOfferRewardLocale(locale);
+      }
+    });
+  }
+
+  Future<int> countQuestOfferRewardLocales({required int id}) async {
+    return laconic.table(_table).where('ID', id).count();
   }
 
   Future<QuestOfferRewardLocaleEntity> createQuestOfferRewardLocale({
@@ -15,21 +39,23 @@ class QuestOfferRewardLocaleRepository with RepositoryMixin {
     return QuestOfferRewardLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> destroyQuestOfferRewardLocale(int id, String locale) async {
-    await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('locale', locale)
-        .delete();
+  Future<void> destroyQuestOfferRewardLocale(
+    QuestOfferRewardLocaleKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefQuestOfferRewardLocaleEntity>>
-  getBriefQuestOfferRewardLocales({int page = 1}) async {
+  getBriefQuestOfferRewardLocales({required int id, int page = 1}) async {
     final offset = (page - 1) * kPageSize;
     final results = await laconic
         .table(_table)
         .select(['ID', 'locale', 'RewardText'])
-        .orderBy('ID')
+        .where('ID', id)
+        .orderBy('locale')
         .limit(kPageSize)
         .offset(offset)
         .get();
@@ -39,15 +65,9 @@ class QuestOfferRewardLocaleRepository with RepositoryMixin {
   }
 
   Future<QuestOfferRewardLocaleEntity?> getQuestOfferRewardLocale(
-    int id,
-    String locale,
+    QuestOfferRewardLocaleKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('locale', locale)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestOfferRewardLocaleEntity.fromJson(results.first.toMap());
   }
@@ -60,60 +80,40 @@ class QuestOfferRewardLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<List<QuestOfferRewardLocaleEntity>> getQuestOfferRewardLocales(
-    int id,
-  ) async {
-    final results = await laconic.table(_table).where('ID', id).get();
-    return results
-        .map((e) => QuestOfferRewardLocaleEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<void> saveQuestOfferRewardLocale(
-    QuestOfferRewardLocaleEntity model,
-  ) async {
-    final existing = await getQuestOfferRewardLocale(model.id, model.locale);
-    if (existing == null) {
-      await storeQuestOfferRewardLocale(model);
-    } else {
-      await updateQuestOfferRewardLocale(model.id, model.locale, model);
-    }
-  }
-
-  Future<void> saveQuestOfferRewardLocales(
-    int id,
-    List<QuestOfferRewardLocaleEntity> locales,
-  ) async {
-    await laconic.transaction(() async {
-      await laconic.table(_table).where('ID', id).delete();
-      if (locales.isEmpty) return;
-      final jsons = locales.map((e) {
-        final json = e.toJson();
-        json['ID'] = id;
-        return json;
-      }).toList();
-      await laconic.table(_table).insert(jsons);
-    });
-  }
-
   Future<void> storeQuestOfferRewardLocale(
     QuestOfferRewardLocaleEntity model,
   ) async {
-    await laconic.table(_table).insert([model.toJson()]);
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务奖励本地化主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateQuestOfferRewardLocale(
-    int id,
-    String locale,
+    QuestOfferRewardLocaleKey originalKey,
     QuestOfferRewardLocaleEntity model,
   ) async {
-    final json = model.toJson();
-    json.remove('ID');
-    json.remove('locale');
-    await laconic
-        .table(_table)
-        .where('ID', id)
-        .where('locale', locale)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务奖励本地化主键已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, QuestOfferRewardLocaleKey key) {
+    return builder.where('ID', key.id).where('locale', key.locale);
   }
 }

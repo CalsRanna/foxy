@@ -23,33 +23,6 @@ class BriefQuestOfferRewardEntity {
   }
 }
 
-/// 列表 / Picker 精简行：ID + locale + 奖励文本
-class BriefQuestOfferRewardLocaleEntity {
-  final int id;
-  final String locale;
-  final String rewardText;
-
-  const BriefQuestOfferRewardLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.rewardText = '',
-  });
-
-  factory BriefQuestOfferRewardLocaleEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefQuestOfferRewardLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      rewardText: json['RewardText']?.toString() ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'locale': locale, 'RewardText': rewardText};
-  }
-}
-
 /// QuestOfferReward 模型
 /// quest_offer_reward 表，1:1 关系与 quest_template，共享 ID 主键。
 class QuestOfferRewardEntity {

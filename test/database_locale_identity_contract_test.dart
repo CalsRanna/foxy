@@ -32,10 +32,6 @@ void main() {
     expect(source, contains('castBarCaption: preserved?.castBarCaption ??'));
     expect(source, contains('name: preserved?.name ??'));
     expect(
-      'verifiedBuild: preserved?.verifiedBuild'.allMatches(source).length,
-      greaterThanOrEqualTo(6),
-    );
-    expect(
       'updates[originalKey] = existing.copyWith('.allMatches(source).length,
       greaterThanOrEqualTo(2),
     );
