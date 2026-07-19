@@ -127,7 +127,7 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(id: items[row].id);
+            viewModel.navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -137,21 +137,21 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(id: items[row].id);
+                    viewModel.navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyGlyphProperty(items[row].id);
+                    viewModel.copyGlyphProperty(items[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteGlyphProperty(items[row].id);
+                    viewModel.deleteGlyphProperty(items[row].key);
                   },
                   child: Text('删除'),
                 ),

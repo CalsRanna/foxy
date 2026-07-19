@@ -13,8 +13,9 @@ import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
 import 'package:foxy/entity/area_table_key.dart' as _i60;
 import 'package:foxy/entity/condition_key.dart' as _i61;
-import 'package:foxy/entity/page_text_key.dart' as _i63;
-import 'package:foxy/entity/smart_script_key.dart' as _i62;
+import 'package:foxy/entity/glyph_property_key.dart' as _i62;
+import 'package:foxy/entity/page_text_key.dart' as _i64;
+import 'package:foxy/entity/smart_script_key.dart' as _i63;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -693,11 +694,14 @@ class GlyphPropertyDetailRoute
     extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
   GlyphPropertyDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i62.GlyphPropertyKey? glyphPropertyKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          GlyphPropertyDetailRoute.name,
-         args: GlyphPropertyDetailRouteArgs(key: key, id: id),
+         args: GlyphPropertyDetailRouteArgs(
+           key: key,
+           glyphPropertyKey: glyphPropertyKey,
+         ),
          initialChildren: children,
        );
 
@@ -709,32 +713,35 @@ class GlyphPropertyDetailRoute
       final args = data.argsAs<GlyphPropertyDetailRouteArgs>(
         orElse: () => const GlyphPropertyDetailRouteArgs(),
       );
-      return _i19.GlyphPropertyDetailPage(key: args.key, id: args.id);
+      return _i19.GlyphPropertyDetailPage(
+        key: args.key,
+        glyphPropertyKey: args.glyphPropertyKey,
+      );
     },
   );
 }
 
 class GlyphPropertyDetailRouteArgs {
-  const GlyphPropertyDetailRouteArgs({this.key, this.id});
+  const GlyphPropertyDetailRouteArgs({this.key, this.glyphPropertyKey});
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i62.GlyphPropertyKey? glyphPropertyKey;
 
   @override
   String toString() {
-    return 'GlyphPropertyDetailRouteArgs{key: $key, id: $id}';
+    return 'GlyphPropertyDetailRouteArgs{key: $key, glyphPropertyKey: $glyphPropertyKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! GlyphPropertyDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && glyphPropertyKey == other.glyphPropertyKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ glyphPropertyKey.hashCode;
 }
 
 /// generated route for
@@ -1687,7 +1694,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i62.SmartScriptKey? scriptKey,
+    _i63.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1716,7 +1723,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i62.SmartScriptKey? scriptKey;
+  final _i63.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1966,7 +1973,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i63.PageTextKey? pageTextKey,
+    _i64.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -1995,7 +2002,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i63.PageTextKey? pageTextKey;
+  final _i64.PageTextKey? pageTextKey;
 
   @override
   String toString() {
