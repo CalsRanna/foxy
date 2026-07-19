@@ -3,6 +3,7 @@ import 'package:foxy/entity/creature_template_locale_entity.dart';
 import 'package:foxy/entity/creature_template_locale_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
+import 'package:foxy/entity/game_object_template_locale_key.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_key.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
@@ -20,7 +21,7 @@ import 'package:foxy/repository/creature_template_locale_repository.dart';
 import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/emote_text_data_repository.dart';
-import 'package:foxy/repository/game_object_template_repository.dart';
+import 'package:foxy/repository/game_object_template_locale_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
@@ -98,76 +99,105 @@ class FoxyLocalePickerDelegates {
   static final gameObjectName = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'name'],
     fieldLabels: ['语言', '名称'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'name': e.name,
-            }),
-          )
-          .toList();
-    },
+    onLoad: (entry) => _loadGameObjectTemplateLocaleRows(
+      entry,
+      (locale) => {'locale': locale.locale, 'name': locale.name},
+    ),
     onSave: (entry, changes) async {
-      final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final existing = await repo.getGameObjectTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final repo = GetIt.instance.get<GameObjectTemplateLocaleRepository>();
+      final creations = <GameObjectTemplateLocaleEntity>[];
+      final updates =
+          <GameObjectTemplateLocaleKey, GameObjectTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final locale = d['locale'] ?? '';
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return GameObjectTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            GameObjectTemplateLocaleEntity(
+              entry: entry,
+              locale: d['locale'] ?? '',
+              name: d['name'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = GameObjectTemplateLocaleKey(
           entry: entry,
-          locale: locale,
-          name: d['name'] ?? '',
-          castBarCaption: preserved?.castBarCaption ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
+          locale: originalLocale,
         );
-      }).toList();
-      await repo.saveGameObjectTemplateLocales(entry, locales);
+        final existing = await repo.getGameObjectTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
+          locale: d['locale'] ?? '',
+          name: d['name'] ?? '',
+        );
+      }
+      await repo.applyGameObjectTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map(
+              (locale) =>
+                  GameObjectTemplateLocaleKey(entry: entry, locale: locale),
+            )
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
   static final gameObjectCaption = DatabaseLocaleEditorDelegate(
     fields: ['locale', 'castBarCaption'],
     fieldLabels: ['语言', '使用说明'],
-    onLoad: (entry) async {
-      final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final locales = await repo.getGameObjectTemplateLocales(entry);
-      return locales
-          .map(
-            (e) => DatabaseLocaleRow.persisted({
-              'locale': e.locale,
-              'castBarCaption': e.castBarCaption,
-            }),
-          )
-          .toList();
-    },
+    onLoad: (entry) => _loadGameObjectTemplateLocaleRows(
+      entry,
+      (locale) => {
+        'locale': locale.locale,
+        'castBarCaption': locale.castBarCaption,
+      },
+    ),
     onSave: (entry, changes) async {
-      final repo = GetIt.instance.get<GameObjectTemplateRepository>();
-      final existing = await repo.getGameObjectTemplateLocales(entry);
-      final locales = changes.rows.map((row) {
+      final repo = GetIt.instance.get<GameObjectTemplateLocaleRepository>();
+      final creations = <GameObjectTemplateLocaleEntity>[];
+      final updates =
+          <GameObjectTemplateLocaleKey, GameObjectTemplateLocaleEntity>{};
+      for (final row in changes.rows) {
         final d = row.values;
-        final locale = d['locale'] ?? '';
-        final preserved = _findOriginal(
-          existing,
-          row.originalLocale,
-          (value) => value.locale,
-        );
-        return GameObjectTemplateLocaleEntity(
+        final originalLocale = row.originalLocale;
+        if (originalLocale == null) {
+          creations.add(
+            GameObjectTemplateLocaleEntity(
+              entry: entry,
+              locale: d['locale'] ?? '',
+              castBarCaption: d['castBarCaption'] ?? '',
+            ),
+          );
+          continue;
+        }
+        final originalKey = GameObjectTemplateLocaleKey(
           entry: entry,
-          locale: locale,
-          name: preserved?.name ?? '',
-          castBarCaption: d['castBarCaption'] ?? '',
-          verifiedBuild: preserved?.verifiedBuild ?? 0,
+          locale: originalLocale,
         );
-      }).toList();
-      await repo.saveGameObjectTemplateLocales(entry, locales);
+        final existing = await repo.getGameObjectTemplateLocale(originalKey);
+        if (existing == null) {
+          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        updates[originalKey] = existing.copyWith(
+          locale: d['locale'] ?? '',
+          castBarCaption: d['castBarCaption'] ?? '',
+        );
+      }
+      await repo.applyGameObjectTemplateLocaleChanges(
+        creations: creations,
+        deletions: changes.deletedLocales
+            .map(
+              (locale) =>
+                  GameObjectTemplateLocaleKey(entry: entry, locale: locale),
+            )
+            .toList(),
+        updates: updates,
+      );
     },
   );
 
@@ -650,18 +680,6 @@ class FoxyLocalePickerDelegates {
     (repo, id, field, values) => repo.saveSpellRangeLocales(id, field, values),
   );
 
-  static T? _findOriginal<T>(
-    List<T> rows,
-    String? originalLocale,
-    String Function(T value) localeOf,
-  ) {
-    if (originalLocale == null) return null;
-    for (final row in rows) {
-      if (localeOf(row) == originalLocale) return row;
-    }
-    return null;
-  }
-
   static Future<List<DatabaseLocaleRow>> _loadItemTemplateLocaleRows(
     int entry,
     Map<String, String> Function(ItemTemplateLocaleEntity locale) valuesOf,
@@ -707,6 +725,30 @@ class FoxyLocalePickerDelegates {
           'name': locale.name,
           'title': locale.title,
         });
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadGameObjectTemplateLocaleRows(
+    int entry,
+    Map<String, String> Function(GameObjectTemplateLocaleEntity locale)
+    valuesOf,
+  ) async {
+    final repo = GetIt.instance.get<GameObjectTemplateLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefGameObjectTemplateLocales(entry: entry),
+      repo.countGameObjectTemplateLocales(entry: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('游戏对象模板本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getGameObjectTemplateLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted(valuesOf(locale));
       }),
     );
   }

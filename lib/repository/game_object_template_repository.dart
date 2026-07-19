@@ -1,12 +1,10 @@
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
-import 'package:foxy/entity/game_object_template_locale_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
-  static const _localeTable = 'gameobject_template_locale';
 
   Future<void> copyGameObjectTemplate(int entry) async {
     var template = await getGameObjectTemplate(entry);
@@ -90,15 +88,6 @@ class GameObjectTemplateRepository with RepositoryMixin {
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
   }
 
-  Future<List<GameObjectTemplateLocaleEntity>> getGameObjectTemplateLocales(
-    int entry,
-  ) async {
-    var results = await laconic.table(_localeTable).where('entry', entry).get();
-    return results
-        .map((e) => GameObjectTemplateLocaleEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
   Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
     var results = await laconic.table(_table).get();
     return results
@@ -117,22 +106,6 @@ class GameObjectTemplateRepository with RepositoryMixin {
     } else {
       await laconic.table(_table).insert([template.toJson()]);
     }
-  }
-
-  Future<void> saveGameObjectTemplateLocales(
-    int entry,
-    List<GameObjectTemplateLocaleEntity> locales,
-  ) async {
-    await laconic.transaction(() async {
-      await laconic.table(_localeTable).where('entry', entry).delete();
-      if (locales.isEmpty) return;
-      var jsons = locales.map((e) {
-        var json = e.toJson();
-        json['entry'] = entry;
-        return json;
-      }).toList();
-      await laconic.table(_localeTable).insert(jsons);
-    });
   }
 
   Future<int> storeGameObjectTemplate(GameObjectTemplateEntity template) async {
