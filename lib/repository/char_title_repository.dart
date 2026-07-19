@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_char_title_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
+import 'package:foxy/entity/char_title_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,17 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyCharTitle(int id) async {
-    var source = await getCharTitle(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<CharTitleKey> copyCharTitle(CharTitleKey key) async {
+    final source = await getCharTitle(key);
+    if (source == null) {
+      throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
+    }
+    final copied = CharTitleEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeCharTitle(copied);
+    return CharTitleKey.fromEntity(copied);
   }
 
   Future<int> countCharTitles({CharTitleFilterEntity? filter}) async {
@@ -30,8 +37,11 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return CharTitleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCharTitle(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyCharTitle(CharTitleKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefCharTitleEntity>> getBriefCharTitles({
@@ -50,8 +60,8 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<CharTitleEntity?> getCharTitle(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<CharTitleEntity?> getCharTitle(CharTitleKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CharTitleEntity.fromJson(results.first.toMap());
   }
@@ -66,37 +76,44 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => CharTitleEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveCharTitle(CharTitleEntity title) async {
-    if (title.id == 0) {
-      await storeCharTitle(title);
-      return;
-    }
-    var existing = await getCharTitle(title.id);
-    if (existing != null) {
-      await updateCharTitle(title);
-    } else {
-      await laconic.table(_table).insert([title.toJson()]);
-    }
-  }
-
   Future<void> saveCharTitleLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeCharTitle(CharTitleEntity title) async {
-    var json = title.toJson();
-    final nextId = title.id > 0 ? title.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeCharTitle(CharTitleEntity title) async {
+    if (title.id <= 0) {
+      throw StateError('角色称号 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([title.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('角色称号 ${title.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateCharTitle(CharTitleEntity title) async {
-    var json = title.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', title.id).update(json);
+  Future<void> updateCharTitle(
+    CharTitleKey originalKey,
+    CharTitleEntity title,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(title.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的角色称号 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -115,5 +132,9 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CharTitleKey key) {
+    return builder.where('ID', key.id);
   }
 }
