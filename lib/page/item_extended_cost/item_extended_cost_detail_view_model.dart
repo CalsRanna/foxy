@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
+import 'package:foxy/entity/item_extended_cost_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
@@ -47,23 +48,30 @@ class ItemExtendedCostDetailViewModel
   late final itemCount4Controller = registerController(IntFieldController());
 
   final cost = signal(ItemExtendedCostEntity());
+  final persistedKey = signal<ItemExtendedCostKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({ItemExtendedCostKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createItemExtendedCost();
         cost.value = blank;
         _initControllers(blank);
         return;
       }
-      cost.value = (await _repository.getItemExtendedCost(id))!;
-      _initControllers(cost.value);
+      persistedKey.value = key;
+      final entity = await _repository.getItemExtendedCost(key);
+      if (entity == null) {
+        throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
+      }
+      cost.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载扩展价格(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载扩展价格(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -72,23 +80,27 @@ class ItemExtendedCostDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateItemExtendedCostFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeItemExtendedCost(candidate);
+    } else {
+      await _repository.updateItemExtendedCost(originalKey, candidate);
+    }
+    persistedKey.value = ItemExtendedCostKey.fromEntity(candidate);
+    cost.value = candidate;
+    routerFacade.updateCurrentLabel('扩展价格 #${candidate.id}');
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateItemExtendedCostFields(t);
-      final existed = await _repository.getItemExtendedCost(t.id);
-      final action = existed == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (existed == null) {
-        final id = await _repository.storeItemExtendedCost(t);
-        idController.init(id);
-        t = t.copyWith(id: id);
-      } else {
-        await _repository.updateItemExtendedCost(t);
-      }
-      cost.value = t;
-      _logActivity(action, t);
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('扩展价格数据已保存'));
       ShadSonner.of(context).show(toast);

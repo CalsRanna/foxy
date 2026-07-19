@@ -138,17 +138,33 @@ void main() {
     expect(view, contains('kItemExtendedCostArenaSlotOptions'));
     expect(view, isNot(contains('flex:')));
     expect('Expanded(child:'.allMatches(view), hasLength(20));
+    expect(view, isNot(contains('readOnly: true')));
   });
 
-  test('Repository 统一校验引用并保护两张商人引用表', () {
+  test('Repository 使用原始键、完整 candidate 和单表边界', () {
     final source = File(
       'lib/repository/item_extended_cost_repository.dart',
     ).readAsStringSync();
-    expect(source, contains('itemExtendedCost.copyWith(id: id)'));
-    expect(source, contains(".table('item_template')"));
-    expect(source, contains(".table('foxy.dbc_item_purchase_group')"));
-    expect(source, contains(".table('npc_vendor')"));
-    expect(source, contains(".table('game_event_npc_vendor')"));
-    expect(source, contains('仍被商人数据引用，不能删除'));
+    expect(source, contains('ItemExtendedCostKey originalKey'));
+    expect(source, contains('.update(itemExtendedCost.toJson())'));
+    expect(source, contains('matchedRows == 0'));
+    expect(source, contains('deletedRows == 0'));
+    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(source, isNot(contains("table('item_template')")));
+    expect(source, isNot(contains("table('foxy.dbc_item_purchase_group')")));
+    expect(source, isNot(contains("table('npc_vendor')")));
+    expect(source, isNot(contains("table('game_event_npc_vendor')")));
+    expect(source, isNot(contains("remove('ID')")));
+
+    final viewModel = File(
+      'lib/page/item_extended_cost/item_extended_cost_detail_view_model.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('signal<ItemExtendedCostKey?>(null)'));
+    expect(viewModel, contains('final originalKey = persistedKey.value'));
+    expect(
+      viewModel,
+      contains('updateItemExtendedCost(originalKey, candidate)'),
+    );
+    expect(viewModel, contains('persistedKey.value = ItemExtendedCostKey'));
   });
 }

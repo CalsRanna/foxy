@@ -1,19 +1,24 @@
+import 'package:foxy/entity/brief_item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
+import 'package:foxy/entity/item_extended_cost_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
-  Future<void> copyItemExtendedCost(int id) async {
-    var source = await getItemExtendedCost(id);
-    if (source == null) return;
-    final nextId = await _getNextId();
-    final candidate = source.copyWith(id: nextId);
-    await _validateReferences(candidate);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
+  Future<ItemExtendedCostKey> copyItemExtendedCost(
+    ItemExtendedCostKey key,
+  ) async {
+    final source = await getItemExtendedCost(key);
+    if (source == null) {
+      throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await _getNextId());
+    await storeItemExtendedCost(copied);
+    return ItemExtendedCostKey.fromEntity(copied);
   }
 
   Future<int> countItemExtendedCosts({
@@ -28,11 +33,11 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return ItemExtendedCostEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemExtendedCost(int id) async {
-    if (await _isReferencedByVendors(id)) {
-      throw StateError('扩展价格 $id 仍被商人数据引用，不能删除');
+  Future<void> destroyItemExtendedCost(ItemExtendedCostKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
     }
-    await laconic.table(_table).where('ID', id).delete();
   }
 
   Future<List<BriefItemExtendedCostEntity>> getBriefItemExtendedCosts({
@@ -67,8 +72,10 @@ class ItemExtendedCostRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemExtendedCostEntity?> getItemExtendedCost(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<ItemExtendedCostEntity?> getItemExtendedCost(
+    ItemExtendedCostKey key,
+  ) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemExtendedCostEntity.fromJson(results.first.toMap());
   }
@@ -80,42 +87,40 @@ class ItemExtendedCostRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<void> saveItemExtendedCost(
+  Future<void> storeItemExtendedCost(
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
-    if (itemExtendedCost.id == 0) {
-      await storeItemExtendedCost(itemExtendedCost);
-      return;
+    if (itemExtendedCost.id <= 0) {
+      throw StateError('扩展价格 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getItemExtendedCost(itemExtendedCost.id);
-    if (existing != null) {
-      await updateItemExtendedCost(itemExtendedCost);
-    } else {
-      await _validateReferences(itemExtendedCost);
+    try {
       await laconic.table(_table).insert([itemExtendedCost.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('扩展价格 ${itemExtendedCost.id} 已存在，无法新建');
+      }
+      rethrow;
     }
-  }
-
-  Future<int> storeItemExtendedCost(
-    ItemExtendedCostEntity itemExtendedCost,
-  ) async {
-    final id = itemExtendedCost.id > 0
-        ? itemExtendedCost.id
-        : await _getNextId();
-    final candidate = itemExtendedCost.copyWith(id: id);
-    await _validateReferences(candidate);
-    var json = candidate.toJson();
-    await laconic.table(_table).insert([json]);
-    return id;
   }
 
   Future<void> updateItemExtendedCost(
+    ItemExtendedCostKey originalKey,
     ItemExtendedCostEntity itemExtendedCost,
   ) async {
-    await _validateReferences(itemExtendedCost);
-    var json = itemExtendedCost.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', itemExtendedCost.id).update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(itemExtendedCost.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的扩展价格 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -137,44 +142,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return id;
   }
 
-  Future<bool> _isReferencedByVendors(int id) async {
-    final vendorCount = await laconic
-        .table('npc_vendor')
-        .where('ExtendedCost', id)
-        .count();
-    if (vendorCount > 0) return true;
-    final eventVendorCount = await laconic
-        .table('game_event_npc_vendor')
-        .where('ExtendedCost', id)
-        .count();
-    return eventVendorCount > 0;
-  }
-
-  Future<void> _validateItemReference(String label, int itemId) async {
-    if (itemId == 0) return;
-    final count = await laconic
-        .table('item_template')
-        .where('entry', itemId)
-        .count();
-    if (count == 0) {
-      throw StateError('$label 引用的物品 $itemId 不存在');
-    }
-  }
-
-  Future<void> _validateReferences(ItemExtendedCostEntity entity) async {
-    await _validateItemReference('物品 0', entity.itemID0);
-    await _validateItemReference('物品 1', entity.itemID1);
-    await _validateItemReference('物品 2', entity.itemID2);
-    await _validateItemReference('物品 3', entity.itemID3);
-    await _validateItemReference('物品 4', entity.itemID4);
-    if (entity.itemPurchaseGroup != 0) {
-      final count = await laconic
-          .table('foxy.dbc_item_purchase_group')
-          .where('ID', entity.itemPurchaseGroup)
-          .count();
-      if (count == 0) {
-        throw StateError('物品购买组 ${entity.itemPurchaseGroup} 不存在');
-      }
-    }
+  QueryBuilder _whereKey(QueryBuilder builder, ItemExtendedCostKey key) {
+    return builder.where('ID', key.id);
   }
 }
