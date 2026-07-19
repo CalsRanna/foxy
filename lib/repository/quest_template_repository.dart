@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
+import 'package:foxy/entity/quest_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class QuestTemplateRepository with RepositoryMixin {
   static const _table = 'quest_template';
 
-  Future<void> copyQuestTemplate(int id) async {
-    var template = await getQuestTemplate(id);
-    if (template == null) return;
-    var json = template.toJson();
-    var newId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
+  Future<QuestTemplateKey> copyQuestTemplate(QuestTemplateKey key) async {
+    final source = await getQuestTemplate(key);
+    if (source == null) {
+      throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeQuestTemplate(copied);
+    return QuestTemplateKey.fromEntity(copied);
   }
 
   Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
@@ -46,8 +50,11 @@ class QuestTemplateRepository with RepositoryMixin {
     return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyQuestTemplate(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyQuestTemplate(QuestTemplateKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
@@ -82,8 +89,8 @@ class QuestTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestTemplateEntity?> getQuestTemplate(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<QuestTemplateEntity?> getQuestTemplate(QuestTemplateKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return QuestTemplateEntity.fromJson(results.first.toMap());
   }
@@ -93,33 +100,38 @@ class QuestTemplateRepository with RepositoryMixin {
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveQuestTemplate(QuestTemplateEntity template) async {
-    if (template.id == 0) {
-      await storeQuestTemplate(template);
-      return;
+  Future<void> storeQuestTemplate(QuestTemplateEntity template) async {
+    if (template.id <= 0) {
+      throw StateError('任务模板 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getQuestTemplate(template.id);
-    if (existing != null) {
-      await updateQuestTemplate(template);
-    } else {
+    try {
       await laconic.table(_table).insert([template.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('任务模板 ${template.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeQuestTemplate(QuestTemplateEntity template) async {
-    var json = template.toJson();
-    final newId = template.id > 0
-        ? template.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
-    return newId;
-  }
-
-  Future<void> updateQuestTemplate(QuestTemplateEntity template) async {
-    var json = template.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', template.id).update(json);
+  Future<void> updateQuestTemplate(
+    QuestTemplateKey originalKey,
+    QuestTemplateEntity template,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(template.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的任务模板 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -147,5 +159,9 @@ class QuestTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, QuestTemplateKey key) {
+    return builder.where('ID', key.id);
   }
 }

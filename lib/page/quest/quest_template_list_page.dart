@@ -143,7 +143,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             final item = templates[row];
-            viewModel.navigateToDetail(id: item.id, name: item.displayTitle);
+            viewModel.navigateToDetail(key: item.key, name: item.displayTitle);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final item = templates[row];
@@ -154,19 +154,19 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () => viewModel.navigateToDetail(
-                    id: item.id,
+                    key: item.key,
                     name: item.displayTitle,
                   ),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyQuestTemplate(item.id),
+                  onPressed: () => viewModel.copyQuestTemplate(item.key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deleteQuestTemplate(item.id),
+                  onPressed: () => viewModel.deleteQuestTemplate(item.key),
                   child: Text('删除'),
                 ),
               ],

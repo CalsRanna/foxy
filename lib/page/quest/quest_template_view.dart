@@ -14,32 +14,12 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class QuestTemplateView extends StatefulWidget {
-  final int? questId;
-  final ValueChanged<int>? onSaved;
-  const QuestTemplateView({super.key, this.questId, this.onSaved});
+class QuestTemplateView extends StatelessWidget {
+  final QuestTemplateDetailViewModel viewModel;
 
-  @override
-  State<QuestTemplateView> createState() => _QuestTemplateViewState();
-}
-
-class _QuestTemplateViewState extends State<QuestTemplateView> {
-  final viewModel = GetIt.instance.get<QuestTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(questId: widget.questId);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const QuestTemplateView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +33,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
           Expanded(
             child: FoxyFormItem(
               label: '编号',
-              child: FoxyNumberInput<int>(
-                controller: vm.idController,
-                readOnly: true,
-              ),
+              child: FoxyNumberInput<int>(controller: vm.idController),
             ),
           ),
           Expanded(
@@ -1033,7 +1010,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '日志标题',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.logTitleController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogTitle',
@@ -1045,7 +1022,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '日志描述',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.logDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'LogDescription',
@@ -1064,7 +1041,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '任务描述',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.questDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestDescription',
@@ -1076,7 +1053,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '区域描述',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.areaDescriptionController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'AreaDescription',
@@ -1095,7 +1072,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '完成日志',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.questCompletionLogController,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'QuestCompletionLog',
@@ -1115,7 +1092,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '目标文本1',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.objectiveText1Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText1',
@@ -1127,7 +1104,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '目标文本2',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.objectiveText2Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText2',
@@ -1139,7 +1116,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '目标文本3',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.objectiveText3Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText3',
@@ -1151,7 +1128,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             child: FoxyFormItem(
               label: '目标文本4',
               child: FoxyLocalePicker(
-                entry: widget.questId,
+                entry: viewModel.persistedKey.value?.id,
                 controller: vm.objectiveText4Controller,
                 delegate: FoxyLocalePickerDelegates.questTemplate,
                 placeholder: 'ObjectiveText4',
@@ -1270,8 +1247,7 @@ class _QuestTemplateViewState extends State<QuestTemplateView> {
             children: [
               ShadButton(
                 onPressed: () async {
-                  final entry = await viewModel.save(context);
-                  if (entry != null) widget.onSaved?.call(entry);
+                  await viewModel.save(context);
                 },
                 child: Text('保存'),
               ),
