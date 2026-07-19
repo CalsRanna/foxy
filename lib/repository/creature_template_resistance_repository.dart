@@ -1,114 +1,120 @@
+import 'package:foxy/entity/brief_creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
+import 'package:foxy/entity/creature_template_resistance_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureTemplateResistanceRepository with RepositoryMixin {
   static const _table = 'creature_template_resistance';
-  static const minSchool = 1;
   static const maxSchool = 6;
+  static const minSchool = 1;
+  static const primaryKeyColumns = {'CreatureID', 'School'};
 
-  Future<void> copyCreatureTemplateResistance(
-    int creatureID,
-    int school,
+  Future<CreatureTemplateResistanceKey> copyCreatureTemplateResistance(
+    CreatureTemplateResistanceKey sourceKey,
   ) async {
-    var source = await getCreatureTemplateResistance(creatureID, school);
-    if (source == null) return;
-    var nextSchool = await getNextSchool(creatureID);
-    var json = source.toJson();
-    json['School'] = nextSchool;
-    await laconic.table(_table).insert([json]);
+    final source = await getCreatureTemplateResistance(sourceKey);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureTemplateResistance(source.creatureID);
+    final candidate = source.copyWith(school: blank.school);
+    await storeCreatureTemplateResistance(candidate);
+    return CreatureTemplateResistanceKey.fromEntity(candidate);
+  }
+
+  Future<int> countCreatureTemplateResistances(int creatureID) {
+    return laconic.table(_table).where('CreatureID', creatureID).count();
   }
 
   Future<CreatureTemplateResistanceEntity> createCreatureTemplateResistance(
     int creatureID,
   ) async {
-    var nextSchool = await getNextSchool(creatureID);
     return CreatureTemplateResistanceEntity(
       creatureID: creatureID,
-      school: nextSchool,
+      school: await getNextSchool(creatureID),
     );
   }
 
   Future<void> destroyCreatureTemplateResistance(
-    int creatureID,
-    int school,
+    CreatureTemplateResistanceKey key,
   ) async {
-    await laconic
-        .table(_table)
-        .where('CreatureID', creatureID)
-        .where('School', school)
-        .delete();
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
-  Future<List<CreatureTemplateResistanceEntity>>
-  getBriefCreatureTemplateResistances(int creatureID) async {
-    var builder = laconic.table(_table);
-    builder = builder.select(['*']);
-    builder = builder.where('CreatureID', creatureID);
-    builder = builder.orderBy('School');
-    var results = await builder.get();
+  Future<List<BriefCreatureTemplateResistanceEntity>>
+  getBriefCreatureTemplateResistances(int creatureID, {int page = 1}) async {
+    final results = await laconic
+        .table(_table)
+        .select(['CreatureID', 'School', 'Resistance', 'VerifiedBuild'])
+        .where('CreatureID', creatureID)
+        .orderBy('CreatureID')
+        .orderBy('School')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => CreatureTemplateResistanceEntity.fromJson(e.toMap()))
+        .map(
+          (result) =>
+              BriefCreatureTemplateResistanceEntity.fromJson(result.toMap()),
+        )
         .toList();
   }
 
   Future<CreatureTemplateResistanceEntity?> getCreatureTemplateResistance(
-    int creatureID,
-    int school,
+    CreatureTemplateResistanceKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('CreatureID', creatureID)
-        .where('School', school)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateResistanceEntity.fromJson(results.first.toMap());
   }
 
   Future<int> getNextSchool(int creatureID) async {
-    var results = await laconic
+    final results = await laconic
         .table(_table)
         .select(['School'])
         .where('CreatureID', creatureID)
         .get();
     return nextAvailableSchool(
-      results.map((result) => result.toMap()['School'] as int),
+      results.map((result) => (result.toMap()['School'] as num).toInt()),
     );
-  }
-
-  Future<void> saveCreatureTemplateResistance(
-    CreatureTemplateResistanceEntity resistance,
-  ) async {
-    var existing = await getCreatureTemplateResistance(
-      resistance.creatureID,
-      resistance.school,
-    );
-    if (existing != null) {
-      await updateCreatureTemplateResistance(resistance);
-    } else {
-      await storeCreatureTemplateResistance(resistance);
-    }
   }
 
   Future<void> storeCreatureTemplateResistance(
     CreatureTemplateResistanceEntity resistance,
   ) async {
-    validateSchool(resistance.school);
-    await laconic.table(_table).insert([resistance.toJson()]);
+    try {
+      await laconic.table(_table).insert([resistance.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物抗性主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureTemplateResistance(
+    CreatureTemplateResistanceKey originalKey,
     CreatureTemplateResistanceEntity resistance,
   ) async {
-    validateSchool(resistance.school);
-    var json = resistance.toJson();
-    json.remove('CreatureID');
-    json.remove('School');
-    await laconic
-        .table(_table)
-        .where('CreatureID', resistance.creatureID)
-        .where('School', resistance.school)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(resistance.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物抗性主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   static int nextAvailableSchool(Iterable<int> usedSchools) {
@@ -119,13 +125,12 @@ class CreatureTemplateResistanceRepository with RepositoryMixin {
     throw StateError('生物抗性学校已满，只允许 $minSchool-$maxSchool');
   }
 
-  static void validateSchool(int school) {
-    if (school < minSchool || school > maxSchool) {
-      throw ArgumentError.value(
-        school,
-        'school',
-        '生物抗性学校只允许 $minSchool-$maxSchool',
-      );
-    }
+  QueryBuilder _whereKey(
+    QueryBuilder builder,
+    CreatureTemplateResistanceKey key,
+  ) {
+    return builder
+        .where('CreatureID', key.creatureID)
+        .where('School', key.school);
   }
 }
