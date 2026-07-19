@@ -1,7 +1,9 @@
 import 'package:foxy/constant/page_text_constants.dart';
+import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
-import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'package:foxy/entity/page_text_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -9,13 +11,16 @@ class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
-  Future<void> copyPageText(int id) async {
-    final source = await getPageText(id);
-    if (source == null) return;
+  Future<PageTextKey> copyPageText(PageTextKey key) async {
+    final source = await getPageText(key);
+    if (source == null) {
+      throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
+    }
     final nextId = await _getNextId();
     final copied = source.copyWith(id: nextId);
     await _validateNextPage(copied.id, copied.nextPageId);
-    await laconic.table(_table).insert([copied.toJson()]);
+    await storePageText(copied);
+    return PageTextKey.fromEntity(copied);
   }
 
   Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
@@ -44,8 +49,11 @@ class PageTextRepository with RepositoryMixin {
     return PageTextEntity(id: await _getNextId());
   }
 
-  Future<void> destroyPageText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyPageText(PageTextKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefPageTextEntity>> getBriefPageTexts({
@@ -74,21 +82,10 @@ class PageTextRepository with RepositoryMixin {
     return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<PageTextEntity?> getPageText(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<PageTextEntity?> getPageText(PageTextKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return PageTextEntity.fromJson(results.first.toMap());
-  }
-
-  Future<List<PageTextLocaleEntity>> getPageTextLocales(int id) async {
-    final results = await laconic
-        .table(_localeTable)
-        .where('ID', id)
-        .orderBy('locale')
-        .get();
-    return results
-        .map((e) => PageTextLocaleEntity.fromJson(e.toMap()))
-        .toList();
   }
 
   Future<List<PageTextEntity>> getPageTexts() async {
@@ -96,47 +93,40 @@ class PageTextRepository with RepositoryMixin {
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> savePageText(PageTextEntity pageText) async {
-    if (pageText.id == 0 || await getPageText(pageText.id) == null) {
-      await storePageText(pageText);
-      return;
-    }
-    await updatePageText(pageText);
-  }
-
-  Future<void> savePageTextLocales(
-    int id,
-    List<PageTextLocaleEntity> locales,
-  ) async {
-    final stored = _prepareLocales(id, locales);
-    await laconic.transaction(() async {
-      await laconic.table(_localeTable).where('ID', id).delete();
-      if (stored.isEmpty) return;
-      await laconic
-          .table(_localeTable)
-          .insert(stored.map((locale) => locale.toJson()).toList());
-    });
-  }
-
-  Future<int> storePageText(PageTextEntity pageText) async {
-    final nextId = pageText.id > 0 ? pageText.id : await _getNextId();
-    final stored = pageText.copyWith(id: nextId);
-    await _validateNextPage(stored.id, stored.nextPageId);
-    if (await getPageText(stored.id) != null) {
-      throw StateError('页面文本 ${stored.id} 已存在');
-    }
-    await laconic.table(_table).insert([stored.toJson()]);
-    return nextId;
-  }
-
-  Future<void> updatePageText(PageTextEntity pageText) async {
-    if (await getPageText(pageText.id) == null) {
-      throw StateError('页面文本 ${pageText.id} 不存在');
+  Future<void> storePageText(PageTextEntity pageText) async {
+    if (pageText.id <= 0) {
+      throw StateError('页面文本 ID 必须在新建表单打开时显式分配');
     }
     await _validateNextPage(pageText.id, pageText.nextPageId);
-    final json = pageText.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', pageText.id).update(json);
+    try {
+      await laconic.table(_table).insert([pageText.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('页面文本 ${pageText.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updatePageText(
+    PageTextKey originalKey,
+    PageTextEntity pageText,
+  ) async {
+    await _validateNextPage(pageText.id, pageText.nextPageId);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(pageText.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的页面文本 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -173,20 +163,6 @@ class PageTextRepository with RepositoryMixin {
     return id;
   }
 
-  List<PageTextLocaleEntity> _prepareLocales(
-    int id,
-    List<PageTextLocaleEntity> locales,
-  ) {
-    final localeKeys = <String>{};
-    return locales.map((locale) {
-      final normalized = locale.copyWith(id: id);
-      if (!localeKeys.add(normalized.locale)) {
-        throw StateError('语言 ${normalized.locale} 重复');
-      }
-      return normalized;
-    }).toList();
-  }
-
   Future<void> _validateNextPage(int id, int nextPageId) async {
     if (nextPageId == 0) return;
     var current = nextPageId;
@@ -195,11 +171,15 @@ class PageTextRepository with RepositoryMixin {
       if (!visited.add(current)) {
         throw StateError('NextPageID 形成循环引用');
       }
-      final page = await getPageText(current);
+      final page = await getPageText(PageTextKey(id: current));
       if (page == null) {
         throw StateError('NextPageID 引用的页面文本 $current 不存在');
       }
       current = page.nextPageId;
     }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, PageTextKey key) {
+    return builder.where('ID', key.id);
   }
 }

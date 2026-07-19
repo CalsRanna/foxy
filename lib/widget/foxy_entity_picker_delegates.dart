@@ -85,7 +85,7 @@ import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/mail_template_filter_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
-import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_filter_entity.dart';

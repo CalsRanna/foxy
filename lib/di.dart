@@ -167,6 +167,7 @@ import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
+import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/repository/point_of_interest_repository.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
@@ -307,6 +308,7 @@ class DI {
     _instance.registerLazySingleton(() => NpcTextRepository());
     _instance.registerLazySingleton(() => NpcTrainerRepository());
     _instance.registerLazySingleton(() => NpcVendorRepository());
+    _instance.registerLazySingleton(() => PageTextLocaleRepository());
     _instance.registerLazySingleton(() => PageTextRepository());
     _instance.registerLazySingleton(() => PointOfInterestRepository());
     _instance.registerLazySingleton(() => PlayerCreateInfoRepository());

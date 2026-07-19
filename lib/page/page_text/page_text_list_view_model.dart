@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/entity/page_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/page_text_repository.dart';
@@ -25,16 +26,16 @@ class PageTextListViewModel with FieldControllerMixin {
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
-  Future<void> copyPageText(int id) async {
+  Future<void> copyPageText(PageTextKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制页面文本 ID=$id？',
+        description: '是否复制页面文本 ID=${key.id}？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyPageText(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyPageText(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -43,17 +44,17 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deletePageText(int id) async {
+  Future<void> deletePageText(PageTextKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除页面文本 ID=$id？此操作不可撤销。',
+        description: '是否删除页面文本 ID=${key.id}？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyPageText(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyPageText(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -82,11 +83,11 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id, String? label}) {
+  void navigateToDetail({PageTextKey? key, String? label}) {
     final name = label?.isNotEmpty == true ? label! : '新建页面文本';
     _routerFacade.navigateToDetail(
       label: name,
-      route: TextContentDetailRoute(id: id, label: label),
+      route: TextContentDetailRoute(pageTextKey: key),
       parentMenu: RouterMenu.more,
     );
   }
@@ -115,9 +116,9 @@ class PageTextListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, PageTextKey key) {
     final pages = this.pages.value;
-    final page = pages.where((p) => p.id == id).firstOrNull;
+    final page = pages.where((p) => p.key == key).firstOrNull;
     final name = page?.text ?? '';
     final log = ActivityLogEntity(
       module: 'page_text',
