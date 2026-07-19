@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_spell_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
+import 'package:foxy/entity/spell_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,14 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copySpell(int id) async {
-    var source = await getSpell(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var newId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
+  Future<SpellKey> copySpell(SpellKey key) async {
+    final source = await getSpell(key);
+    if (source == null) {
+      throw StateError('原法术不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeSpell(copied);
+    return SpellKey.fromEntity(copied);
   }
 
   Future<int> countSpells({SpellFilterEntity? filter}) async {
@@ -31,8 +35,11 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return SpellEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpell(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroySpell(SpellKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSpellEntity>> getBriefSpells({
@@ -69,8 +76,8 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<SpellEntity?> getSpell(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<SpellEntity?> getSpell(SpellKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellEntity.fromJson(results.first.toMap());
   }
@@ -85,37 +92,41 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveSpell(SpellEntity spell) async {
-    if (spell.id == 0) {
-      await storeSpell(spell);
-      return;
-    }
-    var existing = await getSpell(spell.id);
-    if (existing != null) {
-      await updateSpell(spell);
-    } else {
-      await laconic.table(_table).insert([spell.toJson()]);
-    }
-  }
-
   Future<void> saveSpellLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeSpell(SpellEntity spell) async {
-    var json = spell.toJson();
-    final newId = spell.id > 0 ? spell.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = newId;
-    await laconic.table(_table).insert([json]);
-    return newId;
+  Future<void> storeSpell(SpellEntity spell) async {
+    if (spell.id <= 0) {
+      throw StateError('法术 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([spell.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术 ${spell.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateSpell(SpellEntity spell) async {
-    var json = spell.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', spell.id).update(json);
+  Future<void> updateSpell(SpellKey originalKey, SpellEntity spell) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(spell.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilterEntity? filter) {
@@ -131,5 +142,9 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, SpellKey key) {
+    return builder.where('ID', key.id);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
+import 'package:foxy/entity/spell_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/spell_repository.dart';
@@ -15,7 +16,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellRepository>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  /// 主键展示（只读）；新建时由 [createSpell] 预填 MAX+1。
+  /// 主键；新建时由 [createSpell] 预填 MAX+1，之后仍可编辑。
   late final idController = registerController(IntFieldController());
 
   // === 基础文本 ===
@@ -492,8 +493,8 @@ class SpellDetailViewModel with FieldControllerMixin {
     FlagFieldController(),
   );
 
-  final id = signal(0);
   final spell = signal(SpellEntity());
+  final persistedKey = signal<SpellKey?>(null);
 
   // === 联动信号：跟踪当前选择的枚举值，用于控制子字段 readonly/enabled ===
   final effect0Signal = signal<int>(0);
@@ -598,24 +599,26 @@ class SpellDetailViewModel with FieldControllerMixin {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({SpellKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createSpell();
-        this.id.value = blank.id;
         spell.value = blank;
         _initControllers(blank);
         _wireEffectSignals();
         return;
       }
-      this.id.value = id;
-      final result = await _repository.getSpell(id);
-      if (result == null) return;
+      persistedKey.value = key;
+      final result = await _repository.getSpell(key);
+      if (result == null) {
+        throw StateError('原法术不存在，可能已被其他操作修改或删除');
+      }
       spell.value = result;
       _initControllers(result);
       _wireEffectSignals();
     } catch (e, s) {
-      LoggerUtil.instance.e('加载法术(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载法术(id=${key?.id})失败', error: e, stackTrace: s);
     }
   }
 
@@ -623,39 +626,40 @@ class SpellDetailViewModel with FieldControllerMixin {
     routerFacade.goBack();
   }
 
-  Future<int?> save(BuildContext context) async {
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeSpell(candidate);
+    } else {
+      await _repository.updateSpell(originalKey, candidate);
+    }
+    persistedKey.value = SpellKey.fromEntity(candidate);
+    spell.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
+  Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      final isCreate = (await _repository.getSpell(t.id)) == null;
-      if (isCreate) {
-        final newId = await _repository.storeSpell(t);
-        id.value = newId;
-        idController.init(newId);
-        t = t.copyWith(id: newId);
-      } else {
-        await _repository.updateSpell(t);
-      }
-      spell.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
-      if (!context.mounted) return t.id;
+      await persist();
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text('法术数据已保存'));
       ShadSonner.of(context).show(toast);
-      return t.id;
     } catch (e) {
-      if (!context.mounted) return null;
+      if (!context.mounted) return;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
-      return null;
     }
   }
 
   SpellEntity _collectFromControllers() {
     // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
     return spell.value.copyWith(
-      id: id.value,
+      id: idController.collect(),
       // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.collect(),
       nameSubtextLangZhCN: nameSubtextLangZhCNController.collect(),
@@ -1101,6 +1105,13 @@ class SpellDetailViewModel with FieldControllerMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(SpellEntity spell) {
+    final name = spell.nameLangZhCN.isNotEmpty
+        ? spell.nameLangZhCN
+        : spell.nameLangEnUS;
+    return name.isNotEmpty ? name : '法术 #${spell.id}';
   }
 
   /// 监听 SelectFieldController 变化，同步到 signal。

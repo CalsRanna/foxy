@@ -14,33 +14,13 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-class SpellView extends StatefulWidget {
-  final int? id;
-  final ValueChanged<int>? onSaved;
-  const SpellView({super.key, this.id, this.onSaved});
+class SpellView extends StatelessWidget {
+  final SpellDetailViewModel viewModel;
 
-  @override
-  State<SpellView> createState() => _SpellViewState();
-}
-
-class _SpellViewState extends State<SpellView> {
-  final viewModel = GetIt.instance.get<SpellDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(id: widget.id);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const SpellView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +31,6 @@ class _SpellViewState extends State<SpellView> {
       child: FoxyNumberInput<int>(
         controller: vm.idController,
         placeholder: 'ID',
-        readOnly: true,
       ),
     );
 
@@ -59,7 +38,7 @@ class _SpellViewState extends State<SpellView> {
     final nameInput = FoxyFormItem(
       label: '名称',
       child: Watch((_) {
-        final entry = vm.id.value == 0 ? null : vm.id.value;
+        final entry = vm.persistedKey.value?.id;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.nameLangZhCNController,
@@ -73,7 +52,7 @@ class _SpellViewState extends State<SpellView> {
     final subtextInput = FoxyFormItem(
       label: '子名称',
       child: Watch((_) {
-        final entry = vm.id.value == 0 ? null : vm.id.value;
+        final entry = vm.persistedKey.value?.id;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.nameSubtextLangZhCNController,
@@ -87,7 +66,7 @@ class _SpellViewState extends State<SpellView> {
     final descriptionInput = FoxyFormItem(
       label: '描述',
       child: Watch((_) {
-        final entry = vm.id.value == 0 ? null : vm.id.value;
+        final entry = vm.persistedKey.value?.id;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.descriptionLangZhCNController,
@@ -101,7 +80,7 @@ class _SpellViewState extends State<SpellView> {
     final auraDescriptionInput = FoxyFormItem(
       label: 'Buff描述',
       child: Watch((_) {
-        final entry = vm.id.value == 0 ? null : vm.id.value;
+        final entry = vm.persistedKey.value?.id;
         return FoxyLocalePicker(
           entry: entry,
           controller: vm.auraDescriptionLangZhCNController,
@@ -1290,8 +1269,7 @@ class _SpellViewState extends State<SpellView> {
             children: [
               ShadButton(
                 onPressed: () async {
-                  final id = await viewModel.save(context);
-                  if (id != null) widget.onSaved?.call(id);
+                  await viewModel.save(context);
                 },
                 child: Text('保存'),
               ),
