@@ -1,0 +1,51 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/entity/brief_spell_range_entity.dart';
+import 'package:foxy/entity/spell_range_entity.dart';
+import 'package:foxy/entity/spell_range_key.dart';
+
+void main() {
+  test('SpellRangeKey 使用 ID 值相等且 Brief 安全解码并暴露定位器', () {
+    const first = SpellRangeKey(id: 91);
+    expect(first, const SpellRangeKey(id: 91));
+    expect(first.hashCode, const SpellRangeKey(id: 91).hashCode);
+    expect(first, isNot(const SpellRangeKey(id: 92)));
+    expect(SpellRangeKey.fromEntity(const SpellRangeEntity(id: 91)), first);
+    final brief = BriefSpellRangeEntity.fromJson({
+      'ID': 91,
+      'RangeMin0': 1,
+      'RangeMax0': 2,
+    });
+    expect(brief.rangeMin0, 1.0);
+    expect(brief.rangeMax0, 2.0);
+    expect(brief.key, first);
+  });
+
+  test('SpellRange Repository 使用显式创建键与原始更新键', () {
+    final source = File(
+      'lib/repository/spell_range_repository.dart',
+    ).readAsStringSync();
+    expect(source, contains('Future<SpellRangeKey> copySpellRange('));
+    expect(source, contains('Future<void> storeSpellRange('));
+    expect(source, contains('if (range.id <= 0)'));
+    expect(source, contains('insert([range.toJson()])'));
+    expect(source, isNot(contains('Future<int> storeSpellRange')));
+    expect(source, isNot(contains('saveSpellRange(')));
+    expect(source, contains('SpellRangeKey originalKey,'));
+    expect(source, contains(').update(range.toJson())'));
+    expect(source, isNot(contains("remove('ID')")));
+    expect(source, contains('if (matchedRows == 0)'));
+    expect(source, contains('if (deletedRows == 0)'));
+    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
+    expect(source, contains('storeDbcLocaleField(id, field, locales)'));
+  });
+
+  test('BriefSpellRange 不暴露候选写入 API', () {
+    final source = File(
+      'lib/entity/brief_spell_range_entity.dart',
+    ).readAsStringSync();
+    expect(source, isNot(contains('toJson')));
+    expect(source, isNot(contains('copyWith')));
+  });
+}

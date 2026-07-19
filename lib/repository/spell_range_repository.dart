@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_spell_range_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_filter_entity.dart';
+import 'package:foxy/entity/spell_range_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,17 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copySpellRange(int id) async {
-    var source = await getSpellRange(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<SpellRangeKey> copySpellRange(SpellRangeKey key) async {
+    final source = await getSpellRange(key);
+    if (source == null) {
+      throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
+    }
+    final copied = SpellRangeEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeSpellRange(copied);
+    return SpellRangeKey.fromEntity(copied);
   }
 
   Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
@@ -30,8 +37,11 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return SpellRangeEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellRange(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroySpellRange(SpellRangeKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
@@ -55,8 +65,8 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .toList();
   }
 
-  Future<SpellRangeEntity?> getSpellRange(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<SpellRangeEntity?> getSpellRange(SpellRangeKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return SpellRangeEntity.fromJson(results.first.toMap());
   }
@@ -71,37 +81,44 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => SpellRangeEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveSpellRange(SpellRangeEntity range) async {
-    if (range.id == 0) {
-      await storeSpellRange(range);
-      return;
-    }
-    var existing = await getSpellRange(range.id);
-    if (existing != null) {
-      await updateSpellRange(range);
-    } else {
-      await laconic.table(_table).insert([range.toJson()]);
-    }
-  }
-
   Future<void> saveSpellRangeLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeSpellRange(SpellRangeEntity range) async {
-    var json = range.toJson();
-    final nextId = range.id > 0 ? range.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeSpellRange(SpellRangeEntity range) async {
+    if (range.id <= 0) {
+      throw StateError('法术射程 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([range.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('法术射程 ${range.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateSpellRange(SpellRangeEntity range) async {
-    var json = range.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', range.id).update(json);
+  Future<void> updateSpellRange(
+    SpellRangeKey originalKey,
+    SpellRangeEntity range,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(range.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的法术射程 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -120,5 +137,9 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, SpellRangeKey key) {
+    return builder.where('ID', key.id);
   }
 }
