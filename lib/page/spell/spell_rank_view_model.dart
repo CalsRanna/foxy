@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_spell_rank_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
+import 'package:foxy/entity/spell_rank_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -17,16 +21,20 @@ class SpellRankViewModel
         SpellRankValidationMixin,
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _repository = GetIt.instance.get<SpellRankRepository>();
 
-  final spellId = signal(0);
+  final editingKey = signal<SpellRankKey?>(null);
   final items = signal<List<BriefSpellRankEntity>>([]);
+  final page = signal(1);
   final selectedIndex = signal<int?>(null);
+  final spellId = signal(0);
+  final total = signal(0);
 
   late final firstSpellIdController = registerController(IntFieldController());
   late final rankSpellIdController = registerController(IntFieldController());
   late final rankController = registerController(IntFieldController());
 
-  final _repository = GetIt.instance.get<SpellRankRepository>();
+  int _refreshToken = 0;
 
   SpellRankEntity collectFromForm() {
     return SpellRankEntity(
@@ -36,144 +44,154 @@ class SpellRankViewModel
     );
   }
 
-  Future<void> create() async {
+  Future<bool> create() async {
     try {
-      resetForm();
-      firstSpellIdController.init(
-        items.value.isNotEmpty ? items.value.first.firstSpellId : spellId.value,
-      );
-      rankSpellIdController.init(spellId.value);
-      rankController.init(
-        items.value.isNotEmpty ? (items.value.last.rank + 1) : 1,
-      );
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('法术等级-创建失败: $e');
-      DialogUtil.instance.error('法术等级-创建失败: $e');
+      final firstSpellId = items.value.isEmpty
+          ? spellId.value
+          : items.value.first.firstSpellId;
+      final blank = (await _repository.createSpellRank(
+        firstSpellId,
+      )).copyWith(spellId: spellId.value);
+      _clearEditingState();
+      _initControllers(blank);
+      return true;
+    } catch (error) {
+      LoggerUtil.instance.e('法术等级-创建失败: $error');
+      DialogUtil.instance.error('法术等级-创建失败: $error');
+      return false;
     }
   }
 
   Future<void> delete(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final rank = items.value[index];
-    final confirmed = await showFoxyDialog<bool>(
-      context: context,
-      builder: (context) => ShadDialog.alert(
-        title: Text('确认删除'),
-        description: Text('确定要删除这条技能排行记录吗？'),
-        actions: [
-          ShadButton.outline(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
-          ),
-          ShadButton.destructive(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('删除'),
-          ),
-        ],
-      ),
+    final selected = _selectedItem;
+    if (selected == null) return;
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条技能排行记录吗？',
+      confirmText: '删除',
+      destructive: true,
     );
-    if (confirmed == true) {
-      try {
-        await _repository.destroySpellRank(rank.firstSpellId, rank.rank);
-        await load();
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text('删除成功'));
-        ShadSonner.of(context).show(toast);
-      } catch (e) {
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text(e.toString()));
-        ShadSonner.of(context).show(toast);
-      }
+    if (!confirmed) return;
+    try {
+      await _repository.destroySpellRank(selected.key);
+      await _refresh();
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
     }
   }
 
-  void dispose() {
-    disposeControllers();
+  void dispose() => disposeControllers();
+
+  Future<bool> edit() async {
+    final selected = _selectedItem;
+    if (selected == null) return false;
+    final key = selected.key;
+    editingKey.value = key;
+    try {
+      final data = await _repository.getSpellRank(key);
+      if (data == null) {
+        throw StateError('原法术等级记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(data);
+      return true;
+    } catch (error) {
+      _clearEditingState();
+      LoggerUtil.instance.e('法术等级-加载失败: $error');
+      DialogUtil.instance.error('法术等级-加载失败: $error');
+      return false;
+    }
   }
 
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final rank = items.value[index];
-    fillForm(rank);
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      await setParentSpellId(spellId);
+    } catch (error) {
+      LoggerUtil.instance.e('法术等级-初始化失败: $error');
+      DialogUtil.instance.error('法术等级-初始化失败: $error');
+    }
   }
 
-  void fillForm(BriefSpellRankEntity data) {
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> persist() async {
+    final candidate = collectFromForm();
+    validateSpellRankFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storeSpellRank(candidate);
+    } else {
+      await _repository.updateSpellRank(originalKey, candidate);
+    }
+    editingKey.value = SpellRankKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  void pop() => routerFacade.goBack();
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
+      return false;
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) selectedIndex.value = index;
+  }
+
+  Future<void> setParentSpellId(int spellId) async {
+    if (this.spellId.value != spellId) page.value = 1;
+    this.spellId.value = spellId;
+    _clearEditingState(resetForm: true);
+    await _refresh();
+  }
+
+  void _clearEditingState({bool resetForm = false}) {
+    editingKey.value = null;
+    selectedIndex.value = null;
+    if (resetForm) {
+      _initControllers(SpellRankEntity(spellId: spellId.value));
+    }
+  }
+
+  void _initControllers(SpellRankEntity data) {
     firstSpellIdController.init(data.firstSpellId);
     rankSpellIdController.init(data.spellId);
     rankController.init(data.rank);
   }
 
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术等级-初始化失败: $e');
-      DialogUtil.instance.error('法术等级-初始化失败: $e');
-    }
-  }
-
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellRanks(spellId.value);
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final parentId = spellId.value;
+    final count = await _repository.countSpellRanks(parentId);
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await _repository.getBriefSpellRanks(
+      parentId,
+      page: page.value,
+    );
+    if (token != _refreshToken) return;
     items.value = data;
-    selectedIndex.value = null;
+    total.value = count;
+    _clearEditingState(resetForm: true);
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void resetForm() {
-    firstSpellIdController.init(0);
-    rankSpellIdController.init(0);
-    rankController.init(0);
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      final data = collectFromForm();
-      validateSpellRankFields(data);
-      await _repository.storeSpellRank(data);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
+  BriefSpellRankEntity? get _selectedItem {
     final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    try {
-      final oldData = items.value[index];
-      final newData = collectFromForm();
-      validateSpellRankFields(newData);
-      await _repository.updateSpellRank(
-        oldData.firstSpellId,
-        oldData.rank,
-        newData,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+    if (index == null || index < 0 || index >= items.value.length) return null;
+    return items.value[index];
   }
 }
