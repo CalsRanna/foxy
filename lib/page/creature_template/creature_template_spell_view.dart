@@ -6,6 +6,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -32,6 +33,14 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
   }
 
   @override
+  void didUpdateWidget(covariant CreatureTemplateSpellView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.creatureId != widget.creatureId) {
+      viewModel.setParentCreatureId(widget.creatureId);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -52,7 +61,18 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
     );
 
     // 工具栏
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['索引', '技能名称', '验证版本'];
@@ -67,12 +87,9 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
               return ShadTableCell(child: SizedBox());
             }
             final spell = items[vicinity.row];
-            final displayName = spell.spellSubtext.isNotEmpty
-                ? '${spell.spellName} - ${spell.spellSubtext}'
-                : spell.spellName;
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(spell.index.toString())),
-              1 => ShadTableCell(child: Text(displayName)),
+              1 => ShadTableCell(child: Text(spell.displayName)),
               2 => ShadTableCell(child: Text(spell.verifiedBuild.toString())),
               _ => ShadTableCell(child: SizedBox()),
             };
@@ -97,8 +114,8 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.edit();
+                  onPressed: () async {
+                    if (!await viewModel.edit() || !context.mounted) return;
                     _showEditDialog(context);
                   },
                   child: Text('编辑'),
@@ -154,7 +171,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
 
   /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -162,23 +179,21 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID（只读）
+          // 生物ID
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
               placeholder: 'CreatureID',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
-          // 索引（主键序号，create 时 MAX+1，始终只读）
+          // 索引（主键序号）
           FoxyFormItem(
             label: '索引',
             child: FoxyNumberInput<int>(
               controller: viewModel.indexController,
               placeholder: 'Index',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
@@ -212,12 +227,8 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
