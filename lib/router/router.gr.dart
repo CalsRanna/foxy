@@ -17,11 +17,12 @@ import 'package:foxy/entity/currency_type_key.dart' as _i62;
 import 'package:foxy/entity/emote_text_key.dart' as _i63;
 import 'package:foxy/entity/gem_property_key.dart' as _i64;
 import 'package:foxy/entity/glyph_property_key.dart' as _i65;
-import 'package:foxy/entity/page_text_key.dart' as _i70;
+import 'package:foxy/entity/page_text_key.dart' as _i71;
 import 'package:foxy/entity/quest_faction_reward_key.dart' as _i66;
 import 'package:foxy/entity/quest_info_key.dart' as _i67;
 import 'package:foxy/entity/quest_sort_key.dart' as _i68;
-import 'package:foxy/entity/smart_script_key.dart' as _i69;
+import 'package:foxy/entity/scaling_stat_value_key.dart' as _i69;
+import 'package:foxy/entity/smart_script_key.dart' as _i70;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;
@@ -1628,11 +1629,14 @@ class ScalingStatValueDetailRoute
     extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
   ScalingStatValueDetailRoute({
     _i59.Key? key,
-    int? id,
+    _i69.ScalingStatValueKey? scalingStatValueKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          ScalingStatValueDetailRoute.name,
-         args: ScalingStatValueDetailRouteArgs(key: key, id: id),
+         args: ScalingStatValueDetailRouteArgs(
+           key: key,
+           scalingStatValueKey: scalingStatValueKey,
+         ),
          initialChildren: children,
        );
 
@@ -1644,32 +1648,35 @@ class ScalingStatValueDetailRoute
       final args = data.argsAs<ScalingStatValueDetailRouteArgs>(
         orElse: () => const ScalingStatValueDetailRouteArgs(),
       );
-      return _i45.ScalingStatValueDetailPage(key: args.key, id: args.id);
+      return _i45.ScalingStatValueDetailPage(
+        key: args.key,
+        scalingStatValueKey: args.scalingStatValueKey,
+      );
     },
   );
 }
 
 class ScalingStatValueDetailRouteArgs {
-  const ScalingStatValueDetailRouteArgs({this.key, this.id});
+  const ScalingStatValueDetailRouteArgs({this.key, this.scalingStatValueKey});
 
   final _i59.Key? key;
 
-  final int? id;
+  final _i69.ScalingStatValueKey? scalingStatValueKey;
 
   @override
   String toString() {
-    return 'ScalingStatValueDetailRouteArgs{key: $key, id: $id}';
+    return 'ScalingStatValueDetailRouteArgs{key: $key, scalingStatValueKey: $scalingStatValueKey}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! ScalingStatValueDetailRouteArgs) return false;
-    return key == other.key && id == other.id;
+    return key == other.key && scalingStatValueKey == other.scalingStatValueKey;
   }
 
   @override
-  int get hashCode => key.hashCode ^ id.hashCode;
+  int get hashCode => key.hashCode ^ scalingStatValueKey.hashCode;
 }
 
 /// generated route for
@@ -1710,7 +1717,7 @@ class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
     _i59.Key? key,
-    _i69.SmartScriptKey? scriptKey,
+    _i70.SmartScriptKey? scriptKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          SmartScriptDetailRoute.name,
@@ -1739,7 +1746,7 @@ class SmartScriptDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i69.SmartScriptKey? scriptKey;
+  final _i70.SmartScriptKey? scriptKey;
 
   @override
   String toString() {
@@ -1989,7 +1996,7 @@ class TextContentDetailRoute
     extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
   TextContentDetailRoute({
     _i59.Key? key,
-    _i70.PageTextKey? pageTextKey,
+    _i71.PageTextKey? pageTextKey,
     List<_i58.PageRouteInfo>? children,
   }) : super(
          TextContentDetailRoute.name,
@@ -2018,7 +2025,7 @@ class TextContentDetailRouteArgs {
 
   final _i59.Key? key;
 
-  final _i70.PageTextKey? pageTextKey;
+  final _i71.PageTextKey? pageTextKey;
 
   @override
   String toString() {

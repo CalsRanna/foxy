@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/scaling_stat_value_entity.dart';
+import 'package:foxy/entity/brief_scaling_stat_value_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_filter_entity.dart';
+import 'package:foxy/entity/scaling_stat_value_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
@@ -23,16 +24,16 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
   final scalingStatValues = signal(<BriefScalingStatValueEntity>[]);
   final total = signal(0);
 
-  Future<void> copyScalingStatValue(int id) async {
+  Future<void> copyScalingStatValue(ScalingStatValueKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的缩放属性值？',
+        description: '是否复制编号为 ${key.id} 的缩放属性值？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyScalingStatValue(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyScalingStatValue(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,17 +42,17 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteScalingStatValue(int id) async {
+  Future<void> deleteScalingStatValue(ScalingStatValueKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的缩放属性值？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的缩放属性值？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyScalingStatValue(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyScalingStatValue(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -80,12 +81,12 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '缩放属性值 #$id' : '新建缩放属性值';
+  void navigateToDetail({ScalingStatValueKey? key}) {
+    final label = key != null ? '缩放属性值 #${key.id}' : '新建缩放属性值';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: ScalingStatValueDetailRoute(id: id),
+      route: ScalingStatValueDetailRoute(scalingStatValueKey: key),
       parentMenu: RouterMenu.scalingStatValue,
     );
   }
@@ -114,11 +115,11 @@ class ScalingStatValueListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, ScalingStatValueKey key) {
     final log = ActivityLogEntity(
       module: 'scaling_stat_value',
       actionType: action,
-      entityName: 'ScalingStatValue $id',
+      entityName: 'ScalingStatValue ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
