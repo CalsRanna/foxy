@@ -164,40 +164,34 @@ void main() {
     }
   });
 
-  test('Repository 校验全部引用、筛选全部 Rank 并保护反向引用', () {
+  test('Repository 仅持久化当前表并筛选全部 Rank', () {
     final repository = File(
       'lib/repository/talent_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
       'lib/page/talent/talent_detail_view_model.dart',
     ).readAsStringSync();
-    expect(repository, contains('talent.id > 0'));
+    expect(repository, contains('talent.id <= 0'));
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateTalentFields(t);'));
-    expect(repository, contains("table: 'foxy.dbc_talent_tab'"));
-    expect("table: 'foxy.dbc_spell'".allMatches(repository), hasLength(1));
+    expect(repository, isNot(contains("'foxy.dbc_talent_tab'")));
+    expect(repository, isNot(contains("'foxy.dbc_spell'")));
     expect(repository, contains(".where('SpellRank0'"));
     for (var rank = 1; rank <= 8; rank++) {
       expect(repository, contains(".orWhere('SpellRank$rank'"));
     }
-    expect(repository, contains("TABLE_NAME = 'character_talent'"));
-    expect(repository, contains(".where('PrereqTalent0', id)"));
-    expect(repository, contains(".where('PrereqTalent1', id)"));
-    expect(repository, contains(".where('PrereqTalent2', id)"));
+    expect(repository, isNot(contains('information_schema')));
+    expect(repository, isNot(contains('_validateReferences')));
   });
 
-  test('新建保存回填最终 ID 并按存在性记录 create 活动', () {
+  test('详情以 persistedKey 区分增改并在成功后切换身份', () {
     final viewModel = File(
       'lib/page/talent/talent_detail_view_model.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('saved = t.copyWith(id: id);'));
-    expect(
-      viewModel,
-      contains(
-        'existed == null ? ActivityActionType.create : ActivityActionType.update',
-      ),
-    );
-    expect(viewModel, contains('talent.value = saved;'));
+    expect(viewModel, contains('final originalKey = persistedKey.value;'));
+    expect(viewModel, contains('updateTalent(originalKey, t)'));
+    expect(viewModel, contains('persistedKey.value = TalentKey.fromEntity(t)'));
+    expect(viewModel, contains('routerFacade.updateCurrentLabel('));
   });
 
   test('Talent 与 TalentTab definition 使用 3.3.5.12340 物理格式', () {

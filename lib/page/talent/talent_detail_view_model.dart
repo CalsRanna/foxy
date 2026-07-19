@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
@@ -45,23 +46,30 @@ class TalentDetailViewModel
   late final categoryMask1Controller = registerController(IntFieldController());
 
   final talent = signal(TalentEntity());
+  final persistedKey = signal<TalentKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({TalentKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createTalent();
         talent.value = blank;
         _initControllers(blank);
         return;
       }
-      talent.value = (await _repository.getTalent(id))!;
-      _initControllers(talent.value);
+      persistedKey.value = key;
+      final entity = await _repository.getTalent(key);
+      if (entity == null) {
+        throw StateError('原天赋不存在，可能已被其他操作修改或删除');
+      }
+      talent.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载天赋(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载天赋(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -70,25 +78,27 @@ class TalentDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final t = _collectFromControllers();
+    validateTalentFields(t);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeTalent(t);
+    } else {
+      await _repository.updateTalent(originalKey, t);
+    }
+    persistedKey.value = TalentKey.fromEntity(t);
+    talent.value = t;
+    routerFacade.updateCurrentLabel(_labelFor(t));
+    _logActivity(action, t);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      final t = _collectFromControllers();
-      validateTalentFields(t);
-      final existed = await _repository.getTalent(t.id);
-      late final TalentEntity saved;
-      if (existed == null) {
-        final id = await _repository.storeTalent(t);
-        idController.init(id);
-        saved = t.copyWith(id: id);
-      } else {
-        await _repository.updateTalent(t);
-        saved = t;
-      }
-      talent.value = saved;
-      _logActivity(
-        existed == null ? ActivityActionType.create : ActivityActionType.update,
-        saved,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('天赋数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -163,4 +173,6 @@ class TalentDetailViewModel
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
   }
+
+  String _labelFor(TalentEntity talent) => '天赋 #${talent.id}';
 }

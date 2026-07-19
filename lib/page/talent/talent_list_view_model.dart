@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/brief_talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
+import 'package:foxy/entity/talent_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
@@ -23,16 +24,16 @@ class TalentListViewModel with FieldControllerMixin {
   final talents = signal(<BriefTalentEntity>[]);
   final total = signal(0);
 
-  Future<void> copyTalent(int id) async {
+  Future<void> copyTalent(TalentKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的天赋？',
+        description: '是否复制编号为 ${key.id} 的天赋？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyTalent(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyTalent(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,17 +42,17 @@ class TalentListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteTalent(int id) async {
+  Future<void> deleteTalent(TalentKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的天赋？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的天赋？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyTalent(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyTalent(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -80,12 +81,12 @@ class TalentListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id}) {
-    final label = id != null ? '天赋 #$id' : '新建天赋';
+  void navigateToDetail({TalentKey? key}) {
+    final label = key != null ? '天赋 #${key.id}' : '新建天赋';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: TalentDetailRoute(id: id),
+      route: TalentDetailRoute(talentKey: key),
       parentMenu: RouterMenu.talent,
     );
   }
@@ -114,11 +115,11 @@ class TalentListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, TalentKey key) {
     final log = ActivityLogEntity(
       module: 'talent',
       actionType: action,
-      entityName: 'Talent $id',
+      entityName: 'Talent ${key.id}',
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
