@@ -1,18 +1,22 @@
+import 'package:foxy/entity/brief_emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/entity/emote_text_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class EmoteTextRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
-  Future<void> copyEmoteText(int id) async {
-    var source = await getEmoteText(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<EmoteTextKey> copyEmoteText(EmoteTextKey key) async {
+    final source = await getEmoteText(key);
+    if (source == null) {
+      throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
+    }
+    final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
+    await storeEmoteText(copied);
+    return EmoteTextKey.fromEntity(copied);
   }
 
   Future<int> countEmoteTexts({EmoteTextFilterEntity? filter}) async {
@@ -25,8 +29,11 @@ class EmoteTextRepository with RepositoryMixin {
     return EmoteTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyEmoteText(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyEmoteText(EmoteTextKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefEmoteTextEntity>> getBriefEmoteTexts({
@@ -46,8 +53,8 @@ class EmoteTextRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<EmoteTextEntity?> getEmoteText(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<EmoteTextEntity?> getEmoteText(EmoteTextKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return EmoteTextEntity.fromJson(results.first.toMap());
   }
@@ -57,33 +64,38 @@ class EmoteTextRepository with RepositoryMixin {
     return results.map((e) => EmoteTextEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveEmoteText(EmoteTextEntity emoteText) async {
-    if (emoteText.id == 0) {
-      await storeEmoteText(emoteText);
-      return;
+  Future<void> storeEmoteText(EmoteTextEntity emoteText) async {
+    if (emoteText.id <= 0) {
+      throw StateError('表情文本 ID 必须在新建表单打开时显式分配');
     }
-    var existing = await getEmoteText(emoteText.id);
-    if (existing != null) {
-      await updateEmoteText(emoteText);
-    } else {
+    try {
       await laconic.table(_table).insert([emoteText.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('表情文本 ${emoteText.id} 已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<int> storeEmoteText(EmoteTextEntity emoteText) async {
-    var json = emoteText.toJson();
-    final nextId = emoteText.id > 0
-        ? emoteText.id
-        : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
-  }
-
-  Future<void> updateEmoteText(EmoteTextEntity emoteText) async {
-    var json = emoteText.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', emoteText.id).update(json);
+  Future<void> updateEmoteText(
+    EmoteTextKey originalKey,
+    EmoteTextEntity emoteText,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(emoteText.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的表情文本 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -98,5 +110,9 @@ class EmoteTextRepository with RepositoryMixin {
       builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, EmoteTextKey key) {
+    return builder.where('ID', key.id);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/entity/brief_emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/entity/emote_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
@@ -23,16 +24,16 @@ class EmoteTextListViewModel with FieldControllerMixin {
   final emotes = signal(<BriefEmoteTextEntity>[]);
   final total = signal(0);
 
-  Future<void> copyEmoteText(int id) async {
+  Future<void> copyEmoteText(EmoteTextKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $id 的表情文本？',
+        description: '是否复制编号为 ${key.id} 的表情文本？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyEmoteText(id);
-      _logActivity(ActivityActionType.copy, id);
+      await _repository.copyEmoteText(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -41,17 +42,17 @@ class EmoteTextListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteEmoteText(int id) async {
+  Future<void> deleteEmoteText(EmoteTextKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $id 的表情文本？此操作不可撤销。',
+        description: '是否删除编号为 ${key.id} 的表情文本？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyEmoteText(id);
-      _logActivity(ActivityActionType.delete, id);
+      await _repository.destroyEmoteText(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -80,12 +81,12 @@ class EmoteTextListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? id, String? name}) {
+  void navigateToDetail({EmoteTextKey? key, String? name}) {
     final label = name?.isNotEmpty == true ? name! : '新建表情文本';
     final routerFacade = GetIt.instance.get<RouterFacade>();
     routerFacade.navigateToDetail(
       label: label,
-      route: EmoteTextDetailRoute(id: id, name: name),
+      route: EmoteTextDetailRoute(emoteTextKey: key),
       parentMenu: RouterMenu.emoteText,
     );
   }
@@ -114,9 +115,9 @@ class EmoteTextListViewModel with FieldControllerMixin {
     );
   }
 
-  void _logActivity(ActivityActionType action, int id) {
+  void _logActivity(ActivityActionType action, EmoteTextKey key) {
     final templates = emotes.value;
-    final template = templates.where((t) => t.id == id).firstOrNull;
+    final template = templates.where((t) => t.key == key).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'emote_text',

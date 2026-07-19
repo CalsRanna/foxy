@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/entity/emote_text_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/emote_text/emote_text_validation_mixin.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -44,23 +45,30 @@ class EmoteTextDetailViewModel
   late final emoteText15Controller = registerController(IntFieldController());
 
   final emote = signal(EmoteTextEntity());
+  final persistedKey = signal<EmoteTextKey?>(null);
 
   void dispose() {
     disposeControllers();
   }
 
-  Future<void> initSignals({int? id}) async {
+  Future<void> initSignals({EmoteTextKey? key}) async {
     try {
-      if (id == null || id <= 0) {
+      if (key == null) {
+        persistedKey.value = null;
         final blank = await _repository.createEmoteText();
         emote.value = blank;
         _initControllers(blank);
         return;
       }
-      emote.value = (await _repository.getEmoteText(id))!;
-      _initControllers(emote.value);
+      persistedKey.value = key;
+      final entity = await _repository.getEmoteText(key);
+      if (entity == null) {
+        throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
+      }
+      emote.value = entity;
+      _initControllers(entity);
     } catch (e, s) {
-      LoggerUtil.instance.e('加载表情文本(id=$id)失败', error: e, stackTrace: s);
+      LoggerUtil.instance.e('加载表情文本(key=$key)失败', error: e, stackTrace: s);
     }
   }
 
@@ -69,23 +77,27 @@ class EmoteTextDetailViewModel
     routerFacade.goBack();
   }
 
+  Future<void> persist() async {
+    final candidate = _collectFromControllers();
+    validateEmoteTextFields(candidate);
+    final originalKey = persistedKey.value;
+    final action = originalKey == null
+        ? ActivityActionType.create
+        : ActivityActionType.update;
+    if (originalKey == null) {
+      await _repository.storeEmoteText(candidate);
+    } else {
+      await _repository.updateEmoteText(originalKey, candidate);
+    }
+    persistedKey.value = EmoteTextKey.fromEntity(candidate);
+    emote.value = candidate;
+    routerFacade.updateCurrentLabel(_labelFor(candidate));
+    _logActivity(action, candidate);
+  }
+
   Future<void> save(BuildContext context) async {
     try {
-      var t = _collectFromControllers();
-      validateEmoteTextFields(t);
-      final isCreate = await _repository.getEmoteText(t.id) == null;
-      if (isCreate) {
-        final id = await _repository.storeEmoteText(t);
-        t = t.copyWith(id: id);
-        idController.init(id);
-      } else {
-        await _repository.updateEmoteText(t);
-      }
-      emote.value = t;
-      _logActivity(
-        isCreate ? ActivityActionType.create : ActivityActionType.update,
-        t,
-      );
+      await persist();
       if (!context.mounted) return;
       var toast = ShadToast(description: Text('表情文本数据已保存'));
       ShadSonner.of(context).show(toast);
@@ -151,5 +163,9 @@ class EmoteTextDetailViewModel
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+  }
+
+  String _labelFor(EmoteTextEntity value) {
+    return value.name.isNotEmpty ? value.name : '表情文本 #${value.id}';
   }
 }
