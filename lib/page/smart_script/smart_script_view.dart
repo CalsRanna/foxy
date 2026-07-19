@@ -10,30 +10,19 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 class SmartScriptView extends StatefulWidget {
-  final int? entryOrGuid;
-  final int? sourceType;
-  final int? id;
-  final int? link;
+  final SmartScriptDetailViewModel viewModel;
 
-  const SmartScriptView({
-    super.key,
-    this.entryOrGuid,
-    this.sourceType,
-    this.id,
-    this.link,
-  });
+  const SmartScriptView({super.key, required this.viewModel});
 
   @override
   State<SmartScriptView> createState() => _SmartScriptViewState();
 }
 
 class _SmartScriptViewState extends State<SmartScriptView> {
-  final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
+  SmartScriptDetailViewModel get viewModel => widget.viewModel;
 
   @override
   void initState() {
@@ -42,12 +31,6 @@ class _SmartScriptViewState extends State<SmartScriptView> {
     viewModel.eventTypeController.addListener(_typeChanged);
     viewModel.actionTypeController.addListener(_typeChanged);
     viewModel.targetTypeController.addListener(_typeChanged);
-    viewModel.initSignals(
-      entryOrGuid: widget.entryOrGuid,
-      sourceType: widget.sourceType,
-      id: widget.id,
-      link: widget.link,
-    );
   }
 
   void _typeChanged() {
@@ -60,16 +43,15 @@ class _SmartScriptViewState extends State<SmartScriptView> {
     viewModel.eventTypeController.removeListener(_typeChanged);
     viewModel.actionTypeController.removeListener(_typeChanged);
     viewModel.targetTypeController.removeListener(_typeChanged);
-    viewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Watch((_) => _buildBody(ownerEditable: viewModel.isNew.value));
+    return _buildBody();
   }
 
-  Widget _buildBody({required bool ownerEditable}) {
+  Widget _buildBody() {
     final eventConfig = smartEventParameterConfig(
       viewModel.eventTypeController.collect(),
     );
@@ -94,7 +76,6 @@ class _SmartScriptViewState extends State<SmartScriptView> {
                   '实体编号',
                   'entryorguid',
                   viewModel.entryOrGuidController,
-                  readOnly: !ownerEditable,
                 ),
                 FoxyFormItem(
                   label: '源类型',
@@ -102,16 +83,10 @@ class _SmartScriptViewState extends State<SmartScriptView> {
                     controller: viewModel.sourceTypeController,
                     options: kSourceTypes,
                     placeholder: const Text('source_type'),
-                    enabled: ownerEditable,
                   ),
                 ),
-                _numberItem('ID', 'id', viewModel.idController, readOnly: true),
-                _numberItem(
-                  '链接事件 ID',
-                  'link',
-                  viewModel.linkController,
-                  readOnly: !ownerEditable,
-                ),
+                _numberItem('ID', 'id', viewModel.idController),
+                _numberItem('链接事件 ID', 'link', viewModel.linkController),
               ),
               _row(
                 FoxyFormItem(
@@ -330,16 +305,11 @@ class _SmartScriptViewState extends State<SmartScriptView> {
   FoxyFormItem _numberItem(
     String label,
     String column,
-    IntFieldController controller, {
-    bool readOnly = false,
-  }) {
+    IntFieldController controller,
+  ) {
     return FoxyFormItem(
       label: label,
-      child: FoxyNumberInput<int>(
-        placeholder: column,
-        controller: controller,
-        readOnly: readOnly,
-      ),
+      child: FoxyNumberInput<int>(placeholder: column, controller: controller),
     );
   }
 
