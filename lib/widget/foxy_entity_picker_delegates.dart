@@ -79,7 +79,7 @@ import 'package:foxy/entity/liquid_type_filter_entity.dart';
 import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
 import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
-import 'package:foxy/entity/map_info_entity.dart';
+import 'package:foxy/entity/brief_map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
 import 'package:foxy/entity/brief_mail_template_entity.dart';
 import 'package:foxy/entity/mail_template_filter_entity.dart';

@@ -1,6 +1,9 @@
+import 'package:foxy/entity/brief_map_info_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
+import 'package:foxy/entity/map_info_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -11,13 +14,17 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<void> copyMapInfo(int id) async {
-    var source = await getMapInfo(id);
-    if (source == null) return;
-    var json = source.toJson();
-    var nextId = await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
+  Future<MapInfoKey> copyMapInfo(MapInfoKey key) async {
+    final source = await getMapInfo(key);
+    if (source == null) {
+      throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
+    }
+    final copied = MapInfoEntity.fromJson({
+      ...source.toJson(),
+      'ID': await nextMaxPlusOne(_table, 'ID'),
+    });
+    await storeMapInfo(copied);
+    return MapInfoKey.fromEntity(copied);
   }
 
   Future<int> countMapInfos({
@@ -36,8 +43,11 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return MapInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyMapInfo(int id) async {
-    await laconic.table(_table).where('ID', id).delete();
+  Future<void> destroyMapInfo(MapInfoKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
@@ -63,8 +73,8 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<MapInfoEntity?> getMapInfo(int id) async {
-    var results = await laconic.table(_table).where('ID', id).limit(1).get();
+  Future<MapInfoEntity?> getMapInfo(MapInfoKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return MapInfoEntity.fromJson(results.first.toMap());
   }
@@ -79,37 +89,41 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => MapInfoEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<void> saveMapInfo(MapInfoEntity map) async {
-    if (map.id == 0) {
-      await storeMapInfo(map);
-      return;
-    }
-    var existing = await getMapInfo(map.id);
-    if (existing != null) {
-      await updateMapInfo(map);
-    } else {
-      await laconic.table(_table).insert([map.toJson()]);
-    }
-  }
-
   Future<void> saveMapInfoLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  Future<int> storeMapInfo(MapInfoEntity map) async {
-    var json = map.toJson();
-    final nextId = map.id > 0 ? map.id : await nextMaxPlusOne(_table, 'ID');
-    json['ID'] = nextId;
-    await laconic.table(_table).insert([json]);
-    return nextId;
+  Future<void> storeMapInfo(MapInfoEntity map) async {
+    if (map.id <= 0) {
+      throw StateError('地图信息 ID 必须在新建表单打开时显式分配');
+    }
+    try {
+      await laconic.table(_table).insert([map.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('地图信息 ${map.id} 已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
-  Future<void> updateMapInfo(MapInfoEntity map) async {
-    var json = map.toJson();
-    json.remove('ID');
-    await laconic.table(_table).where('ID', map.id).update(json);
+  Future<void> updateMapInfo(MapInfoKey originalKey, MapInfoEntity map) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(map.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的地图信息 ID 已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilterEntity? filter) {
@@ -125,5 +139,9 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, MapInfoKey key) {
+    return builder.where('ID', key.id);
   }
 }
