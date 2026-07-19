@@ -139,6 +139,7 @@ import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
+import 'package:foxy/repository/game_object_template_locale_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
@@ -281,6 +282,7 @@ class DI {
     _instance.registerLazySingleton(() => GameObjectQuestItemRepository());
     _instance.registerLazySingleton(() => GameObjectQuestStarterRepository());
     _instance.registerLazySingleton(() => GameObjectTemplateAddonRepository());
+    _instance.registerLazySingleton(() => GameObjectTemplateLocaleRepository());
     _instance.registerLazySingleton(() => GameObjectTemplateRepository());
     _instance.registerLazySingleton(() => GemPropertyRepository());
     _instance.registerLazySingleton(() => GlyphPropertyRepository());
