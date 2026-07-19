@@ -12,6 +12,7 @@ import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';

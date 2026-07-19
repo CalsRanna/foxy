@@ -11,6 +11,7 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -58,7 +59,18 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
     );
 
     // 工具栏
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
@@ -129,10 +141,10 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
+                  onPressed: () async {
                     viewModel.selectRow(row);
-                    viewModel.edit();
-                    _showEditDialog(context);
+                    if (!await viewModel.edit() || !mounted) return;
+                    _showEditDialog();
                   },
                   child: Text('编辑'),
                 ),
@@ -169,7 +181,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   }
 
   /// 显示编辑对话框
-  void _showEditDialog(BuildContext context) {
+  void _showEditDialog() {
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -190,13 +202,11 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 生物ID（只读）
           FoxyFormItem(
-            label: '生物ID',
+            label: '掉落模板 ID',
             child: FoxyNumberInput<int>(
               controller: viewModel.creatureIdController,
-              placeholder: 'CreatureID',
-              readOnly: true,
+              placeholder: 'Entry',
             ),
           ),
           SizedBox(height: 16),
@@ -207,7 +217,6 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
               delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
-              readOnly: isEditing,
             ),
           ),
           SizedBox(height: 16),
@@ -305,12 +314,10 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = isEditing
+                      ? await viewModel.update(dialogContext)
+                      : await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),

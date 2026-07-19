@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';

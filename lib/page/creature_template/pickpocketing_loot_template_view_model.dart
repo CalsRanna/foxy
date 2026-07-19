@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_loot_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/repository/loot_template_repository.dart';
@@ -22,8 +27,11 @@ class PickpocketingLootTemplateViewModel
 
   final creatureId = signal(0);
   final creatureTemplate = signal<CreatureTemplateEntity?>(null);
+  final editingKey = signal<LootTemplateKey?>(null);
   final items = signal<List<BriefLootTemplateEntity>>([]);
+  final page = signal(1);
   final selectedIndex = signal<int?>(null);
+  final total = signal(0);
   // 表单控制器
   late final creatureIdController = registerController(IntFieldController());
   late final itemController = registerController(IntFieldController());
@@ -47,7 +55,7 @@ class PickpocketingLootTemplateViewModel
     if (template == null) return LootTemplateEntity();
 
     return LootTemplateEntity(
-      entry: template.pickpocketLoot,
+      entry: creatureIdController.collect(),
       item: itemController.collect(),
       reference: referenceController.collect(),
       chance: chanceController.collect(),
@@ -64,6 +72,7 @@ class PickpocketingLootTemplateViewModel
   void create() {
     if (creatureTemplate.value == null) return;
     resetForm();
+    editingKey.value = null;
     selectedIndex.value = null;
   }
 
@@ -94,7 +103,7 @@ class PickpocketingLootTemplateViewModel
 
     if (confirmed == true) {
       try {
-        await repository.destroyLootTemplate(loot.entry, loot.item);
+        await repository.destroyLootTemplate(loot.key);
         await load();
         if (!context.mounted) return;
         var toast = ShadToast(description: Text('删除成功'));
@@ -113,16 +122,24 @@ class PickpocketingLootTemplateViewModel
   }
 
   /// 编辑选中记录
-  void edit() {
+  Future<bool> edit() async {
     final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-
-    final loot = items.value[index];
+    if (index == null || index < 0 || index >= items.value.length) return false;
+    final key = items.value[index].key;
+    editingKey.value = key;
+    final loot = await repository.getLootTemplate(key);
+    if (loot == null) {
+      editingKey.value = null;
+      DialogUtil.instance.error('原记录不存在，可能已被其他操作修改或删除');
+      return false;
+    }
     fillForm(loot);
+    return true;
   }
 
   /// 填充表单
-  void fillForm(BriefLootTemplateEntity loot) {
+  void fillForm(LootTemplateEntity loot) {
+    creatureIdController.init(loot.entry);
     itemController.init(loot.item);
     referenceController.init(loot.reference);
     chanceController.init(loot.chance);
@@ -155,10 +172,18 @@ class PickpocketingLootTemplateViewModel
     if (template == null) return;
     creatureTemplate.value = template;
 
-    final data = await repository.getBriefLootTemplates(
+    final count = await repository.countLootTemplatesForEntry(
       template.pickpocketLoot,
     );
+    final lastPage = max(1, (count / repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await repository.getBriefLootTemplates(
+      template.pickpocketLoot,
+      page: page.value,
+    );
     items.value = data;
+    total.value = count;
+    editingKey.value = null;
     selectedIndex.value = null;
   }
 
@@ -167,8 +192,14 @@ class PickpocketingLootTemplateViewModel
     routerFacade.goBack();
   }
 
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await load();
+  }
+
   /// 重置表单
   void resetForm() {
+    creatureIdController.init(creatureTemplate.value?.pickpocketLoot ?? 0);
     itemController.init(0);
     referenceController.init(0);
     chanceController.init(0.0);
@@ -181,19 +212,21 @@ class PickpocketingLootTemplateViewModel
   }
 
   /// 保存记录
-  Future<void> save(BuildContext context) async {
+  Future<bool> save(BuildContext context) async {
     try {
       final loot = collectFromForm();
       validateLootTemplateFields(loot);
       await repository.storeLootTemplate(loot);
       await load();
-      if (!context.mounted) return;
+      if (!context.mounted) return true;
       var toast = ShadToast(description: Text('保存成功'));
       ShadSonner.of(context).show(toast);
+      return true;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return false;
     }
   }
 
@@ -205,20 +238,23 @@ class PickpocketingLootTemplateViewModel
   }
 
   /// 更新记录
-  Future<void> update(BuildContext context) async {
+  Future<bool> update(BuildContext context) async {
     try {
       final loot = collectFromForm();
       validateLootTemplateFields(loot);
-      final oldItem = items.value[selectedIndex.value!].item;
-      await repository.updateLootTemplate(loot.entry, oldItem, loot);
+      final originalKey = editingKey.value;
+      if (originalKey == null) throw StateError('未选择要更新的掉落记录');
+      await repository.updateLootTemplate(originalKey, loot);
       await load();
-      if (!context.mounted) return;
+      if (!context.mounted) return true;
       var toast = ShadToast(description: Text('更新成功'));
       ShadSonner.of(context).show(toast);
+      return true;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       var toast = ShadToast(description: Text(e.toString()));
       ShadSonner.of(context).show(toast);
+      return false;
     }
   }
 }

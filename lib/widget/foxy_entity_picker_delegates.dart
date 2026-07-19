@@ -76,7 +76,8 @@ import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/entity/light_filter_entity.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
 import 'package:foxy/entity/liquid_type_filter_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/map_info_filter_entity.dart';
@@ -368,7 +369,7 @@ class FoxyEntityPickerDelegates {
   );
 
   static final referenceLoot =
-      FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
+      FoxyEntityPickerDelegate<BriefLootTemplateEntryEntity>(
         title: '关联掉落模板',
         errorLabel: '搜索关联掉落模板失败',
         filters: const [FoxyEntityPickerFilter('模板 ID')],
@@ -376,14 +377,14 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '模板 ID',
             width: 160,
-            text: (BriefLootTemplateEntity t) => t.entry.toString(),
+            text: (BriefLootTemplateEntryEntity t) => t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
             header: '掉落项数',
-            text: (BriefLootTemplateEntity t) => t.itemCount.toString(),
+            text: (BriefLootTemplateEntryEntity t) => t.itemCount.toString(),
           ),
         ],
-        idOf: (BriefLootTemplateEntity t) => t.entry,
+        idOf: (BriefLootTemplateEntryEntity t) => t.entry,
         fetch: (page, v) =>
             _referenceLootRepository.getBriefLootTemplateEntries(
               page: page,
@@ -1683,7 +1684,7 @@ class FoxyEntityPickerDelegates {
   );
 
   static final disenchantLoot =
-      FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
+      FoxyEntityPickerDelegate<BriefLootTemplateEntryEntity>(
         title: '分解掉落模板',
         errorLabel: '搜索分解掉落模板失败',
         filters: const [FoxyEntityPickerFilter('模板 ID')],
@@ -1691,14 +1692,15 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '模板 ID',
             width: 160,
-            text: (BriefLootTemplateEntity row) => row.entry.toString(),
+            text: (BriefLootTemplateEntryEntity row) => row.entry.toString(),
           ),
           FoxyEntityPickerColumn(
             header: '掉落项数',
-            text: (BriefLootTemplateEntity row) => row.itemCount.toString(),
+            text: (BriefLootTemplateEntryEntity row) =>
+                row.itemCount.toString(),
           ),
         ],
-        idOf: (BriefLootTemplateEntity row) => row.entry,
+        idOf: (BriefLootTemplateEntryEntity row) => row.entry,
         fetch: (page, values) =>
             _disenchantLootRepository.getBriefLootTemplateEntries(
               page: page,
@@ -2193,12 +2195,12 @@ class FoxyEntityPickerDelegates {
     ),
   );
 
-  static FoxyEntityPickerDelegate<BriefLootTemplateEntity> lootTemplate(
+  static FoxyEntityPickerDelegate<BriefLootTemplateEntryEntity> lootTemplate(
     LootTableType tableType,
     String title,
   ) {
     final repository = LootTemplateRepository(tableType);
-    return FoxyEntityPickerDelegate<BriefLootTemplateEntity>(
+    return FoxyEntityPickerDelegate<BriefLootTemplateEntryEntity>(
       title: title,
       errorLabel: '搜索掉落模板失败',
       filters: const [FoxyEntityPickerFilter('掉落编号')],
@@ -2206,14 +2208,14 @@ class FoxyEntityPickerDelegates {
         FoxyEntityPickerColumn(
           header: '掉落编号',
           width: 120,
-          text: (BriefLootTemplateEntity t) => t.entry.toString(),
+          text: (BriefLootTemplateEntryEntity t) => t.entry.toString(),
         ),
         FoxyEntityPickerColumn(
           header: '物品数量',
-          text: (BriefLootTemplateEntity t) => t.itemCount.toString(),
+          text: (BriefLootTemplateEntryEntity t) => t.itemCount.toString(),
         ),
       ],
-      idOf: (BriefLootTemplateEntity t) => t.entry,
+      idOf: (BriefLootTemplateEntryEntity t) => t.entry,
       fetch: (page, v) => repository.getBriefLootTemplateEntries(
         filter: LootTemplateFilterEntity(entry: v[0]),
         page: page,

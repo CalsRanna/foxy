@@ -1,22 +1,12 @@
+import 'package:foxy/entity/brief_loot_template_entity.dart';
+import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
+import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
+import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
-
-enum LootTableType {
-  creature('creature_loot_template'),
-  pickpocket('pickpocketing_loot_template'),
-  skinning('skinning_loot_template'),
-  item('item_loot_template'),
-  disenchant('disenchant_loot_template'),
-  prospecting('prospecting_loot_template'),
-  milling('milling_loot_template'),
-  reference('reference_loot_template'),
-  gameobject('gameobject_loot_template');
-
-  final String tableName;
-  const LootTableType(this.tableName);
-}
 
 class LootTemplateRepository with RepositoryMixin {
   final LootTableType tableType;
@@ -25,22 +15,12 @@ class LootTemplateRepository with RepositoryMixin {
 
   String get _table => tableType.tableName;
 
-  Future<void> copyLootTemplate(
-    int entry,
-    int item, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    final source = await getLootTemplate(
-      entry,
-      item,
-      reference: reference,
-      groupId: groupId,
-    );
+  Future<void> copyLootTemplate(LootTemplateKey key) async {
+    final source = await getLootTemplate(key);
     if (source == null) return;
     final copied = tableType == LootTableType.reference
         ? source.copyWith(entry: await nextMaxPlusOne(_table, 'Entry'))
-        : source.copyWith(item: await getNextItemId(entry));
+        : source.copyWith(item: await getNextItemId(source.entry));
     await storeLootTemplate(copied);
   }
 
@@ -77,26 +57,23 @@ class LootTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
+  Future<int> countLootTemplatesForEntry(int entry) {
+    return laconic.table(_table).where('Entry', entry).count();
+  }
+
   Future<LootTemplateEntity> createLootTemplate(int entry) async {
     return LootTemplateEntity(entry: entry);
   }
 
-  Future<void> destroyLootTemplate(
-    int entry,
-    int item, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    var builder = laconic
-        .table(_table)
-        .where('Entry', entry)
-        .where('Item', item);
-    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
-    await builder.delete();
+  Future<void> destroyLootTemplate(LootTemplateKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   /// Distinct entry groups for pickers.
-  Future<List<BriefLootTemplateEntity>> getBriefLootTemplateEntries({
+  Future<List<BriefLootTemplateEntryEntity>> getBriefLootTemplateEntries({
     LootTemplateFilterEntity? filter,
     int page = 1,
   }) async {
@@ -111,7 +88,7 @@ class LootTemplateRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .map((e) => BriefLootTemplateEntryEntity.fromJson(e.toMap()))
         .toList();
   }
 
@@ -123,7 +100,7 @@ class LootTemplateRepository with RepositoryMixin {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
-      'lt.*',
+      ..._briefFields('lt'),
       'it.name',
       if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
@@ -149,14 +126,20 @@ class LootTemplateRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results
-        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .map(
+          (e) =>
+              BriefLootTemplateEntity.fromJson(e.toMap(), tableType: tableType),
+        )
         .toList();
   }
 
-  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(int entry) async {
+  Future<List<BriefLootTemplateEntity>> getBriefLootTemplates(
+    int entry, {
+    int page = 1,
+  }) async {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
-      'lt.*',
+      ..._briefFields('lt'),
       'it.name',
       if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
@@ -178,24 +161,19 @@ class LootTemplateRepository with RepositoryMixin {
       (join) => join.on('it.displayid', 'didi.ID'),
     );
     builder = builder.where('lt.Entry', entry);
+    builder = builder.orderBy('lt.Item');
+    builder = builder.limit(kPageSize).offset((page - 1) * kPageSize);
     var results = await builder.get();
     return results
-        .map((e) => BriefLootTemplateEntity.fromJson(e.toMap()))
+        .map(
+          (e) =>
+              BriefLootTemplateEntity.fromJson(e.toMap(), tableType: tableType),
+        )
         .toList();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(
-    int entry,
-    int item, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    var builder = laconic
-        .table(_table)
-        .where('Entry', entry)
-        .where('Item', item);
-    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
-    var results = await builder.limit(1).get();
+  Future<LootTemplateEntity?> getLootTemplate(LootTemplateKey key) async {
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return LootTemplateEntity.fromJson(results.first.toMap());
   }
@@ -203,57 +181,47 @@ class LootTemplateRepository with RepositoryMixin {
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  Future<void> saveLootTemplate(LootTemplateEntity loot) async {
-    var existing = await getLootTemplate(
-      loot.entry,
-      loot.item,
-      reference: loot.reference,
-      groupId: loot.groupId,
-    );
-    if (existing != null) {
-      await updateLootTemplate(
-        loot.entry,
-        loot.item,
-        loot,
-        reference: loot.reference,
-        groupId: loot.groupId,
-      );
-    } else {
-      await storeLootTemplate(loot);
+  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+    try {
+      await laconic.table(_table).insert([loot.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('掉落模板主键已存在，无法新建');
+      }
+      rethrow;
     }
   }
 
-  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
-    await _validateReferences(loot);
-    await laconic.table(_table).insert([loot.toJson()]);
-  }
-
   Future<void> updateLootTemplate(
-    int entry,
-    int item,
-    LootTemplateEntity loot, {
-    int reference = 0,
-    int groupId = 0,
-  }) async {
-    await _validateReferences(loot);
-    var json = loot.toJson();
-    json.remove('Entry');
-    var builder = laconic
-        .table(_table)
-        .where('Entry', entry)
-        .where('Item', item);
-    builder = _applyAdditionalPrimaryKey(builder, reference, groupId);
-    await builder.update(json);
+    LootTemplateKey originalKey,
+    LootTemplateEntity loot,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(loot.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在，无法保存');
+      }
+      rethrow;
+    }
   }
 
-  QueryBuilder _applyAdditionalPrimaryKey(
-    QueryBuilder builder,
-    int reference,
-    int groupId,
-  ) {
-    if (tableType != LootTableType.creature) return builder;
-    return builder.where('Reference', reference).where('GroupId', groupId);
-  }
+  List<String> _briefFields(String alias) => [
+    '$alias.Entry',
+    '$alias.Item',
+    '$alias.Reference',
+    '$alias.Chance',
+    '$alias.QuestRequired',
+    '$alias.GroupId',
+    '$alias.MinCount',
+    '$alias.MaxCount',
+  ];
 
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
@@ -281,31 +249,20 @@ class LootTemplateRepository with RepositoryMixin {
     return builder;
   }
 
-  Future<void> _validateReferences(LootTemplateEntity loot) async {
-    if (loot.reference == 0) {
-      final item = await laconic
-          .table('item_template')
-          .select(['entry'])
-          .where('entry', loot.item)
-          .limit(1)
-          .get();
-      if (item.isEmpty) {
-        throw StateError('物品 ID ${loot.item} 不存在于 item_template');
+  QueryBuilder _whereKey(QueryBuilder builder, LootTemplateKey key) {
+    builder = builder.where('Entry', key.entry).where('Item', key.item);
+    if (tableType == LootTableType.creature) {
+      if (key is! CreatureLootTemplateKey) {
+        throw ArgumentError.value(key, 'key', '生物掉落需要四列行定位器');
       }
-      return;
+      return builder
+          .where('Reference', key.reference)
+          .where('GroupId', key.groupId);
     }
-
-    final target = await laconic
-        .table(LootTableType.reference.tableName)
-        .select(['Entry'])
-        .where('Entry', loot.reference.abs())
-        .limit(1)
-        .get();
-    if (target.isEmpty) {
-      throw StateError(
-        '关联掉落模板 ${loot.reference.abs()} 不存在于 reference_loot_template',
-      );
+    if (key is! StandardLootTemplateKey) {
+      throw ArgumentError.value(key, 'key', '当前掉落表需要两列行定位器');
     }
+    return builder;
   }
 
   static Set<String> primaryKeyColumnsFor(LootTableType tableType) =>

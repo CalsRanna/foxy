@@ -9,6 +9,7 @@ import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -56,7 +57,18 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
       child: Text('新增'),
     );
 
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
@@ -128,10 +140,10 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
+                  onPressed: () async {
                     viewModel.selectRow(row);
-                    viewModel.edit();
-                    _showEditDialog(context);
+                    if (!await viewModel.edit() || !mounted) return;
+                    _showEditDialog();
                   },
                   child: Text('编辑'),
                 ),
@@ -166,7 +178,7 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
     );
   }
 
-  void _showEditDialog(BuildContext context) {
+  void _showEditDialog() {
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -191,7 +203,6 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
             child: FoxyNumberInput<int>(
               controller: viewModel.entryController,
               placeholder: 'Entry',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
@@ -201,7 +212,6 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
               delegate: FoxyEntityPickerDelegates.itemTemplate,
               controller: viewModel.itemController,
               placeholder: 'Item',
-              readOnly: isEditing,
             ),
           ),
           SizedBox(height: 16),
@@ -291,12 +301,10 @@ class _MillingLootTemplateViewState extends State<MillingLootTemplateView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = isEditing
+                      ? await viewModel.update(dialogContext)
+                      : await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
