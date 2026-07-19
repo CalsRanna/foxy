@@ -1,39 +1,3 @@
-class BriefCurrencyCategoryEntity {
-  final int id;
-  final int flags;
-  final String nameLangZhCN;
-
-  const BriefCurrencyCategoryEntity({
-    this.id = 0,
-    this.flags = 0,
-    this.nameLangZhCN = '',
-  });
-
-  factory BriefCurrencyCategoryEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCurrencyCategoryEntity(
-      id: json['ID'] ?? 0,
-      flags: json['Flags'] ?? 0,
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-    );
-  }
-
-  BriefCurrencyCategoryEntity copyWith({
-    int? id,
-    int? flags,
-    String? nameLangZhCN,
-  }) {
-    return BriefCurrencyCategoryEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'Flags': flags, 'Name_lang_zhCN': nameLangZhCN};
-  }
-}
-
 class CurrencyCategoryEntity {
   final int id;
   final int flags;
