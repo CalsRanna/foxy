@@ -5,6 +5,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -27,6 +28,14 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
   void initState() {
     super.initState();
     viewModel.initSignals(gameObjectId: widget.gameObjectId);
+  }
+
+  @override
+  void didUpdateWidget(covariant GameObjectQuestItemView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.gameObjectId != widget.gameObjectId) {
+      viewModel.setParentGameObjectEntry(widget.gameObjectId);
+    }
   }
 
   @override
@@ -72,6 +81,12 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
               child: Text('复制'),
             ),
             const Spacer(),
+            FoxyPagination(
+              page: viewModel.page.value,
+              pageSize: 50,
+              total: viewModel.total.value,
+              onChange: viewModel.paginate,
+            ),
             ShadButton.destructive(
               leading: Icon(LucideIcons.trash, size: 16),
               onPressed: selectedIndex != null
@@ -116,9 +131,9 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
                 return ShadTableCell.header(child: Text(headers[index]));
               },
               onRowTap: (row) => viewModel.selectRow(row),
-              onRowDoubleTap: (row) {
+              onRowDoubleTap: (row) async {
                 viewModel.selectRow(row);
-                _showEditDialog();
+                await _showEditDialog();
               },
               pinnedRowCount: 1,
               rowCount: items.length,
@@ -130,8 +145,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
   }
 
   Future<void> _showCreateDialog() async {
-    await viewModel.create();
-    if (!mounted) return;
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -142,8 +156,8 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     );
   }
 
-  void _showEditDialog() {
-    viewModel.edit();
+  Future<void> _showEditDialog() async {
+    if (!await viewModel.edit() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -173,7 +187,6 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
                   child: FoxyNumberInput<int>(
                     controller: viewModel.gameObjectIdController,
                     placeholder: 'GameObjectEntry',
-                    readOnly: true,
                   ),
                 ),
               ),
@@ -183,7 +196,6 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
                   child: FoxyNumberInput<int>(
                     controller: viewModel.idxController,
                     placeholder: 'Idx',
-                    readOnly: true,
                   ),
                 ),
               ),
@@ -219,12 +231,8 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
