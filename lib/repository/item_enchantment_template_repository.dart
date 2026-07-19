@@ -1,11 +1,20 @@
+import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
+import 'package:foxy/entity/item_enchantment_template_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
 class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
   static const primaryKeyColumns = {'entry', 'ench'};
+
+  Future<void> copyItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey key,
+  ) async {
+    throw UnsupportedError('附魔 ID 是复合主键的一部分，请新增并选择有效附魔。');
+  }
 
   Future<int> countItemEnchantmentGroups({
     required ItemEnchantmentKind kind,
@@ -38,18 +47,27 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
+  Future<int> countItemEnchantmentTemplatesByEntry(
+    int entry, {
+    required ItemEnchantmentKind kind,
+  }) {
+    var builder = _briefBuilder(kind).where('iet.entry', entry);
+    return builder.count();
+  }
+
   Future<ItemEnchantmentTemplateEntity> createItemEnchantmentTemplate(
     int entry,
   ) async {
     return ItemEnchantmentTemplateEntity(entry: entry);
   }
 
-  Future<void> destroyItemEnchantmentTemplate(int entry, int ench) async {
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('ench', ench)
-        .delete();
+  Future<void> destroyItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey key,
+  ) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原附魔模板记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
@@ -103,9 +121,14 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   getBriefItemEnchantmentTemplatesByEntry(
     int entry, {
     required ItemEnchantmentKind kind,
+    int page = 1,
   }) async {
     var builder = _briefBuilder(kind);
-    builder = builder.where('iet.entry', entry);
+    builder = builder
+        .where('iet.entry', entry)
+        .orderBy('iet.ench')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize);
     var results = await builder.get();
     return results
         .map((e) => BriefItemEnchantmentTemplateEntity.fromJson(e.toMap()))
@@ -113,49 +136,44 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
-    int entry,
-    int ench,
+    ItemEnchantmentTemplateKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('ench', ench)
-        .limit(1)
-        .get();
+    var results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return ItemEnchantmentTemplateEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> saveItemEnchantmentTemplate(
-    ItemEnchantmentTemplateEntity model,
-  ) async {
-    var existing = await getItemEnchantmentTemplate(model.entry, model.ench);
-    if (existing != null) {
-      await updateItemEnchantmentTemplate(model.entry, model.ench, model);
-    } else {
-      await storeItemEnchantmentTemplate(model);
-    }
   }
 
   Future<void> storeItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity model,
   ) async {
-    await laconic.table(_table).insert([model.toJson()]);
+    try {
+      await laconic.table(_table).insert([model.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同附魔组与附魔 ID 的记录已存在');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateItemEnchantmentTemplate(
-    int entry,
-    int ench,
+    ItemEnchantmentTemplateKey originalKey,
     ItemEnchantmentTemplateEntity model,
   ) async {
-    var json = model.toJson();
-    json.remove('entry');
-    json.remove('ench');
-    await laconic
-        .table(_table)
-        .where('entry', entry)
-        .where('ench', ench)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(model.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原附魔模板记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的附魔组与附魔 ID 组合已存在');
+      }
+      rethrow;
+    }
   }
 
   QueryBuilder _applyFilter(
@@ -209,6 +227,10 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
     );
     builder = builder.whereNotNull('random_ench.ID');
     return builder;
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemEnchantmentTemplateKey key) {
+    return builder.where('entry', key.entry).where('ench', key.ench);
   }
 
   static String dbcTableFor(ItemEnchantmentKind kind) =>

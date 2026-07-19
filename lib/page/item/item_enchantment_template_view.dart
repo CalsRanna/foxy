@@ -6,6 +6,7 @@ import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -34,6 +35,14 @@ class _ItemEnchantmentTemplateViewState
   }
 
   @override
+  void didUpdateWidget(covariant ItemEnchantmentTemplateView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.entry != widget.entry) {
+      viewModel.setParentItemEntry(widget.entry);
+    }
+  }
+
+  @override
   void dispose() {
     viewModel.dispose();
     super.dispose();
@@ -52,7 +61,18 @@ class _ItemEnchantmentTemplateViewState
       child: Text('新增'),
     );
 
-    final toolbar = Row(children: [createButton, Spacer()]);
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
     final items = viewModel.items.value;
     final headers = ['附魔ID', '名称', '几率'];
@@ -94,16 +114,17 @@ class _ItemEnchantmentTemplateViewState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
+            viewModel.selectRow(row);
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () {
-                    viewModel.selectRow(row);
-                    viewModel.edit();
-                    _showEditDialog(context);
+                  onPressed: () async {
+                    if (await viewModel.edit() && context.mounted) {
+                      _showEditDialog(context);
+                    }
                   },
                   child: Text('编辑'),
                 ),
@@ -126,8 +147,8 @@ class _ItemEnchantmentTemplateViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
-  void _showCreateDialog() {
-    if (!viewModel.create()) return;
+  Future<void> _showCreateDialog() async {
+    if (!await viewModel.create() || !mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -150,7 +171,7 @@ class _ItemEnchantmentTemplateViewState
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editing.value;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -163,7 +184,6 @@ class _ItemEnchantmentTemplateViewState
             child: FoxyNumberInput<int>(
               controller: viewModel.entryController,
               placeholder: 'Entry',
-              readOnly: true,
             ),
           ),
           SizedBox(height: 16),
@@ -176,7 +196,6 @@ class _ItemEnchantmentTemplateViewState
                   : FoxyEntityPickerDelegates.itemRandomSuffix,
               controller: viewModel.enchController,
               placeholder: 'Ench',
-              readOnly: isEditing,
             ),
           ),
           SizedBox(height: 16),
@@ -198,12 +217,8 @@ class _ItemEnchantmentTemplateViewState
               SizedBox(width: 8),
               ShadButton(
                 onPressed: () async {
-                  if (isEditing) {
-                    await viewModel.update(dialogContext);
-                  } else {
-                    await viewModel.save(dialogContext);
-                  }
-                  if (!dialogContext.mounted) return;
+                  final saved = await viewModel.save(dialogContext);
+                  if (!saved || !dialogContext.mounted) return;
                   Navigator.of(dialogContext).pop();
                 },
                 child: Text(isEditing ? '更新' : '保存'),
