@@ -188,10 +188,8 @@ void main() {
       repository,
       contains("laconic.table(_table).where('ID', id).delete()"),
     );
-    expect(
-      criteriaRepository,
-      contains("laconic.table(_table).where('ID', id).delete()"),
-    );
+    expect(criteriaRepository, contains('AchievementCriteriaKey key'));
+    expect(criteriaRepository, contains('deletedRows == 0'));
     expect(repository, contains('requireImportedTable: true'));
     expect(repository, contains(".orderBy('ID')"));
   });
