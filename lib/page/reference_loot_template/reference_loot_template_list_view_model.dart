@@ -81,15 +81,11 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? entry, int? item, String? label}) {
-    final name = label?.isNotEmpty == true ? label! : '新建关联掉落';
+  void navigateToDetail({LootTemplateKey? key}) {
+    final name = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
     _routerFacade.navigateToDetail(
       label: name,
-      route: ReferenceLootTemplateDetailRoute(
-        entry: entry,
-        item: item,
-        label: label,
-      ),
+      route: ReferenceLootTemplateDetailRoute(referenceLootTemplateKey: key),
       parentMenu: RouterMenu.more,
     );
   }

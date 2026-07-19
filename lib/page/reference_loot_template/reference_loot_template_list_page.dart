@@ -150,11 +150,7 @@ class _ReferenceLootTemplateListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
-              entry: templates[row].entry,
-              item: templates[row].item,
-              label: '${templates[row].entry}-${templates[row].item}',
-            );
+            viewModel.navigateToDetail(key: templates[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -164,11 +160,7 @@ class _ReferenceLootTemplateListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
-                      entry: templates[row].entry,
-                      item: templates[row].item,
-                      label: '${templates[row].entry}-${templates[row].item}',
-                    );
+                    viewModel.navigateToDetail(key: templates[row].key);
                   },
                   child: Text('编辑'),
                 ),

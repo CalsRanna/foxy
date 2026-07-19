@@ -10,35 +10,13 @@ import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class ReferenceLootTemplateView extends StatefulWidget {
-  final int? entry;
-  final int? item;
+class ReferenceLootTemplateView extends StatelessWidget {
+  final ReferenceLootTemplateDetailViewModel viewModel;
 
-  const ReferenceLootTemplateView({super.key, this.entry, this.item});
-
-  @override
-  State<ReferenceLootTemplateView> createState() =>
-      _ReferenceLootTemplateViewState();
-}
-
-class _ReferenceLootTemplateViewState extends State<ReferenceLootTemplateView> {
-  final viewModel = GetIt.instance.get<ReferenceLootTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(entry: widget.entry, item: widget.item);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
+  const ReferenceLootTemplateView({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
