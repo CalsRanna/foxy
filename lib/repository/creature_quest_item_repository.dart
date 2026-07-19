@@ -1,39 +1,57 @@
+import 'package:foxy/entity/brief_creature_quest_item_entity.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
+import 'package:foxy/entity/creature_quest_item_key.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
+import 'package:laconic/laconic.dart';
 
 class CreatureQuestItemRepository with RepositoryMixin {
   static const _table = 'creature_questitem';
+  static const primaryKeyColumns = {'CreatureEntry', 'Idx'};
 
-  Future<void> copyCreatureQuestItem(int creatureEntry, int idx) async {
-    var source = await getCreatureQuestItem(creatureEntry, idx);
-    if (source == null) return;
-    var nextIdx = await getNextIdx(creatureEntry);
-    var json = source.toJson();
-    json['Idx'] = nextIdx;
-    await laconic.table(_table).insert([json]);
+  Future<CreatureQuestItemKey> copyCreatureQuestItem(
+    CreatureQuestItemKey sourceKey,
+  ) async {
+    final source = await getCreatureQuestItem(sourceKey);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureQuestItem(source.creatureEntry);
+    final candidate = source.copyWith(idx: blank.idx);
+    await storeCreatureQuestItem(candidate);
+    return CreatureQuestItemKey.fromEntity(candidate);
+  }
+
+  Future<int> countCreatureQuestItems(int creatureEntry) {
+    return laconic.table(_table).where('CreatureEntry', creatureEntry).count();
   }
 
   Future<CreatureQuestItemEntity> createCreatureQuestItem(
     int creatureEntry,
   ) async {
-    var nextIdx = await getNextIdx(creatureEntry);
-    return CreatureQuestItemEntity(creatureEntry: creatureEntry, idx: nextIdx);
+    return CreatureQuestItemEntity(
+      creatureEntry: creatureEntry,
+      idx: await getNextIdx(creatureEntry),
+    );
   }
 
-  Future<void> destroyCreatureQuestItem(int creatureEntry, int idx) async {
-    await laconic
-        .table(_table)
-        .where('CreatureEntry', creatureEntry)
-        .where('Idx', idx)
-        .delete();
+  Future<void> destroyCreatureQuestItem(CreatureQuestItemKey key) async {
+    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
 
-  Future<List<CreatureQuestItemEntity>> getBriefCreatureQuestItems(
-    int creatureEntry,
-  ) async {
+  Future<List<BriefCreatureQuestItemEntity>> getBriefCreatureQuestItems(
+    int creatureEntry, {
+    int page = 1,
+  }) async {
     var builder = laconic.table('$_table AS cq');
     final fields = <String>[
-      'cq.*',
+      'cq.CreatureEntry',
+      'cq.Idx',
+      'cq.ItemId',
+      'cq.VerifiedBuild',
       'it.name',
       if (localeEnabled) 'itl.Name AS localeName',
       'it.Quality',
@@ -54,57 +72,68 @@ class CreatureQuestItemRepository with RepositoryMixin {
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
-    builder = builder.where('cq.CreatureEntry', creatureEntry);
-    builder = builder.orderBy('cq.Idx');
-    var results = await builder.get();
+    final results = await builder
+        .where('cq.CreatureEntry', creatureEntry)
+        .orderBy('cq.CreatureEntry')
+        .orderBy('cq.Idx')
+        .limit(kPageSize)
+        .offset((page - 1) * kPageSize)
+        .get();
     return results
-        .map((e) => CreatureQuestItemEntity.fromJson(e.toMap()))
+        .map((result) => BriefCreatureQuestItemEntity.fromJson(result.toMap()))
         .toList();
   }
 
   Future<CreatureQuestItemEntity?> getCreatureQuestItem(
-    int creatureEntry,
-    int idx,
+    CreatureQuestItemKey key,
   ) async {
-    var results = await laconic
-        .table(_table)
-        .where('CreatureEntry', creatureEntry)
-        .where('Idx', idx)
-        .limit(1)
-        .get();
+    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureQuestItemEntity.fromJson(results.first.toMap());
   }
 
-  Future<int> getNextIdx(int creatureEntry) =>
-      nextMaxPlusOne(_table, 'Idx', where: {'CreatureEntry': creatureEntry});
-
-  Future<void> saveCreatureQuestItem(CreatureQuestItemEntity questItem) async {
-    var existing = await getCreatureQuestItem(
-      questItem.creatureEntry,
-      questItem.idx,
+  Future<int> getNextIdx(int creatureEntry) {
+    return nextMaxPlusOne(
+      _table,
+      'Idx',
+      where: {'CreatureEntry': creatureEntry},
     );
-    if (existing != null) {
-      await updateCreatureQuestItem(questItem);
-    } else {
-      await storeCreatureQuestItem(questItem);
-    }
   }
 
   Future<void> storeCreatureQuestItem(CreatureQuestItemEntity questItem) async {
-    await laconic.table(_table).insert([questItem.toJson()]);
+    try {
+      await laconic.table(_table).insert([questItem.toJson()]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('生物任务物品主键已存在，无法新建');
+      }
+      rethrow;
+    }
   }
 
   Future<void> updateCreatureQuestItem(
+    CreatureQuestItemKey originalKey,
     CreatureQuestItemEntity questItem,
   ) async {
-    var json = questItem.toJson();
-    json.remove('CreatureEntry');
-    json.remove('Idx');
-    await laconic
-        .table(_table)
-        .where('CreatureEntry', questItem.creatureEntry)
-        .where('Idx', questItem.idx)
-        .update(json);
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table(_table),
+        originalKey,
+      ).update(questItem.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的生物任务物品主键已存在，无法保存');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestItemKey key) {
+    return builder
+        .where('CreatureEntry', key.creatureEntry)
+        .where('Idx', key.idx);
   }
 }
