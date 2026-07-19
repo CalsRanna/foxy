@@ -42,7 +42,7 @@ import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
-import 'package:foxy/entity/game_object_art_kit_entity.dart';
+import 'package:foxy/entity/brief_game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
