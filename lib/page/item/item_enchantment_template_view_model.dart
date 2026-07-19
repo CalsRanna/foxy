@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -124,7 +125,9 @@ class ItemEnchantmentTemplateViewModel
 
   Future<void> initSignals({required int entry}) async {
     try {
-      final template = await _itemRepository.getItemTemplate(entry);
+      final template = await _itemRepository.getItemTemplate(
+        ItemTemplateKey(entry: entry),
+      );
       if (template == null) return;
       if (template.randomProperty != 0) {
         this.entry.value = template.randomProperty;

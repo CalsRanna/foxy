@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/infrastructure/util/item_helpers.dart';
-import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/entity/brief_item_template_entity.dart';
 import 'package:foxy/page/item/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -174,7 +174,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
           },
           onRowDoubleTap: (row) {
             viewModel.navigateToDetail(
-              entry: templates[row].entry,
+              key: templates[row].key,
               name: templates[row].displayName,
             );
           },
@@ -187,7 +187,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
                     viewModel.navigateToDetail(
-                      entry: templates[row].entry,
+                      key: templates[row].key,
                       name: templates[row].displayName,
                     );
                   },
@@ -196,14 +196,14 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyItemTemplate(templates[row].entry);
+                    viewModel.copyItemTemplate(templates[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteItemTemplate(templates[row].entry);
+                    viewModel.deleteItemTemplate(templates[row].key);
                   },
                   child: Text('删除'),
                 ),

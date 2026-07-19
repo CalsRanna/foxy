@@ -1,7 +1,8 @@
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/entity/brief_item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
+import 'package:foxy/entity/item_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
@@ -58,16 +59,16 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     search();
   }
 
-  Future<void> copyItemTemplate(int entry) async {
+  Future<void> copyItemTemplate(ItemTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
-        description: '是否复制编号为 $entry 的物品模板？',
+        description: '是否复制编号为 ${key.entry} 的物品模板？',
         confirmText: '复制',
       );
       if (!confirmed) return;
-      await _repository.copyItemTemplate(entry);
-      _logActivity(ActivityActionType.copy, entry);
+      await _repository.copyItemTemplate(key);
+      _logActivity(ActivityActionType.copy, key);
       DialogUtil.instance.success('复制成功');
       await _refresh();
     } catch (e) {
@@ -76,17 +77,17 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteItemTemplate(int entry) async {
+  Future<void> deleteItemTemplate(ItemTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
-        description: '是否删除编号为 $entry 的物品模板？此操作不可撤销。',
+        description: '是否删除编号为 ${key.entry} 的物品模板？此操作不可撤销。',
         confirmText: '删除',
         destructive: true,
       );
       if (!confirmed) return;
-      await _repository.destroyItemTemplate(entry);
-      _logActivity(ActivityActionType.delete, entry);
+      await _repository.destroyItemTemplate(key);
+      _logActivity(ActivityActionType.delete, key);
       DialogUtil.instance.success('删除成功');
       await _refresh();
     } catch (e) {
@@ -115,12 +116,16 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({int? entry, String? name}) {
+  void navigateToDetail({ItemTemplateKey? key, String? name}) {
     final routerFacade = GetIt.instance.get<RouterFacade>();
-    final label = name?.isNotEmpty == true ? name! : '新建物品';
+    final label = key == null
+        ? '新建物品'
+        : name?.isNotEmpty == true
+        ? name!
+        : '物品 #${key.entry}';
     routerFacade.navigateToDetail(
       label: label,
-      route: ItemTemplateDetailRoute(entry: entry, name: name),
+      route: ItemTemplateDetailRoute(itemTemplateKey: key),
       parentMenu: RouterMenu.itemTemplate,
     );
   }
@@ -180,9 +185,9 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     return _repository.getBriefItemTemplates(page: page.value, filter: filter);
   }
 
-  void _logActivity(ActivityActionType action, int entry) {
+  void _logActivity(ActivityActionType action, ItemTemplateKey key) {
     final templates = this.templates.value;
-    final template = templates.where((t) => t.entry == entry).firstOrNull;
+    final template = templates.where((t) => t.entry == key.entry).firstOrNull;
     final name = template?.name ?? '';
     final log = ActivityLogEntity(
       module: 'item_template',
