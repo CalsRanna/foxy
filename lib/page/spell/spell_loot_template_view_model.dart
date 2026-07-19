@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
+import 'package:foxy/entity/brief_spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
+import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -17,10 +21,14 @@ class SpellLootTemplateViewModel
         SpellLootTemplateValidationMixin,
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
 
-  final spellId = signal(0);
+  final editingKey = signal<SpellLootTemplateKey?>(null);
   final items = signal<List<BriefSpellLootTemplateEntity>>([]);
+  final page = signal(1);
   final selectedIndex = signal<int?>(null);
+  final spellId = signal(0);
+  final total = signal(0);
 
   late final spellIdController = registerController(IntFieldController());
   late final itemController = registerController(IntFieldController());
@@ -35,11 +43,11 @@ class SpellLootTemplateViewModel
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  final _repository = GetIt.instance.get<SpellLootTemplateRepository>();
+  int _refreshToken = 0;
 
   SpellLootTemplateEntity collectFromForm() {
     return SpellLootTemplateEntity(
-      entry: spellId.value,
+      entry: spellIdController.collect(),
       item: itemController.collect(),
       reference: referenceController.collect(),
       chance: chanceController.collect(),
@@ -52,64 +60,135 @@ class SpellLootTemplateViewModel
     );
   }
 
-  Future<void> create() async {
+  Future<bool> create() async {
     try {
-      resetForm();
-      selectedIndex.value = null;
-    } catch (e) {
-      LoggerUtil.instance.e('法术掉落模板-创建失败: $e');
-      DialogUtil.instance.error('法术掉落模板-创建失败: $e');
+      final blank = await _repository.createSpellLootTemplate(spellId.value);
+      _clearEditingState();
+      _initControllers(blank);
+      return true;
+    } catch (error) {
+      LoggerUtil.instance.e('创建法术掉落模板失败: $error');
+      DialogUtil.instance.error('创建法术掉落模板失败: $error');
+      return false;
     }
   }
 
   Future<void> delete(BuildContext context) async {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final loot = items.value[index];
-    final confirmed = await showFoxyDialog<bool>(
-      context: context,
-      builder: (context) => ShadDialog.alert(
-        title: Text('确认删除'),
-        description: Text('确定要删除这条技能掉落记录吗？'),
-        actions: [
-          ShadButton.outline(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('取消'),
-          ),
-          ShadButton.destructive(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('删除'),
-          ),
-        ],
-      ),
+    final selected = _selectedItem;
+    if (selected == null) return;
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '是否删除物品 ${selected.displayName}？',
+      confirmText: '删除',
+      destructive: true,
     );
-    if (confirmed == true) {
-      try {
-        await _repository.destroySpellLootTemplate(loot.entry, loot.item);
-        await load();
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text('删除成功'));
-        ShadSonner.of(context).show(toast);
-      } catch (e) {
-        if (!context.mounted) return;
-        var toast = ShadToast(description: Text(e.toString()));
-        ShadSonner.of(context).show(toast);
-      }
+    if (!confirmed) return;
+    try {
+      await _repository.destroySpellLootTemplate(selected.key);
+      await _refresh();
+      if (!context.mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('删除成功')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
     }
   }
 
-  void dispose() {
-    disposeControllers();
+  void dispose() => disposeControllers();
+
+  Future<bool> edit() async {
+    final selected = _selectedItem;
+    if (selected == null) return false;
+    final key = selected.key;
+    editingKey.value = key;
+    try {
+      final loot = await _repository.getSpellLootTemplate(key);
+      if (loot == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      _initControllers(loot);
+      return true;
+    } catch (error) {
+      _clearEditingState();
+      LoggerUtil.instance.e('加载法术掉落模板失败: $error');
+      DialogUtil.instance.error('加载法术掉落模板失败: $error');
+      return false;
+    }
   }
 
-  void edit() {
-    final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    final loot = items.value[index];
-    fillForm(loot);
+  Future<void> initSignals({required int spellId}) async {
+    try {
+      await setParentSpellId(spellId);
+    } catch (error) {
+      LoggerUtil.instance.e('初始化法术掉落模板失败: $error');
+      DialogUtil.instance.error('初始化法术掉落模板失败: $error');
+    }
   }
 
-  void fillForm(BriefSpellLootTemplateEntity data) {
+  Future<void> load() => _refresh();
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    await _refresh();
+  }
+
+  Future<void> persist() async {
+    final candidate = collectFromForm();
+    validateSpellLootTemplateFields(candidate);
+    final originalKey = editingKey.value;
+    if (originalKey == null) {
+      await _repository.storeSpellLootTemplate(candidate);
+    } else {
+      await _repository.updateSpellLootTemplate(originalKey, candidate);
+    }
+    editingKey.value = SpellLootTemplateKey.fromEntity(candidate);
+    await _refresh();
+  }
+
+  void pop() => routerFacade.goBack();
+
+  void resetForm() {
+    _initControllers(SpellLootTemplateEntity(entry: spellId.value));
+  }
+
+  Future<bool> save(BuildContext context) async {
+    try {
+      await persist();
+      if (!context.mounted) return true;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+      return true;
+    } catch (error) {
+      if (!context.mounted) return false;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+      return false;
+    }
+  }
+
+  void selectRow(int index) {
+    if (index >= 0 && index < items.value.length) {
+      selectedIndex.value = index;
+    }
+  }
+
+  Future<void> setParentSpellId(int spellId) async {
+    if (this.spellId.value != spellId) page.value = 1;
+    this.spellId.value = spellId;
+    _clearEditingState(resetForm: true);
+    await _refresh();
+  }
+
+  void _clearEditingState({bool resetForm = false}) {
+    editingKey.value = null;
+    selectedIndex.value = null;
+    if (resetForm) this.resetForm();
+  }
+
+  void _initControllers(SpellLootTemplateEntity data) {
+    spellIdController.init(data.entry);
     itemController.init(data.item);
     referenceController.init(data.reference);
     chanceController.init(data.chance);
@@ -121,81 +200,26 @@ class SpellLootTemplateViewModel
     commentController.init(data.comment);
   }
 
-  Future<void> initSignals({required int spellId}) async {
-    try {
-      this.spellId.value = spellId;
-      spellIdController.init(spellId);
-      await load();
-    } catch (e) {
-      LoggerUtil.instance.e('法术掉落模板-初始化失败: $e');
-      DialogUtil.instance.error('法术掉落模板-初始化失败: $e');
-    }
-  }
-
-  Future<void> load() async {
-    final data = await _repository.getBriefSpellLootTemplates(spellId.value);
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final parentEntry = spellId.value;
+    final count = await _repository.countSpellLootTemplates(parentEntry);
+    if (token != _refreshToken) return;
+    final lastPage = max(1, (count / _repository.kPageSize).ceil());
+    if (page.value > lastPage) page.value = lastPage;
+    final data = await _repository.getBriefSpellLootTemplates(
+      parentEntry,
+      page: page.value,
+    );
+    if (token != _refreshToken) return;
     items.value = data;
-    selectedIndex.value = null;
+    total.value = count;
+    _clearEditingState(resetForm: true);
   }
 
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  void resetForm() {
-    itemController.init(0);
-    referenceController.init(0);
-    chanceController.init(100.0);
-    questRequiredController.init(0);
-    lootModeController.init(1);
-    groupIdController.init(0);
-    minCountController.init(1);
-    maxCountController.init(1);
-    commentController.init('');
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      final data = collectFromForm();
-      validateSpellLootTemplateFields(data);
-      await _repository.storeSpellLootTemplate(data);
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('保存成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void selectRow(int index) {
-    if (index >= 0 && index < items.value.length) {
-      selectedIndex.value = index;
-    }
-  }
-
-  Future<void> update(BuildContext context) async {
+  BriefSpellLootTemplateEntity? get _selectedItem {
     final index = selectedIndex.value;
-    if (index == null || index < 0 || index >= items.value.length) return;
-    try {
-      final oldData = items.value[index];
-      final newData = collectFromForm();
-      validateSpellLootTemplateFields(newData);
-      await _repository.updateSpellLootTemplate(
-        oldData.entry,
-        oldData.item,
-        newData,
-      );
-      await load();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('更新成功'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
+    if (index == null || index < 0 || index >= items.value.length) return null;
+    return items.value[index];
   }
 }
