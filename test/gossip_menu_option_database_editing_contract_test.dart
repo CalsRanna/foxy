@@ -7,9 +7,16 @@ import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_key.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_key.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
+import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/database/database_transaction.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
+import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
+import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
+import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
 import 'package:foxy/widget/form/validation/gossip_menu_option_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
@@ -215,6 +222,7 @@ void main() {
     late _FakeGossipMenuOptionLocaleRepository localeRepository;
 
     setUp(() {
+      GetIt.instance.registerSingleton(EventBus(sync: true));
       baseRepository = _FakeGossipMenuOptionRepository([
         const GossipMenuOptionEntity(menuId: 10, optionId: 2),
       ]);
@@ -232,17 +240,44 @@ void main() {
       GetIt.instance.registerSingleton<GossipMenuOptionLocaleRepository>(
         localeRepository,
       );
+      final transaction = _FakeTransaction(baseRepository, localeRepository);
+      final activityLogService = ActivityLogService(_FakeActivityRepository());
+      GetIt.instance.registerSingleton(
+        SaveGossipMenuOptionUseCase(
+          transaction: transaction,
+          optionRepository: baseRepository,
+          localeRepository: localeRepository,
+          activityLogService: activityLogService,
+        ),
+      );
+      GetIt.instance.registerSingleton(
+        CopyGossipMenuOptionUseCase(
+          transaction: transaction,
+          optionRepository: baseRepository,
+          localeRepository: localeRepository,
+          activityLogService: activityLogService,
+        ),
+      );
+      GetIt.instance.registerSingleton(
+        DestroyGossipMenuOptionUseCase(
+          transaction: transaction,
+          optionRepository: baseRepository,
+          localeRepository: localeRepository,
+          activityLogService: activityLogService,
+        ),
+      );
     });
 
     tearDown(() async {
+      GetIt.instance.get<EventBus>().destroy();
       await GetIt.instance.reset();
     });
 
     test('编辑后 base 与 locale 分别用各自旧 key 更新', () async {
-      final viewModel = GossipMenuOptionViewModel();
+      final viewModel = GossipMenuOptionCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentMenuId(10);
-      await viewModel.edit(viewModel.options.value.single);
+      await viewModel.setParentKey(10);
+      await viewModel.edit(viewModel.items.value.single.key);
       const baseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
       const localeKey = GossipMenuOptionLocaleKey(
         menuId: 10,
@@ -261,18 +296,17 @@ void main() {
       expect(localeRepository.updateKeys, [localeKey]);
       expect(localeRepository.rows.single.menuId, 11);
       expect(localeRepository.rows.single.optionId, 3);
-      expect(viewModel.options.value, isEmpty);
+      expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.localeEditingKey.value, isNull);
     });
 
-    test('locale 失败后保留新 base key 与旧 locale key，重试不会丢失身份', () async {
-      final viewModel = GossipMenuOptionViewModel();
+    test('locale 失败后回滚并保留旧 base/locale key，重试仍定位原记录', () async {
+      final viewModel = GossipMenuOptionCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentMenuId(10);
-      await viewModel.edit(viewModel.options.value.single);
+      await viewModel.setParentKey(10);
+      await viewModel.edit(viewModel.items.value.single.key);
       const oldBaseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
-      const newBaseKey = GossipMenuOptionKey(menuId: 11, optionId: 3);
       const oldLocaleKey = GossipMenuOptionLocaleKey(
         menuId: 10,
         optionId: 2,
@@ -284,21 +318,23 @@ void main() {
       localeRepository.failUpdates = true;
 
       await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
-      expect(viewModel.editingKey.value, newBaseKey);
+      expect(viewModel.editingKey.value, oldBaseKey);
       expect(viewModel.localeEditingKey.value, oldLocaleKey);
       expect(viewModel.formVisible.value, isTrue);
+      expect(baseRepository.rows.single.menuId, 10);
+      expect(localeRepository.rows.single.menuId, 10);
 
       localeRepository.failUpdates = false;
       await viewModel.persist();
-      expect(baseRepository.updateKeys, [oldBaseKey, newBaseKey]);
+      expect(baseRepository.updateKeys, [oldBaseKey, oldBaseKey]);
       expect(localeRepository.updateKeys, [oldLocaleKey, oldLocaleKey]);
     });
 
     test('清空 locale 字段时使用原 locale key 删除，不使用已改 base key', () async {
-      final viewModel = GossipMenuOptionViewModel();
+      final viewModel = GossipMenuOptionCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentMenuId(10);
-      await viewModel.edit(viewModel.options.value.single);
+      await viewModel.setParentKey(10);
+      await viewModel.edit(viewModel.items.value.single.key);
       const oldLocaleKey = GossipMenuOptionLocaleKey(
         menuId: 10,
         optionId: 2,
@@ -316,13 +352,13 @@ void main() {
     });
 
     test('父范围变化和新建都会清空 persisted row identity', () async {
-      final viewModel = GossipMenuOptionViewModel();
+      final viewModel = GossipMenuOptionCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentMenuId(10);
-      await viewModel.edit(viewModel.options.value.single);
+      await viewModel.setParentKey(10);
+      await viewModel.edit(viewModel.items.value.single.key);
       expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setParentMenuId(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.localeEditingKey.value, isNull);
 
@@ -330,6 +366,90 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.localeEditingKey.value, isNull);
       expect(viewModel.menuIdController.collect(), 12);
+    });
+
+    test('复制 locale 失败时回滚新 base 和已复制 locale', () async {
+      localeRepository.failStores = true;
+      final useCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
+
+      await expectLater(
+        useCase.execute(const GossipMenuOptionKey(menuId: 10, optionId: 2)),
+        throwsA(isA<StateError>()),
+      );
+
+      expect(baseRepository.rows, hasLength(1));
+      expect(
+        GossipMenuOptionKey.fromEntity(baseRepository.rows.single),
+        const GossipMenuOptionKey(menuId: 10, optionId: 2),
+      );
+      expect(localeRepository.rows, hasLength(1));
+      expect(
+        GossipMenuOptionLocaleKey.fromEntity(localeRepository.rows.single),
+        const GossipMenuOptionLocaleKey(
+          menuId: 10,
+          optionId: 2,
+          locale: 'zhCN',
+        ),
+      );
+    });
+
+    test('复制源不存在时抛出稳定错误且不产生目标记录', () async {
+      final useCase = GetIt.instance.get<CopyGossipMenuOptionUseCase>();
+
+      await expectLater(
+        useCase.execute(const GossipMenuOptionKey(menuId: 99, optionId: 1)),
+        throwsStateError,
+      );
+
+      expect(baseRepository.rows, hasLength(1));
+      expect(localeRepository.rows, hasLength(1));
+    });
+
+    test('新增 base/locale 成功后返回两份具体 identity', () async {
+      final useCase = GetIt.instance.get<SaveGossipMenuOptionUseCase>();
+      const candidate = GossipMenuOptionEntity(menuId: 10, optionId: 3);
+      const localeCandidate = GossipMenuOptionLocaleEntity(
+        menuId: 10,
+        optionId: 3,
+        locale: 'zhCN',
+        optionText: '新选项',
+      );
+
+      final result = await useCase.execute(
+        const SaveGossipMenuOptionInput(
+          originalKey: null,
+          candidate: candidate,
+          originalLocaleKey: null,
+          localeCandidate: localeCandidate,
+        ),
+      );
+
+      expect(result.persistedKey, GossipMenuOptionKey.fromEntity(candidate));
+      expect(
+        result.localeKey,
+        GossipMenuOptionLocaleKey.fromEntity(localeCandidate),
+      );
+      expect(baseRepository.rows, hasLength(2));
+      expect(localeRepository.rows, hasLength(2));
+    });
+
+    test('删除 base 失败时回滚已删除 locale', () async {
+      baseRepository.failDestroys = true;
+      final useCase = GetIt.instance.get<DestroyGossipMenuOptionUseCase>();
+      const key = GossipMenuOptionKey(menuId: 10, optionId: 2);
+
+      await expectLater(useCase.execute(key), throwsStateError);
+
+      expect(baseRepository.rows, hasLength(1));
+      expect(localeRepository.rows, hasLength(1));
+      expect(
+        GossipMenuOptionLocaleKey.fromEntity(localeRepository.rows.single),
+        const GossipMenuOptionLocaleKey(
+          menuId: 10,
+          optionId: 2,
+          locale: 'zhCN',
+        ),
+      );
     });
   });
 
@@ -348,7 +468,7 @@ void main() {
       'lib/repository/gossip_menu_option_locale_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/gossip_menu/gossip_menu_option_view_model.dart',
+      'lib/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/gossip_menu/gossip_menu_option_view.dart',
@@ -370,6 +490,7 @@ void main() {
 class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
   final List<GossipMenuOptionEntity> rows;
   final updateKeys = <GossipMenuOptionKey>[];
+  bool failDestroys = false;
 
   _FakeGossipMenuOptionRepository(this.rows);
 
@@ -424,7 +545,21 @@ class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
 
   @override
   Future<void> storeGossipMenuOption(GossipMenuOptionEntity model) async {
+    final key = GossipMenuOptionKey.fromEntity(model);
+    if (rows.any((row) => GossipMenuOptionKey.fromEntity(row) == key)) {
+      throw StateError('duplicate');
+    }
     rows.add(model);
+  }
+
+  @override
+  Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
+    if (failDestroys) throw StateError('base destroy failed');
+    final index = rows.indexWhere(
+      (row) => GossipMenuOptionKey.fromEntity(row) == key,
+    );
+    if (index < 0) throw StateError('missing');
+    rows.removeAt(index);
   }
 
   @override
@@ -446,6 +581,7 @@ class _FakeGossipMenuOptionLocaleRepository
   final List<GossipMenuOptionLocaleEntity> rows;
   final destroyKeys = <GossipMenuOptionLocaleKey>[];
   bool failUpdates = false;
+  bool failStores = false;
   final updateKeys = <GossipMenuOptionLocaleKey>[];
 
   _FakeGossipMenuOptionLocaleRepository(this.rows);
@@ -476,7 +612,18 @@ class _FakeGossipMenuOptionLocaleRepository
   Future<void> storeGossipMenuOptionLocale(
     GossipMenuOptionLocaleEntity model,
   ) async {
+    if (failStores) throw StateError('locale store failed');
     rows.add(model);
+  }
+
+  @override
+  Future<List<GossipMenuOptionLocaleEntity>>
+  getGossipMenuOptionLocalesForOption(GossipMenuOptionKey key) async {
+    return rows
+        .where(
+          (row) => row.menuId == key.menuId && row.optionId == key.optionId,
+        )
+        .toList();
   }
 
   @override
@@ -492,6 +639,39 @@ class _FakeGossipMenuOptionLocaleRepository
     if (index < 0) throw StateError('missing');
     rows[index] = model;
   }
+}
+
+final class _FakeTransaction extends DatabaseTransaction {
+  _FakeTransaction(this.optionRepository, this.localeRepository);
+
+  final _FakeGossipMenuOptionRepository optionRepository;
+  final _FakeGossipMenuOptionLocaleRepository localeRepository;
+
+  @override
+  Future<void> execute(Future<void> Function() action) async {
+    final optionSnapshot = List<GossipMenuOptionEntity>.of(
+      optionRepository.rows,
+    );
+    final localeSnapshot = List<GossipMenuOptionLocaleEntity>.of(
+      localeRepository.rows,
+    );
+    try {
+      await action();
+    } catch (_) {
+      optionRepository.rows
+        ..clear()
+        ..addAll(optionSnapshot);
+      localeRepository.rows
+        ..clear()
+        ..addAll(localeSnapshot);
+      rethrow;
+    }
+  }
+}
+
+final class _FakeActivityRepository extends ActivityLogRepository {
+  @override
+  void storeActivityLogBestEffort(_) {}
 }
 
 class _GossipMenuOptionValidation

@@ -138,7 +138,7 @@ void main() {
     expect(page, isNot(contains('LucideIcons.copy')));
     expect(page, contains('LucideIcons.trash'));
     expect(viewModel, isNot(contains('copyQuestFactionReward')));
-    expect(viewModel, contains('deleteQuestFactionReward'));
+    expect(viewModel, contains('Future<void> destroy(int key)'));
   });
 
   test('Entity 源码没有数组或 Map 字段', () {

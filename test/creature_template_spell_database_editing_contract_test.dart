@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_template_spell_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/creature_template_spell_key.dart';
-import 'package:foxy/page/creature_template/creature_template_spell_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_spell_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/validation/creature_template_spell_entity_validation_mixin.dart';
@@ -111,11 +111,11 @@ void main() {
     });
 
     test('修改两列 candidate key 仍按完整旧 key 更新并清空范围状态', () async {
-      final viewModel = CreatureTemplateSpellViewModel();
+      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
 
       viewModel.creatureIdController.init(11);
@@ -130,11 +130,11 @@ void main() {
     });
 
     test('保存失败保留旧 editingKey 供修正后重试', () async {
-      final viewModel = CreatureTemplateSpellViewModel();
+      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
       repository.failUpdates = true;
       viewModel.indexController.init(3);
@@ -148,17 +148,17 @@ void main() {
     });
 
     test('父范围变化和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateSpellViewModel();
+      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentCreatureId(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIdController.collect(), 12);
 
-      expect(await viewModel.create(), isTrue);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       viewModel.spellController.init(456);
       await viewModel.persist();
@@ -181,7 +181,7 @@ void main() {
       'lib/repository/creature_template_spell_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/creature_template_spell_view_model.dart',
+      'lib/page/creature_template/creature_template_spell_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/creature_template_spell_view.dart',
@@ -193,7 +193,7 @@ void main() {
       viewModel,
       contains('final editingKey = signal<CreatureTemplateSpellKey?>(null)'),
     );
-    expect(viewModel, contains('destroyCreatureTemplateSpell(selected.key)'));
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, contains('FoxyPagination('));
   });

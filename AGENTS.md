@@ -49,6 +49,7 @@ Do not globally format the repository as incidental cleanup. Format only changed
   - `logging/`, `preferences/`, `util/`, `window/` — shared infrastructure.
 - `lib/entity/` — immutable full entities, brief/list entities, filters, and typed composite/special row keys.
 - `lib/repository/` — Laconic query and persistence layer. Most repositories map one physical table or a tightly related table family.
+- `lib/use_case/` — concrete user-intent operations for cross-repository orchestration, transactions, migrations, and cancellable workflows.
 - `lib/page/<module>/` — MVVM feature folders containing pages, views, view models, and occasional module validation.
 - `lib/widget/` — shared shadcn-based widgets, form controllers, pickers, locale editors, tables, and dialogs.
 - `lib/constant/` — AzerothCore/DBC enums, flags, schemas, and UI option definitions.
@@ -71,13 +72,31 @@ The normal feature flow is:
 4. The repository maps physical SQL rows to entities through Laconic.
 5. `RouterFacade` keeps AutoRoute navigation and the signal-backed breadcrumb/menu path in sync.
 
-State management uses `signals`/`signals_flutter`; reactive widget regions use `Watch`. Dependencies are obtained through `GetIt.instance`. Register new repositories and view models in `lib/di.dart`; detail/list view models are normally factories, while global state such as `FoxyViewModel` and `ScaffoldViewModel` is singleton-scoped.
+State management uses `signals`/`signals_flutter`; reactive widget regions use `Watch`. Dependencies are obtained through `GetIt.instance`. Register infrastructure, repositories, use cases, global state ViewModels, and interaction ViewModels in that order in `lib/di.dart`.
+
+Every ViewModel belongs to exactly one closed category and declares it in both
+the class and file suffix: `ListViewModel`, `DetailViewModel`,
+`CollectionEditorViewModel`, `SingleEditorViewModel`, `ReadViewModel`,
+`WorkflowViewModel`, or `StateViewModel`. Do not add an unclassified
+`SomethingViewModel`, a generic/base CRUD ViewModel, or a marker hierarchy.
+Global `StateViewModel` and cross-page workflow owners are singletons; ordinary
+page and editor ViewModels are factories.
+
+ViewModels own Signals, typed field controllers, candidate collection and
+validation, explicit `persistedKey`/`editingKey`, and stale-response protection.
+They must not accept `BuildContext`, show Dialog/Toast, navigate, access
+`Database`/`Laconic`/transactions, or depend on another page ViewModel. UI
+interaction surfaces own Flutter side effects. Simple single-table operations
+may call a concrete Repository directly; cross-table writes, transactions,
+cross-table validation, bootstrap, and cancellable long-running work belong in
+a concrete `lib/use_case/` class with an `execute()` method. Do not introduce a
+generic UseCase, command bus, mediator, or global UI-effect framework.
 
 List view models commonly use a monotonically increasing `_refreshToken` to prevent stale async responses from replacing newer search/pagination results. Preserve that race protection when changing refresh logic.
 
 ## Database boundaries
 
-`Database.instance` owns the active `Laconic` connection. Before connection, accessing `laconic` throws. Startup in `BootstrapViewModel`:
+`Database.instance` owns the active `Laconic` connection. Before connection, accessing `laconic` throws. Startup is coordinated by `BootstrapWorkflowViewModel` through `BootstrapApplicationUseCase`:
 
 1. connects to the configured database (normally the AzerothCore world schema),
 2. detects locale-table availability and loads locale preference,

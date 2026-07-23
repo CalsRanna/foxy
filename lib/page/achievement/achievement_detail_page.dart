@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/achievement/achievement_detail_view_model.dart';
 import 'package:foxy/page/achievement/achievement_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -22,7 +23,16 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.achievementKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.achievementKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -35,11 +45,11 @@ class _AchievementDetailPageState extends State<AchievementDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.achievement.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建成就'
-          : entity.titleLangZhCN.isNotEmpty
-          ? entity.titleLangZhCN
+          : entity?.titleLangZhCN.isNotEmpty == true
+          ? entity?.titleLangZhCN ?? ''
           : '成就 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

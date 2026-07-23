@@ -1,3 +1,7 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/currency_type/currency_type_list_view_model.dart';
@@ -83,10 +87,10 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final items = viewModel.currencyTypes.value;
+    final items = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -129,7 +133,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(key: items[row].key);
+            _navigateToDetail(key: items[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -139,14 +143,15 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(key: items[row].key);
+                    _navigateToDetail(key: items[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteCurrencyType(items[row].key);
+                    _destroy(items[row].key);
                   },
                   child: Text('删除'),
                 ),
@@ -162,5 +167,32 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     var children = [toolbar, Expanded(child: layoutBuilder)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
+  }
+
+  void _navigateToDetail({int? key}) {
+    final label = key != null ? '货币 #$key' : '新建货币';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: CurrencyTypeDetailRoute(currencyTypeKey: key),
+      parentMenu: RouterMenu.currencyType,
+    );
+  }
+
+  Future<void> _destroy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

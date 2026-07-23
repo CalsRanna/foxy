@@ -1,15 +1,12 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/quest_faction_reward_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class QuestFactionRewardDetailViewModel
@@ -18,7 +15,13 @@ class QuestFactionRewardDetailViewModel
         QuestFactionRewardValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<QuestFactionRewardEntity?>(null);
+  final persistedKey = signal<int?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   /// Basic
   late final idController = registerController(IntFieldController());
@@ -35,72 +38,64 @@ class QuestFactionRewardDetailViewModel
   late final difficulty8Controller = registerController(IntFieldController());
   late final difficulty9Controller = registerController(IntFieldController());
 
-  final reward = signal(QuestFactionRewardEntity());
-  final persistedKey = signal<int?>(null);
-
-  void dispose() {
-    disposeControllers();
-  }
+  /// 从所有 Controller 收集数据构建 QuestFactionReward
 
   Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     try {
       if (key == null) {
-        persistedKey.value = null;
         final blank = await _repository.createQuestFactionReward();
-        reward.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      persistedKey.value = key;
-      final entity = await _repository.getQuestFactionReward(key);
-      if (entity == null) {
+      final result = await _repository.getQuestFactionReward(key);
+      if (result == null) {
         throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
       }
-      reward.value = entity;
-      _initControllers(entity);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载任务声望(key=$key)失败', error: e, stackTrace: s);
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
   }
 
   /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
   Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    validateQuestFactionRewardFields(candidate);
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeQuestFactionReward(candidate);
-    } else {
-      await _repository.updateQuestFactionReward(originalKey, candidate);
-    }
-    persistedKey.value = candidate.id;
-    reward.value = candidate;
-    routerFacade.updateCurrentLabel('任务声望 #${candidate.id}');
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
     try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('任务声望数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      final candidate = _collectCandidate();
+      validateQuestFactionRewardFields(candidate);
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeQuestFactionReward(candidate);
+      } else {
+        await _repository.updateQuestFactionReward(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
   }
 
-  /// 从所有 Controller 收集数据构建 QuestFactionReward
-  QuestFactionRewardEntity _collectFromControllers() {
+  QuestFactionRewardEntity _collectCandidate() {
     return QuestFactionRewardEntity(
       id: idController.collect(),
       difficulty0: difficulty0Controller.collect(),
@@ -116,7 +111,7 @@ class QuestFactionRewardDetailViewModel
     );
   }
 
-  void _initControllers(QuestFactionRewardEntity table) {
+  void _applyCandidate(QuestFactionRewardEntity table) {
     idController.init(table.id);
     difficulty0Controller.init(table.difficulty0);
     difficulty1Controller.init(table.difficulty1);
@@ -137,6 +132,10 @@ class QuestFactionRewardDetailViewModel
       entityName: 'QuestFactionReward ${t.id}',
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
+  }
+
+  void dispose() {
+    disposeControllers();
   }
 }

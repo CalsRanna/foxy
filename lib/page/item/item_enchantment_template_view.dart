@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/item_enchantment_template_key.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/page/item/item_enchantment_template_view_model.dart';
+import 'package:foxy/page/item/item_enchantment_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -12,12 +14,13 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// 物品附魔Tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
-  final int entry;
+  final ItemEnchantmentTemplateParentKey? parentKey;
 
-  const ItemEnchantmentTemplateView({super.key, required this.entry});
+  const ItemEnchantmentTemplateView({super.key, required this.parentKey});
 
   @override
   State<ItemEnchantmentTemplateView> createState() =>
@@ -26,19 +29,26 @@ class ItemEnchantmentTemplateView extends StatefulWidget {
 
 class _ItemEnchantmentTemplateViewState
     extends State<ItemEnchantmentTemplateView> {
-  final viewModel = GetIt.instance.get<ItemEnchantmentTemplateViewModel>();
+  final viewModel = GetIt.instance
+      .get<ItemEnchantmentTemplateCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(entry: widget.entry);
+    final parentKey = widget.parentKey;
+    if (parentKey != null) viewModel.initSignals(parentKey: parentKey);
   }
 
   @override
   void didUpdateWidget(covariant ItemEnchantmentTemplateView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.entry != widget.entry) {
-      viewModel.setParentItemEntry(widget.entry);
+    if (oldWidget.parentKey != widget.parentKey) {
+      final parentKey = widget.parentKey;
+      if (parentKey == null) {
+        viewModel.clearParent();
+      } else {
+        viewModel.setParentKey(parentKey);
+      }
     }
   }
 
@@ -114,7 +124,7 @@ class _ItemEnchantmentTemplateViewState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectRow(row);
+            viewModel.selectedKey.value = items[row].key;
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -122,7 +132,8 @@ class _ItemEnchantmentTemplateViewState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (await viewModel.edit() && context.mounted) {
+                    if (!await _load(items[row].key)) return;
+                    if (context.mounted) {
                       _showEditDialog(context);
                     }
                   },
@@ -130,7 +141,7 @@ class _ItemEnchantmentTemplateViewState
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(items[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -148,7 +159,14 @@ class _ItemEnchantmentTemplateViewState
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -191,7 +209,8 @@ class _ItemEnchantmentTemplateViewState
             label: '附魔ID',
             child: FoxyEntityPicker(
               delegate:
-                  viewModel.kind.value == ItemEnchantmentKind.randomProperty
+                  viewModel.parentKey.value?.kind ==
+                      ItemEnchantmentKind.randomProperty
                   ? FoxyEntityPickerDelegates.itemRandomProperties
                   : FoxyEntityPickerDelegates.itemRandomSuffix,
               controller: viewModel.enchController,
@@ -215,18 +234,58 @@ class _ItemEnchantmentTemplateViewState
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _load(ItemEnchantmentTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(ItemEnchantmentTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

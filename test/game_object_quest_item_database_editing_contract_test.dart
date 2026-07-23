@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_quest_item_key.dart';
-import 'package:foxy/page/game_object/game_object_quest_item_view_model.dart';
+import 'package:foxy/page/game_object/game_object_quest_item_collection_editor_view_model.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -109,11 +109,11 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('修改两列 key 仍按旧 key 更新，失败时保留并可重试', () async {
-      final viewModel = GameObjectQuestItemViewModel();
+      final viewModel = GameObjectQuestItemCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(gameObjectId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestItemKey(gameObjectEntry: 10, idx: 2);
       expect(viewModel.editingKey.value, oldKey);
       viewModel.gameObjectIdController.init(11);
@@ -133,16 +133,16 @@ void main() {
     });
 
     test('切换父范围和新建都会清空旧行身份', () async {
-      final viewModel = GameObjectQuestItemViewModel();
+      final viewModel = GameObjectQuestItemCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(gameObjectId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentGameObjectEntry(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedIndex.value, isNull);
-      expect(await viewModel.create(), isTrue);
+      expect(viewModel.selectedKey.value, isNull);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.gameObjectIdController.collect(), 12);
     });
@@ -156,7 +156,7 @@ void main() {
       'lib/repository/game_object_quest_item_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/game_object/game_object_quest_item_view_model.dart',
+      'lib/page/game_object/game_object_quest_item_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/game_object/game_object_quest_item_view.dart',
@@ -168,7 +168,7 @@ void main() {
       viewModel,
       contains('final editingKey = signal<GameObjectQuestItemKey?>(null)'),
     );
-    expect(viewModel, contains('destroyGameObjectQuestItem(selected.key)'));
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly:')));
     expect(view, contains('FoxyPagination('));
   });

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 
 @immutable
 final class SkinningLootTemplateKey {
@@ -8,7 +8,7 @@ final class SkinningLootTemplateKey {
 
   const SkinningLootTemplateKey({required this.entry, required this.item});
 
-  factory SkinningLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory SkinningLootTemplateKey.fromEntity(SkinningLootTemplateEntity value) {
     return SkinningLootTemplateKey(entry: value.entry, item: value.item);
   }
 

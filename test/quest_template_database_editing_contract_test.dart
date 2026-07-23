@@ -36,7 +36,7 @@ void main() {
     ).readAsStringSync();
     expect(page, contains('final int? questTemplateKey'));
     expect(page, contains('viewModel.persistedKey.value'));
-    expect(list, contains('item.key'));
+    expect(list, contains('_navigateToDetail(key: item.key'));
     expect(view, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
   });

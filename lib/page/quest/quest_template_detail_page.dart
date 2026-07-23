@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_view.dart';
@@ -30,7 +31,16 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.questTemplateKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.questTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -43,12 +53,12 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final template = viewModel.template.value;
+      final template = viewModel.entity.value;
       final questId = key ?? 0;
       final name = key == null
           ? '新建任务'
-          : template.logTitle.isNotEmpty
-          ? template.logTitle
+          : template?.logTitle.isNotEmpty == true
+          ? template?.logTitle ?? ''
           : '任务 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

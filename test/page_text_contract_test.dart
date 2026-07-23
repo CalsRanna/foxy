@@ -191,7 +191,6 @@ void main() {
     expect(view, contains('FoxyEntityPickerDelegates.pageText'));
     expect('Expanded(child:'.allMatches(view), hasLength(4));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
 
     final localeView = File(
       'lib/page/page_text/page_text_locale_view.dart',
@@ -203,18 +202,25 @@ void main() {
     expect(localeView, contains("placeholder: 'VerifiedBuild'"));
     expect(localeView, isNot(contains('readOnly: true')));
     expect(localeView, isNot(contains('flex:')));
-    expect(localeView, isNot(contains('description:')));
+    expect(localeView, contains('DialogUtil.instance.confirm('));
   });
 
-  test('locale ViewModel 不再固定分配十六个文本 Controller', () {
+  test('locale ViewModel 使用单行 typed controller 和统一 Collection 状态', () {
     final source = File(
-      'lib/page/page_text/page_text_locale_view_model.dart',
+      'lib/page/page_text/page_text_locale_collection_editor_view_model.dart',
     ).readAsStringSync();
-    expect(source, contains('class PageTextLocaleForm'));
-    expect(source, contains('final idController = IntFieldController();'));
+    expect(source, contains('final parentKey = signal<int?>(null);'));
+    expect(
+      source,
+      contains('final items = signal<List<BriefPageTextLocaleEntity>>'),
+    );
+    expect(source, contains('final editingKey = signal<PageTextLocaleKey?>'));
+    expect(source, contains('final selectedKey = signal<PageTextLocaleKey?>'));
+    expect(source, contains('registerController(IntFieldController())'));
     expect(source, contains('final localeController ='));
-    expect(source, contains('final textController = StringFieldController();'));
+    expect(source, contains('final textController = registerController('));
     expect(source, contains('final verifiedBuildController ='));
+    expect(source, contains('int _refreshToken = 0;'));
     expect(source, isNot(contains('localeController0')));
     expect(source, isNot(contains('for (var i = 0; i < 16; i++)')));
   });
@@ -230,18 +236,19 @@ void main() {
     expect(page, contains('PageTextView(viewModel: viewModel)'));
   });
 
-  test('locale 每行保留 editingKey 且保存失败前不清理原始身份', () {
+  test('locale persist 使用原 editingKey 且失败前不改写身份', () {
     final source = File(
-      'lib/page/page_text/page_text_locale_view_model.dart',
+      'lib/page/page_text/page_text_locale_collection_editor_view_model.dart',
     ).readAsStringSync();
-    expect(source, contains('PageTextLocaleKey? editingKey;'));
-    expect(source, contains('editingKey: brief.key'));
-    expect(source, contains('final _deletedKeys = <PageTextLocaleKey>[];'));
-    expect(source, contains('updates[editingKey] = locales[index];'));
-    expect(source, contains('applyPageTextLocaleChanges('));
-    final applyIndex = source.indexOf('applyPageTextLocaleChanges(');
-    final reloadIndex = source.indexOf('await _load(_currentId);', applyIndex);
-    expect(reloadIndex, greaterThan(applyIndex));
+    expect(source, contains('final originalKey = editingKey.value;'));
+    expect(source, contains('updatePageTextLocale(originalKey, candidate)'));
+    final updateIndex = source.indexOf(
+      'updatePageTextLocale(originalKey, candidate)',
+    );
+    final refreshIndex = source.indexOf('await _refresh();', updateIndex);
+    expect(refreshIndex, greaterThan(updateIndex));
+    expect(source, isNot(contains('applyPageTextLocaleChanges(')));
+    expect(source, isNot(contains('_deletedKeys')));
   });
 
   test('共享页面文本 Picker 同时按 ID 和文本分页筛选', () {

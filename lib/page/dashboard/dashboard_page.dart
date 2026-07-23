@@ -5,7 +5,11 @@ import 'package:foxy/page/dashboard/component/introduction.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
 import 'package:foxy/page/dashboard/component/version.dart';
 import 'package:foxy/page/dashboard/component/welcome.dart';
-import 'package:foxy/page/dashboard/dashboard_view_model.dart';
+import 'package:foxy/page/dashboard/dashboard_read_view_model.dart';
+import 'package:foxy/page/feature/feature_state_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -19,12 +23,14 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageRoute extends State<DashboardPage> {
-  final viewModel = GetIt.instance.get<DashboardViewModel>();
+  final viewModel = GetIt.instance.get<DashboardReadViewModel>();
+  final featureState = GetIt.instance.get<FeatureStateViewModel>();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals();
+    _initialize();
   }
 
   @override
@@ -55,8 +61,8 @@ class _DashboardPageRoute extends State<DashboardPage> {
     final leftChildren = [
       Watch(
         (_) => FrequentModuleComponent(
-          features: viewModel.scaffoldViewModel.favoriteFeatures.value,
-          onMenuTap: viewModel.navigateToMenu,
+          features: featureState.favoriteFeatures.value,
+          onMenuTap: _navigateToMenu,
         ),
       ),
       SizedBox(height: 16),
@@ -85,6 +91,25 @@ class _DashboardPageRoute extends State<DashboardPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
     );
+  }
+
+  void _navigateToMenu(RouterMenu menu) {
+    final feature = featureState.allFeatures.value
+        .where((feature) => feature.routerMenu == menu.name)
+        .firstOrNull;
+    routerFacade.navigateToMenu(
+      menu,
+      parentMenu: feature?.isPinned ?? true ? null : RouterMenu.more,
+    );
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载仪表板数据失败：$error');
+    }
   }
 }
 

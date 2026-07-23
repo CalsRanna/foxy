@@ -1,6 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/setting/setting_view_model.dart';
+import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
+import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -167,7 +169,7 @@ Widget _progressPanel(
 // ─── 导入对话框 ───────────────────────────────────────────────────────────
 
 class DbcImportDialog extends StatefulWidget {
-  final SettingViewModel vm;
+  final DbcImportWorkflowViewModel vm;
   const DbcImportDialog({super.key, required this.vm});
 
   @override
@@ -175,19 +177,26 @@ class DbcImportDialog extends StatefulWidget {
 }
 
 class _DbcImportDialogState extends State<DbcImportDialog> {
-  SettingViewModel get _vm => widget.vm;
+  DbcImportWorkflowViewModel get _vm => widget.vm;
   final _pathController = StringFieldController();
   bool _ready = false;
 
   @override
   void initState() {
     super.initState();
-    _vm.prepareImportDialog().then((_) {
-      if (!mounted) return;
-      final path = _vm.dbcImportPath.value;
-      if (path != null) _pathController.init(path);
-      setState(() => _ready = true);
-    });
+    _prepare();
+  }
+
+  Future<void> _prepare() async {
+    try {
+      await _vm.prepare();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
+    if (!mounted) return;
+    final path = _vm.path.value;
+    if (path != null) _pathController.init(path);
+    setState(() => _ready = true);
   }
 
   @override
@@ -200,14 +209,17 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     final dir = await getDirectoryPath();
     if (dir == null || !mounted) return;
     _pathController.init(dir);
-    _vm.setImportPathLocal(dir);
+    _vm.setPath(dir);
     setState(() {});
-    await _vm.setImportPath(dir);
   }
 
   Future<void> _start() async {
-    _vm.setImportPathLocal(_pathController.collect());
-    await _vm.startImport();
+    _vm.setPath(_pathController.collect());
+    try {
+      await _vm.start();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
   }
 
   @override
@@ -230,9 +242,13 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
           );
         }
 
-        final importing = _vm.dbcImporting.value;
-        final error = _vm.dbcImportError.value;
-        final success = _vm.dbcImportSuccess.value;
+        final workflowStatus = _vm.status.value;
+        final importing =
+            workflowStatus == WorkflowStatus.preparing ||
+            workflowStatus == WorkflowStatus.running ||
+            workflowStatus == WorkflowStatus.cancelling;
+        final error = _vm.errorMessage.value;
+        final success = workflowStatus == WorkflowStatus.succeeded;
         final theme = ShadTheme.of(context);
 
         if (success) {
@@ -250,9 +266,9 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             ],
             child: _banner(
               context,
-              text: _vm.dbcImportSuccessMessage.value.isEmpty
-                  ? 'DBC 数据已导入。'
-                  : _vm.dbcImportSuccessMessage.value,
+              text:
+                  '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
+                  '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
               color: theme.colorScheme.primary,
               icon: LucideIcons.circleCheck,
             ),
@@ -264,15 +280,19 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             title: _titleRow(LucideIcons.fileInput, '正在导入 DBC'),
             child: _progressPanel(
               context,
-              ratio: _vm.dbcImportProgress.value,
-              label: _vm.dbcImportProgressLabel.value,
-              detail: _vm.dbcImportProgressDetail.value,
+              ratio: _vm.progress.value,
+              label: _vm.progressLabel.value,
+              detail: _vm.progressDetail.value,
               trailing: ShadButton.outline(
                 size: ShadButtonSize.sm,
-                onPressed: _vm.dbcImportCancelling.value
+                onPressed: workflowStatus == WorkflowStatus.cancelling
                     ? null
-                    : _vm.cancelImport,
-                child: Text(_vm.dbcImportCancelling.value ? '正在取消…' : '取消导入'),
+                    : _vm.cancel,
+                child: Text(
+                  workflowStatus == WorkflowStatus.cancelling
+                      ? '正在取消…'
+                      : '取消导入',
+                ),
               ),
             ),
           );
@@ -287,8 +307,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             ),
             ShadButton(
               onPressed:
-                  (_vm.dbcImportPath.value == null ||
-                      _vm.dbcImportPath.value!.trim().isEmpty)
+                  (_vm.path.value == null || _vm.path.value!.trim().isEmpty)
                   ? null
                   : _start,
               child: const Row(
@@ -319,7 +338,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 placeholder: '选择或输入 DBC 目录路径',
                 onBrowse: _browse,
                 onChanged: (value) {
-                  _vm.setImportPathLocal(value);
+                  _vm.setPath(value);
                   setState(() {});
                 },
                 onSubmitted: (_) => _start(),
@@ -342,7 +361,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
 // ─── 导出对话框 ───────────────────────────────────────────────────────────
 
 class DbcExportDialog extends StatefulWidget {
-  final SettingViewModel vm;
+  final DbcExportWorkflowViewModel vm;
   const DbcExportDialog({super.key, required this.vm});
 
   @override
@@ -350,7 +369,7 @@ class DbcExportDialog extends StatefulWidget {
 }
 
 class _DbcExportDialogState extends State<DbcExportDialog> {
-  SettingViewModel get _vm => widget.vm;
+  DbcExportWorkflowViewModel get _vm => widget.vm;
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
   String? _outputDir;
@@ -367,13 +386,17 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   }
 
   Future<void> _bootstrap() async {
-    final defaultDir = await _vm.prepareExportDialog();
+    try {
+      await _vm.prepare();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
     if (!mounted) return;
+    final defaultDir = _vm.outputDirectory.value;
     if (defaultDir != null) {
       _dirController.init(defaultDir);
       _outputDir = defaultDir;
     }
-    await _vm.loadExportItems();
     if (mounted) setState(() => _loaded = true);
   }
 
@@ -401,6 +424,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     setState(() {
       _dirController.init(dir);
       _outputDir = dir;
+      _vm.setOutputDirectory(dir);
     });
   }
 
@@ -410,10 +434,14 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
       width: _kDialogWidth,
       child: Watch((_) {
         // 显式订阅列表信号，保证全选/取消全选时整表刷新。
-        final allItems = _vm.dbcExportItems.value;
-        final exporting = _vm.dbcExporting.value;
-        final error = _vm.dbcExportError.value;
-        final success = _vm.dbcExportSuccess.value;
+        final allItems = _vm.items.value;
+        final workflowStatus = _vm.status.value;
+        final exporting =
+            workflowStatus == WorkflowStatus.preparing ||
+            workflowStatus == WorkflowStatus.running ||
+            workflowStatus == WorkflowStatus.cancelling;
+        final error = _vm.errorMessage.value;
+        final success = workflowStatus == WorkflowStatus.succeeded;
         final theme = ShadTheme.of(context);
 
         if (!_loaded && !exporting) {
@@ -458,9 +486,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
               children: [
                 _banner(
                   context,
-                  text: _vm.dbcExportSuccessMessage.value.isEmpty
-                      ? 'DBC 文件已写出。'
-                      : _vm.dbcExportSuccessMessage.value,
+                  text:
+                      '成功导出 ${_vm.result.value?.completed ?? 0} 个文件'
+                      '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个空表' : ''}。',
                   color: theme.colorScheme.primary,
                   icon: LucideIcons.circleCheck,
                 ),
@@ -475,9 +503,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             title: _titleRow(LucideIcons.fileOutput, '正在导出 DBC'),
             child: _progressPanel(
               context,
-              ratio: _vm.dbcExportProgress.value,
-              label: _vm.dbcExportProgressLabel.value,
-              detail: _vm.dbcExportProgressDetail.value,
+              ratio: _vm.progress.value,
+              label: _vm.progressLabel.value,
+              detail: _vm.progressDetail.value,
             ),
           );
         }
@@ -504,7 +532,14 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             ShadButton(
               onPressed: selectedCount == 0 || _outputDir == null
                   ? null
-                  : () => _vm.exportDbc(_outputDir!),
+                  : () async {
+                      _vm.setOutputDirectory(_outputDir!);
+                      try {
+                        await _vm.start();
+                      } catch (_) {
+                        // The workflow exposes the failure through errorMessage.
+                      }
+                    },
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
@@ -533,6 +568,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   setState(() {
                     _outputDir = trimmed.isEmpty ? null : trimmed;
                   });
+                  _vm.setOutputDirectory(value);
                 },
               ),
               if (error != null)
@@ -553,8 +589,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                         onPressed: _outputDir == null
                             ? null
                             : () {
-                                _vm.clearExportFeedback();
-                                _vm.retryExport(_outputDir!);
+                                _vm.setOutputDirectory(_outputDir!);
+                                _vm.retry();
                               },
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,

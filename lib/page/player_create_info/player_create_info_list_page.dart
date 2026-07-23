@@ -1,5 +1,11 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/brief_player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/page/player_create_info/player_create_info_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -94,10 +100,10 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final infos = viewModel.infos.value;
+    final infos = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -152,7 +158,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
           },
           header: (context, index) =>
               ShadTableCell.header(child: Text(headers[index])),
-          onRowDoubleTap: (row) => viewModel.navigateToDetail(info: infos[row]),
+          onRowDoubleTap: (row) => _navigateToDetail(info: infos[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -160,12 +166,13 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(info: infos[row]),
+                  onPressed: () => _navigateToDetail(info: infos[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deletePlayerCreateInfo(infos[row]),
+                  onPressed: () => _destroy(infos[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -187,5 +194,32 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
         ],
       ),
     );
+  }
+
+  void _navigateToDetail({BriefPlayerCreateInfoEntity? info}) {
+    final label = info != null ? '种族${info.race}-职业${info.class_}' : '新建出生信息';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: PlayerCreateInfoDetailRoute(playerCreateInfoKey: info?.key),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> _destroy(PlayerCreateInfoKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

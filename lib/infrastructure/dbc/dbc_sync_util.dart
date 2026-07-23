@@ -31,6 +31,7 @@ class DbcSyncUtil {
 
   _ImportJobHandle? _activeImportJob;
   String? _activeJobId;
+  bool _exportCancelRequested = false;
   bool _running = false;
   DbcSyncOperation? _operation;
 
@@ -268,6 +269,7 @@ class DbcSyncUtil {
 
     _running = true;
     _operation = DbcSyncOperation.export;
+    _exportCancelRequested = false;
     unawaited(
       _runExport(
         controller: controller,
@@ -295,6 +297,7 @@ class DbcSyncUtil {
       }
 
       for (var index = 0; index < definitions.length; index++) {
+        if (_exportCancelRequested) break;
         final definition = definitions[index];
         var stage = DbcSyncStage.reading;
         var rowCount = 0;
@@ -310,6 +313,7 @@ class DbcSyncUtil {
 
         try {
           final rows = await loadRows(definition.tableName);
+          if (_exportCancelRequested) break;
           rowCount = rows.length;
           if (rows.isEmpty) {
             skipped++;
@@ -364,6 +368,7 @@ class DbcSyncUtil {
             totalRows: rowCount,
           ),
         );
+        if (_exportCancelRequested) break;
       }
     } catch (error) {
       LoggerUtil.instance.e('DBC 导出异常: $error');
@@ -378,6 +383,7 @@ class DbcSyncUtil {
             completed: completed,
             skipped: skipped,
             errors: errors,
+            cancelled: _exportCancelRequested,
           ),
         );
       }
@@ -388,6 +394,10 @@ class DbcSyncUtil {
 
   Future<void> cancel() async {
     if (!_running) return;
+    if (_operation == DbcSyncOperation.export) {
+      _exportCancelRequested = true;
+      return;
+    }
     if (_operation != DbcSyncOperation.import) return;
 
     // 持有 job 引用（非瞬时 isolate 快照），spawn 完成后仍可 kill。
@@ -633,6 +643,7 @@ class DbcSyncUtil {
   void _clearActiveTask() {
     _activeImportJob = null;
     _activeJobId = null;
+    _exportCancelRequested = false;
     _operation = null;
     _running = false;
   }

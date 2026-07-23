@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_key.dart';
-import 'package:foxy/page/creature_template/creature_template_resistance_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_resistance_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/validation/creature_template_resistance_entity_validation_mixin.dart';
@@ -139,11 +139,11 @@ void main() {
     });
 
     test('编辑 Brief 后按旧 key 更新，candidate 可移出父范围', () async {
-      final viewModel = CreatureTemplateResistanceViewModel();
+      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = CreatureTemplateResistanceKey(
         creatureID: 10,
         school: 2,
@@ -159,15 +159,15 @@ void main() {
       expect(repository.rows.single.school, 3);
       expect(viewModel.items.value, isEmpty);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedIndex.value, isNull);
+      expect(viewModel.selectedKey.value, isNull);
     });
 
     test('保存失败保留旧 editingKey，重试仍使用同一旧 key', () async {
-      final viewModel = CreatureTemplateResistanceViewModel();
+      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
       repository.failUpdates = true;
       viewModel.schoolController.init(3);
@@ -181,17 +181,17 @@ void main() {
     });
 
     test('切换父范围和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateResistanceViewModel();
+      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentCreatureId(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIdController.collect(), 12);
 
-      expect(await viewModel.create(), isTrue);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       await viewModel.persist();
       expect(repository.storeCount, 1);
@@ -210,7 +210,7 @@ void main() {
       'lib/repository/creature_template_resistance_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/creature_template_resistance_view_model.dart',
+      'lib/page/creature_template/creature_template_resistance_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/creature_template_resistance_view.dart',
@@ -224,10 +224,7 @@ void main() {
         'final editingKey = signal<CreatureTemplateResistanceKey?>(null)',
       ),
     );
-    expect(
-      viewModel,
-      contains('destroyCreatureTemplateResistance(selected.key)'),
-    );
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, isNot(contains('enabled: !isEditing')));
     expect(view, contains('FoxyPagination('));

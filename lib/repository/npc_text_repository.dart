@@ -24,8 +24,8 @@ class NpcTextRepository with RepositoryMixin {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
-  Future<NpcTextEntity> createNpcText() async {
-    return NpcTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
+  Future<NpcTextEntity> createNpcText([int? id]) async {
+    return NpcTextEntity(id: id ?? await nextMaxPlusOne(_table, 'ID'));
   }
 
   Future<void> destroyNpcText(int key) async {

@@ -1,5 +1,5 @@
 import 'package:foxy/database/database.dart';
-import 'package:foxy/page/foxy_app/foxy_view_model.dart';
+import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 
@@ -9,10 +9,10 @@ mixin RepositoryMixin {
 
   /// 是否 JOIN `*_locale` 表显示本地化名称。
   ///
-  /// 读取 [FoxyViewModel.localeEnabled]；DI 未就绪时默认启用，保持向后兼容。
+  /// 读取基础设施层的 locale 查询设置；DI 未就绪时默认启用。
   bool get localeEnabled {
     try {
-      return GetIt.instance.get<FoxyViewModel>().localeEnabled.value;
+      return GetIt.instance.get<LocaleQuerySettings>().localeEnabled;
     } catch (_) {
       return true;
     }

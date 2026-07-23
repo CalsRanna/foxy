@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/page/gossip_menu/npc_text_view_model.dart';
+import 'package:foxy/page/gossip_menu/npc_text_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -12,6 +12,7 @@ import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class NpcTextView extends StatefulWidget {
   final int textId;
@@ -23,18 +24,48 @@ class NpcTextView extends StatefulWidget {
 }
 
 class _NpcTextViewState extends State<NpcTextView> {
-  final viewModel = GetIt.instance.get<NpcTextViewModel>();
+  final viewModel = GetIt.instance.get<NpcTextSingleEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.load(widget.textId);
+    _initialize();
   }
 
   @override
   void didUpdateWidget(covariant NpcTextView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.textId != widget.textId) viewModel.load(widget.textId);
+    if (oldWidget.textId != widget.textId) {
+      _initialize();
+    }
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(parentKey: widget.textId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   @override
@@ -382,12 +413,15 @@ class _NpcTextViewState extends State<NpcTextView> {
   Widget _buildActions() {
     return Row(
       children: [
-        ShadButton(onPressed: viewModel.save, child: const Text('保存')),
-        const SizedBox(width: 8),
-        ShadButton.ghost(
-          onPressed: () => GetIt.instance.get<RouterFacade>().goBack(),
-          child: const Text('取消'),
+        Watch(
+          (_) => ShadButton(
+            enabled: !viewModel.submitting.value,
+            onPressed: _persist,
+            child: const Text('保存'),
+          ),
         ),
+        const SizedBox(width: 8),
+        ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
       ],
     );
   }

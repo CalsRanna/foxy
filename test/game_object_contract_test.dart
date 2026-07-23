@@ -12,7 +12,7 @@ import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
@@ -45,7 +45,7 @@ void main() {
       'VerifiedBuild',
     });
     expect(const GameObjectTemplateLocaleEntity().toJson(), hasLength(5));
-    expect(const LootTemplateEntity().toJson(), hasLength(10));
+    expect(const GameObjectLootTemplateEntity().toJson(), hasLength(10));
   });
 
   test('GameobjectTypes 完整覆盖 AzerothCore 0..35', () {

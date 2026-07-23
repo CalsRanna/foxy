@@ -37,8 +37,24 @@ import 'package:foxy/widget/form/validation/item_visual_effect_entity_validation
 import 'package:foxy/entity/item_visual_effect_entity.dart';
 import 'package:foxy/widget/form/validation/item_visuals_entity_validation_mixin.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
-import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/creature_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/disenchant_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/disenchant_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/game_object_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/item_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/milling_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/pickpocketing_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/prospecting_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/prospecting_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/reference_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
+import 'package:foxy/widget/form/validation/skinning_loot_template_entity_validation_mixin.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/widget/form/validation/page_text_entity_validation_mixin.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';
@@ -102,7 +118,15 @@ class _ValidationViewModel
         ItemTemplateValidationMixin,
         ItemVisualEffectValidationMixin,
         ItemVisualsValidationMixin,
-        LootTemplateValidationMixin,
+        CreatureLootTemplateValidationMixin,
+        DisenchantLootTemplateValidationMixin,
+        GameObjectLootTemplateValidationMixin,
+        ItemLootTemplateValidationMixin,
+        MillingLootTemplateValidationMixin,
+        PickpocketingLootTemplateValidationMixin,
+        ProspectingLootTemplateValidationMixin,
+        ReferenceLootTemplateValidationMixin,
+        SkinningLootTemplateValidationMixin,
         PageTextValidationMixin,
         PageTextLocaleValidationMixin,
         PlayerCreateInfoValidationMixin,
@@ -217,8 +241,55 @@ extension ItemVisualsEntityTestValidation on ItemVisualsEntity {
   void validate() => _validationViewModel.validateItemVisualsFields(this);
 }
 
-extension LootTemplateEntityTestValidation on LootTemplateEntity {
-  void validate() => _validationViewModel.validateLootTemplateFields(this);
+extension CreatureLootTemplateEntityTestValidation
+    on CreatureLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateCreatureLootTemplateFields(this);
+}
+
+extension DisenchantLootTemplateEntityTestValidation
+    on DisenchantLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateDisenchantLootTemplateFields(this);
+}
+
+extension GameObjectLootTemplateEntityTestValidation
+    on GameObjectLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateGameObjectLootTemplateFields(this);
+}
+
+extension ItemLootTemplateEntityTestValidation on ItemLootTemplateEntity {
+  void validate() => _validationViewModel.validateItemLootTemplateFields(this);
+}
+
+extension MillingLootTemplateEntityTestValidation on MillingLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateMillingLootTemplateFields(this);
+}
+
+extension PickpocketingLootTemplateEntityTestValidation
+    on PickpocketingLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validatePickpocketingLootTemplateFields(this);
+}
+
+extension ProspectingLootTemplateEntityTestValidation
+    on ProspectingLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateProspectingLootTemplateFields(this);
+}
+
+extension ReferenceLootTemplateEntityTestValidation
+    on ReferenceLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateReferenceLootTemplateFields(this);
+}
+
+extension SkinningLootTemplateEntityTestValidation
+    on SkinningLootTemplateEntity {
+  void validate() =>
+      _validationViewModel.validateSkinningLootTemplateFields(this);
 }
 
 extension PageTextEntityTestValidation on PageTextEntity {

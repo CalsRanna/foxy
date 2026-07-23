@@ -11,7 +11,7 @@ import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';
@@ -214,7 +214,7 @@ void main() {
       'CreatureId',
       'TrainerId',
     });
-    expect(const LootTemplateEntity().toJson().keys.toSet(), {
+    expect(const CreatureLootTemplateEntity().toJson().keys.toSet(), {
       'Entry',
       'Item',
       'Reference',
@@ -276,23 +276,24 @@ void main() {
 
   test('掉落实体拒绝服务端会跳过或修正的值', () {
     expect(
-      () => const LootTemplateEntity(lootMode: 0).validate(),
+      () => const CreatureLootTemplateEntity(lootMode: 0).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(groupId: 128).validate(),
+      () => const CreatureLootTemplateEntity(groupId: 128).validate(),
       throwsRangeError,
     );
     expect(
-      () => const LootTemplateEntity(minCount: 2, maxCount: 1).validate(),
+      () =>
+          const CreatureLootTemplateEntity(minCount: 2, maxCount: 1).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(chance: 0, groupId: 0).validate(),
+      () => const CreatureLootTemplateEntity(chance: 0, groupId: 0).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, chance: 100).validate(),
+      () => const CreatureLootTemplateEntity(item: 1, chance: 100).validate(),
       returnsNormally,
     );
   });

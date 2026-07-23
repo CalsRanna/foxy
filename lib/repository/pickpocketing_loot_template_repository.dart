@@ -1,6 +1,6 @@
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -57,8 +57,8 @@ class PickpocketingLootTemplateRepository with RepositoryMixin {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    return LootTemplateEntity(entry: entry);
+  Future<PickpocketingLootTemplateEntity> createLootTemplate(int entry) async {
+    return PickpocketingLootTemplateEntity(entry: entry);
   }
 
   Future<void> destroyLootTemplate(PickpocketingLootTemplateKey key) async {
@@ -163,18 +163,18 @@ class PickpocketingLootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(
+  Future<PickpocketingLootTemplateEntity?> getLootTemplate(
     PickpocketingLootTemplateKey key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
-    return LootTemplateEntity.fromJson(results.first.toMap());
+    return PickpocketingLootTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+  Future<void> storeLootTemplate(PickpocketingLootTemplateEntity loot) async {
     try {
       await laconic.table(_table).insert([loot.toJson()]);
     } catch (error) {
@@ -187,7 +187,7 @@ class PickpocketingLootTemplateRepository with RepositoryMixin {
 
   Future<void> updateLootTemplate(
     PickpocketingLootTemplateKey originalKey,
-    LootTemplateEntity loot,
+    PickpocketingLootTemplateEntity loot,
   ) async {
     try {
       final matchedRows = await _whereKey(

@@ -26,18 +26,23 @@ void main() {
     expect(source, isNot(contains('Future<int> storeNpcText')));
   });
 
-  test('内嵌详情使用 persistedKey、可编辑 ID 和显式 locale 事务', () {
+  test('单行编辑器使用 editingKey、可编辑 ID 和具体事务 UseCase', () {
     final viewModel = File(
-      'lib/page/gossip_menu/npc_text_view_model.dart',
+      'lib/page/gossip_menu/npc_text_single_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/gossip_menu/npc_text_view.dart',
     ).readAsStringSync();
-    expect(viewModel, contains('persistedKey = signal<int?>'));
-    expect(viewModel, contains('final originalKey = persistedKey.value'));
-    expect(viewModel, contains('updateNpcText(originalKey, entity)'));
-    expect(viewModel, contains('_repository.laconic.transaction'));
-    expect(viewModel, contains('persistedKey.value = entity.id'));
+    final useCase = File(
+      'lib/use_case/gossip_menu/save_npc_text_use_case.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('editingKey = signal<int?>'));
+    expect(viewModel, contains('final originalKey = editingKey.value'));
+    expect(viewModel, contains('_persistUseCase.execute('));
+    expect(viewModel, isNot(contains('.transaction')));
+    expect(viewModel, contains('editingKey.value = result.persistedKey'));
+    expect(useCase, contains('_transaction.execute('));
+    expect(useCase, contains('updateNpcText(originalKey, candidate)'));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, contains('didUpdateWidget'));
   });

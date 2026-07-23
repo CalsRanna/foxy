@@ -33,7 +33,7 @@ void main() {
       'lib/repository/player_create_info_spell_custom_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/player_create_info/player_create_info_spell_custom_view_model.dart',
+      'lib/page/player_create_info/player_create_info_spell_custom_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/player_create_info/player_create_info_spell_custom_view.dart',
@@ -50,7 +50,7 @@ void main() {
       contains('editingKey = signal<PlayerCreateInfoSpellCustomKey?>'),
     );
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('item.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(view, contains('FoxyPagination('));
     expect(view, contains("Text('编辑')"));
     expect(view, isNot(contains('readOnly: true')));

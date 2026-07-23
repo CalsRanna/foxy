@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
@@ -29,7 +30,16 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.spellKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.spellKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -42,12 +52,12 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final spell = viewModel.spell.value;
+      final spell = viewModel.entity.value;
       final spellId = key ?? 0;
-      final name = spell.nameLangZhCN.isNotEmpty
-          ? spell.nameLangZhCN
-          : spell.nameLangEnUS.isNotEmpty
-          ? spell.nameLangEnUS
+      final name = spell?.nameLangZhCN.isNotEmpty == true
+          ? spell?.nameLangZhCN ?? ''
+          : spell?.nameLangEnUS.isNotEmpty == true
+          ? spell?.nameLangEnUS ?? ''
           : key == null
           ? '新建法术'
           : '法术 #$key';

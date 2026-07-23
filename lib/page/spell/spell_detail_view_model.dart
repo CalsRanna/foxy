@@ -1,23 +1,33 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/spell_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SpellDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellRepository>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<SpellEntity?>(null);
+  final persistedKey = signal<int?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
+  // === 联动信号：跟踪当前选择的枚举值，用于控制子字段 readonly/enabled ===
+  final effect0Signal = signal<int>(0);
+  final effect1Signal = signal<int>(0);
+  final effect2Signal = signal<int>(0);
+  final effectAura0Signal = signal<int>(0);
+  final effectAura1Signal = signal<int>(0);
+  final effectAura2Signal = signal<int>(0);
+  final spellClassSetSignal = signal<int>(0);
 
   /// 主键；新建时由 [createSpell] 预填 MAX+1，之后仍可编辑。
   late final idController = registerController(IntFieldController());
-
   // === 基础文本 ===
   late final nameLangZhCNController = registerController(
     StringFieldController(),
@@ -41,7 +51,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final auraDescriptionLangFlagsController = registerController(
     IntFieldController(),
   );
-
   // === 图标/视觉 ===
   late final spellIconIDController = registerController(IntFieldController());
   late final activeIconIDController = registerController(IntFieldController());
@@ -51,10 +60,8 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellVisualID1Controller = registerController(
     IntFieldController(),
   );
-
   // === 分类/类型 ===
   late final categoryController = registerController(IntFieldController());
-
   late final schoolMaskFlagController = registerController(
     FlagFieldController(),
   );
@@ -70,7 +77,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final preventionTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-
   // === 施法参数 ===
   late final castingTimeIndexController = registerController(
     IntFieldController(),
@@ -80,7 +86,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellDescriptionVariableIDController = registerController(
     IntFieldController(),
   );
-
   // === 等级 ===
   late final baseLevelController = registerController(IntFieldController());
   late final spellLevelController = registerController(IntFieldController());
@@ -88,7 +93,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellDifficultyIDController = registerController(
     IntFieldController(),
   );
-
   // === 冷却/恢复 ===
   late final startRecoveryCategoryController = registerController(
     IntFieldController(),
@@ -100,7 +104,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final categoryRecoveryTimeController = registerController(
     IntFieldController(),
   );
-
   // === 目标 ===
   late final targetCreatureTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -110,7 +113,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final maxTargetLevelController = registerController(
     IntFieldController(),
   );
-
   // === 状态 ===
   late final casterAuraStateController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -122,7 +124,6 @@ class SpellDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final speedController = registerController(DoubleFieldController());
-
   // === 需求 ===
   late final requiredAreasIDController = registerController(
     IntFieldController(),
@@ -133,7 +134,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final facingCasterFlagsController = registerController(
     FlagFieldController(),
   );
-
   // === 能量消耗 ===
   late final powerDisplayIDController = registerController(
     IntFieldController(),
@@ -151,7 +151,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final manaPerSecondPerLevelController = registerController(
     IntFieldController(),
   );
-
   // === 标志位 ===
   late final interruptFlagsController = registerController(
     FlagFieldController(),
@@ -182,12 +181,10 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final attributesExGController = registerController(
     FlagFieldController(),
   );
-
   // === 触发 ===
   late final procTypeMaskController = registerController(FlagFieldController());
   late final procChanceController = registerController(IntFieldController());
   late final procChargesController = registerController(IntFieldController());
-
   // === 法术分类 ===
   late final spellClassSetController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -201,7 +198,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final spellClassMask2Controller = registerController(
     FlagFieldController(),
   );
-
   // === 效果0 ===
   late final effect0Controller = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -269,7 +265,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC0Controller = registerController(
     FlagFieldController(),
   );
-
   // === 效果1 ===
   late final effect1Controller = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -337,7 +332,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC1Controller = registerController(
     FlagFieldController(),
   );
-
   // === 效果2 ===
   late final effect2Controller = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -405,7 +399,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final effectSpellClassMaskC2Controller = registerController(
     FlagFieldController(),
   );
-
   // === 装备限制 ===
   late final equippedItemClassController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -416,7 +409,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final equippedItemInvTypesController = registerController(
     FlagFieldController(),
   );
-
   // === 图腾/施法材料 ===
   late final requiredTotemCategoryID0Controller = registerController(
     IntFieldController(),
@@ -442,7 +434,6 @@ class SpellDetailViewModel with FieldControllerMixin {
   late final reagentCount5Controller = registerController(IntFieldController());
   late final reagentCount6Controller = registerController(IntFieldController());
   late final reagentCount7Controller = registerController(IntFieldController());
-
   // === 其他高级属性 ===
   late final casterAuraSpellController = registerController(
     IntFieldController(),
@@ -492,22 +483,65 @@ class SpellDetailViewModel with FieldControllerMixin {
     FlagFieldController(),
   );
 
-  final spell = signal(SpellEntity());
-  final persistedKey = signal<int?>(null);
-
-  // === 联动信号：跟踪当前选择的枚举值，用于控制子字段 readonly/enabled ===
-  final effect0Signal = signal<int>(0);
-  final effect1Signal = signal<int>(0);
-  final effect2Signal = signal<int>(0);
-  final effectAura0Signal = signal<int>(0);
-  final effectAura1Signal = signal<int>(0);
-  final effectAura2Signal = signal<int>(0);
-  final spellClassSetSignal = signal<int>(0);
-
   bool _effectSignalsWired = false;
 
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createSpell();
+        entity.value = blank;
+        _applyCandidate(blank);
+        _wireEffectSignals();
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getSpell(key);
+      if (result == null) {
+        throw StateError('原法术不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+      _wireEffectSignals();
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeSpell(candidate);
+      } else {
+        await _repository.updateSpell(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
   void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
+    entity.value = entity.value!.copyWith(
       auraDescriptionLangEnUS: values.valueOf('enUS'),
       auraDescriptionLangKoKR: values.valueOf('koKR'),
       auraDescriptionLangFrFR: values.valueOf('frFR'),
@@ -529,7 +563,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   }
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
+    entity.value = entity.value!.copyWith(
       descriptionLangEnUS: values.valueOf('enUS'),
       descriptionLangKoKR: values.valueOf('koKR'),
       descriptionLangFrFR: values.valueOf('frFR'),
@@ -551,7 +585,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   }
 
   void applyNameLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
+    entity.value = entity.value!.copyWith(
       nameLangEnUS: values.valueOf('enUS'),
       nameLangKoKR: values.valueOf('koKR'),
       nameLangFrFR: values.valueOf('frFR'),
@@ -573,7 +607,7 @@ class SpellDetailViewModel with FieldControllerMixin {
   }
 
   void applyNameSubtextLocales(List<DbcLocaleFieldValue> values) {
-    spell.value = spell.value.copyWith(
+    entity.value = entity.value!.copyWith(
       nameSubtextLangEnUS: values.valueOf('enUS'),
       nameSubtextLangKoKR: values.valueOf('koKR'),
       nameSubtextLangFrFR: values.valueOf('frFR'),
@@ -594,70 +628,9 @@ class SpellDetailViewModel with FieldControllerMixin {
     nameSubtextLangZhCNController.init(values.zhCN);
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? key}) async {
-    try {
-      if (key == null) {
-        persistedKey.value = null;
-        final blank = await _repository.createSpell();
-        spell.value = blank;
-        _initControllers(blank);
-        _wireEffectSignals();
-        return;
-      }
-      persistedKey.value = key;
-      final result = await _repository.getSpell(key);
-      if (result == null) {
-        throw StateError('原法术不存在，可能已被其他操作修改或删除');
-      }
-      spell.value = result;
-      _initControllers(result);
-      _wireEffectSignals();
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载法术(id=$key)失败', error: e, stackTrace: s);
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeSpell(candidate);
-    } else {
-      await _repository.updateSpell(originalKey, candidate);
-    }
-    persistedKey.value = candidate.id;
-    spell.value = candidate;
-    routerFacade.updateCurrentLabel(_labelFor(candidate));
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('法术数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  SpellEntity _collectFromControllers() {
+  SpellEntity _collectCandidate() {
     // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
-    return spell.value.copyWith(
+    return entity.value!.copyWith(
       id: idController.collect(),
       // === 基础文本 ===
       nameLangZhCN: nameLangZhCNController.collect(),
@@ -874,7 +847,7 @@ class SpellDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _initControllers(SpellEntity template) {
+  void _applyCandidate(SpellEntity template) {
     idController.init(template.id);
     // === 基础文本 ===
     nameLangZhCNController.init(template.nameLangZhCN);
@@ -1103,14 +1076,7 @@ class SpellDetailViewModel with FieldControllerMixin {
       entityName: t.nameLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
-  }
-
-  String _labelFor(SpellEntity spell) {
-    final name = spell.nameLangZhCN.isNotEmpty
-        ? spell.nameLangZhCN
-        : spell.nameLangEnUS;
-    return name.isNotEmpty ? name : '法术 #${spell.id}';
+    _activityLogService.recordBestEffort(log);
   }
 
   /// 监听 SelectFieldController 变化，同步到 signal。
@@ -1132,5 +1098,9 @@ class SpellDetailViewModel with FieldControllerMixin {
     sync(effectAura1Controller, effectAura1Signal);
     sync(effectAura2Controller, effectAura2Signal);
     sync(spellClassSetController, spellClassSetSignal);
+  }
+
+  void dispose() {
+    disposeControllers();
   }
 }

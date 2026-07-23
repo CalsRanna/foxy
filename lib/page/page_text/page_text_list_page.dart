@@ -1,3 +1,7 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/page_text/page_text_list_view_model.dart';
@@ -86,10 +90,10 @@ class _TextContentListPageState extends State<TextContentListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final pages = viewModel.pages.value;
+    final pages = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -133,7 +137,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
+            _navigateToDetail(
               key: pages[row].key,
               label: pages[row].displayText,
             );
@@ -145,20 +149,22 @@ class _TextContentListPageState extends State<TextContentListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(
+                  onPressed: () => _navigateToDetail(
                     key: pages[row].key,
                     label: pages[row].displayText,
                   ),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyPageText(pages[row].key),
+                  onPressed: () => _copy(pages[row].key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deletePageText(pages[row].key),
+                  onPressed: () => _destroy(pages[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -180,5 +186,49 @@ class _TextContentListPageState extends State<TextContentListPage> {
         ],
       ),
     );
+  }
+
+  void _navigateToDetail({int? key, String? label}) {
+    final name = label?.isNotEmpty == true ? label! : '新建页面文本';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: name,
+      route: TextContentDetailRoute(pageTextKey: key),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> _copy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

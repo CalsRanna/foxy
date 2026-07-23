@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
@@ -20,6 +21,15 @@ class SmartScriptDetailPage extends StatefulWidget {
 class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
 
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.scriptKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
+  }
+
   @override
   void dispose() {
     viewModel.dispose();
@@ -29,7 +39,7 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.scriptKey);
+    _initialize();
   }
 
   @override

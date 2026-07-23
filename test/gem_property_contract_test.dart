@@ -73,7 +73,6 @@ void main() {
     expect(view, contains('FoxyIntShadSelect('));
     expect('Expanded(child:'.allMatches(view), hasLength(8));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {

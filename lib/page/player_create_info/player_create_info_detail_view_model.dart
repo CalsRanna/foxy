@@ -1,16 +1,13 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class PlayerCreateInfoDetailViewModel
@@ -18,8 +15,14 @@ class PlayerCreateInfoDetailViewModel
         ViewModelValidationMixin,
         PlayerCreateInfoValidationMixin,
         FieldControllerMixin {
-  final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<PlayerCreateInfoEntity?>(null);
+  final persistedKey = signal<PlayerCreateInfoKey?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   late final raceController = registerController(IntFieldController());
   late final playerClassController = registerController(IntFieldController());
@@ -32,68 +35,61 @@ class PlayerCreateInfoDetailViewModel
     DoubleFieldController(),
   );
 
-  final info = signal<PlayerCreateInfoEntity?>(null);
-  final persistedKey = signal<PlayerCreateInfoKey?>(null);
-
-  void dispose() {
-    disposeControllers();
-  }
-
   Future<void> initSignals({PlayerCreateInfoKey? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     try {
       if (key == null) {
-        persistedKey.value = null;
         final blank = await _repository.createPlayerCreateInfo();
-        info.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      persistedKey.value = key;
       final result = await _repository.getPlayerCreateInfo(key);
       if (result == null) {
         throw StateError('原出生信息记录不存在，可能已被其他操作修改或删除');
       }
-      info.value = result;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载出生信息失败: $key', error: e, stackTrace: s);
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
   }
-
-  void pop() => routerFacade.goBack();
 
   Future<void> persist() async {
-    final candidate = _collect();
-    validatePlayerCreateInfoFields(candidate);
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storePlayerCreateInfo(candidate);
-    } else {
-      await _repository.updatePlayerCreateInfo(originalKey, candidate);
-    }
-    persistedKey.value = PlayerCreateInfoKey.fromEntity(candidate);
-    info.value = candidate;
-    routerFacade.updateCurrentLabel(
-      '种族${candidate.race}-职业${candidate.class_}',
-    );
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
     try {
-      await persist();
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('保存成功')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      final candidate = _collectCandidate();
+      validatePlayerCreateInfoFields(candidate);
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storePlayerCreateInfo(candidate);
+      } else {
+        await _repository.updatePlayerCreateInfo(originalKey, candidate);
+      }
+      persistedKey.value = PlayerCreateInfoKey.fromEntity(candidate);
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
   }
 
-  PlayerCreateInfoEntity _collect() {
+  PlayerCreateInfoEntity _collectCandidate() {
     return PlayerCreateInfoEntity(
       race: raceController.collect(),
       class_: playerClassController.collect(),
@@ -106,7 +102,7 @@ class PlayerCreateInfoDetailViewModel
     );
   }
 
-  void _initControllers(PlayerCreateInfoEntity i) {
+  void _applyCandidate(PlayerCreateInfoEntity i) {
     raceController.init(i.race);
     playerClassController.init(i.class_);
     mapController.init(i.map);
@@ -124,6 +120,10 @@ class PlayerCreateInfoDetailViewModel
       entityName: 'PlayerCreateInfo ${t.race}/${t.class_}',
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
+  }
+
+  void dispose() {
+    disposeControllers();
   }
 }

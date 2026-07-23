@@ -1,8 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
-import 'package:foxy/page/bootstrap/bootstrap_view_model.dart';
+import 'package:foxy/page/bootstrap/bootstrap_workflow_view_model.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
+import 'package:foxy/page/feature/feature_state_view_model.dart';
+import 'package:foxy/page/foxy_app/foxy_state_view_model.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -15,7 +19,7 @@ class BootstrapPage extends StatefulWidget {
 }
 
 class _BootstrapPageState extends State<BootstrapPage> {
-  final viewModel = GetIt.instance.get<BootstrapViewModel>();
+  final viewModel = GetIt.instance.get<BootstrapWorkflowViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,57 @@ class _BootstrapPageState extends State<BootstrapPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals();
+    _prepare();
+  }
+
+  Future<void> _prepare() async {
+    try {
+      await viewModel.prepare();
+    } catch (_) {
+      if (!mounted) return;
+      DialogUtil.instance.error(viewModel.errorMessage.value ?? '加载连接配置失败');
+    }
+  }
+
+  Future<void> _connect() async {
+    var loadingShown = false;
+    try {
+      DialogUtil.instance.loading();
+      loadingShown = true;
+      await viewModel.start();
+      final result = viewModel.result.value;
+      if (result == null) {
+        throw StateError('数据库启动流程结束但未返回结果');
+      }
+
+      GetIt.instance.get<FoxyStateViewModel>().setLocaleSettings(
+        hasLocaleTables: result.hasLocaleTables,
+        localeEnabled: result.localeEnabled,
+      );
+      GetIt.instance.get<FeatureStateViewModel>().replaceFeatures(
+        result.features,
+      );
+
+      await DialogUtil.instance.dismiss();
+      loadingShown = false;
+      if (!mounted) return;
+      if (!result.configSaved) {
+        await DialogUtil.instance.alert(
+          title: '警告',
+          message: '数据库连接成功，但配置文件保存失败。本次可继续使用；下次启动可能需要重新填写连接信息。',
+        );
+      }
+      if (!mounted) return;
+      AutoRouter.of(context).replaceAll([const DashboardRoute()]);
+    } catch (error) {
+      if (loadingShown) {
+        await DialogUtil.instance.dismiss();
+      }
+      if (!mounted) return;
+      DialogUtil.instance.error(
+        viewModel.errorMessage.value ?? error.toString(),
+      );
+    }
   }
 
   Widget _buildCoverPanel() {
@@ -92,7 +146,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
         databaseController: viewModel.databaseController,
         usernameController: viewModel.usernameController,
         passwordController: viewModel.passwordController,
-        onConnect: () => viewModel.connect(context),
+        onConnect: _connect,
       ),
     );
   }

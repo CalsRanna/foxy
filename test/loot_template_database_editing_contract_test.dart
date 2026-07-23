@@ -20,15 +20,23 @@ import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
 import 'package:foxy/entity/creature_loot_template_key.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/disenchant_loot_template_key.dart';
+import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/game_object_loot_template_key.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/item_loot_template_key.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/entity/milling_loot_template_key.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/prospecting_loot_template_key.dart';
+import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/entity/reference_loot_template_key.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/entity/skinning_loot_template_key.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
@@ -44,46 +52,70 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 void main() {
   group('loot template dedicated key and Brief boundaries', () {
     test('八张两列主键表使用各自具体 key', () {
-      const entity = LootTemplateEntity(
-        entry: 10,
-        item: 20,
-        reference: 30,
-        groupId: 40,
-      );
       final keys = <Object>[
-        PickpocketingLootTemplateKey.fromEntity(entity),
-        SkinningLootTemplateKey.fromEntity(entity),
-        ItemLootTemplateKey.fromEntity(entity),
-        DisenchantLootTemplateKey.fromEntity(entity),
-        ProspectingLootTemplateKey.fromEntity(entity),
-        MillingLootTemplateKey.fromEntity(entity),
-        ReferenceLootTemplateKey.fromEntity(entity),
-        GameObjectLootTemplateKey.fromEntity(entity),
+        PickpocketingLootTemplateKey.fromEntity(
+          _candidateFor('pickpocketing_loot_template'),
+        ),
+        SkinningLootTemplateKey.fromEntity(
+          _candidateFor('skinning_loot_template'),
+        ),
+        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
+        DisenchantLootTemplateKey.fromEntity(
+          _candidateFor('disenchant_loot_template'),
+        ),
+        ProspectingLootTemplateKey.fromEntity(
+          _candidateFor('prospecting_loot_template'),
+        ),
+        MillingLootTemplateKey.fromEntity(
+          _candidateFor('milling_loot_template'),
+        ),
+        ReferenceLootTemplateKey.fromEntity(
+          _candidateFor('reference_loot_template'),
+        ),
+        GameObjectLootTemplateKey.fromEntity(
+          _candidateFor('gameobject_loot_template'),
+        ),
       ];
       final sameKeys = <Object>[
         PickpocketingLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'pickpocketing_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         SkinningLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'skinning_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         ItemLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'item_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         DisenchantLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'disenchant_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         ProspectingLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'prospecting_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         MillingLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'milling_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         ReferenceLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'reference_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
         GameObjectLootTemplateKey.fromEntity(
-          entity.copyWith(reference: 31, groupId: 41),
+          _candidateFor(
+            'gameobject_loot_template',
+          ).copyWith(reference: 31, groupId: 41),
         ),
       ];
 
@@ -93,17 +125,25 @@ void main() {
       }
       expect(keys.toSet(), hasLength(8));
       expect(
-        ItemLootTemplateKey.fromEntity(entity),
-        isNot(ItemLootTemplateKey.fromEntity(entity.copyWith(entry: 11))),
+        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
+        isNot(
+          ItemLootTemplateKey.fromEntity(
+            _candidateFor('item_loot_template').copyWith(entry: 11),
+          ),
+        ),
       );
       expect(
-        ItemLootTemplateKey.fromEntity(entity),
-        isNot(ItemLootTemplateKey.fromEntity(entity.copyWith(item: 21))),
+        ItemLootTemplateKey.fromEntity(_candidateFor('item_loot_template')),
+        isNot(
+          ItemLootTemplateKey.fromEntity(
+            _candidateFor('item_loot_template').copyWith(item: 21),
+          ),
+        ),
       );
     });
 
     test('生物掉落 key 覆盖 Entry、Item、Reference 和 GroupId', () {
-      const entity = LootTemplateEntity(
+      const entity = CreatureLootTemplateEntity(
         entry: 10,
         item: 20,
         reference: 30,
@@ -173,19 +213,8 @@ void main() {
 
   group('dedicated loot template repository write contracts', () {
     test('八张两列主键表均使用旧 key 定位并写入完整 candidate', () async {
-      const candidate = LootTemplateEntity(
-        entry: 11,
-        item: 21,
-        reference: 22,
-        chance: 23,
-        questRequired: true,
-        lootMode: 1,
-        groupId: 24,
-        minCount: 25,
-        maxCount: 26,
-        comment: 'candidate',
-      );
       for (final spec in _standardRepositorySpecs()) {
+        final candidate = _candidateFor(spec.table, updated: true);
         final queries = <LaconicQuery>[];
         final repository = spec.create(
           Laconic(_RecordingDriver(), listen: queries.add),
@@ -213,7 +242,7 @@ void main() {
         reference: 30,
         groupId: 40,
       );
-      const candidate = LootTemplateEntity(
+      const candidate = CreatureLootTemplateEntity(
         entry: 11,
         item: 21,
         reference: 31,
@@ -238,7 +267,7 @@ void main() {
         await expectLater(
           spec.repository.updateLootTemplate(
             spec.key,
-            const LootTemplateEntity(),
+            _candidateFor(spec.table),
           ),
           throwsA(isA<StateError>()),
           reason: '${spec.table} update',
@@ -285,21 +314,22 @@ void main() {
 
   test('全部 loot consumer 使用具体 editingKey、完整加载和可编辑 key 控件', () {
     const viewModelKeyTypes = {
-      'lib/page/creature_template/creature_loot_template_view_model.dart':
+      'lib/page/creature_template/creature_loot_template_collection_editor_view_model.dart':
           'CreatureLootTemplateKey',
       'lib/page/creature_template/'
-              'pickpocketing_loot_template_view_model.dart':
+              'pickpocketing_loot_template_collection_editor_view_model.dart':
           'PickpocketingLootTemplateKey',
-      'lib/page/creature_template/skinning_loot_template_view_model.dart':
+      'lib/page/creature_template/skinning_loot_template_collection_editor_view_model.dart':
           'SkinningLootTemplateKey',
-      'lib/page/game_object/game_object_loot_template_view_model.dart':
+      'lib/page/game_object/game_object_loot_template_collection_editor_view_model.dart':
           'GameObjectLootTemplateKey',
-      'lib/page/item/item_loot_template_view_model.dart': 'ItemLootTemplateKey',
-      'lib/page/item/disenchant_loot_template_view_model.dart':
+      'lib/page/item/item_loot_template_collection_editor_view_model.dart':
+          'ItemLootTemplateKey',
+      'lib/page/item/disenchant_loot_template_collection_editor_view_model.dart':
           'DisenchantLootTemplateKey',
-      'lib/page/item/milling_loot_template_view_model.dart':
+      'lib/page/item/milling_loot_template_collection_editor_view_model.dart':
           'MillingLootTemplateKey',
-      'lib/page/item/prospecting_loot_template_view_model.dart':
+      'lib/page/item/prospecting_loot_template_collection_editor_view_model.dart':
           'ProspectingLootTemplateKey',
     };
     const viewPaths = [
@@ -321,11 +351,7 @@ void main() {
         reason: entry.key,
       );
       expect(source, contains('getLootTemplate(key)'), reason: entry.key);
-      expect(
-        source,
-        matches(RegExp(r'destroyLootTemplate\(\w+\.key\)')),
-        reason: entry.key,
-      );
+      expect(source, contains('destroyLootTemplate(key)'), reason: entry.key);
       expect(source, isNot(contains('editingItem')), reason: entry.key);
       expect(
         source,
@@ -371,6 +397,70 @@ void main() {
       expect(File(path).existsSync(), isFalse, reason: path);
     }
   });
+}
+
+dynamic _candidateFor(String table, {bool updated = false}) {
+  final entry = updated ? 11 : 10;
+  final item = updated ? 21 : 20;
+  const reference = 30;
+  const groupId = 40;
+  return switch (table) {
+    'creature_loot_template' => CreatureLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'pickpocketing_loot_template' => PickpocketingLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'skinning_loot_template' => SkinningLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'item_loot_template' => ItemLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'disenchant_loot_template' => DisenchantLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'prospecting_loot_template' => ProspectingLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'milling_loot_template' => MillingLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'reference_loot_template' => ReferenceLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    'gameobject_loot_template' => GameObjectLootTemplateEntity(
+      entry: entry,
+      item: item,
+      reference: reference,
+      groupId: groupId,
+    ),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
 }
 
 List<({String table, dynamic Function(Laconic) create, dynamic key})>

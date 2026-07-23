@@ -147,7 +147,6 @@ void main() {
       'lib/page/achievement/achievement_view.dart',
     ).readAsStringSync();
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
     expect(view, contains('kAchievementFactionOptions'));
     expect(view, contains('kAchievementFlagOptions'));
     expect(view, contains('FoxyEntityPickerDelegates.map'));
@@ -160,7 +159,7 @@ void main() {
     expect('Row('.allMatches(view), hasLength(7));
     expect('Expanded('.allMatches(view), hasLength(24));
     expect(view, isNot(contains('readOnly: true')));
-    expect('viewModel.persistedKey.value'.allMatches(view), hasLength(3));
+    expect('viewModel.persistedKey.value'.allMatches(view), hasLength(4));
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {

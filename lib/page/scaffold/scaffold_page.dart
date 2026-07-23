@@ -5,7 +5,10 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/page/scaffold/scaffold_view_model.dart';
+import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/page/feature/feature_state_view_model.dart';
+import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
@@ -46,38 +49,46 @@ class _NavigateSettingAction extends CallbackAction<_NavigateSettingIntent> {
 class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
-  final viewModel = GetIt.instance.get<ScaffoldViewModel>();
+  final featureState = GetIt.instance.get<FeatureStateViewModel>();
+  final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await viewModel.checkAndImport();
+      try {
+        await importViewModel.prepare();
+      } catch (_) {
+        // The workflow exposes the failure through errorMessage.
+      }
+      await importViewModel.checkTables();
       if (!mounted) return;
       _showDbcDialog();
     });
   }
 
   void _showDbcDialog() {
-    final vm = viewModel;
+    final vm = importViewModel;
 
     // 已导入，无需操作
-    if (vm.dbcImported.value) return;
+    if (vm.tablesReady || vm.status.value == WorkflowStatus.succeeded) return;
 
     // 检查失败 / 表结构不兼容：专用恢复对话框，禁止误开「未导入」或自动导入。
-    if (vm.dbcCheckError.value != null) {
+    if (vm.blockingTableChecks.isNotEmpty ||
+        (vm.status.value == WorkflowStatus.failed &&
+            vm.tableCheckResults.value.isEmpty)) {
       _showDbcCheckErrorDialog();
       return;
     }
 
     // 路径已配置 → 自动导入（显示进度对话框并启动导入）
-    if (vm.dbcPath.value != null) {
-      vm.startImport();
+    if (vm.path.value != null) {
+      _startImport();
       showFoxyDialog(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => _DbcImportDialog(vm: viewModel),
+        builder: (ctx) => _DbcImportDialog(vm: vm),
       );
       return;
     }
@@ -113,9 +124,11 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   void _showDbcCheckErrorDialog() {
-    final vm = viewModel;
-    final message = vm.dbcCheckError.value ?? 'DBC 表检查失败';
-    final incompatible = vm.dbcCheckIncompatible.value;
+    final vm = importViewModel;
+    final message = vm.errorMessage.value ?? 'DBC 表检查失败';
+    final incompatible = vm.blockingTableChecks.any(
+      (result) => result.state == DbcTableState.incompatible,
+    );
     final theme = ShadTheme.of(context);
 
     showFoxyDialog(
@@ -163,7 +176,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             child: const Text('重新检查'),
             onPressed: () async {
               Navigator.of(ctx).pop();
-              await vm.checkAndImport();
+              await vm.checkTables();
               if (!mounted) return;
               _showDbcDialog();
             },
@@ -172,7 +185,13 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
             child: Text(incompatible ? '重新导入' : '尝试导入'),
             onPressed: () async {
               Navigator.of(ctx).pop();
-              await vm.prepareManualImport(startIfPathReady: true);
+              vm.reset();
+              try {
+                await vm.prepare();
+              } catch (_) {
+                // The workflow exposes the failure through errorMessage.
+              }
+              if (vm.path.value != null) _startImport();
               if (!mounted) return;
               showFoxyDialog(
                 context: context,
@@ -184,6 +203,14 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _startImport() async {
+    try {
+      await importViewModel.start();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
   }
 
   @override
@@ -259,7 +286,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   }
 
   List<RouterMenu> get _menus {
-    final pinned = viewModel.pinnedFeatures.value
+    final pinned = featureState.pinnedFeatures.value
         .map((f) => RouterMenu.values.byName(f.routerMenu))
         .toList();
     return [
@@ -312,7 +339,7 @@ const _kDbcDialogWidth = 480.0;
 
 /// DBC 导入对话框，使用 showFoxyDialog 自带遮罩，不可关闭
 class _DbcImportDialog extends StatefulWidget {
-  final ScaffoldViewModel vm;
+  final DbcImportWorkflowViewModel vm;
   const _DbcImportDialog({required this.vm});
 
   @override
@@ -320,7 +347,7 @@ class _DbcImportDialog extends StatefulWidget {
 }
 
 class _DbcImportDialogState extends State<_DbcImportDialog> {
-  ScaffoldViewModel get _vm => widget.vm;
+  DbcImportWorkflowViewModel get _vm => widget.vm;
   final _pathController = StringFieldController();
   final _pathFocus = FocusNode();
   void Function()? _unsub;
@@ -331,7 +358,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     _pathController.addListener(() {
       if (mounted) setState(() {});
     });
-    _unsub = _vm.dbcImported.subscribe(_onImportedChanged);
+    _unsub = _vm.status.subscribe(_onStatusChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _pathFocus.requestFocus();
     });
@@ -345,8 +372,8 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     super.dispose();
   }
 
-  void _onImportedChanged(bool imported) {
-    if (imported && mounted) {
+  void _onStatusChanged(WorkflowStatus status) {
+    if (status == WorkflowStatus.succeeded && mounted) {
       _unsub?.call();
       _unsub = null;
       Navigator.of(context).maybePop();
@@ -359,9 +386,12 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
   }
 
   Widget _buildBody() {
-    final error = _vm.dbcImportError.value;
-    final path = _vm.dbcPath.value;
-    final importing = _vm.dbcImporting.value;
+    final error = _vm.errorMessage.value;
+    final path = _vm.path.value;
+    final importing =
+        _vm.status.value == WorkflowStatus.preparing ||
+        _vm.status.value == WorkflowStatus.running ||
+        _vm.status.value == WorkflowStatus.cancelling;
 
     if (error != null) {
       return _buildErrorBody(error);
@@ -450,19 +480,24 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
     );
   }
 
-  void _submitPath() {
+  Future<void> _submitPath() async {
     final path = _pathController.collect().trim();
     if (path.isEmpty) return;
-    _vm.setDbcPath(path);
+    _vm.setPath(path);
+    try {
+      await _vm.start();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
   }
 
   Widget _buildProgressBody() {
     final theme = ShadTheme.of(context);
     final mutedStyle = theme.textTheme.muted.copyWith(fontSize: 12);
-    final ratio = _vm.dbcProgress.value;
-    final label = _vm.dbcProgressLabel.value;
-    final detail = _vm.dbcProgressDetail.value;
-    final cancelling = _vm.dbcImportCancelling.value;
+    final ratio = _vm.progress.value;
+    final label = _vm.progressLabel.value;
+    final detail = _vm.progressDetail.value;
+    final cancelling = _vm.status.value == WorkflowStatus.cancelling;
 
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
@@ -519,7 +554,7 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
           Align(
             alignment: Alignment.centerRight,
             child: ShadButton.outline(
-              onPressed: cancelling ? null : _vm.cancelImport,
+              onPressed: cancelling ? null : _vm.cancel,
               child: Text(cancelling ? '正在取消...' : '取消导入'),
             ),
           ),
@@ -570,13 +605,19 @@ class _DbcImportDialogState extends State<_DbcImportDialog> {
               children: [
                 ShadButton.outline(
                   onPressed: () {
-                    _vm.dbcImportError.value = null;
+                    _vm.reset();
                     Navigator.of(context).maybePop();
                   },
                   child: const Text('关闭'),
                 ),
                 ShadButton(
-                  onPressed: _vm.retryImport,
+                  onPressed: () async {
+                    try {
+                      await _vm.retry();
+                    } catch (_) {
+                      // The workflow exposes the failure through errorMessage.
+                    }
+                  },
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     spacing: 6,

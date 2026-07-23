@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
+import 'package:foxy/entity/npc_vendor_key.dart';
+import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -12,6 +13,7 @@ import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// NPC 商人 Tab
 class NpcVendorView extends StatefulWidget {
@@ -24,7 +26,7 @@ class NpcVendorView extends StatefulWidget {
 }
 
 class _NpcVendorViewState extends State<NpcVendorView> {
-  final viewModel = GetIt.instance.get<NpcVendorViewModel>();
+  final viewModel = GetIt.instance.get<NpcVendorCollectionEditorViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   void didUpdateWidget(covariant NpcVendorView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentEntry(widget.creatureId);
+      viewModel.setParentKey(widget.creatureId);
     }
   }
 
@@ -48,7 +50,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(creatureId: widget.creatureId);
+    viewModel.initSignals(parentKey: widget.creatureId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
@@ -125,13 +127,25 @@ class _NpcVendorViewState extends State<NpcVendorView> {
                 child: const Text('取消'),
               ),
               const SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
@@ -204,7 +218,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           header: (context, index) =>
               ShadTableCell.header(child: Text(headers[index])),
           onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectRow(row);
+            viewModel.selectedKey.value = items[row].key;
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -212,14 +226,15 @@ class _NpcVendorViewState extends State<NpcVendorView> {
                 ShadContextMenuItem(
                   leading: const Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (!await viewModel.edit() || !mounted) return;
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (!mounted) return;
                     _showEditDialog();
                   },
                   child: const Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: const Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
                   child: const Text('删除'),
                 ),
               ],
@@ -237,7 +252,14 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -257,5 +279,33 @@ class _NpcVendorViewState extends State<NpcVendorView> {
         child: _buildDialogForm(dialogContext),
       ),
     );
+  }
+
+  Future<bool> _load(NpcVendorKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(NpcVendorKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

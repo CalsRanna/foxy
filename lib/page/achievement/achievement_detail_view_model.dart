@@ -1,16 +1,13 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/achievement_repository.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/achievement_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class AchievementDetailViewModel
@@ -19,7 +16,16 @@ class AchievementDetailViewModel
         AchievementValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<AchievementRepository>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<AchievementEntity?>(null);
+  final persistedKey = signal<int?>(null);
+  final titleLangFlags = signal<int>(0);
+  final descriptionLangFlags = signal<int>(0);
+  final rewardLangFlags = signal<int>(0);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   /// Basic
   late final idController = registerController(IntFieldController());
@@ -78,7 +84,6 @@ class AchievementDetailViewModel
   late final titleLangUnk3Controller = registerController(
     StringFieldController(),
   );
-  final titleLangFlags = signal<int>(0);
 
   /// Description languages
   late final descriptionLangEnUSController = registerController(
@@ -129,7 +134,6 @@ class AchievementDetailViewModel
   late final descriptionLangUnk3Controller = registerController(
     StringFieldController(),
   );
-  final descriptionLangFlags = signal<int>(0);
 
   /// Category / Points / UI / Flags / Icon
   late final categoryController = registerController(IntFieldController());
@@ -187,7 +191,6 @@ class AchievementDetailViewModel
   late final rewardLangUnk3Controller = registerController(
     StringFieldController(),
   );
-  final rewardLangFlags = signal<int>(0);
 
   /// Minimum / Shares
   late final minimumCriteriaController = registerController(
@@ -197,8 +200,59 @@ class AchievementDetailViewModel
     IntFieldController(),
   );
 
-  final achievement = signal(AchievementEntity());
-  final persistedKey = signal<int?>(null);
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createAchievement();
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getAchievement(key);
+      if (result == null) {
+        throw StateError('原成就不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      validateAchievementFields(candidate);
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeAchievement(candidate);
+      } else {
+        await _repository.updateAchievement(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
 
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
     _applyLangControllers(
@@ -220,7 +274,7 @@ class AchievementDetailViewModel
       unk2: descriptionLangUnk2Controller,
       unk3: descriptionLangUnk3Controller,
     );
-    achievement.value = _collectFromControllers();
+    entity.value = _collectCandidate();
   }
 
   void applyRewardLocales(List<DbcLocaleFieldValue> values) {
@@ -243,7 +297,7 @@ class AchievementDetailViewModel
       unk2: rewardLangUnk2Controller,
       unk3: rewardLangUnk3Controller,
     );
-    achievement.value = _collectFromControllers();
+    entity.value = _collectCandidate();
   }
 
   void applyTitleLocales(List<DbcLocaleFieldValue> values) {
@@ -266,109 +320,10 @@ class AchievementDetailViewModel
       unk2: titleLangUnk2Controller,
       unk3: titleLangUnk3Controller,
     );
-    achievement.value = _collectFromControllers();
+    entity.value = _collectCandidate();
   }
 
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals({int? key}) async {
-    try {
-      if (key == null) {
-        persistedKey.value = null;
-        final blank = await _repository.createAchievement();
-        achievement.value = blank;
-        _initControllers(blank);
-        return;
-      }
-      persistedKey.value = key;
-      final entity = await _repository.getAchievement(key);
-      if (entity == null) {
-        throw StateError('原成就不存在，可能已被其他操作修改或删除');
-      }
-      achievement.value = entity;
-      _initControllers(entity);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载成就(key=$key)失败', error: e, stackTrace: s);
-    }
-  }
-
-  /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    validateAchievementFields(candidate);
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeAchievement(candidate);
-    } else {
-      await _repository.updateAchievement(originalKey, candidate);
-    }
-    persistedKey.value = candidate.id;
-    achievement.value = candidate;
-    routerFacade.updateCurrentLabel(_labelFor(candidate));
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('成就数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
-    }
-  }
-
-  void _applyLangControllers(
-    List<DbcLocaleFieldValue> values, {
-    required StringFieldController enUS,
-    required StringFieldController koKR,
-    required StringFieldController frFR,
-    required StringFieldController deDE,
-    required StringFieldController zhCN,
-    required StringFieldController zhTW,
-    required StringFieldController esES,
-    required StringFieldController esMX,
-    required StringFieldController ruRU,
-    required StringFieldController jaJP,
-    required StringFieldController ptPT,
-    required StringFieldController ptBR,
-    required StringFieldController itIT,
-    required StringFieldController unk1,
-    required StringFieldController unk2,
-    required StringFieldController unk3,
-  }) {
-    enUS.init(values.valueOf('enUS'));
-    koKR.init(values.valueOf('koKR'));
-    frFR.init(values.valueOf('frFR'));
-    deDE.init(values.valueOf('deDE'));
-    zhCN.init(values.valueOf('zhCN'));
-    zhTW.init(values.valueOf('zhTW'));
-    esES.init(values.valueOf('esES'));
-    esMX.init(values.valueOf('esMX'));
-    ruRU.init(values.valueOf('ruRU'));
-    jaJP.init(values.valueOf('jaJP'));
-    ptPT.init(values.valueOf('ptPT'));
-    ptBR.init(values.valueOf('ptBR'));
-    itIT.init(values.valueOf('itIT'));
-    unk1.init(values.valueOf('unk1'));
-    unk2.init(values.valueOf('unk2'));
-    unk3.init(values.valueOf('unk3'));
-  }
-
-  /// 从所有 Controller 收集数据构建 AchievementEntity
-  AchievementEntity _collectFromControllers() {
+  AchievementEntity _collectCandidate() {
     return AchievementEntity(
       id: idController.collect(),
       faction: factionController.collect(),
@@ -435,7 +390,7 @@ class AchievementDetailViewModel
     );
   }
 
-  void _initControllers(AchievementEntity achievement) {
+  void _applyCandidate(AchievementEntity achievement) {
     idController.init(achievement.id);
     factionController.init(achievement.faction);
     instanceIdController.init(achievement.instanceId);
@@ -500,6 +455,43 @@ class AchievementDetailViewModel
     sharesCriteriaController.init(achievement.sharesCriteria);
   }
 
+  void _applyLangControllers(
+    List<DbcLocaleFieldValue> values, {
+    required StringFieldController enUS,
+    required StringFieldController koKR,
+    required StringFieldController frFR,
+    required StringFieldController deDE,
+    required StringFieldController zhCN,
+    required StringFieldController zhTW,
+    required StringFieldController esES,
+    required StringFieldController esMX,
+    required StringFieldController ruRU,
+    required StringFieldController jaJP,
+    required StringFieldController ptPT,
+    required StringFieldController ptBR,
+    required StringFieldController itIT,
+    required StringFieldController unk1,
+    required StringFieldController unk2,
+    required StringFieldController unk3,
+  }) {
+    enUS.init(values.valueOf('enUS'));
+    koKR.init(values.valueOf('koKR'));
+    frFR.init(values.valueOf('frFR'));
+    deDE.init(values.valueOf('deDE'));
+    zhCN.init(values.valueOf('zhCN'));
+    zhTW.init(values.valueOf('zhTW'));
+    esES.init(values.valueOf('esES'));
+    esMX.init(values.valueOf('esMX'));
+    ruRU.init(values.valueOf('ruRU'));
+    jaJP.init(values.valueOf('jaJP'));
+    ptPT.init(values.valueOf('ptPT'));
+    ptBR.init(values.valueOf('ptBR'));
+    itIT.init(values.valueOf('itIT'));
+    unk1.init(values.valueOf('unk1'));
+    unk2.init(values.valueOf('unk2'));
+    unk3.init(values.valueOf('unk3'));
+  }
+
   void _logActivity(ActivityActionType action, AchievementEntity t) {
     final log = ActivityLogEntity(
       module: 'achievement',
@@ -507,12 +499,10 @@ class AchievementDetailViewModel
       entityName: t.titleLangZhCN,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
   }
 
-  String _labelFor(AchievementEntity value) {
-    return value.titleLangZhCN.isNotEmpty
-        ? value.titleLangZhCN
-        : '成就 #${value.id}';
+  void dispose() {
+    disposeControllers();
   }
 }

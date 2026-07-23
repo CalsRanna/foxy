@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
 
 @immutable
 final class ItemLootTemplateKey {
@@ -8,7 +8,7 @@ final class ItemLootTemplateKey {
 
   const ItemLootTemplateKey({required this.entry, required this.item});
 
-  factory ItemLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory ItemLootTemplateKey.fromEntity(ItemLootTemplateEntity value) {
     return ItemLootTemplateKey(entry: value.entry, item: value.item);
   }
 

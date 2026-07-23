@@ -1,6 +1,6 @@
 import 'package:foxy/entity/brief_milling_loot_template_entity.dart';
 import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/milling_loot_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -57,8 +57,8 @@ class MillingLootTemplateRepository with RepositoryMixin {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    return LootTemplateEntity(entry: entry);
+  Future<MillingLootTemplateEntity> createLootTemplate(int entry) async {
+    return MillingLootTemplateEntity(entry: entry);
   }
 
   Future<void> destroyLootTemplate(MillingLootTemplateKey key) async {
@@ -161,18 +161,18 @@ class MillingLootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(
+  Future<MillingLootTemplateEntity?> getLootTemplate(
     MillingLootTemplateKey key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
-    return LootTemplateEntity.fromJson(results.first.toMap());
+    return MillingLootTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+  Future<void> storeLootTemplate(MillingLootTemplateEntity loot) async {
     try {
       await laconic.table(_table).insert([loot.toJson()]);
     } catch (error) {
@@ -185,7 +185,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
 
   Future<void> updateLootTemplate(
     MillingLootTemplateKey originalKey,
-    LootTemplateEntity loot,
+    MillingLootTemplateEntity loot,
   ) async {
     try {
       final matchedRows = await _whereKey(

@@ -7,8 +7,8 @@ import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_ender_key.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_key.dart';
-import 'package:foxy/page/quest/creature_quest_ender_view_model.dart';
-import 'package:foxy/page/quest/creature_quest_starter_view_model.dart';
+import 'package:foxy/page/quest/creature_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/page/quest/creature_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -121,11 +121,11 @@ void main() {
       GetIt.instance.registerSingleton<CreatureQuestStarterRepository>(
         repository,
       );
-      final viewModel = CreatureQuestStarterViewModel();
+      final viewModel = CreatureQuestStarterCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(questId: 20);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 20);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureQuestStarterKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
@@ -146,11 +146,11 @@ void main() {
       GetIt.instance.registerSingleton<CreatureQuestEnderRepository>(
         repository,
       );
-      final viewModel = CreatureQuestEnderViewModel();
+      final viewModel = CreatureQuestEnderCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(questId: 20);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 20);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureQuestEnderKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
@@ -174,7 +174,7 @@ void main() {
         'lib/repository/creature_quest_${domain}_repository.dart',
       ).readAsStringSync();
       final viewModel = File(
-        'lib/page/quest/creature_quest_${domain}_view_model.dart',
+        'lib/page/quest/creature_quest_${domain}_collection_editor_view_model.dart',
       ).readAsStringSync();
       final view = File(
         'lib/page/quest/creature_quest_${domain}_view.dart',

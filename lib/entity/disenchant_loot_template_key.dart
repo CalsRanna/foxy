@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 
 @immutable
 final class DisenchantLootTemplateKey {
@@ -8,7 +8,9 @@ final class DisenchantLootTemplateKey {
 
   const DisenchantLootTemplateKey({required this.entry, required this.item});
 
-  factory DisenchantLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory DisenchantLootTemplateKey.fromEntity(
+    DisenchantLootTemplateEntity value,
+  ) {
     return DisenchantLootTemplateKey(entry: value.entry, item: value.item);
   }
 

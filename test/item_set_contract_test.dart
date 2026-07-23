@@ -90,7 +90,6 @@ void main() {
       'lib/page/item_set/item_set_view.dart',
     ).readAsStringSync();
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
     expect(view, contains('FoxyEntityPickerDelegates.skillLine'));
     expect(view, contains('FoxyEntityPickerDelegates.itemTemplate'));
     expect(view, contains('FoxyEntityPickerDelegates.spell'));

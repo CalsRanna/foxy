@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
-import 'package:foxy/page/game_object/game_object_template_addon_view_model.dart';
+import 'package:foxy/page/game_object/game_object_template_addon_single_editor_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -10,6 +11,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class GameObjectTemplateAddonView extends StatefulWidget {
   final int gameObjectId;
@@ -23,12 +25,51 @@ class GameObjectTemplateAddonView extends StatefulWidget {
 
 class _GameObjectTemplateAddonViewState
     extends State<GameObjectTemplateAddonView> {
-  final viewModel = GetIt.instance.get<GameObjectTemplateAddonViewModel>();
+  final viewModel = GetIt.instance
+      .get<GameObjectTemplateAddonSingleEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(gameObjectId: widget.gameObjectId);
+    _initialize();
+  }
+
+  @override
+  void didUpdateWidget(covariant GameObjectTemplateAddonView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.gameObjectId != widget.gameObjectId) {
+      _initialize();
+    }
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(parentKey: widget.gameObjectId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('模板补充数据已保存')));
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   @override
@@ -123,14 +164,14 @@ class _GameObjectTemplateAddonViewState
           Row(
             spacing: 8,
             children: [
-              ShadButton(
-                onPressed: () => viewModel.save(context),
-                child: const Text('保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () => _persist(),
+                  child: const Text('保存'),
+                ),
               ),
-              ShadButton.ghost(
-                onPressed: viewModel.pop,
-                child: const Text('取消'),
-              ),
+              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
             ],
           ),
         ],

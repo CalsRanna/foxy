@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
@@ -27,7 +28,16 @@ class _GameObjectTemplateDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.gameObjectTemplateKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.gameObjectTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -40,12 +50,12 @@ class _GameObjectTemplateDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final template = viewModel.template.value;
+      final template = viewModel.entity.value;
       final entry = key;
       final name = key == null
           ? '新建游戏对象'
-          : template.name.isNotEmpty
-          ? template.name
+          : template?.name.isNotEmpty == true
+          ? template?.name ?? ''
           : '游戏对象 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
@@ -76,7 +86,7 @@ class _GameObjectTemplateDetailPageState
               ),
               GameObjectLootTemplateView(
                 key: ValueKey('loot-$entry'),
-                gameObjectId: entry ?? 0,
+                parentKey: entry ?? 0,
               ),
             ],
             disabledIndexes: key == null ? const {1, 2, 3} : const {},

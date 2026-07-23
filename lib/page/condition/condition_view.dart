@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
@@ -179,14 +181,14 @@ class ConditionView extends StatelessWidget {
             Row(
               spacing: 8,
               children: [
-                ShadButton(
-                  onPressed: () => viewModel.save(context),
-                  child: const Text('保存'),
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () => _persist(context),
+                    child: const Text('保存'),
+                  ),
                 ),
-                ShadButton.ghost(
-                  onPressed: viewModel.pop,
-                  child: const Text('取消'),
-                ),
+                ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
               ],
             ),
           ],
@@ -398,5 +400,25 @@ class ConditionView extends StatelessWidget {
       controller: controller,
       readOnly: readOnly,
     );
+  }
+
+  Future<void> _persist(BuildContext context) async {
+    try {
+      await viewModel.persist();
+      if (!context.mounted) return;
+      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
+        '条件 ${viewModel.persistedKey.value}',
+      );
+      ShadSonner.of(context).show(const ShadToast(description: Text('条件已保存')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

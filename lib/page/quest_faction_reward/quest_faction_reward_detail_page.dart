@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -24,7 +25,16 @@ class _QuestFactionRewardDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.questFactionRewardKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.questFactionRewardKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override

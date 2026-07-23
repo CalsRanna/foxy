@@ -41,24 +41,27 @@ void main() {
   });
 
   test('ViewModel keeps original locale editing key through failed writes', () {
-    final source = File(
-      'lib/page/gossip_menu/npc_text_view_model.dart',
+    final viewModel = File(
+      'lib/page/gossip_menu/npc_text_single_editor_view_model.dart',
     ).readAsStringSync();
-    expect(source, contains('signal<NpcTextLocaleKey?>(null)'));
+    final useCase = File(
+      'lib/use_case/gossip_menu/save_npc_text_use_case.dart',
+    ).readAsStringSync();
+    expect(viewModel, contains('signal<NpcTextLocaleKey?>(null)'));
     expect(
-      source,
+      viewModel,
       contains('final originalLocaleKey = localeEditingKey.value;'),
     );
     expect(
-      source,
-      contains('updateNpcTextLocale(\n              originalLocaleKey,'),
+      useCase,
+      contains('updateNpcTextLocale(\n            originalLocaleKey,'),
     );
-    expect(source, contains('destroyNpcTextLocale(originalLocaleKey)'));
-    final updateIndex = source.indexOf('updateNpcTextLocale(');
-    final replaceIndex = source.indexOf(
-      'localeEditingKey.value = hasLocaleText',
+    expect(useCase, contains('destroyNpcTextLocale(originalLocaleKey)'));
+    final updateIndex = viewModel.indexOf('_persistUseCase.execute(');
+    final replaceIndex = viewModel.indexOf(
+      'localeEditingKey.value = result.localeKey',
     );
     expect(replaceIndex, greaterThan(updateIndex));
-    expect(source, isNot(contains('localeExists')));
+    expect(viewModel, isNot(contains('localeExists')));
   });
 }

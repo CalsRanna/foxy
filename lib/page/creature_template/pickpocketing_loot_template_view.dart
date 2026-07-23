@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/widget/item_quality_color.dart';
-import 'package:foxy/page/creature_template/pickpocketing_loot_template_view_model.dart';
+import 'package:foxy/page/creature_template/pickpocketing_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -17,12 +18,13 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// 偷窃掉落Tab
 class PickpocketingLootTemplateView extends StatefulWidget {
-  final int creatureId;
+  final int parentKey;
 
-  const PickpocketingLootTemplateView({super.key, required this.creatureId});
+  const PickpocketingLootTemplateView({super.key, required this.parentKey});
 
   @override
   State<PickpocketingLootTemplateView> createState() =>
@@ -31,12 +33,13 @@ class PickpocketingLootTemplateView extends StatefulWidget {
 
 class _PickpocketingLootTemplateViewState
     extends State<PickpocketingLootTemplateView> {
-  final viewModel = GetIt.instance.get<PickpocketingLootTemplateViewModel>();
+  final viewModel = GetIt.instance
+      .get<PickpocketingLootTemplateCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(creatureId: widget.creatureId);
+    viewModel.initSignals(parentKey: widget.parentKey);
   }
 
   @override
@@ -143,15 +146,16 @@ class _PickpocketingLootTemplateViewState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    viewModel.selectRow(row);
-                    if (!await viewModel.edit() || !mounted) return;
+                    viewModel.selectedKey.value = items[row].key;
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (!mounted) return;
                     _showEditDialog();
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
                   child: Text('删除'),
                 ),
               ],
@@ -169,8 +173,15 @@ class _PickpocketingLootTemplateViewState
   }
 
   /// 显示新增对话框
-  void _showCreateDialog() {
-    viewModel.create();
+  Future<void> _showCreateDialog() async {
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -195,7 +206,7 @@ class _PickpocketingLootTemplateViewState
 
   /// 对话框表单（垂直布局）
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 500),
@@ -313,20 +324,58 @@ class _PickpocketingLootTemplateViewState
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = isEditing
-                      ? await viewModel.update(dialogContext)
-                      : await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _load(PickpocketingLootTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(PickpocketingLootTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

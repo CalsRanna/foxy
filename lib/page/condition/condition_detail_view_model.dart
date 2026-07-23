@@ -1,16 +1,13 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/condition_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ConditionDetailViewModel
@@ -18,8 +15,21 @@ class ConditionDetailViewModel
         ViewModelValidationMixin,
         ConditionValidationMixin,
         FieldControllerMixin {
-  final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<ConditionRepository>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<ConditionEntity?>(null);
+  final persistedKey = signal<ConditionKey?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
+
+  /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
+  final selectedConditionType = signal(0);
+  final selectedSourceType = signal(0);
+  final selectedSourceGroup = signal(0);
+  final selectedConditionValue1 = signal(0);
+  final selectedErrorType = signal(0);
 
   // 主键字段（完整 10 列）
   late final sourceTypeOrReferenceIdController = registerController(
@@ -44,7 +54,6 @@ class ConditionDetailViewModel
   late final conditionValue3Controller = registerController(
     IntFieldController(),
   );
-
   // 非键字段
   late final negativeConditionController = registerController(
     IntFieldController(),
@@ -54,88 +63,68 @@ class ConditionDetailViewModel
   late final scriptNameController = registerController(StringFieldController());
   late final commentController = registerController(StringFieldController());
 
-  final condition = signal<ConditionEntity?>(null);
-  final persistedKey = signal<ConditionKey?>(null);
-
-  /// 当前选中的条件类型，驱动参数1/2/3 的 label 与控件联动重建
-  final selectedConditionType = signal(0);
-  final selectedSourceType = signal(0);
-  final selectedSourceGroup = signal(0);
-  final selectedConditionValue1 = signal(0);
-  final selectedErrorType = signal(0);
-
-  void dispose() {
-    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
-    sourceGroupController.removeListener(_onSourceGroupChange);
-    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
-    conditionValue1Controller.removeListener(_onConditionValue1Change);
-    errorTypeController.removeListener(_onErrorTypeChange);
-    disposeControllers();
-  }
-
-  Future<void> initSignals({ConditionKey? conditionKey}) async {
+  Future<void> initSignals({ConditionKey? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     sourceTypeOrReferenceIdController.addListener(_onSourceTypeChange);
     sourceGroupController.addListener(_onSourceGroupChange);
     conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
     conditionValue1Controller.addListener(_onConditionValue1Change);
     errorTypeController.addListener(_onErrorTypeChange);
     try {
-      persistedKey.value = conditionKey;
-      if (conditionKey == null) {
+      if (key == null) {
         final blank = await _repository.createCondition();
-        condition.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      final result = await _repository.getCondition(conditionKey);
-      if (result == null) return;
-      condition.value = result;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载条件失败', error: e, stackTrace: s);
-    }
-  }
-
-  void pop() {
-    routerFacade.goBack();
-  }
-
-  Future<void> save(BuildContext context) async {
-    try {
-      await persist();
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('条件已保存')));
-    } catch (e) {
-      if (!context.mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text(e.toString())));
+      final result = await _repository.getCondition(key);
+      if (result == null) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
   }
 
   Future<void> persist() async {
-    final data = _collectFromControllers();
-    validateConditionFields(data);
-    final originalKey = persistedKey.value;
-    final newKey = ConditionKey.fromEntity(data);
-    final isCreate = originalKey == null;
-    if (isCreate) {
-      await _repository.storeCondition(data);
-    } else {
-      await _repository.updateCondition(originalKey, data);
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final data = _collectCandidate();
+      validateConditionFields(data);
+      final originalKey = persistedKey.value;
+      final newKey = ConditionKey.fromEntity(data);
+      final isCreate = originalKey == null;
+      if (isCreate) {
+        await _repository.storeCondition(data);
+      } else {
+        await _repository.updateCondition(originalKey, data);
+      }
+      persistedKey.value = newKey;
+      entity.value = data;
+      _logActivity(
+        isCreate ? ActivityActionType.create : ActivityActionType.update,
+        data,
+      );
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
-    persistedKey.value = newKey;
-    condition.value = data;
-    routerFacade.updateCurrentLabel(
-      data.comment.isNotEmpty
-          ? data.comment
-          : 'Condition ${data.sourceTypeOrReferenceId}-${data.sourceEntry}',
-    );
-    _logActivity(
-      isCreate ? ActivityActionType.create : ActivityActionType.update,
-      data,
-    );
   }
 
-  ConditionEntity _collectFromControllers() {
+  ConditionEntity _collectCandidate() {
     return ConditionEntity(
       sourceTypeOrReferenceId: sourceTypeOrReferenceIdController.collect(),
       sourceGroup: sourceGroupController.collect(),
@@ -155,7 +144,7 @@ class ConditionDetailViewModel
     );
   }
 
-  void _initControllers(ConditionEntity c) {
+  void _applyCandidate(ConditionEntity c) {
     sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
     selectedSourceType.value = c.sourceTypeOrReferenceId;
     sourceGroupController.init(c.sourceGroup);
@@ -189,9 +178,7 @@ class ConditionDetailViewModel
             '${c.comment.isEmpty ? '' : ' - ${c.comment}'}',
         createdAt: DateTime.now(),
       );
-      GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(
-        log,
-      );
+      _activityLogService.recordBestEffort(log);
     } catch (e) {
       LoggerUtil.instance.e('记录条件活动失败: $e');
     }
@@ -215,5 +202,14 @@ class ConditionDetailViewModel
 
   void _onSourceTypeChange() {
     selectedSourceType.value = sourceTypeOrReferenceIdController.collect();
+  }
+
+  void dispose() {
+    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
+    sourceGroupController.removeListener(_onSourceGroupChange);
+    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
+    conditionValue1Controller.removeListener(_onConditionValue1Change);
+    errorTypeController.removeListener(_onErrorTypeChange);
+    disposeControllers();
   }
 }

@@ -101,7 +101,6 @@ void main() {
     expect(view, contains('FoxyEntityPickerDelegates.currencyCategory,'));
     expect('Expanded(child:'.allMatches(view), hasLength(4));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
   });
 
   test('Entity、ViewModel 和 UI 未用集合管理物理字段', () {

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_key.dart';
-import 'package:foxy/page/creature_template/npc_vendor_view_model.dart';
+import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/validation/npc_vendor_entity_validation_mixin.dart';
@@ -130,11 +130,11 @@ void main() {
     });
 
     test('选中 Brief 后使用旧 key 更新，多列键变化后清空范围状态', () async {
-      final viewModel = NpcVendorViewModel();
+      final viewModel = NpcVendorCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
       expect(viewModel.editingKey.value, originalKey);
 
@@ -150,16 +150,16 @@ void main() {
       expect(repository.rows.single.item, 21);
       expect(repository.rows.single.extendedCost, 31);
       expect(viewModel.items.value, isEmpty);
-      expect(viewModel.selectedIndex.value, isNull);
+      expect(viewModel.selectedKey.value, isNull);
       expect(viewModel.editingKey.value, isNull);
     });
 
     test('保存失败保留 editingKey，修正后仍可按旧 key 重试', () async {
-      final viewModel = NpcVendorViewModel();
+      final viewModel = NpcVendorCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
       repository.failUpdates = true;
       viewModel.itemController.init(21);
@@ -173,20 +173,20 @@ void main() {
     });
 
     test('新建和父范围切换都会清空子行身份', () async {
-      final viewModel = NpcVendorViewModel();
+      final viewModel = NpcVendorCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setParentEntry(12);
-      expect(viewModel.entry.value, 12);
+      await viewModel.setParentKey(12);
+      expect(viewModel.parentKey.value, 12);
       expect(viewModel.creatureIdController.collect(), 12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedIndex.value, isNull);
+      expect(viewModel.selectedKey.value, isNull);
 
-      expect(await viewModel.create(), isTrue);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       viewModel.itemController.init(50);
       await viewModel.persist();
@@ -209,13 +209,13 @@ void main() {
       'lib/page/creature_template/npc_vendor_view.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/npc_vendor_view_model.dart',
+      'lib/page/creature_template/npc_vendor_collection_editor_view_model.dart',
     ).readAsStringSync();
     expect(repository, isNot(contains('saveNpcVendor')));
     expect(repository, isNot(contains("json.remove('entry')")));
     expect(viewModel, contains('final editingKey = signal<NpcVendorKey?>'));
     expect(viewModel, isNot(contains('_editingItem')));
-    expect(viewModel, contains('destroyNpcVendor(vendor.key)'));
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly: isEditing')));
     expect(view, contains('FoxyPagination('));
   });

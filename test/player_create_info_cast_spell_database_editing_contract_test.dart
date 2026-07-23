@@ -77,7 +77,7 @@ void main() {
       'lib/repository/player_create_info_cast_spell_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/player_create_info/player_create_info_cast_spell_view_model.dart',
+      'lib/page/player_create_info/player_create_info_cast_spell_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/player_create_info/player_create_info_cast_spell_view.dart',
@@ -92,7 +92,7 @@ void main() {
       contains('editingKey = signal<PlayerCreateInfoCastSpellKey?>'),
     );
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('entity.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(viewModel, contains('NullableStringFieldController()'));
     expect(view, contains('FoxyNullableStringInput('));
     expect(view, contains('FoxyPagination('));

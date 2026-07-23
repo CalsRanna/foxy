@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_on_kill_reputation_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
-import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
+import 'package:foxy/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/validation/creature_on_kill_reputation_entity_validation_mixin.dart';
@@ -87,9 +87,9 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('key 修改失败保留旧 key，成功后按当前父范围重新判定身份', () async {
-      final viewModel = CreatureOnKillReputationViewModel();
+      final viewModel = CreatureOnKillReputationSingleEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
+      await viewModel.initSignals(parentKey: 10);
       const oldKey = 10;
       expect(viewModel.editingKey.value, oldKey);
       viewModel.creatureIdController.init(11);
@@ -104,14 +104,14 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIdController.collect(), 10);
 
-      await viewModel.setParentCreatureID(11);
+      await viewModel.setParentKey(11);
       expect(viewModel.editingKey.value, 11);
     });
 
     test('没有当前父行时执行 create，成功后切换为 persisted key', () async {
-      final viewModel = CreatureOnKillReputationViewModel();
+      final viewModel = CreatureOnKillReputationSingleEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 12);
+      await viewModel.initSignals(parentKey: 12);
       expect(viewModel.editingKey.value, isNull);
 
       await viewModel.persist();
@@ -133,7 +133,7 @@ void main() {
       'lib/repository/creature_on_kill_reputation_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/creature_on_kill_reputation_view_model.dart',
+      'lib/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/creature_on_kill_reputation_view.dart',

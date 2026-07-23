@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/creature_template_resistance_key.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/creature_template/creature_template_resistance_view_model.dart';
+import 'package:foxy/page/creature_template/creature_template_resistance_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -11,6 +12,7 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// 抗性Tab
 class CreatureTemplateResistanceView extends StatefulWidget {
@@ -25,19 +27,20 @@ class CreatureTemplateResistanceView extends StatefulWidget {
 
 class _CreatureTemplateResistanceViewState
     extends State<CreatureTemplateResistanceView> {
-  final viewModel = GetIt.instance.get<CreatureTemplateResistanceViewModel>();
+  final viewModel = GetIt.instance
+      .get<CreatureTemplateResistanceCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(creatureId: widget.creatureId);
+    viewModel.initSignals(parentKey: widget.creatureId);
   }
 
   @override
   void didUpdateWidget(covariant CreatureTemplateResistanceView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentCreatureId(widget.creatureId);
+      viewModel.setParentKey(widget.creatureId);
     }
   }
 
@@ -122,20 +125,21 @@ class _CreatureTemplateResistanceViewState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    viewModel.selectRow(row);
-                    if (!await viewModel.edit() || !context.mounted) return;
+                    viewModel.selectedKey.value = items[row].key;
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (!context.mounted) return;
                     _showEditDialog(context);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
+                  onPressed: () => _copy(viewModel.selectedKey.value!),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
                   child: Text('删除'),
                 ),
               ],
@@ -154,7 +158,14 @@ class _CreatureTemplateResistanceViewState
 
   /// 显示新增对话框
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -233,18 +244,69 @@ class _CreatureTemplateResistanceViewState
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _load(CreatureTemplateResistanceKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(CreatureTemplateResistanceKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<void> _copy(CreatureTemplateResistanceKey key) async {
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
   }
 }

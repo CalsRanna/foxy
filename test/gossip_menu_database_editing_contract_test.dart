@@ -41,7 +41,7 @@ void main() {
     ).readAsStringSync();
     expect(page, contains('final GossipMenuKey? gossipMenuKey'));
     expect(page, contains('viewModel.persistedKey.value'));
-    expect(list, contains('item.key'));
+    expect(list, contains('_navigateToDetail(key: item.key'));
     expect(view, isNot(contains('readOnly: true')));
   });
 

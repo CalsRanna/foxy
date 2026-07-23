@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_key.dart';
-import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
+import 'package:foxy/page/spell/spell_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -107,11 +107,11 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('修改两列 key 仍按旧 key 更新，失败时保留并可重试', () async {
-      final viewModel = SpellLootTemplateViewModel();
+      final viewModel = SpellLootTemplateCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(spellId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = SpellLootTemplateKey(entry: 10, item: 20);
       expect(viewModel.editingKey.value, oldKey);
       viewModel.spellIdController.init(11);
@@ -131,16 +131,16 @@ void main() {
     });
 
     test('切换父范围和新建都会清空旧行身份', () async {
-      final viewModel = SpellLootTemplateViewModel();
+      final viewModel = SpellLootTemplateCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(spellId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentSpellId(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedIndex.value, isNull);
-      expect(await viewModel.create(), isTrue);
+      expect(viewModel.selectedKey.value, isNull);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.spellIdController.collect(), 12);
     });
@@ -154,7 +154,7 @@ void main() {
       'lib/repository/spell_loot_template_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/spell/spell_loot_template_view_model.dart',
+      'lib/page/spell/spell_loot_template_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/spell/spell_loot_template_view.dart',
@@ -166,7 +166,7 @@ void main() {
       viewModel,
       contains('final editingKey = signal<SpellLootTemplateKey?>(null)'),
     );
-    expect(viewModel, contains('destroySpellLootTemplate(selected.key)'));
+    expect(viewModel, contains('destroySpellLootTemplate(key)'));
     expect(view, isNot(contains('readOnly:')));
     expect(view, contains('FoxyPagination('));
   });

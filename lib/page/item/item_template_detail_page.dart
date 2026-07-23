@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
 import 'package:foxy/page/item/item_loot_template_view.dart';
@@ -27,7 +30,16 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.itemTemplateKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.itemTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -40,12 +52,25 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final template = viewModel.template.value;
+      final template = viewModel.entity.value;
       final entry = key ?? 0;
+      final enchantmentParentKey = template == null
+          ? null
+          : template.randomProperty != 0
+          ? ItemEnchantmentTemplateParentKey(
+              entry: template.randomProperty,
+              kind: ItemEnchantmentKind.randomProperty,
+            )
+          : template.randomSuffix != 0
+          ? ItemEnchantmentTemplateParentKey(
+              entry: template.randomSuffix,
+              kind: ItemEnchantmentKind.randomSuffix,
+            )
+          : null;
       final name = key == null
           ? '新建物品'
-          : template.name.isNotEmpty
-          ? template.name
+          : template?.name.isNotEmpty == true
+          ? template?.name ?? ''
           : '物品 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),
@@ -69,21 +94,24 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
             contents: [
               ItemTemplateView(viewModel: viewModel),
               ItemEnchantmentTemplateView(
-                key: ValueKey('enchantment-$entry'),
-                entry: entry,
+                key: ValueKey('enchantment-$enchantmentParentKey'),
+                parentKey: enchantmentParentKey,
               ),
-              ItemLootTemplateView(key: ValueKey('loot-$entry'), entry: entry),
+              ItemLootTemplateView(
+                key: ValueKey('loot-$entry'),
+                parentKey: entry,
+              ),
               DisenchantLootTemplateView(
-                key: ValueKey('disenchant-$entry'),
-                entry: entry,
+                key: ValueKey('disenchant-${template?.disenchantId ?? 0}'),
+                parentKey: template?.disenchantId ?? 0,
               ),
               ProspectingLootTemplateView(
                 key: ValueKey('prospecting-$entry'),
-                entry: entry,
+                parentKey: entry,
               ),
               MillingLootTemplateView(
                 key: ValueKey('milling-$entry'),
-                entry: entry,
+                parentKey: entry,
               ),
             ],
             disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},

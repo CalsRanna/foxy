@@ -6,6 +6,7 @@ import 'package:foxy/entity/brief_smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -109,8 +110,12 @@ void main() {
       GetIt.instance.registerSingleton<SmartScriptRepository>(repository);
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
       GetIt.instance.registerSingleton<EventBus>(EventBus());
+      final activityLogRepository = _FakeActivityLogRepository();
       GetIt.instance.registerSingleton<ActivityLogRepository>(
-        _FakeActivityLogRepository(),
+        activityLogRepository,
+      );
+      GetIt.instance.registerSingleton(
+        ActivityLogService(activityLogRepository),
       );
     });
 
@@ -144,7 +149,7 @@ void main() {
       );
       expect(repository.updateKeys, [oldKey, oldKey]);
       expect(viewModel.persistedKey.value, newKey);
-      expect(viewModel.isNew.value, isFalse);
+      expect(viewModel.entity.value, isNotNull);
     });
 
     test('新建候选在表单打开时已有显式 id，保存不重新分配', () async {

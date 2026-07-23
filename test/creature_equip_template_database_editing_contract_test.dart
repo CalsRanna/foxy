@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_equip_template_key.dart';
-import 'package:foxy/page/creature_template/creature_equip_template_view_model.dart';
+import 'package:foxy/page/creature_template/creature_equip_template_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
@@ -107,11 +107,11 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('键变化用旧 key 更新，失败时保留旧 key 供重试', () async {
-      final viewModel = CreatureEquipTemplateViewModel();
+      final viewModel = CreatureEquipTemplateCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
       repository.failUpdates = true;
       viewModel.creatureIdController.init(11);
@@ -130,15 +130,15 @@ void main() {
     });
 
     test('父范围变化和新建清空 editingKey 并使用显式预分配 ID', () async {
-      final viewModel = CreatureEquipTemplateViewModel();
+      final viewModel = CreatureEquipTemplateCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 10);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentCreatureId(12);
+      await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(await viewModel.create(), isTrue);
+      await viewModel.create();
       expect(viewModel.idController.collect(), 1);
       expect(viewModel.editingKey.value, isNull);
       await viewModel.persist();
@@ -151,7 +151,7 @@ void main() {
       'lib/repository/creature_equip_template_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/creature_equip_template_view_model.dart',
+      'lib/page/creature_template/creature_equip_template_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/creature_equip_template_view.dart',

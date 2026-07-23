@@ -48,7 +48,7 @@ void main() {
       'quest_offer_reward',
     ]) {
       final viewModel = File(
-        'lib/page/quest/${stem}_view_model.dart',
+        'lib/page/quest/${stem}_single_editor_view_model.dart',
       ).readAsStringSync();
       final view = File('lib/page/quest/${stem}_view.dart').readAsStringSync();
       expect(viewModel, contains('editingKey = signal<'));

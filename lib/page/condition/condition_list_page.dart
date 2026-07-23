@@ -1,5 +1,11 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/brief_condition_entity.dart';
+import 'package:foxy/entity/condition_key.dart';
 import 'package:foxy/page/condition/condition_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -93,10 +99,10 @@ class _ConditionListPageState extends State<ConditionListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final conditions = viewModel.conditions.value;
+    final conditions = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -146,7 +152,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
           header: (context, index) =>
               ShadTableCell.header(child: Text(headers[index])),
           onRowDoubleTap: (row) =>
-              viewModel.navigateToDetail(condition: conditions[row]),
+              _navigateToDetail(condition: conditions[row]),
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
               context: context,
@@ -155,17 +161,19 @@ class _ConditionListPageState extends State<ConditionListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () =>
-                      viewModel.navigateToDetail(condition: conditions[row]),
+                      _navigateToDetail(condition: conditions[row]),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyCondition(conditions[row]),
+                  onPressed: () => _copy(conditions[row].key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deleteCondition(conditions[row]),
+                  onPressed: () => _destroy(conditions[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -187,5 +195,54 @@ class _ConditionListPageState extends State<ConditionListPage> {
         ],
       ),
     );
+  }
+
+  void _navigateToDetail({BriefConditionEntity? condition}) {
+    final label = condition != null
+        ? (condition.comment.isNotEmpty
+              ? condition.comment
+              : 'Condition ${condition.sourceTypeOrReferenceId}-${condition.sourceEntry}')
+        : '新建条件';
+
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: ConditionDetailRoute(conditionKey: condition?.key),
+      parentMenu: RouterMenu.more,
+    );
+  }
+
+  Future<void> _copy(ConditionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(ConditionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

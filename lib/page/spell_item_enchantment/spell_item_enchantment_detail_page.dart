@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -27,7 +28,16 @@ class _SpellItemEnchantmentDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.spellItemEnchantmentKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.spellItemEnchantmentKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -40,11 +50,11 @@ class _SpellItemEnchantmentDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.enchantment.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建法术附魔'
-          : entity.nameLangZhCN.isNotEmpty
-          ? entity.nameLangZhCN
+          : entity?.nameLangZhCN.isNotEmpty == true
+          ? entity?.nameLangZhCN ?? ''
           : '法术附魔 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

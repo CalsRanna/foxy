@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
@@ -40,7 +41,16 @@ class _CreatureTemplateDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.creatureTemplateKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.creatureTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -53,12 +63,12 @@ class _CreatureTemplateDetailPageState
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final template = viewModel.template.value;
+      final template = viewModel.entity.value;
       final creatureId = key ?? 0;
       final name = key == null
           ? '新建生物'
-          : template.name.isNotEmpty
-          ? template.name
+          : template?.name.isNotEmpty == true
+          ? template?.name ?? ''
           : '生物 #$key';
       const tabs = [
         Text('生物模板'),
@@ -121,16 +131,16 @@ class _CreatureTemplateDetailPageState
                 creatureId: creatureId,
               ),
               CreatureLootTemplateView(
-                key: ValueKey('loot-$creatureId'),
-                creatureId: creatureId,
+                key: ValueKey('loot-${template?.lootId ?? 0}'),
+                parentKey: template?.lootId ?? 0,
               ),
               PickpocketingLootTemplateView(
-                key: ValueKey('pickpocket-$creatureId'),
-                creatureId: creatureId,
+                key: ValueKey('pickpocket-${template?.pickpocketLoot ?? 0}'),
+                parentKey: template?.pickpocketLoot ?? 0,
               ),
               SkinningLootTemplateView(
-                key: ValueKey('skinning-$creatureId'),
-                creatureId: creatureId,
+                key: ValueKey('skinning-${template?.skinLoot ?? 0}'),
+                parentKey: template?.skinLoot ?? 0,
               ),
             ],
             disabledIndexes: creatureTemplateDisabledTabIndexes(

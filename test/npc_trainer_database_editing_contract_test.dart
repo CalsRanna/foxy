@@ -5,7 +5,7 @@ import 'package:foxy/entity/brief_npc_trainer_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_key.dart';
-import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
+import 'package:foxy/page/creature_template/npc_trainer_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/form/validation/npc_trainer_entity_validation_mixin.dart';
@@ -169,11 +169,11 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('修改联合键仍用旧 key，成功后清空当前范围编辑状态', () async {
-      final viewModel = NpcTrainerViewModel();
+      final viewModel = NpcTrainerCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 100);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
       expect(viewModel.editingKey.value, originalKey);
 
@@ -185,16 +185,16 @@ void main() {
       expect(repository.rows.single.trainerId, 101);
       expect(repository.rows.single.spellId, 21);
       expect(viewModel.items.value, isEmpty);
-      expect(viewModel.selectedIndex.value, isNull);
+      expect(viewModel.selectedKey.value, isNull);
       expect(viewModel.editingKey.value, isNull);
     });
 
     test('保存失败保留 editingKey，修正后仍按旧 key 重试', () async {
-      final viewModel = NpcTrainerViewModel();
+      final viewModel = NpcTrainerCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 100);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
       repository.failUpdates = true;
       viewModel.spellIdController.init(21);
@@ -208,19 +208,18 @@ void main() {
     });
 
     test('父范围切换和新建都清空旧行身份', () async {
-      final viewModel = NpcTrainerViewModel();
+      final viewModel = NpcTrainerCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(creatureId: 10);
-      viewModel.selectRow(0);
-      await viewModel.edit();
+      await viewModel.initSignals(parentKey: 100);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentCreatureId(12);
-      expect(viewModel.creatureId.value, 12);
-      expect(viewModel.relationTrainerId.value, 200);
+      await viewModel.setParentKey(200);
+      expect(viewModel.parentKey.value, 200);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.selectedIndex.value, isNull);
+      expect(viewModel.selectedKey.value, isNull);
 
-      expect(await viewModel.create(), isTrue);
+      await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.trainerIdController.collect(), 200);
       viewModel.spellIdController.init(50);
@@ -244,7 +243,7 @@ void main() {
       'lib/repository/creature_default_trainer_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/npc_trainer_view_model.dart',
+      'lib/page/creature_template/npc_trainer_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/npc_trainer_view.dart',
@@ -257,7 +256,7 @@ void main() {
       viewModel,
       contains('final editingKey = signal<NpcTrainerKey?>(null)'),
     );
-    expect(viewModel, contains('destroyNpcTrainer(trainer.key)'));
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly:')));
     expect(view, contains('FoxyPagination('));
   });

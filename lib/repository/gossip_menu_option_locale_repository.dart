@@ -105,6 +105,18 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
         .toList();
   }
 
+  Future<List<GossipMenuOptionLocaleEntity>>
+  getGossipMenuOptionLocalesForOption(GossipMenuOptionKey key) async {
+    final results = await laconic
+        .table(_table)
+        .where('MenuID', key.menuId)
+        .where('OptionID', key.optionId)
+        .get();
+    return results
+        .map((result) => GossipMenuOptionLocaleEntity.fromJson(result.toMap()))
+        .toList();
+  }
+
   Future<void> storeGossipMenuOptionLocale(
     GossipMenuOptionLocaleEntity model,
   ) async {

@@ -1,3 +1,7 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/game_object/game_object_template_list_view_model.dart';
@@ -84,10 +88,10 @@ class _GameObjectTemplateListPageState
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final templates = viewModel.templates.value;
+    final templates = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -128,7 +132,7 @@ class _GameObjectTemplateListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(
+            _navigateToDetail(
               key: templates[row].key,
               name: templates[row].displayName,
             );
@@ -141,7 +145,7 @@ class _GameObjectTemplateListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(
+                    _navigateToDetail(
                       key: templates[row].key,
                       name: templates[row].displayName,
                     );
@@ -149,16 +153,18 @@ class _GameObjectTemplateListPageState
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copyGameObjectTemplate(templates[row].key);
+                    _copy(templates[row].key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteGameObjectTemplate(templates[row].key);
+                    _destroy(templates[row].key);
                   },
                   child: Text('删除'),
                 ),
@@ -174,5 +180,53 @@ class _GameObjectTemplateListPageState
     var children = [toolbar, Expanded(child: layoutBuilder)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
+  }
+
+  void _navigateToDetail({int? key, String? name}) {
+    final label = key == null
+        ? '新建游戏对象'
+        : name?.isNotEmpty == true
+        ? name!
+        : '游戏对象 #$key';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: GameObjectTemplateDetailRoute(gameObjectTemplateKey: key),
+      parentMenu: RouterMenu.gameObjectTemplate,
+    );
+  }
+
+  Future<void> _copy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

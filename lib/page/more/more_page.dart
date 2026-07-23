@@ -1,11 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/page/more/more_view_model.dart';
+import 'package:foxy/page/feature/feature_state_view_model.dart';
+import 'package:foxy/page/more/more_read_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_feature_card.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -19,16 +23,24 @@ class MorePage extends StatefulWidget {
 }
 
 class _MorePageState extends State<MorePage> {
-  final viewModel = GetIt.instance.get<MoreViewModel>();
+  final viewModel = GetIt.instance.get<MoreReadViewModel>();
+  final featureState = GetIt.instance.get<FeatureStateViewModel>();
+  final routerFacade = GetIt.instance.get<RouterFacade>();
+  void Function()? _featureSubscription;
 
   @override
   void initState() {
     super.initState();
+    viewModel.setFeatures(featureState.allFeatures.value);
     viewModel.initSignals();
+    _featureSubscription = featureState.allFeatures.subscribe(
+      viewModel.setFeatures,
+    );
   }
 
   @override
   void dispose() {
+    _featureSubscription?.call();
     viewModel.dispose();
     super.dispose();
   }
@@ -103,7 +115,7 @@ class _MorePageState extends State<MorePage> {
           final module = modules[index];
           return FoxyFeatureCard(
             feature: module,
-            onTap: () => viewModel.navigateToModule(module),
+            onTap: () => _navigateToModule(module),
             onSecondaryTap: (position) =>
                 _showContextMenu(context, module, position),
           );
@@ -126,7 +138,7 @@ class _MorePageState extends State<MorePage> {
             feature.isPinned ? LucideIcons.pinOff : LucideIcons.pin,
             size: 16,
           ),
-          onPressed: () => viewModel.togglePinned(feature),
+          onPressed: () => _togglePinned(feature),
           child: Text(feature.isPinned ? '取消固定' : '钉到侧边栏'),
         ),
         ShadContextMenuItem(
@@ -134,10 +146,35 @@ class _MorePageState extends State<MorePage> {
             feature.isFavorite ? LucideIcons.starOff : LucideIcons.star,
             size: 16,
           ),
-          onPressed: () => viewModel.toggleFavorite(feature),
+          onPressed: () => _toggleFavorite(feature),
           child: Text(feature.isFavorite ? '取消收藏' : '收藏到首页'),
         ),
       ],
     );
+  }
+
+  void _navigateToModule(FeatureEntity module) {
+    routerFacade.navigateToMenu(
+      RouterMenu.values.byName(module.routerMenu),
+      parentMenu: module.isPinned ? null : RouterMenu.more,
+    );
+  }
+
+  Future<void> _toggleFavorite(FeatureEntity feature) async {
+    try {
+      await featureState.toggleFavorite(feature.id);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('更新收藏状态失败：$error');
+    }
+  }
+
+  Future<void> _togglePinned(FeatureEntity feature) async {
+    try {
+      await featureState.togglePinned(feature.id);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('更新固定状态失败：$error');
+    }
   }
 }

@@ -77,7 +77,7 @@ void main() {
       'lib/repository/spell_area_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/spell/spell_area_view_model.dart',
+      'lib/page/spell/spell_area_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File('lib/page/spell/spell_area_view.dart').readAsStringSync();
     expect(repository, contains('Future<List<BriefSpellAreaEntity>>'));
@@ -85,7 +85,7 @@ void main() {
     expect(viewModel, contains('editingKey = signal<SpellAreaKey?>'));
     expect(viewModel, contains('spell: spellIdController.collect()'));
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('selected.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(view, contains('FoxyPagination('));
     expect(view, isNot(contains('readOnly: true')));
   });
