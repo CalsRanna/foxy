@@ -12,14 +12,15 @@ import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/creature_loot_template_repository.dart';
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
+import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
@@ -234,22 +235,21 @@ void main() {
       'ExtendedCost',
     });
     expect(NpcTrainerRepository.primaryKeyColumns, {'TrainerId', 'SpellId'});
-    expect(
-      LootTemplateRepository.primaryKeyColumnsFor(LootTableType.creature),
-      {'Entry', 'Item', 'Reference', 'GroupId'},
-    );
-    expect(
-      LootTemplateRepository.primaryKeyColumnsFor(LootTableType.pickpocket),
-      {'Entry', 'Item'},
-    );
-    expect(
-      LootTemplateRepository.primaryKeyColumnsFor(LootTableType.skinning),
-      {'Entry', 'Item'},
-    );
+    expect(CreatureLootTemplateRepository.primaryKeyColumns, {
+      'Entry',
+      'Item',
+      'Reference',
+      'GroupId',
+    });
+    expect(PickpocketingLootTemplateRepository.primaryKeyColumns, {
+      'Entry',
+      'Item',
+    });
+    expect(SkinningLootTemplateRepository.primaryKeyColumns, {'Entry', 'Item'});
   });
 
   test('掉落新增项不为 Item 外键自动造号', () async {
-    final repository = LootTemplateRepository(LootTableType.creature);
+    final repository = CreatureLootTemplateRepository();
     final loot = await repository.createLootTemplate(123);
     expect(loot.entry, 123);
     expect(loot.item, 0);

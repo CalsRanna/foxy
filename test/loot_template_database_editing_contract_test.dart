@@ -1,51 +1,104 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_loot_template_entity.dart';
-import 'package:foxy/entity/brief_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
+import 'package:foxy/entity/brief_creature_loot_template_entity.dart';
+import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_disenchant_loot_template_entity.dart';
+import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_game_object_loot_template_entity.dart';
+import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_item_loot_template_entity.dart';
+import 'package:foxy/entity/brief_item_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_milling_loot_template_entity.dart';
+import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_pickpocketing_loot_template_entity.dart';
+import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_prospecting_loot_template_entity.dart';
+import 'package:foxy/entity/brief_prospecting_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_reference_loot_template_entity.dart';
+import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_skinning_loot_template_entity.dart';
+import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
+import 'package:foxy/entity/creature_loot_template_key.dart';
+import 'package:foxy/entity/disenchant_loot_template_key.dart';
+import 'package:foxy/entity/game_object_loot_template_key.dart';
+import 'package:foxy/entity/item_loot_template_key.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_template_entry_key.dart';
-import 'package:foxy/entity/loot_template_key.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/entity/milling_loot_template_key.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
+import 'package:foxy/entity/prospecting_loot_template_key.dart';
+import 'package:foxy/entity/reference_loot_template_key.dart';
+import 'package:foxy/entity/skinning_loot_template_key.dart';
+import 'package:foxy/repository/creature_loot_template_repository.dart';
+import 'package:foxy/repository/disenchant_loot_template_repository.dart';
+import 'package:foxy/repository/game_object_loot_template_repository.dart';
+import 'package:foxy/repository/item_loot_template_repository.dart';
+import 'package:foxy/repository/milling_loot_template_repository.dart';
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
+import 'package:foxy/repository/prospecting_loot_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
+import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 void main() {
-  group('loot template key shapes and Brief boundaries', () {
-    test('两列 key 使用 Entry 和 Item 完整值相等', () {
+  group('loot template dedicated key and Brief boundaries', () {
+    test('八张两列主键表使用各自具体 key', () {
       const entity = LootTemplateEntity(
         entry: 10,
         item: 20,
         reference: 30,
         groupId: 40,
       );
-      final key = LootTemplateKey.fromEntity(LootTableType.item, entity);
-      final same = LootTemplateKey.fromEntity(
-        LootTableType.item,
-        entity.copyWith(reference: 31, groupId: 41),
-      );
+      final keys = <Object>[
+        PickpocketingLootTemplateKey.fromEntity(entity),
+        SkinningLootTemplateKey.fromEntity(entity),
+        ItemLootTemplateKey.fromEntity(entity),
+        DisenchantLootTemplateKey.fromEntity(entity),
+        ProspectingLootTemplateKey.fromEntity(entity),
+        MillingLootTemplateKey.fromEntity(entity),
+        ReferenceLootTemplateKey.fromEntity(entity),
+        GameObjectLootTemplateKey.fromEntity(entity),
+      ];
+      final sameKeys = <Object>[
+        PickpocketingLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        SkinningLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        ItemLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        DisenchantLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        ProspectingLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        MillingLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        ReferenceLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+        GameObjectLootTemplateKey.fromEntity(
+          entity.copyWith(reference: 31, groupId: 41),
+        ),
+      ];
 
-      expect(key, isA<StandardLootTemplateKey>());
-      expect(key, same);
-      expect(key.hashCode, same.hashCode);
+      for (var index = 0; index < keys.length; index++) {
+        expect(keys[index], sameKeys[index]);
+        expect(keys[index].hashCode, sameKeys[index].hashCode);
+      }
+      expect(keys.toSet(), hasLength(8));
       expect(
-        key,
-        isNot(
-          LootTemplateKey.fromEntity(
-            LootTableType.item,
-            entity.copyWith(entry: 11),
-          ),
-        ),
+        ItemLootTemplateKey.fromEntity(entity),
+        isNot(ItemLootTemplateKey.fromEntity(entity.copyWith(entry: 11))),
       );
       expect(
-        key,
-        isNot(
-          LootTemplateKey.fromEntity(
-            LootTableType.item,
-            entity.copyWith(item: 21),
-          ),
-        ),
+        ItemLootTemplateKey.fromEntity(entity),
+        isNot(ItemLootTemplateKey.fromEntity(entity.copyWith(item: 21))),
       );
     });
 
@@ -56,86 +109,70 @@ void main() {
         reference: 30,
         groupId: 40,
       );
-      final key = LootTemplateKey.fromEntity(LootTableType.creature, entity);
-      final same = LootTemplateKey.fromEntity(
-        LootTableType.creature,
+      final key = CreatureLootTemplateKey.fromEntity(entity);
+      final same = CreatureLootTemplateKey.fromEntity(
         entity.copyWith(chance: 50),
       );
 
-      expect(key, isA<CreatureLootTemplateKey>());
       expect(key, same);
       expect(key.hashCode, same.hashCode);
       expect(
         key,
         isNot(
-          LootTemplateKey.fromEntity(
-            LootTableType.creature,
-            entity.copyWith(reference: 31),
-          ),
+          CreatureLootTemplateKey.fromEntity(entity.copyWith(reference: 31)),
         ),
       );
       expect(
         key,
-        isNot(
-          LootTemplateKey.fromEntity(
-            LootTableType.creature,
-            entity.copyWith(groupId: 41),
-          ),
-        ),
+        isNot(CreatureLootTemplateKey.fromEntity(entity.copyWith(groupId: 41))),
       );
     });
 
-    test('行 Brief 提供对应表 key，Entry 聚合使用独立 Brief 类型', () {
-      final creatureBrief = BriefLootTemplateEntity.fromJson(const {
-        'Entry': 10,
-        'Item': 20,
-        'Reference': 30,
-        'GroupId': 40,
-      }, tableType: LootTableType.creature);
-      final standardBrief = BriefLootTemplateEntity.fromJson(const {
-        'Entry': 10,
-        'Item': 20,
-        'Reference': 30,
-        'GroupId': 40,
-      }, tableType: LootTableType.reference);
-      final entryBrief = BriefLootTemplateEntryEntity.fromJson(const {
-        'Entry': 10,
-        'ItemCount': 5,
-      }, tableType: LootTableType.reference);
+    test('九张表的行 Brief 返回各自具体 key，Entry Brief 使用标量 key', () {
+      const row = {'Entry': 10, 'Item': 20, 'Reference': 30, 'GroupId': 40};
+      final briefs = <dynamic>[
+        BriefCreatureLootTemplateEntity.fromJson(row),
+        BriefPickpocketingLootTemplateEntity.fromJson(row),
+        BriefSkinningLootTemplateEntity.fromJson(row),
+        BriefItemLootTemplateEntity.fromJson(row),
+        BriefDisenchantLootTemplateEntity.fromJson(row),
+        BriefProspectingLootTemplateEntity.fromJson(row),
+        BriefMillingLootTemplateEntity.fromJson(row),
+        BriefReferenceLootTemplateEntity.fromJson(row),
+        BriefGameObjectLootTemplateEntity.fromJson(row),
+      ];
+      expect(briefs[0].key, isA<CreatureLootTemplateKey>());
+      expect(briefs[1].key, isA<PickpocketingLootTemplateKey>());
+      expect(briefs[2].key, isA<SkinningLootTemplateKey>());
+      expect(briefs[3].key, isA<ItemLootTemplateKey>());
+      expect(briefs[4].key, isA<DisenchantLootTemplateKey>());
+      expect(briefs[5].key, isA<ProspectingLootTemplateKey>());
+      expect(briefs[6].key, isA<MillingLootTemplateKey>());
+      expect(briefs[7].key, isA<ReferenceLootTemplateKey>());
+      expect(briefs[8].key, isA<GameObjectLootTemplateKey>());
 
-      expect(
-        creatureBrief.key,
-        const CreatureLootTemplateKey(
-          entry: 10,
-          item: 20,
-          reference: 30,
-          groupId: 40,
-        ),
-      );
-      expect(
-        standardBrief.key,
-        const StandardLootTemplateKey(entry: 10, item: 20),
-      );
-      expect(entryBrief.entry, 10);
-      expect(entryBrief.itemCount, 5);
-      expect(
-        entryBrief.key,
-        const LootTemplateEntryKey(
-          tableType: LootTableType.reference,
-          entry: 10,
-        ),
-      );
+      const entryRow = {'Entry': 10, 'ItemCount': 5};
+      final entryBriefs = <dynamic>[
+        BriefCreatureLootTemplateEntryEntity.fromJson(entryRow),
+        BriefPickpocketingLootTemplateEntryEntity.fromJson(entryRow),
+        BriefSkinningLootTemplateEntryEntity.fromJson(entryRow),
+        BriefItemLootTemplateEntryEntity.fromJson(entryRow),
+        BriefDisenchantLootTemplateEntryEntity.fromJson(entryRow),
+        BriefProspectingLootTemplateEntryEntity.fromJson(entryRow),
+        BriefMillingLootTemplateEntryEntity.fromJson(entryRow),
+        BriefReferenceLootTemplateEntryEntity.fromJson(entryRow),
+        BriefGameObjectLootTemplateEntryEntity.fromJson(entryRow),
+      ];
+      for (final brief in entryBriefs) {
+        expect(brief.entry, 10);
+        expect(brief.itemCount, 5);
+        expect(brief.key, 10);
+      }
     });
   });
 
-  group('LootTemplateRepository write contract', () {
-    test('两列 UPDATE 使用旧 key 定位并写入 candidate 全部十列', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestRepository(
-        LootTableType.item,
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
-      const originalKey = StandardLootTemplateKey(entry: 10, item: 20);
+  group('dedicated loot template repository write contracts', () {
+    test('八张两列主键表均使用旧 key 定位并写入完整 candidate', () async {
       const candidate = LootTemplateEntity(
         entry: 11,
         item: 21,
@@ -148,20 +185,26 @@ void main() {
         maxCount: 26,
         comment: 'candidate',
       );
+      for (final spec in _standardRepositorySpecs()) {
+        final queries = <LaconicQuery>[];
+        final repository = spec.create(
+          Laconic(_RecordingDriver(), listen: queries.add),
+        );
 
-      await repository.updateLootTemplate(originalKey, candidate);
+        await repository.updateLootTemplate(spec.key, candidate);
 
-      expect(queries.single.bindings, [
-        ...candidate.toJson().values,
-        originalKey.entry,
-        originalKey.item,
-      ]);
+        expect(queries.single.sql, contains(spec.table), reason: spec.table);
+        expect(queries.single.bindings, [
+          ...candidate.toJson().values,
+          10,
+          20,
+        ], reason: spec.table);
+      }
     });
 
     test('生物掉落 UPDATE 使用旧四列 key 并写入完整 candidate', () async {
       final queries = <LaconicQuery>[];
-      final repository = _TestRepository(
-        LootTableType.creature,
+      final repository = _CreatureTestRepository(
         Laconic(_RecordingDriver(), listen: queries.add),
       );
       const originalKey = CreatureLootTemplateKey(
@@ -190,52 +233,75 @@ void main() {
       ]);
     });
 
-    test('UPDATE 和 DELETE 零行结果报告旧记录不存在', () async {
-      final repository = _TestRepository(
-        LootTableType.item,
-        Laconic(_RecordingDriver(affectedRows: 0)),
-      );
-      const key = StandardLootTemplateKey(entry: 10, item: 20);
-
-      await expectLater(
-        repository.updateLootTemplate(key, const LootTemplateEntity()),
-        throwsA(isA<StateError>()),
-      );
-      await expectLater(
-        repository.destroyLootTemplate(key),
-        throwsA(isA<StateError>()),
-      );
+    test('九张表的 UPDATE、DELETE 与复制均报告原记录不存在', () async {
+      for (final spec in _allRepositorySpecs(affectedRows: 0)) {
+        await expectLater(
+          spec.repository.updateLootTemplate(
+            spec.key,
+            const LootTemplateEntity(),
+          ),
+          throwsA(isA<StateError>()),
+          reason: '${spec.table} update',
+        );
+        await expectLater(
+          spec.repository.destroyLootTemplate(spec.key),
+          throwsA(isA<StateError>()),
+          reason: '${spec.table} delete',
+        );
+        await expectLater(
+          spec.repository.copyLootTemplate(spec.key),
+          throwsA(isA<StateError>()),
+          reason: '${spec.table} copy',
+        );
+      }
     });
 
-    test('Brief 查询显式选择展示列和 locator，并分页', () async {
-      final queries = <LaconicQuery>[];
-      final repository = _TestRepository(
-        LootTableType.item,
-        Laconic(_RecordingDriver(), listen: queries.add),
-      );
+    test('九张表的 Brief 查询显式选择展示列、使用正确表并分页', () async {
+      for (final spec in _allRepositorySpecs()) {
+        final queries = <LaconicQuery>[];
+        final repository = spec.create(
+          Laconic(_RecordingDriver(), listen: queries.add),
+        );
 
-      await repository.getBriefLootTemplates(10, page: 2);
+        await repository.getBriefLootTemplates(10, page: 2);
 
-      final query = queries.single;
-      expect(query.sql, isNot(contains('lt.*')));
-      expect(query.sql, isNot(contains('lt.LootMode')));
-      expect(query.sql, isNot(contains('lt.Comment')));
-      expect(query.sql.toLowerCase(), contains('limit ? offset ?'));
-      expect(query.bindings.sublist(query.bindings.length - 2), [50, 50]);
+        final query = queries.single;
+        expect(query.sql, contains(spec.table), reason: spec.table);
+        expect(query.sql, isNot(contains('lt.*')), reason: spec.table);
+        expect(query.sql, isNot(contains('lt.LootMode')), reason: spec.table);
+        expect(query.sql, isNot(contains('lt.Comment')), reason: spec.table);
+        expect(
+          query.sql.toLowerCase(),
+          contains('limit ? offset ?'),
+          reason: spec.table,
+        );
+        expect(query.bindings.sublist(query.bindings.length - 2), [
+          50,
+          50,
+        ], reason: spec.table);
+      }
     });
   });
 
-  test('全部 loot consumer 使用 editingKey、完整加载和可编辑 key 控件', () {
-    const viewModelPaths = [
-      'lib/page/creature_template/creature_loot_template_view_model.dart',
-      'lib/page/creature_template/pickpocketing_loot_template_view_model.dart',
-      'lib/page/creature_template/skinning_loot_template_view_model.dart',
-      'lib/page/game_object/game_object_loot_template_view_model.dart',
-      'lib/page/item/item_loot_template_view_model.dart',
-      'lib/page/item/disenchant_loot_template_view_model.dart',
-      'lib/page/item/milling_loot_template_view_model.dart',
-      'lib/page/item/prospecting_loot_template_view_model.dart',
-    ];
+  test('全部 loot consumer 使用具体 editingKey、完整加载和可编辑 key 控件', () {
+    const viewModelKeyTypes = {
+      'lib/page/creature_template/creature_loot_template_view_model.dart':
+          'CreatureLootTemplateKey',
+      'lib/page/creature_template/'
+              'pickpocketing_loot_template_view_model.dart':
+          'PickpocketingLootTemplateKey',
+      'lib/page/creature_template/skinning_loot_template_view_model.dart':
+          'SkinningLootTemplateKey',
+      'lib/page/game_object/game_object_loot_template_view_model.dart':
+          'GameObjectLootTemplateKey',
+      'lib/page/item/item_loot_template_view_model.dart': 'ItemLootTemplateKey',
+      'lib/page/item/disenchant_loot_template_view_model.dart':
+          'DisenchantLootTemplateKey',
+      'lib/page/item/milling_loot_template_view_model.dart':
+          'MillingLootTemplateKey',
+      'lib/page/item/prospecting_loot_template_view_model.dart':
+          'ProspectingLootTemplateKey',
+    };
     const viewPaths = [
       'lib/page/creature_template/creature_loot_template_view.dart',
       'lib/page/creature_template/pickpocketing_loot_template_view.dart',
@@ -247,21 +313,25 @@ void main() {
       'lib/page/item/prospecting_loot_template_view.dart',
     ];
 
-    for (final path in viewModelPaths) {
-      final source = File(path).readAsStringSync();
+    for (final entry in viewModelKeyTypes.entries) {
+      final source = File(entry.key).readAsStringSync();
       expect(
         source,
-        contains('final editingKey = signal<LootTemplateKey?>(null)'),
-        reason: path,
+        contains('final editingKey = signal<${entry.value}?>(null)'),
+        reason: entry.key,
       );
-      expect(source, contains('getLootTemplate(key)'), reason: path);
+      expect(source, contains('getLootTemplate(key)'), reason: entry.key);
       expect(
         source,
         matches(RegExp(r'destroyLootTemplate\(\w+\.key\)')),
-        reason: path,
+        reason: entry.key,
       );
-      expect(source, isNot(contains('editingItem')), reason: path);
-      expect(source, contains('Future<void> paginate(int page)'), reason: path);
+      expect(source, isNot(contains('editingItem')), reason: entry.key);
+      expect(
+        source,
+        contains('Future<void> paginate(int page)'),
+        reason: entry.key,
+      );
     }
     for (final path in viewPaths) {
       final source = File(path).readAsStringSync();
@@ -270,7 +340,7 @@ void main() {
     }
 
     final repository = File(
-      'lib/repository/loot_template_repository.dart',
+      'lib/repository/creature_loot_template_repository.dart',
     ).readAsStringSync();
     final referenceViewModel = File(
       'lib/page/reference_loot_template/'
@@ -281,13 +351,109 @@ void main() {
     expect(repository, isNot(contains(".table('item_template')")));
     expect(
       referenceViewModel,
-      contains('final persistedKey = signal<LootTemplateKey?>'),
+      contains('final persistedKey = signal<ReferenceLootTemplateKey?>'),
     );
     final referenceView = File(
       'lib/page/reference_loot_template/reference_loot_template_view.dart',
     ).readAsStringSync();
     expect(referenceView, isNot(contains('readOnly:')));
   });
+
+  test('通用 LootTableType、key 和 Brief 类型已完全移除', () {
+    const removedPaths = [
+      'lib/entity/loot_table_type.dart',
+      'lib/entity/loot_template_key.dart',
+      'lib/entity/loot_template_entry_key.dart',
+      'lib/entity/brief_loot_template_entity.dart',
+      'lib/entity/brief_loot_template_entry_entity.dart',
+    ];
+    for (final path in removedPaths) {
+      expect(File(path).existsSync(), isFalse, reason: path);
+    }
+  });
+}
+
+List<({String table, dynamic Function(Laconic) create, dynamic key})>
+_standardRepositorySpecs() {
+  return [
+    (
+      table: 'pickpocketing_loot_template',
+      create: (laconic) => _PickpocketingTestRepository(laconic),
+      key: const PickpocketingLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'skinning_loot_template',
+      create: (laconic) => _SkinningTestRepository(laconic),
+      key: const SkinningLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'item_loot_template',
+      create: (laconic) => _ItemTestRepository(laconic),
+      key: const ItemLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'disenchant_loot_template',
+      create: (laconic) => _DisenchantTestRepository(laconic),
+      key: const DisenchantLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'prospecting_loot_template',
+      create: (laconic) => _ProspectingTestRepository(laconic),
+      key: const ProspectingLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'milling_loot_template',
+      create: (laconic) => _MillingTestRepository(laconic),
+      key: const MillingLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'reference_loot_template',
+      create: (laconic) => _ReferenceTestRepository(laconic),
+      key: const ReferenceLootTemplateKey(entry: 10, item: 20),
+    ),
+    (
+      table: 'gameobject_loot_template',
+      create: (laconic) => _GameObjectTestRepository(laconic),
+      key: const GameObjectLootTemplateKey(entry: 10, item: 20),
+    ),
+  ];
+}
+
+List<
+  ({
+    String table,
+    dynamic Function(Laconic) create,
+    dynamic repository,
+    dynamic key,
+  })
+>
+_allRepositorySpecs({int affectedRows = 1}) {
+  final standard = _standardRepositorySpecs();
+  final specs = [
+    (
+      table: 'creature_loot_template',
+      create: (Laconic laconic) => _CreatureTestRepository(laconic),
+      key: const CreatureLootTemplateKey(
+        entry: 10,
+        item: 20,
+        reference: 30,
+        groupId: 40,
+      ),
+    ),
+    ...standard,
+  ];
+  return specs
+      .map(
+        (spec) => (
+          table: spec.table,
+          create: spec.create,
+          repository: spec.create(
+            Laconic(_RecordingDriver(affectedRows: affectedRows)),
+          ),
+          key: spec.key,
+        ),
+      )
+      .toList();
 }
 
 class _RecordingDriver implements DatabaseDriver {
@@ -325,9 +491,56 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _TestRepository extends LootTemplateRepository {
+class _CreatureTestRepository extends CreatureLootTemplateRepository {
   @override
   final Laconic laconic;
+  _CreatureTestRepository(this.laconic);
+}
 
-  _TestRepository(super.tableType, this.laconic);
+class _PickpocketingTestRepository extends PickpocketingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _PickpocketingTestRepository(this.laconic);
+}
+
+class _SkinningTestRepository extends SkinningLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _SkinningTestRepository(this.laconic);
+}
+
+class _ItemTestRepository extends ItemLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _ItemTestRepository(this.laconic);
+}
+
+class _DisenchantTestRepository extends DisenchantLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _DisenchantTestRepository(this.laconic);
+}
+
+class _ProspectingTestRepository extends ProspectingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _ProspectingTestRepository(this.laconic);
+}
+
+class _MillingTestRepository extends MillingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _MillingTestRepository(this.laconic);
+}
+
+class _ReferenceTestRepository extends ReferenceLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _ReferenceTestRepository(this.laconic);
+}
+
+class _GameObjectTestRepository extends GameObjectLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _GameObjectTestRepository(this.laconic);
 }

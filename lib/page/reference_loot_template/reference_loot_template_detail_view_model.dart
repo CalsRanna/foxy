@@ -1,11 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/entity/reference_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/loot_template_entity_validation_mixin.dart';
@@ -21,7 +20,7 @@ class ReferenceLootTemplateDetailViewModel
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  final repository = LootTemplateRepository(LootTableType.reference);
+  final repository = GetIt.instance.get<ReferenceLootTemplateRepository>();
   late final entryController = registerController(IntFieldController());
 
   late final itemController = registerController(IntFieldController());
@@ -37,7 +36,7 @@ class ReferenceLootTemplateDetailViewModel
   late final commentController = registerController(StringFieldController());
   final template = signal<LootTemplateEntity?>(null);
 
-  final persistedKey = signal<LootTemplateKey?>(null);
+  final persistedKey = signal<ReferenceLootTemplateKey?>(null);
   final hasReference = signal(false);
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
@@ -48,7 +47,7 @@ class ReferenceLootTemplateDetailViewModel
     disposeControllers();
   }
 
-  Future<void> initSignals({LootTemplateKey? key}) async {
+  Future<void> initSignals({ReferenceLootTemplateKey? key}) async {
     try {
       if (key == null) {
         persistedKey.value = null;
@@ -81,16 +80,10 @@ class ReferenceLootTemplateDetailViewModel
       if (originalKey != null) {
         await repository.updateLootTemplate(originalKey, data);
         template.value = data;
-        persistedKey.value = LootTemplateKey.fromEntity(
-          LootTableType.reference,
-          data,
-        );
+        persistedKey.value = ReferenceLootTemplateKey.fromEntity(data);
         _logActivity(ActivityActionType.update, data);
       } else {
-        final candidateKey = LootTemplateKey.fromEntity(
-          LootTableType.reference,
-          data,
-        );
+        final candidateKey = ReferenceLootTemplateKey.fromEntity(data);
         final existed = await repository.getLootTemplate(candidateKey);
         if (existed != null) {
           throw Exception('Entry=${data.entry}, Item=${data.item} 已存在');

@@ -25,7 +25,7 @@ void main() {
     const repositoryPaths = [
       'lib/repository/creature_on_kill_reputation_repository.dart',
       'lib/repository/gossip_menu_repository.dart',
-      'lib/repository/loot_template_repository.dart',
+      'lib/repository/reference_loot_template_repository.dart',
       'lib/repository/spell_group_repository.dart',
       'lib/repository/npc_vendor_repository.dart',
       'lib/repository/creature_equip_template_repository.dart',

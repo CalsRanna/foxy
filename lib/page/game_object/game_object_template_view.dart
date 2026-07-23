@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -26,10 +25,7 @@ class GameObjectTemplateView extends StatefulWidget {
 class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
   GameObjectTemplateDetailViewModel get viewModel => widget.viewModel;
 
-  late final gameObjectLootDelegate = FoxyEntityPickerDelegates.lootTemplate(
-    LootTableType.gameobject,
-    '游戏对象掉落模板',
-  );
+  late final gameObjectLootDelegate = FoxyEntityPickerDelegates.gameObjectLoot;
 
   @override
   void initState() {

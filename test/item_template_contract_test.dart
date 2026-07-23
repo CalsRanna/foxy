@@ -8,9 +8,11 @@ import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/item_loot_template_repository.dart';
+import 'package:foxy/repository/disenchant_loot_template_repository.dart';
+import 'package:foxy/repository/prospecting_loot_template_repository.dart';
+import 'package:foxy/repository/milling_loot_template_repository.dart';
 
 void main() {
   test('ItemTemplateEntity 精确覆盖 item_template 的 138 个物理列', () {
@@ -257,16 +259,13 @@ void main() {
       'entry',
       'ench',
     });
-    for (final type in [
-      LootTableType.item,
-      LootTableType.disenchant,
-      LootTableType.prospecting,
-      LootTableType.milling,
+    for (final columns in [
+      ItemLootTemplateRepository.primaryKeyColumns,
+      DisenchantLootTemplateRepository.primaryKeyColumns,
+      ProspectingLootTemplateRepository.primaryKeyColumns,
+      MillingLootTemplateRepository.primaryKeyColumns,
     ]) {
-      expect(LootTemplateRepository.primaryKeyColumnsFor(type), {
-        'Entry',
-        'Item',
-      });
+      expect(columns, {'Entry', 'Item'});
     }
   });
 

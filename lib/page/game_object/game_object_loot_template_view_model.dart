@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/brief_loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
+import 'package:foxy/entity/brief_game_object_loot_template_entity.dart';
+import 'package:foxy/entity/game_object_loot_template_key.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/game_object_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -23,8 +22,8 @@ class GameObjectLootTemplateViewModel
         FieldControllerMixin {
   final routerFacade = GetIt.instance.get<RouterFacade>();
   final gameObjectId = signal<int>(0);
-  final editingKey = signal<LootTemplateKey?>(null);
-  final items = signal<List<BriefLootTemplateEntity>>([]);
+  final editingKey = signal<GameObjectLootTemplateKey?>(null);
+  final items = signal<List<BriefGameObjectLootTemplateEntity>>([]);
   final page = signal(1);
   final selectedIndex = signal<int?>(null);
   final total = signal(0);
@@ -43,7 +42,7 @@ class GameObjectLootTemplateViewModel
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  final repository = LootTemplateRepository(LootTableType.gameobject);
+  final repository = GetIt.instance.get<GameObjectLootTemplateRepository>();
 
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(
