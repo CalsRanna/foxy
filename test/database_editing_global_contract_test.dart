@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 
+import 'support/local_dart_library_source.dart';
+
 void main() {
   final entityFiles = Directory('lib/entity')
       .listSync()
       .whereType<File>()
       .where((file) => file.path.endsWith('.dart'))
+      .where((file) => !file.path.endsWith('.g.dart'))
       .toList();
   final briefFiles = entityFiles
       .where((file) => file.uri.pathSegments.last.startsWith('brief_'))
@@ -33,7 +36,7 @@ void main() {
 
     for (final file in briefFiles) {
       expect(
-        file.readAsStringSync(),
+        readLocalDartLibrarySource(file.path),
         matches(keyPattern),
         reason: '${file.path} 缺少完整标量或专用 key',
       );

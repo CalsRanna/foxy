@@ -16,6 +16,7 @@ dependencies:
   laconic_mysql: ^2.1.0
   logger: ^2.4.0
   lucide_icons_flutter: ^3.1.14
+  meta: ^1.18.0
   package_info_plus: ^9.0.0
   path: ^1.9.1
   shadcn_ui: ^0.55.0
@@ -36,9 +37,14 @@ dev_dependencies:
     sdk: flutter
 
   auto_route_generator: ^10.2.5
+  analyzer: ^8.1.1
+  build: ^3.1.0
   build_runner: ^2.4.9
+  build_test: ^3.3.2
   flutter_lints: ^6.0.0
   icons_launcher: ^3.1.0
+  source_gen: ^3.1.0
+  test: ^1.31.0
 
 flutter:
   uses-material-design: true

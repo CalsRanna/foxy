@@ -1,7 +1,28 @@
-class GlyphPropertyEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'glyph_property_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_glyph_properties')
+class GlyphPropertyEntity with _GlyphPropertyEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('SpellID')
   final int spellId;
+
+  @FoxyBriefField()
+  @FoxyFullField('GlyphSlotFlags')
   final int glyphSlotFlags;
+
+  @FoxyBriefField()
+  @FoxyFullField('SpellIconID')
   final int spellIconId;
 
   const GlyphPropertyEntity({
@@ -11,35 +32,6 @@ class GlyphPropertyEntity {
     this.spellIconId = 0,
   });
 
-  factory GlyphPropertyEntity.fromJson(Map<String, dynamic> json) {
-    return GlyphPropertyEntity(
-      id: json['ID'] ?? 0,
-      spellId: json['SpellID'] ?? 0,
-      glyphSlotFlags: json['GlyphSlotFlags'] ?? 0,
-      spellIconId: json['SpellIconID'] ?? 0,
-    );
-  }
-
-  GlyphPropertyEntity copyWith({
-    int? id,
-    int? spellId,
-    int? glyphSlotFlags,
-    int? spellIconId,
-  }) {
-    return GlyphPropertyEntity(
-      id: id ?? this.id,
-      spellId: spellId ?? this.spellId,
-      glyphSlotFlags: glyphSlotFlags ?? this.glyphSlotFlags,
-      spellIconId: spellIconId ?? this.spellIconId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'SpellID': spellId,
-      'GlyphSlotFlags': glyphSlotFlags,
-      'SpellIconID': spellIconId,
-    };
-  }
+  factory GlyphPropertyEntity.fromJson(Map<String, dynamic> json) =>
+      _GlyphPropertyEntityMixin.fromJson(json);
 }
