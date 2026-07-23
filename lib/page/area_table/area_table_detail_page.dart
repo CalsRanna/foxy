@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/area_table/area_table_detail_view_model.dart';
 import 'package:foxy/page/area_table/area_table_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -22,7 +23,16 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.areaTableKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.areaTableKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -35,11 +45,11 @@ class _AreaTableDetailPageState extends State<AreaTableDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.area.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建区域'
-          : entity.areaNameLangZhCN.isNotEmpty
-          ? entity.areaNameLangZhCN
+          : entity?.areaNameLangZhCN.isNotEmpty == true
+          ? entity?.areaNameLangZhCN ?? ''
           : '区域 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

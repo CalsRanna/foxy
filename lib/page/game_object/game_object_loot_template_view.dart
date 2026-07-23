@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/game_object_loot_template_key.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/game_object/game_object_loot_template_view_model.dart';
+import 'package:foxy/page/game_object/game_object_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -13,11 +14,12 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 class GameObjectLootTemplateView extends StatefulWidget {
-  final int gameObjectId;
+  final int parentKey;
 
-  const GameObjectLootTemplateView({super.key, required this.gameObjectId});
+  const GameObjectLootTemplateView({super.key, required this.parentKey});
 
   @override
   State<GameObjectLootTemplateView> createState() =>
@@ -26,12 +28,13 @@ class GameObjectLootTemplateView extends StatefulWidget {
 
 class _GameObjectLootTemplateViewState
     extends State<GameObjectLootTemplateView> {
-  final viewModel = GetIt.instance.get<GameObjectLootTemplateViewModel>();
+  final viewModel = GetIt.instance
+      .get<GameObjectLootTemplateCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(gameObjectId: widget.gameObjectId);
+    viewModel.initSignals(parentKey: widget.parentKey);
   }
 
   @override
@@ -47,7 +50,7 @@ class _GameObjectLootTemplateViewState
 
   Widget _buildContent(BuildContext context) {
     final items = viewModel.items.value;
-    final selectedIndex = viewModel.selectedIndex.value;
+    final selectedKey = viewModel.selectedKey.value;
     final headers = ['物品ID', '物品名称', '几率', '数量', '任务', '组'];
 
     return Column(
@@ -64,7 +67,7 @@ class _GameObjectLootTemplateViewState
             ),
             ShadButton.ghost(
               leading: Icon(LucideIcons.squarePen, size: 16),
-              onPressed: selectedIndex != null ? _showEditDialog : null,
+              onPressed: selectedKey != null ? _showEditDialog : null,
               size: ShadButtonSize.sm,
               child: Text('编辑'),
             ),
@@ -77,8 +80,8 @@ class _GameObjectLootTemplateViewState
             ),
             ShadButton.destructive(
               leading: Icon(LucideIcons.trash, size: 16),
-              onPressed: selectedIndex != null
-                  ? () => viewModel.delete(context)
+              onPressed: selectedKey != null
+                  ? () => _destroy(viewModel.selectedKey.value!)
                   : null,
               size: ShadButtonSize.sm,
               child: Text('删除'),
@@ -131,9 +134,9 @@ class _GameObjectLootTemplateViewState
               header: (context, index) {
                 return ShadTableCell.header(child: Text(headers[index]));
               },
-              onRowTap: (row) => viewModel.selectRow(row),
+              onRowTap: (row) => viewModel.selectedKey.value = items[row].key,
               onRowDoubleTap: (row) async {
-                viewModel.selectRow(row);
+                viewModel.selectedKey.value = items[row].key;
                 await _showEditDialog();
               },
               pinnedRowCount: 1,
@@ -146,7 +149,13 @@ class _GameObjectLootTemplateViewState
   }
 
   Future<void> _showCreateDialog() async {
-    await viewModel.create();
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
     if (!mounted) return;
     showFoxyDialog(
       context: context,
@@ -159,7 +168,8 @@ class _GameObjectLootTemplateViewState
   }
 
   Future<void> _showEditDialog() async {
-    if (!await viewModel.edit() || !mounted) return;
+    if (!await _load(viewModel.selectedKey.value!)) return;
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -171,7 +181,7 @@ class _GameObjectLootTemplateViewState
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editing.value;
+    final isEditing = viewModel.editingKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 960),
@@ -300,15 +310,25 @@ class _GameObjectLootTemplateViewState
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = isEditing
-                      ? await viewModel.update(dialogContext)
-                      : await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
@@ -326,5 +346,33 @@ class _GameObjectLootTemplateViewState
       5 => const Color(0xFFFF8000),
       _ => const Color(0xFF9D9D9D),
     };
+  }
+
+  Future<bool> _load(GameObjectLootTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(GameObjectLootTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

@@ -1,5 +1,10 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
@@ -83,10 +88,10 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
   Widget _buildTable() {
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
-    final templates = viewModel.scripts.value;
+    final templates = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     var pagination = FoxyPagination(
@@ -162,7 +167,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           },
           onRowDoubleTap: (row) {
             final s = templates[row];
-            viewModel.navigateToDetail(key: s.key);
+            _navigateToDetail(key: s.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final s = templates[row];
@@ -173,21 +178,23 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(key: s.key);
+                    _navigateToDetail(key: s.key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.copy, size: 16),
                   onPressed: () {
-                    viewModel.copySmartScript(s.key);
+                    _copy(s.key);
                   },
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteSmartScript(s.key);
+                    _destroy(s.key);
                   },
                   child: Text('删除'),
                 ),
@@ -203,5 +210,51 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
     var children = [toolbar, Expanded(child: layoutBuilder)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
+  }
+
+  void _navigateToDetail({SmartScriptKey? key}) {
+    final label = key == null
+        ? '新建脚本'
+        : '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: SmartScriptDetailRoute(scriptKey: key),
+      parentMenu: RouterMenu.smartScript,
+    );
+  }
+
+  Future<void> _copy(SmartScriptKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(SmartScriptKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

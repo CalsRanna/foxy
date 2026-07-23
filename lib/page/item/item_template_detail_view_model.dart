@@ -1,15 +1,12 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/item_template_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/item_template_entity_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class ItemTemplateDetailViewModel
@@ -18,7 +15,14 @@ class ItemTemplateDetailViewModel
         ItemTemplateValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<ItemTemplateRepository>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  /// Signals
+  final entity = signal<ItemTemplateEntity?>(null);
+  final persistedKey = signal<int?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   /// Card 1: Basic Info
   late final entryController = registerController(IntFieldController());
@@ -316,80 +320,74 @@ class ItemTemplateDetailViewModel
   late final scriptNameController = registerController(StringFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  /// Signals
-  final template = signal(ItemTemplateEntity());
-  final persistedKey = signal<int?>(null);
-
-  bool get hasDisenchantLoot => template.value.disenchantId != 0;
-
-  /// Computed conditions
-  bool get hasEnchantment =>
-      template.value.randomProperty != 0 || template.value.randomSuffix != 0;
-  bool get hasItemLoot => (template.value.flags & 4) != 0;
-  bool get hasMillingLoot => (template.value.flags & 536870912) != 0;
-  bool get hasProspectingLoot => (template.value.flags & 262144) != 0;
-
-  void dispose() {
-    disposeControllers();
-  }
-
   Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     try {
       if (key == null) {
-        persistedKey.value = null;
         final blank = await _repository.createItemTemplate();
-        template.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      persistedKey.value = key;
       final result = await _repository.getItemTemplate(key);
       if (result == null) {
         throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
       }
-      template.value = result;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载物品模板(key=$key)失败', error: e, stackTrace: s);
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
-  }
-
-  void pop() {
-    routerFacade.goBack();
   }
 
   Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    validateItemTemplateFields(candidate);
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeItemTemplate(candidate);
-    } else {
-      await _repository.updateItemTemplate(originalKey, candidate);
-    }
-    persistedKey.value = candidate.entry;
-    template.value = candidate;
-    routerFacade.updateCurrentLabel(_labelFor(candidate));
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
     try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('模板数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      final candidate = _collectCandidate();
+      validateItemTemplateFields(candidate);
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeItemTemplate(candidate);
+      } else {
+        await _repository.updateItemTemplate(originalKey, candidate);
+      }
+      persistedKey.value = candidate.entry;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
   }
 
-  ItemTemplateEntity _collectFromControllers() {
+  bool get hasDisenchantLoot => (entity.value?.disenchantId ?? 0) != 0;
+
+  /// Computed conditions
+  bool get hasEnchantment =>
+      (entity.value?.randomProperty ?? 0) != 0 ||
+      (entity.value?.randomSuffix ?? 0) != 0;
+
+  bool get hasItemLoot => ((entity.value?.flags ?? 0) & 4) != 0;
+
+  bool get hasMillingLoot => ((entity.value?.flags ?? 0) & 536870912) != 0;
+
+  bool get hasProspectingLoot => ((entity.value?.flags ?? 0) & 262144) != 0;
+
+  ItemTemplateEntity _collectCandidate() {
     return ItemTemplateEntity(
       /// Card 1: Basic Info
       entry: entryController.collect(),
@@ -553,7 +551,7 @@ class ItemTemplateDetailViewModel
     );
   }
 
-  void _initControllers(ItemTemplateEntity template) {
+  void _applyCandidate(ItemTemplateEntity template) {
     /// Card 1: Basic Info
     entryController.init(template.entry);
     nameController.init(template.name);
@@ -724,10 +722,10 @@ class ItemTemplateDetailViewModel
       entityName: t.name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
   }
 
-  String _labelFor(ItemTemplateEntity template) {
-    return template.name.isNotEmpty ? template.name : '物品 #${template.entry}';
+  void dispose() {
+    disposeControllers();
   }
 }

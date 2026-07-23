@@ -1,5 +1,10 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/gossip_menu_key.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
@@ -80,13 +85,13 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
   }
 
   Widget _buildTable() {
-    final templates = viewModel.menus.value;
+    final templates = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
 
     final createBtn = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: () => viewModel.navigateToDetail(),
+      onPressed: () => _navigateToDetail(),
       child: Text('新增'),
     );
     final pagination = FoxyPagination(
@@ -136,7 +141,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
           },
           onRowDoubleTap: (row) {
             final item = templates[row];
-            viewModel.navigateToDetail(key: item.key);
+            _navigateToDetail(key: item.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final item = templates[row];
@@ -146,17 +151,19 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.navigateToDetail(key: item.key),
+                  onPressed: () => _navigateToDetail(key: item.key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copyGossipMenu(item.key),
+                  onPressed: () => _copy(item.key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.deleteGossipMenu(item.key),
+                  onPressed: () => _destroy(item.key),
                   child: Text('删除'),
                 ),
               ],
@@ -176,5 +183,48 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
         ],
       ),
     );
+  }
+
+  void _navigateToDetail({GossipMenuKey? key}) {
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: key != null ? '对话 ${key.menuId}' : '新建对话',
+      route: GossipMenuDetailRoute(gossipMenuKey: key),
+      parentMenu: RouterMenu.gossipMenu,
+    );
+  }
+
+  Future<void> _copy(GossipMenuKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确定要复制这条记录吗？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(GossipMenuKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

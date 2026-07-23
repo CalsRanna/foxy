@@ -65,6 +65,12 @@ void main() {
     final gossipMenu = File(
       'lib/page/gossip_menu/gossip_menu_detail_view_model.dart',
     ).readAsStringSync();
+    final conditionView = File(
+      'lib/page/condition/condition_view.dart',
+    ).readAsStringSync();
+    final gossipMenuView = File(
+      'lib/page/gossip_menu/gossip_menu_view.dart',
+    ).readAsStringSync();
     final pageSources = Directory('lib/page')
         .listSync(recursive: true)
         .whereType<File>()
@@ -84,7 +90,9 @@ void main() {
     );
     expect(condition, contains('final persistedKey = signal<ConditionKey?>'));
     expect(condition, contains('persistedKey.value = newKey'));
-    expect(condition, contains('routerFacade.updateCurrentLabel('));
-    expect(gossipMenu, contains('routerFacade.updateCurrentLabel('));
+    expect(condition, isNot(contains('RouterFacade')));
+    expect(gossipMenu, isNot(contains('RouterFacade')));
+    expect(conditionView, contains('updateCurrentLabel('));
+    expect(gossipMenuView, contains('updateCurrentLabel('));
   });
 }

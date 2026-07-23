@@ -2,97 +2,39 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/page_text_repository.dart';
-import 'package:foxy/router/router.gr.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class PageTextListViewModel with FieldControllerMixin {
-  int _refreshToken = 0;
-  late final idController = registerController(StringFieldController());
-  late final textController = registerController(StringFieldController());
-
   final _repository = GetIt.instance.get<PageTextRepository>();
 
+  final items = signal<List<BriefPageTextEntity>>([]);
+
   final page = signal(1);
-  final pages = signal<List<BriefPageTextEntity>>([]);
+
   final total = signal(0);
 
-  final _routerFacade = GetIt.instance.get<RouterFacade>();
+  final loading = signal(false);
 
-  Future<void> copyPageText(int key) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认复制',
-        description: '是否复制页面文本 ID=$key？',
-        confirmText: '复制',
-      );
-      if (!confirmed) return;
-      await _repository.copyPageText(key);
-      _logActivity(ActivityActionType.copy, key);
-      DialogUtil.instance.success('复制成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('复制失败: ${e.toString()}');
-    }
-  }
+  final submitting = signal(false);
 
-  Future<void> deletePageText(int key) async {
-    try {
-      final confirmed = await DialogUtil.instance.confirm(
-        title: '确认删除',
-        description: '是否删除页面文本 ID=$key？此操作不可撤销。',
-        confirmText: '删除',
-        destructive: true,
-      );
-      if (!confirmed) return;
-      await _repository.destroyPageText(key);
-      _logActivity(ActivityActionType.delete, key);
-      DialogUtil.instance.success('删除成功');
-      await _refresh();
-    } catch (e) {
-      LoggerUtil.instance.e(e.toString());
-      DialogUtil.instance.error('删除失败: ${e.toString()}');
-    }
-  }
+  final errorMessage = signal<String?>(null);
 
-  void dispose() {
-    disposeControllers();
-  }
+  late final idController = registerController(StringFieldController());
+
+  late final textController = registerController(StringFieldController());
+
+  int _refreshToken = 0;
 
   Future<void> initSignals() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (
-        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
-        _repository.countPageTexts(filter: _buildFilter()),
-      ).wait;
-      if (token != _refreshToken) return;
-      pages.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('加载页面文本列表失败: $e');
-      DialogUtil.instance.error('加载页面文本列表失败: $e');
-    }
+    await _refresh();
   }
 
-  void navigateToDetail({int? key, String? label}) {
-    final name = label?.isNotEmpty == true ? label! : '新建页面文本';
-    _routerFacade.navigateToDetail(
-      label: name,
-      route: TextContentDetailRoute(pageTextKey: key),
-      parentMenu: RouterMenu.more,
-    );
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
+  Future<void> search() async {
+    page.value = 1;
     await _refresh();
   }
 
@@ -103,21 +45,76 @@ class PageTextListViewModel with FieldControllerMixin {
     await _refresh();
   }
 
-  Future<void> search() async {
-    page.value = 1;
+  Future<void> paginate(int page) async {
+    this.page.value = page;
     await _refresh();
   }
 
-  PageTextFilterEntity _buildFilter() {
+  Future<void> copy(int key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.copyPageText(key);
+      _logActivity(ActivityActionType.copy, key);
+      await _refresh();
+    } catch (error) {
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  Future<void> destroy(int key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyPageText(key);
+      _logActivity(ActivityActionType.delete, key);
+      await _refresh();
+    } catch (error) {
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  PageTextFilterEntity _collectFilter() {
     return PageTextFilterEntity(
       id: idController.collect(),
       text: textController.collect(),
     );
   }
 
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final filter = _collectFilter();
+    final currentPage = page.value;
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      final (nextItems, nextTotal) = await (
+        _repository.getBriefPageTexts(filter: filter, page: currentPage),
+        _repository.countPageTexts(filter: filter),
+      ).wait;
+      if (token != _refreshToken) return;
+      items.value = nextItems;
+      total.value = nextTotal;
+    } catch (error) {
+      if (token != _refreshToken) return;
+      LoggerUtil.instance.e('刷新列表失败: $error');
+      errorMessage.value = '刷新列表失败: $error';
+    } finally {
+      if (token == _refreshToken) loading.value = false;
+    }
+  }
+
   void _logActivity(ActivityActionType action, int key) {
-    final pages = this.pages.value;
-    final page = pages.where((p) => p.key == key).firstOrNull;
+    final items = this.items.value;
+    final page = items.where((p) => p.key == key).firstOrNull;
     final name = page?.text ?? '';
     final log = ActivityLogEntity(
       module: 'page_text',
@@ -125,22 +122,10 @@ class PageTextListViewModel with FieldControllerMixin {
       entityName: name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
   }
 
-  Future<void> _refresh() async {
-    final token = ++_refreshToken;
-    try {
-      final (items, count) = await (
-        _repository.getBriefPageTexts(filter: _buildFilter(), page: page.value),
-        _repository.countPageTexts(filter: _buildFilter()),
-      ).wait;
-      if (token != _refreshToken) return;
-      pages.value = items;
-      total.value = count;
-    } catch (e) {
-      LoggerUtil.instance.e('刷新页面文本列表失败: $e');
-      DialogUtil.instance.error('刷新页面文本列表失败: $e');
-    }
+  void dispose() {
+    disposeControllers();
   }
 }

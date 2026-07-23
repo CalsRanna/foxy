@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/page/setting/setting_view_model.dart';
+import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
 
 /// 不依赖 GetIt 的选择逻辑验证：直接构造 items 列表并复用 VM 中的过滤语义。
 void main() {

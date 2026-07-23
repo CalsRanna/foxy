@@ -147,7 +147,6 @@ void main() {
     expect(view, contains('kTalentAddToSpellBookOptions'));
     expect('Expanded(child:'.allMatches(view), hasLength(32));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
   });
 
   test('Entity、ViewModel 和 UI 未用集合管理重复字段', () {
@@ -191,7 +190,9 @@ void main() {
     expect(viewModel, contains('final originalKey = persistedKey.value;'));
     expect(viewModel, contains('updateTalent(originalKey, t)'));
     expect(viewModel, contains('persistedKey.value = t.id'));
-    expect(viewModel, contains('routerFacade.updateCurrentLabel('));
+    expect(viewModel, isNot(contains('RouterFacade')));
+    final view = File('lib/page/talent/talent_view.dart').readAsStringSync();
+    expect(view, contains('updateCurrentLabel('));
   });
 
   test('Talent 与 TalentTab definition 使用 3.3.5.12340 物理格式', () {

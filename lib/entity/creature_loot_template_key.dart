@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 
 @immutable
 final class CreatureLootTemplateKey {
@@ -15,7 +15,7 @@ final class CreatureLootTemplateKey {
     required this.groupId,
   });
 
-  factory CreatureLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory CreatureLootTemplateKey.fromEntity(CreatureLootTemplateEntity value) {
     return CreatureLootTemplateKey(
       entry: value.entry,
       item: value.item,

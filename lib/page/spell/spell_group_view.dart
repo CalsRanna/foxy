@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/spell/spell_group_view_model.dart';
+import 'package:foxy/entity/spell_group_key.dart';
+import 'package:foxy/page/spell/spell_group_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
@@ -9,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 class SpellGroupView extends StatefulWidget {
   final int spellId;
@@ -20,19 +22,19 @@ class SpellGroupView extends StatefulWidget {
 }
 
 class _SpellGroupViewState extends State<SpellGroupView> {
-  final viewModel = GetIt.instance.get<SpellGroupViewModel>();
+  final viewModel = GetIt.instance.get<SpellGroupCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(spellId: widget.spellId);
+    viewModel.initSignals(parentKey: widget.spellId);
   }
 
   @override
   void didUpdateWidget(covariant SpellGroupView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spellId != widget.spellId) {
-      viewModel.setParentSpellId(widget.spellId);
+      viewModel.setParentKey(widget.spellId);
     }
   }
 
@@ -96,7 +98,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectRow(row);
+            viewModel.selectedKey.value = items[row].key;
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -104,7 +106,8 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (await viewModel.edit() && context.mounted) {
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (context.mounted) {
                       _showEditDialog(context);
                     }
                   },
@@ -112,12 +115,12 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(context),
+                  onPressed: () => _copy(viewModel.selectedKey.value!),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
                   child: Text('删除'),
                 ),
               ],
@@ -135,7 +138,14 @@ class _SpellGroupViewState extends State<SpellGroupView> {
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -158,7 +168,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 960),
@@ -200,18 +210,69 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _load(SpellGroupKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(SpellGroupKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<void> _copy(SpellGroupKey key) async {
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
   }
 }

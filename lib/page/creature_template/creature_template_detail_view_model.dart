@@ -1,18 +1,21 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class CreatureTemplateDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<CreatureTemplateRepository>();
-  final routerFacade = GetIt.instance.get<RouterFacade>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
+
+  final entity = signal<CreatureTemplateEntity?>(null);
+  final persistedKey = signal<int?>(null);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   late final entryController = registerController(IntFieldController());
   late final nameController = registerController(StringFieldController());
@@ -44,18 +47,15 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   );
   late final vehicleIdController = registerController(IntFieldController());
   late final gossipMenuIdController = registerController(IntFieldController());
-
   late final npcFlagController = registerController(FlagFieldController());
   late final typeFlagController = registerController(FlagFieldController());
   late final dynamicFlagController = registerController(FlagFieldController());
   late final extraFlagController = registerController(FlagFieldController());
   late final unitFlagController = registerController(FlagFieldController());
   late final unitFlag2Controller = registerController(FlagFieldController());
-
   late final creatureImmunitiesIdController = registerController(
     IntFieldController(),
   );
-
   late final expController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
@@ -95,7 +95,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   late final speedFlightController = registerController(
     DoubleFieldController(),
   );
-
   late final minGoldController = registerController(IntFieldController());
   late final maxGoldController = registerController(IntFieldController());
   late final lootIdController = registerController(IntFieldController());
@@ -103,7 +102,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
     IntFieldController(),
   );
   late final skinLootController = registerController(IntFieldController());
-
   late final killCredit1Controller = registerController(IntFieldController());
   late final killCredit2Controller = registerController(IntFieldController());
   late final difficultyEntry1Controller = registerController(
@@ -117,7 +115,6 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   );
   late final aiNameController = registerController(StringFieldController());
   late final scriptNameController = registerController(StringFieldController());
-
   late final movementIdController = registerController(IntFieldController());
   late final movementTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -128,75 +125,66 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
   late final detectionRangeController = registerController(
     DoubleFieldController(),
   );
-
   late final verifiedBuildController = registerController(IntFieldController());
 
-  final template = signal(CreatureTemplateEntity());
-  final persistedKey = signal<int?>(null);
-
-  void dispose() {
-    disposeControllers();
-  }
+  /// 从所有字段收集数据构建 CreatureTemplate
 
   Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     try {
       if (key == null) {
-        persistedKey.value = null;
         final blank = await _repository.createCreatureTemplate();
-        template.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      persistedKey.value = key;
       final result = await _repository.getCreatureTemplate(key);
       if (result == null) {
         throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
       }
-      template.value = result;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载生物模板(key=$key)失败', error: e, stackTrace: s);
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
   }
 
   /// 退出页面
-  void pop() {
-    routerFacade.goBack();
-  }
-
   Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    if (candidate.entry <= 0) throw StateError('请输入有效的生物模板 entry');
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeCreatureTemplate(candidate);
-    } else {
-      await _repository.updateCreatureTemplate(originalKey, candidate);
-    }
-    persistedKey.value = candidate.entry;
-    template.value = candidate;
-    routerFacade.updateCurrentLabel(_labelFor(candidate));
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
     try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('模板数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      final candidate = _collectCandidate();
+      if (candidate.entry <= 0) throw StateError('请输入有效的生物模板 entry');
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeCreatureTemplate(candidate);
+      } else {
+        await _repository.updateCreatureTemplate(originalKey, candidate);
+      }
+      persistedKey.value = candidate.entry;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
   }
 
-  /// 从所有字段收集数据构建 CreatureTemplate
-  CreatureTemplateEntity _collectFromControllers() {
+  CreatureTemplateEntity _collectCandidate() {
     return CreatureTemplateEntity(
       entry: entryController.collect(),
       name: nameController.collect(),
@@ -256,7 +244,7 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
     );
   }
 
-  void _initControllers(CreatureTemplateEntity template) {
+  void _applyCandidate(CreatureTemplateEntity template) {
     entryController.init(template.entry);
     nameController.init(template.name);
     subNameController.init(template.subName);
@@ -328,10 +316,10 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin {
       entityName: t.name,
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
   }
 
-  String _labelFor(CreatureTemplateEntity template) {
-    return template.name.isNotEmpty ? template.name : '生物 #${template.entry}';
+  void dispose() {
+    disposeControllers();
   }
 }

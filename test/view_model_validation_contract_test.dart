@@ -41,8 +41,8 @@ void main() {
           RegExp(r'void validate\w+Fields\(').allMatches(source).length;
     });
 
-    expect(validationFiles, hasLength(50));
-    expect(methodCount, 57);
+    expect(validationFiles, hasLength(59));
+    expect(methodCount, 65);
   });
 
   test('ViewModel validation mixin 不通过 Entity extension 承载规则', () {

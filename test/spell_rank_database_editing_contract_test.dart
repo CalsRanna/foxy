@@ -44,14 +44,14 @@ void main() {
       'lib/repository/spell_rank_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/spell/spell_rank_view_model.dart',
+      'lib/page/spell/spell_rank_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File('lib/page/spell/spell_rank_view.dart').readAsStringSync();
     expect(repository, contains('Future<List<BriefSpellRankEntity>>'));
     expect(repository, contains('.limit(kPageSize)'));
     expect(viewModel, contains('editingKey = signal<SpellRankKey?>'));
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('selected.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(viewModel, contains('rank: rankController.collect()'));
     expect(view, contains('FoxyPagination('));
     expect(view, isNot(contains('readOnly: true')));

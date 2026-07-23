@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/gossip_menu_option_key.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_option_view_model.dart';
+import 'package:foxy/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
@@ -28,13 +30,14 @@ class GossipMenuOptionView extends StatefulWidget {
 }
 
 class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
-  final viewModel = GetIt.instance.get<GossipMenuOptionViewModel>();
+  final viewModel = GetIt.instance
+      .get<GossipMenuOptionCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
     if (widget.menuId != 0) {
-      viewModel.search(widget.menuId);
+      viewModel.initSignals(parentKey: widget.menuId);
     }
   }
 
@@ -42,7 +45,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   void didUpdateWidget(covariant GossipMenuOptionView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.menuId != widget.menuId) {
-      viewModel.setParentMenuId(widget.menuId);
+      viewModel.setParentKey(widget.menuId);
     }
   }
 
@@ -65,7 +68,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   Widget _buildList() {
     final createBtn = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: viewModel.create,
+      onPressed: _create,
       child: Text('新增'),
     );
     final toolbar = Row(
@@ -81,7 +84,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       ],
     );
 
-    final options = viewModel.options.value;
+    final options = viewModel.items.value;
     final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
     final table = LayoutBuilder(
       builder: (context, constraints) {
@@ -132,7 +135,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           },
           onRowDoubleTap: (row) {
             final o = options[row];
-            viewModel.edit(o);
+            _edit(o.key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             final o = options[row];
@@ -142,17 +145,17 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
               items: [
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => viewModel.edit(o),
+                  onPressed: () => _edit(o.key),
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => viewModel.copy(o),
+                  onPressed: () => _copy(o.key),
                   child: Text('复制'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(o),
+                  onPressed: () => _destroy(o.key),
                   child: Text('删除'),
                 ),
               ],
@@ -358,7 +361,13 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           ),
           Row(
             children: [
-              ShadButton(onPressed: viewModel.save, child: const Text('保存')),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: _persist,
+                  child: const Text('保存'),
+                ),
+              ),
               const SizedBox(width: 8),
               ShadButton.ghost(onPressed: viewModel.cancel, child: Text('取消')),
             ],
@@ -370,5 +379,69 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
 
   Widget _labeled(String label, Widget child) {
     return FoxyFormItem(label: label, child: child);
+  }
+
+  Future<void> _create() async {
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+    }
+  }
+
+  Future<void> _edit(GossipMenuOptionKey key) async {
+    try {
+      await viewModel.edit(key);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
+  }
+
+  Future<void> _copy(GossipMenuOptionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认复制',
+      description: '确认复制该选项？',
+      confirmText: '复制',
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(GossipMenuOptionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该选项，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      DialogUtil.instance.success('保存成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('保存失败：$error');
+    }
   }
 }

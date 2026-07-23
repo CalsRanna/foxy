@@ -7,6 +7,7 @@ import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_key.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -232,6 +233,7 @@ void main() {
       GetIt.instance.registerSingleton<EventBus>(eventBus);
       activityLogs = _RecordingActivityLogRepository();
       GetIt.instance.registerSingleton<ActivityLogRepository>(activityLogs);
+      GetIt.instance.registerSingleton(ActivityLogService(activityLogs));
       GetIt.instance.registerSingleton<ConditionRepository>(repository);
       GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
     });
@@ -245,7 +247,7 @@ void main() {
       final original = ConditionKey.fromEntity(_condition());
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(conditionKey: original);
+      await viewModel.initSignals(key: original);
       final changed = _condition(
         sourceTypeOrReferenceId: 18,
         sourceEntry: 20,
@@ -268,7 +270,7 @@ void main() {
       final original = ConditionKey.fromEntity(_condition());
       final viewModel = ConditionDetailViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(conditionKey: original);
+      await viewModel.initSignals(key: original);
       _initControllers(
         viewModel,
         _condition(sourceTypeOrReferenceId: 18, sourceEntry: 20),

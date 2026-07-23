@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_view.dart';
 import 'package:foxy/entity/reference_loot_template_key.dart';
@@ -28,7 +29,16 @@ class _ReferenceLootTemplateDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.referenceLootTemplateKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.referenceLootTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/page/setting/setting_view_model.dart';
+import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
 
 void main() {
   final definition = dbcDefinitionByTable['dbc_spell_duration']!;

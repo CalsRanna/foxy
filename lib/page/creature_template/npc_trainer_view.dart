@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/creature_template/npc_trainer_view_model.dart';
+import 'package:foxy/entity/npc_trainer_key.dart';
+import 'package:foxy/page/creature_template/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -11,6 +13,7 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// 训练师Tab
 class NpcTrainerView extends StatefulWidget {
@@ -23,19 +26,20 @@ class NpcTrainerView extends StatefulWidget {
 }
 
 class _NpcTrainerViewState extends State<NpcTrainerView> {
-  final viewModel = GetIt.instance.get<NpcTrainerViewModel>();
+  final viewModel = GetIt.instance.get<NpcTrainerCollectionEditorViewModel>();
+  final _resolveParent = GetIt.instance.get<ResolveNpcTrainerParentUseCase>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(creatureId: widget.creatureId);
+    _setParent(widget.creatureId);
   }
 
   @override
   void didUpdateWidget(covariant NpcTrainerView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentCreatureId(widget.creatureId);
+      _setParent(widget.creatureId);
     }
   }
 
@@ -106,7 +110,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectRow(row);
+            viewModel.selectedKey.value = items[row].key;
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -114,14 +118,15 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (!await viewModel.edit() || !mounted) return;
+                    if (!await _load(items[row].key)) return;
+                    if (!mounted) return;
                     _showEditDialog();
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(items[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -140,7 +145,14 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
 
   /// 显示新增对话框
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -272,13 +284,25 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                   child: Text('取消'),
                 ),
                 SizedBox(width: 8),
-                ShadButton(
-                  onPressed: () async {
-                    final saved = await viewModel.save(dialogContext);
-                    if (!saved || !dialogContext.mounted) return;
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () async {
+                      try {
+                        await viewModel.persist();
+                      } catch (error) {
+                        if (!mounted) return;
+                        DialogUtil.instance.error('保存失败：$error');
+                        return;
+                      }
+                      if (!dialogContext.mounted) return;
+                      ShadSonner.of(
+                        dialogContext,
+                      ).show(const ShadToast(description: Text('保存成功')));
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text(isEditing ? '更新' : '保存'),
+                  ),
                 ),
               ],
             ),
@@ -286,5 +310,48 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
         ),
       ),
     );
+  }
+
+  Future<void> _setParent(int creatureId) async {
+    try {
+      final trainerId = await _resolveParent.execute(creatureId);
+      if (!mounted) return;
+      if (trainerId == null) {
+        viewModel.clearParent();
+        return;
+      }
+      await viewModel.setParentKey(trainerId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
+    }
+  }
+
+  Future<bool> _load(NpcTrainerKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(NpcTrainerKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

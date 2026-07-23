@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
+import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/setting/dbc_sync_dialogs.dart';
-import 'package:foxy/page/setting/setting_view_model.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -17,7 +18,14 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  final viewModel = GetIt.instance.get<SettingViewModel>();
+  final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
+  final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
+
+  @override
+  void dispose() {
+    exportViewModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildDbcActions() {
     return Watch((_) {
-      final busy = viewModel.isDbcBusy;
+      final busy = importViewModel.isRunning || exportViewModel.isRunning;
       return Column(
         children: [
           _SettingItem(
@@ -101,7 +109,7 @@ class _SettingPageState extends State<SettingPage> {
     showFoxyDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DbcImportDialog(vm: viewModel),
+      builder: (context) => DbcImportDialog(vm: importViewModel),
     );
   }
 
@@ -109,7 +117,7 @@ class _SettingPageState extends State<SettingPage> {
     showFoxyDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DbcExportDialog(vm: viewModel),
+      builder: (context) => DbcExportDialog(vm: exportViewModel),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/player_create_info_action_key.dart';
+import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/page/player_create_info/player_create_info_action_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_action_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -13,6 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 class PlayerCreateInfoActionView extends StatefulWidget {
   final int? race;
@@ -26,12 +29,18 @@ class PlayerCreateInfoActionView extends StatefulWidget {
 
 class _PlayerCreateInfoActionViewState
     extends State<PlayerCreateInfoActionView> {
-  final viewModel = GetIt.instance.get<PlayerCreateInfoActionViewModel>();
+  final viewModel = GetIt.instance
+      .get<PlayerCreateInfoActionCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(race: widget.race, class_: widget.playerClass);
+    final race = widget.race;
+    final playerClass = widget.playerClass;
+    if (race == null || playerClass == null) return;
+    viewModel.initSignals(
+      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
+    );
   }
 
   @override
@@ -39,7 +48,12 @@ class _PlayerCreateInfoActionViewState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.race != widget.race ||
         oldWidget.playerClass != widget.playerClass) {
-      viewModel.setParent(race: widget.race, class_: widget.playerClass);
+      final race = widget.race;
+      final playerClass = widget.playerClass;
+      if (race == null || playerClass == null) return;
+      viewModel.setParentKey(
+        PlayerCreateInfoKey(race: race, class_: playerClass),
+      );
     }
   }
 
@@ -82,7 +96,7 @@ class _PlayerCreateInfoActionViewState
   }
 
   Widget _buildTable() {
-    final actions = viewModel.actions.value;
+    final actions = viewModel.items.value;
     final headers = ['按钮', '动作', '类型'];
 
     return LayoutBuilder(
@@ -114,7 +128,8 @@ class _PlayerCreateInfoActionViewState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (await viewModel.edit(actions[row]) && context.mounted) {
+                    if (!await _load(actions[row].key)) return;
+                    if (context.mounted) {
                       _showDialog(isEditing: true);
                     }
                   },
@@ -122,7 +137,7 @@ class _PlayerCreateInfoActionViewState
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context, actions[row]),
+                  onPressed: () => _destroy(actions[row].key),
                   child: Text('删除'),
                 ),
               ],
@@ -136,7 +151,14 @@ class _PlayerCreateInfoActionViewState
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     _showDialog(isEditing: false);
   }
 
@@ -222,13 +244,25 @@ class _PlayerCreateInfoActionViewState
                   child: Text('取消'),
                 ),
                 SizedBox(width: 8),
-                ShadButton(
-                  onPressed: () async {
-                    final saved = await viewModel.save(dialogContext);
-                    if (!saved || !dialogContext.mounted) return;
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () async {
+                      try {
+                        await viewModel.persist();
+                      } catch (error) {
+                        if (!mounted) return;
+                        DialogUtil.instance.error('保存失败：$error');
+                        return;
+                      }
+                      if (!dialogContext.mounted) return;
+                      ShadSonner.of(
+                        dialogContext,
+                      ).show(const ShadToast(description: Text('保存成功')));
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text(isEditing ? '更新' : '保存'),
+                  ),
                 ),
               ],
             ),
@@ -255,5 +289,33 @@ class _PlayerCreateInfoActionViewState
         controller: viewModel.actionController,
       ),
     };
+  }
+
+  Future<bool> _load(PlayerCreateInfoActionKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(PlayerCreateInfoActionKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

@@ -138,6 +138,7 @@ void main() {
       'gossip_menu_option_key.dart',
       'gossip_menu_option_locale_key.dart',
       'item_enchantment_template_key.dart',
+      'item_enchantment_template_parent_key.dart',
       'item_loot_template_key.dart',
       'item_template_locale_key.dart',
       'milling_loot_template_key.dart',

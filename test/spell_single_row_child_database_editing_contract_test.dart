@@ -34,7 +34,7 @@ void main() {
   test('子编辑器使用 editingKey，主键由可编辑 Controller 收集', () {
     for (final stem in ['spell_bonus_data', 'spell_custom_attr']) {
       final viewModel = File(
-        'lib/page/spell/${stem}_view_model.dart',
+        'lib/page/spell/${stem}_single_editor_view_model.dart',
       ).readAsStringSync();
       final view = File('lib/page/spell/${stem}_view.dart').readAsStringSync();
       expect(viewModel, contains('editingKey = signal<'));

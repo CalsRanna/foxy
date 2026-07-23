@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -28,7 +29,16 @@ class _ScalingStatDistributionDetailPageState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.scalingStatDistributionKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.scalingStatDistributionKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override

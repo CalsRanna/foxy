@@ -21,7 +21,7 @@ void main() {
       'lib/repository/player_create_info_item_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/player_create_info/player_create_info_item_view_model.dart',
+      'lib/page/player_create_info/player_create_info_item_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/player_create_info/player_create_info_item_view.dart',
@@ -40,7 +40,7 @@ void main() {
     expect(viewModel, contains('race: raceController.collect()'));
     expect(viewModel, contains('class_: classController.collect()'));
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('item.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(view, contains('FoxyPagination('));
     expect(view, contains("Text('编辑')"));
     expect(view, isNot(contains('readOnly: true')));

@@ -54,7 +54,7 @@ void main() {
       'lib/repository/spell_linked_spell_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/spell/spell_linked_spell_view_model.dart',
+      'lib/page/spell/spell_linked_spell_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/spell/spell_linked_spell_view.dart',
@@ -63,8 +63,8 @@ void main() {
     expect(repository, contains('.limit(kPageSize)'));
     expect(viewModel, contains('editingKey = signal<SpellLinkedSpellKey?>'));
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('selected.key'));
-    expect(viewModel, contains('countSpellLinkedSpells(parentId)'));
+    expect(viewModel, contains('selectedKey.value = key'));
+    expect(viewModel, contains('countSpellLinkedSpells(parent)'));
     expect(view, contains('FoxyPagination('));
   });
 

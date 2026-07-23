@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
 import 'package:foxy/page/quest_sort/quest_sort_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -22,7 +23,16 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.questSortKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.questSortKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -35,11 +45,11 @@ class _QuestSortDetailPageState extends State<QuestSortDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.sort.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建任务排序'
-          : entity.sortNameLangZhCN.isNotEmpty
-          ? entity.sortNameLangZhCN
+          : entity?.sortNameLangZhCN.isNotEmpty == true
+          ? entity?.sortNameLangZhCN ?? ''
           : '任务排序 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

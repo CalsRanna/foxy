@@ -145,7 +145,6 @@ void main() {
     ).readAsStringSync();
     expect('Expanded(child:'.allMatches(view), hasLength(32));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
     expect(view, contains('controller: viewModel.charlevelController'));
     expect(view, isNot(contains('readOnly: true')));
   });

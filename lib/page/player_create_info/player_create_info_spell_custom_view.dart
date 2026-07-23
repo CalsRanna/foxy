@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/player_create_info_spell_custom_key.dart';
+import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/brief_player_create_info_spell_custom_entity.dart';
-import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view_model.dart';
+import 'package:foxy/page/player_create_info/player_create_info_spell_custom_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -14,6 +16,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 class PlayerCreateInfoSpellCustomView extends StatefulWidget {
   final int? race;
@@ -32,12 +35,18 @@ class PlayerCreateInfoSpellCustomView extends StatefulWidget {
 
 class _PlayerCreateInfoSpellCustomViewState
     extends State<PlayerCreateInfoSpellCustomView> {
-  final viewModel = GetIt.instance.get<PlayerCreateInfoSpellCustomViewModel>();
+  final viewModel = GetIt.instance
+      .get<PlayerCreateInfoSpellCustomCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(race: widget.race, class_: widget.playerClass);
+    final race = widget.race;
+    final playerClass = widget.playerClass;
+    if (race == null || playerClass == null) return;
+    viewModel.initSignals(
+      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
+    );
   }
 
   @override
@@ -45,7 +54,12 @@ class _PlayerCreateInfoSpellCustomViewState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.race != widget.race ||
         oldWidget.playerClass != widget.playerClass) {
-      viewModel.setParent(race: widget.race, class_: widget.playerClass);
+      final race = widget.race;
+      final playerClass = widget.playerClass;
+      if (race == null || playerClass == null) return;
+      viewModel.setParentKey(
+        PlayerCreateInfoKey(race: race, class_: playerClass),
+      );
     }
   }
 
@@ -86,7 +100,7 @@ class _PlayerCreateInfoSpellCustomViewState
   );
 
   Widget _buildTable() {
-    final spells = viewModel.spells.value;
+    final spells = viewModel.items.value;
     return LayoutBuilder(
       builder: (context, constraints) {
         final flexWidth = constraints.maxWidth - 360;
@@ -123,7 +137,7 @@ class _PlayerCreateInfoSpellCustomViewState
                 ),
                 ShadContextMenuItem(
                   leading: const Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context, spells[row]),
+                  onPressed: () => _destroy(spells[row].key),
                   child: const Text('删除'),
                 ),
               ],
@@ -137,14 +151,22 @@ class _PlayerCreateInfoSpellCustomViewState
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     _showDialog(isEditing: false);
   }
 
   Future<void> _showEditDialog(
     BriefPlayerCreateInfoSpellCustomEntity item,
   ) async {
-    if (!await viewModel.edit(item) || !mounted) return;
+    if (!await _load(item.key)) return;
+    if (!mounted) return;
     _showDialog(isEditing: true);
   }
 
@@ -210,13 +232,25 @@ class _PlayerCreateInfoSpellCustomViewState
                   child: const Text('取消'),
                 ),
                 const SizedBox(width: 8),
-                ShadButton(
-                  onPressed: () async {
-                    final saved = await viewModel.save(dialogContext);
-                    if (!saved || !dialogContext.mounted) return;
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
+                Watch(
+                  (_) => ShadButton(
+                    enabled: !viewModel.submitting.value,
+                    onPressed: () async {
+                      try {
+                        await viewModel.persist();
+                      } catch (error) {
+                        if (!mounted) return;
+                        DialogUtil.instance.error('保存失败：$error');
+                        return;
+                      }
+                      if (!dialogContext.mounted) return;
+                      ShadSonner.of(
+                        dialogContext,
+                      ).show(const ShadToast(description: Text('保存成功')));
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text(isEditing ? '更新' : '保存'),
+                  ),
                 ),
               ],
             ),
@@ -224,5 +258,33 @@ class _PlayerCreateInfoSpellCustomViewState
         ),
       ),
     );
+  }
+
+  Future<bool> _load(PlayerCreateInfoSpellCustomKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(PlayerCreateInfoSpellCustomKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

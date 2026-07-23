@@ -118,7 +118,7 @@ void main() {
       'lib/page/gossip_menu/npc_text_view.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/gossip_menu/npc_text_view_model.dart',
+      'lib/page/gossip_menu/npc_text_single_editor_view_model.dart',
     ).readAsStringSync();
 
     for (final source in [entity, locale, view, viewModel]) {

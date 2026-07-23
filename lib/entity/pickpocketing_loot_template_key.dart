@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 
 @immutable
 final class PickpocketingLootTemplateKey {
@@ -8,7 +8,9 @@ final class PickpocketingLootTemplateKey {
 
   const PickpocketingLootTemplateKey({required this.entry, required this.item});
 
-  factory PickpocketingLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory PickpocketingLootTemplateKey.fromEntity(
+    PickpocketingLootTemplateEntity value,
+  ) {
     return PickpocketingLootTemplateKey(entry: value.entry, item: value.item);
   }
 

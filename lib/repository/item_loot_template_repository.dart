@@ -1,7 +1,7 @@
 import 'package:foxy/entity/brief_item_loot_template_entity.dart';
 import 'package:foxy/entity/brief_item_loot_template_entry_entity.dart';
 import 'package:foxy/entity/item_loot_template_key.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -57,8 +57,8 @@ class ItemLootTemplateRepository with RepositoryMixin {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    return LootTemplateEntity(entry: entry);
+  Future<ItemLootTemplateEntity> createLootTemplate(int entry) async {
+    return ItemLootTemplateEntity(entry: entry);
   }
 
   Future<void> destroyLootTemplate(ItemLootTemplateKey key) async {
@@ -160,16 +160,18 @@ class ItemLootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(ItemLootTemplateKey key) async {
+  Future<ItemLootTemplateEntity?> getLootTemplate(
+    ItemLootTemplateKey key,
+  ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
-    return LootTemplateEntity.fromJson(results.first.toMap());
+    return ItemLootTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+  Future<void> storeLootTemplate(ItemLootTemplateEntity loot) async {
     try {
       await laconic.table(_table).insert([loot.toJson()]);
     } catch (error) {
@@ -182,7 +184,7 @@ class ItemLootTemplateRepository with RepositoryMixin {
 
   Future<void> updateLootTemplate(
     ItemLootTemplateKey originalKey,
-    LootTemplateEntity loot,
+    ItemLootTemplateEntity loot,
   ) async {
     try {
       final matchedRows = await _whereKey(

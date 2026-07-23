@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/item_set/item_set_detail_view_model.dart';
 import 'package:foxy/page/item_set/item_set_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -22,7 +23,16 @@ class _ItemSetDetailPageState extends State<ItemSetDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.itemSetKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.itemSetKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -35,11 +45,11 @@ class _ItemSetDetailPageState extends State<ItemSetDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.itemSet.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建套装'
-          : entity.nameLangZhCN.isNotEmpty
-          ? entity.nameLangZhCN
+          : entity?.nameLangZhCN.isNotEmpty == true
+          ? entity?.nameLangZhCN ?? ''
           : '套装 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

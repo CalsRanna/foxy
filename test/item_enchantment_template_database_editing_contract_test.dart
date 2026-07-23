@@ -36,7 +36,7 @@ void main() {
       'lib/repository/item_enchantment_template_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/item/item_enchantment_template_view_model.dart',
+      'lib/page/item/item_enchantment_template_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/item/item_enchantment_template_view.dart',
@@ -53,7 +53,7 @@ void main() {
     expect(viewModel, contains('entry: entryController.collect()'));
     expect(viewModel, contains('ench: enchController.collect()'));
     expect(viewModel, contains('final originalKey = editingKey.value'));
-    expect(viewModel, contains('selected.key'));
+    expect(viewModel, contains('selectedKey.value = key'));
     expect(view, contains('FoxyPagination('));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, isNot(contains('readOnly: isEditing')));

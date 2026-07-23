@@ -1,6 +1,6 @@
 import 'package:foxy/entity/brief_skinning_loot_template_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/entity/skinning_loot_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -57,8 +57,8 @@ class SkinningLootTemplateRepository with RepositoryMixin {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
-  Future<LootTemplateEntity> createLootTemplate(int entry) async {
-    return LootTemplateEntity(entry: entry);
+  Future<SkinningLootTemplateEntity> createLootTemplate(int entry) async {
+    return SkinningLootTemplateEntity(entry: entry);
   }
 
   Future<void> destroyLootTemplate(SkinningLootTemplateKey key) async {
@@ -161,18 +161,18 @@ class SkinningLootTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<LootTemplateEntity?> getLootTemplate(
+  Future<SkinningLootTemplateEntity?> getLootTemplate(
     SkinningLootTemplateKey key,
   ) async {
     final results = await _whereKey(laconic.table(_table), key).limit(1).get();
     if (results.isEmpty) return null;
-    return LootTemplateEntity.fromJson(results.first.toMap());
+    return SkinningLootTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  Future<void> storeLootTemplate(LootTemplateEntity loot) async {
+  Future<void> storeLootTemplate(SkinningLootTemplateEntity loot) async {
     try {
       await laconic.table(_table).insert([loot.toJson()]);
     } catch (error) {
@@ -185,7 +185,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
 
   Future<void> updateLootTemplate(
     SkinningLootTemplateKey originalKey,
-    LootTemplateEntity loot,
+    SkinningLootTemplateEntity loot,
   ) async {
     try {
       final matchedRows = await _whereKey(

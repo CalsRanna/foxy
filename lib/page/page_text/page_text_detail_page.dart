@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/page_text/page_text_detail_view_model.dart';
 import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/page/page_text/page_text_locale_view.dart';
@@ -23,7 +24,16 @@ class _TextContentDetailPageState extends State<TextContentDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.pageTextKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.pageTextKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override

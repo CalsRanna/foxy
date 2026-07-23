@@ -48,7 +48,7 @@ void main() {
       'game_object/game_object_template_addon',
     ]) {
       final viewModel = File(
-        'lib/page/${stem}_view_model.dart',
+        'lib/page/${stem}_single_editor_view_model.dart',
       ).readAsStringSync();
       final view = File('lib/page/${stem}_view.dart').readAsStringSync();
       expect(viewModel, contains('editingKey = signal<'));

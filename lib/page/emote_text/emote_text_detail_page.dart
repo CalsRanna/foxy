@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
 import 'package:foxy/page/emote_text/emote_text_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
@@ -22,7 +23,16 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(key: widget.emoteTextKey);
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.emoteTextKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 
   @override
@@ -35,11 +45,11 @@ class _EmoteTextDetailPageState extends State<EmoteTextDetailPage> {
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
-      final entity = viewModel.emote.value;
+      final entity = viewModel.entity.value;
       final name = key == null
           ? '新建表情文本'
-          : entity.name.isNotEmpty
-          ? entity.name
+          : entity?.name.isNotEmpty == true
+          ? entity?.name ?? ''
           : '表情文本 #$key';
       return ListView(
         padding: const EdgeInsets.all(16),

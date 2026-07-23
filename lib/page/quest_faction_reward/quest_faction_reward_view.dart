@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class QuestFactionRewardView extends StatelessWidget {
   final QuestFactionRewardDetailViewModel viewModel;
@@ -146,19 +149,41 @@ class QuestFactionRewardView extends StatelessWidget {
           FoxyFormSection(title: '声望奖励值', children: difficultyRows),
           Row(
             children: [
-              ShadButton(
-                onPressed: () => viewModel.save(context),
-                child: const Text('保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () => _persist(context),
+                  child: const Text('保存'),
+                ),
               ),
               const SizedBox(width: 8),
-              ShadButton.ghost(
-                onPressed: viewModel.pop,
-                child: const Text('取消'),
-              ),
+              ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _persist(BuildContext context) async {
+    try {
+      await viewModel.persist();
+      if (!context.mounted) return;
+      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
+        '任务声望 ${viewModel.persistedKey.value}',
+      );
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('任务声望数据已保存')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

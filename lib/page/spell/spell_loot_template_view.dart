@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/spell/spell_loot_template_view_model.dart';
+import 'package:foxy/page/spell/spell_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -12,6 +13,7 @@ import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:signals/signals_flutter.dart';
 
 class SpellLootTemplateView extends StatefulWidget {
   final int spellId;
@@ -23,19 +25,20 @@ class SpellLootTemplateView extends StatefulWidget {
 }
 
 class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
-  final viewModel = GetIt.instance.get<SpellLootTemplateViewModel>();
+  final viewModel = GetIt.instance
+      .get<SpellLootTemplateCollectionEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(spellId: widget.spellId);
+    viewModel.initSignals(parentKey: widget.spellId);
   }
 
   @override
   void didUpdateWidget(covariant SpellLootTemplateView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spellId != widget.spellId) {
-      viewModel.setParentSpellId(widget.spellId);
+      viewModel.setParentKey(widget.spellId);
     }
   }
 
@@ -117,7 +120,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectRow(row);
+            viewModel.selectedKey.value = items[row].key;
             showFoxyContextMenu(
               context: context,
               position: details.globalPosition,
@@ -125,7 +128,8 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () async {
-                    if (await viewModel.edit() && context.mounted) {
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (context.mounted) {
                       _showEditDialog(context);
                     }
                   },
@@ -133,7 +137,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 ),
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => viewModel.delete(context),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
                   child: Text('删除'),
                 ),
               ],
@@ -151,7 +155,14 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   }
 
   Future<void> _showCreateDialog() async {
-    if (!await viewModel.create() || !mounted) return;
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
     showFoxyDialog(
       context: context,
       builder: (dialogContext) => ShadDialog(
@@ -174,7 +185,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedIndex.value != null;
+    final isEditing = viewModel.selectedKey.value != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 960),
@@ -301,18 +312,58 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: Text('取消'),
               ),
               SizedBox(width: 8),
-              ShadButton(
-                onPressed: () async {
-                  final saved = await viewModel.save(dialogContext);
-                  if (!saved || !dialogContext.mounted) return;
-                  Navigator.of(dialogContext).pop();
-                },
-                child: Text(isEditing ? '更新' : '保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _load(SpellLootTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _destroy(SpellLootTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

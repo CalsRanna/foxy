@@ -164,6 +164,7 @@ lib/
 ├── page/            # 按功能组织的 Page / View / ViewModel
 ├── repository/      # Laconic 查询与持久化层
 ├── router/          # AutoRoute 配置和导航门面
+├── use_case/        # 跨 Repository、事务及长流程的具体用户用例
 ├── widget/          # 表单、表格、Picker、Dialog 等共享组件
 ├── di.dart          # GetIt 依赖注册
 └── main.dart        # 应用入口
@@ -189,6 +190,20 @@ linux|macos|windows/ # 桌面平台工程
 - DBC Entity 的字段必须精确覆盖物理 Schema。
 
 新增模块前，建议先寻找主键形态和存储类型最接近的现有模块，并同步添加对应契约测试。
+
+### ViewModel 与 UseCase 边界
+
+ViewModel 按交互状态机分为七类，并通过类名和文件名后缀声明类别：
+`ListViewModel`、`DetailViewModel`、`CollectionEditorViewModel`、
+`SingleEditorViewModel`、`ReadViewModel`、`WorkflowViewModel` 和
+`StateViewModel`。ViewModel 只持有可渲染状态、typed controller、明确的
+`persistedKey`/`editingKey` 以及异步刷新保护；不接收 `BuildContext`，不显示
+Dialog/Toast，不导航，也不直接访问数据库事务。
+
+简单单表操作可由 ViewModel 直接调用具体 Repository。一次操作涉及多个
+Repository、事务、跨表校验或可取消长流程时，使用 `lib/use_case/` 下的具体
+UseCase。UseCase 使用具体输入输出和 `execute()`，不引入泛型 CRUD 基类；
+Dialog、Toast、mounted 检查和导航均由 UI 交互面负责。
 
 ## 测试数据库
 

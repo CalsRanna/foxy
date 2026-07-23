@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -170,6 +171,43 @@ void main() {
       contains('已有 DBC 任务正在运行'),
     );
     await first.toList().timeout(const Duration(seconds: 5));
+  });
+
+  test('DBC 导出：取消请求在当前读取结束后阻止写文件并返回取消结果', () async {
+    final util = DbcSyncUtil();
+    final dir = await Directory.systemTemp.createTemp('foxy_export_cancel_');
+    final definition = dbcDefinitionByTable['dbc_spell_duration']!;
+    final loadStarted = Completer<void>();
+    final releaseLoad = Completer<void>();
+    addTearDown(() async {
+      if (await dir.exists()) await dir.delete(recursive: true);
+    });
+
+    final eventsFuture = util
+        .export(
+          definitions: [definition],
+          outputDirectory: dir.path,
+          loadRows: (_) async {
+            loadStarted.complete();
+            await releaseLoad.future;
+            return [
+              {'ID': 1, 'Duration': 1, 'DurationPerLevel': 0, 'MaxDuration': 1},
+            ];
+          },
+        )
+        .toList();
+
+    await loadStarted.future.timeout(const Duration(seconds: 5));
+    expect(util.isRunning, isTrue);
+    await util.cancel();
+    releaseLoad.complete();
+    final events = await eventsFuture.timeout(const Duration(seconds: 5));
+
+    final result = events.whereType<DbcSyncResult>().single;
+    expect(result.cancelled, isTrue);
+    expect(result.completed, 0);
+    expect(await File(p.join(dir.path, definition.fileName)).exists(), isFalse);
+    expect(util.isRunning, isFalse);
   });
 
   test(

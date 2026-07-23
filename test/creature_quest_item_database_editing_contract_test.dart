@@ -84,7 +84,7 @@ void main() {
       'lib/repository/creature_quest_item_repository.dart',
     ).readAsStringSync();
     final viewModel = File(
-      'lib/page/creature_template/creature_quest_item_view_model.dart',
+      'lib/page/creature_template/creature_quest_item_collection_editor_view_model.dart',
     ).readAsStringSync();
     final view = File(
       'lib/page/creature_template/creature_quest_item_view.dart',
@@ -96,7 +96,7 @@ void main() {
       viewModel,
       contains('final editingKey = signal<CreatureQuestItemKey?>(null)'),
     );
-    expect(viewModel, contains('destroyCreatureQuestItem(selected.key)'));
+    expect(viewModel, contains('Future<void> destroy('));
     expect(view, isNot(contains('readOnly: true')));
     expect(view, contains('FoxyPagination('));
   });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/creature_template/creature_on_kill_reputation_view_model.dart';
+import 'package:foxy/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -8,6 +9,7 @@ import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// 击杀声望Tab
 class CreatureOnKillReputationView extends StatefulWidget {
@@ -22,20 +24,51 @@ class CreatureOnKillReputationView extends StatefulWidget {
 
 class _CreatureOnKillReputationViewState
     extends State<CreatureOnKillReputationView> {
-  final viewModel = GetIt.instance.get<CreatureOnKillReputationViewModel>();
+  final viewModel = GetIt.instance
+      .get<CreatureOnKillReputationSingleEditorViewModel>();
 
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(creatureId: widget.creatureId);
+    _initialize();
   }
 
   @override
   void didUpdateWidget(covariant CreatureOnKillReputationView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentCreatureID(widget.creatureId);
+      _initialize();
     }
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(parentKey: widget.creatureId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('击杀声望数据已保存')));
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   @override
@@ -195,14 +228,14 @@ class _CreatureOnKillReputationViewState
           Row(
             spacing: 8,
             children: [
-              ShadButton(
-                onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () => _persist(),
+                  child: Text('保存'),
+                ),
               ),
-              ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
-              ),
+              ShadButton.ghost(onPressed: () => _goBack(), child: Text('取消')),
             ],
           ),
         ],

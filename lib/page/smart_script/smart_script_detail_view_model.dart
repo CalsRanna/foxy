@@ -1,16 +1,13 @@
-import 'package:flutter/widgets.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
-import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals.dart';
 
 class SmartScriptDetailViewModel
@@ -18,19 +15,20 @@ class SmartScriptDetailViewModel
         FieldControllerMixin,
         ViewModelValidationMixin,
         SmartScriptValidationMixin {
-  final routerFacade = GetIt.instance.get<RouterFacade>();
   final _repository = GetIt.instance.get<SmartScriptRepository>();
+  final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
+  final entity = signal<SmartScriptEntity?>(null);
   final persistedKey = signal<SmartScriptKey?>(null);
-  final script = signal(SmartScriptEntity());
-  final isNew = signal(true);
+  final loading = signal(false);
+  final submitting = signal(false);
+  final errorMessage = signal<String?>(null);
 
   late final entryOrGuidController = registerController(IntFieldController());
   late final sourceTypeController = registerController(IntFieldController());
   late final idController = registerController(IntFieldController());
   late final linkController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
-
   late final eventTypeController = registerController(IntFieldController());
   late final eventPhaseMaskController = registerController(
     FlagFieldController(),
@@ -43,7 +41,6 @@ class SmartScriptDetailViewModel
   late final eventParam4Controller = registerController(IntFieldController());
   late final eventParam5Controller = registerController(IntFieldController());
   late final eventParam6Controller = registerController(IntFieldController());
-
   late final actionTypeController = registerController(IntFieldController());
   late final actionParam1Controller = registerController(IntFieldController());
   late final actionParam2Controller = registerController(IntFieldController());
@@ -51,7 +48,6 @@ class SmartScriptDetailViewModel
   late final actionParam4Controller = registerController(IntFieldController());
   late final actionParam5Controller = registerController(IntFieldController());
   late final actionParam6Controller = registerController(IntFieldController());
-
   late final targetTypeController = registerController(IntFieldController());
   late final targetParam1Controller = registerController(IntFieldController());
   late final targetParam2Controller = registerController(IntFieldController());
@@ -62,71 +58,62 @@ class SmartScriptDetailViewModel
   late final targetZController = registerController(DoubleFieldController());
   late final targetOController = registerController(DoubleFieldController());
 
-  void dispose() {
-    disposeControllers();
-  }
-
   Future<void> initSignals({SmartScriptKey? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
     try {
       if (key == null) {
-        isNew.value = true;
-        persistedKey.value = null;
         final blank = await _repository.createSmartScript();
-        script.value = blank;
-        _initControllers(blank);
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
         return;
       }
-      persistedKey.value = key;
-      isNew.value = false;
       final result = await _repository.getSmartScript(key);
       if (result == null) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
-      script.value = result;
-      _initControllers(result);
-    } catch (e, s) {
-      LoggerUtil.instance.e('加载脚本(key=$key)失败', error: e, stackTrace: s);
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
     }
-  }
-
-  void pop() {
-    routerFacade.goBack();
   }
 
   Future<void> persist() async {
-    final candidate = _collectFromControllers();
-    validateSmartScriptFields(candidate);
-    final originalKey = persistedKey.value;
-    final action = originalKey == null
-        ? ActivityActionType.create
-        : ActivityActionType.update;
-    if (originalKey == null) {
-      await _repository.storeSmartScript(candidate);
-    } else {
-      await _repository.updateSmartScript(originalKey, candidate);
-    }
-    final newKey = SmartScriptKey.fromEntity(candidate);
-    persistedKey.value = newKey;
-    isNew.value = false;
-    script.value = candidate;
-    routerFacade.updateCurrentLabel(_labelFor(newKey));
-    _logActivity(action, candidate);
-  }
-
-  Future<void> save(BuildContext context) async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
     try {
-      await persist();
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text('脚本数据已保存'));
-      ShadSonner.of(context).show(toast);
-    } catch (e) {
-      if (!context.mounted) return;
-      var toast = ShadToast(description: Text(e.toString()));
-      ShadSonner.of(context).show(toast);
+      final candidate = _collectCandidate();
+      validateSmartScriptFields(candidate);
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeSmartScript(candidate);
+      } else {
+        await _repository.updateSmartScript(originalKey, candidate);
+      }
+      final newKey = SmartScriptKey.fromEntity(candidate);
+      persistedKey.value = newKey;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
     }
   }
 
-  SmartScriptEntity _collectFromControllers() {
+  SmartScriptEntity _collectCandidate() {
     return SmartScriptEntity(
       entryOrGuid: entryOrGuidController.collect(),
       sourceType: sourceTypeController.collect(),
@@ -162,7 +149,7 @@ class SmartScriptDetailViewModel
     );
   }
 
-  void _initControllers(SmartScriptEntity t) {
+  void _applyCandidate(SmartScriptEntity t) {
     entryOrGuidController.init(t.entryOrGuid);
     sourceTypeController.init(t.sourceType);
     idController.init(t.id);
@@ -208,9 +195,10 @@ class SmartScriptDetailViewModel
           '${t.comment.isEmpty ? '' : ' - ${t.comment}'}',
       createdAt: DateTime.now(),
     );
-    GetIt.instance.get<ActivityLogRepository>().storeActivityLogBestEffort(log);
+    _activityLogService.recordBestEffort(log);
   }
 
-  String _labelFor(SmartScriptKey key) =>
-      '脚本 ${key.entryOrGuid}/${key.sourceType}/${key.id}/${key.link}';
+  void dispose() {
+    disposeControllers();
+  }
 }

@@ -48,9 +48,13 @@ void main() {
     expect(page, contains('final key = viewModel.persistedKey.value'));
     expect(page, contains('disabledIndexes: key == null'));
     expect(view, contains('required this.viewModel'));
-    expect(view, isNot(contains('GetIt.instance')));
+    expect(view, contains('GetIt.instance.get<RouterFacade>()'));
     expect(view, isNot(contains('enabled: !pkReadOnly')));
-    expect(listViewModel, contains('playerCreateInfoKey: info?.key'));
+    final listPage = File(
+      'lib/page/player_create_info/player_create_info_list_page.dart',
+    ).readAsStringSync();
+    expect(listViewModel, isNot(contains('RouterFacade')));
+    expect(listPage, contains('playerCreateInfoKey: info?.key'));
   });
 
   test('BriefPlayerCreateInfo 不暴露写模型 API', () {

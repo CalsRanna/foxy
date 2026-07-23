@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 
 void main() {
   test('Entity 精确覆盖 reference_loot_template 的 10 个标量物理列', () {
-    final json = const LootTemplateEntity().toJson();
+    final json = const ReferenceLootTemplateEntity().toJson();
     expect(json.keys.toList(), [
       'Entry',
       'Item',
@@ -34,7 +34,7 @@ void main() {
   });
 
   test('Entity 默认值与 AzerothCore core SQL 一致', () {
-    final entity = const LootTemplateEntity();
+    final entity = const ReferenceLootTemplateEntity();
     expect(entity.entry, 0);
     expect(entity.item, 0);
     expect(entity.reference, 0);
@@ -48,7 +48,7 @@ void main() {
   });
 
   test('fromJson 接受 MySQL 数值类型并保持十列 round-trip', () {
-    final entity = LootTemplateEntity.fromJson({
+    final entity = ReferenceLootTemplateEntity.fromJson({
       'Entry': 1001,
       'Item': 36917,
       'Reference': 0,
@@ -90,9 +90,12 @@ void main() {
   });
 
   test('Entity 拒绝 LootMgr 会跳过、修正或忽略的值', () {
-    expect(const LootTemplateEntity(item: 1).validate, returnsNormally);
     expect(
-      const LootTemplateEntity(
+      const ReferenceLootTemplateEntity(item: 1).validate,
+      returnsNormally,
+    );
+    expect(
+      const ReferenceLootTemplateEntity(
         item: 1,
         reference: 1001,
         minCount: 2,
@@ -101,35 +104,37 @@ void main() {
       returnsNormally,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, lootMode: 0).validate(),
+      () => const ReferenceLootTemplateEntity(item: 1, lootMode: 0).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, lootMode: 0x40).validate(),
+      () =>
+          const ReferenceLootTemplateEntity(item: 1, lootMode: 0x40).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, groupId: 128).validate(),
+      () => const ReferenceLootTemplateEntity(item: 1, groupId: 128).validate(),
       throwsRangeError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, minCount: 0).validate(),
+      () => const ReferenceLootTemplateEntity(item: 1, minCount: 0).validate(),
       throwsRangeError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, chance: 0).validate(),
+      () => const ReferenceLootTemplateEntity(item: 1, chance: 0).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, chance: 100.1).validate(),
+      () =>
+          const ReferenceLootTemplateEntity(item: 1, chance: 100.1).validate(),
       throwsRangeError,
     );
     expect(
-      () => const LootTemplateEntity(item: 1, minCount: 2).validate(),
+      () => const ReferenceLootTemplateEntity(item: 1, minCount: 2).validate(),
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(
+      () => const ReferenceLootTemplateEntity(
         item: 1,
         reference: 1001,
         questRequired: true,
@@ -137,7 +142,7 @@ void main() {
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(
+      () => const ReferenceLootTemplateEntity(
         item: 1,
         reference: 1001,
         minCount: 1,
@@ -146,7 +151,7 @@ void main() {
       throwsStateError,
     );
     expect(
-      () => const LootTemplateEntity(item: -1).validate(),
+      () => const ReferenceLootTemplateEntity(item: -1).validate(),
       throwsRangeError,
     );
   });
@@ -186,7 +191,6 @@ void main() {
     expect(view, contains('enabled: !viewModel.hasReference.value'));
     expect('Expanded(child:'.allMatches(view), hasLength(12));
     expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('description:')));
   });
 
   test('ViewModel 十个 Controller 与实体字段逐一初始化和收集', () {
@@ -226,6 +230,6 @@ void main() {
       view,
       contains('final ReferenceLootTemplateDetailViewModel viewModel'),
     );
-    expect(view, isNot(contains('GetIt.instance')));
+    expect(view, contains('GetIt.instance.get<RouterFacade>()'));
   });
 }

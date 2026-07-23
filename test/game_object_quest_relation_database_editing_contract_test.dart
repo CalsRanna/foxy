@@ -7,8 +7,8 @@ import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_ender_key.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_key.dart';
-import 'package:foxy/page/quest/game_object_quest_ender_view_model.dart';
-import 'package:foxy/page/quest/game_object_quest_starter_view_model.dart';
+import 'package:foxy/page/quest/game_object_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/page/quest/game_object_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -157,11 +157,11 @@ void main() {
       GetIt.instance.registerSingleton<GameObjectQuestStarterRepository>(
         repository,
       );
-      final viewModel = GameObjectQuestStarterViewModel();
+      final viewModel = GameObjectQuestStarterCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(questId: 20);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 20);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestStarterKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
@@ -185,11 +185,11 @@ void main() {
       GetIt.instance.registerSingleton<GameObjectQuestEnderRepository>(
         repository,
       );
-      final viewModel = GameObjectQuestEnderViewModel();
+      final viewModel = GameObjectQuestEnderCollectionEditorViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(questId: 20);
-      viewModel.selectRow(0);
-      expect(await viewModel.edit(), isTrue);
+      await viewModel.initSignals(parentKey: 20);
+      viewModel.selectedKey.value = viewModel.items.value[0].key;
+      await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestEnderKey(id: 10, quest: 20);
       viewModel.idController.init(11);
       viewModel.questController.init(21);
@@ -217,7 +217,7 @@ void main() {
         'lib/repository/game_object_quest_${domain}_repository.dart',
       ).readAsStringSync();
       final viewModel = File(
-        'lib/page/quest/game_object_quest_${domain}_view_model.dart',
+        'lib/page/quest/game_object_quest_${domain}_collection_editor_view_model.dart',
       ).readAsStringSync();
       final view = File(
         'lib/page/quest/game_object_quest_${domain}_view.dart',
@@ -230,7 +230,7 @@ void main() {
         reason: domain,
       );
       expect(viewModel, contains('final editingKey = signal<'), reason: domain);
-      expect(viewModel, contains('selected.key'), reason: domain);
+      expect(viewModel, contains('selectedKey.value = key'), reason: domain);
       expect(view, isNot(contains('readOnly:')), reason: domain);
       expect(view, contains('FoxyPagination('), reason: domain);
     }

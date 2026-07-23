@@ -1,3 +1,7 @@
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/quest_faction_reward/quest_faction_reward_list_view_model.dart';
@@ -77,7 +81,7 @@ class _QuestFactionRewardListPageState
   }
 
   Widget _buildTable() {
-    final rewards = viewModel.rewards.value;
+    final rewards = viewModel.items.value;
     final page = viewModel.page.value;
     final total = viewModel.total.value;
     final canCreate =
@@ -85,7 +89,7 @@ class _QuestFactionRewardListPageState
         !rewards.any((reward) => reward.id == 2);
     var createButton = ShadButton(
       leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: canCreate ? () => viewModel.navigateToDetail() : null,
+      onPressed: canCreate ? () => _navigateToDetail() : null,
       child: Text('新增'),
     );
     var pagination = FoxyPagination(
@@ -142,7 +146,7 @@ class _QuestFactionRewardListPageState
             return ShadTableCell.header(child: Text(headers[index]));
           },
           onRowDoubleTap: (row) {
-            viewModel.navigateToDetail(key: rewards[row].key);
+            _navigateToDetail(key: rewards[row].key);
           },
           onRowSecondaryTapDownWithDetails: (row, details) {
             showFoxyContextMenu(
@@ -152,14 +156,15 @@ class _QuestFactionRewardListPageState
                 ShadContextMenuItem(
                   leading: Icon(LucideIcons.squarePen, size: 16),
                   onPressed: () {
-                    viewModel.navigateToDetail(key: rewards[row].key);
+                    _navigateToDetail(key: rewards[row].key);
                   },
                   child: Text('编辑'),
                 ),
                 ShadContextMenuItem(
+                  enabled: !viewModel.submitting.value,
                   leading: Icon(LucideIcons.trash, size: 16),
                   onPressed: () {
-                    viewModel.deleteQuestFactionReward(rewards[row].key);
+                    _destroy(rewards[row].key);
                   },
                   child: Text('删除'),
                 ),
@@ -175,5 +180,32 @@ class _QuestFactionRewardListPageState
     var children = [toolbar, Expanded(child: layoutBuilder)];
     final column = Column(spacing: 16, children: children);
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
+  }
+
+  void _navigateToDetail({int? key}) {
+    final label = key != null ? '#$key' : '新建任务声望';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: QuestFactionRewardDetailRoute(questFactionRewardKey: key),
+      parentMenu: RouterMenu.questFactionReward,
+    );
+  }
+
+  Future<void> _destroy(int key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '确定要删除这条记录吗？此操作不可撤销。',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
   }
 }

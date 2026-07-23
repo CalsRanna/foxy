@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/loot_template_entity.dart';
+import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 
 @immutable
 final class ProspectingLootTemplateKey {
@@ -8,7 +8,9 @@ final class ProspectingLootTemplateKey {
 
   const ProspectingLootTemplateKey({required this.entry, required this.item});
 
-  factory ProspectingLootTemplateKey.fromEntity(LootTemplateEntity value) {
+  factory ProspectingLootTemplateKey.fromEntity(
+    ProspectingLootTemplateEntity value,
+  ) {
     return ProspectingLootTemplateKey(entry: value.entry, item: value.item);
   }
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:signals/signals_flutter.dart';
 
 class ScalingStatValueView extends StatelessWidget {
   final ScalingStatValueDetailViewModel viewModel;
@@ -288,19 +291,41 @@ class ScalingStatValueView extends StatelessWidget {
           ),
           Row(
             children: [
-              ShadButton(
-                onPressed: () => viewModel.save(context),
-                child: Text('保存'),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () => _persist(context),
+                  child: Text('保存'),
+                ),
               ),
               const SizedBox(width: 8),
-              ShadButton.ghost(
-                onPressed: () => viewModel.pop(),
-                child: Text('取消'),
-              ),
+              ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _persist(BuildContext context) async {
+    try {
+      await viewModel.persist();
+      if (!context.mounted) return;
+      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
+        '缩放属性值 ${viewModel.persistedKey.value}',
+      );
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('缩放属性值数据已保存')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 }
