@@ -4,9 +4,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
 
 void main() {
   test('Entity 精确覆盖 reference_loot_template 的 10 个标量物理列', () {
@@ -153,28 +152,24 @@ void main() {
   });
 
   test('Repository 使用正确复合主键并保持单表写入边界', () {
-    expect(
-      LootTemplateRepository.primaryKeyColumnsFor(LootTableType.reference),
-      {'Entry', 'Item'},
-    );
+    expect(ReferenceLootTemplateRepository.primaryKeyColumns, {
+      'Entry',
+      'Item',
+    });
     final source = File(
-      'lib/repository/loot_template_repository.dart',
+      'lib/repository/reference_loot_template_repository.dart',
     ).readAsStringSync();
     expect(source, isNot(contains(".table('item_template')")));
     expect(source, isNot(contains('reference.abs()')));
     expect(source, contains("builder = builder.groupBy('Entry')"));
-    expect(source, contains('tableType == LootTableType.reference'));
     expect(source, contains("nextMaxPlusOne(_table, 'Entry')"));
   });
 
   test('Repository 复制行时保留 Reference 并复用单表写入路径', () {
     final source = File(
-      'lib/repository/loot_template_repository.dart',
+      'lib/repository/reference_loot_template_repository.dart',
     ).readAsStringSync();
-    expect(
-      source,
-      contains('source.copyWith(item: await getNextItemId(source.entry))'),
-    );
+    expect(source, contains("entry: await nextMaxPlusOne(_table, 'Entry')"));
     expect(source, contains('await storeLootTemplate(copied);'));
     expect(source, isNot(contains("json['Reference'] = nextItem")));
   });
@@ -220,7 +215,10 @@ void main() {
       'lib/page/reference_loot_template/reference_loot_template_view.dart',
     ).readAsStringSync();
 
-    expect(page, contains('final LootTemplateKey? referenceLootTemplateKey'));
+    expect(
+      page,
+      contains('final ReferenceLootTemplateKey? referenceLootTemplateKey'),
+    );
     expect(page, contains('viewModel.persistedKey.value'));
     expect(page, contains('ReferenceLootTemplateView(viewModel: viewModel)'));
     expect(list, contains('key: templates[row].key'));

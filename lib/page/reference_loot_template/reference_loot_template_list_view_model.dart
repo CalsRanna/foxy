@@ -1,11 +1,10 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
+import 'package:foxy/entity/brief_reference_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
-import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/entity/reference_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
@@ -19,15 +18,15 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
   late final entryController = registerController(StringFieldController());
   late final nameController = registerController(StringFieldController());
 
-  final repository = LootTemplateRepository(LootTableType.reference);
+  final repository = GetIt.instance.get<ReferenceLootTemplateRepository>();
 
   final page = signal(1);
-  final templates = signal<List<BriefLootTemplateEntity>>([]);
+  final templates = signal<List<BriefReferenceLootTemplateEntity>>([]);
   final total = signal(0);
 
   final _routerFacade = GetIt.instance.get<RouterFacade>();
 
-  Future<void> copyReferenceLootTemplate(LootTemplateKey key) async {
+  Future<void> copyReferenceLootTemplate(ReferenceLootTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认复制',
@@ -45,7 +44,7 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<void> deleteReferenceLootTemplate(LootTemplateKey key) async {
+  Future<void> deleteReferenceLootTemplate(ReferenceLootTemplateKey key) async {
     try {
       final confirmed = await DialogUtil.instance.confirm(
         title: '确认删除',
@@ -81,7 +80,7 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  void navigateToDetail({LootTemplateKey? key}) {
+  void navigateToDetail({ReferenceLootTemplateKey? key}) {
     final name = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
     _routerFacade.navigateToDetail(
       label: name,
@@ -144,7 +143,7 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  Future<List<BriefLootTemplateEntity>> _searchEntries() async {
+  Future<List<BriefReferenceLootTemplateEntity>> _searchEntries() async {
     return repository.getBriefLootTemplateRows(
       filter: _buildFilter(),
       page: page.value,

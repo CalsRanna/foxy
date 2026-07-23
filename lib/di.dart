@@ -161,6 +161,15 @@ import 'package:foxy/repository/item_visuals_repository.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/repository/lock_repository.dart';
+import 'package:foxy/repository/creature_loot_template_repository.dart';
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
+import 'package:foxy/repository/skinning_loot_template_repository.dart';
+import 'package:foxy/repository/item_loot_template_repository.dart';
+import 'package:foxy/repository/disenchant_loot_template_repository.dart';
+import 'package:foxy/repository/prospecting_loot_template_repository.dart';
+import 'package:foxy/repository/milling_loot_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
+import 'package:foxy/repository/game_object_loot_template_repository.dart';
 import 'package:foxy/repository/light_repository.dart';
 import 'package:foxy/repository/liquid_type_repository.dart';
 import 'package:foxy/repository/map_info_repository.dart';
@@ -352,6 +361,17 @@ class DI {
     _instance.registerLazySingleton(() => SpellItemEnchantmentRepository());
     _instance.registerLazySingleton(() => SpellLinkedSpellRepository());
     _instance.registerLazySingleton(() => SpellLootTemplateRepository());
+    _instance.registerLazySingleton(() => CreatureLootTemplateRepository());
+    _instance.registerLazySingleton(
+      () => PickpocketingLootTemplateRepository(),
+    );
+    _instance.registerLazySingleton(() => SkinningLootTemplateRepository());
+    _instance.registerLazySingleton(() => ItemLootTemplateRepository());
+    _instance.registerLazySingleton(() => DisenchantLootTemplateRepository());
+    _instance.registerLazySingleton(() => ProspectingLootTemplateRepository());
+    _instance.registerLazySingleton(() => MillingLootTemplateRepository());
+    _instance.registerLazySingleton(() => ReferenceLootTemplateRepository());
+    _instance.registerLazySingleton(() => GameObjectLootTemplateRepository());
     _instance.registerLazySingleton(() => SpellRangeRepository());
     _instance.registerLazySingleton(() => SpellRankRepository());
     _instance.registerLazySingleton(() => SpellRepository());

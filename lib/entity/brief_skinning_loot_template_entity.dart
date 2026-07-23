@@ -1,8 +1,6 @@
-import 'package:foxy/entity/loot_table_type.dart';
-import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/entity/skinning_loot_template_key.dart';
 
-/// 掉落模板行列表展示模型。
-class BriefLootTemplateEntity {
+class BriefSkinningLootTemplateEntity {
   final int entry;
   final int item;
   final int reference;
@@ -15,9 +13,8 @@ class BriefLootTemplateEntity {
   final String itemLocaleName;
   final int itemQuality;
   final String itemIcon;
-  final LootTemplateKey key;
 
-  const BriefLootTemplateEntity({
+  const BriefSkinningLootTemplateEntity({
     this.entry = 0,
     this.item = 0,
     this.reference = 0,
@@ -30,39 +27,27 @@ class BriefLootTemplateEntity {
     this.itemLocaleName = '',
     this.itemQuality = 0,
     this.itemIcon = '',
-    required this.key,
   });
 
-  factory BriefLootTemplateEntity.fromJson(
-    Map<String, dynamic> json, {
-    required LootTableType tableType,
-  }) {
-    final entry = json['Entry'] ?? 0;
-    final item = json['Item'] ?? 0;
-    final reference = json['Reference'] ?? 0;
-    final groupId = json['GroupId'] ?? 0;
-    return BriefLootTemplateEntity(
-      entry: entry,
-      item: item,
-      reference: reference,
+  factory BriefSkinningLootTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSkinningLootTemplateEntity(
+      entry: json['Entry'] ?? 0,
+      item: json['Item'] ?? 0,
+      reference: json['Reference'] ?? 0,
       chance: (json['Chance'] as num?)?.toDouble() ?? 100,
       questRequired: (json['QuestRequired'] ?? 0) == 1,
-      groupId: groupId,
+      groupId: json['GroupId'] ?? 0,
       minCount: json['MinCount'] ?? 1,
       maxCount: json['MaxCount'] ?? 1,
       itemName: json['name'] ?? '',
       itemLocaleName: json['localeName'] ?? '',
       itemQuality: json['Quality'] ?? 0,
       itemIcon: json['InventoryIcon0'] ?? '',
-      key: LootTemplateKey.fromValues(
-        tableType,
-        entry: entry,
-        item: item,
-        reference: reference,
-        groupId: groupId,
-      ),
     );
   }
+
+  SkinningLootTemplateKey get key =>
+      SkinningLootTemplateKey(entry: entry, item: item);
 
   String get displayName =>
       itemLocaleName.isNotEmpty ? itemLocaleName : itemName;

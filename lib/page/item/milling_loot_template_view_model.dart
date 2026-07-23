@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/brief_loot_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
+import 'package:foxy/entity/brief_milling_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/entity/milling_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/milling_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -24,8 +23,8 @@ class MillingLootTemplateViewModel
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   final entry = signal(0);
-  final editingKey = signal<LootTemplateKey?>(null);
-  final items = signal<List<BriefLootTemplateEntity>>([]);
+  final editingKey = signal<MillingLootTemplateKey?>(null);
+  final items = signal<List<BriefMillingLootTemplateEntity>>([]);
   final page = signal(1);
   final selectedIndex = signal<int?>(null);
   final total = signal(0);
@@ -45,7 +44,7 @@ class MillingLootTemplateViewModel
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  final repository = LootTemplateRepository(LootTableType.milling);
+  final repository = GetIt.instance.get<MillingLootTemplateRepository>();
 
   LootTemplateEntity collectFromForm() {
     return LootTemplateEntity(

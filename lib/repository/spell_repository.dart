@@ -25,7 +25,6 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<int> countSpells({SpellFilterEntity? filter}) async {
     var builder = laconic.table('$_table AS ds');
-    builder.select(['ds.ID']);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }

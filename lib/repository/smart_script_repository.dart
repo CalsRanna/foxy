@@ -30,7 +30,6 @@ class SmartScriptRepository with RepositoryMixin {
 
   Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
     var builder = laconic.table(_table);
-    builder.select(['entryorguid']);
     builder = _applyFilter(builder, filter);
     return builder.count();
   }

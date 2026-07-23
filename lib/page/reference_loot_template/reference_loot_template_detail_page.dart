@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/loot_template_key.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_view.dart';
+import 'package:foxy/entity/reference_loot_template_key.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 @RoutePage()
 class ReferenceLootTemplateDetailPage extends StatefulWidget {
-  final LootTemplateKey? referenceLootTemplateKey;
+  final ReferenceLootTemplateKey? referenceLootTemplateKey;
 
   const ReferenceLootTemplateDetailPage({
     super.key,

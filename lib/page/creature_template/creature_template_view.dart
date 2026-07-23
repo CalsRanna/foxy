@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
@@ -412,10 +411,7 @@ class CreatureTemplateView extends StatelessWidget {
     final lootInput = FoxyFormItem(
       label: '击杀掉落模板',
       child: FoxyEntityPicker(
-        delegate: FoxyEntityPickerDelegates.lootTemplate(
-          LootTableType.creature,
-          '击杀掉落',
-        ),
+        delegate: FoxyEntityPickerDelegates.creatureLoot,
         controller: viewModel.lootIdController,
         placeholder: 'lootid',
       ),
@@ -423,10 +419,7 @@ class CreatureTemplateView extends StatelessWidget {
     final pickpocketLootInput = FoxyFormItem(
       label: '偷窃掉落模板',
       child: FoxyEntityPicker(
-        delegate: FoxyEntityPickerDelegates.lootTemplate(
-          LootTableType.pickpocket,
-          '偷窃掉落',
-        ),
+        delegate: FoxyEntityPickerDelegates.pickpocketLoot,
         controller: viewModel.pickpocketLootController,
         placeholder: 'pickpocketloot',
       ),
@@ -434,10 +427,7 @@ class CreatureTemplateView extends StatelessWidget {
     final skinLootInput = FoxyFormItem(
       label: '剥皮掉落模板',
       child: FoxyEntityPicker(
-        delegate: FoxyEntityPickerDelegates.lootTemplate(
-          LootTableType.skinning,
-          '剥皮掉落',
-        ),
+        delegate: FoxyEntityPickerDelegates.skinningLoot,
         controller: viewModel.skinLootController,
         placeholder: 'skinloot',
       ),

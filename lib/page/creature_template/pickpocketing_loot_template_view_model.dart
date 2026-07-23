@@ -1,14 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:foxy/entity/brief_loot_template_entity.dart';
+import 'package:foxy/entity/brief_pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/entity/loot_table_type.dart';
 import 'package:foxy/entity/loot_template_entity.dart';
-import 'package:foxy/entity/loot_template_key.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
-import 'package:foxy/repository/loot_template_repository.dart';
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -27,8 +26,8 @@ class PickpocketingLootTemplateViewModel
 
   final creatureId = signal(0);
   final creatureTemplate = signal<CreatureTemplateEntity?>(null);
-  final editingKey = signal<LootTemplateKey?>(null);
-  final items = signal<List<BriefLootTemplateEntity>>([]);
+  final editingKey = signal<PickpocketingLootTemplateKey?>(null);
+  final items = signal<List<BriefPickpocketingLootTemplateEntity>>([]);
   final page = signal(1);
   final selectedIndex = signal<int?>(null);
   final total = signal(0);
@@ -46,7 +45,7 @@ class PickpocketingLootTemplateViewModel
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  final repository = LootTemplateRepository(LootTableType.pickpocket);
+  final repository = GetIt.instance.get<PickpocketingLootTemplateRepository>();
   final _creatureRepository = GetIt.instance.get<CreatureTemplateRepository>();
 
   /// 从表单收集数据
