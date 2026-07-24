@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_char_title_entity.dart';
+import 'package:foxy/entity/char_title_entity.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {

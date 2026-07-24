@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_trainer_key.dart';
+import 'package:foxy/entity/npc_trainer_entity.dart';
 
 /// 训练师技能列表展示模型（含 DBC 技能名称）。
 class BriefNpcTrainerEntity {

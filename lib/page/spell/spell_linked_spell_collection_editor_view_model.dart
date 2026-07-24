@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
-import 'package:foxy/entity/spell_linked_spell_key.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/spell_linked_spell_entity_validation_mixin.dart';

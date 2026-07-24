@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/npc_vendor_key.dart';
+import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';

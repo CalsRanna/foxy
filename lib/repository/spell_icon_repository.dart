@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
 import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

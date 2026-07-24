@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_creature_loot_template_entity.dart';
-import 'package:foxy/entity/creature_loot_template_key.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

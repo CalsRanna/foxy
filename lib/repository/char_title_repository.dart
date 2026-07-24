@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_char_title_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/char_title_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';

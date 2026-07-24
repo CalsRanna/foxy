@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/skinning_loot_template_key.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';

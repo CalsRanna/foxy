@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_gossip_menu_option_entity.dart';
-import 'package:foxy/entity/brief_gossip_menu_option_locale_entity.dart';
+import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_key.dart';
-import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_locale_key.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
@@ -22,6 +20,8 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -83,9 +83,14 @@ void main() {
       final optionSource = File(
         'lib/entity/brief_gossip_menu_option_entity.dart',
       ).readAsStringSync();
-      final localeSource = File(
-        'lib/entity/brief_gossip_menu_option_locale_entity.dart',
-      ).readAsStringSync();
+      final localeLibrarySource = readLocalDartLibrarySource(
+        'lib/entity/gossip_menu_option_locale_entity.dart',
+      );
+      final localeSource = localeLibrarySource.substring(
+        localeLibrarySource.indexOf(
+          'final class BriefGossipMenuOptionLocaleEntity',
+        ),
+      );
       expect(optionSource, isNot(contains('verifiedBuild')));
       expect(localeSource, isNot(contains('boxText')));
     });

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_creature_movement_info_entity.dart';
+import 'package:foxy/entity/creature_movement_info_entity.dart';
 
 void main() {
   test('CreatureMovementInfo 使用独立 Brief 和物理标量 key', () {

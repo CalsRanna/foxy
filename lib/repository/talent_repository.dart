@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_talent_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

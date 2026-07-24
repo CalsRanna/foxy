@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_area_entity.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
-import 'package:foxy/entity/spell_area_key.dart';
 
 void main() {
   test('SpellAreaKey 和 Brief 覆盖六列物理主键', () {

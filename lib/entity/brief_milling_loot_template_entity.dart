@@ -1,4 +1,4 @@
-import 'package:foxy/entity/milling_loot_template_key.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
 
 class BriefMillingLootTemplateEntity {
   final int entry;

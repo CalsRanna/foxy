@@ -1,4 +1,4 @@
-import 'package:foxy/entity/item_loot_template_key.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
 
 class BriefItemLootTemplateEntity {
   final int entry;

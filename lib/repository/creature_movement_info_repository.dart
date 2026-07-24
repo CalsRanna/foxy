@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

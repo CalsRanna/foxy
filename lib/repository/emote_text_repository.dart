@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

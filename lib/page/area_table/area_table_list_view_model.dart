@@ -1,6 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_filter_entity.dart';
-import 'package:foxy/entity/brief_area_table_entity.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/area_table_repository.dart';

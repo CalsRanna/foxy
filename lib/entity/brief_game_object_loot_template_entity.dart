@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_loot_template_key.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 
 class BriefGameObjectLootTemplateEntity {
   final int entry;

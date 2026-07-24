@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_bonus_data_entity.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_key.dart';
 
 void main() {
   test('ItemEnchantmentTemplateKey 和 Brief 覆盖 entry + ench', () {

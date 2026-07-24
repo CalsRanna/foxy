@@ -1,4 +1,4 @@
-import 'package:foxy/entity/smart_script_key.dart';
+import 'package:foxy/entity/smart_script_entity.dart';
 
 class BriefSmartScriptEntity {
   final int entryOrGuid;

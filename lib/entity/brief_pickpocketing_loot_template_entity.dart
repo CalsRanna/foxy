@@ -1,4 +1,4 @@
-import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 
 class BriefPickpocketingLootTemplateEntity {
   final int entry;

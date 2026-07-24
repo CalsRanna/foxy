@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
-import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';

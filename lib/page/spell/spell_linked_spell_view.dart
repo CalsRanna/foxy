@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_linked_spell_key.dart';
+import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/page/spell/spell_linked_spell_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';

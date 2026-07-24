@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_taxi_path_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
 
 void main() {

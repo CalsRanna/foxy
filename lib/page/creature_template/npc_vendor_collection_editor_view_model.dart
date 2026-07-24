@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
-import 'package:foxy/entity/npc_vendor_key.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/npc_vendor_entity_validation_mixin.dart';

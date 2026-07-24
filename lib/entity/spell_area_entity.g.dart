@@ -114,3 +114,109 @@ mixin _SpellAreaEntityMixin {
         ')';
   }
 }
+
+final class SpellAreaKey {
+  final int spell;
+  final int area;
+  final int questStart;
+  final int auraSpell;
+  final int racemask;
+  final int gender;
+
+  const SpellAreaKey({
+    required this.spell,
+    required this.area,
+    required this.questStart,
+    required this.auraSpell,
+    required this.racemask,
+    required this.gender,
+  });
+
+  factory SpellAreaKey.fromEntity(SpellAreaEntity entity) {
+    return SpellAreaKey(
+      spell: entity.spell,
+      area: entity.area,
+      questStart: entity.questStart,
+      auraSpell: entity.auraSpell,
+      racemask: entity.racemask,
+      gender: entity.gender,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SpellAreaKey &&
+            spell == other.spell &&
+            area == other.area &&
+            questStart == other.questStart &&
+            auraSpell == other.auraSpell &&
+            racemask == other.racemask &&
+            gender == other.gender;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([spell, area, questStart, auraSpell, racemask, gender]);
+
+  @override
+  String toString() {
+    return 'SpellAreaKey('
+        'spell: $spell, '
+        'area: $area, '
+        'questStart: $questStart, '
+        'auraSpell: $auraSpell, '
+        'racemask: $racemask, '
+        'gender: $gender'
+        ')';
+  }
+}
+
+final class BriefSpellAreaEntity {
+  final int spell;
+  final int area;
+  final int questStart;
+  final int questEnd;
+  final int auraSpell;
+  final int racemask;
+  final int gender;
+  final int questStartStatus;
+  final int questEndStatus;
+
+  const BriefSpellAreaEntity({
+    this.spell = 0,
+    this.area = 0,
+    this.questStart = 0,
+    this.questEnd = 0,
+    this.auraSpell = 0,
+    this.racemask = 0,
+    this.gender = 2,
+    this.questStartStatus = 64,
+    this.questEndStatus = 11,
+  });
+
+  factory BriefSpellAreaEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellAreaEntity(
+      spell: (json['spell'] as num?)?.toInt() ?? 0,
+      area: (json['area'] as num?)?.toInt() ?? 0,
+      questStart: (json['quest_start'] as num?)?.toInt() ?? 0,
+      questEnd: (json['quest_end'] as num?)?.toInt() ?? 0,
+      auraSpell: (json['aura_spell'] as num?)?.toInt() ?? 0,
+      racemask: (json['racemask'] as num?)?.toInt() ?? 0,
+      gender: (json['gender'] as num?)?.toInt() ?? 2,
+      questStartStatus: (json['quest_start_status'] as num?)?.toInt() ?? 64,
+      questEndStatus: (json['quest_end_status'] as num?)?.toInt() ?? 11,
+    );
+  }
+
+  SpellAreaKey get key {
+    return SpellAreaKey(
+      spell: spell,
+      area: area,
+      questStart: questStart,
+      auraSpell: auraSpell,
+      racemask: racemask,
+      gender: gender,
+    );
+  }
+}

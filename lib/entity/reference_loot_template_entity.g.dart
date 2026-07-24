@@ -116,3 +116,35 @@ mixin _ReferenceLootTemplateEntityMixin {
         ')';
   }
 }
+
+final class ReferenceLootTemplateKey {
+  final int entry;
+  final int item;
+
+  const ReferenceLootTemplateKey({required this.entry, required this.item});
+
+  factory ReferenceLootTemplateKey.fromEntity(
+    ReferenceLootTemplateEntity entity,
+  ) {
+    return ReferenceLootTemplateKey(entry: entity.entry, item: entity.item);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is ReferenceLootTemplateKey &&
+            entry == other.entry &&
+            item == other.item;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, item]);
+
+  @override
+  String toString() {
+    return 'ReferenceLootTemplateKey('
+        'entry: $entry, '
+        'item: $item'
+        ')';
+  }
+}

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/condition_key.dart';
+import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';

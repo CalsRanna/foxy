@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_quest_item_key.dart';
+import 'package:foxy/entity/game_object_quest_item_entity.dart';
 
 class BriefGameObjectQuestItemEntity {
   final int gameObjectEntry;

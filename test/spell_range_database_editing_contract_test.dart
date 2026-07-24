@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_range_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 
 void main() {
@@ -35,13 +34,5 @@ void main() {
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
     expect(source, contains('storeDbcLocaleField(id, field, locales)'));
-  });
-
-  test('BriefSpellRange 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_spell_range_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson')));
-    expect(source, isNot(contains('copyWith')));
   });
 }

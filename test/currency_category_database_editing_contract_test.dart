@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_currency_category_entity.dart';
+import 'package:foxy/entity/currency_category_entity.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {

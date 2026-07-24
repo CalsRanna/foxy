@@ -1,9 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_quest_offer_reward_entity.dart';
-import 'package:foxy/entity/brief_quest_request_items_entity.dart';
-import 'package:foxy/entity/brief_quest_template_addon_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
 import 'package:foxy/entity/quest_request_items_entity.dart';
 import 'package:foxy/entity/quest_template_addon_entity.dart';

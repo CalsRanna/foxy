@@ -1,6 +1,5 @@
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_category_filter_entity.dart';
-import 'package:foxy/entity/brief_achievement_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';

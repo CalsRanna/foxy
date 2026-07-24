@@ -79,3 +79,70 @@ mixin _GameObjectTemplateLocaleEntityMixin {
         ')';
   }
 }
+
+final class GameObjectTemplateLocaleKey {
+  final int entry;
+  final String locale;
+
+  const GameObjectTemplateLocaleKey({
+    required this.entry,
+    required this.locale,
+  });
+
+  factory GameObjectTemplateLocaleKey.fromEntity(
+    GameObjectTemplateLocaleEntity entity,
+  ) {
+    return GameObjectTemplateLocaleKey(
+      entry: entity.entry,
+      locale: entity.locale,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is GameObjectTemplateLocaleKey &&
+            entry == other.entry &&
+            locale == other.locale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, locale]);
+
+  @override
+  String toString() {
+    return 'GameObjectTemplateLocaleKey('
+        'entry: $entry, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+final class BriefGameObjectTemplateLocaleEntity {
+  final int entry;
+  final String locale;
+  final String name;
+  final String castBarCaption;
+
+  const BriefGameObjectTemplateLocaleEntity({
+    this.entry = 0,
+    this.locale = '',
+    this.name = '',
+    this.castBarCaption = '',
+  });
+
+  factory BriefGameObjectTemplateLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefGameObjectTemplateLocaleEntity(
+      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      locale: json['locale']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      castBarCaption: json['castBarCaption']?.toString() ?? '',
+    );
+  }
+
+  GameObjectTemplateLocaleKey get key {
+    return GameObjectTemplateLocaleKey(entry: entry, locale: locale);
+  }
+}

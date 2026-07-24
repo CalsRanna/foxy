@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_gem_property_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 
 void main() {

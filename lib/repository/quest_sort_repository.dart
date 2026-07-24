@@ -1,6 +1,5 @@
-import 'package:foxy/entity/brief_quest_sort_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';

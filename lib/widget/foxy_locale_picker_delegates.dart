@@ -1,9 +1,7 @@
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/creature_template_locale_entity.dart';
-import 'package:foxy/entity/creature_template_locale_key.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
-import 'package:foxy/entity/game_object_template_locale_key.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/item_template_locale_key.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';

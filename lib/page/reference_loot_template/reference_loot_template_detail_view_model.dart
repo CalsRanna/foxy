@@ -1,6 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
-import 'package:foxy/entity/reference_loot_template_key.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/item_enchantment_template_key.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';

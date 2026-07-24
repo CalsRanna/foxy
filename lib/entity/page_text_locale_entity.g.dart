@@ -72,3 +72,58 @@ mixin _PageTextLocaleEntityMixin {
         ')';
   }
 }
+
+final class PageTextLocaleKey {
+  final int id;
+  final String locale;
+
+  const PageTextLocaleKey({required this.id, required this.locale});
+
+  factory PageTextLocaleKey.fromEntity(PageTextLocaleEntity entity) {
+    return PageTextLocaleKey(id: entity.id, locale: entity.locale);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PageTextLocaleKey && id == other.id && locale == other.locale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale]);
+
+  @override
+  String toString() {
+    return 'PageTextLocaleKey('
+        'id: $id, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+final class BriefPageTextLocaleEntity {
+  final int id;
+  final String locale;
+  final String text;
+  final int verifiedBuild;
+
+  const BriefPageTextLocaleEntity({
+    this.id = 0,
+    this.locale = '',
+    this.text = '',
+    this.verifiedBuild = 0,
+  });
+
+  factory BriefPageTextLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefPageTextLocaleEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      locale: json['locale']?.toString() ?? '',
+      text: json['Text']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  PageTextLocaleKey get key {
+    return PageTextLocaleKey(id: id, locale: locale);
+  }
+}

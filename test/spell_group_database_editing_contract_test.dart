@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_group_entity.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
-import 'package:foxy/entity/spell_group_key.dart';
 
 void main() {
   test('SpellGroupKey 和 Brief 覆盖 id + spell_id', () {

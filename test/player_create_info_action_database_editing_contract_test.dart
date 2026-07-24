@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_player_create_info_action_entity.dart';
-import 'package:foxy/entity/player_create_info_action_key.dart';
 import 'package:foxy/entity/player_create_info_action_entity.dart';
 
 void main() {
