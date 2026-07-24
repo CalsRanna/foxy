@@ -1,4 +1,4 @@
-import 'package:foxy/entity/brief_spell_entity.dart';
+import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_rank_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -48,10 +47,10 @@ class SpellRankRepository with RepositoryMixin {
           'sr.first_spell_id',
           'sr.spell_id',
           'sr.`rank` AS rank',
-          'fds.Name_lang_zhCN as First_Spell_Name_Lang_zhCN',
-          'fds.NameSubtext_lang_zhCN as First_Spell_NameSubtext_Lang_zhCN',
-          'ds.Name_lang_zhCN as Spell_Name_Lang_zhCN',
-          'ds.NameSubtext_lang_zhCN as Spell_NameSubtext_Lang_zhCN',
+          'fds.Name_lang_zhCN AS firstSpellName',
+          'fds.NameSubtext_lang_zhCN AS firstSpellSubtext',
+          'ds.Name_lang_zhCN AS spellName',
+          'ds.NameSubtext_lang_zhCN AS spellSubtext',
         ])
         .leftJoin(
           'foxy.dbc_spell AS fds',

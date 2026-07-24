@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -59,7 +58,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       'cdi.CreatureModelScale',
       'cdi.SizeClass',
       'cdi.BloodID',
-      'cmd.ModelName',
+      'cmd.ModelName AS modelName',
     ]);
     builder = _joinModelData(builder);
     builder = _applyFilter(builder, filter);

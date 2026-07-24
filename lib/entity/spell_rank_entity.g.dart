@@ -91,3 +91,39 @@ final class SpellRankKey {
         ')';
   }
 }
+
+final class BriefSpellRankEntity {
+  final int firstSpellId;
+  final int spellId;
+  final int rank;
+  final String firstSpellName;
+  final String firstSpellSubtext;
+  final String spellName;
+  final String spellSubtext;
+
+  const BriefSpellRankEntity({
+    this.firstSpellId = 0,
+    this.spellId = 0,
+    this.rank = 0,
+    this.firstSpellName = '',
+    this.firstSpellSubtext = '',
+    this.spellName = '',
+    this.spellSubtext = '',
+  });
+
+  factory BriefSpellRankEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellRankEntity(
+      firstSpellId: (json['first_spell_id'] as num?)?.toInt() ?? 0,
+      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
+      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      firstSpellName: json['firstSpellName']?.toString() ?? '',
+      firstSpellSubtext: json['firstSpellSubtext']?.toString() ?? '',
+      spellName: json['spellName']?.toString() ?? '',
+      spellSubtext: json['spellSubtext']?.toString() ?? '',
+    );
+  }
+
+  SpellRankKey get key {
+    return SpellRankKey(firstSpellId: firstSpellId, rank: rank);
+  }
+}

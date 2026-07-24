@@ -289,3 +289,31 @@ mixin _GameObjectTemplateEntityMixin {
         ')';
   }
 }
+
+final class BriefGameObjectTemplateEntity {
+  final int entry;
+  final int type;
+  final String name;
+  final double size;
+  final String localeName;
+
+  const BriefGameObjectTemplateEntity({
+    this.entry = 0,
+    this.type = 0,
+    this.name = '',
+    this.size = 1.0,
+    this.localeName = '',
+  });
+
+  factory BriefGameObjectTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectTemplateEntity(
+      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      type: (json['type'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
+      size: (json['size'] as num?)?.toDouble() ?? 1.0,
+      localeName: json['localeName']?.toString() ?? '',
+    );
+  }
+
+  int get key => entry;
+}

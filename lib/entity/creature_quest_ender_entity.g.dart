@@ -78,3 +78,30 @@ final class CreatureQuestEnderKey {
         ')';
   }
 }
+
+final class BriefCreatureQuestEnderEntity {
+  final int id;
+  final int quest;
+  final String name;
+  final String localeName;
+
+  const BriefCreatureQuestEnderEntity({
+    this.id = 0,
+    this.quest = 0,
+    this.name = '',
+    this.localeName = '',
+  });
+
+  factory BriefCreatureQuestEnderEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestEnderEntity(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      quest: (json['quest'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
+      localeName: json['localeName']?.toString() ?? '',
+    );
+  }
+
+  CreatureQuestEnderKey get key {
+    return CreatureQuestEnderKey(id: id, quest: quest);
+  }
+}

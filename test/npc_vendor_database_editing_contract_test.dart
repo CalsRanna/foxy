@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
@@ -11,6 +10,8 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
+import 'support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -45,9 +46,12 @@ void main() {
         brief.key,
         const NpcVendorKey(entry: 10, item: 20, extendedCost: 30),
       );
-      final source = File(
-        'lib/entity/brief_npc_vendor_entity.dart',
-      ).readAsStringSync();
+      final library = readLocalDartLibrarySource(
+        'lib/entity/npc_vendor_entity.dart',
+      );
+      final source = library.substring(
+        library.indexOf('final class BriefNpcVendorEntity'),
+      );
       expect(source, isNot(contains('verifiedBuild')));
     });
   });

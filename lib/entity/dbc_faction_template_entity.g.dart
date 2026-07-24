@@ -142,3 +142,40 @@ mixin _DbcFactionTemplateEntityMixin {
         ')';
   }
 }
+
+final class BriefDbcFactionTemplateEntity {
+  final int id;
+  final int faction;
+  final int flags;
+  final int factionGroup;
+  final int friendGroup;
+  final int enemyGroup;
+  final String factionNameZhCN;
+  final String factionNameEnUS;
+
+  const BriefDbcFactionTemplateEntity({
+    this.id = 0,
+    this.faction = 0,
+    this.flags = 0,
+    this.factionGroup = 0,
+    this.friendGroup = 0,
+    this.enemyGroup = 0,
+    this.factionNameZhCN = '',
+    this.factionNameEnUS = '',
+  });
+
+  factory BriefDbcFactionTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcFactionTemplateEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      faction: (json['Faction'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      factionGroup: (json['FactionGroup'] as num?)?.toInt() ?? 0,
+      friendGroup: (json['FriendGroup'] as num?)?.toInt() ?? 0,
+      enemyGroup: (json['EnemyGroup'] as num?)?.toInt() ?? 0,
+      factionNameZhCN: json['factionNameZhCN']?.toString() ?? '',
+      factionNameEnUS: json['factionNameEnUS']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

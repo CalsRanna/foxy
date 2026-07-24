@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_npc_vendor_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -41,9 +40,9 @@ class NpcVendorRepository with RepositoryMixin {
       'nv.maxcount',
       'nv.incrtime',
       'nv.ExtendedCost',
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
+      'it.name AS itemName',
+      if (localeEnabled) 'itl.Name AS itemLocaleName',
+      'it.Quality AS itemQuality',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

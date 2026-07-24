@@ -1,6 +1,5 @@
-import 'package:foxy/entity/brief_creature_loot_template_entity.dart';
-import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
+import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -95,10 +94,10 @@ class CreatureLootTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
+      'it.name AS itemName',
+      if (localeEnabled) 'itl.Name AS itemLocaleName',
+      'it.Quality AS itemQuality',
+      'didi.InventoryIcon0 AS itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
@@ -131,10 +130,10 @@ class CreatureLootTemplateRepository with RepositoryMixin {
     var builder = laconic.table('$_table AS lt');
     final fields = <String>[
       ..._briefFields('lt'),
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
+      'it.name AS itemName',
+      if (localeEnabled) 'itl.Name AS itemLocaleName',
+      'it.Quality AS itemQuality',
+      'didi.InventoryIcon0 AS itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

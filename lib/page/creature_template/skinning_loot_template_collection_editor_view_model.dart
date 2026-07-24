@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_skinning_loot_template_entity.dart';
 import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

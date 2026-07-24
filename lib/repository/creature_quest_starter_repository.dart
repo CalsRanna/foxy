@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_quest_starter_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -33,7 +32,7 @@ class CreatureQuestStarterRepository with RepositoryMixin {
       'cqs.id',
       'cqs.quest',
       'ct.name',
-      if (localeEnabled) 'ctl.Name',
+      if (localeEnabled) 'ctl.Name AS localeName',
     ];
     var builder = laconic.table('$_table AS cqs');
     builder = builder.select(fields);

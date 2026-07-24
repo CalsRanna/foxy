@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
 import 'package:foxy/entity/point_of_interest_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

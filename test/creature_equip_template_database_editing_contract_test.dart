@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';

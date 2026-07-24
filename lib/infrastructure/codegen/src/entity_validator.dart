@@ -33,7 +33,9 @@ final class EntityValidator {
     }
 
     final columns = <String>{};
+    final dartNames = <String>{};
     for (final field in model.fields) {
+      dartNames.add(field.dartName);
       if (field.columnName.trim().isEmpty) {
         _fail(
           '${model.className}.${field.dartName} 的物理列名不能为空。',
@@ -46,6 +48,33 @@ final class EntityValidator {
           '${model.className} 重复声明物理列名 ${field.columnName}。',
           element.getField(field.dartName) ?? element,
           '确保每个 @FoxyFullField.name 在 Entity 内唯一且区分大小写。',
+        );
+      }
+    }
+
+    final projectionNames = <String>{};
+    for (final field in model.briefProjectionFields) {
+      if (field.dartName.trim().isEmpty) {
+        _fail(
+          '${model.className} 的 Brief 投影字段名不能为空。',
+          element,
+          '为 FoxyBriefField 具名构造函数填写字段名。',
+        );
+      }
+      if (!RegExp(r'^[a-z][A-Za-z0-9]*$').hasMatch(field.dartName)) {
+        _fail(
+          '${model.className} 的 Brief 投影字段名 ${field.dartName} '
+              '不是合法 lowerCamelCase 标识符。',
+          element,
+          '使用合法的 Dart 字段名，并让 Repository 查询使用同名 alias。',
+        );
+      }
+      if (dartNames.contains(field.dartName) ||
+          !projectionNames.add(field.dartName)) {
+        _fail(
+          '${model.className} 重复声明 Brief 字段 ${field.dartName}。',
+          element,
+          '投影字段不能与 Full 字段或其他投影字段重名。',
         );
       }
     }
@@ -67,11 +96,15 @@ final class EntityValidator {
       final briefField = model.fields
           .where((field) => field.includeInBrief)
           .firstOrNull;
-      if (briefField != null) {
+      if (briefField != null || model.briefProjectionFields.isNotEmpty) {
         _fail(
-          '${model.className}.${briefField.dartName} 使用了 @FoxyBriefField，'
+          '${model.className}'
+              '${briefField == null ? '' : '.${briefField.dartName}'} '
+              '使用了 @FoxyBriefField，'
               '但 class 没有 @FoxyBriefEntity。',
-          element.getField(briefField.dartName) ?? element,
+          briefField == null
+              ? element
+              : element.getField(briefField.dartName) ?? element,
           '在 class 上添加 @FoxyBriefEntity，或移除字段注解。',
         );
       }

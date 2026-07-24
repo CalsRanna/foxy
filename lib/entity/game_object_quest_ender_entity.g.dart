@@ -80,3 +80,30 @@ final class GameObjectQuestEnderKey {
         ')';
   }
 }
+
+final class BriefGameObjectQuestEnderEntity {
+  final int id;
+  final int quest;
+  final String name;
+  final String localeName;
+
+  const BriefGameObjectQuestEnderEntity({
+    this.id = 0,
+    this.quest = 0,
+    this.name = '',
+    this.localeName = '',
+  });
+
+  factory BriefGameObjectQuestEnderEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectQuestEnderEntity(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      quest: (json['quest'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
+      localeName: json['localeName']?.toString() ?? '',
+    );
+  }
+
+  GameObjectQuestEnderKey get key {
+    return GameObjectQuestEnderKey(id: id, quest: quest);
+  }
+}

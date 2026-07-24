@@ -4,8 +4,19 @@ part 'spell_entity.g.dart';
 
 /// 法术（技能）完整模型 - 对应 foxy.dbc_spell 表
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('name')
+@FoxyBriefField.text('subtext')
+@FoxyBriefField.text('localeName')
+@FoxyBriefField.text('localeSubtext')
+@FoxyBriefField.text('description')
+@FoxyBriefField.text('localeDescription')
+@FoxyBriefField.text('auraDescription')
+@FoxyBriefField.text('localeAuraDescription')
+@FoxyBriefField.text('textureFilename')
 @FoxyFullEntity(table: 'foxy.dbc_spell')
 class SpellEntity with _SpellEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
@@ -947,4 +958,18 @@ class SpellEntity with _SpellEntityMixin {
 
   factory SpellEntity.fromJson(Map<String, dynamic> json) =>
       _SpellEntityMixin.fromJson(json);
+}
+
+extension BriefSpellEntityDisplay on BriefSpellEntity {
+  String get displayAuraDescription => localeAuraDescription.isNotEmpty
+      ? localeAuraDescription
+      : auraDescription;
+
+  String get displayDescription =>
+      localeDescription.isNotEmpty ? localeDescription : description;
+
+  String get displayName => localeName.isNotEmpty ? localeName : name;
+
+  String get displaySubtext =>
+      localeSubtext.isNotEmpty ? localeSubtext : subtext;
 }

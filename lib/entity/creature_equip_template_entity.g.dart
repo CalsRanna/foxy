@@ -121,3 +121,72 @@ final class CreatureEquipTemplateKey {
         ')';
   }
 }
+
+final class BriefCreatureEquipTemplateEntity {
+  final int creatureID;
+  final int id;
+  final int itemID1;
+  final int itemID2;
+  final int itemID3;
+  final int verifiedBuild;
+  final String name1;
+  final String localeName1;
+  final int quality1;
+  final String icon1;
+  final String name2;
+  final String localeName2;
+  final int quality2;
+  final String icon2;
+  final String name3;
+  final String localeName3;
+  final int quality3;
+  final String icon3;
+
+  const BriefCreatureEquipTemplateEntity({
+    this.creatureID = 0,
+    this.id = 0,
+    this.itemID1 = 0,
+    this.itemID2 = 0,
+    this.itemID3 = 0,
+    this.verifiedBuild = 0,
+    this.name1 = '',
+    this.localeName1 = '',
+    this.quality1 = 0,
+    this.icon1 = '',
+    this.name2 = '',
+    this.localeName2 = '',
+    this.quality2 = 0,
+    this.icon2 = '',
+    this.name3 = '',
+    this.localeName3 = '',
+    this.quality3 = 0,
+    this.icon3 = '',
+  });
+
+  factory BriefCreatureEquipTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureEquipTemplateEntity(
+      creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      name1: json['name1']?.toString() ?? '',
+      localeName1: json['localeName1']?.toString() ?? '',
+      quality1: (json['quality1'] as num?)?.toInt() ?? 0,
+      icon1: json['icon1']?.toString() ?? '',
+      name2: json['name2']?.toString() ?? '',
+      localeName2: json['localeName2']?.toString() ?? '',
+      quality2: (json['quality2'] as num?)?.toInt() ?? 0,
+      icon2: json['icon2']?.toString() ?? '',
+      name3: json['name3']?.toString() ?? '',
+      localeName3: json['localeName3']?.toString() ?? '',
+      quality3: (json['quality3'] as num?)?.toInt() ?? 0,
+      icon3: json['icon3']?.toString() ?? '',
+    );
+  }
+
+  CreatureEquipTemplateKey get key {
+    return CreatureEquipTemplateKey(creatureID: creatureID, id: id);
+  }
+}

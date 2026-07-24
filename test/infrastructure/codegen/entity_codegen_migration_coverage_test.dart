@@ -72,6 +72,44 @@ void main() {
     }
   });
 
+  test('生成型 Full Entity 的独立 Brief 只保留非标量投影例外', () {
+    final independentBriefsForGeneratedOwners = {
+      for (final file
+          in Directory('lib/entity').listSync().whereType<File>().where(
+            (file) =>
+                file.uri.pathSegments.last.startsWith('brief_') &&
+                file.path.endsWith('_entity.dart'),
+          ))
+        if (_generatedOwnerForBrief(file) != null) file.uri.pathSegments.last,
+    };
+
+    expect(independentBriefsForGeneratedOwners, {
+      'brief_item_enchantment_template_entity.dart',
+    });
+  });
+
+  test('Brief 投影 alias 只用于 SELECT，不进入 Repository 查询条件', () {
+    final violations = <String>[];
+    final queryClause = RegExp(
+      r'\b(?:where|orWhere|whereAny)\s*\(([\s\S]*?)\);',
+    );
+    final alias = RegExp(r'\sAS\s', caseSensitive: false);
+
+    for (final file
+        in Directory('lib/repository').listSync().whereType<File>().where(
+          (file) => file.path.endsWith('_repository.dart'),
+        )) {
+      final source = file.readAsStringSync();
+      for (final match in queryClause.allMatches(source)) {
+        if (alias.hasMatch(match.group(1)!)) {
+          violations.add(file.uri.pathSegments.last);
+        }
+      }
+    }
+
+    expect(violations, isEmpty);
+  });
+
   test('生成型 Full Entity 不依赖抽象字段 getter 或 lint 忽略', () {
     for (final file in fullFiles) {
       final source = file.readAsStringSync();
@@ -138,4 +176,11 @@ void main() {
     );
     expect(source, contains('file.deleteSync();'));
   });
+}
+
+File? _generatedOwnerForBrief(File briefFile) {
+  final briefName = briefFile.uri.pathSegments.last;
+  final owner = File('lib/entity/${briefName.substring('brief_'.length)}');
+  if (!owner.existsSync()) return null;
+  return owner.readAsStringSync().contains('@FoxyFullEntity') ? owner : null;
 }

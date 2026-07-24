@@ -2,9 +2,12 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'point_of_interest_entity.g.dart';
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeName')
 @FoxyFilterEntity()
 @FoxyFullEntity(table: 'points_of_interest')
 class PointOfInterestEntity with _PointOfInterestEntityMixin {
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
@@ -24,6 +27,7 @@ class PointOfInterestEntity with _PointOfInterestEntityMixin {
   @FoxyFullField('Importance')
   final int importance;
 
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Name')
   final String name;
@@ -40,4 +44,8 @@ class PointOfInterestEntity with _PointOfInterestEntityMixin {
 
   factory PointOfInterestEntity.fromJson(Map<String, dynamic> json) =>
       _PointOfInterestEntityMixin.fromJson(json);
+}
+
+extension BriefPointOfInterestEntityDisplay on BriefPointOfInterestEntity {
+  String get displayName => localeName.isNotEmpty ? localeName : name;
 }

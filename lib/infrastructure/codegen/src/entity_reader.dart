@@ -109,6 +109,9 @@ final class EntityReader {
       mixinName: mixinName,
       table: annotation.read('table').stringValue,
       fields: List.unmodifiable(fields),
+      briefProjectionFields: List.unmodifiable(
+        _readBriefProjectionFields(classElement),
+      ),
     );
     validator.validate(model, classElement);
     return model;
@@ -200,11 +203,7 @@ final class EntityReader {
       nonNullableType,
       nullable,
     );
-    final includeInBrief = _hasSingleAnnotation(
-      field,
-      _briefFieldChecker,
-      'FoxyBriefField',
-    );
+    final includeInBrief = _readPhysicalBriefField(field);
     final filterAnnotations = _filterFieldChecker.annotationsOf(field).toList();
     if (filterAnnotations.length > 1) {
       _fail(
@@ -226,6 +225,90 @@ final class EntityReader {
       nullable: nullable,
       key: full.peek('key')?.boolValue ?? false,
     );
+  }
+
+  bool _readPhysicalBriefField(FieldElement field) {
+    final annotations = _briefFieldChecker.annotationsOf(field).toList();
+    if (annotations.length > 1) {
+      _fail(
+        '${field.enclosingElement.name}.${field.name} 重复使用 @FoxyBriefField。',
+        field,
+        '只保留一个 @FoxyBriefField。',
+      );
+    }
+    if (annotations.isEmpty) return false;
+
+    final annotation = ConstantReader(annotations.single);
+    if (!annotation.read('name').isNull ||
+        !annotation.read('type').isNull ||
+        !annotation.read('defaultValue').isNull) {
+      _fail(
+        '${field.enclosingElement.name}.${field.name} 上只能使用'
+            '无参数的 @FoxyBriefField()。',
+        field,
+        'Brief 投影字段请使用 class 上的具名构造函数。',
+      );
+    }
+    return true;
+  }
+
+  List<EntityFieldModel> _readBriefProjectionFields(ClassElement classElement) {
+    final result = <EntityFieldModel>[];
+    for (final value in _briefFieldChecker.annotationsOf(classElement)) {
+      final annotation = ConstantReader(value);
+      final nameReader = annotation.read('name');
+      final typeReader = annotation.read('type');
+      if (nameReader.isNull || typeReader.isNull) {
+        _fail(
+          '${classElement.name} 上的 @FoxyBriefField 必须使用'
+              ' text/integer/decimal/boolean 具名构造函数。',
+          classElement,
+          '无参数的 @FoxyBriefField() 只能标注 Full Entity 字段。',
+        );
+      }
+
+      final name = nameReader.stringValue;
+      final typeIndex = typeReader.objectValue.getField('index')?.toIntValue();
+      if (typeIndex == null ||
+          typeIndex < 0 ||
+          typeIndex >= FoxyBriefFieldType.values.length) {
+        _fail(
+          '${classElement.name} 的 Brief 投影字段 $name 类型无法识别。',
+          classElement,
+          '使用 FoxyBriefField 的具名构造函数。',
+        );
+      }
+      final type = FoxyBriefFieldType.values[typeIndex];
+      final dartType = switch (type) {
+        FoxyBriefFieldType.boolean => 'bool',
+        FoxyBriefFieldType.decimal => 'double',
+        FoxyBriefFieldType.integer => 'int',
+        FoxyBriefFieldType.text => 'String',
+      };
+      final defaultObject = annotation.read('defaultValue').objectValue;
+      final defaultValue = _convertConstant(defaultObject, dartType);
+      if (defaultValue == null) {
+        _fail(
+          '${classElement.name} 的 Brief 投影字段 $name 默认值类型不匹配。',
+          classElement,
+          '通过对应具名构造函数传入正确类型的 defaultValue。',
+        );
+      }
+
+      result.add(
+        EntityFieldModel(
+          dartName: name,
+          dartType: dartType,
+          columnName: name,
+          constructorDefaultValue: defaultValue,
+          filter: null,
+          includeInBrief: true,
+          nullable: false,
+          key: false,
+        ),
+      );
+    }
+    return result;
   }
 
   Object? _readConstructorDefault(

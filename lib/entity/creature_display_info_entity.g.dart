@@ -161,3 +161,35 @@ mixin _CreatureDisplayInfoEntityMixin {
         ')';
   }
 }
+
+final class BriefCreatureDisplayInfoEntity {
+  final int id;
+  final int modelId;
+  final double creatureModelScale;
+  final int sizeClass;
+  final int bloodID;
+  final String modelName;
+
+  const BriefCreatureDisplayInfoEntity({
+    this.id = 0,
+    this.modelId = 0,
+    this.creatureModelScale = 1.0,
+    this.sizeClass = 0,
+    this.bloodID = 0,
+    this.modelName = '',
+  });
+
+  factory BriefCreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureDisplayInfoEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      modelId: (json['ModelID'] as num?)?.toInt() ?? 0,
+      creatureModelScale:
+          (json['CreatureModelScale'] as num?)?.toDouble() ?? 1.0,
+      sizeClass: (json['SizeClass'] as num?)?.toInt() ?? 0,
+      bloodID: (json['BloodID'] as num?)?.toInt() ?? 0,
+      modelName: json['modelName']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

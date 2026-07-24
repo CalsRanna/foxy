@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

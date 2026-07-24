@@ -1,6 +1,5 @@
-import 'package:foxy/entity/brief_spell_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
@@ -48,15 +47,15 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     var builder = laconic.table('$_table AS ds');
     const fields = [
       'ds.ID',
-      'ds.Name_lang_enUS',
-      'ds.NameSubtext_lang_enUS',
-      'ds.Name_lang_zhCN',
-      'ds.NameSubtext_lang_zhCN',
-      'ds.Description_lang_enUS',
-      'ds.Description_lang_zhCN',
-      'ds.AuraDescription_lang_enUS',
-      'ds.AuraDescription_lang_zhCN',
-      'dsi.TextureFilename',
+      'ds.Name_lang_enUS AS name',
+      'ds.NameSubtext_lang_enUS AS subtext',
+      'ds.Name_lang_zhCN AS localeName',
+      'ds.NameSubtext_lang_zhCN AS localeSubtext',
+      'ds.Description_lang_enUS AS description',
+      'ds.Description_lang_zhCN AS localeDescription',
+      'ds.AuraDescription_lang_enUS AS auraDescription',
+      'ds.AuraDescription_lang_zhCN AS localeAuraDescription',
+      'dsi.TextureFilename AS textureFilename',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

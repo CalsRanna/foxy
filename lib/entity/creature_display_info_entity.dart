@@ -4,11 +4,15 @@ part 'creature_display_info_entity.g.dart';
 
 /// 生物显示信息 — 对应 foxy.dbc_creature_display_info 表
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('modelName')
 @FoxyFullEntity(table: 'foxy.dbc_creature_display_info')
 class CreatureDisplayInfoEntity with _CreatureDisplayInfoEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('ModelID')
   final int modelId;
 
@@ -18,6 +22,7 @@ class CreatureDisplayInfoEntity with _CreatureDisplayInfoEntityMixin {
   @FoxyFullField('ExtendedDisplayInfoID')
   final int extendedDisplayInfoId;
 
+  @FoxyBriefField()
   @FoxyFullField('CreatureModelScale')
   final double creatureModelScale;
 
@@ -36,9 +41,11 @@ class CreatureDisplayInfoEntity with _CreatureDisplayInfoEntityMixin {
   @FoxyFullField('PortraitTextureName')
   final String portraitTextureName;
 
+  @FoxyBriefField()
   @FoxyFullField('SizeClass')
   final int sizeClass;
 
+  @FoxyBriefField()
   @FoxyFullField('BloodID')
   final int bloodID;
 

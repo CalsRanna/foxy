@@ -1784,3 +1784,46 @@ mixin _SpellEntityMixin {
         ')';
   }
 }
+
+final class BriefSpellEntity {
+  final int id;
+  final String name;
+  final String subtext;
+  final String localeName;
+  final String localeSubtext;
+  final String description;
+  final String localeDescription;
+  final String auraDescription;
+  final String localeAuraDescription;
+  final String textureFilename;
+
+  const BriefSpellEntity({
+    this.id = 0,
+    this.name = '',
+    this.subtext = '',
+    this.localeName = '',
+    this.localeSubtext = '',
+    this.description = '',
+    this.localeDescription = '',
+    this.auraDescription = '',
+    this.localeAuraDescription = '',
+    this.textureFilename = '',
+  });
+
+  factory BriefSpellEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
+      subtext: json['subtext']?.toString() ?? '',
+      localeName: json['localeName']?.toString() ?? '',
+      localeSubtext: json['localeSubtext']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      localeDescription: json['localeDescription']?.toString() ?? '',
+      auraDescription: json['auraDescription']?.toString() ?? '',
+      localeAuraDescription: json['localeAuraDescription']?.toString() ?? '',
+      textureFilename: json['textureFilename']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

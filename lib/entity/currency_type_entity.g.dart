@@ -72,3 +72,34 @@ mixin _CurrencyTypeEntityMixin {
         ')';
   }
 }
+
+final class BriefCurrencyTypeEntity {
+  final int id;
+  final int itemId;
+  final int categoryId;
+  final int bitIndex;
+  final String itemName;
+  final String localeItemName;
+
+  const BriefCurrencyTypeEntity({
+    this.id = 0,
+    this.itemId = 0,
+    this.categoryId = 0,
+    this.bitIndex = 0,
+    this.itemName = '',
+    this.localeItemName = '',
+  });
+
+  factory BriefCurrencyTypeEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCurrencyTypeEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      itemId: (json['ItemID'] as num?)?.toInt() ?? 0,
+      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
+      bitIndex: (json['BitIndex'] as num?)?.toInt() ?? 0,
+      itemName: json['itemName']?.toString() ?? '',
+      localeItemName: json['localeItemName']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

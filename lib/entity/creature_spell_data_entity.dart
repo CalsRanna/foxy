@@ -4,20 +4,30 @@ part 'creature_spell_data_entity.g.dart';
 
 /// 宠物技能数据 — 对应 foxy.dbc_creature_spell_data 表
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('spellName1')
+@FoxyBriefField.text('spellName2')
+@FoxyBriefField.text('spellName3')
+@FoxyBriefField.text('spellName4')
 @FoxyFullEntity(table: 'foxy.dbc_creature_spell_data')
 class CreatureSpellDataEntity with _CreatureSpellDataEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('Spells0')
   final int spells0;
 
+  @FoxyBriefField()
   @FoxyFullField('Spells1')
   final int spells1;
 
+  @FoxyBriefField()
   @FoxyFullField('Spells2')
   final int spells2;
 
+  @FoxyBriefField()
   @FoxyFullField('Spells3')
   final int spells3;
 

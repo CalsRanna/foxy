@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_prospecting_loot_template_entity.dart';
 import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

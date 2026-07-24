@@ -3,9 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/page_text_constants.dart';
-import 'package:foxy/entity/brief_page_text_entity.dart';
-import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/page_text_locale_entity.dart';
 
 void main() {
   test('page_text Entity 精确覆盖四个标量物理列', () {

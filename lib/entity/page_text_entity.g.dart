@@ -72,3 +72,28 @@ mixin _PageTextEntityMixin {
         ')';
   }
 }
+
+final class BriefPageTextEntity {
+  final int id;
+  final String text;
+  final int nextPageId;
+  final String localeText;
+
+  const BriefPageTextEntity({
+    this.id = 0,
+    this.text = '',
+    this.nextPageId = 0,
+    this.localeText = '',
+  });
+
+  factory BriefPageTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefPageTextEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      text: json['Text']?.toString() ?? '',
+      nextPageId: (json['NextPageID'] as num?)?.toInt() ?? 0,
+      localeText: json['localeText']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}
