@@ -65,18 +65,19 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
   ) async {}
 
   Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    for (final key in json.keys.toList()) {
-      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
-        json['`$key`'] = json.remove(key);
-      }
-    }
-    return json;
+    return {
+      for (final entry in json.entries)
+        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
+          '`${entry.key}`': entry.value
+        else
+          entry.key: entry.value,
+    };
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, SpellRankKey key) {
     var query = builder;
     query = query.where('first_spell_id', key.firstSpellId);
-    query = query.where('rank', key.rank);
+    query = query.where('`rank`', key.rank);
     return query;
   }
 }

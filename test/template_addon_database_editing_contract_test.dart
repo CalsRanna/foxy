@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/entity/game_object_template_addon_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('两张模板附加表的 Brief key 直接返回物理 entry 标量', () {
@@ -25,9 +26,9 @@ void main() {
       'creature_template_addon',
       'game_object_template_addon',
     ]) {
-      final source = File(
+      final source = readLocalDartLibrarySource(
         'lib/repository/${stem}_repository.dart',
-      ).readAsStringSync();
+      );
       expect(source, contains('originalKey'));
       expect(source, contains('.update(json)'));
       expect(source, contains('if (matchedRows == 0)'));
