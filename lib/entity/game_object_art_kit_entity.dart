@@ -1,11 +1,37 @@
-class GameObjectArtKitEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'game_object_art_kit_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_game_object_art_kit')
+class GameObjectArtKitEntity with _GameObjectArtKitEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('TextureVariation0')
   final String textureVariation0;
+
+  @FoxyFullField('TextureVariation1')
   final String textureVariation1;
+
+  @FoxyFullField('TextureVariation2')
   final String textureVariation2;
+
+  @FoxyBriefField()
+  @FoxyFullField('AttachModel0')
   final String attachModel0;
+
+  @FoxyFullField('AttachModel1')
   final String attachModel1;
+
+  @FoxyFullField('AttachModel2')
   final String attachModel2;
+
+  @FoxyFullField('AttachModel3')
   final String attachModel3;
 
   const GameObjectArtKitEntity({
@@ -19,27 +45,6 @@ class GameObjectArtKitEntity {
     this.attachModel3 = '',
   });
 
-  factory GameObjectArtKitEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectArtKitEntity(
-      id: json['ID'] ?? 0,
-      textureVariation0: json['TextureVariation0'] ?? '',
-      textureVariation1: json['TextureVariation1'] ?? '',
-      textureVariation2: json['TextureVariation2'] ?? '',
-      attachModel0: json['AttachModel0'] ?? '',
-      attachModel1: json['AttachModel1'] ?? '',
-      attachModel2: json['AttachModel2'] ?? '',
-      attachModel3: json['AttachModel3'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'TextureVariation0': textureVariation0,
-    'TextureVariation1': textureVariation1,
-    'TextureVariation2': textureVariation2,
-    'AttachModel0': attachModel0,
-    'AttachModel1': attachModel1,
-    'AttachModel2': attachModel2,
-    'AttachModel3': attachModel3,
-  };
+  factory GameObjectArtKitEntity.fromJson(Map<String, dynamic> json) =>
+      _GameObjectArtKitEntityMixin.fromJson(json);
 }

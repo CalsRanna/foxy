@@ -1,34 +1,105 @@
-class SmartScriptEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'smart_script_entity.g.dart';
+
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'smart_scripts')
+class SmartScriptEntity with _SmartScriptEntityMixin {
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('entryorguid', key: true)
   final int entryOrGuid;
+
+  @FoxyFullField('source_type', key: true)
   final int sourceType;
+
+  @FoxyFullField('id', key: true)
   final int id;
+
+  @FoxyFullField('link', key: true)
   final int link;
+
+  @FoxyFullField('event_type')
   final int eventType;
+
+  @FoxyFullField('event_phase_mask')
   final int eventPhaseMask;
+
+  @FoxyFullField('event_chance')
   final int eventChance;
+
+  @FoxyFullField('event_flags')
   final int eventFlags;
+
+  @FoxyFullField('event_param1')
   final int eventParam1;
+
+  @FoxyFullField('event_param2')
   final int eventParam2;
+
+  @FoxyFullField('event_param3')
   final int eventParam3;
+
+  @FoxyFullField('event_param4')
   final int eventParam4;
+
+  @FoxyFullField('event_param5')
   final int eventParam5;
+
+  @FoxyFullField('event_param6')
   final int eventParam6;
+
+  @FoxyFullField('action_type')
   final int actionType;
+
+  @FoxyFullField('action_param1')
   final int actionParam1;
+
+  @FoxyFullField('action_param2')
   final int actionParam2;
+
+  @FoxyFullField('action_param3')
   final int actionParam3;
+
+  @FoxyFullField('action_param4')
   final int actionParam4;
+
+  @FoxyFullField('action_param5')
   final int actionParam5;
+
+  @FoxyFullField('action_param6')
   final int actionParam6;
+
+  @FoxyFullField('target_type')
   final int targetType;
+
+  @FoxyFullField('target_param1')
   final int targetParam1;
+
+  @FoxyFullField('target_param2')
   final int targetParam2;
+
+  @FoxyFullField('target_param3')
   final int targetParam3;
+
+  @FoxyFullField('target_param4')
   final int targetParam4;
+
+  @FoxyFullField('target_x')
   final double targetX;
+
+  @FoxyFullField('target_y')
   final double targetY;
+
+  @FoxyFullField('target_z')
   final double targetZ;
+
+  @FoxyFullField('target_o')
   final double targetO;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('comment')
   final String comment;
 
   const SmartScriptEntity({
@@ -65,143 +136,6 @@ class SmartScriptEntity {
     this.comment = '',
   });
 
-  factory SmartScriptEntity.fromJson(Map<String, dynamic> json) {
-    return SmartScriptEntity(
-      entryOrGuid: json['entryorguid'] ?? 0,
-      sourceType: json['source_type'] ?? 0,
-      id: json['id'] ?? 0,
-      link: json['link'] ?? 0,
-      eventType: json['event_type'] ?? 0,
-      eventPhaseMask: json['event_phase_mask'] ?? 0,
-      eventChance: json['event_chance'] ?? 0,
-      eventFlags: json['event_flags'] ?? 0,
-      eventParam1: json['event_param1'] ?? 0,
-      eventParam2: json['event_param2'] ?? 0,
-      eventParam3: json['event_param3'] ?? 0,
-      eventParam4: json['event_param4'] ?? 0,
-      eventParam5: json['event_param5'] ?? 0,
-      eventParam6: json['event_param6'] ?? 0,
-      actionType: json['action_type'] ?? 0,
-      actionParam1: json['action_param1'] ?? 0,
-      actionParam2: json['action_param2'] ?? 0,
-      actionParam3: json['action_param3'] ?? 0,
-      actionParam4: json['action_param4'] ?? 0,
-      actionParam5: json['action_param5'] ?? 0,
-      actionParam6: json['action_param6'] ?? 0,
-      targetType: json['target_type'] ?? 0,
-      targetParam1: json['target_param1'] ?? 0,
-      targetParam2: json['target_param2'] ?? 0,
-      targetParam3: json['target_param3'] ?? 0,
-      targetParam4: json['target_param4'] ?? 0,
-      targetX: (json['target_x'] as num? ?? 0).toDouble(),
-      targetY: (json['target_y'] as num? ?? 0).toDouble(),
-      targetZ: (json['target_z'] as num? ?? 0).toDouble(),
-      targetO: (json['target_o'] as num? ?? 0).toDouble(),
-      comment: json['comment'] ?? '',
-    );
-  }
-
-  SmartScriptEntity copyWith({
-    int? entryOrGuid,
-    int? sourceType,
-    int? id,
-    int? link,
-    int? eventType,
-    int? eventPhaseMask,
-    int? eventChance,
-    int? eventFlags,
-    int? eventParam1,
-    int? eventParam2,
-    int? eventParam3,
-    int? eventParam4,
-    int? eventParam5,
-    int? eventParam6,
-    int? actionType,
-    int? actionParam1,
-    int? actionParam2,
-    int? actionParam3,
-    int? actionParam4,
-    int? actionParam5,
-    int? actionParam6,
-    int? targetType,
-    int? targetParam1,
-    int? targetParam2,
-    int? targetParam3,
-    int? targetParam4,
-    double? targetX,
-    double? targetY,
-    double? targetZ,
-    double? targetO,
-    String? comment,
-  }) {
-    return SmartScriptEntity(
-      entryOrGuid: entryOrGuid ?? this.entryOrGuid,
-      sourceType: sourceType ?? this.sourceType,
-      id: id ?? this.id,
-      link: link ?? this.link,
-      eventType: eventType ?? this.eventType,
-      eventPhaseMask: eventPhaseMask ?? this.eventPhaseMask,
-      eventChance: eventChance ?? this.eventChance,
-      eventFlags: eventFlags ?? this.eventFlags,
-      eventParam1: eventParam1 ?? this.eventParam1,
-      eventParam2: eventParam2 ?? this.eventParam2,
-      eventParam3: eventParam3 ?? this.eventParam3,
-      eventParam4: eventParam4 ?? this.eventParam4,
-      eventParam5: eventParam5 ?? this.eventParam5,
-      eventParam6: eventParam6 ?? this.eventParam6,
-      actionType: actionType ?? this.actionType,
-      actionParam1: actionParam1 ?? this.actionParam1,
-      actionParam2: actionParam2 ?? this.actionParam2,
-      actionParam3: actionParam3 ?? this.actionParam3,
-      actionParam4: actionParam4 ?? this.actionParam4,
-      actionParam5: actionParam5 ?? this.actionParam5,
-      actionParam6: actionParam6 ?? this.actionParam6,
-      targetType: targetType ?? this.targetType,
-      targetParam1: targetParam1 ?? this.targetParam1,
-      targetParam2: targetParam2 ?? this.targetParam2,
-      targetParam3: targetParam3 ?? this.targetParam3,
-      targetParam4: targetParam4 ?? this.targetParam4,
-      targetX: targetX ?? this.targetX,
-      targetY: targetY ?? this.targetY,
-      targetZ: targetZ ?? this.targetZ,
-      targetO: targetO ?? this.targetO,
-      comment: comment ?? this.comment,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entryorguid': entryOrGuid,
-      'source_type': sourceType,
-      'id': id,
-      'link': link,
-      'event_type': eventType,
-      'event_phase_mask': eventPhaseMask,
-      'event_chance': eventChance,
-      'event_flags': eventFlags,
-      'event_param1': eventParam1,
-      'event_param2': eventParam2,
-      'event_param3': eventParam3,
-      'event_param4': eventParam4,
-      'event_param5': eventParam5,
-      'event_param6': eventParam6,
-      'action_type': actionType,
-      'action_param1': actionParam1,
-      'action_param2': actionParam2,
-      'action_param3': actionParam3,
-      'action_param4': actionParam4,
-      'action_param5': actionParam5,
-      'action_param6': actionParam6,
-      'target_type': targetType,
-      'target_param1': targetParam1,
-      'target_param2': targetParam2,
-      'target_param3': targetParam3,
-      'target_param4': targetParam4,
-      'target_x': targetX,
-      'target_y': targetY,
-      'target_z': targetZ,
-      'target_o': targetO,
-      'comment': comment,
-    };
-  }
+  factory SmartScriptEntity.fromJson(Map<String, dynamic> json) =>
+      _SmartScriptEntityMixin.fromJson(json);
 }

@@ -1,6 +1,1 @@
-class ItemVisualEffectFilterEntity {
-  final String id;
-  final String model;
-
-  const ItemVisualEffectFilterEntity({this.id = '', this.model = ''});
-}
+export 'item_visual_effect_entity.filter.g.dart';

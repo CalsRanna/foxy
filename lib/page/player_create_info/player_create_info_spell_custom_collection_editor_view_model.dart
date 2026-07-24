@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_player_create_info_spell_custom_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_key.dart';
 import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
@@ -46,7 +46,12 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     final parent = parentKey;
     editingKey.value = null;
     selectedKey.value = null;
-    _applyCandidate(PlayerCreateInfoSpellCustomEntity(racemask: parent.race, classmask: parent.class_));
+    _applyCandidate(
+      PlayerCreateInfoSpellCustomEntity(
+        raceMask: parent.race,
+        classMask: parent.class_,
+      ),
+    );
     await _refresh();
   }
 
@@ -57,7 +62,10 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createPlayerCreateInfoSpellCustom(parent.race, parent.class_);
+      final candidate = await _repository.createPlayerCreateInfoSpellCustom(
+        parent.race,
+        parent.class_,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -113,7 +121,10 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       if (originalKey == null) {
         await _repository.storePlayerCreateInfoSpellCustom(candidate);
       } else {
-        await _repository.updatePlayerCreateInfoSpellCustom(originalKey, candidate);
+        await _repository.updatePlayerCreateInfoSpellCustom(
+          originalKey,
+          candidate,
+        );
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -158,15 +169,15 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
 
   PlayerCreateInfoSpellCustomEntity _collectCandidate() =>
       PlayerCreateInfoSpellCustomEntity(
-        racemask: racemaskController.collect(),
-        classmask: classmaskController.collect(),
+        raceMask: racemaskController.collect(),
+        classMask: classmaskController.collect(),
         spell: spellController.collect(),
         note: noteController.collect(),
       );
 
   void _applyCandidate(PlayerCreateInfoSpellCustomEntity item) {
-    racemaskController.init(item.racemask);
-    classmaskController.init(item.classmask);
+    racemaskController.init(item.raceMask);
+    classmaskController.init(item.classMask);
     spellController.init(item.spell);
     noteController.init(item.note);
   }
@@ -179,11 +190,18 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final count = await _repository.countPlayerCreateInfoSpellCustoms(parent.race, parent.class_);
+      final count = await _repository.countPlayerCreateInfoSpellCustoms(
+        parent.race,
+        parent.class_,
+      );
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefPlayerCreateInfoSpellCustoms(parent.race, parent.class_, page: nextPage);
+      final data = await _repository.getBriefPlayerCreateInfoSpellCustoms(
+        parent.race,
+        parent.class_,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

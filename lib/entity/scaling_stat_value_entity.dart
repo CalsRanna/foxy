@@ -1,27 +1,93 @@
-class ScalingStatValueEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'scaling_stat_value_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_scaling_stat_values')
+class ScalingStatValueEntity with _ScalingStatValueEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Charlevel')
   final int charlevel;
+
+  @FoxyBriefField()
+  @FoxyFullField('ShoulderBudget')
   final int shoulderBudget;
+
+  @FoxyBriefField()
+  @FoxyFullField('TrinketBudget')
   final int trinketBudget;
+
+  @FoxyBriefField()
+  @FoxyFullField('WeaponBudget1H')
   final int weaponBudget1H;
+
+  @FoxyBriefField()
+  @FoxyFullField('RangedBudget')
   final int rangedBudget;
+
+  @FoxyFullField('ClothShoulderArmor')
   final int clothShoulderArmor;
+
+  @FoxyFullField('LeatherShoulderArmor')
   final int leatherShoulderArmor;
+
+  @FoxyFullField('MailShoulderArmor')
   final int mailShoulderArmor;
+
+  @FoxyFullField('PlateShoulderArmor')
   final int plateShoulderArmor;
+
+  @FoxyFullField('WeaponDPS1H')
   final int weaponDPS1H;
+
+  @FoxyFullField('WeaponDPS2H')
   final int weaponDPS2H;
+
+  @FoxyFullField('SpellcasterDPS1H')
   final int spellcasterDPS1H;
+
+  @FoxyFullField('SpellcasterDPS2H')
   final int spellcasterDPS2H;
+
+  @FoxyFullField('RangedDPS')
   final int rangedDPS;
+
+  @FoxyFullField('WandDPS')
   final int wandDPS;
+
+  @FoxyFullField('SpellPower')
   final int spellPower;
+
+  @FoxyBriefField()
+  @FoxyFullField('PrimaryBudget')
   final int primaryBudget;
+
+  @FoxyBriefField()
+  @FoxyFullField('TertiaryBudget')
   final int tertiaryBudget;
+
+  @FoxyFullField('ClothCloakArmor')
   final int clothCloakArmor;
+
+  @FoxyFullField('ClothChestArmor')
   final int clothChestArmor;
+
+  @FoxyFullField('LeatherChestArmor')
   final int leatherChestArmor;
+
+  @FoxyFullField('MailChestArmor')
   final int mailChestArmor;
+
+  @FoxyFullField('PlateChestArmor')
   final int plateChestArmor;
 
   const ScalingStatValueEntity({
@@ -51,115 +117,6 @@ class ScalingStatValueEntity {
     this.plateChestArmor = 0,
   });
 
-  factory ScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
-    return ScalingStatValueEntity(
-      id: json['ID'] ?? 0,
-      charlevel: json['Charlevel'] ?? 0,
-      shoulderBudget: json['ShoulderBudget'] ?? 0,
-      trinketBudget: json['TrinketBudget'] ?? 0,
-      weaponBudget1H: json['WeaponBudget1H'] ?? 0,
-      rangedBudget: json['RangedBudget'] ?? 0,
-      clothShoulderArmor: json['ClothShoulderArmor'] ?? 0,
-      leatherShoulderArmor: json['LeatherShoulderArmor'] ?? 0,
-      mailShoulderArmor: json['MailShoulderArmor'] ?? 0,
-      plateShoulderArmor: json['PlateShoulderArmor'] ?? 0,
-      weaponDPS1H: json['WeaponDPS1H'] ?? 0,
-      weaponDPS2H: json['WeaponDPS2H'] ?? 0,
-      spellcasterDPS1H: json['SpellcasterDPS1H'] ?? 0,
-      spellcasterDPS2H: json['SpellcasterDPS2H'] ?? 0,
-      rangedDPS: json['RangedDPS'] ?? 0,
-      wandDPS: json['WandDPS'] ?? 0,
-      spellPower: json['SpellPower'] ?? 0,
-      primaryBudget: json['PrimaryBudget'] ?? 0,
-      tertiaryBudget: json['TertiaryBudget'] ?? 0,
-      clothCloakArmor: json['ClothCloakArmor'] ?? 0,
-      clothChestArmor: json['ClothChestArmor'] ?? 0,
-      leatherChestArmor: json['LeatherChestArmor'] ?? 0,
-      mailChestArmor: json['MailChestArmor'] ?? 0,
-      plateChestArmor: json['PlateChestArmor'] ?? 0,
-    );
-  }
-
-  ScalingStatValueEntity copyWith({
-    int? id,
-    int? charlevel,
-    int? shoulderBudget,
-    int? trinketBudget,
-    int? weaponBudget1H,
-    int? rangedBudget,
-    int? clothShoulderArmor,
-    int? leatherShoulderArmor,
-    int? mailShoulderArmor,
-    int? plateShoulderArmor,
-    int? weaponDPS1H,
-    int? weaponDPS2H,
-    int? spellcasterDPS1H,
-    int? spellcasterDPS2H,
-    int? rangedDPS,
-    int? wandDPS,
-    int? spellPower,
-    int? primaryBudget,
-    int? tertiaryBudget,
-    int? clothCloakArmor,
-    int? clothChestArmor,
-    int? leatherChestArmor,
-    int? mailChestArmor,
-    int? plateChestArmor,
-  }) {
-    return ScalingStatValueEntity(
-      id: id ?? this.id,
-      charlevel: charlevel ?? this.charlevel,
-      shoulderBudget: shoulderBudget ?? this.shoulderBudget,
-      trinketBudget: trinketBudget ?? this.trinketBudget,
-      weaponBudget1H: weaponBudget1H ?? this.weaponBudget1H,
-      rangedBudget: rangedBudget ?? this.rangedBudget,
-      clothShoulderArmor: clothShoulderArmor ?? this.clothShoulderArmor,
-      leatherShoulderArmor: leatherShoulderArmor ?? this.leatherShoulderArmor,
-      mailShoulderArmor: mailShoulderArmor ?? this.mailShoulderArmor,
-      plateShoulderArmor: plateShoulderArmor ?? this.plateShoulderArmor,
-      weaponDPS1H: weaponDPS1H ?? this.weaponDPS1H,
-      weaponDPS2H: weaponDPS2H ?? this.weaponDPS2H,
-      spellcasterDPS1H: spellcasterDPS1H ?? this.spellcasterDPS1H,
-      spellcasterDPS2H: spellcasterDPS2H ?? this.spellcasterDPS2H,
-      rangedDPS: rangedDPS ?? this.rangedDPS,
-      wandDPS: wandDPS ?? this.wandDPS,
-      spellPower: spellPower ?? this.spellPower,
-      primaryBudget: primaryBudget ?? this.primaryBudget,
-      tertiaryBudget: tertiaryBudget ?? this.tertiaryBudget,
-      clothCloakArmor: clothCloakArmor ?? this.clothCloakArmor,
-      clothChestArmor: clothChestArmor ?? this.clothChestArmor,
-      leatherChestArmor: leatherChestArmor ?? this.leatherChestArmor,
-      mailChestArmor: mailChestArmor ?? this.mailChestArmor,
-      plateChestArmor: plateChestArmor ?? this.plateChestArmor,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Charlevel': charlevel,
-      'ShoulderBudget': shoulderBudget,
-      'TrinketBudget': trinketBudget,
-      'WeaponBudget1H': weaponBudget1H,
-      'RangedBudget': rangedBudget,
-      'ClothShoulderArmor': clothShoulderArmor,
-      'LeatherShoulderArmor': leatherShoulderArmor,
-      'MailShoulderArmor': mailShoulderArmor,
-      'PlateShoulderArmor': plateShoulderArmor,
-      'WeaponDPS1H': weaponDPS1H,
-      'WeaponDPS2H': weaponDPS2H,
-      'SpellcasterDPS1H': spellcasterDPS1H,
-      'SpellcasterDPS2H': spellcasterDPS2H,
-      'RangedDPS': rangedDPS,
-      'WandDPS': wandDPS,
-      'SpellPower': spellPower,
-      'PrimaryBudget': primaryBudget,
-      'TertiaryBudget': tertiaryBudget,
-      'ClothCloakArmor': clothCloakArmor,
-      'ClothChestArmor': clothChestArmor,
-      'LeatherChestArmor': leatherChestArmor,
-      'MailChestArmor': mailChestArmor,
-      'PlateChestArmor': plateChestArmor,
-    };
-  }
+  factory ScalingStatValueEntity.fromJson(Map<String, dynamic> json) =>
+      _ScalingStatValueEntityMixin.fromJson(json);
 }

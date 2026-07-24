@@ -1,13 +1,45 @@
-class CinematicSequenceEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'cinematic_sequence_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_cinematic_sequences')
+class CinematicSequenceEntity with _CinematicSequenceEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('SoundID')
   final int soundId;
+
+  @FoxyBriefField()
+  @FoxyFullField('Camera0')
   final int camera0;
+
+  @FoxyFullField('Camera1')
   final int camera1;
+
+  @FoxyFullField('Camera2')
   final int camera2;
+
+  @FoxyFullField('Camera3')
   final int camera3;
+
+  @FoxyFullField('Camera4')
   final int camera4;
+
+  @FoxyFullField('Camera5')
   final int camera5;
+
+  @FoxyFullField('Camera6')
   final int camera6;
+
+  @FoxyFullField('Camera7')
   final int camera7;
 
   const CinematicSequenceEntity({
@@ -23,31 +55,6 @@ class CinematicSequenceEntity {
     this.camera7 = 0,
   });
 
-  factory CinematicSequenceEntity.fromJson(Map<String, dynamic> json) {
-    return CinematicSequenceEntity(
-      id: json['ID'] ?? 0,
-      soundId: json['SoundID'] ?? 0,
-      camera0: json['Camera0'] ?? 0,
-      camera1: json['Camera1'] ?? 0,
-      camera2: json['Camera2'] ?? 0,
-      camera3: json['Camera3'] ?? 0,
-      camera4: json['Camera4'] ?? 0,
-      camera5: json['Camera5'] ?? 0,
-      camera6: json['Camera6'] ?? 0,
-      camera7: json['Camera7'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'SoundID': soundId,
-    'Camera0': camera0,
-    'Camera1': camera1,
-    'Camera2': camera2,
-    'Camera3': camera3,
-    'Camera4': camera4,
-    'Camera5': camera5,
-    'Camera6': camera6,
-    'Camera7': camera7,
-  };
+  factory CinematicSequenceEntity.fromJson(Map<String, dynamic> json) =>
+      _CinematicSequenceEntityMixin.fromJson(json);
 }

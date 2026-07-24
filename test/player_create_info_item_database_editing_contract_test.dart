@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_player_create_info_item_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_item_entity.dart';
 import 'package:foxy/entity/player_create_info_item_key.dart';
 
 void main() {
   test('起始物品 Key 和 Brief 覆盖 race + class + itemid', () {
-    const entity = PlayerCreateInfoItemEntity(race: 1, class_: 2, itemid: 3);
+    const entity = PlayerCreateInfoItemEntity(race: 1, class_: 2, itemId: 3);
     const key = PlayerCreateInfoItemKey(race: 1, class_: 2, itemId: 3);
     expect(PlayerCreateInfoItemKey.fromEntity(entity), key);
     expect(

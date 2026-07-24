@@ -1,5 +1,1 @@
-class TaxiPathFilterEntity {
-  final String id;
-
-  const TaxiPathFilterEntity({this.id = ''});
-}
+export 'taxi_path_entity.filter.g.dart';

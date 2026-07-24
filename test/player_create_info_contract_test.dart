@@ -3,7 +3,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
+import 'package:foxy/entity/player_create_info_action_entity.dart';
+import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_item_entity.dart';
+import 'package:foxy/entity/player_create_info_skill_entity.dart';
+import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 
 void main() {
   test('六张 playercreateinfo 表 Entity 精确覆盖 31 个物理列', () {

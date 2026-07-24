@@ -1,22 +1,73 @@
-class EmoteTextEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'emote_text_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_emotes_text')
+class EmoteTextEntity with _EmoteTextEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Name')
   final String name;
+
+  @FoxyBriefField()
+  @FoxyFullField('EmoteID')
   final int emoteId;
+
+  @FoxyFullField('EmoteText0')
   final int emoteText0;
+
+  @FoxyFullField('EmoteText1')
   final int emoteText1;
+
+  @FoxyFullField('EmoteText2')
   final int emoteText2;
+
+  @FoxyFullField('EmoteText3')
   final int emoteText3;
+
+  @FoxyFullField('EmoteText4')
   final int emoteText4;
+
+  @FoxyFullField('EmoteText5')
   final int emoteText5;
+
+  @FoxyFullField('EmoteText6')
   final int emoteText6;
+
+  @FoxyFullField('EmoteText7')
   final int emoteText7;
+
+  @FoxyFullField('EmoteText8')
   final int emoteText8;
+
+  @FoxyFullField('EmoteText9')
   final int emoteText9;
+
+  @FoxyFullField('EmoteText10')
   final int emoteText10;
+
+  @FoxyFullField('EmoteText11')
   final int emoteText11;
+
+  @FoxyFullField('EmoteText12')
   final int emoteText12;
+
+  @FoxyFullField('EmoteText13')
   final int emoteText13;
+
+  @FoxyFullField('EmoteText14')
   final int emoteText14;
+
+  @FoxyFullField('EmoteText15')
   final int emoteText15;
 
   const EmoteTextEntity({
@@ -41,95 +92,6 @@ class EmoteTextEntity {
     this.emoteText15 = 0,
   });
 
-  factory EmoteTextEntity.fromJson(Map<String, dynamic> json) {
-    return EmoteTextEntity(
-      id: json['ID'] ?? 0,
-      name: json['Name'] ?? '',
-      emoteId: json['EmoteID'] ?? 0,
-      emoteText0: json['EmoteText0'] ?? 0,
-      emoteText1: json['EmoteText1'] ?? 0,
-      emoteText2: json['EmoteText2'] ?? 0,
-      emoteText3: json['EmoteText3'] ?? 0,
-      emoteText4: json['EmoteText4'] ?? 0,
-      emoteText5: json['EmoteText5'] ?? 0,
-      emoteText6: json['EmoteText6'] ?? 0,
-      emoteText7: json['EmoteText7'] ?? 0,
-      emoteText8: json['EmoteText8'] ?? 0,
-      emoteText9: json['EmoteText9'] ?? 0,
-      emoteText10: json['EmoteText10'] ?? 0,
-      emoteText11: json['EmoteText11'] ?? 0,
-      emoteText12: json['EmoteText12'] ?? 0,
-      emoteText13: json['EmoteText13'] ?? 0,
-      emoteText14: json['EmoteText14'] ?? 0,
-      emoteText15: json['EmoteText15'] ?? 0,
-    );
-  }
-
-  EmoteTextEntity copyWith({
-    int? id,
-    String? name,
-    int? emoteId,
-    int? emoteText0,
-    int? emoteText1,
-    int? emoteText2,
-    int? emoteText3,
-    int? emoteText4,
-    int? emoteText5,
-    int? emoteText6,
-    int? emoteText7,
-    int? emoteText8,
-    int? emoteText9,
-    int? emoteText10,
-    int? emoteText11,
-    int? emoteText12,
-    int? emoteText13,
-    int? emoteText14,
-    int? emoteText15,
-  }) {
-    return EmoteTextEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      emoteId: emoteId ?? this.emoteId,
-      emoteText0: emoteText0 ?? this.emoteText0,
-      emoteText1: emoteText1 ?? this.emoteText1,
-      emoteText2: emoteText2 ?? this.emoteText2,
-      emoteText3: emoteText3 ?? this.emoteText3,
-      emoteText4: emoteText4 ?? this.emoteText4,
-      emoteText5: emoteText5 ?? this.emoteText5,
-      emoteText6: emoteText6 ?? this.emoteText6,
-      emoteText7: emoteText7 ?? this.emoteText7,
-      emoteText8: emoteText8 ?? this.emoteText8,
-      emoteText9: emoteText9 ?? this.emoteText9,
-      emoteText10: emoteText10 ?? this.emoteText10,
-      emoteText11: emoteText11 ?? this.emoteText11,
-      emoteText12: emoteText12 ?? this.emoteText12,
-      emoteText13: emoteText13 ?? this.emoteText13,
-      emoteText14: emoteText14 ?? this.emoteText14,
-      emoteText15: emoteText15 ?? this.emoteText15,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name': name,
-      'EmoteID': emoteId,
-      'EmoteText0': emoteText0,
-      'EmoteText1': emoteText1,
-      'EmoteText2': emoteText2,
-      'EmoteText3': emoteText3,
-      'EmoteText4': emoteText4,
-      'EmoteText5': emoteText5,
-      'EmoteText6': emoteText6,
-      'EmoteText7': emoteText7,
-      'EmoteText8': emoteText8,
-      'EmoteText9': emoteText9,
-      'EmoteText10': emoteText10,
-      'EmoteText11': emoteText11,
-      'EmoteText12': emoteText12,
-      'EmoteText13': emoteText13,
-      'EmoteText14': emoteText14,
-      'EmoteText15': emoteText15,
-    };
-  }
+  factory EmoteTextEntity.fromJson(Map<String, dynamic> json) =>
+      _EmoteTextEntityMixin.fromJson(json);
 }

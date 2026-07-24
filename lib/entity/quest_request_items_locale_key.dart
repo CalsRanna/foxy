@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 
 @immutable
 final class QuestRequestItemsLocaleKey {

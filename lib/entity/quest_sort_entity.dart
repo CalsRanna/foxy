@@ -1,21 +1,66 @@
-class QuestSortEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_sort_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_quest_sort')
+class QuestSortEntity with _QuestSortEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('SortName_lang_enUS')
   final String sortNameLangEnUS;
+
+  @FoxyFullField('SortName_lang_koKR')
   final String sortNameLangKoKR;
+
+  @FoxyFullField('SortName_lang_frFR')
   final String sortNameLangFrFR;
+
+  @FoxyFullField('SortName_lang_deDE')
   final String sortNameLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('SortName_lang_zhCN')
   final String sortNameLangZhCN;
+
+  @FoxyFullField('SortName_lang_zhTW')
   final String sortNameLangZhTW;
+
+  @FoxyFullField('SortName_lang_esES')
   final String sortNameLangEsES;
+
+  @FoxyFullField('SortName_lang_esMX')
   final String sortNameLangEsMX;
+
+  @FoxyFullField('SortName_lang_ruRU')
   final String sortNameLangRuRU;
+
+  @FoxyFullField('SortName_lang_jaJP')
   final String sortNameLangJaJP;
+
+  @FoxyFullField('SortName_lang_ptPT')
   final String sortNameLangPtPT;
+
+  @FoxyFullField('SortName_lang_ptBR')
   final String sortNameLangPtBR;
+
+  @FoxyFullField('SortName_lang_itIT')
   final String sortNameLangItIT;
+
+  @FoxyFullField('SortName_lang_unk1')
   final String sortNameLangUnk1;
+
+  @FoxyFullField('SortName_lang_unk2')
   final String sortNameLangUnk2;
+
+  @FoxyFullField('SortName_lang_unk3')
   final String sortNameLangUnk3;
+
+  @FoxyFullField('SortName_lang_Flags')
   final int sortNameLangFlags;
 
   const QuestSortEntity({
@@ -39,91 +84,6 @@ class QuestSortEntity {
     this.sortNameLangFlags = 0,
   });
 
-  factory QuestSortEntity.fromJson(Map<String, dynamic> json) {
-    return QuestSortEntity(
-      id: json['ID'] ?? 0,
-      sortNameLangEnUS: json['SortName_lang_enUS'] ?? '',
-      sortNameLangKoKR: json['SortName_lang_koKR'] ?? '',
-      sortNameLangFrFR: json['SortName_lang_frFR'] ?? '',
-      sortNameLangDeDE: json['SortName_lang_deDE'] ?? '',
-      sortNameLangZhCN: json['SortName_lang_zhCN'] ?? '',
-      sortNameLangZhTW: json['SortName_lang_zhTW'] ?? '',
-      sortNameLangEsES: json['SortName_lang_esES'] ?? '',
-      sortNameLangEsMX: json['SortName_lang_esMX'] ?? '',
-      sortNameLangRuRU: json['SortName_lang_ruRU'] ?? '',
-      sortNameLangJaJP: json['SortName_lang_jaJP'] ?? '',
-      sortNameLangPtPT: json['SortName_lang_ptPT'] ?? '',
-      sortNameLangPtBR: json['SortName_lang_ptBR'] ?? '',
-      sortNameLangItIT: json['SortName_lang_itIT'] ?? '',
-      sortNameLangUnk1: json['SortName_lang_unk1'] ?? '',
-      sortNameLangUnk2: json['SortName_lang_unk2'] ?? '',
-      sortNameLangUnk3: json['SortName_lang_unk3'] ?? '',
-      sortNameLangFlags: json['SortName_lang_Flags'] ?? 0,
-    );
-  }
-
-  QuestSortEntity copyWith({
-    int? id,
-    String? sortNameLangEnUS,
-    String? sortNameLangKoKR,
-    String? sortNameLangFrFR,
-    String? sortNameLangDeDE,
-    String? sortNameLangZhCN,
-    String? sortNameLangZhTW,
-    String? sortNameLangEsES,
-    String? sortNameLangEsMX,
-    String? sortNameLangRuRU,
-    String? sortNameLangJaJP,
-    String? sortNameLangPtPT,
-    String? sortNameLangPtBR,
-    String? sortNameLangItIT,
-    String? sortNameLangUnk1,
-    String? sortNameLangUnk2,
-    String? sortNameLangUnk3,
-    int? sortNameLangFlags,
-  }) {
-    return QuestSortEntity(
-      id: id ?? this.id,
-      sortNameLangEnUS: sortNameLangEnUS ?? this.sortNameLangEnUS,
-      sortNameLangKoKR: sortNameLangKoKR ?? this.sortNameLangKoKR,
-      sortNameLangFrFR: sortNameLangFrFR ?? this.sortNameLangFrFR,
-      sortNameLangDeDE: sortNameLangDeDE ?? this.sortNameLangDeDE,
-      sortNameLangZhCN: sortNameLangZhCN ?? this.sortNameLangZhCN,
-      sortNameLangZhTW: sortNameLangZhTW ?? this.sortNameLangZhTW,
-      sortNameLangEsES: sortNameLangEsES ?? this.sortNameLangEsES,
-      sortNameLangEsMX: sortNameLangEsMX ?? this.sortNameLangEsMX,
-      sortNameLangRuRU: sortNameLangRuRU ?? this.sortNameLangRuRU,
-      sortNameLangJaJP: sortNameLangJaJP ?? this.sortNameLangJaJP,
-      sortNameLangPtPT: sortNameLangPtPT ?? this.sortNameLangPtPT,
-      sortNameLangPtBR: sortNameLangPtBR ?? this.sortNameLangPtBR,
-      sortNameLangItIT: sortNameLangItIT ?? this.sortNameLangItIT,
-      sortNameLangUnk1: sortNameLangUnk1 ?? this.sortNameLangUnk1,
-      sortNameLangUnk2: sortNameLangUnk2 ?? this.sortNameLangUnk2,
-      sortNameLangUnk3: sortNameLangUnk3 ?? this.sortNameLangUnk3,
-      sortNameLangFlags: sortNameLangFlags ?? this.sortNameLangFlags,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'SortName_lang_enUS': sortNameLangEnUS,
-      'SortName_lang_koKR': sortNameLangKoKR,
-      'SortName_lang_frFR': sortNameLangFrFR,
-      'SortName_lang_deDE': sortNameLangDeDE,
-      'SortName_lang_zhCN': sortNameLangZhCN,
-      'SortName_lang_zhTW': sortNameLangZhTW,
-      'SortName_lang_esES': sortNameLangEsES,
-      'SortName_lang_esMX': sortNameLangEsMX,
-      'SortName_lang_ruRU': sortNameLangRuRU,
-      'SortName_lang_jaJP': sortNameLangJaJP,
-      'SortName_lang_ptPT': sortNameLangPtPT,
-      'SortName_lang_ptBR': sortNameLangPtBR,
-      'SortName_lang_itIT': sortNameLangItIT,
-      'SortName_lang_unk1': sortNameLangUnk1,
-      'SortName_lang_unk2': sortNameLangUnk2,
-      'SortName_lang_unk3': sortNameLangUnk3,
-      'SortName_lang_Flags': sortNameLangFlags,
-    };
-  }
+  factory QuestSortEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestSortEntityMixin.fromJson(json);
 }

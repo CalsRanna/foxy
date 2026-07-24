@@ -1,38 +1,118 @@
-class MailTemplateEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'mail_template_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_mail_template')
+class MailTemplateEntity with _MailTemplateEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('Subject_lang_enUS')
   final String subjectLangEnUS;
+
+  @FoxyFullField('Subject_lang_koKR')
   final String subjectLangKoKR;
+
+  @FoxyFullField('Subject_lang_frFR')
   final String subjectLangFrFR;
+
+  @FoxyFullField('Subject_lang_deDE')
   final String subjectLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Subject_lang_zhCN')
   final String subjectLangZhCN;
+
+  @FoxyFullField('Subject_lang_zhTW')
   final String subjectLangZhTW;
+
+  @FoxyFullField('Subject_lang_esES')
   final String subjectLangEsES;
+
+  @FoxyFullField('Subject_lang_esMX')
   final String subjectLangEsMX;
+
+  @FoxyFullField('Subject_lang_ruRU')
   final String subjectLangRuRU;
+
+  @FoxyFullField('Subject_lang_jaJP')
   final String subjectLangJaJP;
+
+  @FoxyFullField('Subject_lang_ptPT')
   final String subjectLangPtPT;
+
+  @FoxyFullField('Subject_lang_ptBR')
   final String subjectLangPtBR;
+
+  @FoxyFullField('Subject_lang_itIT')
   final String subjectLangItIT;
+
+  @FoxyFullField('Subject_lang_unk1')
   final String subjectLangUnk1;
+
+  @FoxyFullField('Subject_lang_unk2')
   final String subjectLangUnk2;
+
+  @FoxyFullField('Subject_lang_unk3')
   final String subjectLangUnk3;
+
+  @FoxyFullField('Subject_lang_Flags')
   final int subjectLangFlags;
+
+  @FoxyFullField('Body_lang_enUS')
   final String bodyLangEnUS;
+
+  @FoxyFullField('Body_lang_koKR')
   final String bodyLangKoKR;
+
+  @FoxyFullField('Body_lang_frFR')
   final String bodyLangFrFR;
+
+  @FoxyFullField('Body_lang_deDE')
   final String bodyLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Body_lang_zhCN')
   final String bodyLangZhCN;
+
+  @FoxyFullField('Body_lang_zhTW')
   final String bodyLangZhTW;
+
+  @FoxyFullField('Body_lang_esES')
   final String bodyLangEsES;
+
+  @FoxyFullField('Body_lang_esMX')
   final String bodyLangEsMX;
+
+  @FoxyFullField('Body_lang_ruRU')
   final String bodyLangRuRU;
+
+  @FoxyFullField('Body_lang_jaJP')
   final String bodyLangJaJP;
+
+  @FoxyFullField('Body_lang_ptPT')
   final String bodyLangPtPT;
+
+  @FoxyFullField('Body_lang_ptBR')
   final String bodyLangPtBR;
+
+  @FoxyFullField('Body_lang_itIT')
   final String bodyLangItIT;
+
+  @FoxyFullField('Body_lang_unk1')
   final String bodyLangUnk1;
+
+  @FoxyFullField('Body_lang_unk2')
   final String bodyLangUnk2;
+
+  @FoxyFullField('Body_lang_unk3')
   final String bodyLangUnk3;
+
+  @FoxyFullField('Body_lang_Flags')
   final int bodyLangFlags;
 
   const MailTemplateEntity({
@@ -73,83 +153,6 @@ class MailTemplateEntity {
     this.bodyLangFlags = 0,
   });
 
-  factory MailTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return MailTemplateEntity(
-      id: json['ID'] ?? 0,
-      subjectLangEnUS: json['Subject_lang_enUS'] ?? '',
-      subjectLangKoKR: json['Subject_lang_koKR'] ?? '',
-      subjectLangFrFR: json['Subject_lang_frFR'] ?? '',
-      subjectLangDeDE: json['Subject_lang_deDE'] ?? '',
-      subjectLangZhCN: json['Subject_lang_zhCN'] ?? '',
-      subjectLangZhTW: json['Subject_lang_zhTW'] ?? '',
-      subjectLangEsES: json['Subject_lang_esES'] ?? '',
-      subjectLangEsMX: json['Subject_lang_esMX'] ?? '',
-      subjectLangRuRU: json['Subject_lang_ruRU'] ?? '',
-      subjectLangJaJP: json['Subject_lang_jaJP'] ?? '',
-      subjectLangPtPT: json['Subject_lang_ptPT'] ?? '',
-      subjectLangPtBR: json['Subject_lang_ptBR'] ?? '',
-      subjectLangItIT: json['Subject_lang_itIT'] ?? '',
-      subjectLangUnk1: json['Subject_lang_unk1'] ?? '',
-      subjectLangUnk2: json['Subject_lang_unk2'] ?? '',
-      subjectLangUnk3: json['Subject_lang_unk3'] ?? '',
-      subjectLangFlags: json['Subject_lang_Flags'] ?? 0,
-      bodyLangEnUS: json['Body_lang_enUS'] ?? '',
-      bodyLangKoKR: json['Body_lang_koKR'] ?? '',
-      bodyLangFrFR: json['Body_lang_frFR'] ?? '',
-      bodyLangDeDE: json['Body_lang_deDE'] ?? '',
-      bodyLangZhCN: json['Body_lang_zhCN'] ?? '',
-      bodyLangZhTW: json['Body_lang_zhTW'] ?? '',
-      bodyLangEsES: json['Body_lang_esES'] ?? '',
-      bodyLangEsMX: json['Body_lang_esMX'] ?? '',
-      bodyLangRuRU: json['Body_lang_ruRU'] ?? '',
-      bodyLangJaJP: json['Body_lang_jaJP'] ?? '',
-      bodyLangPtPT: json['Body_lang_ptPT'] ?? '',
-      bodyLangPtBR: json['Body_lang_ptBR'] ?? '',
-      bodyLangItIT: json['Body_lang_itIT'] ?? '',
-      bodyLangUnk1: json['Body_lang_unk1'] ?? '',
-      bodyLangUnk2: json['Body_lang_unk2'] ?? '',
-      bodyLangUnk3: json['Body_lang_unk3'] ?? '',
-      bodyLangFlags: json['Body_lang_Flags'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Subject_lang_enUS': subjectLangEnUS,
-      'Subject_lang_koKR': subjectLangKoKR,
-      'Subject_lang_frFR': subjectLangFrFR,
-      'Subject_lang_deDE': subjectLangDeDE,
-      'Subject_lang_zhCN': subjectLangZhCN,
-      'Subject_lang_zhTW': subjectLangZhTW,
-      'Subject_lang_esES': subjectLangEsES,
-      'Subject_lang_esMX': subjectLangEsMX,
-      'Subject_lang_ruRU': subjectLangRuRU,
-      'Subject_lang_jaJP': subjectLangJaJP,
-      'Subject_lang_ptPT': subjectLangPtPT,
-      'Subject_lang_ptBR': subjectLangPtBR,
-      'Subject_lang_itIT': subjectLangItIT,
-      'Subject_lang_unk1': subjectLangUnk1,
-      'Subject_lang_unk2': subjectLangUnk2,
-      'Subject_lang_unk3': subjectLangUnk3,
-      'Subject_lang_Flags': subjectLangFlags,
-      'Body_lang_enUS': bodyLangEnUS,
-      'Body_lang_koKR': bodyLangKoKR,
-      'Body_lang_frFR': bodyLangFrFR,
-      'Body_lang_deDE': bodyLangDeDE,
-      'Body_lang_zhCN': bodyLangZhCN,
-      'Body_lang_zhTW': bodyLangZhTW,
-      'Body_lang_esES': bodyLangEsES,
-      'Body_lang_esMX': bodyLangEsMX,
-      'Body_lang_ruRU': bodyLangRuRU,
-      'Body_lang_jaJP': bodyLangJaJP,
-      'Body_lang_ptPT': bodyLangPtPT,
-      'Body_lang_ptBR': bodyLangPtBR,
-      'Body_lang_itIT': bodyLangItIT,
-      'Body_lang_unk1': bodyLangUnk1,
-      'Body_lang_unk2': bodyLangUnk2,
-      'Body_lang_unk3': bodyLangUnk3,
-      'Body_lang_Flags': bodyLangFlags,
-    };
-  }
+  factory MailTemplateEntity.fromJson(Map<String, dynamic> json) =>
+      _MailTemplateEntityMixin.fromJson(json);
 }

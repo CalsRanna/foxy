@@ -1,10 +1,32 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'gossip_menu_option_locale_entity.g.dart';
+
 /// gossip_menu_option_locale 本地化模型
 /// 复合键: MenuID + OptionID + Locale
-class GossipMenuOptionLocaleEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'gossip_menu_option_locale')
+class GossipMenuOptionLocaleEntity with _GossipMenuOptionLocaleEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('MenuID', key: true)
   final int menuId;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionID', key: true)
   final int optionId;
+
+  @FoxyBriefField()
+  @FoxyFullField('Locale', key: true)
   final String locale;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionText')
   final String optionText;
+
+  @FoxyFullField('BoxText')
   final String boxText;
 
   const GossipMenuOptionLocaleEntity({
@@ -15,39 +37,6 @@ class GossipMenuOptionLocaleEntity {
     this.boxText = '',
   });
 
-  factory GossipMenuOptionLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return GossipMenuOptionLocaleEntity(
-      menuId: json['MenuID'] ?? 0,
-      optionId: json['OptionID'] ?? 0,
-      locale: json['Locale']?.toString() ?? 'zhCN',
-      optionText: json['OptionText']?.toString() ?? '',
-      boxText: json['BoxText']?.toString() ?? '',
-    );
-  }
-
-  GossipMenuOptionLocaleEntity copyWith({
-    int? menuId,
-    int? optionId,
-    String? locale,
-    String? optionText,
-    String? boxText,
-  }) {
-    return GossipMenuOptionLocaleEntity(
-      menuId: menuId ?? this.menuId,
-      optionId: optionId ?? this.optionId,
-      locale: locale ?? this.locale,
-      optionText: optionText ?? this.optionText,
-      boxText: boxText ?? this.boxText,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'MenuID': menuId,
-      'OptionID': optionId,
-      'Locale': locale,
-      'OptionText': optionText,
-      'BoxText': boxText,
-    };
-  }
+  factory GossipMenuOptionLocaleEntity.fromJson(Map<String, dynamic> json) =>
+      _GossipMenuOptionLocaleEntityMixin.fromJson(json);
 }

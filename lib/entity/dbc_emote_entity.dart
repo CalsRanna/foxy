@@ -1,10 +1,34 @@
-class DbcEmoteEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'dbc_emote_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_emotes')
+class DbcEmoteEntity with _DbcEmoteEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('EmoteSlashCommand')
   final String slashCommand;
+
+  @FoxyBriefField()
+  @FoxyFullField('AnimID')
   final int animId;
+
+  @FoxyFullField('EmoteFlags')
   final int flags;
+
+  @FoxyFullField('EmoteSpecProc')
   final int specProc;
+
+  @FoxyFullField('EmoteSpecProcParam')
   final int specProcParam;
+
+  @FoxyFullField('EventSoundID')
   final int eventSoundId;
 
   const DbcEmoteEntity({
@@ -17,23 +41,6 @@ class DbcEmoteEntity {
     this.eventSoundId = 0,
   });
 
-  factory DbcEmoteEntity.fromJson(Map<String, dynamic> json) => DbcEmoteEntity(
-    id: json['ID'] ?? 0,
-    slashCommand: json['EmoteSlashCommand'] ?? '',
-    animId: json['AnimID'] ?? 0,
-    flags: json['EmoteFlags'] ?? 0,
-    specProc: json['EmoteSpecProc'] ?? 0,
-    specProcParam: json['EmoteSpecProcParam'] ?? 0,
-    eventSoundId: json['EventSoundID'] ?? 0,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'EmoteSlashCommand': slashCommand,
-    'AnimID': animId,
-    'EmoteFlags': flags,
-    'EmoteSpecProc': specProc,
-    'EmoteSpecProcParam': specProcParam,
-    'EventSoundID': eventSoundId,
-  };
+  factory DbcEmoteEntity.fromJson(Map<String, dynamic> json) =>
+      _DbcEmoteEntityMixin.fromJson(json);
 }

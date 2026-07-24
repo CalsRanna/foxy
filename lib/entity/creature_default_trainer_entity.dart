@@ -1,25 +1,21 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_default_trainer_entity.g.dart';
+
 /// 生物默认训练师映射 — 对应 creature_default_trainer 表。
-class CreatureDefaultTrainerEntity {
+
+@FoxyFullEntity(table: 'creature_default_trainer')
+class CreatureDefaultTrainerEntity with _CreatureDefaultTrainerEntityMixin {
+  @FoxyFullField('CreatureId', key: true)
   final int creatureId;
+
+  @FoxyFullField('TrainerId')
   final int trainerId;
 
   const CreatureDefaultTrainerEntity({this.creatureId = 0, this.trainerId = 0});
 
-  factory CreatureDefaultTrainerEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureDefaultTrainerEntity(
-      creatureId: json['CreatureId'] ?? 0,
-      trainerId: json['TrainerId'] ?? 0,
-    );
-  }
-
-  CreatureDefaultTrainerEntity copyWith({int? creatureId, int? trainerId}) {
-    return CreatureDefaultTrainerEntity(
-      creatureId: creatureId ?? this.creatureId,
-      trainerId: trainerId ?? this.trainerId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'CreatureId': creatureId, 'TrainerId': trainerId};
-  }
+  factory CreatureDefaultTrainerEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureDefaultTrainerEntityMixin.fromJson(json);
 }

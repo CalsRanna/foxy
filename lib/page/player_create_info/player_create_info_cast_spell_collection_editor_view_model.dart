@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_key.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/repository/player_create_info_cast_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -57,7 +57,10 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createPlayerCreateInfoCastSpell(parent.race, parent.class_);
+      final candidate = await _repository.createPlayerCreateInfoCastSpell(
+        parent.race,
+        parent.class_,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -113,7 +116,10 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
       if (originalKey == null) {
         await _repository.storePlayerCreateInfoCastSpell(candidate);
       } else {
-        await _repository.updatePlayerCreateInfoCastSpell(originalKey, candidate);
+        await _repository.updatePlayerCreateInfoCastSpell(
+          originalKey,
+          candidate,
+        );
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -156,12 +162,13 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
     await _refresh();
   }
 
-  PlayerCreateInfoCastSpellEntity _collectCandidate() => PlayerCreateInfoCastSpellEntity(
-    raceMask: raceMaskController.collect(),
-    classMask: classMaskController.collect(),
-    spell: spellController.collect(),
-    note: noteController.collect(),
-  );
+  PlayerCreateInfoCastSpellEntity _collectCandidate() =>
+      PlayerCreateInfoCastSpellEntity(
+        raceMask: raceMaskController.collect(),
+        classMask: classMaskController.collect(),
+        spell: spellController.collect(),
+        note: noteController.collect(),
+      );
 
   void _applyCandidate(PlayerCreateInfoCastSpellEntity entity) {
     raceMaskController.init(entity.raceMask);
@@ -178,11 +185,18 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final count = await _repository.countPlayerCreateInfoCastSpells(parent.race, parent.class_);
+      final count = await _repository.countPlayerCreateInfoCastSpells(
+        parent.race,
+        parent.class_,
+      );
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefPlayerCreateInfoCastSpells(parent.race, parent.class_, page: nextPage);
+      final data = await _repository.getBriefPlayerCreateInfoCastSpells(
+        parent.race,
+        parent.class_,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

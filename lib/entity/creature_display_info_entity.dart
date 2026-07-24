@@ -1,20 +1,59 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_display_info_entity.g.dart';
+
 /// 生物显示信息 — 对应 foxy.dbc_creature_display_info 表
-class CreatureDisplayInfoEntity {
+
+@FoxyFullEntity(table: 'foxy.dbc_creature_display_info')
+class CreatureDisplayInfoEntity with _CreatureDisplayInfoEntityMixin {
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('ModelID')
   final int modelId;
+
+  @FoxyFullField('SoundID')
   final int soundId;
+
+  @FoxyFullField('ExtendedDisplayInfoID')
   final int extendedDisplayInfoId;
+
+  @FoxyFullField('CreatureModelScale')
   final double creatureModelScale;
+
+  @FoxyFullField('CreatureModelAlpha')
   final int creatureModelAlpha;
+
+  @FoxyFullField('TextureVariation0')
   final String textureVariation0;
+
+  @FoxyFullField('TextureVariation1')
   final String textureVariation1;
+
+  @FoxyFullField('TextureVariation2')
   final String textureVariation2;
+
+  @FoxyFullField('PortraitTextureName')
   final String portraitTextureName;
+
+  @FoxyFullField('SizeClass')
   final int sizeClass;
+
+  @FoxyFullField('BloodID')
   final int bloodID;
+
+  @FoxyFullField('NPCSoundID')
   final int npcSoundID;
+
+  @FoxyFullField('ParticleColorID')
   final int particleColorID;
+
+  @FoxyFullField('CreatureGeosetData')
   final int creatureGeosetData;
+
+  @FoxyFullField('ObjectEffectPackageID')
   final int objectEffectPackageID;
 
   const CreatureDisplayInfoEntity({
@@ -36,85 +75,6 @@ class CreatureDisplayInfoEntity {
     this.objectEffectPackageID = 0,
   });
 
-  factory CreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureDisplayInfoEntity(
-      id: json['ID'] ?? 0,
-      modelId: json['ModelID'] ?? 0,
-      soundId: json['SoundID'] ?? 0,
-      extendedDisplayInfoId: json['ExtendedDisplayInfoID'] ?? 0,
-      creatureModelScale: json['CreatureModelScale'] ?? 1.0,
-      creatureModelAlpha: json['CreatureModelAlpha'] ?? 0,
-      textureVariation0: json['TextureVariation0'] ?? '',
-      textureVariation1: json['TextureVariation1'] ?? '',
-      textureVariation2: json['TextureVariation2'] ?? '',
-      portraitTextureName: json['PortraitTextureName'] ?? '',
-      sizeClass: json['SizeClass'] ?? 0,
-      bloodID: json['BloodID'] ?? 0,
-      npcSoundID: json['NPCSoundID'] ?? 0,
-      particleColorID: json['ParticleColorID'] ?? 0,
-      creatureGeosetData: json['CreatureGeosetData'] ?? 0,
-      objectEffectPackageID: json['ObjectEffectPackageID'] ?? 0,
-    );
-  }
-
-  CreatureDisplayInfoEntity copyWith({
-    int? id,
-    int? modelId,
-    int? soundId,
-    int? extendedDisplayInfoId,
-    double? creatureModelScale,
-    int? creatureModelAlpha,
-    String? textureVariation0,
-    String? textureVariation1,
-    String? textureVariation2,
-    String? portraitTextureName,
-    int? sizeClass,
-    int? bloodID,
-    int? npcSoundID,
-    int? particleColorID,
-    int? creatureGeosetData,
-    int? objectEffectPackageID,
-  }) {
-    return CreatureDisplayInfoEntity(
-      id: id ?? this.id,
-      modelId: modelId ?? this.modelId,
-      soundId: soundId ?? this.soundId,
-      extendedDisplayInfoId:
-          extendedDisplayInfoId ?? this.extendedDisplayInfoId,
-      creatureModelScale: creatureModelScale ?? this.creatureModelScale,
-      creatureModelAlpha: creatureModelAlpha ?? this.creatureModelAlpha,
-      textureVariation0: textureVariation0 ?? this.textureVariation0,
-      textureVariation1: textureVariation1 ?? this.textureVariation1,
-      textureVariation2: textureVariation2 ?? this.textureVariation2,
-      portraitTextureName: portraitTextureName ?? this.portraitTextureName,
-      sizeClass: sizeClass ?? this.sizeClass,
-      bloodID: bloodID ?? this.bloodID,
-      npcSoundID: npcSoundID ?? this.npcSoundID,
-      particleColorID: particleColorID ?? this.particleColorID,
-      creatureGeosetData: creatureGeosetData ?? this.creatureGeosetData,
-      objectEffectPackageID:
-          objectEffectPackageID ?? this.objectEffectPackageID,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ModelID': modelId,
-      'SoundID': soundId,
-      'ExtendedDisplayInfoID': extendedDisplayInfoId,
-      'CreatureModelScale': creatureModelScale,
-      'CreatureModelAlpha': creatureModelAlpha,
-      'TextureVariation0': textureVariation0,
-      'TextureVariation1': textureVariation1,
-      'TextureVariation2': textureVariation2,
-      'PortraitTextureName': portraitTextureName,
-      'SizeClass': sizeClass,
-      'BloodID': bloodID,
-      'NPCSoundID': npcSoundID,
-      'ParticleColorID': particleColorID,
-      'CreatureGeosetData': creatureGeosetData,
-      'ObjectEffectPackageID': objectEffectPackageID,
-    };
-  }
+  factory CreatureDisplayInfoEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureDisplayInfoEntityMixin.fromJson(json);
 }

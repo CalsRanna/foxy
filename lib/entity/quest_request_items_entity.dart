@@ -1,10 +1,32 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_request_items_entity.g.dart';
+
 /// QuestRequestItems 模型
 /// quest_request_items 表，1:1 关系与 quest_template，共享 ID 主键。
-class QuestRequestItemsEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'quest_request_items')
+class QuestRequestItemsEntity with _QuestRequestItemsEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('EmoteOnComplete')
   final int emoteOnComplete;
+
+  @FoxyBriefField()
+  @FoxyFullField('EmoteOnIncomplete')
   final int emoteOnIncomplete;
+
+  @FoxyBriefField()
+  @FoxyFullField('CompletionText')
   final String completionText;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const QuestRequestItemsEntity({
@@ -15,88 +37,6 @@ class QuestRequestItemsEntity {
     this.verifiedBuild = 0,
   });
 
-  factory QuestRequestItemsEntity.fromJson(Map<String, dynamic> json) {
-    return QuestRequestItemsEntity(
-      id: json['ID'] ?? 0,
-      emoteOnComplete: json['EmoteOnComplete'] ?? 0,
-      emoteOnIncomplete: json['EmoteOnIncomplete'] ?? 0,
-      completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  QuestRequestItemsEntity copyWith({
-    int? id,
-    int? emoteOnComplete,
-    int? emoteOnIncomplete,
-    String? completionText,
-    int? verifiedBuild,
-  }) {
-    return QuestRequestItemsEntity(
-      id: id ?? this.id,
-      emoteOnComplete: emoteOnComplete ?? this.emoteOnComplete,
-      emoteOnIncomplete: emoteOnIncomplete ?? this.emoteOnIncomplete,
-      completionText: completionText ?? this.completionText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'EmoteOnComplete': emoteOnComplete,
-      'EmoteOnIncomplete': emoteOnIncomplete,
-      'CompletionText': completionText,
-      'VerifiedBuild': verifiedBuild,
-    };
-    return result;
-  }
-}
-
-/// quest_request_items_locale 本地化模型（复合键: ID + Locale）
-class QuestRequestItemsLocaleEntity {
-  final int id;
-  final String locale;
-  final String completionText;
-  final int verifiedBuild;
-
-  const QuestRequestItemsLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.completionText = '',
-    this.verifiedBuild = 0,
-  });
-
-  factory QuestRequestItemsLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return QuestRequestItemsLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      completionText: json['CompletionText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  QuestRequestItemsLocaleEntity copyWith({
-    int? id,
-    String? locale,
-    String? completionText,
-    int? verifiedBuild,
-  }) {
-    return QuestRequestItemsLocaleEntity(
-      id: id ?? this.id,
-      locale: locale ?? this.locale,
-      completionText: completionText ?? this.completionText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'locale': locale,
-      'CompletionText': completionText,
-      'VerifiedBuild': verifiedBuild,
-    };
-    return result;
-  }
+  factory QuestRequestItemsEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestRequestItemsEntityMixin.fromJson(json);
 }

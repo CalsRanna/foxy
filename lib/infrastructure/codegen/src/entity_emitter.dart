@@ -179,8 +179,10 @@ final class EntityEmitter {
       ..writeln('  const ${model.briefClassName}({');
     for (final field in fields) {
       buffer.writeln(
-        '    this.${field.dartName} = '
-        '${_literal(field.constructorDefaultValue, asType: field.nonNullableType)},',
+        field.nullable && field.constructorDefaultValue == null
+            ? '    this.${field.dartName},'
+            : '    this.${field.dartName} = '
+                  '${_literal(field.constructorDefaultValue, asType: field.nonNullableType)},',
       );
     }
     buffer

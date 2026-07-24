@@ -1,9 +1,36 @@
-class ItemVisualsEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'item_visuals_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_item_visuals')
+class ItemVisualsEntity with _ItemVisualsEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Slot0')
   final int slot0;
+
+  @FoxyBriefField()
+  @FoxyFullField('Slot1')
   final int slot1;
+
+  @FoxyBriefField()
+  @FoxyFullField('Slot2')
   final int slot2;
+
+  @FoxyBriefField()
+  @FoxyFullField('Slot3')
   final int slot3;
+
+  @FoxyBriefField()
+  @FoxyFullField('Slot4')
   final int slot4;
 
   const ItemVisualsEntity({
@@ -15,41 +42,6 @@ class ItemVisualsEntity {
     this.slot4 = 0,
   });
 
-  factory ItemVisualsEntity.fromJson(Map<String, dynamic> json) {
-    return ItemVisualsEntity(
-      id: json['ID'] ?? 0,
-      slot0: json['Slot0'] ?? 0,
-      slot1: json['Slot1'] ?? 0,
-      slot2: json['Slot2'] ?? 0,
-      slot3: json['Slot3'] ?? 0,
-      slot4: json['Slot4'] ?? 0,
-    );
-  }
-
-  ItemVisualsEntity copyWith({
-    int? id,
-    int? slot0,
-    int? slot1,
-    int? slot2,
-    int? slot3,
-    int? slot4,
-  }) {
-    return ItemVisualsEntity(
-      id: id ?? this.id,
-      slot0: slot0 ?? this.slot0,
-      slot1: slot1 ?? this.slot1,
-      slot2: slot2 ?? this.slot2,
-      slot3: slot3 ?? this.slot3,
-      slot4: slot4 ?? this.slot4,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Slot0': slot0,
-    'Slot1': slot1,
-    'Slot2': slot2,
-    'Slot3': slot3,
-    'Slot4': slot4,
-  };
+  factory ItemVisualsEntity.fromJson(Map<String, dynamic> json) =>
+      _ItemVisualsEntityMixin.fromJson(json);
 }

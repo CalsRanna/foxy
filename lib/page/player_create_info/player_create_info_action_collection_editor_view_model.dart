@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_player_create_info_action_entity.dart';
 import 'package:foxy/entity/player_create_info_action_key.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_action_entity.dart';
 import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -51,7 +51,9 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     final parent = parentKey;
     editingKey.value = null;
     selectedKey.value = null;
-    _applyCandidate(PlayerCreateInfoActionEntity(race: parent.race, class_: parent.class_));
+    _applyCandidate(
+      PlayerCreateInfoActionEntity(race: parent.race, class_: parent.class_),
+    );
     await _refresh();
   }
 
@@ -62,7 +64,10 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createPlayerCreateInfoAction(parent.race, parent.class_);
+      final candidate = await _repository.createPlayerCreateInfoAction(
+        parent.race,
+        parent.class_,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -161,13 +166,14 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     await _refresh();
   }
 
-  PlayerCreateInfoActionEntity _collectCandidate() => PlayerCreateInfoActionEntity(
-    race: raceController.collect(),
-    class_: classController.collect(),
-    button: buttonController.collect(),
-    action: actionController.collect(),
-    type: typeController.collect(),
-  );
+  PlayerCreateInfoActionEntity _collectCandidate() =>
+      PlayerCreateInfoActionEntity(
+        race: raceController.collect(),
+        class_: classController.collect(),
+        button: buttonController.collect(),
+        action: actionController.collect(),
+        type: typeController.collect(),
+      );
 
   void _applyCandidate(PlayerCreateInfoActionEntity item) {
     raceController.init(item.race);
@@ -186,11 +192,18 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final count = await _repository.countPlayerCreateInfoActions(parent.race, parent.class_);
+      final count = await _repository.countPlayerCreateInfoActions(
+        parent.race,
+        parent.class_,
+      );
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefPlayerCreateInfoActions(parent.race, parent.class_, page: nextPage);
+      final data = await _repository.getBriefPlayerCreateInfoActions(
+        parent.race,
+        parent.class_,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

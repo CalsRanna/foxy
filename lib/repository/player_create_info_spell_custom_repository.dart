@@ -1,6 +1,6 @@
 import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/brief_player_create_info_spell_custom_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -29,8 +29,8 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
     int race,
     int playerClass,
   ) async => PlayerCreateInfoSpellCustomEntity(
-    racemask: playerCreateRaceBit(race),
-    classmask: playerCreateClassBit(playerClass),
+    raceMask: playerCreateRaceBit(race),
+    classMask: playerCreateClassBit(playerClass),
   );
 
   Future<void> destroyPlayerCreateInfoSpellCustom(

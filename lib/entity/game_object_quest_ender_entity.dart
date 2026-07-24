@@ -1,24 +1,19 @@
-class GameObjectQuestEnderEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'game_object_quest_ender_entity.g.dart';
+
+@FoxyFullEntity(table: 'gameobject_questender')
+class GameObjectQuestEnderEntity with _GameObjectQuestEnderEntityMixin {
+  @FoxyFullField('id', key: true)
   final int id;
+
+  @FoxyFullField('quest', key: true)
   final int quest;
 
   const GameObjectQuestEnderEntity({this.id = 0, this.quest = 0});
 
-  factory GameObjectQuestEnderEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectQuestEnderEntity(
-      id: json['id'] ?? 0,
-      quest: json['quest'] ?? 0,
-    );
-  }
-
-  GameObjectQuestEnderEntity copyWith({int? id, int? quest}) {
-    return GameObjectQuestEnderEntity(
-      id: id ?? this.id,
-      quest: quest ?? this.quest,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'quest': quest};
-  }
+  factory GameObjectQuestEnderEntity.fromJson(Map<String, dynamic> json) =>
+      _GameObjectQuestEnderEntityMixin.fromJson(json);
 }

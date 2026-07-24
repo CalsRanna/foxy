@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:foxy/entity/quest_offer_reward_entity.dart';
+import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
 
 @immutable
 final class QuestOfferRewardLocaleKey {

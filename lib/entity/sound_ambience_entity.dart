@@ -1,6 +1,24 @@
-class SoundAmbienceEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'sound_ambience_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_sound_ambience')
+class SoundAmbienceEntity with _SoundAmbienceEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('AmbienceID0')
   final int ambienceId0;
+
+  @FoxyBriefField()
+  @FoxyFullField('AmbienceID1')
   final int ambienceId1;
 
   const SoundAmbienceEntity({
@@ -10,23 +28,5 @@ class SoundAmbienceEntity {
   });
 
   factory SoundAmbienceEntity.fromJson(Map<String, dynamic> json) =>
-      SoundAmbienceEntity(
-        id: json['ID'] ?? 0,
-        ambienceId0: json['AmbienceID0'] ?? 0,
-        ambienceId1: json['AmbienceID1'] ?? 0,
-      );
-
-  SoundAmbienceEntity copyWith({int? id, int? ambienceId0, int? ambienceId1}) {
-    return SoundAmbienceEntity(
-      id: id ?? this.id,
-      ambienceId0: ambienceId0 ?? this.ambienceId0,
-      ambienceId1: ambienceId1 ?? this.ambienceId1,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'AmbienceID0': ambienceId0,
-    'AmbienceID1': ambienceId1,
-  };
+      _SoundAmbienceEntityMixin.fromJson(json);
 }

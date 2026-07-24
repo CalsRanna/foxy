@@ -1,5 +1,5 @@
 import 'package:foxy/entity/brief_quest_request_items_locale_entity.dart';
-import 'package:foxy/entity/quest_request_items_entity.dart';
+import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';

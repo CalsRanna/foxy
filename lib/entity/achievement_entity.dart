@@ -1,65 +1,200 @@
-class AchievementEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'achievement_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_achievement')
+class AchievementEntity with _AchievementEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('Faction')
   final int faction;
+
+  @FoxyFullField('Instance_ID')
   final int instanceId;
+
+  @FoxyFullField('Supercedes')
   final int supercedes;
+
+  @FoxyFullField('Title_lang_enUS')
   final String titleLangEnUS;
+
+  @FoxyFullField('Title_lang_koKR')
   final String titleLangKoKR;
+
+  @FoxyFullField('Title_lang_frFR')
   final String titleLangFrFR;
+
+  @FoxyFullField('Title_lang_deDE')
   final String titleLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Title_lang_zhCN')
   final String titleLangZhCN;
+
+  @FoxyFullField('Title_lang_zhTW')
   final String titleLangZhTW;
+
+  @FoxyFullField('Title_lang_esES')
   final String titleLangEsES;
+
+  @FoxyFullField('Title_lang_esMX')
   final String titleLangEsMX;
+
+  @FoxyFullField('Title_lang_ruRU')
   final String titleLangRuRU;
+
+  @FoxyFullField('Title_lang_jaJP')
   final String titleLangJaJP;
+
+  @FoxyFullField('Title_lang_ptPT')
   final String titleLangPtPT;
+
+  @FoxyFullField('Title_lang_ptBR')
   final String titleLangPtBR;
+
+  @FoxyFullField('Title_lang_itIT')
   final String titleLangItIT;
+
+  @FoxyFullField('Title_lang_unk1')
   final String titleLangUnk1;
+
+  @FoxyFullField('Title_lang_unk2')
   final String titleLangUnk2;
+
+  @FoxyFullField('Title_lang_unk3')
   final String titleLangUnk3;
+
+  @FoxyFullField('Title_lang_Flags')
   final int titleLangFlags;
+
+  @FoxyFullField('Description_lang_enUS')
   final String descriptionLangEnUS;
+
+  @FoxyFullField('Description_lang_koKR')
   final String descriptionLangKoKR;
+
+  @FoxyFullField('Description_lang_frFR')
   final String descriptionLangFrFR;
+
+  @FoxyFullField('Description_lang_deDE')
   final String descriptionLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Description_lang_zhCN')
   final String descriptionLangZhCN;
+
+  @FoxyFullField('Description_lang_zhTW')
   final String descriptionLangZhTW;
+
+  @FoxyFullField('Description_lang_esES')
   final String descriptionLangEsES;
+
+  @FoxyFullField('Description_lang_esMX')
   final String descriptionLangEsMX;
+
+  @FoxyFullField('Description_lang_ruRU')
   final String descriptionLangRuRU;
+
+  @FoxyFullField('Description_lang_jaJP')
   final String descriptionLangJaJP;
+
+  @FoxyFullField('Description_lang_ptPT')
   final String descriptionLangPtPT;
+
+  @FoxyFullField('Description_lang_ptBR')
   final String descriptionLangPtBR;
+
+  @FoxyFullField('Description_lang_itIT')
   final String descriptionLangItIT;
+
+  @FoxyFullField('Description_lang_unk1')
   final String descriptionLangUnk1;
+
+  @FoxyFullField('Description_lang_unk2')
   final String descriptionLangUnk2;
+
+  @FoxyFullField('Description_lang_unk3')
   final String descriptionLangUnk3;
+
+  @FoxyFullField('Description_lang_Flags')
   final int descriptionLangFlags;
+
+  @FoxyFullField('Category')
   final int category;
+
+  @FoxyFullField('Points')
   final int points;
+
+  @FoxyFullField('Ui_order')
   final int uiOrder;
+
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyFullField('IconID')
   final int iconId;
+
+  @FoxyFullField('Reward_lang_enUS')
   final String rewardLangEnUS;
+
+  @FoxyFullField('Reward_lang_koKR')
   final String rewardLangKoKR;
+
+  @FoxyFullField('Reward_lang_frFR')
   final String rewardLangFrFR;
+
+  @FoxyFullField('Reward_lang_deDE')
   final String rewardLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Reward_lang_zhCN')
   final String rewardLangZhCN;
+
+  @FoxyFullField('Reward_lang_zhTW')
   final String rewardLangZhTW;
+
+  @FoxyFullField('Reward_lang_esES')
   final String rewardLangEsES;
+
+  @FoxyFullField('Reward_lang_esMX')
   final String rewardLangEsMX;
+
+  @FoxyFullField('Reward_lang_ruRU')
   final String rewardLangRuRU;
+
+  @FoxyFullField('Reward_lang_jaJP')
   final String rewardLangJaJP;
+
+  @FoxyFullField('Reward_lang_ptPT')
   final String rewardLangPtPT;
+
+  @FoxyFullField('Reward_lang_ptBR')
   final String rewardLangPtBR;
+
+  @FoxyFullField('Reward_lang_itIT')
   final String rewardLangItIT;
+
+  @FoxyFullField('Reward_lang_unk1')
   final String rewardLangUnk1;
+
+  @FoxyFullField('Reward_lang_unk2')
   final String rewardLangUnk2;
+
+  @FoxyFullField('Reward_lang_unk3')
   final String rewardLangUnk3;
+
+  @FoxyFullField('Reward_lang_Flags')
   final int rewardLangFlags;
+
+  @FoxyFullField('Minimum_criteria')
   final int minimumCriteria;
+
+  @FoxyFullField('Shares_criteria')
   final int sharesCriteria;
 
   const AchievementEntity({
@@ -127,267 +262,6 @@ class AchievementEntity {
     this.sharesCriteria = 0,
   });
 
-  factory AchievementEntity.fromJson(Map<String, dynamic> json) {
-    return AchievementEntity(
-      id: json['ID'] ?? 0,
-      faction: json['Faction'] ?? 0,
-      instanceId: json['Instance_ID'] ?? 0,
-      supercedes: json['Supercedes'] ?? 0,
-      titleLangEnUS: json['Title_lang_enUS'] ?? '',
-      titleLangKoKR: json['Title_lang_koKR'] ?? '',
-      titleLangFrFR: json['Title_lang_frFR'] ?? '',
-      titleLangDeDE: json['Title_lang_deDE'] ?? '',
-      titleLangZhCN: json['Title_lang_zhCN'] ?? '',
-      titleLangZhTW: json['Title_lang_zhTW'] ?? '',
-      titleLangEsES: json['Title_lang_esES'] ?? '',
-      titleLangEsMX: json['Title_lang_esMX'] ?? '',
-      titleLangRuRU: json['Title_lang_ruRU'] ?? '',
-      titleLangJaJP: json['Title_lang_jaJP'] ?? '',
-      titleLangPtPT: json['Title_lang_ptPT'] ?? '',
-      titleLangPtBR: json['Title_lang_ptBR'] ?? '',
-      titleLangItIT: json['Title_lang_itIT'] ?? '',
-      titleLangUnk1: json['Title_lang_unk1'] ?? '',
-      titleLangUnk2: json['Title_lang_unk2'] ?? '',
-      titleLangUnk3: json['Title_lang_unk3'] ?? '',
-      titleLangFlags: json['Title_lang_Flags'] ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS'] ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR'] ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR'] ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE'] ?? '',
-      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW'] ?? '',
-      descriptionLangEsES: json['Description_lang_esES'] ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX'] ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU'] ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP'] ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT'] ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR'] ?? '',
-      descriptionLangItIT: json['Description_lang_itIT'] ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1'] ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2'] ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3'] ?? '',
-      descriptionLangFlags: json['Description_lang_Flags'] ?? 0,
-      category: json['Category'] ?? 0,
-      points: json['Points'] ?? 0,
-      uiOrder: json['Ui_order'] ?? 0,
-      flags: json['Flags'] ?? 0,
-      iconId: json['IconID'] ?? 0,
-      rewardLangEnUS: json['Reward_lang_enUS'] ?? '',
-      rewardLangKoKR: json['Reward_lang_koKR'] ?? '',
-      rewardLangFrFR: json['Reward_lang_frFR'] ?? '',
-      rewardLangDeDE: json['Reward_lang_deDE'] ?? '',
-      rewardLangZhCN: json['Reward_lang_zhCN'] ?? '',
-      rewardLangZhTW: json['Reward_lang_zhTW'] ?? '',
-      rewardLangEsES: json['Reward_lang_esES'] ?? '',
-      rewardLangEsMX: json['Reward_lang_esMX'] ?? '',
-      rewardLangRuRU: json['Reward_lang_ruRU'] ?? '',
-      rewardLangJaJP: json['Reward_lang_jaJP'] ?? '',
-      rewardLangPtPT: json['Reward_lang_ptPT'] ?? '',
-      rewardLangPtBR: json['Reward_lang_ptBR'] ?? '',
-      rewardLangItIT: json['Reward_lang_itIT'] ?? '',
-      rewardLangUnk1: json['Reward_lang_unk1'] ?? '',
-      rewardLangUnk2: json['Reward_lang_unk2'] ?? '',
-      rewardLangUnk3: json['Reward_lang_unk3'] ?? '',
-      rewardLangFlags: json['Reward_lang_Flags'] ?? 0,
-      minimumCriteria: json['Minimum_criteria'] ?? 0,
-      sharesCriteria: json['Shares_criteria'] ?? 0,
-    );
-  }
-
-  AchievementEntity copyWith({
-    int? id,
-    int? faction,
-    int? instanceId,
-    int? supercedes,
-    String? titleLangEnUS,
-    String? titleLangKoKR,
-    String? titleLangFrFR,
-    String? titleLangDeDE,
-    String? titleLangZhCN,
-    String? titleLangZhTW,
-    String? titleLangEsES,
-    String? titleLangEsMX,
-    String? titleLangRuRU,
-    String? titleLangJaJP,
-    String? titleLangPtPT,
-    String? titleLangPtBR,
-    String? titleLangItIT,
-    String? titleLangUnk1,
-    String? titleLangUnk2,
-    String? titleLangUnk3,
-    int? titleLangFlags,
-    String? descriptionLangEnUS,
-    String? descriptionLangKoKR,
-    String? descriptionLangFrFR,
-    String? descriptionLangDeDE,
-    String? descriptionLangZhCN,
-    String? descriptionLangZhTW,
-    String? descriptionLangEsES,
-    String? descriptionLangEsMX,
-    String? descriptionLangRuRU,
-    String? descriptionLangJaJP,
-    String? descriptionLangPtPT,
-    String? descriptionLangPtBR,
-    String? descriptionLangItIT,
-    String? descriptionLangUnk1,
-    String? descriptionLangUnk2,
-    String? descriptionLangUnk3,
-    int? descriptionLangFlags,
-    int? category,
-    int? points,
-    int? uiOrder,
-    int? flags,
-    int? iconId,
-    String? rewardLangEnUS,
-    String? rewardLangKoKR,
-    String? rewardLangFrFR,
-    String? rewardLangDeDE,
-    String? rewardLangZhCN,
-    String? rewardLangZhTW,
-    String? rewardLangEsES,
-    String? rewardLangEsMX,
-    String? rewardLangRuRU,
-    String? rewardLangJaJP,
-    String? rewardLangPtPT,
-    String? rewardLangPtBR,
-    String? rewardLangItIT,
-    String? rewardLangUnk1,
-    String? rewardLangUnk2,
-    String? rewardLangUnk3,
-    int? rewardLangFlags,
-    int? minimumCriteria,
-    int? sharesCriteria,
-  }) {
-    return AchievementEntity(
-      id: id ?? this.id,
-      faction: faction ?? this.faction,
-      instanceId: instanceId ?? this.instanceId,
-      supercedes: supercedes ?? this.supercedes,
-      titleLangEnUS: titleLangEnUS ?? this.titleLangEnUS,
-      titleLangKoKR: titleLangKoKR ?? this.titleLangKoKR,
-      titleLangFrFR: titleLangFrFR ?? this.titleLangFrFR,
-      titleLangDeDE: titleLangDeDE ?? this.titleLangDeDE,
-      titleLangZhCN: titleLangZhCN ?? this.titleLangZhCN,
-      titleLangZhTW: titleLangZhTW ?? this.titleLangZhTW,
-      titleLangEsES: titleLangEsES ?? this.titleLangEsES,
-      titleLangEsMX: titleLangEsMX ?? this.titleLangEsMX,
-      titleLangRuRU: titleLangRuRU ?? this.titleLangRuRU,
-      titleLangJaJP: titleLangJaJP ?? this.titleLangJaJP,
-      titleLangPtPT: titleLangPtPT ?? this.titleLangPtPT,
-      titleLangPtBR: titleLangPtBR ?? this.titleLangPtBR,
-      titleLangItIT: titleLangItIT ?? this.titleLangItIT,
-      titleLangUnk1: titleLangUnk1 ?? this.titleLangUnk1,
-      titleLangUnk2: titleLangUnk2 ?? this.titleLangUnk2,
-      titleLangUnk3: titleLangUnk3 ?? this.titleLangUnk3,
-      titleLangFlags: titleLangFlags ?? this.titleLangFlags,
-      descriptionLangEnUS: descriptionLangEnUS ?? this.descriptionLangEnUS,
-      descriptionLangKoKR: descriptionLangKoKR ?? this.descriptionLangKoKR,
-      descriptionLangFrFR: descriptionLangFrFR ?? this.descriptionLangFrFR,
-      descriptionLangDeDE: descriptionLangDeDE ?? this.descriptionLangDeDE,
-      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
-      descriptionLangZhTW: descriptionLangZhTW ?? this.descriptionLangZhTW,
-      descriptionLangEsES: descriptionLangEsES ?? this.descriptionLangEsES,
-      descriptionLangEsMX: descriptionLangEsMX ?? this.descriptionLangEsMX,
-      descriptionLangRuRU: descriptionLangRuRU ?? this.descriptionLangRuRU,
-      descriptionLangJaJP: descriptionLangJaJP ?? this.descriptionLangJaJP,
-      descriptionLangPtPT: descriptionLangPtPT ?? this.descriptionLangPtPT,
-      descriptionLangPtBR: descriptionLangPtBR ?? this.descriptionLangPtBR,
-      descriptionLangItIT: descriptionLangItIT ?? this.descriptionLangItIT,
-      descriptionLangUnk1: descriptionLangUnk1 ?? this.descriptionLangUnk1,
-      descriptionLangUnk2: descriptionLangUnk2 ?? this.descriptionLangUnk2,
-      descriptionLangUnk3: descriptionLangUnk3 ?? this.descriptionLangUnk3,
-      descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
-      category: category ?? this.category,
-      points: points ?? this.points,
-      uiOrder: uiOrder ?? this.uiOrder,
-      flags: flags ?? this.flags,
-      iconId: iconId ?? this.iconId,
-      rewardLangEnUS: rewardLangEnUS ?? this.rewardLangEnUS,
-      rewardLangKoKR: rewardLangKoKR ?? this.rewardLangKoKR,
-      rewardLangFrFR: rewardLangFrFR ?? this.rewardLangFrFR,
-      rewardLangDeDE: rewardLangDeDE ?? this.rewardLangDeDE,
-      rewardLangZhCN: rewardLangZhCN ?? this.rewardLangZhCN,
-      rewardLangZhTW: rewardLangZhTW ?? this.rewardLangZhTW,
-      rewardLangEsES: rewardLangEsES ?? this.rewardLangEsES,
-      rewardLangEsMX: rewardLangEsMX ?? this.rewardLangEsMX,
-      rewardLangRuRU: rewardLangRuRU ?? this.rewardLangRuRU,
-      rewardLangJaJP: rewardLangJaJP ?? this.rewardLangJaJP,
-      rewardLangPtPT: rewardLangPtPT ?? this.rewardLangPtPT,
-      rewardLangPtBR: rewardLangPtBR ?? this.rewardLangPtBR,
-      rewardLangItIT: rewardLangItIT ?? this.rewardLangItIT,
-      rewardLangUnk1: rewardLangUnk1 ?? this.rewardLangUnk1,
-      rewardLangUnk2: rewardLangUnk2 ?? this.rewardLangUnk2,
-      rewardLangUnk3: rewardLangUnk3 ?? this.rewardLangUnk3,
-      rewardLangFlags: rewardLangFlags ?? this.rewardLangFlags,
-      minimumCriteria: minimumCriteria ?? this.minimumCriteria,
-      sharesCriteria: sharesCriteria ?? this.sharesCriteria,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Faction': faction,
-      'Instance_ID': instanceId,
-      'Supercedes': supercedes,
-      'Title_lang_enUS': titleLangEnUS,
-      'Title_lang_koKR': titleLangKoKR,
-      'Title_lang_frFR': titleLangFrFR,
-      'Title_lang_deDE': titleLangDeDE,
-      'Title_lang_zhCN': titleLangZhCN,
-      'Title_lang_zhTW': titleLangZhTW,
-      'Title_lang_esES': titleLangEsES,
-      'Title_lang_esMX': titleLangEsMX,
-      'Title_lang_ruRU': titleLangRuRU,
-      'Title_lang_jaJP': titleLangJaJP,
-      'Title_lang_ptPT': titleLangPtPT,
-      'Title_lang_ptBR': titleLangPtBR,
-      'Title_lang_itIT': titleLangItIT,
-      'Title_lang_unk1': titleLangUnk1,
-      'Title_lang_unk2': titleLangUnk2,
-      'Title_lang_unk3': titleLangUnk3,
-      'Title_lang_Flags': titleLangFlags,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-      'Category': category,
-      'Points': points,
-      'Ui_order': uiOrder,
-      'Flags': flags,
-      'IconID': iconId,
-      'Reward_lang_enUS': rewardLangEnUS,
-      'Reward_lang_koKR': rewardLangKoKR,
-      'Reward_lang_frFR': rewardLangFrFR,
-      'Reward_lang_deDE': rewardLangDeDE,
-      'Reward_lang_zhCN': rewardLangZhCN,
-      'Reward_lang_zhTW': rewardLangZhTW,
-      'Reward_lang_esES': rewardLangEsES,
-      'Reward_lang_esMX': rewardLangEsMX,
-      'Reward_lang_ruRU': rewardLangRuRU,
-      'Reward_lang_jaJP': rewardLangJaJP,
-      'Reward_lang_ptPT': rewardLangPtPT,
-      'Reward_lang_ptBR': rewardLangPtBR,
-      'Reward_lang_itIT': rewardLangItIT,
-      'Reward_lang_unk1': rewardLangUnk1,
-      'Reward_lang_unk2': rewardLangUnk2,
-      'Reward_lang_unk3': rewardLangUnk3,
-      'Reward_lang_Flags': rewardLangFlags,
-      'Minimum_criteria': minimumCriteria,
-      'Shares_criteria': sharesCriteria,
-    };
-  }
+  factory AchievementEntity.fromJson(Map<String, dynamic> json) =>
+      _AchievementEntityMixin.fromJson(json);
 }

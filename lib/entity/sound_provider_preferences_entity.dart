@@ -1,27 +1,88 @@
-class SoundProviderPreferencesEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'sound_provider_preferences_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_sound_provider_preferences')
+class SoundProviderPreferencesEntity with _SoundProviderPreferencesEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Description')
   final String description;
+
+  @FoxyBriefField()
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyFullField('EAXEnvironmentSelection')
   final int eaxEnvironmentSelection;
+
+  @FoxyFullField('EAXDecayTime')
   final double eaxDecayTime;
+
+  @FoxyFullField('EAX2EnvironmentSize')
   final double eax2EnvironmentSize;
+
+  @FoxyFullField('EAX2EnvironmentDiffusion')
   final double eax2EnvironmentDiffusion;
+
+  @FoxyFullField('EAX2Room')
   final int eax2Room;
+
+  @FoxyFullField('EAX2RoomHF')
   final int eax2RoomHf;
+
+  @FoxyFullField('EAX2DecayHFRatio')
   final double eax2DecayHfRatio;
+
+  @FoxyFullField('EAX2Reflections')
   final int eax2Reflections;
+
+  @FoxyFullField('EAX2ReflectionsDelay')
   final double eax2ReflectionsDelay;
+
+  @FoxyFullField('EAX2Reverb')
   final int eax2Reverb;
+
+  @FoxyFullField('EAX2ReverbDelay')
   final double eax2ReverbDelay;
+
+  @FoxyFullField('EAX2RoomRolloff')
   final double eax2RoomRolloff;
+
+  @FoxyFullField('EAX2AirAbsorption')
   final double eax2AirAbsorption;
+
+  @FoxyFullField('EAX3RoomLF')
   final int eax3RoomLf;
+
+  @FoxyFullField('EAX3DecayLFRatio')
   final double eax3DecayLfRatio;
+
+  @FoxyFullField('EAX3EchoTime')
   final double eax3EchoTime;
+
+  @FoxyFullField('EAX3EchoDepth')
   final double eax3EchoDepth;
+
+  @FoxyFullField('EAX3ModulationTime')
   final double eax3ModulationTime;
+
+  @FoxyFullField('EAX3ModulationDepth')
   final double eax3ModulationDepth;
+
+  @FoxyFullField('EAX3HFReference')
   final double eax3HfReference;
+
+  @FoxyFullField('EAX3LFReference')
   final double eax3LfReference;
 
   const SoundProviderPreferencesEntity({
@@ -51,63 +112,6 @@ class SoundProviderPreferencesEntity {
     this.eax3LfReference = 0.0,
   });
 
-  factory SoundProviderPreferencesEntity.fromJson(
-    Map<String, dynamic> json,
-  ) => SoundProviderPreferencesEntity(
-    id: json['ID'] ?? 0,
-    description: json['Description'] ?? '',
-    flags: json['Flags'] ?? 0,
-    eaxEnvironmentSelection: json['EAXEnvironmentSelection'] ?? 0,
-    eaxDecayTime: (json['EAXDecayTime'] as num?)?.toDouble() ?? 0.0,
-    eax2EnvironmentSize:
-        (json['EAX2EnvironmentSize'] as num?)?.toDouble() ?? 0.0,
-    eax2EnvironmentDiffusion:
-        (json['EAX2EnvironmentDiffusion'] as num?)?.toDouble() ?? 0.0,
-    eax2Room: json['EAX2Room'] ?? 0,
-    eax2RoomHf: json['EAX2RoomHF'] ?? 0,
-    eax2DecayHfRatio: (json['EAX2DecayHFRatio'] as num?)?.toDouble() ?? 0.0,
-    eax2Reflections: json['EAX2Reflections'] ?? 0,
-    eax2ReflectionsDelay:
-        (json['EAX2ReflectionsDelay'] as num?)?.toDouble() ?? 0.0,
-    eax2Reverb: json['EAX2Reverb'] ?? 0,
-    eax2ReverbDelay: (json['EAX2ReverbDelay'] as num?)?.toDouble() ?? 0.0,
-    eax2RoomRolloff: (json['EAX2RoomRolloff'] as num?)?.toDouble() ?? 0.0,
-    eax2AirAbsorption: (json['EAX2AirAbsorption'] as num?)?.toDouble() ?? 0.0,
-    eax3RoomLf: json['EAX3RoomLF'] ?? 0,
-    eax3DecayLfRatio: (json['EAX3DecayLFRatio'] as num?)?.toDouble() ?? 0.0,
-    eax3EchoTime: (json['EAX3EchoTime'] as num?)?.toDouble() ?? 0.0,
-    eax3EchoDepth: (json['EAX3EchoDepth'] as num?)?.toDouble() ?? 0.0,
-    eax3ModulationTime: (json['EAX3ModulationTime'] as num?)?.toDouble() ?? 0.0,
-    eax3ModulationDepth:
-        (json['EAX3ModulationDepth'] as num?)?.toDouble() ?? 0.0,
-    eax3HfReference: (json['EAX3HFReference'] as num?)?.toDouble() ?? 0.0,
-    eax3LfReference: (json['EAX3LFReference'] as num?)?.toDouble() ?? 0.0,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Description': description,
-    'Flags': flags,
-    'EAXEnvironmentSelection': eaxEnvironmentSelection,
-    'EAXDecayTime': eaxDecayTime,
-    'EAX2EnvironmentSize': eax2EnvironmentSize,
-    'EAX2EnvironmentDiffusion': eax2EnvironmentDiffusion,
-    'EAX2Room': eax2Room,
-    'EAX2RoomHF': eax2RoomHf,
-    'EAX2DecayHFRatio': eax2DecayHfRatio,
-    'EAX2Reflections': eax2Reflections,
-    'EAX2ReflectionsDelay': eax2ReflectionsDelay,
-    'EAX2Reverb': eax2Reverb,
-    'EAX2ReverbDelay': eax2ReverbDelay,
-    'EAX2RoomRolloff': eax2RoomRolloff,
-    'EAX2AirAbsorption': eax2AirAbsorption,
-    'EAX3RoomLF': eax3RoomLf,
-    'EAX3DecayLFRatio': eax3DecayLfRatio,
-    'EAX3EchoTime': eax3EchoTime,
-    'EAX3EchoDepth': eax3EchoDepth,
-    'EAX3ModulationTime': eax3ModulationTime,
-    'EAX3ModulationDepth': eax3ModulationDepth,
-    'EAX3HFReference': eax3HfReference,
-    'EAX3LFReference': eax3LfReference,
-  };
+  factory SoundProviderPreferencesEntity.fromJson(Map<String, dynamic> json) =>
+      _SoundProviderPreferencesEntityMixin.fromJson(json);
 }

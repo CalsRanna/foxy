@@ -1,18 +1,57 @@
-class ConditionEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'condition_entity.g.dart';
+
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'conditions')
+class ConditionEntity with _ConditionEntityMixin {
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('SourceTypeOrReferenceId', key: true)
   final int sourceTypeOrReferenceId;
+
+  @FoxyFullField('SourceGroup', key: true)
   final int sourceGroup;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('SourceEntry', key: true)
   final int sourceEntry;
+
+  @FoxyFullField('SourceId', key: true)
   final int sourceId;
+
+  @FoxyFullField('ElseGroup', key: true)
   final int elseGroup;
+
+  @FoxyFullField('ConditionTypeOrReference', key: true)
   final int conditionTypeOrReference;
+
+  @FoxyFullField('ConditionTarget', key: true)
   final int conditionTarget;
+
+  @FoxyFullField('ConditionValue1', key: true)
   final int conditionValue1;
+
+  @FoxyFullField('ConditionValue2', key: true)
   final int conditionValue2;
+
+  @FoxyFullField('ConditionValue3', key: true)
   final int conditionValue3;
+
+  @FoxyFullField('NegativeCondition')
   final int negativeCondition;
+
+  @FoxyFullField('ErrorType')
   final int errorType;
+
+  @FoxyFullField('ErrorTextId')
   final int errorTextId;
+
+  @FoxyFullField('ScriptName')
   final String scriptName;
+
+  @FoxyFullField('Comment')
   final String comment;
 
   const ConditionEntity({
@@ -33,81 +72,6 @@ class ConditionEntity {
     this.comment = '',
   });
 
-  factory ConditionEntity.fromJson(Map<String, dynamic> json) {
-    return ConditionEntity(
-      sourceTypeOrReferenceId: json['SourceTypeOrReferenceId'] ?? 0,
-      sourceGroup: json['SourceGroup'] ?? 0,
-      sourceEntry: json['SourceEntry'] ?? 0,
-      sourceId: json['SourceId'] ?? 0,
-      elseGroup: json['ElseGroup'] ?? 0,
-      conditionTypeOrReference: json['ConditionTypeOrReference'] ?? 0,
-      conditionTarget: json['ConditionTarget'] ?? 0,
-      conditionValue1: json['ConditionValue1'] ?? 0,
-      conditionValue2: json['ConditionValue2'] ?? 0,
-      conditionValue3: json['ConditionValue3'] ?? 0,
-      negativeCondition: json['NegativeCondition'] ?? 0,
-      errorType: json['ErrorType'] ?? 0,
-      errorTextId: json['ErrorTextId'] ?? 0,
-      scriptName: json['ScriptName'] ?? '',
-      comment: json['Comment'] ?? '',
-    );
-  }
-
-  ConditionEntity copyWith({
-    int? sourceTypeOrReferenceId,
-    int? sourceGroup,
-    int? sourceEntry,
-    int? sourceId,
-    int? elseGroup,
-    int? conditionTypeOrReference,
-    int? conditionTarget,
-    int? conditionValue1,
-    int? conditionValue2,
-    int? conditionValue3,
-    int? negativeCondition,
-    int? errorType,
-    int? errorTextId,
-    String? scriptName,
-    String? comment,
-  }) {
-    return ConditionEntity(
-      sourceTypeOrReferenceId:
-          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
-      sourceGroup: sourceGroup ?? this.sourceGroup,
-      sourceEntry: sourceEntry ?? this.sourceEntry,
-      sourceId: sourceId ?? this.sourceId,
-      elseGroup: elseGroup ?? this.elseGroup,
-      conditionTypeOrReference:
-          conditionTypeOrReference ?? this.conditionTypeOrReference,
-      conditionTarget: conditionTarget ?? this.conditionTarget,
-      conditionValue1: conditionValue1 ?? this.conditionValue1,
-      conditionValue2: conditionValue2 ?? this.conditionValue2,
-      conditionValue3: conditionValue3 ?? this.conditionValue3,
-      negativeCondition: negativeCondition ?? this.negativeCondition,
-      errorType: errorType ?? this.errorType,
-      errorTextId: errorTextId ?? this.errorTextId,
-      scriptName: scriptName ?? this.scriptName,
-      comment: comment ?? this.comment,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
-      'SourceGroup': sourceGroup,
-      'SourceEntry': sourceEntry,
-      'SourceId': sourceId,
-      'ElseGroup': elseGroup,
-      'ConditionTypeOrReference': conditionTypeOrReference,
-      'ConditionTarget': conditionTarget,
-      'ConditionValue1': conditionValue1,
-      'ConditionValue2': conditionValue2,
-      'ConditionValue3': conditionValue3,
-      'NegativeCondition': negativeCondition,
-      'ErrorType': errorType,
-      'ErrorTextId': errorTextId,
-      'ScriptName': scriptName,
-      'Comment': comment,
-    };
-  }
+  factory ConditionEntity.fromJson(Map<String, dynamic> json) =>
+      _ConditionEntityMixin.fromJson(json);
 }

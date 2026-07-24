@@ -1,5 +1,1 @@
-class CinematicSequenceFilterEntity {
-  final String id;
-
-  const CinematicSequenceFilterEntity({this.id = ''});
-}
+export 'cinematic_sequence_entity.filter.g.dart';

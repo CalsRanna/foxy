@@ -1,11 +1,32 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'npc_vendor_entity.g.dart';
+
 /// NPC商人物品 — 对应 npc_vendor 表（复合键: entry + item + ExtendedCost）
-class NpcVendorEntity {
+
+@FoxyFullEntity(table: 'npc_vendor')
+class NpcVendorEntity with _NpcVendorEntityMixin {
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyFullField('slot')
   final int slot;
+
+  @FoxyFullField('item', key: true)
   final int item;
+
+  @FoxyFullField('maxcount')
   final int maxcount;
+
+  @FoxyFullField('incrtime')
   final int incrtime;
+
+  @FoxyFullField('ExtendedCost', key: true)
   final int extendedCost;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const NpcVendorEntity({
@@ -18,47 +39,6 @@ class NpcVendorEntity {
     this.verifiedBuild = 0,
   });
 
-  factory NpcVendorEntity.fromJson(Map<String, dynamic> json) {
-    return NpcVendorEntity(
-      entry: json['entry'] ?? 0,
-      slot: json['slot'] ?? 0,
-      item: json['item'] ?? 0,
-      maxcount: json['maxcount'] ?? 0,
-      incrtime: json['incrtime'] ?? 0,
-      extendedCost: json['ExtendedCost'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  NpcVendorEntity copyWith({
-    int? entry,
-    int? slot,
-    int? item,
-    int? maxcount,
-    int? incrtime,
-    int? extendedCost,
-    int? verifiedBuild,
-  }) {
-    return NpcVendorEntity(
-      entry: entry ?? this.entry,
-      slot: slot ?? this.slot,
-      item: item ?? this.item,
-      maxcount: maxcount ?? this.maxcount,
-      incrtime: incrtime ?? this.incrtime,
-      extendedCost: extendedCost ?? this.extendedCost,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'slot': slot,
-      'item': item,
-      'maxcount': maxcount,
-      'incrtime': incrtime,
-      'ExtendedCost': extendedCost,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  factory NpcVendorEntity.fromJson(Map<String, dynamic> json) =>
+      _NpcVendorEntityMixin.fromJson(json);
 }

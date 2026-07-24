@@ -1,10 +1,33 @@
-class PointOfInterestEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'point_of_interest_entity.g.dart';
+
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'points_of_interest')
+class PointOfInterestEntity with _PointOfInterestEntityMixin {
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('PositionX')
   final double positionX;
+
+  @FoxyFullField('PositionY')
   final double positionY;
+
+  @FoxyFullField('Icon')
   final int icon;
+
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyFullField('Importance')
   final int importance;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Name')
   final String name;
 
   const PointOfInterestEntity({
@@ -17,45 +40,6 @@ class PointOfInterestEntity {
     this.name = '',
   });
 
-  factory PointOfInterestEntity.fromJson(Map<String, dynamic> json) {
-    return PointOfInterestEntity(
-      id: (json['ID'] as num?)?.toInt() ?? 0,
-      positionX: (json['PositionX'] as num?)?.toDouble() ?? 0,
-      positionY: (json['PositionY'] as num?)?.toDouble() ?? 0,
-      icon: (json['Icon'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      importance: (json['Importance'] as num?)?.toInt() ?? 0,
-      name: json['Name']?.toString() ?? '',
-    );
-  }
-
-  PointOfInterestEntity copyWith({
-    int? id,
-    double? positionX,
-    double? positionY,
-    int? icon,
-    int? flags,
-    int? importance,
-    String? name,
-  }) {
-    return PointOfInterestEntity(
-      id: id ?? this.id,
-      positionX: positionX ?? this.positionX,
-      positionY: positionY ?? this.positionY,
-      icon: icon ?? this.icon,
-      flags: flags ?? this.flags,
-      importance: importance ?? this.importance,
-      name: name ?? this.name,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'PositionX': positionX,
-    'PositionY': positionY,
-    'Icon': icon,
-    'Flags': flags,
-    'Importance': importance,
-    'Name': name,
-  };
+  factory PointOfInterestEntity.fromJson(Map<String, dynamic> json) =>
+      _PointOfInterestEntityMixin.fromJson(json);
 }

@@ -1,12 +1,46 @@
-class CreatureImmunityEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_immunity_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'creature_immunities')
+class CreatureImmunityEntity with _CreatureImmunityEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('SchoolMask')
   final int schoolMask;
+
+  @FoxyFullField('DispelTypeMask')
   final int dispelTypeMask;
+
+  @FoxyBriefField()
+  @FoxyFullField('MechanicsMask')
   final int mechanicsMask;
+
+  @FoxyFullField('Effects')
   final String effects;
+
+  @FoxyFullField('Auras')
   final String auras;
+
+  @FoxyBriefField()
+  @FoxyFullField('ImmuneAoE')
   final int immuneAoE;
+
+  @FoxyBriefField()
+  @FoxyFullField('ImmuneChain')
   final int immuneChain;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Comment')
   final String comment;
 
   const CreatureImmunityEntity({
@@ -21,31 +55,6 @@ class CreatureImmunityEntity {
     this.comment = '',
   });
 
-  factory CreatureImmunityEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureImmunityEntity(
-      id: json['ID'] ?? 0,
-      schoolMask: json['SchoolMask'] ?? 0,
-      dispelTypeMask: json['DispelTypeMask'] ?? 0,
-      mechanicsMask: json['MechanicsMask'] ?? 0,
-      effects: json['Effects'] ?? '',
-      auras: json['Auras'] ?? '',
-      immuneAoE: json['ImmuneAoE'] ?? 0,
-      immuneChain: json['ImmuneChain'] ?? 0,
-      comment: json['Comment'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'SchoolMask': schoolMask,
-      'DispelTypeMask': dispelTypeMask,
-      'MechanicsMask': mechanicsMask,
-      'Effects': effects,
-      'Auras': auras,
-      'ImmuneAoE': immuneAoE,
-      'ImmuneChain': immuneChain,
-      'Comment': comment,
-    };
-  }
+  factory CreatureImmunityEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureImmunityEntityMixin.fromJson(json);
 }

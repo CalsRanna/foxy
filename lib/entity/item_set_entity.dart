@@ -1,56 +1,173 @@
-class ItemSetEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'item_set_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_item_set')
+class ItemSetEntity with _ItemSetEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('Name_lang_enUS')
   final String nameLangEnUS;
+
+  @FoxyFullField('Name_lang_koKR')
   final String nameLangKoKR;
+
+  @FoxyFullField('Name_lang_frFR')
   final String nameLangFrFR;
+
+  @FoxyFullField('Name_lang_deDE')
   final String nameLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Name_lang_zhCN')
   final String nameLangZhCN;
+
+  @FoxyFullField('Name_lang_zhTW')
   final String nameLangZhTW;
+
+  @FoxyFullField('Name_lang_esES')
   final String nameLangEsES;
+
+  @FoxyFullField('Name_lang_esMX')
   final String nameLangEsMX;
+
+  @FoxyFullField('Name_lang_ruRU')
   final String nameLangRuRU;
+
+  @FoxyFullField('Name_lang_jaJP')
   final String nameLangJaJP;
+
+  @FoxyFullField('Name_lang_ptPT')
   final String nameLangPtPT;
+
+  @FoxyFullField('Name_lang_ptBR')
   final String nameLangPtBR;
+
+  @FoxyFullField('Name_lang_itIT')
   final String nameLangItIT;
+
+  @FoxyFullField('Name_lang_unk1')
   final String nameLangUnk1;
+
+  @FoxyFullField('Name_lang_unk2')
   final String nameLangUnk2;
+
+  @FoxyFullField('Name_lang_unk3')
   final String nameLangUnk3;
+
+  @FoxyFullField('Name_lang_Flags')
   final int nameLangFlags;
+
+  @FoxyFullField('ItemID0')
   final int itemId0;
+
+  @FoxyFullField('ItemID1')
   final int itemId1;
+
+  @FoxyFullField('ItemID2')
   final int itemId2;
+
+  @FoxyFullField('ItemID3')
   final int itemId3;
+
+  @FoxyFullField('ItemID4')
   final int itemId4;
+
+  @FoxyFullField('ItemID5')
   final int itemId5;
+
+  @FoxyFullField('ItemID6')
   final int itemId6;
+
+  @FoxyFullField('ItemID7')
   final int itemId7;
+
+  @FoxyFullField('ItemID8')
   final int itemId8;
+
+  @FoxyFullField('ItemID9')
   final int itemId9;
+
+  @FoxyFullField('ItemID10')
   final int itemId10;
+
+  @FoxyFullField('ItemID11')
   final int itemId11;
+
+  @FoxyFullField('ItemID12')
   final int itemId12;
+
+  @FoxyFullField('ItemID13')
   final int itemId13;
+
+  @FoxyFullField('ItemID14')
   final int itemId14;
+
+  @FoxyFullField('ItemID15')
   final int itemId15;
+
+  @FoxyFullField('ItemID16')
   final int itemId16;
+
+  @FoxyFullField('SetSpellID0')
   final int setSpellId0;
+
+  @FoxyFullField('SetSpellID1')
   final int setSpellId1;
+
+  @FoxyFullField('SetSpellID2')
   final int setSpellId2;
+
+  @FoxyFullField('SetSpellID3')
   final int setSpellId3;
+
+  @FoxyFullField('SetSpellID4')
   final int setSpellId4;
+
+  @FoxyFullField('SetSpellID5')
   final int setSpellId5;
+
+  @FoxyFullField('SetSpellID6')
   final int setSpellId6;
+
+  @FoxyFullField('SetSpellID7')
   final int setSpellId7;
+
+  @FoxyFullField('SetThreshold0')
   final int setThreshold0;
+
+  @FoxyFullField('SetThreshold1')
   final int setThreshold1;
+
+  @FoxyFullField('SetThreshold2')
   final int setThreshold2;
+
+  @FoxyFullField('SetThreshold3')
   final int setThreshold3;
+
+  @FoxyFullField('SetThreshold4')
   final int setThreshold4;
+
+  @FoxyFullField('SetThreshold5')
   final int setThreshold5;
+
+  @FoxyFullField('SetThreshold6')
   final int setThreshold6;
+
+  @FoxyFullField('SetThreshold7')
   final int setThreshold7;
+
+  @FoxyBriefField()
+  @FoxyFullField('RequiredSkill')
   final int requiredSkill;
+
+  @FoxyBriefField()
+  @FoxyFullField('RequiredSkillRank')
   final int requiredSkillRank;
 
   const ItemSetEntity({
@@ -109,231 +226,6 @@ class ItemSetEntity {
     this.requiredSkillRank = 0,
   });
 
-  factory ItemSetEntity.fromJson(Map<String, dynamic> json) {
-    return ItemSetEntity(
-      id: json['ID'] ?? 0,
-      nameLangEnUS: json['Name_lang_enUS'] ?? '',
-      nameLangKoKR: json['Name_lang_koKR'] ?? '',
-      nameLangFrFR: json['Name_lang_frFR'] ?? '',
-      nameLangDeDE: json['Name_lang_deDE'] ?? '',
-      nameLangZhCN: json['Name_lang_zhCN'] ?? '',
-      nameLangZhTW: json['Name_lang_zhTW'] ?? '',
-      nameLangEsES: json['Name_lang_esES'] ?? '',
-      nameLangEsMX: json['Name_lang_esMX'] ?? '',
-      nameLangRuRU: json['Name_lang_ruRU'] ?? '',
-      nameLangJaJP: json['Name_lang_jaJP'] ?? '',
-      nameLangPtPT: json['Name_lang_ptPT'] ?? '',
-      nameLangPtBR: json['Name_lang_ptBR'] ?? '',
-      nameLangItIT: json['Name_lang_itIT'] ?? '',
-      nameLangUnk1: json['Name_lang_unk1'] ?? '',
-      nameLangUnk2: json['Name_lang_unk2'] ?? '',
-      nameLangUnk3: json['Name_lang_unk3'] ?? '',
-      nameLangFlags: json['Name_lang_Flags'] ?? 0,
-      itemId0: json['ItemID0'] ?? 0,
-      itemId1: json['ItemID1'] ?? 0,
-      itemId2: json['ItemID2'] ?? 0,
-      itemId3: json['ItemID3'] ?? 0,
-      itemId4: json['ItemID4'] ?? 0,
-      itemId5: json['ItemID5'] ?? 0,
-      itemId6: json['ItemID6'] ?? 0,
-      itemId7: json['ItemID7'] ?? 0,
-      itemId8: json['ItemID8'] ?? 0,
-      itemId9: json['ItemID9'] ?? 0,
-      itemId10: json['ItemID10'] ?? 0,
-      itemId11: json['ItemID11'] ?? 0,
-      itemId12: json['ItemID12'] ?? 0,
-      itemId13: json['ItemID13'] ?? 0,
-      itemId14: json['ItemID14'] ?? 0,
-      itemId15: json['ItemID15'] ?? 0,
-      itemId16: json['ItemID16'] ?? 0,
-      setSpellId0: json['SetSpellID0'] ?? 0,
-      setSpellId1: json['SetSpellID1'] ?? 0,
-      setSpellId2: json['SetSpellID2'] ?? 0,
-      setSpellId3: json['SetSpellID3'] ?? 0,
-      setSpellId4: json['SetSpellID4'] ?? 0,
-      setSpellId5: json['SetSpellID5'] ?? 0,
-      setSpellId6: json['SetSpellID6'] ?? 0,
-      setSpellId7: json['SetSpellID7'] ?? 0,
-      setThreshold0: json['SetThreshold0'] ?? 0,
-      setThreshold1: json['SetThreshold1'] ?? 0,
-      setThreshold2: json['SetThreshold2'] ?? 0,
-      setThreshold3: json['SetThreshold3'] ?? 0,
-      setThreshold4: json['SetThreshold4'] ?? 0,
-      setThreshold5: json['SetThreshold5'] ?? 0,
-      setThreshold6: json['SetThreshold6'] ?? 0,
-      setThreshold7: json['SetThreshold7'] ?? 0,
-      requiredSkill: json['RequiredSkill'] ?? 0,
-      requiredSkillRank: json['RequiredSkillRank'] ?? 0,
-    );
-  }
-
-  ItemSetEntity copyWith({
-    int? id,
-    String? nameLangEnUS,
-    String? nameLangKoKR,
-    String? nameLangFrFR,
-    String? nameLangDeDE,
-    String? nameLangZhCN,
-    String? nameLangZhTW,
-    String? nameLangEsES,
-    String? nameLangEsMX,
-    String? nameLangRuRU,
-    String? nameLangJaJP,
-    String? nameLangPtPT,
-    String? nameLangPtBR,
-    String? nameLangItIT,
-    String? nameLangUnk1,
-    String? nameLangUnk2,
-    String? nameLangUnk3,
-    int? nameLangFlags,
-    int? itemId0,
-    int? itemId1,
-    int? itemId2,
-    int? itemId3,
-    int? itemId4,
-    int? itemId5,
-    int? itemId6,
-    int? itemId7,
-    int? itemId8,
-    int? itemId9,
-    int? itemId10,
-    int? itemId11,
-    int? itemId12,
-    int? itemId13,
-    int? itemId14,
-    int? itemId15,
-    int? itemId16,
-    int? setSpellId0,
-    int? setSpellId1,
-    int? setSpellId2,
-    int? setSpellId3,
-    int? setSpellId4,
-    int? setSpellId5,
-    int? setSpellId6,
-    int? setSpellId7,
-    int? setThreshold0,
-    int? setThreshold1,
-    int? setThreshold2,
-    int? setThreshold3,
-    int? setThreshold4,
-    int? setThreshold5,
-    int? setThreshold6,
-    int? setThreshold7,
-    int? requiredSkill,
-    int? requiredSkillRank,
-  }) {
-    return ItemSetEntity(
-      id: id ?? this.id,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
-      itemId0: itemId0 ?? this.itemId0,
-      itemId1: itemId1 ?? this.itemId1,
-      itemId2: itemId2 ?? this.itemId2,
-      itemId3: itemId3 ?? this.itemId3,
-      itemId4: itemId4 ?? this.itemId4,
-      itemId5: itemId5 ?? this.itemId5,
-      itemId6: itemId6 ?? this.itemId6,
-      itemId7: itemId7 ?? this.itemId7,
-      itemId8: itemId8 ?? this.itemId8,
-      itemId9: itemId9 ?? this.itemId9,
-      itemId10: itemId10 ?? this.itemId10,
-      itemId11: itemId11 ?? this.itemId11,
-      itemId12: itemId12 ?? this.itemId12,
-      itemId13: itemId13 ?? this.itemId13,
-      itemId14: itemId14 ?? this.itemId14,
-      itemId15: itemId15 ?? this.itemId15,
-      itemId16: itemId16 ?? this.itemId16,
-      setSpellId0: setSpellId0 ?? this.setSpellId0,
-      setSpellId1: setSpellId1 ?? this.setSpellId1,
-      setSpellId2: setSpellId2 ?? this.setSpellId2,
-      setSpellId3: setSpellId3 ?? this.setSpellId3,
-      setSpellId4: setSpellId4 ?? this.setSpellId4,
-      setSpellId5: setSpellId5 ?? this.setSpellId5,
-      setSpellId6: setSpellId6 ?? this.setSpellId6,
-      setSpellId7: setSpellId7 ?? this.setSpellId7,
-      setThreshold0: setThreshold0 ?? this.setThreshold0,
-      setThreshold1: setThreshold1 ?? this.setThreshold1,
-      setThreshold2: setThreshold2 ?? this.setThreshold2,
-      setThreshold3: setThreshold3 ?? this.setThreshold3,
-      setThreshold4: setThreshold4 ?? this.setThreshold4,
-      setThreshold5: setThreshold5 ?? this.setThreshold5,
-      setThreshold6: setThreshold6 ?? this.setThreshold6,
-      setThreshold7: setThreshold7 ?? this.setThreshold7,
-      requiredSkill: requiredSkill ?? this.requiredSkill,
-      requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'ItemID0': itemId0,
-      'ItemID1': itemId1,
-      'ItemID2': itemId2,
-      'ItemID3': itemId3,
-      'ItemID4': itemId4,
-      'ItemID5': itemId5,
-      'ItemID6': itemId6,
-      'ItemID7': itemId7,
-      'ItemID8': itemId8,
-      'ItemID9': itemId9,
-      'ItemID10': itemId10,
-      'ItemID11': itemId11,
-      'ItemID12': itemId12,
-      'ItemID13': itemId13,
-      'ItemID14': itemId14,
-      'ItemID15': itemId15,
-      'ItemID16': itemId16,
-      'SetSpellID0': setSpellId0,
-      'SetSpellID1': setSpellId1,
-      'SetSpellID2': setSpellId2,
-      'SetSpellID3': setSpellId3,
-      'SetSpellID4': setSpellId4,
-      'SetSpellID5': setSpellId5,
-      'SetSpellID6': setSpellId6,
-      'SetSpellID7': setSpellId7,
-      'SetThreshold0': setThreshold0,
-      'SetThreshold1': setThreshold1,
-      'SetThreshold2': setThreshold2,
-      'SetThreshold3': setThreshold3,
-      'SetThreshold4': setThreshold4,
-      'SetThreshold5': setThreshold5,
-      'SetThreshold6': setThreshold6,
-      'SetThreshold7': setThreshold7,
-      'RequiredSkill': requiredSkill,
-      'RequiredSkillRank': requiredSkillRank,
-    };
-  }
+  factory ItemSetEntity.fromJson(Map<String, dynamic> json) =>
+      _ItemSetEntityMixin.fromJson(json);
 }

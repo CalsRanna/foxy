@@ -1,7 +1,21 @@
-class CurrencyTypeEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'currency_type_entity.g.dart';
+
+@FoxyFullEntity(table: 'foxy.dbc_currency_types')
+class CurrencyTypeEntity with _CurrencyTypeEntityMixin {
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('ItemID')
   final int itemId;
+
+  @FoxyFullField('CategoryID')
   final int categoryId;
+
+  @FoxyFullField('BitIndex')
   final int bitIndex;
 
   const CurrencyTypeEntity({
@@ -11,35 +25,6 @@ class CurrencyTypeEntity {
     this.bitIndex = 0,
   });
 
-  factory CurrencyTypeEntity.fromJson(Map<String, dynamic> json) {
-    return CurrencyTypeEntity(
-      id: json['ID'] ?? 0,
-      itemId: json['ItemID'] ?? 0,
-      categoryId: json['CategoryID'] ?? 0,
-      bitIndex: json['BitIndex'] ?? 0,
-    );
-  }
-
-  CurrencyTypeEntity copyWith({
-    int? id,
-    int? itemId,
-    int? categoryId,
-    int? bitIndex,
-  }) {
-    return CurrencyTypeEntity(
-      id: id ?? this.id,
-      itemId: itemId ?? this.itemId,
-      categoryId: categoryId ?? this.categoryId,
-      bitIndex: bitIndex ?? this.bitIndex,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'ItemID': itemId,
-      'CategoryID': categoryId,
-      'BitIndex': bitIndex,
-    };
-  }
+  factory CurrencyTypeEntity.fromJson(Map<String, dynamic> json) =>
+      _CurrencyTypeEntityMixin.fromJson(json);
 }

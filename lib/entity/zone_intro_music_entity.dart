@@ -1,8 +1,31 @@
-class ZoneIntroMusicEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'zone_intro_music_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_zone_intro_music_table')
+class ZoneIntroMusicEntity with _ZoneIntroMusicEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('Name')
   final String name;
+
+  @FoxyBriefField()
+  @FoxyFullField('SoundID')
   final int soundId;
+
+  @FoxyFullField('Priority')
   final int priority;
+
+  @FoxyFullField('MinDelayMinutes')
   final int minDelayMinutes;
 
   const ZoneIntroMusicEntity({
@@ -14,35 +37,5 @@ class ZoneIntroMusicEntity {
   });
 
   factory ZoneIntroMusicEntity.fromJson(Map<String, dynamic> json) =>
-      ZoneIntroMusicEntity(
-        id: json['ID'] ?? 0,
-        name: json['Name'] ?? '',
-        soundId: json['SoundID'] ?? 0,
-        priority: json['Priority'] ?? 0,
-        minDelayMinutes: json['MinDelayMinutes'] ?? 0,
-      );
-
-  ZoneIntroMusicEntity copyWith({
-    int? id,
-    String? name,
-    int? soundId,
-    int? priority,
-    int? minDelayMinutes,
-  }) {
-    return ZoneIntroMusicEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      soundId: soundId ?? this.soundId,
-      priority: priority ?? this.priority,
-      minDelayMinutes: minDelayMinutes ?? this.minDelayMinutes,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Name': name,
-    'SoundID': soundId,
-    'Priority': priority,
-    'MinDelayMinutes': minDelayMinutes,
-  };
+      _ZoneIntroMusicEntityMixin.fromJson(json);
 }

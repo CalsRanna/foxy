@@ -1,11 +1,38 @@
-class ZoneMusicEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'zone_music_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_zone_music')
+class ZoneMusicEntity with _ZoneMusicEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('SetName')
   final String setName;
+
+  @FoxyFullField('SilenceIntervalMin0')
   final int silenceIntervalMin0;
+
+  @FoxyFullField('SilenceIntervalMin1')
   final int silenceIntervalMin1;
+
+  @FoxyFullField('SilenceIntervalMax0')
   final int silenceIntervalMax0;
+
+  @FoxyFullField('SilenceIntervalMax1')
   final int silenceIntervalMax1;
+
+  @FoxyBriefField()
+  @FoxyFullField('Sounds0')
   final int sounds0;
+
+  @FoxyBriefField()
+  @FoxyFullField('Sounds1')
   final int sounds1;
 
   const ZoneMusicEntity({
@@ -20,47 +47,5 @@ class ZoneMusicEntity {
   });
 
   factory ZoneMusicEntity.fromJson(Map<String, dynamic> json) =>
-      ZoneMusicEntity(
-        id: json['ID'] ?? 0,
-        setName: json['SetName'] ?? '',
-        silenceIntervalMin0: json['SilenceIntervalMin0'] ?? 0,
-        silenceIntervalMin1: json['SilenceIntervalMin1'] ?? 0,
-        silenceIntervalMax0: json['SilenceIntervalMax0'] ?? 0,
-        silenceIntervalMax1: json['SilenceIntervalMax1'] ?? 0,
-        sounds0: json['Sounds0'] ?? 0,
-        sounds1: json['Sounds1'] ?? 0,
-      );
-
-  ZoneMusicEntity copyWith({
-    int? id,
-    String? setName,
-    int? silenceIntervalMin0,
-    int? silenceIntervalMin1,
-    int? silenceIntervalMax0,
-    int? silenceIntervalMax1,
-    int? sounds0,
-    int? sounds1,
-  }) {
-    return ZoneMusicEntity(
-      id: id ?? this.id,
-      setName: setName ?? this.setName,
-      silenceIntervalMin0: silenceIntervalMin0 ?? this.silenceIntervalMin0,
-      silenceIntervalMin1: silenceIntervalMin1 ?? this.silenceIntervalMin1,
-      silenceIntervalMax0: silenceIntervalMax0 ?? this.silenceIntervalMax0,
-      silenceIntervalMax1: silenceIntervalMax1 ?? this.silenceIntervalMax1,
-      sounds0: sounds0 ?? this.sounds0,
-      sounds1: sounds1 ?? this.sounds1,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'SetName': setName,
-    'SilenceIntervalMin0': silenceIntervalMin0,
-    'SilenceIntervalMin1': silenceIntervalMin1,
-    'SilenceIntervalMax0': silenceIntervalMax0,
-    'SilenceIntervalMax1': silenceIntervalMax1,
-    'Sounds0': sounds0,
-    'Sounds1': sounds1,
-  };
+      _ZoneMusicEntityMixin.fromJson(json);
 }

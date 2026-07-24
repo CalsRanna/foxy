@@ -1,5 +1,1 @@
-class SoundAmbienceFilterEntity {
-  final String id;
-
-  const SoundAmbienceFilterEntity({this.id = ''});
-}
+export 'sound_ambience_entity.filter.g.dart';

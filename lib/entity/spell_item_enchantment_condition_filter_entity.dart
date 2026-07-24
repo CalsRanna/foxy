@@ -1,5 +1,1 @@
-class SpellItemEnchantmentConditionFilterEntity {
-  final String id;
-
-  const SpellItemEnchantmentConditionFilterEntity({this.id = ''});
-}
+export 'spell_item_enchantment_condition_entity.filter.g.dart';

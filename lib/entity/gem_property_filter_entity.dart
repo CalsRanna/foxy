@@ -1,17 +1,1 @@
-class GemPropertyFilterEntity {
-  final String id;
-
-  const GemPropertyFilterEntity({this.id = ''});
-
-  factory GemPropertyFilterEntity.fromJson(Map<String, dynamic> json) {
-    return GemPropertyFilterEntity(id: json['id'] ?? '');
-  }
-
-  GemPropertyFilterEntity copyWith({String? id}) {
-    return GemPropertyFilterEntity(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
-  }
-}
+export 'gem_property_entity.filter.g.dart';

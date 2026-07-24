@@ -1,59 +1,177 @@
-class SkillLineEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'skill_line_entity.g.dart';
+
+@FoxyFullEntity(table: 'foxy.dbc_skill_line')
+class SkillLineEntity with _SkillLineEntityMixin {
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('CategoryID')
   final int categoryId;
+
+  @FoxyFullField('SkillCostsID')
   final int skillCostsId;
+
+  @FoxyFullField('DisplayName_lang_enUS')
   final String displayNameLangEnUS;
+
+  @FoxyFullField('DisplayName_lang_koKR')
   final String displayNameLangKoKR;
+
+  @FoxyFullField('DisplayName_lang_frFR')
   final String displayNameLangFrFR;
+
+  @FoxyFullField('DisplayName_lang_deDE')
   final String displayNameLangDeDE;
+
+  @FoxyFullField('DisplayName_lang_zhCN')
   final String displayNameLangZhCN;
+
+  @FoxyFullField('DisplayName_lang_zhTW')
   final String displayNameLangZhTW;
+
+  @FoxyFullField('DisplayName_lang_esES')
   final String displayNameLangEsES;
+
+  @FoxyFullField('DisplayName_lang_esMX')
   final String displayNameLangEsMX;
+
+  @FoxyFullField('DisplayName_lang_ruRU')
   final String displayNameLangRuRU;
+
+  @FoxyFullField('DisplayName_lang_jaJP')
   final String displayNameLangJaJP;
+
+  @FoxyFullField('DisplayName_lang_ptPT')
   final String displayNameLangPtPT;
+
+  @FoxyFullField('DisplayName_lang_ptBR')
   final String displayNameLangPtBR;
+
+  @FoxyFullField('DisplayName_lang_itIT')
   final String displayNameLangItIT;
+
+  @FoxyFullField('DisplayName_lang_unk1')
   final String displayNameLangUnk1;
+
+  @FoxyFullField('DisplayName_lang_unk2')
   final String displayNameLangUnk2;
+
+  @FoxyFullField('DisplayName_lang_unk3')
   final String displayNameLangUnk3;
+
+  @FoxyFullField('DisplayName_lang_Flags')
   final int displayNameLangFlags;
+
+  @FoxyFullField('Description_lang_enUS')
   final String descriptionLangEnUS;
+
+  @FoxyFullField('Description_lang_koKR')
   final String descriptionLangKoKR;
+
+  @FoxyFullField('Description_lang_frFR')
   final String descriptionLangFrFR;
+
+  @FoxyFullField('Description_lang_deDE')
   final String descriptionLangDeDE;
+
+  @FoxyFullField('Description_lang_zhCN')
   final String descriptionLangZhCN;
+
+  @FoxyFullField('Description_lang_zhTW')
   final String descriptionLangZhTW;
+
+  @FoxyFullField('Description_lang_esES')
   final String descriptionLangEsES;
+
+  @FoxyFullField('Description_lang_esMX')
   final String descriptionLangEsMX;
+
+  @FoxyFullField('Description_lang_ruRU')
   final String descriptionLangRuRU;
+
+  @FoxyFullField('Description_lang_jaJP')
   final String descriptionLangJaJP;
+
+  @FoxyFullField('Description_lang_ptPT')
   final String descriptionLangPtPT;
+
+  @FoxyFullField('Description_lang_ptBR')
   final String descriptionLangPtBR;
+
+  @FoxyFullField('Description_lang_itIT')
   final String descriptionLangItIT;
+
+  @FoxyFullField('Description_lang_unk1')
   final String descriptionLangUnk1;
+
+  @FoxyFullField('Description_lang_unk2')
   final String descriptionLangUnk2;
+
+  @FoxyFullField('Description_lang_unk3')
   final String descriptionLangUnk3;
+
+  @FoxyFullField('Description_lang_Flags')
   final int descriptionLangFlags;
+
+  @FoxyFullField('SpellIconID')
   final int spellIconId;
+
+  @FoxyFullField('AlternateVerb_lang_enUS')
   final String alternateVerbLangEnUS;
+
+  @FoxyFullField('AlternateVerb_lang_koKR')
   final String alternateVerbLangKoKR;
+
+  @FoxyFullField('AlternateVerb_lang_frFR')
   final String alternateVerbLangFrFR;
+
+  @FoxyFullField('AlternateVerb_lang_deDE')
   final String alternateVerbLangDeDE;
+
+  @FoxyFullField('AlternateVerb_lang_zhCN')
   final String alternateVerbLangZhCN;
+
+  @FoxyFullField('AlternateVerb_lang_zhTW')
   final String alternateVerbLangZhTW;
+
+  @FoxyFullField('AlternateVerb_lang_esES')
   final String alternateVerbLangEsES;
+
+  @FoxyFullField('AlternateVerb_lang_esMX')
   final String alternateVerbLangEsMX;
+
+  @FoxyFullField('AlternateVerb_lang_ruRU')
   final String alternateVerbLangRuRU;
+
+  @FoxyFullField('AlternateVerb_lang_jaJP')
   final String alternateVerbLangJaJP;
+
+  @FoxyFullField('AlternateVerb_lang_ptPT')
   final String alternateVerbLangPtPT;
+
+  @FoxyFullField('AlternateVerb_lang_ptBR')
   final String alternateVerbLangPtBR;
+
+  @FoxyFullField('AlternateVerb_lang_itIT')
   final String alternateVerbLangItIT;
+
+  @FoxyFullField('AlternateVerb_lang_unk1')
   final String alternateVerbLangUnk1;
+
+  @FoxyFullField('AlternateVerb_lang_unk2')
   final String alternateVerbLangUnk2;
+
+  @FoxyFullField('AlternateVerb_lang_unk3')
   final String alternateVerbLangUnk3;
+
+  @FoxyFullField('AlternateVerb_lang_Flags')
   final int alternateVerbLangFlags;
+
+  @FoxyFullField('CanLink')
   final int canLink;
 
   const SkillLineEntity({
@@ -115,125 +233,6 @@ class SkillLineEntity {
     this.canLink = 0,
   });
 
-  factory SkillLineEntity.fromJson(Map<String, dynamic> json) {
-    return SkillLineEntity(
-      id: json['ID'] ?? 0,
-      categoryId: json['CategoryID'] ?? 0,
-      skillCostsId: json['SkillCostsID'] ?? 0,
-      displayNameLangEnUS: json['DisplayName_lang_enUS'] ?? '',
-      displayNameLangKoKR: json['DisplayName_lang_koKR'] ?? '',
-      displayNameLangFrFR: json['DisplayName_lang_frFR'] ?? '',
-      displayNameLangDeDE: json['DisplayName_lang_deDE'] ?? '',
-      displayNameLangZhCN: json['DisplayName_lang_zhCN'] ?? '',
-      displayNameLangZhTW: json['DisplayName_lang_zhTW'] ?? '',
-      displayNameLangEsES: json['DisplayName_lang_esES'] ?? '',
-      displayNameLangEsMX: json['DisplayName_lang_esMX'] ?? '',
-      displayNameLangRuRU: json['DisplayName_lang_ruRU'] ?? '',
-      displayNameLangJaJP: json['DisplayName_lang_jaJP'] ?? '',
-      displayNameLangPtPT: json['DisplayName_lang_ptPT'] ?? '',
-      displayNameLangPtBR: json['DisplayName_lang_ptBR'] ?? '',
-      displayNameLangItIT: json['DisplayName_lang_itIT'] ?? '',
-      displayNameLangUnk1: json['DisplayName_lang_unk1'] ?? '',
-      displayNameLangUnk2: json['DisplayName_lang_unk2'] ?? '',
-      displayNameLangUnk3: json['DisplayName_lang_unk3'] ?? '',
-      displayNameLangFlags: json['DisplayName_lang_Flags'] ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS'] ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR'] ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR'] ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE'] ?? '',
-      descriptionLangZhCN: json['Description_lang_zhCN'] ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW'] ?? '',
-      descriptionLangEsES: json['Description_lang_esES'] ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX'] ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU'] ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP'] ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT'] ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR'] ?? '',
-      descriptionLangItIT: json['Description_lang_itIT'] ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1'] ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2'] ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3'] ?? '',
-      descriptionLangFlags: json['Description_lang_Flags'] ?? 0,
-      spellIconId: json['SpellIconID'] ?? 0,
-      alternateVerbLangEnUS: json['AlternateVerb_lang_enUS'] ?? '',
-      alternateVerbLangKoKR: json['AlternateVerb_lang_koKR'] ?? '',
-      alternateVerbLangFrFR: json['AlternateVerb_lang_frFR'] ?? '',
-      alternateVerbLangDeDE: json['AlternateVerb_lang_deDE'] ?? '',
-      alternateVerbLangZhCN: json['AlternateVerb_lang_zhCN'] ?? '',
-      alternateVerbLangZhTW: json['AlternateVerb_lang_zhTW'] ?? '',
-      alternateVerbLangEsES: json['AlternateVerb_lang_esES'] ?? '',
-      alternateVerbLangEsMX: json['AlternateVerb_lang_esMX'] ?? '',
-      alternateVerbLangRuRU: json['AlternateVerb_lang_ruRU'] ?? '',
-      alternateVerbLangJaJP: json['AlternateVerb_lang_jaJP'] ?? '',
-      alternateVerbLangPtPT: json['AlternateVerb_lang_ptPT'] ?? '',
-      alternateVerbLangPtBR: json['AlternateVerb_lang_ptBR'] ?? '',
-      alternateVerbLangItIT: json['AlternateVerb_lang_itIT'] ?? '',
-      alternateVerbLangUnk1: json['AlternateVerb_lang_unk1'] ?? '',
-      alternateVerbLangUnk2: json['AlternateVerb_lang_unk2'] ?? '',
-      alternateVerbLangUnk3: json['AlternateVerb_lang_unk3'] ?? '',
-      alternateVerbLangFlags: json['AlternateVerb_lang_Flags'] ?? 0,
-      canLink: json['CanLink'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'CategoryID': categoryId,
-      'SkillCostsID': skillCostsId,
-      'DisplayName_lang_enUS': displayNameLangEnUS,
-      'DisplayName_lang_koKR': displayNameLangKoKR,
-      'DisplayName_lang_frFR': displayNameLangFrFR,
-      'DisplayName_lang_deDE': displayNameLangDeDE,
-      'DisplayName_lang_zhCN': displayNameLangZhCN,
-      'DisplayName_lang_zhTW': displayNameLangZhTW,
-      'DisplayName_lang_esES': displayNameLangEsES,
-      'DisplayName_lang_esMX': displayNameLangEsMX,
-      'DisplayName_lang_ruRU': displayNameLangRuRU,
-      'DisplayName_lang_jaJP': displayNameLangJaJP,
-      'DisplayName_lang_ptPT': displayNameLangPtPT,
-      'DisplayName_lang_ptBR': displayNameLangPtBR,
-      'DisplayName_lang_itIT': displayNameLangItIT,
-      'DisplayName_lang_unk1': displayNameLangUnk1,
-      'DisplayName_lang_unk2': displayNameLangUnk2,
-      'DisplayName_lang_unk3': displayNameLangUnk3,
-      'DisplayName_lang_Flags': displayNameLangFlags,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-      'SpellIconID': spellIconId,
-      'AlternateVerb_lang_enUS': alternateVerbLangEnUS,
-      'AlternateVerb_lang_koKR': alternateVerbLangKoKR,
-      'AlternateVerb_lang_frFR': alternateVerbLangFrFR,
-      'AlternateVerb_lang_deDE': alternateVerbLangDeDE,
-      'AlternateVerb_lang_zhCN': alternateVerbLangZhCN,
-      'AlternateVerb_lang_zhTW': alternateVerbLangZhTW,
-      'AlternateVerb_lang_esES': alternateVerbLangEsES,
-      'AlternateVerb_lang_esMX': alternateVerbLangEsMX,
-      'AlternateVerb_lang_ruRU': alternateVerbLangRuRU,
-      'AlternateVerb_lang_jaJP': alternateVerbLangJaJP,
-      'AlternateVerb_lang_ptPT': alternateVerbLangPtPT,
-      'AlternateVerb_lang_ptBR': alternateVerbLangPtBR,
-      'AlternateVerb_lang_itIT': alternateVerbLangItIT,
-      'AlternateVerb_lang_unk1': alternateVerbLangUnk1,
-      'AlternateVerb_lang_unk2': alternateVerbLangUnk2,
-      'AlternateVerb_lang_unk3': alternateVerbLangUnk3,
-      'AlternateVerb_lang_Flags': alternateVerbLangFlags,
-      'CanLink': canLink,
-    };
-  }
+  factory SkillLineEntity.fromJson(Map<String, dynamic> json) =>
+      _SkillLineEntityMixin.fromJson(json);
 }

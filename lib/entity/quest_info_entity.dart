@@ -1,21 +1,66 @@
-class QuestInfoEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_info_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_quest_info')
+class QuestInfoEntity with _QuestInfoEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('InfoName_lang_enUS')
   final String infoNameLangEnUS;
+
+  @FoxyFullField('InfoName_lang_koKR')
   final String infoNameLangKoKR;
+
+  @FoxyFullField('InfoName_lang_frFR')
   final String infoNameLangFrFR;
+
+  @FoxyFullField('InfoName_lang_deDE')
   final String infoNameLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('InfoName_lang_zhCN')
   final String infoNameLangZhCN;
+
+  @FoxyFullField('InfoName_lang_zhTW')
   final String infoNameLangZhTW;
+
+  @FoxyFullField('InfoName_lang_esES')
   final String infoNameLangEsES;
+
+  @FoxyFullField('InfoName_lang_esMX')
   final String infoNameLangEsMX;
+
+  @FoxyFullField('InfoName_lang_ruRU')
   final String infoNameLangRuRU;
+
+  @FoxyFullField('InfoName_lang_jaJP')
   final String infoNameLangJaJP;
+
+  @FoxyFullField('InfoName_lang_ptPT')
   final String infoNameLangPtPT;
+
+  @FoxyFullField('InfoName_lang_ptBR')
   final String infoNameLangPtBR;
+
+  @FoxyFullField('InfoName_lang_itIT')
   final String infoNameLangItIT;
+
+  @FoxyFullField('InfoName_lang_unk1')
   final String infoNameLangUnk1;
+
+  @FoxyFullField('InfoName_lang_unk2')
   final String infoNameLangUnk2;
+
+  @FoxyFullField('InfoName_lang_unk3')
   final String infoNameLangUnk3;
+
+  @FoxyFullField('InfoName_lang_Flags')
   final int infoNameLangFlags;
 
   const QuestInfoEntity({
@@ -39,91 +84,6 @@ class QuestInfoEntity {
     this.infoNameLangFlags = 0,
   });
 
-  factory QuestInfoEntity.fromJson(Map<String, dynamic> json) {
-    return QuestInfoEntity(
-      id: json['ID'] ?? 0,
-      infoNameLangEnUS: json['InfoName_lang_enUS'] ?? '',
-      infoNameLangKoKR: json['InfoName_lang_koKR'] ?? '',
-      infoNameLangFrFR: json['InfoName_lang_frFR'] ?? '',
-      infoNameLangDeDE: json['InfoName_lang_deDE'] ?? '',
-      infoNameLangZhCN: json['InfoName_lang_zhCN'] ?? '',
-      infoNameLangZhTW: json['InfoName_lang_zhTW'] ?? '',
-      infoNameLangEsES: json['InfoName_lang_esES'] ?? '',
-      infoNameLangEsMX: json['InfoName_lang_esMX'] ?? '',
-      infoNameLangRuRU: json['InfoName_lang_ruRU'] ?? '',
-      infoNameLangJaJP: json['InfoName_lang_jaJP'] ?? '',
-      infoNameLangPtPT: json['InfoName_lang_ptPT'] ?? '',
-      infoNameLangPtBR: json['InfoName_lang_ptBR'] ?? '',
-      infoNameLangItIT: json['InfoName_lang_itIT'] ?? '',
-      infoNameLangUnk1: json['InfoName_lang_unk1'] ?? '',
-      infoNameLangUnk2: json['InfoName_lang_unk2'] ?? '',
-      infoNameLangUnk3: json['InfoName_lang_unk3'] ?? '',
-      infoNameLangFlags: json['InfoName_lang_Flags'] ?? 0,
-    );
-  }
-
-  QuestInfoEntity copyWith({
-    int? id,
-    String? infoNameLangEnUS,
-    String? infoNameLangKoKR,
-    String? infoNameLangFrFR,
-    String? infoNameLangDeDE,
-    String? infoNameLangZhCN,
-    String? infoNameLangZhTW,
-    String? infoNameLangEsES,
-    String? infoNameLangEsMX,
-    String? infoNameLangRuRU,
-    String? infoNameLangJaJP,
-    String? infoNameLangPtPT,
-    String? infoNameLangPtBR,
-    String? infoNameLangItIT,
-    String? infoNameLangUnk1,
-    String? infoNameLangUnk2,
-    String? infoNameLangUnk3,
-    int? infoNameLangFlags,
-  }) {
-    return QuestInfoEntity(
-      id: id ?? this.id,
-      infoNameLangEnUS: infoNameLangEnUS ?? this.infoNameLangEnUS,
-      infoNameLangKoKR: infoNameLangKoKR ?? this.infoNameLangKoKR,
-      infoNameLangFrFR: infoNameLangFrFR ?? this.infoNameLangFrFR,
-      infoNameLangDeDE: infoNameLangDeDE ?? this.infoNameLangDeDE,
-      infoNameLangZhCN: infoNameLangZhCN ?? this.infoNameLangZhCN,
-      infoNameLangZhTW: infoNameLangZhTW ?? this.infoNameLangZhTW,
-      infoNameLangEsES: infoNameLangEsES ?? this.infoNameLangEsES,
-      infoNameLangEsMX: infoNameLangEsMX ?? this.infoNameLangEsMX,
-      infoNameLangRuRU: infoNameLangRuRU ?? this.infoNameLangRuRU,
-      infoNameLangJaJP: infoNameLangJaJP ?? this.infoNameLangJaJP,
-      infoNameLangPtPT: infoNameLangPtPT ?? this.infoNameLangPtPT,
-      infoNameLangPtBR: infoNameLangPtBR ?? this.infoNameLangPtBR,
-      infoNameLangItIT: infoNameLangItIT ?? this.infoNameLangItIT,
-      infoNameLangUnk1: infoNameLangUnk1 ?? this.infoNameLangUnk1,
-      infoNameLangUnk2: infoNameLangUnk2 ?? this.infoNameLangUnk2,
-      infoNameLangUnk3: infoNameLangUnk3 ?? this.infoNameLangUnk3,
-      infoNameLangFlags: infoNameLangFlags ?? this.infoNameLangFlags,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'InfoName_lang_enUS': infoNameLangEnUS,
-      'InfoName_lang_koKR': infoNameLangKoKR,
-      'InfoName_lang_frFR': infoNameLangFrFR,
-      'InfoName_lang_deDE': infoNameLangDeDE,
-      'InfoName_lang_zhCN': infoNameLangZhCN,
-      'InfoName_lang_zhTW': infoNameLangZhTW,
-      'InfoName_lang_esES': infoNameLangEsES,
-      'InfoName_lang_esMX': infoNameLangEsMX,
-      'InfoName_lang_ruRU': infoNameLangRuRU,
-      'InfoName_lang_jaJP': infoNameLangJaJP,
-      'InfoName_lang_ptPT': infoNameLangPtPT,
-      'InfoName_lang_ptBR': infoNameLangPtBR,
-      'InfoName_lang_itIT': infoNameLangItIT,
-      'InfoName_lang_unk1': infoNameLangUnk1,
-      'InfoName_lang_unk2': infoNameLangUnk2,
-      'InfoName_lang_unk3': infoNameLangUnk3,
-      'InfoName_lang_Flags': infoNameLangFlags,
-    };
-  }
+  factory QuestInfoEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestInfoEntityMixin.fromJson(json);
 }

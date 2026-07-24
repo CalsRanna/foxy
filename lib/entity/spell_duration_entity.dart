@@ -1,7 +1,28 @@
-class SpellDurationEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_duration_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_spell_duration')
+class SpellDurationEntity with _SpellDurationEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Duration')
   final int duration;
+
+  @FoxyBriefField()
+  @FoxyFullField('DurationPerLevel')
   final int durationPerLevel;
+
+  @FoxyBriefField()
+  @FoxyFullField('MaxDuration')
   final int maxDuration;
 
   const SpellDurationEntity({
@@ -11,35 +32,6 @@ class SpellDurationEntity {
     this.maxDuration = 0,
   });
 
-  factory SpellDurationEntity.fromJson(Map<String, dynamic> json) {
-    return SpellDurationEntity(
-      id: json['ID'] ?? 0,
-      duration: json['Duration'] ?? 0,
-      durationPerLevel: json['DurationPerLevel'] ?? 0,
-      maxDuration: json['MaxDuration'] ?? 0,
-    );
-  }
-
-  SpellDurationEntity copyWith({
-    int? id,
-    int? duration,
-    int? durationPerLevel,
-    int? maxDuration,
-  }) {
-    return SpellDurationEntity(
-      id: id ?? this.id,
-      duration: duration ?? this.duration,
-      durationPerLevel: durationPerLevel ?? this.durationPerLevel,
-      maxDuration: maxDuration ?? this.maxDuration,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Duration': duration,
-      'DurationPerLevel': durationPerLevel,
-      'MaxDuration': maxDuration,
-    };
-  }
+  factory SpellDurationEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellDurationEntityMixin.fromJson(json);
 }

@@ -1,5 +1,1 @@
-class ItemVisualsFilterEntity {
-  final String id;
-
-  const ItemVisualsFilterEntity({this.id = ''});
-}
+export 'item_visuals_entity.filter.g.dart';

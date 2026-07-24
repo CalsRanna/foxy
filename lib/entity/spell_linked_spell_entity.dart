@@ -1,8 +1,28 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_linked_spell_entity.g.dart';
+
 /// 法术链接技能
-class SpellLinkedSpellEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'spell_linked_spell')
+class SpellLinkedSpellEntity with _SpellLinkedSpellEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('spell_trigger', key: true)
   final int spellTrigger;
+
+  @FoxyBriefField()
+  @FoxyFullField('spell_effect', key: true)
   final int spellEffect;
+
+  @FoxyBriefField()
+  @FoxyFullField('type', key: true)
   final int type;
+
+  @FoxyBriefField()
+  @FoxyFullField('comment')
   final String comment;
 
   const SpellLinkedSpellEntity({
@@ -12,35 +32,6 @@ class SpellLinkedSpellEntity {
     this.comment = '',
   });
 
-  factory SpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) {
-    return SpellLinkedSpellEntity(
-      spellTrigger: json['spell_trigger'] ?? 0,
-      spellEffect: json['spell_effect'] ?? 0,
-      type: json['type'] ?? 0,
-      comment: json['comment'] ?? '',
-    );
-  }
-
-  SpellLinkedSpellEntity copyWith({
-    int? spellTrigger,
-    int? spellEffect,
-    int? type,
-    String? comment,
-  }) {
-    return SpellLinkedSpellEntity(
-      spellTrigger: spellTrigger ?? this.spellTrigger,
-      spellEffect: spellEffect ?? this.spellEffect,
-      type: type ?? this.type,
-      comment: comment ?? this.comment,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'spell_trigger': spellTrigger,
-      'spell_effect': spellEffect,
-      'type': type,
-      'comment': comment,
-    };
-  }
+  factory SpellLinkedSpellEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellLinkedSpellEntityMixin.fromJson(json);
 }

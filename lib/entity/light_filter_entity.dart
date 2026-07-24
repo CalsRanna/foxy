@@ -1,6 +1,1 @@
-class LightFilterEntity {
-  final String id;
-  final String continentId;
-
-  const LightFilterEntity({this.id = '', this.continentId = ''});
-}
+export 'light_entity.filter.g.dart';
