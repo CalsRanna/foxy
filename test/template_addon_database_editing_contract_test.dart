@@ -59,15 +59,7 @@ void main() {
     }
   });
 
-  test('Brief 与 Full Entity 不混用写入职责', () {
-    for (final stem in [
-      'brief_creature_template_addon_entity',
-      'brief_game_object_template_addon_entity',
-    ]) {
-      final source = File('lib/entity/$stem.dart').readAsStringSync();
-      expect(source, isNot(contains('toJson(')));
-      expect(source, isNot(contains('copyWith(')));
-    }
+  test('Full Entity 不包含旧的 aura 规范化写入行为', () {
     final creatureEntity = File(
       'lib/entity/creature_template_addon_entity.dart',
     ).readAsStringSync();

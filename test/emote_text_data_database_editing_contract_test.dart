@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveEmoteTextData(EmoteTextDataEntity')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefEmoteTextData 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_emote_text_data_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

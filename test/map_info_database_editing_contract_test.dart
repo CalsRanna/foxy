@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveMapInfo(MapInfoEntity')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefMapInfo 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_map_info_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

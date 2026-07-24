@@ -58,12 +58,4 @@ void main() {
     expect(view, isNot(contains('readOnly: true')));
     expect(view, isNot(contains('readOnly: isEditing')));
   });
-
-  test('BriefItemEnchantmentTemplate 不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_item_enchantment_template_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

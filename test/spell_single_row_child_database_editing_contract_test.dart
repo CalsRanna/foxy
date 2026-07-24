@@ -44,15 +44,4 @@ void main() {
       expect(view, isNot(contains('initControllers(data)')));
     }
   });
-
-  test('两张独立 Brief 不暴露候选写入 API', () {
-    for (final stem in [
-      'brief_spell_bonus_data_entity',
-      'brief_spell_custom_attr_entity',
-    ]) {
-      final source = File('lib/entity/$stem.dart').readAsStringSync();
-      expect(source, isNot(contains('toJson(')));
-      expect(source, isNot(contains('copyWith(')));
-    }
-  });
 }

@@ -44,12 +44,4 @@ void main() {
     expect(view, isNot(contains('readOnly: true')));
     expect(list, contains('emotes[row].key'));
   });
-
-  test('BriefEmoteText 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_emote_text_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

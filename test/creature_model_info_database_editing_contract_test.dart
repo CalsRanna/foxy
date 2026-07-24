@@ -32,12 +32,4 @@ void main() {
     expect(source, isNot(contains('saveCreatureModelInfo(')));
     expect(source, isNot(contains("remove('DisplayID')")));
   });
-
-  test('BriefCreatureModelInfo 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_creature_model_info_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

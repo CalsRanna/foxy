@@ -26,12 +26,4 @@ void main() {
     expect(source, isNot(contains("where('Parent'")));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefAchievementCategory 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_achievement_category_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

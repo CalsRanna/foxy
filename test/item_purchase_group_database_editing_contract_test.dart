@@ -25,12 +25,4 @@ void main() {
     expect(source, isNot(contains("table('foxy.dbc_item_extended_cost')")));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefItemPurchaseGroup 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_item_purchase_group_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

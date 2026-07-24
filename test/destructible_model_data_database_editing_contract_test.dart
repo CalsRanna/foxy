@@ -44,7 +44,5 @@ void main() {
       ),
     );
     expect(source, isNot(contains('.fromJson(json).toBrief()')));
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
   });
 }

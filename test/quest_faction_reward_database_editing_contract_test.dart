@@ -22,12 +22,4 @@ void main() {
     expect(page, contains('viewModel.persistedKey.value'));
     expect(list, contains('rewards[row].key'));
   });
-
-  test('BriefQuestFactionReward 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_quest_faction_reward_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

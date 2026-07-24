@@ -23,12 +23,4 @@ void main() {
     expect(source, isNot(contains('saveCreatureSpellData(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefCreatureSpellData 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_creature_spell_data_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

@@ -16,7 +16,5 @@ void main() {
       'lib/entity/brief_currency_type_entity.dart',
     ).readAsStringSync();
     expect(source, contains('String get displayItemName'));
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
   });
 }

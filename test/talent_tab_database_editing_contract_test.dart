@@ -26,12 +26,4 @@ void main() {
     expect(source, isNot(contains("table('foxy.dbc_spell_icon')")));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefTalentTab 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_talent_tab_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

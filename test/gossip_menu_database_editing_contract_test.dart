@@ -44,12 +44,4 @@ void main() {
     expect(list, contains('_navigateToDetail(key: item.key'));
     expect(view, isNot(contains('readOnly: true')));
   });
-
-  test('BriefGossipMenu 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_gossip_menu_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

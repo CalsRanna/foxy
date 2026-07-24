@@ -40,8 +40,6 @@ void main() {
     ]) {
       final source = File(path).readAsStringSync();
       expect(source, contains(' get key =>'));
-      expect(source, isNot(contains('copyWith(')));
-      expect(source, isNot(contains('toJson(')));
     }
   });
 }

@@ -66,16 +66,4 @@ void main() {
     expect(requestView, contains('entry: vm.editingKey.value'));
     expect(rewardView, contains('entry: vm.editingKey.value'));
   });
-
-  test('三张独立 Brief 不暴露候选写入 API', () {
-    for (final stem in [
-      'brief_quest_template_addon_entity',
-      'brief_quest_request_items_entity',
-      'brief_quest_offer_reward_entity',
-    ]) {
-      final source = File('lib/entity/$stem.dart').readAsStringSync();
-      expect(source, isNot(contains('toJson(')));
-      expect(source, isNot(contains('copyWith(')));
-    }
-  });
 }

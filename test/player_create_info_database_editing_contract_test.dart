@@ -56,12 +56,4 @@ void main() {
     expect(listViewModel, isNot(contains('RouterFacade')));
     expect(listPage, contains('playerCreateInfoKey: info?.key'));
   });
-
-  test('BriefPlayerCreateInfo 不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_player_create_info_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

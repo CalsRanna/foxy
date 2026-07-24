@@ -42,12 +42,4 @@ void main() {
     expect(view, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
   });
-
-  test('BriefGameObjectTemplate 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_game_object_template_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

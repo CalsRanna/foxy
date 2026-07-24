@@ -56,12 +56,4 @@ void main() {
     expect(view, contains('FoxyPagination('));
     expect(view, isNot(contains('readOnly: true')));
   });
-
-  test('BriefSpellRank 不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_spell_rank_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

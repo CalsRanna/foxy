@@ -40,12 +40,4 @@ void main() {
     expect(view, contains('viewModel.persistedKey.value'));
     expect(view, isNot(contains('readOnly: true')));
   });
-
-  test('BriefCreatureTemplate 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_creature_template_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

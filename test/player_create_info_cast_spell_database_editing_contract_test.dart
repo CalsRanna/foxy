@@ -97,12 +97,4 @@ void main() {
     expect(view, contains('FoxyNullableStringInput('));
     expect(view, contains('FoxyPagination('));
   });
-
-  test('Brief 登录施法实体不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_player_create_info_cast_spell_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

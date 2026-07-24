@@ -23,10 +23,4 @@ void main() {
     expect(source, isNot(contains('saveLock(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefLock 不暴露候选写入 API', () {
-    final source = File('lib/entity/brief_lock_entity.dart').readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

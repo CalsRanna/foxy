@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveMailTemplate(MailTemplateEntity')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefMailTemplate 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_mail_template_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

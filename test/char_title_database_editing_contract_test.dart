@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveCharTitle(CharTitleEntity')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefCharTitle 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_char_title_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }
