@@ -22,12 +22,4 @@ void main() {
     expect(page, contains('viewModel.persistedKey.value'));
     expect(list, contains('items[row].key'));
   });
-
-  test('BriefItemExtendedCost 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_item_extended_cost_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

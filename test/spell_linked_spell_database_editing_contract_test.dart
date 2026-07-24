@@ -67,12 +67,4 @@ void main() {
     expect(viewModel, contains('countSpellLinkedSpells(parent)'));
     expect(view, contains('FoxyPagination('));
   });
-
-  test('BriefSpellLinkedSpell 不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_spell_linked_spell_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

@@ -23,12 +23,4 @@ void main() {
     expect(source, isNot(contains('savePointOfInterest(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefPointOfInterest 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_point_of_interest_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

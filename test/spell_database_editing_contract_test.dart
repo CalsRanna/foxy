@@ -41,12 +41,4 @@ void main() {
     expect(viewModel, contains('id: idController.collect()'));
     expect(viewModel, contains('final originalKey = persistedKey.value'));
   });
-
-  test('BriefSpell 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_spell_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

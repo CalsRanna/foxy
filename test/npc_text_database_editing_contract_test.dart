@@ -46,12 +46,4 @@ void main() {
     expect(view, isNot(contains('readOnly: true')));
     expect(view, contains('didUpdateWidget'));
   });
-
-  test('BriefNpcText 不暴露写模型 API', () {
-    final source = File(
-      'lib/entity/brief_npc_text_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

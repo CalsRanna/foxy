@@ -26,12 +26,4 @@ void main() {
     expect(source, isNot(contains('saveSkillLine(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefSkillLine 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_skill_line_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

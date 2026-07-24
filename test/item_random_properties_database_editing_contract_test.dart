@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveItemRandomProperty(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefItemRandomProperties 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_item_random_properties_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

@@ -28,12 +28,4 @@ void main() {
     expect(source, isNot(contains("table('foxy.dbc_currency_types')")));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefCurrencyCategory 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_currency_category_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

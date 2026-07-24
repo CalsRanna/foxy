@@ -36,10 +36,17 @@ void main() {
     );
 
     for (final file in briefFiles) {
+      final source = readLocalDartLibrarySource(file.path);
+      expect(source, matches(keyPattern), reason: '${file.path} 缺少完整标量或专用 key');
       expect(
-        readLocalDartLibrarySource(file.path),
-        matches(keyPattern),
-        reason: '${file.path} 缺少完整标量或专用 key',
+        source,
+        isNot(contains('toJson(')),
+        reason: '${file.path} 不应暴露写模型序列化 API',
+      );
+      expect(
+        source,
+        isNot(contains('copyWith(')),
+        reason: '${file.path} 不应暴露候选复制 API',
       );
     }
     for (final file in entityFiles.where(

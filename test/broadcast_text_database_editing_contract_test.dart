@@ -23,12 +23,4 @@ void main() {
     expect(source, isNot(contains('saveBroadcastText(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefBroadcastText 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_broadcast_text_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }

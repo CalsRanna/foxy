@@ -24,12 +24,4 @@ void main() {
     expect(source, isNot(contains('saveDbcFaction(')));
     expect(source, isNot(contains("remove('ID')")));
   });
-
-  test('BriefDbcFaction 不暴露候选写入 API', () {
-    final source = File(
-      'lib/entity/brief_dbc_faction_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('toJson(')));
-    expect(source, isNot(contains('copyWith(')));
-  });
 }
