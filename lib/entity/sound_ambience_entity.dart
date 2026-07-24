@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'sound_ambience_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_sound_ambience')
 class SoundAmbienceEntity with _SoundAmbienceEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

@@ -4,9 +4,9 @@ targets:
       foxy:foxy_entity:
         generate_for:
           - lib/entity/**_entity.dart
-      foxy:foxy_filter_entity:
+      foxy:foxy_repository_filter:
         generate_for:
-          - lib/entity/**_entity.dart
+          - lib/repository/**_repository.dart
 
 builders:
   foxy_entity:
@@ -18,10 +18,11 @@ builders:
     build_to: cache
     applies_builders: ["source_gen:combining_builder"]
 
-  foxy_filter_entity:
+  foxy_repository_filter:
     import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyFilterEntityBuilder"]
+    builder_factories: ["foxyRepositoryFilterBuilder"]
     build_extensions:
-      ".dart": [".filter.g.dart"]
+      ".dart": [".foxy_repository_filter.g.part"]
     auto_apply: root_package
-    build_to: source
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]

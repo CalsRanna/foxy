@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -84,8 +83,8 @@ class GossipMenuListViewModel with FieldControllerMixin {
     }
   }
 
-  GossipMenuFilterEntity _collectFilter() {
-    return GossipMenuFilterEntity(
+  GossipMenuFilter _collectFilter() {
+    return GossipMenuFilter(
       menuId: menuIdController.collect(),
       text: textController.collect(),
     );

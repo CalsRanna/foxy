@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_visual_effect_entity.dart';
-import 'package:foxy/entity/item_visual_effect_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_visual_effect_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemVisualEffectFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'model',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemVisualEffectRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_visual_effects';
 
@@ -17,9 +34,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countItemVisualEffects({
-    ItemVisualEffectFilterEntity? filter,
-  }) async {
+  Future<int> countItemVisualEffects({ItemVisualEffectFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -38,7 +53,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
 
   Future<List<BriefItemVisualEffectEntity>> getBriefItemVisualEffects({
     int page = 1,
-    ItemVisualEffectFilterEntity? filter,
+    ItemVisualEffectFilter? filter,
   }) async {
     var builder = laconic.table(_table).select(const ['ID', 'Model']);
     builder = _applyFilter(builder, filter);
@@ -101,7 +116,7 @@ class ItemVisualEffectRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemVisualEffectFilterEntity? filter,
+    ItemVisualEffectFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

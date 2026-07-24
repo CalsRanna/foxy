@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
-import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'sound_provider_preferences_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SoundProviderPreferencesFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'description',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SoundProviderPreferencesRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_provider_preferences';
 
@@ -21,7 +38,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
   }
 
   Future<int> countSoundProviderPreferences({
-    SoundProviderPreferencesFilterEntity? filter,
+    SoundProviderPreferencesFilter? filter,
   }) => _applyFilter(laconic.table(_table), filter).count();
 
   Future<SoundProviderPreferencesEntity>
@@ -38,7 +55,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
   Future<List<BriefSoundProviderPreferencesEntity>>
   getBriefSoundProviderPreferences({
     int page = 1,
-    SoundProviderPreferencesFilterEntity? filter,
+    SoundProviderPreferencesFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select(['ID', 'Description', 'Flags']),
@@ -104,7 +121,7 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    SoundProviderPreferencesFilterEntity? filter,
+    SoundProviderPreferencesFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

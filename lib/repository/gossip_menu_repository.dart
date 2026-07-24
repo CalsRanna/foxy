@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/entity/gossip_menu_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'gossip_menu_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GossipMenuFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'menuId',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'text',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GossipMenuRepository with RepositoryMixin {
   static const _table = 'gossip_menu';
 
@@ -17,7 +34,7 @@ class GossipMenuRepository with RepositoryMixin {
     return GossipMenuKey.fromEntity(copied);
   }
 
-  Future<int> countGossipMenus({GossipMenuFilterEntity? filter}) async {
+  Future<int> countGossipMenus({GossipMenuFilter? filter}) async {
     final needsTextJoin = filter != null && filter.text.isNotEmpty;
     if (!needsTextJoin) {
       var builder = laconic.table(_table);
@@ -54,7 +71,7 @@ class GossipMenuRepository with RepositoryMixin {
 
   Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
-    GossipMenuFilterEntity? filter,
+    GossipMenuFilter? filter,
   }) async {
     var builder = laconic.table('$_table AS gm');
     final fields = <String>[
@@ -138,10 +155,7 @@ class GossipMenuRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    GossipMenuFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
     if (filter == null) return builder;
     if (filter.menuId.isNotEmpty) {
       builder = builder.where('gm.MenuID', filter.menuId);

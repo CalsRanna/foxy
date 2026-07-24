@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
-import 'package:foxy/entity/glyph_property_filter_entity.dart';
+import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -79,8 +78,8 @@ class GlyphPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  GlyphPropertyFilterEntity _collectFilter() {
-    return GlyphPropertyFilterEntity(id: entryController.collect());
+  GlyphPropertyFilter _collectFilter() {
+    return GlyphPropertyFilter(id: entryController.collect());
   }
 
   Future<void> _refresh() async {

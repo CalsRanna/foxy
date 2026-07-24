@@ -3,16 +3,13 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'player_create_info_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'playercreateinfo')
 class PlayerCreateInfoEntity with _PlayerCreateInfoEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('race', key: true)
   final int race;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('class', key: true)
   final int class_;
 

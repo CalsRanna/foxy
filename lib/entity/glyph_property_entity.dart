@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'glyph_property_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_glyph_properties')
 class GlyphPropertyEntity with _GlyphPropertyEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

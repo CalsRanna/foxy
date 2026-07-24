@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
-import 'package:foxy/entity/taxi_path_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'taxi_path_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'TaxiPathFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class TaxiPathRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_taxi_path';
 
@@ -20,7 +32,7 @@ class TaxiPathRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countTaxiPaths({TaxiPathFilterEntity? filter}) =>
+  Future<int> countTaxiPaths({TaxiPathFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<TaxiPathEntity> createTaxiPath() async =>
@@ -35,7 +47,7 @@ class TaxiPathRepository with RepositoryMixin {
 
   Future<List<BriefTaxiPathEntity>> getBriefTaxiPaths({
     int page = 1,
-    TaxiPathFilterEntity? filter,
+    TaxiPathFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select([
@@ -92,10 +104,7 @@ class TaxiPathRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    TaxiPathFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, TaxiPathFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

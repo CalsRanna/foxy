@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
-import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_spell_data_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureSpellDataFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'spell',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureSpellDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_spell_data';
   static const _spellTable = 'foxy.dbc_spell';
@@ -18,9 +35,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countCreatureSpellDatas({
-    CreatureSpellDataFilterEntity? filter,
-  }) async {
+  Future<int> countCreatureSpellDatas({CreatureSpellDataFilter? filter}) async {
     final needsSpellJoin = filter != null && filter.spell.isNotEmpty;
     if (!needsSpellJoin) {
       var builder = laconic.table(_table);
@@ -48,7 +63,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
 
   Future<List<BriefCreatureSpellDataEntity>> getBriefCreatureSpellDatas({
     int page = 1,
-    CreatureSpellDataFilterEntity? filter,
+    CreatureSpellDataFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     const fields = [
@@ -127,7 +142,7 @@ class CreatureSpellDataRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureSpellDataFilterEntity? filter,
+    CreatureSpellDataFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

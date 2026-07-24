@@ -16,11 +16,7 @@ void main() {
           .whereType<File>()
           .where((file) => file.path.endsWith('_entity.dart'))
           .where((file) => !file.path.endsWith('.g.dart'))
-          .where(
-            (file) =>
-                !file.uri.pathSegments.last.startsWith('brief_') &&
-                !file.uri.pathSegments.last.endsWith('_filter_entity.dart'),
-          )
+          .where((file) => !file.uri.pathSegments.last.startsWith('brief_'))
           .toList()
         ..sort((left, right) => left.path.compareTo(right.path));
 
@@ -136,7 +132,7 @@ void main() {
     }
   });
 
-  test('迁移工具不会重新创建旧 Brief/Key 生成壳', () {
+  test('迁移工具不会重新创建旧 Brief/Key/Filter 生成壳', () {
     final source = File('tool/entity_codegen_migrate.dart').readAsStringSync();
 
     expect(
@@ -147,7 +143,71 @@ void main() {
       source,
       isNot(contains("_generatedName(migration.fullFile, 'key')")),
     );
+    expect(source, isNot(contains('FoxyFilterEntity')));
+    expect(source, isNot(contains('FoxyFilterField')));
+    expect(source, isNot(contains('_filter_entity.dart')));
+    expect(source, isNot(contains('.filter.g.dart')));
     expect(source, contains('file.deleteSync();'));
+  });
+
+  test('Repository 专属 Filter 全部由 Repository 注解生成', () {
+    final repositories =
+        Directory('lib/repository')
+            .listSync()
+            .whereType<File>()
+            .where((file) => file.path.endsWith('_repository.dart'))
+            .where(
+              (file) =>
+                  file.readAsStringSync().contains('@FoxyRepositoryFilter'),
+            )
+            .toList()
+          ..sort((left, right) => left.path.compareTo(right.path));
+
+    expect(repositories, hasLength(76));
+    for (final repository in repositories) {
+      final source = repository.readAsStringSync();
+      final fileName = repository.uri.pathSegments.last;
+      final generatedName = fileName.replaceFirst('.dart', '.g.dart');
+      final generated = File('lib/repository/$generatedName');
+
+      expect(
+        source,
+        contains("part '$generatedName';"),
+        reason: '${repository.path} 必须声明 Repository 生成 part',
+      );
+      expect(generated.existsSync(), isTrue, reason: '${generated.path} 尚未生成');
+      expect(
+        generated.readAsStringSync(),
+        contains(RegExp(r'final class \w+Filter\b')),
+        reason: '${generated.path} 必须包含不带 Entity 后缀的 Filter',
+      );
+    }
+  });
+
+  test('旧 Entity Filter 生成路径已移除，共享 Loot Filter 保持独立', () {
+    final oldFiles = Directory('lib/entity').listSync().whereType<File>().where(
+      (file) =>
+          file.path.endsWith('_filter_entity.dart') ||
+          file.path.endsWith('.filter.g.dart'),
+    );
+    expect(oldFiles, isEmpty);
+
+    for (final file in [
+      File('lib/infrastructure/codegen/entity_annotations.dart'),
+      File('lib/infrastructure/codegen/builder.dart'),
+      File('build.yaml'),
+    ]) {
+      final source = file.readAsStringSync();
+      expect(source, isNot(contains('FoxyFilterEntity')));
+      expect(source, isNot(contains('foxy_filter_entity')));
+      expect(source, isNot(contains('.filter.g.dart')));
+    }
+
+    final shared = File(
+      'lib/repository/loot_template_filter.dart',
+    ).readAsStringSync();
+    expect(shared, contains('final class LootTemplateFilter'));
+    expect(shared, isNot(contains('LootTemplateFilterEntity')));
   });
 }
 

@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
-import 'package:foxy/entity/dbc_item_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'dbc_item_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'DbcItemFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'handEquippableOnly',
+      type: FoxyFilterFieldType.boolean,
+      defaultValue: false,
+    ),
+  ],
+)
 class DbcItemRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item';
   static const handEquippableInventoryTypes = [
@@ -28,7 +45,7 @@ class DbcItemRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countDbcItems({DbcItemFilterEntity? filter}) =>
+  Future<int> countDbcItems({DbcItemFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<DbcItemEntity> createDbcItem() async =>
@@ -43,7 +60,7 @@ class DbcItemRepository with RepositoryMixin {
 
   Future<List<BriefDbcItemEntity>> getBriefDbcItems({
     int page = 1,
-    DbcItemFilterEntity? filter,
+    DbcItemFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -101,7 +118,7 @@ class DbcItemRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.handEquippableOnly) {

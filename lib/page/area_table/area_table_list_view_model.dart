@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/area_table_filter_entity.dart';
+import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -82,8 +81,8 @@ class AreaTableListViewModel with FieldControllerMixin {
     }
   }
 
-  AreaTableFilterEntity _collectFilter() {
-    return AreaTableFilterEntity(
+  AreaTableFilter _collectFilter() {
+    return AreaTableFilter(
       id: entryController.collect(),
       name: nameController.collect(),
     );

@@ -1,10 +1,9 @@
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/entity/item_template_filter_entity.dart';
+import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -136,8 +135,8 @@ class ItemTemplateListViewModel with FieldControllerMixin {
     search();
   }
 
-  ItemTemplateFilterEntity _collectFilter() {
-    return ItemTemplateFilterEntity(
+  ItemTemplateFilter _collectFilter() {
+    return ItemTemplateFilter(
       entry: entryController.collect(),
       name: nameController.collect(),
       description: descriptionController.collect(),

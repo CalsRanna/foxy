@@ -1,15 +1,27 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
-import 'package:foxy/entity/waypoint_data_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
+
+part 'waypoint_data_repository.g.dart';
 
 /// 路径点选择器按 path `id` 聚合展示（points = COUNT(point)）。
 ///
 /// 聚合结果不是 `waypoint_data` 的物理行，不在此仓储提供伪 CRUD。
+@FoxyRepositoryFilter(
+  name: 'WaypointDataFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 
-  Future<int> countWaypointDatas({WaypointDataFilterEntity? filter}) async {
+  Future<int> countWaypointDatas({WaypointDataFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     builder = builder.select(['id', 'COUNT(point) as points']);
@@ -19,7 +31,7 @@ class WaypointDataRepository with RepositoryMixin {
 
   Future<List<BriefWaypointDataEntity>> getBriefWaypointDatas({
     int page = 1,
-    WaypointDataFilterEntity? filter,
+    WaypointDataFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -34,10 +46,7 @@ class WaypointDataRepository with RepositoryMixin {
         .toList();
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    WaypointDataFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, WaypointDataFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('id', filter.id);

@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
-import 'package:foxy/entity/broadcast_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'broadcast_text_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'BroadcastTextFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'text',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class BroadcastTextRepository with RepositoryMixin {
   static const _table = 'broadcast_text';
 
@@ -17,7 +34,7 @@ class BroadcastTextRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countBroadcastTexts({BroadcastTextFilterEntity? filter}) async {
+  Future<int> countBroadcastTexts({BroadcastTextFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +53,7 @@ class BroadcastTextRepository with RepositoryMixin {
 
   Future<List<BriefBroadcastTextEntity>> getBriefBroadcastTexts({
     int page = 1,
-    BroadcastTextFilterEntity? filter,
+    BroadcastTextFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -102,10 +119,7 @@ class BroadcastTextRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    BroadcastTextFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, BroadcastTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

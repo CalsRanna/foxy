@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_extended_cost_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemExtendedCostFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemExtendedCostRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
@@ -17,9 +29,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countItemExtendedCosts({
-    ItemExtendedCostFilterEntity? filter,
-  }) async {
+  Future<int> countItemExtendedCosts({ItemExtendedCostFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -38,7 +48,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
 
   Future<List<BriefItemExtendedCostEntity>> getBriefItemExtendedCosts({
     int page = 1,
-    ItemExtendedCostFilterEntity? filter,
+    ItemExtendedCostFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -119,7 +129,7 @@ class ItemExtendedCostRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemExtendedCostFilterEntity? filter,
+    ItemExtendedCostFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

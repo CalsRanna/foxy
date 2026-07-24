@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
-import 'package:foxy/entity/sound_ambience_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'sound_ambience_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SoundAmbienceFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SoundAmbienceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_sound_ambience';
 
@@ -17,7 +29,7 @@ class SoundAmbienceRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSoundAmbiences({SoundAmbienceFilterEntity? filter}) =>
+  Future<int> countSoundAmbiences({SoundAmbienceFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<SoundAmbienceEntity> createSoundAmbience() async =>
@@ -32,7 +44,7 @@ class SoundAmbienceRepository with RepositoryMixin {
 
   Future<List<BriefSoundAmbienceEntity>> getBriefSoundAmbiences({
     int page = 1,
-    SoundAmbienceFilterEntity? filter,
+    SoundAmbienceFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select(['ID', 'AmbienceID0', 'AmbienceID1']),
@@ -91,10 +103,7 @@ class SoundAmbienceRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SoundAmbienceFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SoundAmbienceFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

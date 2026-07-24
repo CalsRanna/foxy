@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
-import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'destructible_model_data_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'DestructibleModelDataFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class DestructibleModelDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_destructible_model_data';
 
@@ -21,7 +33,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   }
 
   Future<int> countDestructibleModelDatas({
-    DestructibleModelDataFilterEntity? filter,
+    DestructibleModelDataFilter? filter,
   }) => _applyFilter(laconic.table(_table), filter).count();
 
   Future<DestructibleModelDataEntity> createDestructibleModelData() async =>
@@ -37,7 +49,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
   Future<List<BriefDestructibleModelDataEntity>>
   getBriefDestructibleModelDatas({
     int page = 1,
-    DestructibleModelDataFilterEntity? filter,
+    DestructibleModelDataFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select([
@@ -105,7 +117,7 @@ class DestructibleModelDataRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    DestructibleModelDataFilterEntity? filter,
+    DestructibleModelDataFilter? filter,
   ) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

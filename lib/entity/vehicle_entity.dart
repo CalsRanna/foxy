@@ -5,11 +5,9 @@ part 'vehicle_entity.g.dart';
 /// 载具数据
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_vehicle')
 class VehicleEntity with _VehicleEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

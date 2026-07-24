@@ -4,11 +4,9 @@ part 'game_object_template_entity.g.dart';
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeName')
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'gameobject_template')
 class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entry', key: true)
   final int entry;
 
@@ -20,7 +18,6 @@ class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
   final int displayId;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('name')
   final String name;
 

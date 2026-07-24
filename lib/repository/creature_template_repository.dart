@@ -1,9 +1,31 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'subName',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureTemplateRepository with RepositoryMixin {
   static const _table = 'creature_template';
 
@@ -19,9 +41,7 @@ class CreatureTemplateRepository with RepositoryMixin {
     return copied.entry;
   }
 
-  Future<int> countCreatureTemplates({
-    CreatureTemplateFilterEntity? filter,
-  }) async {
+  Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled &&
         filter != null &&
@@ -65,7 +85,7 @@ class CreatureTemplateRepository with RepositoryMixin {
 
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
-    CreatureTemplateFilterEntity? filter,
+    CreatureTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS ct');
@@ -149,7 +169,7 @@ class CreatureTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureTemplateFilterEntity? filter,
+    CreatureTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {

@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
-import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'cinematic_sequence_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CinematicSequenceFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CinematicSequenceRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_cinematic_sequences';
 
@@ -20,9 +32,8 @@ class CinematicSequenceRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countCinematicSequences({
-    CinematicSequenceFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
+  Future<int> countCinematicSequences({CinematicSequenceFilter? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
 
   Future<CinematicSequenceEntity> createCinematicSequence() async =>
       CinematicSequenceEntity(id: await nextMaxPlusOne(_table, 'ID'));
@@ -36,7 +47,7 @@ class CinematicSequenceRepository with RepositoryMixin {
 
   Future<List<BriefCinematicSequenceEntity>> getBriefCinematicSequences({
     int page = 1,
-    CinematicSequenceFilterEntity? filter,
+    CinematicSequenceFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select(['ID', 'SoundID', 'Camera0']),
@@ -97,7 +108,7 @@ class CinematicSequenceRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CinematicSequenceFilterEntity? filter,
+    CinematicSequenceFilter? filter,
   ) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

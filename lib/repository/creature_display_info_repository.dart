@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
-import 'package:foxy/entity/creature_display_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_display_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureDisplayInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'modelName',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_display_info';
   static const _modelDataTable = 'foxy.dbc_creature_model_data';
@@ -19,7 +36,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<int> countCreatureDisplayInfos({
-    CreatureDisplayInfoFilterEntity? filter,
+    CreatureDisplayInfoFilter? filter,
   }) async {
     final needsModelJoin = filter != null && filter.modelName.isNotEmpty;
     if (!needsModelJoin) {
@@ -48,7 +65,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
 
   Future<List<BriefCreatureDisplayInfoEntity>> getBriefCreatureDisplayInfos({
     int page = 1,
-    CreatureDisplayInfoFilterEntity? filter,
+    CreatureDisplayInfoFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS cdi');
@@ -119,7 +136,7 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureDisplayInfoFilterEntity? filter,
+    CreatureDisplayInfoFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

@@ -3,12 +3,10 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'spell_item_enchantment_condition_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_spell_item_enchantment_condition')
 class SpellItemEnchantmentConditionEntity
     with _SpellItemEnchantmentConditionEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

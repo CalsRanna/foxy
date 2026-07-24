@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/entity/gem_property_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'gem_property_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GemPropertyFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GemPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
@@ -17,7 +29,7 @@ class GemPropertyRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countGemProperties({GemPropertyFilterEntity? filter}) async {
+  Future<int> countGemProperties({GemPropertyFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class GemPropertyRepository with RepositoryMixin {
 
   Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
     int page = 1,
-    GemPropertyFilterEntity? filter,
+    GemPropertyFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -102,10 +114,7 @@ class GemPropertyRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    GemPropertyFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, GemPropertyFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

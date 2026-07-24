@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
-import 'package:foxy/entity/creature_immunity_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_immunity_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureImmunityFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'comment',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureImmunityRepository with RepositoryMixin {
   static const _table = 'creature_immunities';
 
@@ -20,9 +37,7 @@ class CreatureImmunityRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countCreatureImmunities({
-    CreatureImmunityFilterEntity? filter,
-  }) async {
+  Future<int> countCreatureImmunities({CreatureImmunityFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +56,7 @@ class CreatureImmunityRepository with RepositoryMixin {
 
   Future<List<BriefCreatureImmunityEntity>> getBriefCreatureImmunities({
     int page = 1,
-    CreatureImmunityFilterEntity? filter,
+    CreatureImmunityFilter? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -111,7 +126,7 @@ class CreatureImmunityRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureImmunityFilterEntity? filter,
+    CreatureImmunityFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

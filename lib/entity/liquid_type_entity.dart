@@ -3,16 +3,13 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'liquid_type_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_liquid_type')
 class LiquidTypeEntity with _LiquidTypeEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Name')
   final String name;
 

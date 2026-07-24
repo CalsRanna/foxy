@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
-import 'package:foxy/entity/glyph_property_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'glyph_property_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GlyphPropertyFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GlyphPropertyRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
@@ -17,7 +29,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countGlyphProperties({GlyphPropertyFilterEntity? filter}) async {
+  Future<int> countGlyphProperties({GlyphPropertyFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class GlyphPropertyRepository with RepositoryMixin {
 
   Future<List<BriefGlyphPropertyEntity>> getBriefGlyphProperties({
     int page = 1,
-    GlyphPropertyFilterEntity? filter,
+    GlyphPropertyFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -96,10 +108,7 @@ class GlyphPropertyRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    GlyphPropertyFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, GlyphPropertyFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

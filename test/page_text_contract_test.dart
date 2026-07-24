@@ -257,7 +257,7 @@ void main() {
     final delegate = source.substring(start, end);
     expect(delegate, contains("FoxyEntityPickerFilter('编号')"));
     expect(delegate, contains("FoxyEntityPickerFilter('文本')"));
-    expect(delegate, contains('PageTextFilterEntity(id: v[0], text: v[1])'));
+    expect(delegate, contains('PageTextFilter(id: v[0], text: v[1])'));
     expect(delegate, contains('.getBriefPageTexts('));
     expect(delegate, contains('.countPageTexts('));
   });

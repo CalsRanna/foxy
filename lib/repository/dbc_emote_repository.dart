@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_emote_entity.dart';
-import 'package:foxy/entity/dbc_emote_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'dbc_emote_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'DbcEmoteFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'command',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class DbcEmoteRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes';
 
@@ -20,7 +37,7 @@ class DbcEmoteRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countDbcEmotes({DbcEmoteFilterEntity? filter}) =>
+  Future<int> countDbcEmotes({DbcEmoteFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<DbcEmoteEntity> createDbcEmote() async =>
@@ -35,7 +52,7 @@ class DbcEmoteRepository with RepositoryMixin {
 
   Future<List<BriefDbcEmoteEntity>> getBriefDbcEmotes({
     int page = 1,
-    DbcEmoteFilterEntity? filter,
+    DbcEmoteFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -93,10 +110,7 @@ class DbcEmoteRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    DbcEmoteFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, DbcEmoteFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.command.isNotEmpty) {

@@ -3,7 +3,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../entity_annotations.dart';
 import 'entity_model.dart';
 
 final class EntityValidator {
@@ -109,43 +108,6 @@ final class EntityValidator {
         );
       }
     }
-
-    if (!model.generateFilter) {
-      final filterField = model.fields
-          .where((field) => field.filter != null)
-          .firstOrNull;
-      if (filterField != null) {
-        _fail(
-          '${model.className}.${filterField.dartName} 使用了 @FoxyFilterField，'
-              '但 class 没有 @FoxyFilterEntity。',
-          element.getField(filterField.dartName) ?? element,
-          '在 class 上添加 @FoxyFilterEntity，或移除字段注解。',
-        );
-      }
-    }
-
-    for (final field in model.filterFields) {
-      final filter = field.filter!;
-      if (!_isFilterDefaultCompatible(filter)) {
-        _fail(
-          '${model.className}.${field.dartName} 的 Filter 默认值类型不匹配：'
-              '${filter.type.name} 不能使用 ${filter.defaultValue.runtimeType}。',
-          element.getField(field.dartName) ?? element,
-          '让 defaultValue 与 FoxyFilterFieldType 对应的 Dart 类型一致。',
-        );
-      }
-    }
-  }
-
-  bool _isFilterDefaultCompatible(FilterFieldGenerationModel filter) {
-    final value = filter.defaultValue;
-    if (value == null) return false;
-    return switch (filter.type) {
-      FoxyFilterFieldType.boolean => value is bool,
-      FoxyFilterFieldType.decimal => value is num,
-      FoxyFilterFieldType.integer => value is int,
-      FoxyFilterFieldType.text => value is String,
-    };
   }
 
   Never _fail(String message, Element element, String todo) {

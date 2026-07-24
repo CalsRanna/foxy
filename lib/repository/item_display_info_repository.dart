@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
-import 'package:foxy/entity/item_display_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_display_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemDisplayInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
@@ -20,9 +37,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countItemDisplayInfos({
-    ItemDisplayInfoFilterEntity? filter,
-  }) async {
+  Future<int> countItemDisplayInfos({ItemDisplayInfoFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +56,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
 
   Future<List<BriefItemDisplayInfoEntity>> getBriefItemDisplayInfos({
     int page = 1,
-    ItemDisplayInfoFilterEntity? filter,
+    ItemDisplayInfoFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -104,7 +119,7 @@ class ItemDisplayInfoRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemDisplayInfoFilterEntity? filter,
+    ItemDisplayInfoFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

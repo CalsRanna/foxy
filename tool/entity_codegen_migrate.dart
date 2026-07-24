@@ -33,9 +33,7 @@ final class _Migration {
   final List<_Field> fields;
   final Set<String> keyFields;
   final Set<String> briefFields;
-  final Map<String, _Field> filterFields;
   final File? briefFile;
-  final File? filterFile;
   final File? keyFile;
   final List<String> customGetters;
   final String sourcePrefix;
@@ -47,24 +45,10 @@ final class _Migration {
     required this.fields,
     required this.keyFields,
     required this.briefFields,
-    required this.filterFields,
     required this.briefFile,
-    required this.filterFile,
     required this.keyFile,
     required this.customGetters,
     required this.sourcePrefix,
-  });
-}
-
-final class _FilterPromotion {
-  final File fullFile;
-  final File filterFile;
-  final Map<String, _Field> fields;
-
-  const _FilterPromotion({
-    required this.fullFile,
-    required this.filterFile,
-    required this.fields,
   });
 }
 
@@ -79,15 +63,10 @@ void main(List<String> arguments) {
           .where((file) => file.path.endsWith('_entity.dart'))
           .where((file) => !file.path.contains('.g.dart'))
           .where((file) => !file.uri.pathSegments.last.startsWith('brief_'))
-          .where(
-            (file) =>
-                !file.uri.pathSegments.last.endsWith('_filter_entity.dart'),
-          )
           .toList()
         ..sort((left, right) => left.path.compareTo(right.path));
 
   final migrations = <_Migration>[];
-  final filterPromotions = <_FilterPromotion>[];
   final skipped = <String, String>{};
   for (final file in files) {
     final name = file.uri.pathSegments.last;
@@ -96,8 +75,6 @@ void main(List<String> arguments) {
       continue;
     }
     if (file.readAsStringSync().contains('@FoxyFullEntity')) {
-      final promotion = _inspectAnnotatedFilter(file);
-      if (promotion != null) filterPromotions.add(promotion);
       skipped[name] = 'already migrated';
       continue;
     }
@@ -112,9 +89,7 @@ void main(List<String> arguments) {
   stdout.writeln(
     'eligible=${migrations.length} '
     'brief=${migrations.where((item) => item.briefFile != null).length} '
-    'filter=${migrations.where((item) => item.filterFile != null).length} '
     'compositeKey=${migrations.where((item) => item.keyFile != null).length} '
-    'filterPromotion=${filterPromotions.length} '
     'skipped=${skipped.length}',
   );
   for (final entry in skipped.entries) {
@@ -130,24 +105,16 @@ void main(List<String> arguments) {
     if (migration.briefFile case final file?) {
       file.deleteSync();
     }
-    if (migration.filterFile case final file?) {
-      file.writeAsStringSync(
-        "export '${_generatedName(migration.fullFile, 'filter')}';\n",
-      );
-    }
     if (migration.keyFile case final file?) {
       file.deleteSync();
     }
-  }
-  for (final promotion in filterPromotions) {
-    _applyFilterPromotion(promotion);
   }
 }
 
 const _explicitExclusions = {
   'activity_log_entity.dart',
   'feature_entity.dart',
-  'item_bag_family_entity.dart',
+  'version_entity.dart',
 };
 
 void _splitMultiEntityFiles() {
@@ -341,11 +308,6 @@ _Migration _inspect(File file) {
   final brief = briefFile.existsSync()
       ? _inspectBrief(briefFile, className, fields, keyFields)
       : null;
-  final filterFile = File('lib/entity/${base}_filter_entity.dart');
-  final filter = filterFile.existsSync()
-      ? _inspectFilter(filterFile, className, fields)
-      : null;
-
   return _Migration(
     fullFile: file,
     className: className,
@@ -353,104 +315,10 @@ _Migration _inspect(File file) {
     fields: fields,
     keyFields: keyFields,
     briefFields: brief?.fields.toSet() ?? const {},
-    filterFields: {
-      if (filter != null)
-        for (final name in filter.fields)
-          name: _Field(
-            name: name,
-            type: filter.types[name]!,
-            defaultSource: filter.defaults[name]!,
-            column: '',
-          ),
-    },
     briefFile: brief == null ? null : briefFile,
-    filterFile: filter == null ? null : filterFile,
     keyFile: compositeKeyFields.length > 1 ? keyFile : null,
     customGetters: customGetters,
     sourcePrefix: source.substring(0, classMatch.start).trim(),
-  );
-}
-
-_FilterPromotion? _inspectAnnotatedFilter(File fullFile) {
-  final source = fullFile.readAsStringSync();
-  if (source.contains('@FoxyFilterEntity')) return null;
-  final fileName = fullFile.uri.pathSegments.last;
-  final base = fileName.substring(0, fileName.length - '_entity.dart'.length);
-  final filterFile = File('lib/entity/${base}_filter_entity.dart');
-  if (!filterFile.existsSync() ||
-      filterFile.readAsStringSync().contains('.filter.g.dart')) {
-    return null;
-  }
-  final className = _pascal(fileName.substring(0, fileName.length - 5));
-  final fullFields = <_Field>[];
-  final pattern = RegExp(
-    r"""@FoxyFullField\('([^']+)'(?:,\s*key:\s*true)?\)\s+"""
-    r'final\s+(int|double|String|bool)(\?)?\s+(\w+);',
-  );
-  final defaults = _constructorDefaults(
-    source,
-    className,
-    pattern.allMatches(source).map((match) => match.group(4)!),
-  );
-  for (final match in pattern.allMatches(source)) {
-    final name = match.group(4)!;
-    fullFields.add(
-      _Field(
-        name: name,
-        type: '${match.group(2)}${match.group(3) ?? ''}',
-        defaultSource: defaults[name]!,
-        column: match.group(1)!,
-      ),
-    );
-  }
-  if (fullFields.isEmpty) return null;
-  final filter = _inspectFilter(filterFile, className, fullFields);
-  if (filter == null) return null;
-  return _FilterPromotion(
-    fullFile: fullFile,
-    filterFile: filterFile,
-    fields: {
-      for (final name in filter.fields)
-        name: _Field(
-          name: name,
-          type: filter.types[name]!,
-          defaultSource: filter.defaults[name]!,
-          column: '',
-        ),
-    },
-  );
-}
-
-void _applyFilterPromotion(_FilterPromotion promotion) {
-  var source = promotion.fullFile.readAsStringSync();
-  source = source.replaceFirst(
-    '@FoxyFullEntity',
-    '@FoxyFilterEntity()\n@FoxyFullEntity',
-  );
-  for (final field in promotion.fields.values) {
-    final declaration = RegExp(
-      r'  @FoxyFullField\([^\n]+\)\n'
-      '  final [^\\n]+ ${RegExp.escape(field.name)};',
-    );
-    final match = declaration.firstMatch(source);
-    if (match == null) {
-      throw FormatException(
-        '${promotion.fullFile.path}:${field.name} annotation insertion failed',
-      );
-    }
-    final annotation =
-        '  @FoxyFilterField('
-        'defaultValue: ${field.defaultSource}, '
-        'type: FoxyFilterFieldType.${_filterType(field.type)})\n';
-    source = source.replaceRange(
-      match.start,
-      match.end,
-      '$annotation${match.group(0)}',
-    );
-  }
-  promotion.fullFile.writeAsStringSync(source);
-  promotion.filterFile.writeAsStringSync(
-    "export '${_generatedName(promotion.fullFile, 'filter')}';\n",
   );
 }
 
@@ -679,51 +547,6 @@ _Companion? _inspectBrief(
   }
 }
 
-_Companion? _inspectFilter(
-  File file,
-  String fullClassName,
-  List<_Field> fullFields,
-) {
-  try {
-    final source = file.readAsStringSync();
-    final className = fullClassName.replaceFirst(
-      RegExp(r'Entity$'),
-      'FilterEntity',
-    );
-    if (RegExp(r'\bclass\s+').allMatches(source).length != 1 ||
-        !source.contains(RegExp('\\bclass\\s+$className\\s*\\{'))) {
-      return null;
-    }
-    final fields = _simpleFields(source);
-    final fullNames = fullFields.map((field) => field.name).toSet();
-    if (fields.isEmpty || !fields.keys.every(fullNames.contains)) return null;
-    final defaults = _constructorDefaults(source, className, fields.keys);
-    if (source.contains('factory $className.fromJson')) {
-      final fromJson = _fromJsonArguments(source, className);
-      for (final name in fields.keys) {
-        final keys = RegExp(r'''json\s*\[\s*['"]([^'"]+)['"]\s*\]''')
-            .allMatches(fromJson[name] ?? '')
-            .map((item) => item.group(1)!)
-            .toSet();
-        if (keys.length != 1 || keys.single != name) return null;
-      }
-    }
-    if (source.contains('toJson()')) {
-      final toJson = _toJsonEntries(source);
-      for (final name in fields.keys) {
-        if (toJson[name]?.$1 != name) return null;
-      }
-    }
-    return _Companion(
-      fields: fields.keys.toList(),
-      defaults: defaults,
-      types: fields,
-    );
-  } on FormatException {
-    return null;
-  }
-}
-
 Map<String, String> _simpleFields(String source) {
   return {
     for (final match in RegExp(
@@ -768,7 +591,6 @@ String _emitFull(_Migration migration) {
       ..writeln();
   }
   if (migration.briefFile != null) buffer.writeln('@FoxyBriefEntity()');
-  if (migration.filterFile != null) buffer.writeln('@FoxyFilterEntity()');
   buffer
     ..writeln("@FoxyFullEntity(table: '${migration.table}')")
     ..writeln(
@@ -777,13 +599,6 @@ String _emitFull(_Migration migration) {
   for (final field in migration.fields) {
     if (migration.briefFields.contains(field.name)) {
       buffer.writeln('  @FoxyBriefField()');
-    }
-    if (migration.filterFields[field.name] case final filter?) {
-      buffer.writeln(
-        '  @FoxyFilterField('
-        'defaultValue: ${filter.defaultSource}, '
-        'type: FoxyFilterFieldType.${_filterType(filter.type)})',
-      );
     }
     buffer
       ..writeln(
@@ -824,13 +639,6 @@ String _generatedName(File file, String kind) {
     _ => name.replaceFirst('.dart', '.$kind.g.dart'),
   };
 }
-
-String _filterType(String type) => switch (type.replaceAll('?', '')) {
-  'bool' => 'boolean',
-  'double' => 'decimal',
-  'int' => 'integer',
-  _ => 'text',
-};
 
 String _escape(String value) =>
     value.replaceAll(r'\', r'\\').replaceAll("'", r"\'");

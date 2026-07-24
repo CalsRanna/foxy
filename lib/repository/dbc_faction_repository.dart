@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
-import 'package:foxy/entity/dbc_faction_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'dbc_faction_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'DbcFactionFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_faction';
 
@@ -22,7 +39,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countDbcFactions({DbcFactionFilterEntity? filter}) async {
+  Future<int> countDbcFactions({DbcFactionFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +58,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
     int page = 1,
-    DbcFactionFilterEntity? filter,
+    DbcFactionFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -111,10 +128,7 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    DbcFactionFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, DbcFactionFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

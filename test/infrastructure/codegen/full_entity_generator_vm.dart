@@ -119,24 +119,14 @@ void main() {
     final reordered = standardEntitySource
         .replaceFirst(
           '@FoxyBriefEntity()\n'
-              '@FoxyFilterEntity()\n'
               "@FoxyFullEntity(table: 'foxy.codegen_sample')",
           "@FoxyFullEntity(table: 'foxy.codegen_sample')\n"
-              '@FoxyFilterEntity()\n'
               '@FoxyBriefEntity()',
         )
         .replaceFirst(
           '@FoxyBriefField()\n'
-              '@FoxyFilterField(\n'
-              "    defaultValue: '',\n"
-              '    type: FoxyFilterFieldType.text,\n'
-              '  )\n'
               "@FoxyFullField('ID', key: true)",
           "@FoxyFullField('ID', key: true)\n"
-              '@FoxyFilterField(\n'
-              "    defaultValue: '',\n"
-              '    type: FoxyFilterFieldType.text,\n'
-              '  )\n'
               '@FoxyBriefField()',
         );
     const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';

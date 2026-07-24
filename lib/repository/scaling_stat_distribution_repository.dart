@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'scaling_stat_distribution_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ScalingStatDistributionFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ScalingStatDistributionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
@@ -18,7 +30,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   }
 
   Future<int> countScalingStatDistributions({
-    ScalingStatDistributionFilterEntity? filter,
+    ScalingStatDistributionFilter? filter,
   }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -39,7 +51,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
   Future<List<BriefScalingStatDistributionEntity>>
   getBriefScalingStatDistributions({
     int page = 1,
-    ScalingStatDistributionFilterEntity? filter,
+    ScalingStatDistributionFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -131,7 +143,7 @@ class ScalingStatDistributionRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ScalingStatDistributionFilterEntity? filter,
+    ScalingStatDistributionFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
-import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'vehicle_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'VehicleFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class VehicleRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_vehicle';
 
@@ -17,7 +29,7 @@ class VehicleRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countVehicles({VehicleFilterEntity? filter}) async {
+  Future<int> countVehicles({VehicleFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class VehicleRepository with RepositoryMixin {
 
   Future<List<BriefVehicleEntity>> getBriefVehicles({
     int page = 1,
-    VehicleFilterEntity? filter,
+    VehicleFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -90,7 +102,7 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

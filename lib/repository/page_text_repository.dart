@@ -1,10 +1,27 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'page_text_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'PageTextFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'text',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class PageTextRepository with RepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
@@ -21,7 +38,7 @@ class PageTextRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countPageTexts({PageTextFilterEntity? filter}) async {
+  Future<int> countPageTexts({PageTextFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.text.isNotEmpty;
     if (!needsLocaleJoin) {
@@ -56,7 +73,7 @@ class PageTextRepository with RepositoryMixin {
 
   Future<List<BriefPageTextEntity>> getBriefPageTexts({
     int page = 1,
-    PageTextFilterEntity? filter,
+    PageTextFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS pt');
@@ -124,10 +141,7 @@ class PageTextRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    PageTextFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('pt.ID', filter.id);

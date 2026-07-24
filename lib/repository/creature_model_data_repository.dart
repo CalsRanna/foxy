@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_model_data_entity.dart';
-import 'package:foxy/entity/creature_model_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_model_data_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureModelDataFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'modelName',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureModelDataRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_model_data';
 
@@ -20,9 +37,7 @@ class CreatureModelDataRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countCreatureModelDatas({
-    CreatureModelDataFilterEntity? filter,
-  }) async {
+  Future<int> countCreatureModelDatas({CreatureModelDataFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +56,7 @@ class CreatureModelDataRepository with RepositoryMixin {
 
   Future<List<BriefCreatureModelDataEntity>> getBriefCreatureModelDatas({
     int page = 1,
-    CreatureModelDataFilterEntity? filter,
+    CreatureModelDataFilter? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table).select([
@@ -110,7 +125,7 @@ class CreatureModelDataRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureModelDataFilterEntity? filter,
+    CreatureModelDataFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

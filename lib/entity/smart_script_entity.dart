@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'smart_script_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'smart_scripts')
 class SmartScriptEntity with _SmartScriptEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entryorguid', key: true)
   final int entryOrGuid;
 
@@ -105,7 +103,6 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   final double targetO;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('comment')
   final String comment;
 

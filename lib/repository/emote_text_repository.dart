@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
-import 'package:foxy/entity/emote_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'emote_text_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'EmoteTextFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class EmoteTextRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
@@ -17,7 +34,7 @@ class EmoteTextRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countEmoteTexts({EmoteTextFilterEntity? filter}) async {
+  Future<int> countEmoteTexts({EmoteTextFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +53,7 @@ class EmoteTextRepository with RepositoryMixin {
 
   Future<List<BriefEmoteTextEntity>> getBriefEmoteTexts({
     int page = 1,
-    EmoteTextFilterEntity? filter,
+    EmoteTextFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -96,10 +113,7 @@ class EmoteTextRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    EmoteTextFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

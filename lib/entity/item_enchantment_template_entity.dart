@@ -6,10 +6,8 @@ enum ItemEnchantmentKind { randomProperty, randomSuffix }
 
 /// 物品附魔模板 — 对应 item_enchantment_template 表（复合键: entry + ench）
 
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'item_enchantment_template')
 class ItemEnchantmentTemplateEntity with _ItemEnchantmentTemplateEntityMixin {
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entry', key: true)
   final int entry;
 

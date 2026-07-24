@@ -225,66 +225,6 @@ final class EntityEmitter {
     return buffer.toString();
   }
 
-  String emitFilterLibrary(EntityGenerationModel model) {
-    final fields = model.filterFields;
-    final buffer = StringBuffer()
-      ..writeln('final class ${model.filterClassName} {');
-    for (final field in fields) {
-      buffer.writeln('  final ${field.filter!.dartType} ${field.dartName};');
-    }
-    buffer
-      ..writeln()
-      ..writeln('  const ${model.filterClassName}({');
-    for (final field in fields) {
-      final filter = field.filter!;
-      buffer.writeln(
-        '    this.${field.dartName} = '
-        '${_literal(filter.defaultValue, asType: filter.dartType)},',
-      );
-    }
-    buffer
-      ..writeln('  });')
-      ..writeln()
-      ..writeln(
-        '  factory ${model.filterClassName}.fromJson('
-        'Map<String, dynamic> json) {',
-      )
-      ..writeln('    return ${model.filterClassName}(');
-    for (final field in fields) {
-      buffer.writeln('      ${field.dartName}: ${_filterFromJson(field)},');
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  ${model.filterClassName} copyWith({');
-    for (final field in fields) {
-      buffer.writeln('    ${field.filter!.dartType}? ${field.dartName},');
-    }
-    buffer
-      ..writeln('  }) {')
-      ..writeln('    return ${model.filterClassName}(');
-    for (final field in fields) {
-      buffer.writeln(
-        '      ${field.dartName}: ${field.dartName} ?? this.${field.dartName},',
-      );
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  Map<String, dynamic> toJson() {')
-      ..writeln('    return {');
-    for (final field in fields) {
-      buffer.writeln('      ${_literal(field.dartName)}: ${field.dartName},');
-    }
-    buffer
-      ..writeln('    };')
-      ..writeln('  }')
-      ..writeln('}');
-    return buffer.toString();
-  }
-
   String _fullFromJson(EntityFieldModel field) {
     final key = _literal(field.columnName);
     final fallback = field.constructorDefaultValue == null
@@ -309,21 +249,6 @@ final class EntityEmitter {
       return '$value == null ? null : ($value! ? 1 : 0)';
     }
     return '$value ? 1 : 0';
-  }
-
-  String _filterFromJson(EntityFieldModel field) {
-    final filter = field.filter!;
-    final key = _literal(field.dartName);
-    final fallback = _literal(filter.defaultValue, asType: filter.dartType);
-    return switch (filter.type) {
-      // ignore: deprecated_member_use_from_same_package
-      _ when filter.dartType == 'bool' => 'json[$key] as bool? ?? $fallback',
-      _ when filter.dartType == 'double' =>
-        '(json[$key] as num?)?.toDouble() ?? $fallback',
-      _ when filter.dartType == 'int' =>
-        '(json[$key] as num?)?.toInt() ?? $fallback',
-      _ => 'json[$key]?.toString() ?? $fallback',
-    };
   }
 
   String _copyParameterType(String type) =>

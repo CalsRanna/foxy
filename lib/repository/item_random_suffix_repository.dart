@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_random_suffix_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemRandomSuffixFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemRandomSuffixRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
@@ -23,9 +40,7 @@ class ItemRandomSuffixRepository
     return copied.id;
   }
 
-  Future<int> countItemRandomSuffixes({
-    ItemRandomSuffixFilterEntity? filter,
-  }) async {
+  Future<int> countItemRandomSuffixes({ItemRandomSuffixFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -44,7 +59,7 @@ class ItemRandomSuffixRepository
 
   Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
     int page = 1,
-    ItemRandomSuffixFilterEntity? filter,
+    ItemRandomSuffixFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -118,7 +133,7 @@ class ItemRandomSuffixRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemRandomSuffixFilterEntity? filter,
+    ItemRandomSuffixFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

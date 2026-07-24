@@ -1,211 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/area_table_filter_entity.dart';
+import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/entity/achievement_filter_entity.dart';
-import 'package:foxy/entity/achievement_category_filter_entity.dart';
+import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
-import 'package:foxy/entity/broadcast_text_filter_entity.dart';
+import 'package:foxy/repository/broadcast_text_repository.dart';
 import 'package:foxy/entity/char_title_entity.dart';
-import 'package:foxy/entity/char_title_filter_entity.dart';
+import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
-import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
+import 'package:foxy/repository/cinematic_sequence_repository.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
-import 'package:foxy/entity/creature_immunity_filter_entity.dart';
+import 'package:foxy/repository/creature_immunity_repository.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
-import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
+import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
-import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
+import 'package:foxy/repository/creature_spell_data_repository.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/entity/creature_template_filter_entity.dart';
+import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
-import 'package:foxy/entity/currency_category_filter_entity.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
-import 'package:foxy/entity/creature_display_info_filter_entity.dart';
+import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
-import 'package:foxy/entity/dbc_faction_filter_entity.dart';
+import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
-import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
+import 'package:foxy/repository/dbc_faction_template_repository.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
-import 'package:foxy/entity/emote_text_filter_entity.dart';
+import 'package:foxy/repository/emote_text_repository.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
-import 'package:foxy/entity/emote_text_data_filter_entity.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/entity/dbc_emote_entity.dart';
-import 'package:foxy/entity/dbc_emote_filter_entity.dart';
+import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
-import 'package:foxy/entity/dbc_item_filter_entity.dart';
+import 'package:foxy/repository/dbc_item_repository.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
-import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
+import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/entity/gossip_menu_filter_entity.dart';
+import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/entity/game_object_template_filter_entity.dart';
+import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
-import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
+import 'package:foxy/repository/game_object_art_kit_repository.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
-import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
+import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/entity/gem_property_filter_entity.dart';
+import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/entity/holiday_entity.dart';
-import 'package:foxy/entity/holiday_filter_entity.dart';
+import 'package:foxy/repository/holiday_repository.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
-import 'package:foxy/entity/item_display_info_filter_entity.dart';
+import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
+import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/entity/item_extended_cost_filter_entity.dart';
+import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
-import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
-import 'package:foxy/entity/item_limit_category_filter_entity.dart';
+import 'package:foxy/repository/item_limit_category_repository.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
-import 'package:foxy/entity/item_random_properties_filter_entity.dart';
+import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
-import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
+import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/entity/item_set_entity.dart';
-import 'package:foxy/entity/item_set_filter_entity.dart';
+import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
-import 'package:foxy/entity/item_visuals_filter_entity.dart';
+import 'package:foxy/repository/item_visuals_repository.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/entity/item_template_filter_entity.dart';
+import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/entity/lock_entity.dart';
-import 'package:foxy/entity/lock_filter_entity.dart';
+import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/entity/light_entity.dart';
-import 'package:foxy/entity/light_filter_entity.dart';
+import 'package:foxy/repository/light_repository.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
-import 'package:foxy/entity/liquid_type_filter_entity.dart';
+import 'package:foxy/repository/liquid_type_repository.dart';
 import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_template_filter_entity.dart';
+import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/entity/map_info_entity.dart';
-import 'package:foxy/entity/map_info_filter_entity.dart';
+import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
-import 'package:foxy/entity/mail_template_filter_entity.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/entity/npc_text_filter_entity.dart';
+import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
-import 'package:foxy/entity/point_of_interest_filter_entity.dart';
+import 'package:foxy/repository/point_of_interest_repository.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
-import 'package:foxy/entity/quest_info_filter_entity.dart';
+import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
-import 'package:foxy/entity/quest_template_filter_entity.dart';
+import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
-import 'package:foxy/entity/spell_duration_filter_entity.dart';
+import 'package:foxy/repository/spell_duration_repository.dart';
 import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/entity/spell_filter_entity.dart';
+import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
-import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
+import 'package:foxy/repository/spell_focus_object_repository.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
-import 'package:foxy/entity/spell_icon_filter_entity.dart';
+import 'package:foxy/repository/spell_icon_repository.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
-import 'package:foxy/entity/spell_range_filter_entity.dart';
+import 'package:foxy/repository/spell_range_repository.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_filter_entity.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
-import 'package:foxy/entity/skill_line_filter_entity.dart';
+import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
-import 'package:foxy/entity/sound_ambience_filter_entity.dart';
+import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
-import 'package:foxy/entity/sound_provider_preferences_filter_entity.dart';
+import 'package:foxy/repository/sound_provider_preferences_repository.dart';
 import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/entity/talent_filter_entity.dart';
+import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
-import 'package:foxy/entity/talent_tab_filter_entity.dart';
+import 'package:foxy/repository/talent_tab_repository.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
-import 'package:foxy/entity/totem_category_filter_entity.dart';
+import 'package:foxy/repository/totem_category_repository.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
-import 'package:foxy/entity/taxi_path_filter_entity.dart';
+import 'package:foxy/repository/taxi_path_repository.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
-import 'package:foxy/entity/vehicle_filter_entity.dart';
+import 'package:foxy/repository/vehicle_repository.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
-import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
+import 'package:foxy/repository/zone_intro_music_repository.dart';
 import 'package:foxy/entity/zone_music_entity.dart';
-import 'package:foxy/entity/zone_music_filter_entity.dart';
+import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
-import 'package:foxy/entity/waypoint_data_filter_entity.dart';
-import 'package:foxy/repository/area_table_repository.dart';
-import 'package:foxy/repository/achievement_repository.dart';
-import 'package:foxy/repository/achievement_category_repository.dart';
-import 'package:foxy/repository/broadcast_text_repository.dart';
-import 'package:foxy/repository/char_title_repository.dart';
-import 'package:foxy/repository/cinematic_sequence_repository.dart';
-import 'package:foxy/repository/creature_immunity_repository.dart';
-import 'package:foxy/repository/creature_movement_info_repository.dart';
-import 'package:foxy/repository/creature_spell_data_repository.dart';
-import 'package:foxy/repository/creature_template_repository.dart';
-import 'package:foxy/repository/creature_display_info_repository.dart';
-import 'package:foxy/repository/currency_category_repository.dart';
-import 'package:foxy/repository/dbc_faction_repository.dart';
-import 'package:foxy/repository/dbc_faction_template_repository.dart';
-import 'package:foxy/repository/emote_text_repository.dart';
-import 'package:foxy/repository/emote_text_data_repository.dart';
-import 'package:foxy/repository/dbc_emote_repository.dart';
-import 'package:foxy/repository/dbc_item_repository.dart';
-import 'package:foxy/repository/destructible_model_data_repository.dart';
-import 'package:foxy/repository/gossip_menu_repository.dart';
-import 'package:foxy/repository/game_object_template_repository.dart';
-import 'package:foxy/repository/game_object_art_kit_repository.dart';
-import 'package:foxy/repository/game_object_display_info_repository.dart';
-import 'package:foxy/repository/gem_property_repository.dart';
-import 'package:foxy/repository/holiday_repository.dart';
-import 'package:foxy/repository/item_display_info_repository.dart';
-import 'package:foxy/repository/item_enchantment_template_repository.dart';
-import 'package:foxy/repository/item_extended_cost_repository.dart';
-import 'package:foxy/repository/item_purchase_group_repository.dart';
-import 'package:foxy/repository/item_limit_category_repository.dart';
-import 'package:foxy/repository/item_random_properties_repository.dart';
-import 'package:foxy/repository/item_random_suffix_repository.dart';
-import 'package:foxy/repository/item_set_repository.dart';
-import 'package:foxy/repository/item_visuals_repository.dart';
-import 'package:foxy/repository/item_template_repository.dart';
-import 'package:foxy/repository/lock_repository.dart';
-import 'package:foxy/repository/light_repository.dart';
-import 'package:foxy/repository/liquid_type_repository.dart';
+import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
-import 'package:foxy/repository/map_info_repository.dart';
-import 'package:foxy/repository/mail_template_repository.dart';
-import 'package:foxy/repository/npc_text_repository.dart';
-import 'package:foxy/repository/page_text_repository.dart';
-import 'package:foxy/repository/point_of_interest_repository.dart';
-import 'package:foxy/repository/quest_info_repository.dart';
-import 'package:foxy/repository/quest_template_repository.dart';
-import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
-import 'package:foxy/repository/spell_duration_repository.dart';
-import 'package:foxy/repository/spell_icon_repository.dart';
-import 'package:foxy/repository/spell_range_repository.dart';
-import 'package:foxy/repository/spell_focus_object_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
-import 'package:foxy/repository/skill_line_repository.dart';
-import 'package:foxy/repository/sound_ambience_repository.dart';
-import 'package:foxy/repository/sound_provider_preferences_repository.dart';
-import 'package:foxy/repository/talent_repository.dart';
-import 'package:foxy/repository/talent_tab_repository.dart';
-import 'package:foxy/repository/totem_category_repository.dart';
-import 'package:foxy/repository/taxi_path_repository.dart';
-import 'package:foxy/repository/spell_repository.dart';
-import 'package:foxy/repository/vehicle_repository.dart';
-import 'package:foxy/repository/zone_intro_music_repository.dart';
-import 'package:foxy/repository/zone_music_repository.dart';
-import 'package:foxy/repository/waypoint_data_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:get_it/get_it.dart';
@@ -240,18 +176,12 @@ class FoxyEntityPickerDelegates {
             .get<CurrencyCategoryRepository>()
             .getBriefCurrencyCategories(
               page: page,
-              filter: CurrencyCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: CurrencyCategoryFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<CurrencyCategoryRepository>()
             .countCurrencyCategories(
-              filter: CurrencyCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: CurrencyCategoryFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -281,11 +211,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<AchievementRepository>().getBriefAchievements(
           page: page,
-          filter: AchievementFilterEntity(id: values[0], title: values[1]),
+          filter: AchievementFilter(id: values[0], title: values[1]),
         ),
     count: (values) =>
         GetIt.instance.get<AchievementRepository>().countAchievements(
-          filter: AchievementFilterEntity(id: values[0], title: values[1]),
+          filter: AchievementFilter(id: values[0], title: values[1]),
         ),
   );
 
@@ -319,10 +249,10 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) =>
             GetIt.instance.get<DbcItemRepository>().getBriefDbcItems(
               page: page,
-              filter: DbcItemFilterEntity(id: v[0], handEquippableOnly: true),
+              filter: DbcItemFilter(id: v[0], handEquippableOnly: true),
             ),
         count: (v) => GetIt.instance.get<DbcItemRepository>().countDbcItems(
-          filter: DbcItemFilterEntity(id: v[0], handEquippableOnly: true),
+          filter: DbcItemFilter(id: v[0], handEquippableOnly: true),
         ),
       );
 
@@ -356,18 +286,12 @@ class FoxyEntityPickerDelegates {
             .get<AchievementCategoryRepository>()
             .getBriefAchievementCategories(
               page: page,
-              filter: AchievementCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: AchievementCategoryFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<AchievementCategoryRepository>()
             .countAchievementCategories(
-              filter: AchievementCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: AchievementCategoryFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -398,10 +322,10 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) =>
             _referenceLootRepository.getBriefLootTemplateEntries(
               page: page,
-              filter: LootTemplateFilterEntity(entry: v[0]),
+              filter: LootTemplateFilter(entry: v[0]),
             ),
         count: (v) => _referenceLootRepository.countLootTemplates(
-          filter: LootTemplateFilterEntity(entry: v[0]),
+          filter: LootTemplateFilter(entry: v[0]),
         ),
       );
 
@@ -432,10 +356,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, v) =>
         GetIt.instance.get<DbcEmoteRepository>().getBriefDbcEmotes(
           page: page,
-          filter: DbcEmoteFilterEntity(id: v[0], command: v[1]),
+          filter: DbcEmoteFilter(id: v[0], command: v[1]),
         ),
     count: (v) => GetIt.instance.get<DbcEmoteRepository>().countDbcEmotes(
-      filter: DbcEmoteFilterEntity(id: v[0], command: v[1]),
+      filter: DbcEmoteFilter(id: v[0], command: v[1]),
     ),
   );
 
@@ -463,11 +387,11 @@ class FoxyEntityPickerDelegates {
             .get<EmoteTextDataRepository>()
             .getBriefEmoteTextDatas(
               page: page,
-              filter: EmoteTextDataFilterEntity(id: v[0], text: v[1]),
+              filter: EmoteTextDataFilter(id: v[0], text: v[1]),
             ),
         count: (v) =>
             GetIt.instance.get<EmoteTextDataRepository>().countEmoteTextDatas(
-              filter: EmoteTextDataFilterEntity(id: v[0], text: v[1]),
+              filter: EmoteTextDataFilter(id: v[0], text: v[1]),
             ),
       );
 
@@ -498,10 +422,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, v) =>
         GetIt.instance.get<SkillLineRepository>().getBriefSkillLines(
           page: page,
-          filter: SkillLineFilterEntity(id: v[0], name: v[1]),
+          filter: SkillLineFilter(id: v[0], name: v[1]),
         ),
     count: (v) => GetIt.instance.get<SkillLineRepository>().countSkillLines(
-      filter: SkillLineFilterEntity(id: v[0], name: v[1]),
+      filter: SkillLineFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -534,18 +458,12 @@ class FoxyEntityPickerDelegates {
             .get<CreatureDisplayInfoRepository>()
             .getBriefCreatureDisplayInfos(
               page: page,
-              filter: CreatureDisplayInfoFilterEntity(
-                id: v[0],
-                modelName: v[1],
-              ),
+              filter: CreatureDisplayInfoFilter(id: v[0], modelName: v[1]),
             ),
         count: (v) => GetIt.instance
             .get<CreatureDisplayInfoRepository>()
             .countCreatureDisplayInfos(
-              filter: CreatureDisplayInfoFilterEntity(
-                id: v[0],
-                modelName: v[1],
-              ),
+              filter: CreatureDisplayInfoFilter(id: v[0], modelName: v[1]),
             ),
       );
 
@@ -568,11 +486,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, v) =>
         GetIt.instance.get<WaypointDataRepository>().getBriefWaypointDatas(
           page: page,
-          filter: WaypointDataFilterEntity(id: v[0]),
+          filter: WaypointDataFilter(id: v[0]),
         ),
     count: (v) => GetIt.instance
         .get<WaypointDataRepository>()
-        .countWaypointDatas(filter: WaypointDataFilterEntity(id: v[0])),
+        .countWaypointDatas(filter: WaypointDataFilter(id: v[0])),
   );
 
   static final areaTable = FoxyEntityPickerDelegate<BriefAreaTableEntity>(
@@ -601,11 +519,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefAreaTableEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<AreaTableRepository>().getBriefAreaTables(
-          filter: AreaTableFilterEntity(id: v[0], name: v[1]),
+          filter: AreaTableFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<AreaTableRepository>().countAreaTables(
-      filter: AreaTableFilterEntity(id: v[0], name: v[1]),
+      filter: AreaTableFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -641,7 +559,7 @@ class FoxyEntityPickerDelegates {
             .get<SoundProviderPreferencesRepository>()
             .getBriefSoundProviderPreferences(
               page: page,
-              filter: SoundProviderPreferencesFilterEntity(
+              filter: SoundProviderPreferencesFilter(
                 id: values[0],
                 description: values[1],
               ),
@@ -649,7 +567,7 @@ class FoxyEntityPickerDelegates {
         count: (values) => GetIt.instance
             .get<SoundProviderPreferencesRepository>()
             .countSoundProviderPreferences(
-              filter: SoundProviderPreferencesFilterEntity(
+              filter: SoundProviderPreferencesFilter(
                 id: values[0],
                 description: values[1],
               ),
@@ -683,12 +601,11 @@ class FoxyEntityPickerDelegates {
             .get<SoundAmbienceRepository>()
             .getBriefSoundAmbiences(
               page: page,
-              filter: SoundAmbienceFilterEntity(id: values[0]),
+              filter: SoundAmbienceFilter(id: values[0]),
             ),
-        count: (values) =>
-            GetIt.instance.get<SoundAmbienceRepository>().countSoundAmbiences(
-              filter: SoundAmbienceFilterEntity(id: values[0]),
-            ),
+        count: (values) => GetIt.instance
+            .get<SoundAmbienceRepository>()
+            .countSoundAmbiences(filter: SoundAmbienceFilter(id: values[0])),
       );
 
   static final zoneMusic = FoxyEntityPickerDelegate<BriefZoneMusicEntity>(
@@ -723,11 +640,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<ZoneMusicRepository>().getBriefZoneMusics(
           page: page,
-          filter: ZoneMusicFilterEntity(id: values[0], name: values[1]),
+          filter: ZoneMusicFilter(id: values[0], name: values[1]),
         ),
     count: (values) =>
         GetIt.instance.get<ZoneMusicRepository>().countZoneMusics(
-          filter: ZoneMusicFilterEntity(id: values[0], name: values[1]),
+          filter: ZoneMusicFilter(id: values[0], name: values[1]),
         ),
   );
 
@@ -760,17 +677,11 @@ class FoxyEntityPickerDelegates {
             .get<ZoneIntroMusicRepository>()
             .getBriefZoneIntroMusics(
               page: page,
-              filter: ZoneIntroMusicFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ZoneIntroMusicFilter(id: values[0], name: values[1]),
             ),
         count: (values) =>
             GetIt.instance.get<ZoneIntroMusicRepository>().countZoneIntroMusics(
-              filter: ZoneIntroMusicFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ZoneIntroMusicFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -806,11 +717,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<LiquidTypeRepository>().getBriefLiquidTypes(
           page: page,
-          filter: LiquidTypeFilterEntity(id: values[0], name: values[1]),
+          filter: LiquidTypeFilter(id: values[0], name: values[1]),
         ),
     count: (values) =>
         GetIt.instance.get<LiquidTypeRepository>().countLiquidTypes(
-          filter: LiquidTypeFilterEntity(id: values[0], name: values[1]),
+          filter: LiquidTypeFilter(id: values[0], name: values[1]),
         ),
   );
 
@@ -849,10 +760,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<LightRepository>().getBriefLights(
           page: page,
-          filter: LightFilterEntity(id: values[0], continentId: values[1]),
+          filter: LightFilter(id: values[0], continentId: values[1]),
         ),
     count: (values) => GetIt.instance.get<LightRepository>().countLights(
-      filter: LightFilterEntity(id: values[0], continentId: values[1]),
+      filter: LightFilter(id: values[0], continentId: values[1]),
     ),
   );
 
@@ -884,12 +795,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<BroadcastTextRepository>()
             .getBriefBroadcastTexts(
-              filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
+              filter: BroadcastTextFilter(id: v[0], text: v[1]),
               page: page,
             ),
         count: (v) =>
             GetIt.instance.get<BroadcastTextRepository>().countBroadcastTexts(
-              filter: BroadcastTextFilterEntity(id: v[0], text: v[1]),
+              filter: BroadcastTextFilter(id: v[0], text: v[1]),
             ),
       );
 
@@ -914,11 +825,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefCharTitleEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<CharTitleRepository>().getBriefCharTitles(
-          filter: CharTitleFilterEntity(id: v[0], name: v[1]),
+          filter: CharTitleFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<CharTitleRepository>().countCharTitles(
-      filter: CharTitleFilterEntity(id: v[0], name: v[1]),
+      filter: CharTitleFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -957,13 +868,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<CreatureSpellDataRepository>()
             .getBriefCreatureSpellDatas(
-              filter: CreatureSpellDataFilterEntity(id: v[0], spell: v[1]),
+              filter: CreatureSpellDataFilter(id: v[0], spell: v[1]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<CreatureSpellDataRepository>()
             .countCreatureSpellDatas(
-              filter: CreatureSpellDataFilterEntity(id: v[0], spell: v[1]),
+              filter: CreatureSpellDataFilter(id: v[0], spell: v[1]),
             ),
       );
 
@@ -1007,12 +918,12 @@ class FoxyEntityPickerDelegates {
             .get<CreatureImmunityRepository>()
             .getBriefCreatureImmunities(
               page: page,
-              filter: CreatureImmunityFilterEntity(id: v[0], comment: v[1]),
+              filter: CreatureImmunityFilter(id: v[0], comment: v[1]),
             ),
         count: (v) => GetIt.instance
             .get<CreatureImmunityRepository>()
             .countCreatureImmunities(
-              filter: CreatureImmunityFilterEntity(id: v[0], comment: v[1]),
+              filter: CreatureImmunityFilter(id: v[0], comment: v[1]),
             ),
       );
 
@@ -1038,12 +949,12 @@ class FoxyEntityPickerDelegates {
             .get<CreatureMovementInfoRepository>()
             .getBriefCreatureMovementInfos(
               page: page,
-              filter: CreatureMovementInfoFilterEntity(id: v[0]),
+              filter: CreatureMovementInfoFilter(id: v[0]),
             ),
         count: (v) => GetIt.instance
             .get<CreatureMovementInfoRepository>()
             .countCreatureMovementInfos(
-              filter: CreatureMovementInfoFilterEntity(id: v[0]),
+              filter: CreatureMovementInfoFilter(id: v[0]),
             ),
       );
 
@@ -1077,12 +988,12 @@ class FoxyEntityPickerDelegates {
             .get<CreatureTemplateRepository>()
             .getBriefCreatureTemplates(
               page: page,
-              filter: CreatureTemplateFilterEntity(entry: v[0], name: v[1]),
+              filter: CreatureTemplateFilter(entry: v[0], name: v[1]),
             ),
         count: (v) => GetIt.instance
             .get<CreatureTemplateRepository>()
             .countCreatureTemplates(
-              filter: CreatureTemplateFilterEntity(entry: v[0], name: v[1]),
+              filter: CreatureTemplateFilter(entry: v[0], name: v[1]),
             ),
       );
 
@@ -1111,11 +1022,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefDbcFactionEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<DbcFactionRepository>().getBriefDbcFactions(
-          filter: DbcFactionFilterEntity(id: v[0], name: v[1]),
+          filter: DbcFactionFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<DbcFactionRepository>().countDbcFactions(
-      filter: DbcFactionFilterEntity(id: v[0], name: v[1]),
+      filter: DbcFactionFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -1155,7 +1066,7 @@ class FoxyEntityPickerDelegates {
             .get<DbcFactionTemplateRepository>()
             .getBriefDbcFactionTemplates(
               page: page,
-              filter: DbcFactionTemplateFilterEntity(
+              filter: DbcFactionTemplateFilter(
                 id: v[0],
                 faction: v[1],
                 name: v[2],
@@ -1164,7 +1075,7 @@ class FoxyEntityPickerDelegates {
         count: (v) => GetIt.instance
             .get<DbcFactionTemplateRepository>()
             .countDbcFactionTemplates(
-              filter: DbcFactionTemplateFilterEntity(
+              filter: DbcFactionTemplateFilter(
                 id: v[0],
                 faction: v[1],
                 name: v[2],
@@ -1198,11 +1109,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefEmoteTextEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<EmoteTextRepository>().getBriefEmoteTexts(
-          filter: EmoteTextFilterEntity(id: v[0], name: v[1]),
+          filter: EmoteTextFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<EmoteTextRepository>().countEmoteTexts(
-      filter: EmoteTextFilterEntity(id: v[0], name: v[1]),
+      filter: EmoteTextFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -1232,11 +1143,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefGossipMenuEntity t) => t.menuId,
     fetch: (page, v) =>
         GetIt.instance.get<GossipMenuRepository>().getBriefGossipMenus(
-          filter: GossipMenuFilterEntity(menuId: v[0], text: v[1]),
+          filter: GossipMenuFilter(menuId: v[0], text: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<GossipMenuRepository>().countGossipMenus(
-      filter: GossipMenuFilterEntity(menuId: v[0], text: v[1]),
+      filter: GossipMenuFilter(menuId: v[0], text: v[1]),
     ),
   );
 
@@ -1264,18 +1175,12 @@ class FoxyEntityPickerDelegates {
             .get<PointOfInterestRepository>()
             .getBriefPointsOfInterest(
               page: page,
-              filter: PointOfInterestFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: PointOfInterestFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<PointOfInterestRepository>()
             .countPointsOfInterest(
-              filter: PointOfInterestFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: PointOfInterestFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -1305,12 +1210,12 @@ class FoxyEntityPickerDelegates {
             .get<CinematicSequenceRepository>()
             .getBriefCinematicSequences(
               page: page,
-              filter: CinematicSequenceFilterEntity(id: values[0]),
+              filter: CinematicSequenceFilter(id: values[0]),
             ),
         count: (values) => GetIt.instance
             .get<CinematicSequenceRepository>()
             .countCinematicSequences(
-              filter: CinematicSequenceFilterEntity(id: values[0]),
+              filter: CinematicSequenceFilter(id: values[0]),
             ),
       );
 
@@ -1346,12 +1251,12 @@ class FoxyEntityPickerDelegates {
             .get<DestructibleModelDataRepository>()
             .getBriefDestructibleModelDatas(
               page: page,
-              filter: DestructibleModelDataFilterEntity(id: values[0]),
+              filter: DestructibleModelDataFilter(id: values[0]),
             ),
         count: (values) => GetIt.instance
             .get<DestructibleModelDataRepository>()
             .countDestructibleModelDatas(
-              filter: DestructibleModelDataFilterEntity(id: values[0]),
+              filter: DestructibleModelDataFilter(id: values[0]),
             ),
       );
 
@@ -1383,18 +1288,12 @@ class FoxyEntityPickerDelegates {
             .get<GameObjectArtKitRepository>()
             .getBriefGameObjectArtKits(
               page: page,
-              filter: GameObjectArtKitFilterEntity(
-                id: values[0],
-                path: values[1],
-              ),
+              filter: GameObjectArtKitFilter(id: values[0], path: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<GameObjectArtKitRepository>()
             .countGameObjectArtKits(
-              filter: GameObjectArtKitFilterEntity(
-                id: values[0],
-                path: values[1],
-              ),
+              filter: GameObjectArtKitFilter(id: values[0], path: values[1]),
             ),
       );
 
@@ -1422,7 +1321,7 @@ class FoxyEntityPickerDelegates {
             .get<GameObjectDisplayInfoRepository>()
             .getBriefGameObjectDisplayInfos(
               page: page,
-              filter: GameObjectDisplayInfoFilterEntity(
+              filter: GameObjectDisplayInfoFilter(
                 id: values[0],
                 modelName: values[1],
               ),
@@ -1430,7 +1329,7 @@ class FoxyEntityPickerDelegates {
         count: (values) => GetIt.instance
             .get<GameObjectDisplayInfoRepository>()
             .countGameObjectDisplayInfos(
-              filter: GameObjectDisplayInfoFilterEntity(
+              filter: GameObjectDisplayInfoFilter(
                 id: values[0],
                 modelName: values[1],
               ),
@@ -1461,18 +1360,12 @@ class FoxyEntityPickerDelegates {
             .get<SpellFocusObjectRepository>()
             .getBriefSpellFocusObjects(
               page: page,
-              filter: SpellFocusObjectFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: SpellFocusObjectFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<SpellFocusObjectRepository>()
             .countSpellFocusObjects(
-              filter: SpellFocusObjectFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: SpellFocusObjectFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -1503,10 +1396,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<TaxiPathRepository>().getBriefTaxiPaths(
           page: page,
-          filter: TaxiPathFilterEntity(id: values[0]),
+          filter: TaxiPathFilter(id: values[0]),
         ),
     count: (values) => GetIt.instance.get<TaxiPathRepository>().countTaxiPaths(
-      filter: TaxiPathFilterEntity(id: values[0]),
+      filter: TaxiPathFilter(id: values[0]),
     ),
   );
 
@@ -1538,13 +1431,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<GameObjectTemplateRepository>()
             .getBriefGameObjectTemplates(
-              filter: GameObjectTemplateFilterEntity(entry: v[0], name: v[1]),
+              filter: GameObjectTemplateFilter(entry: v[0], name: v[1]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<GameObjectTemplateRepository>()
             .countGameObjectTemplates(
-              filter: GameObjectTemplateFilterEntity(entry: v[0], name: v[1]),
+              filter: GameObjectTemplateFilter(entry: v[0], name: v[1]),
             ),
       );
 
@@ -1575,13 +1468,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ItemDisplayInfoRepository>()
             .getBriefItemDisplayInfos(
-              filter: ItemDisplayInfoFilterEntity(id: v[0], name: v[1]),
+              filter: ItemDisplayInfoFilter(id: v[0], name: v[1]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ItemDisplayInfoRepository>()
             .countItemDisplayInfos(
-              filter: ItemDisplayInfoFilterEntity(id: v[0], name: v[1]),
+              filter: ItemDisplayInfoFilter(id: v[0], name: v[1]),
             ),
       );
 
@@ -1608,13 +1501,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ItemEnchantmentTemplateRepository>()
             .getBriefItemEnchantmentTemplates(
-              filter: ItemEnchantmentTemplateFilterEntity(entry: v[0]),
+              filter: ItemEnchantmentTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ItemEnchantmentTemplateRepository>()
             .countItemEnchantmentTemplates(
-              filter: ItemEnchantmentTemplateFilterEntity(entry: v[0]),
+              filter: ItemEnchantmentTemplateFilter(entry: v[0]),
             ),
       );
 
@@ -1654,13 +1547,13 @@ class FoxyEntityPickerDelegates {
         .getBriefItemEnchantmentGroups(
           kind: kind,
           page: page,
-          filter: ItemEnchantmentTemplateFilterEntity(entry: values[0]),
+          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
         ),
     count: (values) => GetIt.instance
         .get<ItemEnchantmentTemplateRepository>()
         .countItemEnchantmentGroups(
           kind: kind,
-          filter: ItemEnchantmentTemplateFilterEntity(entry: values[0]),
+          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
         ),
   );
 
@@ -1686,10 +1579,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<ItemSetRepository>().getBriefItemSets(
           page: page,
-          filter: ItemSetFilterEntity(id: values[0], name: values[1]),
+          filter: ItemSetFilter(id: values[0], name: values[1]),
         ),
     count: (values) => GetIt.instance.get<ItemSetRepository>().countItemSets(
-      filter: ItemSetFilterEntity(id: values[0], name: values[1]),
+      filter: ItemSetFilter(id: values[0], name: values[1]),
     ),
   );
 
@@ -1715,10 +1608,10 @@ class FoxyEntityPickerDelegates {
         fetch: (page, values) =>
             _disenchantLootRepository.getBriefLootTemplateEntries(
               page: page,
-              filter: LootTemplateFilterEntity(entry: values[0]),
+              filter: LootTemplateFilter(entry: values[0]),
             ),
         count: (values) => _disenchantLootRepository.countLootTemplates(
-          filter: LootTemplateFilterEntity(entry: values[0]),
+          filter: LootTemplateFilter(entry: values[0]),
         ),
       );
 
@@ -1741,11 +1634,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<GemPropertyRepository>().getBriefGemProperties(
           page: page,
-          filter: GemPropertyFilterEntity(id: values[0]),
+          filter: GemPropertyFilter(id: values[0]),
         ),
     count: (values) => GetIt.instance
         .get<GemPropertyRepository>()
-        .countGemProperties(filter: GemPropertyFilterEntity(id: values[0])),
+        .countGemProperties(filter: GemPropertyFilter(id: values[0])),
   );
 
   static final itemVisuals = FoxyEntityPickerDelegate<BriefItemVisualsEntity>(
@@ -1783,11 +1676,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<ItemVisualsRepository>().getBriefItemVisuals(
           page: page,
-          filter: ItemVisualsFilterEntity(id: values[0]),
+          filter: ItemVisualsFilter(id: values[0]),
         ),
     count: (values) => GetIt.instance
         .get<ItemVisualsRepository>()
-        .countItemVisuals(filter: ItemVisualsFilterEntity(id: values[0])),
+        .countItemVisuals(filter: ItemVisualsFilter(id: values[0])),
   );
 
   static final spellItemEnchantmentCondition =
@@ -1807,12 +1700,12 @@ class FoxyEntityPickerDelegates {
             .get<SpellItemEnchantmentConditionRepository>()
             .getBriefSpellItemEnchantmentConditions(
               page: page,
-              filter: SpellItemEnchantmentConditionFilterEntity(id: values[0]),
+              filter: SpellItemEnchantmentConditionFilter(id: values[0]),
             ),
         count: (values) => GetIt.instance
             .get<SpellItemEnchantmentConditionRepository>()
             .countSpellItemEnchantmentConditions(
-              filter: SpellItemEnchantmentConditionFilterEntity(id: values[0]),
+              filter: SpellItemEnchantmentConditionFilter(id: values[0]),
             ),
       );
 
@@ -1840,7 +1733,7 @@ class FoxyEntityPickerDelegates {
             .get<SpellItemEnchantmentRepository>()
             .getBriefSpellItemEnchantments(
               page: page,
-              filter: SpellItemEnchantmentFilterEntity(
+              filter: SpellItemEnchantmentFilter(
                 id: values[0],
                 name: values[1],
               ),
@@ -1848,7 +1741,7 @@ class FoxyEntityPickerDelegates {
         count: (values) => GetIt.instance
             .get<SpellItemEnchantmentRepository>()
             .countSpellItemEnchantments(
-              filter: SpellItemEnchantmentFilterEntity(
+              filter: SpellItemEnchantmentFilter(
                 id: values[0],
                 name: values[1],
               ),
@@ -1879,11 +1772,11 @@ class FoxyEntityPickerDelegates {
             .get<TotemCategoryRepository>()
             .getBriefTotemCategories(
               page: page,
-              filter: TotemCategoryFilterEntity(id: values[0], name: values[1]),
+              filter: TotemCategoryFilter(id: values[0], name: values[1]),
             ),
         count: (values) =>
             GetIt.instance.get<TotemCategoryRepository>().countTotemCategories(
-              filter: TotemCategoryFilterEntity(id: values[0], name: values[1]),
+              filter: TotemCategoryFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -1916,18 +1809,12 @@ class FoxyEntityPickerDelegates {
             .get<ItemLimitCategoryRepository>()
             .getBriefItemLimitCategories(
               page: page,
-              filter: ItemLimitCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ItemLimitCategoryFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<ItemLimitCategoryRepository>()
             .countItemLimitCategories(
-              filter: ItemLimitCategoryFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ItemLimitCategoryFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -1955,10 +1842,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<HolidayRepository>().getBriefHolidays(
           page: page,
-          filter: HolidayFilterEntity(id: values[0]),
+          filter: HolidayFilter(id: values[0]),
         ),
     count: (values) => GetIt.instance.get<HolidayRepository>().countHolidays(
-      filter: HolidayFilterEntity(id: values[0]),
+      filter: HolidayFilter(id: values[0]),
     ),
   );
 
@@ -1993,14 +1880,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ItemExtendedCostRepository>()
             .getBriefItemExtendedCosts(
-              filter: ItemExtendedCostFilterEntity(id: v[0]),
+              filter: ItemExtendedCostFilter(id: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ItemExtendedCostRepository>()
-            .countItemExtendedCosts(
-              filter: ItemExtendedCostFilterEntity(id: v[0]),
-            ),
+            .countItemExtendedCosts(filter: ItemExtendedCostFilter(id: v[0])),
       );
 
   static final itemPurchaseGroup =
@@ -2028,18 +1913,12 @@ class FoxyEntityPickerDelegates {
             .get<ItemPurchaseGroupRepository>()
             .getBriefItemPurchaseGroups(
               page: page,
-              filter: ItemPurchaseGroupFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ItemPurchaseGroupFilter(id: values[0], name: values[1]),
             ),
         count: (values) => GetIt.instance
             .get<ItemPurchaseGroupRepository>()
             .countItemPurchaseGroups(
-              filter: ItemPurchaseGroupFilterEntity(
-                id: values[0],
-                name: values[1],
-              ),
+              filter: ItemPurchaseGroupFilter(id: values[0], name: values[1]),
             ),
       );
 
@@ -2067,13 +1946,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ItemRandomPropertiesRepository>()
             .getBriefItemRandomProperties(
-              filter: ItemRandomPropertiesFilterEntity(id: v[0], name: v[1]),
+              filter: ItemRandomPropertiesFilter(id: v[0], name: v[1]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ItemRandomPropertiesRepository>()
             .countItemRandomProperties(
-              filter: ItemRandomPropertiesFilterEntity(id: v[0], name: v[1]),
+              filter: ItemRandomPropertiesFilter(id: v[0], name: v[1]),
             ),
       );
 
@@ -2104,13 +1983,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ItemRandomSuffixRepository>()
             .getBriefItemRandomSuffixes(
-              filter: ItemRandomSuffixFilterEntity(id: v[0], name: v[1]),
+              filter: ItemRandomSuffixFilter(id: v[0], name: v[1]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ItemRandomSuffixRepository>()
             .countItemRandomSuffixes(
-              filter: ItemRandomSuffixFilterEntity(id: v[0], name: v[1]),
+              filter: ItemRandomSuffixFilter(id: v[0], name: v[1]),
             ),
       );
 
@@ -2154,7 +2033,7 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefItemTemplateEntity t) => t.entry,
     fetch: (page, v) =>
         GetIt.instance.get<ItemTemplateRepository>().getBriefItemTemplates(
-          filter: ItemTemplateFilterEntity(
+          filter: ItemTemplateFilter(
             entry: v[0],
             name: v[1],
             description: v[2],
@@ -2163,7 +2042,7 @@ class FoxyEntityPickerDelegates {
         ),
     count: (v) =>
         GetIt.instance.get<ItemTemplateRepository>().countItemTemplates(
-          filter: ItemTemplateFilterEntity(
+          filter: ItemTemplateFilter(
             entry: v[0],
             name: v[1],
             description: v[2],
@@ -2198,11 +2077,11 @@ class FoxyEntityPickerDelegates {
     ],
     idOf: (BriefLockEntity t) => t.id,
     fetch: (page, v) => GetIt.instance.get<LockRepository>().getBriefLocks(
-      filter: LockFilterEntity(id: v[0]),
+      filter: LockFilter(id: v[0]),
       page: page,
     ),
     count: (v) => GetIt.instance.get<LockRepository>().countLocks(
-      filter: LockFilterEntity(id: v[0]),
+      filter: LockFilter(id: v[0]),
     ),
   );
 
@@ -2228,12 +2107,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilterEntity(entry: v[0]),
+              filter: LootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilterEntity(entry: v[0])),
+            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
       );
 
   static final pickpocketLoot =
@@ -2258,12 +2137,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilterEntity(entry: v[0]),
+              filter: LootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilterEntity(entry: v[0])),
+            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
       );
 
   static final skinningLoot =
@@ -2288,12 +2167,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilterEntity(entry: v[0]),
+              filter: LootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilterEntity(entry: v[0])),
+            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
       );
 
   static final gameObjectLoot =
@@ -2318,12 +2197,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilterEntity(entry: v[0]),
+              filter: LootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilterEntity(entry: v[0])),
+            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
       );
 
   static final mailTemplate = FoxyEntityPickerDelegate<BriefMailTemplateEntity>(
@@ -2351,12 +2230,12 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefMailTemplateEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<MailTemplateRepository>().getBriefMailTemplates(
-          filter: MailTemplateFilterEntity(id: v[0], subject: v[1]),
+          filter: MailTemplateFilter(id: v[0], subject: v[1]),
           page: page,
         ),
     count: (v) =>
         GetIt.instance.get<MailTemplateRepository>().countMailTemplates(
-          filter: MailTemplateFilterEntity(id: v[0], subject: v[1]),
+          filter: MailTemplateFilter(id: v[0], subject: v[1]),
         ),
   );
 
@@ -2391,11 +2270,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefMapInfoEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<MapInfoRepository>().getBriefMapInfos(
-          filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+          filter: MapInfoFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<MapInfoRepository>().countMapInfos(
-      filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+      filter: MapInfoFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -2425,12 +2304,12 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefMapInfoEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<MapInfoRepository>().getBriefMapInfos(
-          filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+          filter: MapInfoFilter(id: v[0], name: v[1]),
           page: page,
           nonInstanceableOnly: true,
         ),
     count: (v) => GetIt.instance.get<MapInfoRepository>().countMapInfos(
-      filter: MapInfoFilterEntity(id: v[0], name: v[1]),
+      filter: MapInfoFilter(id: v[0], name: v[1]),
       nonInstanceableOnly: true,
     ),
   );
@@ -2456,11 +2335,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefNpcTextEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<NpcTextRepository>().getBriefNpcTexts(
-          filter: NpcTextFilterEntity(id: v[0], text: v[1]),
+          filter: NpcTextFilter(id: v[0], text: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<NpcTextRepository>().countNpcTexts(
-      filter: NpcTextFilterEntity(id: v[0], text: v[1]),
+      filter: NpcTextFilter(id: v[0], text: v[1]),
     ),
   );
 
@@ -2482,11 +2361,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefPageTextEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<PageTextRepository>().getBriefPageTexts(
-          filter: PageTextFilterEntity(id: v[0], text: v[1]),
+          filter: PageTextFilter(id: v[0], text: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<PageTextRepository>().countPageTexts(
-      filter: PageTextFilterEntity(id: v[0], text: v[1]),
+      filter: PageTextFilter(id: v[0], text: v[1]),
     ),
   );
 
@@ -2511,11 +2390,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefQuestInfoEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<QuestInfoRepository>().getBriefQuestInfos(
-          filter: QuestInfoFilterEntity(id: v[0], name: v[1]),
+          filter: QuestInfoFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<QuestInfoRepository>().countQuestInfos(
-      filter: QuestInfoFilterEntity(id: v[0], name: v[1]),
+      filter: QuestInfoFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -2542,12 +2421,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<QuestTemplateRepository>()
             .getBriefQuestTemplates(
-              filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
+              filter: QuestTemplateFilter(id: v[0], title: v[1]),
               page: page,
             ),
         count: (v) =>
             GetIt.instance.get<QuestTemplateRepository>().countQuestTemplates(
-              filter: QuestTemplateFilterEntity(id: v[0], title: v[1]),
+              filter: QuestTemplateFilter(id: v[0], title: v[1]),
             ),
       );
 
@@ -2571,13 +2450,13 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<ScalingStatDistributionRepository>()
             .getBriefScalingStatDistributions(
-              filter: ScalingStatDistributionFilterEntity(id: v[0]),
+              filter: ScalingStatDistributionFilter(id: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<ScalingStatDistributionRepository>()
             .countScalingStatDistributions(
-              filter: ScalingStatDistributionFilterEntity(id: v[0]),
+              filter: ScalingStatDistributionFilter(id: v[0]),
             ),
       );
 
@@ -2611,12 +2490,12 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<SpellDurationRepository>()
             .getBriefSpellDurations(
-              filter: SpellDurationFilterEntity(id: v[0]),
+              filter: SpellDurationFilter(id: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<SpellDurationRepository>()
-            .countSpellDurations(filter: SpellDurationFilterEntity(id: v[0])),
+            .countSpellDurations(filter: SpellDurationFilter(id: v[0])),
       );
 
   static final spellIcon = FoxyEntityPickerDelegate<BriefSpellIconEntity>(
@@ -2649,11 +2528,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefSpellIconEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<SpellIconRepository>().getBriefSpellIcons(
-          filter: SpellIconFilterEntity(id: v[0], name: v[1]),
+          filter: SpellIconFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<SpellIconRepository>().countSpellIcons(
-      filter: SpellIconFilterEntity(id: v[0], name: v[1]),
+      filter: SpellIconFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -2685,7 +2564,7 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefSpellEntity t) => t.id,
     fetch: (page, v) async {
       final repo = GetIt.instance.get<SpellRepository>();
-      final filter = SpellFilterEntity(
+      final filter = SpellFilter(
         id: v[0].isEmpty ? '' : v[0],
         name: v[1].isEmpty ? '' : v[1],
       );
@@ -2693,7 +2572,7 @@ class FoxyEntityPickerDelegates {
     },
     count: (v) {
       final repo = GetIt.instance.get<SpellRepository>();
-      final filter = SpellFilterEntity(
+      final filter = SpellFilter(
         id: v[0].isEmpty ? '' : v[0],
         name: v[1].isEmpty ? '' : v[1],
       );
@@ -2739,10 +2618,10 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<TalentRepository>().getBriefTalents(
           page: page,
-          filter: TalentFilterEntity(id: values[0], spell: values[1]),
+          filter: TalentFilter(id: values[0], spell: values[1]),
         ),
     count: (values) => GetIt.instance.get<TalentRepository>().countTalents(
-      filter: TalentFilterEntity(id: values[0], spell: values[1]),
+      filter: TalentFilter(id: values[0], spell: values[1]),
     ),
   );
 
@@ -2783,11 +2662,11 @@ class FoxyEntityPickerDelegates {
     fetch: (page, values) =>
         GetIt.instance.get<TalentTabRepository>().getBriefTalentTabs(
           page: page,
-          filter: TalentTabFilterEntity(id: values[0], name: values[1]),
+          filter: TalentTabFilter(id: values[0], name: values[1]),
         ),
     count: (values) =>
         GetIt.instance.get<TalentTabRepository>().countTalentTabs(
-          filter: TalentTabFilterEntity(id: values[0], name: values[1]),
+          filter: TalentTabFilter(id: values[0], name: values[1]),
         ),
   );
 
@@ -2822,11 +2701,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefSpellRangeEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<SpellRangeRepository>().getBriefSpellRanges(
-          filter: SpellRangeFilterEntity(id: v[0], name: v[1]),
+          filter: SpellRangeFilter(id: v[0], name: v[1]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<SpellRangeRepository>().countSpellRanges(
-      filter: SpellRangeFilterEntity(id: v[0], name: v[1]),
+      filter: SpellRangeFilter(id: v[0], name: v[1]),
     ),
   );
 
@@ -2853,11 +2732,11 @@ class FoxyEntityPickerDelegates {
     idOf: (BriefVehicleEntity t) => t.id,
     fetch: (page, v) =>
         GetIt.instance.get<VehicleRepository>().getBriefVehicles(
-          filter: VehicleFilterEntity(id: v[0]),
+          filter: VehicleFilter(id: v[0]),
           page: page,
         ),
     count: (v) => GetIt.instance.get<VehicleRepository>().countVehicles(
-      filter: VehicleFilterEntity(id: v[0]),
+      filter: VehicleFilter(id: v[0]),
     ),
   );
 }

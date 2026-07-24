@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
-import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_duration_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellDurationFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellDurationRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_duration';
 
@@ -17,7 +29,7 @@ class SpellDurationRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSpellDurations({SpellDurationFilterEntity? filter}) async {
+  Future<int> countSpellDurations({SpellDurationFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class SpellDurationRepository with RepositoryMixin {
 
   Future<List<BriefSpellDurationEntity>> getBriefSpellDurations({
     int page = 1,
-    SpellDurationFilterEntity? filter,
+    SpellDurationFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -100,10 +112,7 @@ class SpellDurationRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SpellDurationFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SpellDurationFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

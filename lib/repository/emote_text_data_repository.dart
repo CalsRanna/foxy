@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/emote_text_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'emote_text_data_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'EmoteTextDataFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'text',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text_data';
 
@@ -25,7 +42,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countEmoteTextDatas({EmoteTextDataFilterEntity? filter}) {
+  Future<int> countEmoteTextDatas({EmoteTextDataFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -42,7 +59,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefEmoteTextDataEntity>> getBriefEmoteTextDatas({
     int page = 1,
-    EmoteTextDataFilterEntity? filter,
+    EmoteTextDataFilter? filter,
   }) async {
     var builder = laconic.table(_table).select(['ID', 'Text_lang_zhCN']);
     builder = _applyFilter(builder, filter);
@@ -115,10 +132,7 @@ class EmoteTextDataRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    EmoteTextDataFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextDataFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.text.isNotEmpty) {

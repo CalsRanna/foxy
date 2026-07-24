@@ -33,22 +33,6 @@ class FoxyBriefField {
 
 enum FoxyBriefFieldType { boolean, decimal, integer, text }
 
-class FoxyFilterEntity {
-  const FoxyFilterEntity();
-}
-
-enum FoxyFilterFieldType { boolean, decimal, integer, text }
-
-class FoxyFilterField {
-  final Object? defaultValue;
-  final FoxyFilterFieldType type;
-
-  const FoxyFilterField({
-    required this.defaultValue,
-    required this.type,
-  });
-}
-
 class FoxyFullEntity {
   final String table;
 
@@ -69,16 +53,11 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'codegen_sample_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.codegen_sample')
 class CodegenSampleEntity with _CodegenSampleEntityMixin {
   static const defaultRatio = 100.0;
 
   @FoxyBriefField()
-  @FoxyFilterField(
-    defaultValue: '',
-    type: FoxyFilterFieldType.text,
-  )
   @FoxyFullField('ID', key: true)
   final int id;
 

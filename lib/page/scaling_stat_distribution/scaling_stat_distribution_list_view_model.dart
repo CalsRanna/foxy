@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -79,8 +78,8 @@ class ScalingStatDistributionListViewModel with FieldControllerMixin {
     }
   }
 
-  ScalingStatDistributionFilterEntity _collectFilter() {
-    return ScalingStatDistributionFilterEntity(id: idController.collect());
+  ScalingStatDistributionFilter _collectFilter() {
+    return ScalingStatDistributionFilter(id: idController.collect());
   }
 
   Future<void> _refresh() async {

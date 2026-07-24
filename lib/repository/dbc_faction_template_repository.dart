@@ -1,9 +1,31 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
-import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'dbc_faction_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'DbcFactionTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'faction',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class DbcFactionTemplateRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_faction_template';
   static const _factionTable = 'foxy.dbc_faction';
@@ -22,7 +44,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countDbcFactionTemplates({
-    DbcFactionTemplateFilterEntity? filter,
+    DbcFactionTemplateFilter? filter,
   }) async {
     var builder = laconic.table('$_table AS dft');
     if (filter != null && filter.name.isNotEmpty) {
@@ -45,7 +67,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
 
   Future<List<BriefDbcFactionTemplateEntity>> getBriefDbcFactionTemplates({
     int page = 1,
-    DbcFactionTemplateFilterEntity? filter,
+    DbcFactionTemplateFilter? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS dft');
@@ -120,7 +142,7 @@ class DbcFactionTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    DbcFactionTemplateFilterEntity? filter,
+    DbcFactionTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
