@@ -1,9 +1,14 @@
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class GameObjectQuestEnderRepository with RepositoryMixin {
+part 'game_object_quest_ender_repository.g.dart';
+
+@FoxyRepository(GameObjectQuestEnderEntity)
+class GameObjectQuestEnderRepository
+    with RepositoryMixin, _GameObjectQuestEnderRepositoryMixin {
   static const _table = 'gameobject_questender';
   static const primaryKeyColumns = {'id', 'quest'};
 
@@ -15,13 +20,6 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
     int questId,
   ) async {
     return GameObjectQuestEnderEntity(quest: questId);
-  }
-
-  Future<void> destroyGameObjectQuestEnder(GameObjectQuestEnderKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGameObjectQuestEnderEntity>> getBriefGameObjectQuestEnders(
@@ -54,50 +52,5 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
     return results
         .map((e) => BriefGameObjectQuestEnderEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<GameObjectQuestEnderEntity?> getGameObjectQuestEnder(
-    GameObjectQuestEnderKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GameObjectQuestEnderEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeGameObjectQuestEnder(
-    GameObjectQuestEnderEntity model,
-  ) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('游戏对象任务结束关系主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGameObjectQuestEnder(
-    GameObjectQuestEnderKey originalKey,
-    GameObjectQuestEnderEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的游戏对象任务结束关系主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectQuestEnderKey key) {
-    return builder.where('id', key.id).where('quest', key.quest);
   }
 }

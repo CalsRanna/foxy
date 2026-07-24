@@ -1,9 +1,14 @@
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class GameObjectQuestItemRepository with RepositoryMixin {
+part 'game_object_quest_item_repository.g.dart';
+
+@FoxyRepository(GameObjectQuestItemEntity)
+class GameObjectQuestItemRepository
+    with RepositoryMixin, _GameObjectQuestItemRepositoryMixin {
   static const _table = 'gameobject_questitem';
   static const primaryKeyColumns = {'GameObjectEntry', 'Idx'};
 
@@ -34,13 +39,6 @@ class GameObjectQuestItemRepository with RepositoryMixin {
       gameObjectEntry: gameObjectEntry,
       idx: await getNextIdx(gameObjectEntry),
     );
-  }
-
-  Future<void> destroyGameObjectQuestItem(GameObjectQuestItemKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGameObjectQuestItemEntity>> getBriefGameObjectQuestItems(
@@ -82,14 +80,6 @@ class GameObjectQuestItemRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GameObjectQuestItemEntity?> getGameObjectQuestItem(
-    GameObjectQuestItemKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GameObjectQuestItemEntity.fromJson(results.first.toMap());
-  }
-
   Future<int> getNextIdx(int gameObjectEntry) async {
     final rows = await laconic
         .table(_table)
@@ -102,44 +92,5 @@ class GameObjectQuestItemRepository with RepositoryMixin {
       if (!occupied.contains(idx)) return idx;
     }
     throw StateError('该游戏对象的 6 个任务物品槽位已全部占用');
-  }
-
-  Future<void> storeGameObjectQuestItem(
-    GameObjectQuestItemEntity questItem,
-  ) async {
-    try {
-      await laconic.table(_table).insert([questItem.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('游戏对象任务物品主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGameObjectQuestItem(
-    GameObjectQuestItemKey originalKey,
-    GameObjectQuestItemEntity questItem,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(questItem.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的游戏对象任务物品主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectQuestItemKey key) {
-    return builder
-        .where('GameObjectEntry', key.gameObjectEntry)
-        .where('Idx', key.idx);
   }
 }

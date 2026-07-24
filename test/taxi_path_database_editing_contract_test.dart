@@ -19,12 +19,11 @@ void main() {
     expect(source, contains("'ToTaxiNode'"));
     expect(source, contains("'Cost'"));
     expect(source, contains('Future<void> storeTaxiPath('));
-    expect(source, contains('if (entity.id <= 0)'));
-    expect(source, contains('insert([entity.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeTaxiPath')));
     expect(source, isNot(contains('saveTaxiPath(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(entity.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

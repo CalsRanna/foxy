@@ -15,12 +15,11 @@ void main() {
     );
     expect(source, contains('Future<int> copyDbcEmote('));
     expect(source, contains('Future<void> storeDbcEmote('));
-    expect(source, contains('if (emote.id <= 0)'));
-    expect(source, contains('insert([emote.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeDbcEmote')));
     expect(source, isNot(contains('saveDbcEmote(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(emote.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

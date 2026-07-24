@@ -22,15 +22,30 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     return GossipMenuEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeGossipMenu(GossipMenuEntity gossipMenu) async {
+    await _beforeStore(gossipMenu);
+    final json = _prepareWriteJson(gossipMenu.toJson());
+    try {
+      await laconic.table('gossip_menu').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateGossipMenu(
     GossipMenuKey originalKey,
-    GossipMenuEntity menu,
+    GossipMenuEntity gossipMenu,
   ) async {
+    await _beforeUpdate(originalKey, gossipMenu);
+    final json = _prepareWriteJson(gossipMenu.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('gossip_menu'),
         originalKey,
-      ).update(menu.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +55,22 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(GossipMenuEntity gossipMenu) async {}
+
+  Future<void> _beforeUpdate(
+    GossipMenuKey originalKey,
+    GossipMenuEntity gossipMenu,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, GossipMenuKey key) {

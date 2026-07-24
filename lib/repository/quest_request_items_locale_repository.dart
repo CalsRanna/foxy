@@ -1,9 +1,14 @@
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class QuestRequestItemsLocaleRepository with RepositoryMixin {
+part 'quest_request_items_locale_repository.g.dart';
+
+@FoxyRepository(QuestRequestItemsLocaleEntity)
+class QuestRequestItemsLocaleRepository
+    with RepositoryMixin, _QuestRequestItemsLocaleRepositoryMixin {
   static const _table = 'quest_request_items_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
@@ -37,15 +42,6 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
     return QuestRequestItemsLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> destroyQuestRequestItemsLocale(
-    QuestRequestItemsLocaleKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefQuestRequestItemsLocaleEntity>>
   getBriefQuestRequestItemsLocales({required int id, int page = 1}) async {
     final offset = (page - 1) * kPageSize;
@@ -62,56 +58,11 @@ class QuestRequestItemsLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestRequestItemsLocaleEntity?> getQuestRequestItemsLocale(
-    QuestRequestItemsLocaleKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestRequestItemsLocaleEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<QuestRequestItemsLocaleEntity>>
   getQuestRequestItemsLocaleEntities() async {
     final results = await laconic.table(_table).get();
     return results
         .map((e) => QuestRequestItemsLocaleEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeQuestRequestItemsLocale(
-    QuestRequestItemsLocaleEntity model,
-  ) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('任务物品本地化主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateQuestRequestItemsLocale(
-    QuestRequestItemsLocaleKey originalKey,
-    QuestRequestItemsLocaleEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的任务物品本地化主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, QuestRequestItemsLocaleKey key) {
-    return builder.where('ID', key.id).where('locale', key.locale);
   }
 }

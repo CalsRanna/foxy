@@ -193,7 +193,7 @@ void main() {
             .toList()
           ..sort((left, right) => left.path.compareTo(right.path));
 
-    expect(repositories, hasLength(81));
+    expect(repositories, hasLength(121));
     var generatedDestroyCount = 0;
     var generatedGetCount = 0;
     var generatedStoreCount = 0;
@@ -236,10 +236,10 @@ void main() {
         r'Future<void>\s+update\w+\s*\(',
       ).allMatches(generated).length;
     }
-    expect(generatedDestroyCount, 68);
-    expect(generatedGetCount, 68);
-    expect(generatedStoreCount, 4);
-    expect(generatedUpdateCount, 65);
+    expect(generatedDestroyCount, 121);
+    expect(generatedGetCount, 121);
+    expect(generatedStoreCount, 121);
+    expect(generatedUpdateCount, 121);
   });
 
   test('旧 Entity Filter 和跨 Repository 共享 Filter 均已移除', () {

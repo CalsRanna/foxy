@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -95,20 +95,6 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
   }
 
   Future<int> getNextMenuId() => nextMaxPlusOne(_table, 'MenuID');
-
-  Future<void> storeGossipMenu(GossipMenuEntity menu) async {
-    if (menu.menuId <= 0) {
-      throw StateError('对话菜单 MenuID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([menu.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('对话菜单 ${menu.menuId}/${menu.textId} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
 
   QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
     if (filter == null) return builder;

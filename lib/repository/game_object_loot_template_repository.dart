@@ -1,7 +1,7 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -16,12 +16,12 @@ class GameObjectLootTemplateRepository
   static const primaryKeyColumns = {'Entry', 'Item'};
 
   Future<void> copyLootTemplate(GameObjectLootTemplateKey key) async {
-    final source = await getLootTemplate(key);
+    final source = await getGameObjectLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
-    await storeLootTemplate(copied);
+    await storeGameObjectLootTemplate(copied);
   }
 
   Future<int> countLootTemplateRows({
@@ -65,13 +65,6 @@ class GameObjectLootTemplateRepository
 
   Future<GameObjectLootTemplateEntity> createLootTemplate(int entry) async {
     return GameObjectLootTemplateEntity(entry: entry);
-  }
-
-  Future<void> destroyLootTemplate(GameObjectLootTemplateKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGameObjectLootTemplateEntryEntity>>
@@ -167,47 +160,8 @@ class GameObjectLootTemplateRepository
         .toList();
   }
 
-  Future<GameObjectLootTemplateEntity?> getLootTemplate(
-    GameObjectLootTemplateKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GameObjectLootTemplateEntity.fromJson(results.first.toMap());
-  }
-
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
-
-  Future<void> storeLootTemplate(GameObjectLootTemplateEntity loot) async {
-    try {
-      await laconic.table(_table).insert([loot.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('掉落模板主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateLootTemplate(
-    GameObjectLootTemplateKey originalKey,
-    GameObjectLootTemplateEntity loot,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(loot.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
 
   List<String> _briefFields(String alias) => [
     '$alias.Entry',

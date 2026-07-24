@@ -22,15 +22,33 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     return GlyphPropertyEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
+    if (glyphProperty.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(glyphProperty);
+    final json = _prepareWriteJson(glyphProperty.toJson());
+    try {
+      await laconic.table('foxy.dbc_glyph_properties').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateGlyphProperty(
     int originalKey,
     GlyphPropertyEntity glyphProperty,
   ) async {
+    await _beforeUpdate(originalKey, glyphProperty);
+    final json = _prepareWriteJson(glyphProperty.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_glyph_properties'),
         originalKey,
-      ).update(glyphProperty.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +58,22 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(GlyphPropertyEntity glyphProperty) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    GlyphPropertyEntity glyphProperty,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

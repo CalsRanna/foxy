@@ -1,9 +1,14 @@
 import 'package:foxy/entity/creature_template_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class CreatureTemplateLocaleRepository with RepositoryMixin {
+part 'creature_template_locale_repository.g.dart';
+
+@FoxyRepository(CreatureTemplateLocaleEntity)
+class CreatureTemplateLocaleRepository
+    with RepositoryMixin, _CreatureTemplateLocaleRepositoryMixin {
   static const _table = 'creature_template_locale';
   static const primaryKeyColumns = {'entry', 'locale'};
 
@@ -37,15 +42,6 @@ class CreatureTemplateLocaleRepository with RepositoryMixin {
     return CreatureTemplateLocaleEntity(entry: entry, locale: locale);
   }
 
-  Future<void> destroyCreatureTemplateLocale(
-    CreatureTemplateLocaleKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureTemplateLocaleEntity>>
   getBriefCreatureTemplateLocales({required int entry, int page = 1}) async {
     final results = await laconic
@@ -59,50 +55,5 @@ class CreatureTemplateLocaleRepository with RepositoryMixin {
     return results
         .map((row) => BriefCreatureTemplateLocaleEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<CreatureTemplateLocaleEntity?> getCreatureTemplateLocale(
-    CreatureTemplateLocaleKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureTemplateLocaleEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeCreatureTemplateLocale(
-    CreatureTemplateLocaleEntity locale,
-  ) async {
-    try {
-      await laconic.table(_table).insert([locale.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('生物模板本地化主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureTemplateLocale(
-    CreatureTemplateLocaleKey originalKey,
-    CreatureTemplateLocaleEntity locale,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(locale.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物模板本地化主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureTemplateLocaleKey key) {
-    return builder.where('entry', key.entry).where('locale', key.locale);
   }
 }

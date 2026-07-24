@@ -22,15 +22,35 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
     return GameObjectArtKitEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeGameObjectArtKit(
+    GameObjectArtKitEntity gameObjectArtKit,
+  ) async {
+    if (gameObjectArtKit.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(gameObjectArtKit);
+    final json = _prepareWriteJson(gameObjectArtKit.toJson());
+    try {
+      await laconic.table('foxy.dbc_game_object_art_kit').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateGameObjectArtKit(
     int originalKey,
-    GameObjectArtKitEntity entity,
+    GameObjectArtKitEntity gameObjectArtKit,
   ) async {
+    await _beforeUpdate(originalKey, gameObjectArtKit);
+    final json = _prepareWriteJson(gameObjectArtKit.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_game_object_art_kit'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(GameObjectArtKitEntity gameObjectArtKit) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    GameObjectArtKitEntity gameObjectArtKit,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

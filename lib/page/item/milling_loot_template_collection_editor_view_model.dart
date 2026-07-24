@@ -84,7 +84,7 @@ class MillingLootTemplateCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.getLootTemplate(key);
+      final candidate = await _repository.getMillingLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -114,9 +114,9 @@ class MillingLootTemplateCollectionEditorViewModel
     errorMessage.value = null;
     try {
       if (originalKey == null) {
-        await _repository.storeLootTemplate(candidate);
+        await _repository.storeMillingLootTemplate(candidate);
       } else {
-        await _repository.updateLootTemplate(originalKey, candidate);
+        await _repository.updateMillingLootTemplate(originalKey, candidate);
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -139,7 +139,7 @@ class MillingLootTemplateCollectionEditorViewModel
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _repository.destroyLootTemplate(key);
+      await _repository.destroyMillingLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
     } catch (error) {

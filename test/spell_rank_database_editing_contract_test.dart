@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('SpellRankKey 和 Brief 覆盖 first_spell_id + rank', () {
@@ -24,11 +25,11 @@ void main() {
   });
 
   test('Repository 使用完整旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_rank_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('SpellRankKey originalKey'));
-    expect(source, contains('.update(_writeJson(data))'));
+    expect(source, contains('.update(json)'));
     expect(source, contains("where('first_spell_id', key.firstSpellId)"));
     expect(source, contains("where('`rank`', key.rank)"));
     expect(source, contains('if (matchedRows == 0)'));
@@ -38,9 +39,9 @@ void main() {
   });
 
   test('内嵌编辑器使用 Brief、editingKey、分页且所有物理字段可编辑', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_rank_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell/spell_rank_collection_editor_view_model.dart',
     ).readAsStringSync();

@@ -1,9 +1,14 @@
 import 'package:foxy/entity/item_template_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class ItemTemplateLocaleRepository with RepositoryMixin {
+part 'item_template_locale_repository.g.dart';
+
+@FoxyRepository(ItemTemplateLocaleEntity)
+class ItemTemplateLocaleRepository
+    with RepositoryMixin, _ItemTemplateLocaleRepositoryMixin {
   static const _table = 'item_template_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
@@ -36,13 +41,6 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
     return ItemTemplateLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> destroyItemTemplateLocale(ItemTemplateLocaleKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemTemplateLocaleEntity>> getBriefItemTemplateLocales({
     required int id,
     int page = 1,
@@ -61,53 +59,10 @@ class ItemTemplateLocaleRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemTemplateLocaleEntity?> getItemTemplateLocale(
-    ItemTemplateLocaleKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemTemplateLocaleEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<ItemTemplateLocaleEntity>> getItemTemplateLocaleEntities() async {
     final results = await laconic.table(_table).get();
     return results
         .map((e) => ItemTemplateLocaleEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeItemTemplateLocale(ItemTemplateLocaleEntity model) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('物品本地化主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateItemTemplateLocale(
-    ItemTemplateLocaleKey originalKey,
-    ItemTemplateLocaleEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的物品本地化主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, ItemTemplateLocaleKey key) {
-    return builder.where('ID', key.id).where('locale', key.locale);
   }
 }

@@ -15,12 +15,11 @@ void main() {
     );
     expect(source, contains('Future<int> copySpellDuration('));
     expect(source, contains('Future<void> storeSpellDuration('));
-    expect(source, contains('if (duration.id <= 0)'));
-    expect(source, contains('insert([duration.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeSpellDuration')));
     expect(source, isNot(contains('saveSpellDuration(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(duration.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

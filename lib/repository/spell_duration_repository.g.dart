@@ -22,15 +22,33 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
     return SpellDurationEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeSpellDuration(SpellDurationEntity spellDuration) async {
+    if (spellDuration.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(spellDuration);
+    final json = _prepareWriteJson(spellDuration.toJson());
+    try {
+      await laconic.table('foxy.dbc_spell_duration').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateSpellDuration(
     int originalKey,
-    SpellDurationEntity duration,
+    SpellDurationEntity spellDuration,
   ) async {
+    await _beforeUpdate(originalKey, spellDuration);
+    final json = _prepareWriteJson(spellDuration.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_spell_duration'),
         originalKey,
-      ).update(duration.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +58,22 @@ mixin _SpellDurationRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(SpellDurationEntity spellDuration) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    SpellDurationEntity spellDuration,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

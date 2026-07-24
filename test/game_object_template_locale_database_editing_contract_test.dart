@@ -31,12 +31,12 @@ void main() {
   });
 
   test('locale Repository has one-table typed write contract', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/game_object_template_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("{'entry', 'locale'}"));
     expect(source, contains('GameObjectTemplateLocaleKey originalKey'));
-    expect(source, contains(').update(locale.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

@@ -23,8 +23,10 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
   }
 
   Future<void> storeCondition(ConditionEntity condition) async {
+    await _beforeStore(condition);
+    final json = _prepareWriteJson(condition.toJson());
     try {
-      await laconic.table('conditions').insert([condition.toJson()]);
+      await laconic.table('conditions').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('相同主键的记录已存在');
@@ -37,11 +39,13 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     ConditionKey originalKey,
     ConditionEntity condition,
   ) async {
+    await _beforeUpdate(originalKey, condition);
+    final json = _prepareWriteJson(condition.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('conditions'),
         originalKey,
-      ).update(condition.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -51,6 +55,22 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(ConditionEntity condition) async {}
+
+  Future<void> _beforeUpdate(
+    ConditionKey originalKey,
+    ConditionEntity condition,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, ConditionKey key) {

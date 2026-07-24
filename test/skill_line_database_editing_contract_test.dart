@@ -18,7 +18,7 @@ void main() {
     expect(source, contains('getSkillLine(int key)'));
     expect(source, contains('Future<void> storeSkillLine('));
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(skillLine.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

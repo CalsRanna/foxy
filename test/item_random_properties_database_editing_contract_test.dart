@@ -13,9 +13,9 @@ void main() {
       'lib/repository/item_random_properties_repository.dart',
     );
     expect(source, contains('int key'));
-    expect(source, contains('Future<void> storeItemRandomProperty('));
+    expect(source, contains('Future<void> storeItemRandomProperties('));
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(property.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

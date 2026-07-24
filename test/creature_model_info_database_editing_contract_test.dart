@@ -24,7 +24,7 @@ void main() {
     );
     expect(source, contains('Future<void> storeCreatureModelInfo('));
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(info.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

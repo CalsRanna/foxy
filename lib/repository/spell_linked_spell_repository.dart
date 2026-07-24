@@ -1,9 +1,14 @@
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellLinkedSpellRepository with RepositoryMixin {
+part 'spell_linked_spell_repository.g.dart';
+
+@FoxyRepository(SpellLinkedSpellEntity)
+class SpellLinkedSpellRepository
+    with RepositoryMixin, _SpellLinkedSpellRepositoryMixin {
   static const _table = 'spell_linked_spell';
 
   Future<SpellLinkedSpellKey> copySpellLinkedSpell(
@@ -42,13 +47,6 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     return SpellLinkedSpellEntity(spellTrigger: spellTrigger);
   }
 
-  Future<void> destroySpellLinkedSpell(SpellLinkedSpellKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原链接法术不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSpellLinkedSpellEntity>> getBriefSpellLinkedSpells(
     int spellTrigger, {
     int page = 1,
@@ -64,52 +62,6 @@ class SpellLinkedSpellRepository with RepositoryMixin {
     return results
         .map((row) => BriefSpellLinkedSpellEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<SpellLinkedSpellEntity?> getSpellLinkedSpell(
-    SpellLinkedSpellKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellLinkedSpellEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeSpellLinkedSpell(SpellLinkedSpellEntity data) async {
-    try {
-      await laconic.table(_table).insert([data.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同触发法术、效果法术和类型的链接记录已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateSpellLinkedSpell(
-    SpellLinkedSpellKey originalKey,
-    SpellLinkedSpellEntity data,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(data.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原链接法术不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的触发法术、效果法术和类型组合已存在');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SpellLinkedSpellKey key) {
-    return builder
-        .where('spell_trigger', key.spellTrigger)
-        .where('spell_effect', key.spellEffect)
-        .where('type', key.type);
   }
 
   QueryBuilder _whereParent(QueryBuilder builder, int spellTrigger) {

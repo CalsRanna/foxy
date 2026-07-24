@@ -22,15 +22,35 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
     return CreatureImmunityEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeCreatureImmunity(
+    CreatureImmunityEntity creatureImmunity,
+  ) async {
+    if (creatureImmunity.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(creatureImmunity);
+    final json = _prepareWriteJson(creatureImmunity.toJson());
+    try {
+      await laconic.table('creature_immunities').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateCreatureImmunity(
     int originalKey,
-    CreatureImmunityEntity immunity,
+    CreatureImmunityEntity creatureImmunity,
   ) async {
+    await _beforeUpdate(originalKey, creatureImmunity);
+    final json = _prepareWriteJson(creatureImmunity.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('creature_immunities'),
         originalKey,
-      ).update(immunity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _CreatureImmunityRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(CreatureImmunityEntity creatureImmunity) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    CreatureImmunityEntity creatureImmunity,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

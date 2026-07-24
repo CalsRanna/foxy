@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/creature_model_info_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/creature_model_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -64,20 +64,6 @@ class CreatureModelInfoRepository
     return results
         .map((e) => CreatureModelInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeCreatureModelInfo(CreatureModelInfoEntity info) async {
-    if (info.displayId <= 0) {
-      throw StateError('生物模型信息 DisplayID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([info.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('生物模型信息 ${info.displayId} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

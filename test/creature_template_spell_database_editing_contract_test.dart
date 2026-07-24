@@ -10,6 +10,7 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -175,9 +176,9 @@ void main() {
     final fullEntity = File(
       'lib/entity/creature_template_spell_entity.dart',
     ).readAsStringSync();
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/creature_template_spell_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/creature_template/creature_template_spell_collection_editor_view_model.dart',
     ).readAsStringSync();

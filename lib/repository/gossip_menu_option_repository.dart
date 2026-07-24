@@ -1,9 +1,14 @@
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class GossipMenuOptionRepository with RepositoryMixin {
+part 'gossip_menu_option_repository.g.dart';
+
+@FoxyRepository(GossipMenuOptionEntity)
+class GossipMenuOptionRepository
+    with RepositoryMixin, _GossipMenuOptionRepositoryMixin {
   static const _table = 'gossip_menu_option';
   static const _localeTable = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID'};
@@ -28,13 +33,6 @@ class GossipMenuOptionRepository with RepositoryMixin {
   Future<GossipMenuOptionEntity> createGossipMenuOption(int menuId) async {
     final nextOptionId = await _getNextOptionId(menuId);
     return GossipMenuOptionEntity(menuId: menuId, optionId: nextOptionId);
-  }
-
-  Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGossipMenuOptionEntity>> getBriefGossipMenuOptions(
@@ -73,50 +71,11 @@ class GossipMenuOptionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GossipMenuOptionEntity?> getGossipMenuOption(
-    GossipMenuOptionKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GossipMenuOptionEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<GossipMenuOptionEntity>> getGossipMenuOptions() async {
     final results = await laconic.table(_table).get();
     return results
         .map((row) => GossipMenuOptionEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<void> storeGossipMenuOption(GossipMenuOptionEntity model) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('对话菜单选项主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGossipMenuOption(
-    GossipMenuOptionKey originalKey,
-    GossipMenuOptionEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的对话菜单选项主键已存在，无法保存');
-      }
-      rethrow;
-    }
   }
 
   Future<int> _getNextOptionId(int menuId) async {
@@ -132,9 +91,5 @@ class GossipMenuOptionRepository with RepositoryMixin {
       if (!used.contains(optionId)) return optionId;
     }
     throw StateError('每个对话菜单最多支持 32 个选项');
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GossipMenuOptionKey key) {
-    return builder.where('MenuID', key.menuId).where('OptionID', key.optionId);
   }
 }

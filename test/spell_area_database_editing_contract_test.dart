@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('SpellAreaKey 和 Brief 覆盖六列物理主键', () {
@@ -49,9 +50,9 @@ void main() {
   });
 
   test('Repository 使用完整旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_area_repository.dart',
-    ).readAsStringSync();
+    );
     for (final condition in [
       "where('spell', key.spell)",
       "where('area', key.area)",
@@ -63,7 +64,7 @@ void main() {
       expect(source, contains(condition));
     }
     expect(source, contains('SpellAreaKey originalKey'));
-    expect(source, contains('.update(data.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
@@ -71,9 +72,9 @@ void main() {
   });
 
   test('内嵌编辑器使用 Brief、editingKey、分页且法术键可编辑', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_area_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell/spell_area_collection_editor_view_model.dart',
     ).readAsStringSync();

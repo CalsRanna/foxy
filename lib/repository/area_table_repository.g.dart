@@ -22,12 +22,33 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin {
     return AreaTableEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> updateAreaTable(int originalKey, AreaTableEntity area) async {
+  Future<void> storeAreaTable(AreaTableEntity areaTable) async {
+    if (areaTable.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(areaTable);
+    final json = _prepareWriteJson(areaTable.toJson());
+    try {
+      await laconic.table('foxy.dbc_area_table').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateAreaTable(
+    int originalKey,
+    AreaTableEntity areaTable,
+  ) async {
+    await _beforeUpdate(originalKey, areaTable);
+    final json = _prepareWriteJson(areaTable.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_area_table'),
         originalKey,
-      ).update(area.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -37,6 +58,22 @@ mixin _AreaTableRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(AreaTableEntity areaTable) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    AreaTableEntity areaTable,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

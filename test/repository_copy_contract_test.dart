@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('Repository 不暴露读取源记录后静默返回的 copy API', () {
@@ -21,9 +22,9 @@ void main() {
   });
 
   test('对话选项 locale 批量复制仍会写入目标 OptionID', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/gossip_menu_option_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('copyGossipMenuOptionLocales('));
     expect(source, contains("json['MenuID'] = targetKey.menuId"));
     expect(source, contains("json['OptionID'] = targetKey.optionId"));

@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -57,20 +57,6 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   Future<List<GemPropertyEntity>> getGemProperties() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeGemProperty(GemPropertyEntity gemProperty) async {
-    if (gemProperty.id <= 0) {
-      throw StateError('宝石属性 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([gemProperty.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('宝石属性 ${gemProperty.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, GemPropertyFilter? filter) {

@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -71,20 +71,6 @@ class CurrencyTypeRepository
   Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
-    if (currencyType.id <= 0) {
-      throw StateError('货币 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([currencyType.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('货币 ID、物品或位索引已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

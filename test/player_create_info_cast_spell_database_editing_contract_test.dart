@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('全行 Key 和 Brief 覆盖四个物理列并区分 NULL 与空串', () {
@@ -56,9 +57,9 @@ void main() {
   });
 
   test('Repository 使用绑定参数、二进制 null-safe 比较和 LIMIT 1', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/player_create_info_cast_spell_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('PlayerCreateInfoCastSpellKey originalKey'));
     expect(source, contains('BINARY `note` <=> BINARY ? LIMIT 1'));
     expect(source, contains("'UPDATE `playercreateinfo_cast_spell` '"));
@@ -71,9 +72,9 @@ void main() {
   });
 
   test('内嵌编辑器使用全行 Brief、editingKey、分页和可空输入', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/player_create_info_cast_spell_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/player_create_info/player_create_info_cast_spell_collection_editor_view_model.dart',
     ).readAsStringSync();

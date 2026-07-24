@@ -1,9 +1,14 @@
 import 'package:foxy/entity/player_create_info_item_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class PlayerCreateInfoItemRepository with RepositoryMixin {
+part 'player_create_info_item_repository.g.dart';
+
+@FoxyRepository(PlayerCreateInfoItemEntity)
+class PlayerCreateInfoItemRepository
+    with RepositoryMixin, _PlayerCreateInfoItemRepositoryMixin {
   static const _table = 'playercreateinfo_item';
 
   Future<void> copyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
@@ -22,13 +27,6 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     int race,
     int class_,
   ) async => PlayerCreateInfoItemEntity(race: race, class_: class_);
-
-  Future<void> destroyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原角色物品记录不存在，可能已被其他操作修改或删除');
-    }
-  }
 
   Future<List<BriefPlayerCreateInfoItemEntity>> getBriefPlayerCreateInfoItems(
     int race,
@@ -49,53 +47,5 @@ class PlayerCreateInfoItemRepository with RepositoryMixin {
     return results
         .map((row) => BriefPlayerCreateInfoItemEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<PlayerCreateInfoItemEntity?> getPlayerCreateInfoItem(
-    PlayerCreateInfoItemKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PlayerCreateInfoItemEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storePlayerCreateInfoItem(
-    PlayerCreateInfoItemEntity item,
-  ) async {
-    try {
-      await laconic.table(_table).insert([item.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同种族、职业与物品 ID 的记录已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updatePlayerCreateInfoItem(
-    PlayerCreateInfoItemKey originalKey,
-    PlayerCreateInfoItemEntity item,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(item.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原角色物品记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的种族、职业与物品 ID 组合已存在');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoItemKey key) {
-    return builder
-        .where('race', key.race)
-        .where('class', key.class_)
-        .where('itemid', key.itemId);
   }
 }

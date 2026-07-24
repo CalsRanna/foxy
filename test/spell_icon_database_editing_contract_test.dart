@@ -15,12 +15,11 @@ void main() {
     );
     expect(source, contains('Future<int> copySpellIcon('));
     expect(source, contains('Future<void> storeSpellIcon('));
-    expect(source, contains('if (icon.id <= 0)'));
-    expect(source, contains('insert([icon.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeSpellIcon')));
     expect(source, isNot(contains('saveSpellIcon(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(icon.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

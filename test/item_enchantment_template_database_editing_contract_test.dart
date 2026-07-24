@@ -25,7 +25,7 @@ void main() {
       'lib/repository/item_enchantment_template_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('ItemEnchantmentTemplateKey originalKey'));
-    expect(source, contains('.update(itemEnchantmentTemplate.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(generatedSource, contains("where('entry', key.entry)"));
     expect(generatedSource, contains("where('ench', key.ench)"));
     expect(source, contains('if (matchedRows == 0)'));

@@ -22,12 +22,11 @@ void main() {
     );
     expect(source, contains('Future<int> copySpellRange('));
     expect(source, contains('Future<void> storeSpellRange('));
-    expect(source, contains('if (range.id <= 0)'));
-    expect(source, contains('insert([range.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeSpellRange')));
     expect(source, isNot(contains('saveSpellRange(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(range.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

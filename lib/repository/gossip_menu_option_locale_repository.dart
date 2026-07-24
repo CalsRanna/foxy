@@ -1,10 +1,15 @@
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class GossipMenuOptionLocaleRepository with RepositoryMixin {
+part 'gossip_menu_option_locale_repository.g.dart';
+
+@FoxyRepository(GossipMenuOptionLocaleEntity)
+class GossipMenuOptionLocaleRepository
+    with RepositoryMixin, _GossipMenuOptionLocaleRepositoryMixin {
   static const _table = 'gossip_menu_option_locale';
   static const primaryKeyColumns = {'MenuID', 'OptionID', 'Locale'};
 
@@ -50,15 +55,6 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原本地化记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefGossipMenuOptionLocaleEntity>>
   getBriefGossipMenuOptionLocales({int page = 1}) async {
     final results = await laconic
@@ -76,14 +72,6 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
               BriefGossipMenuOptionLocaleEntity.fromJson(result.toMap()),
         )
         .toList();
-  }
-
-  Future<GossipMenuOptionLocaleEntity?> getGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GossipMenuOptionLocaleEntity.fromJson(results.first.toMap());
   }
 
   Future<List<GossipMenuOptionLocaleEntity>>
@@ -113,45 +101,5 @@ class GossipMenuOptionLocaleRepository with RepositoryMixin {
     return results
         .map((result) => GossipMenuOptionLocaleEntity.fromJson(result.toMap()))
         .toList();
-  }
-
-  Future<void> storeGossipMenuOptionLocale(
-    GossipMenuOptionLocaleEntity model,
-  ) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('对话菜单选项本地化主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey originalKey,
-    GossipMenuOptionLocaleEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原本地化记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的本地化主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GossipMenuOptionLocaleKey key) {
-    return builder
-        .where('MenuID', key.menuId)
-        .where('OptionID', key.optionId)
-        .where('Locale', key.locale);
   }
 }

@@ -22,15 +22,35 @@ mixin _CreatureModelDataRepositoryMixin on RepositoryMixin {
     return CreatureModelDataEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeCreatureModelData(
+    CreatureModelDataEntity creatureModelData,
+  ) async {
+    if (creatureModelData.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(creatureModelData);
+    final json = _prepareWriteJson(creatureModelData.toJson());
+    try {
+      await laconic.table('foxy.dbc_creature_model_data').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateCreatureModelData(
     int originalKey,
-    CreatureModelDataEntity entity,
+    CreatureModelDataEntity creatureModelData,
   ) async {
+    await _beforeUpdate(originalKey, creatureModelData);
+    final json = _prepareWriteJson(creatureModelData.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_creature_model_data'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _CreatureModelDataRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(CreatureModelDataEntity creatureModelData) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    CreatureModelDataEntity creatureModelData,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

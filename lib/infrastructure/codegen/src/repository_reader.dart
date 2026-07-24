@@ -117,41 +117,36 @@ final class RepositoryReader {
     }
 
     final methods = element.methods;
-    final hasGet = methods.any(
+    final handwrittenCrudMethods = methods.where(
       (method) =>
-          method.name?.startsWith('get') == true &&
-          _returns(method, 'Future<$entityClassName?>') &&
-          method.formalParameters.length == 1,
-    );
-    final storeMethod = methods
-        .where(
-          (method) =>
-              method.name?.startsWith('store') == true &&
+          (method.name?.startsWith('get') == true &&
+              _returns(method, 'Future<$entityClassName?>') &&
+              method.formalParameters.length == 1) ||
+          (method.name?.startsWith('store') == true &&
               _returns(method, 'Future<void>') &&
-              _accepts(method, [entityClassName]),
-        )
-        .firstOrNull;
-    final hasStore = storeMethod != null;
-    final hasUpdate = methods.any(
-      (method) =>
-          method.name?.startsWith('update') == true &&
-          _returns(method, 'Future<void>') &&
-          method.formalParameters.length == 2 &&
-          method.formalParameters.last.type.getDisplayString() ==
-              entityClassName,
+              _accepts(method, [entityClassName])) ||
+          (method.name?.startsWith('update') == true &&
+              _returns(method, 'Future<void>') &&
+              method.formalParameters.length == 2 &&
+              method.formalParameters.last.type.getDisplayString() ==
+                  entityClassName) ||
+          (method.name?.startsWith('destroy') == true &&
+              _returns(method, 'Future<void>') &&
+              method.formalParameters.length == 1),
     );
-    final hasDestroy = methods.any(
-      (method) =>
-          method.name?.startsWith('destroy') == true &&
-          _returns(method, 'Future<void>') &&
-          method.formalParameters.length == 1,
-    );
+    if (handwrittenCrudMethods.isNotEmpty) {
+      _fail(
+        '$repositoryClassName 不允许手写标准 CRUD：'
+            '${handwrittenCrudMethods.map((method) => method.name).join(', ')}。',
+        element,
+        '删除这些方法，让 @FoxyRepository 统一生成 get/store/update/destroy。',
+      );
+    }
     final baseName = entityClassName.substring(
       0,
       entityClassName.length - 'Entity'.length,
     );
     final entityParameterName =
-        storeMethod?.formalParameters.single.name ??
         '${baseName[0].toLowerCase()}${baseName.substring(1)}';
 
     final source = await buildStep.readAsString(buildStep.inputId);
@@ -189,10 +184,6 @@ final class RepositoryReader {
     return RepositoryGenerationModel(
       entityClassName: entityClassName,
       entityParameterName: entityParameterName,
-      generateDestroy: !hasDestroy,
-      generateGet: !hasGet,
-      generateStore: !hasStore,
-      generateUpdate: !hasUpdate,
       keyFields: List.unmodifiable(keyFields),
       mixinName: mixinName,
       repositoryClassName: repositoryClassName,

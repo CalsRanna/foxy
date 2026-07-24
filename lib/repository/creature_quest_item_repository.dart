@@ -1,9 +1,14 @@
 import 'package:foxy/entity/creature_quest_item_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class CreatureQuestItemRepository with RepositoryMixin {
+part 'creature_quest_item_repository.g.dart';
+
+@FoxyRepository(CreatureQuestItemEntity)
+class CreatureQuestItemRepository
+    with RepositoryMixin, _CreatureQuestItemRepositoryMixin {
   static const _table = 'creature_questitem';
   static const primaryKeyColumns = {'CreatureEntry', 'Idx'};
 
@@ -31,13 +36,6 @@ class CreatureQuestItemRepository with RepositoryMixin {
       creatureEntry: creatureEntry,
       idx: await getNextIdx(creatureEntry),
     );
-  }
-
-  Future<void> destroyCreatureQuestItem(CreatureQuestItemKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefCreatureQuestItemEntity>> getBriefCreatureQuestItems(
@@ -82,56 +80,11 @@ class CreatureQuestItemRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureQuestItemEntity?> getCreatureQuestItem(
-    CreatureQuestItemKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureQuestItemEntity.fromJson(results.first.toMap());
-  }
-
   Future<int> getNextIdx(int creatureEntry) {
     return nextMaxPlusOne(
       _table,
       'Idx',
       where: {'CreatureEntry': creatureEntry},
     );
-  }
-
-  Future<void> storeCreatureQuestItem(CreatureQuestItemEntity questItem) async {
-    try {
-      await laconic.table(_table).insert([questItem.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('生物任务物品主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureQuestItem(
-    CreatureQuestItemKey originalKey,
-    CreatureQuestItemEntity questItem,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(questItem.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物任务物品主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestItemKey key) {
-    return builder
-        .where('CreatureEntry', key.creatureEntry)
-        .where('Idx', key.idx);
   }
 }

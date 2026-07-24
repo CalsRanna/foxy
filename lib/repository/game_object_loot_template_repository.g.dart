@@ -3,6 +3,84 @@
 part of 'game_object_loot_template_repository.dart';
 
 mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<void> destroyGameObjectLootTemplate(
+    GameObjectLootTemplateKey key,
+  ) async {
+    final deletedRows = await _whereKey(
+      laconic.table('gameobject_loot_template'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<GameObjectLootTemplateEntity?> getGameObjectLootTemplate(
+    GameObjectLootTemplateKey key,
+  ) async {
+    final results = await _whereKey(
+      laconic.table('gameobject_loot_template'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return GameObjectLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> storeGameObjectLootTemplate(
+    GameObjectLootTemplateEntity gameObjectLootTemplate,
+  ) async {
+    await _beforeStore(gameObjectLootTemplate);
+    final json = _prepareWriteJson(gameObjectLootTemplate.toJson());
+    try {
+      await laconic.table('gameobject_loot_template').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateGameObjectLootTemplate(
+    GameObjectLootTemplateKey originalKey,
+    GameObjectLootTemplateEntity gameObjectLootTemplate,
+  ) async {
+    await _beforeUpdate(originalKey, gameObjectLootTemplate);
+    final json = _prepareWriteJson(gameObjectLootTemplate.toJson());
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table('gameobject_loot_template'),
+        originalKey,
+      ).update(json);
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> _beforeStore(
+    GameObjectLootTemplateEntity gameObjectLootTemplate,
+  ) async {}
+
+  Future<void> _beforeUpdate(
+    GameObjectLootTemplateKey originalKey,
+    GameObjectLootTemplateEntity gameObjectLootTemplate,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
+  }
+
   QueryBuilder _whereKey(QueryBuilder builder, GameObjectLootTemplateKey key) {
     var query = builder;
     query = query.where('Entry', key.entry);

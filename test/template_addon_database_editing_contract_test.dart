@@ -29,7 +29,7 @@ void main() {
         'lib/repository/${stem}_repository.dart',
       ).readAsStringSync();
       expect(source, contains('originalKey'));
-      expect(source, contains('.update(addon.toJson())'));
+      expect(source, contains('.update(json)'));
       expect(source, contains('if (matchedRows == 0)'));
       expect(source, contains('if (deletedRows == 0)'));
       expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

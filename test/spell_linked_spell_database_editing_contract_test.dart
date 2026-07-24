@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('SpellLinkedSpellKey 覆盖物理 UNIQUE 三列并实现值相等', () {
@@ -33,11 +34,11 @@ void main() {
   });
 
   test('Repository 使用完整旧 UNIQUE key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_linked_spell_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('SpellLinkedSpellKey originalKey'));
-    expect(source, contains('.update(data.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains("where('spell_trigger', key.spellTrigger)"));
     expect(source, contains("where('spell_effect', key.spellEffect)"));
     expect(source, contains("where('type', key.type)"));
@@ -48,9 +49,9 @@ void main() {
   });
 
   test('内嵌编辑器使用 Brief、editingKey、分页和统一 persist', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_linked_spell_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell/spell_linked_spell_collection_editor_view_model.dart',
     ).readAsStringSync();

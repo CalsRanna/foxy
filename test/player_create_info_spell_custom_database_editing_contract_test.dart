@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('自定义法术 Key 和 Brief 覆盖 racemask + classmask + Spell', () {
@@ -27,9 +28,9 @@ void main() {
   });
 
   test('Repository 与编辑器使用旧 Key、完整 candidate、分页 Brief', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/player_create_info_spell_custom_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/player_create_info/player_create_info_spell_custom_collection_editor_view_model.dart',
     ).readAsStringSync();
@@ -37,7 +38,7 @@ void main() {
       'lib/page/player_create_info/player_create_info_spell_custom_view.dart',
     ).readAsStringSync();
     expect(repository, contains('PlayerCreateInfoSpellCustomKey originalKey'));
-    expect(repository, contains('.update(entity.toJson())'));
+    expect(repository, contains('.update(json)'));
     expect(repository, contains('if (matchedRows == 0)'));
     expect(repository, contains('if (deletedRows == 0)'));
     expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

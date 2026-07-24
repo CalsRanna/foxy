@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -51,20 +51,6 @@ class LightRepository with RepositoryMixin, _LightRepositoryMixin {
   Future<List<LightEntity>> getLights() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => LightEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<void> storeLight(LightEntity entity) async {
-    if (entity.id <= 0) {
-      throw StateError('光照 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([entity.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('光照 ${entity.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, LightFilter? filter) {

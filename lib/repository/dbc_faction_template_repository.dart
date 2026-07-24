@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -74,22 +74,6 @@ class DbcFactionTemplateRepository
     return results
         .map((row) => DbcFactionTemplateEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<void> storeDbcFactionTemplate(
-    DbcFactionTemplateEntity factionTemplate,
-  ) async {
-    if (factionTemplate.id <= 0) {
-      throw StateError('阵营模板 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([factionTemplate.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('阵营模板 ${factionTemplate.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

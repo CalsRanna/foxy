@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -57,20 +57,6 @@ class ItemDisplayInfoRepository
     return results
         .map((e) => ItemDisplayInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeItemDisplayInfo(ItemDisplayInfoEntity info) async {
-    if (info.id <= 0) {
-      throw StateError('物品显示信息 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([info.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('物品显示信息 ${info.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

@@ -10,6 +10,8 @@ final class RepositoryEmitter {
     _emitGet(buffer, model);
     _emitStore(buffer, model);
     _emitUpdate(buffer, model);
+    _emitWriteHooks(buffer, model);
+    _emitPrepareWriteJson(buffer);
     buffer.writeln(
       '  QueryBuilder _whereKey(QueryBuilder builder, ${model.keyType} key) {',
     );
@@ -34,7 +36,6 @@ final class RepositoryEmitter {
   }
 
   void _emitDestroy(StringBuffer buffer, RepositoryGenerationModel model) {
-    if (!model.generateDestroy) return;
     buffer
       ..writeln(
         '  Future<void> destroy${model.baseName}(${model.keyType} key) async {',
@@ -50,7 +51,6 @@ final class RepositoryEmitter {
   }
 
   void _emitGet(StringBuffer buffer, RepositoryGenerationModel model) {
-    if (!model.generateGet) return;
     buffer
       ..writeln(
         '  Future<${model.entityClassName}?> get${model.baseName}(${model.keyType} key) async {',
@@ -67,15 +67,25 @@ final class RepositoryEmitter {
   }
 
   void _emitStore(StringBuffer buffer, RepositoryGenerationModel model) {
-    if (!model.generateStore) return;
     final parameter = model.entityParameterName;
+    buffer.writeln(
+      '  Future<void> store${model.baseName}(${model.entityClassName} $parameter) async {',
+    );
+    if (model.keyFields.length == 1 &&
+        model.keyFields.single.dartType == 'int') {
+      buffer
+        ..writeln(
+          '    if ($parameter.${model.keyFields.single.dartName} <= 0) {',
+        )
+        ..writeln("      throw StateError('主键必须在新建时显式分配');")
+        ..writeln('    }');
+    }
     buffer
-      ..writeln(
-        '  Future<void> store${model.baseName}(${model.entityClassName} $parameter) async {',
-      )
+      ..writeln('    await _beforeStore($parameter);')
+      ..writeln('    final json = _prepareWriteJson($parameter.toJson());')
       ..writeln('    try {')
       ..writeln(
-        "      await laconic.table('${_escape(model.table)}').insert([$parameter.toJson()]);",
+        "      await laconic.table('${_escape(model.table)}').insert([json]);",
       )
       ..writeln('    } catch (error) {')
       ..writeln('      if (MysqlErrorUtil.isDuplicateEntry(error)) {')
@@ -88,17 +98,18 @@ final class RepositoryEmitter {
   }
 
   void _emitUpdate(StringBuffer buffer, RepositoryGenerationModel model) {
-    if (!model.generateUpdate) return;
     final parameter = model.entityParameterName;
     buffer
       ..writeln(
         '  Future<void> update${model.baseName}(${model.keyType} originalKey, ${model.entityClassName} $parameter) async {',
       )
+      ..writeln('    await _beforeUpdate(originalKey, $parameter);')
+      ..writeln('    final json = _prepareWriteJson($parameter.toJson());')
       ..writeln('    try {')
       ..writeln('      final matchedRows = await _whereKey(')
       ..writeln("        laconic.table('${_escape(model.table)}'),")
       ..writeln('        originalKey,')
-      ..writeln('      ).update($parameter.toJson());')
+      ..writeln('      ).update(json);')
       ..writeln('      if (matchedRows == 0) {')
       ..writeln("        throw StateError('原记录不存在，可能已被其他操作修改或删除');")
       ..writeln('      }')
@@ -108,6 +119,36 @@ final class RepositoryEmitter {
       ..writeln('      }')
       ..writeln('      rethrow;')
       ..writeln('    }')
+      ..writeln('  }')
+      ..writeln();
+  }
+
+  void _emitWriteHooks(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parameter = model.entityParameterName;
+    buffer
+      ..writeln(
+        '  Future<void> _beforeStore(${model.entityClassName} $parameter) async {}',
+      )
+      ..writeln()
+      ..writeln(
+        '  Future<void> _beforeUpdate(${model.keyType} originalKey, ${model.entityClassName} $parameter) async {}',
+      )
+      ..writeln();
+  }
+
+  void _emitPrepareWriteJson(StringBuffer buffer) {
+    buffer
+      ..writeln(
+        '  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {',
+      )
+      ..writeln('    for (final key in json.keys.toList()) {')
+      ..writeln(
+        "      if (const {'index', 'rank'}.contains(key.toLowerCase())) {",
+      )
+      ..writeln("        json['`\$key`'] = json.remove(key);")
+      ..writeln('      }')
+      ..writeln('    }')
+      ..writeln('    return json;')
       ..writeln('  }')
       ..writeln();
   }

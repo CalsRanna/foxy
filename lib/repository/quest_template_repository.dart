@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -89,20 +89,6 @@ class QuestTemplateRepository
   Future<List<QuestTemplateEntity>> getQuestTemplates() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeQuestTemplate(QuestTemplateEntity template) async {
-    if (template.id <= 0) {
-      throw StateError('任务模板 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([template.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('任务模板 ${template.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, QuestTemplateFilter? filter) {

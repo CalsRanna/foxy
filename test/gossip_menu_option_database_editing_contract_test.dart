@@ -467,12 +467,8 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final baseRepository = File(
-      'lib/repository/gossip_menu_option_repository.dart',
-    ).readAsStringSync();
-    final localeRepository = File(
-      'lib/repository/gossip_menu_option_locale_repository.dart',
-    ).readAsStringSync();
+    final baseRepository = readLocalDartLibrarySource('lib/repository/gossip_menu_option_repository.dart');
+    final localeRepository = readLocalDartLibrarySource('lib/repository/gossip_menu_option_locale_repository.dart');
     final viewModel = File(
       'lib/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart',
     ).readAsStringSync();

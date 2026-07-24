@@ -34,12 +34,11 @@ void main() {
     );
     expect(source, contains('Future<int> copyDbcItem('));
     expect(source, contains('Future<void> storeDbcItem('));
-    expect(source, contains('if (item.id <= 0)'));
-    expect(source, contains('insert([item.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeDbcItem')));
     expect(source, isNot(contains('saveDbcItem(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(item.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

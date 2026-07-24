@@ -1,9 +1,14 @@
 import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class PageTextLocaleRepository with RepositoryMixin {
+part 'page_text_locale_repository.g.dart';
+
+@FoxyRepository(PageTextLocaleEntity)
+class PageTextLocaleRepository
+    with RepositoryMixin, _PageTextLocaleRepositoryMixin {
   static const _table = 'page_text_locale';
   static const primaryKeyColumns = {'ID', 'locale'};
 
@@ -36,13 +41,6 @@ class PageTextLocaleRepository with RepositoryMixin {
     return PageTextLocaleEntity(id: id, locale: locale);
   }
 
-  Future<void> destroyPageTextLocale(PageTextLocaleKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原本地化记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefPageTextLocaleEntity>> getBriefPageTextLocales({
     required int id,
     int page = 1,
@@ -58,46 +56,5 @@ class PageTextLocaleRepository with RepositoryMixin {
     return results
         .map((result) => BriefPageTextLocaleEntity.fromJson(result.toMap()))
         .toList();
-  }
-
-  Future<PageTextLocaleEntity?> getPageTextLocale(PageTextLocaleKey key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PageTextLocaleEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storePageTextLocale(PageTextLocaleEntity locale) async {
-    try {
-      await laconic.table(_table).insert([locale.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('页面文本本地化主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updatePageTextLocale(
-    PageTextLocaleKey originalKey,
-    PageTextLocaleEntity locale,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(locale.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原本地化记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的页面文本本地化主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, PageTextLocaleKey key) {
-    return builder.where('ID', key.id).where('locale', key.locale);
   }
 }

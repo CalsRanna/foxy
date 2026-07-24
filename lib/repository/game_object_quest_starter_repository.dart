@@ -1,9 +1,14 @@
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class GameObjectQuestStarterRepository with RepositoryMixin {
+part 'game_object_quest_starter_repository.g.dart';
+
+@FoxyRepository(GameObjectQuestStarterEntity)
+class GameObjectQuestStarterRepository
+    with RepositoryMixin, _GameObjectQuestStarterRepositoryMixin {
   static const _table = 'gameobject_queststarter';
   static const primaryKeyColumns = {'id', 'quest'};
 
@@ -15,15 +20,6 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
     int questId,
   ) async {
     return GameObjectQuestStarterEntity(quest: questId);
-  }
-
-  Future<void> destroyGameObjectQuestStarter(
-    GameObjectQuestStarterKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGameObjectQuestStarterEntity>>
@@ -54,50 +50,5 @@ class GameObjectQuestStarterRepository with RepositoryMixin {
     return results
         .map((e) => BriefGameObjectQuestStarterEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
-    GameObjectQuestStarterKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GameObjectQuestStarterEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeGameObjectQuestStarter(
-    GameObjectQuestStarterEntity model,
-  ) async {
-    try {
-      await laconic.table(_table).insert([model.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('游戏对象任务开始关系主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGameObjectQuestStarter(
-    GameObjectQuestStarterKey originalKey,
-    GameObjectQuestStarterEntity model,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(model.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的游戏对象任务开始关系主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectQuestStarterKey key) {
-    return builder.where('id', key.id).where('quest', key.quest);
   }
 }

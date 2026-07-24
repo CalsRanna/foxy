@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/item_template_locale_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('Key 与 Brief 使用 ID + locale 完整定位', () {
@@ -26,12 +27,12 @@ void main() {
   });
 
   test('Repository writes use original typed key and complete candidate', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/item_template_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("{'ID', 'locale'}"));
     expect(source, contains('ItemTemplateLocaleKey originalKey'));
-    expect(source, contains(').update(model.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

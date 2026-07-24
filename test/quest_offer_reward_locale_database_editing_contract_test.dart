@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('Key 与 Brief 完整覆盖 ID + locale', () {
@@ -32,12 +33,12 @@ void main() {
   });
 
   test('Repository uses original key, full candidate, and affected rows', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/quest_offer_reward_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("{'ID', 'locale'}"));
     expect(source, contains('QuestOfferRewardLocaleKey originalKey'));
-    expect(source, contains(').update(model.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

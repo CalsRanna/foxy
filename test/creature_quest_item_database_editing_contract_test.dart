@@ -5,6 +5,7 @@ import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('CreatureQuestItemKey 和 Brief 完整覆盖两列主键', () {
@@ -78,9 +79,9 @@ void main() {
     final entity = File(
       'lib/entity/creature_quest_item_entity.dart',
     ).readAsStringSync();
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/creature_quest_item_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/creature_template/creature_quest_item_collection_editor_view_model.dart',
     ).readAsStringSync();

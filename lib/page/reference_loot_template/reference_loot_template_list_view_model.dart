@@ -70,7 +70,7 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _repository.destroyLootTemplate(key);
+      await _repository.destroyReferenceLootTemplate(key);
       _logActivity(ActivityActionType.delete, key);
       await _refresh();
     } catch (error) {

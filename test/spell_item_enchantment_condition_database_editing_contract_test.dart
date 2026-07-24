@@ -18,7 +18,7 @@ void main() {
       contains('Future<void> storeSpellItemEnchantmentCondition('),
     );
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(entity.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

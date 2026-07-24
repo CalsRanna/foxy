@@ -27,14 +27,13 @@ void main() {
     expect(source, contains('Future<AreaTableEntity> createAreaTable()'));
     expect(source, contains("id: await nextMaxPlusOne(_table, 'ID')"));
     expect(source, contains('Future<void> storeAreaTable('));
-    expect(source, contains('if (area.id <= 0)'));
-    expect(source, contains('insert([area.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeAreaTable')));
     expect(source, isNot(contains('insertAndGetId')));
     expect(source, isNot(contains('saveAreaTable(')));
 
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(area.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, isNot(contains("remove('ID')")));
 

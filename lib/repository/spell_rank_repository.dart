@@ -1,9 +1,13 @@
 import 'package:foxy/entity/spell_rank_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellRankRepository with RepositoryMixin {
+part 'spell_rank_repository.g.dart';
+
+@FoxyRepository(SpellRankEntity)
+class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
   static const _table = 'spell_ranks';
 
   Future<void> copySpellRank(SpellRankKey key) async {
@@ -25,13 +29,6 @@ class SpellRankRepository with RepositoryMixin {
         where: {'first_spell_id': firstSpellId},
       ),
     );
-  }
-
-  Future<void> destroySpellRank(SpellRankKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术等级记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefSpellRankEntity>> getBriefSpellRanks(
@@ -70,43 +67,6 @@ class SpellRankRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellRankEntity?> getSpellRank(SpellRankKey key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellRankEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeSpellRank(SpellRankEntity data) async {
-    try {
-      await laconic.table(_table).insert([_writeJson(data)]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同起始法术与等级的记录已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateSpellRank(
-    SpellRankKey originalKey,
-    SpellRankEntity data,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(_writeJson(data));
-      if (matchedRows == 0) {
-        throw StateError('原法术等级记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的起始法术与等级组合已存在');
-      }
-      rethrow;
-    }
-  }
-
   Future<int?> _getFirstSpellId(int spellId) async {
     final results = await laconic
         .table(_table)
@@ -120,17 +80,5 @@ class SpellRankRepository with RepositoryMixin {
     if (value is num) return value.toInt() == 0 ? null : value.toInt();
     final parsed = int.tryParse('$value');
     return parsed == 0 ? null : parsed;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SpellRankKey key) {
-    return builder
-        .where('first_spell_id', key.firstSpellId)
-        .where('`rank`', key.rank);
-  }
-
-  Map<String, dynamic> _writeJson(SpellRankEntity data) {
-    final json = data.toJson();
-    json['`rank`'] = json.remove('rank');
-    return json;
   }
 }

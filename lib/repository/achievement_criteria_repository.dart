@@ -1,7 +1,7 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -24,12 +24,12 @@ class AchievementCriteriaRepository
   String get dbcLocaleTableName => _table;
 
   Future<int> copyAchievementCriterion(int key) async {
-    final source = await getAchievementCriterion(key);
+    final source = await getAchievementCriteria(key);
     if (source == null) {
       throw StateError('原成就条件不存在，可能已被其他操作修改或删除');
     }
     final copied = source.copyWith(id: await _getNextId());
-    await storeAchievementCriterion(copied);
+    await storeAchievementCriteria(copied);
     return copied.id;
   }
 
@@ -40,29 +40,16 @@ class AchievementCriteriaRepository
     return AchievementCriteriaEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievementCriterion(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原成就条件不存在，可能已被其他操作修改或删除');
-    }
-  }
-
-  Future<List<AchievementCriteriaEntity>> getAchievementCriteria() async {
-    final rows = await laconic.table(_table).orderBy('ID').get();
-    return rows
-        .map((row) => AchievementCriteriaEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
   Future<List<DbcLocaleFieldValue>> getAchievementCriteriaLocales(
     int id,
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<AchievementCriteriaEntity?> getAchievementCriterion(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (rows.isEmpty) return null;
-    return AchievementCriteriaEntity.fromJson(rows.first.toMap());
+  Future<List<AchievementCriteriaEntity>> getAllAchievementCriteria() async {
+    final rows = await laconic.table(_table).orderBy('ID').get();
+    return rows
+        .map((row) => AchievementCriteriaEntity.fromJson(row.toMap()))
+        .toList();
   }
 
   Future<List<BriefAchievementCriteriaEntity>> getBriefAchievementCriteria({
@@ -86,42 +73,6 @@ class AchievementCriteriaRepository
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-
-  Future<void> storeAchievementCriterion(
-    AchievementCriteriaEntity criterion,
-  ) async {
-    if (criterion.id <= 0) {
-      throw StateError('成就条件 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([criterion.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('成就条件 ${criterion.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateAchievementCriterion(
-    int originalKey,
-    AchievementCriteriaEntity criterion,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(criterion.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原成就条件不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的成就条件 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,

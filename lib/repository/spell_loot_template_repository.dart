@@ -1,9 +1,14 @@
 import 'package:foxy/entity/spell_loot_template_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellLootTemplateRepository with RepositoryMixin {
+part 'spell_loot_template_repository.g.dart';
+
+@FoxyRepository(SpellLootTemplateEntity)
+class SpellLootTemplateRepository
+    with RepositoryMixin, _SpellLootTemplateRepositoryMixin {
   static const _table = 'spell_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -17,13 +22,6 @@ class SpellLootTemplateRepository with RepositoryMixin {
 
   Future<SpellLootTemplateEntity> createSpellLootTemplate(int entry) async {
     return SpellLootTemplateEntity(entry: entry);
-  }
-
-  Future<void> destroySpellLootTemplate(SpellLootTemplateKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefSpellLootTemplateEntity>> getBriefSpellLootTemplates(
@@ -69,48 +67,5 @@ class SpellLootTemplateRepository with RepositoryMixin {
     return results
         .map((e) => BriefSpellLootTemplateEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<SpellLootTemplateEntity?> getSpellLootTemplate(
-    SpellLootTemplateKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellLootTemplateEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeSpellLootTemplate(SpellLootTemplateEntity data) async {
-    try {
-      await laconic.table(_table).insert([data.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('法术掉落模板主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateSpellLootTemplate(
-    SpellLootTemplateKey originalKey,
-    SpellLootTemplateEntity data,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(data.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术掉落模板主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SpellLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('Key 与 Brief 完整覆盖 ID + Locale', () {
@@ -24,12 +25,12 @@ void main() {
   });
 
   test('Repository uses original key, all 18 columns, and affected rows', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/npc_text_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("{'ID', 'Locale'}"));
     expect(source, contains('NpcTextLocaleKey originalKey'));
-    expect(source, contains(').update(model.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

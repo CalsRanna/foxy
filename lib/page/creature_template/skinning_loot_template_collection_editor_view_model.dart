@@ -84,7 +84,7 @@ class SkinningLootTemplateCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.getLootTemplate(key);
+      final candidate = await _repository.getSkinningLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -114,9 +114,9 @@ class SkinningLootTemplateCollectionEditorViewModel
     errorMessage.value = null;
     try {
       if (originalKey == null) {
-        await _repository.storeLootTemplate(candidate);
+        await _repository.storeSkinningLootTemplate(candidate);
       } else {
-        await _repository.updateLootTemplate(originalKey, candidate);
+        await _repository.updateSkinningLootTemplate(originalKey, candidate);
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -139,7 +139,7 @@ class SkinningLootTemplateCollectionEditorViewModel
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _repository.destroyLootTemplate(key);
+      await _repository.destroySkinningLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
     } catch (error) {

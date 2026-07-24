@@ -90,7 +90,7 @@ void main() {
     expect(source, contains('1'));
     expect(source, contains('2'));
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(questFactionReward.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
