@@ -4,6 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

@@ -144,3 +144,39 @@ final class NpcTrainerKey {
         ')';
   }
 }
+
+final class BriefNpcTrainerEntity {
+  final int trainerId;
+  final int spellId;
+  final int moneyCost;
+  final int reqSkillLine;
+  final int reqLevel;
+  final String spellName;
+  final String spellSubtext;
+
+  const BriefNpcTrainerEntity({
+    this.trainerId = 0,
+    this.spellId = 0,
+    this.moneyCost = 0,
+    this.reqSkillLine = 0,
+    this.reqLevel = 0,
+    this.spellName = '',
+    this.spellSubtext = '',
+  });
+
+  factory BriefNpcTrainerEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTrainerEntity(
+      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
+      spellId: (json['SpellId'] as num?)?.toInt() ?? 0,
+      moneyCost: (json['MoneyCost'] as num?)?.toInt() ?? 0,
+      reqSkillLine: (json['ReqSkillLine'] as num?)?.toInt() ?? 0,
+      reqLevel: (json['ReqLevel'] as num?)?.toInt() ?? 0,
+      spellName: json['spellName']?.toString() ?? '',
+      spellSubtext: json['spellSubtext']?.toString() ?? '',
+    );
+  }
+
+  NpcTrainerKey get key {
+    return NpcTrainerKey(trainerId: trainerId, spellId: spellId);
+  }
+}

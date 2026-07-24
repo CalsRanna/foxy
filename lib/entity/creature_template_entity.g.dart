@@ -431,3 +431,37 @@ mixin _CreatureTemplateEntityMixin {
         ')';
   }
 }
+
+final class BriefCreatureTemplateEntity {
+  final int entry;
+  final int maxLevel;
+  final int minLevel;
+  final String name;
+  final String subName;
+  final String localeName;
+  final String localeSubName;
+
+  const BriefCreatureTemplateEntity({
+    this.entry = 0,
+    this.maxLevel = 1,
+    this.minLevel = 1,
+    this.name = '',
+    this.subName = '',
+    this.localeName = '',
+    this.localeSubName = '',
+  });
+
+  factory BriefCreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureTemplateEntity(
+      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      maxLevel: (json['maxlevel'] as num?)?.toInt() ?? 1,
+      minLevel: (json['minlevel'] as num?)?.toInt() ?? 1,
+      name: json['name']?.toString() ?? '',
+      subName: json['subname']?.toString() ?? '',
+      localeName: json['localeName']?.toString() ?? '',
+      localeSubName: json['localeSubName']?.toString() ?? '',
+    );
+  }
+
+  int get key => entry;
+}

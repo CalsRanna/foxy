@@ -1,5 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_page_text_entity.dart';
+import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';

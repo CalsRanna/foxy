@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -55,18 +54,18 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       'cet.ItemID2',
       'cet.ItemID3',
       'cet.VerifiedBuild',
-      'it1.name as name_1',
-      if (localeEnabled) 'itl1.Name as localeName_1',
-      'it1.Quality as Quality_1',
-      'didi1.InventoryIcon0 as Icon_1',
-      'it2.name as name_2',
-      if (localeEnabled) 'itl2.Name as localeName_2',
-      'it2.Quality as Quality_2',
-      'didi2.InventoryIcon0 as Icon_2',
-      'it3.name as name_3',
-      if (localeEnabled) 'itl3.Name as localeName_3',
-      'it3.Quality as Quality_3',
-      'didi3.InventoryIcon0 as Icon_3',
+      'it1.name AS name1',
+      if (localeEnabled) 'itl1.Name AS localeName1',
+      'it1.Quality AS quality1',
+      'didi1.InventoryIcon0 AS icon1',
+      'it2.name AS name2',
+      if (localeEnabled) 'itl2.Name AS localeName2',
+      'it2.Quality AS quality2',
+      'didi2.InventoryIcon0 AS icon2',
+      'it3.name AS name3',
+      if (localeEnabled) 'itl3.Name AS localeName3',
+      'it3.Quality AS quality3',
+      'didi3.InventoryIcon0 AS icon3',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

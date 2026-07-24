@@ -80,3 +80,30 @@ final class CreatureQuestStarterKey {
         ')';
   }
 }
+
+final class BriefCreatureQuestStarterEntity {
+  final int id;
+  final int quest;
+  final String name;
+  final String localeName;
+
+  const BriefCreatureQuestStarterEntity({
+    this.id = 0,
+    this.quest = 0,
+    this.name = '',
+    this.localeName = '',
+  });
+
+  factory BriefCreatureQuestStarterEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureQuestStarterEntity(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      quest: (json['quest'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
+      localeName: json['localeName']?.toString() ?? '',
+    );
+  }
+
+  CreatureQuestStarterKey get key {
+    return CreatureQuestStarterKey(id: id, quest: quest);
+  }
+}

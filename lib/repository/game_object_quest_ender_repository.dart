@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -33,7 +32,7 @@ class GameObjectQuestEnderRepository with RepositoryMixin {
       'goe.id',
       'goe.quest',
       'got.name',
-      if (localeEnabled) 'gotl.name AS Name',
+      if (localeEnabled) 'gotl.name AS localeName',
     ];
     var builder = laconic.table('$_table AS goe');
     builder = builder.select(fields);

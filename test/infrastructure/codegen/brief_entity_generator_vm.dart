@@ -68,4 +68,69 @@ void main() {
     );
     expect(logContains(logs, '缺少完整物理身份'), isTrue);
   });
+
+  test('class 上的具名 FoxyBriefField 只生成 Brief 投影字段', () async {
+    final source = standardEntitySource.replaceFirst(
+      '@FoxyBriefEntity()',
+      "@FoxyBriefEntity()\n"
+          "@FoxyBriefField.boolean('active')\n"
+          "@FoxyBriefField.decimal('score')\n"
+          "@FoxyBriefField.text('localeName')\n"
+          "@FoxyBriefField.integer('quality', defaultValue: -1)",
+    );
+
+    await testBuilder(
+      foxyEntityBuilder(BuilderOptions.empty),
+      sourceAsset(standardEntityAsset, source),
+      outputs: {
+        'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part':
+            decodedMatches(
+              allOf(<Matcher>[
+                contains('final bool active;'),
+                contains('final double score;'),
+                contains('final String localeName;'),
+                contains('final int quality;'),
+                contains('this.active = false'),
+                contains('this.score = 0.0'),
+                contains("this.localeName = ''"),
+                contains('this.quality = -1'),
+                contains(
+                  "active: json['active'] == null\n"
+                  "          ? false\n"
+                  "          : (json['active'] as num).toInt() == 1",
+                ),
+                contains("(json['score'] as num?)?.toDouble() ?? 0.0"),
+                contains("json['localeName']?.toString() ?? ''"),
+                contains("(json['quality'] as num?)?.toInt() ?? -1"),
+                predicate<String>((source) {
+                  final fullSource = source.substring(
+                    0,
+                    source.indexOf('final class BriefCodegenSampleEntity'),
+                  );
+                  return !fullSource.contains('active') &&
+                      !fullSource.contains('score') &&
+                      !fullSource.contains('localeName') &&
+                      !fullSource.contains('quality');
+                }, '投影字段不进入 Full Mixin'),
+              ]),
+            ),
+      },
+    );
+  });
+
+  test('Brief 投影字段与 Full 字段重名时拒绝生成', () async {
+    final source = standardEntitySource.replaceFirst(
+      '@FoxyBriefEntity()',
+      "@FoxyBriefEntity()\n@FoxyBriefField.text('name')",
+    );
+    final logs = <String>[];
+
+    await testBuilder(
+      foxyEntityBuilder(BuilderOptions.empty),
+      sourceAsset(standardEntityAsset, source),
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(logContains(logs, '重复声明 Brief 字段 name'), isTrue);
+  });
 }

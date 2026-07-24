@@ -146,3 +146,56 @@ final class MillingLootTemplateKey {
         ')';
   }
 }
+
+final class BriefMillingLootTemplateEntity {
+  final int entry;
+  final int item;
+  final int reference;
+  final double chance;
+  final bool questRequired;
+  final int groupId;
+  final int minCount;
+  final int maxCount;
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+  final String itemIcon;
+
+  const BriefMillingLootTemplateEntity({
+    this.entry = 0,
+    this.item = 0,
+    this.reference = 0,
+    this.chance = 100.0,
+    this.questRequired = false,
+    this.groupId = 0,
+    this.minCount = 1,
+    this.maxCount = 1,
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
+  });
+
+  factory BriefMillingLootTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefMillingLootTemplateEntity(
+      entry: (json['Entry'] as num?)?.toInt() ?? 0,
+      item: (json['Item'] as num?)?.toInt() ?? 0,
+      reference: (json['Reference'] as num?)?.toInt() ?? 0,
+      chance: (json['Chance'] as num?)?.toDouble() ?? 100.0,
+      questRequired: json['QuestRequired'] == null
+          ? false
+          : (json['QuestRequired'] as num).toInt() == 1,
+      groupId: (json['GroupId'] as num?)?.toInt() ?? 0,
+      minCount: (json['MinCount'] as num?)?.toInt() ?? 1,
+      maxCount: (json['MaxCount'] as num?)?.toInt() ?? 1,
+      itemName: json['itemName']?.toString() ?? '',
+      itemLocaleName: json['itemLocaleName']?.toString() ?? '',
+      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemIcon: json['itemIcon']?.toString() ?? '',
+    );
+  }
+
+  MillingLootTemplateKey get key {
+    return MillingLootTemplateKey(entry: entry, item: item);
+  }
+}

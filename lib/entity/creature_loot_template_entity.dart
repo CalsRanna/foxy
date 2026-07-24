@@ -4,32 +4,45 @@ part 'creature_loot_template_entity.g.dart';
 
 /// 掉落模板 — 对应 *_loot_template 表
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('itemName')
+@FoxyBriefField.text('itemLocaleName')
+@FoxyBriefField.integer('itemQuality')
+@FoxyBriefField.text('itemIcon')
 @FoxyFullEntity(table: 'creature_loot_template')
 class CreatureLootTemplateEntity with _CreatureLootTemplateEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('Entry', key: true)
   final int entry;
 
+  @FoxyBriefField()
   @FoxyFullField('Item', key: true)
   final int item;
 
+  @FoxyBriefField()
   @FoxyFullField('Reference', key: true)
   final int reference;
 
+  @FoxyBriefField()
   @FoxyFullField('Chance')
   final double chance;
 
+  @FoxyBriefField()
   @FoxyFullField('QuestRequired')
   final bool questRequired;
 
   @FoxyFullField('LootMode')
   final int lootMode;
 
+  @FoxyBriefField()
   @FoxyFullField('GroupId', key: true)
   final int groupId;
 
+  @FoxyBriefField()
   @FoxyFullField('MinCount')
   final int minCount;
 
+  @FoxyBriefField()
   @FoxyFullField('MaxCount')
   final int maxCount;
 
@@ -51,4 +64,10 @@ class CreatureLootTemplateEntity with _CreatureLootTemplateEntityMixin {
 
   factory CreatureLootTemplateEntity.fromJson(Map<String, dynamic> json) =>
       _CreatureLootTemplateEntityMixin.fromJson(json);
+}
+
+extension BriefCreatureLootTemplateEntityDisplay
+    on BriefCreatureLootTemplateEntity {
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 }

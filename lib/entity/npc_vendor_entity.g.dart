@@ -134,3 +134,45 @@ final class NpcVendorKey {
         ')';
   }
 }
+
+final class BriefNpcVendorEntity {
+  final int entry;
+  final int slot;
+  final int item;
+  final int maxcount;
+  final int incrtime;
+  final int extendedCost;
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+
+  const BriefNpcVendorEntity({
+    this.entry = 0,
+    this.slot = 0,
+    this.item = 0,
+    this.maxcount = 0,
+    this.incrtime = 0,
+    this.extendedCost = 0,
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+  });
+
+  factory BriefNpcVendorEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcVendorEntity(
+      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      slot: (json['slot'] as num?)?.toInt() ?? 0,
+      item: (json['item'] as num?)?.toInt() ?? 0,
+      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
+      incrtime: (json['incrtime'] as num?)?.toInt() ?? 0,
+      extendedCost: (json['ExtendedCost'] as num?)?.toInt() ?? 0,
+      itemName: json['itemName']?.toString() ?? '',
+      itemLocaleName: json['itemLocaleName']?.toString() ?? '',
+      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  NpcVendorKey get key {
+    return NpcVendorKey(entry: entry, item: item, extendedCost: extendedCost);
+  }
+}

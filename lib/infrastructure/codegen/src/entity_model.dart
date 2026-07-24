@@ -8,6 +8,7 @@ final class EntityGenerationModel {
   final String mixinName;
   final String table;
   final List<EntityFieldModel> fields;
+  final List<EntityFieldModel> briefProjectionFields;
 
   const EntityGenerationModel({
     required this.className,
@@ -17,6 +18,7 @@ final class EntityGenerationModel {
     required this.mixinName,
     required this.table,
     required this.fields,
+    required this.briefProjectionFields,
   });
 
   String get baseName => className.endsWith('Entity')
@@ -32,8 +34,10 @@ final class EntityGenerationModel {
   List<EntityFieldModel> get keyFields =>
       fields.where((field) => field.key).toList(growable: false);
 
-  List<EntityFieldModel> get briefFields =>
-      fields.where((field) => field.includeInBrief).toList(growable: false);
+  List<EntityFieldModel> get briefFields => [
+    ...fields.where((field) => field.includeInBrief),
+    ...briefProjectionFields,
+  ];
 
   List<EntityFieldModel> get filterFields =>
       fields.where((field) => field.filter != null).toList(growable: false);

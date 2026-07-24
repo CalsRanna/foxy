@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_skill_line_entity.dart';
+import 'package:foxy/entity/skill_line_entity.dart';
 
 void main() {
   test('Brief key 返回完整物理 ID 标量', () {

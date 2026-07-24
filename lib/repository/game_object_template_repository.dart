@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/game_object_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -67,7 +66,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
       'gt.name',
       'gt.type',
       'gt.size',
-      if (localeEnabled) 'gtl.name AS Name',
+      if (localeEnabled) 'gtl.name AS localeName',
     ];
     builder = builder.select(fields);
     if (localeEnabled) {

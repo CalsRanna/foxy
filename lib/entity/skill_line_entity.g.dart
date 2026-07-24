@@ -456,3 +456,25 @@ mixin _SkillLineEntityMixin {
         ')';
   }
 }
+
+final class BriefSkillLineEntity {
+  final int id;
+  final int categoryId;
+  final String displayNameZhCN;
+
+  const BriefSkillLineEntity({
+    this.id = 0,
+    this.categoryId = 0,
+    this.displayNameZhCN = '',
+  });
+
+  factory BriefSkillLineEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSkillLineEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
+      displayNameZhCN: json['displayNameZhCN']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

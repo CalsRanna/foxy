@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -46,8 +45,8 @@ class CurrencyTypeRepository with RepositoryMixin {
       'ct.ItemID',
       'ct.CategoryID',
       'ct.BitIndex',
-      'it.name',
-      if (joinLocale) 'itl.Name AS localeName',
+      'it.name AS itemName',
+      if (joinLocale) 'itl.Name AS localeItemName',
     ]);
     builder = builder.leftJoin(
       'item_template AS it',

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -57,8 +56,8 @@ class DbcFactionTemplateRepository with RepositoryMixin {
       'dft.FactionGroup',
       'dft.FriendGroup',
       'dft.EnemyGroup',
-      'df.Name_lang_zhCN AS FactionNameZhCN',
-      'df.Name_lang_enUS AS FactionNameEnUS',
+      'df.Name_lang_zhCN AS factionNameZhCN',
+      'df.Name_lang_enUS AS factionNameEnUS',
     ]);
     builder = _joinFaction(builder);
     builder = _applyFilter(builder, filter);

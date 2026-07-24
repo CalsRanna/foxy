@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -76,7 +75,10 @@ class CreatureTemplateRepository with RepositoryMixin {
       'ct.subname',
       'ct.minlevel',
       'ct.maxlevel',
-      if (localeEnabled) ...['ctl.Name', 'ctl.Title'],
+      if (localeEnabled) ...[
+        'ctl.Name AS localeName',
+        'ctl.Title AS localeSubName',
+      ],
     ];
     builder = builder.select(fields);
     if (localeEnabled) {

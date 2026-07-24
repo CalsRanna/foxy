@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

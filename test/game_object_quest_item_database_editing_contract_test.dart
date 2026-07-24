@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_collection_editor_view_model.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
@@ -161,7 +160,11 @@ void main() {
       'lib/page/game_object/game_object_quest_item_view.dart',
     ).readAsStringSync();
 
-    expect(entity, isNot(contains('itemName')));
+    expect(
+      entity,
+      isNot(contains('final String itemName;')),
+      reason: 'JOIN 投影不能成为 Full Entity 字段',
+    );
     expect(repository, isNot(contains('saveGameObjectQuestItem')));
     expect(
       viewModel,

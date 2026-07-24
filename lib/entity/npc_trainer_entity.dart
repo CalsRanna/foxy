@@ -4,17 +4,24 @@ part 'npc_trainer_entity.g.dart';
 
 /// 训练师技能 — 对应 trainer_spell 表（复合键: TrainerId + SpellId）。
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('spellName')
+@FoxyBriefField.text('spellSubtext')
 @FoxyFullEntity(table: 'trainer_spell')
 class NpcTrainerEntity with _NpcTrainerEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('TrainerId', key: true)
   final int trainerId;
 
+  @FoxyBriefField()
   @FoxyFullField('SpellId', key: true)
   final int spellId;
 
+  @FoxyBriefField()
   @FoxyFullField('MoneyCost')
   final int moneyCost;
 
+  @FoxyBriefField()
   @FoxyFullField('ReqSkillLine')
   final int reqSkillLine;
 
@@ -30,6 +37,7 @@ class NpcTrainerEntity with _NpcTrainerEntityMixin {
   @FoxyFullField('ReqAbility3')
   final int reqAbility3;
 
+  @FoxyBriefField()
   @FoxyFullField('ReqLevel')
   final int reqLevel;
 

@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_game_object_quest_ender_entity.dart';
-import 'package:foxy/entity/brief_game_object_quest_starter_entity.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_collection_editor_view_model.dart';
@@ -221,7 +219,11 @@ void main() {
         'lib/page/quest/game_object_quest_${domain}_view.dart',
       ).readAsStringSync();
 
-      expect(entity, isNot(contains('localeName')), reason: domain);
+      expect(
+        entity,
+        isNot(contains('final String localeName;')),
+        reason: '$domain 的 JOIN 投影不能成为 Full Entity 字段',
+      );
       expect(
         repository,
         isNot(contains('saveGameObjectQuest')),

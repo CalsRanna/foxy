@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_spell_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -62,10 +61,10 @@ class CreatureSpellDataRepository with RepositoryMixin {
       'dcsd.Availability1',
       'dcsd.Availability2',
       'dcsd.Availability3',
-      'ds_1.Name_lang_zhCN AS SpellName1',
-      'ds_2.Name_lang_zhCN AS SpellName2',
-      'ds_3.Name_lang_zhCN AS SpellName3',
-      'ds_4.Name_lang_zhCN AS SpellName4',
+      'ds_1.Name_lang_zhCN AS spellName1',
+      'ds_2.Name_lang_zhCN AS spellName2',
+      'ds_3.Name_lang_zhCN AS spellName3',
+      'ds_4.Name_lang_zhCN AS spellName4',
     ];
     var builder = laconic.table('$_table AS dcsd');
     builder = builder.select(fields);

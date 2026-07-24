@@ -1,5 +1,4 @@
 import 'package:foxy/constant/page_text_constants.dart';
-import 'package:foxy/entity/brief_page_text_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

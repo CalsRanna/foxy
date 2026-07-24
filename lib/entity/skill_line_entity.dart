@@ -2,11 +2,15 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'skill_line_entity.g.dart';
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('displayNameZhCN')
 @FoxyFullEntity(table: 'foxy.dbc_skill_line')
 class SkillLineEntity with _SkillLineEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('CategoryID')
   final int categoryId;
 

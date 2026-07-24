@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

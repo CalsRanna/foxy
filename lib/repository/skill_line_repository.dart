@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
 import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -41,7 +40,7 @@ class SkillLineRepository with RepositoryMixin {
     var builder = laconic.table(_table).select([
       'ID',
       'CategoryID',
-      'DisplayName_lang_zhCN',
+      'DisplayName_lang_zhCN AS displayNameZhCN',
     ]);
     builder = _applyFilter(builder, filter).orderBy('ID');
     final rows = await builder

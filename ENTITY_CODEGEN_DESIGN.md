@@ -217,27 +217,85 @@ class FoxyBriefEntity {
   const FoxyBriefEntity();
 }
 
-@Target({TargetKind.field})
+enum FoxyBriefFieldType {
+  boolean,
+  decimal,
+  integer,
+  text,
+}
+
+@Target({TargetKind.classType, TargetKind.field})
 class FoxyBriefField {
   const FoxyBriefField();
+
+  const FoxyBriefField.boolean(
+    String name, {
+    bool defaultValue = false,
+  });
+
+  const FoxyBriefField.decimal(
+    String name, {
+    double defaultValue = 0.0,
+  });
+
+  const FoxyBriefField.integer(
+    String name, {
+    int defaultValue = 0,
+  });
+
+  const FoxyBriefField.text(
+    String name, {
+    String defaultValue = '',
+  });
 }
 ```
 
 `@FoxyBriefEntity` 标记该 Full Entity 可以派生标准 Brief Entity；
-`@FoxyBriefField` 选择进入 Brief 的 Full 字段。
+字段上的无参数 `@FoxyBriefField()` 选择进入 Brief 的物理 Full 字段。class
+上的具名构造函数声明只属于 Brief 的查询投影字段，例如：
+
+```dart
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeName')
+@FoxyBriefField.integer('quality', defaultValue: -1)
+@FoxyFullEntity(table: 'item_template')
+class ItemTemplateEntity with _ItemTemplateEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('entry', key: true)
+  final int entry;
+
+  // Full 物理字段……
+}
+```
+
+具名构造函数同时确定 Dart 类型和默认值，调用方不需要再传重复的 `type`：
+
+- `boolean`：`bool`，默认 `false`；
+- `decimal`：`double`，默认 `0.0`；
+- `integer`：`int`，默认 `0`；
+- `text`：`String`，默认 `''`。
+
+需要特殊回退值时只覆盖 `defaultValue`。构造函数的静态类型会在 Dart 编译期
+拒绝不匹配的默认值，Generator 仍会校验读取到的常量。
 
 标准 Brief 生成约束：
 
-- Brief 字段必须全部来自 Full Entity；
+- Brief 字段可以来自 Full Entity，也可以是 class 注解声明的标量查询投影；
+- 投影字段只进入 Brief，不进入 Full Entity 字段、构造函数、`fromJson`、
+  `copyWith`、`toJson`、相等判断或 `toString`；
 - Brief 必须包含完整物理身份；
-- Brief 的 `fromJson` 继续使用对应 `FoxyFullField.name` 物理列名；
+- 物理 Brief 字段的 `fromJson` 使用对应 `FoxyFullField.name`；
+- 投影字段的 `fromJson` 使用投影字段名，Repository SELECT 必须提供同名 alias；
 - Brief 构造默认值复用 Full Entity 对应构造参数的默认值；
+- 投影字段构造默认值来自相应的 `FoxyBriefField` 具名构造函数；
 - 标量身份的 `key` getter 返回 `int` 或 `String`；
 - 复合身份的 `key` getter 返回生成的 `XXXKey`；
 - Brief 生成 `final` 字段、`const` 构造函数、`fromJson` 和 `key`；
 - Brief 不生成 `copyWith` 或 `toJson`，避免暴露写模型 API；
-- join、locale fallback 或计算展示字段存在时，不添加
-  `@FoxyBriefEntity`，继续手写 Brief。
+- JOIN、locale fallback 和标量聚合值由 Repository 负责查询并 alias，不能作为
+  虚构字段污染 Full Entity；
+- 非四种标量类型、需要自定义转换的字段，以及没有对应 Full 行模型的聚合结果，
+  继续使用手写 Brief。
 
 ### 4.4 Repository Filter
 
@@ -399,12 +457,13 @@ import 'package:foxy/entity/creature_template_entity.brief.g.dart';
 生成型 Entity 不保留 `brief_xxx_entity.dart` 或 `xxx_key.dart` 转发壳。
 仍然存在的独立 Brief/Key 文件只代表尚不能从 Full Entity 元数据生成的手写模型。
 
-当前已继续迁移 `BroadcastText`、`Condition`、`ItemExtendedCost`、
-`ScalingStatDistribution`、`SmartScript` 和 `SpellFocusObject` 的标准 Brief。
-这些 Brief 的字段全部来自 Full Entity；原有展示 getter 以同库 extension 保留。
-剩余独立 Brief 包含 JOIN/聚合字段、兼容别名，或其 Full Entity 本身仍采用非对称
-手写映射。剩余独立 Key 中，普通物理复合 Key 依赖这些手写 Full Entity；
-`WaypointDataKey` 和 `ItemEnchantmentTemplateParentKey` 则不是物理行主键。
+纯物理字段 Brief 以及可表达为四种标量类型的 JOIN、locale 和聚合投影均已迁入
+所属 Full Entity library；原有展示 getter 以同库 extension 保留。生成型 Full
+Entity 目前只剩 `BriefItemEnchantmentTemplateEntity` 继续独立手写，因为它包含
+`ItemEnchantmentKind` enum 投影和自定义转换。其他独立 Brief 要么没有对应 Full
+行模型，要么其 Full Entity 本身仍采用非对称手写映射。剩余独立 Key 中，普通物理
+复合 Key 依赖这些手写 Full Entity；`WaypointDataKey` 和
+`ItemEnchantmentTemplateParentKey` 则不是物理行主键。
 
 ### 5.1 注解排序
 
@@ -1125,14 +1184,19 @@ Generator 复用相应元数据，而不是重新解释源码文本。
 20. key 字段不是持久化字段；
 21. 没有任何 key 字段；
 22. 同一种 class 或 field 注解重复出现；
-23. 存在 `FoxyBriefField`，但 class 没有 `FoxyBriefEntity`；
+23. 存在字段级或 class 级 `FoxyBriefField`，但 class 没有
+    `FoxyBriefEntity`；
 24. 存在 `FoxyFilterField`，但 class 没有 `FoxyFilterEntity`；
 25. 标准 Brief 没有包含全部 key 字段；
 26. `FoxyFilterField.defaultValue` 与其 Filter 类型不兼容；
-27. Brief、Filter 或 Key 需要无法从 Full Entity 元数据得到的字段；
+27. 字段上使用了 `FoxyBriefField` 具名构造函数，或 class 上使用了无参数
+    `FoxyBriefField()`；
 28. Reader 或 Generator 尝试根据注解声明顺序决定行为；
 29. 一个输入文件包含多个 `@FoxyFullEntity` class；
 30. Entity class 名与输入文件名不符合约定。
+31. Brief 投影字段名为空、不是合法 lowerCamelCase 标识符，或与 Full/其他
+    Brief 投影字段重名；
+32. Brief 投影默认值与具名构造函数类型不兼容。
 
 诊断消息应包含修复方式，例如：
 
@@ -1231,10 +1295,13 @@ Key：
 Brief：
 
 - 只包含被标记字段；
+- class 级具名注解生成只属于 Brief 的标量投影字段；
+- 投影字段使用字段名读取 Repository alias，并应用类型默认值或覆盖值；
+- 投影字段不进入 Full Mixin；
 - 必须包含完整身份；
 - 标量和复合 `key` getter；
 - 不生成 `copyWith/toJson`；
-- join、locale 和计算字段拒绝自动生成。
+- 非标量或需要自定义转换的投影继续手写。
 
 Filter：
 

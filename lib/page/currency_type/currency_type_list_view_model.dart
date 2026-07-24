@@ -1,5 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_currency_type_entity.dart';
+import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/currency_type_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';

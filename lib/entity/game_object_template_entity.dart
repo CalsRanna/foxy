@@ -2,19 +2,24 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'game_object_template_entity.g.dart';
 
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeName')
 @FoxyFilterEntity()
 @FoxyFullEntity(table: 'gameobject_template')
 class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entry', key: true)
   final int entry;
 
+  @FoxyBriefField()
   @FoxyFullField('type')
   final int type;
 
   @FoxyFullField('displayId')
   final int displayId;
 
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('name')
   final String name;
@@ -28,6 +33,7 @@ class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
   @FoxyFullField('unk1')
   final String unk1;
 
+  @FoxyBriefField()
   @FoxyFullField('size')
   final double size;
 
@@ -152,4 +158,9 @@ class GameObjectTemplateEntity with _GameObjectTemplateEntityMixin {
 
   factory GameObjectTemplateEntity.fromJson(Map<String, dynamic> json) =>
       _GameObjectTemplateEntityMixin.fromJson(json);
+}
+
+extension BriefGameObjectTemplateEntityDisplay
+    on BriefGameObjectTemplateEntity {
+  String get displayName => localeName.isNotEmpty ? localeName : name;
 }

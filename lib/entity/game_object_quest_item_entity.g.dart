@@ -108,3 +108,42 @@ final class GameObjectQuestItemKey {
         ')';
   }
 }
+
+final class BriefGameObjectQuestItemEntity {
+  final int gameObjectEntry;
+  final int idx;
+  final int itemId;
+  final int verifiedBuild;
+  final String itemName;
+  final String itemLocaleName;
+  final int itemQuality;
+  final String itemIcon;
+
+  const BriefGameObjectQuestItemEntity({
+    this.gameObjectEntry = 0,
+    this.idx = 0,
+    this.itemId = 0,
+    this.verifiedBuild = 0,
+    this.itemName = '',
+    this.itemLocaleName = '',
+    this.itemQuality = 0,
+    this.itemIcon = '',
+  });
+
+  factory BriefGameObjectQuestItemEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectQuestItemEntity(
+      gameObjectEntry: (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
+      idx: (json['Idx'] as num?)?.toInt() ?? 0,
+      itemId: (json['ItemId'] as num?)?.toInt() ?? 0,
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      itemName: json['itemName']?.toString() ?? '',
+      itemLocaleName: json['itemLocaleName']?.toString() ?? '',
+      itemQuality: (json['itemQuality'] as num?)?.toInt() ?? 0,
+      itemIcon: json['itemIcon']?.toString() ?? '',
+    );
+  }
+
+  GameObjectQuestItemKey get key {
+    return GameObjectQuestItemKey(gameObjectEntry: gameObjectEntry, idx: idx);
+  }
+}

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_game_object_quest_item_entity.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
@@ -54,10 +53,10 @@ class GameObjectQuestItemRepository with RepositoryMixin {
       'gq.Idx',
       'gq.ItemId',
       'gq.VerifiedBuild',
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
+      'it.name AS itemName',
+      if (localeEnabled) 'itl.Name AS itemLocaleName',
+      'it.Quality AS itemQuality',
+      'didi.InventoryIcon0 AS itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(
