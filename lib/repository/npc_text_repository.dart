@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'npc_text_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'NpcTextFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'text',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class NpcTextRepository with RepositoryMixin {
+@FoxyRepository(NpcTextEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('text')
+class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
   static const _table = 'npc_text';
 
   Future<int> copyNpcText(int key) async {
@@ -44,13 +32,6 @@ class NpcTextRepository with RepositoryMixin {
     return NpcTextEntity(id: id ?? await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyNpcText(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefNpcTextEntity>> getBriefNpcTexts({
     int page = 1,
     NpcTextFilter? filter,
@@ -71,12 +52,6 @@ class NpcTextRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<NpcTextEntity?> getNpcText(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return NpcTextEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<NpcTextEntity>> getNpcTexts() async {
     final results = await laconic.table(_table).get();
     return results.map((row) => NpcTextEntity.fromJson(row.toMap())).toList();
@@ -94,23 +69,6 @@ class NpcTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateNpcText(int originalKey, NpcTextEntity npcText) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(npcText.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的 NPC 文本 ID 已存在');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -122,9 +80,5 @@ class NpcTextRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'condition_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ConditionFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'sourceTypeOrReferenceId',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'sourceEntry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ConditionRepository with RepositoryMixin {
+@FoxyRepository(ConditionEntity)
+@FoxyFilter.text('sourceTypeOrReferenceId')
+@FoxyFilter.text('sourceEntry')
+class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
   static const _table = 'conditions';
 
   /// acore_world.conditions 完整 10 列主键
@@ -61,13 +49,6 @@ class ConditionRepository with RepositoryMixin {
     return const ConditionEntity();
   }
 
-  Future<void> destroyCondition(ConditionKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
     ConditionFilter? filter,
@@ -99,46 +80,9 @@ class ConditionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ConditionEntity?> getCondition(ConditionKey key) async {
-    var results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ConditionEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<ConditionEntity>> getConditions() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeCondition(ConditionEntity condition) async {
-    try {
-      await laconic.table(_table).insert([condition.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('条件主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCondition(
-    ConditionKey originalKey,
-    ConditionEntity condition,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(condition.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在，无法保存');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, ConditionFilter? filter) {
@@ -153,19 +97,5 @@ class ConditionRepository with RepositoryMixin {
       builder = builder.where('SourceEntry', filter.sourceEntry);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, ConditionKey key) {
-    return builder
-        .where('SourceTypeOrReferenceId', key.sourceTypeOrReferenceId)
-        .where('SourceGroup', key.sourceGroup)
-        .where('SourceEntry', key.sourceEntry)
-        .where('SourceId', key.sourceId)
-        .where('ElseGroup', key.elseGroup)
-        .where('ConditionTypeOrReference', key.conditionTypeOrReference)
-        .where('ConditionTarget', key.conditionTarget)
-        .where('ConditionValue1', key.conditionValue1)
-        .where('ConditionValue2', key.conditionValue2)
-        .where('ConditionValue3', key.conditionValue3);
   }
 }

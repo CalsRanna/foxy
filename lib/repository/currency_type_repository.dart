@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'currency_type_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CurrencyTypeFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CurrencyTypeRepository with RepositoryMixin {
+@FoxyRepository(CurrencyTypeEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class CurrencyTypeRepository
+    with RepositoryMixin, _CurrencyTypeRepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
 
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {
@@ -43,13 +32,6 @@ class CurrencyTypeRepository with RepositoryMixin {
 
   Future<CurrencyTypeEntity> createCurrencyType() async {
     return CurrencyTypeEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyCurrencyType(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原货币不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
@@ -86,13 +68,6 @@ class CurrencyTypeRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CurrencyTypeEntity?> getCurrencyType(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : CurrencyTypeEntity.fromJson(rows.first.toMap());
-  }
-
   Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
@@ -107,26 +82,6 @@ class CurrencyTypeRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('货币 ID、物品或位索引已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCurrencyType(
-    int originalKey,
-    CurrencyTypeEntity currencyType,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(currencyType.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原货币不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的货币 ID、物品或位索引已存在，无法保存');
       }
       rethrow;
     }
@@ -156,9 +111,5 @@ class CurrencyTypeRepository with RepositoryMixin {
       throw StateError('CurrencyTypes ID 已超出 DBC int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

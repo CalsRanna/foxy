@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -11,9 +10,9 @@ void main() {
   });
 
   test('GameObjectDisplayInfo Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/game_object_display_info_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<int> copyGameObjectDisplayInfo('));
     expect(source, contains('Future<void> storeGameObjectDisplayInfo('));
     expect(source, contains('if (entity.id <= 0)'));

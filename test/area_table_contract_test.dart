@@ -12,6 +12,7 @@ import 'package:foxy/entity/zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_music_entity.dart';
 import 'package:foxy/page/area_table/area_table_validation_mixin.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
+import 'support/local_dart_library_source.dart';
 
 class _AreaTableValidationViewModel
     with ViewModelValidationMixin, AreaTableValidationMixin {}
@@ -181,9 +182,9 @@ void main() {
   });
 
   test('AreaTable Repository 新建和复制都会分配独立探索位', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/area_table_repository.dart',
-    ).readAsStringSync();
+    );
     expect(
       source,
       contains("areaBit: await nextMaxPlusOne(_table, 'AreaBit')"),

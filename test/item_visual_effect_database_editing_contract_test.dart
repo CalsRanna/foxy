@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/item_visual_effect_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -11,9 +10,9 @@ void main() {
   });
 
   test('ItemVisualEffect Repository 使用原始键且写入只触及自身表', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/item_visual_effect_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<int> copyItemVisualEffect('));
     expect(source, contains('Future<void> storeItemVisualEffect('));
     expect(source, contains('if (entity.id <= 0)'));

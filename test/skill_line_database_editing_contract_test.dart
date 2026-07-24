@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回完整物理 ID 标量', () {
@@ -11,9 +10,9 @@ void main() {
   });
 
   test('SkillLine Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/skill_line_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('copySkillLine(int key)'));
     expect(source, contains('destroySkillLine(int key)'));
     expect(source, contains('getSkillLine(int key)'));

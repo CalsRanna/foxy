@@ -5,6 +5,7 @@ import 'package:source_gen/source_gen.dart';
 
 import 'src/entity_generator.dart';
 import 'src/repository_filter_generator.dart';
+import 'src/repository_generator.dart';
 
 Builder foxyEntityBuilder(BuilderOptions options) {
   return SharedPartBuilder(
@@ -14,10 +15,10 @@ Builder foxyEntityBuilder(BuilderOptions options) {
   );
 }
 
-Builder foxyRepositoryFilterBuilder(BuilderOptions options) {
+Builder foxyRepositoryBuilder(BuilderOptions options) {
   return SharedPartBuilder(
-    [const FoxyRepositoryFilterGenerator()],
-    'foxy_repository_filter',
+    [const FoxyRepositoryGenerator(), const FoxyFilterGenerator()],
+    'foxy_repository',
     writeDescriptions: false,
   );
 }

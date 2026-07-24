@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('PlayerCreateInfoKey 和 Brief 覆盖 race + class', () {
@@ -13,13 +14,16 @@ void main() {
   });
 
   test('Repository 使用完整旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/player_create_info_repository.dart',
+    );
+    final generatedSource = File(
+      'lib/repository/player_create_info_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('PlayerCreateInfoKey originalKey'));
-    expect(source, contains('.update(info.toJson())'));
-    expect(source, contains("where('race', key.race)"));
-    expect(source, contains("where('class', key.class_)"));
+    expect(source, contains('.update(playerCreateInfo.toJson())'));
+    expect(generatedSource, contains("where('race', key.race)"));
+    expect(generatedSource, contains("where('class', key.class_)"));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

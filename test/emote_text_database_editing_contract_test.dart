@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -11,9 +12,9 @@ void main() {
   });
 
   test('EmoteText 使用完整 candidate、单表写入和 persisted identity', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/emote_text_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/emote_text/emote_text_detail_view_model.dart',
     ).readAsStringSync();

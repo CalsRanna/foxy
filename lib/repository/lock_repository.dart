@@ -6,17 +6,9 @@ import 'package:laconic/laconic.dart';
 
 part 'lock_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'LockFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class LockRepository with RepositoryMixin {
+@FoxyRepository(LockEntity)
+@FoxyFilter.text('id')
+class LockRepository with RepositoryMixin, _LockRepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
   Future<int> copyLock(int key) async {
@@ -39,13 +31,6 @@ class LockRepository with RepositoryMixin {
     return LockEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyLock(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefLockEntity>> getBriefLocks({
     int page = 1,
     LockFilter? filter,
@@ -58,12 +43,6 @@ class LockRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefLockEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<LockEntity?> getLock(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return LockEntity.fromJson(results.first.toMap());
   }
 
   Future<List<LockEntity>> getLocks() async {
@@ -85,32 +64,11 @@ class LockRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateLock(int originalKey, LockEntity lock) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(lock.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原锁定义不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的锁定义 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, LockFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

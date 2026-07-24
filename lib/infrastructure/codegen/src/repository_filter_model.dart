@@ -15,7 +15,7 @@ final class RepositoryFilterGenerationModel {
 final class RepositoryFilterFieldModel {
   final Object defaultValue;
   final String name;
-  final FoxyFilterFieldType type;
+  final FoxyFilterType type;
 
   const RepositoryFilterFieldModel({
     required this.defaultValue,
@@ -24,9 +24,9 @@ final class RepositoryFilterFieldModel {
   });
 
   String get dartType => switch (type) {
-    FoxyFilterFieldType.boolean => 'bool',
-    FoxyFilterFieldType.decimal => 'double',
-    FoxyFilterFieldType.integer => 'int',
-    FoxyFilterFieldType.text => 'String',
+    FoxyFilterType.boolean => 'bool',
+    FoxyFilterType.decimal => 'double',
+    FoxyFilterType.integer => 'int',
+    FoxyFilterType.text => 'String',
   };
 }

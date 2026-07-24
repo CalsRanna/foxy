@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_faction_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DbcFactionFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(DbcFactionEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class DbcFactionRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _DbcFactionRepositoryMixin {
   static const _table = 'foxy.dbc_faction';
 
   @override
@@ -49,13 +38,6 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return DbcFactionEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyDbcFaction(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原阵营不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefDbcFactionEntity>> getBriefDbcFactions({
     int page = 1,
     DbcFactionFilter? filter,
@@ -70,12 +52,6 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results
         .map((e) => BriefDbcFactionEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<DbcFactionEntity?> getDbcFaction(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return DbcFactionEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getDbcFactionLocales(
@@ -108,26 +84,6 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateDbcFaction(
-    int originalKey,
-    DbcFactionEntity faction,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(faction.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原阵营不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的阵营 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, DbcFactionFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -141,9 +97,5 @@ class DbcFactionRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

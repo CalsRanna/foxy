@@ -8,23 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'item_random_properties_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemRandomPropertiesFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(ItemRandomPropertiesEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class ItemRandomPropertiesRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _ItemRandomPropertiesRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_properties';
 
   @override
@@ -151,9 +142,5 @@ class ItemRandomPropertiesRepository
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

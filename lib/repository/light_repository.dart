@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'light_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'LightFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'continentId',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class LightRepository with RepositoryMixin {
+@FoxyRepository(LightEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('continentId')
+class LightRepository with RepositoryMixin, _LightRepositoryMixin {
   static const _table = 'foxy.dbc_light';
 
   Future<int> copyLight(int key) async {
@@ -43,13 +31,6 @@ class LightRepository with RepositoryMixin {
   Future<LightEntity> createLight() async =>
       LightEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyLight(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原光照不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefLightEntity>> getBriefLights({
     int page = 1,
     LightFilter? filter,
@@ -65,11 +46,6 @@ class LightRepository with RepositoryMixin {
       filter,
     ).orderBy('ID').limit(kPageSize).offset((page - 1) * kPageSize).get();
     return rows.map((row) => BriefLightEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<LightEntity?> getLight(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : LightEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<LightEntity>> getLights() async {
@@ -91,23 +67,6 @@ class LightRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateLight(int originalKey, LightEntity entity) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原光照不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的光照 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, LightFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -115,9 +74,5 @@ class LightRepository with RepositoryMixin {
       builder = builder.where('ContinentID', filter.continentId);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('ItemSet Entity 精确覆盖 53 个标量物理列', () {
@@ -106,9 +107,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/item_set_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/item_set/item_set_detail_view_model.dart',
     ).readAsStringSync();

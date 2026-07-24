@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/gem_property_constants.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 GemProperties.dbc 的 5 个物理列', () {
@@ -76,9 +77,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/gem_property_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/gem_property/gem_property_detail_view_model.dart',
     ).readAsStringSync();

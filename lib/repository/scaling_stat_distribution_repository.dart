@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'scaling_stat_distribution_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ScalingStatDistributionFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ScalingStatDistributionRepository with RepositoryMixin {
+@FoxyRepository(ScalingStatDistributionEntity)
+@FoxyFilter.text('id')
+class ScalingStatDistributionRepository
+    with RepositoryMixin, _ScalingStatDistributionRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
   Future<int> copyScalingStatDistribution(int key) async {
@@ -39,13 +32,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
 
   Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
     return ScalingStatDistributionEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyScalingStatDistribution(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefScalingStatDistributionEntity>>
@@ -89,14 +75,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ScalingStatDistributionEntity?> getScalingStatDistribution(
-    int key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ScalingStatDistributionEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<ScalingStatDistributionEntity>>
   getScalingStatDistributions() async {
     var results = await laconic.table(_table).get();
@@ -121,26 +99,6 @@ class ScalingStatDistributionRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateScalingStatDistribution(
-    int originalKey,
-    ScalingStatDistributionEntity distribution,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(distribution.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的属性缩放分布 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ScalingStatDistributionFilter? filter,
@@ -158,9 +116,5 @@ class ScalingStatDistributionRepository with RepositoryMixin {
       throw StateError('ScalingStatDistribution ID 已超出物品模板可引用范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

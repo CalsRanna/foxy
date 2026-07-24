@@ -6,17 +6,9 @@ import 'package:laconic/laconic.dart';
 
 part 'gem_property_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'GemPropertyFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class GemPropertyRepository with RepositoryMixin {
+@FoxyRepository(GemPropertyEntity)
+@FoxyFilter.text('id')
+class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
   Future<int> copyGemProperty(int key) async {
@@ -37,13 +29,6 @@ class GemPropertyRepository with RepositoryMixin {
 
   Future<GemPropertyEntity> createGemProperty() async {
     return GemPropertyEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyGemProperty(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
@@ -74,12 +59,6 @@ class GemPropertyRepository with RepositoryMixin {
     return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<GemPropertyEntity?> getGemProperty(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GemPropertyEntity.fromJson(results.first.toMap());
-  }
-
   Future<void> storeGemProperty(GemPropertyEntity gemProperty) async {
     if (gemProperty.id <= 0) {
       throw StateError('宝石属性 ID 必须在新建表单打开时显式分配');
@@ -89,26 +68,6 @@ class GemPropertyRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('宝石属性 ${gemProperty.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGemProperty(
-    int originalKey,
-    GemPropertyEntity gemProperty,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(gemProperty.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的宝石属性 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -128,9 +87,5 @@ class GemPropertyRepository with RepositoryMixin {
       throw StateError('GemProperties ID 已超出 DBC int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'item_set_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemSetFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(ItemSetEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class ItemSetRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _ItemSetRepositoryMixin {
   static const _table = 'foxy.dbc_item_set';
 
   @override
@@ -49,13 +38,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return ItemSetEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemSet(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原套装不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemSetEntity>> getBriefItemSets({
     int page = 1,
     ItemSetFilter? filter,
@@ -73,12 +55,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
         .offset((page - 1) * kPageSize)
         .get();
     return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<ItemSetEntity?> getItemSet(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemSetEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getItemSetLocales(
@@ -111,23 +87,6 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateItemSet(int originalKey, ItemSetEntity itemSet) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(itemSet.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原套装不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的套装 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -145,9 +104,5 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7FFFFFFF) throw StateError('ItemSet.dbc 已无可用 int32 ID');
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

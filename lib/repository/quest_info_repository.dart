@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'QuestInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(QuestInfoEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class QuestInfoRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestInfoRepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
 
   @override
@@ -49,13 +38,6 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestInfoEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefQuestInfoEntity>> getBriefQuestInfos({
     int page = 1,
     QuestInfoFilter? filter,
@@ -71,12 +53,6 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results
         .map((e) => BriefQuestInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<QuestInfoEntity?> getQuestInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestInfoEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getQuestInfoLocales(
@@ -109,26 +85,6 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateQuestInfo(
-    int originalKey,
-    QuestInfoEntity questInfo,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(questInfo.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的任务信息 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -150,9 +106,5 @@ class QuestInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       throw StateError('任务信息编号已超出 QuestInfoID 可引用范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

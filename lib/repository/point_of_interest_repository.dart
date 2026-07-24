@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'point_of_interest_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'PointOfInterestFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class PointOfInterestRepository with RepositoryMixin {
+@FoxyRepository(PointOfInterestEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class PointOfInterestRepository
+    with RepositoryMixin, _PointOfInterestRepositoryMixin {
   static const _table = 'points_of_interest';
   static const _localeTable = 'points_of_interest_locale';
 
@@ -43,13 +32,6 @@ class PointOfInterestRepository with RepositoryMixin {
 
   Future<PointOfInterestEntity> createPointOfInterest() async {
     return PointOfInterestEntity(id: await nextMaxPlusOne(_table, 'ID'));
-  }
-
-  Future<void> destroyPointOfInterest(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原兴趣点不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefPointOfInterestEntity>> getBriefPointsOfInterest({
@@ -78,12 +60,6 @@ class PointOfInterestRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<PointOfInterestEntity?> getPointOfInterest(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PointOfInterestEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<PointOfInterestEntity>> getPointsOfInterest() async {
     final results = await laconic.table(_table).get();
     return results
@@ -105,26 +81,6 @@ class PointOfInterestRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updatePointOfInterest(
-    int originalKey,
-    PointOfInterestEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原兴趣点不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的兴趣点 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     PointOfInterestFilter? filter,
@@ -139,9 +95,5 @@ class PointOfInterestRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

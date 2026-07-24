@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'item_display_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemDisplayInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ItemDisplayInfoRepository with RepositoryMixin {
+@FoxyRepository(ItemDisplayInfoEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class ItemDisplayInfoRepository
+    with RepositoryMixin, _ItemDisplayInfoRepositoryMixin {
   static const _table = 'foxy.dbc_item_display_info';
 
   Future<int> copyItemDisplayInfo(int key) async {
@@ -47,13 +36,6 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return ItemDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemDisplayInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemDisplayInfoEntity>> getBriefItemDisplayInfos({
     int page = 1,
     ItemDisplayInfoFilter? filter,
@@ -68,12 +50,6 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     return results
         .map((e) => BriefItemDisplayInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<ItemDisplayInfoEntity?> getItemDisplayInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
   Future<List<ItemDisplayInfoEntity>> getItemDisplayInfos() async {
@@ -97,26 +73,6 @@ class ItemDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateItemDisplayInfo(
-    int originalKey,
-    ItemDisplayInfoEntity info,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(info.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的物品显示信息 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemDisplayInfoFilter? filter,
@@ -133,9 +89,5 @@ class ItemDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

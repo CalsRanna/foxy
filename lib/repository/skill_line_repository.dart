@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'skill_line_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SkillLineFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SkillLineRepository with RepositoryMixin {
+@FoxyRepository(SkillLineEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
   static const _table = 'foxy.dbc_skill_line';
 
   Future<int> copySkillLine(int key) async {
@@ -43,13 +31,6 @@ class SkillLineRepository with RepositoryMixin {
   Future<SkillLineEntity> createSkillLine() async =>
       SkillLineEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySkillLine(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原技能线不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSkillLineEntity>> getBriefSkillLines({
     int page = 1,
     SkillLineFilter? filter,
@@ -67,11 +48,6 @@ class SkillLineRepository with RepositoryMixin {
     return rows
         .map((row) => BriefSkillLineEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<SkillLineEntity?> getSkillLine(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : SkillLineEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<SkillLineEntity>> getSkillLines() async {
@@ -93,26 +69,6 @@ class SkillLineRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateSkillLine(
-    int originalKey,
-    SkillLineEntity skillLine,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(skillLine.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原技能线不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的技能线 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SkillLineFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -124,9 +80,5 @@ class SkillLineRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

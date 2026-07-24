@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_faction_reward_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'QuestFactionRewardFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class QuestFactionRewardRepository with RepositoryMixin {
+@FoxyRepository(QuestFactionRewardEntity)
+@FoxyFilter.text('id')
+class QuestFactionRewardRepository
+    with RepositoryMixin, _QuestFactionRewardRepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
 
   Future<int> countQuestFactionRewards({
@@ -29,13 +22,6 @@ class QuestFactionRewardRepository with RepositoryMixin {
 
   Future<QuestFactionRewardEntity> createQuestFactionReward() async {
     return QuestFactionRewardEntity(id: await _getAvailableId());
-  }
-
-  Future<void> destroyQuestFactionReward(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefQuestFactionRewardEntity>> getBriefQuestFactionRewards({
@@ -67,12 +53,6 @@ class QuestFactionRewardRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestFactionRewardEntity?> getQuestFactionReward(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestFactionRewardEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<QuestFactionRewardEntity>> getQuestFactionRewards() async {
     var results = await laconic.table(_table).get();
     return results
@@ -91,26 +71,6 @@ class QuestFactionRewardRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('任务声望 ${questFactionReward.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateQuestFactionReward(
-    int originalKey,
-    QuestFactionRewardEntity questFactionReward,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(questFactionReward.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原任务声望不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的任务声望 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -135,9 +95,5 @@ class QuestFactionRewardRepository with RepositoryMixin {
       return 2;
     }
     throw StateError('任务声望固定记录 1 和 2 已存在，不能继续新增');
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

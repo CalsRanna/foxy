@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_model_info_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief 安全解码并返回物理 DisplayID 标量', () {
@@ -16,9 +15,9 @@ void main() {
   });
 
   test('CreatureModelInfo Repository 预分配并原始键更新完整 candidate', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/creature_model_info_repository.dart',
-    ).readAsStringSync();
+    );
     expect(
       source,
       contains("displayId: await nextMaxPlusOne(_table, 'DisplayID')"),

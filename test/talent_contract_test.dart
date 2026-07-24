@@ -7,6 +7,7 @@ import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/constant/talent_constants.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Talent Entity 精确覆盖 23 个独立标量物理列', () {
@@ -164,9 +165,9 @@ void main() {
   });
 
   test('Repository 仅持久化当前表并筛选全部 Rank', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/talent_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/talent/talent_detail_view_model.dart',
     ).readAsStringSync();

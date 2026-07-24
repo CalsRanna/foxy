@@ -150,16 +150,13 @@ void main() {
     expect(source, contains('file.deleteSync();'));
   });
 
-  test('Repository 专属 Filter 全部由 Repository 注解生成', () {
+  test('Repository 专属 Filter 全部由可重复 FoxyFilter 注解生成', () {
     final repositories =
         Directory('lib/repository')
             .listSync()
             .whereType<File>()
             .where((file) => file.path.endsWith('_repository.dart'))
-            .where(
-              (file) =>
-                  file.readAsStringSync().contains('@FoxyRepositoryFilter'),
-            )
+            .where((file) => file.readAsStringSync().contains('@FoxyFilter.'))
             .toList()
           ..sort((left, right) => left.path.compareTo(right.path));
 
@@ -184,6 +181,67 @@ void main() {
     }
   });
 
+  test('标准持久化 Repository 的公有 CRUD 与物理 Key 定位由生成 Mixin 提供', () {
+    final repositories =
+        Directory('lib/repository')
+            .listSync()
+            .whereType<File>()
+            .where((file) => file.path.endsWith('_repository.dart'))
+            .where(
+              (file) => file.readAsStringSync().contains('@FoxyRepository('),
+            )
+            .toList()
+          ..sort((left, right) => left.path.compareTo(right.path));
+
+    expect(repositories, hasLength(81));
+    var generatedDestroyCount = 0;
+    var generatedGetCount = 0;
+    var generatedStoreCount = 0;
+    var generatedUpdateCount = 0;
+    for (final repository in repositories) {
+      final source = repository.readAsStringSync();
+      final fileName = repository.uri.pathSegments.last;
+      final generated = File(
+        'lib/repository/${fileName.replaceFirst('.dart', '.g.dart')}',
+      ).readAsStringSync();
+      final className = RegExp(
+        r'class\s+(\w+Repository)\b',
+      ).firstMatch(source)!.group(1)!;
+
+      expect(source, contains('_${className}Mixin'));
+      expect(
+        generated,
+        contains('mixin _${className}Mixin on RepositoryMixin'),
+      );
+      expect(
+        source,
+        isNot(contains(RegExp(r'QueryBuilder\s+_whereKey\s*\('))),
+        reason: '${repository.path} 不应继续手写物理 Key 定位',
+      );
+      expect(
+        generated,
+        contains(RegExp(r'QueryBuilder\s+_whereKey\s*\(')),
+        reason: '${repository.path} 必须从 Entity Key 元数据生成定位方法',
+      );
+      generatedDestroyCount += RegExp(
+        r'Future<void>\s+destroy\w+\s*\(',
+      ).allMatches(generated).length;
+      generatedGetCount += RegExp(
+        r'Future<\w+Entity\?>\s+get\w+\s*\(',
+      ).allMatches(generated).length;
+      generatedStoreCount += RegExp(
+        r'Future<void>\s+store\w+\s*\(',
+      ).allMatches(generated).length;
+      generatedUpdateCount += RegExp(
+        r'Future<void>\s+update\w+\s*\(',
+      ).allMatches(generated).length;
+    }
+    expect(generatedDestroyCount, 68);
+    expect(generatedGetCount, 68);
+    expect(generatedStoreCount, 4);
+    expect(generatedUpdateCount, 65);
+  });
+
   test('旧 Entity Filter 和跨 Repository 共享 Filter 均已移除', () {
     final oldFiles = Directory('lib/entity').listSync().whereType<File>().where(
       (file) =>
@@ -194,6 +252,7 @@ void main() {
 
     for (final file in [
       File('lib/infrastructure/codegen/entity_annotations.dart'),
+      File('lib/infrastructure/codegen/repository_annotations.dart'),
       File('lib/infrastructure/codegen/builder.dart'),
       File('build.yaml'),
     ]) {
@@ -201,6 +260,8 @@ void main() {
       expect(source, isNot(contains('FoxyFilterEntity')));
       expect(source, isNot(contains('foxy_filter_entity')));
       expect(source, isNot(contains('.filter.g.dart')));
+      expect(source, isNot(contains('FoxyRepositoryFilter')));
+      expect(source, isNot(contains('FoxyRepositoryFilterField')));
     }
 
     expect(
@@ -222,7 +283,7 @@ void main() {
       final source = File(
         'lib/repository/${name}_loot_template_repository.dart',
       ).readAsStringSync();
-      expect(source, contains('@FoxyRepositoryFilter'));
+      expect(source, contains('@FoxyFilter.text'));
       expect(source, isNot(contains(RegExp(r'\bLootTemplateFilter\?'))));
     }
   });

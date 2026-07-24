@@ -6,27 +6,12 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_faction_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DbcFactionTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'faction',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class DbcFactionTemplateRepository with RepositoryMixin {
+@FoxyRepository(DbcFactionTemplateEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('faction')
+@FoxyFilter.text('name')
+class DbcFactionTemplateRepository
+    with RepositoryMixin, _DbcFactionTemplateRepositoryMixin {
   static const _table = 'foxy.dbc_faction_template';
   static const _factionTable = 'foxy.dbc_faction';
 
@@ -58,13 +43,6 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     return DbcFactionTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyDbcFactionTemplate(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原阵营模板不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefDbcFactionTemplateEntity>> getBriefDbcFactionTemplates({
     int page = 1,
     DbcFactionTemplateFilter? filter,
@@ -91,12 +69,6 @@ class DbcFactionTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<DbcFactionTemplateEntity?> getDbcFactionTemplate(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return DbcFactionTemplateEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<DbcFactionTemplateEntity>> getDbcFactionTemplates() async {
     final results = await laconic.table(_table).get();
     return results
@@ -115,26 +87,6 @@ class DbcFactionTemplateRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('阵营模板 ${factionTemplate.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateDbcFactionTemplate(
-    int originalKey,
-    DbcFactionTemplateEntity factionTemplate,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(factionTemplate.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原阵营模板不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的阵营模板 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -166,9 +118,5 @@ class DbcFactionTemplateRepository with RepositoryMixin {
       '$_factionTable AS df',
       (join) => join.on('dft.Faction', 'df.ID'),
     );
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('QuestFactionReward Entity 精确覆盖 11 个物理列且全部为标量', () {
@@ -83,9 +84,9 @@ void main() {
   });
 
   test('Repository 预分配固定 ID 并使用原始键写入当前表', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/quest_faction_reward_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('1'));
     expect(source, contains('2'));
     expect(source, contains('int originalKey'));

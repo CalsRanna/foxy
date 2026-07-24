@@ -7,6 +7,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('CurrencyTypes Entity 精确覆盖 4 个独立标量物理列', () {
@@ -122,9 +123,9 @@ void main() {
   });
 
   test('Repository 使用原始键、数据库唯一约束和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/currency_type_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/currency_type/currency_type_detail_view_model.dart',
     ).readAsStringSync();
@@ -143,9 +144,9 @@ void main() {
   });
 
   test('列表 locale JOIN 限定 zhCN、名称筛选生效且无复制入口', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/currency_type_repository.dart',
-    ).readAsStringSync();
+    );
     final page = File(
       'lib/page/currency_type/currency_type_list_page.dart',
     ).readAsStringSync();

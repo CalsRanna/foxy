@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('page_text Entity 精确覆盖四个标量物理列', () {
@@ -130,9 +131,9 @@ void main() {
   });
 
   test('主表 Repository 使用原始 Key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/page_text_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('await _validateNextPage('));
     expect(source, isNot(contains(".table('item_template')")));
     expect(source, isNot(contains(".table('gameobject_template')")));

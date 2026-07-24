@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'GameObjectLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class GameObjectLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(GameObjectLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class GameObjectLootTemplateRepository
+    with RepositoryMixin, _GameObjectLootTemplateRepositoryMixin {
   static const _table = 'gameobject_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -255,9 +244,5 @@ class GameObjectLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GameObjectLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

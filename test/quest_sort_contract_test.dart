@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('QuestSort Entity 精确覆盖 18 个物理列且全部为标量', () {
@@ -65,9 +66,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/quest_sort_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, isNot(contains('.validate()')));
     expect(source, contains('int originalKey'));
     expect(source, contains('.update(questSort.toJson())'));

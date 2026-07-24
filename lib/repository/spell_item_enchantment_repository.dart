@@ -8,23 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_item_enchantment_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SpellItemEnchantmentFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(SpellItemEnchantmentEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class SpellItemEnchantmentRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _SpellItemEnchantmentRepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment';
 
   @override
@@ -50,13 +41,6 @@ class SpellItemEnchantmentRepository
     return SpellItemEnchantmentEntity(id: await _getNextId());
   }
 
-  Future<void> destroySpellItemEnchantment(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSpellItemEnchantmentEntity>> getBriefSpellItemEnchantments({
     int page = 1,
     SpellItemEnchantmentFilter? filter,
@@ -78,12 +62,6 @@ class SpellItemEnchantmentRepository
     return results
         .map((row) => BriefSpellItemEnchantmentEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<SpellItemEnchantmentEntity?> getSpellItemEnchantment(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellItemEnchantmentEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
@@ -120,26 +98,6 @@ class SpellItemEnchantmentRepository
     }
   }
 
-  Future<void> updateSpellItemEnchantment(
-    int originalKey,
-    SpellItemEnchantmentEntity spellItemEnchantment,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(spellItemEnchantment.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术附魔 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SpellItemEnchantmentFilter? filter,
@@ -162,9 +120,5 @@ class SpellItemEnchantmentRepository
       throw StateError('SpellItemEnchantment ID 已超出 DBC int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'talent_tab_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'TalentTabFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(TalentTabEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class TalentTabRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _TalentTabRepositoryMixin {
   static const _table = 'foxy.dbc_talent_tab';
 
   @override
@@ -47,13 +36,6 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return TalentTabEntity(id: await _getNextId());
   }
 
-  Future<void> destroyTalentTab(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefTalentTabEntity>> getBriefTalentTabs({
     int page = 1,
     TalentTabFilter? filter,
@@ -74,11 +56,6 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return rows
         .map((row) => BriefTalentTabEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<TalentTabEntity?> getTalentTab(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : TalentTabEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getTalentTabLocales(
@@ -111,26 +88,6 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateTalentTab(
-    int originalKey,
-    TalentTabEntity talentTab,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(talentTab.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的天赋页 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -150,9 +107,5 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       throw StateError('TalentTab ID 已超出 DBC int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

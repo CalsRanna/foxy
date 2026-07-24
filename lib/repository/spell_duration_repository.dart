@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_duration_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SpellDurationFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SpellDurationRepository with RepositoryMixin {
+@FoxyRepository(SpellDurationEntity)
+@FoxyFilter.text('id')
+class SpellDurationRepository
+    with RepositoryMixin, _SpellDurationRepositoryMixin {
   static const _table = 'foxy.dbc_spell_duration';
 
   Future<int> copySpellDuration(int key) async {
@@ -37,13 +30,6 @@ class SpellDurationRepository with RepositoryMixin {
 
   Future<SpellDurationEntity> createSpellDuration() async {
     return SpellDurationEntity(id: await nextMaxPlusOne(_table, 'ID'));
-  }
-
-  Future<void> destroySpellDuration(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术持续时间不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefSpellDurationEntity>> getBriefSpellDurations({
@@ -67,12 +53,6 @@ class SpellDurationRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SpellDurationEntity?> getSpellDuration(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellDurationEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<SpellDurationEntity>> getSpellDurations() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SpellDurationEntity.fromJson(e.toMap())).toList();
@@ -92,35 +72,11 @@ class SpellDurationRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateSpellDuration(
-    int originalKey,
-    SpellDurationEntity duration,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(duration.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术持续时间不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术持续时间 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SpellDurationFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

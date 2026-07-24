@@ -1,23 +1,29 @@
 import 'package:meta/meta_meta.dart';
 
-enum FoxyFilterFieldType { boolean, decimal, integer, text }
+enum FoxyFilterType { boolean, decimal, integer, text }
 
-final class FoxyRepositoryFilterField {
+@Target({TargetKind.classType})
+final class FoxyFilter {
   final Object defaultValue;
   final String name;
-  final FoxyFilterFieldType type;
+  final FoxyFilterType type;
 
-  const FoxyRepositoryFilterField({
-    required this.name,
-    required this.type,
-    required this.defaultValue,
-  });
+  const FoxyFilter.boolean(this.name, {bool this.defaultValue = false})
+    : type = FoxyFilterType.boolean;
+
+  const FoxyFilter.decimal(this.name, {double this.defaultValue = 0.0})
+    : type = FoxyFilterType.decimal;
+
+  const FoxyFilter.integer(this.name, {int this.defaultValue = 0})
+    : type = FoxyFilterType.integer;
+
+  const FoxyFilter.text(this.name, {String this.defaultValue = ''})
+    : type = FoxyFilterType.text;
 }
 
 @Target({TargetKind.classType})
-final class FoxyRepositoryFilter {
-  final List<FoxyRepositoryFilterField> fields;
-  final String name;
+final class FoxyRepository {
+  final Type entity;
 
-  const FoxyRepositoryFilter({required this.name, required this.fields});
+  const FoxyRepository(this.entity);
 }

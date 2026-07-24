@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'sound_provider_preferences_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SoundProviderPreferencesFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'description',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SoundProviderPreferencesRepository with RepositoryMixin {
+@FoxyRepository(SoundProviderPreferencesEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('description')
+class SoundProviderPreferencesRepository
+    with RepositoryMixin, _SoundProviderPreferencesRepositoryMixin {
   static const _table = 'foxy.dbc_sound_provider_preferences';
 
   Future<int> copySoundProviderPreference(int key) async {
@@ -133,9 +122,5 @@ class SoundProviderPreferencesRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

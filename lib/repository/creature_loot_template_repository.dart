@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(CreatureLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class CreatureLootTemplateRepository
+    with RepositoryMixin, _CreatureLootTemplateRepositoryMixin {
   static const _table = 'creature_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item', 'Reference', 'GroupId'};
 
@@ -255,13 +244,5 @@ class CreatureLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureLootTemplateKey key) {
-    return builder
-        .where('Entry', key.entry)
-        .where('Item', key.item)
-        .where('Reference', key.reference)
-        .where('GroupId', key.groupId);
   }
 }

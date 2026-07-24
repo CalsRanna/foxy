@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -18,9 +17,9 @@ void main() {
   });
 
   test('SpellFocusObject Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_focus_object_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<int> copySpellFocusObject('));
     expect(source, contains('Future<void> storeSpellFocusObject('));
     expect(source, contains('if (entity.id <= 0)'));

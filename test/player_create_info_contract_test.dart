@@ -9,6 +9,7 @@ import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_item_entity.dart';
 import 'package:foxy/entity/player_create_info_skill_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('六张 playercreateinfo 表 Entity 精确覆盖 31 个物理列', () {
@@ -179,9 +180,9 @@ void main() {
   });
 
   test('出生地图 Picker 排除 ObjectMgr 不接受的实例地图', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/map_info_repository.dart',
-    ).readAsStringSync();
+    );
     final delegates = File(
       'lib/widget/foxy_entity_picker_delegates.dart',
     ).readAsStringSync();

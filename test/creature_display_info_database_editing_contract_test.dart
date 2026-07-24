@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief 安全解码并返回物理 ID 标量', () {
@@ -15,9 +14,9 @@ void main() {
   });
 
   test('CreatureDisplayInfo Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/creature_display_info_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('int key'));
     expect(source, contains('Future<void> storeCreatureDisplayInfo('));
     expect(source, contains('int originalKey'));

@@ -115,7 +115,7 @@ void main() {
     var deletedChecks = 0;
 
     for (final file in editingRepositoryFiles) {
-      final source = file.readAsStringSync();
+      final source = readLocalDartLibrarySource(file.path);
       for (final match in updatePattern.allMatches(source)) {
         updateCount++;
         expect(
@@ -178,7 +178,7 @@ void main() {
 
   test('Repository 不再推断保存身份、返回替代键或执行隐式跨表删除', () {
     final source = editingRepositoryFiles
-        .map((file) => file.readAsStringSync())
+        .map((file) => readLocalDartLibrarySource(file.path))
         .join('\n');
     final saveMethods = RegExp(r'Future<void>\s+(save\w+)\s*\(')
         .allMatches(source)

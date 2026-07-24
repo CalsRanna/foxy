@@ -2,6 +2,15 @@
 
 part of 'game_object_loot_template_repository.dart';
 
+mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, GameObjectLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class GameObjectLootTemplateFilter {
   final String entry;
   final String name;

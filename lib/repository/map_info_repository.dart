@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'map_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'MapInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(MapInfoEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class MapInfoRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _MapInfoRepositoryMixin {
   static const _table = 'foxy.dbc_map';
 
   @override
@@ -58,13 +47,6 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return MapInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyMapInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
     int page = 1,
     MapInfoFilter? filter,
@@ -86,12 +68,6 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefMapInfoEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<MapInfoEntity?> getMapInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return MapInfoEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getMapInfoLocales(
@@ -124,23 +100,6 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateMapInfo(int originalKey, MapInfoEntity map) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(map.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的地图信息 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -154,9 +113,5 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

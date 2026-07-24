@@ -8,23 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'item_purchase_group_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemPurchaseGroupFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(ItemPurchaseGroupEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class ItemPurchaseGroupRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _ItemPurchaseGroupRepositoryMixin {
   static const _table = 'foxy.dbc_item_purchase_group';
 
   @override
@@ -48,13 +39,6 @@ class ItemPurchaseGroupRepository
     return ItemPurchaseGroupEntity(id: await _getNextId());
   }
 
-  Future<void> destroyItemPurchaseGroup(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemPurchaseGroupEntity>> getBriefItemPurchaseGroups({
     int page = 1,
     ItemPurchaseGroupFilter? filter,
@@ -69,13 +53,6 @@ class ItemPurchaseGroupRepository
     return rows
         .map((row) => BriefItemPurchaseGroupEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<ItemPurchaseGroupEntity?> getItemPurchaseGroup(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : ItemPurchaseGroupEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getItemPurchaseGroupLocales(
@@ -110,26 +87,6 @@ class ItemPurchaseGroupRepository
     }
   }
 
-  Future<void> updateItemPurchaseGroup(
-    int originalKey,
-    ItemPurchaseGroupEntity group,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(group.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的物品购买组 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemPurchaseGroupFilter? filter,
@@ -152,9 +109,5 @@ class ItemPurchaseGroupRepository
       throw StateError('物品购买组编号已超出 signed int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

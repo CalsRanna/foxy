@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_movement_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureMovementInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureMovementInfoRepository with RepositoryMixin {
+@FoxyRepository(CreatureMovementInfoEntity)
+@FoxyFilter.text('id')
+class CreatureMovementInfoRepository
+    with RepositoryMixin, _CreatureMovementInfoRepositoryMixin {
   static const _table = 'foxy.dbc_creature_movement_info';
 
   Future<int> copyCreatureMovementInfo(int key) async {
@@ -41,13 +34,6 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     return CreatureMovementInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureMovementInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物移动信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureMovementInfoEntity>> getBriefCreatureMovementInfos({
     int page = 1,
     CreatureMovementInfoFilter? filter,
@@ -61,12 +47,6 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     return results
         .map((row) => BriefCreatureMovementInfoEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<CreatureMovementInfoEntity?> getCreatureMovementInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureMovementInfoEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureMovementInfoEntity>> getCreatureMovementInfos() async {
@@ -92,26 +72,6 @@ class CreatureMovementInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateCreatureMovementInfo(
-    int originalKey,
-    CreatureMovementInfoEntity movementInfo,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(movementInfo.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物移动信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物移动信息 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureMovementInfoFilter? filter,
@@ -121,9 +81,5 @@ class CreatureMovementInfoRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -2,6 +2,18 @@
 
 part of 'pickpocketing_loot_template_repository.dart';
 
+mixin _PickpocketingLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(
+    QueryBuilder builder,
+    PickpocketingLootTemplateKey key,
+  ) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class PickpocketingLootTemplateFilter {
   final String entry;
   final String name;

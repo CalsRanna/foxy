@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'zone_music_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ZoneMusicFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ZoneMusicRepository with RepositoryMixin {
+@FoxyRepository(ZoneMusicEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class ZoneMusicRepository with RepositoryMixin, _ZoneMusicRepositoryMixin {
   static const _table = 'foxy.dbc_zone_music';
 
   Future<int> copyZoneMusic(int key) async {
@@ -40,13 +28,6 @@ class ZoneMusicRepository with RepositoryMixin {
   Future<ZoneMusicEntity> createZoneMusic() async =>
       ZoneMusicEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyZoneMusic(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原区域音乐不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefZoneMusicEntity>> getBriefZoneMusics({
     int page = 1,
     ZoneMusicFilter? filter,
@@ -58,11 +39,6 @@ class ZoneMusicRepository with RepositoryMixin {
     return rows
         .map((row) => BriefZoneMusicEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<ZoneMusicEntity?> getZoneMusic(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : ZoneMusicEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<ZoneMusicEntity>> getZoneMusics() async {
@@ -84,23 +60,6 @@ class ZoneMusicRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateZoneMusic(int originalKey, ZoneMusicEntity entity) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原区域音乐不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的区域音乐 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, ZoneMusicFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -112,9 +71,5 @@ class ZoneMusicRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

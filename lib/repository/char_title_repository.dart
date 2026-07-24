@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'char_title_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CharTitleFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(CharTitleEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class CharTitleRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _CharTitleRepositoryMixin {
   static const _table = 'foxy.dbc_char_titles';
 
   @override
@@ -52,13 +41,6 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return CharTitleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCharTitle(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCharTitleEntity>> getBriefCharTitles({
     int page = 1,
     CharTitleFilter? filter,
@@ -73,12 +55,6 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results
         .map((e) => BriefCharTitleEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<CharTitleEntity?> getCharTitle(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CharTitleEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getCharTitleLocales(
@@ -111,23 +87,6 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateCharTitle(int originalKey, CharTitleEntity title) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(title.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的角色称号 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, CharTitleFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -141,9 +100,5 @@ class CharTitleRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

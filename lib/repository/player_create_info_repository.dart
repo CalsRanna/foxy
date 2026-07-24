@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'PlayerCreateInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'race',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'class_',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class PlayerCreateInfoRepository with RepositoryMixin {
+@FoxyRepository(PlayerCreateInfoEntity)
+@FoxyFilter.text('race')
+@FoxyFilter.text('class_')
+class PlayerCreateInfoRepository
+    with RepositoryMixin, _PlayerCreateInfoRepositoryMixin {
   static const _table = 'playercreateinfo';
 
   Future<void> copyPlayerCreateInfo(PlayerCreateInfoKey key) async {
@@ -35,13 +24,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
 
   Future<PlayerCreateInfoEntity> createPlayerCreateInfo() async {
     return const PlayerCreateInfoEntity();
-  }
-
-  Future<void> destroyPlayerCreateInfo(PlayerCreateInfoKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原出生信息记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefPlayerCreateInfoEntity>> getBriefPlayerCreateInfos({
@@ -70,45 +52,6 @@ class PlayerCreateInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<PlayerCreateInfoEntity?> getPlayerCreateInfo(
-    PlayerCreateInfoKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PlayerCreateInfoEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storePlayerCreateInfo(PlayerCreateInfoEntity info) async {
-    try {
-      await laconic.table(_table).insert([info.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同种族与职业的出生信息已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updatePlayerCreateInfo(
-    PlayerCreateInfoKey originalKey,
-    PlayerCreateInfoEntity info,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(info.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原出生信息记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的种族与职业组合已存在');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     PlayerCreateInfoFilter? filter,
@@ -119,9 +62,5 @@ class PlayerCreateInfoRepository with RepositoryMixin {
       builder = builder.where('class', filter.class_);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoKey key) {
-    return builder.where('race', key.race).where('class', key.class_);
   }
 }

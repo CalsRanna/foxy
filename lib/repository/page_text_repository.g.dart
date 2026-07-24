@@ -2,6 +2,31 @@
 
 part of 'page_text_repository.dart';
 
+mixin _PageTextRepositoryMixin on RepositoryMixin {
+  Future<void> destroyPageText(int key) async {
+    final deletedRows = await _whereKey(
+      laconic.table('page_text'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<PageTextEntity?> getPageText(int key) async {
+    final results = await _whereKey(
+      laconic.table('page_text'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return PageTextEntity.fromJson(results.first.toMap());
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class PageTextFilter {
   final String id;
   final String text;

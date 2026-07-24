@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_range_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SpellRangeFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(SpellRangeEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class SpellRangeRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRangeRepositoryMixin {
   static const _table = 'foxy.dbc_spell_range';
 
   @override
@@ -52,13 +41,6 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return SpellRangeEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellRange(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
     int page = 1,
     SpellRangeFilter? filter,
@@ -78,12 +60,6 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results
         .map((e) => BriefSpellRangeEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<SpellRangeEntity?> getSpellRange(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellRangeEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getSpellRangeLocales(
@@ -116,23 +92,6 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateSpellRange(int originalKey, SpellRangeEntity range) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(range.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术射程 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SpellRangeFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -146,9 +105,5 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

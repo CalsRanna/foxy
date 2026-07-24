@@ -6,37 +6,14 @@ import 'package:laconic/laconic.dart';
 
 part 'item_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'description',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'classId',
-      type: FoxyFilterFieldType.integer,
-      defaultValue: -1,
-    ),
-    FoxyRepositoryFilterField(
-      name: 'subclass',
-      type: FoxyFilterFieldType.integer,
-      defaultValue: -1,
-    ),
-  ],
-)
-class ItemTemplateRepository with RepositoryMixin {
+@FoxyRepository(ItemTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+@FoxyFilter.text('description')
+@FoxyFilter.integer('classId', defaultValue: -1)
+@FoxyFilter.integer('subclass', defaultValue: -1)
+class ItemTemplateRepository
+    with RepositoryMixin, _ItemTemplateRepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
@@ -99,13 +76,6 @@ class ItemTemplateRepository with RepositoryMixin {
     return ItemTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
-  Future<void> destroyItemTemplate(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
     int page = 1,
     ItemTemplateFilter? filter,
@@ -144,14 +114,6 @@ class ItemTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemTemplateEntity?> getItemTemplate(int key) async {
-    var builder = laconic.table(_table);
-    builder = builder.where('entry', key).limit(1);
-    var results = await builder.get();
-    if (results.isEmpty) return null;
-    return ItemTemplateEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<ItemTemplateEntity>> getItemTemplates() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
@@ -166,26 +128,6 @@ class ItemTemplateRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('物品模板 ${template.entry} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateItemTemplate(
-    int originalKey,
-    ItemTemplateEntity template,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(template.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的物品模板 entry 已存在，无法保存');
       }
       rethrow;
     }
@@ -233,9 +175,5 @@ class ItemTemplateRepository with RepositoryMixin {
       builder = builder.where('it.subclass', filter.subclass);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('entry', key);
   }
 }

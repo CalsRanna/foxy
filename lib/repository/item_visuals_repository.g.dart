@@ -2,6 +2,12 @@
 
 part of 'item_visuals_repository.dart';
 
+mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class ItemVisualsFilter {
   final String id;
 

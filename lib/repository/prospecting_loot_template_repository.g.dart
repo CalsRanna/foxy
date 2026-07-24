@@ -2,6 +2,15 @@
 
 part of 'prospecting_loot_template_repository.dart';
 
+mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, ProspectingLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class ProspectingLootTemplateFilter {
   final String entry;
   final String name;

@@ -6,17 +6,9 @@ import 'package:laconic/laconic.dart';
 
 part 'vehicle_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'VehicleFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class VehicleRepository with RepositoryMixin {
+@FoxyRepository(VehicleEntity)
+@FoxyFilter.text('id')
+class VehicleRepository with RepositoryMixin, _VehicleRepositoryMixin {
   static const _table = 'foxy.dbc_vehicle';
 
   Future<int> copyVehicle(int key) async {
@@ -39,13 +31,6 @@ class VehicleRepository with RepositoryMixin {
     return VehicleEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyVehicle(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原载具不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefVehicleEntity>> getBriefVehicles({
     int page = 1,
     VehicleFilter? filter,
@@ -58,12 +43,6 @@ class VehicleRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefVehicleEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<VehicleEntity?> getVehicle(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return VehicleEntity.fromJson(results.first.toMap());
   }
 
   Future<List<VehicleEntity>> getVehicles() async {
@@ -85,32 +64,11 @@ class VehicleRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateVehicle(int originalKey, VehicleEntity vehicle) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(vehicle.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原载具不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的载具 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

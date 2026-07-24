@@ -5,16 +5,7 @@ import 'package:laconic/laconic.dart';
 
 part 'holiday_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'HolidayFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyFilter.text('id')
 class HolidayRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_holidays';
 

@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'QuestTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'title',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class QuestTemplateRepository with RepositoryMixin {
+@FoxyRepository(QuestTemplateEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('title')
+class QuestTemplateRepository
+    with RepositoryMixin, _QuestTemplateRepositoryMixin {
   static const _table = 'quest_template';
 
   Future<int> copyQuestTemplate(int key) async {
@@ -65,13 +54,6 @@ class QuestTemplateRepository with RepositoryMixin {
     return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyQuestTemplate(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
     QuestTemplateFilter? filter,
@@ -104,12 +86,6 @@ class QuestTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<QuestTemplateEntity?> getQuestTemplate(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestTemplateEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<QuestTemplateEntity>> getQuestTemplates() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
@@ -124,26 +100,6 @@ class QuestTemplateRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('任务模板 ${template.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateQuestTemplate(
-    int originalKey,
-    QuestTemplateEntity template,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(template.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原任务模板不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的任务模板 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -171,9 +127,5 @@ class QuestTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

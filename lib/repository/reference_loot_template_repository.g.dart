@@ -2,6 +2,15 @@
 
 part of 'reference_loot_template_repository.dart';
 
+mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, ReferenceLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class ReferenceLootTemplateFilter {
   final String entry;
   final String name;

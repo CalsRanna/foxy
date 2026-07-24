@@ -12,6 +12,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -174,9 +175,9 @@ void main() {
     final entity = File(
       'lib/entity/smart_script_entity.dart',
     ).readAsStringSync();
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/smart_script_repository.dart',
-    ).readAsStringSync();
+    );
     final detailViewModel = File(
       'lib/page/smart_script/smart_script_detail_view_model.dart',
     ).readAsStringSync();

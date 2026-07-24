@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('int 和 Brief 覆盖 ID', () {
@@ -11,12 +12,15 @@ void main() {
   });
 
   test('Repository 使用旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/npc_text_repository.dart',
+    );
+    final generatedSource = File(
+      'lib/repository/npc_text_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('int originalKey'));
     expect(source, contains('.update(npcText.toJson())'));
-    expect(source, contains("where('ID', key)"));
+    expect(generatedSource, contains("where('ID', key)"));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

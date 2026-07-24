@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'item_visual_effect_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemVisualEffectFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'model',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ItemVisualEffectRepository with RepositoryMixin {
+@FoxyRepository(ItemVisualEffectEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('model')
+class ItemVisualEffectRepository
+    with RepositoryMixin, _ItemVisualEffectRepositoryMixin {
   static const _table = 'foxy.dbc_item_visual_effects';
 
   Future<int> copyItemVisualEffect(int key) async {
@@ -44,13 +33,6 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return ItemVisualEffectEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemVisualEffect(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemVisualEffectEntity>> getBriefItemVisualEffects({
     int page = 1,
     ItemVisualEffectFilter? filter,
@@ -65,12 +47,6 @@ class ItemVisualEffectRepository with RepositoryMixin {
     return results
         .map((row) => BriefItemVisualEffectEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<ItemVisualEffectEntity?> getItemVisualEffect(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemVisualEffectEntity.fromJson(results.first.toMap());
   }
 
   Future<List<ItemVisualEffectEntity>> getItemVisualEffects() async {
@@ -94,26 +70,6 @@ class ItemVisualEffectRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateItemVisualEffect(
-    int originalKey,
-    ItemVisualEffectEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的物品视觉效果 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemVisualEffectFilter? filter,
@@ -126,9 +82,5 @@ class ItemVisualEffectRepository with RepositoryMixin {
       builder = builder.where('Model', '%${filter.model}%', comparator: 'like');
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

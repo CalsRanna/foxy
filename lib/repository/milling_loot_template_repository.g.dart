@@ -2,6 +2,15 @@
 
 part of 'milling_loot_template_repository.dart';
 
+mixin _MillingLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, MillingLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class MillingLootTemplateFilter {
   final String entry;
   final String name;

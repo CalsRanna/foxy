@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('ItemEnchantmentTemplateKey 和 Brief 覆盖 entry + ench', () {
@@ -17,13 +18,16 @@ void main() {
   });
 
   test('Repository 使用完整旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/item_enchantment_template_repository.dart',
+    );
+    final generatedSource = File(
+      'lib/repository/item_enchantment_template_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('ItemEnchantmentTemplateKey originalKey'));
-    expect(source, contains('.update(model.toJson())'));
-    expect(source, contains("where('entry', key.entry)"));
-    expect(source, contains("where('ench', key.ench)"));
+    expect(source, contains('.update(itemEnchantmentTemplate.toJson())'));
+    expect(generatedSource, contains("where('entry', key.entry)"));
+    expect(generatedSource, contains("where('ench', key.ench)"));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
@@ -31,9 +35,9 @@ void main() {
   });
 
   test('内嵌编辑器使用 Brief、editingKey、分页且两个键都可编辑', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/item_enchantment_template_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/item/item_enchantment_template_collection_editor_view_model.dart',
     ).readAsStringSync();

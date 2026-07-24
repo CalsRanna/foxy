@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'broadcast_text_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'BroadcastTextFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'text',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class BroadcastTextRepository with RepositoryMixin {
+@FoxyRepository(BroadcastTextEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('text')
+class BroadcastTextRepository
+    with RepositoryMixin, _BroadcastTextRepositoryMixin {
   static const _table = 'broadcast_text';
 
   Future<int> copyBroadcastText(int key) async {
@@ -42,13 +31,6 @@ class BroadcastTextRepository with RepositoryMixin {
 
   Future<BroadcastTextEntity> createBroadcastText() async {
     return BroadcastTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
-  }
-
-  Future<void> destroyBroadcastText(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefBroadcastTextEntity>> getBriefBroadcastTexts({
@@ -74,12 +56,6 @@ class BroadcastTextRepository with RepositoryMixin {
     }).toList();
   }
 
-  Future<BroadcastTextEntity?> getBroadcastText(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return BroadcastTextEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<BroadcastTextEntity>> getBroadcastTexts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
@@ -99,26 +75,6 @@ class BroadcastTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateBroadcastText(
-    int originalKey,
-    BroadcastTextEntity text,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(text.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原广播文本不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的广播文本 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, BroadcastTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -132,9 +88,5 @@ class BroadcastTextRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

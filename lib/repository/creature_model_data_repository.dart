@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_model_data_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureModelDataFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'modelName',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureModelDataRepository with RepositoryMixin {
+@FoxyRepository(CreatureModelDataEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('modelName')
+class CreatureModelDataRepository
+    with RepositoryMixin, _CreatureModelDataRepositoryMixin {
   static const _table = 'foxy.dbc_creature_model_data';
 
   Future<int> copyCreatureModelData(int key) async {
@@ -47,13 +36,6 @@ class CreatureModelDataRepository with RepositoryMixin {
     return CreatureModelDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureModelData(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物模型数据不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureModelDataEntity>> getBriefCreatureModelDatas({
     int page = 1,
     CreatureModelDataFilter? filter,
@@ -74,12 +56,6 @@ class CreatureModelDataRepository with RepositoryMixin {
     return results
         .map((e) => BriefCreatureModelDataEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<CreatureModelDataEntity?> getCreatureModelData(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureModelDataEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureModelDataEntity>> getCreatureModelDatas() async {
@@ -103,26 +79,6 @@ class CreatureModelDataRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateCreatureModelData(
-    int originalKey,
-    CreatureModelDataEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物模型数据不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物模型数据 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureModelDataFilter? filter,
@@ -139,9 +95,5 @@ class CreatureModelDataRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

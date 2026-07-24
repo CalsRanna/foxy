@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'prospecting_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ProspectingLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ProspectingLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(ProspectingLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class ProspectingLootTemplateRepository
+    with RepositoryMixin, _ProspectingLootTemplateRepositoryMixin {
   static const _table = 'prospecting_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -257,9 +246,5 @@ class ProspectingLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, ProspectingLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }
