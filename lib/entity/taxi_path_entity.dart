@@ -1,7 +1,28 @@
-class TaxiPathEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'taxi_path_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_taxi_path')
+class TaxiPathEntity with _TaxiPathEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('FromTaxiNode')
   final int fromTaxiNode;
+
+  @FoxyBriefField()
+  @FoxyFullField('ToTaxiNode')
   final int toTaxiNode;
+
+  @FoxyBriefField()
+  @FoxyFullField('Cost')
   final int cost;
 
   const TaxiPathEntity({
@@ -11,17 +32,6 @@ class TaxiPathEntity {
     this.cost = 0,
   });
 
-  factory TaxiPathEntity.fromJson(Map<String, dynamic> json) => TaxiPathEntity(
-    id: json['ID'] ?? 0,
-    fromTaxiNode: json['FromTaxiNode'] ?? 0,
-    toTaxiNode: json['ToTaxiNode'] ?? 0,
-    cost: json['Cost'] ?? 0,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'FromTaxiNode': fromTaxiNode,
-    'ToTaxiNode': toTaxiNode,
-    'Cost': cost,
-  };
+  factory TaxiPathEntity.fromJson(Map<String, dynamic> json) =>
+      _TaxiPathEntityMixin.fromJson(json);
 }

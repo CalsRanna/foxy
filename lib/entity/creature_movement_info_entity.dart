@@ -1,6 +1,22 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_movement_info_entity.g.dart';
+
 /// DBC 生物移动信息，对应 `foxy.dbc_creature_movement_info` 表。
-class CreatureMovementInfoEntity {
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_creature_movement_info')
+class CreatureMovementInfoEntity with _CreatureMovementInfoEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('SmoothFacingChaseRate')
   final double smoothFacingChaseRate;
 
   const CreatureMovementInfoEntity({
@@ -8,26 +24,6 @@ class CreatureMovementInfoEntity {
     this.smoothFacingChaseRate = 0,
   });
 
-  factory CreatureMovementInfoEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureMovementInfoEntity(
-      id: json['ID'] ?? 0,
-      smoothFacingChaseRate:
-          (json['SmoothFacingChaseRate'] as num?)?.toDouble() ?? 0,
-    );
-  }
-
-  CreatureMovementInfoEntity copyWith({
-    int? id,
-    double? smoothFacingChaseRate,
-  }) {
-    return CreatureMovementInfoEntity(
-      id: id ?? this.id,
-      smoothFacingChaseRate:
-          smoothFacingChaseRate ?? this.smoothFacingChaseRate,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'ID': id, 'SmoothFacingChaseRate': smoothFacingChaseRate};
-  }
+  factory CreatureMovementInfoEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureMovementInfoEntityMixin.fromJson(json);
 }

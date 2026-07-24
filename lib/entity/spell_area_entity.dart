@@ -1,14 +1,51 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_area_entity.g.dart';
+
 /// 法术区域技能
-class SpellAreaEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'spell_area')
+class SpellAreaEntity with _SpellAreaEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('spell', key: true)
   final int spell;
+
+  @FoxyBriefField()
+  @FoxyFullField('area', key: true)
   final int area;
+
+  @FoxyBriefField()
+  @FoxyFullField('quest_start', key: true)
   final int questStart;
+
+  @FoxyBriefField()
+  @FoxyFullField('quest_end')
   final int questEnd;
+
+  @FoxyBriefField()
+  @FoxyFullField('aura_spell', key: true)
   final int auraSpell;
+
+  @FoxyBriefField()
+  @FoxyFullField('racemask', key: true)
   final int racemask;
+
+  @FoxyBriefField()
+  @FoxyFullField('gender', key: true)
   final int gender;
+
+  @FoxyFullField('autocast')
   final int autocast;
+
+  @FoxyBriefField()
+  @FoxyFullField('quest_start_status')
   final int questStartStatus;
+
+  @FoxyBriefField()
+  @FoxyFullField('quest_end_status')
   final int questEndStatus;
 
   const SpellAreaEntity({
@@ -24,59 +61,6 @@ class SpellAreaEntity {
     this.questEndStatus = 11,
   });
 
-  factory SpellAreaEntity.fromJson(Map<String, dynamic> json) {
-    return SpellAreaEntity(
-      spell: json['spell'] ?? 0,
-      area: json['area'] ?? 0,
-      questStart: json['quest_start'] ?? 0,
-      questEnd: json['quest_end'] ?? 0,
-      auraSpell: json['aura_spell'] ?? 0,
-      racemask: json['racemask'] ?? 0,
-      gender: json['gender'] ?? 2,
-      autocast: json['autocast'] ?? 0,
-      questStartStatus: json['quest_start_status'] ?? 64,
-      questEndStatus: json['quest_end_status'] ?? 11,
-    );
-  }
-
-  SpellAreaEntity copyWith({
-    int? spell,
-    int? area,
-    int? questStart,
-    int? questEnd,
-    int? auraSpell,
-    int? racemask,
-    int? gender,
-    int? autocast,
-    int? questStartStatus,
-    int? questEndStatus,
-  }) {
-    return SpellAreaEntity(
-      spell: spell ?? this.spell,
-      area: area ?? this.area,
-      questStart: questStart ?? this.questStart,
-      questEnd: questEnd ?? this.questEnd,
-      auraSpell: auraSpell ?? this.auraSpell,
-      racemask: racemask ?? this.racemask,
-      gender: gender ?? this.gender,
-      autocast: autocast ?? this.autocast,
-      questStartStatus: questStartStatus ?? this.questStartStatus,
-      questEndStatus: questEndStatus ?? this.questEndStatus,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'spell': spell,
-      'area': area,
-      'quest_start': questStart,
-      'quest_end': questEnd,
-      'aura_spell': auraSpell,
-      'racemask': racemask,
-      'gender': gender,
-      'autocast': autocast,
-      'quest_start_status': questStartStatus,
-      'quest_end_status': questEndStatus,
-    };
-  }
+  factory SpellAreaEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellAreaEntityMixin.fromJson(json);
 }

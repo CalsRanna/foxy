@@ -1,5 +1,1 @@
-class DestructibleModelDataFilterEntity {
-  final String id;
-
-  const DestructibleModelDataFilterEntity({this.id = ''});
-}
+export 'destructible_model_data_entity.filter.g.dart';

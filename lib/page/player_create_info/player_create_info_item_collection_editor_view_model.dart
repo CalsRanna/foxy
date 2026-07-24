@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_player_create_info_item_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_item_entity.dart';
 import 'package:foxy/entity/player_create_info_item_key.dart';
 import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
@@ -46,7 +46,9 @@ class PlayerCreateInfoItemCollectionEditorViewModel
     final parent = parentKey;
     editingKey.value = null;
     selectedKey.value = null;
-    _applyCandidate(PlayerCreateInfoItemEntity(race: parent.race, class_: parent.class_));
+    _applyCandidate(
+      PlayerCreateInfoItemEntity(race: parent.race, class_: parent.class_),
+    );
     await _refresh();
   }
 
@@ -57,7 +59,10 @@ class PlayerCreateInfoItemCollectionEditorViewModel
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createPlayerCreateInfoItem(parent.race, parent.class_);
+      final candidate = await _repository.createPlayerCreateInfoItem(
+        parent.race,
+        parent.class_,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -159,7 +164,7 @@ class PlayerCreateInfoItemCollectionEditorViewModel
   PlayerCreateInfoItemEntity _collectCandidate() => PlayerCreateInfoItemEntity(
     race: raceController.collect(),
     class_: classController.collect(),
-    itemid: itemIdController.collect(),
+    itemId: itemIdController.collect(),
     amount: amountController.collect(),
     note: noteController.collect(),
   );
@@ -167,7 +172,7 @@ class PlayerCreateInfoItemCollectionEditorViewModel
   void _applyCandidate(PlayerCreateInfoItemEntity item) {
     raceController.init(item.race);
     classController.init(item.class_);
-    itemIdController.init(item.itemid);
+    itemIdController.init(item.itemId);
     amountController.init(item.amount);
     noteController.init(item.note);
   }
@@ -180,11 +185,18 @@ class PlayerCreateInfoItemCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final count = await _repository.countPlayerCreateInfoItems(parent.race, parent.class_);
+      final count = await _repository.countPlayerCreateInfoItems(
+        parent.race,
+        parent.class_,
+      );
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefPlayerCreateInfoItems(parent.race, parent.class_, page: nextPage);
+      final data = await _repository.getBriefPlayerCreateInfoItems(
+        parent.race,
+        parent.class_,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

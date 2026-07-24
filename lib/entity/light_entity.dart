@@ -1,18 +1,63 @@
-class LightEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'light_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_light')
+class LightEntity with _LightEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ContinentID')
   final int continentId;
+
+  @FoxyBriefField()
+  @FoxyFullField('GameCoords0')
   final double gameCoords0;
+
+  @FoxyBriefField()
+  @FoxyFullField('GameCoords1')
   final double gameCoords1;
+
+  @FoxyBriefField()
+  @FoxyFullField('GameCoords2')
   final double gameCoords2;
+
+  @FoxyFullField('GameFalloffStart')
   final double gameFalloffStart;
+
+  @FoxyFullField('GameFalloffEnd')
   final double gameFalloffEnd;
+
+  @FoxyFullField('LightParamsID0')
   final int lightParamsId0;
+
+  @FoxyFullField('LightParamsID1')
   final int lightParamsId1;
+
+  @FoxyFullField('LightParamsID2')
   final int lightParamsId2;
+
+  @FoxyFullField('LightParamsID3')
   final int lightParamsId3;
+
+  @FoxyFullField('LightParamsID4')
   final int lightParamsId4;
+
+  @FoxyFullField('LightParamsID5')
   final int lightParamsId5;
+
+  @FoxyFullField('LightParamsID6')
   final int lightParamsId6;
+
+  @FoxyFullField('LightParamsID7')
   final int lightParamsId7;
 
   const LightEntity({
@@ -33,39 +78,6 @@ class LightEntity {
     this.lightParamsId7 = 0,
   });
 
-  factory LightEntity.fromJson(Map<String, dynamic> json) => LightEntity(
-    id: json['ID'] ?? 0,
-    continentId: json['ContinentID'] ?? 0,
-    gameCoords0: (json['GameCoords0'] as num?)?.toDouble() ?? 0.0,
-    gameCoords1: (json['GameCoords1'] as num?)?.toDouble() ?? 0.0,
-    gameCoords2: (json['GameCoords2'] as num?)?.toDouble() ?? 0.0,
-    gameFalloffStart: (json['GameFalloffStart'] as num?)?.toDouble() ?? 0.0,
-    gameFalloffEnd: (json['GameFalloffEnd'] as num?)?.toDouble() ?? 0.0,
-    lightParamsId0: json['LightParamsID0'] ?? 0,
-    lightParamsId1: json['LightParamsID1'] ?? 0,
-    lightParamsId2: json['LightParamsID2'] ?? 0,
-    lightParamsId3: json['LightParamsID3'] ?? 0,
-    lightParamsId4: json['LightParamsID4'] ?? 0,
-    lightParamsId5: json['LightParamsID5'] ?? 0,
-    lightParamsId6: json['LightParamsID6'] ?? 0,
-    lightParamsId7: json['LightParamsID7'] ?? 0,
-  );
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'ContinentID': continentId,
-    'GameCoords0': gameCoords0,
-    'GameCoords1': gameCoords1,
-    'GameCoords2': gameCoords2,
-    'GameFalloffStart': gameFalloffStart,
-    'GameFalloffEnd': gameFalloffEnd,
-    'LightParamsID0': lightParamsId0,
-    'LightParamsID1': lightParamsId1,
-    'LightParamsID2': lightParamsId2,
-    'LightParamsID3': lightParamsId3,
-    'LightParamsID4': lightParamsId4,
-    'LightParamsID5': lightParamsId5,
-    'LightParamsID6': lightParamsId6,
-    'LightParamsID7': lightParamsId7,
-  };
+  factory LightEntity.fromJson(Map<String, dynamic> json) =>
+      _LightEntityMixin.fromJson(json);
 }

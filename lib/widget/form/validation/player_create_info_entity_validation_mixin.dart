@@ -1,5 +1,10 @@
 import 'package:foxy/constant/player_create_info_constants.dart';
+import 'package:foxy/entity/player_create_info_action_entity.dart';
+import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_item_entity.dart';
+import 'package:foxy/entity/player_create_info_skill_entity.dart';
+import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
 mixin PlayerCreateInfoValidationMixin on ViewModelValidationMixin {
@@ -56,7 +61,7 @@ mixin PlayerCreateInfoItemValidationMixin on ViewModelValidationMixin {
   void validatePlayerCreateInfoItemFields(PlayerCreateInfoItemEntity value) {
     final race = value.race;
     final class_ = value.class_;
-    final itemid = value.itemid;
+    final itemid = value.itemId;
     final amount = value.amount;
 
     if (race != 0 && !kPlayerRaceOptions.containsKey(race)) {
@@ -74,8 +79,8 @@ mixin PlayerCreateInfoSpellCustomValidationMixin on ViewModelValidationMixin {
   void validatePlayerCreateInfoSpellCustomFields(
     PlayerCreateInfoSpellCustomEntity value,
   ) {
-    final racemask = value.racemask;
-    final classmask = value.classmask;
+    final racemask = value.raceMask;
+    final classmask = value.classMask;
     final spell = value.spell;
 
     _validatePlayerCreateMasks(racemask, classmask);

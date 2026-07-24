@@ -1,14 +1,41 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'prospecting_loot_template_entity.g.dart';
+
 /// 掉落模板 — 对应 *_loot_template 表
-class ProspectingLootTemplateEntity {
+
+@FoxyFullEntity(table: 'prospecting_loot_template')
+class ProspectingLootTemplateEntity with _ProspectingLootTemplateEntityMixin {
+  @FoxyFullField('Entry', key: true)
   final int entry;
+
+  @FoxyFullField('Item', key: true)
   final int item;
+
+  @FoxyFullField('Reference')
   final int reference;
+
+  @FoxyFullField('Chance')
   final double chance;
+
+  @FoxyFullField('QuestRequired')
   final bool questRequired;
+
+  @FoxyFullField('LootMode')
   final int lootMode;
+
+  @FoxyFullField('GroupId')
   final int groupId;
+
+  @FoxyFullField('MinCount')
   final int minCount;
+
+  @FoxyFullField('MaxCount')
   final int maxCount;
+
+  @FoxyFullField('Comment')
   final String comment;
 
   const ProspectingLootTemplateEntity({
@@ -24,59 +51,6 @@ class ProspectingLootTemplateEntity {
     this.comment = '',
   });
 
-  factory ProspectingLootTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return ProspectingLootTemplateEntity(
-      entry: json['Entry'] ?? 0,
-      item: json['Item'] ?? 0,
-      reference: json['Reference'] ?? 0,
-      chance: (json['Chance'] as num?)?.toDouble() ?? 100,
-      questRequired: (json['QuestRequired'] ?? 0) == 1,
-      lootMode: json['LootMode'] ?? 1,
-      groupId: json['GroupId'] ?? 0,
-      minCount: json['MinCount'] ?? 1,
-      maxCount: json['MaxCount'] ?? 1,
-      comment: json['Comment'] ?? '',
-    );
-  }
-
-  ProspectingLootTemplateEntity copyWith({
-    int? entry,
-    int? item,
-    int? reference,
-    double? chance,
-    bool? questRequired,
-    int? lootMode,
-    int? groupId,
-    int? minCount,
-    int? maxCount,
-    String? comment,
-  }) {
-    return ProspectingLootTemplateEntity(
-      entry: entry ?? this.entry,
-      item: item ?? this.item,
-      reference: reference ?? this.reference,
-      chance: chance ?? this.chance,
-      questRequired: questRequired ?? this.questRequired,
-      lootMode: lootMode ?? this.lootMode,
-      groupId: groupId ?? this.groupId,
-      minCount: minCount ?? this.minCount,
-      maxCount: maxCount ?? this.maxCount,
-      comment: comment ?? this.comment,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'Entry': entry,
-      'Item': item,
-      'Reference': reference,
-      'Chance': chance,
-      'QuestRequired': questRequired ? 1 : 0,
-      'LootMode': lootMode,
-      'GroupId': groupId,
-      'MinCount': minCount,
-      'MaxCount': maxCount,
-      'Comment': comment,
-    };
-  }
+  factory ProspectingLootTemplateEntity.fromJson(Map<String, dynamic> json) =>
+      _ProspectingLootTemplateEntityMixin.fromJson(json);
 }

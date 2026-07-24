@@ -1,16 +1,49 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_offer_reward_entity.g.dart';
+
 /// QuestOfferReward 模型
 /// quest_offer_reward 表，1:1 关系与 quest_template，共享 ID 主键。
-class QuestOfferRewardEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'quest_offer_reward')
+class QuestOfferRewardEntity with _QuestOfferRewardEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Emote1')
   final int emote1;
+
+  @FoxyFullField('Emote2')
   final int emote2;
+
+  @FoxyFullField('Emote3')
   final int emote3;
+
+  @FoxyFullField('Emote4')
   final int emote4;
+
+  @FoxyFullField('EmoteDelay1')
   final int emoteDelay1;
+
+  @FoxyFullField('EmoteDelay2')
   final int emoteDelay2;
+
+  @FoxyFullField('EmoteDelay3')
   final int emoteDelay3;
+
+  @FoxyFullField('EmoteDelay4')
   final int emoteDelay4;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewardText')
   final String rewardText;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const QuestOfferRewardEntity({
@@ -27,112 +60,6 @@ class QuestOfferRewardEntity {
     this.verifiedBuild = 0,
   });
 
-  factory QuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardEntity(
-      id: json['ID'] ?? 0,
-      emote1: json['Emote1'] ?? 0,
-      emote2: json['Emote2'] ?? 0,
-      emote3: json['Emote3'] ?? 0,
-      emote4: json['Emote4'] ?? 0,
-      emoteDelay1: json['EmoteDelay1'] ?? 0,
-      emoteDelay2: json['EmoteDelay2'] ?? 0,
-      emoteDelay3: json['EmoteDelay3'] ?? 0,
-      emoteDelay4: json['EmoteDelay4'] ?? 0,
-      rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  QuestOfferRewardEntity copyWith({
-    int? id,
-    int? emote1,
-    int? emote2,
-    int? emote3,
-    int? emote4,
-    int? emoteDelay1,
-    int? emoteDelay2,
-    int? emoteDelay3,
-    int? emoteDelay4,
-    String? rewardText,
-    int? verifiedBuild,
-  }) {
-    return QuestOfferRewardEntity(
-      id: id ?? this.id,
-      emote1: emote1 ?? this.emote1,
-      emote2: emote2 ?? this.emote2,
-      emote3: emote3 ?? this.emote3,
-      emote4: emote4 ?? this.emote4,
-      emoteDelay1: emoteDelay1 ?? this.emoteDelay1,
-      emoteDelay2: emoteDelay2 ?? this.emoteDelay2,
-      emoteDelay3: emoteDelay3 ?? this.emoteDelay3,
-      emoteDelay4: emoteDelay4 ?? this.emoteDelay4,
-      rewardText: rewardText ?? this.rewardText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'Emote1': emote1,
-      'Emote2': emote2,
-      'Emote3': emote3,
-      'Emote4': emote4,
-      'EmoteDelay1': emoteDelay1,
-      'EmoteDelay2': emoteDelay2,
-      'EmoteDelay3': emoteDelay3,
-      'EmoteDelay4': emoteDelay4,
-      'RewardText': rewardText,
-      'VerifiedBuild': verifiedBuild,
-    };
-    return result;
-  }
-}
-
-/// quest_offer_reward_locale 本地化模型（复合键: ID + Locale）
-class QuestOfferRewardLocaleEntity {
-  final int id;
-  final String locale;
-  final String rewardText;
-  final int verifiedBuild;
-
-  const QuestOfferRewardLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.rewardText = '',
-    this.verifiedBuild = 0,
-  });
-
-  factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  QuestOfferRewardLocaleEntity copyWith({
-    int? id,
-    String? locale,
-    String? rewardText,
-    int? verifiedBuild,
-  }) {
-    return QuestOfferRewardLocaleEntity(
-      id: id ?? this.id,
-      locale: locale ?? this.locale,
-      rewardText: rewardText ?? this.rewardText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'locale': locale,
-      'RewardText': rewardText,
-      'VerifiedBuild': verifiedBuild,
-    };
-    return result;
-  }
+  factory QuestOfferRewardEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestOfferRewardEntityMixin.fromJson(json);
 }

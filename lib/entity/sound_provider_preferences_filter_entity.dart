@@ -1,9 +1,1 @@
-class SoundProviderPreferencesFilterEntity {
-  final String id;
-  final String description;
-
-  const SoundProviderPreferencesFilterEntity({
-    this.id = '',
-    this.description = '',
-  });
-}
+export 'sound_provider_preferences_entity.filter.g.dart';

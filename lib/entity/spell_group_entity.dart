@@ -1,25 +1,24 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_group_entity.g.dart';
+
 /// 法术技能组
-class SpellGroupEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'spell_group')
+class SpellGroupEntity with _SpellGroupEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('id', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('spell_id', key: true)
   final int spellId;
 
   const SpellGroupEntity({this.id = 0, this.spellId = 0});
 
-  factory SpellGroupEntity.fromJson(Map<String, dynamic> json) {
-    return SpellGroupEntity(
-      id: json['id'] ?? 0,
-      spellId: json['spell_id'] ?? 0,
-    );
-  }
-
-  SpellGroupEntity copyWith({int? id, int? spellId}) {
-    return SpellGroupEntity(
-      id: id ?? this.id,
-      spellId: spellId ?? this.spellId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'spell_id': spellId};
-  }
+  factory SpellGroupEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellGroupEntityMixin.fromJson(json);
 }

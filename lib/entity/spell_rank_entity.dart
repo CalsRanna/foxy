@@ -1,7 +1,20 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_rank_entity.g.dart';
+
 /// 法术技能排行
-class SpellRankEntity {
+
+@FoxyFullEntity(table: 'spell_ranks')
+class SpellRankEntity with _SpellRankEntityMixin {
+  @FoxyFullField('first_spell_id', key: true)
   final int firstSpellId;
+
+  @FoxyFullField('spell_id')
   final int spellId;
+
+  @FoxyFullField('rank', key: true)
   final int rank;
 
   const SpellRankEntity({
@@ -10,23 +23,6 @@ class SpellRankEntity {
     this.rank = 0,
   });
 
-  factory SpellRankEntity.fromJson(Map<String, dynamic> json) {
-    return SpellRankEntity(
-      firstSpellId: json['first_spell_id'] ?? 0,
-      spellId: json['spell_id'] ?? 0,
-      rank: json['rank'] ?? 0,
-    );
-  }
-
-  SpellRankEntity copyWith({int? firstSpellId, int? spellId, int? rank}) {
-    return SpellRankEntity(
-      firstSpellId: firstSpellId ?? this.firstSpellId,
-      spellId: spellId ?? this.spellId,
-      rank: rank ?? this.rank,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'first_spell_id': firstSpellId, 'spell_id': spellId, 'rank': rank};
-  }
+  factory SpellRankEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellRankEntityMixin.fromJson(json);
 }

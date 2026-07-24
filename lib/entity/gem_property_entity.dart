@@ -1,8 +1,32 @@
-class GemPropertyEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'gem_property_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_gem_properties')
+class GemPropertyEntity with _GemPropertyEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Enchant_ID')
   final int enchantId;
+
+  @FoxyBriefField()
+  @FoxyFullField('Maxcount_inv')
   final int maxCountInv;
+
+  @FoxyBriefField()
+  @FoxyFullField('Maxcount_item')
   final int maxCountItem;
+
+  @FoxyBriefField()
+  @FoxyFullField('Type')
   final int type;
 
   const GemPropertyEntity({
@@ -13,39 +37,6 @@ class GemPropertyEntity {
     this.type = 0,
   });
 
-  factory GemPropertyEntity.fromJson(Map<String, dynamic> json) {
-    return GemPropertyEntity(
-      id: json['ID'] ?? 0,
-      enchantId: json['Enchant_ID'] ?? 0,
-      maxCountInv: json['Maxcount_inv'] ?? 0,
-      maxCountItem: json['Maxcount_item'] ?? 0,
-      type: json['Type'] ?? 0,
-    );
-  }
-
-  GemPropertyEntity copyWith({
-    int? id,
-    int? enchantId,
-    int? maxCountInv,
-    int? maxCountItem,
-    int? type,
-  }) {
-    return GemPropertyEntity(
-      id: id ?? this.id,
-      enchantId: enchantId ?? this.enchantId,
-      maxCountInv: maxCountInv ?? this.maxCountInv,
-      maxCountItem: maxCountItem ?? this.maxCountItem,
-      type: type ?? this.type,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Enchant_ID': enchantId,
-      'Maxcount_inv': maxCountInv,
-      'Maxcount_item': maxCountItem,
-      'Type': type,
-    };
-  }
+  factory GemPropertyEntity.fromJson(Map<String, dynamic> json) =>
+      _GemPropertyEntityMixin.fromJson(json);
 }

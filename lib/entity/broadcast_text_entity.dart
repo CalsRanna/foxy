@@ -1,7 +1,21 @@
-class BroadcastTextEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'broadcast_text_entity.g.dart';
+
+@FoxyFullEntity(table: 'broadcast_text')
+class BroadcastTextEntity with _BroadcastTextEntityMixin {
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('LanguageID')
   final int languageId;
+
+  @FoxyFullField('MaleText')
   final String maleText;
+
+  @FoxyFullField('FemaleText')
   final String femaleText;
 
   const BroadcastTextEntity({
@@ -11,40 +25,11 @@ class BroadcastTextEntity {
     this.femaleText = '',
   });
 
-  factory BroadcastTextEntity.fromJson(Map<String, dynamic> json) {
-    return BroadcastTextEntity(
-      id: json['ID'] ?? 0,
-      languageId: json['LanguageID'] ?? 0,
-      maleText: json['MaleText'] ?? '',
-      femaleText: json['FemaleText'] ?? '',
-    );
-  }
+  factory BroadcastTextEntity.fromJson(Map<String, dynamic> json) =>
+      _BroadcastTextEntityMixin.fromJson(json);
 
   String get displayText {
     if (maleText.isNotEmpty) return maleText;
     return femaleText;
-  }
-
-  BroadcastTextEntity copyWith({
-    int? id,
-    int? languageId,
-    String? maleText,
-    String? femaleText,
-  }) {
-    return BroadcastTextEntity(
-      id: id ?? this.id,
-      languageId: languageId ?? this.languageId,
-      maleText: maleText ?? this.maleText,
-      femaleText: femaleText ?? this.femaleText,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'LanguageID': languageId,
-      'MaleText': maleText,
-      'FemaleText': femaleText,
-    };
   }
 }

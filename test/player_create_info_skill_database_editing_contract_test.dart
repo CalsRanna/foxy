@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_player_create_info_skill_entity.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_skill_entity.dart';
 import 'package:foxy/entity/player_create_info_skill_key.dart';
 
 void main() {

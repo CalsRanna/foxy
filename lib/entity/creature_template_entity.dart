@@ -1,58 +1,178 @@
-class CreatureTemplateEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_template_entity.g.dart';
+
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'creature_template')
+class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
+  @FoxyFullField('AIName')
   final String aiName;
+
+  @FoxyFullField('ArmorModifier')
   final double armorModifier;
+
+  @FoxyFullField('BaseAttackTime')
   final int baseAttackTime;
+
+  @FoxyFullField('BaseVariance')
   final double baseVariance;
+
+  @FoxyFullField('DamageModifier')
   final double damageModifier;
+
+  @FoxyFullField('difficulty_entry_1')
   final int difficultyEntry1;
+
+  @FoxyFullField('difficulty_entry_2')
   final int difficultyEntry2;
+
+  @FoxyFullField('difficulty_entry_3')
   final int difficultyEntry3;
+
+  @FoxyFullField('dmgschool')
   final int damageSchool;
+
+  @FoxyFullField('detection_range')
   final double detectionRange;
+
+  @FoxyFullField('dynamicflags')
   final int dynamicFlags;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyFullField('exp')
   final int exp;
+
+  @FoxyFullField('ExperienceModifier')
   final double experienceModifier;
+
+  @FoxyFullField('faction')
   final int faction;
+
+  @FoxyFullField('family')
   final int family;
+
+  @FoxyFullField('flags_extra')
   final int flagsExtra;
+
+  @FoxyFullField('gossip_menu_id')
   final int gossipMenuId;
+
+  @FoxyFullField('HealthModifier')
   final double healthModifier;
+
+  @FoxyFullField('HoverHeight')
   final double hoverHeight;
+
+  @FoxyFullField('IconName')
   final String iconName;
+
+  @FoxyFullField('KillCredit1')
   final int killCredit1;
+
+  @FoxyFullField('KillCredit2')
   final int killCredit2;
+
+  @FoxyFullField('lootid')
   final int lootId;
+
+  @FoxyFullField('maxgold')
   final int maxGold;
+
+  @FoxyFullField('maxlevel')
   final int maxLevel;
+
+  @FoxyFullField('ManaModifier')
   final double manaModifier;
+
+  @FoxyFullField('minlevel')
   final int minLevel;
+
+  @FoxyFullField('mingold')
   final int minGold;
+
+  @FoxyFullField('movementId')
   final int movementId;
+
+  @FoxyFullField('MovementType')
   final int movementType;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('name')
   final String name;
+
+  @FoxyFullField('npcflag')
   final int npcFlag;
+
+  @FoxyFullField('PetSpellDataId')
   final int petSpellDataId;
+
+  @FoxyFullField('pickpocketloot')
   final int pickpocketLoot;
+
+  @FoxyFullField('RacialLeader')
   final int racialLeader;
+
+  @FoxyFullField('RangeAttackTime')
   final int rangeAttackTime;
+
+  @FoxyFullField('RangeVariance')
   final double rangeVariance;
+
+  @FoxyFullField('rank')
   final int rank;
+
+  @FoxyFullField('RegenHealth')
   final int regenHealth;
+
+  @FoxyFullField('ScriptName')
   final String scriptName;
+
+  @FoxyFullField('skinloot')
   final int skinLoot;
+
+  @FoxyFullField('speed_flight')
   final double speedFlight;
+
+  @FoxyFullField('speed_run')
   final double speedRun;
+
+  @FoxyFullField('speed_swim')
   final double speedSwim;
+
+  @FoxyFullField('speed_walk')
   final double speedWalk;
+
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('subname')
   final String subName;
+
+  @FoxyFullField('type')
   final int type;
+
+  @FoxyFullField('type_flags')
   final int typeFlags;
+
+  @FoxyFullField('unit_class')
   final int unitClass;
+
+  @FoxyFullField('unit_flags')
   final int unitFlags;
+
+  @FoxyFullField('unit_flags2')
   final int unitFlags2;
+
+  @FoxyFullField('VehicleId')
   final int vehicleId;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
+
+  @FoxyFullField('CreatureImmunitiesId')
   final int creatureImmunitiesId;
 
   const CreatureTemplateEntity({
@@ -113,239 +233,6 @@ class CreatureTemplateEntity {
     this.creatureImmunitiesId = 0,
   });
 
-  factory CreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateEntity(
-      aiName: json['AIName'] ?? '',
-      armorModifier: json['ArmorModifier'] ?? 1.0,
-      baseAttackTime: json['BaseAttackTime'] ?? 0,
-      baseVariance: json['BaseVariance'] ?? 1.0,
-      damageModifier: json['DamageModifier'] ?? 1.0,
-      difficultyEntry1: json['difficulty_entry_1'] ?? 0,
-      difficultyEntry2: json['difficulty_entry_2'] ?? 0,
-      difficultyEntry3: json['difficulty_entry_3'] ?? 0,
-      damageSchool: json['dmgschool'] ?? 0,
-      detectionRange: json['detection_range'] ?? 20.0,
-      dynamicFlags: json['dynamicflags'] ?? 0,
-      entry: json['entry'] ?? 0,
-      exp: json['exp'] ?? 0,
-      experienceModifier: json['ExperienceModifier'] ?? 1.0,
-      faction: json['faction'] ?? 0,
-      family: json['family'] ?? 0,
-      flagsExtra: json['flags_extra'] ?? 0,
-      gossipMenuId: json['gossip_menu_id'] ?? 0,
-      healthModifier: json['HealthModifier'] ?? 1.0,
-      hoverHeight: json['HoverHeight'] ?? 1.0,
-      iconName: json['IconName'] ?? '',
-      killCredit1: json['KillCredit1'] ?? 0,
-      killCredit2: json['KillCredit2'] ?? 0,
-      lootId: json['lootid'] ?? 0,
-      maxGold: json['maxgold'] ?? 0,
-      maxLevel: json['maxlevel'] ?? 1,
-      manaModifier: json['ManaModifier'] ?? 1.0,
-      minLevel: json['minlevel'] ?? 1,
-      minGold: json['mingold'] ?? 0,
-      movementId: json['movementId'] ?? 0,
-      movementType: json['MovementType'] ?? 0,
-      name: json['name'] ?? '',
-      npcFlag: json['npcflag'] ?? 0,
-      petSpellDataId: json['PetSpellDataId'] ?? 0,
-      pickpocketLoot: json['pickpocketloot'] ?? 0,
-      racialLeader: json['RacialLeader'] ?? 0,
-      rangeAttackTime: json['RangeAttackTime'] ?? 0,
-      rangeVariance: json['RangeVariance'] ?? 1.0,
-      rank: json['rank'] ?? 0,
-      regenHealth: json['RegenHealth'] ?? 1,
-      scriptName: json['ScriptName'] ?? '',
-      skinLoot: json['skinloot'] ?? 0,
-      speedFlight: json['speed_flight'] ?? 1.0,
-      speedRun: json['speed_run'] ?? 1.14286,
-      speedSwim: json['speed_swim'] ?? 1.0,
-      speedWalk: json['speed_walk'] ?? 1.0,
-      subName: json['subname'] ?? '',
-      type: json['type'] ?? 0,
-      typeFlags: json['type_flags'] ?? 0,
-      unitClass: json['unit_class'] ?? 1,
-      unitFlags: json['unit_flags'] ?? 0,
-      unitFlags2: json['unit_flags2'] ?? 0,
-      vehicleId: json['VehicleId'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-      creatureImmunitiesId: json['CreatureImmunitiesId'] ?? 0,
-    );
-  }
-
-  CreatureTemplateEntity copyWith({
-    String? aiName,
-    double? armorModifier,
-    int? baseAttackTime,
-    double? baseVariance,
-    double? damageModifier,
-    int? difficultyEntry1,
-    int? difficultyEntry2,
-    int? difficultyEntry3,
-    int? damageSchool,
-    double? detectionRange,
-    int? dynamicFlags,
-    int? entry,
-    int? exp,
-    double? experienceModifier,
-    int? faction,
-    int? family,
-    int? flagsExtra,
-    int? gossipMenuId,
-    double? healthModifier,
-    double? hoverHeight,
-    String? iconName,
-    int? killCredit1,
-    int? killCredit2,
-    int? lootId,
-    int? maxGold,
-    int? maxLevel,
-    double? manaModifier,
-    int? minLevel,
-    int? minGold,
-    int? movementId,
-    int? movementType,
-    String? name,
-    int? npcFlag,
-    int? petSpellDataId,
-    int? pickpocketLoot,
-    int? racialLeader,
-    int? rangeAttackTime,
-    double? rangeVariance,
-    int? rank,
-    int? regenHealth,
-    String? scriptName,
-    int? skinLoot,
-    double? speedFlight,
-    double? speedRun,
-    double? speedSwim,
-    double? speedWalk,
-    String? subName,
-    int? type,
-    int? typeFlags,
-    int? unitClass,
-    int? unitFlags,
-    int? unitFlags2,
-    int? vehicleId,
-    int? verifiedBuild,
-    int? creatureImmunitiesId,
-  }) {
-    return CreatureTemplateEntity(
-      aiName: aiName ?? this.aiName,
-      armorModifier: armorModifier ?? this.armorModifier,
-      baseAttackTime: baseAttackTime ?? this.baseAttackTime,
-      baseVariance: baseVariance ?? this.baseVariance,
-      damageModifier: damageModifier ?? this.damageModifier,
-      difficultyEntry1: difficultyEntry1 ?? this.difficultyEntry1,
-      difficultyEntry2: difficultyEntry2 ?? this.difficultyEntry2,
-      difficultyEntry3: difficultyEntry3 ?? this.difficultyEntry3,
-      damageSchool: damageSchool ?? this.damageSchool,
-      detectionRange: detectionRange ?? this.detectionRange,
-      dynamicFlags: dynamicFlags ?? this.dynamicFlags,
-      entry: entry ?? this.entry,
-      exp: exp ?? this.exp,
-      experienceModifier: experienceModifier ?? this.experienceModifier,
-      faction: faction ?? this.faction,
-      family: family ?? this.family,
-      flagsExtra: flagsExtra ?? this.flagsExtra,
-      gossipMenuId: gossipMenuId ?? this.gossipMenuId,
-      healthModifier: healthModifier ?? this.healthModifier,
-      hoverHeight: hoverHeight ?? this.hoverHeight,
-      iconName: iconName ?? this.iconName,
-      killCredit1: killCredit1 ?? this.killCredit1,
-      killCredit2: killCredit2 ?? this.killCredit2,
-      lootId: lootId ?? this.lootId,
-      maxGold: maxGold ?? this.maxGold,
-      maxLevel: maxLevel ?? this.maxLevel,
-      manaModifier: manaModifier ?? this.manaModifier,
-      minLevel: minLevel ?? this.minLevel,
-      minGold: minGold ?? this.minGold,
-      movementId: movementId ?? this.movementId,
-      movementType: movementType ?? this.movementType,
-      name: name ?? this.name,
-      npcFlag: npcFlag ?? this.npcFlag,
-      petSpellDataId: petSpellDataId ?? this.petSpellDataId,
-      pickpocketLoot: pickpocketLoot ?? this.pickpocketLoot,
-      racialLeader: racialLeader ?? this.racialLeader,
-      rangeAttackTime: rangeAttackTime ?? this.rangeAttackTime,
-      rangeVariance: rangeVariance ?? this.rangeVariance,
-      rank: rank ?? this.rank,
-      regenHealth: regenHealth ?? this.regenHealth,
-      scriptName: scriptName ?? this.scriptName,
-      skinLoot: skinLoot ?? this.skinLoot,
-      speedFlight: speedFlight ?? this.speedFlight,
-      speedRun: speedRun ?? this.speedRun,
-      speedSwim: speedSwim ?? this.speedSwim,
-      speedWalk: speedWalk ?? this.speedWalk,
-      subName: subName ?? this.subName,
-      type: type ?? this.type,
-      typeFlags: typeFlags ?? this.typeFlags,
-      unitClass: unitClass ?? this.unitClass,
-      unitFlags: unitFlags ?? this.unitFlags,
-      unitFlags2: unitFlags2 ?? this.unitFlags2,
-      vehicleId: vehicleId ?? this.vehicleId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-      creatureImmunitiesId: creatureImmunitiesId ?? this.creatureImmunitiesId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'AIName': aiName,
-      'ArmorModifier': armorModifier,
-      'BaseAttackTime': baseAttackTime,
-      'BaseVariance': baseVariance,
-      'DamageModifier': damageModifier,
-      'difficulty_entry_1': difficultyEntry1,
-      'difficulty_entry_2': difficultyEntry2,
-      'difficulty_entry_3': difficultyEntry3,
-      'dmgschool': damageSchool,
-      'detection_range': detectionRange,
-      'dynamicflags': dynamicFlags,
-      'entry': entry,
-      'exp': exp,
-      'ExperienceModifier': experienceModifier,
-      'faction': faction,
-      'family': family,
-      'flags_extra': flagsExtra,
-      'gossip_menu_id': gossipMenuId,
-      'HealthModifier': healthModifier,
-      'HoverHeight': hoverHeight,
-      'IconName': iconName,
-      'KillCredit1': killCredit1,
-      'KillCredit2': killCredit2,
-      'lootid': lootId,
-      'maxgold': maxGold,
-      'maxlevel': maxLevel,
-      'ManaModifier': manaModifier,
-      'minlevel': minLevel,
-      'mingold': minGold,
-      'movementId': movementId,
-      'MovementType': movementType,
-      'name': name,
-      'npcflag': npcFlag,
-      'PetSpellDataId': petSpellDataId,
-      'pickpocketloot': pickpocketLoot,
-      'RacialLeader': racialLeader,
-      'RangeAttackTime': rangeAttackTime,
-      'RangeVariance': rangeVariance,
-      'rank': rank,
-      'RegenHealth': regenHealth,
-      'ScriptName': scriptName,
-      'skinloot': skinLoot,
-      'speed_flight': speedFlight,
-      'speed_run': speedRun,
-      'speed_swim': speedSwim,
-      'speed_walk': speedWalk,
-      'subname': subName,
-      'type': type,
-      'type_flags': typeFlags,
-      'unit_class': unitClass,
-      'unit_flags': unitFlags,
-      'unit_flags2': unitFlags2,
-      'VehicleId': vehicleId,
-      'VerifiedBuild': verifiedBuild,
-      'CreatureImmunitiesId': creatureImmunitiesId,
-    };
-  }
+  factory CreatureTemplateEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureTemplateEntityMixin.fromJson(json);
 }

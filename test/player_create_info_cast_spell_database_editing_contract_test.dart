@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_key.dart';
-import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 
 void main() {

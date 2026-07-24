@@ -31,7 +31,8 @@ void main() {
 
   test('全部 Brief Entity 独立成文件并暴露完整标量或专用身份', () {
     final keyPattern = RegExp(
-      r'(?:(?:final\s+)?(?:int|String|\w+Key)\s+key;|(?:int|String|\w+Key)\s+get\s+key\s*=>)',
+      r'(?:(?:final\s+)?(?:int|String|\w+Key)\s+key;|'
+      r'(?:int|String|\w+Key)\s+get\s+key\s*(?:=>|\{))',
     );
 
     for (final file in briefFiles) {
@@ -177,9 +178,9 @@ void main() {
 
     expect(actualKeyFiles, retainedKeyFiles);
     expect(
-      File(
+      readLocalDartLibrarySource(
         'lib/entity/player_create_info_cast_spell_key.dart',
-      ).readAsStringSync(),
+      ),
       contains('final String? note;'),
     );
     expect(

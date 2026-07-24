@@ -1,12 +1,41 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_template_addon_entity.g.dart';
+
 /// 生物模板附加数据
-class CreatureTemplateAddonEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'creature_template_addon')
+class CreatureTemplateAddonEntity with _CreatureTemplateAddonEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyBriefField()
+  @FoxyFullField('path_id')
   final int pathId;
+
+  @FoxyBriefField()
+  @FoxyFullField('mount')
   final int mount;
+
+  @FoxyBriefField()
+  @FoxyFullField('emote')
   final int emote;
+
+  @FoxyFullField('bytes1')
   final int bytes1;
+
+  @FoxyFullField('bytes2')
   final int bytes2;
+
+  @FoxyFullField('visibilityDistanceType')
   final int visibilityDistanceType;
+
+  @FoxyBriefField()
+  @FoxyFullField('auras')
   final String auras;
 
   const CreatureTemplateAddonEntity({
@@ -20,52 +49,6 @@ class CreatureTemplateAddonEntity {
     this.auras = '',
   });
 
-  factory CreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateAddonEntity(
-      entry: json['entry'] ?? 0,
-      pathId: json['path_id'] ?? 0,
-      mount: json['mount'] ?? 0,
-      emote: json['emote'] ?? 0,
-      bytes1: json['bytes1'] ?? 0,
-      bytes2: json['bytes2'] ?? 0,
-      visibilityDistanceType: json['visibilityDistanceType'] ?? 0,
-      auras: json['auras'] ?? '',
-    );
-  }
-
-  CreatureTemplateAddonEntity copyWith({
-    int? entry,
-    int? pathId,
-    int? mount,
-    int? emote,
-    int? bytes1,
-    int? bytes2,
-    int? visibilityDistanceType,
-    String? auras,
-  }) {
-    return CreatureTemplateAddonEntity(
-      entry: entry ?? this.entry,
-      pathId: pathId ?? this.pathId,
-      mount: mount ?? this.mount,
-      emote: emote ?? this.emote,
-      bytes1: bytes1 ?? this.bytes1,
-      bytes2: bytes2 ?? this.bytes2,
-      visibilityDistanceType:
-          visibilityDistanceType ?? this.visibilityDistanceType,
-      auras: auras ?? this.auras,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'path_id': pathId,
-      'mount': mount,
-      'emote': emote,
-      'bytes1': bytes1,
-      'bytes2': bytes2,
-      'visibilityDistanceType': visibilityDistanceType,
-      'auras': auras,
-    };
-  }
+  factory CreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureTemplateAddonEntityMixin.fromJson(json);
 }

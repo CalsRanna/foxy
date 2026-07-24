@@ -364,12 +364,12 @@ final class EntityReader {
     }
     if (!RegExp(
       'factory\\s+$escapedClass\\.fromJson\\s*'
-      '\\(\\s*Map<String,\\s*dynamic>\\s+json\\s*\\)\\s*=>\\s*'
+      '\\(\\s*Map<String,\\s*dynamic>\\s+json\\s*,?\\s*\\)\\s*=>\\s*'
       '$escapedMixin\\.fromJson\\(json\\)\\s*;',
       multiLine: true,
     ).hasMatch(source)) {
       _fail(
-        '$className 必须保留约定签名的一行 fromJson factory 委托。',
+        '$className 必须保留约定签名的 fromJson factory 委托。',
         element,
         '委托到 $mixinName.fromJson(json)。',
       );

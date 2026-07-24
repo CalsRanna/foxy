@@ -1,21 +1,66 @@
-class EmoteTextDataEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'emote_text_data_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_emotes_text_data')
+class EmoteTextDataEntity with _EmoteTextDataEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('Text_lang_enUS')
   final String textLangEnUS;
+
+  @FoxyFullField('Text_lang_koKR')
   final String textLangKoKR;
+
+  @FoxyFullField('Text_lang_frFR')
   final String textLangFrFR;
+
+  @FoxyFullField('Text_lang_deDE')
   final String textLangDeDE;
+
+  @FoxyBriefField()
+  @FoxyFullField('Text_lang_zhCN')
   final String textLangZhCN;
+
+  @FoxyFullField('Text_lang_zhTW')
   final String textLangZhTW;
+
+  @FoxyFullField('Text_lang_esES')
   final String textLangEsES;
+
+  @FoxyFullField('Text_lang_esMX')
   final String textLangEsMX;
+
+  @FoxyFullField('Text_lang_ruRU')
   final String textLangRuRU;
+
+  @FoxyFullField('Text_lang_jaJP')
   final String textLangJaJP;
+
+  @FoxyFullField('Text_lang_ptPT')
   final String textLangPtPT;
+
+  @FoxyFullField('Text_lang_ptBR')
   final String textLangPtBR;
+
+  @FoxyFullField('Text_lang_itIT')
   final String textLangItIT;
+
+  @FoxyFullField('Text_lang_unk1')
   final String textLangUnk1;
+
+  @FoxyFullField('Text_lang_unk2')
   final String textLangUnk2;
+
+  @FoxyFullField('Text_lang_unk3')
   final String textLangUnk3;
+
+  @FoxyFullField('Text_lang_Flags')
   final int textLangFlags;
 
   const EmoteTextDataEntity({
@@ -39,47 +84,6 @@ class EmoteTextDataEntity {
     this.textLangFlags = 0,
   });
 
-  factory EmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
-    return EmoteTextDataEntity(
-      id: json['ID'] ?? 0,
-      textLangEnUS: json['Text_lang_enUS'] ?? '',
-      textLangKoKR: json['Text_lang_koKR'] ?? '',
-      textLangFrFR: json['Text_lang_frFR'] ?? '',
-      textLangDeDE: json['Text_lang_deDE'] ?? '',
-      textLangZhCN: json['Text_lang_zhCN'] ?? '',
-      textLangZhTW: json['Text_lang_zhTW'] ?? '',
-      textLangEsES: json['Text_lang_esES'] ?? '',
-      textLangEsMX: json['Text_lang_esMX'] ?? '',
-      textLangRuRU: json['Text_lang_ruRU'] ?? '',
-      textLangJaJP: json['Text_lang_jaJP'] ?? '',
-      textLangPtPT: json['Text_lang_ptPT'] ?? '',
-      textLangPtBR: json['Text_lang_ptBR'] ?? '',
-      textLangItIT: json['Text_lang_itIT'] ?? '',
-      textLangUnk1: json['Text_lang_unk1'] ?? '',
-      textLangUnk2: json['Text_lang_unk2'] ?? '',
-      textLangUnk3: json['Text_lang_unk3'] ?? '',
-      textLangFlags: json['Text_lang_Flags'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'Text_lang_enUS': textLangEnUS,
-    'Text_lang_koKR': textLangKoKR,
-    'Text_lang_frFR': textLangFrFR,
-    'Text_lang_deDE': textLangDeDE,
-    'Text_lang_zhCN': textLangZhCN,
-    'Text_lang_zhTW': textLangZhTW,
-    'Text_lang_esES': textLangEsES,
-    'Text_lang_esMX': textLangEsMX,
-    'Text_lang_ruRU': textLangRuRU,
-    'Text_lang_jaJP': textLangJaJP,
-    'Text_lang_ptPT': textLangPtPT,
-    'Text_lang_ptBR': textLangPtBR,
-    'Text_lang_itIT': textLangItIT,
-    'Text_lang_unk1': textLangUnk1,
-    'Text_lang_unk2': textLangUnk2,
-    'Text_lang_unk3': textLangUnk3,
-    'Text_lang_Flags': textLangFlags,
-  };
+  factory EmoteTextDataEntity.fromJson(Map<String, dynamic> json) =>
+      _EmoteTextDataEntityMixin.fromJson(json);
 }

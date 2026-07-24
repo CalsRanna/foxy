@@ -1,11 +1,39 @@
-class DbcItemEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'dbc_item_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.dbc_item')
+class DbcItemEntity with _DbcItemEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('ClassID')
   final int classId;
+
+  @FoxyBriefField()
+  @FoxyFullField('SubclassID')
   final int subclassId;
+
+  @FoxyFullField('Sound_override_subclassID')
   final int soundOverrideSubclassId;
+
+  @FoxyFullField('Material')
   final int material;
+
+  @FoxyBriefField()
+  @FoxyFullField('DisplayInfoID')
   final int displayInfoId;
+
+  @FoxyBriefField()
+  @FoxyFullField('InventoryType')
   final int inventoryType;
+
+  @FoxyFullField('SheatheType')
   final int sheatheType;
 
   const DbcItemEntity({
@@ -19,50 +47,6 @@ class DbcItemEntity {
     this.sheatheType = 0,
   });
 
-  factory DbcItemEntity.fromJson(Map<String, dynamic> json) {
-    return DbcItemEntity(
-      id: json['ID'] ?? 0,
-      classId: json['ClassID'] ?? 0,
-      subclassId: json['SubclassID'] ?? 0,
-      soundOverrideSubclassId: json['Sound_override_subclassID'] ?? 0,
-      material: json['Material'] ?? 0,
-      displayInfoId: json['DisplayInfoID'] ?? 0,
-      inventoryType: json['InventoryType'] ?? 0,
-      sheatheType: json['SheatheType'] ?? 0,
-    );
-  }
-
-  DbcItemEntity copyWith({
-    int? id,
-    int? classId,
-    int? subclassId,
-    int? soundOverrideSubclassId,
-    int? material,
-    int? displayInfoId,
-    int? inventoryType,
-    int? sheatheType,
-  }) {
-    return DbcItemEntity(
-      id: id ?? this.id,
-      classId: classId ?? this.classId,
-      subclassId: subclassId ?? this.subclassId,
-      soundOverrideSubclassId:
-          soundOverrideSubclassId ?? this.soundOverrideSubclassId,
-      material: material ?? this.material,
-      displayInfoId: displayInfoId ?? this.displayInfoId,
-      inventoryType: inventoryType ?? this.inventoryType,
-      sheatheType: sheatheType ?? this.sheatheType,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'ClassID': classId,
-    'SubclassID': subclassId,
-    'Sound_override_subclassID': soundOverrideSubclassId,
-    'Material': material,
-    'DisplayInfoID': displayInfoId,
-    'InventoryType': inventoryType,
-    'SheatheType': sheatheType,
-  };
+  factory DbcItemEntity.fromJson(Map<String, dynamic> json) =>
+      _DbcItemEntityMixin.fromJson(json);
 }

@@ -1,8 +1,29 @@
-class GameObjectTemplateLocaleEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'game_object_template_locale_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'gameobject_template_locale')
+class GameObjectTemplateLocaleEntity with _GameObjectTemplateLocaleEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyBriefField()
+  @FoxyFullField('locale', key: true)
   final String locale;
+
+  @FoxyBriefField()
+  @FoxyFullField('name')
   final String name;
+
+  @FoxyBriefField()
+  @FoxyFullField('castBarCaption')
   final String castBarCaption;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const GameObjectTemplateLocaleEntity({
@@ -13,39 +34,6 @@ class GameObjectTemplateLocaleEntity {
     this.verifiedBuild = 0,
   });
 
-  factory GameObjectTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateLocaleEntity(
-      entry: json['entry'] ?? 0,
-      locale: json['locale'] ?? '',
-      name: json['name'] ?? '',
-      castBarCaption: json['castBarCaption'] ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  GameObjectTemplateLocaleEntity copyWith({
-    int? entry,
-    String? locale,
-    String? name,
-    String? castBarCaption,
-    int? verifiedBuild,
-  }) {
-    return GameObjectTemplateLocaleEntity(
-      entry: entry ?? this.entry,
-      locale: locale ?? this.locale,
-      name: name ?? this.name,
-      castBarCaption: castBarCaption ?? this.castBarCaption,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'locale': locale,
-      'name': name,
-      'castBarCaption': castBarCaption,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  factory GameObjectTemplateLocaleEntity.fromJson(Map<String, dynamic> json) =>
+      _GameObjectTemplateLocaleEntityMixin.fromJson(json);
 }

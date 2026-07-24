@@ -1,6 +1,1 @@
-class PointOfInterestFilterEntity {
-  final String id;
-  final String name;
-
-  const PointOfInterestFilterEntity({this.id = '', this.name = ''});
-}
+export 'point_of_interest_entity.filter.g.dart';

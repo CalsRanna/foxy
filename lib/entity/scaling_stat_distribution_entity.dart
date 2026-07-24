@@ -1,25 +1,77 @@
-class ScalingStatDistributionEntity {
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'scaling_stat_distribution_entity.g.dart';
+
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_scaling_stat_distribution')
+class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('StatID0')
   final int statId0;
+
+  @FoxyFullField('StatID1')
   final int statId1;
+
+  @FoxyFullField('StatID2')
   final int statId2;
+
+  @FoxyFullField('StatID3')
   final int statId3;
+
+  @FoxyFullField('StatID4')
   final int statId4;
+
+  @FoxyFullField('StatID5')
   final int statId5;
+
+  @FoxyFullField('StatID6')
   final int statId6;
+
+  @FoxyFullField('StatID7')
   final int statId7;
+
+  @FoxyFullField('StatID8')
   final int statId8;
+
+  @FoxyFullField('StatID9')
   final int statId9;
+
+  @FoxyFullField('Bonus0')
   final int bonus0;
+
+  @FoxyFullField('Bonus1')
   final int bonus1;
+
+  @FoxyFullField('Bonus2')
   final int bonus2;
+
+  @FoxyFullField('Bonus3')
   final int bonus3;
+
+  @FoxyFullField('Bonus4')
   final int bonus4;
+
+  @FoxyFullField('Bonus5')
   final int bonus5;
+
+  @FoxyFullField('Bonus6')
   final int bonus6;
+
+  @FoxyFullField('Bonus7')
   final int bonus7;
+
+  @FoxyFullField('Bonus8')
   final int bonus8;
+
+  @FoxyFullField('Bonus9')
   final int bonus9;
+
+  @FoxyFullField('Maxlevel')
   final int maxlevel;
 
   const ScalingStatDistributionEntity({
@@ -47,32 +99,8 @@ class ScalingStatDistributionEntity {
     this.maxlevel = 80,
   });
 
-  factory ScalingStatDistributionEntity.fromJson(Map<String, dynamic> json) {
-    return ScalingStatDistributionEntity(
-      id: json['ID'] ?? 0,
-      statId0: json['StatID0'] ?? 0,
-      statId1: json['StatID1'] ?? 0,
-      statId2: json['StatID2'] ?? 0,
-      statId3: json['StatID3'] ?? 0,
-      statId4: json['StatID4'] ?? 0,
-      statId5: json['StatID5'] ?? 0,
-      statId6: json['StatID6'] ?? 0,
-      statId7: json['StatID7'] ?? 0,
-      statId8: json['StatID8'] ?? 0,
-      statId9: json['StatID9'] ?? 0,
-      bonus0: json['Bonus0'] ?? 0,
-      bonus1: json['Bonus1'] ?? 0,
-      bonus2: json['Bonus2'] ?? 0,
-      bonus3: json['Bonus3'] ?? 0,
-      bonus4: json['Bonus4'] ?? 0,
-      bonus5: json['Bonus5'] ?? 0,
-      bonus6: json['Bonus6'] ?? 0,
-      bonus7: json['Bonus7'] ?? 0,
-      bonus8: json['Bonus8'] ?? 0,
-      bonus9: json['Bonus9'] ?? 0,
-      maxlevel: json['Maxlevel'] ?? 0,
-    );
-  }
+  factory ScalingStatDistributionEntity.fromJson(Map<String, dynamic> json) =>
+      _ScalingStatDistributionEntityMixin.fromJson(json);
 
   String get displayStats {
     final result = StringBuffer();
@@ -93,82 +121,5 @@ class ScalingStatDistributionEntity {
     append(statId8, bonus8);
     append(statId9, bonus9);
     return result.isEmpty ? '-' : result.toString();
-  }
-
-  ScalingStatDistributionEntity copyWith({
-    int? id,
-    int? statId0,
-    int? statId1,
-    int? statId2,
-    int? statId3,
-    int? statId4,
-    int? statId5,
-    int? statId6,
-    int? statId7,
-    int? statId8,
-    int? statId9,
-    int? bonus0,
-    int? bonus1,
-    int? bonus2,
-    int? bonus3,
-    int? bonus4,
-    int? bonus5,
-    int? bonus6,
-    int? bonus7,
-    int? bonus8,
-    int? bonus9,
-    int? maxlevel,
-  }) {
-    return ScalingStatDistributionEntity(
-      id: id ?? this.id,
-      statId0: statId0 ?? this.statId0,
-      statId1: statId1 ?? this.statId1,
-      statId2: statId2 ?? this.statId2,
-      statId3: statId3 ?? this.statId3,
-      statId4: statId4 ?? this.statId4,
-      statId5: statId5 ?? this.statId5,
-      statId6: statId6 ?? this.statId6,
-      statId7: statId7 ?? this.statId7,
-      statId8: statId8 ?? this.statId8,
-      statId9: statId9 ?? this.statId9,
-      bonus0: bonus0 ?? this.bonus0,
-      bonus1: bonus1 ?? this.bonus1,
-      bonus2: bonus2 ?? this.bonus2,
-      bonus3: bonus3 ?? this.bonus3,
-      bonus4: bonus4 ?? this.bonus4,
-      bonus5: bonus5 ?? this.bonus5,
-      bonus6: bonus6 ?? this.bonus6,
-      bonus7: bonus7 ?? this.bonus7,
-      bonus8: bonus8 ?? this.bonus8,
-      bonus9: bonus9 ?? this.bonus9,
-      maxlevel: maxlevel ?? this.maxlevel,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'StatID0': statId0,
-      'StatID1': statId1,
-      'StatID2': statId2,
-      'StatID3': statId3,
-      'StatID4': statId4,
-      'StatID5': statId5,
-      'StatID6': statId6,
-      'StatID7': statId7,
-      'StatID8': statId8,
-      'StatID9': statId9,
-      'Bonus0': bonus0,
-      'Bonus1': bonus1,
-      'Bonus2': bonus2,
-      'Bonus3': bonus3,
-      'Bonus4': bonus4,
-      'Bonus5': bonus5,
-      'Bonus6': bonus6,
-      'Bonus7': bonus7,
-      'Bonus8': bonus8,
-      'Bonus9': bonus9,
-      'Maxlevel': maxlevel,
-    };
   }
 }

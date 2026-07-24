@@ -1,10 +1,36 @@
+// ignore_for_file: annotate_overrides
+
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_bonus_data_entity.g.dart';
+
 /// 法术奖励系数
-class SpellBonusDataEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'spell_bonus_data')
+class SpellBonusDataEntity with _SpellBonusDataEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyBriefField()
+  @FoxyFullField('direct_bonus')
   final double directBonus;
+
+  @FoxyBriefField()
+  @FoxyFullField('dot_bonus')
   final double dotBonus;
+
+  @FoxyBriefField()
+  @FoxyFullField('ap_bonus')
   final double apBonus;
+
+  @FoxyBriefField()
+  @FoxyFullField('ap_dot_bonus')
   final double apDotBonus;
+
+  @FoxyBriefField()
+  @FoxyFullField('comments')
   final String comments;
 
   const SpellBonusDataEntity({
@@ -16,43 +42,6 @@ class SpellBonusDataEntity {
     this.comments = '',
   });
 
-  factory SpellBonusDataEntity.fromJson(Map<String, dynamic> json) {
-    return SpellBonusDataEntity(
-      entry: json['entry'] ?? 0,
-      directBonus: (json['direct_bonus'] ?? 0).toDouble(),
-      dotBonus: (json['dot_bonus'] ?? 0).toDouble(),
-      apBonus: (json['ap_bonus'] ?? 0).toDouble(),
-      apDotBonus: (json['ap_dot_bonus'] ?? 0).toDouble(),
-      comments: json['comments'] ?? '',
-    );
-  }
-
-  SpellBonusDataEntity copyWith({
-    int? entry,
-    double? directBonus,
-    double? dotBonus,
-    double? apBonus,
-    double? apDotBonus,
-    String? comments,
-  }) {
-    return SpellBonusDataEntity(
-      entry: entry ?? this.entry,
-      directBonus: directBonus ?? this.directBonus,
-      dotBonus: dotBonus ?? this.dotBonus,
-      apBonus: apBonus ?? this.apBonus,
-      apDotBonus: apDotBonus ?? this.apDotBonus,
-      comments: comments ?? this.comments,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'direct_bonus': directBonus,
-      'dot_bonus': dotBonus,
-      'ap_bonus': apBonus,
-      'ap_dot_bonus': apDotBonus,
-      'comments': comments,
-    };
-  }
+  factory SpellBonusDataEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellBonusDataEntityMixin.fromJson(json);
 }
