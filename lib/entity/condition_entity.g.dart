@@ -240,3 +240,64 @@ final class ConditionKey {
         ')';
   }
 }
+
+final class BriefConditionEntity {
+  final int sourceTypeOrReferenceId;
+  final int sourceGroup;
+  final int sourceEntry;
+  final int sourceId;
+  final int elseGroup;
+  final int conditionTypeOrReference;
+  final int conditionTarget;
+  final int conditionValue1;
+  final int conditionValue2;
+  final int conditionValue3;
+  final String comment;
+
+  const BriefConditionEntity({
+    this.sourceTypeOrReferenceId = 0,
+    this.sourceGroup = 0,
+    this.sourceEntry = 0,
+    this.sourceId = 0,
+    this.elseGroup = 0,
+    this.conditionTypeOrReference = 0,
+    this.conditionTarget = 0,
+    this.conditionValue1 = 0,
+    this.conditionValue2 = 0,
+    this.conditionValue3 = 0,
+    this.comment = '',
+  });
+
+  factory BriefConditionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefConditionEntity(
+      sourceTypeOrReferenceId:
+          (json['SourceTypeOrReferenceId'] as num?)?.toInt() ?? 0,
+      sourceGroup: (json['SourceGroup'] as num?)?.toInt() ?? 0,
+      sourceEntry: (json['SourceEntry'] as num?)?.toInt() ?? 0,
+      sourceId: (json['SourceId'] as num?)?.toInt() ?? 0,
+      elseGroup: (json['ElseGroup'] as num?)?.toInt() ?? 0,
+      conditionTypeOrReference:
+          (json['ConditionTypeOrReference'] as num?)?.toInt() ?? 0,
+      conditionTarget: (json['ConditionTarget'] as num?)?.toInt() ?? 0,
+      conditionValue1: (json['ConditionValue1'] as num?)?.toInt() ?? 0,
+      conditionValue2: (json['ConditionValue2'] as num?)?.toInt() ?? 0,
+      conditionValue3: (json['ConditionValue3'] as num?)?.toInt() ?? 0,
+      comment: json['Comment']?.toString() ?? '',
+    );
+  }
+
+  ConditionKey get key {
+    return ConditionKey(
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId,
+      sourceGroup: sourceGroup,
+      sourceEntry: sourceEntry,
+      sourceId: sourceId,
+      elseGroup: elseGroup,
+      conditionTypeOrReference: conditionTypeOrReference,
+      conditionTarget: conditionTarget,
+      conditionValue1: conditionValue1,
+      conditionValue2: conditionValue2,
+      conditionValue3: conditionValue3,
+    );
+  }
+}

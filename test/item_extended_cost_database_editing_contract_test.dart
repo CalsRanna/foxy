@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 
 void main() {
@@ -9,6 +8,15 @@ void main() {
     const key = 7;
     expect((const ItemExtendedCostEntity(id: 7)).id, key);
     expect(const BriefItemExtendedCostEntity(id: 7).key, key);
+    expect(
+      const BriefItemExtendedCostEntity(
+        itemID0: 100,
+        itemCount0: 2,
+        itemID2: 300,
+        itemCount2: 4,
+      ).displayItems,
+      '100x2, 300x4',
+    );
   });
 
   test('ItemExtendedCost 路由只携带标量 key 且列表传 brief.key', () {

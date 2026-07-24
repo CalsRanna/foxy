@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

@@ -198,3 +198,84 @@ mixin _ScalingStatDistributionEntityMixin {
         ')';
   }
 }
+
+final class BriefScalingStatDistributionEntity {
+  final int id;
+  final int statId0;
+  final int statId1;
+  final int statId2;
+  final int statId3;
+  final int statId4;
+  final int statId5;
+  final int statId6;
+  final int statId7;
+  final int statId8;
+  final int statId9;
+  final int bonus0;
+  final int bonus1;
+  final int bonus2;
+  final int bonus3;
+  final int bonus4;
+  final int bonus5;
+  final int bonus6;
+  final int bonus7;
+  final int bonus8;
+  final int bonus9;
+  final int maxlevel;
+
+  const BriefScalingStatDistributionEntity({
+    this.id = 0,
+    this.statId0 = -1,
+    this.statId1 = -1,
+    this.statId2 = -1,
+    this.statId3 = -1,
+    this.statId4 = -1,
+    this.statId5 = -1,
+    this.statId6 = -1,
+    this.statId7 = -1,
+    this.statId8 = -1,
+    this.statId9 = -1,
+    this.bonus0 = 0,
+    this.bonus1 = 0,
+    this.bonus2 = 0,
+    this.bonus3 = 0,
+    this.bonus4 = 0,
+    this.bonus5 = 0,
+    this.bonus6 = 0,
+    this.bonus7 = 0,
+    this.bonus8 = 0,
+    this.bonus9 = 0,
+    this.maxlevel = 80,
+  });
+
+  factory BriefScalingStatDistributionEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefScalingStatDistributionEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      statId0: (json['StatID0'] as num?)?.toInt() ?? -1,
+      statId1: (json['StatID1'] as num?)?.toInt() ?? -1,
+      statId2: (json['StatID2'] as num?)?.toInt() ?? -1,
+      statId3: (json['StatID3'] as num?)?.toInt() ?? -1,
+      statId4: (json['StatID4'] as num?)?.toInt() ?? -1,
+      statId5: (json['StatID5'] as num?)?.toInt() ?? -1,
+      statId6: (json['StatID6'] as num?)?.toInt() ?? -1,
+      statId7: (json['StatID7'] as num?)?.toInt() ?? -1,
+      statId8: (json['StatID8'] as num?)?.toInt() ?? -1,
+      statId9: (json['StatID9'] as num?)?.toInt() ?? -1,
+      bonus0: (json['Bonus0'] as num?)?.toInt() ?? 0,
+      bonus1: (json['Bonus1'] as num?)?.toInt() ?? 0,
+      bonus2: (json['Bonus2'] as num?)?.toInt() ?? 0,
+      bonus3: (json['Bonus3'] as num?)?.toInt() ?? 0,
+      bonus4: (json['Bonus4'] as num?)?.toInt() ?? 0,
+      bonus5: (json['Bonus5'] as num?)?.toInt() ?? 0,
+      bonus6: (json['Bonus6'] as num?)?.toInt() ?? 0,
+      bonus7: (json['Bonus7'] as num?)?.toInt() ?? 0,
+      bonus8: (json['Bonus8'] as num?)?.toInt() ?? 0,
+      bonus9: (json['Bonus9'] as num?)?.toInt() ?? 0,
+      maxlevel: (json['Maxlevel'] as num?)?.toInt() ?? 80,
+    );
+  }
+
+  int get key => id;
+}

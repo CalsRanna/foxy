@@ -2,14 +2,18 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'broadcast_text_entity.g.dart';
 
+@FoxyBriefEntity()
 @FoxyFullEntity(table: 'broadcast_text')
 class BroadcastTextEntity with _BroadcastTextEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('LanguageID')
   final int languageId;
 
+  @FoxyBriefField()
   @FoxyFullField('MaleText')
   final String maleText;
 

@@ -4,7 +4,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/page/condition/condition_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';

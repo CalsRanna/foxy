@@ -4,49 +4,64 @@ part 'item_extended_cost_entity.g.dart';
 
 /// 扩展价格
 
+@FoxyBriefEntity()
 @FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')
 class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('HonorPoints')
   final int honorPoints;
 
+  @FoxyBriefField()
   @FoxyFullField('ArenaPoints')
   final int arenaPoints;
 
+  @FoxyBriefField()
   @FoxyFullField('ArenaBracket')
   final int arenaBracket;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemID0')
   final int itemID0;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemID1')
   final int itemID1;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemID2')
   final int itemID2;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemID3')
   final int itemID3;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemID4')
   final int itemID4;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemCount0')
   final int itemCount0;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemCount1')
   final int itemCount1;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemCount2')
   final int itemCount2;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemCount3')
   final int itemCount3;
 
+  @FoxyBriefField()
   @FoxyFullField('ItemCount4')
   final int itemCount4;
 
@@ -77,4 +92,22 @@ class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
 
   factory ItemExtendedCostEntity.fromJson(Map<String, dynamic> json) =>
       _ItemExtendedCostEntityMixin.fromJson(json);
+}
+
+String _appendDisplayItem(String current, int itemId, int count) {
+  if (itemId == 0) return current;
+  final value = '${itemId}x$count';
+  return current.isEmpty ? value : '$current, $value';
+}
+
+extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {
+  String get displayItems {
+    var result = '';
+    result = _appendDisplayItem(result, itemID0, itemCount0);
+    result = _appendDisplayItem(result, itemID1, itemCount1);
+    result = _appendDisplayItem(result, itemID2, itemCount2);
+    result = _appendDisplayItem(result, itemID3, itemCount3);
+    result = _appendDisplayItem(result, itemID4, itemCount4);
+    return result.isEmpty ? '-' : result;
+  }
 }

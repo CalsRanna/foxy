@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -319,7 +318,6 @@ void main() {
   test('conditions 已移除 Map credential 并解锁已有记录主键', () {
     final files = [
       'lib/entity/condition_entity.dart',
-      'lib/entity/brief_condition_entity.dart',
       'lib/repository/condition_repository.dart',
       'lib/page/condition/condition_detail_view_model.dart',
       'lib/page/condition/condition_list_view_model.dart',

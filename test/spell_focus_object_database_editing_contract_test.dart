@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 
 void main() {
@@ -9,6 +8,13 @@ void main() {
     const first = 61;
     expect((const SpellFocusObjectEntity(id: 61)).id, first);
     expect(const BriefSpellFocusObjectEntity(id: 61).key, first);
+    expect(
+      const BriefSpellFocusObjectEntity(
+        nameLangZhCN: '中文',
+        nameLangEnUS: 'English',
+      ).displayName,
+      '中文',
+    );
   });
 
   test('SpellFocusObject Repository 使用显式创建键与原始更新键', () {
