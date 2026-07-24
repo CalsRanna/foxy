@@ -3,9 +3,6 @@
 part of 'creature_quest_ender_entity.dart';
 
 mixin _CreatureQuestEnderEntityMixin {
-  int get id;
-  int get quest;
-
   static CreatureQuestEnderEntity fromJson(Map<String, dynamic> json) {
     return CreatureQuestEnderEntity(
       id: (json['id'] as num?)?.toInt() ?? 0,
@@ -14,35 +11,40 @@ mixin _CreatureQuestEnderEntityMixin {
   }
 
   CreatureQuestEnderEntity copyWith({int? id, int? quest}) {
+    final self = this as CreatureQuestEnderEntity;
     return CreatureQuestEnderEntity(
-      id: id ?? this.id,
-      quest: quest ?? this.quest,
+      id: id ?? self.id,
+      quest: quest ?? self.quest,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'quest': quest};
+    final self = this as CreatureQuestEnderEntity;
+    return {'id': self.id, 'quest': self.quest};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureQuestEnderEntity;
+    return identical(self, other) ||
         other is CreatureQuestEnderEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            quest == other.quest;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.quest == other.quest;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, quest]);
+    final self = this as CreatureQuestEnderEntity;
+    return Object.hashAll([self.runtimeType, self.id, self.quest]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureQuestEnderEntity;
     return 'CreatureQuestEnderEntity('
-        'id: $id, '
-        'quest: $quest'
+        'id: ${self.id}, '
+        'quest: ${self.quest}'
         ')';
   }
 }

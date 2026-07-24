@@ -3,12 +3,6 @@
 part of 'player_create_info_skill_entity.dart';
 
 mixin _PlayerCreateInfoSkillEntityMixin {
-  int get raceMask;
-  int get classMask;
-  int get skill;
-  int get rank;
-  String get comment;
-
   static PlayerCreateInfoSkillEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoSkillEntity(
       raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _PlayerCreateInfoSkillEntityMixin {
     int? rank,
     String? comment,
   }) {
+    final self = this as PlayerCreateInfoSkillEntity;
     return PlayerCreateInfoSkillEntity(
-      raceMask: raceMask ?? this.raceMask,
-      classMask: classMask ?? this.classMask,
-      skill: skill ?? this.skill,
-      rank: rank ?? this.rank,
-      comment: comment ?? this.comment,
+      raceMask: raceMask ?? self.raceMask,
+      classMask: classMask ?? self.classMask,
+      skill: skill ?? self.skill,
+      rank: rank ?? self.rank,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PlayerCreateInfoSkillEntity;
     return {
-      'raceMask': raceMask,
-      'classMask': classMask,
-      'skill': skill,
-      'rank': rank,
-      'comment': comment,
+      'raceMask': self.raceMask,
+      'classMask': self.classMask,
+      'skill': self.skill,
+      'rank': self.rank,
+      'comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PlayerCreateInfoSkillEntity;
+    return identical(self, other) ||
         other is PlayerCreateInfoSkillEntity &&
-            runtimeType == other.runtimeType &&
-            raceMask == other.raceMask &&
-            classMask == other.classMask &&
-            skill == other.skill &&
-            rank == other.rank &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.raceMask == other.raceMask &&
+            self.classMask == other.classMask &&
+            self.skill == other.skill &&
+            self.rank == other.rank &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as PlayerCreateInfoSkillEntity;
     return Object.hashAll([
-      runtimeType,
-      raceMask,
-      classMask,
-      skill,
-      rank,
-      comment,
+      self.runtimeType,
+      self.raceMask,
+      self.classMask,
+      self.skill,
+      self.rank,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as PlayerCreateInfoSkillEntity;
     return 'PlayerCreateInfoSkillEntity('
-        'raceMask: $raceMask, '
-        'classMask: $classMask, '
-        'skill: $skill, '
-        'rank: $rank, '
-        'comment: $comment'
+        'raceMask: ${self.raceMask}, '
+        'classMask: ${self.classMask}, '
+        'skill: ${self.skill}, '
+        'rank: ${self.rank}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

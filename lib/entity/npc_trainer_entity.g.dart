@@ -3,17 +3,6 @@
 part of 'npc_trainer_entity.dart';
 
 mixin _NpcTrainerEntityMixin {
-  int get trainerId;
-  int get spellId;
-  int get moneyCost;
-  int get reqSkillLine;
-  int get reqSkillRank;
-  int get reqAbility1;
-  int get reqAbility2;
-  int get reqAbility3;
-  int get reqLevel;
-  int get verifiedBuild;
-
   static NpcTrainerEntity fromJson(Map<String, dynamic> json) {
     return NpcTrainerEntity(
       trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
@@ -41,82 +30,87 @@ mixin _NpcTrainerEntityMixin {
     int? reqLevel,
     int? verifiedBuild,
   }) {
+    final self = this as NpcTrainerEntity;
     return NpcTrainerEntity(
-      trainerId: trainerId ?? this.trainerId,
-      spellId: spellId ?? this.spellId,
-      moneyCost: moneyCost ?? this.moneyCost,
-      reqSkillLine: reqSkillLine ?? this.reqSkillLine,
-      reqSkillRank: reqSkillRank ?? this.reqSkillRank,
-      reqAbility1: reqAbility1 ?? this.reqAbility1,
-      reqAbility2: reqAbility2 ?? this.reqAbility2,
-      reqAbility3: reqAbility3 ?? this.reqAbility3,
-      reqLevel: reqLevel ?? this.reqLevel,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      trainerId: trainerId ?? self.trainerId,
+      spellId: spellId ?? self.spellId,
+      moneyCost: moneyCost ?? self.moneyCost,
+      reqSkillLine: reqSkillLine ?? self.reqSkillLine,
+      reqSkillRank: reqSkillRank ?? self.reqSkillRank,
+      reqAbility1: reqAbility1 ?? self.reqAbility1,
+      reqAbility2: reqAbility2 ?? self.reqAbility2,
+      reqAbility3: reqAbility3 ?? self.reqAbility3,
+      reqLevel: reqLevel ?? self.reqLevel,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as NpcTrainerEntity;
     return {
-      'TrainerId': trainerId,
-      'SpellId': spellId,
-      'MoneyCost': moneyCost,
-      'ReqSkillLine': reqSkillLine,
-      'ReqSkillRank': reqSkillRank,
-      'ReqAbility1': reqAbility1,
-      'ReqAbility2': reqAbility2,
-      'ReqAbility3': reqAbility3,
-      'ReqLevel': reqLevel,
-      'VerifiedBuild': verifiedBuild,
+      'TrainerId': self.trainerId,
+      'SpellId': self.spellId,
+      'MoneyCost': self.moneyCost,
+      'ReqSkillLine': self.reqSkillLine,
+      'ReqSkillRank': self.reqSkillRank,
+      'ReqAbility1': self.reqAbility1,
+      'ReqAbility2': self.reqAbility2,
+      'ReqAbility3': self.reqAbility3,
+      'ReqLevel': self.reqLevel,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as NpcTrainerEntity;
+    return identical(self, other) ||
         other is NpcTrainerEntity &&
-            runtimeType == other.runtimeType &&
-            trainerId == other.trainerId &&
-            spellId == other.spellId &&
-            moneyCost == other.moneyCost &&
-            reqSkillLine == other.reqSkillLine &&
-            reqSkillRank == other.reqSkillRank &&
-            reqAbility1 == other.reqAbility1 &&
-            reqAbility2 == other.reqAbility2 &&
-            reqAbility3 == other.reqAbility3 &&
-            reqLevel == other.reqLevel &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.trainerId == other.trainerId &&
+            self.spellId == other.spellId &&
+            self.moneyCost == other.moneyCost &&
+            self.reqSkillLine == other.reqSkillLine &&
+            self.reqSkillRank == other.reqSkillRank &&
+            self.reqAbility1 == other.reqAbility1 &&
+            self.reqAbility2 == other.reqAbility2 &&
+            self.reqAbility3 == other.reqAbility3 &&
+            self.reqLevel == other.reqLevel &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as NpcTrainerEntity;
     return Object.hashAll([
-      runtimeType,
-      trainerId,
-      spellId,
-      moneyCost,
-      reqSkillLine,
-      reqSkillRank,
-      reqAbility1,
-      reqAbility2,
-      reqAbility3,
-      reqLevel,
-      verifiedBuild,
+      self.runtimeType,
+      self.trainerId,
+      self.spellId,
+      self.moneyCost,
+      self.reqSkillLine,
+      self.reqSkillRank,
+      self.reqAbility1,
+      self.reqAbility2,
+      self.reqAbility3,
+      self.reqLevel,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as NpcTrainerEntity;
     return 'NpcTrainerEntity('
-        'trainerId: $trainerId, '
-        'spellId: $spellId, '
-        'moneyCost: $moneyCost, '
-        'reqSkillLine: $reqSkillLine, '
-        'reqSkillRank: $reqSkillRank, '
-        'reqAbility1: $reqAbility1, '
-        'reqAbility2: $reqAbility2, '
-        'reqAbility3: $reqAbility3, '
-        'reqLevel: $reqLevel, '
-        'verifiedBuild: $verifiedBuild'
+        'trainerId: ${self.trainerId}, '
+        'spellId: ${self.spellId}, '
+        'moneyCost: ${self.moneyCost}, '
+        'reqSkillLine: ${self.reqSkillLine}, '
+        'reqSkillRank: ${self.reqSkillRank}, '
+        'reqAbility1: ${self.reqAbility1}, '
+        'reqAbility2: ${self.reqAbility2}, '
+        'reqAbility3: ${self.reqAbility3}, '
+        'reqLevel: ${self.reqLevel}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

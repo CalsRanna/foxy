@@ -3,12 +3,6 @@
 part of 'creature_template_locale_entity.dart';
 
 mixin _CreatureTemplateLocaleEntityMixin {
-  int get entry;
-  String get locale;
-  String get name;
-  String get title;
-  int get verifiedBuild;
-
   static CreatureTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateLocaleEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _CreatureTemplateLocaleEntityMixin {
     String? title,
     int? verifiedBuild,
   }) {
+    final self = this as CreatureTemplateLocaleEntity;
     return CreatureTemplateLocaleEntity(
-      entry: entry ?? this.entry,
-      locale: locale ?? this.locale,
-      name: name ?? this.name,
-      title: title ?? this.title,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      entry: entry ?? self.entry,
+      locale: locale ?? self.locale,
+      name: name ?? self.name,
+      title: title ?? self.title,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureTemplateLocaleEntity;
     return {
-      'entry': entry,
-      'locale': locale,
-      'Name': name,
-      'Title': title,
-      'VerifiedBuild': verifiedBuild,
+      'entry': self.entry,
+      'locale': self.locale,
+      'Name': self.name,
+      'Title': self.title,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureTemplateLocaleEntity;
+    return identical(self, other) ||
         other is CreatureTemplateLocaleEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            locale == other.locale &&
-            name == other.name &&
-            title == other.title &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.locale == other.locale &&
+            self.name == other.name &&
+            self.title == other.title &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureTemplateLocaleEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      locale,
-      name,
-      title,
-      verifiedBuild,
+      self.runtimeType,
+      self.entry,
+      self.locale,
+      self.name,
+      self.title,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureTemplateLocaleEntity;
     return 'CreatureTemplateLocaleEntity('
-        'entry: $entry, '
-        'locale: $locale, '
-        'name: $name, '
-        'title: $title, '
-        'verifiedBuild: $verifiedBuild'
+        'entry: ${self.entry}, '
+        'locale: ${self.locale}, '
+        'name: ${self.name}, '
+        'title: ${self.title}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

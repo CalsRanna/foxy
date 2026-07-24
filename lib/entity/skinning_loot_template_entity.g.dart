@@ -3,17 +3,6 @@
 part of 'skinning_loot_template_entity.dart';
 
 mixin _SkinningLootTemplateEntityMixin {
-  int get entry;
-  int get item;
-  int get reference;
-  double get chance;
-  bool get questRequired;
-  int get lootMode;
-  int get groupId;
-  int get minCount;
-  int get maxCount;
-  String get comment;
-
   static SkinningLootTemplateEntity fromJson(Map<String, dynamic> json) {
     return SkinningLootTemplateEntity(
       entry: (json['Entry'] as num?)?.toInt() ?? 0,
@@ -43,82 +32,87 @@ mixin _SkinningLootTemplateEntityMixin {
     int? maxCount,
     String? comment,
   }) {
+    final self = this as SkinningLootTemplateEntity;
     return SkinningLootTemplateEntity(
-      entry: entry ?? this.entry,
-      item: item ?? this.item,
-      reference: reference ?? this.reference,
-      chance: chance ?? this.chance,
-      questRequired: questRequired ?? this.questRequired,
-      lootMode: lootMode ?? this.lootMode,
-      groupId: groupId ?? this.groupId,
-      minCount: minCount ?? this.minCount,
-      maxCount: maxCount ?? this.maxCount,
-      comment: comment ?? this.comment,
+      entry: entry ?? self.entry,
+      item: item ?? self.item,
+      reference: reference ?? self.reference,
+      chance: chance ?? self.chance,
+      questRequired: questRequired ?? self.questRequired,
+      lootMode: lootMode ?? self.lootMode,
+      groupId: groupId ?? self.groupId,
+      minCount: minCount ?? self.minCount,
+      maxCount: maxCount ?? self.maxCount,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SkinningLootTemplateEntity;
     return {
-      'Entry': entry,
-      'Item': item,
-      'Reference': reference,
-      'Chance': chance,
-      'QuestRequired': questRequired ? 1 : 0,
-      'LootMode': lootMode,
-      'GroupId': groupId,
-      'MinCount': minCount,
-      'MaxCount': maxCount,
-      'Comment': comment,
+      'Entry': self.entry,
+      'Item': self.item,
+      'Reference': self.reference,
+      'Chance': self.chance,
+      'QuestRequired': self.questRequired ? 1 : 0,
+      'LootMode': self.lootMode,
+      'GroupId': self.groupId,
+      'MinCount': self.minCount,
+      'MaxCount': self.maxCount,
+      'Comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SkinningLootTemplateEntity;
+    return identical(self, other) ||
         other is SkinningLootTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            item == other.item &&
-            reference == other.reference &&
-            chance == other.chance &&
-            questRequired == other.questRequired &&
-            lootMode == other.lootMode &&
-            groupId == other.groupId &&
-            minCount == other.minCount &&
-            maxCount == other.maxCount &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.item == other.item &&
+            self.reference == other.reference &&
+            self.chance == other.chance &&
+            self.questRequired == other.questRequired &&
+            self.lootMode == other.lootMode &&
+            self.groupId == other.groupId &&
+            self.minCount == other.minCount &&
+            self.maxCount == other.maxCount &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as SkinningLootTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      item,
-      reference,
-      chance,
-      questRequired,
-      lootMode,
-      groupId,
-      minCount,
-      maxCount,
-      comment,
+      self.runtimeType,
+      self.entry,
+      self.item,
+      self.reference,
+      self.chance,
+      self.questRequired,
+      self.lootMode,
+      self.groupId,
+      self.minCount,
+      self.maxCount,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SkinningLootTemplateEntity;
     return 'SkinningLootTemplateEntity('
-        'entry: $entry, '
-        'item: $item, '
-        'reference: $reference, '
-        'chance: $chance, '
-        'questRequired: $questRequired, '
-        'lootMode: $lootMode, '
-        'groupId: $groupId, '
-        'minCount: $minCount, '
-        'maxCount: $maxCount, '
-        'comment: $comment'
+        'entry: ${self.entry}, '
+        'item: ${self.item}, '
+        'reference: ${self.reference}, '
+        'chance: ${self.chance}, '
+        'questRequired: ${self.questRequired}, '
+        'lootMode: ${self.lootMode}, '
+        'groupId: ${self.groupId}, '
+        'minCount: ${self.minCount}, '
+        'maxCount: ${self.maxCount}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

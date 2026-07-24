@@ -3,11 +3,6 @@
 part of 'page_text_entity.dart';
 
 mixin _PageTextEntityMixin {
-  int get id;
-  String get text;
-  int get nextPageId;
-  int get verifiedBuild;
-
   static PageTextEntity fromJson(Map<String, dynamic> json) {
     return PageTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _PageTextEntityMixin {
     int? nextPageId,
     int? verifiedBuild,
   }) {
+    final self = this as PageTextEntity;
     return PageTextEntity(
-      id: id ?? this.id,
-      text: text ?? this.text,
-      nextPageId: nextPageId ?? this.nextPageId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      id: id ?? self.id,
+      text: text ?? self.text,
+      nextPageId: nextPageId ?? self.nextPageId,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PageTextEntity;
     return {
-      'ID': id,
-      'Text': text,
-      'NextPageID': nextPageId,
-      'VerifiedBuild': verifiedBuild,
+      'ID': self.id,
+      'Text': self.text,
+      'NextPageID': self.nextPageId,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PageTextEntity;
+    return identical(self, other) ||
         other is PageTextEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            text == other.text &&
-            nextPageId == other.nextPageId &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.text == other.text &&
+            self.nextPageId == other.nextPageId &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, text, nextPageId, verifiedBuild]);
+    final self = this as PageTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.text,
+      self.nextPageId,
+      self.verifiedBuild,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as PageTextEntity;
     return 'PageTextEntity('
-        'id: $id, '
-        'text: $text, '
-        'nextPageId: $nextPageId, '
-        'verifiedBuild: $verifiedBuild'
+        'id: ${self.id}, '
+        'text: ${self.text}, '
+        'nextPageId: ${self.nextPageId}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

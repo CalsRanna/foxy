@@ -3,11 +3,6 @@
 part of 'spell_duration_entity.dart';
 
 mixin _SpellDurationEntityMixin {
-  int get id;
-  int get duration;
-  int get durationPerLevel;
-  int get maxDuration;
-
   static SpellDurationEntity fromJson(Map<String, dynamic> json) {
     return SpellDurationEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,52 +18,57 @@ mixin _SpellDurationEntityMixin {
     int? durationPerLevel,
     int? maxDuration,
   }) {
+    final self = this as SpellDurationEntity;
     return SpellDurationEntity(
-      id: id ?? this.id,
-      duration: duration ?? this.duration,
-      durationPerLevel: durationPerLevel ?? this.durationPerLevel,
-      maxDuration: maxDuration ?? this.maxDuration,
+      id: id ?? self.id,
+      duration: duration ?? self.duration,
+      durationPerLevel: durationPerLevel ?? self.durationPerLevel,
+      maxDuration: maxDuration ?? self.maxDuration,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellDurationEntity;
     return {
-      'ID': id,
-      'Duration': duration,
-      'DurationPerLevel': durationPerLevel,
-      'MaxDuration': maxDuration,
+      'ID': self.id,
+      'Duration': self.duration,
+      'DurationPerLevel': self.durationPerLevel,
+      'MaxDuration': self.maxDuration,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellDurationEntity;
+    return identical(self, other) ||
         other is SpellDurationEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            duration == other.duration &&
-            durationPerLevel == other.durationPerLevel &&
-            maxDuration == other.maxDuration;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.duration == other.duration &&
+            self.durationPerLevel == other.durationPerLevel &&
+            self.maxDuration == other.maxDuration;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellDurationEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      duration,
-      durationPerLevel,
-      maxDuration,
+      self.runtimeType,
+      self.id,
+      self.duration,
+      self.durationPerLevel,
+      self.maxDuration,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellDurationEntity;
     return 'SpellDurationEntity('
-        'id: $id, '
-        'duration: $duration, '
-        'durationPerLevel: $durationPerLevel, '
-        'maxDuration: $maxDuration'
+        'id: ${self.id}, '
+        'duration: ${self.duration}, '
+        'durationPerLevel: ${self.durationPerLevel}, '
+        'maxDuration: ${self.maxDuration}'
         ')';
   }
 }

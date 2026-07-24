@@ -754,8 +754,6 @@ String _emitFull(_Migration migration) {
       .join('\n')
       .trim();
   final buffer = StringBuffer()
-    ..writeln('// ignore_for_file: annotate_overrides')
-    ..writeln()
     ..writeln(
       "import 'package:foxy/infrastructure/codegen/entity_annotations.dart';",
     )

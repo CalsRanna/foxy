@@ -3,12 +3,6 @@
 part of 'quest_request_items_entity.dart';
 
 mixin _QuestRequestItemsEntityMixin {
-  int get id;
-  int get emoteOnComplete;
-  int get emoteOnIncomplete;
-  String get completionText;
-  int get verifiedBuild;
-
   static QuestRequestItemsEntity fromJson(Map<String, dynamic> json) {
     return QuestRequestItemsEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _QuestRequestItemsEntityMixin {
     String? completionText,
     int? verifiedBuild,
   }) {
+    final self = this as QuestRequestItemsEntity;
     return QuestRequestItemsEntity(
-      id: id ?? this.id,
-      emoteOnComplete: emoteOnComplete ?? this.emoteOnComplete,
-      emoteOnIncomplete: emoteOnIncomplete ?? this.emoteOnIncomplete,
-      completionText: completionText ?? this.completionText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      id: id ?? self.id,
+      emoteOnComplete: emoteOnComplete ?? self.emoteOnComplete,
+      emoteOnIncomplete: emoteOnIncomplete ?? self.emoteOnIncomplete,
+      completionText: completionText ?? self.completionText,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestRequestItemsEntity;
     return {
-      'ID': id,
-      'EmoteOnComplete': emoteOnComplete,
-      'EmoteOnIncomplete': emoteOnIncomplete,
-      'CompletionText': completionText,
-      'VerifiedBuild': verifiedBuild,
+      'ID': self.id,
+      'EmoteOnComplete': self.emoteOnComplete,
+      'EmoteOnIncomplete': self.emoteOnIncomplete,
+      'CompletionText': self.completionText,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestRequestItemsEntity;
+    return identical(self, other) ||
         other is QuestRequestItemsEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            emoteOnComplete == other.emoteOnComplete &&
-            emoteOnIncomplete == other.emoteOnIncomplete &&
-            completionText == other.completionText &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.emoteOnComplete == other.emoteOnComplete &&
+            self.emoteOnIncomplete == other.emoteOnIncomplete &&
+            self.completionText == other.completionText &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestRequestItemsEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      emoteOnComplete,
-      emoteOnIncomplete,
-      completionText,
-      verifiedBuild,
+      self.runtimeType,
+      self.id,
+      self.emoteOnComplete,
+      self.emoteOnIncomplete,
+      self.completionText,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestRequestItemsEntity;
     return 'QuestRequestItemsEntity('
-        'id: $id, '
-        'emoteOnComplete: $emoteOnComplete, '
-        'emoteOnIncomplete: $emoteOnIncomplete, '
-        'completionText: $completionText, '
-        'verifiedBuild: $verifiedBuild'
+        'id: ${self.id}, '
+        'emoteOnComplete: ${self.emoteOnComplete}, '
+        'emoteOnIncomplete: ${self.emoteOnIncomplete}, '
+        'completionText: ${self.completionText}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

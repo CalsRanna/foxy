@@ -3,11 +3,6 @@
 part of 'game_object_quest_item_entity.dart';
 
 mixin _GameObjectQuestItemEntityMixin {
-  int get gameObjectEntry;
-  int get idx;
-  int get itemId;
-  int get verifiedBuild;
-
   static GameObjectQuestItemEntity fromJson(Map<String, dynamic> json) {
     return GameObjectQuestItemEntity(
       gameObjectEntry: (json['GameObjectEntry'] as num?)?.toInt() ?? 0,
@@ -23,52 +18,57 @@ mixin _GameObjectQuestItemEntityMixin {
     int? itemId,
     int? verifiedBuild,
   }) {
+    final self = this as GameObjectQuestItemEntity;
     return GameObjectQuestItemEntity(
-      gameObjectEntry: gameObjectEntry ?? this.gameObjectEntry,
-      idx: idx ?? this.idx,
-      itemId: itemId ?? this.itemId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      gameObjectEntry: gameObjectEntry ?? self.gameObjectEntry,
+      idx: idx ?? self.idx,
+      itemId: itemId ?? self.itemId,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GameObjectQuestItemEntity;
     return {
-      'GameObjectEntry': gameObjectEntry,
-      'Idx': idx,
-      'ItemId': itemId,
-      'VerifiedBuild': verifiedBuild,
+      'GameObjectEntry': self.gameObjectEntry,
+      'Idx': self.idx,
+      'ItemId': self.itemId,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GameObjectQuestItemEntity;
+    return identical(self, other) ||
         other is GameObjectQuestItemEntity &&
-            runtimeType == other.runtimeType &&
-            gameObjectEntry == other.gameObjectEntry &&
-            idx == other.idx &&
-            itemId == other.itemId &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.gameObjectEntry == other.gameObjectEntry &&
+            self.idx == other.idx &&
+            self.itemId == other.itemId &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as GameObjectQuestItemEntity;
     return Object.hashAll([
-      runtimeType,
-      gameObjectEntry,
-      idx,
-      itemId,
-      verifiedBuild,
+      self.runtimeType,
+      self.gameObjectEntry,
+      self.idx,
+      self.itemId,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GameObjectQuestItemEntity;
     return 'GameObjectQuestItemEntity('
-        'gameObjectEntry: $gameObjectEntry, '
-        'idx: $idx, '
-        'itemId: $itemId, '
-        'verifiedBuild: $verifiedBuild'
+        'gameObjectEntry: ${self.gameObjectEntry}, '
+        'idx: ${self.idx}, '
+        'itemId: ${self.itemId}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

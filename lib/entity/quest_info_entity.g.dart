@@ -3,25 +3,6 @@
 part of 'quest_info_entity.dart';
 
 mixin _QuestInfoEntityMixin {
-  int get id;
-  String get infoNameLangEnUS;
-  String get infoNameLangKoKR;
-  String get infoNameLangFrFR;
-  String get infoNameLangDeDE;
-  String get infoNameLangZhCN;
-  String get infoNameLangZhTW;
-  String get infoNameLangEsES;
-  String get infoNameLangEsMX;
-  String get infoNameLangRuRU;
-  String get infoNameLangJaJP;
-  String get infoNameLangPtPT;
-  String get infoNameLangPtBR;
-  String get infoNameLangItIT;
-  String get infoNameLangUnk1;
-  String get infoNameLangUnk2;
-  String get infoNameLangUnk3;
-  int get infoNameLangFlags;
-
   static QuestInfoEntity fromJson(Map<String, dynamic> json) {
     return QuestInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -65,122 +46,127 @@ mixin _QuestInfoEntityMixin {
     String? infoNameLangUnk3,
     int? infoNameLangFlags,
   }) {
+    final self = this as QuestInfoEntity;
     return QuestInfoEntity(
-      id: id ?? this.id,
-      infoNameLangEnUS: infoNameLangEnUS ?? this.infoNameLangEnUS,
-      infoNameLangKoKR: infoNameLangKoKR ?? this.infoNameLangKoKR,
-      infoNameLangFrFR: infoNameLangFrFR ?? this.infoNameLangFrFR,
-      infoNameLangDeDE: infoNameLangDeDE ?? this.infoNameLangDeDE,
-      infoNameLangZhCN: infoNameLangZhCN ?? this.infoNameLangZhCN,
-      infoNameLangZhTW: infoNameLangZhTW ?? this.infoNameLangZhTW,
-      infoNameLangEsES: infoNameLangEsES ?? this.infoNameLangEsES,
-      infoNameLangEsMX: infoNameLangEsMX ?? this.infoNameLangEsMX,
-      infoNameLangRuRU: infoNameLangRuRU ?? this.infoNameLangRuRU,
-      infoNameLangJaJP: infoNameLangJaJP ?? this.infoNameLangJaJP,
-      infoNameLangPtPT: infoNameLangPtPT ?? this.infoNameLangPtPT,
-      infoNameLangPtBR: infoNameLangPtBR ?? this.infoNameLangPtBR,
-      infoNameLangItIT: infoNameLangItIT ?? this.infoNameLangItIT,
-      infoNameLangUnk1: infoNameLangUnk1 ?? this.infoNameLangUnk1,
-      infoNameLangUnk2: infoNameLangUnk2 ?? this.infoNameLangUnk2,
-      infoNameLangUnk3: infoNameLangUnk3 ?? this.infoNameLangUnk3,
-      infoNameLangFlags: infoNameLangFlags ?? this.infoNameLangFlags,
+      id: id ?? self.id,
+      infoNameLangEnUS: infoNameLangEnUS ?? self.infoNameLangEnUS,
+      infoNameLangKoKR: infoNameLangKoKR ?? self.infoNameLangKoKR,
+      infoNameLangFrFR: infoNameLangFrFR ?? self.infoNameLangFrFR,
+      infoNameLangDeDE: infoNameLangDeDE ?? self.infoNameLangDeDE,
+      infoNameLangZhCN: infoNameLangZhCN ?? self.infoNameLangZhCN,
+      infoNameLangZhTW: infoNameLangZhTW ?? self.infoNameLangZhTW,
+      infoNameLangEsES: infoNameLangEsES ?? self.infoNameLangEsES,
+      infoNameLangEsMX: infoNameLangEsMX ?? self.infoNameLangEsMX,
+      infoNameLangRuRU: infoNameLangRuRU ?? self.infoNameLangRuRU,
+      infoNameLangJaJP: infoNameLangJaJP ?? self.infoNameLangJaJP,
+      infoNameLangPtPT: infoNameLangPtPT ?? self.infoNameLangPtPT,
+      infoNameLangPtBR: infoNameLangPtBR ?? self.infoNameLangPtBR,
+      infoNameLangItIT: infoNameLangItIT ?? self.infoNameLangItIT,
+      infoNameLangUnk1: infoNameLangUnk1 ?? self.infoNameLangUnk1,
+      infoNameLangUnk2: infoNameLangUnk2 ?? self.infoNameLangUnk2,
+      infoNameLangUnk3: infoNameLangUnk3 ?? self.infoNameLangUnk3,
+      infoNameLangFlags: infoNameLangFlags ?? self.infoNameLangFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestInfoEntity;
     return {
-      'ID': id,
-      'InfoName_lang_enUS': infoNameLangEnUS,
-      'InfoName_lang_koKR': infoNameLangKoKR,
-      'InfoName_lang_frFR': infoNameLangFrFR,
-      'InfoName_lang_deDE': infoNameLangDeDE,
-      'InfoName_lang_zhCN': infoNameLangZhCN,
-      'InfoName_lang_zhTW': infoNameLangZhTW,
-      'InfoName_lang_esES': infoNameLangEsES,
-      'InfoName_lang_esMX': infoNameLangEsMX,
-      'InfoName_lang_ruRU': infoNameLangRuRU,
-      'InfoName_lang_jaJP': infoNameLangJaJP,
-      'InfoName_lang_ptPT': infoNameLangPtPT,
-      'InfoName_lang_ptBR': infoNameLangPtBR,
-      'InfoName_lang_itIT': infoNameLangItIT,
-      'InfoName_lang_unk1': infoNameLangUnk1,
-      'InfoName_lang_unk2': infoNameLangUnk2,
-      'InfoName_lang_unk3': infoNameLangUnk3,
-      'InfoName_lang_Flags': infoNameLangFlags,
+      'ID': self.id,
+      'InfoName_lang_enUS': self.infoNameLangEnUS,
+      'InfoName_lang_koKR': self.infoNameLangKoKR,
+      'InfoName_lang_frFR': self.infoNameLangFrFR,
+      'InfoName_lang_deDE': self.infoNameLangDeDE,
+      'InfoName_lang_zhCN': self.infoNameLangZhCN,
+      'InfoName_lang_zhTW': self.infoNameLangZhTW,
+      'InfoName_lang_esES': self.infoNameLangEsES,
+      'InfoName_lang_esMX': self.infoNameLangEsMX,
+      'InfoName_lang_ruRU': self.infoNameLangRuRU,
+      'InfoName_lang_jaJP': self.infoNameLangJaJP,
+      'InfoName_lang_ptPT': self.infoNameLangPtPT,
+      'InfoName_lang_ptBR': self.infoNameLangPtBR,
+      'InfoName_lang_itIT': self.infoNameLangItIT,
+      'InfoName_lang_unk1': self.infoNameLangUnk1,
+      'InfoName_lang_unk2': self.infoNameLangUnk2,
+      'InfoName_lang_unk3': self.infoNameLangUnk3,
+      'InfoName_lang_Flags': self.infoNameLangFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestInfoEntity;
+    return identical(self, other) ||
         other is QuestInfoEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            infoNameLangEnUS == other.infoNameLangEnUS &&
-            infoNameLangKoKR == other.infoNameLangKoKR &&
-            infoNameLangFrFR == other.infoNameLangFrFR &&
-            infoNameLangDeDE == other.infoNameLangDeDE &&
-            infoNameLangZhCN == other.infoNameLangZhCN &&
-            infoNameLangZhTW == other.infoNameLangZhTW &&
-            infoNameLangEsES == other.infoNameLangEsES &&
-            infoNameLangEsMX == other.infoNameLangEsMX &&
-            infoNameLangRuRU == other.infoNameLangRuRU &&
-            infoNameLangJaJP == other.infoNameLangJaJP &&
-            infoNameLangPtPT == other.infoNameLangPtPT &&
-            infoNameLangPtBR == other.infoNameLangPtBR &&
-            infoNameLangItIT == other.infoNameLangItIT &&
-            infoNameLangUnk1 == other.infoNameLangUnk1 &&
-            infoNameLangUnk2 == other.infoNameLangUnk2 &&
-            infoNameLangUnk3 == other.infoNameLangUnk3 &&
-            infoNameLangFlags == other.infoNameLangFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.infoNameLangEnUS == other.infoNameLangEnUS &&
+            self.infoNameLangKoKR == other.infoNameLangKoKR &&
+            self.infoNameLangFrFR == other.infoNameLangFrFR &&
+            self.infoNameLangDeDE == other.infoNameLangDeDE &&
+            self.infoNameLangZhCN == other.infoNameLangZhCN &&
+            self.infoNameLangZhTW == other.infoNameLangZhTW &&
+            self.infoNameLangEsES == other.infoNameLangEsES &&
+            self.infoNameLangEsMX == other.infoNameLangEsMX &&
+            self.infoNameLangRuRU == other.infoNameLangRuRU &&
+            self.infoNameLangJaJP == other.infoNameLangJaJP &&
+            self.infoNameLangPtPT == other.infoNameLangPtPT &&
+            self.infoNameLangPtBR == other.infoNameLangPtBR &&
+            self.infoNameLangItIT == other.infoNameLangItIT &&
+            self.infoNameLangUnk1 == other.infoNameLangUnk1 &&
+            self.infoNameLangUnk2 == other.infoNameLangUnk2 &&
+            self.infoNameLangUnk3 == other.infoNameLangUnk3 &&
+            self.infoNameLangFlags == other.infoNameLangFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestInfoEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      infoNameLangEnUS,
-      infoNameLangKoKR,
-      infoNameLangFrFR,
-      infoNameLangDeDE,
-      infoNameLangZhCN,
-      infoNameLangZhTW,
-      infoNameLangEsES,
-      infoNameLangEsMX,
-      infoNameLangRuRU,
-      infoNameLangJaJP,
-      infoNameLangPtPT,
-      infoNameLangPtBR,
-      infoNameLangItIT,
-      infoNameLangUnk1,
-      infoNameLangUnk2,
-      infoNameLangUnk3,
-      infoNameLangFlags,
+      self.runtimeType,
+      self.id,
+      self.infoNameLangEnUS,
+      self.infoNameLangKoKR,
+      self.infoNameLangFrFR,
+      self.infoNameLangDeDE,
+      self.infoNameLangZhCN,
+      self.infoNameLangZhTW,
+      self.infoNameLangEsES,
+      self.infoNameLangEsMX,
+      self.infoNameLangRuRU,
+      self.infoNameLangJaJP,
+      self.infoNameLangPtPT,
+      self.infoNameLangPtBR,
+      self.infoNameLangItIT,
+      self.infoNameLangUnk1,
+      self.infoNameLangUnk2,
+      self.infoNameLangUnk3,
+      self.infoNameLangFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestInfoEntity;
     return 'QuestInfoEntity('
-        'id: $id, '
-        'infoNameLangEnUS: $infoNameLangEnUS, '
-        'infoNameLangKoKR: $infoNameLangKoKR, '
-        'infoNameLangFrFR: $infoNameLangFrFR, '
-        'infoNameLangDeDE: $infoNameLangDeDE, '
-        'infoNameLangZhCN: $infoNameLangZhCN, '
-        'infoNameLangZhTW: $infoNameLangZhTW, '
-        'infoNameLangEsES: $infoNameLangEsES, '
-        'infoNameLangEsMX: $infoNameLangEsMX, '
-        'infoNameLangRuRU: $infoNameLangRuRU, '
-        'infoNameLangJaJP: $infoNameLangJaJP, '
-        'infoNameLangPtPT: $infoNameLangPtPT, '
-        'infoNameLangPtBR: $infoNameLangPtBR, '
-        'infoNameLangItIT: $infoNameLangItIT, '
-        'infoNameLangUnk1: $infoNameLangUnk1, '
-        'infoNameLangUnk2: $infoNameLangUnk2, '
-        'infoNameLangUnk3: $infoNameLangUnk3, '
-        'infoNameLangFlags: $infoNameLangFlags'
+        'id: ${self.id}, '
+        'infoNameLangEnUS: ${self.infoNameLangEnUS}, '
+        'infoNameLangKoKR: ${self.infoNameLangKoKR}, '
+        'infoNameLangFrFR: ${self.infoNameLangFrFR}, '
+        'infoNameLangDeDE: ${self.infoNameLangDeDE}, '
+        'infoNameLangZhCN: ${self.infoNameLangZhCN}, '
+        'infoNameLangZhTW: ${self.infoNameLangZhTW}, '
+        'infoNameLangEsES: ${self.infoNameLangEsES}, '
+        'infoNameLangEsMX: ${self.infoNameLangEsMX}, '
+        'infoNameLangRuRU: ${self.infoNameLangRuRU}, '
+        'infoNameLangJaJP: ${self.infoNameLangJaJP}, '
+        'infoNameLangPtPT: ${self.infoNameLangPtPT}, '
+        'infoNameLangPtBR: ${self.infoNameLangPtBR}, '
+        'infoNameLangItIT: ${self.infoNameLangItIT}, '
+        'infoNameLangUnk1: ${self.infoNameLangUnk1}, '
+        'infoNameLangUnk2: ${self.infoNameLangUnk2}, '
+        'infoNameLangUnk3: ${self.infoNameLangUnk3}, '
+        'infoNameLangFlags: ${self.infoNameLangFlags}'
         ')';
   }
 }

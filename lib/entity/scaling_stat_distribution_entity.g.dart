@@ -3,29 +3,6 @@
 part of 'scaling_stat_distribution_entity.dart';
 
 mixin _ScalingStatDistributionEntityMixin {
-  int get id;
-  int get statId0;
-  int get statId1;
-  int get statId2;
-  int get statId3;
-  int get statId4;
-  int get statId5;
-  int get statId6;
-  int get statId7;
-  int get statId8;
-  int get statId9;
-  int get bonus0;
-  int get bonus1;
-  int get bonus2;
-  int get bonus3;
-  int get bonus4;
-  int get bonus5;
-  int get bonus6;
-  int get bonus7;
-  int get bonus8;
-  int get bonus9;
-  int get maxlevel;
-
   static ScalingStatDistributionEntity fromJson(Map<String, dynamic> json) {
     return ScalingStatDistributionEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -77,142 +54,147 @@ mixin _ScalingStatDistributionEntityMixin {
     int? bonus9,
     int? maxlevel,
   }) {
+    final self = this as ScalingStatDistributionEntity;
     return ScalingStatDistributionEntity(
-      id: id ?? this.id,
-      statId0: statId0 ?? this.statId0,
-      statId1: statId1 ?? this.statId1,
-      statId2: statId2 ?? this.statId2,
-      statId3: statId3 ?? this.statId3,
-      statId4: statId4 ?? this.statId4,
-      statId5: statId5 ?? this.statId5,
-      statId6: statId6 ?? this.statId6,
-      statId7: statId7 ?? this.statId7,
-      statId8: statId8 ?? this.statId8,
-      statId9: statId9 ?? this.statId9,
-      bonus0: bonus0 ?? this.bonus0,
-      bonus1: bonus1 ?? this.bonus1,
-      bonus2: bonus2 ?? this.bonus2,
-      bonus3: bonus3 ?? this.bonus3,
-      bonus4: bonus4 ?? this.bonus4,
-      bonus5: bonus5 ?? this.bonus5,
-      bonus6: bonus6 ?? this.bonus6,
-      bonus7: bonus7 ?? this.bonus7,
-      bonus8: bonus8 ?? this.bonus8,
-      bonus9: bonus9 ?? this.bonus9,
-      maxlevel: maxlevel ?? this.maxlevel,
+      id: id ?? self.id,
+      statId0: statId0 ?? self.statId0,
+      statId1: statId1 ?? self.statId1,
+      statId2: statId2 ?? self.statId2,
+      statId3: statId3 ?? self.statId3,
+      statId4: statId4 ?? self.statId4,
+      statId5: statId5 ?? self.statId5,
+      statId6: statId6 ?? self.statId6,
+      statId7: statId7 ?? self.statId7,
+      statId8: statId8 ?? self.statId8,
+      statId9: statId9 ?? self.statId9,
+      bonus0: bonus0 ?? self.bonus0,
+      bonus1: bonus1 ?? self.bonus1,
+      bonus2: bonus2 ?? self.bonus2,
+      bonus3: bonus3 ?? self.bonus3,
+      bonus4: bonus4 ?? self.bonus4,
+      bonus5: bonus5 ?? self.bonus5,
+      bonus6: bonus6 ?? self.bonus6,
+      bonus7: bonus7 ?? self.bonus7,
+      bonus8: bonus8 ?? self.bonus8,
+      bonus9: bonus9 ?? self.bonus9,
+      maxlevel: maxlevel ?? self.maxlevel,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ScalingStatDistributionEntity;
     return {
-      'ID': id,
-      'StatID0': statId0,
-      'StatID1': statId1,
-      'StatID2': statId2,
-      'StatID3': statId3,
-      'StatID4': statId4,
-      'StatID5': statId5,
-      'StatID6': statId6,
-      'StatID7': statId7,
-      'StatID8': statId8,
-      'StatID9': statId9,
-      'Bonus0': bonus0,
-      'Bonus1': bonus1,
-      'Bonus2': bonus2,
-      'Bonus3': bonus3,
-      'Bonus4': bonus4,
-      'Bonus5': bonus5,
-      'Bonus6': bonus6,
-      'Bonus7': bonus7,
-      'Bonus8': bonus8,
-      'Bonus9': bonus9,
-      'Maxlevel': maxlevel,
+      'ID': self.id,
+      'StatID0': self.statId0,
+      'StatID1': self.statId1,
+      'StatID2': self.statId2,
+      'StatID3': self.statId3,
+      'StatID4': self.statId4,
+      'StatID5': self.statId5,
+      'StatID6': self.statId6,
+      'StatID7': self.statId7,
+      'StatID8': self.statId8,
+      'StatID9': self.statId9,
+      'Bonus0': self.bonus0,
+      'Bonus1': self.bonus1,
+      'Bonus2': self.bonus2,
+      'Bonus3': self.bonus3,
+      'Bonus4': self.bonus4,
+      'Bonus5': self.bonus5,
+      'Bonus6': self.bonus6,
+      'Bonus7': self.bonus7,
+      'Bonus8': self.bonus8,
+      'Bonus9': self.bonus9,
+      'Maxlevel': self.maxlevel,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ScalingStatDistributionEntity;
+    return identical(self, other) ||
         other is ScalingStatDistributionEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            statId0 == other.statId0 &&
-            statId1 == other.statId1 &&
-            statId2 == other.statId2 &&
-            statId3 == other.statId3 &&
-            statId4 == other.statId4 &&
-            statId5 == other.statId5 &&
-            statId6 == other.statId6 &&
-            statId7 == other.statId7 &&
-            statId8 == other.statId8 &&
-            statId9 == other.statId9 &&
-            bonus0 == other.bonus0 &&
-            bonus1 == other.bonus1 &&
-            bonus2 == other.bonus2 &&
-            bonus3 == other.bonus3 &&
-            bonus4 == other.bonus4 &&
-            bonus5 == other.bonus5 &&
-            bonus6 == other.bonus6 &&
-            bonus7 == other.bonus7 &&
-            bonus8 == other.bonus8 &&
-            bonus9 == other.bonus9 &&
-            maxlevel == other.maxlevel;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.statId0 == other.statId0 &&
+            self.statId1 == other.statId1 &&
+            self.statId2 == other.statId2 &&
+            self.statId3 == other.statId3 &&
+            self.statId4 == other.statId4 &&
+            self.statId5 == other.statId5 &&
+            self.statId6 == other.statId6 &&
+            self.statId7 == other.statId7 &&
+            self.statId8 == other.statId8 &&
+            self.statId9 == other.statId9 &&
+            self.bonus0 == other.bonus0 &&
+            self.bonus1 == other.bonus1 &&
+            self.bonus2 == other.bonus2 &&
+            self.bonus3 == other.bonus3 &&
+            self.bonus4 == other.bonus4 &&
+            self.bonus5 == other.bonus5 &&
+            self.bonus6 == other.bonus6 &&
+            self.bonus7 == other.bonus7 &&
+            self.bonus8 == other.bonus8 &&
+            self.bonus9 == other.bonus9 &&
+            self.maxlevel == other.maxlevel;
   }
 
   @override
   int get hashCode {
+    final self = this as ScalingStatDistributionEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      statId0,
-      statId1,
-      statId2,
-      statId3,
-      statId4,
-      statId5,
-      statId6,
-      statId7,
-      statId8,
-      statId9,
-      bonus0,
-      bonus1,
-      bonus2,
-      bonus3,
-      bonus4,
-      bonus5,
-      bonus6,
-      bonus7,
-      bonus8,
-      bonus9,
-      maxlevel,
+      self.runtimeType,
+      self.id,
+      self.statId0,
+      self.statId1,
+      self.statId2,
+      self.statId3,
+      self.statId4,
+      self.statId5,
+      self.statId6,
+      self.statId7,
+      self.statId8,
+      self.statId9,
+      self.bonus0,
+      self.bonus1,
+      self.bonus2,
+      self.bonus3,
+      self.bonus4,
+      self.bonus5,
+      self.bonus6,
+      self.bonus7,
+      self.bonus8,
+      self.bonus9,
+      self.maxlevel,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ScalingStatDistributionEntity;
     return 'ScalingStatDistributionEntity('
-        'id: $id, '
-        'statId0: $statId0, '
-        'statId1: $statId1, '
-        'statId2: $statId2, '
-        'statId3: $statId3, '
-        'statId4: $statId4, '
-        'statId5: $statId5, '
-        'statId6: $statId6, '
-        'statId7: $statId7, '
-        'statId8: $statId8, '
-        'statId9: $statId9, '
-        'bonus0: $bonus0, '
-        'bonus1: $bonus1, '
-        'bonus2: $bonus2, '
-        'bonus3: $bonus3, '
-        'bonus4: $bonus4, '
-        'bonus5: $bonus5, '
-        'bonus6: $bonus6, '
-        'bonus7: $bonus7, '
-        'bonus8: $bonus8, '
-        'bonus9: $bonus9, '
-        'maxlevel: $maxlevel'
+        'id: ${self.id}, '
+        'statId0: ${self.statId0}, '
+        'statId1: ${self.statId1}, '
+        'statId2: ${self.statId2}, '
+        'statId3: ${self.statId3}, '
+        'statId4: ${self.statId4}, '
+        'statId5: ${self.statId5}, '
+        'statId6: ${self.statId6}, '
+        'statId7: ${self.statId7}, '
+        'statId8: ${self.statId8}, '
+        'statId9: ${self.statId9}, '
+        'bonus0: ${self.bonus0}, '
+        'bonus1: ${self.bonus1}, '
+        'bonus2: ${self.bonus2}, '
+        'bonus3: ${self.bonus3}, '
+        'bonus4: ${self.bonus4}, '
+        'bonus5: ${self.bonus5}, '
+        'bonus6: ${self.bonus6}, '
+        'bonus7: ${self.bonus7}, '
+        'bonus8: ${self.bonus8}, '
+        'bonus9: ${self.bonus9}, '
+        'maxlevel: ${self.maxlevel}'
         ')';
   }
 }

@@ -3,9 +3,6 @@
 part of 'item_visual_effect_entity.dart';
 
 mixin _ItemVisualEffectEntityMixin {
-  int get id;
-  String get model;
-
   static ItemVisualEffectEntity fromJson(Map<String, dynamic> json) {
     return ItemVisualEffectEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -14,35 +11,40 @@ mixin _ItemVisualEffectEntityMixin {
   }
 
   ItemVisualEffectEntity copyWith({int? id, String? model}) {
+    final self = this as ItemVisualEffectEntity;
     return ItemVisualEffectEntity(
-      id: id ?? this.id,
-      model: model ?? this.model,
+      id: id ?? self.id,
+      model: model ?? self.model,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'Model': model};
+    final self = this as ItemVisualEffectEntity;
+    return {'ID': self.id, 'Model': self.model};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ItemVisualEffectEntity;
+    return identical(self, other) ||
         other is ItemVisualEffectEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            model == other.model;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.model == other.model;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, model]);
+    final self = this as ItemVisualEffectEntity;
+    return Object.hashAll([self.runtimeType, self.id, self.model]);
   }
 
   @override
   String toString() {
+    final self = this as ItemVisualEffectEntity;
     return 'ItemVisualEffectEntity('
-        'id: $id, '
-        'model: $model'
+        'id: ${self.id}, '
+        'model: ${self.model}'
         ')';
   }
 }

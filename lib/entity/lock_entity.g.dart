@@ -3,40 +3,6 @@
 part of 'lock_entity.dart';
 
 mixin _LockEntityMixin {
-  int get id;
-  int get type0;
-  int get type1;
-  int get type2;
-  int get type3;
-  int get type4;
-  int get type5;
-  int get type6;
-  int get type7;
-  int get index0;
-  int get index1;
-  int get index2;
-  int get index3;
-  int get index4;
-  int get index5;
-  int get index6;
-  int get index7;
-  int get skill0;
-  int get skill1;
-  int get skill2;
-  int get skill3;
-  int get skill4;
-  int get skill5;
-  int get skill6;
-  int get skill7;
-  int get action0;
-  int get action1;
-  int get action2;
-  int get action3;
-  int get action4;
-  int get action5;
-  int get action6;
-  int get action7;
-
   static LockEntity fromJson(Map<String, dynamic> json) {
     return LockEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -110,197 +76,202 @@ mixin _LockEntityMixin {
     int? action6,
     int? action7,
   }) {
+    final self = this as LockEntity;
     return LockEntity(
-      id: id ?? this.id,
-      type0: type0 ?? this.type0,
-      type1: type1 ?? this.type1,
-      type2: type2 ?? this.type2,
-      type3: type3 ?? this.type3,
-      type4: type4 ?? this.type4,
-      type5: type5 ?? this.type5,
-      type6: type6 ?? this.type6,
-      type7: type7 ?? this.type7,
-      index0: index0 ?? this.index0,
-      index1: index1 ?? this.index1,
-      index2: index2 ?? this.index2,
-      index3: index3 ?? this.index3,
-      index4: index4 ?? this.index4,
-      index5: index5 ?? this.index5,
-      index6: index6 ?? this.index6,
-      index7: index7 ?? this.index7,
-      skill0: skill0 ?? this.skill0,
-      skill1: skill1 ?? this.skill1,
-      skill2: skill2 ?? this.skill2,
-      skill3: skill3 ?? this.skill3,
-      skill4: skill4 ?? this.skill4,
-      skill5: skill5 ?? this.skill5,
-      skill6: skill6 ?? this.skill6,
-      skill7: skill7 ?? this.skill7,
-      action0: action0 ?? this.action0,
-      action1: action1 ?? this.action1,
-      action2: action2 ?? this.action2,
-      action3: action3 ?? this.action3,
-      action4: action4 ?? this.action4,
-      action5: action5 ?? this.action5,
-      action6: action6 ?? this.action6,
-      action7: action7 ?? this.action7,
+      id: id ?? self.id,
+      type0: type0 ?? self.type0,
+      type1: type1 ?? self.type1,
+      type2: type2 ?? self.type2,
+      type3: type3 ?? self.type3,
+      type4: type4 ?? self.type4,
+      type5: type5 ?? self.type5,
+      type6: type6 ?? self.type6,
+      type7: type7 ?? self.type7,
+      index0: index0 ?? self.index0,
+      index1: index1 ?? self.index1,
+      index2: index2 ?? self.index2,
+      index3: index3 ?? self.index3,
+      index4: index4 ?? self.index4,
+      index5: index5 ?? self.index5,
+      index6: index6 ?? self.index6,
+      index7: index7 ?? self.index7,
+      skill0: skill0 ?? self.skill0,
+      skill1: skill1 ?? self.skill1,
+      skill2: skill2 ?? self.skill2,
+      skill3: skill3 ?? self.skill3,
+      skill4: skill4 ?? self.skill4,
+      skill5: skill5 ?? self.skill5,
+      skill6: skill6 ?? self.skill6,
+      skill7: skill7 ?? self.skill7,
+      action0: action0 ?? self.action0,
+      action1: action1 ?? self.action1,
+      action2: action2 ?? self.action2,
+      action3: action3 ?? self.action3,
+      action4: action4 ?? self.action4,
+      action5: action5 ?? self.action5,
+      action6: action6 ?? self.action6,
+      action7: action7 ?? self.action7,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as LockEntity;
     return {
-      'ID': id,
-      'Type0': type0,
-      'Type1': type1,
-      'Type2': type2,
-      'Type3': type3,
-      'Type4': type4,
-      'Type5': type5,
-      'Type6': type6,
-      'Type7': type7,
-      'Index0': index0,
-      'Index1': index1,
-      'Index2': index2,
-      'Index3': index3,
-      'Index4': index4,
-      'Index5': index5,
-      'Index6': index6,
-      'Index7': index7,
-      'Skill0': skill0,
-      'Skill1': skill1,
-      'Skill2': skill2,
-      'Skill3': skill3,
-      'Skill4': skill4,
-      'Skill5': skill5,
-      'Skill6': skill6,
-      'Skill7': skill7,
-      'Action0': action0,
-      'Action1': action1,
-      'Action2': action2,
-      'Action3': action3,
-      'Action4': action4,
-      'Action5': action5,
-      'Action6': action6,
-      'Action7': action7,
+      'ID': self.id,
+      'Type0': self.type0,
+      'Type1': self.type1,
+      'Type2': self.type2,
+      'Type3': self.type3,
+      'Type4': self.type4,
+      'Type5': self.type5,
+      'Type6': self.type6,
+      'Type7': self.type7,
+      'Index0': self.index0,
+      'Index1': self.index1,
+      'Index2': self.index2,
+      'Index3': self.index3,
+      'Index4': self.index4,
+      'Index5': self.index5,
+      'Index6': self.index6,
+      'Index7': self.index7,
+      'Skill0': self.skill0,
+      'Skill1': self.skill1,
+      'Skill2': self.skill2,
+      'Skill3': self.skill3,
+      'Skill4': self.skill4,
+      'Skill5': self.skill5,
+      'Skill6': self.skill6,
+      'Skill7': self.skill7,
+      'Action0': self.action0,
+      'Action1': self.action1,
+      'Action2': self.action2,
+      'Action3': self.action3,
+      'Action4': self.action4,
+      'Action5': self.action5,
+      'Action6': self.action6,
+      'Action7': self.action7,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as LockEntity;
+    return identical(self, other) ||
         other is LockEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            type0 == other.type0 &&
-            type1 == other.type1 &&
-            type2 == other.type2 &&
-            type3 == other.type3 &&
-            type4 == other.type4 &&
-            type5 == other.type5 &&
-            type6 == other.type6 &&
-            type7 == other.type7 &&
-            index0 == other.index0 &&
-            index1 == other.index1 &&
-            index2 == other.index2 &&
-            index3 == other.index3 &&
-            index4 == other.index4 &&
-            index5 == other.index5 &&
-            index6 == other.index6 &&
-            index7 == other.index7 &&
-            skill0 == other.skill0 &&
-            skill1 == other.skill1 &&
-            skill2 == other.skill2 &&
-            skill3 == other.skill3 &&
-            skill4 == other.skill4 &&
-            skill5 == other.skill5 &&
-            skill6 == other.skill6 &&
-            skill7 == other.skill7 &&
-            action0 == other.action0 &&
-            action1 == other.action1 &&
-            action2 == other.action2 &&
-            action3 == other.action3 &&
-            action4 == other.action4 &&
-            action5 == other.action5 &&
-            action6 == other.action6 &&
-            action7 == other.action7;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.type0 == other.type0 &&
+            self.type1 == other.type1 &&
+            self.type2 == other.type2 &&
+            self.type3 == other.type3 &&
+            self.type4 == other.type4 &&
+            self.type5 == other.type5 &&
+            self.type6 == other.type6 &&
+            self.type7 == other.type7 &&
+            self.index0 == other.index0 &&
+            self.index1 == other.index1 &&
+            self.index2 == other.index2 &&
+            self.index3 == other.index3 &&
+            self.index4 == other.index4 &&
+            self.index5 == other.index5 &&
+            self.index6 == other.index6 &&
+            self.index7 == other.index7 &&
+            self.skill0 == other.skill0 &&
+            self.skill1 == other.skill1 &&
+            self.skill2 == other.skill2 &&
+            self.skill3 == other.skill3 &&
+            self.skill4 == other.skill4 &&
+            self.skill5 == other.skill5 &&
+            self.skill6 == other.skill6 &&
+            self.skill7 == other.skill7 &&
+            self.action0 == other.action0 &&
+            self.action1 == other.action1 &&
+            self.action2 == other.action2 &&
+            self.action3 == other.action3 &&
+            self.action4 == other.action4 &&
+            self.action5 == other.action5 &&
+            self.action6 == other.action6 &&
+            self.action7 == other.action7;
   }
 
   @override
   int get hashCode {
+    final self = this as LockEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      type0,
-      type1,
-      type2,
-      type3,
-      type4,
-      type5,
-      type6,
-      type7,
-      index0,
-      index1,
-      index2,
-      index3,
-      index4,
-      index5,
-      index6,
-      index7,
-      skill0,
-      skill1,
-      skill2,
-      skill3,
-      skill4,
-      skill5,
-      skill6,
-      skill7,
-      action0,
-      action1,
-      action2,
-      action3,
-      action4,
-      action5,
-      action6,
-      action7,
+      self.runtimeType,
+      self.id,
+      self.type0,
+      self.type1,
+      self.type2,
+      self.type3,
+      self.type4,
+      self.type5,
+      self.type6,
+      self.type7,
+      self.index0,
+      self.index1,
+      self.index2,
+      self.index3,
+      self.index4,
+      self.index5,
+      self.index6,
+      self.index7,
+      self.skill0,
+      self.skill1,
+      self.skill2,
+      self.skill3,
+      self.skill4,
+      self.skill5,
+      self.skill6,
+      self.skill7,
+      self.action0,
+      self.action1,
+      self.action2,
+      self.action3,
+      self.action4,
+      self.action5,
+      self.action6,
+      self.action7,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as LockEntity;
     return 'LockEntity('
-        'id: $id, '
-        'type0: $type0, '
-        'type1: $type1, '
-        'type2: $type2, '
-        'type3: $type3, '
-        'type4: $type4, '
-        'type5: $type5, '
-        'type6: $type6, '
-        'type7: $type7, '
-        'index0: $index0, '
-        'index1: $index1, '
-        'index2: $index2, '
-        'index3: $index3, '
-        'index4: $index4, '
-        'index5: $index5, '
-        'index6: $index6, '
-        'index7: $index7, '
-        'skill0: $skill0, '
-        'skill1: $skill1, '
-        'skill2: $skill2, '
-        'skill3: $skill3, '
-        'skill4: $skill4, '
-        'skill5: $skill5, '
-        'skill6: $skill6, '
-        'skill7: $skill7, '
-        'action0: $action0, '
-        'action1: $action1, '
-        'action2: $action2, '
-        'action3: $action3, '
-        'action4: $action4, '
-        'action5: $action5, '
-        'action6: $action6, '
-        'action7: $action7'
+        'id: ${self.id}, '
+        'type0: ${self.type0}, '
+        'type1: ${self.type1}, '
+        'type2: ${self.type2}, '
+        'type3: ${self.type3}, '
+        'type4: ${self.type4}, '
+        'type5: ${self.type5}, '
+        'type6: ${self.type6}, '
+        'type7: ${self.type7}, '
+        'index0: ${self.index0}, '
+        'index1: ${self.index1}, '
+        'index2: ${self.index2}, '
+        'index3: ${self.index3}, '
+        'index4: ${self.index4}, '
+        'index5: ${self.index5}, '
+        'index6: ${self.index6}, '
+        'index7: ${self.index7}, '
+        'skill0: ${self.skill0}, '
+        'skill1: ${self.skill1}, '
+        'skill2: ${self.skill2}, '
+        'skill3: ${self.skill3}, '
+        'skill4: ${self.skill4}, '
+        'skill5: ${self.skill5}, '
+        'skill6: ${self.skill6}, '
+        'skill7: ${self.skill7}, '
+        'action0: ${self.action0}, '
+        'action1: ${self.action1}, '
+        'action2: ${self.action2}, '
+        'action3: ${self.action3}, '
+        'action4: ${self.action4}, '
+        'action5: ${self.action5}, '
+        'action6: ${self.action6}, '
+        'action7: ${self.action7}'
         ')';
   }
 }

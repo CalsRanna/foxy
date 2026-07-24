@@ -4,11 +4,8 @@ final class EntityEmitter {
   const EntityEmitter();
 
   String emitFullMixin(EntityGenerationModel model) {
-    final buffer = StringBuffer()..writeln('mixin ${model.mixinName} {');
-    for (final field in model.fields) {
-      buffer.writeln('  ${field.dartType} get ${field.dartName};');
-    }
-    buffer
+    final buffer = StringBuffer()
+      ..writeln('mixin ${model.mixinName} {')
       ..writeln()
       ..writeln(
         '  static ${model.className} fromJson(Map<String, dynamic> json) {',
@@ -30,10 +27,11 @@ final class EntityEmitter {
     }
     buffer
       ..writeln('  }) {')
+      ..writeln('    final self = this as ${model.className};')
       ..writeln('    return ${model.className}(');
     for (final field in model.fields) {
       buffer.writeln(
-        '      ${field.dartName}: ${field.dartName} ?? this.${field.dartName},',
+        '      ${field.dartName}: ${field.dartName} ?? self.${field.dartName},',
       );
     }
     buffer
@@ -41,10 +39,12 @@ final class EntityEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  Map<String, dynamic> toJson() {')
+      ..writeln('    final self = this as ${model.className};')
       ..writeln('    return {');
     for (final field in model.fields) {
       buffer.writeln(
-        '      ${_literal(field.columnName)}: ${_fullToJson(field)},',
+        '      ${_literal(field.columnName)}: '
+        '${_fullToJson(field, receiver: 'self')},',
       );
     }
     buffer
@@ -53,14 +53,16 @@ final class EntityEmitter {
       ..writeln()
       ..writeln('  @override')
       ..writeln('  bool operator ==(Object other) {')
-      ..writeln('    return identical(this, other) ||')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln('    return identical(self, other) ||')
       ..writeln('        other is ${model.className} &&')
-      ..writeln('            runtimeType == other.runtimeType &&');
+      ..writeln('            self.runtimeType == other.runtimeType &&');
     for (var index = 0; index < model.fields.length; index++) {
       final field = model.fields[index];
       final suffix = index == model.fields.length - 1 ? ';' : ' &&';
       buffer.writeln(
-        '            ${field.dartName} == other.${field.dartName}$suffix',
+        '            self.${field.dartName} == '
+        'other.${field.dartName}$suffix',
       );
     }
     buffer
@@ -68,10 +70,11 @@ final class EntityEmitter {
       ..writeln()
       ..writeln('  @override')
       ..writeln('  int get hashCode {')
+      ..writeln('    final self = this as ${model.className};')
       ..writeln('    return Object.hashAll([')
-      ..writeln('      runtimeType,');
+      ..writeln('      self.runtimeType,');
     for (final field in model.fields) {
-      buffer.writeln('      ${field.dartName},');
+      buffer.writeln('      self.${field.dartName},');
     }
     buffer
       ..writeln('    ]);')
@@ -79,11 +82,15 @@ final class EntityEmitter {
       ..writeln()
       ..writeln('  @override')
       ..writeln('  String toString() {')
+      ..writeln('    final self = this as ${model.className};')
       ..writeln("    return '${model.className}('");
     for (var index = 0; index < model.fields.length; index++) {
       final field = model.fields[index];
       final suffix = index == model.fields.length - 1 ? "'" : ", '";
-      buffer.writeln("        '${field.dartName}: \$${field.dartName}$suffix");
+      buffer.writeln(
+        "        '${field.dartName}: "
+        "\${self.${field.dartName}}$suffix",
+      );
     }
     buffer
       ..writeln("        ')';")
@@ -295,13 +302,13 @@ final class EntityEmitter {
     };
   }
 
-  String _fullToJson(EntityFieldModel field) {
-    if (field.nonNullableType != 'bool') return field.dartName;
+  String _fullToJson(EntityFieldModel field, {required String receiver}) {
+    final value = '$receiver.${field.dartName}';
+    if (field.nonNullableType != 'bool') return value;
     if (field.nullable) {
-      return '${field.dartName} == null '
-          '? null : (${field.dartName}! ? 1 : 0)';
+      return '$value == null ? null : ($value! ? 1 : 0)';
     }
-    return '${field.dartName} ? 1 : 0';
+    return '$value ? 1 : 0';
   }
 
   String _filterFromJson(EntityFieldModel field) {

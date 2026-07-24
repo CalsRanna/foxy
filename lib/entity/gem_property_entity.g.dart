@@ -3,12 +3,6 @@
 part of 'gem_property_entity.dart';
 
 mixin _GemPropertyEntityMixin {
-  int get id;
-  int get enchantId;
-  int get maxCountInv;
-  int get maxCountItem;
-  int get type;
-
   static GemPropertyEntity fromJson(Map<String, dynamic> json) {
     return GemPropertyEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _GemPropertyEntityMixin {
     int? maxCountItem,
     int? type,
   }) {
+    final self = this as GemPropertyEntity;
     return GemPropertyEntity(
-      id: id ?? this.id,
-      enchantId: enchantId ?? this.enchantId,
-      maxCountInv: maxCountInv ?? this.maxCountInv,
-      maxCountItem: maxCountItem ?? this.maxCountItem,
-      type: type ?? this.type,
+      id: id ?? self.id,
+      enchantId: enchantId ?? self.enchantId,
+      maxCountInv: maxCountInv ?? self.maxCountInv,
+      maxCountItem: maxCountItem ?? self.maxCountItem,
+      type: type ?? self.type,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GemPropertyEntity;
     return {
-      'ID': id,
-      'Enchant_ID': enchantId,
-      'Maxcount_inv': maxCountInv,
-      'Maxcount_item': maxCountItem,
-      'Type': type,
+      'ID': self.id,
+      'Enchant_ID': self.enchantId,
+      'Maxcount_inv': self.maxCountInv,
+      'Maxcount_item': self.maxCountItem,
+      'Type': self.type,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GemPropertyEntity;
+    return identical(self, other) ||
         other is GemPropertyEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            enchantId == other.enchantId &&
-            maxCountInv == other.maxCountInv &&
-            maxCountItem == other.maxCountItem &&
-            type == other.type;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.enchantId == other.enchantId &&
+            self.maxCountInv == other.maxCountInv &&
+            self.maxCountItem == other.maxCountItem &&
+            self.type == other.type;
   }
 
   @override
   int get hashCode {
+    final self = this as GemPropertyEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      enchantId,
-      maxCountInv,
-      maxCountItem,
-      type,
+      self.runtimeType,
+      self.id,
+      self.enchantId,
+      self.maxCountInv,
+      self.maxCountItem,
+      self.type,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GemPropertyEntity;
     return 'GemPropertyEntity('
-        'id: $id, '
-        'enchantId: $enchantId, '
-        'maxCountInv: $maxCountInv, '
-        'maxCountItem: $maxCountItem, '
-        'type: $type'
+        'id: ${self.id}, '
+        'enchantId: ${self.enchantId}, '
+        'maxCountInv: ${self.maxCountInv}, '
+        'maxCountItem: ${self.maxCountItem}, '
+        'type: ${self.type}'
         ')';
   }
 }

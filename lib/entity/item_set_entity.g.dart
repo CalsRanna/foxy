@@ -3,60 +3,6 @@
 part of 'item_set_entity.dart';
 
 mixin _ItemSetEntityMixin {
-  int get id;
-  String get nameLangEnUS;
-  String get nameLangKoKR;
-  String get nameLangFrFR;
-  String get nameLangDeDE;
-  String get nameLangZhCN;
-  String get nameLangZhTW;
-  String get nameLangEsES;
-  String get nameLangEsMX;
-  String get nameLangRuRU;
-  String get nameLangJaJP;
-  String get nameLangPtPT;
-  String get nameLangPtBR;
-  String get nameLangItIT;
-  String get nameLangUnk1;
-  String get nameLangUnk2;
-  String get nameLangUnk3;
-  int get nameLangFlags;
-  int get itemId0;
-  int get itemId1;
-  int get itemId2;
-  int get itemId3;
-  int get itemId4;
-  int get itemId5;
-  int get itemId6;
-  int get itemId7;
-  int get itemId8;
-  int get itemId9;
-  int get itemId10;
-  int get itemId11;
-  int get itemId12;
-  int get itemId13;
-  int get itemId14;
-  int get itemId15;
-  int get itemId16;
-  int get setSpellId0;
-  int get setSpellId1;
-  int get setSpellId2;
-  int get setSpellId3;
-  int get setSpellId4;
-  int get setSpellId5;
-  int get setSpellId6;
-  int get setSpellId7;
-  int get setThreshold0;
-  int get setThreshold1;
-  int get setThreshold2;
-  int get setThreshold3;
-  int get setThreshold4;
-  int get setThreshold5;
-  int get setThreshold6;
-  int get setThreshold7;
-  int get requiredSkill;
-  int get requiredSkillRank;
-
   static ItemSetEntity fromJson(Map<String, dynamic> json) {
     return ItemSetEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -170,297 +116,302 @@ mixin _ItemSetEntityMixin {
     int? requiredSkill,
     int? requiredSkillRank,
   }) {
+    final self = this as ItemSetEntity;
     return ItemSetEntity(
-      id: id ?? this.id,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
-      itemId0: itemId0 ?? this.itemId0,
-      itemId1: itemId1 ?? this.itemId1,
-      itemId2: itemId2 ?? this.itemId2,
-      itemId3: itemId3 ?? this.itemId3,
-      itemId4: itemId4 ?? this.itemId4,
-      itemId5: itemId5 ?? this.itemId5,
-      itemId6: itemId6 ?? this.itemId6,
-      itemId7: itemId7 ?? this.itemId7,
-      itemId8: itemId8 ?? this.itemId8,
-      itemId9: itemId9 ?? this.itemId9,
-      itemId10: itemId10 ?? this.itemId10,
-      itemId11: itemId11 ?? this.itemId11,
-      itemId12: itemId12 ?? this.itemId12,
-      itemId13: itemId13 ?? this.itemId13,
-      itemId14: itemId14 ?? this.itemId14,
-      itemId15: itemId15 ?? this.itemId15,
-      itemId16: itemId16 ?? this.itemId16,
-      setSpellId0: setSpellId0 ?? this.setSpellId0,
-      setSpellId1: setSpellId1 ?? this.setSpellId1,
-      setSpellId2: setSpellId2 ?? this.setSpellId2,
-      setSpellId3: setSpellId3 ?? this.setSpellId3,
-      setSpellId4: setSpellId4 ?? this.setSpellId4,
-      setSpellId5: setSpellId5 ?? this.setSpellId5,
-      setSpellId6: setSpellId6 ?? this.setSpellId6,
-      setSpellId7: setSpellId7 ?? this.setSpellId7,
-      setThreshold0: setThreshold0 ?? this.setThreshold0,
-      setThreshold1: setThreshold1 ?? this.setThreshold1,
-      setThreshold2: setThreshold2 ?? this.setThreshold2,
-      setThreshold3: setThreshold3 ?? this.setThreshold3,
-      setThreshold4: setThreshold4 ?? this.setThreshold4,
-      setThreshold5: setThreshold5 ?? this.setThreshold5,
-      setThreshold6: setThreshold6 ?? this.setThreshold6,
-      setThreshold7: setThreshold7 ?? this.setThreshold7,
-      requiredSkill: requiredSkill ?? this.requiredSkill,
-      requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
+      id: id ?? self.id,
+      nameLangEnUS: nameLangEnUS ?? self.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? self.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? self.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? self.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? self.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? self.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? self.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? self.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? self.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? self.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? self.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? self.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? self.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? self.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? self.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? self.nameLangUnk3,
+      nameLangFlags: nameLangFlags ?? self.nameLangFlags,
+      itemId0: itemId0 ?? self.itemId0,
+      itemId1: itemId1 ?? self.itemId1,
+      itemId2: itemId2 ?? self.itemId2,
+      itemId3: itemId3 ?? self.itemId3,
+      itemId4: itemId4 ?? self.itemId4,
+      itemId5: itemId5 ?? self.itemId5,
+      itemId6: itemId6 ?? self.itemId6,
+      itemId7: itemId7 ?? self.itemId7,
+      itemId8: itemId8 ?? self.itemId8,
+      itemId9: itemId9 ?? self.itemId9,
+      itemId10: itemId10 ?? self.itemId10,
+      itemId11: itemId11 ?? self.itemId11,
+      itemId12: itemId12 ?? self.itemId12,
+      itemId13: itemId13 ?? self.itemId13,
+      itemId14: itemId14 ?? self.itemId14,
+      itemId15: itemId15 ?? self.itemId15,
+      itemId16: itemId16 ?? self.itemId16,
+      setSpellId0: setSpellId0 ?? self.setSpellId0,
+      setSpellId1: setSpellId1 ?? self.setSpellId1,
+      setSpellId2: setSpellId2 ?? self.setSpellId2,
+      setSpellId3: setSpellId3 ?? self.setSpellId3,
+      setSpellId4: setSpellId4 ?? self.setSpellId4,
+      setSpellId5: setSpellId5 ?? self.setSpellId5,
+      setSpellId6: setSpellId6 ?? self.setSpellId6,
+      setSpellId7: setSpellId7 ?? self.setSpellId7,
+      setThreshold0: setThreshold0 ?? self.setThreshold0,
+      setThreshold1: setThreshold1 ?? self.setThreshold1,
+      setThreshold2: setThreshold2 ?? self.setThreshold2,
+      setThreshold3: setThreshold3 ?? self.setThreshold3,
+      setThreshold4: setThreshold4 ?? self.setThreshold4,
+      setThreshold5: setThreshold5 ?? self.setThreshold5,
+      setThreshold6: setThreshold6 ?? self.setThreshold6,
+      setThreshold7: setThreshold7 ?? self.setThreshold7,
+      requiredSkill: requiredSkill ?? self.requiredSkill,
+      requiredSkillRank: requiredSkillRank ?? self.requiredSkillRank,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ItemSetEntity;
     return {
-      'ID': id,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'ItemID0': itemId0,
-      'ItemID1': itemId1,
-      'ItemID2': itemId2,
-      'ItemID3': itemId3,
-      'ItemID4': itemId4,
-      'ItemID5': itemId5,
-      'ItemID6': itemId6,
-      'ItemID7': itemId7,
-      'ItemID8': itemId8,
-      'ItemID9': itemId9,
-      'ItemID10': itemId10,
-      'ItemID11': itemId11,
-      'ItemID12': itemId12,
-      'ItemID13': itemId13,
-      'ItemID14': itemId14,
-      'ItemID15': itemId15,
-      'ItemID16': itemId16,
-      'SetSpellID0': setSpellId0,
-      'SetSpellID1': setSpellId1,
-      'SetSpellID2': setSpellId2,
-      'SetSpellID3': setSpellId3,
-      'SetSpellID4': setSpellId4,
-      'SetSpellID5': setSpellId5,
-      'SetSpellID6': setSpellId6,
-      'SetSpellID7': setSpellId7,
-      'SetThreshold0': setThreshold0,
-      'SetThreshold1': setThreshold1,
-      'SetThreshold2': setThreshold2,
-      'SetThreshold3': setThreshold3,
-      'SetThreshold4': setThreshold4,
-      'SetThreshold5': setThreshold5,
-      'SetThreshold6': setThreshold6,
-      'SetThreshold7': setThreshold7,
-      'RequiredSkill': requiredSkill,
-      'RequiredSkillRank': requiredSkillRank,
+      'ID': self.id,
+      'Name_lang_enUS': self.nameLangEnUS,
+      'Name_lang_koKR': self.nameLangKoKR,
+      'Name_lang_frFR': self.nameLangFrFR,
+      'Name_lang_deDE': self.nameLangDeDE,
+      'Name_lang_zhCN': self.nameLangZhCN,
+      'Name_lang_zhTW': self.nameLangZhTW,
+      'Name_lang_esES': self.nameLangEsES,
+      'Name_lang_esMX': self.nameLangEsMX,
+      'Name_lang_ruRU': self.nameLangRuRU,
+      'Name_lang_jaJP': self.nameLangJaJP,
+      'Name_lang_ptPT': self.nameLangPtPT,
+      'Name_lang_ptBR': self.nameLangPtBR,
+      'Name_lang_itIT': self.nameLangItIT,
+      'Name_lang_unk1': self.nameLangUnk1,
+      'Name_lang_unk2': self.nameLangUnk2,
+      'Name_lang_unk3': self.nameLangUnk3,
+      'Name_lang_Flags': self.nameLangFlags,
+      'ItemID0': self.itemId0,
+      'ItemID1': self.itemId1,
+      'ItemID2': self.itemId2,
+      'ItemID3': self.itemId3,
+      'ItemID4': self.itemId4,
+      'ItemID5': self.itemId5,
+      'ItemID6': self.itemId6,
+      'ItemID7': self.itemId7,
+      'ItemID8': self.itemId8,
+      'ItemID9': self.itemId9,
+      'ItemID10': self.itemId10,
+      'ItemID11': self.itemId11,
+      'ItemID12': self.itemId12,
+      'ItemID13': self.itemId13,
+      'ItemID14': self.itemId14,
+      'ItemID15': self.itemId15,
+      'ItemID16': self.itemId16,
+      'SetSpellID0': self.setSpellId0,
+      'SetSpellID1': self.setSpellId1,
+      'SetSpellID2': self.setSpellId2,
+      'SetSpellID3': self.setSpellId3,
+      'SetSpellID4': self.setSpellId4,
+      'SetSpellID5': self.setSpellId5,
+      'SetSpellID6': self.setSpellId6,
+      'SetSpellID7': self.setSpellId7,
+      'SetThreshold0': self.setThreshold0,
+      'SetThreshold1': self.setThreshold1,
+      'SetThreshold2': self.setThreshold2,
+      'SetThreshold3': self.setThreshold3,
+      'SetThreshold4': self.setThreshold4,
+      'SetThreshold5': self.setThreshold5,
+      'SetThreshold6': self.setThreshold6,
+      'SetThreshold7': self.setThreshold7,
+      'RequiredSkill': self.requiredSkill,
+      'RequiredSkillRank': self.requiredSkillRank,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ItemSetEntity;
+    return identical(self, other) ||
         other is ItemSetEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            nameLangEnUS == other.nameLangEnUS &&
-            nameLangKoKR == other.nameLangKoKR &&
-            nameLangFrFR == other.nameLangFrFR &&
-            nameLangDeDE == other.nameLangDeDE &&
-            nameLangZhCN == other.nameLangZhCN &&
-            nameLangZhTW == other.nameLangZhTW &&
-            nameLangEsES == other.nameLangEsES &&
-            nameLangEsMX == other.nameLangEsMX &&
-            nameLangRuRU == other.nameLangRuRU &&
-            nameLangJaJP == other.nameLangJaJP &&
-            nameLangPtPT == other.nameLangPtPT &&
-            nameLangPtBR == other.nameLangPtBR &&
-            nameLangItIT == other.nameLangItIT &&
-            nameLangUnk1 == other.nameLangUnk1 &&
-            nameLangUnk2 == other.nameLangUnk2 &&
-            nameLangUnk3 == other.nameLangUnk3 &&
-            nameLangFlags == other.nameLangFlags &&
-            itemId0 == other.itemId0 &&
-            itemId1 == other.itemId1 &&
-            itemId2 == other.itemId2 &&
-            itemId3 == other.itemId3 &&
-            itemId4 == other.itemId4 &&
-            itemId5 == other.itemId5 &&
-            itemId6 == other.itemId6 &&
-            itemId7 == other.itemId7 &&
-            itemId8 == other.itemId8 &&
-            itemId9 == other.itemId9 &&
-            itemId10 == other.itemId10 &&
-            itemId11 == other.itemId11 &&
-            itemId12 == other.itemId12 &&
-            itemId13 == other.itemId13 &&
-            itemId14 == other.itemId14 &&
-            itemId15 == other.itemId15 &&
-            itemId16 == other.itemId16 &&
-            setSpellId0 == other.setSpellId0 &&
-            setSpellId1 == other.setSpellId1 &&
-            setSpellId2 == other.setSpellId2 &&
-            setSpellId3 == other.setSpellId3 &&
-            setSpellId4 == other.setSpellId4 &&
-            setSpellId5 == other.setSpellId5 &&
-            setSpellId6 == other.setSpellId6 &&
-            setSpellId7 == other.setSpellId7 &&
-            setThreshold0 == other.setThreshold0 &&
-            setThreshold1 == other.setThreshold1 &&
-            setThreshold2 == other.setThreshold2 &&
-            setThreshold3 == other.setThreshold3 &&
-            setThreshold4 == other.setThreshold4 &&
-            setThreshold5 == other.setThreshold5 &&
-            setThreshold6 == other.setThreshold6 &&
-            setThreshold7 == other.setThreshold7 &&
-            requiredSkill == other.requiredSkill &&
-            requiredSkillRank == other.requiredSkillRank;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.itemId0 == other.itemId0 &&
+            self.itemId1 == other.itemId1 &&
+            self.itemId2 == other.itemId2 &&
+            self.itemId3 == other.itemId3 &&
+            self.itemId4 == other.itemId4 &&
+            self.itemId5 == other.itemId5 &&
+            self.itemId6 == other.itemId6 &&
+            self.itemId7 == other.itemId7 &&
+            self.itemId8 == other.itemId8 &&
+            self.itemId9 == other.itemId9 &&
+            self.itemId10 == other.itemId10 &&
+            self.itemId11 == other.itemId11 &&
+            self.itemId12 == other.itemId12 &&
+            self.itemId13 == other.itemId13 &&
+            self.itemId14 == other.itemId14 &&
+            self.itemId15 == other.itemId15 &&
+            self.itemId16 == other.itemId16 &&
+            self.setSpellId0 == other.setSpellId0 &&
+            self.setSpellId1 == other.setSpellId1 &&
+            self.setSpellId2 == other.setSpellId2 &&
+            self.setSpellId3 == other.setSpellId3 &&
+            self.setSpellId4 == other.setSpellId4 &&
+            self.setSpellId5 == other.setSpellId5 &&
+            self.setSpellId6 == other.setSpellId6 &&
+            self.setSpellId7 == other.setSpellId7 &&
+            self.setThreshold0 == other.setThreshold0 &&
+            self.setThreshold1 == other.setThreshold1 &&
+            self.setThreshold2 == other.setThreshold2 &&
+            self.setThreshold3 == other.setThreshold3 &&
+            self.setThreshold4 == other.setThreshold4 &&
+            self.setThreshold5 == other.setThreshold5 &&
+            self.setThreshold6 == other.setThreshold6 &&
+            self.setThreshold7 == other.setThreshold7 &&
+            self.requiredSkill == other.requiredSkill &&
+            self.requiredSkillRank == other.requiredSkillRank;
   }
 
   @override
   int get hashCode {
+    final self = this as ItemSetEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      nameLangEnUS,
-      nameLangKoKR,
-      nameLangFrFR,
-      nameLangDeDE,
-      nameLangZhCN,
-      nameLangZhTW,
-      nameLangEsES,
-      nameLangEsMX,
-      nameLangRuRU,
-      nameLangJaJP,
-      nameLangPtPT,
-      nameLangPtBR,
-      nameLangItIT,
-      nameLangUnk1,
-      nameLangUnk2,
-      nameLangUnk3,
-      nameLangFlags,
-      itemId0,
-      itemId1,
-      itemId2,
-      itemId3,
-      itemId4,
-      itemId5,
-      itemId6,
-      itemId7,
-      itemId8,
-      itemId9,
-      itemId10,
-      itemId11,
-      itemId12,
-      itemId13,
-      itemId14,
-      itemId15,
-      itemId16,
-      setSpellId0,
-      setSpellId1,
-      setSpellId2,
-      setSpellId3,
-      setSpellId4,
-      setSpellId5,
-      setSpellId6,
-      setSpellId7,
-      setThreshold0,
-      setThreshold1,
-      setThreshold2,
-      setThreshold3,
-      setThreshold4,
-      setThreshold5,
-      setThreshold6,
-      setThreshold7,
-      requiredSkill,
-      requiredSkillRank,
+      self.runtimeType,
+      self.id,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.itemId0,
+      self.itemId1,
+      self.itemId2,
+      self.itemId3,
+      self.itemId4,
+      self.itemId5,
+      self.itemId6,
+      self.itemId7,
+      self.itemId8,
+      self.itemId9,
+      self.itemId10,
+      self.itemId11,
+      self.itemId12,
+      self.itemId13,
+      self.itemId14,
+      self.itemId15,
+      self.itemId16,
+      self.setSpellId0,
+      self.setSpellId1,
+      self.setSpellId2,
+      self.setSpellId3,
+      self.setSpellId4,
+      self.setSpellId5,
+      self.setSpellId6,
+      self.setSpellId7,
+      self.setThreshold0,
+      self.setThreshold1,
+      self.setThreshold2,
+      self.setThreshold3,
+      self.setThreshold4,
+      self.setThreshold5,
+      self.setThreshold6,
+      self.setThreshold7,
+      self.requiredSkill,
+      self.requiredSkillRank,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ItemSetEntity;
     return 'ItemSetEntity('
-        'id: $id, '
-        'nameLangEnUS: $nameLangEnUS, '
-        'nameLangKoKR: $nameLangKoKR, '
-        'nameLangFrFR: $nameLangFrFR, '
-        'nameLangDeDE: $nameLangDeDE, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'nameLangZhTW: $nameLangZhTW, '
-        'nameLangEsES: $nameLangEsES, '
-        'nameLangEsMX: $nameLangEsMX, '
-        'nameLangRuRU: $nameLangRuRU, '
-        'nameLangJaJP: $nameLangJaJP, '
-        'nameLangPtPT: $nameLangPtPT, '
-        'nameLangPtBR: $nameLangPtBR, '
-        'nameLangItIT: $nameLangItIT, '
-        'nameLangUnk1: $nameLangUnk1, '
-        'nameLangUnk2: $nameLangUnk2, '
-        'nameLangUnk3: $nameLangUnk3, '
-        'nameLangFlags: $nameLangFlags, '
-        'itemId0: $itemId0, '
-        'itemId1: $itemId1, '
-        'itemId2: $itemId2, '
-        'itemId3: $itemId3, '
-        'itemId4: $itemId4, '
-        'itemId5: $itemId5, '
-        'itemId6: $itemId6, '
-        'itemId7: $itemId7, '
-        'itemId8: $itemId8, '
-        'itemId9: $itemId9, '
-        'itemId10: $itemId10, '
-        'itemId11: $itemId11, '
-        'itemId12: $itemId12, '
-        'itemId13: $itemId13, '
-        'itemId14: $itemId14, '
-        'itemId15: $itemId15, '
-        'itemId16: $itemId16, '
-        'setSpellId0: $setSpellId0, '
-        'setSpellId1: $setSpellId1, '
-        'setSpellId2: $setSpellId2, '
-        'setSpellId3: $setSpellId3, '
-        'setSpellId4: $setSpellId4, '
-        'setSpellId5: $setSpellId5, '
-        'setSpellId6: $setSpellId6, '
-        'setSpellId7: $setSpellId7, '
-        'setThreshold0: $setThreshold0, '
-        'setThreshold1: $setThreshold1, '
-        'setThreshold2: $setThreshold2, '
-        'setThreshold3: $setThreshold3, '
-        'setThreshold4: $setThreshold4, '
-        'setThreshold5: $setThreshold5, '
-        'setThreshold6: $setThreshold6, '
-        'setThreshold7: $setThreshold7, '
-        'requiredSkill: $requiredSkill, '
-        'requiredSkillRank: $requiredSkillRank'
+        'id: ${self.id}, '
+        'nameLangEnUS: ${self.nameLangEnUS}, '
+        'nameLangKoKR: ${self.nameLangKoKR}, '
+        'nameLangFrFR: ${self.nameLangFrFR}, '
+        'nameLangDeDE: ${self.nameLangDeDE}, '
+        'nameLangZhCN: ${self.nameLangZhCN}, '
+        'nameLangZhTW: ${self.nameLangZhTW}, '
+        'nameLangEsES: ${self.nameLangEsES}, '
+        'nameLangEsMX: ${self.nameLangEsMX}, '
+        'nameLangRuRU: ${self.nameLangRuRU}, '
+        'nameLangJaJP: ${self.nameLangJaJP}, '
+        'nameLangPtPT: ${self.nameLangPtPT}, '
+        'nameLangPtBR: ${self.nameLangPtBR}, '
+        'nameLangItIT: ${self.nameLangItIT}, '
+        'nameLangUnk1: ${self.nameLangUnk1}, '
+        'nameLangUnk2: ${self.nameLangUnk2}, '
+        'nameLangUnk3: ${self.nameLangUnk3}, '
+        'nameLangFlags: ${self.nameLangFlags}, '
+        'itemId0: ${self.itemId0}, '
+        'itemId1: ${self.itemId1}, '
+        'itemId2: ${self.itemId2}, '
+        'itemId3: ${self.itemId3}, '
+        'itemId4: ${self.itemId4}, '
+        'itemId5: ${self.itemId5}, '
+        'itemId6: ${self.itemId6}, '
+        'itemId7: ${self.itemId7}, '
+        'itemId8: ${self.itemId8}, '
+        'itemId9: ${self.itemId9}, '
+        'itemId10: ${self.itemId10}, '
+        'itemId11: ${self.itemId11}, '
+        'itemId12: ${self.itemId12}, '
+        'itemId13: ${self.itemId13}, '
+        'itemId14: ${self.itemId14}, '
+        'itemId15: ${self.itemId15}, '
+        'itemId16: ${self.itemId16}, '
+        'setSpellId0: ${self.setSpellId0}, '
+        'setSpellId1: ${self.setSpellId1}, '
+        'setSpellId2: ${self.setSpellId2}, '
+        'setSpellId3: ${self.setSpellId3}, '
+        'setSpellId4: ${self.setSpellId4}, '
+        'setSpellId5: ${self.setSpellId5}, '
+        'setSpellId6: ${self.setSpellId6}, '
+        'setSpellId7: ${self.setSpellId7}, '
+        'setThreshold0: ${self.setThreshold0}, '
+        'setThreshold1: ${self.setThreshold1}, '
+        'setThreshold2: ${self.setThreshold2}, '
+        'setThreshold3: ${self.setThreshold3}, '
+        'setThreshold4: ${self.setThreshold4}, '
+        'setThreshold5: ${self.setThreshold5}, '
+        'setThreshold6: ${self.setThreshold6}, '
+        'setThreshold7: ${self.setThreshold7}, '
+        'requiredSkill: ${self.requiredSkill}, '
+        'requiredSkillRank: ${self.requiredSkillRank}'
         ')';
   }
 }

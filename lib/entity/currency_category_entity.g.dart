@@ -3,26 +3,6 @@
 part of 'currency_category_entity.dart';
 
 mixin _CurrencyCategoryEntityMixin {
-  int get id;
-  int get flags;
-  String get nameLangEnUS;
-  String get nameLangKoKR;
-  String get nameLangFrFR;
-  String get nameLangDeDE;
-  String get nameLangZhCN;
-  String get nameLangZhTW;
-  String get nameLangEsES;
-  String get nameLangEsMX;
-  String get nameLangRuRU;
-  String get nameLangJaJP;
-  String get nameLangPtPT;
-  String get nameLangPtBR;
-  String get nameLangItIT;
-  String get nameLangUnk1;
-  String get nameLangUnk2;
-  String get nameLangUnk3;
-  int get nameLangFlags;
-
   static CurrencyCategoryEntity fromJson(Map<String, dynamic> json) {
     return CurrencyCategoryEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -68,127 +48,132 @@ mixin _CurrencyCategoryEntityMixin {
     String? nameLangUnk3,
     int? nameLangFlags,
   }) {
+    final self = this as CurrencyCategoryEntity;
     return CurrencyCategoryEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
+      id: id ?? self.id,
+      flags: flags ?? self.flags,
+      nameLangEnUS: nameLangEnUS ?? self.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? self.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? self.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? self.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? self.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? self.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? self.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? self.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? self.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? self.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? self.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? self.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? self.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? self.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? self.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? self.nameLangUnk3,
+      nameLangFlags: nameLangFlags ?? self.nameLangFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CurrencyCategoryEntity;
     return {
-      'ID': id,
-      'Flags': flags,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
+      'ID': self.id,
+      'Flags': self.flags,
+      'Name_lang_enUS': self.nameLangEnUS,
+      'Name_lang_koKR': self.nameLangKoKR,
+      'Name_lang_frFR': self.nameLangFrFR,
+      'Name_lang_deDE': self.nameLangDeDE,
+      'Name_lang_zhCN': self.nameLangZhCN,
+      'Name_lang_zhTW': self.nameLangZhTW,
+      'Name_lang_esES': self.nameLangEsES,
+      'Name_lang_esMX': self.nameLangEsMX,
+      'Name_lang_ruRU': self.nameLangRuRU,
+      'Name_lang_jaJP': self.nameLangJaJP,
+      'Name_lang_ptPT': self.nameLangPtPT,
+      'Name_lang_ptBR': self.nameLangPtBR,
+      'Name_lang_itIT': self.nameLangItIT,
+      'Name_lang_unk1': self.nameLangUnk1,
+      'Name_lang_unk2': self.nameLangUnk2,
+      'Name_lang_unk3': self.nameLangUnk3,
+      'Name_lang_Flags': self.nameLangFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CurrencyCategoryEntity;
+    return identical(self, other) ||
         other is CurrencyCategoryEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            flags == other.flags &&
-            nameLangEnUS == other.nameLangEnUS &&
-            nameLangKoKR == other.nameLangKoKR &&
-            nameLangFrFR == other.nameLangFrFR &&
-            nameLangDeDE == other.nameLangDeDE &&
-            nameLangZhCN == other.nameLangZhCN &&
-            nameLangZhTW == other.nameLangZhTW &&
-            nameLangEsES == other.nameLangEsES &&
-            nameLangEsMX == other.nameLangEsMX &&
-            nameLangRuRU == other.nameLangRuRU &&
-            nameLangJaJP == other.nameLangJaJP &&
-            nameLangPtPT == other.nameLangPtPT &&
-            nameLangPtBR == other.nameLangPtBR &&
-            nameLangItIT == other.nameLangItIT &&
-            nameLangUnk1 == other.nameLangUnk1 &&
-            nameLangUnk2 == other.nameLangUnk2 &&
-            nameLangUnk3 == other.nameLangUnk3 &&
-            nameLangFlags == other.nameLangFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.flags == other.flags &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as CurrencyCategoryEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      flags,
-      nameLangEnUS,
-      nameLangKoKR,
-      nameLangFrFR,
-      nameLangDeDE,
-      nameLangZhCN,
-      nameLangZhTW,
-      nameLangEsES,
-      nameLangEsMX,
-      nameLangRuRU,
-      nameLangJaJP,
-      nameLangPtPT,
-      nameLangPtBR,
-      nameLangItIT,
-      nameLangUnk1,
-      nameLangUnk2,
-      nameLangUnk3,
-      nameLangFlags,
+      self.runtimeType,
+      self.id,
+      self.flags,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CurrencyCategoryEntity;
     return 'CurrencyCategoryEntity('
-        'id: $id, '
-        'flags: $flags, '
-        'nameLangEnUS: $nameLangEnUS, '
-        'nameLangKoKR: $nameLangKoKR, '
-        'nameLangFrFR: $nameLangFrFR, '
-        'nameLangDeDE: $nameLangDeDE, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'nameLangZhTW: $nameLangZhTW, '
-        'nameLangEsES: $nameLangEsES, '
-        'nameLangEsMX: $nameLangEsMX, '
-        'nameLangRuRU: $nameLangRuRU, '
-        'nameLangJaJP: $nameLangJaJP, '
-        'nameLangPtPT: $nameLangPtPT, '
-        'nameLangPtBR: $nameLangPtBR, '
-        'nameLangItIT: $nameLangItIT, '
-        'nameLangUnk1: $nameLangUnk1, '
-        'nameLangUnk2: $nameLangUnk2, '
-        'nameLangUnk3: $nameLangUnk3, '
-        'nameLangFlags: $nameLangFlags'
+        'id: ${self.id}, '
+        'flags: ${self.flags}, '
+        'nameLangEnUS: ${self.nameLangEnUS}, '
+        'nameLangKoKR: ${self.nameLangKoKR}, '
+        'nameLangFrFR: ${self.nameLangFrFR}, '
+        'nameLangDeDE: ${self.nameLangDeDE}, '
+        'nameLangZhCN: ${self.nameLangZhCN}, '
+        'nameLangZhTW: ${self.nameLangZhTW}, '
+        'nameLangEsES: ${self.nameLangEsES}, '
+        'nameLangEsMX: ${self.nameLangEsMX}, '
+        'nameLangRuRU: ${self.nameLangRuRU}, '
+        'nameLangJaJP: ${self.nameLangJaJP}, '
+        'nameLangPtPT: ${self.nameLangPtPT}, '
+        'nameLangPtBR: ${self.nameLangPtBR}, '
+        'nameLangItIT: ${self.nameLangItIT}, '
+        'nameLangUnk1: ${self.nameLangUnk1}, '
+        'nameLangUnk2: ${self.nameLangUnk2}, '
+        'nameLangUnk3: ${self.nameLangUnk3}, '
+        'nameLangFlags: ${self.nameLangFlags}'
         ')';
   }
 }

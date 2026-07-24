@@ -3,22 +3,6 @@
 part of 'light_entity.dart';
 
 mixin _LightEntityMixin {
-  int get id;
-  int get continentId;
-  double get gameCoords0;
-  double get gameCoords1;
-  double get gameCoords2;
-  double get gameFalloffStart;
-  double get gameFalloffEnd;
-  int get lightParamsId0;
-  int get lightParamsId1;
-  int get lightParamsId2;
-  int get lightParamsId3;
-  int get lightParamsId4;
-  int get lightParamsId5;
-  int get lightParamsId6;
-  int get lightParamsId7;
-
   static LightEntity fromJson(Map<String, dynamic> json) {
     return LightEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -56,107 +40,112 @@ mixin _LightEntityMixin {
     int? lightParamsId6,
     int? lightParamsId7,
   }) {
+    final self = this as LightEntity;
     return LightEntity(
-      id: id ?? this.id,
-      continentId: continentId ?? this.continentId,
-      gameCoords0: gameCoords0 ?? this.gameCoords0,
-      gameCoords1: gameCoords1 ?? this.gameCoords1,
-      gameCoords2: gameCoords2 ?? this.gameCoords2,
-      gameFalloffStart: gameFalloffStart ?? this.gameFalloffStart,
-      gameFalloffEnd: gameFalloffEnd ?? this.gameFalloffEnd,
-      lightParamsId0: lightParamsId0 ?? this.lightParamsId0,
-      lightParamsId1: lightParamsId1 ?? this.lightParamsId1,
-      lightParamsId2: lightParamsId2 ?? this.lightParamsId2,
-      lightParamsId3: lightParamsId3 ?? this.lightParamsId3,
-      lightParamsId4: lightParamsId4 ?? this.lightParamsId4,
-      lightParamsId5: lightParamsId5 ?? this.lightParamsId5,
-      lightParamsId6: lightParamsId6 ?? this.lightParamsId6,
-      lightParamsId7: lightParamsId7 ?? this.lightParamsId7,
+      id: id ?? self.id,
+      continentId: continentId ?? self.continentId,
+      gameCoords0: gameCoords0 ?? self.gameCoords0,
+      gameCoords1: gameCoords1 ?? self.gameCoords1,
+      gameCoords2: gameCoords2 ?? self.gameCoords2,
+      gameFalloffStart: gameFalloffStart ?? self.gameFalloffStart,
+      gameFalloffEnd: gameFalloffEnd ?? self.gameFalloffEnd,
+      lightParamsId0: lightParamsId0 ?? self.lightParamsId0,
+      lightParamsId1: lightParamsId1 ?? self.lightParamsId1,
+      lightParamsId2: lightParamsId2 ?? self.lightParamsId2,
+      lightParamsId3: lightParamsId3 ?? self.lightParamsId3,
+      lightParamsId4: lightParamsId4 ?? self.lightParamsId4,
+      lightParamsId5: lightParamsId5 ?? self.lightParamsId5,
+      lightParamsId6: lightParamsId6 ?? self.lightParamsId6,
+      lightParamsId7: lightParamsId7 ?? self.lightParamsId7,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as LightEntity;
     return {
-      'ID': id,
-      'ContinentID': continentId,
-      'GameCoords0': gameCoords0,
-      'GameCoords1': gameCoords1,
-      'GameCoords2': gameCoords2,
-      'GameFalloffStart': gameFalloffStart,
-      'GameFalloffEnd': gameFalloffEnd,
-      'LightParamsID0': lightParamsId0,
-      'LightParamsID1': lightParamsId1,
-      'LightParamsID2': lightParamsId2,
-      'LightParamsID3': lightParamsId3,
-      'LightParamsID4': lightParamsId4,
-      'LightParamsID5': lightParamsId5,
-      'LightParamsID6': lightParamsId6,
-      'LightParamsID7': lightParamsId7,
+      'ID': self.id,
+      'ContinentID': self.continentId,
+      'GameCoords0': self.gameCoords0,
+      'GameCoords1': self.gameCoords1,
+      'GameCoords2': self.gameCoords2,
+      'GameFalloffStart': self.gameFalloffStart,
+      'GameFalloffEnd': self.gameFalloffEnd,
+      'LightParamsID0': self.lightParamsId0,
+      'LightParamsID1': self.lightParamsId1,
+      'LightParamsID2': self.lightParamsId2,
+      'LightParamsID3': self.lightParamsId3,
+      'LightParamsID4': self.lightParamsId4,
+      'LightParamsID5': self.lightParamsId5,
+      'LightParamsID6': self.lightParamsId6,
+      'LightParamsID7': self.lightParamsId7,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as LightEntity;
+    return identical(self, other) ||
         other is LightEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            continentId == other.continentId &&
-            gameCoords0 == other.gameCoords0 &&
-            gameCoords1 == other.gameCoords1 &&
-            gameCoords2 == other.gameCoords2 &&
-            gameFalloffStart == other.gameFalloffStart &&
-            gameFalloffEnd == other.gameFalloffEnd &&
-            lightParamsId0 == other.lightParamsId0 &&
-            lightParamsId1 == other.lightParamsId1 &&
-            lightParamsId2 == other.lightParamsId2 &&
-            lightParamsId3 == other.lightParamsId3 &&
-            lightParamsId4 == other.lightParamsId4 &&
-            lightParamsId5 == other.lightParamsId5 &&
-            lightParamsId6 == other.lightParamsId6 &&
-            lightParamsId7 == other.lightParamsId7;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.continentId == other.continentId &&
+            self.gameCoords0 == other.gameCoords0 &&
+            self.gameCoords1 == other.gameCoords1 &&
+            self.gameCoords2 == other.gameCoords2 &&
+            self.gameFalloffStart == other.gameFalloffStart &&
+            self.gameFalloffEnd == other.gameFalloffEnd &&
+            self.lightParamsId0 == other.lightParamsId0 &&
+            self.lightParamsId1 == other.lightParamsId1 &&
+            self.lightParamsId2 == other.lightParamsId2 &&
+            self.lightParamsId3 == other.lightParamsId3 &&
+            self.lightParamsId4 == other.lightParamsId4 &&
+            self.lightParamsId5 == other.lightParamsId5 &&
+            self.lightParamsId6 == other.lightParamsId6 &&
+            self.lightParamsId7 == other.lightParamsId7;
   }
 
   @override
   int get hashCode {
+    final self = this as LightEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      continentId,
-      gameCoords0,
-      gameCoords1,
-      gameCoords2,
-      gameFalloffStart,
-      gameFalloffEnd,
-      lightParamsId0,
-      lightParamsId1,
-      lightParamsId2,
-      lightParamsId3,
-      lightParamsId4,
-      lightParamsId5,
-      lightParamsId6,
-      lightParamsId7,
+      self.runtimeType,
+      self.id,
+      self.continentId,
+      self.gameCoords0,
+      self.gameCoords1,
+      self.gameCoords2,
+      self.gameFalloffStart,
+      self.gameFalloffEnd,
+      self.lightParamsId0,
+      self.lightParamsId1,
+      self.lightParamsId2,
+      self.lightParamsId3,
+      self.lightParamsId4,
+      self.lightParamsId5,
+      self.lightParamsId6,
+      self.lightParamsId7,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as LightEntity;
     return 'LightEntity('
-        'id: $id, '
-        'continentId: $continentId, '
-        'gameCoords0: $gameCoords0, '
-        'gameCoords1: $gameCoords1, '
-        'gameCoords2: $gameCoords2, '
-        'gameFalloffStart: $gameFalloffStart, '
-        'gameFalloffEnd: $gameFalloffEnd, '
-        'lightParamsId0: $lightParamsId0, '
-        'lightParamsId1: $lightParamsId1, '
-        'lightParamsId2: $lightParamsId2, '
-        'lightParamsId3: $lightParamsId3, '
-        'lightParamsId4: $lightParamsId4, '
-        'lightParamsId5: $lightParamsId5, '
-        'lightParamsId6: $lightParamsId6, '
-        'lightParamsId7: $lightParamsId7'
+        'id: ${self.id}, '
+        'continentId: ${self.continentId}, '
+        'gameCoords0: ${self.gameCoords0}, '
+        'gameCoords1: ${self.gameCoords1}, '
+        'gameCoords2: ${self.gameCoords2}, '
+        'gameFalloffStart: ${self.gameFalloffStart}, '
+        'gameFalloffEnd: ${self.gameFalloffEnd}, '
+        'lightParamsId0: ${self.lightParamsId0}, '
+        'lightParamsId1: ${self.lightParamsId1}, '
+        'lightParamsId2: ${self.lightParamsId2}, '
+        'lightParamsId3: ${self.lightParamsId3}, '
+        'lightParamsId4: ${self.lightParamsId4}, '
+        'lightParamsId5: ${self.lightParamsId5}, '
+        'lightParamsId6: ${self.lightParamsId6}, '
+        'lightParamsId7: ${self.lightParamsId7}'
         ')';
   }
 }

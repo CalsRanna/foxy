@@ -3,12 +3,6 @@
 part of 'zone_intro_music_entity.dart';
 
 mixin _ZoneIntroMusicEntityMixin {
-  int get id;
-  String get name;
-  int get soundId;
-  int get priority;
-  int get minDelayMinutes;
-
   static ZoneIntroMusicEntity fromJson(Map<String, dynamic> json) {
     return ZoneIntroMusicEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _ZoneIntroMusicEntityMixin {
     int? priority,
     int? minDelayMinutes,
   }) {
+    final self = this as ZoneIntroMusicEntity;
     return ZoneIntroMusicEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      soundId: soundId ?? this.soundId,
-      priority: priority ?? this.priority,
-      minDelayMinutes: minDelayMinutes ?? this.minDelayMinutes,
+      id: id ?? self.id,
+      name: name ?? self.name,
+      soundId: soundId ?? self.soundId,
+      priority: priority ?? self.priority,
+      minDelayMinutes: minDelayMinutes ?? self.minDelayMinutes,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ZoneIntroMusicEntity;
     return {
-      'ID': id,
-      'Name': name,
-      'SoundID': soundId,
-      'Priority': priority,
-      'MinDelayMinutes': minDelayMinutes,
+      'ID': self.id,
+      'Name': self.name,
+      'SoundID': self.soundId,
+      'Priority': self.priority,
+      'MinDelayMinutes': self.minDelayMinutes,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ZoneIntroMusicEntity;
+    return identical(self, other) ||
         other is ZoneIntroMusicEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            name == other.name &&
-            soundId == other.soundId &&
-            priority == other.priority &&
-            minDelayMinutes == other.minDelayMinutes;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.name == other.name &&
+            self.soundId == other.soundId &&
+            self.priority == other.priority &&
+            self.minDelayMinutes == other.minDelayMinutes;
   }
 
   @override
   int get hashCode {
+    final self = this as ZoneIntroMusicEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      name,
-      soundId,
-      priority,
-      minDelayMinutes,
+      self.runtimeType,
+      self.id,
+      self.name,
+      self.soundId,
+      self.priority,
+      self.minDelayMinutes,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ZoneIntroMusicEntity;
     return 'ZoneIntroMusicEntity('
-        'id: $id, '
-        'name: $name, '
-        'soundId: $soundId, '
-        'priority: $priority, '
-        'minDelayMinutes: $minDelayMinutes'
+        'id: ${self.id}, '
+        'name: ${self.name}, '
+        'soundId: ${self.soundId}, '
+        'priority: ${self.priority}, '
+        'minDelayMinutes: ${self.minDelayMinutes}'
         ')';
   }
 }

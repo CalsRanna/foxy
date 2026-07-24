@@ -3,30 +3,6 @@
 part of 'talent_entity.dart';
 
 mixin _TalentEntityMixin {
-  int get id;
-  int get tabId;
-  int get tierId;
-  int get columnIndex;
-  int get spellRank0;
-  int get spellRank1;
-  int get spellRank2;
-  int get spellRank3;
-  int get spellRank4;
-  int get spellRank5;
-  int get spellRank6;
-  int get spellRank7;
-  int get spellRank8;
-  int get prereqTalent0;
-  int get prereqTalent1;
-  int get prereqTalent2;
-  int get prereqRank0;
-  int get prereqRank1;
-  int get prereqRank2;
-  int get flags;
-  int get requiredSpellId;
-  int get categoryMask0;
-  int get categoryMask1;
-
   static TalentEntity fromJson(Map<String, dynamic> json) {
     return TalentEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -80,147 +56,152 @@ mixin _TalentEntityMixin {
     int? categoryMask0,
     int? categoryMask1,
   }) {
+    final self = this as TalentEntity;
     return TalentEntity(
-      id: id ?? this.id,
-      tabId: tabId ?? this.tabId,
-      tierId: tierId ?? this.tierId,
-      columnIndex: columnIndex ?? this.columnIndex,
-      spellRank0: spellRank0 ?? this.spellRank0,
-      spellRank1: spellRank1 ?? this.spellRank1,
-      spellRank2: spellRank2 ?? this.spellRank2,
-      spellRank3: spellRank3 ?? this.spellRank3,
-      spellRank4: spellRank4 ?? this.spellRank4,
-      spellRank5: spellRank5 ?? this.spellRank5,
-      spellRank6: spellRank6 ?? this.spellRank6,
-      spellRank7: spellRank7 ?? this.spellRank7,
-      spellRank8: spellRank8 ?? this.spellRank8,
-      prereqTalent0: prereqTalent0 ?? this.prereqTalent0,
-      prereqTalent1: prereqTalent1 ?? this.prereqTalent1,
-      prereqTalent2: prereqTalent2 ?? this.prereqTalent2,
-      prereqRank0: prereqRank0 ?? this.prereqRank0,
-      prereqRank1: prereqRank1 ?? this.prereqRank1,
-      prereqRank2: prereqRank2 ?? this.prereqRank2,
-      flags: flags ?? this.flags,
-      requiredSpellId: requiredSpellId ?? this.requiredSpellId,
-      categoryMask0: categoryMask0 ?? this.categoryMask0,
-      categoryMask1: categoryMask1 ?? this.categoryMask1,
+      id: id ?? self.id,
+      tabId: tabId ?? self.tabId,
+      tierId: tierId ?? self.tierId,
+      columnIndex: columnIndex ?? self.columnIndex,
+      spellRank0: spellRank0 ?? self.spellRank0,
+      spellRank1: spellRank1 ?? self.spellRank1,
+      spellRank2: spellRank2 ?? self.spellRank2,
+      spellRank3: spellRank3 ?? self.spellRank3,
+      spellRank4: spellRank4 ?? self.spellRank4,
+      spellRank5: spellRank5 ?? self.spellRank5,
+      spellRank6: spellRank6 ?? self.spellRank6,
+      spellRank7: spellRank7 ?? self.spellRank7,
+      spellRank8: spellRank8 ?? self.spellRank8,
+      prereqTalent0: prereqTalent0 ?? self.prereqTalent0,
+      prereqTalent1: prereqTalent1 ?? self.prereqTalent1,
+      prereqTalent2: prereqTalent2 ?? self.prereqTalent2,
+      prereqRank0: prereqRank0 ?? self.prereqRank0,
+      prereqRank1: prereqRank1 ?? self.prereqRank1,
+      prereqRank2: prereqRank2 ?? self.prereqRank2,
+      flags: flags ?? self.flags,
+      requiredSpellId: requiredSpellId ?? self.requiredSpellId,
+      categoryMask0: categoryMask0 ?? self.categoryMask0,
+      categoryMask1: categoryMask1 ?? self.categoryMask1,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as TalentEntity;
     return {
-      'ID': id,
-      'TabID': tabId,
-      'TierID': tierId,
-      'ColumnIndex': columnIndex,
-      'SpellRank0': spellRank0,
-      'SpellRank1': spellRank1,
-      'SpellRank2': spellRank2,
-      'SpellRank3': spellRank3,
-      'SpellRank4': spellRank4,
-      'SpellRank5': spellRank5,
-      'SpellRank6': spellRank6,
-      'SpellRank7': spellRank7,
-      'SpellRank8': spellRank8,
-      'PrereqTalent0': prereqTalent0,
-      'PrereqTalent1': prereqTalent1,
-      'PrereqTalent2': prereqTalent2,
-      'PrereqRank0': prereqRank0,
-      'PrereqRank1': prereqRank1,
-      'PrereqRank2': prereqRank2,
-      'Flags': flags,
-      'RequiredSpellID': requiredSpellId,
-      'CategoryMask0': categoryMask0,
-      'CategoryMask1': categoryMask1,
+      'ID': self.id,
+      'TabID': self.tabId,
+      'TierID': self.tierId,
+      'ColumnIndex': self.columnIndex,
+      'SpellRank0': self.spellRank0,
+      'SpellRank1': self.spellRank1,
+      'SpellRank2': self.spellRank2,
+      'SpellRank3': self.spellRank3,
+      'SpellRank4': self.spellRank4,
+      'SpellRank5': self.spellRank5,
+      'SpellRank6': self.spellRank6,
+      'SpellRank7': self.spellRank7,
+      'SpellRank8': self.spellRank8,
+      'PrereqTalent0': self.prereqTalent0,
+      'PrereqTalent1': self.prereqTalent1,
+      'PrereqTalent2': self.prereqTalent2,
+      'PrereqRank0': self.prereqRank0,
+      'PrereqRank1': self.prereqRank1,
+      'PrereqRank2': self.prereqRank2,
+      'Flags': self.flags,
+      'RequiredSpellID': self.requiredSpellId,
+      'CategoryMask0': self.categoryMask0,
+      'CategoryMask1': self.categoryMask1,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as TalentEntity;
+    return identical(self, other) ||
         other is TalentEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            tabId == other.tabId &&
-            tierId == other.tierId &&
-            columnIndex == other.columnIndex &&
-            spellRank0 == other.spellRank0 &&
-            spellRank1 == other.spellRank1 &&
-            spellRank2 == other.spellRank2 &&
-            spellRank3 == other.spellRank3 &&
-            spellRank4 == other.spellRank4 &&
-            spellRank5 == other.spellRank5 &&
-            spellRank6 == other.spellRank6 &&
-            spellRank7 == other.spellRank7 &&
-            spellRank8 == other.spellRank8 &&
-            prereqTalent0 == other.prereqTalent0 &&
-            prereqTalent1 == other.prereqTalent1 &&
-            prereqTalent2 == other.prereqTalent2 &&
-            prereqRank0 == other.prereqRank0 &&
-            prereqRank1 == other.prereqRank1 &&
-            prereqRank2 == other.prereqRank2 &&
-            flags == other.flags &&
-            requiredSpellId == other.requiredSpellId &&
-            categoryMask0 == other.categoryMask0 &&
-            categoryMask1 == other.categoryMask1;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.tabId == other.tabId &&
+            self.tierId == other.tierId &&
+            self.columnIndex == other.columnIndex &&
+            self.spellRank0 == other.spellRank0 &&
+            self.spellRank1 == other.spellRank1 &&
+            self.spellRank2 == other.spellRank2 &&
+            self.spellRank3 == other.spellRank3 &&
+            self.spellRank4 == other.spellRank4 &&
+            self.spellRank5 == other.spellRank5 &&
+            self.spellRank6 == other.spellRank6 &&
+            self.spellRank7 == other.spellRank7 &&
+            self.spellRank8 == other.spellRank8 &&
+            self.prereqTalent0 == other.prereqTalent0 &&
+            self.prereqTalent1 == other.prereqTalent1 &&
+            self.prereqTalent2 == other.prereqTalent2 &&
+            self.prereqRank0 == other.prereqRank0 &&
+            self.prereqRank1 == other.prereqRank1 &&
+            self.prereqRank2 == other.prereqRank2 &&
+            self.flags == other.flags &&
+            self.requiredSpellId == other.requiredSpellId &&
+            self.categoryMask0 == other.categoryMask0 &&
+            self.categoryMask1 == other.categoryMask1;
   }
 
   @override
   int get hashCode {
+    final self = this as TalentEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      tabId,
-      tierId,
-      columnIndex,
-      spellRank0,
-      spellRank1,
-      spellRank2,
-      spellRank3,
-      spellRank4,
-      spellRank5,
-      spellRank6,
-      spellRank7,
-      spellRank8,
-      prereqTalent0,
-      prereqTalent1,
-      prereqTalent2,
-      prereqRank0,
-      prereqRank1,
-      prereqRank2,
-      flags,
-      requiredSpellId,
-      categoryMask0,
-      categoryMask1,
+      self.runtimeType,
+      self.id,
+      self.tabId,
+      self.tierId,
+      self.columnIndex,
+      self.spellRank0,
+      self.spellRank1,
+      self.spellRank2,
+      self.spellRank3,
+      self.spellRank4,
+      self.spellRank5,
+      self.spellRank6,
+      self.spellRank7,
+      self.spellRank8,
+      self.prereqTalent0,
+      self.prereqTalent1,
+      self.prereqTalent2,
+      self.prereqRank0,
+      self.prereqRank1,
+      self.prereqRank2,
+      self.flags,
+      self.requiredSpellId,
+      self.categoryMask0,
+      self.categoryMask1,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as TalentEntity;
     return 'TalentEntity('
-        'id: $id, '
-        'tabId: $tabId, '
-        'tierId: $tierId, '
-        'columnIndex: $columnIndex, '
-        'spellRank0: $spellRank0, '
-        'spellRank1: $spellRank1, '
-        'spellRank2: $spellRank2, '
-        'spellRank3: $spellRank3, '
-        'spellRank4: $spellRank4, '
-        'spellRank5: $spellRank5, '
-        'spellRank6: $spellRank6, '
-        'spellRank7: $spellRank7, '
-        'spellRank8: $spellRank8, '
-        'prereqTalent0: $prereqTalent0, '
-        'prereqTalent1: $prereqTalent1, '
-        'prereqTalent2: $prereqTalent2, '
-        'prereqRank0: $prereqRank0, '
-        'prereqRank1: $prereqRank1, '
-        'prereqRank2: $prereqRank2, '
-        'flags: $flags, '
-        'requiredSpellId: $requiredSpellId, '
-        'categoryMask0: $categoryMask0, '
-        'categoryMask1: $categoryMask1'
+        'id: ${self.id}, '
+        'tabId: ${self.tabId}, '
+        'tierId: ${self.tierId}, '
+        'columnIndex: ${self.columnIndex}, '
+        'spellRank0: ${self.spellRank0}, '
+        'spellRank1: ${self.spellRank1}, '
+        'spellRank2: ${self.spellRank2}, '
+        'spellRank3: ${self.spellRank3}, '
+        'spellRank4: ${self.spellRank4}, '
+        'spellRank5: ${self.spellRank5}, '
+        'spellRank6: ${self.spellRank6}, '
+        'spellRank7: ${self.spellRank7}, '
+        'spellRank8: ${self.spellRank8}, '
+        'prereqTalent0: ${self.prereqTalent0}, '
+        'prereqTalent1: ${self.prereqTalent1}, '
+        'prereqTalent2: ${self.prereqTalent2}, '
+        'prereqRank0: ${self.prereqRank0}, '
+        'prereqRank1: ${self.prereqRank1}, '
+        'prereqRank2: ${self.prereqRank2}, '
+        'flags: ${self.flags}, '
+        'requiredSpellId: ${self.requiredSpellId}, '
+        'categoryMask0: ${self.categoryMask0}, '
+        'categoryMask1: ${self.categoryMask1}'
         ')';
   }
 }

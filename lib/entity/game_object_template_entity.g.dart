@@ -3,42 +3,6 @@
 part of 'game_object_template_entity.dart';
 
 mixin _GameObjectTemplateEntityMixin {
-  int get entry;
-  int get type;
-  int get displayId;
-  String get name;
-  String get iconName;
-  String get castBarCaption;
-  String get unk1;
-  double get size;
-  int get data0;
-  int get data1;
-  int get data2;
-  int get data3;
-  int get data4;
-  int get data5;
-  int get data6;
-  int get data7;
-  int get data8;
-  int get data9;
-  int get data10;
-  int get data11;
-  int get data12;
-  int get data13;
-  int get data14;
-  int get data15;
-  int get data16;
-  int get data17;
-  int get data18;
-  int get data19;
-  int get data20;
-  int get data21;
-  int get data22;
-  int get data23;
-  String get aiName;
-  String get scriptName;
-  int get verifiedBuild;
-
   static GameObjectTemplateEntity fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -116,207 +80,212 @@ mixin _GameObjectTemplateEntityMixin {
     String? scriptName,
     int? verifiedBuild,
   }) {
+    final self = this as GameObjectTemplateEntity;
     return GameObjectTemplateEntity(
-      entry: entry ?? this.entry,
-      type: type ?? this.type,
-      displayId: displayId ?? this.displayId,
-      name: name ?? this.name,
-      iconName: iconName ?? this.iconName,
-      castBarCaption: castBarCaption ?? this.castBarCaption,
-      unk1: unk1 ?? this.unk1,
-      size: size ?? this.size,
-      data0: data0 ?? this.data0,
-      data1: data1 ?? this.data1,
-      data2: data2 ?? this.data2,
-      data3: data3 ?? this.data3,
-      data4: data4 ?? this.data4,
-      data5: data5 ?? this.data5,
-      data6: data6 ?? this.data6,
-      data7: data7 ?? this.data7,
-      data8: data8 ?? this.data8,
-      data9: data9 ?? this.data9,
-      data10: data10 ?? this.data10,
-      data11: data11 ?? this.data11,
-      data12: data12 ?? this.data12,
-      data13: data13 ?? this.data13,
-      data14: data14 ?? this.data14,
-      data15: data15 ?? this.data15,
-      data16: data16 ?? this.data16,
-      data17: data17 ?? this.data17,
-      data18: data18 ?? this.data18,
-      data19: data19 ?? this.data19,
-      data20: data20 ?? this.data20,
-      data21: data21 ?? this.data21,
-      data22: data22 ?? this.data22,
-      data23: data23 ?? this.data23,
-      aiName: aiName ?? this.aiName,
-      scriptName: scriptName ?? this.scriptName,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      entry: entry ?? self.entry,
+      type: type ?? self.type,
+      displayId: displayId ?? self.displayId,
+      name: name ?? self.name,
+      iconName: iconName ?? self.iconName,
+      castBarCaption: castBarCaption ?? self.castBarCaption,
+      unk1: unk1 ?? self.unk1,
+      size: size ?? self.size,
+      data0: data0 ?? self.data0,
+      data1: data1 ?? self.data1,
+      data2: data2 ?? self.data2,
+      data3: data3 ?? self.data3,
+      data4: data4 ?? self.data4,
+      data5: data5 ?? self.data5,
+      data6: data6 ?? self.data6,
+      data7: data7 ?? self.data7,
+      data8: data8 ?? self.data8,
+      data9: data9 ?? self.data9,
+      data10: data10 ?? self.data10,
+      data11: data11 ?? self.data11,
+      data12: data12 ?? self.data12,
+      data13: data13 ?? self.data13,
+      data14: data14 ?? self.data14,
+      data15: data15 ?? self.data15,
+      data16: data16 ?? self.data16,
+      data17: data17 ?? self.data17,
+      data18: data18 ?? self.data18,
+      data19: data19 ?? self.data19,
+      data20: data20 ?? self.data20,
+      data21: data21 ?? self.data21,
+      data22: data22 ?? self.data22,
+      data23: data23 ?? self.data23,
+      aiName: aiName ?? self.aiName,
+      scriptName: scriptName ?? self.scriptName,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GameObjectTemplateEntity;
     return {
-      'entry': entry,
-      'type': type,
-      'displayId': displayId,
-      'name': name,
-      'IconName': iconName,
-      'castBarCaption': castBarCaption,
-      'unk1': unk1,
-      'size': size,
-      'Data0': data0,
-      'Data1': data1,
-      'Data2': data2,
-      'Data3': data3,
-      'Data4': data4,
-      'Data5': data5,
-      'Data6': data6,
-      'Data7': data7,
-      'Data8': data8,
-      'Data9': data9,
-      'Data10': data10,
-      'Data11': data11,
-      'Data12': data12,
-      'Data13': data13,
-      'Data14': data14,
-      'Data15': data15,
-      'Data16': data16,
-      'Data17': data17,
-      'Data18': data18,
-      'Data19': data19,
-      'Data20': data20,
-      'Data21': data21,
-      'Data22': data22,
-      'Data23': data23,
-      'AIName': aiName,
-      'ScriptName': scriptName,
-      'VerifiedBuild': verifiedBuild,
+      'entry': self.entry,
+      'type': self.type,
+      'displayId': self.displayId,
+      'name': self.name,
+      'IconName': self.iconName,
+      'castBarCaption': self.castBarCaption,
+      'unk1': self.unk1,
+      'size': self.size,
+      'Data0': self.data0,
+      'Data1': self.data1,
+      'Data2': self.data2,
+      'Data3': self.data3,
+      'Data4': self.data4,
+      'Data5': self.data5,
+      'Data6': self.data6,
+      'Data7': self.data7,
+      'Data8': self.data8,
+      'Data9': self.data9,
+      'Data10': self.data10,
+      'Data11': self.data11,
+      'Data12': self.data12,
+      'Data13': self.data13,
+      'Data14': self.data14,
+      'Data15': self.data15,
+      'Data16': self.data16,
+      'Data17': self.data17,
+      'Data18': self.data18,
+      'Data19': self.data19,
+      'Data20': self.data20,
+      'Data21': self.data21,
+      'Data22': self.data22,
+      'Data23': self.data23,
+      'AIName': self.aiName,
+      'ScriptName': self.scriptName,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GameObjectTemplateEntity;
+    return identical(self, other) ||
         other is GameObjectTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            type == other.type &&
-            displayId == other.displayId &&
-            name == other.name &&
-            iconName == other.iconName &&
-            castBarCaption == other.castBarCaption &&
-            unk1 == other.unk1 &&
-            size == other.size &&
-            data0 == other.data0 &&
-            data1 == other.data1 &&
-            data2 == other.data2 &&
-            data3 == other.data3 &&
-            data4 == other.data4 &&
-            data5 == other.data5 &&
-            data6 == other.data6 &&
-            data7 == other.data7 &&
-            data8 == other.data8 &&
-            data9 == other.data9 &&
-            data10 == other.data10 &&
-            data11 == other.data11 &&
-            data12 == other.data12 &&
-            data13 == other.data13 &&
-            data14 == other.data14 &&
-            data15 == other.data15 &&
-            data16 == other.data16 &&
-            data17 == other.data17 &&
-            data18 == other.data18 &&
-            data19 == other.data19 &&
-            data20 == other.data20 &&
-            data21 == other.data21 &&
-            data22 == other.data22 &&
-            data23 == other.data23 &&
-            aiName == other.aiName &&
-            scriptName == other.scriptName &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.type == other.type &&
+            self.displayId == other.displayId &&
+            self.name == other.name &&
+            self.iconName == other.iconName &&
+            self.castBarCaption == other.castBarCaption &&
+            self.unk1 == other.unk1 &&
+            self.size == other.size &&
+            self.data0 == other.data0 &&
+            self.data1 == other.data1 &&
+            self.data2 == other.data2 &&
+            self.data3 == other.data3 &&
+            self.data4 == other.data4 &&
+            self.data5 == other.data5 &&
+            self.data6 == other.data6 &&
+            self.data7 == other.data7 &&
+            self.data8 == other.data8 &&
+            self.data9 == other.data9 &&
+            self.data10 == other.data10 &&
+            self.data11 == other.data11 &&
+            self.data12 == other.data12 &&
+            self.data13 == other.data13 &&
+            self.data14 == other.data14 &&
+            self.data15 == other.data15 &&
+            self.data16 == other.data16 &&
+            self.data17 == other.data17 &&
+            self.data18 == other.data18 &&
+            self.data19 == other.data19 &&
+            self.data20 == other.data20 &&
+            self.data21 == other.data21 &&
+            self.data22 == other.data22 &&
+            self.data23 == other.data23 &&
+            self.aiName == other.aiName &&
+            self.scriptName == other.scriptName &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as GameObjectTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      type,
-      displayId,
-      name,
-      iconName,
-      castBarCaption,
-      unk1,
-      size,
-      data0,
-      data1,
-      data2,
-      data3,
-      data4,
-      data5,
-      data6,
-      data7,
-      data8,
-      data9,
-      data10,
-      data11,
-      data12,
-      data13,
-      data14,
-      data15,
-      data16,
-      data17,
-      data18,
-      data19,
-      data20,
-      data21,
-      data22,
-      data23,
-      aiName,
-      scriptName,
-      verifiedBuild,
+      self.runtimeType,
+      self.entry,
+      self.type,
+      self.displayId,
+      self.name,
+      self.iconName,
+      self.castBarCaption,
+      self.unk1,
+      self.size,
+      self.data0,
+      self.data1,
+      self.data2,
+      self.data3,
+      self.data4,
+      self.data5,
+      self.data6,
+      self.data7,
+      self.data8,
+      self.data9,
+      self.data10,
+      self.data11,
+      self.data12,
+      self.data13,
+      self.data14,
+      self.data15,
+      self.data16,
+      self.data17,
+      self.data18,
+      self.data19,
+      self.data20,
+      self.data21,
+      self.data22,
+      self.data23,
+      self.aiName,
+      self.scriptName,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GameObjectTemplateEntity;
     return 'GameObjectTemplateEntity('
-        'entry: $entry, '
-        'type: $type, '
-        'displayId: $displayId, '
-        'name: $name, '
-        'iconName: $iconName, '
-        'castBarCaption: $castBarCaption, '
-        'unk1: $unk1, '
-        'size: $size, '
-        'data0: $data0, '
-        'data1: $data1, '
-        'data2: $data2, '
-        'data3: $data3, '
-        'data4: $data4, '
-        'data5: $data5, '
-        'data6: $data6, '
-        'data7: $data7, '
-        'data8: $data8, '
-        'data9: $data9, '
-        'data10: $data10, '
-        'data11: $data11, '
-        'data12: $data12, '
-        'data13: $data13, '
-        'data14: $data14, '
-        'data15: $data15, '
-        'data16: $data16, '
-        'data17: $data17, '
-        'data18: $data18, '
-        'data19: $data19, '
-        'data20: $data20, '
-        'data21: $data21, '
-        'data22: $data22, '
-        'data23: $data23, '
-        'aiName: $aiName, '
-        'scriptName: $scriptName, '
-        'verifiedBuild: $verifiedBuild'
+        'entry: ${self.entry}, '
+        'type: ${self.type}, '
+        'displayId: ${self.displayId}, '
+        'name: ${self.name}, '
+        'iconName: ${self.iconName}, '
+        'castBarCaption: ${self.castBarCaption}, '
+        'unk1: ${self.unk1}, '
+        'size: ${self.size}, '
+        'data0: ${self.data0}, '
+        'data1: ${self.data1}, '
+        'data2: ${self.data2}, '
+        'data3: ${self.data3}, '
+        'data4: ${self.data4}, '
+        'data5: ${self.data5}, '
+        'data6: ${self.data6}, '
+        'data7: ${self.data7}, '
+        'data8: ${self.data8}, '
+        'data9: ${self.data9}, '
+        'data10: ${self.data10}, '
+        'data11: ${self.data11}, '
+        'data12: ${self.data12}, '
+        'data13: ${self.data13}, '
+        'data14: ${self.data14}, '
+        'data15: ${self.data15}, '
+        'data16: ${self.data16}, '
+        'data17: ${self.data17}, '
+        'data18: ${self.data18}, '
+        'data19: ${self.data19}, '
+        'data20: ${self.data20}, '
+        'data21: ${self.data21}, '
+        'data22: ${self.data22}, '
+        'data23: ${self.data23}, '
+        'aiName: ${self.aiName}, '
+        'scriptName: ${self.scriptName}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

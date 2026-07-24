@@ -3,11 +3,6 @@
 part of 'player_create_info_cast_spell_entity.dart';
 
 mixin _PlayerCreateInfoCastSpellEntityMixin {
-  int get raceMask;
-  int get classMask;
-  int get spell;
-  String? get note;
-
   static PlayerCreateInfoCastSpellEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoCastSpellEntity(
       raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _PlayerCreateInfoCastSpellEntityMixin {
     int? spell,
     String? note,
   }) {
+    final self = this as PlayerCreateInfoCastSpellEntity;
     return PlayerCreateInfoCastSpellEntity(
-      raceMask: raceMask ?? this.raceMask,
-      classMask: classMask ?? this.classMask,
-      spell: spell ?? this.spell,
-      note: note ?? this.note,
+      raceMask: raceMask ?? self.raceMask,
+      classMask: classMask ?? self.classMask,
+      spell: spell ?? self.spell,
+      note: note ?? self.note,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PlayerCreateInfoCastSpellEntity;
     return {
-      'raceMask': raceMask,
-      'classMask': classMask,
-      'spell': spell,
-      'note': note,
+      'raceMask': self.raceMask,
+      'classMask': self.classMask,
+      'spell': self.spell,
+      'note': self.note,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PlayerCreateInfoCastSpellEntity;
+    return identical(self, other) ||
         other is PlayerCreateInfoCastSpellEntity &&
-            runtimeType == other.runtimeType &&
-            raceMask == other.raceMask &&
-            classMask == other.classMask &&
-            spell == other.spell &&
-            note == other.note;
+            self.runtimeType == other.runtimeType &&
+            self.raceMask == other.raceMask &&
+            self.classMask == other.classMask &&
+            self.spell == other.spell &&
+            self.note == other.note;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, raceMask, classMask, spell, note]);
+    final self = this as PlayerCreateInfoCastSpellEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.raceMask,
+      self.classMask,
+      self.spell,
+      self.note,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as PlayerCreateInfoCastSpellEntity;
     return 'PlayerCreateInfoCastSpellEntity('
-        'raceMask: $raceMask, '
-        'classMask: $classMask, '
-        'spell: $spell, '
-        'note: $note'
+        'raceMask: ${self.raceMask}, '
+        'classMask: ${self.classMask}, '
+        'spell: ${self.spell}, '
+        'note: ${self.note}'
         ')';
   }
 }

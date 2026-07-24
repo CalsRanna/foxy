@@ -3,15 +3,6 @@
 part of 'dbc_item_entity.dart';
 
 mixin _DbcItemEntityMixin {
-  int get id;
-  int get classId;
-  int get subclassId;
-  int get soundOverrideSubclassId;
-  int get material;
-  int get displayInfoId;
-  int get inventoryType;
-  int get sheatheType;
-
   static DbcItemEntity fromJson(Map<String, dynamic> json) {
     return DbcItemEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -36,73 +27,78 @@ mixin _DbcItemEntityMixin {
     int? inventoryType,
     int? sheatheType,
   }) {
+    final self = this as DbcItemEntity;
     return DbcItemEntity(
-      id: id ?? this.id,
-      classId: classId ?? this.classId,
-      subclassId: subclassId ?? this.subclassId,
+      id: id ?? self.id,
+      classId: classId ?? self.classId,
+      subclassId: subclassId ?? self.subclassId,
       soundOverrideSubclassId:
-          soundOverrideSubclassId ?? this.soundOverrideSubclassId,
-      material: material ?? this.material,
-      displayInfoId: displayInfoId ?? this.displayInfoId,
-      inventoryType: inventoryType ?? this.inventoryType,
-      sheatheType: sheatheType ?? this.sheatheType,
+          soundOverrideSubclassId ?? self.soundOverrideSubclassId,
+      material: material ?? self.material,
+      displayInfoId: displayInfoId ?? self.displayInfoId,
+      inventoryType: inventoryType ?? self.inventoryType,
+      sheatheType: sheatheType ?? self.sheatheType,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as DbcItemEntity;
     return {
-      'ID': id,
-      'ClassID': classId,
-      'SubclassID': subclassId,
-      'Sound_override_subclassID': soundOverrideSubclassId,
-      'Material': material,
-      'DisplayInfoID': displayInfoId,
-      'InventoryType': inventoryType,
-      'SheatheType': sheatheType,
+      'ID': self.id,
+      'ClassID': self.classId,
+      'SubclassID': self.subclassId,
+      'Sound_override_subclassID': self.soundOverrideSubclassId,
+      'Material': self.material,
+      'DisplayInfoID': self.displayInfoId,
+      'InventoryType': self.inventoryType,
+      'SheatheType': self.sheatheType,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as DbcItemEntity;
+    return identical(self, other) ||
         other is DbcItemEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            classId == other.classId &&
-            subclassId == other.subclassId &&
-            soundOverrideSubclassId == other.soundOverrideSubclassId &&
-            material == other.material &&
-            displayInfoId == other.displayInfoId &&
-            inventoryType == other.inventoryType &&
-            sheatheType == other.sheatheType;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.classId == other.classId &&
+            self.subclassId == other.subclassId &&
+            self.soundOverrideSubclassId == other.soundOverrideSubclassId &&
+            self.material == other.material &&
+            self.displayInfoId == other.displayInfoId &&
+            self.inventoryType == other.inventoryType &&
+            self.sheatheType == other.sheatheType;
   }
 
   @override
   int get hashCode {
+    final self = this as DbcItemEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      classId,
-      subclassId,
-      soundOverrideSubclassId,
-      material,
-      displayInfoId,
-      inventoryType,
-      sheatheType,
+      self.runtimeType,
+      self.id,
+      self.classId,
+      self.subclassId,
+      self.soundOverrideSubclassId,
+      self.material,
+      self.displayInfoId,
+      self.inventoryType,
+      self.sheatheType,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as DbcItemEntity;
     return 'DbcItemEntity('
-        'id: $id, '
-        'classId: $classId, '
-        'subclassId: $subclassId, '
-        'soundOverrideSubclassId: $soundOverrideSubclassId, '
-        'material: $material, '
-        'displayInfoId: $displayInfoId, '
-        'inventoryType: $inventoryType, '
-        'sheatheType: $sheatheType'
+        'id: ${self.id}, '
+        'classId: ${self.classId}, '
+        'subclassId: ${self.subclassId}, '
+        'soundOverrideSubclassId: ${self.soundOverrideSubclassId}, '
+        'material: ${self.material}, '
+        'displayInfoId: ${self.displayInfoId}, '
+        'inventoryType: ${self.inventoryType}, '
+        'sheatheType: ${self.sheatheType}'
         ')';
   }
 }

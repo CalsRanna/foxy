@@ -3,241 +3,6 @@
 part of 'spell_entity.dart';
 
 mixin _SpellEntityMixin {
-  int get id;
-  int get category;
-  int get dispelType;
-  int get mechanic;
-  int get attributes;
-  int get attributesEx;
-  int get attributesExB;
-  int get attributesExC;
-  int get attributesExD;
-  int get attributesExE;
-  int get attributesExF;
-  int get attributesExG;
-  int get shapeshiftMask0;
-  int get shapeshiftMask1;
-  int get shapeshiftExclude0;
-  int get shapeshiftExclude1;
-  int get targets;
-  int get targetCreatureType;
-  int get requiresSpellFocus;
-  int get facingCasterFlags;
-  int get casterAuraState;
-  int get targetAuraState;
-  int get excludeCasterAuraState;
-  int get excludeTargetAuraState;
-  int get casterAuraSpell;
-  int get targetAuraSpell;
-  int get excludeCasterAuraSpell;
-  int get excludeTargetAuraSpell;
-  int get castingTimeIndex;
-  int get recoveryTime;
-  int get categoryRecoveryTime;
-  int get interruptFlags;
-  int get auraInterruptFlags;
-  int get channelInterruptFlags;
-  int get procTypeMask;
-  int get procChance;
-  int get procCharges;
-  int get maxLevel;
-  int get baseLevel;
-  int get spellLevel;
-  int get durationIndex;
-  int get powerType;
-  int get manaCost;
-  int get manaCostPerLevel;
-  int get manaPerSecond;
-  int get manaPerSecondPerLevel;
-  int get rangeIndex;
-  double get speed;
-  int get modalNextSpell;
-  int get cumulativeAura;
-  int get totem0;
-  int get totem1;
-  int get reagent0;
-  int get reagent1;
-  int get reagent2;
-  int get reagent3;
-  int get reagent4;
-  int get reagent5;
-  int get reagent6;
-  int get reagent7;
-  int get reagentCount0;
-  int get reagentCount1;
-  int get reagentCount2;
-  int get reagentCount3;
-  int get reagentCount4;
-  int get reagentCount5;
-  int get reagentCount6;
-  int get reagentCount7;
-  int get equippedItemClass;
-  int get equippedItemSubclass;
-  int get equippedItemInvTypes;
-  int get effect0;
-  int get effect1;
-  int get effect2;
-  int get effectDieSides0;
-  int get effectDieSides1;
-  int get effectDieSides2;
-  double get effectRealPointsPerLevel0;
-  double get effectRealPointsPerLevel1;
-  double get effectRealPointsPerLevel2;
-  int get effectBasePoints0;
-  int get effectBasePoints1;
-  int get effectBasePoints2;
-  int get effectMechanic0;
-  int get effectMechanic1;
-  int get effectMechanic2;
-  int get implicitTargetA0;
-  int get implicitTargetA1;
-  int get implicitTargetA2;
-  int get implicitTargetB0;
-  int get implicitTargetB1;
-  int get implicitTargetB2;
-  int get effectRadiusIndex0;
-  int get effectRadiusIndex1;
-  int get effectRadiusIndex2;
-  int get effectAura0;
-  int get effectAura1;
-  int get effectAura2;
-  int get effectAuraPeriod0;
-  int get effectAuraPeriod1;
-  int get effectAuraPeriod2;
-  double get effectAmplitude0;
-  double get effectAmplitude1;
-  double get effectAmplitude2;
-  int get effectChainTargets0;
-  int get effectChainTargets1;
-  int get effectChainTargets2;
-  int get effectItemType0;
-  int get effectItemType1;
-  int get effectItemType2;
-  int get effectMiscValue0;
-  int get effectMiscValue1;
-  int get effectMiscValue2;
-  int get effectMiscValueB0;
-  int get effectMiscValueB1;
-  int get effectMiscValueB2;
-  int get effectTriggerSpell0;
-  int get effectTriggerSpell1;
-  int get effectTriggerSpell2;
-  double get effectPointsPerCombo0;
-  double get effectPointsPerCombo1;
-  double get effectPointsPerCombo2;
-  int get effectSpellClassMaskA0;
-  int get effectSpellClassMaskA1;
-  int get effectSpellClassMaskA2;
-  int get effectSpellClassMaskB0;
-  int get effectSpellClassMaskB1;
-  int get effectSpellClassMaskB2;
-  int get effectSpellClassMaskC0;
-  int get effectSpellClassMaskC1;
-  int get effectSpellClassMaskC2;
-  int get spellVisualID0;
-  int get spellVisualID1;
-  int get spellIconID;
-  int get activeIconID;
-  int get spellPriority;
-  String get nameLangEnUS;
-  String get nameLangKoKR;
-  String get nameLangFrFR;
-  String get nameLangDeDE;
-  String get nameLangZhCN;
-  String get nameLangZhTW;
-  String get nameLangEsES;
-  String get nameLangEsMX;
-  String get nameLangRuRU;
-  String get nameLangJaJP;
-  String get nameLangPtPT;
-  String get nameLangPtBR;
-  String get nameLangItIT;
-  String get nameLangUnk1;
-  String get nameLangUnk2;
-  String get nameLangUnk3;
-  int get nameLangFlags;
-  String get nameSubtextLangEnUS;
-  String get nameSubtextLangKoKR;
-  String get nameSubtextLangFrFR;
-  String get nameSubtextLangDeDE;
-  String get nameSubtextLangZhCN;
-  String get nameSubtextLangZhTW;
-  String get nameSubtextLangEsES;
-  String get nameSubtextLangEsMX;
-  String get nameSubtextLangRuRU;
-  String get nameSubtextLangJaJP;
-  String get nameSubtextLangPtPT;
-  String get nameSubtextLangPtBR;
-  String get nameSubtextLangItIT;
-  String get nameSubtextLangUnk1;
-  String get nameSubtextLangUnk2;
-  String get nameSubtextLangUnk3;
-  int get nameSubtextLangFlags;
-  String get descriptionLangEnUS;
-  String get descriptionLangKoKR;
-  String get descriptionLangFrFR;
-  String get descriptionLangDeDE;
-  String get descriptionLangZhCN;
-  String get descriptionLangZhTW;
-  String get descriptionLangEsES;
-  String get descriptionLangEsMX;
-  String get descriptionLangRuRU;
-  String get descriptionLangJaJP;
-  String get descriptionLangPtPT;
-  String get descriptionLangPtBR;
-  String get descriptionLangItIT;
-  String get descriptionLangUnk1;
-  String get descriptionLangUnk2;
-  String get descriptionLangUnk3;
-  int get descriptionLangFlags;
-  String get auraDescriptionLangEnUS;
-  String get auraDescriptionLangKoKR;
-  String get auraDescriptionLangFrFR;
-  String get auraDescriptionLangDeDE;
-  String get auraDescriptionLangZhCN;
-  String get auraDescriptionLangZhTW;
-  String get auraDescriptionLangEsES;
-  String get auraDescriptionLangEsMX;
-  String get auraDescriptionLangRuRU;
-  String get auraDescriptionLangJaJP;
-  String get auraDescriptionLangPtPT;
-  String get auraDescriptionLangPtBR;
-  String get auraDescriptionLangItIT;
-  String get auraDescriptionLangUnk1;
-  String get auraDescriptionLangUnk2;
-  String get auraDescriptionLangUnk3;
-  int get auraDescriptionLangFlags;
-  int get manaCostPct;
-  int get startRecoveryCategory;
-  int get startRecoveryTime;
-  int get maxTargetLevel;
-  int get spellClassSet;
-  int get spellClassMask0;
-  int get spellClassMask1;
-  int get spellClassMask2;
-  int get maxTargets;
-  int get defenseType;
-  int get preventionType;
-  int get stanceBarOrder;
-  double get effectChainAmplitude0;
-  double get effectChainAmplitude1;
-  double get effectChainAmplitude2;
-  int get minFactionID;
-  int get minReputation;
-  int get requiredAuraVision;
-  int get requiredTotemCategoryID0;
-  int get requiredTotemCategoryID1;
-  int get requiredAreasID;
-  int get schoolMask;
-  int get runeCostID;
-  int get spellMissileID;
-  int get powerDisplayID;
-  double get effectBonusCoefficient0;
-  double get effectBonusCoefficient1;
-  double get effectBonusCoefficient2;
-  int get spellDescriptionVariableID;
-  int get spellDifficultyID;
-
   static SpellEntity fromJson(Map<String, dynamic> json) {
     return SpellEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -766,1250 +531,1256 @@ mixin _SpellEntityMixin {
     int? spellDescriptionVariableID,
     int? spellDifficultyID,
   }) {
+    final self = this as SpellEntity;
     return SpellEntity(
-      id: id ?? this.id,
-      category: category ?? this.category,
-      dispelType: dispelType ?? this.dispelType,
-      mechanic: mechanic ?? this.mechanic,
-      attributes: attributes ?? this.attributes,
-      attributesEx: attributesEx ?? this.attributesEx,
-      attributesExB: attributesExB ?? this.attributesExB,
-      attributesExC: attributesExC ?? this.attributesExC,
-      attributesExD: attributesExD ?? this.attributesExD,
-      attributesExE: attributesExE ?? this.attributesExE,
-      attributesExF: attributesExF ?? this.attributesExF,
-      attributesExG: attributesExG ?? this.attributesExG,
-      shapeshiftMask0: shapeshiftMask0 ?? this.shapeshiftMask0,
-      shapeshiftMask1: shapeshiftMask1 ?? this.shapeshiftMask1,
-      shapeshiftExclude0: shapeshiftExclude0 ?? this.shapeshiftExclude0,
-      shapeshiftExclude1: shapeshiftExclude1 ?? this.shapeshiftExclude1,
-      targets: targets ?? this.targets,
-      targetCreatureType: targetCreatureType ?? this.targetCreatureType,
-      requiresSpellFocus: requiresSpellFocus ?? this.requiresSpellFocus,
-      facingCasterFlags: facingCasterFlags ?? this.facingCasterFlags,
-      casterAuraState: casterAuraState ?? this.casterAuraState,
-      targetAuraState: targetAuraState ?? this.targetAuraState,
+      id: id ?? self.id,
+      category: category ?? self.category,
+      dispelType: dispelType ?? self.dispelType,
+      mechanic: mechanic ?? self.mechanic,
+      attributes: attributes ?? self.attributes,
+      attributesEx: attributesEx ?? self.attributesEx,
+      attributesExB: attributesExB ?? self.attributesExB,
+      attributesExC: attributesExC ?? self.attributesExC,
+      attributesExD: attributesExD ?? self.attributesExD,
+      attributesExE: attributesExE ?? self.attributesExE,
+      attributesExF: attributesExF ?? self.attributesExF,
+      attributesExG: attributesExG ?? self.attributesExG,
+      shapeshiftMask0: shapeshiftMask0 ?? self.shapeshiftMask0,
+      shapeshiftMask1: shapeshiftMask1 ?? self.shapeshiftMask1,
+      shapeshiftExclude0: shapeshiftExclude0 ?? self.shapeshiftExclude0,
+      shapeshiftExclude1: shapeshiftExclude1 ?? self.shapeshiftExclude1,
+      targets: targets ?? self.targets,
+      targetCreatureType: targetCreatureType ?? self.targetCreatureType,
+      requiresSpellFocus: requiresSpellFocus ?? self.requiresSpellFocus,
+      facingCasterFlags: facingCasterFlags ?? self.facingCasterFlags,
+      casterAuraState: casterAuraState ?? self.casterAuraState,
+      targetAuraState: targetAuraState ?? self.targetAuraState,
       excludeCasterAuraState:
-          excludeCasterAuraState ?? this.excludeCasterAuraState,
+          excludeCasterAuraState ?? self.excludeCasterAuraState,
       excludeTargetAuraState:
-          excludeTargetAuraState ?? this.excludeTargetAuraState,
-      casterAuraSpell: casterAuraSpell ?? this.casterAuraSpell,
-      targetAuraSpell: targetAuraSpell ?? this.targetAuraSpell,
+          excludeTargetAuraState ?? self.excludeTargetAuraState,
+      casterAuraSpell: casterAuraSpell ?? self.casterAuraSpell,
+      targetAuraSpell: targetAuraSpell ?? self.targetAuraSpell,
       excludeCasterAuraSpell:
-          excludeCasterAuraSpell ?? this.excludeCasterAuraSpell,
+          excludeCasterAuraSpell ?? self.excludeCasterAuraSpell,
       excludeTargetAuraSpell:
-          excludeTargetAuraSpell ?? this.excludeTargetAuraSpell,
-      castingTimeIndex: castingTimeIndex ?? this.castingTimeIndex,
-      recoveryTime: recoveryTime ?? this.recoveryTime,
-      categoryRecoveryTime: categoryRecoveryTime ?? this.categoryRecoveryTime,
-      interruptFlags: interruptFlags ?? this.interruptFlags,
-      auraInterruptFlags: auraInterruptFlags ?? this.auraInterruptFlags,
+          excludeTargetAuraSpell ?? self.excludeTargetAuraSpell,
+      castingTimeIndex: castingTimeIndex ?? self.castingTimeIndex,
+      recoveryTime: recoveryTime ?? self.recoveryTime,
+      categoryRecoveryTime: categoryRecoveryTime ?? self.categoryRecoveryTime,
+      interruptFlags: interruptFlags ?? self.interruptFlags,
+      auraInterruptFlags: auraInterruptFlags ?? self.auraInterruptFlags,
       channelInterruptFlags:
-          channelInterruptFlags ?? this.channelInterruptFlags,
-      procTypeMask: procTypeMask ?? this.procTypeMask,
-      procChance: procChance ?? this.procChance,
-      procCharges: procCharges ?? this.procCharges,
-      maxLevel: maxLevel ?? this.maxLevel,
-      baseLevel: baseLevel ?? this.baseLevel,
-      spellLevel: spellLevel ?? this.spellLevel,
-      durationIndex: durationIndex ?? this.durationIndex,
-      powerType: powerType ?? this.powerType,
-      manaCost: manaCost ?? this.manaCost,
-      manaCostPerLevel: manaCostPerLevel ?? this.manaCostPerLevel,
-      manaPerSecond: manaPerSecond ?? this.manaPerSecond,
+          channelInterruptFlags ?? self.channelInterruptFlags,
+      procTypeMask: procTypeMask ?? self.procTypeMask,
+      procChance: procChance ?? self.procChance,
+      procCharges: procCharges ?? self.procCharges,
+      maxLevel: maxLevel ?? self.maxLevel,
+      baseLevel: baseLevel ?? self.baseLevel,
+      spellLevel: spellLevel ?? self.spellLevel,
+      durationIndex: durationIndex ?? self.durationIndex,
+      powerType: powerType ?? self.powerType,
+      manaCost: manaCost ?? self.manaCost,
+      manaCostPerLevel: manaCostPerLevel ?? self.manaCostPerLevel,
+      manaPerSecond: manaPerSecond ?? self.manaPerSecond,
       manaPerSecondPerLevel:
-          manaPerSecondPerLevel ?? this.manaPerSecondPerLevel,
-      rangeIndex: rangeIndex ?? this.rangeIndex,
-      speed: speed ?? this.speed,
-      modalNextSpell: modalNextSpell ?? this.modalNextSpell,
-      cumulativeAura: cumulativeAura ?? this.cumulativeAura,
-      totem0: totem0 ?? this.totem0,
-      totem1: totem1 ?? this.totem1,
-      reagent0: reagent0 ?? this.reagent0,
-      reagent1: reagent1 ?? this.reagent1,
-      reagent2: reagent2 ?? this.reagent2,
-      reagent3: reagent3 ?? this.reagent3,
-      reagent4: reagent4 ?? this.reagent4,
-      reagent5: reagent5 ?? this.reagent5,
-      reagent6: reagent6 ?? this.reagent6,
-      reagent7: reagent7 ?? this.reagent7,
-      reagentCount0: reagentCount0 ?? this.reagentCount0,
-      reagentCount1: reagentCount1 ?? this.reagentCount1,
-      reagentCount2: reagentCount2 ?? this.reagentCount2,
-      reagentCount3: reagentCount3 ?? this.reagentCount3,
-      reagentCount4: reagentCount4 ?? this.reagentCount4,
-      reagentCount5: reagentCount5 ?? this.reagentCount5,
-      reagentCount6: reagentCount6 ?? this.reagentCount6,
-      reagentCount7: reagentCount7 ?? this.reagentCount7,
-      equippedItemClass: equippedItemClass ?? this.equippedItemClass,
-      equippedItemSubclass: equippedItemSubclass ?? this.equippedItemSubclass,
-      equippedItemInvTypes: equippedItemInvTypes ?? this.equippedItemInvTypes,
-      effect0: effect0 ?? this.effect0,
-      effect1: effect1 ?? this.effect1,
-      effect2: effect2 ?? this.effect2,
-      effectDieSides0: effectDieSides0 ?? this.effectDieSides0,
-      effectDieSides1: effectDieSides1 ?? this.effectDieSides1,
-      effectDieSides2: effectDieSides2 ?? this.effectDieSides2,
+          manaPerSecondPerLevel ?? self.manaPerSecondPerLevel,
+      rangeIndex: rangeIndex ?? self.rangeIndex,
+      speed: speed ?? self.speed,
+      modalNextSpell: modalNextSpell ?? self.modalNextSpell,
+      cumulativeAura: cumulativeAura ?? self.cumulativeAura,
+      totem0: totem0 ?? self.totem0,
+      totem1: totem1 ?? self.totem1,
+      reagent0: reagent0 ?? self.reagent0,
+      reagent1: reagent1 ?? self.reagent1,
+      reagent2: reagent2 ?? self.reagent2,
+      reagent3: reagent3 ?? self.reagent3,
+      reagent4: reagent4 ?? self.reagent4,
+      reagent5: reagent5 ?? self.reagent5,
+      reagent6: reagent6 ?? self.reagent6,
+      reagent7: reagent7 ?? self.reagent7,
+      reagentCount0: reagentCount0 ?? self.reagentCount0,
+      reagentCount1: reagentCount1 ?? self.reagentCount1,
+      reagentCount2: reagentCount2 ?? self.reagentCount2,
+      reagentCount3: reagentCount3 ?? self.reagentCount3,
+      reagentCount4: reagentCount4 ?? self.reagentCount4,
+      reagentCount5: reagentCount5 ?? self.reagentCount5,
+      reagentCount6: reagentCount6 ?? self.reagentCount6,
+      reagentCount7: reagentCount7 ?? self.reagentCount7,
+      equippedItemClass: equippedItemClass ?? self.equippedItemClass,
+      equippedItemSubclass: equippedItemSubclass ?? self.equippedItemSubclass,
+      equippedItemInvTypes: equippedItemInvTypes ?? self.equippedItemInvTypes,
+      effect0: effect0 ?? self.effect0,
+      effect1: effect1 ?? self.effect1,
+      effect2: effect2 ?? self.effect2,
+      effectDieSides0: effectDieSides0 ?? self.effectDieSides0,
+      effectDieSides1: effectDieSides1 ?? self.effectDieSides1,
+      effectDieSides2: effectDieSides2 ?? self.effectDieSides2,
       effectRealPointsPerLevel0:
-          effectRealPointsPerLevel0 ?? this.effectRealPointsPerLevel0,
+          effectRealPointsPerLevel0 ?? self.effectRealPointsPerLevel0,
       effectRealPointsPerLevel1:
-          effectRealPointsPerLevel1 ?? this.effectRealPointsPerLevel1,
+          effectRealPointsPerLevel1 ?? self.effectRealPointsPerLevel1,
       effectRealPointsPerLevel2:
-          effectRealPointsPerLevel2 ?? this.effectRealPointsPerLevel2,
-      effectBasePoints0: effectBasePoints0 ?? this.effectBasePoints0,
-      effectBasePoints1: effectBasePoints1 ?? this.effectBasePoints1,
-      effectBasePoints2: effectBasePoints2 ?? this.effectBasePoints2,
-      effectMechanic0: effectMechanic0 ?? this.effectMechanic0,
-      effectMechanic1: effectMechanic1 ?? this.effectMechanic1,
-      effectMechanic2: effectMechanic2 ?? this.effectMechanic2,
-      implicitTargetA0: implicitTargetA0 ?? this.implicitTargetA0,
-      implicitTargetA1: implicitTargetA1 ?? this.implicitTargetA1,
-      implicitTargetA2: implicitTargetA2 ?? this.implicitTargetA2,
-      implicitTargetB0: implicitTargetB0 ?? this.implicitTargetB0,
-      implicitTargetB1: implicitTargetB1 ?? this.implicitTargetB1,
-      implicitTargetB2: implicitTargetB2 ?? this.implicitTargetB2,
-      effectRadiusIndex0: effectRadiusIndex0 ?? this.effectRadiusIndex0,
-      effectRadiusIndex1: effectRadiusIndex1 ?? this.effectRadiusIndex1,
-      effectRadiusIndex2: effectRadiusIndex2 ?? this.effectRadiusIndex2,
-      effectAura0: effectAura0 ?? this.effectAura0,
-      effectAura1: effectAura1 ?? this.effectAura1,
-      effectAura2: effectAura2 ?? this.effectAura2,
-      effectAuraPeriod0: effectAuraPeriod0 ?? this.effectAuraPeriod0,
-      effectAuraPeriod1: effectAuraPeriod1 ?? this.effectAuraPeriod1,
-      effectAuraPeriod2: effectAuraPeriod2 ?? this.effectAuraPeriod2,
-      effectAmplitude0: effectAmplitude0 ?? this.effectAmplitude0,
-      effectAmplitude1: effectAmplitude1 ?? this.effectAmplitude1,
-      effectAmplitude2: effectAmplitude2 ?? this.effectAmplitude2,
-      effectChainTargets0: effectChainTargets0 ?? this.effectChainTargets0,
-      effectChainTargets1: effectChainTargets1 ?? this.effectChainTargets1,
-      effectChainTargets2: effectChainTargets2 ?? this.effectChainTargets2,
-      effectItemType0: effectItemType0 ?? this.effectItemType0,
-      effectItemType1: effectItemType1 ?? this.effectItemType1,
-      effectItemType2: effectItemType2 ?? this.effectItemType2,
-      effectMiscValue0: effectMiscValue0 ?? this.effectMiscValue0,
-      effectMiscValue1: effectMiscValue1 ?? this.effectMiscValue1,
-      effectMiscValue2: effectMiscValue2 ?? this.effectMiscValue2,
-      effectMiscValueB0: effectMiscValueB0 ?? this.effectMiscValueB0,
-      effectMiscValueB1: effectMiscValueB1 ?? this.effectMiscValueB1,
-      effectMiscValueB2: effectMiscValueB2 ?? this.effectMiscValueB2,
-      effectTriggerSpell0: effectTriggerSpell0 ?? this.effectTriggerSpell0,
-      effectTriggerSpell1: effectTriggerSpell1 ?? this.effectTriggerSpell1,
-      effectTriggerSpell2: effectTriggerSpell2 ?? this.effectTriggerSpell2,
+          effectRealPointsPerLevel2 ?? self.effectRealPointsPerLevel2,
+      effectBasePoints0: effectBasePoints0 ?? self.effectBasePoints0,
+      effectBasePoints1: effectBasePoints1 ?? self.effectBasePoints1,
+      effectBasePoints2: effectBasePoints2 ?? self.effectBasePoints2,
+      effectMechanic0: effectMechanic0 ?? self.effectMechanic0,
+      effectMechanic1: effectMechanic1 ?? self.effectMechanic1,
+      effectMechanic2: effectMechanic2 ?? self.effectMechanic2,
+      implicitTargetA0: implicitTargetA0 ?? self.implicitTargetA0,
+      implicitTargetA1: implicitTargetA1 ?? self.implicitTargetA1,
+      implicitTargetA2: implicitTargetA2 ?? self.implicitTargetA2,
+      implicitTargetB0: implicitTargetB0 ?? self.implicitTargetB0,
+      implicitTargetB1: implicitTargetB1 ?? self.implicitTargetB1,
+      implicitTargetB2: implicitTargetB2 ?? self.implicitTargetB2,
+      effectRadiusIndex0: effectRadiusIndex0 ?? self.effectRadiusIndex0,
+      effectRadiusIndex1: effectRadiusIndex1 ?? self.effectRadiusIndex1,
+      effectRadiusIndex2: effectRadiusIndex2 ?? self.effectRadiusIndex2,
+      effectAura0: effectAura0 ?? self.effectAura0,
+      effectAura1: effectAura1 ?? self.effectAura1,
+      effectAura2: effectAura2 ?? self.effectAura2,
+      effectAuraPeriod0: effectAuraPeriod0 ?? self.effectAuraPeriod0,
+      effectAuraPeriod1: effectAuraPeriod1 ?? self.effectAuraPeriod1,
+      effectAuraPeriod2: effectAuraPeriod2 ?? self.effectAuraPeriod2,
+      effectAmplitude0: effectAmplitude0 ?? self.effectAmplitude0,
+      effectAmplitude1: effectAmplitude1 ?? self.effectAmplitude1,
+      effectAmplitude2: effectAmplitude2 ?? self.effectAmplitude2,
+      effectChainTargets0: effectChainTargets0 ?? self.effectChainTargets0,
+      effectChainTargets1: effectChainTargets1 ?? self.effectChainTargets1,
+      effectChainTargets2: effectChainTargets2 ?? self.effectChainTargets2,
+      effectItemType0: effectItemType0 ?? self.effectItemType0,
+      effectItemType1: effectItemType1 ?? self.effectItemType1,
+      effectItemType2: effectItemType2 ?? self.effectItemType2,
+      effectMiscValue0: effectMiscValue0 ?? self.effectMiscValue0,
+      effectMiscValue1: effectMiscValue1 ?? self.effectMiscValue1,
+      effectMiscValue2: effectMiscValue2 ?? self.effectMiscValue2,
+      effectMiscValueB0: effectMiscValueB0 ?? self.effectMiscValueB0,
+      effectMiscValueB1: effectMiscValueB1 ?? self.effectMiscValueB1,
+      effectMiscValueB2: effectMiscValueB2 ?? self.effectMiscValueB2,
+      effectTriggerSpell0: effectTriggerSpell0 ?? self.effectTriggerSpell0,
+      effectTriggerSpell1: effectTriggerSpell1 ?? self.effectTriggerSpell1,
+      effectTriggerSpell2: effectTriggerSpell2 ?? self.effectTriggerSpell2,
       effectPointsPerCombo0:
-          effectPointsPerCombo0 ?? this.effectPointsPerCombo0,
+          effectPointsPerCombo0 ?? self.effectPointsPerCombo0,
       effectPointsPerCombo1:
-          effectPointsPerCombo1 ?? this.effectPointsPerCombo1,
+          effectPointsPerCombo1 ?? self.effectPointsPerCombo1,
       effectPointsPerCombo2:
-          effectPointsPerCombo2 ?? this.effectPointsPerCombo2,
+          effectPointsPerCombo2 ?? self.effectPointsPerCombo2,
       effectSpellClassMaskA0:
-          effectSpellClassMaskA0 ?? this.effectSpellClassMaskA0,
+          effectSpellClassMaskA0 ?? self.effectSpellClassMaskA0,
       effectSpellClassMaskA1:
-          effectSpellClassMaskA1 ?? this.effectSpellClassMaskA1,
+          effectSpellClassMaskA1 ?? self.effectSpellClassMaskA1,
       effectSpellClassMaskA2:
-          effectSpellClassMaskA2 ?? this.effectSpellClassMaskA2,
+          effectSpellClassMaskA2 ?? self.effectSpellClassMaskA2,
       effectSpellClassMaskB0:
-          effectSpellClassMaskB0 ?? this.effectSpellClassMaskB0,
+          effectSpellClassMaskB0 ?? self.effectSpellClassMaskB0,
       effectSpellClassMaskB1:
-          effectSpellClassMaskB1 ?? this.effectSpellClassMaskB1,
+          effectSpellClassMaskB1 ?? self.effectSpellClassMaskB1,
       effectSpellClassMaskB2:
-          effectSpellClassMaskB2 ?? this.effectSpellClassMaskB2,
+          effectSpellClassMaskB2 ?? self.effectSpellClassMaskB2,
       effectSpellClassMaskC0:
-          effectSpellClassMaskC0 ?? this.effectSpellClassMaskC0,
+          effectSpellClassMaskC0 ?? self.effectSpellClassMaskC0,
       effectSpellClassMaskC1:
-          effectSpellClassMaskC1 ?? this.effectSpellClassMaskC1,
+          effectSpellClassMaskC1 ?? self.effectSpellClassMaskC1,
       effectSpellClassMaskC2:
-          effectSpellClassMaskC2 ?? this.effectSpellClassMaskC2,
-      spellVisualID0: spellVisualID0 ?? this.spellVisualID0,
-      spellVisualID1: spellVisualID1 ?? this.spellVisualID1,
-      spellIconID: spellIconID ?? this.spellIconID,
-      activeIconID: activeIconID ?? this.activeIconID,
-      spellPriority: spellPriority ?? this.spellPriority,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
-      nameSubtextLangEnUS: nameSubtextLangEnUS ?? this.nameSubtextLangEnUS,
-      nameSubtextLangKoKR: nameSubtextLangKoKR ?? this.nameSubtextLangKoKR,
-      nameSubtextLangFrFR: nameSubtextLangFrFR ?? this.nameSubtextLangFrFR,
-      nameSubtextLangDeDE: nameSubtextLangDeDE ?? this.nameSubtextLangDeDE,
-      nameSubtextLangZhCN: nameSubtextLangZhCN ?? this.nameSubtextLangZhCN,
-      nameSubtextLangZhTW: nameSubtextLangZhTW ?? this.nameSubtextLangZhTW,
-      nameSubtextLangEsES: nameSubtextLangEsES ?? this.nameSubtextLangEsES,
-      nameSubtextLangEsMX: nameSubtextLangEsMX ?? this.nameSubtextLangEsMX,
-      nameSubtextLangRuRU: nameSubtextLangRuRU ?? this.nameSubtextLangRuRU,
-      nameSubtextLangJaJP: nameSubtextLangJaJP ?? this.nameSubtextLangJaJP,
-      nameSubtextLangPtPT: nameSubtextLangPtPT ?? this.nameSubtextLangPtPT,
-      nameSubtextLangPtBR: nameSubtextLangPtBR ?? this.nameSubtextLangPtBR,
-      nameSubtextLangItIT: nameSubtextLangItIT ?? this.nameSubtextLangItIT,
-      nameSubtextLangUnk1: nameSubtextLangUnk1 ?? this.nameSubtextLangUnk1,
-      nameSubtextLangUnk2: nameSubtextLangUnk2 ?? this.nameSubtextLangUnk2,
-      nameSubtextLangUnk3: nameSubtextLangUnk3 ?? this.nameSubtextLangUnk3,
-      nameSubtextLangFlags: nameSubtextLangFlags ?? this.nameSubtextLangFlags,
-      descriptionLangEnUS: descriptionLangEnUS ?? this.descriptionLangEnUS,
-      descriptionLangKoKR: descriptionLangKoKR ?? this.descriptionLangKoKR,
-      descriptionLangFrFR: descriptionLangFrFR ?? this.descriptionLangFrFR,
-      descriptionLangDeDE: descriptionLangDeDE ?? this.descriptionLangDeDE,
-      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
-      descriptionLangZhTW: descriptionLangZhTW ?? this.descriptionLangZhTW,
-      descriptionLangEsES: descriptionLangEsES ?? this.descriptionLangEsES,
-      descriptionLangEsMX: descriptionLangEsMX ?? this.descriptionLangEsMX,
-      descriptionLangRuRU: descriptionLangRuRU ?? this.descriptionLangRuRU,
-      descriptionLangJaJP: descriptionLangJaJP ?? this.descriptionLangJaJP,
-      descriptionLangPtPT: descriptionLangPtPT ?? this.descriptionLangPtPT,
-      descriptionLangPtBR: descriptionLangPtBR ?? this.descriptionLangPtBR,
-      descriptionLangItIT: descriptionLangItIT ?? this.descriptionLangItIT,
-      descriptionLangUnk1: descriptionLangUnk1 ?? this.descriptionLangUnk1,
-      descriptionLangUnk2: descriptionLangUnk2 ?? this.descriptionLangUnk2,
-      descriptionLangUnk3: descriptionLangUnk3 ?? this.descriptionLangUnk3,
-      descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
+          effectSpellClassMaskC2 ?? self.effectSpellClassMaskC2,
+      spellVisualID0: spellVisualID0 ?? self.spellVisualID0,
+      spellVisualID1: spellVisualID1 ?? self.spellVisualID1,
+      spellIconID: spellIconID ?? self.spellIconID,
+      activeIconID: activeIconID ?? self.activeIconID,
+      spellPriority: spellPriority ?? self.spellPriority,
+      nameLangEnUS: nameLangEnUS ?? self.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? self.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? self.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? self.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? self.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? self.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? self.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? self.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? self.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? self.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? self.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? self.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? self.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? self.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? self.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? self.nameLangUnk3,
+      nameLangFlags: nameLangFlags ?? self.nameLangFlags,
+      nameSubtextLangEnUS: nameSubtextLangEnUS ?? self.nameSubtextLangEnUS,
+      nameSubtextLangKoKR: nameSubtextLangKoKR ?? self.nameSubtextLangKoKR,
+      nameSubtextLangFrFR: nameSubtextLangFrFR ?? self.nameSubtextLangFrFR,
+      nameSubtextLangDeDE: nameSubtextLangDeDE ?? self.nameSubtextLangDeDE,
+      nameSubtextLangZhCN: nameSubtextLangZhCN ?? self.nameSubtextLangZhCN,
+      nameSubtextLangZhTW: nameSubtextLangZhTW ?? self.nameSubtextLangZhTW,
+      nameSubtextLangEsES: nameSubtextLangEsES ?? self.nameSubtextLangEsES,
+      nameSubtextLangEsMX: nameSubtextLangEsMX ?? self.nameSubtextLangEsMX,
+      nameSubtextLangRuRU: nameSubtextLangRuRU ?? self.nameSubtextLangRuRU,
+      nameSubtextLangJaJP: nameSubtextLangJaJP ?? self.nameSubtextLangJaJP,
+      nameSubtextLangPtPT: nameSubtextLangPtPT ?? self.nameSubtextLangPtPT,
+      nameSubtextLangPtBR: nameSubtextLangPtBR ?? self.nameSubtextLangPtBR,
+      nameSubtextLangItIT: nameSubtextLangItIT ?? self.nameSubtextLangItIT,
+      nameSubtextLangUnk1: nameSubtextLangUnk1 ?? self.nameSubtextLangUnk1,
+      nameSubtextLangUnk2: nameSubtextLangUnk2 ?? self.nameSubtextLangUnk2,
+      nameSubtextLangUnk3: nameSubtextLangUnk3 ?? self.nameSubtextLangUnk3,
+      nameSubtextLangFlags: nameSubtextLangFlags ?? self.nameSubtextLangFlags,
+      descriptionLangEnUS: descriptionLangEnUS ?? self.descriptionLangEnUS,
+      descriptionLangKoKR: descriptionLangKoKR ?? self.descriptionLangKoKR,
+      descriptionLangFrFR: descriptionLangFrFR ?? self.descriptionLangFrFR,
+      descriptionLangDeDE: descriptionLangDeDE ?? self.descriptionLangDeDE,
+      descriptionLangZhCN: descriptionLangZhCN ?? self.descriptionLangZhCN,
+      descriptionLangZhTW: descriptionLangZhTW ?? self.descriptionLangZhTW,
+      descriptionLangEsES: descriptionLangEsES ?? self.descriptionLangEsES,
+      descriptionLangEsMX: descriptionLangEsMX ?? self.descriptionLangEsMX,
+      descriptionLangRuRU: descriptionLangRuRU ?? self.descriptionLangRuRU,
+      descriptionLangJaJP: descriptionLangJaJP ?? self.descriptionLangJaJP,
+      descriptionLangPtPT: descriptionLangPtPT ?? self.descriptionLangPtPT,
+      descriptionLangPtBR: descriptionLangPtBR ?? self.descriptionLangPtBR,
+      descriptionLangItIT: descriptionLangItIT ?? self.descriptionLangItIT,
+      descriptionLangUnk1: descriptionLangUnk1 ?? self.descriptionLangUnk1,
+      descriptionLangUnk2: descriptionLangUnk2 ?? self.descriptionLangUnk2,
+      descriptionLangUnk3: descriptionLangUnk3 ?? self.descriptionLangUnk3,
+      descriptionLangFlags: descriptionLangFlags ?? self.descriptionLangFlags,
       auraDescriptionLangEnUS:
-          auraDescriptionLangEnUS ?? this.auraDescriptionLangEnUS,
+          auraDescriptionLangEnUS ?? self.auraDescriptionLangEnUS,
       auraDescriptionLangKoKR:
-          auraDescriptionLangKoKR ?? this.auraDescriptionLangKoKR,
+          auraDescriptionLangKoKR ?? self.auraDescriptionLangKoKR,
       auraDescriptionLangFrFR:
-          auraDescriptionLangFrFR ?? this.auraDescriptionLangFrFR,
+          auraDescriptionLangFrFR ?? self.auraDescriptionLangFrFR,
       auraDescriptionLangDeDE:
-          auraDescriptionLangDeDE ?? this.auraDescriptionLangDeDE,
+          auraDescriptionLangDeDE ?? self.auraDescriptionLangDeDE,
       auraDescriptionLangZhCN:
-          auraDescriptionLangZhCN ?? this.auraDescriptionLangZhCN,
+          auraDescriptionLangZhCN ?? self.auraDescriptionLangZhCN,
       auraDescriptionLangZhTW:
-          auraDescriptionLangZhTW ?? this.auraDescriptionLangZhTW,
+          auraDescriptionLangZhTW ?? self.auraDescriptionLangZhTW,
       auraDescriptionLangEsES:
-          auraDescriptionLangEsES ?? this.auraDescriptionLangEsES,
+          auraDescriptionLangEsES ?? self.auraDescriptionLangEsES,
       auraDescriptionLangEsMX:
-          auraDescriptionLangEsMX ?? this.auraDescriptionLangEsMX,
+          auraDescriptionLangEsMX ?? self.auraDescriptionLangEsMX,
       auraDescriptionLangRuRU:
-          auraDescriptionLangRuRU ?? this.auraDescriptionLangRuRU,
+          auraDescriptionLangRuRU ?? self.auraDescriptionLangRuRU,
       auraDescriptionLangJaJP:
-          auraDescriptionLangJaJP ?? this.auraDescriptionLangJaJP,
+          auraDescriptionLangJaJP ?? self.auraDescriptionLangJaJP,
       auraDescriptionLangPtPT:
-          auraDescriptionLangPtPT ?? this.auraDescriptionLangPtPT,
+          auraDescriptionLangPtPT ?? self.auraDescriptionLangPtPT,
       auraDescriptionLangPtBR:
-          auraDescriptionLangPtBR ?? this.auraDescriptionLangPtBR,
+          auraDescriptionLangPtBR ?? self.auraDescriptionLangPtBR,
       auraDescriptionLangItIT:
-          auraDescriptionLangItIT ?? this.auraDescriptionLangItIT,
+          auraDescriptionLangItIT ?? self.auraDescriptionLangItIT,
       auraDescriptionLangUnk1:
-          auraDescriptionLangUnk1 ?? this.auraDescriptionLangUnk1,
+          auraDescriptionLangUnk1 ?? self.auraDescriptionLangUnk1,
       auraDescriptionLangUnk2:
-          auraDescriptionLangUnk2 ?? this.auraDescriptionLangUnk2,
+          auraDescriptionLangUnk2 ?? self.auraDescriptionLangUnk2,
       auraDescriptionLangUnk3:
-          auraDescriptionLangUnk3 ?? this.auraDescriptionLangUnk3,
+          auraDescriptionLangUnk3 ?? self.auraDescriptionLangUnk3,
       auraDescriptionLangFlags:
-          auraDescriptionLangFlags ?? this.auraDescriptionLangFlags,
-      manaCostPct: manaCostPct ?? this.manaCostPct,
+          auraDescriptionLangFlags ?? self.auraDescriptionLangFlags,
+      manaCostPct: manaCostPct ?? self.manaCostPct,
       startRecoveryCategory:
-          startRecoveryCategory ?? this.startRecoveryCategory,
-      startRecoveryTime: startRecoveryTime ?? this.startRecoveryTime,
-      maxTargetLevel: maxTargetLevel ?? this.maxTargetLevel,
-      spellClassSet: spellClassSet ?? this.spellClassSet,
-      spellClassMask0: spellClassMask0 ?? this.spellClassMask0,
-      spellClassMask1: spellClassMask1 ?? this.spellClassMask1,
-      spellClassMask2: spellClassMask2 ?? this.spellClassMask2,
-      maxTargets: maxTargets ?? this.maxTargets,
-      defenseType: defenseType ?? this.defenseType,
-      preventionType: preventionType ?? this.preventionType,
-      stanceBarOrder: stanceBarOrder ?? this.stanceBarOrder,
+          startRecoveryCategory ?? self.startRecoveryCategory,
+      startRecoveryTime: startRecoveryTime ?? self.startRecoveryTime,
+      maxTargetLevel: maxTargetLevel ?? self.maxTargetLevel,
+      spellClassSet: spellClassSet ?? self.spellClassSet,
+      spellClassMask0: spellClassMask0 ?? self.spellClassMask0,
+      spellClassMask1: spellClassMask1 ?? self.spellClassMask1,
+      spellClassMask2: spellClassMask2 ?? self.spellClassMask2,
+      maxTargets: maxTargets ?? self.maxTargets,
+      defenseType: defenseType ?? self.defenseType,
+      preventionType: preventionType ?? self.preventionType,
+      stanceBarOrder: stanceBarOrder ?? self.stanceBarOrder,
       effectChainAmplitude0:
-          effectChainAmplitude0 ?? this.effectChainAmplitude0,
+          effectChainAmplitude0 ?? self.effectChainAmplitude0,
       effectChainAmplitude1:
-          effectChainAmplitude1 ?? this.effectChainAmplitude1,
+          effectChainAmplitude1 ?? self.effectChainAmplitude1,
       effectChainAmplitude2:
-          effectChainAmplitude2 ?? this.effectChainAmplitude2,
-      minFactionID: minFactionID ?? this.minFactionID,
-      minReputation: minReputation ?? this.minReputation,
-      requiredAuraVision: requiredAuraVision ?? this.requiredAuraVision,
+          effectChainAmplitude2 ?? self.effectChainAmplitude2,
+      minFactionID: minFactionID ?? self.minFactionID,
+      minReputation: minReputation ?? self.minReputation,
+      requiredAuraVision: requiredAuraVision ?? self.requiredAuraVision,
       requiredTotemCategoryID0:
-          requiredTotemCategoryID0 ?? this.requiredTotemCategoryID0,
+          requiredTotemCategoryID0 ?? self.requiredTotemCategoryID0,
       requiredTotemCategoryID1:
-          requiredTotemCategoryID1 ?? this.requiredTotemCategoryID1,
-      requiredAreasID: requiredAreasID ?? this.requiredAreasID,
-      schoolMask: schoolMask ?? this.schoolMask,
-      runeCostID: runeCostID ?? this.runeCostID,
-      spellMissileID: spellMissileID ?? this.spellMissileID,
-      powerDisplayID: powerDisplayID ?? this.powerDisplayID,
+          requiredTotemCategoryID1 ?? self.requiredTotemCategoryID1,
+      requiredAreasID: requiredAreasID ?? self.requiredAreasID,
+      schoolMask: schoolMask ?? self.schoolMask,
+      runeCostID: runeCostID ?? self.runeCostID,
+      spellMissileID: spellMissileID ?? self.spellMissileID,
+      powerDisplayID: powerDisplayID ?? self.powerDisplayID,
       effectBonusCoefficient0:
-          effectBonusCoefficient0 ?? this.effectBonusCoefficient0,
+          effectBonusCoefficient0 ?? self.effectBonusCoefficient0,
       effectBonusCoefficient1:
-          effectBonusCoefficient1 ?? this.effectBonusCoefficient1,
+          effectBonusCoefficient1 ?? self.effectBonusCoefficient1,
       effectBonusCoefficient2:
-          effectBonusCoefficient2 ?? this.effectBonusCoefficient2,
+          effectBonusCoefficient2 ?? self.effectBonusCoefficient2,
       spellDescriptionVariableID:
-          spellDescriptionVariableID ?? this.spellDescriptionVariableID,
-      spellDifficultyID: spellDifficultyID ?? this.spellDifficultyID,
+          spellDescriptionVariableID ?? self.spellDescriptionVariableID,
+      spellDifficultyID: spellDifficultyID ?? self.spellDifficultyID,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellEntity;
     return {
-      'ID': id,
-      'Category': category,
-      'DispelType': dispelType,
-      'Mechanic': mechanic,
-      'Attributes': attributes,
-      'AttributesEx': attributesEx,
-      'AttributesExB': attributesExB,
-      'AttributesExC': attributesExC,
-      'AttributesExD': attributesExD,
-      'AttributesExE': attributesExE,
-      'AttributesExF': attributesExF,
-      'AttributesExG': attributesExG,
-      'ShapeshiftMask0': shapeshiftMask0,
-      'ShapeshiftMask1': shapeshiftMask1,
-      'ShapeshiftExclude0': shapeshiftExclude0,
-      'ShapeshiftExclude1': shapeshiftExclude1,
-      'Targets': targets,
-      'TargetCreatureType': targetCreatureType,
-      'RequiresSpellFocus': requiresSpellFocus,
-      'FacingCasterFlags': facingCasterFlags,
-      'CasterAuraState': casterAuraState,
-      'TargetAuraState': targetAuraState,
-      'ExcludeCasterAuraState': excludeCasterAuraState,
-      'ExcludeTargetAuraState': excludeTargetAuraState,
-      'CasterAuraSpell': casterAuraSpell,
-      'TargetAuraSpell': targetAuraSpell,
-      'ExcludeCasterAuraSpell': excludeCasterAuraSpell,
-      'ExcludeTargetAuraSpell': excludeTargetAuraSpell,
-      'CastingTimeIndex': castingTimeIndex,
-      'RecoveryTime': recoveryTime,
-      'CategoryRecoveryTime': categoryRecoveryTime,
-      'InterruptFlags': interruptFlags,
-      'AuraInterruptFlags': auraInterruptFlags,
-      'ChannelInterruptFlags': channelInterruptFlags,
-      'ProcTypeMask': procTypeMask,
-      'ProcChance': procChance,
-      'ProcCharges': procCharges,
-      'MaxLevel': maxLevel,
-      'BaseLevel': baseLevel,
-      'SpellLevel': spellLevel,
-      'DurationIndex': durationIndex,
-      'PowerType': powerType,
-      'ManaCost': manaCost,
-      'ManaCostPerLevel': manaCostPerLevel,
-      'ManaPerSecond': manaPerSecond,
-      'ManaPerSecondPerLevel': manaPerSecondPerLevel,
-      'RangeIndex': rangeIndex,
-      'Speed': speed,
-      'ModalNextSpell': modalNextSpell,
-      'CumulativeAura': cumulativeAura,
-      'Totem0': totem0,
-      'Totem1': totem1,
-      'Reagent0': reagent0,
-      'Reagent1': reagent1,
-      'Reagent2': reagent2,
-      'Reagent3': reagent3,
-      'Reagent4': reagent4,
-      'Reagent5': reagent5,
-      'Reagent6': reagent6,
-      'Reagent7': reagent7,
-      'ReagentCount0': reagentCount0,
-      'ReagentCount1': reagentCount1,
-      'ReagentCount2': reagentCount2,
-      'ReagentCount3': reagentCount3,
-      'ReagentCount4': reagentCount4,
-      'ReagentCount5': reagentCount5,
-      'ReagentCount6': reagentCount6,
-      'ReagentCount7': reagentCount7,
-      'EquippedItemClass': equippedItemClass,
-      'EquippedItemSubclass': equippedItemSubclass,
-      'EquippedItemInvTypes': equippedItemInvTypes,
-      'Effect0': effect0,
-      'Effect1': effect1,
-      'Effect2': effect2,
-      'EffectDieSides0': effectDieSides0,
-      'EffectDieSides1': effectDieSides1,
-      'EffectDieSides2': effectDieSides2,
-      'EffectRealPointsPerLevel0': effectRealPointsPerLevel0,
-      'EffectRealPointsPerLevel1': effectRealPointsPerLevel1,
-      'EffectRealPointsPerLevel2': effectRealPointsPerLevel2,
-      'EffectBasePoints0': effectBasePoints0,
-      'EffectBasePoints1': effectBasePoints1,
-      'EffectBasePoints2': effectBasePoints2,
-      'EffectMechanic0': effectMechanic0,
-      'EffectMechanic1': effectMechanic1,
-      'EffectMechanic2': effectMechanic2,
-      'ImplicitTargetA0': implicitTargetA0,
-      'ImplicitTargetA1': implicitTargetA1,
-      'ImplicitTargetA2': implicitTargetA2,
-      'ImplicitTargetB0': implicitTargetB0,
-      'ImplicitTargetB1': implicitTargetB1,
-      'ImplicitTargetB2': implicitTargetB2,
-      'EffectRadiusIndex0': effectRadiusIndex0,
-      'EffectRadiusIndex1': effectRadiusIndex1,
-      'EffectRadiusIndex2': effectRadiusIndex2,
-      'EffectAura0': effectAura0,
-      'EffectAura1': effectAura1,
-      'EffectAura2': effectAura2,
-      'EffectAuraPeriod0': effectAuraPeriod0,
-      'EffectAuraPeriod1': effectAuraPeriod1,
-      'EffectAuraPeriod2': effectAuraPeriod2,
-      'EffectAmplitude0': effectAmplitude0,
-      'EffectAmplitude1': effectAmplitude1,
-      'EffectAmplitude2': effectAmplitude2,
-      'EffectChainTargets0': effectChainTargets0,
-      'EffectChainTargets1': effectChainTargets1,
-      'EffectChainTargets2': effectChainTargets2,
-      'EffectItemType0': effectItemType0,
-      'EffectItemType1': effectItemType1,
-      'EffectItemType2': effectItemType2,
-      'EffectMiscValue0': effectMiscValue0,
-      'EffectMiscValue1': effectMiscValue1,
-      'EffectMiscValue2': effectMiscValue2,
-      'EffectMiscValueB0': effectMiscValueB0,
-      'EffectMiscValueB1': effectMiscValueB1,
-      'EffectMiscValueB2': effectMiscValueB2,
-      'EffectTriggerSpell0': effectTriggerSpell0,
-      'EffectTriggerSpell1': effectTriggerSpell1,
-      'EffectTriggerSpell2': effectTriggerSpell2,
-      'EffectPointsPerCombo0': effectPointsPerCombo0,
-      'EffectPointsPerCombo1': effectPointsPerCombo1,
-      'EffectPointsPerCombo2': effectPointsPerCombo2,
-      'EffectSpellClassMaskA0': effectSpellClassMaskA0,
-      'EffectSpellClassMaskA1': effectSpellClassMaskA1,
-      'EffectSpellClassMaskA2': effectSpellClassMaskA2,
-      'EffectSpellClassMaskB0': effectSpellClassMaskB0,
-      'EffectSpellClassMaskB1': effectSpellClassMaskB1,
-      'EffectSpellClassMaskB2': effectSpellClassMaskB2,
-      'EffectSpellClassMaskC0': effectSpellClassMaskC0,
-      'EffectSpellClassMaskC1': effectSpellClassMaskC1,
-      'EffectSpellClassMaskC2': effectSpellClassMaskC2,
-      'SpellVisualID0': spellVisualID0,
-      'SpellVisualID1': spellVisualID1,
-      'SpellIconID': spellIconID,
-      'ActiveIconID': activeIconID,
-      'SpellPriority': spellPriority,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'NameSubtext_lang_enUS': nameSubtextLangEnUS,
-      'NameSubtext_lang_koKR': nameSubtextLangKoKR,
-      'NameSubtext_lang_frFR': nameSubtextLangFrFR,
-      'NameSubtext_lang_deDE': nameSubtextLangDeDE,
-      'NameSubtext_lang_zhCN': nameSubtextLangZhCN,
-      'NameSubtext_lang_zhTW': nameSubtextLangZhTW,
-      'NameSubtext_lang_esES': nameSubtextLangEsES,
-      'NameSubtext_lang_esMX': nameSubtextLangEsMX,
-      'NameSubtext_lang_ruRU': nameSubtextLangRuRU,
-      'NameSubtext_lang_jaJP': nameSubtextLangJaJP,
-      'NameSubtext_lang_ptPT': nameSubtextLangPtPT,
-      'NameSubtext_lang_ptBR': nameSubtextLangPtBR,
-      'NameSubtext_lang_itIT': nameSubtextLangItIT,
-      'NameSubtext_lang_unk1': nameSubtextLangUnk1,
-      'NameSubtext_lang_unk2': nameSubtextLangUnk2,
-      'NameSubtext_lang_unk3': nameSubtextLangUnk3,
-      'NameSubtext_lang_Flags': nameSubtextLangFlags,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-      'AuraDescription_lang_enUS': auraDescriptionLangEnUS,
-      'AuraDescription_lang_koKR': auraDescriptionLangKoKR,
-      'AuraDescription_lang_frFR': auraDescriptionLangFrFR,
-      'AuraDescription_lang_deDE': auraDescriptionLangDeDE,
-      'AuraDescription_lang_zhCN': auraDescriptionLangZhCN,
-      'AuraDescription_lang_zhTW': auraDescriptionLangZhTW,
-      'AuraDescription_lang_esES': auraDescriptionLangEsES,
-      'AuraDescription_lang_esMX': auraDescriptionLangEsMX,
-      'AuraDescription_lang_ruRU': auraDescriptionLangRuRU,
-      'AuraDescription_lang_jaJP': auraDescriptionLangJaJP,
-      'AuraDescription_lang_ptPT': auraDescriptionLangPtPT,
-      'AuraDescription_lang_ptBR': auraDescriptionLangPtBR,
-      'AuraDescription_lang_itIT': auraDescriptionLangItIT,
-      'AuraDescription_lang_unk1': auraDescriptionLangUnk1,
-      'AuraDescription_lang_unk2': auraDescriptionLangUnk2,
-      'AuraDescription_lang_unk3': auraDescriptionLangUnk3,
-      'AuraDescription_lang_Flags': auraDescriptionLangFlags,
-      'ManaCostPct': manaCostPct,
-      'StartRecoveryCategory': startRecoveryCategory,
-      'StartRecoveryTime': startRecoveryTime,
-      'MaxTargetLevel': maxTargetLevel,
-      'SpellClassSet': spellClassSet,
-      'SpellClassMask0': spellClassMask0,
-      'SpellClassMask1': spellClassMask1,
-      'SpellClassMask2': spellClassMask2,
-      'MaxTargets': maxTargets,
-      'DefenseType': defenseType,
-      'PreventionType': preventionType,
-      'StanceBarOrder': stanceBarOrder,
-      'EffectChainAmplitude0': effectChainAmplitude0,
-      'EffectChainAmplitude1': effectChainAmplitude1,
-      'EffectChainAmplitude2': effectChainAmplitude2,
-      'MinFactionID': minFactionID,
-      'MinReputation': minReputation,
-      'RequiredAuraVision': requiredAuraVision,
-      'RequiredTotemCategoryID0': requiredTotemCategoryID0,
-      'RequiredTotemCategoryID1': requiredTotemCategoryID1,
-      'RequiredAreasID': requiredAreasID,
-      'SchoolMask': schoolMask,
-      'RuneCostID': runeCostID,
-      'SpellMissileID': spellMissileID,
-      'PowerDisplayID': powerDisplayID,
-      'EffectBonusCoefficient0': effectBonusCoefficient0,
-      'EffectBonusCoefficient1': effectBonusCoefficient1,
-      'EffectBonusCoefficient2': effectBonusCoefficient2,
-      'DescriptionVariablesID': spellDescriptionVariableID,
-      'Difficulty': spellDifficultyID,
+      'ID': self.id,
+      'Category': self.category,
+      'DispelType': self.dispelType,
+      'Mechanic': self.mechanic,
+      'Attributes': self.attributes,
+      'AttributesEx': self.attributesEx,
+      'AttributesExB': self.attributesExB,
+      'AttributesExC': self.attributesExC,
+      'AttributesExD': self.attributesExD,
+      'AttributesExE': self.attributesExE,
+      'AttributesExF': self.attributesExF,
+      'AttributesExG': self.attributesExG,
+      'ShapeshiftMask0': self.shapeshiftMask0,
+      'ShapeshiftMask1': self.shapeshiftMask1,
+      'ShapeshiftExclude0': self.shapeshiftExclude0,
+      'ShapeshiftExclude1': self.shapeshiftExclude1,
+      'Targets': self.targets,
+      'TargetCreatureType': self.targetCreatureType,
+      'RequiresSpellFocus': self.requiresSpellFocus,
+      'FacingCasterFlags': self.facingCasterFlags,
+      'CasterAuraState': self.casterAuraState,
+      'TargetAuraState': self.targetAuraState,
+      'ExcludeCasterAuraState': self.excludeCasterAuraState,
+      'ExcludeTargetAuraState': self.excludeTargetAuraState,
+      'CasterAuraSpell': self.casterAuraSpell,
+      'TargetAuraSpell': self.targetAuraSpell,
+      'ExcludeCasterAuraSpell': self.excludeCasterAuraSpell,
+      'ExcludeTargetAuraSpell': self.excludeTargetAuraSpell,
+      'CastingTimeIndex': self.castingTimeIndex,
+      'RecoveryTime': self.recoveryTime,
+      'CategoryRecoveryTime': self.categoryRecoveryTime,
+      'InterruptFlags': self.interruptFlags,
+      'AuraInterruptFlags': self.auraInterruptFlags,
+      'ChannelInterruptFlags': self.channelInterruptFlags,
+      'ProcTypeMask': self.procTypeMask,
+      'ProcChance': self.procChance,
+      'ProcCharges': self.procCharges,
+      'MaxLevel': self.maxLevel,
+      'BaseLevel': self.baseLevel,
+      'SpellLevel': self.spellLevel,
+      'DurationIndex': self.durationIndex,
+      'PowerType': self.powerType,
+      'ManaCost': self.manaCost,
+      'ManaCostPerLevel': self.manaCostPerLevel,
+      'ManaPerSecond': self.manaPerSecond,
+      'ManaPerSecondPerLevel': self.manaPerSecondPerLevel,
+      'RangeIndex': self.rangeIndex,
+      'Speed': self.speed,
+      'ModalNextSpell': self.modalNextSpell,
+      'CumulativeAura': self.cumulativeAura,
+      'Totem0': self.totem0,
+      'Totem1': self.totem1,
+      'Reagent0': self.reagent0,
+      'Reagent1': self.reagent1,
+      'Reagent2': self.reagent2,
+      'Reagent3': self.reagent3,
+      'Reagent4': self.reagent4,
+      'Reagent5': self.reagent5,
+      'Reagent6': self.reagent6,
+      'Reagent7': self.reagent7,
+      'ReagentCount0': self.reagentCount0,
+      'ReagentCount1': self.reagentCount1,
+      'ReagentCount2': self.reagentCount2,
+      'ReagentCount3': self.reagentCount3,
+      'ReagentCount4': self.reagentCount4,
+      'ReagentCount5': self.reagentCount5,
+      'ReagentCount6': self.reagentCount6,
+      'ReagentCount7': self.reagentCount7,
+      'EquippedItemClass': self.equippedItemClass,
+      'EquippedItemSubclass': self.equippedItemSubclass,
+      'EquippedItemInvTypes': self.equippedItemInvTypes,
+      'Effect0': self.effect0,
+      'Effect1': self.effect1,
+      'Effect2': self.effect2,
+      'EffectDieSides0': self.effectDieSides0,
+      'EffectDieSides1': self.effectDieSides1,
+      'EffectDieSides2': self.effectDieSides2,
+      'EffectRealPointsPerLevel0': self.effectRealPointsPerLevel0,
+      'EffectRealPointsPerLevel1': self.effectRealPointsPerLevel1,
+      'EffectRealPointsPerLevel2': self.effectRealPointsPerLevel2,
+      'EffectBasePoints0': self.effectBasePoints0,
+      'EffectBasePoints1': self.effectBasePoints1,
+      'EffectBasePoints2': self.effectBasePoints2,
+      'EffectMechanic0': self.effectMechanic0,
+      'EffectMechanic1': self.effectMechanic1,
+      'EffectMechanic2': self.effectMechanic2,
+      'ImplicitTargetA0': self.implicitTargetA0,
+      'ImplicitTargetA1': self.implicitTargetA1,
+      'ImplicitTargetA2': self.implicitTargetA2,
+      'ImplicitTargetB0': self.implicitTargetB0,
+      'ImplicitTargetB1': self.implicitTargetB1,
+      'ImplicitTargetB2': self.implicitTargetB2,
+      'EffectRadiusIndex0': self.effectRadiusIndex0,
+      'EffectRadiusIndex1': self.effectRadiusIndex1,
+      'EffectRadiusIndex2': self.effectRadiusIndex2,
+      'EffectAura0': self.effectAura0,
+      'EffectAura1': self.effectAura1,
+      'EffectAura2': self.effectAura2,
+      'EffectAuraPeriod0': self.effectAuraPeriod0,
+      'EffectAuraPeriod1': self.effectAuraPeriod1,
+      'EffectAuraPeriod2': self.effectAuraPeriod2,
+      'EffectAmplitude0': self.effectAmplitude0,
+      'EffectAmplitude1': self.effectAmplitude1,
+      'EffectAmplitude2': self.effectAmplitude2,
+      'EffectChainTargets0': self.effectChainTargets0,
+      'EffectChainTargets1': self.effectChainTargets1,
+      'EffectChainTargets2': self.effectChainTargets2,
+      'EffectItemType0': self.effectItemType0,
+      'EffectItemType1': self.effectItemType1,
+      'EffectItemType2': self.effectItemType2,
+      'EffectMiscValue0': self.effectMiscValue0,
+      'EffectMiscValue1': self.effectMiscValue1,
+      'EffectMiscValue2': self.effectMiscValue2,
+      'EffectMiscValueB0': self.effectMiscValueB0,
+      'EffectMiscValueB1': self.effectMiscValueB1,
+      'EffectMiscValueB2': self.effectMiscValueB2,
+      'EffectTriggerSpell0': self.effectTriggerSpell0,
+      'EffectTriggerSpell1': self.effectTriggerSpell1,
+      'EffectTriggerSpell2': self.effectTriggerSpell2,
+      'EffectPointsPerCombo0': self.effectPointsPerCombo0,
+      'EffectPointsPerCombo1': self.effectPointsPerCombo1,
+      'EffectPointsPerCombo2': self.effectPointsPerCombo2,
+      'EffectSpellClassMaskA0': self.effectSpellClassMaskA0,
+      'EffectSpellClassMaskA1': self.effectSpellClassMaskA1,
+      'EffectSpellClassMaskA2': self.effectSpellClassMaskA2,
+      'EffectSpellClassMaskB0': self.effectSpellClassMaskB0,
+      'EffectSpellClassMaskB1': self.effectSpellClassMaskB1,
+      'EffectSpellClassMaskB2': self.effectSpellClassMaskB2,
+      'EffectSpellClassMaskC0': self.effectSpellClassMaskC0,
+      'EffectSpellClassMaskC1': self.effectSpellClassMaskC1,
+      'EffectSpellClassMaskC2': self.effectSpellClassMaskC2,
+      'SpellVisualID0': self.spellVisualID0,
+      'SpellVisualID1': self.spellVisualID1,
+      'SpellIconID': self.spellIconID,
+      'ActiveIconID': self.activeIconID,
+      'SpellPriority': self.spellPriority,
+      'Name_lang_enUS': self.nameLangEnUS,
+      'Name_lang_koKR': self.nameLangKoKR,
+      'Name_lang_frFR': self.nameLangFrFR,
+      'Name_lang_deDE': self.nameLangDeDE,
+      'Name_lang_zhCN': self.nameLangZhCN,
+      'Name_lang_zhTW': self.nameLangZhTW,
+      'Name_lang_esES': self.nameLangEsES,
+      'Name_lang_esMX': self.nameLangEsMX,
+      'Name_lang_ruRU': self.nameLangRuRU,
+      'Name_lang_jaJP': self.nameLangJaJP,
+      'Name_lang_ptPT': self.nameLangPtPT,
+      'Name_lang_ptBR': self.nameLangPtBR,
+      'Name_lang_itIT': self.nameLangItIT,
+      'Name_lang_unk1': self.nameLangUnk1,
+      'Name_lang_unk2': self.nameLangUnk2,
+      'Name_lang_unk3': self.nameLangUnk3,
+      'Name_lang_Flags': self.nameLangFlags,
+      'NameSubtext_lang_enUS': self.nameSubtextLangEnUS,
+      'NameSubtext_lang_koKR': self.nameSubtextLangKoKR,
+      'NameSubtext_lang_frFR': self.nameSubtextLangFrFR,
+      'NameSubtext_lang_deDE': self.nameSubtextLangDeDE,
+      'NameSubtext_lang_zhCN': self.nameSubtextLangZhCN,
+      'NameSubtext_lang_zhTW': self.nameSubtextLangZhTW,
+      'NameSubtext_lang_esES': self.nameSubtextLangEsES,
+      'NameSubtext_lang_esMX': self.nameSubtextLangEsMX,
+      'NameSubtext_lang_ruRU': self.nameSubtextLangRuRU,
+      'NameSubtext_lang_jaJP': self.nameSubtextLangJaJP,
+      'NameSubtext_lang_ptPT': self.nameSubtextLangPtPT,
+      'NameSubtext_lang_ptBR': self.nameSubtextLangPtBR,
+      'NameSubtext_lang_itIT': self.nameSubtextLangItIT,
+      'NameSubtext_lang_unk1': self.nameSubtextLangUnk1,
+      'NameSubtext_lang_unk2': self.nameSubtextLangUnk2,
+      'NameSubtext_lang_unk3': self.nameSubtextLangUnk3,
+      'NameSubtext_lang_Flags': self.nameSubtextLangFlags,
+      'Description_lang_enUS': self.descriptionLangEnUS,
+      'Description_lang_koKR': self.descriptionLangKoKR,
+      'Description_lang_frFR': self.descriptionLangFrFR,
+      'Description_lang_deDE': self.descriptionLangDeDE,
+      'Description_lang_zhCN': self.descriptionLangZhCN,
+      'Description_lang_zhTW': self.descriptionLangZhTW,
+      'Description_lang_esES': self.descriptionLangEsES,
+      'Description_lang_esMX': self.descriptionLangEsMX,
+      'Description_lang_ruRU': self.descriptionLangRuRU,
+      'Description_lang_jaJP': self.descriptionLangJaJP,
+      'Description_lang_ptPT': self.descriptionLangPtPT,
+      'Description_lang_ptBR': self.descriptionLangPtBR,
+      'Description_lang_itIT': self.descriptionLangItIT,
+      'Description_lang_unk1': self.descriptionLangUnk1,
+      'Description_lang_unk2': self.descriptionLangUnk2,
+      'Description_lang_unk3': self.descriptionLangUnk3,
+      'Description_lang_Flags': self.descriptionLangFlags,
+      'AuraDescription_lang_enUS': self.auraDescriptionLangEnUS,
+      'AuraDescription_lang_koKR': self.auraDescriptionLangKoKR,
+      'AuraDescription_lang_frFR': self.auraDescriptionLangFrFR,
+      'AuraDescription_lang_deDE': self.auraDescriptionLangDeDE,
+      'AuraDescription_lang_zhCN': self.auraDescriptionLangZhCN,
+      'AuraDescription_lang_zhTW': self.auraDescriptionLangZhTW,
+      'AuraDescription_lang_esES': self.auraDescriptionLangEsES,
+      'AuraDescription_lang_esMX': self.auraDescriptionLangEsMX,
+      'AuraDescription_lang_ruRU': self.auraDescriptionLangRuRU,
+      'AuraDescription_lang_jaJP': self.auraDescriptionLangJaJP,
+      'AuraDescription_lang_ptPT': self.auraDescriptionLangPtPT,
+      'AuraDescription_lang_ptBR': self.auraDescriptionLangPtBR,
+      'AuraDescription_lang_itIT': self.auraDescriptionLangItIT,
+      'AuraDescription_lang_unk1': self.auraDescriptionLangUnk1,
+      'AuraDescription_lang_unk2': self.auraDescriptionLangUnk2,
+      'AuraDescription_lang_unk3': self.auraDescriptionLangUnk3,
+      'AuraDescription_lang_Flags': self.auraDescriptionLangFlags,
+      'ManaCostPct': self.manaCostPct,
+      'StartRecoveryCategory': self.startRecoveryCategory,
+      'StartRecoveryTime': self.startRecoveryTime,
+      'MaxTargetLevel': self.maxTargetLevel,
+      'SpellClassSet': self.spellClassSet,
+      'SpellClassMask0': self.spellClassMask0,
+      'SpellClassMask1': self.spellClassMask1,
+      'SpellClassMask2': self.spellClassMask2,
+      'MaxTargets': self.maxTargets,
+      'DefenseType': self.defenseType,
+      'PreventionType': self.preventionType,
+      'StanceBarOrder': self.stanceBarOrder,
+      'EffectChainAmplitude0': self.effectChainAmplitude0,
+      'EffectChainAmplitude1': self.effectChainAmplitude1,
+      'EffectChainAmplitude2': self.effectChainAmplitude2,
+      'MinFactionID': self.minFactionID,
+      'MinReputation': self.minReputation,
+      'RequiredAuraVision': self.requiredAuraVision,
+      'RequiredTotemCategoryID0': self.requiredTotemCategoryID0,
+      'RequiredTotemCategoryID1': self.requiredTotemCategoryID1,
+      'RequiredAreasID': self.requiredAreasID,
+      'SchoolMask': self.schoolMask,
+      'RuneCostID': self.runeCostID,
+      'SpellMissileID': self.spellMissileID,
+      'PowerDisplayID': self.powerDisplayID,
+      'EffectBonusCoefficient0': self.effectBonusCoefficient0,
+      'EffectBonusCoefficient1': self.effectBonusCoefficient1,
+      'EffectBonusCoefficient2': self.effectBonusCoefficient2,
+      'DescriptionVariablesID': self.spellDescriptionVariableID,
+      'Difficulty': self.spellDifficultyID,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellEntity;
+    return identical(self, other) ||
         other is SpellEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            category == other.category &&
-            dispelType == other.dispelType &&
-            mechanic == other.mechanic &&
-            attributes == other.attributes &&
-            attributesEx == other.attributesEx &&
-            attributesExB == other.attributesExB &&
-            attributesExC == other.attributesExC &&
-            attributesExD == other.attributesExD &&
-            attributesExE == other.attributesExE &&
-            attributesExF == other.attributesExF &&
-            attributesExG == other.attributesExG &&
-            shapeshiftMask0 == other.shapeshiftMask0 &&
-            shapeshiftMask1 == other.shapeshiftMask1 &&
-            shapeshiftExclude0 == other.shapeshiftExclude0 &&
-            shapeshiftExclude1 == other.shapeshiftExclude1 &&
-            targets == other.targets &&
-            targetCreatureType == other.targetCreatureType &&
-            requiresSpellFocus == other.requiresSpellFocus &&
-            facingCasterFlags == other.facingCasterFlags &&
-            casterAuraState == other.casterAuraState &&
-            targetAuraState == other.targetAuraState &&
-            excludeCasterAuraState == other.excludeCasterAuraState &&
-            excludeTargetAuraState == other.excludeTargetAuraState &&
-            casterAuraSpell == other.casterAuraSpell &&
-            targetAuraSpell == other.targetAuraSpell &&
-            excludeCasterAuraSpell == other.excludeCasterAuraSpell &&
-            excludeTargetAuraSpell == other.excludeTargetAuraSpell &&
-            castingTimeIndex == other.castingTimeIndex &&
-            recoveryTime == other.recoveryTime &&
-            categoryRecoveryTime == other.categoryRecoveryTime &&
-            interruptFlags == other.interruptFlags &&
-            auraInterruptFlags == other.auraInterruptFlags &&
-            channelInterruptFlags == other.channelInterruptFlags &&
-            procTypeMask == other.procTypeMask &&
-            procChance == other.procChance &&
-            procCharges == other.procCharges &&
-            maxLevel == other.maxLevel &&
-            baseLevel == other.baseLevel &&
-            spellLevel == other.spellLevel &&
-            durationIndex == other.durationIndex &&
-            powerType == other.powerType &&
-            manaCost == other.manaCost &&
-            manaCostPerLevel == other.manaCostPerLevel &&
-            manaPerSecond == other.manaPerSecond &&
-            manaPerSecondPerLevel == other.manaPerSecondPerLevel &&
-            rangeIndex == other.rangeIndex &&
-            speed == other.speed &&
-            modalNextSpell == other.modalNextSpell &&
-            cumulativeAura == other.cumulativeAura &&
-            totem0 == other.totem0 &&
-            totem1 == other.totem1 &&
-            reagent0 == other.reagent0 &&
-            reagent1 == other.reagent1 &&
-            reagent2 == other.reagent2 &&
-            reagent3 == other.reagent3 &&
-            reagent4 == other.reagent4 &&
-            reagent5 == other.reagent5 &&
-            reagent6 == other.reagent6 &&
-            reagent7 == other.reagent7 &&
-            reagentCount0 == other.reagentCount0 &&
-            reagentCount1 == other.reagentCount1 &&
-            reagentCount2 == other.reagentCount2 &&
-            reagentCount3 == other.reagentCount3 &&
-            reagentCount4 == other.reagentCount4 &&
-            reagentCount5 == other.reagentCount5 &&
-            reagentCount6 == other.reagentCount6 &&
-            reagentCount7 == other.reagentCount7 &&
-            equippedItemClass == other.equippedItemClass &&
-            equippedItemSubclass == other.equippedItemSubclass &&
-            equippedItemInvTypes == other.equippedItemInvTypes &&
-            effect0 == other.effect0 &&
-            effect1 == other.effect1 &&
-            effect2 == other.effect2 &&
-            effectDieSides0 == other.effectDieSides0 &&
-            effectDieSides1 == other.effectDieSides1 &&
-            effectDieSides2 == other.effectDieSides2 &&
-            effectRealPointsPerLevel0 == other.effectRealPointsPerLevel0 &&
-            effectRealPointsPerLevel1 == other.effectRealPointsPerLevel1 &&
-            effectRealPointsPerLevel2 == other.effectRealPointsPerLevel2 &&
-            effectBasePoints0 == other.effectBasePoints0 &&
-            effectBasePoints1 == other.effectBasePoints1 &&
-            effectBasePoints2 == other.effectBasePoints2 &&
-            effectMechanic0 == other.effectMechanic0 &&
-            effectMechanic1 == other.effectMechanic1 &&
-            effectMechanic2 == other.effectMechanic2 &&
-            implicitTargetA0 == other.implicitTargetA0 &&
-            implicitTargetA1 == other.implicitTargetA1 &&
-            implicitTargetA2 == other.implicitTargetA2 &&
-            implicitTargetB0 == other.implicitTargetB0 &&
-            implicitTargetB1 == other.implicitTargetB1 &&
-            implicitTargetB2 == other.implicitTargetB2 &&
-            effectRadiusIndex0 == other.effectRadiusIndex0 &&
-            effectRadiusIndex1 == other.effectRadiusIndex1 &&
-            effectRadiusIndex2 == other.effectRadiusIndex2 &&
-            effectAura0 == other.effectAura0 &&
-            effectAura1 == other.effectAura1 &&
-            effectAura2 == other.effectAura2 &&
-            effectAuraPeriod0 == other.effectAuraPeriod0 &&
-            effectAuraPeriod1 == other.effectAuraPeriod1 &&
-            effectAuraPeriod2 == other.effectAuraPeriod2 &&
-            effectAmplitude0 == other.effectAmplitude0 &&
-            effectAmplitude1 == other.effectAmplitude1 &&
-            effectAmplitude2 == other.effectAmplitude2 &&
-            effectChainTargets0 == other.effectChainTargets0 &&
-            effectChainTargets1 == other.effectChainTargets1 &&
-            effectChainTargets2 == other.effectChainTargets2 &&
-            effectItemType0 == other.effectItemType0 &&
-            effectItemType1 == other.effectItemType1 &&
-            effectItemType2 == other.effectItemType2 &&
-            effectMiscValue0 == other.effectMiscValue0 &&
-            effectMiscValue1 == other.effectMiscValue1 &&
-            effectMiscValue2 == other.effectMiscValue2 &&
-            effectMiscValueB0 == other.effectMiscValueB0 &&
-            effectMiscValueB1 == other.effectMiscValueB1 &&
-            effectMiscValueB2 == other.effectMiscValueB2 &&
-            effectTriggerSpell0 == other.effectTriggerSpell0 &&
-            effectTriggerSpell1 == other.effectTriggerSpell1 &&
-            effectTriggerSpell2 == other.effectTriggerSpell2 &&
-            effectPointsPerCombo0 == other.effectPointsPerCombo0 &&
-            effectPointsPerCombo1 == other.effectPointsPerCombo1 &&
-            effectPointsPerCombo2 == other.effectPointsPerCombo2 &&
-            effectSpellClassMaskA0 == other.effectSpellClassMaskA0 &&
-            effectSpellClassMaskA1 == other.effectSpellClassMaskA1 &&
-            effectSpellClassMaskA2 == other.effectSpellClassMaskA2 &&
-            effectSpellClassMaskB0 == other.effectSpellClassMaskB0 &&
-            effectSpellClassMaskB1 == other.effectSpellClassMaskB1 &&
-            effectSpellClassMaskB2 == other.effectSpellClassMaskB2 &&
-            effectSpellClassMaskC0 == other.effectSpellClassMaskC0 &&
-            effectSpellClassMaskC1 == other.effectSpellClassMaskC1 &&
-            effectSpellClassMaskC2 == other.effectSpellClassMaskC2 &&
-            spellVisualID0 == other.spellVisualID0 &&
-            spellVisualID1 == other.spellVisualID1 &&
-            spellIconID == other.spellIconID &&
-            activeIconID == other.activeIconID &&
-            spellPriority == other.spellPriority &&
-            nameLangEnUS == other.nameLangEnUS &&
-            nameLangKoKR == other.nameLangKoKR &&
-            nameLangFrFR == other.nameLangFrFR &&
-            nameLangDeDE == other.nameLangDeDE &&
-            nameLangZhCN == other.nameLangZhCN &&
-            nameLangZhTW == other.nameLangZhTW &&
-            nameLangEsES == other.nameLangEsES &&
-            nameLangEsMX == other.nameLangEsMX &&
-            nameLangRuRU == other.nameLangRuRU &&
-            nameLangJaJP == other.nameLangJaJP &&
-            nameLangPtPT == other.nameLangPtPT &&
-            nameLangPtBR == other.nameLangPtBR &&
-            nameLangItIT == other.nameLangItIT &&
-            nameLangUnk1 == other.nameLangUnk1 &&
-            nameLangUnk2 == other.nameLangUnk2 &&
-            nameLangUnk3 == other.nameLangUnk3 &&
-            nameLangFlags == other.nameLangFlags &&
-            nameSubtextLangEnUS == other.nameSubtextLangEnUS &&
-            nameSubtextLangKoKR == other.nameSubtextLangKoKR &&
-            nameSubtextLangFrFR == other.nameSubtextLangFrFR &&
-            nameSubtextLangDeDE == other.nameSubtextLangDeDE &&
-            nameSubtextLangZhCN == other.nameSubtextLangZhCN &&
-            nameSubtextLangZhTW == other.nameSubtextLangZhTW &&
-            nameSubtextLangEsES == other.nameSubtextLangEsES &&
-            nameSubtextLangEsMX == other.nameSubtextLangEsMX &&
-            nameSubtextLangRuRU == other.nameSubtextLangRuRU &&
-            nameSubtextLangJaJP == other.nameSubtextLangJaJP &&
-            nameSubtextLangPtPT == other.nameSubtextLangPtPT &&
-            nameSubtextLangPtBR == other.nameSubtextLangPtBR &&
-            nameSubtextLangItIT == other.nameSubtextLangItIT &&
-            nameSubtextLangUnk1 == other.nameSubtextLangUnk1 &&
-            nameSubtextLangUnk2 == other.nameSubtextLangUnk2 &&
-            nameSubtextLangUnk3 == other.nameSubtextLangUnk3 &&
-            nameSubtextLangFlags == other.nameSubtextLangFlags &&
-            descriptionLangEnUS == other.descriptionLangEnUS &&
-            descriptionLangKoKR == other.descriptionLangKoKR &&
-            descriptionLangFrFR == other.descriptionLangFrFR &&
-            descriptionLangDeDE == other.descriptionLangDeDE &&
-            descriptionLangZhCN == other.descriptionLangZhCN &&
-            descriptionLangZhTW == other.descriptionLangZhTW &&
-            descriptionLangEsES == other.descriptionLangEsES &&
-            descriptionLangEsMX == other.descriptionLangEsMX &&
-            descriptionLangRuRU == other.descriptionLangRuRU &&
-            descriptionLangJaJP == other.descriptionLangJaJP &&
-            descriptionLangPtPT == other.descriptionLangPtPT &&
-            descriptionLangPtBR == other.descriptionLangPtBR &&
-            descriptionLangItIT == other.descriptionLangItIT &&
-            descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            descriptionLangFlags == other.descriptionLangFlags &&
-            auraDescriptionLangEnUS == other.auraDescriptionLangEnUS &&
-            auraDescriptionLangKoKR == other.auraDescriptionLangKoKR &&
-            auraDescriptionLangFrFR == other.auraDescriptionLangFrFR &&
-            auraDescriptionLangDeDE == other.auraDescriptionLangDeDE &&
-            auraDescriptionLangZhCN == other.auraDescriptionLangZhCN &&
-            auraDescriptionLangZhTW == other.auraDescriptionLangZhTW &&
-            auraDescriptionLangEsES == other.auraDescriptionLangEsES &&
-            auraDescriptionLangEsMX == other.auraDescriptionLangEsMX &&
-            auraDescriptionLangRuRU == other.auraDescriptionLangRuRU &&
-            auraDescriptionLangJaJP == other.auraDescriptionLangJaJP &&
-            auraDescriptionLangPtPT == other.auraDescriptionLangPtPT &&
-            auraDescriptionLangPtBR == other.auraDescriptionLangPtBR &&
-            auraDescriptionLangItIT == other.auraDescriptionLangItIT &&
-            auraDescriptionLangUnk1 == other.auraDescriptionLangUnk1 &&
-            auraDescriptionLangUnk2 == other.auraDescriptionLangUnk2 &&
-            auraDescriptionLangUnk3 == other.auraDescriptionLangUnk3 &&
-            auraDescriptionLangFlags == other.auraDescriptionLangFlags &&
-            manaCostPct == other.manaCostPct &&
-            startRecoveryCategory == other.startRecoveryCategory &&
-            startRecoveryTime == other.startRecoveryTime &&
-            maxTargetLevel == other.maxTargetLevel &&
-            spellClassSet == other.spellClassSet &&
-            spellClassMask0 == other.spellClassMask0 &&
-            spellClassMask1 == other.spellClassMask1 &&
-            spellClassMask2 == other.spellClassMask2 &&
-            maxTargets == other.maxTargets &&
-            defenseType == other.defenseType &&
-            preventionType == other.preventionType &&
-            stanceBarOrder == other.stanceBarOrder &&
-            effectChainAmplitude0 == other.effectChainAmplitude0 &&
-            effectChainAmplitude1 == other.effectChainAmplitude1 &&
-            effectChainAmplitude2 == other.effectChainAmplitude2 &&
-            minFactionID == other.minFactionID &&
-            minReputation == other.minReputation &&
-            requiredAuraVision == other.requiredAuraVision &&
-            requiredTotemCategoryID0 == other.requiredTotemCategoryID0 &&
-            requiredTotemCategoryID1 == other.requiredTotemCategoryID1 &&
-            requiredAreasID == other.requiredAreasID &&
-            schoolMask == other.schoolMask &&
-            runeCostID == other.runeCostID &&
-            spellMissileID == other.spellMissileID &&
-            powerDisplayID == other.powerDisplayID &&
-            effectBonusCoefficient0 == other.effectBonusCoefficient0 &&
-            effectBonusCoefficient1 == other.effectBonusCoefficient1 &&
-            effectBonusCoefficient2 == other.effectBonusCoefficient2 &&
-            spellDescriptionVariableID == other.spellDescriptionVariableID &&
-            spellDifficultyID == other.spellDifficultyID;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.category == other.category &&
+            self.dispelType == other.dispelType &&
+            self.mechanic == other.mechanic &&
+            self.attributes == other.attributes &&
+            self.attributesEx == other.attributesEx &&
+            self.attributesExB == other.attributesExB &&
+            self.attributesExC == other.attributesExC &&
+            self.attributesExD == other.attributesExD &&
+            self.attributesExE == other.attributesExE &&
+            self.attributesExF == other.attributesExF &&
+            self.attributesExG == other.attributesExG &&
+            self.shapeshiftMask0 == other.shapeshiftMask0 &&
+            self.shapeshiftMask1 == other.shapeshiftMask1 &&
+            self.shapeshiftExclude0 == other.shapeshiftExclude0 &&
+            self.shapeshiftExclude1 == other.shapeshiftExclude1 &&
+            self.targets == other.targets &&
+            self.targetCreatureType == other.targetCreatureType &&
+            self.requiresSpellFocus == other.requiresSpellFocus &&
+            self.facingCasterFlags == other.facingCasterFlags &&
+            self.casterAuraState == other.casterAuraState &&
+            self.targetAuraState == other.targetAuraState &&
+            self.excludeCasterAuraState == other.excludeCasterAuraState &&
+            self.excludeTargetAuraState == other.excludeTargetAuraState &&
+            self.casterAuraSpell == other.casterAuraSpell &&
+            self.targetAuraSpell == other.targetAuraSpell &&
+            self.excludeCasterAuraSpell == other.excludeCasterAuraSpell &&
+            self.excludeTargetAuraSpell == other.excludeTargetAuraSpell &&
+            self.castingTimeIndex == other.castingTimeIndex &&
+            self.recoveryTime == other.recoveryTime &&
+            self.categoryRecoveryTime == other.categoryRecoveryTime &&
+            self.interruptFlags == other.interruptFlags &&
+            self.auraInterruptFlags == other.auraInterruptFlags &&
+            self.channelInterruptFlags == other.channelInterruptFlags &&
+            self.procTypeMask == other.procTypeMask &&
+            self.procChance == other.procChance &&
+            self.procCharges == other.procCharges &&
+            self.maxLevel == other.maxLevel &&
+            self.baseLevel == other.baseLevel &&
+            self.spellLevel == other.spellLevel &&
+            self.durationIndex == other.durationIndex &&
+            self.powerType == other.powerType &&
+            self.manaCost == other.manaCost &&
+            self.manaCostPerLevel == other.manaCostPerLevel &&
+            self.manaPerSecond == other.manaPerSecond &&
+            self.manaPerSecondPerLevel == other.manaPerSecondPerLevel &&
+            self.rangeIndex == other.rangeIndex &&
+            self.speed == other.speed &&
+            self.modalNextSpell == other.modalNextSpell &&
+            self.cumulativeAura == other.cumulativeAura &&
+            self.totem0 == other.totem0 &&
+            self.totem1 == other.totem1 &&
+            self.reagent0 == other.reagent0 &&
+            self.reagent1 == other.reagent1 &&
+            self.reagent2 == other.reagent2 &&
+            self.reagent3 == other.reagent3 &&
+            self.reagent4 == other.reagent4 &&
+            self.reagent5 == other.reagent5 &&
+            self.reagent6 == other.reagent6 &&
+            self.reagent7 == other.reagent7 &&
+            self.reagentCount0 == other.reagentCount0 &&
+            self.reagentCount1 == other.reagentCount1 &&
+            self.reagentCount2 == other.reagentCount2 &&
+            self.reagentCount3 == other.reagentCount3 &&
+            self.reagentCount4 == other.reagentCount4 &&
+            self.reagentCount5 == other.reagentCount5 &&
+            self.reagentCount6 == other.reagentCount6 &&
+            self.reagentCount7 == other.reagentCount7 &&
+            self.equippedItemClass == other.equippedItemClass &&
+            self.equippedItemSubclass == other.equippedItemSubclass &&
+            self.equippedItemInvTypes == other.equippedItemInvTypes &&
+            self.effect0 == other.effect0 &&
+            self.effect1 == other.effect1 &&
+            self.effect2 == other.effect2 &&
+            self.effectDieSides0 == other.effectDieSides0 &&
+            self.effectDieSides1 == other.effectDieSides1 &&
+            self.effectDieSides2 == other.effectDieSides2 &&
+            self.effectRealPointsPerLevel0 == other.effectRealPointsPerLevel0 &&
+            self.effectRealPointsPerLevel1 == other.effectRealPointsPerLevel1 &&
+            self.effectRealPointsPerLevel2 == other.effectRealPointsPerLevel2 &&
+            self.effectBasePoints0 == other.effectBasePoints0 &&
+            self.effectBasePoints1 == other.effectBasePoints1 &&
+            self.effectBasePoints2 == other.effectBasePoints2 &&
+            self.effectMechanic0 == other.effectMechanic0 &&
+            self.effectMechanic1 == other.effectMechanic1 &&
+            self.effectMechanic2 == other.effectMechanic2 &&
+            self.implicitTargetA0 == other.implicitTargetA0 &&
+            self.implicitTargetA1 == other.implicitTargetA1 &&
+            self.implicitTargetA2 == other.implicitTargetA2 &&
+            self.implicitTargetB0 == other.implicitTargetB0 &&
+            self.implicitTargetB1 == other.implicitTargetB1 &&
+            self.implicitTargetB2 == other.implicitTargetB2 &&
+            self.effectRadiusIndex0 == other.effectRadiusIndex0 &&
+            self.effectRadiusIndex1 == other.effectRadiusIndex1 &&
+            self.effectRadiusIndex2 == other.effectRadiusIndex2 &&
+            self.effectAura0 == other.effectAura0 &&
+            self.effectAura1 == other.effectAura1 &&
+            self.effectAura2 == other.effectAura2 &&
+            self.effectAuraPeriod0 == other.effectAuraPeriod0 &&
+            self.effectAuraPeriod1 == other.effectAuraPeriod1 &&
+            self.effectAuraPeriod2 == other.effectAuraPeriod2 &&
+            self.effectAmplitude0 == other.effectAmplitude0 &&
+            self.effectAmplitude1 == other.effectAmplitude1 &&
+            self.effectAmplitude2 == other.effectAmplitude2 &&
+            self.effectChainTargets0 == other.effectChainTargets0 &&
+            self.effectChainTargets1 == other.effectChainTargets1 &&
+            self.effectChainTargets2 == other.effectChainTargets2 &&
+            self.effectItemType0 == other.effectItemType0 &&
+            self.effectItemType1 == other.effectItemType1 &&
+            self.effectItemType2 == other.effectItemType2 &&
+            self.effectMiscValue0 == other.effectMiscValue0 &&
+            self.effectMiscValue1 == other.effectMiscValue1 &&
+            self.effectMiscValue2 == other.effectMiscValue2 &&
+            self.effectMiscValueB0 == other.effectMiscValueB0 &&
+            self.effectMiscValueB1 == other.effectMiscValueB1 &&
+            self.effectMiscValueB2 == other.effectMiscValueB2 &&
+            self.effectTriggerSpell0 == other.effectTriggerSpell0 &&
+            self.effectTriggerSpell1 == other.effectTriggerSpell1 &&
+            self.effectTriggerSpell2 == other.effectTriggerSpell2 &&
+            self.effectPointsPerCombo0 == other.effectPointsPerCombo0 &&
+            self.effectPointsPerCombo1 == other.effectPointsPerCombo1 &&
+            self.effectPointsPerCombo2 == other.effectPointsPerCombo2 &&
+            self.effectSpellClassMaskA0 == other.effectSpellClassMaskA0 &&
+            self.effectSpellClassMaskA1 == other.effectSpellClassMaskA1 &&
+            self.effectSpellClassMaskA2 == other.effectSpellClassMaskA2 &&
+            self.effectSpellClassMaskB0 == other.effectSpellClassMaskB0 &&
+            self.effectSpellClassMaskB1 == other.effectSpellClassMaskB1 &&
+            self.effectSpellClassMaskB2 == other.effectSpellClassMaskB2 &&
+            self.effectSpellClassMaskC0 == other.effectSpellClassMaskC0 &&
+            self.effectSpellClassMaskC1 == other.effectSpellClassMaskC1 &&
+            self.effectSpellClassMaskC2 == other.effectSpellClassMaskC2 &&
+            self.spellVisualID0 == other.spellVisualID0 &&
+            self.spellVisualID1 == other.spellVisualID1 &&
+            self.spellIconID == other.spellIconID &&
+            self.activeIconID == other.activeIconID &&
+            self.spellPriority == other.spellPriority &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.nameSubtextLangEnUS == other.nameSubtextLangEnUS &&
+            self.nameSubtextLangKoKR == other.nameSubtextLangKoKR &&
+            self.nameSubtextLangFrFR == other.nameSubtextLangFrFR &&
+            self.nameSubtextLangDeDE == other.nameSubtextLangDeDE &&
+            self.nameSubtextLangZhCN == other.nameSubtextLangZhCN &&
+            self.nameSubtextLangZhTW == other.nameSubtextLangZhTW &&
+            self.nameSubtextLangEsES == other.nameSubtextLangEsES &&
+            self.nameSubtextLangEsMX == other.nameSubtextLangEsMX &&
+            self.nameSubtextLangRuRU == other.nameSubtextLangRuRU &&
+            self.nameSubtextLangJaJP == other.nameSubtextLangJaJP &&
+            self.nameSubtextLangPtPT == other.nameSubtextLangPtPT &&
+            self.nameSubtextLangPtBR == other.nameSubtextLangPtBR &&
+            self.nameSubtextLangItIT == other.nameSubtextLangItIT &&
+            self.nameSubtextLangUnk1 == other.nameSubtextLangUnk1 &&
+            self.nameSubtextLangUnk2 == other.nameSubtextLangUnk2 &&
+            self.nameSubtextLangUnk3 == other.nameSubtextLangUnk3 &&
+            self.nameSubtextLangFlags == other.nameSubtextLangFlags &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags &&
+            self.auraDescriptionLangEnUS == other.auraDescriptionLangEnUS &&
+            self.auraDescriptionLangKoKR == other.auraDescriptionLangKoKR &&
+            self.auraDescriptionLangFrFR == other.auraDescriptionLangFrFR &&
+            self.auraDescriptionLangDeDE == other.auraDescriptionLangDeDE &&
+            self.auraDescriptionLangZhCN == other.auraDescriptionLangZhCN &&
+            self.auraDescriptionLangZhTW == other.auraDescriptionLangZhTW &&
+            self.auraDescriptionLangEsES == other.auraDescriptionLangEsES &&
+            self.auraDescriptionLangEsMX == other.auraDescriptionLangEsMX &&
+            self.auraDescriptionLangRuRU == other.auraDescriptionLangRuRU &&
+            self.auraDescriptionLangJaJP == other.auraDescriptionLangJaJP &&
+            self.auraDescriptionLangPtPT == other.auraDescriptionLangPtPT &&
+            self.auraDescriptionLangPtBR == other.auraDescriptionLangPtBR &&
+            self.auraDescriptionLangItIT == other.auraDescriptionLangItIT &&
+            self.auraDescriptionLangUnk1 == other.auraDescriptionLangUnk1 &&
+            self.auraDescriptionLangUnk2 == other.auraDescriptionLangUnk2 &&
+            self.auraDescriptionLangUnk3 == other.auraDescriptionLangUnk3 &&
+            self.auraDescriptionLangFlags == other.auraDescriptionLangFlags &&
+            self.manaCostPct == other.manaCostPct &&
+            self.startRecoveryCategory == other.startRecoveryCategory &&
+            self.startRecoveryTime == other.startRecoveryTime &&
+            self.maxTargetLevel == other.maxTargetLevel &&
+            self.spellClassSet == other.spellClassSet &&
+            self.spellClassMask0 == other.spellClassMask0 &&
+            self.spellClassMask1 == other.spellClassMask1 &&
+            self.spellClassMask2 == other.spellClassMask2 &&
+            self.maxTargets == other.maxTargets &&
+            self.defenseType == other.defenseType &&
+            self.preventionType == other.preventionType &&
+            self.stanceBarOrder == other.stanceBarOrder &&
+            self.effectChainAmplitude0 == other.effectChainAmplitude0 &&
+            self.effectChainAmplitude1 == other.effectChainAmplitude1 &&
+            self.effectChainAmplitude2 == other.effectChainAmplitude2 &&
+            self.minFactionID == other.minFactionID &&
+            self.minReputation == other.minReputation &&
+            self.requiredAuraVision == other.requiredAuraVision &&
+            self.requiredTotemCategoryID0 == other.requiredTotemCategoryID0 &&
+            self.requiredTotemCategoryID1 == other.requiredTotemCategoryID1 &&
+            self.requiredAreasID == other.requiredAreasID &&
+            self.schoolMask == other.schoolMask &&
+            self.runeCostID == other.runeCostID &&
+            self.spellMissileID == other.spellMissileID &&
+            self.powerDisplayID == other.powerDisplayID &&
+            self.effectBonusCoefficient0 == other.effectBonusCoefficient0 &&
+            self.effectBonusCoefficient1 == other.effectBonusCoefficient1 &&
+            self.effectBonusCoefficient2 == other.effectBonusCoefficient2 &&
+            self.spellDescriptionVariableID ==
+                other.spellDescriptionVariableID &&
+            self.spellDifficultyID == other.spellDifficultyID;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      category,
-      dispelType,
-      mechanic,
-      attributes,
-      attributesEx,
-      attributesExB,
-      attributesExC,
-      attributesExD,
-      attributesExE,
-      attributesExF,
-      attributesExG,
-      shapeshiftMask0,
-      shapeshiftMask1,
-      shapeshiftExclude0,
-      shapeshiftExclude1,
-      targets,
-      targetCreatureType,
-      requiresSpellFocus,
-      facingCasterFlags,
-      casterAuraState,
-      targetAuraState,
-      excludeCasterAuraState,
-      excludeTargetAuraState,
-      casterAuraSpell,
-      targetAuraSpell,
-      excludeCasterAuraSpell,
-      excludeTargetAuraSpell,
-      castingTimeIndex,
-      recoveryTime,
-      categoryRecoveryTime,
-      interruptFlags,
-      auraInterruptFlags,
-      channelInterruptFlags,
-      procTypeMask,
-      procChance,
-      procCharges,
-      maxLevel,
-      baseLevel,
-      spellLevel,
-      durationIndex,
-      powerType,
-      manaCost,
-      manaCostPerLevel,
-      manaPerSecond,
-      manaPerSecondPerLevel,
-      rangeIndex,
-      speed,
-      modalNextSpell,
-      cumulativeAura,
-      totem0,
-      totem1,
-      reagent0,
-      reagent1,
-      reagent2,
-      reagent3,
-      reagent4,
-      reagent5,
-      reagent6,
-      reagent7,
-      reagentCount0,
-      reagentCount1,
-      reagentCount2,
-      reagentCount3,
-      reagentCount4,
-      reagentCount5,
-      reagentCount6,
-      reagentCount7,
-      equippedItemClass,
-      equippedItemSubclass,
-      equippedItemInvTypes,
-      effect0,
-      effect1,
-      effect2,
-      effectDieSides0,
-      effectDieSides1,
-      effectDieSides2,
-      effectRealPointsPerLevel0,
-      effectRealPointsPerLevel1,
-      effectRealPointsPerLevel2,
-      effectBasePoints0,
-      effectBasePoints1,
-      effectBasePoints2,
-      effectMechanic0,
-      effectMechanic1,
-      effectMechanic2,
-      implicitTargetA0,
-      implicitTargetA1,
-      implicitTargetA2,
-      implicitTargetB0,
-      implicitTargetB1,
-      implicitTargetB2,
-      effectRadiusIndex0,
-      effectRadiusIndex1,
-      effectRadiusIndex2,
-      effectAura0,
-      effectAura1,
-      effectAura2,
-      effectAuraPeriod0,
-      effectAuraPeriod1,
-      effectAuraPeriod2,
-      effectAmplitude0,
-      effectAmplitude1,
-      effectAmplitude2,
-      effectChainTargets0,
-      effectChainTargets1,
-      effectChainTargets2,
-      effectItemType0,
-      effectItemType1,
-      effectItemType2,
-      effectMiscValue0,
-      effectMiscValue1,
-      effectMiscValue2,
-      effectMiscValueB0,
-      effectMiscValueB1,
-      effectMiscValueB2,
-      effectTriggerSpell0,
-      effectTriggerSpell1,
-      effectTriggerSpell2,
-      effectPointsPerCombo0,
-      effectPointsPerCombo1,
-      effectPointsPerCombo2,
-      effectSpellClassMaskA0,
-      effectSpellClassMaskA1,
-      effectSpellClassMaskA2,
-      effectSpellClassMaskB0,
-      effectSpellClassMaskB1,
-      effectSpellClassMaskB2,
-      effectSpellClassMaskC0,
-      effectSpellClassMaskC1,
-      effectSpellClassMaskC2,
-      spellVisualID0,
-      spellVisualID1,
-      spellIconID,
-      activeIconID,
-      spellPriority,
-      nameLangEnUS,
-      nameLangKoKR,
-      nameLangFrFR,
-      nameLangDeDE,
-      nameLangZhCN,
-      nameLangZhTW,
-      nameLangEsES,
-      nameLangEsMX,
-      nameLangRuRU,
-      nameLangJaJP,
-      nameLangPtPT,
-      nameLangPtBR,
-      nameLangItIT,
-      nameLangUnk1,
-      nameLangUnk2,
-      nameLangUnk3,
-      nameLangFlags,
-      nameSubtextLangEnUS,
-      nameSubtextLangKoKR,
-      nameSubtextLangFrFR,
-      nameSubtextLangDeDE,
-      nameSubtextLangZhCN,
-      nameSubtextLangZhTW,
-      nameSubtextLangEsES,
-      nameSubtextLangEsMX,
-      nameSubtextLangRuRU,
-      nameSubtextLangJaJP,
-      nameSubtextLangPtPT,
-      nameSubtextLangPtBR,
-      nameSubtextLangItIT,
-      nameSubtextLangUnk1,
-      nameSubtextLangUnk2,
-      nameSubtextLangUnk3,
-      nameSubtextLangFlags,
-      descriptionLangEnUS,
-      descriptionLangKoKR,
-      descriptionLangFrFR,
-      descriptionLangDeDE,
-      descriptionLangZhCN,
-      descriptionLangZhTW,
-      descriptionLangEsES,
-      descriptionLangEsMX,
-      descriptionLangRuRU,
-      descriptionLangJaJP,
-      descriptionLangPtPT,
-      descriptionLangPtBR,
-      descriptionLangItIT,
-      descriptionLangUnk1,
-      descriptionLangUnk2,
-      descriptionLangUnk3,
-      descriptionLangFlags,
-      auraDescriptionLangEnUS,
-      auraDescriptionLangKoKR,
-      auraDescriptionLangFrFR,
-      auraDescriptionLangDeDE,
-      auraDescriptionLangZhCN,
-      auraDescriptionLangZhTW,
-      auraDescriptionLangEsES,
-      auraDescriptionLangEsMX,
-      auraDescriptionLangRuRU,
-      auraDescriptionLangJaJP,
-      auraDescriptionLangPtPT,
-      auraDescriptionLangPtBR,
-      auraDescriptionLangItIT,
-      auraDescriptionLangUnk1,
-      auraDescriptionLangUnk2,
-      auraDescriptionLangUnk3,
-      auraDescriptionLangFlags,
-      manaCostPct,
-      startRecoveryCategory,
-      startRecoveryTime,
-      maxTargetLevel,
-      spellClassSet,
-      spellClassMask0,
-      spellClassMask1,
-      spellClassMask2,
-      maxTargets,
-      defenseType,
-      preventionType,
-      stanceBarOrder,
-      effectChainAmplitude0,
-      effectChainAmplitude1,
-      effectChainAmplitude2,
-      minFactionID,
-      minReputation,
-      requiredAuraVision,
-      requiredTotemCategoryID0,
-      requiredTotemCategoryID1,
-      requiredAreasID,
-      schoolMask,
-      runeCostID,
-      spellMissileID,
-      powerDisplayID,
-      effectBonusCoefficient0,
-      effectBonusCoefficient1,
-      effectBonusCoefficient2,
-      spellDescriptionVariableID,
-      spellDifficultyID,
+      self.runtimeType,
+      self.id,
+      self.category,
+      self.dispelType,
+      self.mechanic,
+      self.attributes,
+      self.attributesEx,
+      self.attributesExB,
+      self.attributesExC,
+      self.attributesExD,
+      self.attributesExE,
+      self.attributesExF,
+      self.attributesExG,
+      self.shapeshiftMask0,
+      self.shapeshiftMask1,
+      self.shapeshiftExclude0,
+      self.shapeshiftExclude1,
+      self.targets,
+      self.targetCreatureType,
+      self.requiresSpellFocus,
+      self.facingCasterFlags,
+      self.casterAuraState,
+      self.targetAuraState,
+      self.excludeCasterAuraState,
+      self.excludeTargetAuraState,
+      self.casterAuraSpell,
+      self.targetAuraSpell,
+      self.excludeCasterAuraSpell,
+      self.excludeTargetAuraSpell,
+      self.castingTimeIndex,
+      self.recoveryTime,
+      self.categoryRecoveryTime,
+      self.interruptFlags,
+      self.auraInterruptFlags,
+      self.channelInterruptFlags,
+      self.procTypeMask,
+      self.procChance,
+      self.procCharges,
+      self.maxLevel,
+      self.baseLevel,
+      self.spellLevel,
+      self.durationIndex,
+      self.powerType,
+      self.manaCost,
+      self.manaCostPerLevel,
+      self.manaPerSecond,
+      self.manaPerSecondPerLevel,
+      self.rangeIndex,
+      self.speed,
+      self.modalNextSpell,
+      self.cumulativeAura,
+      self.totem0,
+      self.totem1,
+      self.reagent0,
+      self.reagent1,
+      self.reagent2,
+      self.reagent3,
+      self.reagent4,
+      self.reagent5,
+      self.reagent6,
+      self.reagent7,
+      self.reagentCount0,
+      self.reagentCount1,
+      self.reagentCount2,
+      self.reagentCount3,
+      self.reagentCount4,
+      self.reagentCount5,
+      self.reagentCount6,
+      self.reagentCount7,
+      self.equippedItemClass,
+      self.equippedItemSubclass,
+      self.equippedItemInvTypes,
+      self.effect0,
+      self.effect1,
+      self.effect2,
+      self.effectDieSides0,
+      self.effectDieSides1,
+      self.effectDieSides2,
+      self.effectRealPointsPerLevel0,
+      self.effectRealPointsPerLevel1,
+      self.effectRealPointsPerLevel2,
+      self.effectBasePoints0,
+      self.effectBasePoints1,
+      self.effectBasePoints2,
+      self.effectMechanic0,
+      self.effectMechanic1,
+      self.effectMechanic2,
+      self.implicitTargetA0,
+      self.implicitTargetA1,
+      self.implicitTargetA2,
+      self.implicitTargetB0,
+      self.implicitTargetB1,
+      self.implicitTargetB2,
+      self.effectRadiusIndex0,
+      self.effectRadiusIndex1,
+      self.effectRadiusIndex2,
+      self.effectAura0,
+      self.effectAura1,
+      self.effectAura2,
+      self.effectAuraPeriod0,
+      self.effectAuraPeriod1,
+      self.effectAuraPeriod2,
+      self.effectAmplitude0,
+      self.effectAmplitude1,
+      self.effectAmplitude2,
+      self.effectChainTargets0,
+      self.effectChainTargets1,
+      self.effectChainTargets2,
+      self.effectItemType0,
+      self.effectItemType1,
+      self.effectItemType2,
+      self.effectMiscValue0,
+      self.effectMiscValue1,
+      self.effectMiscValue2,
+      self.effectMiscValueB0,
+      self.effectMiscValueB1,
+      self.effectMiscValueB2,
+      self.effectTriggerSpell0,
+      self.effectTriggerSpell1,
+      self.effectTriggerSpell2,
+      self.effectPointsPerCombo0,
+      self.effectPointsPerCombo1,
+      self.effectPointsPerCombo2,
+      self.effectSpellClassMaskA0,
+      self.effectSpellClassMaskA1,
+      self.effectSpellClassMaskA2,
+      self.effectSpellClassMaskB0,
+      self.effectSpellClassMaskB1,
+      self.effectSpellClassMaskB2,
+      self.effectSpellClassMaskC0,
+      self.effectSpellClassMaskC1,
+      self.effectSpellClassMaskC2,
+      self.spellVisualID0,
+      self.spellVisualID1,
+      self.spellIconID,
+      self.activeIconID,
+      self.spellPriority,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.nameSubtextLangEnUS,
+      self.nameSubtextLangKoKR,
+      self.nameSubtextLangFrFR,
+      self.nameSubtextLangDeDE,
+      self.nameSubtextLangZhCN,
+      self.nameSubtextLangZhTW,
+      self.nameSubtextLangEsES,
+      self.nameSubtextLangEsMX,
+      self.nameSubtextLangRuRU,
+      self.nameSubtextLangJaJP,
+      self.nameSubtextLangPtPT,
+      self.nameSubtextLangPtBR,
+      self.nameSubtextLangItIT,
+      self.nameSubtextLangUnk1,
+      self.nameSubtextLangUnk2,
+      self.nameSubtextLangUnk3,
+      self.nameSubtextLangFlags,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+      self.auraDescriptionLangEnUS,
+      self.auraDescriptionLangKoKR,
+      self.auraDescriptionLangFrFR,
+      self.auraDescriptionLangDeDE,
+      self.auraDescriptionLangZhCN,
+      self.auraDescriptionLangZhTW,
+      self.auraDescriptionLangEsES,
+      self.auraDescriptionLangEsMX,
+      self.auraDescriptionLangRuRU,
+      self.auraDescriptionLangJaJP,
+      self.auraDescriptionLangPtPT,
+      self.auraDescriptionLangPtBR,
+      self.auraDescriptionLangItIT,
+      self.auraDescriptionLangUnk1,
+      self.auraDescriptionLangUnk2,
+      self.auraDescriptionLangUnk3,
+      self.auraDescriptionLangFlags,
+      self.manaCostPct,
+      self.startRecoveryCategory,
+      self.startRecoveryTime,
+      self.maxTargetLevel,
+      self.spellClassSet,
+      self.spellClassMask0,
+      self.spellClassMask1,
+      self.spellClassMask2,
+      self.maxTargets,
+      self.defenseType,
+      self.preventionType,
+      self.stanceBarOrder,
+      self.effectChainAmplitude0,
+      self.effectChainAmplitude1,
+      self.effectChainAmplitude2,
+      self.minFactionID,
+      self.minReputation,
+      self.requiredAuraVision,
+      self.requiredTotemCategoryID0,
+      self.requiredTotemCategoryID1,
+      self.requiredAreasID,
+      self.schoolMask,
+      self.runeCostID,
+      self.spellMissileID,
+      self.powerDisplayID,
+      self.effectBonusCoefficient0,
+      self.effectBonusCoefficient1,
+      self.effectBonusCoefficient2,
+      self.spellDescriptionVariableID,
+      self.spellDifficultyID,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellEntity;
     return 'SpellEntity('
-        'id: $id, '
-        'category: $category, '
-        'dispelType: $dispelType, '
-        'mechanic: $mechanic, '
-        'attributes: $attributes, '
-        'attributesEx: $attributesEx, '
-        'attributesExB: $attributesExB, '
-        'attributesExC: $attributesExC, '
-        'attributesExD: $attributesExD, '
-        'attributesExE: $attributesExE, '
-        'attributesExF: $attributesExF, '
-        'attributesExG: $attributesExG, '
-        'shapeshiftMask0: $shapeshiftMask0, '
-        'shapeshiftMask1: $shapeshiftMask1, '
-        'shapeshiftExclude0: $shapeshiftExclude0, '
-        'shapeshiftExclude1: $shapeshiftExclude1, '
-        'targets: $targets, '
-        'targetCreatureType: $targetCreatureType, '
-        'requiresSpellFocus: $requiresSpellFocus, '
-        'facingCasterFlags: $facingCasterFlags, '
-        'casterAuraState: $casterAuraState, '
-        'targetAuraState: $targetAuraState, '
-        'excludeCasterAuraState: $excludeCasterAuraState, '
-        'excludeTargetAuraState: $excludeTargetAuraState, '
-        'casterAuraSpell: $casterAuraSpell, '
-        'targetAuraSpell: $targetAuraSpell, '
-        'excludeCasterAuraSpell: $excludeCasterAuraSpell, '
-        'excludeTargetAuraSpell: $excludeTargetAuraSpell, '
-        'castingTimeIndex: $castingTimeIndex, '
-        'recoveryTime: $recoveryTime, '
-        'categoryRecoveryTime: $categoryRecoveryTime, '
-        'interruptFlags: $interruptFlags, '
-        'auraInterruptFlags: $auraInterruptFlags, '
-        'channelInterruptFlags: $channelInterruptFlags, '
-        'procTypeMask: $procTypeMask, '
-        'procChance: $procChance, '
-        'procCharges: $procCharges, '
-        'maxLevel: $maxLevel, '
-        'baseLevel: $baseLevel, '
-        'spellLevel: $spellLevel, '
-        'durationIndex: $durationIndex, '
-        'powerType: $powerType, '
-        'manaCost: $manaCost, '
-        'manaCostPerLevel: $manaCostPerLevel, '
-        'manaPerSecond: $manaPerSecond, '
-        'manaPerSecondPerLevel: $manaPerSecondPerLevel, '
-        'rangeIndex: $rangeIndex, '
-        'speed: $speed, '
-        'modalNextSpell: $modalNextSpell, '
-        'cumulativeAura: $cumulativeAura, '
-        'totem0: $totem0, '
-        'totem1: $totem1, '
-        'reagent0: $reagent0, '
-        'reagent1: $reagent1, '
-        'reagent2: $reagent2, '
-        'reagent3: $reagent3, '
-        'reagent4: $reagent4, '
-        'reagent5: $reagent5, '
-        'reagent6: $reagent6, '
-        'reagent7: $reagent7, '
-        'reagentCount0: $reagentCount0, '
-        'reagentCount1: $reagentCount1, '
-        'reagentCount2: $reagentCount2, '
-        'reagentCount3: $reagentCount3, '
-        'reagentCount4: $reagentCount4, '
-        'reagentCount5: $reagentCount5, '
-        'reagentCount6: $reagentCount6, '
-        'reagentCount7: $reagentCount7, '
-        'equippedItemClass: $equippedItemClass, '
-        'equippedItemSubclass: $equippedItemSubclass, '
-        'equippedItemInvTypes: $equippedItemInvTypes, '
-        'effect0: $effect0, '
-        'effect1: $effect1, '
-        'effect2: $effect2, '
-        'effectDieSides0: $effectDieSides0, '
-        'effectDieSides1: $effectDieSides1, '
-        'effectDieSides2: $effectDieSides2, '
-        'effectRealPointsPerLevel0: $effectRealPointsPerLevel0, '
-        'effectRealPointsPerLevel1: $effectRealPointsPerLevel1, '
-        'effectRealPointsPerLevel2: $effectRealPointsPerLevel2, '
-        'effectBasePoints0: $effectBasePoints0, '
-        'effectBasePoints1: $effectBasePoints1, '
-        'effectBasePoints2: $effectBasePoints2, '
-        'effectMechanic0: $effectMechanic0, '
-        'effectMechanic1: $effectMechanic1, '
-        'effectMechanic2: $effectMechanic2, '
-        'implicitTargetA0: $implicitTargetA0, '
-        'implicitTargetA1: $implicitTargetA1, '
-        'implicitTargetA2: $implicitTargetA2, '
-        'implicitTargetB0: $implicitTargetB0, '
-        'implicitTargetB1: $implicitTargetB1, '
-        'implicitTargetB2: $implicitTargetB2, '
-        'effectRadiusIndex0: $effectRadiusIndex0, '
-        'effectRadiusIndex1: $effectRadiusIndex1, '
-        'effectRadiusIndex2: $effectRadiusIndex2, '
-        'effectAura0: $effectAura0, '
-        'effectAura1: $effectAura1, '
-        'effectAura2: $effectAura2, '
-        'effectAuraPeriod0: $effectAuraPeriod0, '
-        'effectAuraPeriod1: $effectAuraPeriod1, '
-        'effectAuraPeriod2: $effectAuraPeriod2, '
-        'effectAmplitude0: $effectAmplitude0, '
-        'effectAmplitude1: $effectAmplitude1, '
-        'effectAmplitude2: $effectAmplitude2, '
-        'effectChainTargets0: $effectChainTargets0, '
-        'effectChainTargets1: $effectChainTargets1, '
-        'effectChainTargets2: $effectChainTargets2, '
-        'effectItemType0: $effectItemType0, '
-        'effectItemType1: $effectItemType1, '
-        'effectItemType2: $effectItemType2, '
-        'effectMiscValue0: $effectMiscValue0, '
-        'effectMiscValue1: $effectMiscValue1, '
-        'effectMiscValue2: $effectMiscValue2, '
-        'effectMiscValueB0: $effectMiscValueB0, '
-        'effectMiscValueB1: $effectMiscValueB1, '
-        'effectMiscValueB2: $effectMiscValueB2, '
-        'effectTriggerSpell0: $effectTriggerSpell0, '
-        'effectTriggerSpell1: $effectTriggerSpell1, '
-        'effectTriggerSpell2: $effectTriggerSpell2, '
-        'effectPointsPerCombo0: $effectPointsPerCombo0, '
-        'effectPointsPerCombo1: $effectPointsPerCombo1, '
-        'effectPointsPerCombo2: $effectPointsPerCombo2, '
-        'effectSpellClassMaskA0: $effectSpellClassMaskA0, '
-        'effectSpellClassMaskA1: $effectSpellClassMaskA1, '
-        'effectSpellClassMaskA2: $effectSpellClassMaskA2, '
-        'effectSpellClassMaskB0: $effectSpellClassMaskB0, '
-        'effectSpellClassMaskB1: $effectSpellClassMaskB1, '
-        'effectSpellClassMaskB2: $effectSpellClassMaskB2, '
-        'effectSpellClassMaskC0: $effectSpellClassMaskC0, '
-        'effectSpellClassMaskC1: $effectSpellClassMaskC1, '
-        'effectSpellClassMaskC2: $effectSpellClassMaskC2, '
-        'spellVisualID0: $spellVisualID0, '
-        'spellVisualID1: $spellVisualID1, '
-        'spellIconID: $spellIconID, '
-        'activeIconID: $activeIconID, '
-        'spellPriority: $spellPriority, '
-        'nameLangEnUS: $nameLangEnUS, '
-        'nameLangKoKR: $nameLangKoKR, '
-        'nameLangFrFR: $nameLangFrFR, '
-        'nameLangDeDE: $nameLangDeDE, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'nameLangZhTW: $nameLangZhTW, '
-        'nameLangEsES: $nameLangEsES, '
-        'nameLangEsMX: $nameLangEsMX, '
-        'nameLangRuRU: $nameLangRuRU, '
-        'nameLangJaJP: $nameLangJaJP, '
-        'nameLangPtPT: $nameLangPtPT, '
-        'nameLangPtBR: $nameLangPtBR, '
-        'nameLangItIT: $nameLangItIT, '
-        'nameLangUnk1: $nameLangUnk1, '
-        'nameLangUnk2: $nameLangUnk2, '
-        'nameLangUnk3: $nameLangUnk3, '
-        'nameLangFlags: $nameLangFlags, '
-        'nameSubtextLangEnUS: $nameSubtextLangEnUS, '
-        'nameSubtextLangKoKR: $nameSubtextLangKoKR, '
-        'nameSubtextLangFrFR: $nameSubtextLangFrFR, '
-        'nameSubtextLangDeDE: $nameSubtextLangDeDE, '
-        'nameSubtextLangZhCN: $nameSubtextLangZhCN, '
-        'nameSubtextLangZhTW: $nameSubtextLangZhTW, '
-        'nameSubtextLangEsES: $nameSubtextLangEsES, '
-        'nameSubtextLangEsMX: $nameSubtextLangEsMX, '
-        'nameSubtextLangRuRU: $nameSubtextLangRuRU, '
-        'nameSubtextLangJaJP: $nameSubtextLangJaJP, '
-        'nameSubtextLangPtPT: $nameSubtextLangPtPT, '
-        'nameSubtextLangPtBR: $nameSubtextLangPtBR, '
-        'nameSubtextLangItIT: $nameSubtextLangItIT, '
-        'nameSubtextLangUnk1: $nameSubtextLangUnk1, '
-        'nameSubtextLangUnk2: $nameSubtextLangUnk2, '
-        'nameSubtextLangUnk3: $nameSubtextLangUnk3, '
-        'nameSubtextLangFlags: $nameSubtextLangFlags, '
-        'descriptionLangEnUS: $descriptionLangEnUS, '
-        'descriptionLangKoKR: $descriptionLangKoKR, '
-        'descriptionLangFrFR: $descriptionLangFrFR, '
-        'descriptionLangDeDE: $descriptionLangDeDE, '
-        'descriptionLangZhCN: $descriptionLangZhCN, '
-        'descriptionLangZhTW: $descriptionLangZhTW, '
-        'descriptionLangEsES: $descriptionLangEsES, '
-        'descriptionLangEsMX: $descriptionLangEsMX, '
-        'descriptionLangRuRU: $descriptionLangRuRU, '
-        'descriptionLangJaJP: $descriptionLangJaJP, '
-        'descriptionLangPtPT: $descriptionLangPtPT, '
-        'descriptionLangPtBR: $descriptionLangPtBR, '
-        'descriptionLangItIT: $descriptionLangItIT, '
-        'descriptionLangUnk1: $descriptionLangUnk1, '
-        'descriptionLangUnk2: $descriptionLangUnk2, '
-        'descriptionLangUnk3: $descriptionLangUnk3, '
-        'descriptionLangFlags: $descriptionLangFlags, '
-        'auraDescriptionLangEnUS: $auraDescriptionLangEnUS, '
-        'auraDescriptionLangKoKR: $auraDescriptionLangKoKR, '
-        'auraDescriptionLangFrFR: $auraDescriptionLangFrFR, '
-        'auraDescriptionLangDeDE: $auraDescriptionLangDeDE, '
-        'auraDescriptionLangZhCN: $auraDescriptionLangZhCN, '
-        'auraDescriptionLangZhTW: $auraDescriptionLangZhTW, '
-        'auraDescriptionLangEsES: $auraDescriptionLangEsES, '
-        'auraDescriptionLangEsMX: $auraDescriptionLangEsMX, '
-        'auraDescriptionLangRuRU: $auraDescriptionLangRuRU, '
-        'auraDescriptionLangJaJP: $auraDescriptionLangJaJP, '
-        'auraDescriptionLangPtPT: $auraDescriptionLangPtPT, '
-        'auraDescriptionLangPtBR: $auraDescriptionLangPtBR, '
-        'auraDescriptionLangItIT: $auraDescriptionLangItIT, '
-        'auraDescriptionLangUnk1: $auraDescriptionLangUnk1, '
-        'auraDescriptionLangUnk2: $auraDescriptionLangUnk2, '
-        'auraDescriptionLangUnk3: $auraDescriptionLangUnk3, '
-        'auraDescriptionLangFlags: $auraDescriptionLangFlags, '
-        'manaCostPct: $manaCostPct, '
-        'startRecoveryCategory: $startRecoveryCategory, '
-        'startRecoveryTime: $startRecoveryTime, '
-        'maxTargetLevel: $maxTargetLevel, '
-        'spellClassSet: $spellClassSet, '
-        'spellClassMask0: $spellClassMask0, '
-        'spellClassMask1: $spellClassMask1, '
-        'spellClassMask2: $spellClassMask2, '
-        'maxTargets: $maxTargets, '
-        'defenseType: $defenseType, '
-        'preventionType: $preventionType, '
-        'stanceBarOrder: $stanceBarOrder, '
-        'effectChainAmplitude0: $effectChainAmplitude0, '
-        'effectChainAmplitude1: $effectChainAmplitude1, '
-        'effectChainAmplitude2: $effectChainAmplitude2, '
-        'minFactionID: $minFactionID, '
-        'minReputation: $minReputation, '
-        'requiredAuraVision: $requiredAuraVision, '
-        'requiredTotemCategoryID0: $requiredTotemCategoryID0, '
-        'requiredTotemCategoryID1: $requiredTotemCategoryID1, '
-        'requiredAreasID: $requiredAreasID, '
-        'schoolMask: $schoolMask, '
-        'runeCostID: $runeCostID, '
-        'spellMissileID: $spellMissileID, '
-        'powerDisplayID: $powerDisplayID, '
-        'effectBonusCoefficient0: $effectBonusCoefficient0, '
-        'effectBonusCoefficient1: $effectBonusCoefficient1, '
-        'effectBonusCoefficient2: $effectBonusCoefficient2, '
-        'spellDescriptionVariableID: $spellDescriptionVariableID, '
-        'spellDifficultyID: $spellDifficultyID'
+        'id: ${self.id}, '
+        'category: ${self.category}, '
+        'dispelType: ${self.dispelType}, '
+        'mechanic: ${self.mechanic}, '
+        'attributes: ${self.attributes}, '
+        'attributesEx: ${self.attributesEx}, '
+        'attributesExB: ${self.attributesExB}, '
+        'attributesExC: ${self.attributesExC}, '
+        'attributesExD: ${self.attributesExD}, '
+        'attributesExE: ${self.attributesExE}, '
+        'attributesExF: ${self.attributesExF}, '
+        'attributesExG: ${self.attributesExG}, '
+        'shapeshiftMask0: ${self.shapeshiftMask0}, '
+        'shapeshiftMask1: ${self.shapeshiftMask1}, '
+        'shapeshiftExclude0: ${self.shapeshiftExclude0}, '
+        'shapeshiftExclude1: ${self.shapeshiftExclude1}, '
+        'targets: ${self.targets}, '
+        'targetCreatureType: ${self.targetCreatureType}, '
+        'requiresSpellFocus: ${self.requiresSpellFocus}, '
+        'facingCasterFlags: ${self.facingCasterFlags}, '
+        'casterAuraState: ${self.casterAuraState}, '
+        'targetAuraState: ${self.targetAuraState}, '
+        'excludeCasterAuraState: ${self.excludeCasterAuraState}, '
+        'excludeTargetAuraState: ${self.excludeTargetAuraState}, '
+        'casterAuraSpell: ${self.casterAuraSpell}, '
+        'targetAuraSpell: ${self.targetAuraSpell}, '
+        'excludeCasterAuraSpell: ${self.excludeCasterAuraSpell}, '
+        'excludeTargetAuraSpell: ${self.excludeTargetAuraSpell}, '
+        'castingTimeIndex: ${self.castingTimeIndex}, '
+        'recoveryTime: ${self.recoveryTime}, '
+        'categoryRecoveryTime: ${self.categoryRecoveryTime}, '
+        'interruptFlags: ${self.interruptFlags}, '
+        'auraInterruptFlags: ${self.auraInterruptFlags}, '
+        'channelInterruptFlags: ${self.channelInterruptFlags}, '
+        'procTypeMask: ${self.procTypeMask}, '
+        'procChance: ${self.procChance}, '
+        'procCharges: ${self.procCharges}, '
+        'maxLevel: ${self.maxLevel}, '
+        'baseLevel: ${self.baseLevel}, '
+        'spellLevel: ${self.spellLevel}, '
+        'durationIndex: ${self.durationIndex}, '
+        'powerType: ${self.powerType}, '
+        'manaCost: ${self.manaCost}, '
+        'manaCostPerLevel: ${self.manaCostPerLevel}, '
+        'manaPerSecond: ${self.manaPerSecond}, '
+        'manaPerSecondPerLevel: ${self.manaPerSecondPerLevel}, '
+        'rangeIndex: ${self.rangeIndex}, '
+        'speed: ${self.speed}, '
+        'modalNextSpell: ${self.modalNextSpell}, '
+        'cumulativeAura: ${self.cumulativeAura}, '
+        'totem0: ${self.totem0}, '
+        'totem1: ${self.totem1}, '
+        'reagent0: ${self.reagent0}, '
+        'reagent1: ${self.reagent1}, '
+        'reagent2: ${self.reagent2}, '
+        'reagent3: ${self.reagent3}, '
+        'reagent4: ${self.reagent4}, '
+        'reagent5: ${self.reagent5}, '
+        'reagent6: ${self.reagent6}, '
+        'reagent7: ${self.reagent7}, '
+        'reagentCount0: ${self.reagentCount0}, '
+        'reagentCount1: ${self.reagentCount1}, '
+        'reagentCount2: ${self.reagentCount2}, '
+        'reagentCount3: ${self.reagentCount3}, '
+        'reagentCount4: ${self.reagentCount4}, '
+        'reagentCount5: ${self.reagentCount5}, '
+        'reagentCount6: ${self.reagentCount6}, '
+        'reagentCount7: ${self.reagentCount7}, '
+        'equippedItemClass: ${self.equippedItemClass}, '
+        'equippedItemSubclass: ${self.equippedItemSubclass}, '
+        'equippedItemInvTypes: ${self.equippedItemInvTypes}, '
+        'effect0: ${self.effect0}, '
+        'effect1: ${self.effect1}, '
+        'effect2: ${self.effect2}, '
+        'effectDieSides0: ${self.effectDieSides0}, '
+        'effectDieSides1: ${self.effectDieSides1}, '
+        'effectDieSides2: ${self.effectDieSides2}, '
+        'effectRealPointsPerLevel0: ${self.effectRealPointsPerLevel0}, '
+        'effectRealPointsPerLevel1: ${self.effectRealPointsPerLevel1}, '
+        'effectRealPointsPerLevel2: ${self.effectRealPointsPerLevel2}, '
+        'effectBasePoints0: ${self.effectBasePoints0}, '
+        'effectBasePoints1: ${self.effectBasePoints1}, '
+        'effectBasePoints2: ${self.effectBasePoints2}, '
+        'effectMechanic0: ${self.effectMechanic0}, '
+        'effectMechanic1: ${self.effectMechanic1}, '
+        'effectMechanic2: ${self.effectMechanic2}, '
+        'implicitTargetA0: ${self.implicitTargetA0}, '
+        'implicitTargetA1: ${self.implicitTargetA1}, '
+        'implicitTargetA2: ${self.implicitTargetA2}, '
+        'implicitTargetB0: ${self.implicitTargetB0}, '
+        'implicitTargetB1: ${self.implicitTargetB1}, '
+        'implicitTargetB2: ${self.implicitTargetB2}, '
+        'effectRadiusIndex0: ${self.effectRadiusIndex0}, '
+        'effectRadiusIndex1: ${self.effectRadiusIndex1}, '
+        'effectRadiusIndex2: ${self.effectRadiusIndex2}, '
+        'effectAura0: ${self.effectAura0}, '
+        'effectAura1: ${self.effectAura1}, '
+        'effectAura2: ${self.effectAura2}, '
+        'effectAuraPeriod0: ${self.effectAuraPeriod0}, '
+        'effectAuraPeriod1: ${self.effectAuraPeriod1}, '
+        'effectAuraPeriod2: ${self.effectAuraPeriod2}, '
+        'effectAmplitude0: ${self.effectAmplitude0}, '
+        'effectAmplitude1: ${self.effectAmplitude1}, '
+        'effectAmplitude2: ${self.effectAmplitude2}, '
+        'effectChainTargets0: ${self.effectChainTargets0}, '
+        'effectChainTargets1: ${self.effectChainTargets1}, '
+        'effectChainTargets2: ${self.effectChainTargets2}, '
+        'effectItemType0: ${self.effectItemType0}, '
+        'effectItemType1: ${self.effectItemType1}, '
+        'effectItemType2: ${self.effectItemType2}, '
+        'effectMiscValue0: ${self.effectMiscValue0}, '
+        'effectMiscValue1: ${self.effectMiscValue1}, '
+        'effectMiscValue2: ${self.effectMiscValue2}, '
+        'effectMiscValueB0: ${self.effectMiscValueB0}, '
+        'effectMiscValueB1: ${self.effectMiscValueB1}, '
+        'effectMiscValueB2: ${self.effectMiscValueB2}, '
+        'effectTriggerSpell0: ${self.effectTriggerSpell0}, '
+        'effectTriggerSpell1: ${self.effectTriggerSpell1}, '
+        'effectTriggerSpell2: ${self.effectTriggerSpell2}, '
+        'effectPointsPerCombo0: ${self.effectPointsPerCombo0}, '
+        'effectPointsPerCombo1: ${self.effectPointsPerCombo1}, '
+        'effectPointsPerCombo2: ${self.effectPointsPerCombo2}, '
+        'effectSpellClassMaskA0: ${self.effectSpellClassMaskA0}, '
+        'effectSpellClassMaskA1: ${self.effectSpellClassMaskA1}, '
+        'effectSpellClassMaskA2: ${self.effectSpellClassMaskA2}, '
+        'effectSpellClassMaskB0: ${self.effectSpellClassMaskB0}, '
+        'effectSpellClassMaskB1: ${self.effectSpellClassMaskB1}, '
+        'effectSpellClassMaskB2: ${self.effectSpellClassMaskB2}, '
+        'effectSpellClassMaskC0: ${self.effectSpellClassMaskC0}, '
+        'effectSpellClassMaskC1: ${self.effectSpellClassMaskC1}, '
+        'effectSpellClassMaskC2: ${self.effectSpellClassMaskC2}, '
+        'spellVisualID0: ${self.spellVisualID0}, '
+        'spellVisualID1: ${self.spellVisualID1}, '
+        'spellIconID: ${self.spellIconID}, '
+        'activeIconID: ${self.activeIconID}, '
+        'spellPriority: ${self.spellPriority}, '
+        'nameLangEnUS: ${self.nameLangEnUS}, '
+        'nameLangKoKR: ${self.nameLangKoKR}, '
+        'nameLangFrFR: ${self.nameLangFrFR}, '
+        'nameLangDeDE: ${self.nameLangDeDE}, '
+        'nameLangZhCN: ${self.nameLangZhCN}, '
+        'nameLangZhTW: ${self.nameLangZhTW}, '
+        'nameLangEsES: ${self.nameLangEsES}, '
+        'nameLangEsMX: ${self.nameLangEsMX}, '
+        'nameLangRuRU: ${self.nameLangRuRU}, '
+        'nameLangJaJP: ${self.nameLangJaJP}, '
+        'nameLangPtPT: ${self.nameLangPtPT}, '
+        'nameLangPtBR: ${self.nameLangPtBR}, '
+        'nameLangItIT: ${self.nameLangItIT}, '
+        'nameLangUnk1: ${self.nameLangUnk1}, '
+        'nameLangUnk2: ${self.nameLangUnk2}, '
+        'nameLangUnk3: ${self.nameLangUnk3}, '
+        'nameLangFlags: ${self.nameLangFlags}, '
+        'nameSubtextLangEnUS: ${self.nameSubtextLangEnUS}, '
+        'nameSubtextLangKoKR: ${self.nameSubtextLangKoKR}, '
+        'nameSubtextLangFrFR: ${self.nameSubtextLangFrFR}, '
+        'nameSubtextLangDeDE: ${self.nameSubtextLangDeDE}, '
+        'nameSubtextLangZhCN: ${self.nameSubtextLangZhCN}, '
+        'nameSubtextLangZhTW: ${self.nameSubtextLangZhTW}, '
+        'nameSubtextLangEsES: ${self.nameSubtextLangEsES}, '
+        'nameSubtextLangEsMX: ${self.nameSubtextLangEsMX}, '
+        'nameSubtextLangRuRU: ${self.nameSubtextLangRuRU}, '
+        'nameSubtextLangJaJP: ${self.nameSubtextLangJaJP}, '
+        'nameSubtextLangPtPT: ${self.nameSubtextLangPtPT}, '
+        'nameSubtextLangPtBR: ${self.nameSubtextLangPtBR}, '
+        'nameSubtextLangItIT: ${self.nameSubtextLangItIT}, '
+        'nameSubtextLangUnk1: ${self.nameSubtextLangUnk1}, '
+        'nameSubtextLangUnk2: ${self.nameSubtextLangUnk2}, '
+        'nameSubtextLangUnk3: ${self.nameSubtextLangUnk3}, '
+        'nameSubtextLangFlags: ${self.nameSubtextLangFlags}, '
+        'descriptionLangEnUS: ${self.descriptionLangEnUS}, '
+        'descriptionLangKoKR: ${self.descriptionLangKoKR}, '
+        'descriptionLangFrFR: ${self.descriptionLangFrFR}, '
+        'descriptionLangDeDE: ${self.descriptionLangDeDE}, '
+        'descriptionLangZhCN: ${self.descriptionLangZhCN}, '
+        'descriptionLangZhTW: ${self.descriptionLangZhTW}, '
+        'descriptionLangEsES: ${self.descriptionLangEsES}, '
+        'descriptionLangEsMX: ${self.descriptionLangEsMX}, '
+        'descriptionLangRuRU: ${self.descriptionLangRuRU}, '
+        'descriptionLangJaJP: ${self.descriptionLangJaJP}, '
+        'descriptionLangPtPT: ${self.descriptionLangPtPT}, '
+        'descriptionLangPtBR: ${self.descriptionLangPtBR}, '
+        'descriptionLangItIT: ${self.descriptionLangItIT}, '
+        'descriptionLangUnk1: ${self.descriptionLangUnk1}, '
+        'descriptionLangUnk2: ${self.descriptionLangUnk2}, '
+        'descriptionLangUnk3: ${self.descriptionLangUnk3}, '
+        'descriptionLangFlags: ${self.descriptionLangFlags}, '
+        'auraDescriptionLangEnUS: ${self.auraDescriptionLangEnUS}, '
+        'auraDescriptionLangKoKR: ${self.auraDescriptionLangKoKR}, '
+        'auraDescriptionLangFrFR: ${self.auraDescriptionLangFrFR}, '
+        'auraDescriptionLangDeDE: ${self.auraDescriptionLangDeDE}, '
+        'auraDescriptionLangZhCN: ${self.auraDescriptionLangZhCN}, '
+        'auraDescriptionLangZhTW: ${self.auraDescriptionLangZhTW}, '
+        'auraDescriptionLangEsES: ${self.auraDescriptionLangEsES}, '
+        'auraDescriptionLangEsMX: ${self.auraDescriptionLangEsMX}, '
+        'auraDescriptionLangRuRU: ${self.auraDescriptionLangRuRU}, '
+        'auraDescriptionLangJaJP: ${self.auraDescriptionLangJaJP}, '
+        'auraDescriptionLangPtPT: ${self.auraDescriptionLangPtPT}, '
+        'auraDescriptionLangPtBR: ${self.auraDescriptionLangPtBR}, '
+        'auraDescriptionLangItIT: ${self.auraDescriptionLangItIT}, '
+        'auraDescriptionLangUnk1: ${self.auraDescriptionLangUnk1}, '
+        'auraDescriptionLangUnk2: ${self.auraDescriptionLangUnk2}, '
+        'auraDescriptionLangUnk3: ${self.auraDescriptionLangUnk3}, '
+        'auraDescriptionLangFlags: ${self.auraDescriptionLangFlags}, '
+        'manaCostPct: ${self.manaCostPct}, '
+        'startRecoveryCategory: ${self.startRecoveryCategory}, '
+        'startRecoveryTime: ${self.startRecoveryTime}, '
+        'maxTargetLevel: ${self.maxTargetLevel}, '
+        'spellClassSet: ${self.spellClassSet}, '
+        'spellClassMask0: ${self.spellClassMask0}, '
+        'spellClassMask1: ${self.spellClassMask1}, '
+        'spellClassMask2: ${self.spellClassMask2}, '
+        'maxTargets: ${self.maxTargets}, '
+        'defenseType: ${self.defenseType}, '
+        'preventionType: ${self.preventionType}, '
+        'stanceBarOrder: ${self.stanceBarOrder}, '
+        'effectChainAmplitude0: ${self.effectChainAmplitude0}, '
+        'effectChainAmplitude1: ${self.effectChainAmplitude1}, '
+        'effectChainAmplitude2: ${self.effectChainAmplitude2}, '
+        'minFactionID: ${self.minFactionID}, '
+        'minReputation: ${self.minReputation}, '
+        'requiredAuraVision: ${self.requiredAuraVision}, '
+        'requiredTotemCategoryID0: ${self.requiredTotemCategoryID0}, '
+        'requiredTotemCategoryID1: ${self.requiredTotemCategoryID1}, '
+        'requiredAreasID: ${self.requiredAreasID}, '
+        'schoolMask: ${self.schoolMask}, '
+        'runeCostID: ${self.runeCostID}, '
+        'spellMissileID: ${self.spellMissileID}, '
+        'powerDisplayID: ${self.powerDisplayID}, '
+        'effectBonusCoefficient0: ${self.effectBonusCoefficient0}, '
+        'effectBonusCoefficient1: ${self.effectBonusCoefficient1}, '
+        'effectBonusCoefficient2: ${self.effectBonusCoefficient2}, '
+        'spellDescriptionVariableID: ${self.spellDescriptionVariableID}, '
+        'spellDifficultyID: ${self.spellDifficultyID}'
         ')';
   }
 }

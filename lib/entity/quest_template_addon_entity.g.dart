@@ -3,25 +3,6 @@
 part of 'quest_template_addon_entity.dart';
 
 mixin _QuestTemplateAddonEntityMixin {
-  int get id;
-  int get maxLevel;
-  int get allowableClasses;
-  int get sourceSpellId;
-  int get prevQuestId;
-  int get nextQuestId;
-  int get exclusiveGroup;
-  int get breadcrumbForQuestId;
-  int get rewardMailTemplateId;
-  int get rewardMailDelay;
-  int get requiredSkillId;
-  int get requiredSkillPoints;
-  int get requiredMinRepFaction;
-  int get requiredMaxRepFaction;
-  int get requiredMinRepValue;
-  int get requiredMaxRepValue;
-  int get providedItemCount;
-  int get specialFlags;
-
   static QuestTemplateAddonEntity fromJson(Map<String, dynamic> json) {
     return QuestTemplateAddonEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -69,124 +50,129 @@ mixin _QuestTemplateAddonEntityMixin {
     int? providedItemCount,
     int? specialFlags,
   }) {
+    final self = this as QuestTemplateAddonEntity;
     return QuestTemplateAddonEntity(
-      id: id ?? this.id,
-      maxLevel: maxLevel ?? this.maxLevel,
-      allowableClasses: allowableClasses ?? this.allowableClasses,
-      sourceSpellId: sourceSpellId ?? this.sourceSpellId,
-      prevQuestId: prevQuestId ?? this.prevQuestId,
-      nextQuestId: nextQuestId ?? this.nextQuestId,
-      exclusiveGroup: exclusiveGroup ?? this.exclusiveGroup,
-      breadcrumbForQuestId: breadcrumbForQuestId ?? this.breadcrumbForQuestId,
-      rewardMailTemplateId: rewardMailTemplateId ?? this.rewardMailTemplateId,
-      rewardMailDelay: rewardMailDelay ?? this.rewardMailDelay,
-      requiredSkillId: requiredSkillId ?? this.requiredSkillId,
-      requiredSkillPoints: requiredSkillPoints ?? this.requiredSkillPoints,
+      id: id ?? self.id,
+      maxLevel: maxLevel ?? self.maxLevel,
+      allowableClasses: allowableClasses ?? self.allowableClasses,
+      sourceSpellId: sourceSpellId ?? self.sourceSpellId,
+      prevQuestId: prevQuestId ?? self.prevQuestId,
+      nextQuestId: nextQuestId ?? self.nextQuestId,
+      exclusiveGroup: exclusiveGroup ?? self.exclusiveGroup,
+      breadcrumbForQuestId: breadcrumbForQuestId ?? self.breadcrumbForQuestId,
+      rewardMailTemplateId: rewardMailTemplateId ?? self.rewardMailTemplateId,
+      rewardMailDelay: rewardMailDelay ?? self.rewardMailDelay,
+      requiredSkillId: requiredSkillId ?? self.requiredSkillId,
+      requiredSkillPoints: requiredSkillPoints ?? self.requiredSkillPoints,
       requiredMinRepFaction:
-          requiredMinRepFaction ?? this.requiredMinRepFaction,
+          requiredMinRepFaction ?? self.requiredMinRepFaction,
       requiredMaxRepFaction:
-          requiredMaxRepFaction ?? this.requiredMaxRepFaction,
-      requiredMinRepValue: requiredMinRepValue ?? this.requiredMinRepValue,
-      requiredMaxRepValue: requiredMaxRepValue ?? this.requiredMaxRepValue,
-      providedItemCount: providedItemCount ?? this.providedItemCount,
-      specialFlags: specialFlags ?? this.specialFlags,
+          requiredMaxRepFaction ?? self.requiredMaxRepFaction,
+      requiredMinRepValue: requiredMinRepValue ?? self.requiredMinRepValue,
+      requiredMaxRepValue: requiredMaxRepValue ?? self.requiredMaxRepValue,
+      providedItemCount: providedItemCount ?? self.providedItemCount,
+      specialFlags: specialFlags ?? self.specialFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestTemplateAddonEntity;
     return {
-      'ID': id,
-      'MaxLevel': maxLevel,
-      'AllowableClasses': allowableClasses,
-      'SourceSpellID': sourceSpellId,
-      'PrevQuestID': prevQuestId,
-      'NextQuestID': nextQuestId,
-      'ExclusiveGroup': exclusiveGroup,
-      'BreadcrumbForQuestId': breadcrumbForQuestId,
-      'RewardMailTemplateID': rewardMailTemplateId,
-      'RewardMailDelay': rewardMailDelay,
-      'RequiredSkillID': requiredSkillId,
-      'RequiredSkillPoints': requiredSkillPoints,
-      'RequiredMinRepFaction': requiredMinRepFaction,
-      'RequiredMaxRepFaction': requiredMaxRepFaction,
-      'RequiredMinRepValue': requiredMinRepValue,
-      'RequiredMaxRepValue': requiredMaxRepValue,
-      'ProvidedItemCount': providedItemCount,
-      'SpecialFlags': specialFlags,
+      'ID': self.id,
+      'MaxLevel': self.maxLevel,
+      'AllowableClasses': self.allowableClasses,
+      'SourceSpellID': self.sourceSpellId,
+      'PrevQuestID': self.prevQuestId,
+      'NextQuestID': self.nextQuestId,
+      'ExclusiveGroup': self.exclusiveGroup,
+      'BreadcrumbForQuestId': self.breadcrumbForQuestId,
+      'RewardMailTemplateID': self.rewardMailTemplateId,
+      'RewardMailDelay': self.rewardMailDelay,
+      'RequiredSkillID': self.requiredSkillId,
+      'RequiredSkillPoints': self.requiredSkillPoints,
+      'RequiredMinRepFaction': self.requiredMinRepFaction,
+      'RequiredMaxRepFaction': self.requiredMaxRepFaction,
+      'RequiredMinRepValue': self.requiredMinRepValue,
+      'RequiredMaxRepValue': self.requiredMaxRepValue,
+      'ProvidedItemCount': self.providedItemCount,
+      'SpecialFlags': self.specialFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestTemplateAddonEntity;
+    return identical(self, other) ||
         other is QuestTemplateAddonEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            maxLevel == other.maxLevel &&
-            allowableClasses == other.allowableClasses &&
-            sourceSpellId == other.sourceSpellId &&
-            prevQuestId == other.prevQuestId &&
-            nextQuestId == other.nextQuestId &&
-            exclusiveGroup == other.exclusiveGroup &&
-            breadcrumbForQuestId == other.breadcrumbForQuestId &&
-            rewardMailTemplateId == other.rewardMailTemplateId &&
-            rewardMailDelay == other.rewardMailDelay &&
-            requiredSkillId == other.requiredSkillId &&
-            requiredSkillPoints == other.requiredSkillPoints &&
-            requiredMinRepFaction == other.requiredMinRepFaction &&
-            requiredMaxRepFaction == other.requiredMaxRepFaction &&
-            requiredMinRepValue == other.requiredMinRepValue &&
-            requiredMaxRepValue == other.requiredMaxRepValue &&
-            providedItemCount == other.providedItemCount &&
-            specialFlags == other.specialFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.maxLevel == other.maxLevel &&
+            self.allowableClasses == other.allowableClasses &&
+            self.sourceSpellId == other.sourceSpellId &&
+            self.prevQuestId == other.prevQuestId &&
+            self.nextQuestId == other.nextQuestId &&
+            self.exclusiveGroup == other.exclusiveGroup &&
+            self.breadcrumbForQuestId == other.breadcrumbForQuestId &&
+            self.rewardMailTemplateId == other.rewardMailTemplateId &&
+            self.rewardMailDelay == other.rewardMailDelay &&
+            self.requiredSkillId == other.requiredSkillId &&
+            self.requiredSkillPoints == other.requiredSkillPoints &&
+            self.requiredMinRepFaction == other.requiredMinRepFaction &&
+            self.requiredMaxRepFaction == other.requiredMaxRepFaction &&
+            self.requiredMinRepValue == other.requiredMinRepValue &&
+            self.requiredMaxRepValue == other.requiredMaxRepValue &&
+            self.providedItemCount == other.providedItemCount &&
+            self.specialFlags == other.specialFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestTemplateAddonEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      maxLevel,
-      allowableClasses,
-      sourceSpellId,
-      prevQuestId,
-      nextQuestId,
-      exclusiveGroup,
-      breadcrumbForQuestId,
-      rewardMailTemplateId,
-      rewardMailDelay,
-      requiredSkillId,
-      requiredSkillPoints,
-      requiredMinRepFaction,
-      requiredMaxRepFaction,
-      requiredMinRepValue,
-      requiredMaxRepValue,
-      providedItemCount,
-      specialFlags,
+      self.runtimeType,
+      self.id,
+      self.maxLevel,
+      self.allowableClasses,
+      self.sourceSpellId,
+      self.prevQuestId,
+      self.nextQuestId,
+      self.exclusiveGroup,
+      self.breadcrumbForQuestId,
+      self.rewardMailTemplateId,
+      self.rewardMailDelay,
+      self.requiredSkillId,
+      self.requiredSkillPoints,
+      self.requiredMinRepFaction,
+      self.requiredMaxRepFaction,
+      self.requiredMinRepValue,
+      self.requiredMaxRepValue,
+      self.providedItemCount,
+      self.specialFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestTemplateAddonEntity;
     return 'QuestTemplateAddonEntity('
-        'id: $id, '
-        'maxLevel: $maxLevel, '
-        'allowableClasses: $allowableClasses, '
-        'sourceSpellId: $sourceSpellId, '
-        'prevQuestId: $prevQuestId, '
-        'nextQuestId: $nextQuestId, '
-        'exclusiveGroup: $exclusiveGroup, '
-        'breadcrumbForQuestId: $breadcrumbForQuestId, '
-        'rewardMailTemplateId: $rewardMailTemplateId, '
-        'rewardMailDelay: $rewardMailDelay, '
-        'requiredSkillId: $requiredSkillId, '
-        'requiredSkillPoints: $requiredSkillPoints, '
-        'requiredMinRepFaction: $requiredMinRepFaction, '
-        'requiredMaxRepFaction: $requiredMaxRepFaction, '
-        'requiredMinRepValue: $requiredMinRepValue, '
-        'requiredMaxRepValue: $requiredMaxRepValue, '
-        'providedItemCount: $providedItemCount, '
-        'specialFlags: $specialFlags'
+        'id: ${self.id}, '
+        'maxLevel: ${self.maxLevel}, '
+        'allowableClasses: ${self.allowableClasses}, '
+        'sourceSpellId: ${self.sourceSpellId}, '
+        'prevQuestId: ${self.prevQuestId}, '
+        'nextQuestId: ${self.nextQuestId}, '
+        'exclusiveGroup: ${self.exclusiveGroup}, '
+        'breadcrumbForQuestId: ${self.breadcrumbForQuestId}, '
+        'rewardMailTemplateId: ${self.rewardMailTemplateId}, '
+        'rewardMailDelay: ${self.rewardMailDelay}, '
+        'requiredSkillId: ${self.requiredSkillId}, '
+        'requiredSkillPoints: ${self.requiredSkillPoints}, '
+        'requiredMinRepFaction: ${self.requiredMinRepFaction}, '
+        'requiredMaxRepFaction: ${self.requiredMaxRepFaction}, '
+        'requiredMinRepValue: ${self.requiredMinRepValue}, '
+        'requiredMaxRepValue: ${self.requiredMaxRepValue}, '
+        'providedItemCount: ${self.providedItemCount}, '
+        'specialFlags: ${self.specialFlags}'
         ')';
   }
 }

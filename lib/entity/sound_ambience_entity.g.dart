@@ -3,10 +3,6 @@
 part of 'sound_ambience_entity.dart';
 
 mixin _SoundAmbienceEntityMixin {
-  int get id;
-  int get ambienceId0;
-  int get ambienceId1;
-
   static SoundAmbienceEntity fromJson(Map<String, dynamic> json) {
     return SoundAmbienceEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -16,38 +12,52 @@ mixin _SoundAmbienceEntityMixin {
   }
 
   SoundAmbienceEntity copyWith({int? id, int? ambienceId0, int? ambienceId1}) {
+    final self = this as SoundAmbienceEntity;
     return SoundAmbienceEntity(
-      id: id ?? this.id,
-      ambienceId0: ambienceId0 ?? this.ambienceId0,
-      ambienceId1: ambienceId1 ?? this.ambienceId1,
+      id: id ?? self.id,
+      ambienceId0: ambienceId0 ?? self.ambienceId0,
+      ambienceId1: ambienceId1 ?? self.ambienceId1,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'AmbienceID0': ambienceId0, 'AmbienceID1': ambienceId1};
+    final self = this as SoundAmbienceEntity;
+    return {
+      'ID': self.id,
+      'AmbienceID0': self.ambienceId0,
+      'AmbienceID1': self.ambienceId1,
+    };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SoundAmbienceEntity;
+    return identical(self, other) ||
         other is SoundAmbienceEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            ambienceId0 == other.ambienceId0 &&
-            ambienceId1 == other.ambienceId1;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.ambienceId0 == other.ambienceId0 &&
+            self.ambienceId1 == other.ambienceId1;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, ambienceId0, ambienceId1]);
+    final self = this as SoundAmbienceEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.ambienceId0,
+      self.ambienceId1,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as SoundAmbienceEntity;
     return 'SoundAmbienceEntity('
-        'id: $id, '
-        'ambienceId0: $ambienceId0, '
-        'ambienceId1: $ambienceId1'
+        'id: ${self.id}, '
+        'ambienceId0: ${self.ambienceId0}, '
+        'ambienceId1: ${self.ambienceId1}'
         ')';
   }
 }

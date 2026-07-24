@@ -408,9 +408,6 @@ Key 不使用独立注解，由 `FoxyFullField(key: true)` 表达。
 part of 'creature_template_entity.dart';
 
 mixin _CreatureTemplateEntityMixin {
-  int get entry;
-  String get name;
-
   static CreatureTemplateEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -422,42 +419,47 @@ mixin _CreatureTemplateEntityMixin {
     int? entry,
     String? name,
   }) {
+    final self = this as CreatureTemplateEntity;
     return CreatureTemplateEntity(
-      entry: entry ?? this.entry,
-      name: name ?? this.name,
+      entry: entry ?? self.entry,
+      name: name ?? self.name,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureTemplateEntity;
     return {
-      'entry': entry,
-      'name': name,
+      'entry': self.entry,
+      'name': self.name,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureTemplateEntity;
+    return identical(self, other) ||
         other is CreatureTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            name == other.name;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.name == other.name;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      name,
+      self.runtimeType,
+      self.entry,
+      self.name,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureTemplateEntity;
     return 'CreatureTemplateEntity('
-        'entry: $entry, '
-        'name: $name'
+        'entry: ${self.entry}, '
+        'name: ${self.name}'
         ')';
   }
 }

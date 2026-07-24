@@ -3,14 +3,6 @@
 part of 'dbc_emote_entity.dart';
 
 mixin _DbcEmoteEntityMixin {
-  int get id;
-  String get slashCommand;
-  int get animId;
-  int get flags;
-  int get specProc;
-  int get specProcParam;
-  int get eventSoundId;
-
   static DbcEmoteEntity fromJson(Map<String, dynamic> json) {
     return DbcEmoteEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -32,67 +24,72 @@ mixin _DbcEmoteEntityMixin {
     int? specProcParam,
     int? eventSoundId,
   }) {
+    final self = this as DbcEmoteEntity;
     return DbcEmoteEntity(
-      id: id ?? this.id,
-      slashCommand: slashCommand ?? this.slashCommand,
-      animId: animId ?? this.animId,
-      flags: flags ?? this.flags,
-      specProc: specProc ?? this.specProc,
-      specProcParam: specProcParam ?? this.specProcParam,
-      eventSoundId: eventSoundId ?? this.eventSoundId,
+      id: id ?? self.id,
+      slashCommand: slashCommand ?? self.slashCommand,
+      animId: animId ?? self.animId,
+      flags: flags ?? self.flags,
+      specProc: specProc ?? self.specProc,
+      specProcParam: specProcParam ?? self.specProcParam,
+      eventSoundId: eventSoundId ?? self.eventSoundId,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as DbcEmoteEntity;
     return {
-      'ID': id,
-      'EmoteSlashCommand': slashCommand,
-      'AnimID': animId,
-      'EmoteFlags': flags,
-      'EmoteSpecProc': specProc,
-      'EmoteSpecProcParam': specProcParam,
-      'EventSoundID': eventSoundId,
+      'ID': self.id,
+      'EmoteSlashCommand': self.slashCommand,
+      'AnimID': self.animId,
+      'EmoteFlags': self.flags,
+      'EmoteSpecProc': self.specProc,
+      'EmoteSpecProcParam': self.specProcParam,
+      'EventSoundID': self.eventSoundId,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as DbcEmoteEntity;
+    return identical(self, other) ||
         other is DbcEmoteEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            slashCommand == other.slashCommand &&
-            animId == other.animId &&
-            flags == other.flags &&
-            specProc == other.specProc &&
-            specProcParam == other.specProcParam &&
-            eventSoundId == other.eventSoundId;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.slashCommand == other.slashCommand &&
+            self.animId == other.animId &&
+            self.flags == other.flags &&
+            self.specProc == other.specProc &&
+            self.specProcParam == other.specProcParam &&
+            self.eventSoundId == other.eventSoundId;
   }
 
   @override
   int get hashCode {
+    final self = this as DbcEmoteEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      slashCommand,
-      animId,
-      flags,
-      specProc,
-      specProcParam,
-      eventSoundId,
+      self.runtimeType,
+      self.id,
+      self.slashCommand,
+      self.animId,
+      self.flags,
+      self.specProc,
+      self.specProcParam,
+      self.eventSoundId,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as DbcEmoteEntity;
     return 'DbcEmoteEntity('
-        'id: $id, '
-        'slashCommand: $slashCommand, '
-        'animId: $animId, '
-        'flags: $flags, '
-        'specProc: $specProc, '
-        'specProcParam: $specProcParam, '
-        'eventSoundId: $eventSoundId'
+        'id: ${self.id}, '
+        'slashCommand: ${self.slashCommand}, '
+        'animId: ${self.animId}, '
+        'flags: ${self.flags}, '
+        'specProc: ${self.specProc}, '
+        'specProcParam: ${self.specProcParam}, '
+        'eventSoundId: ${self.eventSoundId}'
         ')';
   }
 }

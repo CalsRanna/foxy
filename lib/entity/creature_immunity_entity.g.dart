@@ -3,16 +3,6 @@
 part of 'creature_immunity_entity.dart';
 
 mixin _CreatureImmunityEntityMixin {
-  int get id;
-  int get schoolMask;
-  int get dispelTypeMask;
-  int get mechanicsMask;
-  String get effects;
-  String get auras;
-  int get immuneAoE;
-  int get immuneChain;
-  String get comment;
-
   static CreatureImmunityEntity fromJson(Map<String, dynamic> json) {
     return CreatureImmunityEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -38,77 +28,82 @@ mixin _CreatureImmunityEntityMixin {
     int? immuneChain,
     String? comment,
   }) {
+    final self = this as CreatureImmunityEntity;
     return CreatureImmunityEntity(
-      id: id ?? this.id,
-      schoolMask: schoolMask ?? this.schoolMask,
-      dispelTypeMask: dispelTypeMask ?? this.dispelTypeMask,
-      mechanicsMask: mechanicsMask ?? this.mechanicsMask,
-      effects: effects ?? this.effects,
-      auras: auras ?? this.auras,
-      immuneAoE: immuneAoE ?? this.immuneAoE,
-      immuneChain: immuneChain ?? this.immuneChain,
-      comment: comment ?? this.comment,
+      id: id ?? self.id,
+      schoolMask: schoolMask ?? self.schoolMask,
+      dispelTypeMask: dispelTypeMask ?? self.dispelTypeMask,
+      mechanicsMask: mechanicsMask ?? self.mechanicsMask,
+      effects: effects ?? self.effects,
+      auras: auras ?? self.auras,
+      immuneAoE: immuneAoE ?? self.immuneAoE,
+      immuneChain: immuneChain ?? self.immuneChain,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureImmunityEntity;
     return {
-      'ID': id,
-      'SchoolMask': schoolMask,
-      'DispelTypeMask': dispelTypeMask,
-      'MechanicsMask': mechanicsMask,
-      'Effects': effects,
-      'Auras': auras,
-      'ImmuneAoE': immuneAoE,
-      'ImmuneChain': immuneChain,
-      'Comment': comment,
+      'ID': self.id,
+      'SchoolMask': self.schoolMask,
+      'DispelTypeMask': self.dispelTypeMask,
+      'MechanicsMask': self.mechanicsMask,
+      'Effects': self.effects,
+      'Auras': self.auras,
+      'ImmuneAoE': self.immuneAoE,
+      'ImmuneChain': self.immuneChain,
+      'Comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureImmunityEntity;
+    return identical(self, other) ||
         other is CreatureImmunityEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            schoolMask == other.schoolMask &&
-            dispelTypeMask == other.dispelTypeMask &&
-            mechanicsMask == other.mechanicsMask &&
-            effects == other.effects &&
-            auras == other.auras &&
-            immuneAoE == other.immuneAoE &&
-            immuneChain == other.immuneChain &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.schoolMask == other.schoolMask &&
+            self.dispelTypeMask == other.dispelTypeMask &&
+            self.mechanicsMask == other.mechanicsMask &&
+            self.effects == other.effects &&
+            self.auras == other.auras &&
+            self.immuneAoE == other.immuneAoE &&
+            self.immuneChain == other.immuneChain &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureImmunityEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      schoolMask,
-      dispelTypeMask,
-      mechanicsMask,
-      effects,
-      auras,
-      immuneAoE,
-      immuneChain,
-      comment,
+      self.runtimeType,
+      self.id,
+      self.schoolMask,
+      self.dispelTypeMask,
+      self.mechanicsMask,
+      self.effects,
+      self.auras,
+      self.immuneAoE,
+      self.immuneChain,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureImmunityEntity;
     return 'CreatureImmunityEntity('
-        'id: $id, '
-        'schoolMask: $schoolMask, '
-        'dispelTypeMask: $dispelTypeMask, '
-        'mechanicsMask: $mechanicsMask, '
-        'effects: $effects, '
-        'auras: $auras, '
-        'immuneAoE: $immuneAoE, '
-        'immuneChain: $immuneChain, '
-        'comment: $comment'
+        'id: ${self.id}, '
+        'schoolMask: ${self.schoolMask}, '
+        'dispelTypeMask: ${self.dispelTypeMask}, '
+        'mechanicsMask: ${self.mechanicsMask}, '
+        'effects: ${self.effects}, '
+        'auras: ${self.auras}, '
+        'immuneAoE: ${self.immuneAoE}, '
+        'immuneChain: ${self.immuneChain}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

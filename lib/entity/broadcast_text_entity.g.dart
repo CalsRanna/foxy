@@ -3,11 +3,6 @@
 part of 'broadcast_text_entity.dart';
 
 mixin _BroadcastTextEntityMixin {
-  int get id;
-  int get languageId;
-  String get maleText;
-  String get femaleText;
-
   static BroadcastTextEntity fromJson(Map<String, dynamic> json) {
     return BroadcastTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _BroadcastTextEntityMixin {
     String? maleText,
     String? femaleText,
   }) {
+    final self = this as BroadcastTextEntity;
     return BroadcastTextEntity(
-      id: id ?? this.id,
-      languageId: languageId ?? this.languageId,
-      maleText: maleText ?? this.maleText,
-      femaleText: femaleText ?? this.femaleText,
+      id: id ?? self.id,
+      languageId: languageId ?? self.languageId,
+      maleText: maleText ?? self.maleText,
+      femaleText: femaleText ?? self.femaleText,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as BroadcastTextEntity;
     return {
-      'ID': id,
-      'LanguageID': languageId,
-      'MaleText': maleText,
-      'FemaleText': femaleText,
+      'ID': self.id,
+      'LanguageID': self.languageId,
+      'MaleText': self.maleText,
+      'FemaleText': self.femaleText,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as BroadcastTextEntity;
+    return identical(self, other) ||
         other is BroadcastTextEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            languageId == other.languageId &&
-            maleText == other.maleText &&
-            femaleText == other.femaleText;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.languageId == other.languageId &&
+            self.maleText == other.maleText &&
+            self.femaleText == other.femaleText;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, languageId, maleText, femaleText]);
+    final self = this as BroadcastTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.languageId,
+      self.maleText,
+      self.femaleText,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as BroadcastTextEntity;
     return 'BroadcastTextEntity('
-        'id: $id, '
-        'languageId: $languageId, '
-        'maleText: $maleText, '
-        'femaleText: $femaleText'
+        'id: ${self.id}, '
+        'languageId: ${self.languageId}, '
+        'maleText: ${self.maleText}, '
+        'femaleText: ${self.femaleText}'
         ')';
   }
 }

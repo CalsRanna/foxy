@@ -3,18 +3,6 @@
 part of 'quest_faction_reward_entity.dart';
 
 mixin _QuestFactionRewardEntityMixin {
-  int get id;
-  int get difficulty0;
-  int get difficulty1;
-  int get difficulty2;
-  int get difficulty3;
-  int get difficulty4;
-  int get difficulty5;
-  int get difficulty6;
-  int get difficulty7;
-  int get difficulty8;
-  int get difficulty9;
-
   static QuestFactionRewardEntity fromJson(Map<String, dynamic> json) {
     return QuestFactionRewardEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -44,87 +32,92 @@ mixin _QuestFactionRewardEntityMixin {
     int? difficulty8,
     int? difficulty9,
   }) {
+    final self = this as QuestFactionRewardEntity;
     return QuestFactionRewardEntity(
-      id: id ?? this.id,
-      difficulty0: difficulty0 ?? this.difficulty0,
-      difficulty1: difficulty1 ?? this.difficulty1,
-      difficulty2: difficulty2 ?? this.difficulty2,
-      difficulty3: difficulty3 ?? this.difficulty3,
-      difficulty4: difficulty4 ?? this.difficulty4,
-      difficulty5: difficulty5 ?? this.difficulty5,
-      difficulty6: difficulty6 ?? this.difficulty6,
-      difficulty7: difficulty7 ?? this.difficulty7,
-      difficulty8: difficulty8 ?? this.difficulty8,
-      difficulty9: difficulty9 ?? this.difficulty9,
+      id: id ?? self.id,
+      difficulty0: difficulty0 ?? self.difficulty0,
+      difficulty1: difficulty1 ?? self.difficulty1,
+      difficulty2: difficulty2 ?? self.difficulty2,
+      difficulty3: difficulty3 ?? self.difficulty3,
+      difficulty4: difficulty4 ?? self.difficulty4,
+      difficulty5: difficulty5 ?? self.difficulty5,
+      difficulty6: difficulty6 ?? self.difficulty6,
+      difficulty7: difficulty7 ?? self.difficulty7,
+      difficulty8: difficulty8 ?? self.difficulty8,
+      difficulty9: difficulty9 ?? self.difficulty9,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestFactionRewardEntity;
     return {
-      'ID': id,
-      'Difficulty0': difficulty0,
-      'Difficulty1': difficulty1,
-      'Difficulty2': difficulty2,
-      'Difficulty3': difficulty3,
-      'Difficulty4': difficulty4,
-      'Difficulty5': difficulty5,
-      'Difficulty6': difficulty6,
-      'Difficulty7': difficulty7,
-      'Difficulty8': difficulty8,
-      'Difficulty9': difficulty9,
+      'ID': self.id,
+      'Difficulty0': self.difficulty0,
+      'Difficulty1': self.difficulty1,
+      'Difficulty2': self.difficulty2,
+      'Difficulty3': self.difficulty3,
+      'Difficulty4': self.difficulty4,
+      'Difficulty5': self.difficulty5,
+      'Difficulty6': self.difficulty6,
+      'Difficulty7': self.difficulty7,
+      'Difficulty8': self.difficulty8,
+      'Difficulty9': self.difficulty9,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestFactionRewardEntity;
+    return identical(self, other) ||
         other is QuestFactionRewardEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            difficulty0 == other.difficulty0 &&
-            difficulty1 == other.difficulty1 &&
-            difficulty2 == other.difficulty2 &&
-            difficulty3 == other.difficulty3 &&
-            difficulty4 == other.difficulty4 &&
-            difficulty5 == other.difficulty5 &&
-            difficulty6 == other.difficulty6 &&
-            difficulty7 == other.difficulty7 &&
-            difficulty8 == other.difficulty8 &&
-            difficulty9 == other.difficulty9;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.difficulty0 == other.difficulty0 &&
+            self.difficulty1 == other.difficulty1 &&
+            self.difficulty2 == other.difficulty2 &&
+            self.difficulty3 == other.difficulty3 &&
+            self.difficulty4 == other.difficulty4 &&
+            self.difficulty5 == other.difficulty5 &&
+            self.difficulty6 == other.difficulty6 &&
+            self.difficulty7 == other.difficulty7 &&
+            self.difficulty8 == other.difficulty8 &&
+            self.difficulty9 == other.difficulty9;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestFactionRewardEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      difficulty0,
-      difficulty1,
-      difficulty2,
-      difficulty3,
-      difficulty4,
-      difficulty5,
-      difficulty6,
-      difficulty7,
-      difficulty8,
-      difficulty9,
+      self.runtimeType,
+      self.id,
+      self.difficulty0,
+      self.difficulty1,
+      self.difficulty2,
+      self.difficulty3,
+      self.difficulty4,
+      self.difficulty5,
+      self.difficulty6,
+      self.difficulty7,
+      self.difficulty8,
+      self.difficulty9,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestFactionRewardEntity;
     return 'QuestFactionRewardEntity('
-        'id: $id, '
-        'difficulty0: $difficulty0, '
-        'difficulty1: $difficulty1, '
-        'difficulty2: $difficulty2, '
-        'difficulty3: $difficulty3, '
-        'difficulty4: $difficulty4, '
-        'difficulty5: $difficulty5, '
-        'difficulty6: $difficulty6, '
-        'difficulty7: $difficulty7, '
-        'difficulty8: $difficulty8, '
-        'difficulty9: $difficulty9'
+        'id: ${self.id}, '
+        'difficulty0: ${self.difficulty0}, '
+        'difficulty1: ${self.difficulty1}, '
+        'difficulty2: ${self.difficulty2}, '
+        'difficulty3: ${self.difficulty3}, '
+        'difficulty4: ${self.difficulty4}, '
+        'difficulty5: ${self.difficulty5}, '
+        'difficulty6: ${self.difficulty6}, '
+        'difficulty7: ${self.difficulty7}, '
+        'difficulty8: ${self.difficulty8}, '
+        'difficulty9: ${self.difficulty9}'
         ')';
   }
 }

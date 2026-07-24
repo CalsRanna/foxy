@@ -3,43 +3,6 @@
 part of 'area_table_entity.dart';
 
 mixin _AreaTableEntityMixin {
-  int get id;
-  int get continentId;
-  int get parentAreaId;
-  int get areaBit;
-  int get flags;
-  int get soundProviderPref;
-  int get soundProviderPrefUnderwater;
-  int get ambienceId;
-  int get zoneMusic;
-  int get introSound;
-  int get explorationLevel;
-  String get areaNameLangEnUS;
-  String get areaNameLangKoKR;
-  String get areaNameLangFrFR;
-  String get areaNameLangDeDE;
-  String get areaNameLangZhCN;
-  String get areaNameLangZhTW;
-  String get areaNameLangEsES;
-  String get areaNameLangEsMX;
-  String get areaNameLangRuRU;
-  String get areaNameLangJaJP;
-  String get areaNameLangPtPT;
-  String get areaNameLangPtBR;
-  String get areaNameLangItIT;
-  String get areaNameLangUnk1;
-  String get areaNameLangUnk2;
-  String get areaNameLangUnk3;
-  int get areaNameLangFlags;
-  int get factionGroupMask;
-  int get liquidTypeId0;
-  int get liquidTypeId1;
-  int get liquidTypeId2;
-  int get liquidTypeId3;
-  double get minElevation;
-  double get ambientMultiplier;
-  int get lightId;
-
   static AreaTableEntity fromJson(Map<String, dynamic> json) {
     return AreaTableEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -121,213 +84,219 @@ mixin _AreaTableEntityMixin {
     double? ambientMultiplier,
     int? lightId,
   }) {
+    final self = this as AreaTableEntity;
     return AreaTableEntity(
-      id: id ?? this.id,
-      continentId: continentId ?? this.continentId,
-      parentAreaId: parentAreaId ?? this.parentAreaId,
-      areaBit: areaBit ?? this.areaBit,
-      flags: flags ?? this.flags,
-      soundProviderPref: soundProviderPref ?? this.soundProviderPref,
+      id: id ?? self.id,
+      continentId: continentId ?? self.continentId,
+      parentAreaId: parentAreaId ?? self.parentAreaId,
+      areaBit: areaBit ?? self.areaBit,
+      flags: flags ?? self.flags,
+      soundProviderPref: soundProviderPref ?? self.soundProviderPref,
       soundProviderPrefUnderwater:
-          soundProviderPrefUnderwater ?? this.soundProviderPrefUnderwater,
-      ambienceId: ambienceId ?? this.ambienceId,
-      zoneMusic: zoneMusic ?? this.zoneMusic,
-      introSound: introSound ?? this.introSound,
-      explorationLevel: explorationLevel ?? this.explorationLevel,
-      areaNameLangEnUS: areaNameLangEnUS ?? this.areaNameLangEnUS,
-      areaNameLangKoKR: areaNameLangKoKR ?? this.areaNameLangKoKR,
-      areaNameLangFrFR: areaNameLangFrFR ?? this.areaNameLangFrFR,
-      areaNameLangDeDE: areaNameLangDeDE ?? this.areaNameLangDeDE,
-      areaNameLangZhCN: areaNameLangZhCN ?? this.areaNameLangZhCN,
-      areaNameLangZhTW: areaNameLangZhTW ?? this.areaNameLangZhTW,
-      areaNameLangEsES: areaNameLangEsES ?? this.areaNameLangEsES,
-      areaNameLangEsMX: areaNameLangEsMX ?? this.areaNameLangEsMX,
-      areaNameLangRuRU: areaNameLangRuRU ?? this.areaNameLangRuRU,
-      areaNameLangJaJP: areaNameLangJaJP ?? this.areaNameLangJaJP,
-      areaNameLangPtPT: areaNameLangPtPT ?? this.areaNameLangPtPT,
-      areaNameLangPtBR: areaNameLangPtBR ?? this.areaNameLangPtBR,
-      areaNameLangItIT: areaNameLangItIT ?? this.areaNameLangItIT,
-      areaNameLangUnk1: areaNameLangUnk1 ?? this.areaNameLangUnk1,
-      areaNameLangUnk2: areaNameLangUnk2 ?? this.areaNameLangUnk2,
-      areaNameLangUnk3: areaNameLangUnk3 ?? this.areaNameLangUnk3,
-      areaNameLangFlags: areaNameLangFlags ?? this.areaNameLangFlags,
-      factionGroupMask: factionGroupMask ?? this.factionGroupMask,
-      liquidTypeId0: liquidTypeId0 ?? this.liquidTypeId0,
-      liquidTypeId1: liquidTypeId1 ?? this.liquidTypeId1,
-      liquidTypeId2: liquidTypeId2 ?? this.liquidTypeId2,
-      liquidTypeId3: liquidTypeId3 ?? this.liquidTypeId3,
-      minElevation: minElevation ?? this.minElevation,
-      ambientMultiplier: ambientMultiplier ?? this.ambientMultiplier,
-      lightId: lightId ?? this.lightId,
+          soundProviderPrefUnderwater ?? self.soundProviderPrefUnderwater,
+      ambienceId: ambienceId ?? self.ambienceId,
+      zoneMusic: zoneMusic ?? self.zoneMusic,
+      introSound: introSound ?? self.introSound,
+      explorationLevel: explorationLevel ?? self.explorationLevel,
+      areaNameLangEnUS: areaNameLangEnUS ?? self.areaNameLangEnUS,
+      areaNameLangKoKR: areaNameLangKoKR ?? self.areaNameLangKoKR,
+      areaNameLangFrFR: areaNameLangFrFR ?? self.areaNameLangFrFR,
+      areaNameLangDeDE: areaNameLangDeDE ?? self.areaNameLangDeDE,
+      areaNameLangZhCN: areaNameLangZhCN ?? self.areaNameLangZhCN,
+      areaNameLangZhTW: areaNameLangZhTW ?? self.areaNameLangZhTW,
+      areaNameLangEsES: areaNameLangEsES ?? self.areaNameLangEsES,
+      areaNameLangEsMX: areaNameLangEsMX ?? self.areaNameLangEsMX,
+      areaNameLangRuRU: areaNameLangRuRU ?? self.areaNameLangRuRU,
+      areaNameLangJaJP: areaNameLangJaJP ?? self.areaNameLangJaJP,
+      areaNameLangPtPT: areaNameLangPtPT ?? self.areaNameLangPtPT,
+      areaNameLangPtBR: areaNameLangPtBR ?? self.areaNameLangPtBR,
+      areaNameLangItIT: areaNameLangItIT ?? self.areaNameLangItIT,
+      areaNameLangUnk1: areaNameLangUnk1 ?? self.areaNameLangUnk1,
+      areaNameLangUnk2: areaNameLangUnk2 ?? self.areaNameLangUnk2,
+      areaNameLangUnk3: areaNameLangUnk3 ?? self.areaNameLangUnk3,
+      areaNameLangFlags: areaNameLangFlags ?? self.areaNameLangFlags,
+      factionGroupMask: factionGroupMask ?? self.factionGroupMask,
+      liquidTypeId0: liquidTypeId0 ?? self.liquidTypeId0,
+      liquidTypeId1: liquidTypeId1 ?? self.liquidTypeId1,
+      liquidTypeId2: liquidTypeId2 ?? self.liquidTypeId2,
+      liquidTypeId3: liquidTypeId3 ?? self.liquidTypeId3,
+      minElevation: minElevation ?? self.minElevation,
+      ambientMultiplier: ambientMultiplier ?? self.ambientMultiplier,
+      lightId: lightId ?? self.lightId,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as AreaTableEntity;
     return {
-      'ID': id,
-      'ContinentID': continentId,
-      'ParentAreaID': parentAreaId,
-      'AreaBit': areaBit,
-      'Flags': flags,
-      'SoundProviderPref': soundProviderPref,
-      'SoundProviderPrefUnderwater': soundProviderPrefUnderwater,
-      'AmbienceID': ambienceId,
-      'ZoneMusic': zoneMusic,
-      'IntroSound': introSound,
-      'ExplorationLevel': explorationLevel,
-      'AreaName_lang_enUS': areaNameLangEnUS,
-      'AreaName_lang_koKR': areaNameLangKoKR,
-      'AreaName_lang_frFR': areaNameLangFrFR,
-      'AreaName_lang_deDE': areaNameLangDeDE,
-      'AreaName_lang_zhCN': areaNameLangZhCN,
-      'AreaName_lang_zhTW': areaNameLangZhTW,
-      'AreaName_lang_esES': areaNameLangEsES,
-      'AreaName_lang_esMX': areaNameLangEsMX,
-      'AreaName_lang_ruRU': areaNameLangRuRU,
-      'AreaName_lang_jaJP': areaNameLangJaJP,
-      'AreaName_lang_ptPT': areaNameLangPtPT,
-      'AreaName_lang_ptBR': areaNameLangPtBR,
-      'AreaName_lang_itIT': areaNameLangItIT,
-      'AreaName_lang_unk1': areaNameLangUnk1,
-      'AreaName_lang_unk2': areaNameLangUnk2,
-      'AreaName_lang_unk3': areaNameLangUnk3,
-      'AreaName_lang_Flags': areaNameLangFlags,
-      'FactionGroupMask': factionGroupMask,
-      'LiquidTypeID0': liquidTypeId0,
-      'LiquidTypeID1': liquidTypeId1,
-      'LiquidTypeID2': liquidTypeId2,
-      'LiquidTypeID3': liquidTypeId3,
-      'MinElevation': minElevation,
-      'Ambient_multiplier': ambientMultiplier,
-      'LightID': lightId,
+      'ID': self.id,
+      'ContinentID': self.continentId,
+      'ParentAreaID': self.parentAreaId,
+      'AreaBit': self.areaBit,
+      'Flags': self.flags,
+      'SoundProviderPref': self.soundProviderPref,
+      'SoundProviderPrefUnderwater': self.soundProviderPrefUnderwater,
+      'AmbienceID': self.ambienceId,
+      'ZoneMusic': self.zoneMusic,
+      'IntroSound': self.introSound,
+      'ExplorationLevel': self.explorationLevel,
+      'AreaName_lang_enUS': self.areaNameLangEnUS,
+      'AreaName_lang_koKR': self.areaNameLangKoKR,
+      'AreaName_lang_frFR': self.areaNameLangFrFR,
+      'AreaName_lang_deDE': self.areaNameLangDeDE,
+      'AreaName_lang_zhCN': self.areaNameLangZhCN,
+      'AreaName_lang_zhTW': self.areaNameLangZhTW,
+      'AreaName_lang_esES': self.areaNameLangEsES,
+      'AreaName_lang_esMX': self.areaNameLangEsMX,
+      'AreaName_lang_ruRU': self.areaNameLangRuRU,
+      'AreaName_lang_jaJP': self.areaNameLangJaJP,
+      'AreaName_lang_ptPT': self.areaNameLangPtPT,
+      'AreaName_lang_ptBR': self.areaNameLangPtBR,
+      'AreaName_lang_itIT': self.areaNameLangItIT,
+      'AreaName_lang_unk1': self.areaNameLangUnk1,
+      'AreaName_lang_unk2': self.areaNameLangUnk2,
+      'AreaName_lang_unk3': self.areaNameLangUnk3,
+      'AreaName_lang_Flags': self.areaNameLangFlags,
+      'FactionGroupMask': self.factionGroupMask,
+      'LiquidTypeID0': self.liquidTypeId0,
+      'LiquidTypeID1': self.liquidTypeId1,
+      'LiquidTypeID2': self.liquidTypeId2,
+      'LiquidTypeID3': self.liquidTypeId3,
+      'MinElevation': self.minElevation,
+      'Ambient_multiplier': self.ambientMultiplier,
+      'LightID': self.lightId,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as AreaTableEntity;
+    return identical(self, other) ||
         other is AreaTableEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            continentId == other.continentId &&
-            parentAreaId == other.parentAreaId &&
-            areaBit == other.areaBit &&
-            flags == other.flags &&
-            soundProviderPref == other.soundProviderPref &&
-            soundProviderPrefUnderwater == other.soundProviderPrefUnderwater &&
-            ambienceId == other.ambienceId &&
-            zoneMusic == other.zoneMusic &&
-            introSound == other.introSound &&
-            explorationLevel == other.explorationLevel &&
-            areaNameLangEnUS == other.areaNameLangEnUS &&
-            areaNameLangKoKR == other.areaNameLangKoKR &&
-            areaNameLangFrFR == other.areaNameLangFrFR &&
-            areaNameLangDeDE == other.areaNameLangDeDE &&
-            areaNameLangZhCN == other.areaNameLangZhCN &&
-            areaNameLangZhTW == other.areaNameLangZhTW &&
-            areaNameLangEsES == other.areaNameLangEsES &&
-            areaNameLangEsMX == other.areaNameLangEsMX &&
-            areaNameLangRuRU == other.areaNameLangRuRU &&
-            areaNameLangJaJP == other.areaNameLangJaJP &&
-            areaNameLangPtPT == other.areaNameLangPtPT &&
-            areaNameLangPtBR == other.areaNameLangPtBR &&
-            areaNameLangItIT == other.areaNameLangItIT &&
-            areaNameLangUnk1 == other.areaNameLangUnk1 &&
-            areaNameLangUnk2 == other.areaNameLangUnk2 &&
-            areaNameLangUnk3 == other.areaNameLangUnk3 &&
-            areaNameLangFlags == other.areaNameLangFlags &&
-            factionGroupMask == other.factionGroupMask &&
-            liquidTypeId0 == other.liquidTypeId0 &&
-            liquidTypeId1 == other.liquidTypeId1 &&
-            liquidTypeId2 == other.liquidTypeId2 &&
-            liquidTypeId3 == other.liquidTypeId3 &&
-            minElevation == other.minElevation &&
-            ambientMultiplier == other.ambientMultiplier &&
-            lightId == other.lightId;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.continentId == other.continentId &&
+            self.parentAreaId == other.parentAreaId &&
+            self.areaBit == other.areaBit &&
+            self.flags == other.flags &&
+            self.soundProviderPref == other.soundProviderPref &&
+            self.soundProviderPrefUnderwater ==
+                other.soundProviderPrefUnderwater &&
+            self.ambienceId == other.ambienceId &&
+            self.zoneMusic == other.zoneMusic &&
+            self.introSound == other.introSound &&
+            self.explorationLevel == other.explorationLevel &&
+            self.areaNameLangEnUS == other.areaNameLangEnUS &&
+            self.areaNameLangKoKR == other.areaNameLangKoKR &&
+            self.areaNameLangFrFR == other.areaNameLangFrFR &&
+            self.areaNameLangDeDE == other.areaNameLangDeDE &&
+            self.areaNameLangZhCN == other.areaNameLangZhCN &&
+            self.areaNameLangZhTW == other.areaNameLangZhTW &&
+            self.areaNameLangEsES == other.areaNameLangEsES &&
+            self.areaNameLangEsMX == other.areaNameLangEsMX &&
+            self.areaNameLangRuRU == other.areaNameLangRuRU &&
+            self.areaNameLangJaJP == other.areaNameLangJaJP &&
+            self.areaNameLangPtPT == other.areaNameLangPtPT &&
+            self.areaNameLangPtBR == other.areaNameLangPtBR &&
+            self.areaNameLangItIT == other.areaNameLangItIT &&
+            self.areaNameLangUnk1 == other.areaNameLangUnk1 &&
+            self.areaNameLangUnk2 == other.areaNameLangUnk2 &&
+            self.areaNameLangUnk3 == other.areaNameLangUnk3 &&
+            self.areaNameLangFlags == other.areaNameLangFlags &&
+            self.factionGroupMask == other.factionGroupMask &&
+            self.liquidTypeId0 == other.liquidTypeId0 &&
+            self.liquidTypeId1 == other.liquidTypeId1 &&
+            self.liquidTypeId2 == other.liquidTypeId2 &&
+            self.liquidTypeId3 == other.liquidTypeId3 &&
+            self.minElevation == other.minElevation &&
+            self.ambientMultiplier == other.ambientMultiplier &&
+            self.lightId == other.lightId;
   }
 
   @override
   int get hashCode {
+    final self = this as AreaTableEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      continentId,
-      parentAreaId,
-      areaBit,
-      flags,
-      soundProviderPref,
-      soundProviderPrefUnderwater,
-      ambienceId,
-      zoneMusic,
-      introSound,
-      explorationLevel,
-      areaNameLangEnUS,
-      areaNameLangKoKR,
-      areaNameLangFrFR,
-      areaNameLangDeDE,
-      areaNameLangZhCN,
-      areaNameLangZhTW,
-      areaNameLangEsES,
-      areaNameLangEsMX,
-      areaNameLangRuRU,
-      areaNameLangJaJP,
-      areaNameLangPtPT,
-      areaNameLangPtBR,
-      areaNameLangItIT,
-      areaNameLangUnk1,
-      areaNameLangUnk2,
-      areaNameLangUnk3,
-      areaNameLangFlags,
-      factionGroupMask,
-      liquidTypeId0,
-      liquidTypeId1,
-      liquidTypeId2,
-      liquidTypeId3,
-      minElevation,
-      ambientMultiplier,
-      lightId,
+      self.runtimeType,
+      self.id,
+      self.continentId,
+      self.parentAreaId,
+      self.areaBit,
+      self.flags,
+      self.soundProviderPref,
+      self.soundProviderPrefUnderwater,
+      self.ambienceId,
+      self.zoneMusic,
+      self.introSound,
+      self.explorationLevel,
+      self.areaNameLangEnUS,
+      self.areaNameLangKoKR,
+      self.areaNameLangFrFR,
+      self.areaNameLangDeDE,
+      self.areaNameLangZhCN,
+      self.areaNameLangZhTW,
+      self.areaNameLangEsES,
+      self.areaNameLangEsMX,
+      self.areaNameLangRuRU,
+      self.areaNameLangJaJP,
+      self.areaNameLangPtPT,
+      self.areaNameLangPtBR,
+      self.areaNameLangItIT,
+      self.areaNameLangUnk1,
+      self.areaNameLangUnk2,
+      self.areaNameLangUnk3,
+      self.areaNameLangFlags,
+      self.factionGroupMask,
+      self.liquidTypeId0,
+      self.liquidTypeId1,
+      self.liquidTypeId2,
+      self.liquidTypeId3,
+      self.minElevation,
+      self.ambientMultiplier,
+      self.lightId,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as AreaTableEntity;
     return 'AreaTableEntity('
-        'id: $id, '
-        'continentId: $continentId, '
-        'parentAreaId: $parentAreaId, '
-        'areaBit: $areaBit, '
-        'flags: $flags, '
-        'soundProviderPref: $soundProviderPref, '
-        'soundProviderPrefUnderwater: $soundProviderPrefUnderwater, '
-        'ambienceId: $ambienceId, '
-        'zoneMusic: $zoneMusic, '
-        'introSound: $introSound, '
-        'explorationLevel: $explorationLevel, '
-        'areaNameLangEnUS: $areaNameLangEnUS, '
-        'areaNameLangKoKR: $areaNameLangKoKR, '
-        'areaNameLangFrFR: $areaNameLangFrFR, '
-        'areaNameLangDeDE: $areaNameLangDeDE, '
-        'areaNameLangZhCN: $areaNameLangZhCN, '
-        'areaNameLangZhTW: $areaNameLangZhTW, '
-        'areaNameLangEsES: $areaNameLangEsES, '
-        'areaNameLangEsMX: $areaNameLangEsMX, '
-        'areaNameLangRuRU: $areaNameLangRuRU, '
-        'areaNameLangJaJP: $areaNameLangJaJP, '
-        'areaNameLangPtPT: $areaNameLangPtPT, '
-        'areaNameLangPtBR: $areaNameLangPtBR, '
-        'areaNameLangItIT: $areaNameLangItIT, '
-        'areaNameLangUnk1: $areaNameLangUnk1, '
-        'areaNameLangUnk2: $areaNameLangUnk2, '
-        'areaNameLangUnk3: $areaNameLangUnk3, '
-        'areaNameLangFlags: $areaNameLangFlags, '
-        'factionGroupMask: $factionGroupMask, '
-        'liquidTypeId0: $liquidTypeId0, '
-        'liquidTypeId1: $liquidTypeId1, '
-        'liquidTypeId2: $liquidTypeId2, '
-        'liquidTypeId3: $liquidTypeId3, '
-        'minElevation: $minElevation, '
-        'ambientMultiplier: $ambientMultiplier, '
-        'lightId: $lightId'
+        'id: ${self.id}, '
+        'continentId: ${self.continentId}, '
+        'parentAreaId: ${self.parentAreaId}, '
+        'areaBit: ${self.areaBit}, '
+        'flags: ${self.flags}, '
+        'soundProviderPref: ${self.soundProviderPref}, '
+        'soundProviderPrefUnderwater: ${self.soundProviderPrefUnderwater}, '
+        'ambienceId: ${self.ambienceId}, '
+        'zoneMusic: ${self.zoneMusic}, '
+        'introSound: ${self.introSound}, '
+        'explorationLevel: ${self.explorationLevel}, '
+        'areaNameLangEnUS: ${self.areaNameLangEnUS}, '
+        'areaNameLangKoKR: ${self.areaNameLangKoKR}, '
+        'areaNameLangFrFR: ${self.areaNameLangFrFR}, '
+        'areaNameLangDeDE: ${self.areaNameLangDeDE}, '
+        'areaNameLangZhCN: ${self.areaNameLangZhCN}, '
+        'areaNameLangZhTW: ${self.areaNameLangZhTW}, '
+        'areaNameLangEsES: ${self.areaNameLangEsES}, '
+        'areaNameLangEsMX: ${self.areaNameLangEsMX}, '
+        'areaNameLangRuRU: ${self.areaNameLangRuRU}, '
+        'areaNameLangJaJP: ${self.areaNameLangJaJP}, '
+        'areaNameLangPtPT: ${self.areaNameLangPtPT}, '
+        'areaNameLangPtBR: ${self.areaNameLangPtBR}, '
+        'areaNameLangItIT: ${self.areaNameLangItIT}, '
+        'areaNameLangUnk1: ${self.areaNameLangUnk1}, '
+        'areaNameLangUnk2: ${self.areaNameLangUnk2}, '
+        'areaNameLangUnk3: ${self.areaNameLangUnk3}, '
+        'areaNameLangFlags: ${self.areaNameLangFlags}, '
+        'factionGroupMask: ${self.factionGroupMask}, '
+        'liquidTypeId0: ${self.liquidTypeId0}, '
+        'liquidTypeId1: ${self.liquidTypeId1}, '
+        'liquidTypeId2: ${self.liquidTypeId2}, '
+        'liquidTypeId3: ${self.liquidTypeId3}, '
+        'minElevation: ${self.minElevation}, '
+        'ambientMultiplier: ${self.ambientMultiplier}, '
+        'lightId: ${self.lightId}'
         ')';
   }
 }

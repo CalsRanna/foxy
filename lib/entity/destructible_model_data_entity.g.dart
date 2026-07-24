@@ -3,26 +3,6 @@
 part of 'destructible_model_data_entity.dart';
 
 mixin _DestructibleModelDataEntityMixin {
-  int get id;
-  int get state0ImpactEffectDoodadSet;
-  int get state0AmbientDoodadSet;
-  int get state1Wmo;
-  int get state1DestructionDoodadSet;
-  int get state1ImpactEffectDoodadSet;
-  int get state1AmbientDoodadSet;
-  int get state2Wmo;
-  int get state2DestructionDoodadSet;
-  int get state2ImpactEffectDoodadSet;
-  int get state2AmbientDoodadSet;
-  int get state3Wmo;
-  int get state3InitDoodadSet;
-  int get state3AmbientDoodadSet;
-  int get ejectDirection;
-  int get repairGroundFx;
-  int get doNotHighlight;
-  int get healEffect;
-  int get healEffectSpeed;
-
   static DestructibleModelDataEntity fromJson(Map<String, dynamic> json) {
     return DestructibleModelDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -77,136 +57,146 @@ mixin _DestructibleModelDataEntityMixin {
     int? healEffect,
     int? healEffectSpeed,
   }) {
+    final self = this as DestructibleModelDataEntity;
     return DestructibleModelDataEntity(
-      id: id ?? this.id,
+      id: id ?? self.id,
       state0ImpactEffectDoodadSet:
-          state0ImpactEffectDoodadSet ?? this.state0ImpactEffectDoodadSet,
+          state0ImpactEffectDoodadSet ?? self.state0ImpactEffectDoodadSet,
       state0AmbientDoodadSet:
-          state0AmbientDoodadSet ?? this.state0AmbientDoodadSet,
-      state1Wmo: state1Wmo ?? this.state1Wmo,
+          state0AmbientDoodadSet ?? self.state0AmbientDoodadSet,
+      state1Wmo: state1Wmo ?? self.state1Wmo,
       state1DestructionDoodadSet:
-          state1DestructionDoodadSet ?? this.state1DestructionDoodadSet,
+          state1DestructionDoodadSet ?? self.state1DestructionDoodadSet,
       state1ImpactEffectDoodadSet:
-          state1ImpactEffectDoodadSet ?? this.state1ImpactEffectDoodadSet,
+          state1ImpactEffectDoodadSet ?? self.state1ImpactEffectDoodadSet,
       state1AmbientDoodadSet:
-          state1AmbientDoodadSet ?? this.state1AmbientDoodadSet,
-      state2Wmo: state2Wmo ?? this.state2Wmo,
+          state1AmbientDoodadSet ?? self.state1AmbientDoodadSet,
+      state2Wmo: state2Wmo ?? self.state2Wmo,
       state2DestructionDoodadSet:
-          state2DestructionDoodadSet ?? this.state2DestructionDoodadSet,
+          state2DestructionDoodadSet ?? self.state2DestructionDoodadSet,
       state2ImpactEffectDoodadSet:
-          state2ImpactEffectDoodadSet ?? this.state2ImpactEffectDoodadSet,
+          state2ImpactEffectDoodadSet ?? self.state2ImpactEffectDoodadSet,
       state2AmbientDoodadSet:
-          state2AmbientDoodadSet ?? this.state2AmbientDoodadSet,
-      state3Wmo: state3Wmo ?? this.state3Wmo,
-      state3InitDoodadSet: state3InitDoodadSet ?? this.state3InitDoodadSet,
+          state2AmbientDoodadSet ?? self.state2AmbientDoodadSet,
+      state3Wmo: state3Wmo ?? self.state3Wmo,
+      state3InitDoodadSet: state3InitDoodadSet ?? self.state3InitDoodadSet,
       state3AmbientDoodadSet:
-          state3AmbientDoodadSet ?? this.state3AmbientDoodadSet,
-      ejectDirection: ejectDirection ?? this.ejectDirection,
-      repairGroundFx: repairGroundFx ?? this.repairGroundFx,
-      doNotHighlight: doNotHighlight ?? this.doNotHighlight,
-      healEffect: healEffect ?? this.healEffect,
-      healEffectSpeed: healEffectSpeed ?? this.healEffectSpeed,
+          state3AmbientDoodadSet ?? self.state3AmbientDoodadSet,
+      ejectDirection: ejectDirection ?? self.ejectDirection,
+      repairGroundFx: repairGroundFx ?? self.repairGroundFx,
+      doNotHighlight: doNotHighlight ?? self.doNotHighlight,
+      healEffect: healEffect ?? self.healEffect,
+      healEffectSpeed: healEffectSpeed ?? self.healEffectSpeed,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as DestructibleModelDataEntity;
     return {
-      'ID': id,
-      'State0ImpactEffectDoodadSet': state0ImpactEffectDoodadSet,
-      'State0AmbientDoodadSet': state0AmbientDoodadSet,
-      'State1WMO': state1Wmo,
-      'State1DestructionDoodadSet': state1DestructionDoodadSet,
-      'State1ImpactEffectDoodadSet': state1ImpactEffectDoodadSet,
-      'State1AmbientDoodadSet': state1AmbientDoodadSet,
-      'State2WMO': state2Wmo,
-      'State2DestructionDoodadSet': state2DestructionDoodadSet,
-      'State2ImpactEffectDoodadSet': state2ImpactEffectDoodadSet,
-      'State2AmbientDoodadSet': state2AmbientDoodadSet,
-      'State3WMO': state3Wmo,
-      'State3InitDoodadSet': state3InitDoodadSet,
-      'State3AmbientDoodadSet': state3AmbientDoodadSet,
-      'EjectDirection': ejectDirection,
-      'RepairGroundFx': repairGroundFx,
-      'DoNotHighlight': doNotHighlight,
-      'HealEffect': healEffect,
-      'HealEffectSpeed': healEffectSpeed,
+      'ID': self.id,
+      'State0ImpactEffectDoodadSet': self.state0ImpactEffectDoodadSet,
+      'State0AmbientDoodadSet': self.state0AmbientDoodadSet,
+      'State1WMO': self.state1Wmo,
+      'State1DestructionDoodadSet': self.state1DestructionDoodadSet,
+      'State1ImpactEffectDoodadSet': self.state1ImpactEffectDoodadSet,
+      'State1AmbientDoodadSet': self.state1AmbientDoodadSet,
+      'State2WMO': self.state2Wmo,
+      'State2DestructionDoodadSet': self.state2DestructionDoodadSet,
+      'State2ImpactEffectDoodadSet': self.state2ImpactEffectDoodadSet,
+      'State2AmbientDoodadSet': self.state2AmbientDoodadSet,
+      'State3WMO': self.state3Wmo,
+      'State3InitDoodadSet': self.state3InitDoodadSet,
+      'State3AmbientDoodadSet': self.state3AmbientDoodadSet,
+      'EjectDirection': self.ejectDirection,
+      'RepairGroundFx': self.repairGroundFx,
+      'DoNotHighlight': self.doNotHighlight,
+      'HealEffect': self.healEffect,
+      'HealEffectSpeed': self.healEffectSpeed,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as DestructibleModelDataEntity;
+    return identical(self, other) ||
         other is DestructibleModelDataEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            state0ImpactEffectDoodadSet == other.state0ImpactEffectDoodadSet &&
-            state0AmbientDoodadSet == other.state0AmbientDoodadSet &&
-            state1Wmo == other.state1Wmo &&
-            state1DestructionDoodadSet == other.state1DestructionDoodadSet &&
-            state1ImpactEffectDoodadSet == other.state1ImpactEffectDoodadSet &&
-            state1AmbientDoodadSet == other.state1AmbientDoodadSet &&
-            state2Wmo == other.state2Wmo &&
-            state2DestructionDoodadSet == other.state2DestructionDoodadSet &&
-            state2ImpactEffectDoodadSet == other.state2ImpactEffectDoodadSet &&
-            state2AmbientDoodadSet == other.state2AmbientDoodadSet &&
-            state3Wmo == other.state3Wmo &&
-            state3InitDoodadSet == other.state3InitDoodadSet &&
-            state3AmbientDoodadSet == other.state3AmbientDoodadSet &&
-            ejectDirection == other.ejectDirection &&
-            repairGroundFx == other.repairGroundFx &&
-            doNotHighlight == other.doNotHighlight &&
-            healEffect == other.healEffect &&
-            healEffectSpeed == other.healEffectSpeed;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.state0ImpactEffectDoodadSet ==
+                other.state0ImpactEffectDoodadSet &&
+            self.state0AmbientDoodadSet == other.state0AmbientDoodadSet &&
+            self.state1Wmo == other.state1Wmo &&
+            self.state1DestructionDoodadSet ==
+                other.state1DestructionDoodadSet &&
+            self.state1ImpactEffectDoodadSet ==
+                other.state1ImpactEffectDoodadSet &&
+            self.state1AmbientDoodadSet == other.state1AmbientDoodadSet &&
+            self.state2Wmo == other.state2Wmo &&
+            self.state2DestructionDoodadSet ==
+                other.state2DestructionDoodadSet &&
+            self.state2ImpactEffectDoodadSet ==
+                other.state2ImpactEffectDoodadSet &&
+            self.state2AmbientDoodadSet == other.state2AmbientDoodadSet &&
+            self.state3Wmo == other.state3Wmo &&
+            self.state3InitDoodadSet == other.state3InitDoodadSet &&
+            self.state3AmbientDoodadSet == other.state3AmbientDoodadSet &&
+            self.ejectDirection == other.ejectDirection &&
+            self.repairGroundFx == other.repairGroundFx &&
+            self.doNotHighlight == other.doNotHighlight &&
+            self.healEffect == other.healEffect &&
+            self.healEffectSpeed == other.healEffectSpeed;
   }
 
   @override
   int get hashCode {
+    final self = this as DestructibleModelDataEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      state0ImpactEffectDoodadSet,
-      state0AmbientDoodadSet,
-      state1Wmo,
-      state1DestructionDoodadSet,
-      state1ImpactEffectDoodadSet,
-      state1AmbientDoodadSet,
-      state2Wmo,
-      state2DestructionDoodadSet,
-      state2ImpactEffectDoodadSet,
-      state2AmbientDoodadSet,
-      state3Wmo,
-      state3InitDoodadSet,
-      state3AmbientDoodadSet,
-      ejectDirection,
-      repairGroundFx,
-      doNotHighlight,
-      healEffect,
-      healEffectSpeed,
+      self.runtimeType,
+      self.id,
+      self.state0ImpactEffectDoodadSet,
+      self.state0AmbientDoodadSet,
+      self.state1Wmo,
+      self.state1DestructionDoodadSet,
+      self.state1ImpactEffectDoodadSet,
+      self.state1AmbientDoodadSet,
+      self.state2Wmo,
+      self.state2DestructionDoodadSet,
+      self.state2ImpactEffectDoodadSet,
+      self.state2AmbientDoodadSet,
+      self.state3Wmo,
+      self.state3InitDoodadSet,
+      self.state3AmbientDoodadSet,
+      self.ejectDirection,
+      self.repairGroundFx,
+      self.doNotHighlight,
+      self.healEffect,
+      self.healEffectSpeed,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as DestructibleModelDataEntity;
     return 'DestructibleModelDataEntity('
-        'id: $id, '
-        'state0ImpactEffectDoodadSet: $state0ImpactEffectDoodadSet, '
-        'state0AmbientDoodadSet: $state0AmbientDoodadSet, '
-        'state1Wmo: $state1Wmo, '
-        'state1DestructionDoodadSet: $state1DestructionDoodadSet, '
-        'state1ImpactEffectDoodadSet: $state1ImpactEffectDoodadSet, '
-        'state1AmbientDoodadSet: $state1AmbientDoodadSet, '
-        'state2Wmo: $state2Wmo, '
-        'state2DestructionDoodadSet: $state2DestructionDoodadSet, '
-        'state2ImpactEffectDoodadSet: $state2ImpactEffectDoodadSet, '
-        'state2AmbientDoodadSet: $state2AmbientDoodadSet, '
-        'state3Wmo: $state3Wmo, '
-        'state3InitDoodadSet: $state3InitDoodadSet, '
-        'state3AmbientDoodadSet: $state3AmbientDoodadSet, '
-        'ejectDirection: $ejectDirection, '
-        'repairGroundFx: $repairGroundFx, '
-        'doNotHighlight: $doNotHighlight, '
-        'healEffect: $healEffect, '
-        'healEffectSpeed: $healEffectSpeed'
+        'id: ${self.id}, '
+        'state0ImpactEffectDoodadSet: ${self.state0ImpactEffectDoodadSet}, '
+        'state0AmbientDoodadSet: ${self.state0AmbientDoodadSet}, '
+        'state1Wmo: ${self.state1Wmo}, '
+        'state1DestructionDoodadSet: ${self.state1DestructionDoodadSet}, '
+        'state1ImpactEffectDoodadSet: ${self.state1ImpactEffectDoodadSet}, '
+        'state1AmbientDoodadSet: ${self.state1AmbientDoodadSet}, '
+        'state2Wmo: ${self.state2Wmo}, '
+        'state2DestructionDoodadSet: ${self.state2DestructionDoodadSet}, '
+        'state2ImpactEffectDoodadSet: ${self.state2ImpactEffectDoodadSet}, '
+        'state2AmbientDoodadSet: ${self.state2AmbientDoodadSet}, '
+        'state3Wmo: ${self.state3Wmo}, '
+        'state3InitDoodadSet: ${self.state3InitDoodadSet}, '
+        'state3AmbientDoodadSet: ${self.state3AmbientDoodadSet}, '
+        'ejectDirection: ${self.ejectDirection}, '
+        'repairGroundFx: ${self.repairGroundFx}, '
+        'doNotHighlight: ${self.doNotHighlight}, '
+        'healEffect: ${self.healEffect}, '
+        'healEffectSpeed: ${self.healEffectSpeed}'
         ')';
   }
 }

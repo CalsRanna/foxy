@@ -3,17 +3,6 @@
 part of 'spell_area_entity.dart';
 
 mixin _SpellAreaEntityMixin {
-  int get spell;
-  int get area;
-  int get questStart;
-  int get questEnd;
-  int get auraSpell;
-  int get racemask;
-  int get gender;
-  int get autocast;
-  int get questStartStatus;
-  int get questEndStatus;
-
   static SpellAreaEntity fromJson(Map<String, dynamic> json) {
     return SpellAreaEntity(
       spell: (json['spell'] as num?)?.toInt() ?? 0,
@@ -41,82 +30,87 @@ mixin _SpellAreaEntityMixin {
     int? questStartStatus,
     int? questEndStatus,
   }) {
+    final self = this as SpellAreaEntity;
     return SpellAreaEntity(
-      spell: spell ?? this.spell,
-      area: area ?? this.area,
-      questStart: questStart ?? this.questStart,
-      questEnd: questEnd ?? this.questEnd,
-      auraSpell: auraSpell ?? this.auraSpell,
-      racemask: racemask ?? this.racemask,
-      gender: gender ?? this.gender,
-      autocast: autocast ?? this.autocast,
-      questStartStatus: questStartStatus ?? this.questStartStatus,
-      questEndStatus: questEndStatus ?? this.questEndStatus,
+      spell: spell ?? self.spell,
+      area: area ?? self.area,
+      questStart: questStart ?? self.questStart,
+      questEnd: questEnd ?? self.questEnd,
+      auraSpell: auraSpell ?? self.auraSpell,
+      racemask: racemask ?? self.racemask,
+      gender: gender ?? self.gender,
+      autocast: autocast ?? self.autocast,
+      questStartStatus: questStartStatus ?? self.questStartStatus,
+      questEndStatus: questEndStatus ?? self.questEndStatus,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellAreaEntity;
     return {
-      'spell': spell,
-      'area': area,
-      'quest_start': questStart,
-      'quest_end': questEnd,
-      'aura_spell': auraSpell,
-      'racemask': racemask,
-      'gender': gender,
-      'autocast': autocast,
-      'quest_start_status': questStartStatus,
-      'quest_end_status': questEndStatus,
+      'spell': self.spell,
+      'area': self.area,
+      'quest_start': self.questStart,
+      'quest_end': self.questEnd,
+      'aura_spell': self.auraSpell,
+      'racemask': self.racemask,
+      'gender': self.gender,
+      'autocast': self.autocast,
+      'quest_start_status': self.questStartStatus,
+      'quest_end_status': self.questEndStatus,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellAreaEntity;
+    return identical(self, other) ||
         other is SpellAreaEntity &&
-            runtimeType == other.runtimeType &&
-            spell == other.spell &&
-            area == other.area &&
-            questStart == other.questStart &&
-            questEnd == other.questEnd &&
-            auraSpell == other.auraSpell &&
-            racemask == other.racemask &&
-            gender == other.gender &&
-            autocast == other.autocast &&
-            questStartStatus == other.questStartStatus &&
-            questEndStatus == other.questEndStatus;
+            self.runtimeType == other.runtimeType &&
+            self.spell == other.spell &&
+            self.area == other.area &&
+            self.questStart == other.questStart &&
+            self.questEnd == other.questEnd &&
+            self.auraSpell == other.auraSpell &&
+            self.racemask == other.racemask &&
+            self.gender == other.gender &&
+            self.autocast == other.autocast &&
+            self.questStartStatus == other.questStartStatus &&
+            self.questEndStatus == other.questEndStatus;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellAreaEntity;
     return Object.hashAll([
-      runtimeType,
-      spell,
-      area,
-      questStart,
-      questEnd,
-      auraSpell,
-      racemask,
-      gender,
-      autocast,
-      questStartStatus,
-      questEndStatus,
+      self.runtimeType,
+      self.spell,
+      self.area,
+      self.questStart,
+      self.questEnd,
+      self.auraSpell,
+      self.racemask,
+      self.gender,
+      self.autocast,
+      self.questStartStatus,
+      self.questEndStatus,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellAreaEntity;
     return 'SpellAreaEntity('
-        'spell: $spell, '
-        'area: $area, '
-        'questStart: $questStart, '
-        'questEnd: $questEnd, '
-        'auraSpell: $auraSpell, '
-        'racemask: $racemask, '
-        'gender: $gender, '
-        'autocast: $autocast, '
-        'questStartStatus: $questStartStatus, '
-        'questEndStatus: $questEndStatus'
+        'spell: ${self.spell}, '
+        'area: ${self.area}, '
+        'questStart: ${self.questStart}, '
+        'questEnd: ${self.questEnd}, '
+        'auraSpell: ${self.auraSpell}, '
+        'racemask: ${self.racemask}, '
+        'gender: ${self.gender}, '
+        'autocast: ${self.autocast}, '
+        'questStartStatus: ${self.questStartStatus}, '
+        'questEndStatus: ${self.questEndStatus}'
         ')';
   }
 }

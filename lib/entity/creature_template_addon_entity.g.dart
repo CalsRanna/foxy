@@ -3,15 +3,6 @@
 part of 'creature_template_addon_entity.dart';
 
 mixin _CreatureTemplateAddonEntityMixin {
-  int get entry;
-  int get pathId;
-  int get mount;
-  int get emote;
-  int get bytes1;
-  int get bytes2;
-  int get visibilityDistanceType;
-  String get auras;
-
   static CreatureTemplateAddonEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateAddonEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -36,73 +27,78 @@ mixin _CreatureTemplateAddonEntityMixin {
     int? visibilityDistanceType,
     String? auras,
   }) {
+    final self = this as CreatureTemplateAddonEntity;
     return CreatureTemplateAddonEntity(
-      entry: entry ?? this.entry,
-      pathId: pathId ?? this.pathId,
-      mount: mount ?? this.mount,
-      emote: emote ?? this.emote,
-      bytes1: bytes1 ?? this.bytes1,
-      bytes2: bytes2 ?? this.bytes2,
+      entry: entry ?? self.entry,
+      pathId: pathId ?? self.pathId,
+      mount: mount ?? self.mount,
+      emote: emote ?? self.emote,
+      bytes1: bytes1 ?? self.bytes1,
+      bytes2: bytes2 ?? self.bytes2,
       visibilityDistanceType:
-          visibilityDistanceType ?? this.visibilityDistanceType,
-      auras: auras ?? this.auras,
+          visibilityDistanceType ?? self.visibilityDistanceType,
+      auras: auras ?? self.auras,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureTemplateAddonEntity;
     return {
-      'entry': entry,
-      'path_id': pathId,
-      'mount': mount,
-      'emote': emote,
-      'bytes1': bytes1,
-      'bytes2': bytes2,
-      'visibilityDistanceType': visibilityDistanceType,
-      'auras': auras,
+      'entry': self.entry,
+      'path_id': self.pathId,
+      'mount': self.mount,
+      'emote': self.emote,
+      'bytes1': self.bytes1,
+      'bytes2': self.bytes2,
+      'visibilityDistanceType': self.visibilityDistanceType,
+      'auras': self.auras,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureTemplateAddonEntity;
+    return identical(self, other) ||
         other is CreatureTemplateAddonEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            pathId == other.pathId &&
-            mount == other.mount &&
-            emote == other.emote &&
-            bytes1 == other.bytes1 &&
-            bytes2 == other.bytes2 &&
-            visibilityDistanceType == other.visibilityDistanceType &&
-            auras == other.auras;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.pathId == other.pathId &&
+            self.mount == other.mount &&
+            self.emote == other.emote &&
+            self.bytes1 == other.bytes1 &&
+            self.bytes2 == other.bytes2 &&
+            self.visibilityDistanceType == other.visibilityDistanceType &&
+            self.auras == other.auras;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureTemplateAddonEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      pathId,
-      mount,
-      emote,
-      bytes1,
-      bytes2,
-      visibilityDistanceType,
-      auras,
+      self.runtimeType,
+      self.entry,
+      self.pathId,
+      self.mount,
+      self.emote,
+      self.bytes1,
+      self.bytes2,
+      self.visibilityDistanceType,
+      self.auras,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureTemplateAddonEntity;
     return 'CreatureTemplateAddonEntity('
-        'entry: $entry, '
-        'pathId: $pathId, '
-        'mount: $mount, '
-        'emote: $emote, '
-        'bytes1: $bytes1, '
-        'bytes2: $bytes2, '
-        'visibilityDistanceType: $visibilityDistanceType, '
-        'auras: $auras'
+        'entry: ${self.entry}, '
+        'pathId: ${self.pathId}, '
+        'mount: ${self.mount}, '
+        'emote: ${self.emote}, '
+        'bytes1: ${self.bytes1}, '
+        'bytes2: ${self.bytes2}, '
+        'visibilityDistanceType: ${self.visibilityDistanceType}, '
+        'auras: ${self.auras}'
         ')';
   }
 }
