@@ -3,21 +3,6 @@
 part of 'dbc_faction_template_entity.dart';
 
 mixin _DbcFactionTemplateEntityMixin {
-  int get id;
-  int get faction;
-  int get flags;
-  int get factionGroup;
-  int get friendGroup;
-  int get enemyGroup;
-  int get enemies0;
-  int get enemies1;
-  int get enemies2;
-  int get enemies3;
-  int get friend0;
-  int get friend1;
-  int get friend2;
-  int get friend3;
-
   static DbcFactionTemplateEntity fromJson(Map<String, dynamic> json) {
     return DbcFactionTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -53,102 +38,107 @@ mixin _DbcFactionTemplateEntityMixin {
     int? friend2,
     int? friend3,
   }) {
+    final self = this as DbcFactionTemplateEntity;
     return DbcFactionTemplateEntity(
-      id: id ?? this.id,
-      faction: faction ?? this.faction,
-      flags: flags ?? this.flags,
-      factionGroup: factionGroup ?? this.factionGroup,
-      friendGroup: friendGroup ?? this.friendGroup,
-      enemyGroup: enemyGroup ?? this.enemyGroup,
-      enemies0: enemies0 ?? this.enemies0,
-      enemies1: enemies1 ?? this.enemies1,
-      enemies2: enemies2 ?? this.enemies2,
-      enemies3: enemies3 ?? this.enemies3,
-      friend0: friend0 ?? this.friend0,
-      friend1: friend1 ?? this.friend1,
-      friend2: friend2 ?? this.friend2,
-      friend3: friend3 ?? this.friend3,
+      id: id ?? self.id,
+      faction: faction ?? self.faction,
+      flags: flags ?? self.flags,
+      factionGroup: factionGroup ?? self.factionGroup,
+      friendGroup: friendGroup ?? self.friendGroup,
+      enemyGroup: enemyGroup ?? self.enemyGroup,
+      enemies0: enemies0 ?? self.enemies0,
+      enemies1: enemies1 ?? self.enemies1,
+      enemies2: enemies2 ?? self.enemies2,
+      enemies3: enemies3 ?? self.enemies3,
+      friend0: friend0 ?? self.friend0,
+      friend1: friend1 ?? self.friend1,
+      friend2: friend2 ?? self.friend2,
+      friend3: friend3 ?? self.friend3,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as DbcFactionTemplateEntity;
     return {
-      'ID': id,
-      'Faction': faction,
-      'Flags': flags,
-      'FactionGroup': factionGroup,
-      'FriendGroup': friendGroup,
-      'EnemyGroup': enemyGroup,
-      'Enemies0': enemies0,
-      'Enemies1': enemies1,
-      'Enemies2': enemies2,
-      'Enemies3': enemies3,
-      'Friend0': friend0,
-      'Friend1': friend1,
-      'Friend2': friend2,
-      'Friend3': friend3,
+      'ID': self.id,
+      'Faction': self.faction,
+      'Flags': self.flags,
+      'FactionGroup': self.factionGroup,
+      'FriendGroup': self.friendGroup,
+      'EnemyGroup': self.enemyGroup,
+      'Enemies0': self.enemies0,
+      'Enemies1': self.enemies1,
+      'Enemies2': self.enemies2,
+      'Enemies3': self.enemies3,
+      'Friend0': self.friend0,
+      'Friend1': self.friend1,
+      'Friend2': self.friend2,
+      'Friend3': self.friend3,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as DbcFactionTemplateEntity;
+    return identical(self, other) ||
         other is DbcFactionTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            faction == other.faction &&
-            flags == other.flags &&
-            factionGroup == other.factionGroup &&
-            friendGroup == other.friendGroup &&
-            enemyGroup == other.enemyGroup &&
-            enemies0 == other.enemies0 &&
-            enemies1 == other.enemies1 &&
-            enemies2 == other.enemies2 &&
-            enemies3 == other.enemies3 &&
-            friend0 == other.friend0 &&
-            friend1 == other.friend1 &&
-            friend2 == other.friend2 &&
-            friend3 == other.friend3;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.faction == other.faction &&
+            self.flags == other.flags &&
+            self.factionGroup == other.factionGroup &&
+            self.friendGroup == other.friendGroup &&
+            self.enemyGroup == other.enemyGroup &&
+            self.enemies0 == other.enemies0 &&
+            self.enemies1 == other.enemies1 &&
+            self.enemies2 == other.enemies2 &&
+            self.enemies3 == other.enemies3 &&
+            self.friend0 == other.friend0 &&
+            self.friend1 == other.friend1 &&
+            self.friend2 == other.friend2 &&
+            self.friend3 == other.friend3;
   }
 
   @override
   int get hashCode {
+    final self = this as DbcFactionTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      faction,
-      flags,
-      factionGroup,
-      friendGroup,
-      enemyGroup,
-      enemies0,
-      enemies1,
-      enemies2,
-      enemies3,
-      friend0,
-      friend1,
-      friend2,
-      friend3,
+      self.runtimeType,
+      self.id,
+      self.faction,
+      self.flags,
+      self.factionGroup,
+      self.friendGroup,
+      self.enemyGroup,
+      self.enemies0,
+      self.enemies1,
+      self.enemies2,
+      self.enemies3,
+      self.friend0,
+      self.friend1,
+      self.friend2,
+      self.friend3,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as DbcFactionTemplateEntity;
     return 'DbcFactionTemplateEntity('
-        'id: $id, '
-        'faction: $faction, '
-        'flags: $flags, '
-        'factionGroup: $factionGroup, '
-        'friendGroup: $friendGroup, '
-        'enemyGroup: $enemyGroup, '
-        'enemies0: $enemies0, '
-        'enemies1: $enemies1, '
-        'enemies2: $enemies2, '
-        'enemies3: $enemies3, '
-        'friend0: $friend0, '
-        'friend1: $friend1, '
-        'friend2: $friend2, '
-        'friend3: $friend3'
+        'id: ${self.id}, '
+        'faction: ${self.faction}, '
+        'flags: ${self.flags}, '
+        'factionGroup: ${self.factionGroup}, '
+        'friendGroup: ${self.friendGroup}, '
+        'enemyGroup: ${self.enemyGroup}, '
+        'enemies0: ${self.enemies0}, '
+        'enemies1: ${self.enemies1}, '
+        'enemies2: ${self.enemies2}, '
+        'enemies3: ${self.enemies3}, '
+        'friend0: ${self.friend0}, '
+        'friend1: ${self.friend1}, '
+        'friend2: ${self.friend2}, '
+        'friend3: ${self.friend3}'
         ')';
   }
 }

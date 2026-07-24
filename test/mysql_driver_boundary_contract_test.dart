@@ -10,14 +10,15 @@ void main() {
       'lib/infrastructure/database/mysql_error_util.dart',
     ).readAsStringSync();
 
-    expect(pubspec, contains('laconic_mysql: ^2.1.0'));
+    expect(pubspec, contains('laconic_mysql: ^3.0.0'));
     expect(pubspec, isNot(contains('mysql_client:')));
     expect(pubspec, isNot(contains('dependency_overrides:')));
-    expect(lockfile, contains('version: "2.1.0"'));
+    expect(lockfile, contains('version: "3.0.0"'));
     expect(lockfile, contains('source: hosted'));
     expect(lockfile, isNot(contains('third_party/mysql_client')));
     expect(Directory('third_party/mysql_client').existsSync(), isFalse);
-    expect(errorUtil, contains("package:laconic_mysql/laconic_mysql.dart"));
+    expect(errorUtil, contains("package:laconic/laconic.dart"));
+    expect(errorUtil, isNot(contains("package:laconic_mysql/")));
     expect(errorUtil, isNot(contains('package:mysql_client/')));
   });
 }

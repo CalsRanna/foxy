@@ -3,13 +3,6 @@
 part of 'creature_equip_template_entity.dart';
 
 mixin _CreatureEquipTemplateEntityMixin {
-  int get creatureID;
-  int get id;
-  int get itemID1;
-  int get itemID2;
-  int get itemID3;
-  int get verifiedBuild;
-
   static CreatureEquipTemplateEntity fromJson(Map<String, dynamic> json) {
     return CreatureEquipTemplateEntity(
       creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
@@ -29,62 +22,67 @@ mixin _CreatureEquipTemplateEntityMixin {
     int? itemID3,
     int? verifiedBuild,
   }) {
+    final self = this as CreatureEquipTemplateEntity;
     return CreatureEquipTemplateEntity(
-      creatureID: creatureID ?? this.creatureID,
-      id: id ?? this.id,
-      itemID1: itemID1 ?? this.itemID1,
-      itemID2: itemID2 ?? this.itemID2,
-      itemID3: itemID3 ?? this.itemID3,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      creatureID: creatureID ?? self.creatureID,
+      id: id ?? self.id,
+      itemID1: itemID1 ?? self.itemID1,
+      itemID2: itemID2 ?? self.itemID2,
+      itemID3: itemID3 ?? self.itemID3,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureEquipTemplateEntity;
     return {
-      'CreatureID': creatureID,
-      'ID': id,
-      'ItemID1': itemID1,
-      'ItemID2': itemID2,
-      'ItemID3': itemID3,
-      'VerifiedBuild': verifiedBuild,
+      'CreatureID': self.creatureID,
+      'ID': self.id,
+      'ItemID1': self.itemID1,
+      'ItemID2': self.itemID2,
+      'ItemID3': self.itemID3,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureEquipTemplateEntity;
+    return identical(self, other) ||
         other is CreatureEquipTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            creatureID == other.creatureID &&
-            id == other.id &&
-            itemID1 == other.itemID1 &&
-            itemID2 == other.itemID2 &&
-            itemID3 == other.itemID3 &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.creatureID == other.creatureID &&
+            self.id == other.id &&
+            self.itemID1 == other.itemID1 &&
+            self.itemID2 == other.itemID2 &&
+            self.itemID3 == other.itemID3 &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureEquipTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      creatureID,
-      id,
-      itemID1,
-      itemID2,
-      itemID3,
-      verifiedBuild,
+      self.runtimeType,
+      self.creatureID,
+      self.id,
+      self.itemID1,
+      self.itemID2,
+      self.itemID3,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureEquipTemplateEntity;
     return 'CreatureEquipTemplateEntity('
-        'creatureID: $creatureID, '
-        'id: $id, '
-        'itemID1: $itemID1, '
-        'itemID2: $itemID2, '
-        'itemID3: $itemID3, '
-        'verifiedBuild: $verifiedBuild'
+        'creatureID: ${self.creatureID}, '
+        'id: ${self.id}, '
+        'itemID1: ${self.itemID1}, '
+        'itemID2: ${self.itemID2}, '
+        'itemID3: ${self.itemID3}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

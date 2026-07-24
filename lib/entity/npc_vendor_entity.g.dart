@@ -3,14 +3,6 @@
 part of 'npc_vendor_entity.dart';
 
 mixin _NpcVendorEntityMixin {
-  int get entry;
-  int get slot;
-  int get item;
-  int get maxcount;
-  int get incrtime;
-  int get extendedCost;
-  int get verifiedBuild;
-
   static NpcVendorEntity fromJson(Map<String, dynamic> json) {
     return NpcVendorEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -32,67 +24,72 @@ mixin _NpcVendorEntityMixin {
     int? extendedCost,
     int? verifiedBuild,
   }) {
+    final self = this as NpcVendorEntity;
     return NpcVendorEntity(
-      entry: entry ?? this.entry,
-      slot: slot ?? this.slot,
-      item: item ?? this.item,
-      maxcount: maxcount ?? this.maxcount,
-      incrtime: incrtime ?? this.incrtime,
-      extendedCost: extendedCost ?? this.extendedCost,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      entry: entry ?? self.entry,
+      slot: slot ?? self.slot,
+      item: item ?? self.item,
+      maxcount: maxcount ?? self.maxcount,
+      incrtime: incrtime ?? self.incrtime,
+      extendedCost: extendedCost ?? self.extendedCost,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as NpcVendorEntity;
     return {
-      'entry': entry,
-      'slot': slot,
-      'item': item,
-      'maxcount': maxcount,
-      'incrtime': incrtime,
-      'ExtendedCost': extendedCost,
-      'VerifiedBuild': verifiedBuild,
+      'entry': self.entry,
+      'slot': self.slot,
+      'item': self.item,
+      'maxcount': self.maxcount,
+      'incrtime': self.incrtime,
+      'ExtendedCost': self.extendedCost,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as NpcVendorEntity;
+    return identical(self, other) ||
         other is NpcVendorEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            slot == other.slot &&
-            item == other.item &&
-            maxcount == other.maxcount &&
-            incrtime == other.incrtime &&
-            extendedCost == other.extendedCost &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.slot == other.slot &&
+            self.item == other.item &&
+            self.maxcount == other.maxcount &&
+            self.incrtime == other.incrtime &&
+            self.extendedCost == other.extendedCost &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as NpcVendorEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      slot,
-      item,
-      maxcount,
-      incrtime,
-      extendedCost,
-      verifiedBuild,
+      self.runtimeType,
+      self.entry,
+      self.slot,
+      self.item,
+      self.maxcount,
+      self.incrtime,
+      self.extendedCost,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as NpcVendorEntity;
     return 'NpcVendorEntity('
-        'entry: $entry, '
-        'slot: $slot, '
-        'item: $item, '
-        'maxcount: $maxcount, '
-        'incrtime: $incrtime, '
-        'extendedCost: $extendedCost, '
-        'verifiedBuild: $verifiedBuild'
+        'entry: ${self.entry}, '
+        'slot: ${self.slot}, '
+        'item: ${self.item}, '
+        'maxcount: ${self.maxcount}, '
+        'incrtime: ${self.incrtime}, '
+        'extendedCost: ${self.extendedCost}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

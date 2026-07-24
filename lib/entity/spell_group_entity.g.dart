@@ -3,9 +3,6 @@
 part of 'spell_group_entity.dart';
 
 mixin _SpellGroupEntityMixin {
-  int get id;
-  int get spellId;
-
   static SpellGroupEntity fromJson(Map<String, dynamic> json) {
     return SpellGroupEntity(
       id: (json['id'] as num?)?.toInt() ?? 0,
@@ -14,35 +11,40 @@ mixin _SpellGroupEntityMixin {
   }
 
   SpellGroupEntity copyWith({int? id, int? spellId}) {
+    final self = this as SpellGroupEntity;
     return SpellGroupEntity(
-      id: id ?? this.id,
-      spellId: spellId ?? this.spellId,
+      id: id ?? self.id,
+      spellId: spellId ?? self.spellId,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'spell_id': spellId};
+    final self = this as SpellGroupEntity;
+    return {'id': self.id, 'spell_id': self.spellId};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellGroupEntity;
+    return identical(self, other) ||
         other is SpellGroupEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            spellId == other.spellId;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.spellId == other.spellId;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, spellId]);
+    final self = this as SpellGroupEntity;
+    return Object.hashAll([self.runtimeType, self.id, self.spellId]);
   }
 
   @override
   String toString() {
+    final self = this as SpellGroupEntity;
     return 'SpellGroupEntity('
-        'id: $id, '
-        'spellId: $spellId'
+        'id: ${self.id}, '
+        'spellId: ${self.spellId}'
         ')';
   }
 }

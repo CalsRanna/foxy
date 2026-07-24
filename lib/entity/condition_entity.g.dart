@@ -3,22 +3,6 @@
 part of 'condition_entity.dart';
 
 mixin _ConditionEntityMixin {
-  int get sourceTypeOrReferenceId;
-  int get sourceGroup;
-  int get sourceEntry;
-  int get sourceId;
-  int get elseGroup;
-  int get conditionTypeOrReference;
-  int get conditionTarget;
-  int get conditionValue1;
-  int get conditionValue2;
-  int get conditionValue3;
-  int get negativeCondition;
-  int get errorType;
-  int get errorTextId;
-  String get scriptName;
-  String get comment;
-
   static ConditionEntity fromJson(Map<String, dynamic> json) {
     return ConditionEntity(
       sourceTypeOrReferenceId:
@@ -58,109 +42,114 @@ mixin _ConditionEntityMixin {
     String? scriptName,
     String? comment,
   }) {
+    final self = this as ConditionEntity;
     return ConditionEntity(
       sourceTypeOrReferenceId:
-          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
-      sourceGroup: sourceGroup ?? this.sourceGroup,
-      sourceEntry: sourceEntry ?? this.sourceEntry,
-      sourceId: sourceId ?? this.sourceId,
-      elseGroup: elseGroup ?? this.elseGroup,
+          sourceTypeOrReferenceId ?? self.sourceTypeOrReferenceId,
+      sourceGroup: sourceGroup ?? self.sourceGroup,
+      sourceEntry: sourceEntry ?? self.sourceEntry,
+      sourceId: sourceId ?? self.sourceId,
+      elseGroup: elseGroup ?? self.elseGroup,
       conditionTypeOrReference:
-          conditionTypeOrReference ?? this.conditionTypeOrReference,
-      conditionTarget: conditionTarget ?? this.conditionTarget,
-      conditionValue1: conditionValue1 ?? this.conditionValue1,
-      conditionValue2: conditionValue2 ?? this.conditionValue2,
-      conditionValue3: conditionValue3 ?? this.conditionValue3,
-      negativeCondition: negativeCondition ?? this.negativeCondition,
-      errorType: errorType ?? this.errorType,
-      errorTextId: errorTextId ?? this.errorTextId,
-      scriptName: scriptName ?? this.scriptName,
-      comment: comment ?? this.comment,
+          conditionTypeOrReference ?? self.conditionTypeOrReference,
+      conditionTarget: conditionTarget ?? self.conditionTarget,
+      conditionValue1: conditionValue1 ?? self.conditionValue1,
+      conditionValue2: conditionValue2 ?? self.conditionValue2,
+      conditionValue3: conditionValue3 ?? self.conditionValue3,
+      negativeCondition: negativeCondition ?? self.negativeCondition,
+      errorType: errorType ?? self.errorType,
+      errorTextId: errorTextId ?? self.errorTextId,
+      scriptName: scriptName ?? self.scriptName,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ConditionEntity;
     return {
-      'SourceTypeOrReferenceId': sourceTypeOrReferenceId,
-      'SourceGroup': sourceGroup,
-      'SourceEntry': sourceEntry,
-      'SourceId': sourceId,
-      'ElseGroup': elseGroup,
-      'ConditionTypeOrReference': conditionTypeOrReference,
-      'ConditionTarget': conditionTarget,
-      'ConditionValue1': conditionValue1,
-      'ConditionValue2': conditionValue2,
-      'ConditionValue3': conditionValue3,
-      'NegativeCondition': negativeCondition,
-      'ErrorType': errorType,
-      'ErrorTextId': errorTextId,
-      'ScriptName': scriptName,
-      'Comment': comment,
+      'SourceTypeOrReferenceId': self.sourceTypeOrReferenceId,
+      'SourceGroup': self.sourceGroup,
+      'SourceEntry': self.sourceEntry,
+      'SourceId': self.sourceId,
+      'ElseGroup': self.elseGroup,
+      'ConditionTypeOrReference': self.conditionTypeOrReference,
+      'ConditionTarget': self.conditionTarget,
+      'ConditionValue1': self.conditionValue1,
+      'ConditionValue2': self.conditionValue2,
+      'ConditionValue3': self.conditionValue3,
+      'NegativeCondition': self.negativeCondition,
+      'ErrorType': self.errorType,
+      'ErrorTextId': self.errorTextId,
+      'ScriptName': self.scriptName,
+      'Comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ConditionEntity;
+    return identical(self, other) ||
         other is ConditionEntity &&
-            runtimeType == other.runtimeType &&
-            sourceTypeOrReferenceId == other.sourceTypeOrReferenceId &&
-            sourceGroup == other.sourceGroup &&
-            sourceEntry == other.sourceEntry &&
-            sourceId == other.sourceId &&
-            elseGroup == other.elseGroup &&
-            conditionTypeOrReference == other.conditionTypeOrReference &&
-            conditionTarget == other.conditionTarget &&
-            conditionValue1 == other.conditionValue1 &&
-            conditionValue2 == other.conditionValue2 &&
-            conditionValue3 == other.conditionValue3 &&
-            negativeCondition == other.negativeCondition &&
-            errorType == other.errorType &&
-            errorTextId == other.errorTextId &&
-            scriptName == other.scriptName &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.sourceTypeOrReferenceId == other.sourceTypeOrReferenceId &&
+            self.sourceGroup == other.sourceGroup &&
+            self.sourceEntry == other.sourceEntry &&
+            self.sourceId == other.sourceId &&
+            self.elseGroup == other.elseGroup &&
+            self.conditionTypeOrReference == other.conditionTypeOrReference &&
+            self.conditionTarget == other.conditionTarget &&
+            self.conditionValue1 == other.conditionValue1 &&
+            self.conditionValue2 == other.conditionValue2 &&
+            self.conditionValue3 == other.conditionValue3 &&
+            self.negativeCondition == other.negativeCondition &&
+            self.errorType == other.errorType &&
+            self.errorTextId == other.errorTextId &&
+            self.scriptName == other.scriptName &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as ConditionEntity;
     return Object.hashAll([
-      runtimeType,
-      sourceTypeOrReferenceId,
-      sourceGroup,
-      sourceEntry,
-      sourceId,
-      elseGroup,
-      conditionTypeOrReference,
-      conditionTarget,
-      conditionValue1,
-      conditionValue2,
-      conditionValue3,
-      negativeCondition,
-      errorType,
-      errorTextId,
-      scriptName,
-      comment,
+      self.runtimeType,
+      self.sourceTypeOrReferenceId,
+      self.sourceGroup,
+      self.sourceEntry,
+      self.sourceId,
+      self.elseGroup,
+      self.conditionTypeOrReference,
+      self.conditionTarget,
+      self.conditionValue1,
+      self.conditionValue2,
+      self.conditionValue3,
+      self.negativeCondition,
+      self.errorType,
+      self.errorTextId,
+      self.scriptName,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ConditionEntity;
     return 'ConditionEntity('
-        'sourceTypeOrReferenceId: $sourceTypeOrReferenceId, '
-        'sourceGroup: $sourceGroup, '
-        'sourceEntry: $sourceEntry, '
-        'sourceId: $sourceId, '
-        'elseGroup: $elseGroup, '
-        'conditionTypeOrReference: $conditionTypeOrReference, '
-        'conditionTarget: $conditionTarget, '
-        'conditionValue1: $conditionValue1, '
-        'conditionValue2: $conditionValue2, '
-        'conditionValue3: $conditionValue3, '
-        'negativeCondition: $negativeCondition, '
-        'errorType: $errorType, '
-        'errorTextId: $errorTextId, '
-        'scriptName: $scriptName, '
-        'comment: $comment'
+        'sourceTypeOrReferenceId: ${self.sourceTypeOrReferenceId}, '
+        'sourceGroup: ${self.sourceGroup}, '
+        'sourceEntry: ${self.sourceEntry}, '
+        'sourceId: ${self.sourceId}, '
+        'elseGroup: ${self.elseGroup}, '
+        'conditionTypeOrReference: ${self.conditionTypeOrReference}, '
+        'conditionTarget: ${self.conditionTarget}, '
+        'conditionValue1: ${self.conditionValue1}, '
+        'conditionValue2: ${self.conditionValue2}, '
+        'conditionValue3: ${self.conditionValue3}, '
+        'negativeCondition: ${self.negativeCondition}, '
+        'errorType: ${self.errorType}, '
+        'errorTextId: ${self.errorTextId}, '
+        'scriptName: ${self.scriptName}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

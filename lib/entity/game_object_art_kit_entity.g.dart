@@ -3,15 +3,6 @@
 part of 'game_object_art_kit_entity.dart';
 
 mixin _GameObjectArtKitEntityMixin {
-  int get id;
-  String get textureVariation0;
-  String get textureVariation1;
-  String get textureVariation2;
-  String get attachModel0;
-  String get attachModel1;
-  String get attachModel2;
-  String get attachModel3;
-
   static GameObjectArtKitEntity fromJson(Map<String, dynamic> json) {
     return GameObjectArtKitEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -35,72 +26,77 @@ mixin _GameObjectArtKitEntityMixin {
     String? attachModel2,
     String? attachModel3,
   }) {
+    final self = this as GameObjectArtKitEntity;
     return GameObjectArtKitEntity(
-      id: id ?? this.id,
-      textureVariation0: textureVariation0 ?? this.textureVariation0,
-      textureVariation1: textureVariation1 ?? this.textureVariation1,
-      textureVariation2: textureVariation2 ?? this.textureVariation2,
-      attachModel0: attachModel0 ?? this.attachModel0,
-      attachModel1: attachModel1 ?? this.attachModel1,
-      attachModel2: attachModel2 ?? this.attachModel2,
-      attachModel3: attachModel3 ?? this.attachModel3,
+      id: id ?? self.id,
+      textureVariation0: textureVariation0 ?? self.textureVariation0,
+      textureVariation1: textureVariation1 ?? self.textureVariation1,
+      textureVariation2: textureVariation2 ?? self.textureVariation2,
+      attachModel0: attachModel0 ?? self.attachModel0,
+      attachModel1: attachModel1 ?? self.attachModel1,
+      attachModel2: attachModel2 ?? self.attachModel2,
+      attachModel3: attachModel3 ?? self.attachModel3,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GameObjectArtKitEntity;
     return {
-      'ID': id,
-      'TextureVariation0': textureVariation0,
-      'TextureVariation1': textureVariation1,
-      'TextureVariation2': textureVariation2,
-      'AttachModel0': attachModel0,
-      'AttachModel1': attachModel1,
-      'AttachModel2': attachModel2,
-      'AttachModel3': attachModel3,
+      'ID': self.id,
+      'TextureVariation0': self.textureVariation0,
+      'TextureVariation1': self.textureVariation1,
+      'TextureVariation2': self.textureVariation2,
+      'AttachModel0': self.attachModel0,
+      'AttachModel1': self.attachModel1,
+      'AttachModel2': self.attachModel2,
+      'AttachModel3': self.attachModel3,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GameObjectArtKitEntity;
+    return identical(self, other) ||
         other is GameObjectArtKitEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            textureVariation0 == other.textureVariation0 &&
-            textureVariation1 == other.textureVariation1 &&
-            textureVariation2 == other.textureVariation2 &&
-            attachModel0 == other.attachModel0 &&
-            attachModel1 == other.attachModel1 &&
-            attachModel2 == other.attachModel2 &&
-            attachModel3 == other.attachModel3;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.textureVariation0 == other.textureVariation0 &&
+            self.textureVariation1 == other.textureVariation1 &&
+            self.textureVariation2 == other.textureVariation2 &&
+            self.attachModel0 == other.attachModel0 &&
+            self.attachModel1 == other.attachModel1 &&
+            self.attachModel2 == other.attachModel2 &&
+            self.attachModel3 == other.attachModel3;
   }
 
   @override
   int get hashCode {
+    final self = this as GameObjectArtKitEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      textureVariation0,
-      textureVariation1,
-      textureVariation2,
-      attachModel0,
-      attachModel1,
-      attachModel2,
-      attachModel3,
+      self.runtimeType,
+      self.id,
+      self.textureVariation0,
+      self.textureVariation1,
+      self.textureVariation2,
+      self.attachModel0,
+      self.attachModel1,
+      self.attachModel2,
+      self.attachModel3,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GameObjectArtKitEntity;
     return 'GameObjectArtKitEntity('
-        'id: $id, '
-        'textureVariation0: $textureVariation0, '
-        'textureVariation1: $textureVariation1, '
-        'textureVariation2: $textureVariation2, '
-        'attachModel0: $attachModel0, '
-        'attachModel1: $attachModel1, '
-        'attachModel2: $attachModel2, '
-        'attachModel3: $attachModel3'
+        'id: ${self.id}, '
+        'textureVariation0: ${self.textureVariation0}, '
+        'textureVariation1: ${self.textureVariation1}, '
+        'textureVariation2: ${self.textureVariation2}, '
+        'attachModel0: ${self.attachModel0}, '
+        'attachModel1: ${self.attachModel1}, '
+        'attachModel2: ${self.attachModel2}, '
+        'attachModel3: ${self.attachModel3}'
         ')';
   }
 }

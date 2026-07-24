@@ -3,12 +3,6 @@
 part of 'game_object_template_locale_entity.dart';
 
 mixin _GameObjectTemplateLocaleEntityMixin {
-  int get entry;
-  String get locale;
-  String get name;
-  String get castBarCaption;
-  int get verifiedBuild;
-
   static GameObjectTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
     return GameObjectTemplateLocaleEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _GameObjectTemplateLocaleEntityMixin {
     String? castBarCaption,
     int? verifiedBuild,
   }) {
+    final self = this as GameObjectTemplateLocaleEntity;
     return GameObjectTemplateLocaleEntity(
-      entry: entry ?? this.entry,
-      locale: locale ?? this.locale,
-      name: name ?? this.name,
-      castBarCaption: castBarCaption ?? this.castBarCaption,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      entry: entry ?? self.entry,
+      locale: locale ?? self.locale,
+      name: name ?? self.name,
+      castBarCaption: castBarCaption ?? self.castBarCaption,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GameObjectTemplateLocaleEntity;
     return {
-      'entry': entry,
-      'locale': locale,
-      'name': name,
-      'castBarCaption': castBarCaption,
-      'VerifiedBuild': verifiedBuild,
+      'entry': self.entry,
+      'locale': self.locale,
+      'name': self.name,
+      'castBarCaption': self.castBarCaption,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GameObjectTemplateLocaleEntity;
+    return identical(self, other) ||
         other is GameObjectTemplateLocaleEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            locale == other.locale &&
-            name == other.name &&
-            castBarCaption == other.castBarCaption &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.locale == other.locale &&
+            self.name == other.name &&
+            self.castBarCaption == other.castBarCaption &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as GameObjectTemplateLocaleEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      locale,
-      name,
-      castBarCaption,
-      verifiedBuild,
+      self.runtimeType,
+      self.entry,
+      self.locale,
+      self.name,
+      self.castBarCaption,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GameObjectTemplateLocaleEntity;
     return 'GameObjectTemplateLocaleEntity('
-        'entry: $entry, '
-        'locale: $locale, '
-        'name: $name, '
-        'castBarCaption: $castBarCaption, '
-        'verifiedBuild: $verifiedBuild'
+        'entry: ${self.entry}, '
+        'locale: ${self.locale}, '
+        'name: ${self.name}, '
+        'castBarCaption: ${self.castBarCaption}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

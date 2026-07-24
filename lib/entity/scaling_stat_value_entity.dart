@@ -1,5 +1,3 @@
-// ignore_for_file: annotate_overrides
-
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'scaling_stat_value_entity.g.dart';

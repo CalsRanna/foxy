@@ -1,5 +1,3 @@
-// ignore_for_file: annotate_overrides
-
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'quest_request_items_entity.g.dart';

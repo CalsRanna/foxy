@@ -3,31 +3,6 @@
 part of 'scaling_stat_value_entity.dart';
 
 mixin _ScalingStatValueEntityMixin {
-  int get id;
-  int get charlevel;
-  int get shoulderBudget;
-  int get trinketBudget;
-  int get weaponBudget1H;
-  int get rangedBudget;
-  int get clothShoulderArmor;
-  int get leatherShoulderArmor;
-  int get mailShoulderArmor;
-  int get plateShoulderArmor;
-  int get weaponDPS1H;
-  int get weaponDPS2H;
-  int get spellcasterDPS1H;
-  int get spellcasterDPS2H;
-  int get rangedDPS;
-  int get wandDPS;
-  int get spellPower;
-  int get primaryBudget;
-  int get tertiaryBudget;
-  int get clothCloakArmor;
-  int get clothChestArmor;
-  int get leatherChestArmor;
-  int get mailChestArmor;
-  int get plateChestArmor;
-
   static ScalingStatValueEntity fromJson(Map<String, dynamic> json) {
     return ScalingStatValueEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -84,152 +59,157 @@ mixin _ScalingStatValueEntityMixin {
     int? mailChestArmor,
     int? plateChestArmor,
   }) {
+    final self = this as ScalingStatValueEntity;
     return ScalingStatValueEntity(
-      id: id ?? this.id,
-      charlevel: charlevel ?? this.charlevel,
-      shoulderBudget: shoulderBudget ?? this.shoulderBudget,
-      trinketBudget: trinketBudget ?? this.trinketBudget,
-      weaponBudget1H: weaponBudget1H ?? this.weaponBudget1H,
-      rangedBudget: rangedBudget ?? this.rangedBudget,
-      clothShoulderArmor: clothShoulderArmor ?? this.clothShoulderArmor,
-      leatherShoulderArmor: leatherShoulderArmor ?? this.leatherShoulderArmor,
-      mailShoulderArmor: mailShoulderArmor ?? this.mailShoulderArmor,
-      plateShoulderArmor: plateShoulderArmor ?? this.plateShoulderArmor,
-      weaponDPS1H: weaponDPS1H ?? this.weaponDPS1H,
-      weaponDPS2H: weaponDPS2H ?? this.weaponDPS2H,
-      spellcasterDPS1H: spellcasterDPS1H ?? this.spellcasterDPS1H,
-      spellcasterDPS2H: spellcasterDPS2H ?? this.spellcasterDPS2H,
-      rangedDPS: rangedDPS ?? this.rangedDPS,
-      wandDPS: wandDPS ?? this.wandDPS,
-      spellPower: spellPower ?? this.spellPower,
-      primaryBudget: primaryBudget ?? this.primaryBudget,
-      tertiaryBudget: tertiaryBudget ?? this.tertiaryBudget,
-      clothCloakArmor: clothCloakArmor ?? this.clothCloakArmor,
-      clothChestArmor: clothChestArmor ?? this.clothChestArmor,
-      leatherChestArmor: leatherChestArmor ?? this.leatherChestArmor,
-      mailChestArmor: mailChestArmor ?? this.mailChestArmor,
-      plateChestArmor: plateChestArmor ?? this.plateChestArmor,
+      id: id ?? self.id,
+      charlevel: charlevel ?? self.charlevel,
+      shoulderBudget: shoulderBudget ?? self.shoulderBudget,
+      trinketBudget: trinketBudget ?? self.trinketBudget,
+      weaponBudget1H: weaponBudget1H ?? self.weaponBudget1H,
+      rangedBudget: rangedBudget ?? self.rangedBudget,
+      clothShoulderArmor: clothShoulderArmor ?? self.clothShoulderArmor,
+      leatherShoulderArmor: leatherShoulderArmor ?? self.leatherShoulderArmor,
+      mailShoulderArmor: mailShoulderArmor ?? self.mailShoulderArmor,
+      plateShoulderArmor: plateShoulderArmor ?? self.plateShoulderArmor,
+      weaponDPS1H: weaponDPS1H ?? self.weaponDPS1H,
+      weaponDPS2H: weaponDPS2H ?? self.weaponDPS2H,
+      spellcasterDPS1H: spellcasterDPS1H ?? self.spellcasterDPS1H,
+      spellcasterDPS2H: spellcasterDPS2H ?? self.spellcasterDPS2H,
+      rangedDPS: rangedDPS ?? self.rangedDPS,
+      wandDPS: wandDPS ?? self.wandDPS,
+      spellPower: spellPower ?? self.spellPower,
+      primaryBudget: primaryBudget ?? self.primaryBudget,
+      tertiaryBudget: tertiaryBudget ?? self.tertiaryBudget,
+      clothCloakArmor: clothCloakArmor ?? self.clothCloakArmor,
+      clothChestArmor: clothChestArmor ?? self.clothChestArmor,
+      leatherChestArmor: leatherChestArmor ?? self.leatherChestArmor,
+      mailChestArmor: mailChestArmor ?? self.mailChestArmor,
+      plateChestArmor: plateChestArmor ?? self.plateChestArmor,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ScalingStatValueEntity;
     return {
-      'ID': id,
-      'Charlevel': charlevel,
-      'ShoulderBudget': shoulderBudget,
-      'TrinketBudget': trinketBudget,
-      'WeaponBudget1H': weaponBudget1H,
-      'RangedBudget': rangedBudget,
-      'ClothShoulderArmor': clothShoulderArmor,
-      'LeatherShoulderArmor': leatherShoulderArmor,
-      'MailShoulderArmor': mailShoulderArmor,
-      'PlateShoulderArmor': plateShoulderArmor,
-      'WeaponDPS1H': weaponDPS1H,
-      'WeaponDPS2H': weaponDPS2H,
-      'SpellcasterDPS1H': spellcasterDPS1H,
-      'SpellcasterDPS2H': spellcasterDPS2H,
-      'RangedDPS': rangedDPS,
-      'WandDPS': wandDPS,
-      'SpellPower': spellPower,
-      'PrimaryBudget': primaryBudget,
-      'TertiaryBudget': tertiaryBudget,
-      'ClothCloakArmor': clothCloakArmor,
-      'ClothChestArmor': clothChestArmor,
-      'LeatherChestArmor': leatherChestArmor,
-      'MailChestArmor': mailChestArmor,
-      'PlateChestArmor': plateChestArmor,
+      'ID': self.id,
+      'Charlevel': self.charlevel,
+      'ShoulderBudget': self.shoulderBudget,
+      'TrinketBudget': self.trinketBudget,
+      'WeaponBudget1H': self.weaponBudget1H,
+      'RangedBudget': self.rangedBudget,
+      'ClothShoulderArmor': self.clothShoulderArmor,
+      'LeatherShoulderArmor': self.leatherShoulderArmor,
+      'MailShoulderArmor': self.mailShoulderArmor,
+      'PlateShoulderArmor': self.plateShoulderArmor,
+      'WeaponDPS1H': self.weaponDPS1H,
+      'WeaponDPS2H': self.weaponDPS2H,
+      'SpellcasterDPS1H': self.spellcasterDPS1H,
+      'SpellcasterDPS2H': self.spellcasterDPS2H,
+      'RangedDPS': self.rangedDPS,
+      'WandDPS': self.wandDPS,
+      'SpellPower': self.spellPower,
+      'PrimaryBudget': self.primaryBudget,
+      'TertiaryBudget': self.tertiaryBudget,
+      'ClothCloakArmor': self.clothCloakArmor,
+      'ClothChestArmor': self.clothChestArmor,
+      'LeatherChestArmor': self.leatherChestArmor,
+      'MailChestArmor': self.mailChestArmor,
+      'PlateChestArmor': self.plateChestArmor,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ScalingStatValueEntity;
+    return identical(self, other) ||
         other is ScalingStatValueEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            charlevel == other.charlevel &&
-            shoulderBudget == other.shoulderBudget &&
-            trinketBudget == other.trinketBudget &&
-            weaponBudget1H == other.weaponBudget1H &&
-            rangedBudget == other.rangedBudget &&
-            clothShoulderArmor == other.clothShoulderArmor &&
-            leatherShoulderArmor == other.leatherShoulderArmor &&
-            mailShoulderArmor == other.mailShoulderArmor &&
-            plateShoulderArmor == other.plateShoulderArmor &&
-            weaponDPS1H == other.weaponDPS1H &&
-            weaponDPS2H == other.weaponDPS2H &&
-            spellcasterDPS1H == other.spellcasterDPS1H &&
-            spellcasterDPS2H == other.spellcasterDPS2H &&
-            rangedDPS == other.rangedDPS &&
-            wandDPS == other.wandDPS &&
-            spellPower == other.spellPower &&
-            primaryBudget == other.primaryBudget &&
-            tertiaryBudget == other.tertiaryBudget &&
-            clothCloakArmor == other.clothCloakArmor &&
-            clothChestArmor == other.clothChestArmor &&
-            leatherChestArmor == other.leatherChestArmor &&
-            mailChestArmor == other.mailChestArmor &&
-            plateChestArmor == other.plateChestArmor;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.charlevel == other.charlevel &&
+            self.shoulderBudget == other.shoulderBudget &&
+            self.trinketBudget == other.trinketBudget &&
+            self.weaponBudget1H == other.weaponBudget1H &&
+            self.rangedBudget == other.rangedBudget &&
+            self.clothShoulderArmor == other.clothShoulderArmor &&
+            self.leatherShoulderArmor == other.leatherShoulderArmor &&
+            self.mailShoulderArmor == other.mailShoulderArmor &&
+            self.plateShoulderArmor == other.plateShoulderArmor &&
+            self.weaponDPS1H == other.weaponDPS1H &&
+            self.weaponDPS2H == other.weaponDPS2H &&
+            self.spellcasterDPS1H == other.spellcasterDPS1H &&
+            self.spellcasterDPS2H == other.spellcasterDPS2H &&
+            self.rangedDPS == other.rangedDPS &&
+            self.wandDPS == other.wandDPS &&
+            self.spellPower == other.spellPower &&
+            self.primaryBudget == other.primaryBudget &&
+            self.tertiaryBudget == other.tertiaryBudget &&
+            self.clothCloakArmor == other.clothCloakArmor &&
+            self.clothChestArmor == other.clothChestArmor &&
+            self.leatherChestArmor == other.leatherChestArmor &&
+            self.mailChestArmor == other.mailChestArmor &&
+            self.plateChestArmor == other.plateChestArmor;
   }
 
   @override
   int get hashCode {
+    final self = this as ScalingStatValueEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      charlevel,
-      shoulderBudget,
-      trinketBudget,
-      weaponBudget1H,
-      rangedBudget,
-      clothShoulderArmor,
-      leatherShoulderArmor,
-      mailShoulderArmor,
-      plateShoulderArmor,
-      weaponDPS1H,
-      weaponDPS2H,
-      spellcasterDPS1H,
-      spellcasterDPS2H,
-      rangedDPS,
-      wandDPS,
-      spellPower,
-      primaryBudget,
-      tertiaryBudget,
-      clothCloakArmor,
-      clothChestArmor,
-      leatherChestArmor,
-      mailChestArmor,
-      plateChestArmor,
+      self.runtimeType,
+      self.id,
+      self.charlevel,
+      self.shoulderBudget,
+      self.trinketBudget,
+      self.weaponBudget1H,
+      self.rangedBudget,
+      self.clothShoulderArmor,
+      self.leatherShoulderArmor,
+      self.mailShoulderArmor,
+      self.plateShoulderArmor,
+      self.weaponDPS1H,
+      self.weaponDPS2H,
+      self.spellcasterDPS1H,
+      self.spellcasterDPS2H,
+      self.rangedDPS,
+      self.wandDPS,
+      self.spellPower,
+      self.primaryBudget,
+      self.tertiaryBudget,
+      self.clothCloakArmor,
+      self.clothChestArmor,
+      self.leatherChestArmor,
+      self.mailChestArmor,
+      self.plateChestArmor,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ScalingStatValueEntity;
     return 'ScalingStatValueEntity('
-        'id: $id, '
-        'charlevel: $charlevel, '
-        'shoulderBudget: $shoulderBudget, '
-        'trinketBudget: $trinketBudget, '
-        'weaponBudget1H: $weaponBudget1H, '
-        'rangedBudget: $rangedBudget, '
-        'clothShoulderArmor: $clothShoulderArmor, '
-        'leatherShoulderArmor: $leatherShoulderArmor, '
-        'mailShoulderArmor: $mailShoulderArmor, '
-        'plateShoulderArmor: $plateShoulderArmor, '
-        'weaponDPS1H: $weaponDPS1H, '
-        'weaponDPS2H: $weaponDPS2H, '
-        'spellcasterDPS1H: $spellcasterDPS1H, '
-        'spellcasterDPS2H: $spellcasterDPS2H, '
-        'rangedDPS: $rangedDPS, '
-        'wandDPS: $wandDPS, '
-        'spellPower: $spellPower, '
-        'primaryBudget: $primaryBudget, '
-        'tertiaryBudget: $tertiaryBudget, '
-        'clothCloakArmor: $clothCloakArmor, '
-        'clothChestArmor: $clothChestArmor, '
-        'leatherChestArmor: $leatherChestArmor, '
-        'mailChestArmor: $mailChestArmor, '
-        'plateChestArmor: $plateChestArmor'
+        'id: ${self.id}, '
+        'charlevel: ${self.charlevel}, '
+        'shoulderBudget: ${self.shoulderBudget}, '
+        'trinketBudget: ${self.trinketBudget}, '
+        'weaponBudget1H: ${self.weaponBudget1H}, '
+        'rangedBudget: ${self.rangedBudget}, '
+        'clothShoulderArmor: ${self.clothShoulderArmor}, '
+        'leatherShoulderArmor: ${self.leatherShoulderArmor}, '
+        'mailShoulderArmor: ${self.mailShoulderArmor}, '
+        'plateShoulderArmor: ${self.plateShoulderArmor}, '
+        'weaponDPS1H: ${self.weaponDPS1H}, '
+        'weaponDPS2H: ${self.weaponDPS2H}, '
+        'spellcasterDPS1H: ${self.spellcasterDPS1H}, '
+        'spellcasterDPS2H: ${self.spellcasterDPS2H}, '
+        'rangedDPS: ${self.rangedDPS}, '
+        'wandDPS: ${self.wandDPS}, '
+        'spellPower: ${self.spellPower}, '
+        'primaryBudget: ${self.primaryBudget}, '
+        'tertiaryBudget: ${self.tertiaryBudget}, '
+        'clothCloakArmor: ${self.clothCloakArmor}, '
+        'clothChestArmor: ${self.clothChestArmor}, '
+        'leatherChestArmor: ${self.leatherChestArmor}, '
+        'mailChestArmor: ${self.mailChestArmor}, '
+        'plateChestArmor: ${self.plateChestArmor}'
         ')';
   }
 }

@@ -3,32 +3,6 @@
 part of 'item_display_info_entity.dart';
 
 mixin _ItemDisplayInfoEntityMixin {
-  int get id;
-  String get modelName0;
-  String get modelName1;
-  String get modelTexture0;
-  String get modelTexture1;
-  String get inventoryIcon0;
-  String get inventoryIcon1;
-  int get geosetGroup0;
-  int get geosetGroup1;
-  int get geosetGroup2;
-  int get flags;
-  int get spellVisualId;
-  int get groupSoundIndex;
-  int get helmetGeosetVisId0;
-  int get helmetGeosetVisId1;
-  String get texture0;
-  String get texture1;
-  String get texture2;
-  String get texture3;
-  String get texture4;
-  String get texture5;
-  String get texture6;
-  String get texture7;
-  int get itemVisual;
-  int get particleColorId;
-
   static ItemDisplayInfoEntity fromJson(Map<String, dynamic> json) {
     return ItemDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -86,157 +60,162 @@ mixin _ItemDisplayInfoEntityMixin {
     int? itemVisual,
     int? particleColorId,
   }) {
+    final self = this as ItemDisplayInfoEntity;
     return ItemDisplayInfoEntity(
-      id: id ?? this.id,
-      modelName0: modelName0 ?? this.modelName0,
-      modelName1: modelName1 ?? this.modelName1,
-      modelTexture0: modelTexture0 ?? this.modelTexture0,
-      modelTexture1: modelTexture1 ?? this.modelTexture1,
-      inventoryIcon0: inventoryIcon0 ?? this.inventoryIcon0,
-      inventoryIcon1: inventoryIcon1 ?? this.inventoryIcon1,
-      geosetGroup0: geosetGroup0 ?? this.geosetGroup0,
-      geosetGroup1: geosetGroup1 ?? this.geosetGroup1,
-      geosetGroup2: geosetGroup2 ?? this.geosetGroup2,
-      flags: flags ?? this.flags,
-      spellVisualId: spellVisualId ?? this.spellVisualId,
-      groupSoundIndex: groupSoundIndex ?? this.groupSoundIndex,
-      helmetGeosetVisId0: helmetGeosetVisId0 ?? this.helmetGeosetVisId0,
-      helmetGeosetVisId1: helmetGeosetVisId1 ?? this.helmetGeosetVisId1,
-      texture0: texture0 ?? this.texture0,
-      texture1: texture1 ?? this.texture1,
-      texture2: texture2 ?? this.texture2,
-      texture3: texture3 ?? this.texture3,
-      texture4: texture4 ?? this.texture4,
-      texture5: texture5 ?? this.texture5,
-      texture6: texture6 ?? this.texture6,
-      texture7: texture7 ?? this.texture7,
-      itemVisual: itemVisual ?? this.itemVisual,
-      particleColorId: particleColorId ?? this.particleColorId,
+      id: id ?? self.id,
+      modelName0: modelName0 ?? self.modelName0,
+      modelName1: modelName1 ?? self.modelName1,
+      modelTexture0: modelTexture0 ?? self.modelTexture0,
+      modelTexture1: modelTexture1 ?? self.modelTexture1,
+      inventoryIcon0: inventoryIcon0 ?? self.inventoryIcon0,
+      inventoryIcon1: inventoryIcon1 ?? self.inventoryIcon1,
+      geosetGroup0: geosetGroup0 ?? self.geosetGroup0,
+      geosetGroup1: geosetGroup1 ?? self.geosetGroup1,
+      geosetGroup2: geosetGroup2 ?? self.geosetGroup2,
+      flags: flags ?? self.flags,
+      spellVisualId: spellVisualId ?? self.spellVisualId,
+      groupSoundIndex: groupSoundIndex ?? self.groupSoundIndex,
+      helmetGeosetVisId0: helmetGeosetVisId0 ?? self.helmetGeosetVisId0,
+      helmetGeosetVisId1: helmetGeosetVisId1 ?? self.helmetGeosetVisId1,
+      texture0: texture0 ?? self.texture0,
+      texture1: texture1 ?? self.texture1,
+      texture2: texture2 ?? self.texture2,
+      texture3: texture3 ?? self.texture3,
+      texture4: texture4 ?? self.texture4,
+      texture5: texture5 ?? self.texture5,
+      texture6: texture6 ?? self.texture6,
+      texture7: texture7 ?? self.texture7,
+      itemVisual: itemVisual ?? self.itemVisual,
+      particleColorId: particleColorId ?? self.particleColorId,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ItemDisplayInfoEntity;
     return {
-      'ID': id,
-      'ModelName0': modelName0,
-      'ModelName1': modelName1,
-      'ModelTexture0': modelTexture0,
-      'ModelTexture1': modelTexture1,
-      'InventoryIcon0': inventoryIcon0,
-      'InventoryIcon1': inventoryIcon1,
-      'GeosetGroup0': geosetGroup0,
-      'GeosetGroup1': geosetGroup1,
-      'GeosetGroup2': geosetGroup2,
-      'Flags': flags,
-      'SpellVisualID': spellVisualId,
-      'GroupSoundIndex': groupSoundIndex,
-      'HelmetGeosetVisID0': helmetGeosetVisId0,
-      'HelmetGeosetVisID1': helmetGeosetVisId1,
-      'Texture0': texture0,
-      'Texture1': texture1,
-      'Texture2': texture2,
-      'Texture3': texture3,
-      'Texture4': texture4,
-      'Texture5': texture5,
-      'Texture6': texture6,
-      'Texture7': texture7,
-      'ItemVisual': itemVisual,
-      'ParticleColorID': particleColorId,
+      'ID': self.id,
+      'ModelName0': self.modelName0,
+      'ModelName1': self.modelName1,
+      'ModelTexture0': self.modelTexture0,
+      'ModelTexture1': self.modelTexture1,
+      'InventoryIcon0': self.inventoryIcon0,
+      'InventoryIcon1': self.inventoryIcon1,
+      'GeosetGroup0': self.geosetGroup0,
+      'GeosetGroup1': self.geosetGroup1,
+      'GeosetGroup2': self.geosetGroup2,
+      'Flags': self.flags,
+      'SpellVisualID': self.spellVisualId,
+      'GroupSoundIndex': self.groupSoundIndex,
+      'HelmetGeosetVisID0': self.helmetGeosetVisId0,
+      'HelmetGeosetVisID1': self.helmetGeosetVisId1,
+      'Texture0': self.texture0,
+      'Texture1': self.texture1,
+      'Texture2': self.texture2,
+      'Texture3': self.texture3,
+      'Texture4': self.texture4,
+      'Texture5': self.texture5,
+      'Texture6': self.texture6,
+      'Texture7': self.texture7,
+      'ItemVisual': self.itemVisual,
+      'ParticleColorID': self.particleColorId,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ItemDisplayInfoEntity;
+    return identical(self, other) ||
         other is ItemDisplayInfoEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            modelName0 == other.modelName0 &&
-            modelName1 == other.modelName1 &&
-            modelTexture0 == other.modelTexture0 &&
-            modelTexture1 == other.modelTexture1 &&
-            inventoryIcon0 == other.inventoryIcon0 &&
-            inventoryIcon1 == other.inventoryIcon1 &&
-            geosetGroup0 == other.geosetGroup0 &&
-            geosetGroup1 == other.geosetGroup1 &&
-            geosetGroup2 == other.geosetGroup2 &&
-            flags == other.flags &&
-            spellVisualId == other.spellVisualId &&
-            groupSoundIndex == other.groupSoundIndex &&
-            helmetGeosetVisId0 == other.helmetGeosetVisId0 &&
-            helmetGeosetVisId1 == other.helmetGeosetVisId1 &&
-            texture0 == other.texture0 &&
-            texture1 == other.texture1 &&
-            texture2 == other.texture2 &&
-            texture3 == other.texture3 &&
-            texture4 == other.texture4 &&
-            texture5 == other.texture5 &&
-            texture6 == other.texture6 &&
-            texture7 == other.texture7 &&
-            itemVisual == other.itemVisual &&
-            particleColorId == other.particleColorId;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.modelName0 == other.modelName0 &&
+            self.modelName1 == other.modelName1 &&
+            self.modelTexture0 == other.modelTexture0 &&
+            self.modelTexture1 == other.modelTexture1 &&
+            self.inventoryIcon0 == other.inventoryIcon0 &&
+            self.inventoryIcon1 == other.inventoryIcon1 &&
+            self.geosetGroup0 == other.geosetGroup0 &&
+            self.geosetGroup1 == other.geosetGroup1 &&
+            self.geosetGroup2 == other.geosetGroup2 &&
+            self.flags == other.flags &&
+            self.spellVisualId == other.spellVisualId &&
+            self.groupSoundIndex == other.groupSoundIndex &&
+            self.helmetGeosetVisId0 == other.helmetGeosetVisId0 &&
+            self.helmetGeosetVisId1 == other.helmetGeosetVisId1 &&
+            self.texture0 == other.texture0 &&
+            self.texture1 == other.texture1 &&
+            self.texture2 == other.texture2 &&
+            self.texture3 == other.texture3 &&
+            self.texture4 == other.texture4 &&
+            self.texture5 == other.texture5 &&
+            self.texture6 == other.texture6 &&
+            self.texture7 == other.texture7 &&
+            self.itemVisual == other.itemVisual &&
+            self.particleColorId == other.particleColorId;
   }
 
   @override
   int get hashCode {
+    final self = this as ItemDisplayInfoEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      modelName0,
-      modelName1,
-      modelTexture0,
-      modelTexture1,
-      inventoryIcon0,
-      inventoryIcon1,
-      geosetGroup0,
-      geosetGroup1,
-      geosetGroup2,
-      flags,
-      spellVisualId,
-      groupSoundIndex,
-      helmetGeosetVisId0,
-      helmetGeosetVisId1,
-      texture0,
-      texture1,
-      texture2,
-      texture3,
-      texture4,
-      texture5,
-      texture6,
-      texture7,
-      itemVisual,
-      particleColorId,
+      self.runtimeType,
+      self.id,
+      self.modelName0,
+      self.modelName1,
+      self.modelTexture0,
+      self.modelTexture1,
+      self.inventoryIcon0,
+      self.inventoryIcon1,
+      self.geosetGroup0,
+      self.geosetGroup1,
+      self.geosetGroup2,
+      self.flags,
+      self.spellVisualId,
+      self.groupSoundIndex,
+      self.helmetGeosetVisId0,
+      self.helmetGeosetVisId1,
+      self.texture0,
+      self.texture1,
+      self.texture2,
+      self.texture3,
+      self.texture4,
+      self.texture5,
+      self.texture6,
+      self.texture7,
+      self.itemVisual,
+      self.particleColorId,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ItemDisplayInfoEntity;
     return 'ItemDisplayInfoEntity('
-        'id: $id, '
-        'modelName0: $modelName0, '
-        'modelName1: $modelName1, '
-        'modelTexture0: $modelTexture0, '
-        'modelTexture1: $modelTexture1, '
-        'inventoryIcon0: $inventoryIcon0, '
-        'inventoryIcon1: $inventoryIcon1, '
-        'geosetGroup0: $geosetGroup0, '
-        'geosetGroup1: $geosetGroup1, '
-        'geosetGroup2: $geosetGroup2, '
-        'flags: $flags, '
-        'spellVisualId: $spellVisualId, '
-        'groupSoundIndex: $groupSoundIndex, '
-        'helmetGeosetVisId0: $helmetGeosetVisId0, '
-        'helmetGeosetVisId1: $helmetGeosetVisId1, '
-        'texture0: $texture0, '
-        'texture1: $texture1, '
-        'texture2: $texture2, '
-        'texture3: $texture3, '
-        'texture4: $texture4, '
-        'texture5: $texture5, '
-        'texture6: $texture6, '
-        'texture7: $texture7, '
-        'itemVisual: $itemVisual, '
-        'particleColorId: $particleColorId'
+        'id: ${self.id}, '
+        'modelName0: ${self.modelName0}, '
+        'modelName1: ${self.modelName1}, '
+        'modelTexture0: ${self.modelTexture0}, '
+        'modelTexture1: ${self.modelTexture1}, '
+        'inventoryIcon0: ${self.inventoryIcon0}, '
+        'inventoryIcon1: ${self.inventoryIcon1}, '
+        'geosetGroup0: ${self.geosetGroup0}, '
+        'geosetGroup1: ${self.geosetGroup1}, '
+        'geosetGroup2: ${self.geosetGroup2}, '
+        'flags: ${self.flags}, '
+        'spellVisualId: ${self.spellVisualId}, '
+        'groupSoundIndex: ${self.groupSoundIndex}, '
+        'helmetGeosetVisId0: ${self.helmetGeosetVisId0}, '
+        'helmetGeosetVisId1: ${self.helmetGeosetVisId1}, '
+        'texture0: ${self.texture0}, '
+        'texture1: ${self.texture1}, '
+        'texture2: ${self.texture2}, '
+        'texture3: ${self.texture3}, '
+        'texture4: ${self.texture4}, '
+        'texture5: ${self.texture5}, '
+        'texture6: ${self.texture6}, '
+        'texture7: ${self.texture7}, '
+        'itemVisual: ${self.itemVisual}, '
+        'particleColorId: ${self.particleColorId}'
         ')';
   }
 }

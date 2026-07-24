@@ -3,16 +3,6 @@
 part of 'creature_spell_data_entity.dart';
 
 mixin _CreatureSpellDataEntityMixin {
-  int get id;
-  int get spells0;
-  int get spells1;
-  int get spells2;
-  int get spells3;
-  int get availability0;
-  int get availability1;
-  int get availability2;
-  int get availability3;
-
   static CreatureSpellDataEntity fromJson(Map<String, dynamic> json) {
     return CreatureSpellDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -38,77 +28,82 @@ mixin _CreatureSpellDataEntityMixin {
     int? availability2,
     int? availability3,
   }) {
+    final self = this as CreatureSpellDataEntity;
     return CreatureSpellDataEntity(
-      id: id ?? this.id,
-      spells0: spells0 ?? this.spells0,
-      spells1: spells1 ?? this.spells1,
-      spells2: spells2 ?? this.spells2,
-      spells3: spells3 ?? this.spells3,
-      availability0: availability0 ?? this.availability0,
-      availability1: availability1 ?? this.availability1,
-      availability2: availability2 ?? this.availability2,
-      availability3: availability3 ?? this.availability3,
+      id: id ?? self.id,
+      spells0: spells0 ?? self.spells0,
+      spells1: spells1 ?? self.spells1,
+      spells2: spells2 ?? self.spells2,
+      spells3: spells3 ?? self.spells3,
+      availability0: availability0 ?? self.availability0,
+      availability1: availability1 ?? self.availability1,
+      availability2: availability2 ?? self.availability2,
+      availability3: availability3 ?? self.availability3,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureSpellDataEntity;
     return {
-      'ID': id,
-      'Spells0': spells0,
-      'Spells1': spells1,
-      'Spells2': spells2,
-      'Spells3': spells3,
-      'Availability0': availability0,
-      'Availability1': availability1,
-      'Availability2': availability2,
-      'Availability3': availability3,
+      'ID': self.id,
+      'Spells0': self.spells0,
+      'Spells1': self.spells1,
+      'Spells2': self.spells2,
+      'Spells3': self.spells3,
+      'Availability0': self.availability0,
+      'Availability1': self.availability1,
+      'Availability2': self.availability2,
+      'Availability3': self.availability3,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureSpellDataEntity;
+    return identical(self, other) ||
         other is CreatureSpellDataEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            spells0 == other.spells0 &&
-            spells1 == other.spells1 &&
-            spells2 == other.spells2 &&
-            spells3 == other.spells3 &&
-            availability0 == other.availability0 &&
-            availability1 == other.availability1 &&
-            availability2 == other.availability2 &&
-            availability3 == other.availability3;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.spells0 == other.spells0 &&
+            self.spells1 == other.spells1 &&
+            self.spells2 == other.spells2 &&
+            self.spells3 == other.spells3 &&
+            self.availability0 == other.availability0 &&
+            self.availability1 == other.availability1 &&
+            self.availability2 == other.availability2 &&
+            self.availability3 == other.availability3;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureSpellDataEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      spells0,
-      spells1,
-      spells2,
-      spells3,
-      availability0,
-      availability1,
-      availability2,
-      availability3,
+      self.runtimeType,
+      self.id,
+      self.spells0,
+      self.spells1,
+      self.spells2,
+      self.spells3,
+      self.availability0,
+      self.availability1,
+      self.availability2,
+      self.availability3,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureSpellDataEntity;
     return 'CreatureSpellDataEntity('
-        'id: $id, '
-        'spells0: $spells0, '
-        'spells1: $spells1, '
-        'spells2: $spells2, '
-        'spells3: $spells3, '
-        'availability0: $availability0, '
-        'availability1: $availability1, '
-        'availability2: $availability2, '
-        'availability3: $availability3'
+        'id: ${self.id}, '
+        'spells0: ${self.spells0}, '
+        'spells1: ${self.spells1}, '
+        'spells2: ${self.spells2}, '
+        'spells3: ${self.spells3}, '
+        'availability0: ${self.availability0}, '
+        'availability1: ${self.availability1}, '
+        'availability2: ${self.availability2}, '
+        'availability3: ${self.availability3}'
         ')';
   }
 }

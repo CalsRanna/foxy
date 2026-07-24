@@ -3,9 +3,6 @@
 part of 'spell_icon_entity.dart';
 
 mixin _SpellIconEntityMixin {
-  int get id;
-  String get textureFilename;
-
   static SpellIconEntity fromJson(Map<String, dynamic> json) {
     return SpellIconEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -14,35 +11,40 @@ mixin _SpellIconEntityMixin {
   }
 
   SpellIconEntity copyWith({int? id, String? textureFilename}) {
+    final self = this as SpellIconEntity;
     return SpellIconEntity(
-      id: id ?? this.id,
-      textureFilename: textureFilename ?? this.textureFilename,
+      id: id ?? self.id,
+      textureFilename: textureFilename ?? self.textureFilename,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'ID': id, 'TextureFilename': textureFilename};
+    final self = this as SpellIconEntity;
+    return {'ID': self.id, 'TextureFilename': self.textureFilename};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellIconEntity;
+    return identical(self, other) ||
         other is SpellIconEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            textureFilename == other.textureFilename;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.textureFilename == other.textureFilename;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, textureFilename]);
+    final self = this as SpellIconEntity;
+    return Object.hashAll([self.runtimeType, self.id, self.textureFilename]);
   }
 
   @override
   String toString() {
+    final self = this as SpellIconEntity;
     return 'SpellIconEntity('
-        'id: $id, '
-        'textureFilename: $textureFilename'
+        'id: ${self.id}, '
+        'textureFilename: ${self.textureFilename}'
         ')';
   }
 }

@@ -3,10 +3,6 @@
 part of 'item_enchantment_template_entity.dart';
 
 mixin _ItemEnchantmentTemplateEntityMixin {
-  int get entry;
-  int get ench;
-  double get chance;
-
   static ItemEnchantmentTemplateEntity fromJson(Map<String, dynamic> json) {
     return ItemEnchantmentTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -20,38 +16,48 @@ mixin _ItemEnchantmentTemplateEntityMixin {
     int? ench,
     double? chance,
   }) {
+    final self = this as ItemEnchantmentTemplateEntity;
     return ItemEnchantmentTemplateEntity(
-      entry: entry ?? this.entry,
-      ench: ench ?? this.ench,
-      chance: chance ?? this.chance,
+      entry: entry ?? self.entry,
+      ench: ench ?? self.ench,
+      chance: chance ?? self.chance,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'entry': entry, 'ench': ench, 'chance': chance};
+    final self = this as ItemEnchantmentTemplateEntity;
+    return {'entry': self.entry, 'ench': self.ench, 'chance': self.chance};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ItemEnchantmentTemplateEntity;
+    return identical(self, other) ||
         other is ItemEnchantmentTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            ench == other.ench &&
-            chance == other.chance;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.ench == other.ench &&
+            self.chance == other.chance;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, entry, ench, chance]);
+    final self = this as ItemEnchantmentTemplateEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.entry,
+      self.ench,
+      self.chance,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as ItemEnchantmentTemplateEntity;
     return 'ItemEnchantmentTemplateEntity('
-        'entry: $entry, '
-        'ench: $ench, '
-        'chance: $chance'
+        'entry: ${self.entry}, '
+        'ench: ${self.ench}, '
+        'chance: ${self.chance}'
         ')';
   }
 }

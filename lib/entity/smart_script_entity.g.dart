@@ -3,38 +3,6 @@
 part of 'smart_script_entity.dart';
 
 mixin _SmartScriptEntityMixin {
-  int get entryOrGuid;
-  int get sourceType;
-  int get id;
-  int get link;
-  int get eventType;
-  int get eventPhaseMask;
-  int get eventChance;
-  int get eventFlags;
-  int get eventParam1;
-  int get eventParam2;
-  int get eventParam3;
-  int get eventParam4;
-  int get eventParam5;
-  int get eventParam6;
-  int get actionType;
-  int get actionParam1;
-  int get actionParam2;
-  int get actionParam3;
-  int get actionParam4;
-  int get actionParam5;
-  int get actionParam6;
-  int get targetType;
-  int get targetParam1;
-  int get targetParam2;
-  int get targetParam3;
-  int get targetParam4;
-  double get targetX;
-  double get targetY;
-  double get targetZ;
-  double get targetO;
-  String get comment;
-
   static SmartScriptEntity fromJson(Map<String, dynamic> json) {
     return SmartScriptEntity(
       entryOrGuid: (json['entryorguid'] as num?)?.toInt() ?? 0,
@@ -104,187 +72,192 @@ mixin _SmartScriptEntityMixin {
     double? targetO,
     String? comment,
   }) {
+    final self = this as SmartScriptEntity;
     return SmartScriptEntity(
-      entryOrGuid: entryOrGuid ?? this.entryOrGuid,
-      sourceType: sourceType ?? this.sourceType,
-      id: id ?? this.id,
-      link: link ?? this.link,
-      eventType: eventType ?? this.eventType,
-      eventPhaseMask: eventPhaseMask ?? this.eventPhaseMask,
-      eventChance: eventChance ?? this.eventChance,
-      eventFlags: eventFlags ?? this.eventFlags,
-      eventParam1: eventParam1 ?? this.eventParam1,
-      eventParam2: eventParam2 ?? this.eventParam2,
-      eventParam3: eventParam3 ?? this.eventParam3,
-      eventParam4: eventParam4 ?? this.eventParam4,
-      eventParam5: eventParam5 ?? this.eventParam5,
-      eventParam6: eventParam6 ?? this.eventParam6,
-      actionType: actionType ?? this.actionType,
-      actionParam1: actionParam1 ?? this.actionParam1,
-      actionParam2: actionParam2 ?? this.actionParam2,
-      actionParam3: actionParam3 ?? this.actionParam3,
-      actionParam4: actionParam4 ?? this.actionParam4,
-      actionParam5: actionParam5 ?? this.actionParam5,
-      actionParam6: actionParam6 ?? this.actionParam6,
-      targetType: targetType ?? this.targetType,
-      targetParam1: targetParam1 ?? this.targetParam1,
-      targetParam2: targetParam2 ?? this.targetParam2,
-      targetParam3: targetParam3 ?? this.targetParam3,
-      targetParam4: targetParam4 ?? this.targetParam4,
-      targetX: targetX ?? this.targetX,
-      targetY: targetY ?? this.targetY,
-      targetZ: targetZ ?? this.targetZ,
-      targetO: targetO ?? this.targetO,
-      comment: comment ?? this.comment,
+      entryOrGuid: entryOrGuid ?? self.entryOrGuid,
+      sourceType: sourceType ?? self.sourceType,
+      id: id ?? self.id,
+      link: link ?? self.link,
+      eventType: eventType ?? self.eventType,
+      eventPhaseMask: eventPhaseMask ?? self.eventPhaseMask,
+      eventChance: eventChance ?? self.eventChance,
+      eventFlags: eventFlags ?? self.eventFlags,
+      eventParam1: eventParam1 ?? self.eventParam1,
+      eventParam2: eventParam2 ?? self.eventParam2,
+      eventParam3: eventParam3 ?? self.eventParam3,
+      eventParam4: eventParam4 ?? self.eventParam4,
+      eventParam5: eventParam5 ?? self.eventParam5,
+      eventParam6: eventParam6 ?? self.eventParam6,
+      actionType: actionType ?? self.actionType,
+      actionParam1: actionParam1 ?? self.actionParam1,
+      actionParam2: actionParam2 ?? self.actionParam2,
+      actionParam3: actionParam3 ?? self.actionParam3,
+      actionParam4: actionParam4 ?? self.actionParam4,
+      actionParam5: actionParam5 ?? self.actionParam5,
+      actionParam6: actionParam6 ?? self.actionParam6,
+      targetType: targetType ?? self.targetType,
+      targetParam1: targetParam1 ?? self.targetParam1,
+      targetParam2: targetParam2 ?? self.targetParam2,
+      targetParam3: targetParam3 ?? self.targetParam3,
+      targetParam4: targetParam4 ?? self.targetParam4,
+      targetX: targetX ?? self.targetX,
+      targetY: targetY ?? self.targetY,
+      targetZ: targetZ ?? self.targetZ,
+      targetO: targetO ?? self.targetO,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SmartScriptEntity;
     return {
-      'entryorguid': entryOrGuid,
-      'source_type': sourceType,
-      'id': id,
-      'link': link,
-      'event_type': eventType,
-      'event_phase_mask': eventPhaseMask,
-      'event_chance': eventChance,
-      'event_flags': eventFlags,
-      'event_param1': eventParam1,
-      'event_param2': eventParam2,
-      'event_param3': eventParam3,
-      'event_param4': eventParam4,
-      'event_param5': eventParam5,
-      'event_param6': eventParam6,
-      'action_type': actionType,
-      'action_param1': actionParam1,
-      'action_param2': actionParam2,
-      'action_param3': actionParam3,
-      'action_param4': actionParam4,
-      'action_param5': actionParam5,
-      'action_param6': actionParam6,
-      'target_type': targetType,
-      'target_param1': targetParam1,
-      'target_param2': targetParam2,
-      'target_param3': targetParam3,
-      'target_param4': targetParam4,
-      'target_x': targetX,
-      'target_y': targetY,
-      'target_z': targetZ,
-      'target_o': targetO,
-      'comment': comment,
+      'entryorguid': self.entryOrGuid,
+      'source_type': self.sourceType,
+      'id': self.id,
+      'link': self.link,
+      'event_type': self.eventType,
+      'event_phase_mask': self.eventPhaseMask,
+      'event_chance': self.eventChance,
+      'event_flags': self.eventFlags,
+      'event_param1': self.eventParam1,
+      'event_param2': self.eventParam2,
+      'event_param3': self.eventParam3,
+      'event_param4': self.eventParam4,
+      'event_param5': self.eventParam5,
+      'event_param6': self.eventParam6,
+      'action_type': self.actionType,
+      'action_param1': self.actionParam1,
+      'action_param2': self.actionParam2,
+      'action_param3': self.actionParam3,
+      'action_param4': self.actionParam4,
+      'action_param5': self.actionParam5,
+      'action_param6': self.actionParam6,
+      'target_type': self.targetType,
+      'target_param1': self.targetParam1,
+      'target_param2': self.targetParam2,
+      'target_param3': self.targetParam3,
+      'target_param4': self.targetParam4,
+      'target_x': self.targetX,
+      'target_y': self.targetY,
+      'target_z': self.targetZ,
+      'target_o': self.targetO,
+      'comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SmartScriptEntity;
+    return identical(self, other) ||
         other is SmartScriptEntity &&
-            runtimeType == other.runtimeType &&
-            entryOrGuid == other.entryOrGuid &&
-            sourceType == other.sourceType &&
-            id == other.id &&
-            link == other.link &&
-            eventType == other.eventType &&
-            eventPhaseMask == other.eventPhaseMask &&
-            eventChance == other.eventChance &&
-            eventFlags == other.eventFlags &&
-            eventParam1 == other.eventParam1 &&
-            eventParam2 == other.eventParam2 &&
-            eventParam3 == other.eventParam3 &&
-            eventParam4 == other.eventParam4 &&
-            eventParam5 == other.eventParam5 &&
-            eventParam6 == other.eventParam6 &&
-            actionType == other.actionType &&
-            actionParam1 == other.actionParam1 &&
-            actionParam2 == other.actionParam2 &&
-            actionParam3 == other.actionParam3 &&
-            actionParam4 == other.actionParam4 &&
-            actionParam5 == other.actionParam5 &&
-            actionParam6 == other.actionParam6 &&
-            targetType == other.targetType &&
-            targetParam1 == other.targetParam1 &&
-            targetParam2 == other.targetParam2 &&
-            targetParam3 == other.targetParam3 &&
-            targetParam4 == other.targetParam4 &&
-            targetX == other.targetX &&
-            targetY == other.targetY &&
-            targetZ == other.targetZ &&
-            targetO == other.targetO &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.entryOrGuid == other.entryOrGuid &&
+            self.sourceType == other.sourceType &&
+            self.id == other.id &&
+            self.link == other.link &&
+            self.eventType == other.eventType &&
+            self.eventPhaseMask == other.eventPhaseMask &&
+            self.eventChance == other.eventChance &&
+            self.eventFlags == other.eventFlags &&
+            self.eventParam1 == other.eventParam1 &&
+            self.eventParam2 == other.eventParam2 &&
+            self.eventParam3 == other.eventParam3 &&
+            self.eventParam4 == other.eventParam4 &&
+            self.eventParam5 == other.eventParam5 &&
+            self.eventParam6 == other.eventParam6 &&
+            self.actionType == other.actionType &&
+            self.actionParam1 == other.actionParam1 &&
+            self.actionParam2 == other.actionParam2 &&
+            self.actionParam3 == other.actionParam3 &&
+            self.actionParam4 == other.actionParam4 &&
+            self.actionParam5 == other.actionParam5 &&
+            self.actionParam6 == other.actionParam6 &&
+            self.targetType == other.targetType &&
+            self.targetParam1 == other.targetParam1 &&
+            self.targetParam2 == other.targetParam2 &&
+            self.targetParam3 == other.targetParam3 &&
+            self.targetParam4 == other.targetParam4 &&
+            self.targetX == other.targetX &&
+            self.targetY == other.targetY &&
+            self.targetZ == other.targetZ &&
+            self.targetO == other.targetO &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as SmartScriptEntity;
     return Object.hashAll([
-      runtimeType,
-      entryOrGuid,
-      sourceType,
-      id,
-      link,
-      eventType,
-      eventPhaseMask,
-      eventChance,
-      eventFlags,
-      eventParam1,
-      eventParam2,
-      eventParam3,
-      eventParam4,
-      eventParam5,
-      eventParam6,
-      actionType,
-      actionParam1,
-      actionParam2,
-      actionParam3,
-      actionParam4,
-      actionParam5,
-      actionParam6,
-      targetType,
-      targetParam1,
-      targetParam2,
-      targetParam3,
-      targetParam4,
-      targetX,
-      targetY,
-      targetZ,
-      targetO,
-      comment,
+      self.runtimeType,
+      self.entryOrGuid,
+      self.sourceType,
+      self.id,
+      self.link,
+      self.eventType,
+      self.eventPhaseMask,
+      self.eventChance,
+      self.eventFlags,
+      self.eventParam1,
+      self.eventParam2,
+      self.eventParam3,
+      self.eventParam4,
+      self.eventParam5,
+      self.eventParam6,
+      self.actionType,
+      self.actionParam1,
+      self.actionParam2,
+      self.actionParam3,
+      self.actionParam4,
+      self.actionParam5,
+      self.actionParam6,
+      self.targetType,
+      self.targetParam1,
+      self.targetParam2,
+      self.targetParam3,
+      self.targetParam4,
+      self.targetX,
+      self.targetY,
+      self.targetZ,
+      self.targetO,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SmartScriptEntity;
     return 'SmartScriptEntity('
-        'entryOrGuid: $entryOrGuid, '
-        'sourceType: $sourceType, '
-        'id: $id, '
-        'link: $link, '
-        'eventType: $eventType, '
-        'eventPhaseMask: $eventPhaseMask, '
-        'eventChance: $eventChance, '
-        'eventFlags: $eventFlags, '
-        'eventParam1: $eventParam1, '
-        'eventParam2: $eventParam2, '
-        'eventParam3: $eventParam3, '
-        'eventParam4: $eventParam4, '
-        'eventParam5: $eventParam5, '
-        'eventParam6: $eventParam6, '
-        'actionType: $actionType, '
-        'actionParam1: $actionParam1, '
-        'actionParam2: $actionParam2, '
-        'actionParam3: $actionParam3, '
-        'actionParam4: $actionParam4, '
-        'actionParam5: $actionParam5, '
-        'actionParam6: $actionParam6, '
-        'targetType: $targetType, '
-        'targetParam1: $targetParam1, '
-        'targetParam2: $targetParam2, '
-        'targetParam3: $targetParam3, '
-        'targetParam4: $targetParam4, '
-        'targetX: $targetX, '
-        'targetY: $targetY, '
-        'targetZ: $targetZ, '
-        'targetO: $targetO, '
-        'comment: $comment'
+        'entryOrGuid: ${self.entryOrGuid}, '
+        'sourceType: ${self.sourceType}, '
+        'id: ${self.id}, '
+        'link: ${self.link}, '
+        'eventType: ${self.eventType}, '
+        'eventPhaseMask: ${self.eventPhaseMask}, '
+        'eventChance: ${self.eventChance}, '
+        'eventFlags: ${self.eventFlags}, '
+        'eventParam1: ${self.eventParam1}, '
+        'eventParam2: ${self.eventParam2}, '
+        'eventParam3: ${self.eventParam3}, '
+        'eventParam4: ${self.eventParam4}, '
+        'eventParam5: ${self.eventParam5}, '
+        'eventParam6: ${self.eventParam6}, '
+        'actionType: ${self.actionType}, '
+        'actionParam1: ${self.actionParam1}, '
+        'actionParam2: ${self.actionParam2}, '
+        'actionParam3: ${self.actionParam3}, '
+        'actionParam4: ${self.actionParam4}, '
+        'actionParam5: ${self.actionParam5}, '
+        'actionParam6: ${self.actionParam6}, '
+        'targetType: ${self.targetType}, '
+        'targetParam1: ${self.targetParam1}, '
+        'targetParam2: ${self.targetParam2}, '
+        'targetParam3: ${self.targetParam3}, '
+        'targetParam4: ${self.targetParam4}, '
+        'targetX: ${self.targetX}, '
+        'targetY: ${self.targetY}, '
+        'targetZ: ${self.targetZ}, '
+        'targetO: ${self.targetO}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

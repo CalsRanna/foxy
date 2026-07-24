@@ -3,18 +3,6 @@
 part of 'quest_offer_reward_entity.dart';
 
 mixin _QuestOfferRewardEntityMixin {
-  int get id;
-  int get emote1;
-  int get emote2;
-  int get emote3;
-  int get emote4;
-  int get emoteDelay1;
-  int get emoteDelay2;
-  int get emoteDelay3;
-  int get emoteDelay4;
-  String get rewardText;
-  int get verifiedBuild;
-
   static QuestOfferRewardEntity fromJson(Map<String, dynamic> json) {
     return QuestOfferRewardEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -44,87 +32,92 @@ mixin _QuestOfferRewardEntityMixin {
     String? rewardText,
     int? verifiedBuild,
   }) {
+    final self = this as QuestOfferRewardEntity;
     return QuestOfferRewardEntity(
-      id: id ?? this.id,
-      emote1: emote1 ?? this.emote1,
-      emote2: emote2 ?? this.emote2,
-      emote3: emote3 ?? this.emote3,
-      emote4: emote4 ?? this.emote4,
-      emoteDelay1: emoteDelay1 ?? this.emoteDelay1,
-      emoteDelay2: emoteDelay2 ?? this.emoteDelay2,
-      emoteDelay3: emoteDelay3 ?? this.emoteDelay3,
-      emoteDelay4: emoteDelay4 ?? this.emoteDelay4,
-      rewardText: rewardText ?? this.rewardText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      id: id ?? self.id,
+      emote1: emote1 ?? self.emote1,
+      emote2: emote2 ?? self.emote2,
+      emote3: emote3 ?? self.emote3,
+      emote4: emote4 ?? self.emote4,
+      emoteDelay1: emoteDelay1 ?? self.emoteDelay1,
+      emoteDelay2: emoteDelay2 ?? self.emoteDelay2,
+      emoteDelay3: emoteDelay3 ?? self.emoteDelay3,
+      emoteDelay4: emoteDelay4 ?? self.emoteDelay4,
+      rewardText: rewardText ?? self.rewardText,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestOfferRewardEntity;
     return {
-      'ID': id,
-      'Emote1': emote1,
-      'Emote2': emote2,
-      'Emote3': emote3,
-      'Emote4': emote4,
-      'EmoteDelay1': emoteDelay1,
-      'EmoteDelay2': emoteDelay2,
-      'EmoteDelay3': emoteDelay3,
-      'EmoteDelay4': emoteDelay4,
-      'RewardText': rewardText,
-      'VerifiedBuild': verifiedBuild,
+      'ID': self.id,
+      'Emote1': self.emote1,
+      'Emote2': self.emote2,
+      'Emote3': self.emote3,
+      'Emote4': self.emote4,
+      'EmoteDelay1': self.emoteDelay1,
+      'EmoteDelay2': self.emoteDelay2,
+      'EmoteDelay3': self.emoteDelay3,
+      'EmoteDelay4': self.emoteDelay4,
+      'RewardText': self.rewardText,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestOfferRewardEntity;
+    return identical(self, other) ||
         other is QuestOfferRewardEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            emote1 == other.emote1 &&
-            emote2 == other.emote2 &&
-            emote3 == other.emote3 &&
-            emote4 == other.emote4 &&
-            emoteDelay1 == other.emoteDelay1 &&
-            emoteDelay2 == other.emoteDelay2 &&
-            emoteDelay3 == other.emoteDelay3 &&
-            emoteDelay4 == other.emoteDelay4 &&
-            rewardText == other.rewardText &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.emote1 == other.emote1 &&
+            self.emote2 == other.emote2 &&
+            self.emote3 == other.emote3 &&
+            self.emote4 == other.emote4 &&
+            self.emoteDelay1 == other.emoteDelay1 &&
+            self.emoteDelay2 == other.emoteDelay2 &&
+            self.emoteDelay3 == other.emoteDelay3 &&
+            self.emoteDelay4 == other.emoteDelay4 &&
+            self.rewardText == other.rewardText &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestOfferRewardEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      emote1,
-      emote2,
-      emote3,
-      emote4,
-      emoteDelay1,
-      emoteDelay2,
-      emoteDelay3,
-      emoteDelay4,
-      rewardText,
-      verifiedBuild,
+      self.runtimeType,
+      self.id,
+      self.emote1,
+      self.emote2,
+      self.emote3,
+      self.emote4,
+      self.emoteDelay1,
+      self.emoteDelay2,
+      self.emoteDelay3,
+      self.emoteDelay4,
+      self.rewardText,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestOfferRewardEntity;
     return 'QuestOfferRewardEntity('
-        'id: $id, '
-        'emote1: $emote1, '
-        'emote2: $emote2, '
-        'emote3: $emote3, '
-        'emote4: $emote4, '
-        'emoteDelay1: $emoteDelay1, '
-        'emoteDelay2: $emoteDelay2, '
-        'emoteDelay3: $emoteDelay3, '
-        'emoteDelay4: $emoteDelay4, '
-        'rewardText: $rewardText, '
-        'verifiedBuild: $verifiedBuild'
+        'id: ${self.id}, '
+        'emote1: ${self.emote1}, '
+        'emote2: ${self.emote2}, '
+        'emote3: ${self.emote3}, '
+        'emote4: ${self.emote4}, '
+        'emoteDelay1: ${self.emoteDelay1}, '
+        'emoteDelay2: ${self.emoteDelay2}, '
+        'emoteDelay3: ${self.emoteDelay3}, '
+        'emoteDelay4: ${self.emoteDelay4}, '
+        'rewardText: ${self.rewardText}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

@@ -3,11 +3,6 @@
 part of 'spell_linked_spell_entity.dart';
 
 mixin _SpellLinkedSpellEntityMixin {
-  int get spellTrigger;
-  int get spellEffect;
-  int get type;
-  String get comment;
-
   static SpellLinkedSpellEntity fromJson(Map<String, dynamic> json) {
     return SpellLinkedSpellEntity(
       spellTrigger: (json['spell_trigger'] as num?)?.toInt() ?? 0,
@@ -23,52 +18,57 @@ mixin _SpellLinkedSpellEntityMixin {
     int? type,
     String? comment,
   }) {
+    final self = this as SpellLinkedSpellEntity;
     return SpellLinkedSpellEntity(
-      spellTrigger: spellTrigger ?? this.spellTrigger,
-      spellEffect: spellEffect ?? this.spellEffect,
-      type: type ?? this.type,
-      comment: comment ?? this.comment,
+      spellTrigger: spellTrigger ?? self.spellTrigger,
+      spellEffect: spellEffect ?? self.spellEffect,
+      type: type ?? self.type,
+      comment: comment ?? self.comment,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellLinkedSpellEntity;
     return {
-      'spell_trigger': spellTrigger,
-      'spell_effect': spellEffect,
-      'type': type,
-      'comment': comment,
+      'spell_trigger': self.spellTrigger,
+      'spell_effect': self.spellEffect,
+      'type': self.type,
+      'comment': self.comment,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellLinkedSpellEntity;
+    return identical(self, other) ||
         other is SpellLinkedSpellEntity &&
-            runtimeType == other.runtimeType &&
-            spellTrigger == other.spellTrigger &&
-            spellEffect == other.spellEffect &&
-            type == other.type &&
-            comment == other.comment;
+            self.runtimeType == other.runtimeType &&
+            self.spellTrigger == other.spellTrigger &&
+            self.spellEffect == other.spellEffect &&
+            self.type == other.type &&
+            self.comment == other.comment;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellLinkedSpellEntity;
     return Object.hashAll([
-      runtimeType,
-      spellTrigger,
-      spellEffect,
-      type,
-      comment,
+      self.runtimeType,
+      self.spellTrigger,
+      self.spellEffect,
+      self.type,
+      self.comment,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellLinkedSpellEntity;
     return 'SpellLinkedSpellEntity('
-        'spellTrigger: $spellTrigger, '
-        'spellEffect: $spellEffect, '
-        'type: $type, '
-        'comment: $comment'
+        'spellTrigger: ${self.spellTrigger}, '
+        'spellEffect: ${self.spellEffect}, '
+        'type: ${self.type}, '
+        'comment: ${self.comment}'
         ')';
   }
 }

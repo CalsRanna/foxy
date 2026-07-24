@@ -3,38 +3,6 @@
 part of 'achievement_criteria_entity.dart';
 
 mixin _AchievementCriteriaEntityMixin {
-  int get id;
-  int get achievementId;
-  int get type;
-  int get assetId;
-  int get quantity;
-  int get startEvent;
-  int get startAsset;
-  int get failEvent;
-  int get failAsset;
-  String get descriptionLangEnUS;
-  String get descriptionLangKoKR;
-  String get descriptionLangFrFR;
-  String get descriptionLangDeDE;
-  String get descriptionLangZhCN;
-  String get descriptionLangZhTW;
-  String get descriptionLangEsES;
-  String get descriptionLangEsMX;
-  String get descriptionLangRuRU;
-  String get descriptionLangJaJP;
-  String get descriptionLangPtPT;
-  String get descriptionLangPtBR;
-  String get descriptionLangItIT;
-  String get descriptionLangUnk1;
-  String get descriptionLangUnk2;
-  String get descriptionLangUnk3;
-  int get descriptionLangFlags;
-  int get flags;
-  int get timerStartEvent;
-  int get timerAssetId;
-  int get timerTime;
-  int get uiOrder;
-
   static AchievementCriteriaEntity fromJson(Map<String, dynamic> json) {
     return AchievementCriteriaEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -105,187 +73,192 @@ mixin _AchievementCriteriaEntityMixin {
     int? timerTime,
     int? uiOrder,
   }) {
+    final self = this as AchievementCriteriaEntity;
     return AchievementCriteriaEntity(
-      id: id ?? this.id,
-      achievementId: achievementId ?? this.achievementId,
-      type: type ?? this.type,
-      assetId: assetId ?? this.assetId,
-      quantity: quantity ?? this.quantity,
-      startEvent: startEvent ?? this.startEvent,
-      startAsset: startAsset ?? this.startAsset,
-      failEvent: failEvent ?? this.failEvent,
-      failAsset: failAsset ?? this.failAsset,
-      descriptionLangEnUS: descriptionLangEnUS ?? this.descriptionLangEnUS,
-      descriptionLangKoKR: descriptionLangKoKR ?? this.descriptionLangKoKR,
-      descriptionLangFrFR: descriptionLangFrFR ?? this.descriptionLangFrFR,
-      descriptionLangDeDE: descriptionLangDeDE ?? this.descriptionLangDeDE,
-      descriptionLangZhCN: descriptionLangZhCN ?? this.descriptionLangZhCN,
-      descriptionLangZhTW: descriptionLangZhTW ?? this.descriptionLangZhTW,
-      descriptionLangEsES: descriptionLangEsES ?? this.descriptionLangEsES,
-      descriptionLangEsMX: descriptionLangEsMX ?? this.descriptionLangEsMX,
-      descriptionLangRuRU: descriptionLangRuRU ?? this.descriptionLangRuRU,
-      descriptionLangJaJP: descriptionLangJaJP ?? this.descriptionLangJaJP,
-      descriptionLangPtPT: descriptionLangPtPT ?? this.descriptionLangPtPT,
-      descriptionLangPtBR: descriptionLangPtBR ?? this.descriptionLangPtBR,
-      descriptionLangItIT: descriptionLangItIT ?? this.descriptionLangItIT,
-      descriptionLangUnk1: descriptionLangUnk1 ?? this.descriptionLangUnk1,
-      descriptionLangUnk2: descriptionLangUnk2 ?? this.descriptionLangUnk2,
-      descriptionLangUnk3: descriptionLangUnk3 ?? this.descriptionLangUnk3,
-      descriptionLangFlags: descriptionLangFlags ?? this.descriptionLangFlags,
-      flags: flags ?? this.flags,
-      timerStartEvent: timerStartEvent ?? this.timerStartEvent,
-      timerAssetId: timerAssetId ?? this.timerAssetId,
-      timerTime: timerTime ?? this.timerTime,
-      uiOrder: uiOrder ?? this.uiOrder,
+      id: id ?? self.id,
+      achievementId: achievementId ?? self.achievementId,
+      type: type ?? self.type,
+      assetId: assetId ?? self.assetId,
+      quantity: quantity ?? self.quantity,
+      startEvent: startEvent ?? self.startEvent,
+      startAsset: startAsset ?? self.startAsset,
+      failEvent: failEvent ?? self.failEvent,
+      failAsset: failAsset ?? self.failAsset,
+      descriptionLangEnUS: descriptionLangEnUS ?? self.descriptionLangEnUS,
+      descriptionLangKoKR: descriptionLangKoKR ?? self.descriptionLangKoKR,
+      descriptionLangFrFR: descriptionLangFrFR ?? self.descriptionLangFrFR,
+      descriptionLangDeDE: descriptionLangDeDE ?? self.descriptionLangDeDE,
+      descriptionLangZhCN: descriptionLangZhCN ?? self.descriptionLangZhCN,
+      descriptionLangZhTW: descriptionLangZhTW ?? self.descriptionLangZhTW,
+      descriptionLangEsES: descriptionLangEsES ?? self.descriptionLangEsES,
+      descriptionLangEsMX: descriptionLangEsMX ?? self.descriptionLangEsMX,
+      descriptionLangRuRU: descriptionLangRuRU ?? self.descriptionLangRuRU,
+      descriptionLangJaJP: descriptionLangJaJP ?? self.descriptionLangJaJP,
+      descriptionLangPtPT: descriptionLangPtPT ?? self.descriptionLangPtPT,
+      descriptionLangPtBR: descriptionLangPtBR ?? self.descriptionLangPtBR,
+      descriptionLangItIT: descriptionLangItIT ?? self.descriptionLangItIT,
+      descriptionLangUnk1: descriptionLangUnk1 ?? self.descriptionLangUnk1,
+      descriptionLangUnk2: descriptionLangUnk2 ?? self.descriptionLangUnk2,
+      descriptionLangUnk3: descriptionLangUnk3 ?? self.descriptionLangUnk3,
+      descriptionLangFlags: descriptionLangFlags ?? self.descriptionLangFlags,
+      flags: flags ?? self.flags,
+      timerStartEvent: timerStartEvent ?? self.timerStartEvent,
+      timerAssetId: timerAssetId ?? self.timerAssetId,
+      timerTime: timerTime ?? self.timerTime,
+      uiOrder: uiOrder ?? self.uiOrder,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as AchievementCriteriaEntity;
     return {
-      'ID': id,
-      'Achievement_ID': achievementId,
-      'Type': type,
-      'Asset_ID': assetId,
-      'Quantity': quantity,
-      'Start_event': startEvent,
-      'Start_asset': startAsset,
-      'Fail_event': failEvent,
-      'Fail_asset': failAsset,
-      'Description_lang_enUS': descriptionLangEnUS,
-      'Description_lang_koKR': descriptionLangKoKR,
-      'Description_lang_frFR': descriptionLangFrFR,
-      'Description_lang_deDE': descriptionLangDeDE,
-      'Description_lang_zhCN': descriptionLangZhCN,
-      'Description_lang_zhTW': descriptionLangZhTW,
-      'Description_lang_esES': descriptionLangEsES,
-      'Description_lang_esMX': descriptionLangEsMX,
-      'Description_lang_ruRU': descriptionLangRuRU,
-      'Description_lang_jaJP': descriptionLangJaJP,
-      'Description_lang_ptPT': descriptionLangPtPT,
-      'Description_lang_ptBR': descriptionLangPtBR,
-      'Description_lang_itIT': descriptionLangItIT,
-      'Description_lang_unk1': descriptionLangUnk1,
-      'Description_lang_unk2': descriptionLangUnk2,
-      'Description_lang_unk3': descriptionLangUnk3,
-      'Description_lang_Flags': descriptionLangFlags,
-      'Flags': flags,
-      'Timer_start_event': timerStartEvent,
-      'Timer_asset_ID': timerAssetId,
-      'Timer_time': timerTime,
-      'Ui_order': uiOrder,
+      'ID': self.id,
+      'Achievement_ID': self.achievementId,
+      'Type': self.type,
+      'Asset_ID': self.assetId,
+      'Quantity': self.quantity,
+      'Start_event': self.startEvent,
+      'Start_asset': self.startAsset,
+      'Fail_event': self.failEvent,
+      'Fail_asset': self.failAsset,
+      'Description_lang_enUS': self.descriptionLangEnUS,
+      'Description_lang_koKR': self.descriptionLangKoKR,
+      'Description_lang_frFR': self.descriptionLangFrFR,
+      'Description_lang_deDE': self.descriptionLangDeDE,
+      'Description_lang_zhCN': self.descriptionLangZhCN,
+      'Description_lang_zhTW': self.descriptionLangZhTW,
+      'Description_lang_esES': self.descriptionLangEsES,
+      'Description_lang_esMX': self.descriptionLangEsMX,
+      'Description_lang_ruRU': self.descriptionLangRuRU,
+      'Description_lang_jaJP': self.descriptionLangJaJP,
+      'Description_lang_ptPT': self.descriptionLangPtPT,
+      'Description_lang_ptBR': self.descriptionLangPtBR,
+      'Description_lang_itIT': self.descriptionLangItIT,
+      'Description_lang_unk1': self.descriptionLangUnk1,
+      'Description_lang_unk2': self.descriptionLangUnk2,
+      'Description_lang_unk3': self.descriptionLangUnk3,
+      'Description_lang_Flags': self.descriptionLangFlags,
+      'Flags': self.flags,
+      'Timer_start_event': self.timerStartEvent,
+      'Timer_asset_ID': self.timerAssetId,
+      'Timer_time': self.timerTime,
+      'Ui_order': self.uiOrder,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as AchievementCriteriaEntity;
+    return identical(self, other) ||
         other is AchievementCriteriaEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            achievementId == other.achievementId &&
-            type == other.type &&
-            assetId == other.assetId &&
-            quantity == other.quantity &&
-            startEvent == other.startEvent &&
-            startAsset == other.startAsset &&
-            failEvent == other.failEvent &&
-            failAsset == other.failAsset &&
-            descriptionLangEnUS == other.descriptionLangEnUS &&
-            descriptionLangKoKR == other.descriptionLangKoKR &&
-            descriptionLangFrFR == other.descriptionLangFrFR &&
-            descriptionLangDeDE == other.descriptionLangDeDE &&
-            descriptionLangZhCN == other.descriptionLangZhCN &&
-            descriptionLangZhTW == other.descriptionLangZhTW &&
-            descriptionLangEsES == other.descriptionLangEsES &&
-            descriptionLangEsMX == other.descriptionLangEsMX &&
-            descriptionLangRuRU == other.descriptionLangRuRU &&
-            descriptionLangJaJP == other.descriptionLangJaJP &&
-            descriptionLangPtPT == other.descriptionLangPtPT &&
-            descriptionLangPtBR == other.descriptionLangPtBR &&
-            descriptionLangItIT == other.descriptionLangItIT &&
-            descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            descriptionLangFlags == other.descriptionLangFlags &&
-            flags == other.flags &&
-            timerStartEvent == other.timerStartEvent &&
-            timerAssetId == other.timerAssetId &&
-            timerTime == other.timerTime &&
-            uiOrder == other.uiOrder;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.achievementId == other.achievementId &&
+            self.type == other.type &&
+            self.assetId == other.assetId &&
+            self.quantity == other.quantity &&
+            self.startEvent == other.startEvent &&
+            self.startAsset == other.startAsset &&
+            self.failEvent == other.failEvent &&
+            self.failAsset == other.failAsset &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags &&
+            self.flags == other.flags &&
+            self.timerStartEvent == other.timerStartEvent &&
+            self.timerAssetId == other.timerAssetId &&
+            self.timerTime == other.timerTime &&
+            self.uiOrder == other.uiOrder;
   }
 
   @override
   int get hashCode {
+    final self = this as AchievementCriteriaEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      achievementId,
-      type,
-      assetId,
-      quantity,
-      startEvent,
-      startAsset,
-      failEvent,
-      failAsset,
-      descriptionLangEnUS,
-      descriptionLangKoKR,
-      descriptionLangFrFR,
-      descriptionLangDeDE,
-      descriptionLangZhCN,
-      descriptionLangZhTW,
-      descriptionLangEsES,
-      descriptionLangEsMX,
-      descriptionLangRuRU,
-      descriptionLangJaJP,
-      descriptionLangPtPT,
-      descriptionLangPtBR,
-      descriptionLangItIT,
-      descriptionLangUnk1,
-      descriptionLangUnk2,
-      descriptionLangUnk3,
-      descriptionLangFlags,
-      flags,
-      timerStartEvent,
-      timerAssetId,
-      timerTime,
-      uiOrder,
+      self.runtimeType,
+      self.id,
+      self.achievementId,
+      self.type,
+      self.assetId,
+      self.quantity,
+      self.startEvent,
+      self.startAsset,
+      self.failEvent,
+      self.failAsset,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+      self.flags,
+      self.timerStartEvent,
+      self.timerAssetId,
+      self.timerTime,
+      self.uiOrder,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as AchievementCriteriaEntity;
     return 'AchievementCriteriaEntity('
-        'id: $id, '
-        'achievementId: $achievementId, '
-        'type: $type, '
-        'assetId: $assetId, '
-        'quantity: $quantity, '
-        'startEvent: $startEvent, '
-        'startAsset: $startAsset, '
-        'failEvent: $failEvent, '
-        'failAsset: $failAsset, '
-        'descriptionLangEnUS: $descriptionLangEnUS, '
-        'descriptionLangKoKR: $descriptionLangKoKR, '
-        'descriptionLangFrFR: $descriptionLangFrFR, '
-        'descriptionLangDeDE: $descriptionLangDeDE, '
-        'descriptionLangZhCN: $descriptionLangZhCN, '
-        'descriptionLangZhTW: $descriptionLangZhTW, '
-        'descriptionLangEsES: $descriptionLangEsES, '
-        'descriptionLangEsMX: $descriptionLangEsMX, '
-        'descriptionLangRuRU: $descriptionLangRuRU, '
-        'descriptionLangJaJP: $descriptionLangJaJP, '
-        'descriptionLangPtPT: $descriptionLangPtPT, '
-        'descriptionLangPtBR: $descriptionLangPtBR, '
-        'descriptionLangItIT: $descriptionLangItIT, '
-        'descriptionLangUnk1: $descriptionLangUnk1, '
-        'descriptionLangUnk2: $descriptionLangUnk2, '
-        'descriptionLangUnk3: $descriptionLangUnk3, '
-        'descriptionLangFlags: $descriptionLangFlags, '
-        'flags: $flags, '
-        'timerStartEvent: $timerStartEvent, '
-        'timerAssetId: $timerAssetId, '
-        'timerTime: $timerTime, '
-        'uiOrder: $uiOrder'
+        'id: ${self.id}, '
+        'achievementId: ${self.achievementId}, '
+        'type: ${self.type}, '
+        'assetId: ${self.assetId}, '
+        'quantity: ${self.quantity}, '
+        'startEvent: ${self.startEvent}, '
+        'startAsset: ${self.startAsset}, '
+        'failEvent: ${self.failEvent}, '
+        'failAsset: ${self.failAsset}, '
+        'descriptionLangEnUS: ${self.descriptionLangEnUS}, '
+        'descriptionLangKoKR: ${self.descriptionLangKoKR}, '
+        'descriptionLangFrFR: ${self.descriptionLangFrFR}, '
+        'descriptionLangDeDE: ${self.descriptionLangDeDE}, '
+        'descriptionLangZhCN: ${self.descriptionLangZhCN}, '
+        'descriptionLangZhTW: ${self.descriptionLangZhTW}, '
+        'descriptionLangEsES: ${self.descriptionLangEsES}, '
+        'descriptionLangEsMX: ${self.descriptionLangEsMX}, '
+        'descriptionLangRuRU: ${self.descriptionLangRuRU}, '
+        'descriptionLangJaJP: ${self.descriptionLangJaJP}, '
+        'descriptionLangPtPT: ${self.descriptionLangPtPT}, '
+        'descriptionLangPtBR: ${self.descriptionLangPtBR}, '
+        'descriptionLangItIT: ${self.descriptionLangItIT}, '
+        'descriptionLangUnk1: ${self.descriptionLangUnk1}, '
+        'descriptionLangUnk2: ${self.descriptionLangUnk2}, '
+        'descriptionLangUnk3: ${self.descriptionLangUnk3}, '
+        'descriptionLangFlags: ${self.descriptionLangFlags}, '
+        'flags: ${self.flags}, '
+        'timerStartEvent: ${self.timerStartEvent}, '
+        'timerAssetId: ${self.timerAssetId}, '
+        'timerTime: ${self.timerTime}, '
+        'uiOrder: ${self.uiOrder}'
         ')';
   }
 }

@@ -3,12 +3,6 @@
 part of 'gossip_menu_option_locale_entity.dart';
 
 mixin _GossipMenuOptionLocaleEntityMixin {
-  int get menuId;
-  int get optionId;
-  String get locale;
-  String get optionText;
-  String get boxText;
-
   static GossipMenuOptionLocaleEntity fromJson(Map<String, dynamic> json) {
     return GossipMenuOptionLocaleEntity(
       menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
@@ -26,57 +20,62 @@ mixin _GossipMenuOptionLocaleEntityMixin {
     String? optionText,
     String? boxText,
   }) {
+    final self = this as GossipMenuOptionLocaleEntity;
     return GossipMenuOptionLocaleEntity(
-      menuId: menuId ?? this.menuId,
-      optionId: optionId ?? this.optionId,
-      locale: locale ?? this.locale,
-      optionText: optionText ?? this.optionText,
-      boxText: boxText ?? this.boxText,
+      menuId: menuId ?? self.menuId,
+      optionId: optionId ?? self.optionId,
+      locale: locale ?? self.locale,
+      optionText: optionText ?? self.optionText,
+      boxText: boxText ?? self.boxText,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GossipMenuOptionLocaleEntity;
     return {
-      'MenuID': menuId,
-      'OptionID': optionId,
-      'Locale': locale,
-      'OptionText': optionText,
-      'BoxText': boxText,
+      'MenuID': self.menuId,
+      'OptionID': self.optionId,
+      'Locale': self.locale,
+      'OptionText': self.optionText,
+      'BoxText': self.boxText,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GossipMenuOptionLocaleEntity;
+    return identical(self, other) ||
         other is GossipMenuOptionLocaleEntity &&
-            runtimeType == other.runtimeType &&
-            menuId == other.menuId &&
-            optionId == other.optionId &&
-            locale == other.locale &&
-            optionText == other.optionText &&
-            boxText == other.boxText;
+            self.runtimeType == other.runtimeType &&
+            self.menuId == other.menuId &&
+            self.optionId == other.optionId &&
+            self.locale == other.locale &&
+            self.optionText == other.optionText &&
+            self.boxText == other.boxText;
   }
 
   @override
   int get hashCode {
+    final self = this as GossipMenuOptionLocaleEntity;
     return Object.hashAll([
-      runtimeType,
-      menuId,
-      optionId,
-      locale,
-      optionText,
-      boxText,
+      self.runtimeType,
+      self.menuId,
+      self.optionId,
+      self.locale,
+      self.optionText,
+      self.boxText,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GossipMenuOptionLocaleEntity;
     return 'GossipMenuOptionLocaleEntity('
-        'menuId: $menuId, '
-        'optionId: $optionId, '
-        'locale: $locale, '
-        'optionText: $optionText, '
-        'boxText: $boxText'
+        'menuId: ${self.menuId}, '
+        'optionId: ${self.optionId}, '
+        'locale: ${self.locale}, '
+        'optionText: ${self.optionText}, '
+        'boxText: ${self.boxText}'
         ')';
   }
 }

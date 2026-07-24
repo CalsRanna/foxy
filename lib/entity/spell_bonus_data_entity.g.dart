@@ -3,13 +3,6 @@
 part of 'spell_bonus_data_entity.dart';
 
 mixin _SpellBonusDataEntityMixin {
-  int get entry;
-  double get directBonus;
-  double get dotBonus;
-  double get apBonus;
-  double get apDotBonus;
-  String get comments;
-
   static SpellBonusDataEntity fromJson(Map<String, dynamic> json) {
     return SpellBonusDataEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
@@ -29,62 +22,67 @@ mixin _SpellBonusDataEntityMixin {
     double? apDotBonus,
     String? comments,
   }) {
+    final self = this as SpellBonusDataEntity;
     return SpellBonusDataEntity(
-      entry: entry ?? this.entry,
-      directBonus: directBonus ?? this.directBonus,
-      dotBonus: dotBonus ?? this.dotBonus,
-      apBonus: apBonus ?? this.apBonus,
-      apDotBonus: apDotBonus ?? this.apDotBonus,
-      comments: comments ?? this.comments,
+      entry: entry ?? self.entry,
+      directBonus: directBonus ?? self.directBonus,
+      dotBonus: dotBonus ?? self.dotBonus,
+      apBonus: apBonus ?? self.apBonus,
+      apDotBonus: apDotBonus ?? self.apDotBonus,
+      comments: comments ?? self.comments,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellBonusDataEntity;
     return {
-      'entry': entry,
-      'direct_bonus': directBonus,
-      'dot_bonus': dotBonus,
-      'ap_bonus': apBonus,
-      'ap_dot_bonus': apDotBonus,
-      'comments': comments,
+      'entry': self.entry,
+      'direct_bonus': self.directBonus,
+      'dot_bonus': self.dotBonus,
+      'ap_bonus': self.apBonus,
+      'ap_dot_bonus': self.apDotBonus,
+      'comments': self.comments,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellBonusDataEntity;
+    return identical(self, other) ||
         other is SpellBonusDataEntity &&
-            runtimeType == other.runtimeType &&
-            entry == other.entry &&
-            directBonus == other.directBonus &&
-            dotBonus == other.dotBonus &&
-            apBonus == other.apBonus &&
-            apDotBonus == other.apDotBonus &&
-            comments == other.comments;
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.directBonus == other.directBonus &&
+            self.dotBonus == other.dotBonus &&
+            self.apBonus == other.apBonus &&
+            self.apDotBonus == other.apDotBonus &&
+            self.comments == other.comments;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellBonusDataEntity;
     return Object.hashAll([
-      runtimeType,
-      entry,
-      directBonus,
-      dotBonus,
-      apBonus,
-      apDotBonus,
-      comments,
+      self.runtimeType,
+      self.entry,
+      self.directBonus,
+      self.dotBonus,
+      self.apBonus,
+      self.apDotBonus,
+      self.comments,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellBonusDataEntity;
     return 'SpellBonusDataEntity('
-        'entry: $entry, '
-        'directBonus: $directBonus, '
-        'dotBonus: $dotBonus, '
-        'apBonus: $apBonus, '
-        'apDotBonus: $apDotBonus, '
-        'comments: $comments'
+        'entry: ${self.entry}, '
+        'directBonus: ${self.directBonus}, '
+        'dotBonus: ${self.dotBonus}, '
+        'apBonus: ${self.apBonus}, '
+        'apDotBonus: ${self.apDotBonus}, '
+        'comments: ${self.comments}'
         ')';
   }
 }

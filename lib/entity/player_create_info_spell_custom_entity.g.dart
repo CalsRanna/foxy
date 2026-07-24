@@ -3,11 +3,6 @@
 part of 'player_create_info_spell_custom_entity.dart';
 
 mixin _PlayerCreateInfoSpellCustomEntityMixin {
-  int get raceMask;
-  int get classMask;
-  int get spell;
-  String get note;
-
   static PlayerCreateInfoSpellCustomEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoSpellCustomEntity(
       raceMask: (json['racemask'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _PlayerCreateInfoSpellCustomEntityMixin {
     int? spell,
     String? note,
   }) {
+    final self = this as PlayerCreateInfoSpellCustomEntity;
     return PlayerCreateInfoSpellCustomEntity(
-      raceMask: raceMask ?? this.raceMask,
-      classMask: classMask ?? this.classMask,
-      spell: spell ?? this.spell,
-      note: note ?? this.note,
+      raceMask: raceMask ?? self.raceMask,
+      classMask: classMask ?? self.classMask,
+      spell: spell ?? self.spell,
+      note: note ?? self.note,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PlayerCreateInfoSpellCustomEntity;
     return {
-      'racemask': raceMask,
-      'classmask': classMask,
-      'Spell': spell,
-      'Note': note,
+      'racemask': self.raceMask,
+      'classmask': self.classMask,
+      'Spell': self.spell,
+      'Note': self.note,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PlayerCreateInfoSpellCustomEntity;
+    return identical(self, other) ||
         other is PlayerCreateInfoSpellCustomEntity &&
-            runtimeType == other.runtimeType &&
-            raceMask == other.raceMask &&
-            classMask == other.classMask &&
-            spell == other.spell &&
-            note == other.note;
+            self.runtimeType == other.runtimeType &&
+            self.raceMask == other.raceMask &&
+            self.classMask == other.classMask &&
+            self.spell == other.spell &&
+            self.note == other.note;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, raceMask, classMask, spell, note]);
+    final self = this as PlayerCreateInfoSpellCustomEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.raceMask,
+      self.classMask,
+      self.spell,
+      self.note,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as PlayerCreateInfoSpellCustomEntity;
     return 'PlayerCreateInfoSpellCustomEntity('
-        'raceMask: $raceMask, '
-        'classMask: $classMask, '
-        'spell: $spell, '
-        'note: $note'
+        'raceMask: ${self.raceMask}, '
+        'classMask: ${self.classMask}, '
+        'spell: ${self.spell}, '
+        'note: ${self.note}'
         ')';
   }
 }

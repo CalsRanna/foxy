@@ -3,15 +3,6 @@
 part of 'zone_music_entity.dart';
 
 mixin _ZoneMusicEntityMixin {
-  int get id;
-  String get setName;
-  int get silenceIntervalMin0;
-  int get silenceIntervalMin1;
-  int get silenceIntervalMax0;
-  int get silenceIntervalMax1;
-  int get sounds0;
-  int get sounds1;
-
   static ZoneMusicEntity fromJson(Map<String, dynamic> json) {
     return ZoneMusicEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -35,72 +26,77 @@ mixin _ZoneMusicEntityMixin {
     int? sounds0,
     int? sounds1,
   }) {
+    final self = this as ZoneMusicEntity;
     return ZoneMusicEntity(
-      id: id ?? this.id,
-      setName: setName ?? this.setName,
-      silenceIntervalMin0: silenceIntervalMin0 ?? this.silenceIntervalMin0,
-      silenceIntervalMin1: silenceIntervalMin1 ?? this.silenceIntervalMin1,
-      silenceIntervalMax0: silenceIntervalMax0 ?? this.silenceIntervalMax0,
-      silenceIntervalMax1: silenceIntervalMax1 ?? this.silenceIntervalMax1,
-      sounds0: sounds0 ?? this.sounds0,
-      sounds1: sounds1 ?? this.sounds1,
+      id: id ?? self.id,
+      setName: setName ?? self.setName,
+      silenceIntervalMin0: silenceIntervalMin0 ?? self.silenceIntervalMin0,
+      silenceIntervalMin1: silenceIntervalMin1 ?? self.silenceIntervalMin1,
+      silenceIntervalMax0: silenceIntervalMax0 ?? self.silenceIntervalMax0,
+      silenceIntervalMax1: silenceIntervalMax1 ?? self.silenceIntervalMax1,
+      sounds0: sounds0 ?? self.sounds0,
+      sounds1: sounds1 ?? self.sounds1,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ZoneMusicEntity;
     return {
-      'ID': id,
-      'SetName': setName,
-      'SilenceIntervalMin0': silenceIntervalMin0,
-      'SilenceIntervalMin1': silenceIntervalMin1,
-      'SilenceIntervalMax0': silenceIntervalMax0,
-      'SilenceIntervalMax1': silenceIntervalMax1,
-      'Sounds0': sounds0,
-      'Sounds1': sounds1,
+      'ID': self.id,
+      'SetName': self.setName,
+      'SilenceIntervalMin0': self.silenceIntervalMin0,
+      'SilenceIntervalMin1': self.silenceIntervalMin1,
+      'SilenceIntervalMax0': self.silenceIntervalMax0,
+      'SilenceIntervalMax1': self.silenceIntervalMax1,
+      'Sounds0': self.sounds0,
+      'Sounds1': self.sounds1,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ZoneMusicEntity;
+    return identical(self, other) ||
         other is ZoneMusicEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            setName == other.setName &&
-            silenceIntervalMin0 == other.silenceIntervalMin0 &&
-            silenceIntervalMin1 == other.silenceIntervalMin1 &&
-            silenceIntervalMax0 == other.silenceIntervalMax0 &&
-            silenceIntervalMax1 == other.silenceIntervalMax1 &&
-            sounds0 == other.sounds0 &&
-            sounds1 == other.sounds1;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.setName == other.setName &&
+            self.silenceIntervalMin0 == other.silenceIntervalMin0 &&
+            self.silenceIntervalMin1 == other.silenceIntervalMin1 &&
+            self.silenceIntervalMax0 == other.silenceIntervalMax0 &&
+            self.silenceIntervalMax1 == other.silenceIntervalMax1 &&
+            self.sounds0 == other.sounds0 &&
+            self.sounds1 == other.sounds1;
   }
 
   @override
   int get hashCode {
+    final self = this as ZoneMusicEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      setName,
-      silenceIntervalMin0,
-      silenceIntervalMin1,
-      silenceIntervalMax0,
-      silenceIntervalMax1,
-      sounds0,
-      sounds1,
+      self.runtimeType,
+      self.id,
+      self.setName,
+      self.silenceIntervalMin0,
+      self.silenceIntervalMin1,
+      self.silenceIntervalMax0,
+      self.silenceIntervalMax1,
+      self.sounds0,
+      self.sounds1,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ZoneMusicEntity;
     return 'ZoneMusicEntity('
-        'id: $id, '
-        'setName: $setName, '
-        'silenceIntervalMin0: $silenceIntervalMin0, '
-        'silenceIntervalMin1: $silenceIntervalMin1, '
-        'silenceIntervalMax0: $silenceIntervalMax0, '
-        'silenceIntervalMax1: $silenceIntervalMax1, '
-        'sounds0: $sounds0, '
-        'sounds1: $sounds1'
+        'id: ${self.id}, '
+        'setName: ${self.setName}, '
+        'silenceIntervalMin0: ${self.silenceIntervalMin0}, '
+        'silenceIntervalMin1: ${self.silenceIntervalMin1}, '
+        'silenceIntervalMax0: ${self.silenceIntervalMax0}, '
+        'silenceIntervalMax1: ${self.silenceIntervalMax1}, '
+        'sounds0: ${self.sounds0}, '
+        'sounds1: ${self.sounds1}'
         ')';
   }
 }

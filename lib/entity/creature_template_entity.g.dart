@@ -3,62 +3,6 @@
 part of 'creature_template_entity.dart';
 
 mixin _CreatureTemplateEntityMixin {
-  String get aiName;
-  double get armorModifier;
-  int get baseAttackTime;
-  double get baseVariance;
-  double get damageModifier;
-  int get difficultyEntry1;
-  int get difficultyEntry2;
-  int get difficultyEntry3;
-  int get damageSchool;
-  double get detectionRange;
-  int get dynamicFlags;
-  int get entry;
-  int get exp;
-  double get experienceModifier;
-  int get faction;
-  int get family;
-  int get flagsExtra;
-  int get gossipMenuId;
-  double get healthModifier;
-  double get hoverHeight;
-  String get iconName;
-  int get killCredit1;
-  int get killCredit2;
-  int get lootId;
-  int get maxGold;
-  int get maxLevel;
-  double get manaModifier;
-  int get minLevel;
-  int get minGold;
-  int get movementId;
-  int get movementType;
-  String get name;
-  int get npcFlag;
-  int get petSpellDataId;
-  int get pickpocketLoot;
-  int get racialLeader;
-  int get rangeAttackTime;
-  double get rangeVariance;
-  int get rank;
-  int get regenHealth;
-  String get scriptName;
-  int get skinLoot;
-  double get speedFlight;
-  double get speedRun;
-  double get speedSwim;
-  double get speedWalk;
-  String get subName;
-  int get type;
-  int get typeFlags;
-  int get unitClass;
-  int get unitFlags;
-  int get unitFlags2;
-  int get vehicleId;
-  int get verifiedBuild;
-  int get creatureImmunitiesId;
-
   static CreatureTemplateEntity fromJson(Map<String, dynamic> json) {
     return CreatureTemplateEntity(
       aiName: json['AIName']?.toString() ?? '',
@@ -178,307 +122,312 @@ mixin _CreatureTemplateEntityMixin {
     int? verifiedBuild,
     int? creatureImmunitiesId,
   }) {
+    final self = this as CreatureTemplateEntity;
     return CreatureTemplateEntity(
-      aiName: aiName ?? this.aiName,
-      armorModifier: armorModifier ?? this.armorModifier,
-      baseAttackTime: baseAttackTime ?? this.baseAttackTime,
-      baseVariance: baseVariance ?? this.baseVariance,
-      damageModifier: damageModifier ?? this.damageModifier,
-      difficultyEntry1: difficultyEntry1 ?? this.difficultyEntry1,
-      difficultyEntry2: difficultyEntry2 ?? this.difficultyEntry2,
-      difficultyEntry3: difficultyEntry3 ?? this.difficultyEntry3,
-      damageSchool: damageSchool ?? this.damageSchool,
-      detectionRange: detectionRange ?? this.detectionRange,
-      dynamicFlags: dynamicFlags ?? this.dynamicFlags,
-      entry: entry ?? this.entry,
-      exp: exp ?? this.exp,
-      experienceModifier: experienceModifier ?? this.experienceModifier,
-      faction: faction ?? this.faction,
-      family: family ?? this.family,
-      flagsExtra: flagsExtra ?? this.flagsExtra,
-      gossipMenuId: gossipMenuId ?? this.gossipMenuId,
-      healthModifier: healthModifier ?? this.healthModifier,
-      hoverHeight: hoverHeight ?? this.hoverHeight,
-      iconName: iconName ?? this.iconName,
-      killCredit1: killCredit1 ?? this.killCredit1,
-      killCredit2: killCredit2 ?? this.killCredit2,
-      lootId: lootId ?? this.lootId,
-      maxGold: maxGold ?? this.maxGold,
-      maxLevel: maxLevel ?? this.maxLevel,
-      manaModifier: manaModifier ?? this.manaModifier,
-      minLevel: minLevel ?? this.minLevel,
-      minGold: minGold ?? this.minGold,
-      movementId: movementId ?? this.movementId,
-      movementType: movementType ?? this.movementType,
-      name: name ?? this.name,
-      npcFlag: npcFlag ?? this.npcFlag,
-      petSpellDataId: petSpellDataId ?? this.petSpellDataId,
-      pickpocketLoot: pickpocketLoot ?? this.pickpocketLoot,
-      racialLeader: racialLeader ?? this.racialLeader,
-      rangeAttackTime: rangeAttackTime ?? this.rangeAttackTime,
-      rangeVariance: rangeVariance ?? this.rangeVariance,
-      rank: rank ?? this.rank,
-      regenHealth: regenHealth ?? this.regenHealth,
-      scriptName: scriptName ?? this.scriptName,
-      skinLoot: skinLoot ?? this.skinLoot,
-      speedFlight: speedFlight ?? this.speedFlight,
-      speedRun: speedRun ?? this.speedRun,
-      speedSwim: speedSwim ?? this.speedSwim,
-      speedWalk: speedWalk ?? this.speedWalk,
-      subName: subName ?? this.subName,
-      type: type ?? this.type,
-      typeFlags: typeFlags ?? this.typeFlags,
-      unitClass: unitClass ?? this.unitClass,
-      unitFlags: unitFlags ?? this.unitFlags,
-      unitFlags2: unitFlags2 ?? this.unitFlags2,
-      vehicleId: vehicleId ?? this.vehicleId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-      creatureImmunitiesId: creatureImmunitiesId ?? this.creatureImmunitiesId,
+      aiName: aiName ?? self.aiName,
+      armorModifier: armorModifier ?? self.armorModifier,
+      baseAttackTime: baseAttackTime ?? self.baseAttackTime,
+      baseVariance: baseVariance ?? self.baseVariance,
+      damageModifier: damageModifier ?? self.damageModifier,
+      difficultyEntry1: difficultyEntry1 ?? self.difficultyEntry1,
+      difficultyEntry2: difficultyEntry2 ?? self.difficultyEntry2,
+      difficultyEntry3: difficultyEntry3 ?? self.difficultyEntry3,
+      damageSchool: damageSchool ?? self.damageSchool,
+      detectionRange: detectionRange ?? self.detectionRange,
+      dynamicFlags: dynamicFlags ?? self.dynamicFlags,
+      entry: entry ?? self.entry,
+      exp: exp ?? self.exp,
+      experienceModifier: experienceModifier ?? self.experienceModifier,
+      faction: faction ?? self.faction,
+      family: family ?? self.family,
+      flagsExtra: flagsExtra ?? self.flagsExtra,
+      gossipMenuId: gossipMenuId ?? self.gossipMenuId,
+      healthModifier: healthModifier ?? self.healthModifier,
+      hoverHeight: hoverHeight ?? self.hoverHeight,
+      iconName: iconName ?? self.iconName,
+      killCredit1: killCredit1 ?? self.killCredit1,
+      killCredit2: killCredit2 ?? self.killCredit2,
+      lootId: lootId ?? self.lootId,
+      maxGold: maxGold ?? self.maxGold,
+      maxLevel: maxLevel ?? self.maxLevel,
+      manaModifier: manaModifier ?? self.manaModifier,
+      minLevel: minLevel ?? self.minLevel,
+      minGold: minGold ?? self.minGold,
+      movementId: movementId ?? self.movementId,
+      movementType: movementType ?? self.movementType,
+      name: name ?? self.name,
+      npcFlag: npcFlag ?? self.npcFlag,
+      petSpellDataId: petSpellDataId ?? self.petSpellDataId,
+      pickpocketLoot: pickpocketLoot ?? self.pickpocketLoot,
+      racialLeader: racialLeader ?? self.racialLeader,
+      rangeAttackTime: rangeAttackTime ?? self.rangeAttackTime,
+      rangeVariance: rangeVariance ?? self.rangeVariance,
+      rank: rank ?? self.rank,
+      regenHealth: regenHealth ?? self.regenHealth,
+      scriptName: scriptName ?? self.scriptName,
+      skinLoot: skinLoot ?? self.skinLoot,
+      speedFlight: speedFlight ?? self.speedFlight,
+      speedRun: speedRun ?? self.speedRun,
+      speedSwim: speedSwim ?? self.speedSwim,
+      speedWalk: speedWalk ?? self.speedWalk,
+      subName: subName ?? self.subName,
+      type: type ?? self.type,
+      typeFlags: typeFlags ?? self.typeFlags,
+      unitClass: unitClass ?? self.unitClass,
+      unitFlags: unitFlags ?? self.unitFlags,
+      unitFlags2: unitFlags2 ?? self.unitFlags2,
+      vehicleId: vehicleId ?? self.vehicleId,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
+      creatureImmunitiesId: creatureImmunitiesId ?? self.creatureImmunitiesId,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureTemplateEntity;
     return {
-      'AIName': aiName,
-      'ArmorModifier': armorModifier,
-      'BaseAttackTime': baseAttackTime,
-      'BaseVariance': baseVariance,
-      'DamageModifier': damageModifier,
-      'difficulty_entry_1': difficultyEntry1,
-      'difficulty_entry_2': difficultyEntry2,
-      'difficulty_entry_3': difficultyEntry3,
-      'dmgschool': damageSchool,
-      'detection_range': detectionRange,
-      'dynamicflags': dynamicFlags,
-      'entry': entry,
-      'exp': exp,
-      'ExperienceModifier': experienceModifier,
-      'faction': faction,
-      'family': family,
-      'flags_extra': flagsExtra,
-      'gossip_menu_id': gossipMenuId,
-      'HealthModifier': healthModifier,
-      'HoverHeight': hoverHeight,
-      'IconName': iconName,
-      'KillCredit1': killCredit1,
-      'KillCredit2': killCredit2,
-      'lootid': lootId,
-      'maxgold': maxGold,
-      'maxlevel': maxLevel,
-      'ManaModifier': manaModifier,
-      'minlevel': minLevel,
-      'mingold': minGold,
-      'movementId': movementId,
-      'MovementType': movementType,
-      'name': name,
-      'npcflag': npcFlag,
-      'PetSpellDataId': petSpellDataId,
-      'pickpocketloot': pickpocketLoot,
-      'RacialLeader': racialLeader,
-      'RangeAttackTime': rangeAttackTime,
-      'RangeVariance': rangeVariance,
-      'rank': rank,
-      'RegenHealth': regenHealth,
-      'ScriptName': scriptName,
-      'skinloot': skinLoot,
-      'speed_flight': speedFlight,
-      'speed_run': speedRun,
-      'speed_swim': speedSwim,
-      'speed_walk': speedWalk,
-      'subname': subName,
-      'type': type,
-      'type_flags': typeFlags,
-      'unit_class': unitClass,
-      'unit_flags': unitFlags,
-      'unit_flags2': unitFlags2,
-      'VehicleId': vehicleId,
-      'VerifiedBuild': verifiedBuild,
-      'CreatureImmunitiesId': creatureImmunitiesId,
+      'AIName': self.aiName,
+      'ArmorModifier': self.armorModifier,
+      'BaseAttackTime': self.baseAttackTime,
+      'BaseVariance': self.baseVariance,
+      'DamageModifier': self.damageModifier,
+      'difficulty_entry_1': self.difficultyEntry1,
+      'difficulty_entry_2': self.difficultyEntry2,
+      'difficulty_entry_3': self.difficultyEntry3,
+      'dmgschool': self.damageSchool,
+      'detection_range': self.detectionRange,
+      'dynamicflags': self.dynamicFlags,
+      'entry': self.entry,
+      'exp': self.exp,
+      'ExperienceModifier': self.experienceModifier,
+      'faction': self.faction,
+      'family': self.family,
+      'flags_extra': self.flagsExtra,
+      'gossip_menu_id': self.gossipMenuId,
+      'HealthModifier': self.healthModifier,
+      'HoverHeight': self.hoverHeight,
+      'IconName': self.iconName,
+      'KillCredit1': self.killCredit1,
+      'KillCredit2': self.killCredit2,
+      'lootid': self.lootId,
+      'maxgold': self.maxGold,
+      'maxlevel': self.maxLevel,
+      'ManaModifier': self.manaModifier,
+      'minlevel': self.minLevel,
+      'mingold': self.minGold,
+      'movementId': self.movementId,
+      'MovementType': self.movementType,
+      'name': self.name,
+      'npcflag': self.npcFlag,
+      'PetSpellDataId': self.petSpellDataId,
+      'pickpocketloot': self.pickpocketLoot,
+      'RacialLeader': self.racialLeader,
+      'RangeAttackTime': self.rangeAttackTime,
+      'RangeVariance': self.rangeVariance,
+      'rank': self.rank,
+      'RegenHealth': self.regenHealth,
+      'ScriptName': self.scriptName,
+      'skinloot': self.skinLoot,
+      'speed_flight': self.speedFlight,
+      'speed_run': self.speedRun,
+      'speed_swim': self.speedSwim,
+      'speed_walk': self.speedWalk,
+      'subname': self.subName,
+      'type': self.type,
+      'type_flags': self.typeFlags,
+      'unit_class': self.unitClass,
+      'unit_flags': self.unitFlags,
+      'unit_flags2': self.unitFlags2,
+      'VehicleId': self.vehicleId,
+      'VerifiedBuild': self.verifiedBuild,
+      'CreatureImmunitiesId': self.creatureImmunitiesId,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureTemplateEntity;
+    return identical(self, other) ||
         other is CreatureTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            aiName == other.aiName &&
-            armorModifier == other.armorModifier &&
-            baseAttackTime == other.baseAttackTime &&
-            baseVariance == other.baseVariance &&
-            damageModifier == other.damageModifier &&
-            difficultyEntry1 == other.difficultyEntry1 &&
-            difficultyEntry2 == other.difficultyEntry2 &&
-            difficultyEntry3 == other.difficultyEntry3 &&
-            damageSchool == other.damageSchool &&
-            detectionRange == other.detectionRange &&
-            dynamicFlags == other.dynamicFlags &&
-            entry == other.entry &&
-            exp == other.exp &&
-            experienceModifier == other.experienceModifier &&
-            faction == other.faction &&
-            family == other.family &&
-            flagsExtra == other.flagsExtra &&
-            gossipMenuId == other.gossipMenuId &&
-            healthModifier == other.healthModifier &&
-            hoverHeight == other.hoverHeight &&
-            iconName == other.iconName &&
-            killCredit1 == other.killCredit1 &&
-            killCredit2 == other.killCredit2 &&
-            lootId == other.lootId &&
-            maxGold == other.maxGold &&
-            maxLevel == other.maxLevel &&
-            manaModifier == other.manaModifier &&
-            minLevel == other.minLevel &&
-            minGold == other.minGold &&
-            movementId == other.movementId &&
-            movementType == other.movementType &&
-            name == other.name &&
-            npcFlag == other.npcFlag &&
-            petSpellDataId == other.petSpellDataId &&
-            pickpocketLoot == other.pickpocketLoot &&
-            racialLeader == other.racialLeader &&
-            rangeAttackTime == other.rangeAttackTime &&
-            rangeVariance == other.rangeVariance &&
-            rank == other.rank &&
-            regenHealth == other.regenHealth &&
-            scriptName == other.scriptName &&
-            skinLoot == other.skinLoot &&
-            speedFlight == other.speedFlight &&
-            speedRun == other.speedRun &&
-            speedSwim == other.speedSwim &&
-            speedWalk == other.speedWalk &&
-            subName == other.subName &&
-            type == other.type &&
-            typeFlags == other.typeFlags &&
-            unitClass == other.unitClass &&
-            unitFlags == other.unitFlags &&
-            unitFlags2 == other.unitFlags2 &&
-            vehicleId == other.vehicleId &&
-            verifiedBuild == other.verifiedBuild &&
-            creatureImmunitiesId == other.creatureImmunitiesId;
+            self.runtimeType == other.runtimeType &&
+            self.aiName == other.aiName &&
+            self.armorModifier == other.armorModifier &&
+            self.baseAttackTime == other.baseAttackTime &&
+            self.baseVariance == other.baseVariance &&
+            self.damageModifier == other.damageModifier &&
+            self.difficultyEntry1 == other.difficultyEntry1 &&
+            self.difficultyEntry2 == other.difficultyEntry2 &&
+            self.difficultyEntry3 == other.difficultyEntry3 &&
+            self.damageSchool == other.damageSchool &&
+            self.detectionRange == other.detectionRange &&
+            self.dynamicFlags == other.dynamicFlags &&
+            self.entry == other.entry &&
+            self.exp == other.exp &&
+            self.experienceModifier == other.experienceModifier &&
+            self.faction == other.faction &&
+            self.family == other.family &&
+            self.flagsExtra == other.flagsExtra &&
+            self.gossipMenuId == other.gossipMenuId &&
+            self.healthModifier == other.healthModifier &&
+            self.hoverHeight == other.hoverHeight &&
+            self.iconName == other.iconName &&
+            self.killCredit1 == other.killCredit1 &&
+            self.killCredit2 == other.killCredit2 &&
+            self.lootId == other.lootId &&
+            self.maxGold == other.maxGold &&
+            self.maxLevel == other.maxLevel &&
+            self.manaModifier == other.manaModifier &&
+            self.minLevel == other.minLevel &&
+            self.minGold == other.minGold &&
+            self.movementId == other.movementId &&
+            self.movementType == other.movementType &&
+            self.name == other.name &&
+            self.npcFlag == other.npcFlag &&
+            self.petSpellDataId == other.petSpellDataId &&
+            self.pickpocketLoot == other.pickpocketLoot &&
+            self.racialLeader == other.racialLeader &&
+            self.rangeAttackTime == other.rangeAttackTime &&
+            self.rangeVariance == other.rangeVariance &&
+            self.rank == other.rank &&
+            self.regenHealth == other.regenHealth &&
+            self.scriptName == other.scriptName &&
+            self.skinLoot == other.skinLoot &&
+            self.speedFlight == other.speedFlight &&
+            self.speedRun == other.speedRun &&
+            self.speedSwim == other.speedSwim &&
+            self.speedWalk == other.speedWalk &&
+            self.subName == other.subName &&
+            self.type == other.type &&
+            self.typeFlags == other.typeFlags &&
+            self.unitClass == other.unitClass &&
+            self.unitFlags == other.unitFlags &&
+            self.unitFlags2 == other.unitFlags2 &&
+            self.vehicleId == other.vehicleId &&
+            self.verifiedBuild == other.verifiedBuild &&
+            self.creatureImmunitiesId == other.creatureImmunitiesId;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      aiName,
-      armorModifier,
-      baseAttackTime,
-      baseVariance,
-      damageModifier,
-      difficultyEntry1,
-      difficultyEntry2,
-      difficultyEntry3,
-      damageSchool,
-      detectionRange,
-      dynamicFlags,
-      entry,
-      exp,
-      experienceModifier,
-      faction,
-      family,
-      flagsExtra,
-      gossipMenuId,
-      healthModifier,
-      hoverHeight,
-      iconName,
-      killCredit1,
-      killCredit2,
-      lootId,
-      maxGold,
-      maxLevel,
-      manaModifier,
-      minLevel,
-      minGold,
-      movementId,
-      movementType,
-      name,
-      npcFlag,
-      petSpellDataId,
-      pickpocketLoot,
-      racialLeader,
-      rangeAttackTime,
-      rangeVariance,
-      rank,
-      regenHealth,
-      scriptName,
-      skinLoot,
-      speedFlight,
-      speedRun,
-      speedSwim,
-      speedWalk,
-      subName,
-      type,
-      typeFlags,
-      unitClass,
-      unitFlags,
-      unitFlags2,
-      vehicleId,
-      verifiedBuild,
-      creatureImmunitiesId,
+      self.runtimeType,
+      self.aiName,
+      self.armorModifier,
+      self.baseAttackTime,
+      self.baseVariance,
+      self.damageModifier,
+      self.difficultyEntry1,
+      self.difficultyEntry2,
+      self.difficultyEntry3,
+      self.damageSchool,
+      self.detectionRange,
+      self.dynamicFlags,
+      self.entry,
+      self.exp,
+      self.experienceModifier,
+      self.faction,
+      self.family,
+      self.flagsExtra,
+      self.gossipMenuId,
+      self.healthModifier,
+      self.hoverHeight,
+      self.iconName,
+      self.killCredit1,
+      self.killCredit2,
+      self.lootId,
+      self.maxGold,
+      self.maxLevel,
+      self.manaModifier,
+      self.minLevel,
+      self.minGold,
+      self.movementId,
+      self.movementType,
+      self.name,
+      self.npcFlag,
+      self.petSpellDataId,
+      self.pickpocketLoot,
+      self.racialLeader,
+      self.rangeAttackTime,
+      self.rangeVariance,
+      self.rank,
+      self.regenHealth,
+      self.scriptName,
+      self.skinLoot,
+      self.speedFlight,
+      self.speedRun,
+      self.speedSwim,
+      self.speedWalk,
+      self.subName,
+      self.type,
+      self.typeFlags,
+      self.unitClass,
+      self.unitFlags,
+      self.unitFlags2,
+      self.vehicleId,
+      self.verifiedBuild,
+      self.creatureImmunitiesId,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureTemplateEntity;
     return 'CreatureTemplateEntity('
-        'aiName: $aiName, '
-        'armorModifier: $armorModifier, '
-        'baseAttackTime: $baseAttackTime, '
-        'baseVariance: $baseVariance, '
-        'damageModifier: $damageModifier, '
-        'difficultyEntry1: $difficultyEntry1, '
-        'difficultyEntry2: $difficultyEntry2, '
-        'difficultyEntry3: $difficultyEntry3, '
-        'damageSchool: $damageSchool, '
-        'detectionRange: $detectionRange, '
-        'dynamicFlags: $dynamicFlags, '
-        'entry: $entry, '
-        'exp: $exp, '
-        'experienceModifier: $experienceModifier, '
-        'faction: $faction, '
-        'family: $family, '
-        'flagsExtra: $flagsExtra, '
-        'gossipMenuId: $gossipMenuId, '
-        'healthModifier: $healthModifier, '
-        'hoverHeight: $hoverHeight, '
-        'iconName: $iconName, '
-        'killCredit1: $killCredit1, '
-        'killCredit2: $killCredit2, '
-        'lootId: $lootId, '
-        'maxGold: $maxGold, '
-        'maxLevel: $maxLevel, '
-        'manaModifier: $manaModifier, '
-        'minLevel: $minLevel, '
-        'minGold: $minGold, '
-        'movementId: $movementId, '
-        'movementType: $movementType, '
-        'name: $name, '
-        'npcFlag: $npcFlag, '
-        'petSpellDataId: $petSpellDataId, '
-        'pickpocketLoot: $pickpocketLoot, '
-        'racialLeader: $racialLeader, '
-        'rangeAttackTime: $rangeAttackTime, '
-        'rangeVariance: $rangeVariance, '
-        'rank: $rank, '
-        'regenHealth: $regenHealth, '
-        'scriptName: $scriptName, '
-        'skinLoot: $skinLoot, '
-        'speedFlight: $speedFlight, '
-        'speedRun: $speedRun, '
-        'speedSwim: $speedSwim, '
-        'speedWalk: $speedWalk, '
-        'subName: $subName, '
-        'type: $type, '
-        'typeFlags: $typeFlags, '
-        'unitClass: $unitClass, '
-        'unitFlags: $unitFlags, '
-        'unitFlags2: $unitFlags2, '
-        'vehicleId: $vehicleId, '
-        'verifiedBuild: $verifiedBuild, '
-        'creatureImmunitiesId: $creatureImmunitiesId'
+        'aiName: ${self.aiName}, '
+        'armorModifier: ${self.armorModifier}, '
+        'baseAttackTime: ${self.baseAttackTime}, '
+        'baseVariance: ${self.baseVariance}, '
+        'damageModifier: ${self.damageModifier}, '
+        'difficultyEntry1: ${self.difficultyEntry1}, '
+        'difficultyEntry2: ${self.difficultyEntry2}, '
+        'difficultyEntry3: ${self.difficultyEntry3}, '
+        'damageSchool: ${self.damageSchool}, '
+        'detectionRange: ${self.detectionRange}, '
+        'dynamicFlags: ${self.dynamicFlags}, '
+        'entry: ${self.entry}, '
+        'exp: ${self.exp}, '
+        'experienceModifier: ${self.experienceModifier}, '
+        'faction: ${self.faction}, '
+        'family: ${self.family}, '
+        'flagsExtra: ${self.flagsExtra}, '
+        'gossipMenuId: ${self.gossipMenuId}, '
+        'healthModifier: ${self.healthModifier}, '
+        'hoverHeight: ${self.hoverHeight}, '
+        'iconName: ${self.iconName}, '
+        'killCredit1: ${self.killCredit1}, '
+        'killCredit2: ${self.killCredit2}, '
+        'lootId: ${self.lootId}, '
+        'maxGold: ${self.maxGold}, '
+        'maxLevel: ${self.maxLevel}, '
+        'manaModifier: ${self.manaModifier}, '
+        'minLevel: ${self.minLevel}, '
+        'minGold: ${self.minGold}, '
+        'movementId: ${self.movementId}, '
+        'movementType: ${self.movementType}, '
+        'name: ${self.name}, '
+        'npcFlag: ${self.npcFlag}, '
+        'petSpellDataId: ${self.petSpellDataId}, '
+        'pickpocketLoot: ${self.pickpocketLoot}, '
+        'racialLeader: ${self.racialLeader}, '
+        'rangeAttackTime: ${self.rangeAttackTime}, '
+        'rangeVariance: ${self.rangeVariance}, '
+        'rank: ${self.rank}, '
+        'regenHealth: ${self.regenHealth}, '
+        'scriptName: ${self.scriptName}, '
+        'skinLoot: ${self.skinLoot}, '
+        'speedFlight: ${self.speedFlight}, '
+        'speedRun: ${self.speedRun}, '
+        'speedSwim: ${self.speedSwim}, '
+        'speedWalk: ${self.speedWalk}, '
+        'subName: ${self.subName}, '
+        'type: ${self.type}, '
+        'typeFlags: ${self.typeFlags}, '
+        'unitClass: ${self.unitClass}, '
+        'unitFlags: ${self.unitFlags}, '
+        'unitFlags2: ${self.unitFlags2}, '
+        'vehicleId: ${self.vehicleId}, '
+        'verifiedBuild: ${self.verifiedBuild}, '
+        'creatureImmunitiesId: ${self.creatureImmunitiesId}'
         ')';
   }
 }

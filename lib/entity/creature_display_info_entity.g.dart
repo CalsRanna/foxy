@@ -3,23 +3,6 @@
 part of 'creature_display_info_entity.dart';
 
 mixin _CreatureDisplayInfoEntityMixin {
-  int get id;
-  int get modelId;
-  int get soundId;
-  int get extendedDisplayInfoId;
-  double get creatureModelScale;
-  int get creatureModelAlpha;
-  String get textureVariation0;
-  String get textureVariation1;
-  String get textureVariation2;
-  String get portraitTextureName;
-  int get sizeClass;
-  int get bloodID;
-  int get npcSoundID;
-  int get particleColorID;
-  int get creatureGeosetData;
-  int get objectEffectPackageID;
-
   static CreatureDisplayInfoEntity fromJson(Map<String, dynamic> json) {
     return CreatureDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -62,114 +45,119 @@ mixin _CreatureDisplayInfoEntityMixin {
     int? creatureGeosetData,
     int? objectEffectPackageID,
   }) {
+    final self = this as CreatureDisplayInfoEntity;
     return CreatureDisplayInfoEntity(
-      id: id ?? this.id,
-      modelId: modelId ?? this.modelId,
-      soundId: soundId ?? this.soundId,
+      id: id ?? self.id,
+      modelId: modelId ?? self.modelId,
+      soundId: soundId ?? self.soundId,
       extendedDisplayInfoId:
-          extendedDisplayInfoId ?? this.extendedDisplayInfoId,
-      creatureModelScale: creatureModelScale ?? this.creatureModelScale,
-      creatureModelAlpha: creatureModelAlpha ?? this.creatureModelAlpha,
-      textureVariation0: textureVariation0 ?? this.textureVariation0,
-      textureVariation1: textureVariation1 ?? this.textureVariation1,
-      textureVariation2: textureVariation2 ?? this.textureVariation2,
-      portraitTextureName: portraitTextureName ?? this.portraitTextureName,
-      sizeClass: sizeClass ?? this.sizeClass,
-      bloodID: bloodID ?? this.bloodID,
-      npcSoundID: npcSoundID ?? this.npcSoundID,
-      particleColorID: particleColorID ?? this.particleColorID,
-      creatureGeosetData: creatureGeosetData ?? this.creatureGeosetData,
+          extendedDisplayInfoId ?? self.extendedDisplayInfoId,
+      creatureModelScale: creatureModelScale ?? self.creatureModelScale,
+      creatureModelAlpha: creatureModelAlpha ?? self.creatureModelAlpha,
+      textureVariation0: textureVariation0 ?? self.textureVariation0,
+      textureVariation1: textureVariation1 ?? self.textureVariation1,
+      textureVariation2: textureVariation2 ?? self.textureVariation2,
+      portraitTextureName: portraitTextureName ?? self.portraitTextureName,
+      sizeClass: sizeClass ?? self.sizeClass,
+      bloodID: bloodID ?? self.bloodID,
+      npcSoundID: npcSoundID ?? self.npcSoundID,
+      particleColorID: particleColorID ?? self.particleColorID,
+      creatureGeosetData: creatureGeosetData ?? self.creatureGeosetData,
       objectEffectPackageID:
-          objectEffectPackageID ?? this.objectEffectPackageID,
+          objectEffectPackageID ?? self.objectEffectPackageID,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureDisplayInfoEntity;
     return {
-      'ID': id,
-      'ModelID': modelId,
-      'SoundID': soundId,
-      'ExtendedDisplayInfoID': extendedDisplayInfoId,
-      'CreatureModelScale': creatureModelScale,
-      'CreatureModelAlpha': creatureModelAlpha,
-      'TextureVariation0': textureVariation0,
-      'TextureVariation1': textureVariation1,
-      'TextureVariation2': textureVariation2,
-      'PortraitTextureName': portraitTextureName,
-      'SizeClass': sizeClass,
-      'BloodID': bloodID,
-      'NPCSoundID': npcSoundID,
-      'ParticleColorID': particleColorID,
-      'CreatureGeosetData': creatureGeosetData,
-      'ObjectEffectPackageID': objectEffectPackageID,
+      'ID': self.id,
+      'ModelID': self.modelId,
+      'SoundID': self.soundId,
+      'ExtendedDisplayInfoID': self.extendedDisplayInfoId,
+      'CreatureModelScale': self.creatureModelScale,
+      'CreatureModelAlpha': self.creatureModelAlpha,
+      'TextureVariation0': self.textureVariation0,
+      'TextureVariation1': self.textureVariation1,
+      'TextureVariation2': self.textureVariation2,
+      'PortraitTextureName': self.portraitTextureName,
+      'SizeClass': self.sizeClass,
+      'BloodID': self.bloodID,
+      'NPCSoundID': self.npcSoundID,
+      'ParticleColorID': self.particleColorID,
+      'CreatureGeosetData': self.creatureGeosetData,
+      'ObjectEffectPackageID': self.objectEffectPackageID,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureDisplayInfoEntity;
+    return identical(self, other) ||
         other is CreatureDisplayInfoEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            modelId == other.modelId &&
-            soundId == other.soundId &&
-            extendedDisplayInfoId == other.extendedDisplayInfoId &&
-            creatureModelScale == other.creatureModelScale &&
-            creatureModelAlpha == other.creatureModelAlpha &&
-            textureVariation0 == other.textureVariation0 &&
-            textureVariation1 == other.textureVariation1 &&
-            textureVariation2 == other.textureVariation2 &&
-            portraitTextureName == other.portraitTextureName &&
-            sizeClass == other.sizeClass &&
-            bloodID == other.bloodID &&
-            npcSoundID == other.npcSoundID &&
-            particleColorID == other.particleColorID &&
-            creatureGeosetData == other.creatureGeosetData &&
-            objectEffectPackageID == other.objectEffectPackageID;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.modelId == other.modelId &&
+            self.soundId == other.soundId &&
+            self.extendedDisplayInfoId == other.extendedDisplayInfoId &&
+            self.creatureModelScale == other.creatureModelScale &&
+            self.creatureModelAlpha == other.creatureModelAlpha &&
+            self.textureVariation0 == other.textureVariation0 &&
+            self.textureVariation1 == other.textureVariation1 &&
+            self.textureVariation2 == other.textureVariation2 &&
+            self.portraitTextureName == other.portraitTextureName &&
+            self.sizeClass == other.sizeClass &&
+            self.bloodID == other.bloodID &&
+            self.npcSoundID == other.npcSoundID &&
+            self.particleColorID == other.particleColorID &&
+            self.creatureGeosetData == other.creatureGeosetData &&
+            self.objectEffectPackageID == other.objectEffectPackageID;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureDisplayInfoEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      modelId,
-      soundId,
-      extendedDisplayInfoId,
-      creatureModelScale,
-      creatureModelAlpha,
-      textureVariation0,
-      textureVariation1,
-      textureVariation2,
-      portraitTextureName,
-      sizeClass,
-      bloodID,
-      npcSoundID,
-      particleColorID,
-      creatureGeosetData,
-      objectEffectPackageID,
+      self.runtimeType,
+      self.id,
+      self.modelId,
+      self.soundId,
+      self.extendedDisplayInfoId,
+      self.creatureModelScale,
+      self.creatureModelAlpha,
+      self.textureVariation0,
+      self.textureVariation1,
+      self.textureVariation2,
+      self.portraitTextureName,
+      self.sizeClass,
+      self.bloodID,
+      self.npcSoundID,
+      self.particleColorID,
+      self.creatureGeosetData,
+      self.objectEffectPackageID,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureDisplayInfoEntity;
     return 'CreatureDisplayInfoEntity('
-        'id: $id, '
-        'modelId: $modelId, '
-        'soundId: $soundId, '
-        'extendedDisplayInfoId: $extendedDisplayInfoId, '
-        'creatureModelScale: $creatureModelScale, '
-        'creatureModelAlpha: $creatureModelAlpha, '
-        'textureVariation0: $textureVariation0, '
-        'textureVariation1: $textureVariation1, '
-        'textureVariation2: $textureVariation2, '
-        'portraitTextureName: $portraitTextureName, '
-        'sizeClass: $sizeClass, '
-        'bloodID: $bloodID, '
-        'npcSoundID: $npcSoundID, '
-        'particleColorID: $particleColorID, '
-        'creatureGeosetData: $creatureGeosetData, '
-        'objectEffectPackageID: $objectEffectPackageID'
+        'id: ${self.id}, '
+        'modelId: ${self.modelId}, '
+        'soundId: ${self.soundId}, '
+        'extendedDisplayInfoId: ${self.extendedDisplayInfoId}, '
+        'creatureModelScale: ${self.creatureModelScale}, '
+        'creatureModelAlpha: ${self.creatureModelAlpha}, '
+        'textureVariation0: ${self.textureVariation0}, '
+        'textureVariation1: ${self.textureVariation1}, '
+        'textureVariation2: ${self.textureVariation2}, '
+        'portraitTextureName: ${self.portraitTextureName}, '
+        'sizeClass: ${self.sizeClass}, '
+        'bloodID: ${self.bloodID}, '
+        'npcSoundID: ${self.npcSoundID}, '
+        'particleColorID: ${self.particleColorID}, '
+        'creatureGeosetData: ${self.creatureGeosetData}, '
+        'objectEffectPackageID: ${self.objectEffectPackageID}'
         ')';
   }
 }

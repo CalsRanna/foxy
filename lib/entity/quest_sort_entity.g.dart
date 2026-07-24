@@ -3,25 +3,6 @@
 part of 'quest_sort_entity.dart';
 
 mixin _QuestSortEntityMixin {
-  int get id;
-  String get sortNameLangEnUS;
-  String get sortNameLangKoKR;
-  String get sortNameLangFrFR;
-  String get sortNameLangDeDE;
-  String get sortNameLangZhCN;
-  String get sortNameLangZhTW;
-  String get sortNameLangEsES;
-  String get sortNameLangEsMX;
-  String get sortNameLangRuRU;
-  String get sortNameLangJaJP;
-  String get sortNameLangPtPT;
-  String get sortNameLangPtBR;
-  String get sortNameLangItIT;
-  String get sortNameLangUnk1;
-  String get sortNameLangUnk2;
-  String get sortNameLangUnk3;
-  int get sortNameLangFlags;
-
   static QuestSortEntity fromJson(Map<String, dynamic> json) {
     return QuestSortEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -65,122 +46,127 @@ mixin _QuestSortEntityMixin {
     String? sortNameLangUnk3,
     int? sortNameLangFlags,
   }) {
+    final self = this as QuestSortEntity;
     return QuestSortEntity(
-      id: id ?? this.id,
-      sortNameLangEnUS: sortNameLangEnUS ?? this.sortNameLangEnUS,
-      sortNameLangKoKR: sortNameLangKoKR ?? this.sortNameLangKoKR,
-      sortNameLangFrFR: sortNameLangFrFR ?? this.sortNameLangFrFR,
-      sortNameLangDeDE: sortNameLangDeDE ?? this.sortNameLangDeDE,
-      sortNameLangZhCN: sortNameLangZhCN ?? this.sortNameLangZhCN,
-      sortNameLangZhTW: sortNameLangZhTW ?? this.sortNameLangZhTW,
-      sortNameLangEsES: sortNameLangEsES ?? this.sortNameLangEsES,
-      sortNameLangEsMX: sortNameLangEsMX ?? this.sortNameLangEsMX,
-      sortNameLangRuRU: sortNameLangRuRU ?? this.sortNameLangRuRU,
-      sortNameLangJaJP: sortNameLangJaJP ?? this.sortNameLangJaJP,
-      sortNameLangPtPT: sortNameLangPtPT ?? this.sortNameLangPtPT,
-      sortNameLangPtBR: sortNameLangPtBR ?? this.sortNameLangPtBR,
-      sortNameLangItIT: sortNameLangItIT ?? this.sortNameLangItIT,
-      sortNameLangUnk1: sortNameLangUnk1 ?? this.sortNameLangUnk1,
-      sortNameLangUnk2: sortNameLangUnk2 ?? this.sortNameLangUnk2,
-      sortNameLangUnk3: sortNameLangUnk3 ?? this.sortNameLangUnk3,
-      sortNameLangFlags: sortNameLangFlags ?? this.sortNameLangFlags,
+      id: id ?? self.id,
+      sortNameLangEnUS: sortNameLangEnUS ?? self.sortNameLangEnUS,
+      sortNameLangKoKR: sortNameLangKoKR ?? self.sortNameLangKoKR,
+      sortNameLangFrFR: sortNameLangFrFR ?? self.sortNameLangFrFR,
+      sortNameLangDeDE: sortNameLangDeDE ?? self.sortNameLangDeDE,
+      sortNameLangZhCN: sortNameLangZhCN ?? self.sortNameLangZhCN,
+      sortNameLangZhTW: sortNameLangZhTW ?? self.sortNameLangZhTW,
+      sortNameLangEsES: sortNameLangEsES ?? self.sortNameLangEsES,
+      sortNameLangEsMX: sortNameLangEsMX ?? self.sortNameLangEsMX,
+      sortNameLangRuRU: sortNameLangRuRU ?? self.sortNameLangRuRU,
+      sortNameLangJaJP: sortNameLangJaJP ?? self.sortNameLangJaJP,
+      sortNameLangPtPT: sortNameLangPtPT ?? self.sortNameLangPtPT,
+      sortNameLangPtBR: sortNameLangPtBR ?? self.sortNameLangPtBR,
+      sortNameLangItIT: sortNameLangItIT ?? self.sortNameLangItIT,
+      sortNameLangUnk1: sortNameLangUnk1 ?? self.sortNameLangUnk1,
+      sortNameLangUnk2: sortNameLangUnk2 ?? self.sortNameLangUnk2,
+      sortNameLangUnk3: sortNameLangUnk3 ?? self.sortNameLangUnk3,
+      sortNameLangFlags: sortNameLangFlags ?? self.sortNameLangFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as QuestSortEntity;
     return {
-      'ID': id,
-      'SortName_lang_enUS': sortNameLangEnUS,
-      'SortName_lang_koKR': sortNameLangKoKR,
-      'SortName_lang_frFR': sortNameLangFrFR,
-      'SortName_lang_deDE': sortNameLangDeDE,
-      'SortName_lang_zhCN': sortNameLangZhCN,
-      'SortName_lang_zhTW': sortNameLangZhTW,
-      'SortName_lang_esES': sortNameLangEsES,
-      'SortName_lang_esMX': sortNameLangEsMX,
-      'SortName_lang_ruRU': sortNameLangRuRU,
-      'SortName_lang_jaJP': sortNameLangJaJP,
-      'SortName_lang_ptPT': sortNameLangPtPT,
-      'SortName_lang_ptBR': sortNameLangPtBR,
-      'SortName_lang_itIT': sortNameLangItIT,
-      'SortName_lang_unk1': sortNameLangUnk1,
-      'SortName_lang_unk2': sortNameLangUnk2,
-      'SortName_lang_unk3': sortNameLangUnk3,
-      'SortName_lang_Flags': sortNameLangFlags,
+      'ID': self.id,
+      'SortName_lang_enUS': self.sortNameLangEnUS,
+      'SortName_lang_koKR': self.sortNameLangKoKR,
+      'SortName_lang_frFR': self.sortNameLangFrFR,
+      'SortName_lang_deDE': self.sortNameLangDeDE,
+      'SortName_lang_zhCN': self.sortNameLangZhCN,
+      'SortName_lang_zhTW': self.sortNameLangZhTW,
+      'SortName_lang_esES': self.sortNameLangEsES,
+      'SortName_lang_esMX': self.sortNameLangEsMX,
+      'SortName_lang_ruRU': self.sortNameLangRuRU,
+      'SortName_lang_jaJP': self.sortNameLangJaJP,
+      'SortName_lang_ptPT': self.sortNameLangPtPT,
+      'SortName_lang_ptBR': self.sortNameLangPtBR,
+      'SortName_lang_itIT': self.sortNameLangItIT,
+      'SortName_lang_unk1': self.sortNameLangUnk1,
+      'SortName_lang_unk2': self.sortNameLangUnk2,
+      'SortName_lang_unk3': self.sortNameLangUnk3,
+      'SortName_lang_Flags': self.sortNameLangFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as QuestSortEntity;
+    return identical(self, other) ||
         other is QuestSortEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            sortNameLangEnUS == other.sortNameLangEnUS &&
-            sortNameLangKoKR == other.sortNameLangKoKR &&
-            sortNameLangFrFR == other.sortNameLangFrFR &&
-            sortNameLangDeDE == other.sortNameLangDeDE &&
-            sortNameLangZhCN == other.sortNameLangZhCN &&
-            sortNameLangZhTW == other.sortNameLangZhTW &&
-            sortNameLangEsES == other.sortNameLangEsES &&
-            sortNameLangEsMX == other.sortNameLangEsMX &&
-            sortNameLangRuRU == other.sortNameLangRuRU &&
-            sortNameLangJaJP == other.sortNameLangJaJP &&
-            sortNameLangPtPT == other.sortNameLangPtPT &&
-            sortNameLangPtBR == other.sortNameLangPtBR &&
-            sortNameLangItIT == other.sortNameLangItIT &&
-            sortNameLangUnk1 == other.sortNameLangUnk1 &&
-            sortNameLangUnk2 == other.sortNameLangUnk2 &&
-            sortNameLangUnk3 == other.sortNameLangUnk3 &&
-            sortNameLangFlags == other.sortNameLangFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.sortNameLangEnUS == other.sortNameLangEnUS &&
+            self.sortNameLangKoKR == other.sortNameLangKoKR &&
+            self.sortNameLangFrFR == other.sortNameLangFrFR &&
+            self.sortNameLangDeDE == other.sortNameLangDeDE &&
+            self.sortNameLangZhCN == other.sortNameLangZhCN &&
+            self.sortNameLangZhTW == other.sortNameLangZhTW &&
+            self.sortNameLangEsES == other.sortNameLangEsES &&
+            self.sortNameLangEsMX == other.sortNameLangEsMX &&
+            self.sortNameLangRuRU == other.sortNameLangRuRU &&
+            self.sortNameLangJaJP == other.sortNameLangJaJP &&
+            self.sortNameLangPtPT == other.sortNameLangPtPT &&
+            self.sortNameLangPtBR == other.sortNameLangPtBR &&
+            self.sortNameLangItIT == other.sortNameLangItIT &&
+            self.sortNameLangUnk1 == other.sortNameLangUnk1 &&
+            self.sortNameLangUnk2 == other.sortNameLangUnk2 &&
+            self.sortNameLangUnk3 == other.sortNameLangUnk3 &&
+            self.sortNameLangFlags == other.sortNameLangFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as QuestSortEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      sortNameLangEnUS,
-      sortNameLangKoKR,
-      sortNameLangFrFR,
-      sortNameLangDeDE,
-      sortNameLangZhCN,
-      sortNameLangZhTW,
-      sortNameLangEsES,
-      sortNameLangEsMX,
-      sortNameLangRuRU,
-      sortNameLangJaJP,
-      sortNameLangPtPT,
-      sortNameLangPtBR,
-      sortNameLangItIT,
-      sortNameLangUnk1,
-      sortNameLangUnk2,
-      sortNameLangUnk3,
-      sortNameLangFlags,
+      self.runtimeType,
+      self.id,
+      self.sortNameLangEnUS,
+      self.sortNameLangKoKR,
+      self.sortNameLangFrFR,
+      self.sortNameLangDeDE,
+      self.sortNameLangZhCN,
+      self.sortNameLangZhTW,
+      self.sortNameLangEsES,
+      self.sortNameLangEsMX,
+      self.sortNameLangRuRU,
+      self.sortNameLangJaJP,
+      self.sortNameLangPtPT,
+      self.sortNameLangPtBR,
+      self.sortNameLangItIT,
+      self.sortNameLangUnk1,
+      self.sortNameLangUnk2,
+      self.sortNameLangUnk3,
+      self.sortNameLangFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as QuestSortEntity;
     return 'QuestSortEntity('
-        'id: $id, '
-        'sortNameLangEnUS: $sortNameLangEnUS, '
-        'sortNameLangKoKR: $sortNameLangKoKR, '
-        'sortNameLangFrFR: $sortNameLangFrFR, '
-        'sortNameLangDeDE: $sortNameLangDeDE, '
-        'sortNameLangZhCN: $sortNameLangZhCN, '
-        'sortNameLangZhTW: $sortNameLangZhTW, '
-        'sortNameLangEsES: $sortNameLangEsES, '
-        'sortNameLangEsMX: $sortNameLangEsMX, '
-        'sortNameLangRuRU: $sortNameLangRuRU, '
-        'sortNameLangJaJP: $sortNameLangJaJP, '
-        'sortNameLangPtPT: $sortNameLangPtPT, '
-        'sortNameLangPtBR: $sortNameLangPtBR, '
-        'sortNameLangItIT: $sortNameLangItIT, '
-        'sortNameLangUnk1: $sortNameLangUnk1, '
-        'sortNameLangUnk2: $sortNameLangUnk2, '
-        'sortNameLangUnk3: $sortNameLangUnk3, '
-        'sortNameLangFlags: $sortNameLangFlags'
+        'id: ${self.id}, '
+        'sortNameLangEnUS: ${self.sortNameLangEnUS}, '
+        'sortNameLangKoKR: ${self.sortNameLangKoKR}, '
+        'sortNameLangFrFR: ${self.sortNameLangFrFR}, '
+        'sortNameLangDeDE: ${self.sortNameLangDeDE}, '
+        'sortNameLangZhCN: ${self.sortNameLangZhCN}, '
+        'sortNameLangZhTW: ${self.sortNameLangZhTW}, '
+        'sortNameLangEsES: ${self.sortNameLangEsES}, '
+        'sortNameLangEsMX: ${self.sortNameLangEsMX}, '
+        'sortNameLangRuRU: ${self.sortNameLangRuRU}, '
+        'sortNameLangJaJP: ${self.sortNameLangJaJP}, '
+        'sortNameLangPtPT: ${self.sortNameLangPtPT}, '
+        'sortNameLangPtBR: ${self.sortNameLangPtBR}, '
+        'sortNameLangItIT: ${self.sortNameLangItIT}, '
+        'sortNameLangUnk1: ${self.sortNameLangUnk1}, '
+        'sortNameLangUnk2: ${self.sortNameLangUnk2}, '
+        'sortNameLangUnk3: ${self.sortNameLangUnk3}, '
+        'sortNameLangFlags: ${self.sortNameLangFlags}'
         ')';
   }
 }

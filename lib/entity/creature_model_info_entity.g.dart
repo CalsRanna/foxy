@@ -3,13 +3,6 @@
 part of 'creature_model_info_entity.dart';
 
 mixin _CreatureModelInfoEntityMixin {
-  int get displayId;
-  double get boundingRadius;
-  double get combatReach;
-  int get gender;
-  int get displayIdOtherGender;
-  int get verifiedBuild;
-
   static CreatureModelInfoEntity fromJson(Map<String, dynamic> json) {
     return CreatureModelInfoEntity(
       displayId: (json['DisplayID'] as num?)?.toInt() ?? 0,
@@ -30,62 +23,67 @@ mixin _CreatureModelInfoEntityMixin {
     int? displayIdOtherGender,
     int? verifiedBuild,
   }) {
+    final self = this as CreatureModelInfoEntity;
     return CreatureModelInfoEntity(
-      displayId: displayId ?? this.displayId,
-      boundingRadius: boundingRadius ?? this.boundingRadius,
-      combatReach: combatReach ?? this.combatReach,
-      gender: gender ?? this.gender,
-      displayIdOtherGender: displayIdOtherGender ?? this.displayIdOtherGender,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      displayId: displayId ?? self.displayId,
+      boundingRadius: boundingRadius ?? self.boundingRadius,
+      combatReach: combatReach ?? self.combatReach,
+      gender: gender ?? self.gender,
+      displayIdOtherGender: displayIdOtherGender ?? self.displayIdOtherGender,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CreatureModelInfoEntity;
     return {
-      'DisplayID': displayId,
-      'BoundingRadius': boundingRadius,
-      'CombatReach': combatReach,
-      'Gender': gender,
-      'DisplayID_Other_Gender': displayIdOtherGender,
-      'VerifiedBuild': verifiedBuild,
+      'DisplayID': self.displayId,
+      'BoundingRadius': self.boundingRadius,
+      'CombatReach': self.combatReach,
+      'Gender': self.gender,
+      'DisplayID_Other_Gender': self.displayIdOtherGender,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureModelInfoEntity;
+    return identical(self, other) ||
         other is CreatureModelInfoEntity &&
-            runtimeType == other.runtimeType &&
-            displayId == other.displayId &&
-            boundingRadius == other.boundingRadius &&
-            combatReach == other.combatReach &&
-            gender == other.gender &&
-            displayIdOtherGender == other.displayIdOtherGender &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.displayId == other.displayId &&
+            self.boundingRadius == other.boundingRadius &&
+            self.combatReach == other.combatReach &&
+            self.gender == other.gender &&
+            self.displayIdOtherGender == other.displayIdOtherGender &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
+    final self = this as CreatureModelInfoEntity;
     return Object.hashAll([
-      runtimeType,
-      displayId,
-      boundingRadius,
-      combatReach,
-      gender,
-      displayIdOtherGender,
-      verifiedBuild,
+      self.runtimeType,
+      self.displayId,
+      self.boundingRadius,
+      self.combatReach,
+      self.gender,
+      self.displayIdOtherGender,
+      self.verifiedBuild,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureModelInfoEntity;
     return 'CreatureModelInfoEntity('
-        'displayId: $displayId, '
-        'boundingRadius: $boundingRadius, '
-        'combatReach: $combatReach, '
-        'gender: $gender, '
-        'displayIdOtherGender: $displayIdOtherGender, '
-        'verifiedBuild: $verifiedBuild'
+        'displayId: ${self.displayId}, '
+        'boundingRadius: ${self.boundingRadius}, '
+        'combatReach: ${self.combatReach}, '
+        'gender: ${self.gender}, '
+        'displayIdOtherGender: ${self.displayIdOtherGender}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

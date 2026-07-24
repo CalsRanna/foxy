@@ -1,5 +1,3 @@
-// ignore_for_file: annotate_overrides
-
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'milling_loot_template_entity.g.dart';

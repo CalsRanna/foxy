@@ -72,6 +72,45 @@ void main() {
     }
   });
 
+  test('生成型 Full Entity 不依赖抽象字段 getter 或 lint 忽略', () {
+    for (final file in fullFiles) {
+      final source = file.readAsStringSync();
+      if (!source.contains('@FoxyFullEntity')) continue;
+
+      expect(
+        source,
+        isNot(contains('ignore_for_file: annotate_overrides')),
+        reason: '${file.path} 不应通过文件级忽略隐藏 Mixin 字段覆盖',
+      );
+
+      final className = RegExp(
+        r'class\s+(\w+Entity)\s+with\s+_\w+EntityMixin',
+      ).firstMatch(source)?.group(1);
+      expect(className, isNotNull, reason: '${file.path} 缺少约定 Mixin');
+
+      final generated = File(
+        file.path.replaceFirst(RegExp(r'\.dart$'), '.g.dart'),
+      ).readAsStringSync();
+      expect(
+        generated,
+        isNot(
+          contains(
+            RegExp(
+              r'^\s+(?:int|double|String|bool)\??\s+get\s+\w+;\s*$',
+              multiLine: true,
+            ),
+          ),
+        ),
+        reason: '${file.path} 的 Full Mixin 不应生成抽象字段 getter',
+      );
+      expect(
+        generated,
+        contains('final self = this as $className;'),
+        reason: '${file.path} 的实例方法应在生成代码内部转换具体 Entity',
+      );
+    }
+  });
+
   test('三个历史多实体文件完成独立文件拆分', () {
     for (final path in const [
       'lib/entity/player_create_info_action_entity.dart',

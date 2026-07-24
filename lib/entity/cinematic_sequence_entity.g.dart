@@ -3,17 +3,6 @@
 part of 'cinematic_sequence_entity.dart';
 
 mixin _CinematicSequenceEntityMixin {
-  int get id;
-  int get soundId;
-  int get camera0;
-  int get camera1;
-  int get camera2;
-  int get camera3;
-  int get camera4;
-  int get camera5;
-  int get camera6;
-  int get camera7;
-
   static CinematicSequenceEntity fromJson(Map<String, dynamic> json) {
     return CinematicSequenceEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -41,82 +30,87 @@ mixin _CinematicSequenceEntityMixin {
     int? camera6,
     int? camera7,
   }) {
+    final self = this as CinematicSequenceEntity;
     return CinematicSequenceEntity(
-      id: id ?? this.id,
-      soundId: soundId ?? this.soundId,
-      camera0: camera0 ?? this.camera0,
-      camera1: camera1 ?? this.camera1,
-      camera2: camera2 ?? this.camera2,
-      camera3: camera3 ?? this.camera3,
-      camera4: camera4 ?? this.camera4,
-      camera5: camera5 ?? this.camera5,
-      camera6: camera6 ?? this.camera6,
-      camera7: camera7 ?? this.camera7,
+      id: id ?? self.id,
+      soundId: soundId ?? self.soundId,
+      camera0: camera0 ?? self.camera0,
+      camera1: camera1 ?? self.camera1,
+      camera2: camera2 ?? self.camera2,
+      camera3: camera3 ?? self.camera3,
+      camera4: camera4 ?? self.camera4,
+      camera5: camera5 ?? self.camera5,
+      camera6: camera6 ?? self.camera6,
+      camera7: camera7 ?? self.camera7,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CinematicSequenceEntity;
     return {
-      'ID': id,
-      'SoundID': soundId,
-      'Camera0': camera0,
-      'Camera1': camera1,
-      'Camera2': camera2,
-      'Camera3': camera3,
-      'Camera4': camera4,
-      'Camera5': camera5,
-      'Camera6': camera6,
-      'Camera7': camera7,
+      'ID': self.id,
+      'SoundID': self.soundId,
+      'Camera0': self.camera0,
+      'Camera1': self.camera1,
+      'Camera2': self.camera2,
+      'Camera3': self.camera3,
+      'Camera4': self.camera4,
+      'Camera5': self.camera5,
+      'Camera6': self.camera6,
+      'Camera7': self.camera7,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CinematicSequenceEntity;
+    return identical(self, other) ||
         other is CinematicSequenceEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            soundId == other.soundId &&
-            camera0 == other.camera0 &&
-            camera1 == other.camera1 &&
-            camera2 == other.camera2 &&
-            camera3 == other.camera3 &&
-            camera4 == other.camera4 &&
-            camera5 == other.camera5 &&
-            camera6 == other.camera6 &&
-            camera7 == other.camera7;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.soundId == other.soundId &&
+            self.camera0 == other.camera0 &&
+            self.camera1 == other.camera1 &&
+            self.camera2 == other.camera2 &&
+            self.camera3 == other.camera3 &&
+            self.camera4 == other.camera4 &&
+            self.camera5 == other.camera5 &&
+            self.camera6 == other.camera6 &&
+            self.camera7 == other.camera7;
   }
 
   @override
   int get hashCode {
+    final self = this as CinematicSequenceEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      soundId,
-      camera0,
-      camera1,
-      camera2,
-      camera3,
-      camera4,
-      camera5,
-      camera6,
-      camera7,
+      self.runtimeType,
+      self.id,
+      self.soundId,
+      self.camera0,
+      self.camera1,
+      self.camera2,
+      self.camera3,
+      self.camera4,
+      self.camera5,
+      self.camera6,
+      self.camera7,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as CinematicSequenceEntity;
     return 'CinematicSequenceEntity('
-        'id: $id, '
-        'soundId: $soundId, '
-        'camera0: $camera0, '
-        'camera1: $camera1, '
-        'camera2: $camera2, '
-        'camera3: $camera3, '
-        'camera4: $camera4, '
-        'camera5: $camera5, '
-        'camera6: $camera6, '
-        'camera7: $camera7'
+        'id: ${self.id}, '
+        'soundId: ${self.soundId}, '
+        'camera0: ${self.camera0}, '
+        'camera1: ${self.camera1}, '
+        'camera2: ${self.camera2}, '
+        'camera3: ${self.camera3}, '
+        'camera4: ${self.camera4}, '
+        'camera5: ${self.camera5}, '
+        'camera6: ${self.camera6}, '
+        'camera7: ${self.camera7}'
         ')';
   }
 }

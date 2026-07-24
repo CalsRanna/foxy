@@ -3,31 +3,6 @@
 part of 'item_random_properties_entity.dart';
 
 mixin _ItemRandomPropertiesEntityMixin {
-  int get id;
-  String get name;
-  int get enchantment0;
-  int get enchantment1;
-  int get enchantment2;
-  int get enchantment3;
-  int get enchantment4;
-  String get nameLangEnUS;
-  String get nameLangKoKR;
-  String get nameLangFrFR;
-  String get nameLangDeDE;
-  String get nameLangZhCN;
-  String get nameLangZhTW;
-  String get nameLangEsES;
-  String get nameLangEsMX;
-  String get nameLangRuRU;
-  String get nameLangJaJP;
-  String get nameLangPtPT;
-  String get nameLangPtBR;
-  String get nameLangItIT;
-  String get nameLangUnk1;
-  String get nameLangUnk2;
-  String get nameLangUnk3;
-  int get nameLangFlags;
-
   static ItemRandomPropertiesEntity fromJson(Map<String, dynamic> json) {
     return ItemRandomPropertiesEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -83,152 +58,157 @@ mixin _ItemRandomPropertiesEntityMixin {
     String? nameLangUnk3,
     int? nameLangFlags,
   }) {
+    final self = this as ItemRandomPropertiesEntity;
     return ItemRandomPropertiesEntity(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      enchantment0: enchantment0 ?? this.enchantment0,
-      enchantment1: enchantment1 ?? this.enchantment1,
-      enchantment2: enchantment2 ?? this.enchantment2,
-      enchantment3: enchantment3 ?? this.enchantment3,
-      enchantment4: enchantment4 ?? this.enchantment4,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
+      id: id ?? self.id,
+      name: name ?? self.name,
+      enchantment0: enchantment0 ?? self.enchantment0,
+      enchantment1: enchantment1 ?? self.enchantment1,
+      enchantment2: enchantment2 ?? self.enchantment2,
+      enchantment3: enchantment3 ?? self.enchantment3,
+      enchantment4: enchantment4 ?? self.enchantment4,
+      nameLangEnUS: nameLangEnUS ?? self.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? self.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? self.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? self.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? self.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? self.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? self.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? self.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? self.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? self.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? self.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? self.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? self.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? self.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? self.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? self.nameLangUnk3,
+      nameLangFlags: nameLangFlags ?? self.nameLangFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as ItemRandomPropertiesEntity;
     return {
-      'ID': id,
-      'Name': name,
-      'Enchantment0': enchantment0,
-      'Enchantment1': enchantment1,
-      'Enchantment2': enchantment2,
-      'Enchantment3': enchantment3,
-      'Enchantment4': enchantment4,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
+      'ID': self.id,
+      'Name': self.name,
+      'Enchantment0': self.enchantment0,
+      'Enchantment1': self.enchantment1,
+      'Enchantment2': self.enchantment2,
+      'Enchantment3': self.enchantment3,
+      'Enchantment4': self.enchantment4,
+      'Name_lang_enUS': self.nameLangEnUS,
+      'Name_lang_koKR': self.nameLangKoKR,
+      'Name_lang_frFR': self.nameLangFrFR,
+      'Name_lang_deDE': self.nameLangDeDE,
+      'Name_lang_zhCN': self.nameLangZhCN,
+      'Name_lang_zhTW': self.nameLangZhTW,
+      'Name_lang_esES': self.nameLangEsES,
+      'Name_lang_esMX': self.nameLangEsMX,
+      'Name_lang_ruRU': self.nameLangRuRU,
+      'Name_lang_jaJP': self.nameLangJaJP,
+      'Name_lang_ptPT': self.nameLangPtPT,
+      'Name_lang_ptBR': self.nameLangPtBR,
+      'Name_lang_itIT': self.nameLangItIT,
+      'Name_lang_unk1': self.nameLangUnk1,
+      'Name_lang_unk2': self.nameLangUnk2,
+      'Name_lang_unk3': self.nameLangUnk3,
+      'Name_lang_Flags': self.nameLangFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as ItemRandomPropertiesEntity;
+    return identical(self, other) ||
         other is ItemRandomPropertiesEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            name == other.name &&
-            enchantment0 == other.enchantment0 &&
-            enchantment1 == other.enchantment1 &&
-            enchantment2 == other.enchantment2 &&
-            enchantment3 == other.enchantment3 &&
-            enchantment4 == other.enchantment4 &&
-            nameLangEnUS == other.nameLangEnUS &&
-            nameLangKoKR == other.nameLangKoKR &&
-            nameLangFrFR == other.nameLangFrFR &&
-            nameLangDeDE == other.nameLangDeDE &&
-            nameLangZhCN == other.nameLangZhCN &&
-            nameLangZhTW == other.nameLangZhTW &&
-            nameLangEsES == other.nameLangEsES &&
-            nameLangEsMX == other.nameLangEsMX &&
-            nameLangRuRU == other.nameLangRuRU &&
-            nameLangJaJP == other.nameLangJaJP &&
-            nameLangPtPT == other.nameLangPtPT &&
-            nameLangPtBR == other.nameLangPtBR &&
-            nameLangItIT == other.nameLangItIT &&
-            nameLangUnk1 == other.nameLangUnk1 &&
-            nameLangUnk2 == other.nameLangUnk2 &&
-            nameLangUnk3 == other.nameLangUnk3 &&
-            nameLangFlags == other.nameLangFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.name == other.name &&
+            self.enchantment0 == other.enchantment0 &&
+            self.enchantment1 == other.enchantment1 &&
+            self.enchantment2 == other.enchantment2 &&
+            self.enchantment3 == other.enchantment3 &&
+            self.enchantment4 == other.enchantment4 &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as ItemRandomPropertiesEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      name,
-      enchantment0,
-      enchantment1,
-      enchantment2,
-      enchantment3,
-      enchantment4,
-      nameLangEnUS,
-      nameLangKoKR,
-      nameLangFrFR,
-      nameLangDeDE,
-      nameLangZhCN,
-      nameLangZhTW,
-      nameLangEsES,
-      nameLangEsMX,
-      nameLangRuRU,
-      nameLangJaJP,
-      nameLangPtPT,
-      nameLangPtBR,
-      nameLangItIT,
-      nameLangUnk1,
-      nameLangUnk2,
-      nameLangUnk3,
-      nameLangFlags,
+      self.runtimeType,
+      self.id,
+      self.name,
+      self.enchantment0,
+      self.enchantment1,
+      self.enchantment2,
+      self.enchantment3,
+      self.enchantment4,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as ItemRandomPropertiesEntity;
     return 'ItemRandomPropertiesEntity('
-        'id: $id, '
-        'name: $name, '
-        'enchantment0: $enchantment0, '
-        'enchantment1: $enchantment1, '
-        'enchantment2: $enchantment2, '
-        'enchantment3: $enchantment3, '
-        'enchantment4: $enchantment4, '
-        'nameLangEnUS: $nameLangEnUS, '
-        'nameLangKoKR: $nameLangKoKR, '
-        'nameLangFrFR: $nameLangFrFR, '
-        'nameLangDeDE: $nameLangDeDE, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'nameLangZhTW: $nameLangZhTW, '
-        'nameLangEsES: $nameLangEsES, '
-        'nameLangEsMX: $nameLangEsMX, '
-        'nameLangRuRU: $nameLangRuRU, '
-        'nameLangJaJP: $nameLangJaJP, '
-        'nameLangPtPT: $nameLangPtPT, '
-        'nameLangPtBR: $nameLangPtBR, '
-        'nameLangItIT: $nameLangItIT, '
-        'nameLangUnk1: $nameLangUnk1, '
-        'nameLangUnk2: $nameLangUnk2, '
-        'nameLangUnk3: $nameLangUnk3, '
-        'nameLangFlags: $nameLangFlags'
+        'id: ${self.id}, '
+        'name: ${self.name}, '
+        'enchantment0: ${self.enchantment0}, '
+        'enchantment1: ${self.enchantment1}, '
+        'enchantment2: ${self.enchantment2}, '
+        'enchantment3: ${self.enchantment3}, '
+        'enchantment4: ${self.enchantment4}, '
+        'nameLangEnUS: ${self.nameLangEnUS}, '
+        'nameLangKoKR: ${self.nameLangKoKR}, '
+        'nameLangFrFR: ${self.nameLangFrFR}, '
+        'nameLangDeDE: ${self.nameLangDeDE}, '
+        'nameLangZhCN: ${self.nameLangZhCN}, '
+        'nameLangZhTW: ${self.nameLangZhTW}, '
+        'nameLangEsES: ${self.nameLangEsES}, '
+        'nameLangEsMX: ${self.nameLangEsMX}, '
+        'nameLangRuRU: ${self.nameLangRuRU}, '
+        'nameLangJaJP: ${self.nameLangJaJP}, '
+        'nameLangPtPT: ${self.nameLangPtPT}, '
+        'nameLangPtBR: ${self.nameLangPtBR}, '
+        'nameLangItIT: ${self.nameLangItIT}, '
+        'nameLangUnk1: ${self.nameLangUnk1}, '
+        'nameLangUnk2: ${self.nameLangUnk2}, '
+        'nameLangUnk3: ${self.nameLangUnk3}, '
+        'nameLangFlags: ${self.nameLangFlags}'
         ')';
   }
 }

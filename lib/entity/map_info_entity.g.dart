@@ -3,73 +3,6 @@
 part of 'map_info_entity.dart';
 
 mixin _MapInfoEntityMixin {
-  int get id;
-  String get directory;
-  int get instanceType;
-  int get flags;
-  int get pvp;
-  String get mapNameLangEnUS;
-  String get mapNameLangKoKR;
-  String get mapNameLangFrFR;
-  String get mapNameLangDeDE;
-  String get mapNameLangZhCN;
-  String get mapNameLangZhTW;
-  String get mapNameLangEsES;
-  String get mapNameLangEsMX;
-  String get mapNameLangRuRU;
-  String get mapNameLangJaJP;
-  String get mapNameLangPtPT;
-  String get mapNameLangPtBR;
-  String get mapNameLangItIT;
-  String get mapNameLangUnk1;
-  String get mapNameLangUnk2;
-  String get mapNameLangUnk3;
-  int get mapNameLangFlags;
-  int get areaTableId;
-  String get mapDescription0LangEnUS;
-  String get mapDescription0LangKoKR;
-  String get mapDescription0LangFrFR;
-  String get mapDescription0LangDeDE;
-  String get mapDescription0LangZhCN;
-  String get mapDescription0LangZhTW;
-  String get mapDescription0LangEsES;
-  String get mapDescription0LangEsMX;
-  String get mapDescription0LangRuRU;
-  String get mapDescription0LangJaJP;
-  String get mapDescription0LangPtPT;
-  String get mapDescription0LangPtBR;
-  String get mapDescription0LangItIT;
-  String get mapDescription0LangUnk1;
-  String get mapDescription0LangUnk2;
-  String get mapDescription0LangUnk3;
-  int get mapDescription0LangFlags;
-  String get mapDescription1LangEnUS;
-  String get mapDescription1LangKoKR;
-  String get mapDescription1LangFrFR;
-  String get mapDescription1LangDeDE;
-  String get mapDescription1LangZhCN;
-  String get mapDescription1LangZhTW;
-  String get mapDescription1LangEsES;
-  String get mapDescription1LangEsMX;
-  String get mapDescription1LangRuRU;
-  String get mapDescription1LangJaJP;
-  String get mapDescription1LangPtPT;
-  String get mapDescription1LangPtBR;
-  String get mapDescription1LangItIT;
-  String get mapDescription1LangUnk1;
-  String get mapDescription1LangUnk2;
-  String get mapDescription1LangUnk3;
-  int get mapDescription1LangFlags;
-  int get loadingScreenId;
-  double get minimapIconScale;
-  int get corpseMapId;
-  double get corpse0;
-  double get corpse1;
-  int get timeOfDayOverride;
-  int get expansionId;
-  int get raidOffset;
-  int get maxPlayers;
-
   static MapInfoEntity fromJson(Map<String, dynamic> json) {
     return MapInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -243,396 +176,401 @@ mixin _MapInfoEntityMixin {
     int? raidOffset,
     int? maxPlayers,
   }) {
+    final self = this as MapInfoEntity;
     return MapInfoEntity(
-      id: id ?? this.id,
-      directory: directory ?? this.directory,
-      instanceType: instanceType ?? this.instanceType,
-      flags: flags ?? this.flags,
-      pvp: pvp ?? this.pvp,
-      mapNameLangEnUS: mapNameLangEnUS ?? this.mapNameLangEnUS,
-      mapNameLangKoKR: mapNameLangKoKR ?? this.mapNameLangKoKR,
-      mapNameLangFrFR: mapNameLangFrFR ?? this.mapNameLangFrFR,
-      mapNameLangDeDE: mapNameLangDeDE ?? this.mapNameLangDeDE,
-      mapNameLangZhCN: mapNameLangZhCN ?? this.mapNameLangZhCN,
-      mapNameLangZhTW: mapNameLangZhTW ?? this.mapNameLangZhTW,
-      mapNameLangEsES: mapNameLangEsES ?? this.mapNameLangEsES,
-      mapNameLangEsMX: mapNameLangEsMX ?? this.mapNameLangEsMX,
-      mapNameLangRuRU: mapNameLangRuRU ?? this.mapNameLangRuRU,
-      mapNameLangJaJP: mapNameLangJaJP ?? this.mapNameLangJaJP,
-      mapNameLangPtPT: mapNameLangPtPT ?? this.mapNameLangPtPT,
-      mapNameLangPtBR: mapNameLangPtBR ?? this.mapNameLangPtBR,
-      mapNameLangItIT: mapNameLangItIT ?? this.mapNameLangItIT,
-      mapNameLangUnk1: mapNameLangUnk1 ?? this.mapNameLangUnk1,
-      mapNameLangUnk2: mapNameLangUnk2 ?? this.mapNameLangUnk2,
-      mapNameLangUnk3: mapNameLangUnk3 ?? this.mapNameLangUnk3,
-      mapNameLangFlags: mapNameLangFlags ?? this.mapNameLangFlags,
-      areaTableId: areaTableId ?? this.areaTableId,
+      id: id ?? self.id,
+      directory: directory ?? self.directory,
+      instanceType: instanceType ?? self.instanceType,
+      flags: flags ?? self.flags,
+      pvp: pvp ?? self.pvp,
+      mapNameLangEnUS: mapNameLangEnUS ?? self.mapNameLangEnUS,
+      mapNameLangKoKR: mapNameLangKoKR ?? self.mapNameLangKoKR,
+      mapNameLangFrFR: mapNameLangFrFR ?? self.mapNameLangFrFR,
+      mapNameLangDeDE: mapNameLangDeDE ?? self.mapNameLangDeDE,
+      mapNameLangZhCN: mapNameLangZhCN ?? self.mapNameLangZhCN,
+      mapNameLangZhTW: mapNameLangZhTW ?? self.mapNameLangZhTW,
+      mapNameLangEsES: mapNameLangEsES ?? self.mapNameLangEsES,
+      mapNameLangEsMX: mapNameLangEsMX ?? self.mapNameLangEsMX,
+      mapNameLangRuRU: mapNameLangRuRU ?? self.mapNameLangRuRU,
+      mapNameLangJaJP: mapNameLangJaJP ?? self.mapNameLangJaJP,
+      mapNameLangPtPT: mapNameLangPtPT ?? self.mapNameLangPtPT,
+      mapNameLangPtBR: mapNameLangPtBR ?? self.mapNameLangPtBR,
+      mapNameLangItIT: mapNameLangItIT ?? self.mapNameLangItIT,
+      mapNameLangUnk1: mapNameLangUnk1 ?? self.mapNameLangUnk1,
+      mapNameLangUnk2: mapNameLangUnk2 ?? self.mapNameLangUnk2,
+      mapNameLangUnk3: mapNameLangUnk3 ?? self.mapNameLangUnk3,
+      mapNameLangFlags: mapNameLangFlags ?? self.mapNameLangFlags,
+      areaTableId: areaTableId ?? self.areaTableId,
       mapDescription0LangEnUS:
-          mapDescription0LangEnUS ?? this.mapDescription0LangEnUS,
+          mapDescription0LangEnUS ?? self.mapDescription0LangEnUS,
       mapDescription0LangKoKR:
-          mapDescription0LangKoKR ?? this.mapDescription0LangKoKR,
+          mapDescription0LangKoKR ?? self.mapDescription0LangKoKR,
       mapDescription0LangFrFR:
-          mapDescription0LangFrFR ?? this.mapDescription0LangFrFR,
+          mapDescription0LangFrFR ?? self.mapDescription0LangFrFR,
       mapDescription0LangDeDE:
-          mapDescription0LangDeDE ?? this.mapDescription0LangDeDE,
+          mapDescription0LangDeDE ?? self.mapDescription0LangDeDE,
       mapDescription0LangZhCN:
-          mapDescription0LangZhCN ?? this.mapDescription0LangZhCN,
+          mapDescription0LangZhCN ?? self.mapDescription0LangZhCN,
       mapDescription0LangZhTW:
-          mapDescription0LangZhTW ?? this.mapDescription0LangZhTW,
+          mapDescription0LangZhTW ?? self.mapDescription0LangZhTW,
       mapDescription0LangEsES:
-          mapDescription0LangEsES ?? this.mapDescription0LangEsES,
+          mapDescription0LangEsES ?? self.mapDescription0LangEsES,
       mapDescription0LangEsMX:
-          mapDescription0LangEsMX ?? this.mapDescription0LangEsMX,
+          mapDescription0LangEsMX ?? self.mapDescription0LangEsMX,
       mapDescription0LangRuRU:
-          mapDescription0LangRuRU ?? this.mapDescription0LangRuRU,
+          mapDescription0LangRuRU ?? self.mapDescription0LangRuRU,
       mapDescription0LangJaJP:
-          mapDescription0LangJaJP ?? this.mapDescription0LangJaJP,
+          mapDescription0LangJaJP ?? self.mapDescription0LangJaJP,
       mapDescription0LangPtPT:
-          mapDescription0LangPtPT ?? this.mapDescription0LangPtPT,
+          mapDescription0LangPtPT ?? self.mapDescription0LangPtPT,
       mapDescription0LangPtBR:
-          mapDescription0LangPtBR ?? this.mapDescription0LangPtBR,
+          mapDescription0LangPtBR ?? self.mapDescription0LangPtBR,
       mapDescription0LangItIT:
-          mapDescription0LangItIT ?? this.mapDescription0LangItIT,
+          mapDescription0LangItIT ?? self.mapDescription0LangItIT,
       mapDescription0LangUnk1:
-          mapDescription0LangUnk1 ?? this.mapDescription0LangUnk1,
+          mapDescription0LangUnk1 ?? self.mapDescription0LangUnk1,
       mapDescription0LangUnk2:
-          mapDescription0LangUnk2 ?? this.mapDescription0LangUnk2,
+          mapDescription0LangUnk2 ?? self.mapDescription0LangUnk2,
       mapDescription0LangUnk3:
-          mapDescription0LangUnk3 ?? this.mapDescription0LangUnk3,
+          mapDescription0LangUnk3 ?? self.mapDescription0LangUnk3,
       mapDescription0LangFlags:
-          mapDescription0LangFlags ?? this.mapDescription0LangFlags,
+          mapDescription0LangFlags ?? self.mapDescription0LangFlags,
       mapDescription1LangEnUS:
-          mapDescription1LangEnUS ?? this.mapDescription1LangEnUS,
+          mapDescription1LangEnUS ?? self.mapDescription1LangEnUS,
       mapDescription1LangKoKR:
-          mapDescription1LangKoKR ?? this.mapDescription1LangKoKR,
+          mapDescription1LangKoKR ?? self.mapDescription1LangKoKR,
       mapDescription1LangFrFR:
-          mapDescription1LangFrFR ?? this.mapDescription1LangFrFR,
+          mapDescription1LangFrFR ?? self.mapDescription1LangFrFR,
       mapDescription1LangDeDE:
-          mapDescription1LangDeDE ?? this.mapDescription1LangDeDE,
+          mapDescription1LangDeDE ?? self.mapDescription1LangDeDE,
       mapDescription1LangZhCN:
-          mapDescription1LangZhCN ?? this.mapDescription1LangZhCN,
+          mapDescription1LangZhCN ?? self.mapDescription1LangZhCN,
       mapDescription1LangZhTW:
-          mapDescription1LangZhTW ?? this.mapDescription1LangZhTW,
+          mapDescription1LangZhTW ?? self.mapDescription1LangZhTW,
       mapDescription1LangEsES:
-          mapDescription1LangEsES ?? this.mapDescription1LangEsES,
+          mapDescription1LangEsES ?? self.mapDescription1LangEsES,
       mapDescription1LangEsMX:
-          mapDescription1LangEsMX ?? this.mapDescription1LangEsMX,
+          mapDescription1LangEsMX ?? self.mapDescription1LangEsMX,
       mapDescription1LangRuRU:
-          mapDescription1LangRuRU ?? this.mapDescription1LangRuRU,
+          mapDescription1LangRuRU ?? self.mapDescription1LangRuRU,
       mapDescription1LangJaJP:
-          mapDescription1LangJaJP ?? this.mapDescription1LangJaJP,
+          mapDescription1LangJaJP ?? self.mapDescription1LangJaJP,
       mapDescription1LangPtPT:
-          mapDescription1LangPtPT ?? this.mapDescription1LangPtPT,
+          mapDescription1LangPtPT ?? self.mapDescription1LangPtPT,
       mapDescription1LangPtBR:
-          mapDescription1LangPtBR ?? this.mapDescription1LangPtBR,
+          mapDescription1LangPtBR ?? self.mapDescription1LangPtBR,
       mapDescription1LangItIT:
-          mapDescription1LangItIT ?? this.mapDescription1LangItIT,
+          mapDescription1LangItIT ?? self.mapDescription1LangItIT,
       mapDescription1LangUnk1:
-          mapDescription1LangUnk1 ?? this.mapDescription1LangUnk1,
+          mapDescription1LangUnk1 ?? self.mapDescription1LangUnk1,
       mapDescription1LangUnk2:
-          mapDescription1LangUnk2 ?? this.mapDescription1LangUnk2,
+          mapDescription1LangUnk2 ?? self.mapDescription1LangUnk2,
       mapDescription1LangUnk3:
-          mapDescription1LangUnk3 ?? this.mapDescription1LangUnk3,
+          mapDescription1LangUnk3 ?? self.mapDescription1LangUnk3,
       mapDescription1LangFlags:
-          mapDescription1LangFlags ?? this.mapDescription1LangFlags,
-      loadingScreenId: loadingScreenId ?? this.loadingScreenId,
-      minimapIconScale: minimapIconScale ?? this.minimapIconScale,
-      corpseMapId: corpseMapId ?? this.corpseMapId,
-      corpse0: corpse0 ?? this.corpse0,
-      corpse1: corpse1 ?? this.corpse1,
-      timeOfDayOverride: timeOfDayOverride ?? this.timeOfDayOverride,
-      expansionId: expansionId ?? this.expansionId,
-      raidOffset: raidOffset ?? this.raidOffset,
-      maxPlayers: maxPlayers ?? this.maxPlayers,
+          mapDescription1LangFlags ?? self.mapDescription1LangFlags,
+      loadingScreenId: loadingScreenId ?? self.loadingScreenId,
+      minimapIconScale: minimapIconScale ?? self.minimapIconScale,
+      corpseMapId: corpseMapId ?? self.corpseMapId,
+      corpse0: corpse0 ?? self.corpse0,
+      corpse1: corpse1 ?? self.corpse1,
+      timeOfDayOverride: timeOfDayOverride ?? self.timeOfDayOverride,
+      expansionId: expansionId ?? self.expansionId,
+      raidOffset: raidOffset ?? self.raidOffset,
+      maxPlayers: maxPlayers ?? self.maxPlayers,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as MapInfoEntity;
     return {
-      'ID': id,
-      'Directory': directory,
-      'InstanceType': instanceType,
-      'Flags': flags,
-      'PVP': pvp,
-      'MapName_lang_enUS': mapNameLangEnUS,
-      'MapName_lang_koKR': mapNameLangKoKR,
-      'MapName_lang_frFR': mapNameLangFrFR,
-      'MapName_lang_deDE': mapNameLangDeDE,
-      'MapName_lang_zhCN': mapNameLangZhCN,
-      'MapName_lang_zhTW': mapNameLangZhTW,
-      'MapName_lang_esES': mapNameLangEsES,
-      'MapName_lang_esMX': mapNameLangEsMX,
-      'MapName_lang_ruRU': mapNameLangRuRU,
-      'MapName_lang_jaJP': mapNameLangJaJP,
-      'MapName_lang_ptPT': mapNameLangPtPT,
-      'MapName_lang_ptBR': mapNameLangPtBR,
-      'MapName_lang_itIT': mapNameLangItIT,
-      'MapName_lang_unk1': mapNameLangUnk1,
-      'MapName_lang_unk2': mapNameLangUnk2,
-      'MapName_lang_unk3': mapNameLangUnk3,
-      'MapName_lang_Flags': mapNameLangFlags,
-      'AreaTableID': areaTableId,
-      'MapDescription0_lang_enUS': mapDescription0LangEnUS,
-      'MapDescription0_lang_koKR': mapDescription0LangKoKR,
-      'MapDescription0_lang_frFR': mapDescription0LangFrFR,
-      'MapDescription0_lang_deDE': mapDescription0LangDeDE,
-      'MapDescription0_lang_zhCN': mapDescription0LangZhCN,
-      'MapDescription0_lang_zhTW': mapDescription0LangZhTW,
-      'MapDescription0_lang_esES': mapDescription0LangEsES,
-      'MapDescription0_lang_esMX': mapDescription0LangEsMX,
-      'MapDescription0_lang_ruRU': mapDescription0LangRuRU,
-      'MapDescription0_lang_jaJP': mapDescription0LangJaJP,
-      'MapDescription0_lang_ptPT': mapDescription0LangPtPT,
-      'MapDescription0_lang_ptBR': mapDescription0LangPtBR,
-      'MapDescription0_lang_itIT': mapDescription0LangItIT,
-      'MapDescription0_lang_unk1': mapDescription0LangUnk1,
-      'MapDescription0_lang_unk2': mapDescription0LangUnk2,
-      'MapDescription0_lang_unk3': mapDescription0LangUnk3,
-      'MapDescription0_lang_Flags': mapDescription0LangFlags,
-      'MapDescription1_lang_enUS': mapDescription1LangEnUS,
-      'MapDescription1_lang_koKR': mapDescription1LangKoKR,
-      'MapDescription1_lang_frFR': mapDescription1LangFrFR,
-      'MapDescription1_lang_deDE': mapDescription1LangDeDE,
-      'MapDescription1_lang_zhCN': mapDescription1LangZhCN,
-      'MapDescription1_lang_zhTW': mapDescription1LangZhTW,
-      'MapDescription1_lang_esES': mapDescription1LangEsES,
-      'MapDescription1_lang_esMX': mapDescription1LangEsMX,
-      'MapDescription1_lang_ruRU': mapDescription1LangRuRU,
-      'MapDescription1_lang_jaJP': mapDescription1LangJaJP,
-      'MapDescription1_lang_ptPT': mapDescription1LangPtPT,
-      'MapDescription1_lang_ptBR': mapDescription1LangPtBR,
-      'MapDescription1_lang_itIT': mapDescription1LangItIT,
-      'MapDescription1_lang_unk1': mapDescription1LangUnk1,
-      'MapDescription1_lang_unk2': mapDescription1LangUnk2,
-      'MapDescription1_lang_unk3': mapDescription1LangUnk3,
-      'MapDescription1_lang_Flags': mapDescription1LangFlags,
-      'LoadingScreenID': loadingScreenId,
-      'MinimapIconScale': minimapIconScale,
-      'CorpseMapID': corpseMapId,
-      'Corpse0': corpse0,
-      'Corpse1': corpse1,
-      'TimeOfDayOverride': timeOfDayOverride,
-      'ExpansionID': expansionId,
-      'RaidOffset': raidOffset,
-      'MaxPlayers': maxPlayers,
+      'ID': self.id,
+      'Directory': self.directory,
+      'InstanceType': self.instanceType,
+      'Flags': self.flags,
+      'PVP': self.pvp,
+      'MapName_lang_enUS': self.mapNameLangEnUS,
+      'MapName_lang_koKR': self.mapNameLangKoKR,
+      'MapName_lang_frFR': self.mapNameLangFrFR,
+      'MapName_lang_deDE': self.mapNameLangDeDE,
+      'MapName_lang_zhCN': self.mapNameLangZhCN,
+      'MapName_lang_zhTW': self.mapNameLangZhTW,
+      'MapName_lang_esES': self.mapNameLangEsES,
+      'MapName_lang_esMX': self.mapNameLangEsMX,
+      'MapName_lang_ruRU': self.mapNameLangRuRU,
+      'MapName_lang_jaJP': self.mapNameLangJaJP,
+      'MapName_lang_ptPT': self.mapNameLangPtPT,
+      'MapName_lang_ptBR': self.mapNameLangPtBR,
+      'MapName_lang_itIT': self.mapNameLangItIT,
+      'MapName_lang_unk1': self.mapNameLangUnk1,
+      'MapName_lang_unk2': self.mapNameLangUnk2,
+      'MapName_lang_unk3': self.mapNameLangUnk3,
+      'MapName_lang_Flags': self.mapNameLangFlags,
+      'AreaTableID': self.areaTableId,
+      'MapDescription0_lang_enUS': self.mapDescription0LangEnUS,
+      'MapDescription0_lang_koKR': self.mapDescription0LangKoKR,
+      'MapDescription0_lang_frFR': self.mapDescription0LangFrFR,
+      'MapDescription0_lang_deDE': self.mapDescription0LangDeDE,
+      'MapDescription0_lang_zhCN': self.mapDescription0LangZhCN,
+      'MapDescription0_lang_zhTW': self.mapDescription0LangZhTW,
+      'MapDescription0_lang_esES': self.mapDescription0LangEsES,
+      'MapDescription0_lang_esMX': self.mapDescription0LangEsMX,
+      'MapDescription0_lang_ruRU': self.mapDescription0LangRuRU,
+      'MapDescription0_lang_jaJP': self.mapDescription0LangJaJP,
+      'MapDescription0_lang_ptPT': self.mapDescription0LangPtPT,
+      'MapDescription0_lang_ptBR': self.mapDescription0LangPtBR,
+      'MapDescription0_lang_itIT': self.mapDescription0LangItIT,
+      'MapDescription0_lang_unk1': self.mapDescription0LangUnk1,
+      'MapDescription0_lang_unk2': self.mapDescription0LangUnk2,
+      'MapDescription0_lang_unk3': self.mapDescription0LangUnk3,
+      'MapDescription0_lang_Flags': self.mapDescription0LangFlags,
+      'MapDescription1_lang_enUS': self.mapDescription1LangEnUS,
+      'MapDescription1_lang_koKR': self.mapDescription1LangKoKR,
+      'MapDescription1_lang_frFR': self.mapDescription1LangFrFR,
+      'MapDescription1_lang_deDE': self.mapDescription1LangDeDE,
+      'MapDescription1_lang_zhCN': self.mapDescription1LangZhCN,
+      'MapDescription1_lang_zhTW': self.mapDescription1LangZhTW,
+      'MapDescription1_lang_esES': self.mapDescription1LangEsES,
+      'MapDescription1_lang_esMX': self.mapDescription1LangEsMX,
+      'MapDescription1_lang_ruRU': self.mapDescription1LangRuRU,
+      'MapDescription1_lang_jaJP': self.mapDescription1LangJaJP,
+      'MapDescription1_lang_ptPT': self.mapDescription1LangPtPT,
+      'MapDescription1_lang_ptBR': self.mapDescription1LangPtBR,
+      'MapDescription1_lang_itIT': self.mapDescription1LangItIT,
+      'MapDescription1_lang_unk1': self.mapDescription1LangUnk1,
+      'MapDescription1_lang_unk2': self.mapDescription1LangUnk2,
+      'MapDescription1_lang_unk3': self.mapDescription1LangUnk3,
+      'MapDescription1_lang_Flags': self.mapDescription1LangFlags,
+      'LoadingScreenID': self.loadingScreenId,
+      'MinimapIconScale': self.minimapIconScale,
+      'CorpseMapID': self.corpseMapId,
+      'Corpse0': self.corpse0,
+      'Corpse1': self.corpse1,
+      'TimeOfDayOverride': self.timeOfDayOverride,
+      'ExpansionID': self.expansionId,
+      'RaidOffset': self.raidOffset,
+      'MaxPlayers': self.maxPlayers,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as MapInfoEntity;
+    return identical(self, other) ||
         other is MapInfoEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            directory == other.directory &&
-            instanceType == other.instanceType &&
-            flags == other.flags &&
-            pvp == other.pvp &&
-            mapNameLangEnUS == other.mapNameLangEnUS &&
-            mapNameLangKoKR == other.mapNameLangKoKR &&
-            mapNameLangFrFR == other.mapNameLangFrFR &&
-            mapNameLangDeDE == other.mapNameLangDeDE &&
-            mapNameLangZhCN == other.mapNameLangZhCN &&
-            mapNameLangZhTW == other.mapNameLangZhTW &&
-            mapNameLangEsES == other.mapNameLangEsES &&
-            mapNameLangEsMX == other.mapNameLangEsMX &&
-            mapNameLangRuRU == other.mapNameLangRuRU &&
-            mapNameLangJaJP == other.mapNameLangJaJP &&
-            mapNameLangPtPT == other.mapNameLangPtPT &&
-            mapNameLangPtBR == other.mapNameLangPtBR &&
-            mapNameLangItIT == other.mapNameLangItIT &&
-            mapNameLangUnk1 == other.mapNameLangUnk1 &&
-            mapNameLangUnk2 == other.mapNameLangUnk2 &&
-            mapNameLangUnk3 == other.mapNameLangUnk3 &&
-            mapNameLangFlags == other.mapNameLangFlags &&
-            areaTableId == other.areaTableId &&
-            mapDescription0LangEnUS == other.mapDescription0LangEnUS &&
-            mapDescription0LangKoKR == other.mapDescription0LangKoKR &&
-            mapDescription0LangFrFR == other.mapDescription0LangFrFR &&
-            mapDescription0LangDeDE == other.mapDescription0LangDeDE &&
-            mapDescription0LangZhCN == other.mapDescription0LangZhCN &&
-            mapDescription0LangZhTW == other.mapDescription0LangZhTW &&
-            mapDescription0LangEsES == other.mapDescription0LangEsES &&
-            mapDescription0LangEsMX == other.mapDescription0LangEsMX &&
-            mapDescription0LangRuRU == other.mapDescription0LangRuRU &&
-            mapDescription0LangJaJP == other.mapDescription0LangJaJP &&
-            mapDescription0LangPtPT == other.mapDescription0LangPtPT &&
-            mapDescription0LangPtBR == other.mapDescription0LangPtBR &&
-            mapDescription0LangItIT == other.mapDescription0LangItIT &&
-            mapDescription0LangUnk1 == other.mapDescription0LangUnk1 &&
-            mapDescription0LangUnk2 == other.mapDescription0LangUnk2 &&
-            mapDescription0LangUnk3 == other.mapDescription0LangUnk3 &&
-            mapDescription0LangFlags == other.mapDescription0LangFlags &&
-            mapDescription1LangEnUS == other.mapDescription1LangEnUS &&
-            mapDescription1LangKoKR == other.mapDescription1LangKoKR &&
-            mapDescription1LangFrFR == other.mapDescription1LangFrFR &&
-            mapDescription1LangDeDE == other.mapDescription1LangDeDE &&
-            mapDescription1LangZhCN == other.mapDescription1LangZhCN &&
-            mapDescription1LangZhTW == other.mapDescription1LangZhTW &&
-            mapDescription1LangEsES == other.mapDescription1LangEsES &&
-            mapDescription1LangEsMX == other.mapDescription1LangEsMX &&
-            mapDescription1LangRuRU == other.mapDescription1LangRuRU &&
-            mapDescription1LangJaJP == other.mapDescription1LangJaJP &&
-            mapDescription1LangPtPT == other.mapDescription1LangPtPT &&
-            mapDescription1LangPtBR == other.mapDescription1LangPtBR &&
-            mapDescription1LangItIT == other.mapDescription1LangItIT &&
-            mapDescription1LangUnk1 == other.mapDescription1LangUnk1 &&
-            mapDescription1LangUnk2 == other.mapDescription1LangUnk2 &&
-            mapDescription1LangUnk3 == other.mapDescription1LangUnk3 &&
-            mapDescription1LangFlags == other.mapDescription1LangFlags &&
-            loadingScreenId == other.loadingScreenId &&
-            minimapIconScale == other.minimapIconScale &&
-            corpseMapId == other.corpseMapId &&
-            corpse0 == other.corpse0 &&
-            corpse1 == other.corpse1 &&
-            timeOfDayOverride == other.timeOfDayOverride &&
-            expansionId == other.expansionId &&
-            raidOffset == other.raidOffset &&
-            maxPlayers == other.maxPlayers;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.directory == other.directory &&
+            self.instanceType == other.instanceType &&
+            self.flags == other.flags &&
+            self.pvp == other.pvp &&
+            self.mapNameLangEnUS == other.mapNameLangEnUS &&
+            self.mapNameLangKoKR == other.mapNameLangKoKR &&
+            self.mapNameLangFrFR == other.mapNameLangFrFR &&
+            self.mapNameLangDeDE == other.mapNameLangDeDE &&
+            self.mapNameLangZhCN == other.mapNameLangZhCN &&
+            self.mapNameLangZhTW == other.mapNameLangZhTW &&
+            self.mapNameLangEsES == other.mapNameLangEsES &&
+            self.mapNameLangEsMX == other.mapNameLangEsMX &&
+            self.mapNameLangRuRU == other.mapNameLangRuRU &&
+            self.mapNameLangJaJP == other.mapNameLangJaJP &&
+            self.mapNameLangPtPT == other.mapNameLangPtPT &&
+            self.mapNameLangPtBR == other.mapNameLangPtBR &&
+            self.mapNameLangItIT == other.mapNameLangItIT &&
+            self.mapNameLangUnk1 == other.mapNameLangUnk1 &&
+            self.mapNameLangUnk2 == other.mapNameLangUnk2 &&
+            self.mapNameLangUnk3 == other.mapNameLangUnk3 &&
+            self.mapNameLangFlags == other.mapNameLangFlags &&
+            self.areaTableId == other.areaTableId &&
+            self.mapDescription0LangEnUS == other.mapDescription0LangEnUS &&
+            self.mapDescription0LangKoKR == other.mapDescription0LangKoKR &&
+            self.mapDescription0LangFrFR == other.mapDescription0LangFrFR &&
+            self.mapDescription0LangDeDE == other.mapDescription0LangDeDE &&
+            self.mapDescription0LangZhCN == other.mapDescription0LangZhCN &&
+            self.mapDescription0LangZhTW == other.mapDescription0LangZhTW &&
+            self.mapDescription0LangEsES == other.mapDescription0LangEsES &&
+            self.mapDescription0LangEsMX == other.mapDescription0LangEsMX &&
+            self.mapDescription0LangRuRU == other.mapDescription0LangRuRU &&
+            self.mapDescription0LangJaJP == other.mapDescription0LangJaJP &&
+            self.mapDescription0LangPtPT == other.mapDescription0LangPtPT &&
+            self.mapDescription0LangPtBR == other.mapDescription0LangPtBR &&
+            self.mapDescription0LangItIT == other.mapDescription0LangItIT &&
+            self.mapDescription0LangUnk1 == other.mapDescription0LangUnk1 &&
+            self.mapDescription0LangUnk2 == other.mapDescription0LangUnk2 &&
+            self.mapDescription0LangUnk3 == other.mapDescription0LangUnk3 &&
+            self.mapDescription0LangFlags == other.mapDescription0LangFlags &&
+            self.mapDescription1LangEnUS == other.mapDescription1LangEnUS &&
+            self.mapDescription1LangKoKR == other.mapDescription1LangKoKR &&
+            self.mapDescription1LangFrFR == other.mapDescription1LangFrFR &&
+            self.mapDescription1LangDeDE == other.mapDescription1LangDeDE &&
+            self.mapDescription1LangZhCN == other.mapDescription1LangZhCN &&
+            self.mapDescription1LangZhTW == other.mapDescription1LangZhTW &&
+            self.mapDescription1LangEsES == other.mapDescription1LangEsES &&
+            self.mapDescription1LangEsMX == other.mapDescription1LangEsMX &&
+            self.mapDescription1LangRuRU == other.mapDescription1LangRuRU &&
+            self.mapDescription1LangJaJP == other.mapDescription1LangJaJP &&
+            self.mapDescription1LangPtPT == other.mapDescription1LangPtPT &&
+            self.mapDescription1LangPtBR == other.mapDescription1LangPtBR &&
+            self.mapDescription1LangItIT == other.mapDescription1LangItIT &&
+            self.mapDescription1LangUnk1 == other.mapDescription1LangUnk1 &&
+            self.mapDescription1LangUnk2 == other.mapDescription1LangUnk2 &&
+            self.mapDescription1LangUnk3 == other.mapDescription1LangUnk3 &&
+            self.mapDescription1LangFlags == other.mapDescription1LangFlags &&
+            self.loadingScreenId == other.loadingScreenId &&
+            self.minimapIconScale == other.minimapIconScale &&
+            self.corpseMapId == other.corpseMapId &&
+            self.corpse0 == other.corpse0 &&
+            self.corpse1 == other.corpse1 &&
+            self.timeOfDayOverride == other.timeOfDayOverride &&
+            self.expansionId == other.expansionId &&
+            self.raidOffset == other.raidOffset &&
+            self.maxPlayers == other.maxPlayers;
   }
 
   @override
   int get hashCode {
+    final self = this as MapInfoEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      directory,
-      instanceType,
-      flags,
-      pvp,
-      mapNameLangEnUS,
-      mapNameLangKoKR,
-      mapNameLangFrFR,
-      mapNameLangDeDE,
-      mapNameLangZhCN,
-      mapNameLangZhTW,
-      mapNameLangEsES,
-      mapNameLangEsMX,
-      mapNameLangRuRU,
-      mapNameLangJaJP,
-      mapNameLangPtPT,
-      mapNameLangPtBR,
-      mapNameLangItIT,
-      mapNameLangUnk1,
-      mapNameLangUnk2,
-      mapNameLangUnk3,
-      mapNameLangFlags,
-      areaTableId,
-      mapDescription0LangEnUS,
-      mapDescription0LangKoKR,
-      mapDescription0LangFrFR,
-      mapDescription0LangDeDE,
-      mapDescription0LangZhCN,
-      mapDescription0LangZhTW,
-      mapDescription0LangEsES,
-      mapDescription0LangEsMX,
-      mapDescription0LangRuRU,
-      mapDescription0LangJaJP,
-      mapDescription0LangPtPT,
-      mapDescription0LangPtBR,
-      mapDescription0LangItIT,
-      mapDescription0LangUnk1,
-      mapDescription0LangUnk2,
-      mapDescription0LangUnk3,
-      mapDescription0LangFlags,
-      mapDescription1LangEnUS,
-      mapDescription1LangKoKR,
-      mapDescription1LangFrFR,
-      mapDescription1LangDeDE,
-      mapDescription1LangZhCN,
-      mapDescription1LangZhTW,
-      mapDescription1LangEsES,
-      mapDescription1LangEsMX,
-      mapDescription1LangRuRU,
-      mapDescription1LangJaJP,
-      mapDescription1LangPtPT,
-      mapDescription1LangPtBR,
-      mapDescription1LangItIT,
-      mapDescription1LangUnk1,
-      mapDescription1LangUnk2,
-      mapDescription1LangUnk3,
-      mapDescription1LangFlags,
-      loadingScreenId,
-      minimapIconScale,
-      corpseMapId,
-      corpse0,
-      corpse1,
-      timeOfDayOverride,
-      expansionId,
-      raidOffset,
-      maxPlayers,
+      self.runtimeType,
+      self.id,
+      self.directory,
+      self.instanceType,
+      self.flags,
+      self.pvp,
+      self.mapNameLangEnUS,
+      self.mapNameLangKoKR,
+      self.mapNameLangFrFR,
+      self.mapNameLangDeDE,
+      self.mapNameLangZhCN,
+      self.mapNameLangZhTW,
+      self.mapNameLangEsES,
+      self.mapNameLangEsMX,
+      self.mapNameLangRuRU,
+      self.mapNameLangJaJP,
+      self.mapNameLangPtPT,
+      self.mapNameLangPtBR,
+      self.mapNameLangItIT,
+      self.mapNameLangUnk1,
+      self.mapNameLangUnk2,
+      self.mapNameLangUnk3,
+      self.mapNameLangFlags,
+      self.areaTableId,
+      self.mapDescription0LangEnUS,
+      self.mapDescription0LangKoKR,
+      self.mapDescription0LangFrFR,
+      self.mapDescription0LangDeDE,
+      self.mapDescription0LangZhCN,
+      self.mapDescription0LangZhTW,
+      self.mapDescription0LangEsES,
+      self.mapDescription0LangEsMX,
+      self.mapDescription0LangRuRU,
+      self.mapDescription0LangJaJP,
+      self.mapDescription0LangPtPT,
+      self.mapDescription0LangPtBR,
+      self.mapDescription0LangItIT,
+      self.mapDescription0LangUnk1,
+      self.mapDescription0LangUnk2,
+      self.mapDescription0LangUnk3,
+      self.mapDescription0LangFlags,
+      self.mapDescription1LangEnUS,
+      self.mapDescription1LangKoKR,
+      self.mapDescription1LangFrFR,
+      self.mapDescription1LangDeDE,
+      self.mapDescription1LangZhCN,
+      self.mapDescription1LangZhTW,
+      self.mapDescription1LangEsES,
+      self.mapDescription1LangEsMX,
+      self.mapDescription1LangRuRU,
+      self.mapDescription1LangJaJP,
+      self.mapDescription1LangPtPT,
+      self.mapDescription1LangPtBR,
+      self.mapDescription1LangItIT,
+      self.mapDescription1LangUnk1,
+      self.mapDescription1LangUnk2,
+      self.mapDescription1LangUnk3,
+      self.mapDescription1LangFlags,
+      self.loadingScreenId,
+      self.minimapIconScale,
+      self.corpseMapId,
+      self.corpse0,
+      self.corpse1,
+      self.timeOfDayOverride,
+      self.expansionId,
+      self.raidOffset,
+      self.maxPlayers,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as MapInfoEntity;
     return 'MapInfoEntity('
-        'id: $id, '
-        'directory: $directory, '
-        'instanceType: $instanceType, '
-        'flags: $flags, '
-        'pvp: $pvp, '
-        'mapNameLangEnUS: $mapNameLangEnUS, '
-        'mapNameLangKoKR: $mapNameLangKoKR, '
-        'mapNameLangFrFR: $mapNameLangFrFR, '
-        'mapNameLangDeDE: $mapNameLangDeDE, '
-        'mapNameLangZhCN: $mapNameLangZhCN, '
-        'mapNameLangZhTW: $mapNameLangZhTW, '
-        'mapNameLangEsES: $mapNameLangEsES, '
-        'mapNameLangEsMX: $mapNameLangEsMX, '
-        'mapNameLangRuRU: $mapNameLangRuRU, '
-        'mapNameLangJaJP: $mapNameLangJaJP, '
-        'mapNameLangPtPT: $mapNameLangPtPT, '
-        'mapNameLangPtBR: $mapNameLangPtBR, '
-        'mapNameLangItIT: $mapNameLangItIT, '
-        'mapNameLangUnk1: $mapNameLangUnk1, '
-        'mapNameLangUnk2: $mapNameLangUnk2, '
-        'mapNameLangUnk3: $mapNameLangUnk3, '
-        'mapNameLangFlags: $mapNameLangFlags, '
-        'areaTableId: $areaTableId, '
-        'mapDescription0LangEnUS: $mapDescription0LangEnUS, '
-        'mapDescription0LangKoKR: $mapDescription0LangKoKR, '
-        'mapDescription0LangFrFR: $mapDescription0LangFrFR, '
-        'mapDescription0LangDeDE: $mapDescription0LangDeDE, '
-        'mapDescription0LangZhCN: $mapDescription0LangZhCN, '
-        'mapDescription0LangZhTW: $mapDescription0LangZhTW, '
-        'mapDescription0LangEsES: $mapDescription0LangEsES, '
-        'mapDescription0LangEsMX: $mapDescription0LangEsMX, '
-        'mapDescription0LangRuRU: $mapDescription0LangRuRU, '
-        'mapDescription0LangJaJP: $mapDescription0LangJaJP, '
-        'mapDescription0LangPtPT: $mapDescription0LangPtPT, '
-        'mapDescription0LangPtBR: $mapDescription0LangPtBR, '
-        'mapDescription0LangItIT: $mapDescription0LangItIT, '
-        'mapDescription0LangUnk1: $mapDescription0LangUnk1, '
-        'mapDescription0LangUnk2: $mapDescription0LangUnk2, '
-        'mapDescription0LangUnk3: $mapDescription0LangUnk3, '
-        'mapDescription0LangFlags: $mapDescription0LangFlags, '
-        'mapDescription1LangEnUS: $mapDescription1LangEnUS, '
-        'mapDescription1LangKoKR: $mapDescription1LangKoKR, '
-        'mapDescription1LangFrFR: $mapDescription1LangFrFR, '
-        'mapDescription1LangDeDE: $mapDescription1LangDeDE, '
-        'mapDescription1LangZhCN: $mapDescription1LangZhCN, '
-        'mapDescription1LangZhTW: $mapDescription1LangZhTW, '
-        'mapDescription1LangEsES: $mapDescription1LangEsES, '
-        'mapDescription1LangEsMX: $mapDescription1LangEsMX, '
-        'mapDescription1LangRuRU: $mapDescription1LangRuRU, '
-        'mapDescription1LangJaJP: $mapDescription1LangJaJP, '
-        'mapDescription1LangPtPT: $mapDescription1LangPtPT, '
-        'mapDescription1LangPtBR: $mapDescription1LangPtBR, '
-        'mapDescription1LangItIT: $mapDescription1LangItIT, '
-        'mapDescription1LangUnk1: $mapDescription1LangUnk1, '
-        'mapDescription1LangUnk2: $mapDescription1LangUnk2, '
-        'mapDescription1LangUnk3: $mapDescription1LangUnk3, '
-        'mapDescription1LangFlags: $mapDescription1LangFlags, '
-        'loadingScreenId: $loadingScreenId, '
-        'minimapIconScale: $minimapIconScale, '
-        'corpseMapId: $corpseMapId, '
-        'corpse0: $corpse0, '
-        'corpse1: $corpse1, '
-        'timeOfDayOverride: $timeOfDayOverride, '
-        'expansionId: $expansionId, '
-        'raidOffset: $raidOffset, '
-        'maxPlayers: $maxPlayers'
+        'id: ${self.id}, '
+        'directory: ${self.directory}, '
+        'instanceType: ${self.instanceType}, '
+        'flags: ${self.flags}, '
+        'pvp: ${self.pvp}, '
+        'mapNameLangEnUS: ${self.mapNameLangEnUS}, '
+        'mapNameLangKoKR: ${self.mapNameLangKoKR}, '
+        'mapNameLangFrFR: ${self.mapNameLangFrFR}, '
+        'mapNameLangDeDE: ${self.mapNameLangDeDE}, '
+        'mapNameLangZhCN: ${self.mapNameLangZhCN}, '
+        'mapNameLangZhTW: ${self.mapNameLangZhTW}, '
+        'mapNameLangEsES: ${self.mapNameLangEsES}, '
+        'mapNameLangEsMX: ${self.mapNameLangEsMX}, '
+        'mapNameLangRuRU: ${self.mapNameLangRuRU}, '
+        'mapNameLangJaJP: ${self.mapNameLangJaJP}, '
+        'mapNameLangPtPT: ${self.mapNameLangPtPT}, '
+        'mapNameLangPtBR: ${self.mapNameLangPtBR}, '
+        'mapNameLangItIT: ${self.mapNameLangItIT}, '
+        'mapNameLangUnk1: ${self.mapNameLangUnk1}, '
+        'mapNameLangUnk2: ${self.mapNameLangUnk2}, '
+        'mapNameLangUnk3: ${self.mapNameLangUnk3}, '
+        'mapNameLangFlags: ${self.mapNameLangFlags}, '
+        'areaTableId: ${self.areaTableId}, '
+        'mapDescription0LangEnUS: ${self.mapDescription0LangEnUS}, '
+        'mapDescription0LangKoKR: ${self.mapDescription0LangKoKR}, '
+        'mapDescription0LangFrFR: ${self.mapDescription0LangFrFR}, '
+        'mapDescription0LangDeDE: ${self.mapDescription0LangDeDE}, '
+        'mapDescription0LangZhCN: ${self.mapDescription0LangZhCN}, '
+        'mapDescription0LangZhTW: ${self.mapDescription0LangZhTW}, '
+        'mapDescription0LangEsES: ${self.mapDescription0LangEsES}, '
+        'mapDescription0LangEsMX: ${self.mapDescription0LangEsMX}, '
+        'mapDescription0LangRuRU: ${self.mapDescription0LangRuRU}, '
+        'mapDescription0LangJaJP: ${self.mapDescription0LangJaJP}, '
+        'mapDescription0LangPtPT: ${self.mapDescription0LangPtPT}, '
+        'mapDescription0LangPtBR: ${self.mapDescription0LangPtBR}, '
+        'mapDescription0LangItIT: ${self.mapDescription0LangItIT}, '
+        'mapDescription0LangUnk1: ${self.mapDescription0LangUnk1}, '
+        'mapDescription0LangUnk2: ${self.mapDescription0LangUnk2}, '
+        'mapDescription0LangUnk3: ${self.mapDescription0LangUnk3}, '
+        'mapDescription0LangFlags: ${self.mapDescription0LangFlags}, '
+        'mapDescription1LangEnUS: ${self.mapDescription1LangEnUS}, '
+        'mapDescription1LangKoKR: ${self.mapDescription1LangKoKR}, '
+        'mapDescription1LangFrFR: ${self.mapDescription1LangFrFR}, '
+        'mapDescription1LangDeDE: ${self.mapDescription1LangDeDE}, '
+        'mapDescription1LangZhCN: ${self.mapDescription1LangZhCN}, '
+        'mapDescription1LangZhTW: ${self.mapDescription1LangZhTW}, '
+        'mapDescription1LangEsES: ${self.mapDescription1LangEsES}, '
+        'mapDescription1LangEsMX: ${self.mapDescription1LangEsMX}, '
+        'mapDescription1LangRuRU: ${self.mapDescription1LangRuRU}, '
+        'mapDescription1LangJaJP: ${self.mapDescription1LangJaJP}, '
+        'mapDescription1LangPtPT: ${self.mapDescription1LangPtPT}, '
+        'mapDescription1LangPtBR: ${self.mapDescription1LangPtBR}, '
+        'mapDescription1LangItIT: ${self.mapDescription1LangItIT}, '
+        'mapDescription1LangUnk1: ${self.mapDescription1LangUnk1}, '
+        'mapDescription1LangUnk2: ${self.mapDescription1LangUnk2}, '
+        'mapDescription1LangUnk3: ${self.mapDescription1LangUnk3}, '
+        'mapDescription1LangFlags: ${self.mapDescription1LangFlags}, '
+        'loadingScreenId: ${self.loadingScreenId}, '
+        'minimapIconScale: ${self.minimapIconScale}, '
+        'corpseMapId: ${self.corpseMapId}, '
+        'corpse0: ${self.corpse0}, '
+        'corpse1: ${self.corpse1}, '
+        'timeOfDayOverride: ${self.timeOfDayOverride}, '
+        'expansionId: ${self.expansionId}, '
+        'raidOffset: ${self.raidOffset}, '
+        'maxPlayers: ${self.maxPlayers}'
         ')';
   }
 }

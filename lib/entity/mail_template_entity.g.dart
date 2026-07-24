@@ -3,42 +3,6 @@
 part of 'mail_template_entity.dart';
 
 mixin _MailTemplateEntityMixin {
-  int get id;
-  String get subjectLangEnUS;
-  String get subjectLangKoKR;
-  String get subjectLangFrFR;
-  String get subjectLangDeDE;
-  String get subjectLangZhCN;
-  String get subjectLangZhTW;
-  String get subjectLangEsES;
-  String get subjectLangEsMX;
-  String get subjectLangRuRU;
-  String get subjectLangJaJP;
-  String get subjectLangPtPT;
-  String get subjectLangPtBR;
-  String get subjectLangItIT;
-  String get subjectLangUnk1;
-  String get subjectLangUnk2;
-  String get subjectLangUnk3;
-  int get subjectLangFlags;
-  String get bodyLangEnUS;
-  String get bodyLangKoKR;
-  String get bodyLangFrFR;
-  String get bodyLangDeDE;
-  String get bodyLangZhCN;
-  String get bodyLangZhTW;
-  String get bodyLangEsES;
-  String get bodyLangEsMX;
-  String get bodyLangRuRU;
-  String get bodyLangJaJP;
-  String get bodyLangPtPT;
-  String get bodyLangPtBR;
-  String get bodyLangItIT;
-  String get bodyLangUnk1;
-  String get bodyLangUnk2;
-  String get bodyLangUnk3;
-  int get bodyLangFlags;
-
   static MailTemplateEntity fromJson(Map<String, dynamic> json) {
     return MailTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -116,207 +80,212 @@ mixin _MailTemplateEntityMixin {
     String? bodyLangUnk3,
     int? bodyLangFlags,
   }) {
+    final self = this as MailTemplateEntity;
     return MailTemplateEntity(
-      id: id ?? this.id,
-      subjectLangEnUS: subjectLangEnUS ?? this.subjectLangEnUS,
-      subjectLangKoKR: subjectLangKoKR ?? this.subjectLangKoKR,
-      subjectLangFrFR: subjectLangFrFR ?? this.subjectLangFrFR,
-      subjectLangDeDE: subjectLangDeDE ?? this.subjectLangDeDE,
-      subjectLangZhCN: subjectLangZhCN ?? this.subjectLangZhCN,
-      subjectLangZhTW: subjectLangZhTW ?? this.subjectLangZhTW,
-      subjectLangEsES: subjectLangEsES ?? this.subjectLangEsES,
-      subjectLangEsMX: subjectLangEsMX ?? this.subjectLangEsMX,
-      subjectLangRuRU: subjectLangRuRU ?? this.subjectLangRuRU,
-      subjectLangJaJP: subjectLangJaJP ?? this.subjectLangJaJP,
-      subjectLangPtPT: subjectLangPtPT ?? this.subjectLangPtPT,
-      subjectLangPtBR: subjectLangPtBR ?? this.subjectLangPtBR,
-      subjectLangItIT: subjectLangItIT ?? this.subjectLangItIT,
-      subjectLangUnk1: subjectLangUnk1 ?? this.subjectLangUnk1,
-      subjectLangUnk2: subjectLangUnk2 ?? this.subjectLangUnk2,
-      subjectLangUnk3: subjectLangUnk3 ?? this.subjectLangUnk3,
-      subjectLangFlags: subjectLangFlags ?? this.subjectLangFlags,
-      bodyLangEnUS: bodyLangEnUS ?? this.bodyLangEnUS,
-      bodyLangKoKR: bodyLangKoKR ?? this.bodyLangKoKR,
-      bodyLangFrFR: bodyLangFrFR ?? this.bodyLangFrFR,
-      bodyLangDeDE: bodyLangDeDE ?? this.bodyLangDeDE,
-      bodyLangZhCN: bodyLangZhCN ?? this.bodyLangZhCN,
-      bodyLangZhTW: bodyLangZhTW ?? this.bodyLangZhTW,
-      bodyLangEsES: bodyLangEsES ?? this.bodyLangEsES,
-      bodyLangEsMX: bodyLangEsMX ?? this.bodyLangEsMX,
-      bodyLangRuRU: bodyLangRuRU ?? this.bodyLangRuRU,
-      bodyLangJaJP: bodyLangJaJP ?? this.bodyLangJaJP,
-      bodyLangPtPT: bodyLangPtPT ?? this.bodyLangPtPT,
-      bodyLangPtBR: bodyLangPtBR ?? this.bodyLangPtBR,
-      bodyLangItIT: bodyLangItIT ?? this.bodyLangItIT,
-      bodyLangUnk1: bodyLangUnk1 ?? this.bodyLangUnk1,
-      bodyLangUnk2: bodyLangUnk2 ?? this.bodyLangUnk2,
-      bodyLangUnk3: bodyLangUnk3 ?? this.bodyLangUnk3,
-      bodyLangFlags: bodyLangFlags ?? this.bodyLangFlags,
+      id: id ?? self.id,
+      subjectLangEnUS: subjectLangEnUS ?? self.subjectLangEnUS,
+      subjectLangKoKR: subjectLangKoKR ?? self.subjectLangKoKR,
+      subjectLangFrFR: subjectLangFrFR ?? self.subjectLangFrFR,
+      subjectLangDeDE: subjectLangDeDE ?? self.subjectLangDeDE,
+      subjectLangZhCN: subjectLangZhCN ?? self.subjectLangZhCN,
+      subjectLangZhTW: subjectLangZhTW ?? self.subjectLangZhTW,
+      subjectLangEsES: subjectLangEsES ?? self.subjectLangEsES,
+      subjectLangEsMX: subjectLangEsMX ?? self.subjectLangEsMX,
+      subjectLangRuRU: subjectLangRuRU ?? self.subjectLangRuRU,
+      subjectLangJaJP: subjectLangJaJP ?? self.subjectLangJaJP,
+      subjectLangPtPT: subjectLangPtPT ?? self.subjectLangPtPT,
+      subjectLangPtBR: subjectLangPtBR ?? self.subjectLangPtBR,
+      subjectLangItIT: subjectLangItIT ?? self.subjectLangItIT,
+      subjectLangUnk1: subjectLangUnk1 ?? self.subjectLangUnk1,
+      subjectLangUnk2: subjectLangUnk2 ?? self.subjectLangUnk2,
+      subjectLangUnk3: subjectLangUnk3 ?? self.subjectLangUnk3,
+      subjectLangFlags: subjectLangFlags ?? self.subjectLangFlags,
+      bodyLangEnUS: bodyLangEnUS ?? self.bodyLangEnUS,
+      bodyLangKoKR: bodyLangKoKR ?? self.bodyLangKoKR,
+      bodyLangFrFR: bodyLangFrFR ?? self.bodyLangFrFR,
+      bodyLangDeDE: bodyLangDeDE ?? self.bodyLangDeDE,
+      bodyLangZhCN: bodyLangZhCN ?? self.bodyLangZhCN,
+      bodyLangZhTW: bodyLangZhTW ?? self.bodyLangZhTW,
+      bodyLangEsES: bodyLangEsES ?? self.bodyLangEsES,
+      bodyLangEsMX: bodyLangEsMX ?? self.bodyLangEsMX,
+      bodyLangRuRU: bodyLangRuRU ?? self.bodyLangRuRU,
+      bodyLangJaJP: bodyLangJaJP ?? self.bodyLangJaJP,
+      bodyLangPtPT: bodyLangPtPT ?? self.bodyLangPtPT,
+      bodyLangPtBR: bodyLangPtBR ?? self.bodyLangPtBR,
+      bodyLangItIT: bodyLangItIT ?? self.bodyLangItIT,
+      bodyLangUnk1: bodyLangUnk1 ?? self.bodyLangUnk1,
+      bodyLangUnk2: bodyLangUnk2 ?? self.bodyLangUnk2,
+      bodyLangUnk3: bodyLangUnk3 ?? self.bodyLangUnk3,
+      bodyLangFlags: bodyLangFlags ?? self.bodyLangFlags,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as MailTemplateEntity;
     return {
-      'ID': id,
-      'Subject_lang_enUS': subjectLangEnUS,
-      'Subject_lang_koKR': subjectLangKoKR,
-      'Subject_lang_frFR': subjectLangFrFR,
-      'Subject_lang_deDE': subjectLangDeDE,
-      'Subject_lang_zhCN': subjectLangZhCN,
-      'Subject_lang_zhTW': subjectLangZhTW,
-      'Subject_lang_esES': subjectLangEsES,
-      'Subject_lang_esMX': subjectLangEsMX,
-      'Subject_lang_ruRU': subjectLangRuRU,
-      'Subject_lang_jaJP': subjectLangJaJP,
-      'Subject_lang_ptPT': subjectLangPtPT,
-      'Subject_lang_ptBR': subjectLangPtBR,
-      'Subject_lang_itIT': subjectLangItIT,
-      'Subject_lang_unk1': subjectLangUnk1,
-      'Subject_lang_unk2': subjectLangUnk2,
-      'Subject_lang_unk3': subjectLangUnk3,
-      'Subject_lang_Flags': subjectLangFlags,
-      'Body_lang_enUS': bodyLangEnUS,
-      'Body_lang_koKR': bodyLangKoKR,
-      'Body_lang_frFR': bodyLangFrFR,
-      'Body_lang_deDE': bodyLangDeDE,
-      'Body_lang_zhCN': bodyLangZhCN,
-      'Body_lang_zhTW': bodyLangZhTW,
-      'Body_lang_esES': bodyLangEsES,
-      'Body_lang_esMX': bodyLangEsMX,
-      'Body_lang_ruRU': bodyLangRuRU,
-      'Body_lang_jaJP': bodyLangJaJP,
-      'Body_lang_ptPT': bodyLangPtPT,
-      'Body_lang_ptBR': bodyLangPtBR,
-      'Body_lang_itIT': bodyLangItIT,
-      'Body_lang_unk1': bodyLangUnk1,
-      'Body_lang_unk2': bodyLangUnk2,
-      'Body_lang_unk3': bodyLangUnk3,
-      'Body_lang_Flags': bodyLangFlags,
+      'ID': self.id,
+      'Subject_lang_enUS': self.subjectLangEnUS,
+      'Subject_lang_koKR': self.subjectLangKoKR,
+      'Subject_lang_frFR': self.subjectLangFrFR,
+      'Subject_lang_deDE': self.subjectLangDeDE,
+      'Subject_lang_zhCN': self.subjectLangZhCN,
+      'Subject_lang_zhTW': self.subjectLangZhTW,
+      'Subject_lang_esES': self.subjectLangEsES,
+      'Subject_lang_esMX': self.subjectLangEsMX,
+      'Subject_lang_ruRU': self.subjectLangRuRU,
+      'Subject_lang_jaJP': self.subjectLangJaJP,
+      'Subject_lang_ptPT': self.subjectLangPtPT,
+      'Subject_lang_ptBR': self.subjectLangPtBR,
+      'Subject_lang_itIT': self.subjectLangItIT,
+      'Subject_lang_unk1': self.subjectLangUnk1,
+      'Subject_lang_unk2': self.subjectLangUnk2,
+      'Subject_lang_unk3': self.subjectLangUnk3,
+      'Subject_lang_Flags': self.subjectLangFlags,
+      'Body_lang_enUS': self.bodyLangEnUS,
+      'Body_lang_koKR': self.bodyLangKoKR,
+      'Body_lang_frFR': self.bodyLangFrFR,
+      'Body_lang_deDE': self.bodyLangDeDE,
+      'Body_lang_zhCN': self.bodyLangZhCN,
+      'Body_lang_zhTW': self.bodyLangZhTW,
+      'Body_lang_esES': self.bodyLangEsES,
+      'Body_lang_esMX': self.bodyLangEsMX,
+      'Body_lang_ruRU': self.bodyLangRuRU,
+      'Body_lang_jaJP': self.bodyLangJaJP,
+      'Body_lang_ptPT': self.bodyLangPtPT,
+      'Body_lang_ptBR': self.bodyLangPtBR,
+      'Body_lang_itIT': self.bodyLangItIT,
+      'Body_lang_unk1': self.bodyLangUnk1,
+      'Body_lang_unk2': self.bodyLangUnk2,
+      'Body_lang_unk3': self.bodyLangUnk3,
+      'Body_lang_Flags': self.bodyLangFlags,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as MailTemplateEntity;
+    return identical(self, other) ||
         other is MailTemplateEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            subjectLangEnUS == other.subjectLangEnUS &&
-            subjectLangKoKR == other.subjectLangKoKR &&
-            subjectLangFrFR == other.subjectLangFrFR &&
-            subjectLangDeDE == other.subjectLangDeDE &&
-            subjectLangZhCN == other.subjectLangZhCN &&
-            subjectLangZhTW == other.subjectLangZhTW &&
-            subjectLangEsES == other.subjectLangEsES &&
-            subjectLangEsMX == other.subjectLangEsMX &&
-            subjectLangRuRU == other.subjectLangRuRU &&
-            subjectLangJaJP == other.subjectLangJaJP &&
-            subjectLangPtPT == other.subjectLangPtPT &&
-            subjectLangPtBR == other.subjectLangPtBR &&
-            subjectLangItIT == other.subjectLangItIT &&
-            subjectLangUnk1 == other.subjectLangUnk1 &&
-            subjectLangUnk2 == other.subjectLangUnk2 &&
-            subjectLangUnk3 == other.subjectLangUnk3 &&
-            subjectLangFlags == other.subjectLangFlags &&
-            bodyLangEnUS == other.bodyLangEnUS &&
-            bodyLangKoKR == other.bodyLangKoKR &&
-            bodyLangFrFR == other.bodyLangFrFR &&
-            bodyLangDeDE == other.bodyLangDeDE &&
-            bodyLangZhCN == other.bodyLangZhCN &&
-            bodyLangZhTW == other.bodyLangZhTW &&
-            bodyLangEsES == other.bodyLangEsES &&
-            bodyLangEsMX == other.bodyLangEsMX &&
-            bodyLangRuRU == other.bodyLangRuRU &&
-            bodyLangJaJP == other.bodyLangJaJP &&
-            bodyLangPtPT == other.bodyLangPtPT &&
-            bodyLangPtBR == other.bodyLangPtBR &&
-            bodyLangItIT == other.bodyLangItIT &&
-            bodyLangUnk1 == other.bodyLangUnk1 &&
-            bodyLangUnk2 == other.bodyLangUnk2 &&
-            bodyLangUnk3 == other.bodyLangUnk3 &&
-            bodyLangFlags == other.bodyLangFlags;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.subjectLangEnUS == other.subjectLangEnUS &&
+            self.subjectLangKoKR == other.subjectLangKoKR &&
+            self.subjectLangFrFR == other.subjectLangFrFR &&
+            self.subjectLangDeDE == other.subjectLangDeDE &&
+            self.subjectLangZhCN == other.subjectLangZhCN &&
+            self.subjectLangZhTW == other.subjectLangZhTW &&
+            self.subjectLangEsES == other.subjectLangEsES &&
+            self.subjectLangEsMX == other.subjectLangEsMX &&
+            self.subjectLangRuRU == other.subjectLangRuRU &&
+            self.subjectLangJaJP == other.subjectLangJaJP &&
+            self.subjectLangPtPT == other.subjectLangPtPT &&
+            self.subjectLangPtBR == other.subjectLangPtBR &&
+            self.subjectLangItIT == other.subjectLangItIT &&
+            self.subjectLangUnk1 == other.subjectLangUnk1 &&
+            self.subjectLangUnk2 == other.subjectLangUnk2 &&
+            self.subjectLangUnk3 == other.subjectLangUnk3 &&
+            self.subjectLangFlags == other.subjectLangFlags &&
+            self.bodyLangEnUS == other.bodyLangEnUS &&
+            self.bodyLangKoKR == other.bodyLangKoKR &&
+            self.bodyLangFrFR == other.bodyLangFrFR &&
+            self.bodyLangDeDE == other.bodyLangDeDE &&
+            self.bodyLangZhCN == other.bodyLangZhCN &&
+            self.bodyLangZhTW == other.bodyLangZhTW &&
+            self.bodyLangEsES == other.bodyLangEsES &&
+            self.bodyLangEsMX == other.bodyLangEsMX &&
+            self.bodyLangRuRU == other.bodyLangRuRU &&
+            self.bodyLangJaJP == other.bodyLangJaJP &&
+            self.bodyLangPtPT == other.bodyLangPtPT &&
+            self.bodyLangPtBR == other.bodyLangPtBR &&
+            self.bodyLangItIT == other.bodyLangItIT &&
+            self.bodyLangUnk1 == other.bodyLangUnk1 &&
+            self.bodyLangUnk2 == other.bodyLangUnk2 &&
+            self.bodyLangUnk3 == other.bodyLangUnk3 &&
+            self.bodyLangFlags == other.bodyLangFlags;
   }
 
   @override
   int get hashCode {
+    final self = this as MailTemplateEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      subjectLangEnUS,
-      subjectLangKoKR,
-      subjectLangFrFR,
-      subjectLangDeDE,
-      subjectLangZhCN,
-      subjectLangZhTW,
-      subjectLangEsES,
-      subjectLangEsMX,
-      subjectLangRuRU,
-      subjectLangJaJP,
-      subjectLangPtPT,
-      subjectLangPtBR,
-      subjectLangItIT,
-      subjectLangUnk1,
-      subjectLangUnk2,
-      subjectLangUnk3,
-      subjectLangFlags,
-      bodyLangEnUS,
-      bodyLangKoKR,
-      bodyLangFrFR,
-      bodyLangDeDE,
-      bodyLangZhCN,
-      bodyLangZhTW,
-      bodyLangEsES,
-      bodyLangEsMX,
-      bodyLangRuRU,
-      bodyLangJaJP,
-      bodyLangPtPT,
-      bodyLangPtBR,
-      bodyLangItIT,
-      bodyLangUnk1,
-      bodyLangUnk2,
-      bodyLangUnk3,
-      bodyLangFlags,
+      self.runtimeType,
+      self.id,
+      self.subjectLangEnUS,
+      self.subjectLangKoKR,
+      self.subjectLangFrFR,
+      self.subjectLangDeDE,
+      self.subjectLangZhCN,
+      self.subjectLangZhTW,
+      self.subjectLangEsES,
+      self.subjectLangEsMX,
+      self.subjectLangRuRU,
+      self.subjectLangJaJP,
+      self.subjectLangPtPT,
+      self.subjectLangPtBR,
+      self.subjectLangItIT,
+      self.subjectLangUnk1,
+      self.subjectLangUnk2,
+      self.subjectLangUnk3,
+      self.subjectLangFlags,
+      self.bodyLangEnUS,
+      self.bodyLangKoKR,
+      self.bodyLangFrFR,
+      self.bodyLangDeDE,
+      self.bodyLangZhCN,
+      self.bodyLangZhTW,
+      self.bodyLangEsES,
+      self.bodyLangEsMX,
+      self.bodyLangRuRU,
+      self.bodyLangJaJP,
+      self.bodyLangPtPT,
+      self.bodyLangPtBR,
+      self.bodyLangItIT,
+      self.bodyLangUnk1,
+      self.bodyLangUnk2,
+      self.bodyLangUnk3,
+      self.bodyLangFlags,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as MailTemplateEntity;
     return 'MailTemplateEntity('
-        'id: $id, '
-        'subjectLangEnUS: $subjectLangEnUS, '
-        'subjectLangKoKR: $subjectLangKoKR, '
-        'subjectLangFrFR: $subjectLangFrFR, '
-        'subjectLangDeDE: $subjectLangDeDE, '
-        'subjectLangZhCN: $subjectLangZhCN, '
-        'subjectLangZhTW: $subjectLangZhTW, '
-        'subjectLangEsES: $subjectLangEsES, '
-        'subjectLangEsMX: $subjectLangEsMX, '
-        'subjectLangRuRU: $subjectLangRuRU, '
-        'subjectLangJaJP: $subjectLangJaJP, '
-        'subjectLangPtPT: $subjectLangPtPT, '
-        'subjectLangPtBR: $subjectLangPtBR, '
-        'subjectLangItIT: $subjectLangItIT, '
-        'subjectLangUnk1: $subjectLangUnk1, '
-        'subjectLangUnk2: $subjectLangUnk2, '
-        'subjectLangUnk3: $subjectLangUnk3, '
-        'subjectLangFlags: $subjectLangFlags, '
-        'bodyLangEnUS: $bodyLangEnUS, '
-        'bodyLangKoKR: $bodyLangKoKR, '
-        'bodyLangFrFR: $bodyLangFrFR, '
-        'bodyLangDeDE: $bodyLangDeDE, '
-        'bodyLangZhCN: $bodyLangZhCN, '
-        'bodyLangZhTW: $bodyLangZhTW, '
-        'bodyLangEsES: $bodyLangEsES, '
-        'bodyLangEsMX: $bodyLangEsMX, '
-        'bodyLangRuRU: $bodyLangRuRU, '
-        'bodyLangJaJP: $bodyLangJaJP, '
-        'bodyLangPtPT: $bodyLangPtPT, '
-        'bodyLangPtBR: $bodyLangPtBR, '
-        'bodyLangItIT: $bodyLangItIT, '
-        'bodyLangUnk1: $bodyLangUnk1, '
-        'bodyLangUnk2: $bodyLangUnk2, '
-        'bodyLangUnk3: $bodyLangUnk3, '
-        'bodyLangFlags: $bodyLangFlags'
+        'id: ${self.id}, '
+        'subjectLangEnUS: ${self.subjectLangEnUS}, '
+        'subjectLangKoKR: ${self.subjectLangKoKR}, '
+        'subjectLangFrFR: ${self.subjectLangFrFR}, '
+        'subjectLangDeDE: ${self.subjectLangDeDE}, '
+        'subjectLangZhCN: ${self.subjectLangZhCN}, '
+        'subjectLangZhTW: ${self.subjectLangZhTW}, '
+        'subjectLangEsES: ${self.subjectLangEsES}, '
+        'subjectLangEsMX: ${self.subjectLangEsMX}, '
+        'subjectLangRuRU: ${self.subjectLangRuRU}, '
+        'subjectLangJaJP: ${self.subjectLangJaJP}, '
+        'subjectLangPtPT: ${self.subjectLangPtPT}, '
+        'subjectLangPtBR: ${self.subjectLangPtBR}, '
+        'subjectLangItIT: ${self.subjectLangItIT}, '
+        'subjectLangUnk1: ${self.subjectLangUnk1}, '
+        'subjectLangUnk2: ${self.subjectLangUnk2}, '
+        'subjectLangUnk3: ${self.subjectLangUnk3}, '
+        'subjectLangFlags: ${self.subjectLangFlags}, '
+        'bodyLangEnUS: ${self.bodyLangEnUS}, '
+        'bodyLangKoKR: ${self.bodyLangKoKR}, '
+        'bodyLangFrFR: ${self.bodyLangFrFR}, '
+        'bodyLangDeDE: ${self.bodyLangDeDE}, '
+        'bodyLangZhCN: ${self.bodyLangZhCN}, '
+        'bodyLangZhTW: ${self.bodyLangZhTW}, '
+        'bodyLangEsES: ${self.bodyLangEsES}, '
+        'bodyLangEsMX: ${self.bodyLangEsMX}, '
+        'bodyLangRuRU: ${self.bodyLangRuRU}, '
+        'bodyLangJaJP: ${self.bodyLangJaJP}, '
+        'bodyLangPtPT: ${self.bodyLangPtPT}, '
+        'bodyLangPtBR: ${self.bodyLangPtBR}, '
+        'bodyLangItIT: ${self.bodyLangItIT}, '
+        'bodyLangUnk1: ${self.bodyLangUnk1}, '
+        'bodyLangUnk2: ${self.bodyLangUnk2}, '
+        'bodyLangUnk3: ${self.bodyLangUnk3}, '
+        'bodyLangFlags: ${self.bodyLangFlags}'
         ')';
   }
 }

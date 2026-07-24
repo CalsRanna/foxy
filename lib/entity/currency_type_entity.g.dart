@@ -3,11 +3,6 @@
 part of 'currency_type_entity.dart';
 
 mixin _CurrencyTypeEntityMixin {
-  int get id;
-  int get itemId;
-  int get categoryId;
-  int get bitIndex;
-
   static CurrencyTypeEntity fromJson(Map<String, dynamic> json) {
     return CurrencyTypeEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _CurrencyTypeEntityMixin {
     int? categoryId,
     int? bitIndex,
   }) {
+    final self = this as CurrencyTypeEntity;
     return CurrencyTypeEntity(
-      id: id ?? this.id,
-      itemId: itemId ?? this.itemId,
-      categoryId: categoryId ?? this.categoryId,
-      bitIndex: bitIndex ?? this.bitIndex,
+      id: id ?? self.id,
+      itemId: itemId ?? self.itemId,
+      categoryId: categoryId ?? self.categoryId,
+      bitIndex: bitIndex ?? self.bitIndex,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as CurrencyTypeEntity;
     return {
-      'ID': id,
-      'ItemID': itemId,
-      'CategoryID': categoryId,
-      'BitIndex': bitIndex,
+      'ID': self.id,
+      'ItemID': self.itemId,
+      'CategoryID': self.categoryId,
+      'BitIndex': self.bitIndex,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CurrencyTypeEntity;
+    return identical(self, other) ||
         other is CurrencyTypeEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            itemId == other.itemId &&
-            categoryId == other.categoryId &&
-            bitIndex == other.bitIndex;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.itemId == other.itemId &&
+            self.categoryId == other.categoryId &&
+            self.bitIndex == other.bitIndex;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, itemId, categoryId, bitIndex]);
+    final self = this as CurrencyTypeEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.itemId,
+      self.categoryId,
+      self.bitIndex,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as CurrencyTypeEntity;
     return 'CurrencyTypeEntity('
-        'id: $id, '
-        'itemId: $itemId, '
-        'categoryId: $categoryId, '
-        'bitIndex: $bitIndex'
+        'id: ${self.id}, '
+        'itemId: ${self.itemId}, '
+        'categoryId: ${self.categoryId}, '
+        'bitIndex: ${self.bitIndex}'
         ')';
   }
 }

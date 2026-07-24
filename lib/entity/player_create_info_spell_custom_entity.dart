@@ -1,5 +1,3 @@
-// ignore_for_file: annotate_overrides
-
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'player_create_info_spell_custom_entity.g.dart';

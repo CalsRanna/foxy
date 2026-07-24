@@ -3,14 +3,6 @@
 part of 'point_of_interest_entity.dart';
 
 mixin _PointOfInterestEntityMixin {
-  int get id;
-  double get positionX;
-  double get positionY;
-  int get icon;
-  int get flags;
-  int get importance;
-  String get name;
-
   static PointOfInterestEntity fromJson(Map<String, dynamic> json) {
     return PointOfInterestEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -32,67 +24,72 @@ mixin _PointOfInterestEntityMixin {
     int? importance,
     String? name,
   }) {
+    final self = this as PointOfInterestEntity;
     return PointOfInterestEntity(
-      id: id ?? this.id,
-      positionX: positionX ?? this.positionX,
-      positionY: positionY ?? this.positionY,
-      icon: icon ?? this.icon,
-      flags: flags ?? this.flags,
-      importance: importance ?? this.importance,
-      name: name ?? this.name,
+      id: id ?? self.id,
+      positionX: positionX ?? self.positionX,
+      positionY: positionY ?? self.positionY,
+      icon: icon ?? self.icon,
+      flags: flags ?? self.flags,
+      importance: importance ?? self.importance,
+      name: name ?? self.name,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PointOfInterestEntity;
     return {
-      'ID': id,
-      'PositionX': positionX,
-      'PositionY': positionY,
-      'Icon': icon,
-      'Flags': flags,
-      'Importance': importance,
-      'Name': name,
+      'ID': self.id,
+      'PositionX': self.positionX,
+      'PositionY': self.positionY,
+      'Icon': self.icon,
+      'Flags': self.flags,
+      'Importance': self.importance,
+      'Name': self.name,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PointOfInterestEntity;
+    return identical(self, other) ||
         other is PointOfInterestEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            positionX == other.positionX &&
-            positionY == other.positionY &&
-            icon == other.icon &&
-            flags == other.flags &&
-            importance == other.importance &&
-            name == other.name;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.positionX == other.positionX &&
+            self.positionY == other.positionY &&
+            self.icon == other.icon &&
+            self.flags == other.flags &&
+            self.importance == other.importance &&
+            self.name == other.name;
   }
 
   @override
   int get hashCode {
+    final self = this as PointOfInterestEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      positionX,
-      positionY,
-      icon,
-      flags,
-      importance,
-      name,
+      self.runtimeType,
+      self.id,
+      self.positionX,
+      self.positionY,
+      self.icon,
+      self.flags,
+      self.importance,
+      self.name,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as PointOfInterestEntity;
     return 'PointOfInterestEntity('
-        'id: $id, '
-        'positionX: $positionX, '
-        'positionY: $positionY, '
-        'icon: $icon, '
-        'flags: $flags, '
-        'importance: $importance, '
-        'name: $name'
+        'id: ${self.id}, '
+        'positionX: ${self.positionX}, '
+        'positionY: ${self.positionY}, '
+        'icon: ${self.icon}, '
+        'flags: ${self.flags}, '
+        'importance: ${self.importance}, '
+        'name: ${self.name}'
         ')';
   }
 }

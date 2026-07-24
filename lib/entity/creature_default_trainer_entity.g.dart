@@ -3,9 +3,6 @@
 part of 'creature_default_trainer_entity.dart';
 
 mixin _CreatureDefaultTrainerEntityMixin {
-  int get creatureId;
-  int get trainerId;
-
   static CreatureDefaultTrainerEntity fromJson(Map<String, dynamic> json) {
     return CreatureDefaultTrainerEntity(
       creatureId: (json['CreatureId'] as num?)?.toInt() ?? 0,
@@ -14,35 +11,40 @@ mixin _CreatureDefaultTrainerEntityMixin {
   }
 
   CreatureDefaultTrainerEntity copyWith({int? creatureId, int? trainerId}) {
+    final self = this as CreatureDefaultTrainerEntity;
     return CreatureDefaultTrainerEntity(
-      creatureId: creatureId ?? this.creatureId,
-      trainerId: trainerId ?? this.trainerId,
+      creatureId: creatureId ?? self.creatureId,
+      trainerId: trainerId ?? self.trainerId,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'CreatureId': creatureId, 'TrainerId': trainerId};
+    final self = this as CreatureDefaultTrainerEntity;
+    return {'CreatureId': self.creatureId, 'TrainerId': self.trainerId};
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as CreatureDefaultTrainerEntity;
+    return identical(self, other) ||
         other is CreatureDefaultTrainerEntity &&
-            runtimeType == other.runtimeType &&
-            creatureId == other.creatureId &&
-            trainerId == other.trainerId;
+            self.runtimeType == other.runtimeType &&
+            self.creatureId == other.creatureId &&
+            self.trainerId == other.trainerId;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, creatureId, trainerId]);
+    final self = this as CreatureDefaultTrainerEntity;
+    return Object.hashAll([self.runtimeType, self.creatureId, self.trainerId]);
   }
 
   @override
   String toString() {
+    final self = this as CreatureDefaultTrainerEntity;
     return 'CreatureDefaultTrainerEntity('
-        'creatureId: $creatureId, '
-        'trainerId: $trainerId'
+        'creatureId: ${self.creatureId}, '
+        'trainerId: ${self.trainerId}'
         ')';
   }
 }

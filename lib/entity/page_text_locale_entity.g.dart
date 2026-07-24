@@ -3,11 +3,6 @@
 part of 'page_text_locale_entity.dart';
 
 mixin _PageTextLocaleEntityMixin {
-  int get id;
-  String get locale;
-  String get text;
-  int get verifiedBuild;
-
   static PageTextLocaleEntity fromJson(Map<String, dynamic> json) {
     return PageTextLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,46 +18,57 @@ mixin _PageTextLocaleEntityMixin {
     String? text,
     int? verifiedBuild,
   }) {
+    final self = this as PageTextLocaleEntity;
     return PageTextLocaleEntity(
-      id: id ?? this.id,
-      locale: locale ?? this.locale,
-      text: text ?? this.text,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
+      id: id ?? self.id,
+      locale: locale ?? self.locale,
+      text: text ?? self.text,
+      verifiedBuild: verifiedBuild ?? self.verifiedBuild,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PageTextLocaleEntity;
     return {
-      'ID': id,
-      'locale': locale,
-      'Text': text,
-      'VerifiedBuild': verifiedBuild,
+      'ID': self.id,
+      'locale': self.locale,
+      'Text': self.text,
+      'VerifiedBuild': self.verifiedBuild,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PageTextLocaleEntity;
+    return identical(self, other) ||
         other is PageTextLocaleEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            locale == other.locale &&
-            text == other.text &&
-            verifiedBuild == other.verifiedBuild;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.locale == other.locale &&
+            self.text == other.text &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, id, locale, text, verifiedBuild]);
+    final self = this as PageTextLocaleEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.locale,
+      self.text,
+      self.verifiedBuild,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as PageTextLocaleEntity;
     return 'PageTextLocaleEntity('
-        'id: $id, '
-        'locale: $locale, '
-        'text: $text, '
-        'verifiedBuild: $verifiedBuild'
+        'id: ${self.id}, '
+        'locale: ${self.locale}, '
+        'text: ${self.text}, '
+        'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
 }

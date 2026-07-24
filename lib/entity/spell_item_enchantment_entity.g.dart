@@ -3,45 +3,6 @@
 part of 'spell_item_enchantment_entity.dart';
 
 mixin _SpellItemEnchantmentEntityMixin {
-  int get id;
-  int get charges;
-  int get effect0;
-  int get effect1;
-  int get effect2;
-  int get effectPointsMin0;
-  int get effectPointsMin1;
-  int get effectPointsMin2;
-  int get effectPointsMax0;
-  int get effectPointsMax1;
-  int get effectPointsMax2;
-  int get effectArg0;
-  int get effectArg1;
-  int get effectArg2;
-  String get nameLangEnUS;
-  String get nameLangKoKR;
-  String get nameLangFrFR;
-  String get nameLangDeDE;
-  String get nameLangZhCN;
-  String get nameLangZhTW;
-  String get nameLangEsES;
-  String get nameLangEsMX;
-  String get nameLangRuRU;
-  String get nameLangJaJP;
-  String get nameLangPtPT;
-  String get nameLangPtBR;
-  String get nameLangItIT;
-  String get nameLangUnk1;
-  String get nameLangUnk2;
-  String get nameLangUnk3;
-  int get nameLangFlags;
-  int get itemVisual;
-  int get flags;
-  int get srcItemId;
-  int get conditionId;
-  int get requiredSkillId;
-  int get requiredSkillRank;
-  int get minLevel;
-
   static SpellItemEnchantmentEntity fromJson(Map<String, dynamic> json) {
     return SpellItemEnchantmentEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -125,222 +86,227 @@ mixin _SpellItemEnchantmentEntityMixin {
     int? requiredSkillRank,
     int? minLevel,
   }) {
+    final self = this as SpellItemEnchantmentEntity;
     return SpellItemEnchantmentEntity(
-      id: id ?? this.id,
-      charges: charges ?? this.charges,
-      effect0: effect0 ?? this.effect0,
-      effect1: effect1 ?? this.effect1,
-      effect2: effect2 ?? this.effect2,
-      effectPointsMin0: effectPointsMin0 ?? this.effectPointsMin0,
-      effectPointsMin1: effectPointsMin1 ?? this.effectPointsMin1,
-      effectPointsMin2: effectPointsMin2 ?? this.effectPointsMin2,
-      effectPointsMax0: effectPointsMax0 ?? this.effectPointsMax0,
-      effectPointsMax1: effectPointsMax1 ?? this.effectPointsMax1,
-      effectPointsMax2: effectPointsMax2 ?? this.effectPointsMax2,
-      effectArg0: effectArg0 ?? this.effectArg0,
-      effectArg1: effectArg1 ?? this.effectArg1,
-      effectArg2: effectArg2 ?? this.effectArg2,
-      nameLangEnUS: nameLangEnUS ?? this.nameLangEnUS,
-      nameLangKoKR: nameLangKoKR ?? this.nameLangKoKR,
-      nameLangFrFR: nameLangFrFR ?? this.nameLangFrFR,
-      nameLangDeDE: nameLangDeDE ?? this.nameLangDeDE,
-      nameLangZhCN: nameLangZhCN ?? this.nameLangZhCN,
-      nameLangZhTW: nameLangZhTW ?? this.nameLangZhTW,
-      nameLangEsES: nameLangEsES ?? this.nameLangEsES,
-      nameLangEsMX: nameLangEsMX ?? this.nameLangEsMX,
-      nameLangRuRU: nameLangRuRU ?? this.nameLangRuRU,
-      nameLangJaJP: nameLangJaJP ?? this.nameLangJaJP,
-      nameLangPtPT: nameLangPtPT ?? this.nameLangPtPT,
-      nameLangPtBR: nameLangPtBR ?? this.nameLangPtBR,
-      nameLangItIT: nameLangItIT ?? this.nameLangItIT,
-      nameLangUnk1: nameLangUnk1 ?? this.nameLangUnk1,
-      nameLangUnk2: nameLangUnk2 ?? this.nameLangUnk2,
-      nameLangUnk3: nameLangUnk3 ?? this.nameLangUnk3,
-      nameLangFlags: nameLangFlags ?? this.nameLangFlags,
-      itemVisual: itemVisual ?? this.itemVisual,
-      flags: flags ?? this.flags,
-      srcItemId: srcItemId ?? this.srcItemId,
-      conditionId: conditionId ?? this.conditionId,
-      requiredSkillId: requiredSkillId ?? this.requiredSkillId,
-      requiredSkillRank: requiredSkillRank ?? this.requiredSkillRank,
-      minLevel: minLevel ?? this.minLevel,
+      id: id ?? self.id,
+      charges: charges ?? self.charges,
+      effect0: effect0 ?? self.effect0,
+      effect1: effect1 ?? self.effect1,
+      effect2: effect2 ?? self.effect2,
+      effectPointsMin0: effectPointsMin0 ?? self.effectPointsMin0,
+      effectPointsMin1: effectPointsMin1 ?? self.effectPointsMin1,
+      effectPointsMin2: effectPointsMin2 ?? self.effectPointsMin2,
+      effectPointsMax0: effectPointsMax0 ?? self.effectPointsMax0,
+      effectPointsMax1: effectPointsMax1 ?? self.effectPointsMax1,
+      effectPointsMax2: effectPointsMax2 ?? self.effectPointsMax2,
+      effectArg0: effectArg0 ?? self.effectArg0,
+      effectArg1: effectArg1 ?? self.effectArg1,
+      effectArg2: effectArg2 ?? self.effectArg2,
+      nameLangEnUS: nameLangEnUS ?? self.nameLangEnUS,
+      nameLangKoKR: nameLangKoKR ?? self.nameLangKoKR,
+      nameLangFrFR: nameLangFrFR ?? self.nameLangFrFR,
+      nameLangDeDE: nameLangDeDE ?? self.nameLangDeDE,
+      nameLangZhCN: nameLangZhCN ?? self.nameLangZhCN,
+      nameLangZhTW: nameLangZhTW ?? self.nameLangZhTW,
+      nameLangEsES: nameLangEsES ?? self.nameLangEsES,
+      nameLangEsMX: nameLangEsMX ?? self.nameLangEsMX,
+      nameLangRuRU: nameLangRuRU ?? self.nameLangRuRU,
+      nameLangJaJP: nameLangJaJP ?? self.nameLangJaJP,
+      nameLangPtPT: nameLangPtPT ?? self.nameLangPtPT,
+      nameLangPtBR: nameLangPtBR ?? self.nameLangPtBR,
+      nameLangItIT: nameLangItIT ?? self.nameLangItIT,
+      nameLangUnk1: nameLangUnk1 ?? self.nameLangUnk1,
+      nameLangUnk2: nameLangUnk2 ?? self.nameLangUnk2,
+      nameLangUnk3: nameLangUnk3 ?? self.nameLangUnk3,
+      nameLangFlags: nameLangFlags ?? self.nameLangFlags,
+      itemVisual: itemVisual ?? self.itemVisual,
+      flags: flags ?? self.flags,
+      srcItemId: srcItemId ?? self.srcItemId,
+      conditionId: conditionId ?? self.conditionId,
+      requiredSkillId: requiredSkillId ?? self.requiredSkillId,
+      requiredSkillRank: requiredSkillRank ?? self.requiredSkillRank,
+      minLevel: minLevel ?? self.minLevel,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as SpellItemEnchantmentEntity;
     return {
-      'ID': id,
-      'Charges': charges,
-      'Effect0': effect0,
-      'Effect1': effect1,
-      'Effect2': effect2,
-      'EffectPointsMin0': effectPointsMin0,
-      'EffectPointsMin1': effectPointsMin1,
-      'EffectPointsMin2': effectPointsMin2,
-      'EffectPointsMax0': effectPointsMax0,
-      'EffectPointsMax1': effectPointsMax1,
-      'EffectPointsMax2': effectPointsMax2,
-      'EffectArg0': effectArg0,
-      'EffectArg1': effectArg1,
-      'EffectArg2': effectArg2,
-      'Name_lang_enUS': nameLangEnUS,
-      'Name_lang_koKR': nameLangKoKR,
-      'Name_lang_frFR': nameLangFrFR,
-      'Name_lang_deDE': nameLangDeDE,
-      'Name_lang_zhCN': nameLangZhCN,
-      'Name_lang_zhTW': nameLangZhTW,
-      'Name_lang_esES': nameLangEsES,
-      'Name_lang_esMX': nameLangEsMX,
-      'Name_lang_ruRU': nameLangRuRU,
-      'Name_lang_jaJP': nameLangJaJP,
-      'Name_lang_ptPT': nameLangPtPT,
-      'Name_lang_ptBR': nameLangPtBR,
-      'Name_lang_itIT': nameLangItIT,
-      'Name_lang_unk1': nameLangUnk1,
-      'Name_lang_unk2': nameLangUnk2,
-      'Name_lang_unk3': nameLangUnk3,
-      'Name_lang_Flags': nameLangFlags,
-      'ItemVisual': itemVisual,
-      'Flags': flags,
-      'Src_itemID': srcItemId,
-      'Condition_ID': conditionId,
-      'RequiredSkillID': requiredSkillId,
-      'RequiredSkillRank': requiredSkillRank,
-      'MinLevel': minLevel,
+      'ID': self.id,
+      'Charges': self.charges,
+      'Effect0': self.effect0,
+      'Effect1': self.effect1,
+      'Effect2': self.effect2,
+      'EffectPointsMin0': self.effectPointsMin0,
+      'EffectPointsMin1': self.effectPointsMin1,
+      'EffectPointsMin2': self.effectPointsMin2,
+      'EffectPointsMax0': self.effectPointsMax0,
+      'EffectPointsMax1': self.effectPointsMax1,
+      'EffectPointsMax2': self.effectPointsMax2,
+      'EffectArg0': self.effectArg0,
+      'EffectArg1': self.effectArg1,
+      'EffectArg2': self.effectArg2,
+      'Name_lang_enUS': self.nameLangEnUS,
+      'Name_lang_koKR': self.nameLangKoKR,
+      'Name_lang_frFR': self.nameLangFrFR,
+      'Name_lang_deDE': self.nameLangDeDE,
+      'Name_lang_zhCN': self.nameLangZhCN,
+      'Name_lang_zhTW': self.nameLangZhTW,
+      'Name_lang_esES': self.nameLangEsES,
+      'Name_lang_esMX': self.nameLangEsMX,
+      'Name_lang_ruRU': self.nameLangRuRU,
+      'Name_lang_jaJP': self.nameLangJaJP,
+      'Name_lang_ptPT': self.nameLangPtPT,
+      'Name_lang_ptBR': self.nameLangPtBR,
+      'Name_lang_itIT': self.nameLangItIT,
+      'Name_lang_unk1': self.nameLangUnk1,
+      'Name_lang_unk2': self.nameLangUnk2,
+      'Name_lang_unk3': self.nameLangUnk3,
+      'Name_lang_Flags': self.nameLangFlags,
+      'ItemVisual': self.itemVisual,
+      'Flags': self.flags,
+      'Src_itemID': self.srcItemId,
+      'Condition_ID': self.conditionId,
+      'RequiredSkillID': self.requiredSkillId,
+      'RequiredSkillRank': self.requiredSkillRank,
+      'MinLevel': self.minLevel,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as SpellItemEnchantmentEntity;
+    return identical(self, other) ||
         other is SpellItemEnchantmentEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            charges == other.charges &&
-            effect0 == other.effect0 &&
-            effect1 == other.effect1 &&
-            effect2 == other.effect2 &&
-            effectPointsMin0 == other.effectPointsMin0 &&
-            effectPointsMin1 == other.effectPointsMin1 &&
-            effectPointsMin2 == other.effectPointsMin2 &&
-            effectPointsMax0 == other.effectPointsMax0 &&
-            effectPointsMax1 == other.effectPointsMax1 &&
-            effectPointsMax2 == other.effectPointsMax2 &&
-            effectArg0 == other.effectArg0 &&
-            effectArg1 == other.effectArg1 &&
-            effectArg2 == other.effectArg2 &&
-            nameLangEnUS == other.nameLangEnUS &&
-            nameLangKoKR == other.nameLangKoKR &&
-            nameLangFrFR == other.nameLangFrFR &&
-            nameLangDeDE == other.nameLangDeDE &&
-            nameLangZhCN == other.nameLangZhCN &&
-            nameLangZhTW == other.nameLangZhTW &&
-            nameLangEsES == other.nameLangEsES &&
-            nameLangEsMX == other.nameLangEsMX &&
-            nameLangRuRU == other.nameLangRuRU &&
-            nameLangJaJP == other.nameLangJaJP &&
-            nameLangPtPT == other.nameLangPtPT &&
-            nameLangPtBR == other.nameLangPtBR &&
-            nameLangItIT == other.nameLangItIT &&
-            nameLangUnk1 == other.nameLangUnk1 &&
-            nameLangUnk2 == other.nameLangUnk2 &&
-            nameLangUnk3 == other.nameLangUnk3 &&
-            nameLangFlags == other.nameLangFlags &&
-            itemVisual == other.itemVisual &&
-            flags == other.flags &&
-            srcItemId == other.srcItemId &&
-            conditionId == other.conditionId &&
-            requiredSkillId == other.requiredSkillId &&
-            requiredSkillRank == other.requiredSkillRank &&
-            minLevel == other.minLevel;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.charges == other.charges &&
+            self.effect0 == other.effect0 &&
+            self.effect1 == other.effect1 &&
+            self.effect2 == other.effect2 &&
+            self.effectPointsMin0 == other.effectPointsMin0 &&
+            self.effectPointsMin1 == other.effectPointsMin1 &&
+            self.effectPointsMin2 == other.effectPointsMin2 &&
+            self.effectPointsMax0 == other.effectPointsMax0 &&
+            self.effectPointsMax1 == other.effectPointsMax1 &&
+            self.effectPointsMax2 == other.effectPointsMax2 &&
+            self.effectArg0 == other.effectArg0 &&
+            self.effectArg1 == other.effectArg1 &&
+            self.effectArg2 == other.effectArg2 &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.itemVisual == other.itemVisual &&
+            self.flags == other.flags &&
+            self.srcItemId == other.srcItemId &&
+            self.conditionId == other.conditionId &&
+            self.requiredSkillId == other.requiredSkillId &&
+            self.requiredSkillRank == other.requiredSkillRank &&
+            self.minLevel == other.minLevel;
   }
 
   @override
   int get hashCode {
+    final self = this as SpellItemEnchantmentEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      charges,
-      effect0,
-      effect1,
-      effect2,
-      effectPointsMin0,
-      effectPointsMin1,
-      effectPointsMin2,
-      effectPointsMax0,
-      effectPointsMax1,
-      effectPointsMax2,
-      effectArg0,
-      effectArg1,
-      effectArg2,
-      nameLangEnUS,
-      nameLangKoKR,
-      nameLangFrFR,
-      nameLangDeDE,
-      nameLangZhCN,
-      nameLangZhTW,
-      nameLangEsES,
-      nameLangEsMX,
-      nameLangRuRU,
-      nameLangJaJP,
-      nameLangPtPT,
-      nameLangPtBR,
-      nameLangItIT,
-      nameLangUnk1,
-      nameLangUnk2,
-      nameLangUnk3,
-      nameLangFlags,
-      itemVisual,
-      flags,
-      srcItemId,
-      conditionId,
-      requiredSkillId,
-      requiredSkillRank,
-      minLevel,
+      self.runtimeType,
+      self.id,
+      self.charges,
+      self.effect0,
+      self.effect1,
+      self.effect2,
+      self.effectPointsMin0,
+      self.effectPointsMin1,
+      self.effectPointsMin2,
+      self.effectPointsMax0,
+      self.effectPointsMax1,
+      self.effectPointsMax2,
+      self.effectArg0,
+      self.effectArg1,
+      self.effectArg2,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.itemVisual,
+      self.flags,
+      self.srcItemId,
+      self.conditionId,
+      self.requiredSkillId,
+      self.requiredSkillRank,
+      self.minLevel,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as SpellItemEnchantmentEntity;
     return 'SpellItemEnchantmentEntity('
-        'id: $id, '
-        'charges: $charges, '
-        'effect0: $effect0, '
-        'effect1: $effect1, '
-        'effect2: $effect2, '
-        'effectPointsMin0: $effectPointsMin0, '
-        'effectPointsMin1: $effectPointsMin1, '
-        'effectPointsMin2: $effectPointsMin2, '
-        'effectPointsMax0: $effectPointsMax0, '
-        'effectPointsMax1: $effectPointsMax1, '
-        'effectPointsMax2: $effectPointsMax2, '
-        'effectArg0: $effectArg0, '
-        'effectArg1: $effectArg1, '
-        'effectArg2: $effectArg2, '
-        'nameLangEnUS: $nameLangEnUS, '
-        'nameLangKoKR: $nameLangKoKR, '
-        'nameLangFrFR: $nameLangFrFR, '
-        'nameLangDeDE: $nameLangDeDE, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'nameLangZhTW: $nameLangZhTW, '
-        'nameLangEsES: $nameLangEsES, '
-        'nameLangEsMX: $nameLangEsMX, '
-        'nameLangRuRU: $nameLangRuRU, '
-        'nameLangJaJP: $nameLangJaJP, '
-        'nameLangPtPT: $nameLangPtPT, '
-        'nameLangPtBR: $nameLangPtBR, '
-        'nameLangItIT: $nameLangItIT, '
-        'nameLangUnk1: $nameLangUnk1, '
-        'nameLangUnk2: $nameLangUnk2, '
-        'nameLangUnk3: $nameLangUnk3, '
-        'nameLangFlags: $nameLangFlags, '
-        'itemVisual: $itemVisual, '
-        'flags: $flags, '
-        'srcItemId: $srcItemId, '
-        'conditionId: $conditionId, '
-        'requiredSkillId: $requiredSkillId, '
-        'requiredSkillRank: $requiredSkillRank, '
-        'minLevel: $minLevel'
+        'id: ${self.id}, '
+        'charges: ${self.charges}, '
+        'effect0: ${self.effect0}, '
+        'effect1: ${self.effect1}, '
+        'effect2: ${self.effect2}, '
+        'effectPointsMin0: ${self.effectPointsMin0}, '
+        'effectPointsMin1: ${self.effectPointsMin1}, '
+        'effectPointsMin2: ${self.effectPointsMin2}, '
+        'effectPointsMax0: ${self.effectPointsMax0}, '
+        'effectPointsMax1: ${self.effectPointsMax1}, '
+        'effectPointsMax2: ${self.effectPointsMax2}, '
+        'effectArg0: ${self.effectArg0}, '
+        'effectArg1: ${self.effectArg1}, '
+        'effectArg2: ${self.effectArg2}, '
+        'nameLangEnUS: ${self.nameLangEnUS}, '
+        'nameLangKoKR: ${self.nameLangKoKR}, '
+        'nameLangFrFR: ${self.nameLangFrFR}, '
+        'nameLangDeDE: ${self.nameLangDeDE}, '
+        'nameLangZhCN: ${self.nameLangZhCN}, '
+        'nameLangZhTW: ${self.nameLangZhTW}, '
+        'nameLangEsES: ${self.nameLangEsES}, '
+        'nameLangEsMX: ${self.nameLangEsMX}, '
+        'nameLangRuRU: ${self.nameLangRuRU}, '
+        'nameLangJaJP: ${self.nameLangJaJP}, '
+        'nameLangPtPT: ${self.nameLangPtPT}, '
+        'nameLangPtBR: ${self.nameLangPtBR}, '
+        'nameLangItIT: ${self.nameLangItIT}, '
+        'nameLangUnk1: ${self.nameLangUnk1}, '
+        'nameLangUnk2: ${self.nameLangUnk2}, '
+        'nameLangUnk3: ${self.nameLangUnk3}, '
+        'nameLangFlags: ${self.nameLangFlags}, '
+        'itemVisual: ${self.itemVisual}, '
+        'flags: ${self.flags}, '
+        'srcItemId: ${self.srcItemId}, '
+        'conditionId: ${self.conditionId}, '
+        'requiredSkillId: ${self.requiredSkillId}, '
+        'requiredSkillRank: ${self.requiredSkillRank}, '
+        'minLevel: ${self.minLevel}'
         ')';
   }
 }

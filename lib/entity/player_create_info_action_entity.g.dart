@@ -3,12 +3,6 @@
 part of 'player_create_info_action_entity.dart';
 
 mixin _PlayerCreateInfoActionEntityMixin {
-  int get race;
-  int get class_;
-  int get button;
-  int get action;
-  int get type;
-
   static PlayerCreateInfoActionEntity fromJson(Map<String, dynamic> json) {
     return PlayerCreateInfoActionEntity(
       race: (json['race'] as num?)?.toInt() ?? 0,
@@ -26,50 +20,62 @@ mixin _PlayerCreateInfoActionEntityMixin {
     int? action,
     int? type,
   }) {
+    final self = this as PlayerCreateInfoActionEntity;
     return PlayerCreateInfoActionEntity(
-      race: race ?? this.race,
-      class_: class_ ?? this.class_,
-      button: button ?? this.button,
-      action: action ?? this.action,
-      type: type ?? this.type,
+      race: race ?? self.race,
+      class_: class_ ?? self.class_,
+      button: button ?? self.button,
+      action: action ?? self.action,
+      type: type ?? self.type,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as PlayerCreateInfoActionEntity;
     return {
-      'race': race,
-      'class': class_,
-      'button': button,
-      'action': action,
-      'type': type,
+      'race': self.race,
+      'class': self.class_,
+      'button': self.button,
+      'action': self.action,
+      'type': self.type,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as PlayerCreateInfoActionEntity;
+    return identical(self, other) ||
         other is PlayerCreateInfoActionEntity &&
-            runtimeType == other.runtimeType &&
-            race == other.race &&
-            class_ == other.class_ &&
-            button == other.button &&
-            action == other.action &&
-            type == other.type;
+            self.runtimeType == other.runtimeType &&
+            self.race == other.race &&
+            self.class_ == other.class_ &&
+            self.button == other.button &&
+            self.action == other.action &&
+            self.type == other.type;
   }
 
   @override
   int get hashCode {
-    return Object.hashAll([runtimeType, race, class_, button, action, type]);
+    final self = this as PlayerCreateInfoActionEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.race,
+      self.class_,
+      self.button,
+      self.action,
+      self.type,
+    ]);
   }
 
   @override
   String toString() {
+    final self = this as PlayerCreateInfoActionEntity;
     return 'PlayerCreateInfoActionEntity('
-        'race: $race, '
-        'class_: $class_, '
-        'button: $button, '
-        'action: $action, '
-        'type: $type'
+        'race: ${self.race}, '
+        'class_: ${self.class_}, '
+        'button: ${self.button}, '
+        'action: ${self.action}, '
+        'type: ${self.type}'
         ')';
   }
 }

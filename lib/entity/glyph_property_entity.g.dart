@@ -3,11 +3,6 @@
 part of 'glyph_property_entity.dart';
 
 mixin _GlyphPropertyEntityMixin {
-  int get id;
-  int get spellId;
-  int get glyphSlotFlags;
-  int get spellIconId;
-
   static GlyphPropertyEntity fromJson(Map<String, dynamic> json) {
     return GlyphPropertyEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
@@ -23,52 +18,57 @@ mixin _GlyphPropertyEntityMixin {
     int? glyphSlotFlags,
     int? spellIconId,
   }) {
+    final self = this as GlyphPropertyEntity;
     return GlyphPropertyEntity(
-      id: id ?? this.id,
-      spellId: spellId ?? this.spellId,
-      glyphSlotFlags: glyphSlotFlags ?? this.glyphSlotFlags,
-      spellIconId: spellIconId ?? this.spellIconId,
+      id: id ?? self.id,
+      spellId: spellId ?? self.spellId,
+      glyphSlotFlags: glyphSlotFlags ?? self.glyphSlotFlags,
+      spellIconId: spellIconId ?? self.spellIconId,
     );
   }
 
   Map<String, dynamic> toJson() {
+    final self = this as GlyphPropertyEntity;
     return {
-      'ID': id,
-      'SpellID': spellId,
-      'GlyphSlotFlags': glyphSlotFlags,
-      'SpellIconID': spellIconId,
+      'ID': self.id,
+      'SpellID': self.spellId,
+      'GlyphSlotFlags': self.glyphSlotFlags,
+      'SpellIconID': self.spellIconId,
     };
   }
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
+    final self = this as GlyphPropertyEntity;
+    return identical(self, other) ||
         other is GlyphPropertyEntity &&
-            runtimeType == other.runtimeType &&
-            id == other.id &&
-            spellId == other.spellId &&
-            glyphSlotFlags == other.glyphSlotFlags &&
-            spellIconId == other.spellIconId;
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.spellId == other.spellId &&
+            self.glyphSlotFlags == other.glyphSlotFlags &&
+            self.spellIconId == other.spellIconId;
   }
 
   @override
   int get hashCode {
+    final self = this as GlyphPropertyEntity;
     return Object.hashAll([
-      runtimeType,
-      id,
-      spellId,
-      glyphSlotFlags,
-      spellIconId,
+      self.runtimeType,
+      self.id,
+      self.spellId,
+      self.glyphSlotFlags,
+      self.spellIconId,
     ]);
   }
 
   @override
   String toString() {
+    final self = this as GlyphPropertyEntity;
     return 'GlyphPropertyEntity('
-        'id: $id, '
-        'spellId: $spellId, '
-        'glyphSlotFlags: $glyphSlotFlags, '
-        'spellIconId: $spellIconId'
+        'id: ${self.id}, '
+        'spellId: ${self.spellId}, '
+        'glyphSlotFlags: ${self.glyphSlotFlags}, '
+        'spellIconId: ${self.spellIconId}'
         ')';
   }
 }

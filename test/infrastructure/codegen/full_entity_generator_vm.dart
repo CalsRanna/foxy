@@ -15,6 +15,9 @@ void main() {
             decodedMatches(
               allOf(<Matcher>[
                 contains('mixin _CodegenSampleEntityMixin'),
+                isNot(contains('int get id;')),
+                isNot(contains('String get name;')),
+                contains('final self = this as CodegenSampleEntity;'),
                 contains('static CodegenSampleEntity fromJson'),
                 contains("(json['ID'] as num?)?.toInt() ?? 0"),
                 contains("(json['Ratio'] as num?)?.toDouble() ?? 100.0"),
