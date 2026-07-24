@@ -208,7 +208,7 @@ final class ItemTemplateFilter {
 Filter 是不可变查询数据对象。它生成 `fromJson`、`copyWith` 和 `toJson`，
 但不生成 SQL。
 
-当前 76 个 Repository 专属 Filter 已全部迁移到这条路径。
+当前 85 个 Repository 专属 Filter 已全部迁移到这条路径。
 
 ### 5.3 字段与默认值
 
@@ -225,24 +225,26 @@ Filter 是不可变查询数据对象。它生成 `fromJson`、`copyWith` 和 `t
 字段名必须是 lowerCamelCase。遇到 Dart 保留字时只允许追加一个下划线，
 例如 `class_`；这代表确定的查询字段名，不是数据库字段兼容 alias。
 
-### 5.4 共享 Filter
+### 5.4 Filter 不跨 Repository 共享
 
-一个 Filter 如果确实被多个 Repository 共同拥有，就不能生成在任意一个
-Repository 的 private library part 中，否则其他 Repository 会反向依赖
-错误的 owner。
+每个 Filter 都是其 Repository 的查询契约。即使多个 Repository 当前拥有
+完全相同的字段，也必须分别声明和生成类型，不能通过共享 Filter 把这些
+查询 API 耦合起来。
 
-当前唯一例外是：
+9 个 Loot Repository 因此分别拥有：
 
-```text
-lib/repository/loot_template_filter.dart
-└── LootTemplateFilter
-```
+- `CreatureLootTemplateFilter`
+- `DisenchantLootTemplateFilter`
+- `GameObjectLootTemplateFilter`
+- `ItemLootTemplateFilter`
+- `MillingLootTemplateFilter`
+- `PickpocketingLootTemplateFilter`
+- `ProspectingLootTemplateFilter`
+- `ReferenceLootTemplateFilter`
+- `SkinningLootTemplateFilter`
 
-它由 9 个 Loot Repository 共享，因此是独立的手写查询模型。它仍不属于
-Entity，也不带 `Entity` 后缀。
-
-未来只有在多个 Repository 的查询契约真正相同且共同演进时才允许新增
-共享 Filter；仅仅字段碰巧相同不足以共享。
+字段形状相同只是当前实现事实，不构成共享 owner。以后某一种 Loot 查询
+增加条件时，只修改对应 Repository 的注解和 SQL。
 
 ## 6. Builder 拓扑
 
@@ -311,9 +313,9 @@ Repository Filter 生成器拒绝：
 
 - 标准 Full Entity 只剩三个明确手写例外；
 - 生成型 Full Entity 不依赖抽象 getter 或 lint ignore；
-- 76 个 Repository 专属 Filter 都有对应注解和生成 part；
+- 85 个 Repository 专属 Filter 都有对应注解和生成 part；
 - 不存在 `*_filter_entity.dart`、`.filter.g.dart` 或旧 Builder；
-- `LootTemplateFilter` 是唯一明确的共享 Filter。
+- 不存在跨 Repository 共享的 `LootTemplateFilter`。
 
 每次修改生成规则后执行：
 

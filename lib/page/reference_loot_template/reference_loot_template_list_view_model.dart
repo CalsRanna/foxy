@@ -1,6 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
-import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
@@ -82,8 +81,8 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  LootTemplateFilter _collectFilter() {
-    return LootTemplateFilter(
+  ReferenceLootTemplateFilter _collectFilter() {
+    return ReferenceLootTemplateFilter(
       entry: entryController.collect(),
       name: nameController.collect(),
     );

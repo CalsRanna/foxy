@@ -163,7 +163,7 @@ void main() {
             .toList()
           ..sort((left, right) => left.path.compareTo(right.path));
 
-    expect(repositories, hasLength(76));
+    expect(repositories, hasLength(85));
     for (final repository in repositories) {
       final source = repository.readAsStringSync();
       final fileName = repository.uri.pathSegments.last;
@@ -184,7 +184,7 @@ void main() {
     }
   });
 
-  test('旧 Entity Filter 生成路径已移除，共享 Loot Filter 保持独立', () {
+  test('旧 Entity Filter 和跨 Repository 共享 Filter 均已移除', () {
     final oldFiles = Directory('lib/entity').listSync().whereType<File>().where(
       (file) =>
           file.path.endsWith('_filter_entity.dart') ||
@@ -203,11 +203,28 @@ void main() {
       expect(source, isNot(contains('.filter.g.dart')));
     }
 
-    final shared = File(
-      'lib/repository/loot_template_filter.dart',
-    ).readAsStringSync();
-    expect(shared, contains('final class LootTemplateFilter'));
-    expect(shared, isNot(contains('LootTemplateFilterEntity')));
+    expect(
+      File('lib/repository/loot_template_filter.dart').existsSync(),
+      false,
+    );
+
+    for (final name in const [
+      'creature',
+      'disenchant',
+      'game_object',
+      'item',
+      'milling',
+      'pickpocketing',
+      'prospecting',
+      'reference',
+      'skinning',
+    ]) {
+      final source = File(
+        'lib/repository/${name}_loot_template_repository.dart',
+      ).readAsStringSync();
+      expect(source, contains('@FoxyRepositoryFilter'));
+      expect(source, isNot(contains(RegExp(r'\bLootTemplateFilter\?'))));
+    }
   });
 }
 

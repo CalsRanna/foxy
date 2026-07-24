@@ -83,7 +83,6 @@ import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
-import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
@@ -322,10 +321,10 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) =>
             _referenceLootRepository.getBriefLootTemplateEntries(
               page: page,
-              filter: LootTemplateFilter(entry: v[0]),
+              filter: ReferenceLootTemplateFilter(entry: v[0]),
             ),
         count: (v) => _referenceLootRepository.countLootTemplates(
-          filter: LootTemplateFilter(entry: v[0]),
+          filter: ReferenceLootTemplateFilter(entry: v[0]),
         ),
       );
 
@@ -1608,10 +1607,10 @@ class FoxyEntityPickerDelegates {
         fetch: (page, values) =>
             _disenchantLootRepository.getBriefLootTemplateEntries(
               page: page,
-              filter: LootTemplateFilter(entry: values[0]),
+              filter: DisenchantLootTemplateFilter(entry: values[0]),
             ),
         count: (values) => _disenchantLootRepository.countLootTemplates(
-          filter: LootTemplateFilter(entry: values[0]),
+          filter: DisenchantLootTemplateFilter(entry: values[0]),
         ),
       );
 
@@ -2107,12 +2106,14 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilter(entry: v[0]),
+              filter: CreatureLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
+            .countLootTemplates(
+              filter: CreatureLootTemplateFilter(entry: v[0]),
+            ),
       );
 
   static final pickpocketLoot =
@@ -2137,12 +2138,14 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilter(entry: v[0]),
+              filter: PickpocketingLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
+            .countLootTemplates(
+              filter: PickpocketingLootTemplateFilter(entry: v[0]),
+            ),
       );
 
   static final skinningLoot =
@@ -2167,12 +2170,14 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilter(entry: v[0]),
+              filter: SkinningLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
+            .countLootTemplates(
+              filter: SkinningLootTemplateFilter(entry: v[0]),
+            ),
       );
 
   static final gameObjectLoot =
@@ -2197,12 +2202,14 @@ class FoxyEntityPickerDelegates {
         fetch: (page, v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
             .getBriefLootTemplateEntries(
-              filter: LootTemplateFilter(entry: v[0]),
+              filter: GameObjectLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
-            .countLootTemplates(filter: LootTemplateFilter(entry: v[0])),
+            .countLootTemplates(
+              filter: GameObjectLootTemplateFilter(entry: v[0]),
+            ),
       );
 
   static final mailTemplate = FoxyEntityPickerDelegate<BriefMailTemplateEntity>(

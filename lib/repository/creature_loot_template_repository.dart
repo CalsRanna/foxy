@@ -1,10 +1,27 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
-import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_loot_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureLootTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureLootTemplateRepository with RepositoryMixin {
   static const _table = 'creature_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item', 'Reference', 'GroupId'};
@@ -18,7 +35,9 @@ class CreatureLootTemplateRepository with RepositoryMixin {
     await storeLootTemplate(copied);
   }
 
-  Future<int> countLootTemplateRows({LootTemplateFilter? filter}) async {
+  Future<int> countLootTemplateRows({
+    CreatureLootTemplateFilter? filter,
+  }) async {
     final needsNameJoin = filter != null && filter.name.isNotEmpty;
     if (!needsNameJoin) {
       var builder = laconic.table(_table);
@@ -42,7 +61,7 @@ class CreatureLootTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<int> countLootTemplates({LootTemplateFilter? filter}) async {
+  Future<int> countLootTemplates({CreatureLootTemplateFilter? filter}) async {
     var builder = laconic.table(_table);
     if (filter != null && filter.entry.isNotEmpty) {
       builder = builder.where('Entry', filter.entry);
@@ -68,7 +87,7 @@ class CreatureLootTemplateRepository with RepositoryMixin {
 
   Future<List<BriefCreatureLootTemplateEntryEntity>>
   getBriefLootTemplateEntries({
-    LootTemplateFilter? filter,
+    CreatureLootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -87,7 +106,7 @@ class CreatureLootTemplateRepository with RepositoryMixin {
   }
 
   Future<List<BriefCreatureLootTemplateEntity>> getBriefLootTemplateRows({
-    LootTemplateFilter? filter,
+    CreatureLootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -214,7 +233,7 @@ class CreatureLootTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
-    LootTemplateFilter? filter,
+    CreatureLootTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
