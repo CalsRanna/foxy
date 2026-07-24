@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_creature_model_data_entity.dart';
+import 'package:foxy/entity/creature_model_data_entity.dart';
 
 void main() {
   test('Brief 安全解码并返回物理 ID 标量', () {

@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_creature_template_spell_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
-import 'package:foxy/entity/creature_template_spell_key.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/creature_template_spell_entity_validation_mixin.dart';
@@ -34,8 +32,7 @@ class CreatureTemplateSpellCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) =>
-      setParentKey(parentKey);
+  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
 
   Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
@@ -204,7 +201,10 @@ class CreatureTemplateSpellCollectionEditorViewModel
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefCreatureTemplateSpells(parent, page: nextPage);
+      final data = await _repository.getBriefCreatureTemplateSpells(
+        parent,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

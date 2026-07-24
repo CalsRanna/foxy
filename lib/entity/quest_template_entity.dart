@@ -1,108 +1,331 @@
-class QuestTemplateEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_template_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeTitle')
+@FoxyBriefField.text('localeDetails')
+@FoxyFullEntity(table: 'quest_template')
+class QuestTemplateEntity with _QuestTemplateEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('QuestType')
   final int questType;
+
+  @FoxyBriefField()
+  @FoxyFullField('QuestLevel')
   final int questLevel;
+
+  @FoxyBriefField()
+  @FoxyFullField('MinLevel')
   final int minLevel;
+
+  @FoxyFullField('QuestSortID')
   final int questSortId;
+
+  @FoxyFullField('QuestInfoID')
   final int questInfoId;
+
+  @FoxyFullField('SuggestedGroupNum')
   final int suggestedGroupNum;
+
+  @FoxyFullField('RequiredFactionId1')
   final int requiredFactionId1;
+
+  @FoxyFullField('RequiredFactionId2')
   final int requiredFactionId2;
+
+  @FoxyFullField('RequiredFactionValue1')
   final int requiredFactionValue1;
+
+  @FoxyFullField('RequiredFactionValue2')
   final int requiredFactionValue2;
+
+  @FoxyFullField('RewardNextQuest')
   final int rewardNextQuest;
+
+  @FoxyFullField('RewardXPDifficulty')
   final int rewardXpDifficulty;
+
+  @FoxyFullField('RewardMoney')
   final int rewardMoney;
+
+  @FoxyFullField('RewardMoneyDifficulty')
   final int rewardMoneyDifficulty;
+
+  @FoxyFullField('RewardDisplaySpell')
   final int rewardDisplaySpell;
+
+  @FoxyFullField('RewardSpell')
   final int rewardSpell;
+
+  @FoxyFullField('RewardHonor')
   final int rewardHonor;
+
+  @FoxyFullField('RewardKillHonor')
   final double rewardKillHonor;
+
+  @FoxyFullField('StartItem')
   final int startItem;
+
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyFullField('RequiredPlayerKills')
   final int requiredPlayerKills;
+
+  @FoxyFullField('RewardItem1')
   final int rewardItem1;
+
+  @FoxyFullField('RewardAmount1')
   final int rewardAmount1;
+
+  @FoxyFullField('RewardItem2')
   final int rewardItem2;
+
+  @FoxyFullField('RewardAmount2')
   final int rewardAmount2;
+
+  @FoxyFullField('RewardItem3')
   final int rewardItem3;
+
+  @FoxyFullField('RewardAmount3')
   final int rewardAmount3;
+
+  @FoxyFullField('RewardItem4')
   final int rewardItem4;
+
+  @FoxyFullField('RewardAmount4')
   final int rewardAmount4;
+
+  @FoxyFullField('ItemDrop1')
   final int itemDrop1;
+
+  @FoxyFullField('ItemDropQuantity1')
   final int itemDropQuantity1;
+
+  @FoxyFullField('ItemDrop2')
   final int itemDrop2;
+
+  @FoxyFullField('ItemDropQuantity2')
   final int itemDropQuantity2;
+
+  @FoxyFullField('ItemDrop3')
   final int itemDrop3;
+
+  @FoxyFullField('ItemDropQuantity3')
   final int itemDropQuantity3;
+
+  @FoxyFullField('ItemDrop4')
   final int itemDrop4;
+
+  @FoxyFullField('ItemDropQuantity4')
   final int itemDropQuantity4;
+
+  @FoxyFullField('RewardChoiceItemID1')
   final int rewardChoiceItemId1;
+
+  @FoxyFullField('RewardChoiceItemQuantity1')
   final int rewardChoiceItemQuantity1;
+
+  @FoxyFullField('RewardChoiceItemID2')
   final int rewardChoiceItemId2;
+
+  @FoxyFullField('RewardChoiceItemQuantity2')
   final int rewardChoiceItemQuantity2;
+
+  @FoxyFullField('RewardChoiceItemID3')
   final int rewardChoiceItemId3;
+
+  @FoxyFullField('RewardChoiceItemQuantity3')
   final int rewardChoiceItemQuantity3;
+
+  @FoxyFullField('RewardChoiceItemID4')
   final int rewardChoiceItemId4;
+
+  @FoxyFullField('RewardChoiceItemQuantity4')
   final int rewardChoiceItemQuantity4;
+
+  @FoxyFullField('RewardChoiceItemID5')
   final int rewardChoiceItemId5;
+
+  @FoxyFullField('RewardChoiceItemQuantity5')
   final int rewardChoiceItemQuantity5;
+
+  @FoxyFullField('RewardChoiceItemID6')
   final int rewardChoiceItemId6;
+
+  @FoxyFullField('RewardChoiceItemQuantity6')
   final int rewardChoiceItemQuantity6;
+
+  @FoxyFullField('POIContinent')
   final int poiContinent;
+
+  @FoxyFullField('POIx')
   final double poiX;
+
+  @FoxyFullField('POIy')
   final double poiY;
+
+  @FoxyFullField('POIPriority')
   final int poiPriority;
+
+  @FoxyFullField('RewardTitle')
   final int rewardTitle;
+
+  @FoxyFullField('RewardTalents')
   final int rewardTalents;
+
+  @FoxyFullField('RewardArenaPoints')
   final int rewardArenaPoints;
+
+  @FoxyFullField('RewardFactionID1')
   final int rewardFactionId1;
+
+  @FoxyFullField('RewardFactionValue1')
   final int rewardFactionValue1;
+
+  @FoxyFullField('RewardFactionOverride1')
   final int rewardFactionOverride1;
+
+  @FoxyFullField('RewardFactionID2')
   final int rewardFactionId2;
+
+  @FoxyFullField('RewardFactionValue2')
   final int rewardFactionValue2;
+
+  @FoxyFullField('RewardFactionOverride2')
   final int rewardFactionOverride2;
+
+  @FoxyFullField('RewardFactionID3')
   final int rewardFactionId3;
+
+  @FoxyFullField('RewardFactionValue3')
   final int rewardFactionValue3;
+
+  @FoxyFullField('RewardFactionOverride3')
   final int rewardFactionOverride3;
+
+  @FoxyFullField('RewardFactionID4')
   final int rewardFactionId4;
+
+  @FoxyFullField('RewardFactionValue4')
   final int rewardFactionValue4;
+
+  @FoxyFullField('RewardFactionOverride4')
   final int rewardFactionOverride4;
+
+  @FoxyFullField('RewardFactionID5')
   final int rewardFactionId5;
+
+  @FoxyFullField('RewardFactionValue5')
   final int rewardFactionValue5;
+
+  @FoxyFullField('RewardFactionOverride5')
   final int rewardFactionOverride5;
+
+  @FoxyFullField('TimeAllowed')
   final int timeAllowed;
+
+  @FoxyFullField('AllowableRaces')
   final int allowableRaces;
+
+  @FoxyBriefField()
+  @FoxyFullField('LogTitle')
   final String logTitle;
+
+  @FoxyFullField('LogDescription')
   final String logDescription;
+
+  @FoxyBriefField()
+  @FoxyFullField('QuestDescription')
   final String questDescription;
+
+  @FoxyFullField('AreaDescription')
   final String areaDescription;
+
+  @FoxyFullField('QuestCompletionLog')
   final String questCompletionLog;
+
+  @FoxyFullField('RequiredNpcOrGo1')
   final int requiredNpcOrGo1;
+
+  @FoxyFullField('RequiredNpcOrGo2')
   final int requiredNpcOrGo2;
+
+  @FoxyFullField('RequiredNpcOrGo3')
   final int requiredNpcOrGo3;
+
+  @FoxyFullField('RequiredNpcOrGo4')
   final int requiredNpcOrGo4;
+
+  @FoxyFullField('RequiredNpcOrGoCount1')
   final int requiredNpcOrGoCount1;
+
+  @FoxyFullField('RequiredNpcOrGoCount2')
   final int requiredNpcOrGoCount2;
+
+  @FoxyFullField('RequiredNpcOrGoCount3')
   final int requiredNpcOrGoCount3;
+
+  @FoxyFullField('RequiredNpcOrGoCount4')
   final int requiredNpcOrGoCount4;
+
+  @FoxyFullField('RequiredItemId1')
   final int requiredItemId1;
+
+  @FoxyFullField('RequiredItemId2')
   final int requiredItemId2;
+
+  @FoxyFullField('RequiredItemId3')
   final int requiredItemId3;
+
+  @FoxyFullField('RequiredItemId4')
   final int requiredItemId4;
+
+  @FoxyFullField('RequiredItemId5')
   final int requiredItemId5;
+
+  @FoxyFullField('RequiredItemId6')
   final int requiredItemId6;
+
+  @FoxyFullField('RequiredItemCount1')
   final int requiredItemCount1;
+
+  @FoxyFullField('RequiredItemCount2')
   final int requiredItemCount2;
+
+  @FoxyFullField('RequiredItemCount3')
   final int requiredItemCount3;
+
+  @FoxyFullField('RequiredItemCount4')
   final int requiredItemCount4;
+
+  @FoxyFullField('RequiredItemCount5')
   final int requiredItemCount5;
+
+  @FoxyFullField('RequiredItemCount6')
   final int requiredItemCount6;
+
+  @FoxyFullField('Unknown0')
   final int unknown0;
+
+  @FoxyFullField('ObjectiveText1')
   final String objectiveText1;
+
+  @FoxyFullField('ObjectiveText2')
   final String objectiveText2;
+
+  @FoxyFullField('ObjectiveText3')
   final String objectiveText3;
+
+  @FoxyFullField('ObjectiveText4')
   final String objectiveText4;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const QuestTemplateEntity({
@@ -213,457 +436,13 @@ class QuestTemplateEntity {
     this.verifiedBuild = 0,
   });
 
-  factory QuestTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return QuestTemplateEntity(
-      id: json['ID'] ?? json['id'] ?? 0,
-      questType: json['QuestType'] ?? 2,
-      questLevel: json['QuestLevel'] ?? 1,
-      minLevel: json['MinLevel'] ?? 0,
-      questSortId: json['QuestSortID'] ?? 0,
-      questInfoId: json['QuestInfoID'] ?? 0,
-      suggestedGroupNum: json['SuggestedGroupNum'] ?? 0,
-      requiredFactionId1: json['RequiredFactionId1'] ?? 0,
-      requiredFactionId2: json['RequiredFactionId2'] ?? 0,
-      requiredFactionValue1: json['RequiredFactionValue1'] ?? 0,
-      requiredFactionValue2: json['RequiredFactionValue2'] ?? 0,
-      rewardNextQuest: json['RewardNextQuest'] ?? 0,
-      rewardXpDifficulty: json['RewardXPDifficulty'] ?? 0,
-      rewardMoney: json['RewardMoney'] ?? 0,
-      rewardMoneyDifficulty: json['RewardMoneyDifficulty'] ?? 0,
-      rewardDisplaySpell: json['RewardDisplaySpell'] ?? 0,
-      rewardSpell: json['RewardSpell'] ?? 0,
-      rewardHonor: json['RewardHonor'] ?? 0,
-      rewardKillHonor: json['RewardKillHonor'] ?? 0,
-      startItem: json['StartItem'] ?? 0,
-      flags: json['Flags'] ?? 0,
-      requiredPlayerKills: json['RequiredPlayerKills'] ?? 0,
-      rewardItem1: json['RewardItem1'] ?? 0,
-      rewardAmount1: json['RewardAmount1'] ?? 0,
-      rewardItem2: json['RewardItem2'] ?? 0,
-      rewardAmount2: json['RewardAmount2'] ?? 0,
-      rewardItem3: json['RewardItem3'] ?? 0,
-      rewardAmount3: json['RewardAmount3'] ?? 0,
-      rewardItem4: json['RewardItem4'] ?? 0,
-      rewardAmount4: json['RewardAmount4'] ?? 0,
-      itemDrop1: json['ItemDrop1'] ?? 0,
-      itemDropQuantity1: json['ItemDropQuantity1'] ?? 0,
-      itemDrop2: json['ItemDrop2'] ?? 0,
-      itemDropQuantity2: json['ItemDropQuantity2'] ?? 0,
-      itemDrop3: json['ItemDrop3'] ?? 0,
-      itemDropQuantity3: json['ItemDropQuantity3'] ?? 0,
-      itemDrop4: json['ItemDrop4'] ?? 0,
-      itemDropQuantity4: json['ItemDropQuantity4'] ?? 0,
-      rewardChoiceItemId1: json['RewardChoiceItemID1'] ?? 0,
-      rewardChoiceItemQuantity1: json['RewardChoiceItemQuantity1'] ?? 0,
-      rewardChoiceItemId2: json['RewardChoiceItemID2'] ?? 0,
-      rewardChoiceItemQuantity2: json['RewardChoiceItemQuantity2'] ?? 0,
-      rewardChoiceItemId3: json['RewardChoiceItemID3'] ?? 0,
-      rewardChoiceItemQuantity3: json['RewardChoiceItemQuantity3'] ?? 0,
-      rewardChoiceItemId4: json['RewardChoiceItemID4'] ?? 0,
-      rewardChoiceItemQuantity4: json['RewardChoiceItemQuantity4'] ?? 0,
-      rewardChoiceItemId5: json['RewardChoiceItemID5'] ?? 0,
-      rewardChoiceItemQuantity5: json['RewardChoiceItemQuantity5'] ?? 0,
-      rewardChoiceItemId6: json['RewardChoiceItemID6'] ?? 0,
-      rewardChoiceItemQuantity6: json['RewardChoiceItemQuantity6'] ?? 0,
-      poiContinent: json['POIContinent'] ?? 0,
-      poiX: json['POIx'] ?? 0,
-      poiY: json['POIy'] ?? 0,
-      poiPriority: json['POIPriority'] ?? 0,
-      rewardTitle: json['RewardTitle'] ?? 0,
-      rewardTalents: json['RewardTalents'] ?? 0,
-      rewardArenaPoints: json['RewardArenaPoints'] ?? 0,
-      rewardFactionId1: json['RewardFactionID1'] ?? 0,
-      rewardFactionValue1: json['RewardFactionValue1'] ?? 0,
-      rewardFactionOverride1: json['RewardFactionOverride1'] ?? 0,
-      rewardFactionId2: json['RewardFactionID2'] ?? 0,
-      rewardFactionValue2: json['RewardFactionValue2'] ?? 0,
-      rewardFactionOverride2: json['RewardFactionOverride2'] ?? 0,
-      rewardFactionId3: json['RewardFactionID3'] ?? 0,
-      rewardFactionValue3: json['RewardFactionValue3'] ?? 0,
-      rewardFactionOverride3: json['RewardFactionOverride3'] ?? 0,
-      rewardFactionId4: json['RewardFactionID4'] ?? 0,
-      rewardFactionValue4: json['RewardFactionValue4'] ?? 0,
-      rewardFactionOverride4: json['RewardFactionOverride4'] ?? 0,
-      rewardFactionId5: json['RewardFactionID5'] ?? 0,
-      rewardFactionValue5: json['RewardFactionValue5'] ?? 0,
-      rewardFactionOverride5: json['RewardFactionOverride5'] ?? 0,
-      timeAllowed: json['TimeAllowed'] ?? 0,
-      allowableRaces: json['AllowableRaces'] ?? 0,
-      logTitle: json['LogTitle']?.toString() ?? '',
-      logDescription: json['LogDescription']?.toString() ?? '',
-      questDescription: json['QuestDescription']?.toString() ?? '',
-      areaDescription: json['AreaDescription']?.toString() ?? '',
-      questCompletionLog: json['QuestCompletionLog']?.toString() ?? '',
-      requiredNpcOrGo1: json['RequiredNpcOrGo1'] ?? 0,
-      requiredNpcOrGo2: json['RequiredNpcOrGo2'] ?? 0,
-      requiredNpcOrGo3: json['RequiredNpcOrGo3'] ?? 0,
-      requiredNpcOrGo4: json['RequiredNpcOrGo4'] ?? 0,
-      requiredNpcOrGoCount1: json['RequiredNpcOrGoCount1'] ?? 0,
-      requiredNpcOrGoCount2: json['RequiredNpcOrGoCount2'] ?? 0,
-      requiredNpcOrGoCount3: json['RequiredNpcOrGoCount3'] ?? 0,
-      requiredNpcOrGoCount4: json['RequiredNpcOrGoCount4'] ?? 0,
-      requiredItemId1: json['RequiredItemId1'] ?? 0,
-      requiredItemId2: json['RequiredItemId2'] ?? 0,
-      requiredItemId3: json['RequiredItemId3'] ?? 0,
-      requiredItemId4: json['RequiredItemId4'] ?? 0,
-      requiredItemId5: json['RequiredItemId5'] ?? 0,
-      requiredItemId6: json['RequiredItemId6'] ?? 0,
-      requiredItemCount1: json['RequiredItemCount1'] ?? 0,
-      requiredItemCount2: json['RequiredItemCount2'] ?? 0,
-      requiredItemCount3: json['RequiredItemCount3'] ?? 0,
-      requiredItemCount4: json['RequiredItemCount4'] ?? 0,
-      requiredItemCount5: json['RequiredItemCount5'] ?? 0,
-      requiredItemCount6: json['RequiredItemCount6'] ?? 0,
-      unknown0: json['Unknown0'] ?? 0,
-      objectiveText1: json['ObjectiveText1']?.toString() ?? '',
-      objectiveText2: json['ObjectiveText2']?.toString() ?? '',
-      objectiveText3: json['ObjectiveText3']?.toString() ?? '',
-      objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
+  factory QuestTemplateEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestTemplateEntityMixin.fromJson(json);
+}
 
-  QuestTemplateEntity copyWith({
-    int? id,
-    int? questType,
-    int? questLevel,
-    int? minLevel,
-    int? questSortId,
-    int? questInfoId,
-    int? suggestedGroupNum,
-    int? requiredFactionId1,
-    int? requiredFactionId2,
-    int? requiredFactionValue1,
-    int? requiredFactionValue2,
-    int? rewardNextQuest,
-    int? rewardXpDifficulty,
-    int? rewardMoney,
-    int? rewardMoneyDifficulty,
-    int? rewardDisplaySpell,
-    int? rewardSpell,
-    int? rewardHonor,
-    double? rewardKillHonor,
-    int? startItem,
-    int? flags,
-    int? requiredPlayerKills,
-    int? rewardItem1,
-    int? rewardAmount1,
-    int? rewardItem2,
-    int? rewardAmount2,
-    int? rewardItem3,
-    int? rewardAmount3,
-    int? rewardItem4,
-    int? rewardAmount4,
-    int? itemDrop1,
-    int? itemDropQuantity1,
-    int? itemDrop2,
-    int? itemDropQuantity2,
-    int? itemDrop3,
-    int? itemDropQuantity3,
-    int? itemDrop4,
-    int? itemDropQuantity4,
-    int? rewardChoiceItemId1,
-    int? rewardChoiceItemQuantity1,
-    int? rewardChoiceItemId2,
-    int? rewardChoiceItemQuantity2,
-    int? rewardChoiceItemId3,
-    int? rewardChoiceItemQuantity3,
-    int? rewardChoiceItemId4,
-    int? rewardChoiceItemQuantity4,
-    int? rewardChoiceItemId5,
-    int? rewardChoiceItemQuantity5,
-    int? rewardChoiceItemId6,
-    int? rewardChoiceItemQuantity6,
-    int? poiContinent,
-    double? poiX,
-    double? poiY,
-    int? poiPriority,
-    int? rewardTitle,
-    int? rewardTalents,
-    int? rewardArenaPoints,
-    int? rewardFactionId1,
-    int? rewardFactionValue1,
-    int? rewardFactionOverride1,
-    int? rewardFactionId2,
-    int? rewardFactionValue2,
-    int? rewardFactionOverride2,
-    int? rewardFactionId3,
-    int? rewardFactionValue3,
-    int? rewardFactionOverride3,
-    int? rewardFactionId4,
-    int? rewardFactionValue4,
-    int? rewardFactionOverride4,
-    int? rewardFactionId5,
-    int? rewardFactionValue5,
-    int? rewardFactionOverride5,
-    int? timeAllowed,
-    int? allowableRaces,
-    String? logTitle,
-    String? logDescription,
-    String? questDescription,
-    String? areaDescription,
-    String? questCompletionLog,
-    int? requiredNpcOrGo1,
-    int? requiredNpcOrGo2,
-    int? requiredNpcOrGo3,
-    int? requiredNpcOrGo4,
-    int? requiredNpcOrGoCount1,
-    int? requiredNpcOrGoCount2,
-    int? requiredNpcOrGoCount3,
-    int? requiredNpcOrGoCount4,
-    int? requiredItemId1,
-    int? requiredItemId2,
-    int? requiredItemId3,
-    int? requiredItemId4,
-    int? requiredItemId5,
-    int? requiredItemId6,
-    int? requiredItemCount1,
-    int? requiredItemCount2,
-    int? requiredItemCount3,
-    int? requiredItemCount4,
-    int? requiredItemCount5,
-    int? requiredItemCount6,
-    int? unknown0,
-    String? objectiveText1,
-    String? objectiveText2,
-    String? objectiveText3,
-    String? objectiveText4,
-    int? verifiedBuild,
-  }) {
-    return QuestTemplateEntity(
-      id: id ?? this.id,
-      questType: questType ?? this.questType,
-      questLevel: questLevel ?? this.questLevel,
-      minLevel: minLevel ?? this.minLevel,
-      questSortId: questSortId ?? this.questSortId,
-      questInfoId: questInfoId ?? this.questInfoId,
-      suggestedGroupNum: suggestedGroupNum ?? this.suggestedGroupNum,
-      requiredFactionId1: requiredFactionId1 ?? this.requiredFactionId1,
-      requiredFactionId2: requiredFactionId2 ?? this.requiredFactionId2,
-      requiredFactionValue1:
-          requiredFactionValue1 ?? this.requiredFactionValue1,
-      requiredFactionValue2:
-          requiredFactionValue2 ?? this.requiredFactionValue2,
-      rewardNextQuest: rewardNextQuest ?? this.rewardNextQuest,
-      rewardXpDifficulty: rewardXpDifficulty ?? this.rewardXpDifficulty,
-      rewardMoney: rewardMoney ?? this.rewardMoney,
-      rewardMoneyDifficulty:
-          rewardMoneyDifficulty ?? this.rewardMoneyDifficulty,
-      rewardDisplaySpell: rewardDisplaySpell ?? this.rewardDisplaySpell,
-      rewardSpell: rewardSpell ?? this.rewardSpell,
-      rewardHonor: rewardHonor ?? this.rewardHonor,
-      rewardKillHonor: rewardKillHonor ?? this.rewardKillHonor,
-      startItem: startItem ?? this.startItem,
-      flags: flags ?? this.flags,
-      requiredPlayerKills: requiredPlayerKills ?? this.requiredPlayerKills,
-      rewardItem1: rewardItem1 ?? this.rewardItem1,
-      rewardAmount1: rewardAmount1 ?? this.rewardAmount1,
-      rewardItem2: rewardItem2 ?? this.rewardItem2,
-      rewardAmount2: rewardAmount2 ?? this.rewardAmount2,
-      rewardItem3: rewardItem3 ?? this.rewardItem3,
-      rewardAmount3: rewardAmount3 ?? this.rewardAmount3,
-      rewardItem4: rewardItem4 ?? this.rewardItem4,
-      rewardAmount4: rewardAmount4 ?? this.rewardAmount4,
-      itemDrop1: itemDrop1 ?? this.itemDrop1,
-      itemDropQuantity1: itemDropQuantity1 ?? this.itemDropQuantity1,
-      itemDrop2: itemDrop2 ?? this.itemDrop2,
-      itemDropQuantity2: itemDropQuantity2 ?? this.itemDropQuantity2,
-      itemDrop3: itemDrop3 ?? this.itemDrop3,
-      itemDropQuantity3: itemDropQuantity3 ?? this.itemDropQuantity3,
-      itemDrop4: itemDrop4 ?? this.itemDrop4,
-      itemDropQuantity4: itemDropQuantity4 ?? this.itemDropQuantity4,
-      rewardChoiceItemId1: rewardChoiceItemId1 ?? this.rewardChoiceItemId1,
-      rewardChoiceItemQuantity1:
-          rewardChoiceItemQuantity1 ?? this.rewardChoiceItemQuantity1,
-      rewardChoiceItemId2: rewardChoiceItemId2 ?? this.rewardChoiceItemId2,
-      rewardChoiceItemQuantity2:
-          rewardChoiceItemQuantity2 ?? this.rewardChoiceItemQuantity2,
-      rewardChoiceItemId3: rewardChoiceItemId3 ?? this.rewardChoiceItemId3,
-      rewardChoiceItemQuantity3:
-          rewardChoiceItemQuantity3 ?? this.rewardChoiceItemQuantity3,
-      rewardChoiceItemId4: rewardChoiceItemId4 ?? this.rewardChoiceItemId4,
-      rewardChoiceItemQuantity4:
-          rewardChoiceItemQuantity4 ?? this.rewardChoiceItemQuantity4,
-      rewardChoiceItemId5: rewardChoiceItemId5 ?? this.rewardChoiceItemId5,
-      rewardChoiceItemQuantity5:
-          rewardChoiceItemQuantity5 ?? this.rewardChoiceItemQuantity5,
-      rewardChoiceItemId6: rewardChoiceItemId6 ?? this.rewardChoiceItemId6,
-      rewardChoiceItemQuantity6:
-          rewardChoiceItemQuantity6 ?? this.rewardChoiceItemQuantity6,
-      poiContinent: poiContinent ?? this.poiContinent,
-      poiX: poiX ?? this.poiX,
-      poiY: poiY ?? this.poiY,
-      poiPriority: poiPriority ?? this.poiPriority,
-      rewardTitle: rewardTitle ?? this.rewardTitle,
-      rewardTalents: rewardTalents ?? this.rewardTalents,
-      rewardArenaPoints: rewardArenaPoints ?? this.rewardArenaPoints,
-      rewardFactionId1: rewardFactionId1 ?? this.rewardFactionId1,
-      rewardFactionValue1: rewardFactionValue1 ?? this.rewardFactionValue1,
-      rewardFactionOverride1:
-          rewardFactionOverride1 ?? this.rewardFactionOverride1,
-      rewardFactionId2: rewardFactionId2 ?? this.rewardFactionId2,
-      rewardFactionValue2: rewardFactionValue2 ?? this.rewardFactionValue2,
-      rewardFactionOverride2:
-          rewardFactionOverride2 ?? this.rewardFactionOverride2,
-      rewardFactionId3: rewardFactionId3 ?? this.rewardFactionId3,
-      rewardFactionValue3: rewardFactionValue3 ?? this.rewardFactionValue3,
-      rewardFactionOverride3:
-          rewardFactionOverride3 ?? this.rewardFactionOverride3,
-      rewardFactionId4: rewardFactionId4 ?? this.rewardFactionId4,
-      rewardFactionValue4: rewardFactionValue4 ?? this.rewardFactionValue4,
-      rewardFactionOverride4:
-          rewardFactionOverride4 ?? this.rewardFactionOverride4,
-      rewardFactionId5: rewardFactionId5 ?? this.rewardFactionId5,
-      rewardFactionValue5: rewardFactionValue5 ?? this.rewardFactionValue5,
-      rewardFactionOverride5:
-          rewardFactionOverride5 ?? this.rewardFactionOverride5,
-      timeAllowed: timeAllowed ?? this.timeAllowed,
-      allowableRaces: allowableRaces ?? this.allowableRaces,
-      logTitle: logTitle ?? this.logTitle,
-      logDescription: logDescription ?? this.logDescription,
-      questDescription: questDescription ?? this.questDescription,
-      areaDescription: areaDescription ?? this.areaDescription,
-      questCompletionLog: questCompletionLog ?? this.questCompletionLog,
-      requiredNpcOrGo1: requiredNpcOrGo1 ?? this.requiredNpcOrGo1,
-      requiredNpcOrGo2: requiredNpcOrGo2 ?? this.requiredNpcOrGo2,
-      requiredNpcOrGo3: requiredNpcOrGo3 ?? this.requiredNpcOrGo3,
-      requiredNpcOrGo4: requiredNpcOrGo4 ?? this.requiredNpcOrGo4,
-      requiredNpcOrGoCount1:
-          requiredNpcOrGoCount1 ?? this.requiredNpcOrGoCount1,
-      requiredNpcOrGoCount2:
-          requiredNpcOrGoCount2 ?? this.requiredNpcOrGoCount2,
-      requiredNpcOrGoCount3:
-          requiredNpcOrGoCount3 ?? this.requiredNpcOrGoCount3,
-      requiredNpcOrGoCount4:
-          requiredNpcOrGoCount4 ?? this.requiredNpcOrGoCount4,
-      requiredItemId1: requiredItemId1 ?? this.requiredItemId1,
-      requiredItemId2: requiredItemId2 ?? this.requiredItemId2,
-      requiredItemId3: requiredItemId3 ?? this.requiredItemId3,
-      requiredItemId4: requiredItemId4 ?? this.requiredItemId4,
-      requiredItemId5: requiredItemId5 ?? this.requiredItemId5,
-      requiredItemId6: requiredItemId6 ?? this.requiredItemId6,
-      requiredItemCount1: requiredItemCount1 ?? this.requiredItemCount1,
-      requiredItemCount2: requiredItemCount2 ?? this.requiredItemCount2,
-      requiredItemCount3: requiredItemCount3 ?? this.requiredItemCount3,
-      requiredItemCount4: requiredItemCount4 ?? this.requiredItemCount4,
-      requiredItemCount5: requiredItemCount5 ?? this.requiredItemCount5,
-      requiredItemCount6: requiredItemCount6 ?? this.requiredItemCount6,
-      unknown0: unknown0 ?? this.unknown0,
-      objectiveText1: objectiveText1 ?? this.objectiveText1,
-      objectiveText2: objectiveText2 ?? this.objectiveText2,
-      objectiveText3: objectiveText3 ?? this.objectiveText3,
-      objectiveText4: objectiveText4 ?? this.objectiveText4,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
+extension BriefQuestTemplateEntityDisplay on BriefQuestTemplateEntity {
+  String get displayDescription =>
+      localeDetails.isNotEmpty ? localeDetails : questDescription;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'QuestType': questType,
-      'QuestLevel': questLevel,
-      'MinLevel': minLevel,
-      'QuestSortID': questSortId,
-      'QuestInfoID': questInfoId,
-      'SuggestedGroupNum': suggestedGroupNum,
-      'RequiredFactionId1': requiredFactionId1,
-      'RequiredFactionId2': requiredFactionId2,
-      'RequiredFactionValue1': requiredFactionValue1,
-      'RequiredFactionValue2': requiredFactionValue2,
-      'RewardNextQuest': rewardNextQuest,
-      'RewardXPDifficulty': rewardXpDifficulty,
-      'RewardMoney': rewardMoney,
-      'RewardMoneyDifficulty': rewardMoneyDifficulty,
-      'RewardDisplaySpell': rewardDisplaySpell,
-      'RewardSpell': rewardSpell,
-      'RewardHonor': rewardHonor,
-      'RewardKillHonor': rewardKillHonor,
-      'StartItem': startItem,
-      'Flags': flags,
-      'RequiredPlayerKills': requiredPlayerKills,
-      'RewardItem1': rewardItem1,
-      'RewardAmount1': rewardAmount1,
-      'RewardItem2': rewardItem2,
-      'RewardAmount2': rewardAmount2,
-      'RewardItem3': rewardItem3,
-      'RewardAmount3': rewardAmount3,
-      'RewardItem4': rewardItem4,
-      'RewardAmount4': rewardAmount4,
-      'ItemDrop1': itemDrop1,
-      'ItemDropQuantity1': itemDropQuantity1,
-      'ItemDrop2': itemDrop2,
-      'ItemDropQuantity2': itemDropQuantity2,
-      'ItemDrop3': itemDrop3,
-      'ItemDropQuantity3': itemDropQuantity3,
-      'ItemDrop4': itemDrop4,
-      'ItemDropQuantity4': itemDropQuantity4,
-      'RewardChoiceItemID1': rewardChoiceItemId1,
-      'RewardChoiceItemQuantity1': rewardChoiceItemQuantity1,
-      'RewardChoiceItemID2': rewardChoiceItemId2,
-      'RewardChoiceItemQuantity2': rewardChoiceItemQuantity2,
-      'RewardChoiceItemID3': rewardChoiceItemId3,
-      'RewardChoiceItemQuantity3': rewardChoiceItemQuantity3,
-      'RewardChoiceItemID4': rewardChoiceItemId4,
-      'RewardChoiceItemQuantity4': rewardChoiceItemQuantity4,
-      'RewardChoiceItemID5': rewardChoiceItemId5,
-      'RewardChoiceItemQuantity5': rewardChoiceItemQuantity5,
-      'RewardChoiceItemID6': rewardChoiceItemId6,
-      'RewardChoiceItemQuantity6': rewardChoiceItemQuantity6,
-      'POIContinent': poiContinent,
-      'POIx': poiX,
-      'POIy': poiY,
-      'POIPriority': poiPriority,
-      'RewardTitle': rewardTitle,
-      'RewardTalents': rewardTalents,
-      'RewardArenaPoints': rewardArenaPoints,
-      'RewardFactionID1': rewardFactionId1,
-      'RewardFactionValue1': rewardFactionValue1,
-      'RewardFactionOverride1': rewardFactionOverride1,
-      'RewardFactionID2': rewardFactionId2,
-      'RewardFactionValue2': rewardFactionValue2,
-      'RewardFactionOverride2': rewardFactionOverride2,
-      'RewardFactionID3': rewardFactionId3,
-      'RewardFactionValue3': rewardFactionValue3,
-      'RewardFactionOverride3': rewardFactionOverride3,
-      'RewardFactionID4': rewardFactionId4,
-      'RewardFactionValue4': rewardFactionValue4,
-      'RewardFactionOverride4': rewardFactionOverride4,
-      'RewardFactionID5': rewardFactionId5,
-      'RewardFactionValue5': rewardFactionValue5,
-      'RewardFactionOverride5': rewardFactionOverride5,
-      'TimeAllowed': timeAllowed,
-      'AllowableRaces': allowableRaces,
-      'LogTitle': logTitle,
-      'LogDescription': logDescription,
-      'QuestDescription': questDescription,
-      'AreaDescription': areaDescription,
-      'QuestCompletionLog': questCompletionLog,
-      'RequiredNpcOrGo1': requiredNpcOrGo1,
-      'RequiredNpcOrGo2': requiredNpcOrGo2,
-      'RequiredNpcOrGo3': requiredNpcOrGo3,
-      'RequiredNpcOrGo4': requiredNpcOrGo4,
-      'RequiredNpcOrGoCount1': requiredNpcOrGoCount1,
-      'RequiredNpcOrGoCount2': requiredNpcOrGoCount2,
-      'RequiredNpcOrGoCount3': requiredNpcOrGoCount3,
-      'RequiredNpcOrGoCount4': requiredNpcOrGoCount4,
-      'RequiredItemId1': requiredItemId1,
-      'RequiredItemId2': requiredItemId2,
-      'RequiredItemId3': requiredItemId3,
-      'RequiredItemId4': requiredItemId4,
-      'RequiredItemId5': requiredItemId5,
-      'RequiredItemId6': requiredItemId6,
-      'RequiredItemCount1': requiredItemCount1,
-      'RequiredItemCount2': requiredItemCount2,
-      'RequiredItemCount3': requiredItemCount3,
-      'RequiredItemCount4': requiredItemCount4,
-      'RequiredItemCount5': requiredItemCount5,
-      'RequiredItemCount6': requiredItemCount6,
-      'Unknown0': unknown0,
-      'ObjectiveText1': objectiveText1,
-      'ObjectiveText2': objectiveText2,
-      'ObjectiveText3': objectiveText3,
-      'ObjectiveText4': objectiveText4,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  String get displayTitle => localeTitle.isNotEmpty ? localeTitle : logTitle;
 }

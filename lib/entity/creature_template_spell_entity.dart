@@ -1,8 +1,28 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_template_spell_entity.g.dart';
+
 /// 生物模板技能
-class CreatureTemplateSpellEntity {
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('spellName')
+@FoxyBriefField.text('spellSubtext')
+@FoxyFullEntity(table: 'creature_template_spell')
+class CreatureTemplateSpellEntity with _CreatureTemplateSpellEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('CreatureID', key: true)
   final int creatureID;
+
+  @FoxyBriefField()
+  @FoxyFullField('Index', key: true)
   final int index;
+
+  @FoxyBriefField()
+  @FoxyFullField('Spell')
   final int spell;
+
+  @FoxyBriefField()
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const CreatureTemplateSpellEntity({
@@ -12,35 +32,12 @@ class CreatureTemplateSpellEntity {
     this.verifiedBuild = 0,
   });
 
-  factory CreatureTemplateSpellEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateSpellEntity(
-      creatureID: json['CreatureID'] ?? json['creatureID'] ?? 0,
-      index: json['Index'] ?? json['index'] ?? 0,
-      spell: json['Spell'] ?? json['spell'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
-    );
-  }
+  factory CreatureTemplateSpellEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureTemplateSpellEntityMixin.fromJson(json);
+}
 
-  CreatureTemplateSpellEntity copyWith({
-    int? creatureID,
-    int? index,
-    int? spell,
-    int? verifiedBuild,
-  }) {
-    return CreatureTemplateSpellEntity(
-      creatureID: creatureID ?? this.creatureID,
-      index: index ?? this.index,
-      spell: spell ?? this.spell,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureID': creatureID,
-      'Index': index,
-      'Spell': spell,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+extension BriefCreatureTemplateSpellEntityDisplay
+    on BriefCreatureTemplateSpellEntity {
+  String get displayName =>
+      spellSubtext.isNotEmpty ? '$spellName - $spellSubtext' : spellName;
 }

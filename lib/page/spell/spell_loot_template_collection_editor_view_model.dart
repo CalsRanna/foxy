@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/spell_loot_template_entity_validation_mixin.dart';

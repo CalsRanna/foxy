@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_creature_quest_item_entity.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
-import 'package:foxy/entity/creature_quest_item_key.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -90,7 +88,8 @@ void main() {
       'lib/page/creature_template/creature_quest_item_view.dart',
     ).readAsStringSync();
 
-    expect(entity, isNot(contains('itemName')));
+    expect(entity, isNot(contains('final String itemName;')));
+    expect(entity, isNot(contains('this.itemName')));
     expect(repository, isNot(contains('saveCreatureQuestItem')));
     expect(
       viewModel,

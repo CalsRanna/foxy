@@ -4,7 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/gossip_menu_key.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

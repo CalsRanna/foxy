@@ -8,33 +8,6 @@ void main() {
     'activity_log_entity.dart',
     'feature_entity.dart',
     'version_entity.dart',
-
-    // Dynamic DBC row passthrough models backed by Map<String, dynamic>.
-    'holiday_entity.dart',
-    'item_bag_family_entity.dart',
-    'item_limit_category_entity.dart',
-    'totem_category_entity.dart',
-
-    // Joined values, compatibility aliases, or otherwise non-symmetric mapping.
-    'creature_model_data_entity.dart',
-    'creature_on_kill_reputation_entity.dart',
-    'creature_quest_item_entity.dart',
-    'creature_template_resistance_entity.dart',
-    'creature_template_spell_entity.dart',
-    'game_object_display_info_entity.dart',
-    'game_object_template_addon_entity.dart',
-    'gossip_menu_entity.dart',
-    'gossip_menu_option_entity.dart',
-    'item_template_entity.dart',
-    'item_template_locale_entity.dart',
-    'npc_text_entity.dart',
-    'npc_text_locale_entity.dart',
-    'quest_offer_reward_locale_entity.dart',
-    'quest_request_items_locale_entity.dart',
-    'quest_template_entity.dart',
-    'quest_template_locale_entity.dart',
-    'spell_loot_template_entity.dart',
-    'vehicle_entity.dart',
   };
 
   final fullFiles =
@@ -59,7 +32,7 @@ void main() {
     };
 
     expect(handwritten, intentionallyHandwritten);
-    expect(fullFiles.length - handwritten.length, 102);
+    expect(fullFiles.length - handwritten.length, 125);
   });
 
   test('拆分完成后每个 Full Entity 文件只声明一个 Full Entity class', () {

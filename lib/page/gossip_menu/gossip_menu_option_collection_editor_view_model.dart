@@ -1,8 +1,6 @@
 import 'dart:math';
 
-import 'package:foxy/entity/brief_gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_key.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';

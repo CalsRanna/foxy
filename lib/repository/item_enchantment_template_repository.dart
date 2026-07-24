@@ -193,7 +193,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
       'iet.entry',
       'iet.ench',
       'iet.chance',
-      'random_ench.Name_lang_zhCN',
+      'random_ench.Name_lang_zhCN AS name',
       'dsie_1.Name_lang_zhCN AS Enchantment_1',
       'dsie_2.Name_lang_zhCN AS Enchantment_2',
       'dsie_3.Name_lang_zhCN AS Enchantment_3',

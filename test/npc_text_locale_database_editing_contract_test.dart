@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_npc_text_locale_entity.dart';
-import 'package:foxy/entity/npc_text_locale_key.dart';
+import 'package:foxy/entity/npc_text_locale_entity.dart';
 
 void main() {
   test('Key 与 Brief 完整覆盖 ID + Locale', () {

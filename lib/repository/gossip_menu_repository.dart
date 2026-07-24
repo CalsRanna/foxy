@@ -1,7 +1,5 @@
-import 'package:foxy/entity/brief_gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_filter_entity.dart';
-import 'package:foxy/entity/gossip_menu_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -62,9 +60,12 @@ class GossipMenuRepository with RepositoryMixin {
     final fields = <String>[
       'gm.MenuID',
       'gm.TextID',
-      'nt.text0_0',
-      'nt.text0_1',
-      if (localeEnabled) ...['ntl.Text0_0', 'ntl.Text0_1'],
+      'nt.text0_0 AS text00',
+      'nt.text0_1 AS text01',
+      if (localeEnabled) ...[
+        'ntl.Text0_0 AS textLocale00',
+        'ntl.Text0_1 AS textLocale01',
+      ],
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

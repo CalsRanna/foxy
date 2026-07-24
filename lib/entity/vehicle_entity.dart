@@ -1,44 +1,135 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'vehicle_entity.g.dart';
+
 /// 载具数据
-class VehicleEntity {
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_vehicle')
+class VehicleEntity with _VehicleEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyBriefField()
+  @FoxyFullField('TurnSpeed')
   final double turnSpeed;
+
+  @FoxyFullField('PitchSpeed')
   final double pitchSpeed;
+
+  @FoxyFullField('PitchMin')
   final double pitchMin;
+
+  @FoxyFullField('PitchMax')
   final double pitchMax;
+
+  @FoxyFullField('SeatID0')
   final int seatID0;
+
+  @FoxyFullField('SeatID1')
   final int seatID1;
+
+  @FoxyFullField('SeatID2')
   final int seatID2;
+
+  @FoxyFullField('SeatID3')
   final int seatID3;
+
+  @FoxyFullField('SeatID4')
   final int seatID4;
+
+  @FoxyFullField('SeatID5')
   final int seatID5;
+
+  @FoxyFullField('SeatID6')
   final int seatID6;
+
+  @FoxyFullField('SeatID7')
   final int seatID7;
+
+  @FoxyFullField('MouseLookOffsetPitch')
   final double mouseLookOffsetPitch;
+
+  @FoxyFullField('CameraFadeDistScalarMin')
   final double cameraFadeDistScalarMin;
+
+  @FoxyFullField('CameraFadeDistScalarMax')
   final double cameraFadeDistScalarMax;
+
+  @FoxyFullField('CameraPitchOffset')
   final double cameraPitchOffset;
+
+  @FoxyFullField('FacingLimitRight')
   final double facingLimitRight;
+
+  @FoxyFullField('FacingLimitLeft')
   final double facingLimitLeft;
+
+  @FoxyFullField('MsslTrgtTurnLingering')
   final double msslTrgtTurnLingering;
+
+  @FoxyFullField('MsslTrgtPitchLingering')
   final double msslTrgtPitchLingering;
+
+  @FoxyFullField('MsslTrgtMouseLingering')
   final double msslTrgtMouseLingering;
+
+  @FoxyFullField('MsslTrgtEndOpacity')
   final double msslTrgtEndOpacity;
+
+  @FoxyFullField('MsslTrgtArcSpeed')
   final double msslTrgtArcSpeed;
+
+  @FoxyFullField('MsslTrgtArcRepeat')
   final double msslTrgtArcRepeat;
+
+  @FoxyFullField('MsslTrgtArcWidth')
   final double msslTrgtArcWidth;
+
+  @FoxyFullField('MsslTrgtImpactRadius0')
   final double msslTrgtImpactRadius0;
+
+  @FoxyFullField('MsslTrgtImpactRadius1')
   final double msslTrgtImpactRadius1;
+
+  @FoxyFullField('MsslTrgtArcTexture')
   final String msslTrgtArcTexture;
+
+  @FoxyFullField('MsslTrgtImpactTexture')
   final String msslTrgtImpactTexture;
+
+  @FoxyFullField('MsslTrgtImpactModel0')
   final String msslTrgtImpactModel0;
+
+  @FoxyFullField('MsslTrgtImpactModel1')
   final String msslTrgtImpactModel1;
+
+  @FoxyFullField('CameraYawOffset')
   final double cameraYawOffset;
+
+  @FoxyFullField('UiLocomotionType')
   final int uiLocomotionType;
+
+  @FoxyFullField('MsslTrgtImpactTexRadius')
   final double msslTrgtImpactTexRadius;
+
+  @FoxyFullField('VehicleUIIndicatorID')
   final int vehicleUIIndicatorID;
+
+  @FoxyFullField('PowerDisplayID0')
   final int powerDisplayID0;
+
+  @FoxyFullField('PowerDisplayID1')
   final int powerDisplayID1;
+
+  @FoxyFullField('PowerDisplayID2')
   final int powerDisplayID2;
 
   const VehicleEntity({
@@ -84,188 +175,6 @@ class VehicleEntity {
     this.powerDisplayID2 = 0,
   });
 
-  factory VehicleEntity.fromJson(Map<String, dynamic> json) {
-    return VehicleEntity(
-      id: json['ID'] ?? json['id'] ?? 0,
-      flags: json['Flags'] ?? json['flags'] ?? 0,
-      turnSpeed: json['TurnSpeed'] ?? json['turnSpeed'] ?? 0,
-      pitchSpeed: json['PitchSpeed'] ?? json['pitchSpeed'] ?? 0,
-      pitchMin: json['PitchMin'] ?? json['pitchMin'] ?? 0,
-      pitchMax: json['PitchMax'] ?? json['pitchMax'] ?? 0,
-      seatID0: json['SeatID0'] ?? 0,
-      seatID1: json['SeatID1'] ?? 0,
-      seatID2: json['SeatID2'] ?? 0,
-      seatID3: json['SeatID3'] ?? 0,
-      seatID4: json['SeatID4'] ?? 0,
-      seatID5: json['SeatID5'] ?? 0,
-      seatID6: json['SeatID6'] ?? 0,
-      seatID7: json['SeatID7'] ?? 0,
-      mouseLookOffsetPitch: json['MouseLookOffsetPitch'] ?? 0,
-      cameraFadeDistScalarMin: json['CameraFadeDistScalarMin'] ?? 0,
-      cameraFadeDistScalarMax: json['CameraFadeDistScalarMax'] ?? 0,
-      cameraPitchOffset: json['CameraPitchOffset'] ?? 0,
-      facingLimitRight: json['FacingLimitRight'] ?? 0,
-      facingLimitLeft: json['FacingLimitLeft'] ?? 0,
-      msslTrgtTurnLingering: json['MsslTrgtTurnLingering'] ?? 0,
-      msslTrgtPitchLingering: json['MsslTrgtPitchLingering'] ?? 0,
-      msslTrgtMouseLingering: json['MsslTrgtMouseLingering'] ?? 0,
-      msslTrgtEndOpacity: json['MsslTrgtEndOpacity'] ?? 0,
-      msslTrgtArcSpeed: json['MsslTrgtArcSpeed'] ?? 0,
-      msslTrgtArcRepeat: json['MsslTrgtArcRepeat'] ?? 0,
-      msslTrgtArcWidth: json['MsslTrgtArcWidth'] ?? 0,
-      msslTrgtImpactRadius0: json['MsslTrgtImpactRadius0'] ?? 0,
-      msslTrgtImpactRadius1: json['MsslTrgtImpactRadius1'] ?? 0,
-      msslTrgtArcTexture: json['MsslTrgtArcTexture'] ?? '',
-      msslTrgtImpactTexture: json['MsslTrgtImpactTexture'] ?? '',
-      msslTrgtImpactModel0: json['MsslTrgtImpactModel0'] ?? '',
-      msslTrgtImpactModel1: json['MsslTrgtImpactModel1'] ?? '',
-      cameraYawOffset: json['CameraYawOffset'] ?? 0,
-      uiLocomotionType: json['UiLocomotionType'] ?? 0,
-      msslTrgtImpactTexRadius: json['MsslTrgtImpactTexRadius'] ?? 0,
-      vehicleUIIndicatorID: json['VehicleUIIndicatorID'] ?? 0,
-      powerDisplayID0: json['PowerDisplayID0'] ?? 0,
-      powerDisplayID1: json['PowerDisplayID1'] ?? 0,
-      powerDisplayID2: json['PowerDisplayID2'] ?? 0,
-    );
-  }
-
-  VehicleEntity copyWith({
-    int? id,
-    int? flags,
-    double? turnSpeed,
-    double? pitchSpeed,
-    double? pitchMin,
-    double? pitchMax,
-    int? seatID0,
-    int? seatID1,
-    int? seatID2,
-    int? seatID3,
-    int? seatID4,
-    int? seatID5,
-    int? seatID6,
-    int? seatID7,
-    double? mouseLookOffsetPitch,
-    double? cameraFadeDistScalarMin,
-    double? cameraFadeDistScalarMax,
-    double? cameraPitchOffset,
-    double? facingLimitRight,
-    double? facingLimitLeft,
-    double? msslTrgtTurnLingering,
-    double? msslTrgtPitchLingering,
-    double? msslTrgtMouseLingering,
-    double? msslTrgtEndOpacity,
-    double? msslTrgtArcSpeed,
-    double? msslTrgtArcRepeat,
-    double? msslTrgtArcWidth,
-    double? msslTrgtImpactRadius0,
-    double? msslTrgtImpactRadius1,
-    String? msslTrgtArcTexture,
-    String? msslTrgtImpactTexture,
-    String? msslTrgtImpactModel0,
-    String? msslTrgtImpactModel1,
-    double? cameraYawOffset,
-    int? uiLocomotionType,
-    double? msslTrgtImpactTexRadius,
-    int? vehicleUIIndicatorID,
-    int? powerDisplayID0,
-    int? powerDisplayID1,
-    int? powerDisplayID2,
-  }) {
-    return VehicleEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      turnSpeed: turnSpeed ?? this.turnSpeed,
-      pitchSpeed: pitchSpeed ?? this.pitchSpeed,
-      pitchMin: pitchMin ?? this.pitchMin,
-      pitchMax: pitchMax ?? this.pitchMax,
-      seatID0: seatID0 ?? this.seatID0,
-      seatID1: seatID1 ?? this.seatID1,
-      seatID2: seatID2 ?? this.seatID2,
-      seatID3: seatID3 ?? this.seatID3,
-      seatID4: seatID4 ?? this.seatID4,
-      seatID5: seatID5 ?? this.seatID5,
-      seatID6: seatID6 ?? this.seatID6,
-      seatID7: seatID7 ?? this.seatID7,
-      mouseLookOffsetPitch: mouseLookOffsetPitch ?? this.mouseLookOffsetPitch,
-      cameraFadeDistScalarMin:
-          cameraFadeDistScalarMin ?? this.cameraFadeDistScalarMin,
-      cameraFadeDistScalarMax:
-          cameraFadeDistScalarMax ?? this.cameraFadeDistScalarMax,
-      cameraPitchOffset: cameraPitchOffset ?? this.cameraPitchOffset,
-      facingLimitRight: facingLimitRight ?? this.facingLimitRight,
-      facingLimitLeft: facingLimitLeft ?? this.facingLimitLeft,
-      msslTrgtTurnLingering:
-          msslTrgtTurnLingering ?? this.msslTrgtTurnLingering,
-      msslTrgtPitchLingering:
-          msslTrgtPitchLingering ?? this.msslTrgtPitchLingering,
-      msslTrgtMouseLingering:
-          msslTrgtMouseLingering ?? this.msslTrgtMouseLingering,
-      msslTrgtEndOpacity: msslTrgtEndOpacity ?? this.msslTrgtEndOpacity,
-      msslTrgtArcSpeed: msslTrgtArcSpeed ?? this.msslTrgtArcSpeed,
-      msslTrgtArcRepeat: msslTrgtArcRepeat ?? this.msslTrgtArcRepeat,
-      msslTrgtArcWidth: msslTrgtArcWidth ?? this.msslTrgtArcWidth,
-      msslTrgtImpactRadius0:
-          msslTrgtImpactRadius0 ?? this.msslTrgtImpactRadius0,
-      msslTrgtImpactRadius1:
-          msslTrgtImpactRadius1 ?? this.msslTrgtImpactRadius1,
-      msslTrgtArcTexture: msslTrgtArcTexture ?? this.msslTrgtArcTexture,
-      msslTrgtImpactTexture:
-          msslTrgtImpactTexture ?? this.msslTrgtImpactTexture,
-      msslTrgtImpactModel0: msslTrgtImpactModel0 ?? this.msslTrgtImpactModel0,
-      msslTrgtImpactModel1: msslTrgtImpactModel1 ?? this.msslTrgtImpactModel1,
-      cameraYawOffset: cameraYawOffset ?? this.cameraYawOffset,
-      uiLocomotionType: uiLocomotionType ?? this.uiLocomotionType,
-      msslTrgtImpactTexRadius:
-          msslTrgtImpactTexRadius ?? this.msslTrgtImpactTexRadius,
-      vehicleUIIndicatorID: vehicleUIIndicatorID ?? this.vehicleUIIndicatorID,
-      powerDisplayID0: powerDisplayID0 ?? this.powerDisplayID0,
-      powerDisplayID1: powerDisplayID1 ?? this.powerDisplayID1,
-      powerDisplayID2: powerDisplayID2 ?? this.powerDisplayID2,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'TurnSpeed': turnSpeed,
-      'PitchSpeed': pitchSpeed,
-      'PitchMin': pitchMin,
-      'PitchMax': pitchMax,
-      'SeatID0': seatID0,
-      'SeatID1': seatID1,
-      'SeatID2': seatID2,
-      'SeatID3': seatID3,
-      'SeatID4': seatID4,
-      'SeatID5': seatID5,
-      'SeatID6': seatID6,
-      'SeatID7': seatID7,
-      'MouseLookOffsetPitch': mouseLookOffsetPitch,
-      'CameraFadeDistScalarMin': cameraFadeDistScalarMin,
-      'CameraFadeDistScalarMax': cameraFadeDistScalarMax,
-      'CameraPitchOffset': cameraPitchOffset,
-      'FacingLimitRight': facingLimitRight,
-      'FacingLimitLeft': facingLimitLeft,
-      'MsslTrgtTurnLingering': msslTrgtTurnLingering,
-      'MsslTrgtPitchLingering': msslTrgtPitchLingering,
-      'MsslTrgtMouseLingering': msslTrgtMouseLingering,
-      'MsslTrgtEndOpacity': msslTrgtEndOpacity,
-      'MsslTrgtArcSpeed': msslTrgtArcSpeed,
-      'MsslTrgtArcRepeat': msslTrgtArcRepeat,
-      'MsslTrgtArcWidth': msslTrgtArcWidth,
-      'MsslTrgtImpactRadius0': msslTrgtImpactRadius0,
-      'MsslTrgtImpactRadius1': msslTrgtImpactRadius1,
-      'MsslTrgtArcTexture': msslTrgtArcTexture,
-      'MsslTrgtImpactTexture': msslTrgtImpactTexture,
-      'MsslTrgtImpactModel0': msslTrgtImpactModel0,
-      'MsslTrgtImpactModel1': msslTrgtImpactModel1,
-      'CameraYawOffset': cameraYawOffset,
-      'UiLocomotionType': uiLocomotionType,
-      'MsslTrgtImpactTexRadius': msslTrgtImpactTexRadius,
-      'VehicleUIIndicatorID': vehicleUIIndicatorID,
-      'PowerDisplayID0': powerDisplayID0,
-      'PowerDisplayID1': powerDisplayID1,
-      'PowerDisplayID2': powerDisplayID2,
-    };
-  }
+  factory VehicleEntity.fromJson(Map<String, dynamic> json) =>
+      _VehicleEntityMixin.fromJson(json);
 }

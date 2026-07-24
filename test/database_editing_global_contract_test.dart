@@ -153,20 +153,9 @@ void main() {
     expect(deletedChecks, destroyCount);
   });
 
-  test('独立 Key 文件只保留特殊或尚未生成的联合定位器', () {
+  test('独立 Key 文件只保留非标准物理行身份', () {
     const retainedKeyFiles = {
-      'creature_quest_item_key.dart',
-      'creature_template_resistance_key.dart',
-      'creature_template_spell_key.dart',
-      'gossip_menu_key.dart',
-      'gossip_menu_option_key.dart',
       'item_enchantment_template_parent_key.dart',
-      'item_template_locale_key.dart',
-      'npc_text_locale_key.dart',
-      'quest_offer_reward_locale_key.dart',
-      'quest_request_items_locale_key.dart',
-      'quest_template_locale_key.dart',
-      'spell_loot_template_key.dart',
       'waypoint_data_key.dart',
     };
     final actualKeyFiles = entityFiles

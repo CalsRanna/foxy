@@ -1,7 +1,23 @@
-class QuestOfferRewardLocaleEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'quest_offer_reward_locale_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'quest_offer_reward_locale')
+class QuestOfferRewardLocaleEntity with _QuestOfferRewardLocaleEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('locale', key: true)
   final String locale;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewardText')
   final String rewardText;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const QuestOfferRewardLocaleEntity({
@@ -11,36 +27,6 @@ class QuestOfferRewardLocaleEntity {
     this.verifiedBuild = 0,
   });
 
-  factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  QuestOfferRewardLocaleEntity copyWith({
-    int? id,
-    String? locale,
-    String? rewardText,
-    int? verifiedBuild,
-  }) {
-    return QuestOfferRewardLocaleEntity(
-      id: id ?? this.id,
-      locale: locale ?? this.locale,
-      rewardText: rewardText ?? this.rewardText,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'ID': id,
-      'locale': locale,
-      'RewardText': rewardText,
-      'VerifiedBuild': verifiedBuild,
-    };
-    return result;
-  }
+  factory QuestOfferRewardLocaleEntity.fromJson(Map<String, dynamic> json) =>
+      _QuestOfferRewardLocaleEntityMixin.fromJson(json);
 }

@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_gossip_menu_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/entity/gossip_menu_key.dart';
 
 void main() {
   test('GossipMenuKey 与 Brief 完整覆盖 MenuID + TextID', () {

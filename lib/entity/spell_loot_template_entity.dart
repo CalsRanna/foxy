@@ -1,14 +1,54 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'spell_loot_template_entity.g.dart';
+
 /// 法术掉落模板
-class SpellLootTemplateEntity {
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('itemName')
+@FoxyBriefField.text('localeName')
+@FoxyBriefField.integer('quality')
+@FoxyBriefField.text('icon')
+@FoxyFullEntity(table: 'spell_loot_template')
+class SpellLootTemplateEntity with _SpellLootTemplateEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('Entry', key: true)
   final int entry;
+
+  @FoxyBriefField()
+  @FoxyFullField('Item', key: true)
   final int item;
+
+  @FoxyBriefField()
+  @FoxyFullField('Reference')
   final int reference;
+
+  @FoxyBriefField()
+  @FoxyFullField('Chance')
   final double chance;
+
+  @FoxyBriefField()
+  @FoxyFullField('QuestRequired')
   final int questRequired;
+
+  @FoxyBriefField()
+  @FoxyFullField('LootMode')
   final int lootMode;
+
+  @FoxyBriefField()
+  @FoxyFullField('GroupId')
   final int groupId;
+
+  @FoxyBriefField()
+  @FoxyFullField('MinCount')
   final int minCount;
+
+  @FoxyBriefField()
+  @FoxyFullField('MaxCount')
   final int maxCount;
+
+  @FoxyBriefField()
+  @FoxyFullField('Comment')
   final String comment;
 
   const SpellLootTemplateEntity({
@@ -24,59 +64,10 @@ class SpellLootTemplateEntity {
     this.comment = '',
   });
 
-  factory SpellLootTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return SpellLootTemplateEntity(
-      entry: json['Entry'] ?? json['entry'] ?? 0,
-      item: json['Item'] ?? json['item'] ?? 0,
-      reference: json['Reference'] ?? json['reference'] ?? 0,
-      chance: (json['Chance'] ?? json['chance'] ?? 100).toDouble(),
-      questRequired: json['QuestRequired'] ?? json['questRequired'] ?? 0,
-      lootMode: json['LootMode'] ?? json['lootMode'] ?? 1,
-      groupId: json['GroupId'] ?? 0,
-      minCount: json['MinCount'] ?? json['minCount'] ?? 1,
-      maxCount: json['MaxCount'] ?? json['maxCount'] ?? 1,
-      comment: json['Comment'] ?? json['comment'] ?? '',
-    );
-  }
+  factory SpellLootTemplateEntity.fromJson(Map<String, dynamic> json) =>
+      _SpellLootTemplateEntityMixin.fromJson(json);
+}
 
-  SpellLootTemplateEntity copyWith({
-    int? entry,
-    int? item,
-    int? reference,
-    double? chance,
-    int? questRequired,
-    int? lootMode,
-    int? groupId,
-    int? minCount,
-    int? maxCount,
-    String? comment,
-  }) {
-    return SpellLootTemplateEntity(
-      entry: entry ?? this.entry,
-      item: item ?? this.item,
-      reference: reference ?? this.reference,
-      chance: chance ?? this.chance,
-      questRequired: questRequired ?? this.questRequired,
-      lootMode: lootMode ?? this.lootMode,
-      groupId: groupId ?? this.groupId,
-      minCount: minCount ?? this.minCount,
-      maxCount: maxCount ?? this.maxCount,
-      comment: comment ?? this.comment,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'Entry': entry,
-      'Item': item,
-      'Reference': reference,
-      'Chance': chance,
-      'QuestRequired': questRequired,
-      'LootMode': lootMode,
-      'GroupId': groupId,
-      'MinCount': minCount,
-      'MaxCount': maxCount,
-      'Comment': comment,
-    };
-  }
+extension BriefSpellLootTemplateEntityDisplay on BriefSpellLootTemplateEntity {
+  String get displayName => localeName.isNotEmpty ? localeName : itemName;
 }

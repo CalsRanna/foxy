@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_item_template_locale_entity.dart';
-import 'package:foxy/entity/item_template_locale_key.dart';
+import 'package:foxy/entity/item_template_locale_entity.dart';
 
 void main() {
   test('Key 与 Brief 使用 ID + locale 完整定位', () {

@@ -1,22 +1,70 @@
-class GameObjectDisplayInfoEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'game_object_display_info_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_game_object_display_info')
+class GameObjectDisplayInfoEntity with _GameObjectDisplayInfoEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ModelName')
   final String modelName;
+
+  @FoxyFullField('Sound0')
   final int sound0;
+
+  @FoxyFullField('Sound1')
   final int sound1;
+
+  @FoxyFullField('Sound2')
   final int sound2;
+
+  @FoxyFullField('Sound3')
   final int sound3;
+
+  @FoxyFullField('Sound4')
   final int sound4;
+
+  @FoxyFullField('Sound5')
   final int sound5;
+
+  @FoxyFullField('Sound6')
   final int sound6;
+
+  @FoxyFullField('Sound7')
   final int sound7;
+
+  @FoxyFullField('Sound8')
   final int sound8;
+
+  @FoxyFullField('Sound9')
   final int sound9;
+
+  @FoxyFullField('GeoBoxMin0')
   final double geoBoxMin0;
+
+  @FoxyFullField('GeoBoxMin1')
   final double geoBoxMin1;
+
+  @FoxyFullField('GeoBoxMin2')
   final double geoBoxMin2;
+
+  @FoxyFullField('GeoBoxMax0')
   final double geoBoxMax0;
+
+  @FoxyFullField('GeoBoxMax1')
   final double geoBoxMax1;
+
+  @FoxyFullField('GeoBoxMax2')
   final double geoBoxMax2;
+
+  @FoxyFullField('ObjectEffectPackageID')
   final int objectEffectPackageId;
 
   const GameObjectDisplayInfoEntity({
@@ -41,50 +89,6 @@ class GameObjectDisplayInfoEntity {
     this.objectEffectPackageId = 0,
   });
 
-  factory GameObjectDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    double d(String key) => (json[key] ?? 0).toDouble();
-    return GameObjectDisplayInfoEntity(
-      id: json['ID'] ?? 0,
-      modelName: json['ModelName'] ?? '',
-      sound0: json['Sound0'] ?? 0,
-      sound1: json['Sound1'] ?? 0,
-      sound2: json['Sound2'] ?? 0,
-      sound3: json['Sound3'] ?? 0,
-      sound4: json['Sound4'] ?? 0,
-      sound5: json['Sound5'] ?? 0,
-      sound6: json['Sound6'] ?? 0,
-      sound7: json['Sound7'] ?? 0,
-      sound8: json['Sound8'] ?? 0,
-      sound9: json['Sound9'] ?? 0,
-      geoBoxMin0: d('GeoBoxMin0'),
-      geoBoxMin1: d('GeoBoxMin1'),
-      geoBoxMin2: d('GeoBoxMin2'),
-      geoBoxMax0: d('GeoBoxMax0'),
-      geoBoxMax1: d('GeoBoxMax1'),
-      geoBoxMax2: d('GeoBoxMax2'),
-      objectEffectPackageId: json['ObjectEffectPackageID'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'ID': id,
-    'ModelName': modelName,
-    'Sound0': sound0,
-    'Sound1': sound1,
-    'Sound2': sound2,
-    'Sound3': sound3,
-    'Sound4': sound4,
-    'Sound5': sound5,
-    'Sound6': sound6,
-    'Sound7': sound7,
-    'Sound8': sound8,
-    'Sound9': sound9,
-    'GeoBoxMin0': geoBoxMin0,
-    'GeoBoxMin1': geoBoxMin1,
-    'GeoBoxMin2': geoBoxMin2,
-    'GeoBoxMax0': geoBoxMax0,
-    'GeoBoxMax1': geoBoxMax1,
-    'GeoBoxMax2': geoBoxMax2,
-    'ObjectEffectPackageID': objectEffectPackageId,
-  };
+  factory GameObjectDisplayInfoEntity.fromJson(Map<String, dynamic> json) =>
+      _GameObjectDisplayInfoEntityMixin.fromJson(json);
 }
