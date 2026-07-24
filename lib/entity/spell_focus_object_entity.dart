@@ -2,11 +2,14 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'spell_focus_object_entity.g.dart';
 
+@FoxyBriefEntity()
 @FoxyFullEntity(table: 'foxy.dbc_spell_focus_object')
 class SpellFocusObjectEntity with _SpellFocusObjectEntityMixin {
+  @FoxyBriefField()
   @FoxyFullField('ID', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('Name_lang_enUS')
   final String nameLangEnUS;
 
@@ -19,6 +22,7 @@ class SpellFocusObjectEntity with _SpellFocusObjectEntityMixin {
   @FoxyFullField('Name_lang_deDE')
   final String nameLangDeDE;
 
+  @FoxyBriefField()
   @FoxyFullField('Name_lang_zhCN')
   final String nameLangZhCN;
 
@@ -81,4 +85,9 @@ class SpellFocusObjectEntity with _SpellFocusObjectEntityMixin {
 
   factory SpellFocusObjectEntity.fromJson(Map<String, dynamic> json) =>
       _SpellFocusObjectEntityMixin.fromJson(json);
+}
+
+extension BriefSpellFocusObjectEntityDisplay on BriefSpellFocusObjectEntity {
+  String get displayName =>
+      nameLangZhCN.isNotEmpty ? nameLangZhCN : nameLangEnUS;
 }

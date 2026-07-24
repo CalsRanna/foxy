@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

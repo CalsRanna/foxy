@@ -2,22 +2,28 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'smart_script_entity.g.dart';
 
+@FoxyBriefEntity()
 @FoxyFilterEntity()
 @FoxyFullEntity(table: 'smart_scripts')
 class SmartScriptEntity with _SmartScriptEntityMixin {
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entryorguid', key: true)
   final int entryOrGuid;
 
+  @FoxyBriefField()
   @FoxyFullField('source_type', key: true)
   final int sourceType;
 
+  @FoxyBriefField()
   @FoxyFullField('id', key: true)
   final int id;
 
+  @FoxyBriefField()
   @FoxyFullField('link', key: true)
   final int link;
 
+  @FoxyBriefField()
   @FoxyFullField('event_type')
   final int eventType;
 
@@ -48,6 +54,7 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   @FoxyFullField('event_param6')
   final int eventParam6;
 
+  @FoxyBriefField()
   @FoxyFullField('action_type')
   final int actionType;
 
@@ -69,6 +76,7 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   @FoxyFullField('action_param6')
   final int actionParam6;
 
+  @FoxyBriefField()
   @FoxyFullField('target_type')
   final int targetType;
 
@@ -96,6 +104,7 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
   @FoxyFullField('target_o')
   final double targetO;
 
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('comment')
   final String comment;
@@ -136,4 +145,8 @@ class SmartScriptEntity with _SmartScriptEntityMixin {
 
   factory SmartScriptEntity.fromJson(Map<String, dynamic> json) =>
       _SmartScriptEntityMixin.fromJson(json);
+}
+
+extension BriefSmartScriptEntityDisplay on BriefSmartScriptEntity {
+  String get displayName => comment;
 }

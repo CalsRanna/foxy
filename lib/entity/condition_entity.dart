@@ -1,39 +1,52 @@
+import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'condition_entity.g.dart';
 
+@FoxyBriefEntity()
 @FoxyFilterEntity()
 @FoxyFullEntity(table: 'conditions')
 class ConditionEntity with _ConditionEntityMixin {
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('SourceTypeOrReferenceId', key: true)
   final int sourceTypeOrReferenceId;
 
+  @FoxyBriefField()
   @FoxyFullField('SourceGroup', key: true)
   final int sourceGroup;
 
+  @FoxyBriefField()
   @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('SourceEntry', key: true)
   final int sourceEntry;
 
+  @FoxyBriefField()
   @FoxyFullField('SourceId', key: true)
   final int sourceId;
 
+  @FoxyBriefField()
   @FoxyFullField('ElseGroup', key: true)
   final int elseGroup;
 
+  @FoxyBriefField()
   @FoxyFullField('ConditionTypeOrReference', key: true)
   final int conditionTypeOrReference;
 
+  @FoxyBriefField()
   @FoxyFullField('ConditionTarget', key: true)
   final int conditionTarget;
 
+  @FoxyBriefField()
   @FoxyFullField('ConditionValue1', key: true)
   final int conditionValue1;
 
+  @FoxyBriefField()
   @FoxyFullField('ConditionValue2', key: true)
   final int conditionValue2;
 
+  @FoxyBriefField()
   @FoxyFullField('ConditionValue3', key: true)
   final int conditionValue3;
 
@@ -49,6 +62,7 @@ class ConditionEntity with _ConditionEntityMixin {
   @FoxyFullField('ScriptName')
   final String scriptName;
 
+  @FoxyBriefField()
   @FoxyFullField('Comment')
   final String comment;
 
@@ -72,4 +86,20 @@ class ConditionEntity with _ConditionEntityMixin {
 
   factory ConditionEntity.fromJson(Map<String, dynamic> json) =>
       _ConditionEntityMixin.fromJson(json);
+}
+
+extension BriefConditionEntityDisplay on BriefConditionEntity {
+  /// 条件类型标签：非负值映射枚举，负值表示引用。
+  String get conditionTypeLabel {
+    final id = conditionTypeOrReference;
+    if (id < 0) return '引用 $id';
+    return kConditionTypeLabels[id] ?? id.toString();
+  }
+
+  /// 来源类型标签：非负值映射枚举，负值表示引用。
+  String get sourceTypeLabel {
+    final id = sourceTypeOrReferenceId;
+    if (id < 0) return '引用 $id';
+    return kConditionSourceTypeLabels[id] ?? id.toString();
+  }
 }

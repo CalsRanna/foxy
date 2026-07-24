@@ -128,9 +128,7 @@ void main(List<String> arguments) {
   for (final migration in migrations) {
     migration.fullFile.writeAsStringSync(_emitFull(migration));
     if (migration.briefFile case final file?) {
-      file.writeAsStringSync(
-        "export '${_generatedName(migration.fullFile, 'brief')}';\n",
-      );
+      file.deleteSync();
     }
     if (migration.filterFile case final file?) {
       file.writeAsStringSync(
@@ -138,9 +136,7 @@ void main(List<String> arguments) {
       );
     }
     if (migration.keyFile case final file?) {
-      file.writeAsStringSync(
-        "export '${_generatedName(migration.fullFile, 'key')}';\n",
-      );
+      file.deleteSync();
     }
   }
   for (final promotion in filterPromotions) {

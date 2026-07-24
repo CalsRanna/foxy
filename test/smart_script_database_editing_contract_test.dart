@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_smart_script_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
@@ -31,6 +30,7 @@ void main() {
       sourceType: 1,
       id: 2,
       link: 3,
+      comment: '测试脚本',
     );
 
     expect(key, same);
@@ -41,6 +41,7 @@ void main() {
     );
     expect(key, isNot(SmartScriptKey.fromEntity(entity.copyWith(link: 4))));
     expect(brief.key, key);
+    expect(brief.displayName, '测试脚本');
   });
 
   test('UPDATE 用旧四列 key 定位并写入 candidate 全部 31 列', () async {
@@ -187,7 +188,7 @@ void main() {
     ).readAsStringSync();
     final generated = File('lib/router/router.gr.dart').readAsStringSync();
 
-    expect(entity, isNot(contains('BriefSmartScriptEntity')));
+    expect(entity, isNot(matches(RegExp(r'class\s+BriefSmartScriptEntity\b'))));
     expect(repository, isNot(contains('saveSmartScript')));
     expect(
       detailViewModel,

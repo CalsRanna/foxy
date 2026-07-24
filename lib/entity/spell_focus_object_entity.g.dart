@@ -170,3 +170,25 @@ mixin _SpellFocusObjectEntityMixin {
         ')';
   }
 }
+
+final class BriefSpellFocusObjectEntity {
+  final int id;
+  final String nameLangEnUS;
+  final String nameLangZhCN;
+
+  const BriefSpellFocusObjectEntity({
+    this.id = 0,
+    this.nameLangEnUS = '',
+    this.nameLangZhCN = '',
+  });
+
+  factory BriefSpellFocusObjectEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellFocusObjectEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}

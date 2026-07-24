@@ -124,4 +124,18 @@ void main() {
       expect(File(path).existsSync(), isTrue, reason: '$path 尚未拆分');
     }
   });
+
+  test('迁移工具不会重新创建旧 Brief/Key 生成壳', () {
+    final source = File('tool/entity_codegen_migrate.dart').readAsStringSync();
+
+    expect(
+      source,
+      isNot(contains("_generatedName(migration.fullFile, 'brief')")),
+    );
+    expect(
+      source,
+      isNot(contains("_generatedName(migration.fullFile, 'key')")),
+    );
+    expect(source, contains('file.deleteSync();'));
+  });
 }

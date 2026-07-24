@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 
 void main() {
@@ -9,6 +8,15 @@ void main() {
     const key = 7;
     expect((const ScalingStatDistributionEntity(id: 7)).id, key);
     expect(const BriefScalingStatDistributionEntity(id: 7).key, key);
+    expect(
+      const BriefScalingStatDistributionEntity(
+        statId0: 3,
+        bonus0: 5,
+        statId1: 7,
+        bonus1: 9,
+      ).displayStats,
+      '3+5, 7+9',
+    );
   });
 
   test('ScalingStatDistribution 路由只携带标量 key 且列表传 brief.key', () {

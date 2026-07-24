@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_focus_object_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_focus_object_filter_entity.dart';

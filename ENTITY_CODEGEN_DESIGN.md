@@ -399,6 +399,13 @@ import 'package:foxy/entity/creature_template_entity.brief.g.dart';
 生成型 Entity 不保留 `brief_xxx_entity.dart` 或 `xxx_key.dart` 转发壳。
 仍然存在的独立 Brief/Key 文件只代表尚不能从 Full Entity 元数据生成的手写模型。
 
+当前已继续迁移 `BroadcastText`、`Condition`、`ItemExtendedCost`、
+`ScalingStatDistribution`、`SmartScript` 和 `SpellFocusObject` 的标准 Brief。
+这些 Brief 的字段全部来自 Full Entity；原有展示 getter 以同库 extension 保留。
+剩余独立 Brief 包含 JOIN/聚合字段、兼容别名，或其 Full Entity 本身仍采用非对称
+手写映射。剩余独立 Key 中，普通物理复合 Key 依赖这些手写 Full Entity；
+`WaypointDataKey` 和 `ItemEnchantmentTemplateParentKey` 则不是物理行主键。
+
 ### 5.1 注解排序
 
 同一个声明上的多个注解没有执行顺序。项目统一按照注解类型名的字母顺序排列，

@@ -72,3 +72,25 @@ mixin _BroadcastTextEntityMixin {
         ')';
   }
 }
+
+final class BriefBroadcastTextEntity {
+  final int id;
+  final int languageId;
+  final String maleText;
+
+  const BriefBroadcastTextEntity({
+    this.id = 0,
+    this.languageId = 0,
+    this.maleText = '',
+  });
+
+  factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefBroadcastTextEntity(
+      id: (json['ID'] as num?)?.toInt() ?? 0,
+      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
+      maleText: json['MaleText']?.toString() ?? '',
+    );
+  }
+
+  int get key => id;
+}
