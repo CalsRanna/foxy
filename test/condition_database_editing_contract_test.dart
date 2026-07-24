@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/brief_condition_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
-import 'package:foxy/entity/condition_key.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';

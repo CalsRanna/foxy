@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
-import 'package:foxy/entity/player_create_info_spell_custom_key.dart';
-import 'package:foxy/entity/player_create_info_key.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';

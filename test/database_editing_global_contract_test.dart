@@ -15,6 +15,13 @@ void main() {
   final briefFiles = entityFiles
       .where((file) => file.uri.pathSegments.last.startsWith('brief_'))
       .toList();
+  final generatedBriefOwners = entityFiles
+      .where(
+        (file) =>
+            !file.uri.pathSegments.last.startsWith('brief_') &&
+            file.readAsStringSync().contains('@FoxyBriefEntity()'),
+      )
+      .toList();
   final repositoryFiles = Directory('lib/repository')
       .listSync()
       .whereType<File>()
@@ -29,22 +36,31 @@ void main() {
       .where((file) => file.path.endsWith('.dart'))
       .toList();
 
-  test('全部 Brief Entity 独立成文件并暴露完整标量或专用身份', () {
+  test('全部 Brief Entity 暴露完整身份且不包含写模型 API', () {
     final keyPattern = RegExp(
       r'(?:(?:final\s+)?(?:int|String|\w+Key)\s+key;|'
       r'(?:int|String|\w+Key)\s+get\s+key\s*(?:=>|\{))',
     );
 
-    for (final file in briefFiles) {
+    for (final file in [...briefFiles, ...generatedBriefOwners]) {
       final source = readLocalDartLibrarySource(file.path);
-      expect(source, matches(keyPattern), reason: '${file.path} 缺少完整标量或专用 key');
+      final classStart = source.indexOf(
+        RegExp(r'(?:final\s+)?class\s+Brief\w+Entity\b'),
+      );
+      expect(classStart, isNonNegative, reason: '${file.path} 缺少 Brief Entity');
+      final briefSource = source.substring(classStart);
       expect(
-        source,
+        briefSource,
+        matches(keyPattern),
+        reason: '${file.path} 缺少完整标量或专用 key',
+      );
+      expect(
+        briefSource,
         isNot(contains('toJson(')),
         reason: '${file.path} 不应暴露写模型序列化 API',
       );
       expect(
-        source,
+        briefSource,
         isNot(contains('copyWith(')),
         reason: '${file.path} 不应暴露候选复制 API',
       );
@@ -58,6 +74,15 @@ void main() {
         reason: '${file.path} 仍内嵌 Brief Entity',
       );
     }
+    expect(
+      Directory('lib/entity').listSync().whereType<File>().where(
+        (file) =>
+            file.path.endsWith('.brief.g.dart') ||
+            file.path.endsWith('.key.g.dart'),
+      ),
+      isEmpty,
+      reason: 'Brief、Key 应与 Full 合并到 Entity 的 .g.dart',
+    );
   });
 
   test('全部 Brief Repository 查询返回 Brief、分页且数量一一对应', () {
@@ -128,54 +153,20 @@ void main() {
     expect(deletedChecks, destroyCount);
   });
 
-  test('专用 Key 清单只保留联合或特殊定位器', () {
+  test('独立 Key 文件只保留特殊或尚未生成的联合定位器', () {
     const retainedKeyFiles = {
-      'condition_key.dart',
-      'creature_equip_template_key.dart',
-      'creature_loot_template_key.dart',
-      'creature_quest_ender_key.dart',
       'creature_quest_item_key.dart',
-      'creature_quest_starter_key.dart',
-      'creature_template_locale_key.dart',
       'creature_template_resistance_key.dart',
       'creature_template_spell_key.dart',
-      'disenchant_loot_template_key.dart',
-      'game_object_loot_template_key.dart',
-      'game_object_quest_ender_key.dart',
-      'game_object_quest_item_key.dart',
-      'game_object_quest_starter_key.dart',
-      'game_object_template_locale_key.dart',
       'gossip_menu_key.dart',
       'gossip_menu_option_key.dart',
-      'gossip_menu_option_locale_key.dart',
-      'item_enchantment_template_key.dart',
       'item_enchantment_template_parent_key.dart',
-      'item_loot_template_key.dart',
       'item_template_locale_key.dart',
-      'milling_loot_template_key.dart',
       'npc_text_locale_key.dart',
-      'npc_trainer_key.dart',
-      'npc_vendor_key.dart',
-      'page_text_locale_key.dart',
-      'player_create_info_action_key.dart',
-      'player_create_info_cast_spell_key.dart',
-      'player_create_info_item_key.dart',
-      'player_create_info_key.dart',
-      'player_create_info_skill_key.dart',
-      'player_create_info_spell_custom_key.dart',
-      'pickpocketing_loot_template_key.dart',
-      'prospecting_loot_template_key.dart',
       'quest_offer_reward_locale_key.dart',
       'quest_request_items_locale_key.dart',
       'quest_template_locale_key.dart',
-      'reference_loot_template_key.dart',
-      'skinning_loot_template_key.dart',
-      'smart_script_key.dart',
-      'spell_area_key.dart',
-      'spell_group_key.dart',
-      'spell_linked_spell_key.dart',
       'spell_loot_template_key.dart',
-      'spell_rank_key.dart',
       'waypoint_data_key.dart',
     };
     final actualKeyFiles = entityFiles
@@ -186,7 +177,7 @@ void main() {
     expect(actualKeyFiles, retainedKeyFiles);
     expect(
       readLocalDartLibrarySource(
-        'lib/entity/player_create_info_cast_spell_key.dart',
+        'lib/entity/player_create_info_cast_spell_entity.dart',
       ),
       contains('final String? note;'),
     );

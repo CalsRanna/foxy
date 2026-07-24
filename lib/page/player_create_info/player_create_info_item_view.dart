@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/player_create_info_item_key.dart';
-import 'package:foxy/entity/player_create_info_key.dart';
+import 'package:foxy/entity/player_create_info_item_entity.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/entity/brief_player_create_info_item_entity.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';

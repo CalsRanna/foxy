@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
-import 'package:foxy/entity/creature_quest_ender_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';

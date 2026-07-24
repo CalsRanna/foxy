@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_area_key.dart';
+import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';

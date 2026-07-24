@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/brief_spell_rank_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
-import 'package:foxy/entity/spell_rank_key.dart';
 
 void main() {
   test('SpellRankKey 和 Brief 覆盖 first_spell_id + rank', () {

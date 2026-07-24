@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
 import 'package:foxy/entity/item_visuals_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

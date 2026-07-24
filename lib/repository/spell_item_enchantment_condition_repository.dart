@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

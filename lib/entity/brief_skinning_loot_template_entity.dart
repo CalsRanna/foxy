@@ -1,4 +1,4 @@
-import 'package:foxy/entity/skinning_loot_template_key.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 
 class BriefSkinningLootTemplateEntity {
   final int entry;

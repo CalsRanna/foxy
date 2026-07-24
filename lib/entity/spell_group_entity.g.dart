@@ -48,3 +48,49 @@ mixin _SpellGroupEntityMixin {
         ')';
   }
 }
+
+final class SpellGroupKey {
+  final int id;
+  final int spellId;
+
+  const SpellGroupKey({required this.id, required this.spellId});
+
+  factory SpellGroupKey.fromEntity(SpellGroupEntity entity) {
+    return SpellGroupKey(id: entity.id, spellId: entity.spellId);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SpellGroupKey && id == other.id && spellId == other.spellId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, spellId]);
+
+  @override
+  String toString() {
+    return 'SpellGroupKey('
+        'id: $id, '
+        'spellId: $spellId'
+        ')';
+  }
+}
+
+final class BriefSpellGroupEntity {
+  final int id;
+  final int spellId;
+
+  const BriefSpellGroupEntity({this.id = 0, this.spellId = 0});
+
+  factory BriefSpellGroupEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellGroupEntity(
+      id: (json['id'] as num?)?.toInt() ?? 0,
+      spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  SpellGroupKey get key {
+    return SpellGroupKey(id: id, spellId: spellId);
+  }
+}

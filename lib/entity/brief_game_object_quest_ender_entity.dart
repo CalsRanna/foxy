@@ -1,4 +1,4 @@
-import 'package:foxy/entity/game_object_quest_ender_key.dart';
+import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 
 class BriefGameObjectQuestEnderEntity {
   final int id;

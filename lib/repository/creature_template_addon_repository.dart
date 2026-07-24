@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_creature_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';

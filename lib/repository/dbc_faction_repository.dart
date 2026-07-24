@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';

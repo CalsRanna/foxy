@@ -4,7 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/reference_loot_template_key.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

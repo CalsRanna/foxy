@@ -1,7 +1,6 @@
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
-import 'package:foxy/entity/pickpocketing_loot_template_key.dart';
 import 'package:test/test.dart';
 
 void main() {

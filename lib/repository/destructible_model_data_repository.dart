@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_destructible_model_data_entity.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
 import 'package:foxy/entity/destructible_model_data_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

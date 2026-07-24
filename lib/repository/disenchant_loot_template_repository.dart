@@ -1,6 +1,5 @@
 import 'package:foxy/entity/brief_disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
-import 'package:foxy/entity/disenchant_loot_template_key.dart';
 import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/loot_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/brief_area_table_entity.dart';
 
 void main() {
   test('Brief key 返回完整物理 ID 标量', () {

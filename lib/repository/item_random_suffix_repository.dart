@@ -1,6 +1,5 @@
-import 'package:foxy/entity/brief_item_random_suffix_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
+import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_random_suffix_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';

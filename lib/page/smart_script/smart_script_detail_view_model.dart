@@ -1,6 +1,5 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
-import 'package:foxy/entity/smart_script_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';

@@ -1,4 +1,4 @@
-import 'package:foxy/entity/prospecting_loot_template_key.dart';
+import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 
 class BriefProspectingLootTemplateEntity {
   final int entry;

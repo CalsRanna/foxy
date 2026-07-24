@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_lock_entity.dart';
 import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/lock_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

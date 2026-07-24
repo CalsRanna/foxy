@@ -1,4 +1,4 @@
-import 'package:foxy/entity/spell_rank_key.dart';
+import 'package:foxy/entity/spell_rank_entity.dart';
 
 class BriefSpellRankEntity {
   final int firstSpellId;

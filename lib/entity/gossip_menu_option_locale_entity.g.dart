@@ -79,3 +79,79 @@ mixin _GossipMenuOptionLocaleEntityMixin {
         ')';
   }
 }
+
+final class GossipMenuOptionLocaleKey {
+  final int menuId;
+  final int optionId;
+  final String locale;
+
+  const GossipMenuOptionLocaleKey({
+    required this.menuId,
+    required this.optionId,
+    required this.locale,
+  });
+
+  factory GossipMenuOptionLocaleKey.fromEntity(
+    GossipMenuOptionLocaleEntity entity,
+  ) {
+    return GossipMenuOptionLocaleKey(
+      menuId: entity.menuId,
+      optionId: entity.optionId,
+      locale: entity.locale,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is GossipMenuOptionLocaleKey &&
+            menuId == other.menuId &&
+            optionId == other.optionId &&
+            locale == other.locale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([menuId, optionId, locale]);
+
+  @override
+  String toString() {
+    return 'GossipMenuOptionLocaleKey('
+        'menuId: $menuId, '
+        'optionId: $optionId, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+final class BriefGossipMenuOptionLocaleEntity {
+  final int menuId;
+  final int optionId;
+  final String locale;
+  final String optionText;
+
+  const BriefGossipMenuOptionLocaleEntity({
+    this.menuId = 0,
+    this.optionId = 0,
+    this.locale = 'zhCN',
+    this.optionText = '',
+  });
+
+  factory BriefGossipMenuOptionLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefGossipMenuOptionLocaleEntity(
+      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
+      optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
+      locale: json['Locale']?.toString() ?? 'zhCN',
+      optionText: json['OptionText']?.toString() ?? '',
+    );
+  }
+
+  GossipMenuOptionLocaleKey get key {
+    return GossipMenuOptionLocaleKey(
+      menuId: menuId,
+      optionId: optionId,
+      locale: locale,
+    );
+  }
+}

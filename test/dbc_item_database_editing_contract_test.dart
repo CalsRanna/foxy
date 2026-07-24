@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_dbc_item_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 
 void main() {

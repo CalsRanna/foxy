@@ -11,11 +11,11 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i58;
 import 'package:flutter/material.dart' as _i59;
-import 'package:foxy/entity/condition_key.dart' as _i60;
+import 'package:foxy/entity/condition_entity.dart' as _i60;
 import 'package:foxy/entity/gossip_menu_key.dart' as _i61;
-import 'package:foxy/entity/player_create_info_key.dart' as _i62;
-import 'package:foxy/entity/reference_loot_template_key.dart' as _i63;
-import 'package:foxy/entity/smart_script_key.dart' as _i64;
+import 'package:foxy/entity/player_create_info_entity.dart' as _i62;
+import 'package:foxy/entity/reference_loot_template_entity.dart' as _i63;
+import 'package:foxy/entity/smart_script_entity.dart' as _i64;
 import 'package:foxy/page/achievement/achievement_detail_page.dart' as _i1;
 import 'package:foxy/page/achievement/achievement_list_page.dart' as _i2;
 import 'package:foxy/page/area_table/area_table_detail_page.dart' as _i3;

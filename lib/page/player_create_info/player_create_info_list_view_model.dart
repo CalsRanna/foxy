@@ -1,7 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_player_create_info_entity.dart';
+import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
-import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';

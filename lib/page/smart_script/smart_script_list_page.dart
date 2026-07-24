@@ -4,7 +4,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/smart_script_key.dart';
+import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';

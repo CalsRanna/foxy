@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_criteria_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';

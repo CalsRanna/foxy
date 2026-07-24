@@ -72,3 +72,85 @@ mixin _PlayerCreateInfoCastSpellEntityMixin {
         ')';
   }
 }
+
+final class PlayerCreateInfoCastSpellKey {
+  final int raceMask;
+  final int classMask;
+  final int spell;
+  final String? note;
+
+  const PlayerCreateInfoCastSpellKey({
+    required this.raceMask,
+    required this.classMask,
+    required this.spell,
+    required this.note,
+  });
+
+  factory PlayerCreateInfoCastSpellKey.fromEntity(
+    PlayerCreateInfoCastSpellEntity entity,
+  ) {
+    return PlayerCreateInfoCastSpellKey(
+      raceMask: entity.raceMask,
+      classMask: entity.classMask,
+      spell: entity.spell,
+      note: entity.note,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PlayerCreateInfoCastSpellKey &&
+            raceMask == other.raceMask &&
+            classMask == other.classMask &&
+            spell == other.spell &&
+            note == other.note;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([raceMask, classMask, spell, note]);
+
+  @override
+  String toString() {
+    return 'PlayerCreateInfoCastSpellKey('
+        'raceMask: $raceMask, '
+        'classMask: $classMask, '
+        'spell: $spell, '
+        'note: $note'
+        ')';
+  }
+}
+
+final class BriefPlayerCreateInfoCastSpellEntity {
+  final int raceMask;
+  final int classMask;
+  final int spell;
+  final String? note;
+
+  const BriefPlayerCreateInfoCastSpellEntity({
+    this.raceMask = 0,
+    this.classMask = 0,
+    this.spell = 0,
+    this.note,
+  });
+
+  factory BriefPlayerCreateInfoCastSpellEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefPlayerCreateInfoCastSpellEntity(
+      raceMask: (json['raceMask'] as num?)?.toInt() ?? 0,
+      classMask: (json['classMask'] as num?)?.toInt() ?? 0,
+      spell: (json['spell'] as num?)?.toInt() ?? 0,
+      note: json['note']?.toString(),
+    );
+  }
+
+  PlayerCreateInfoCastSpellKey get key {
+    return PlayerCreateInfoCastSpellKey(
+      raceMask: raceMask,
+      classMask: classMask,
+      spell: spell,
+      note: note,
+    );
+  }
+}

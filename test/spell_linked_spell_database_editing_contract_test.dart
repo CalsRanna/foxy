@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
-import 'package:foxy/entity/spell_linked_spell_key.dart';
 
 void main() {
   test('SpellLinkedSpellKey 覆盖物理 UNIQUE 三列并实现值相等', () {

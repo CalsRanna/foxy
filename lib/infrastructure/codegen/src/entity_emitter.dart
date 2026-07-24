@@ -3,6 +3,15 @@ import 'entity_model.dart';
 final class EntityEmitter {
   const EntityEmitter();
 
+  String emitEntityPart(EntityGenerationModel model) {
+    final sections = <String>[
+      emitFullMixin(model),
+      if (model.keyFields.length > 1) emitKey(model),
+      if (model.generateBrief) emitBrief(model),
+    ];
+    return sections.join('\n\n');
+  }
+
   String emitFullMixin(EntityGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} {')
@@ -99,11 +108,9 @@ final class EntityEmitter {
     return buffer.toString();
   }
 
-  String emitKeyLibrary(EntityGenerationModel model) {
+  String emitKey(EntityGenerationModel model) {
     final fields = model.keyFields;
     final buffer = StringBuffer()
-      ..writeln("import '${model.inputFileName}';")
-      ..writeln()
       ..writeln('final class ${model.keyClassName} {');
     for (final field in fields) {
       buffer.writeln('  final ${field.dartType} ${field.dartName};');
@@ -166,17 +173,10 @@ final class EntityEmitter {
     return buffer.toString();
   }
 
-  String emitBriefLibrary(EntityGenerationModel model) {
+  String emitBrief(EntityGenerationModel model) {
     final fields = model.briefFields;
     final keyFields = model.keyFields;
     final buffer = StringBuffer();
-    if (keyFields.length > 1) {
-      buffer
-        ..writeln(
-          "import '${model.inputFileName.replaceFirst('.dart', '.key.g.dart')}';",
-        )
-        ..writeln();
-    }
     buffer.writeln('final class ${model.briefClassName} {');
     for (final field in fields) {
       buffer.writeln('  final ${field.dartType} ${field.dartName};');

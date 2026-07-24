@@ -1,7 +1,5 @@
-import 'package:foxy/entity/brief_player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_filter_entity.dart';
-import 'package:foxy/entity/player_create_info_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';

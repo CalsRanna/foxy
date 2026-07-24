@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_quest_ender_key.dart';
+import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/page/quest/creature_quest_ender_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';

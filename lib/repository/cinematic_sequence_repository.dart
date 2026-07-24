@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

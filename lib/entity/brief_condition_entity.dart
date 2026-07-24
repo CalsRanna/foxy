@@ -1,6 +1,6 @@
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
-import 'package:foxy/entity/condition_key.dart';
+import 'package:foxy/entity/condition_entity.dart';
 
 /// 条件列表页用的精简实体
 /// 携带全部 10 列主键（用于导航/复制/删除）+ Comment（人类可读说明）

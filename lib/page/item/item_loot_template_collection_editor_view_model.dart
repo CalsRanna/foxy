@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_item_loot_template_entity.dart';
-import 'package:foxy/entity/item_loot_template_key.dart';
 import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/repository/item_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

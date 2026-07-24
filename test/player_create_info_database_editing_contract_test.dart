@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/entity/player_create_info_key.dart';
 
 void main() {
   test('PlayerCreateInfoKey 和 Brief 覆盖 race + class', () {

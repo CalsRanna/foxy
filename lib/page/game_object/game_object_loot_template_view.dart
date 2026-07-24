@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/game_object_loot_template_key.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';

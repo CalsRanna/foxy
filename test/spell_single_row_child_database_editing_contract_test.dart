@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_bonus_data_entity.dart';
-import 'package:foxy/entity/brief_spell_custom_attr_entity.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
 

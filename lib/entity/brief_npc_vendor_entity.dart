@@ -1,4 +1,4 @@
-import 'package:foxy/entity/npc_vendor_key.dart';
+import 'package:foxy/entity/npc_vendor_entity.dart';
 
 /// NPC 商人物品列表展示模型。
 ///

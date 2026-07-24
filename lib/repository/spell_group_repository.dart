@@ -1,6 +1,4 @@
-import 'package:foxy/entity/brief_spell_group_entity.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
-import 'package:foxy/entity/spell_group_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

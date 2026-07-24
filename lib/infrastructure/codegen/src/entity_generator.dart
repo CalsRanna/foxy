@@ -8,12 +8,11 @@ import '../entity_annotations.dart';
 import 'entity_emitter.dart';
 import 'entity_reader.dart';
 
-final class FoxyBriefEntityGenerator
-    extends GeneratorForAnnotation<FoxyFullEntity> {
+final class FoxyEntityGenerator extends GeneratorForAnnotation<FoxyFullEntity> {
   final EntityReader reader;
   final EntityEmitter emitter;
 
-  const FoxyBriefEntityGenerator({
+  const FoxyEntityGenerator({
     this.reader = const EntityReader(),
     this.emitter = const EntityEmitter(),
   }) : super(inPackage: 'foxy');
@@ -25,13 +24,12 @@ final class FoxyBriefEntityGenerator
   );
 
   @override
-  Future<String?> generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
     final model = await reader.read(element, annotation, buildStep);
-    if (!model.generateBrief) return null;
-    return emitter.emitBriefLibrary(model);
+    return emitter.emitEntityPart(model);
   }
 }

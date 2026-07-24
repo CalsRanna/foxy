@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
-import 'package:foxy/entity/player_create_info_spell_custom_key.dart';
 
 void main() {
   test('自定义法术 Key 和 Brief 覆盖 racemask + classmask + Spell', () {

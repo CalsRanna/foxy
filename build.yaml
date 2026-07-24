@@ -1,49 +1,27 @@
 targets:
   $default:
     builders:
-      foxy:foxy_brief_entity:
+      foxy:foxy_entity:
         generate_for:
           - lib/entity/**_entity.dart
       foxy:foxy_filter_entity:
         generate_for:
           - lib/entity/**_entity.dart
-      foxy:foxy_full_entity:
-        generate_for:
-          - lib/entity/**_entity.dart
-      foxy:foxy_key:
-        generate_for:
-          - lib/entity/**_entity.dart
 
 builders:
-  foxy_brief_entity:
+  foxy_entity:
     import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyBriefEntityBuilder"]
+    builder_factories: ["foxyEntityBuilder"]
     build_extensions:
-      ".dart": [".brief.g.dart"]
+      ".dart": [".foxy_entity.g.part"]
     auto_apply: root_package
-    build_to: source
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
 
   foxy_filter_entity:
     import: "package:foxy/infrastructure/codegen/builder.dart"
     builder_factories: ["foxyFilterEntityBuilder"]
     build_extensions:
       ".dart": [".filter.g.dart"]
-    auto_apply: root_package
-    build_to: source
-
-  foxy_full_entity:
-    import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyFullEntityBuilder"]
-    build_extensions:
-      ".dart": [".foxy_full_entity.g.part"]
-    auto_apply: root_package
-    build_to: cache
-    applies_builders: ["source_gen:combining_builder"]
-
-  foxy_key:
-    import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyKeyBuilder"]
-    build_extensions:
-      ".dart": [".key.g.dart"]
     auto_apply: root_package
     build_to: source

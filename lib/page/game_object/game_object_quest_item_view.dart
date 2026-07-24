@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/game_object_quest_item_key.dart';
+import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_collection_editor_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

@@ -2,11 +2,14 @@
 
 ## 1. 目标
 
-本方案以 `lib/entity/` 中的 Full Entity 作为 Entity 层唯一事实源，分阶段减少
-Full Entity、Key、Brief Entity 和 Filter Entity 的模板代码。
+本方案以 `lib/entity/` 中的 Full Entity 作为持久化数据结构的唯一事实源，
+减少 Full Entity、Key 和 Brief Entity 的模板代码，并把查询 Filter 从
+Entity 元数据中逐步迁移到 Repository 查询契约。
 
-第一实施阶段直接交付完整 Entity 层生成闭环：FullEntityMixin、Key、Brief
-Entity 和 Filter Entity。Repository、SQL 和查询行为不属于这一阶段。
+每个生成型 Entity 只暴露一个手写 Dart library：
+`xxx_entity.dart`。Full Mixin、标准复合 Key 和标准 Brief Entity 全部作为
+同一个 library 的 part 写入 `xxx_entity.g.dart`。业务代码不得直接 import
+生成文件，也不再为生成型 Brief/Key 保留转发壳文件。
 
 手写代码继续保留：
 
@@ -17,7 +20,7 @@ Entity 和 Filter Entity。Repository、SQL 和查询行为不属于这一阶段
 - 一行 `fromJson` factory 委托；
 - Entity 特有的业务方法。
 
-第一阶段生成器负责生成：
+Entity 生成器负责生成：
 
 - `_XXXEntityMixin`；
 - `static fromJson()`；
@@ -27,8 +30,7 @@ Entity 和 Filter Entity。Repository、SQL 和查询行为不属于这一阶段
 - `hashCode`；
 - `toString()`；
 - 标准复合 Key；
-- 标准 Brief Entity；
-- 标准 Filter Entity。
+- 标准 Brief Entity。
 
 所有产物必须读取同一个 Full Entity 源文件，不得复制物理列名、默认值或主键
 定义。标量 Key 继续直接使用 `int` 或 `String`，不额外生成类型。
@@ -39,14 +41,14 @@ Entity 和 Filter Entity。Repository、SQL 和查询行为不属于这一阶段
 
 - 不生成字段或构造函数；
 - 不修改已有类声明；
-- 不生成 Repository、SQL 或查询条件；
+- 不生成 Repository、SQL 或 `_applyFilter()`；
 - 不从数据库实时反向读取 Schema；
 - 不为集合字段提供深度相等；
 - 不允许一个字段读取多个数据库列名；
 - 不为 nullable `copyWith` 提供“显式设置为 null”的 sentinel；
 - 不自动处理 `DateTime`、enum、`Map`、`List` 或自定义值对象；
-- 不让 Brief、Key 或 Filter Builder 读取另一个 Builder 的生成文件；
-- 不把 Full、Brief、Key 和 Filter 全部输出到同一个 `*.g.dart`。
+- 不让任何 Builder 读取另一个 Builder 的生成文件；
+- 不把 Repository Filter 输出到 Entity 的 `*.g.dart`。
 
 遇到暂不支持的类型或结构时，生成器必须在构建期报错，不得静默跳过或生成
 弱类型代码。
@@ -69,13 +71,12 @@ lib/infrastructure/codegen/
 ├── builder.dart
 ├── entity_annotations.dart
 └── src/
-    ├── brief_entity_generator.dart
     ├── entity_emitter.dart
+    ├── entity_generator.dart
     ├── entity_model.dart
     ├── entity_reader.dart
     ├── filter_entity_generator.dart
-    ├── full_entity_generator.dart
-    └── key_generator.dart
+    └── entity_validator.dart
 
 test/infrastructure/codegen/
 ├── brief_entity_generator_test.dart
@@ -238,41 +239,45 @@ class FoxyBriefField {
 - join、locale fallback 或计算展示字段存在时，不添加
   `@FoxyBriefEntity`，继续手写 Brief。
 
-### 4.4 FoxyFilterEntity 和 FoxyFilterField
+### 4.4 Repository Filter
 
-这两个注解在第一阶段启用：
+Filter 不是数据库行，也不是 Entity 的精简投影。它表达某个 Repository
+公开了哪些查询条件，因此最终归属于 Repository library。
+
+目标注解放在 Repository class 上，而不是 Full Entity 或 Full 字段上：
 
 ```dart
-@Target({TargetKind.classType})
-class FoxyFilterEntity {
-  const FoxyFilterEntity();
-}
+part 'gem_property_repository.g.dart';
 
-enum FoxyFilterFieldType {
-  boolean,
-  decimal,
-  integer,
-  text,
-}
-
-@Target({TargetKind.field})
-class FoxyFilterField {
-  final Object? defaultValue;
-  final FoxyFilterFieldType type;
-
-  const FoxyFilterField({
-    required this.defaultValue,
-    required this.type,
-  });
+@FoxyRepositoryFilter(
+  name: 'GemPropertyFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
+class GemPropertyRepository with RepositoryMixin {
+  // _applyFilter 仍然手写。
 }
 ```
 
-Filter 字段类型不能从 Full 字段类型直接推断。例如 Full 的 `int id` 通常对应
-Filter 的 `String id`，用于保留文本输入。因此 Filter 类型和默认值必须显式
-配置。`FoxyFilterField.defaultValue` 仍然保留：Filter 类及其构造函数本身是
-生成产物，并且 Filter 类型可能与 Full 类型不同，不能复用 Full 构造参数默认值。
+目标产物 `GemPropertyFilter` 是
+`gem_property_repository.g.dart` 的一部分。ViewModel 已经依赖具体
+Repository，因此只需 import `gem_property_repository.dart`，不需要 import
+Entity Filter 文件或任何 `.g.dart`。
 
-类型映射：
+Repository Filter 注解至少声明：
+
+- Filter 类型名；
+- Dart 字段名；
+- Dart 字段类型；
+- 构造默认值。
+
+Filter 字段类型不能从 Full 字段类型推断。例如 Full 的 `int id` 常对应
+Filter 的 `String id`，以保留文本框原始输入。类型映射继续使用：
 
 ```text
 boolean -> bool
@@ -281,32 +286,47 @@ integer -> int
 text    -> String
 ```
 
-Filter 的 `fromJson/toJson` key 使用 Full 字段的 Dart 名称，例如 `id`，不使用
-物理列名 `ID`。
+Filter 生成 `final` 字段、`const` 构造函数、`fromJson`、`copyWith` 和
+`toJson`。JSON key 使用 Filter 的 Dart 字段名。
 
-标准 Filter 生成：
+第一版 Repository Filter 生成器不生成 SQL。`_applyFilter()` 继续由
+Repository 手写，因为实际查询可能包含：
 
-- `final` 字段；
-- `const` 构造函数；
-- `fromJson`；
-- `copyWith`；
-- `toJson`。
+- 精确、模糊和范围比较；
+- locale fallback；
+- join 后的展示字段；
+- 多列组合条件；
+- 同一字段在不同查询方法中的不同语义。
 
-`FoxyFilterField` 只描述 Filter DTO，不描述 SQL comparator、join 或
-Repository `_applyFilter()`。Filter 字段若不对应 Full 字段，或者依赖 join、
-locale、组合条件，则不添加 `@FoxyFilterEntity`，继续手写 Filter。
+只有当这些语义形成稳定且足够小的公共模型后，才考虑增加 comparator 等元数据；
+不能为了生成 SQL 把任意查询表达式塞进注解字符串。
+
+通常一个列表 Repository 对应一个 Filter，可直接使用 class 注解。若一个
+Repository 暴露多组独立查询，则注解必须显式命名每个 Filter，不能根据方法名
+猜测。像 `LootTemplateFilter` 这样被多个 Repository 共享的查询条件不归属于
+任意一个具体 Repository，应保留在独立的共享查询模型文件中。
+
+当前代码中的 `@FoxyFilterEntity`、`@FoxyFilterField` 和
+`*.filter.g.dart` 是迁移期兼容实现。迁移 Repository Filter 时应按模块逐个
+替换；在全部调用方迁移完成前，不同时生成两个同名 Filter。
 
 ### 4.5 Key
 
-Key 不使用独立注解。Key Builder 只读取 `FoxyFullField.key`：
+Key 不使用独立注解。Entity Generator 只读取 `FoxyFullField.key`：
 
 - 没有 key 字段：不生成 Key，并由 Full Entity Validator 给出诊断；
 - 单个 `int` 或 `String` key：直接使用标量，不生成 `XXXKey` 类；
 - 多个 key 字段：按照 Full 字段声明顺序生成不可变 `XXXKey`；
 - 生成的复合 Key 包含 `final` 字段、`const` 构造函数、`fromEntity`、
   `operator ==`、`hashCode` 和 `toString`；
-- 特殊身份无法由物理 key 字段表达时，整个 Entity 暂不添加
-  `@FoxyFullEntity`，继续手写，不使用隐藏白名单。
+- 特殊身份无法由物理 key 字段表达时继续手写专用 Key，不使用隐藏白名单。
+
+Key 属于 Entity，而不是 Repository，原因是它表达“这一行是谁”，会跨越
+Repository、ViewModel、路由和 Brief Entity 使用。Repository 只负责如何使用
+旧 Key 定位更新或删除目标，不拥有身份定义。
+
+只有查询游标、临时 locator、替代搜索键等不代表持久化行身份的“key”才属于
+Repository 查询模型，不使用本节的 Entity Key 生成规则。
 
 ## 5. Entity 编写形式
 
@@ -346,6 +366,8 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
 - 输入文件：`creature_template_entity.dart`
 - 生成文件：`creature_template_entity.g.dart`
 - 生成 Mixin：`_CreatureTemplateEntityMixin`
+- 生成 Brief：`BriefCreatureTemplateEntity`（启用时）
+- 生成复合 Key：`CreatureTemplateKey`（多列身份时）
 - Mixin 只使用下划线前缀，不使用 `$`
 - Mixin 中的静态方法名为 `fromJson`，不使用下划线前缀
 
@@ -359,6 +381,23 @@ CreatureTemplateEntity.fromJson(json)
 ```
 
 不改成 companion、顶层函数或公开静态解析器。
+
+Full、Brief 和 Key 属于同一个 Dart library。调用方统一 import 手写入口：
+
+```dart
+import 'package:foxy/entity/creature_template_entity.dart';
+```
+
+禁止以下形式：
+
+```dart
+import 'package:foxy/entity/brief_creature_template_entity.dart';
+import 'package:foxy/entity/creature_template_entity.key.g.dart';
+import 'package:foxy/entity/creature_template_entity.brief.g.dart';
+```
+
+生成型 Entity 不保留 `brief_xxx_entity.dart` 或 `xxx_key.dart` 转发壳。
+仍然存在的独立 Brief/Key 文件只代表尚不能从 Full Entity 元数据生成的手写模型。
 
 ### 5.1 注解排序
 
@@ -495,8 +534,6 @@ Key 名称从 Full class 名移除结尾的 `Entity` 后追加 `Key`。标量 ke
 `GossipMenuEntity` 的 `menuId/textId` 都标记 `key: true` 时生成：
 
 ```dart
-import 'gossip_menu_entity.dart';
-
 final class GossipMenuKey {
   final int menuId;
   final int textId;
@@ -554,10 +591,11 @@ class BriefGlyphPropertyEntity {
 }
 ```
 
-Brief 不生成 `copyWith/toJson`。复合身份 Brief 的 standalone library 必须
-import 对应 `*.key.g.dart`，其 `key` getter 返回完整复合 Key。
+Brief 不生成 `copyWith/toJson`。复合身份 Brief 与复合 Key 位于同一个
+Entity library，其 `key` getter 直接返回完整复合 Key，不产生 import 或额外
+生成文件。
 
-### 6.4 Filter 示例
+### 6.4 迁移期 Filter 示例
 
 ```dart
 class GlyphPropertyFilterEntity {
@@ -591,7 +629,9 @@ class GlyphPropertyFilterEntity {
 }
 ```
 
-Filter 使用 Dart 字段名作为 JSON key，不使用 `FoxyFullField.name`。
+Filter 使用 Dart 字段名作为 JSON key，不使用 `FoxyFullField.name`。这是当前
+Entity Filter 兼容产物；迁移完成后，同样的类型由 Repository 注解生成到
+`xxx_repository.g.dart`，并移除 `Entity` 后缀。
 
 ## 7. 类型映射规则
 
@@ -832,36 +872,20 @@ EntityName(field1: value1, field2: value2)
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'src/brief_entity_generator.dart';
+import 'src/entity_generator.dart';
 import 'src/filter_entity_generator.dart';
-import 'src/full_entity_generator.dart';
-import 'src/key_generator.dart';
 
-Builder foxyBriefEntityBuilder(BuilderOptions options) {
-  return LibraryBuilder(
-    FoxyBriefEntityGenerator(),
-    generatedExtension: '.brief.g.dart',
+Builder foxyEntityBuilder(BuilderOptions options) {
+  return SharedPartBuilder(
+    [const FoxyEntityGenerator()],
+    'foxy_entity',
   );
 }
 
 Builder foxyFilterEntityBuilder(BuilderOptions options) {
   return LibraryBuilder(
-    FoxyFilterEntityGenerator(),
+    const FoxyFilterEntityGenerator(),
     generatedExtension: '.filter.g.dart',
-  );
-}
-
-Builder foxyFullEntityBuilder(BuilderOptions options) {
-  return SharedPartBuilder(
-    [FoxyFullEntityGenerator()],
-    'foxy_full_entity',
-  );
-}
-
-Builder foxyKeyBuilder(BuilderOptions options) {
-  return LibraryBuilder(
-    FoxyKeyGenerator(),
-    generatedExtension: '.key.g.dart',
   );
 }
 ```
@@ -870,36 +894,20 @@ Builder foxyKeyBuilder(BuilderOptions options) {
 
 ```yaml
 builders:
-  foxy_brief_entity:
+  foxy_entity:
     import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyBriefEntityBuilder"]
+    builder_factories: ["foxyEntityBuilder"]
     build_extensions:
-      ".dart": [".brief.g.dart"]
+      ".dart": [".foxy_entity.g.part"]
     auto_apply: root_package
-    build_to: source
+    build_to: cache
+    applies_builders: ["source_gen:combining_builder"]
 
   foxy_filter_entity:
     import: "package:foxy/infrastructure/codegen/builder.dart"
     builder_factories: ["foxyFilterEntityBuilder"]
     build_extensions:
       ".dart": [".filter.g.dart"]
-    auto_apply: root_package
-    build_to: source
-
-  foxy_full_entity:
-    import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyFullEntityBuilder"]
-    build_extensions:
-      ".dart": [".foxy_full_entity.g.part"]
-    auto_apply: root_package
-    build_to: cache
-    applies_builders: ["source_gen:combining_builder"]
-
-  foxy_key:
-    import: "package:foxy/infrastructure/codegen/builder.dart"
-    builder_factories: ["foxyKeyBuilder"]
-    build_extensions:
-      ".dart": [".key.g.dart"]
     auto_apply: root_package
     build_to: source
 ```
@@ -910,23 +918,24 @@ builders:
 targets:
   $default:
     builders:
-      foxy:foxy_brief_entity:
+      foxy:foxy_entity:
         generate_for:
           - lib/entity/**_entity.dart
       foxy:foxy_filter_entity:
         generate_for:
           - lib/entity/**_entity.dart
-      foxy:foxy_full_entity:
-        generate_for:
-          - lib/entity/**_entity.dart
-      foxy:foxy_key:
-        generate_for:
-          - lib/entity/**_entity.dart
 ```
 
-所有 Builder 都只接受包含唯一 `@FoxyFullEntity` class 的输入文件。Brief 和
-Filter Builder 分别根据 `@FoxyBriefEntity`、`@FoxyFilterEntity` 决定是否
-产生内容；Key Builder 根据 `FoxyFullField.key` 决定是否生成复合 Key。
+Entity Builder 只接受包含唯一 `@FoxyFullEntity` class 的输入文件，一次读取并
+校验完整模型，然后按照固定顺序输出：
+
+1. Full Mixin；
+2. 标准复合 Key（多列身份时）；
+3. 标准 Brief Entity（启用时）。
+
+三个产物之间直接引用同一个 library 中的类型，不生成 import。标量 Key 不产生
+额外声明。迁移期 Filter Builder 仍根据 `@FoxyFilterEntity` 单独生成
+`.filter.g.dart`；它不进入 Entity shared part。
 
 运行：
 
@@ -942,61 +951,64 @@ dart run build_runner watch --delete-conflicting-outputs
 
 ### 10.1 Builder 拓扑
 
-一个 Full Entity 是唯一输入，但不同产物使用独立 Builder：
+一个 Full Entity 是唯一输入和唯一公开 library：
 
 ```text
-                         ┌── FullEntityMixin Builder ──> *.g.dart
-Full Entity annotations ├── Key Builder ──────────────> *.key.g.dart
-                         ├── Brief Builder ────────────> *.brief.g.dart
-                         └── Filter Builder ───────────> *.filter.g.dart
+Full Entity annotations
+        │
+        ▼
+FoxyEntityGenerator
+        │
+        ├── Full Mixin
+        ├── composite Key（可选）
+        └── Brief Entity（可选）
+        │
+        ▼
+SharedPartBuilder + combining_builder
+        │
+        ▼
+xxx_entity.g.dart
+
+迁移期 @FoxyFilterEntity ──> Filter LibraryBuilder ──> *.filter.g.dart
 ```
 
 规则：
 
-- 四个 Builder 都直接读取 Full Entity 源文件及其注解；
-- 四个 Builder 复用相同的 Reader、Validator 和内部 Entity 模型；
-- Brief Builder 不读取 Key Builder 的输出，而是直接读取
-  `FoxyFullField.key`；
+- Entity Generator 只读取一次 Full Entity 并构建一个
+  `EntityGenerationModel`；
+- Full、Brief 和 Key 由同一个 Emitter 基于同一模型输出；
 - Builder 不依赖注解声明顺序；
 - Builder 之间不建立“先生成、再读取生成文件”的执行链；
-- FullEntityMixin 使用 `SharedPartBuilder`；
-- Key、Brief 和 Filter 是独立 library，使用独立 `LibraryBuilder` 或声明了
-  固定多输出的自定义 Builder；
-- 每类 Builder 使用唯一 output extension，避免互相覆盖。
+- Entity 使用 `SharedPartBuilder`；
+- 迁移期 Filter 使用独立 `LibraryBuilder`；
+- `.foxy_entity.g.part` 只存在于 build cache，最终由
+  `source_gen:combining_builder` 写入 tracked `*.g.dart`。
 
-建议产物：
+产物：
 
 ```text
 glyph_property_entity.dart
 glyph_property_entity.g.dart
-glyph_property_entity.brief.g.dart
 glyph_property_entity.filter.g.dart
 
-gossip_menu_entity.dart
-gossip_menu_entity.g.dart
-gossip_menu_entity.brief.g.dart
-gossip_menu_entity.filter.g.dart
-gossip_menu_entity.key.g.dart
+player_create_info_entity.dart
+player_create_info_entity.g.dart
 ```
 
-标量 key 不产生 `*.key.g.dart`。
+不产生 `*.brief.g.dart` 或 `*.key.g.dart`，也不保留对应转发壳。Filter 的
+兼容 export 文件会在 Repository Filter 迁移时一并移除。
 
-为保持现有 import 路径，迁移期间保留一行手写兼容入口：
+### 10.2 Library 与 import 规则
 
-```dart
-// brief_glyph_property_entity.dart
-export 'glyph_property_entity.brief.g.dart'
-    show BriefGlyphPropertyEntity;
-```
+物理生成文件不是公共模块边界。业务代码只根据类型归属 import 手写入口：
 
-```dart
-// glyph_property_filter_entity.dart
-export 'glyph_property_entity.filter.g.dart'
-    show GlyphPropertyFilterEntity;
-```
+- Full、Brief、持久化 Key → `xxx_entity.dart`；
+- Repository 专属 Filter → `xxx_repository.dart`；
+- 共享 Filter → 独立共享查询模型文件；
+- 手写特殊 Key → 对应手写 Key 文件。
 
-复合 Key 使用同样方式由现有 `gossip_menu_key.dart` export 生成类型。等全部调用
-方和源码 contract tests 完成迁移后，再决定是否保留这些稳定入口文件。
+同一个调用文件同时使用 Full、Brief 和生成 Key 时仍然只有一个 Entity import。
+这避免把 Builder extension、生成器拆分方式和执行顺序泄漏给业务层。
 
 ## 11. 生成器内部模型
 
@@ -1075,8 +1087,9 @@ EntityEmitter 输出 Dart 源码
 SharedPartBuilder 合并为 *.g.dart
 ```
 
-Reader、Validator 和 Emitter 必须分离。这样四类 Entity 生成器以及后续
-Repository 生成器可以复用同一份 Entity 元数据，而不是重新解释注解。
+Reader、Validator 和 Emitter 必须分离。Entity Generator 一次读取模型后统一
+输出 Full、Brief 和 Key；迁移期 Filter Generator 以及后续 Repository
+Generator 复用相应元数据，而不是重新解释源码文本。
 
 ## 12. 构建期诊断
 
@@ -1130,8 +1143,10 @@ GlyphPropertyEntity.id 的构造参数默认值类型不匹配：
 - 带 `GENERATED CODE - DO NOT MODIFY BY HAND` 头；
 - 不允许手工编辑；
 - 与对应 Entity 源文件一起提交；
-- FullEntityMixin、Key、Brief 和 Filter 的生成文件使用不同 extension；
-- `.foxy_full_entity.g.part` 只存在于 build cache，不提交；
+- FullEntityMixin、标准复合 Key 和标准 Brief 位于同一个 Entity `*.g.dart`；
+- Filter 在迁移期继续使用独立 `*.filter.g.dart`；
+- `.foxy_entity.g.part` 只存在于 build cache，不提交；
+- 不提交或保留 `*.brief.g.dart`、`*.key.g.dart`；
 - 重复执行生成器必须产生零 diff。
 
 提交生成文件可以让代码审查直接看到物理字段映射变化，也避免全新 checkout
@@ -1154,10 +1169,12 @@ git diff --exit-code
 1. 能改成行为测试的契约优先改成行为测试；
 2. 必须检查源码形状时，提供统一 test helper，读取主 library 及其全部本地
    `part`；
-3. 检查 Brief、Filter 或 Key 生成内容时直接读取相应独立生成文件；
-4. 兼容 export 文件只验证 export 目标正确，不把“一行文件不包含某方法”当作
-   真实架构契约；
-5. 不在每个 contract test 中重复实现 part/export 解析。
+3. 检查生成型 Full、Brief 或 Key 时从 Entity 主文件开始读取，不直接依赖
+   Builder 的临时 extension；
+4. 对 Brief 的禁止 API 断言必须截取 Brief class 自身，不能因为同 library 的
+   Full Mixin 合法包含 `copyWith/toJson` 而误报；
+5. 不把“一行 export 文件不包含某方法”当作真实架构契约；
+6. 不在每个 contract test 中重复实现 part/export 解析。
 
 Repository 源码 contract tests 在 Repository 仍为手写期间不受本阶段影响。
 
@@ -1221,10 +1238,10 @@ Filter：
 
 Builder：
 
-- 四个 Builder 可以从同一输入独立运行；
-- 每个 Builder 对每个输入文件最多生成一个 standalone library；
-- Builder 不读取其他生成输出；
-- 输出 extension 不冲突；
+- Entity Builder 的一个输出同时包含 Full、复合 Key 和 Brief；
+- 标量 Key 不产生额外类型；
+- Entity Builder 不产生 import、`*.brief.g.dart` 或 `*.key.g.dart`；
+- 迁移期 Filter Builder 与 Entity Builder 的 output extension 不冲突；
 - 调整注解排列顺序产生零代码 diff。
 
 ### 14.3 生成结果行为测试
@@ -1274,113 +1291,58 @@ flutter test
 
 只格式化手写变更和生成器源码，不对整个仓库做无关格式化。
 
-## 15. 渐进落地
+## 15. 落地与迁移顺序
 
-### 阶段一：生成器骨架
+### 15.1 Entity library 合并
 
-1. 创建 `lib/infrastructure/codegen/entity_annotations.dart` 注解 library；
-2. 在 `lib/infrastructure/codegen/` 下创建 builder、generator 和内部模型；
-3. 实现全部六种注解和 Filter 类型枚举；
-4. 实现共享 Element reader、内部模型和集中校验；
-5. 配置 Full、Key、Brief、Filter 四个 Builder；
-6. 实现 FullEntityMixin 的全部生成成员；
-7. 实现标量/复合 Key 规则；
-8. 实现标准 Brief Entity；
-9. 实现标准 Filter Entity；
-10. 完成四类生成器的正常与异常测试。
+1. 将 Full、Brief、Key Generator 合并成一个 `FoxyEntityGenerator`；
+2. 使用一个 `SharedPartBuilder` 输出 `.foxy_entity.g.part`；
+3. 重新生成全部 `xxx_entity.g.dart`；
+4. 将生成型 Brief/Key 的调用方 import 改为所属 `xxx_entity.dart`；
+5. 删除 `*.brief.g.dart`、`*.key.g.dart` 以及只做 export 的兼容壳；
+6. 保留真正手写的 Brief 和特殊 Key；
+7. 更新源码 contract helper，使其沿 `part` 读取完整 library；
+8. 运行生成器测试、全局 Entity 契约、`flutter analyze` 和完整测试。
 
-完成标准：
+### 15.2 Repository Filter 迁移
 
-- 一个标准测试 Entity 可以稳定生成 FullEntityMixin、Brief 和 Filter；
-- 一个复合 key 测试 Entity 可以稳定生成 Key；
-- 连续生成两次零 diff；
-- 非法输入得到清晰诊断；
-- 调整注解排列顺序产生零代码 diff。
+Repository Filter 后续按模块迁移：
 
-### 阶段二：标量 DBC 试点
+1. 增加 Repository annotation library 和 `FoxyRepositoryFilterGenerator`；
+2. 为目标 Repository 添加 `part 'xxx_repository.g.dart'`；
+3. 在 Repository class 注解中声明 Filter 类型和字段；
+4. 生成 Filter DTO，但保留手写 `_applyFilter()`；
+5. ViewModel 改为只 import Repository；
+6. 删除该模块旧的 Entity Filter 注解、生成文件和转发壳；
+7. 共享 Filter 迁到独立查询模型，不绑定某个 Repository；
+8. 每个模块迁移后验证 count/list 使用同一 Filter 语义。
 
-迁移 `GlyphPropertyEntity`：
-
-- 验证 `int`；
-- 验证 DBC 大小写物理列名；
-- 验证非手写 `copyWith/toJson/==/hashCode/toString`；
-- 验证标量 key 不生成额外 Key 类型；
-- 生成标准 Brief 和 Filter；
-- 运行 glyph property 和 DBC round-trip 测试。
-
-### 阶段三：复杂标量试点
-
-迁移一个 loot template Entity，例如 `PickpocketingLootTemplateEntity`，并选择
-一个标准复合身份 Entity：
-
-- 验证 `double`；
-- 验证数据库 `0/1` 与 `bool` 转换；
-- 验证从构造参数读取 `100.0`、`1` 等非零默认值；
-- 验证复合物理身份和 `XXXKey`；
-- 只为满足标准约束的 Brief/Filter 启用对应注解；
-- 共享 Filter、join Brief 或计算字段继续手写。
-
-### 阶段四：大型 DBC 压力测试
-
-选择 `CharTitleEntity` 或另一个字段较多、但字段类型仍属于支持范围的 DBC
-Entity：
-
-- 验证大量字段的生成性能；
-- 验证字段声明顺序；
-- 验证 `Object.hashAll`；
-- 验证生成文件可读性和格式化稳定性。
-
-### 阶段五：分批迁移
-
-只迁移满足以下条件的 Entity：
-
-- 字段全部为支持类型；
-- 每个字段对应唯一物理列；
-- 构造函数为标准命名参数形式；
-- 默认值语义明确；
-- 没有自定义序列化行为；
-- 没有集合或复杂值对象。
-
-每一批保持较小，迁移后运行相关 contract tests、`flutter analyze` 和完整测试。
-
-迁移以下旧文件前，先按“一文件一个 Full Entity”拆分并更新 import：
-
-- `player_create_info_entity.dart`：拆分其中 6 个 Full Entity；
-- `quest_offer_reward_entity.dart`：拆分 Full 和 Locale Entity；
-- `quest_request_items_entity.dart`：拆分 Full 和 Locale Entity。
-
-拆分是正式重构，不在生成器中增加多 Entity library 兼容逻辑。
-
-以下 Entity 第一阶段继续手写：
-
-- `ActivityLogEntity`；
-- `FeatureEntity`；
-- 包含 `DateTime`、enum、`Map`、`List` 或自定义值对象的 Entity；
-- fromJson/toJson 不是完整对称物理行映射的特殊 Entity。
+迁移必须逐模块完成，不能在同一个 library 中同时存在新旧同名 Filter。
 
 ## 16. 后续扩展边界
 
-第一阶段之后，以下能力按实际需求再设计：
+以下能力按实际需求再设计：
 
 - 自定义字段 converter；
 - nullable `copyWith` sentinel；
 - 集合深度相等；
+- Repository Filter comparator；
 - 根据 `table` 和 `key` 生成标准 Repository 基础代码。
 
-这些能力必须建立在同一个 `EntityGenerationModel` 上。不得新增第二套物理列名、
-构造参数默认值或主键定义。
+Entity 能力必须建立在同一个 `EntityGenerationModel` 上。Repository Filter
+可以拥有独立查询模型，但不得复制 Entity 的物理列名、构造默认值或主键定义。
 
 ## 17. 验收标准
 
-Entity 代码生成第一阶段完成时必须满足：
+Entity 代码生成必须满足：
 
 1. 生成 Mixin 只使用下划线前缀，不使用 `$`；
 2. Mixin 静态方法名为 `fromJson`；
 3. 生成 `fromJson/copyWith/toJson/==/hashCode/toString`；
 4. 标量 key 不生成类型，复合 key 生成完整不可变 Key；
 5. 标准 Brief 包含完整身份且不暴露 `copyWith/toJson`；
-6. 标准 Filter 使用显式 Filter 类型并且不包含 SQL 行为；
-7. 四个 Builder 独立读取同一个 Full Entity 源文件；
+6. Full、Brief 和复合 Key 位于同一个 `xxx_entity.g.dart`；
+7. Entity Generator 一次读取同一个 Full Entity 源文件；
 8. 每个输入文件只允许一个 `@FoxyFullEntity`；
 9. 物理列名精确且区分大小写；
 10. 未命名构造函数参数默认值决定 Full 和 Brief 的反序列化回退值；
@@ -1392,4 +1354,7 @@ Entity 代码生成第一阶段完成时必须满足：
 16. `flutter analyze` 通过；
 17. 重复生成零 diff；
 18. 调整注解顺序产生零代码 diff；
-19. 生成文件不需要也不允许人工修改。
+19. 生成文件不需要也不允许人工修改；
+20. 业务代码不 import `.g.dart`；
+21. 生成型 Brief/Key 不保留独立转发壳；
+22. Repository Filter 不进入 Entity 的 `.g.dart`。

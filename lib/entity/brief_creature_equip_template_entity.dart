@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_equip_template_key.dart';
+import 'package:foxy/entity/creature_equip_template_entity.dart';
 
 /// 生物装备模板列表展示模型。
 class BriefCreatureEquipTemplateEntity {

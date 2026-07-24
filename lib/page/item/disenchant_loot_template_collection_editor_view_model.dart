@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_disenchant_loot_template_entity.dart';
-import 'package:foxy/entity/disenchant_loot_template_key.dart';
 import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';

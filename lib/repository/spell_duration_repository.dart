@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/entity/spell_duration_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

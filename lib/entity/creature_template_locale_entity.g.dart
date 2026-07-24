@@ -79,3 +79,67 @@ mixin _CreatureTemplateLocaleEntityMixin {
         ')';
   }
 }
+
+final class CreatureTemplateLocaleKey {
+  final int entry;
+  final String locale;
+
+  const CreatureTemplateLocaleKey({required this.entry, required this.locale});
+
+  factory CreatureTemplateLocaleKey.fromEntity(
+    CreatureTemplateLocaleEntity entity,
+  ) {
+    return CreatureTemplateLocaleKey(
+      entry: entity.entry,
+      locale: entity.locale,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is CreatureTemplateLocaleKey &&
+            entry == other.entry &&
+            locale == other.locale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, locale]);
+
+  @override
+  String toString() {
+    return 'CreatureTemplateLocaleKey('
+        'entry: $entry, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+final class BriefCreatureTemplateLocaleEntity {
+  final int entry;
+  final String locale;
+  final String name;
+  final String title;
+
+  const BriefCreatureTemplateLocaleEntity({
+    this.entry = 0,
+    this.locale = '',
+    this.name = '',
+    this.title = '',
+  });
+
+  factory BriefCreatureTemplateLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefCreatureTemplateLocaleEntity(
+      entry: (json['entry'] as num?)?.toInt() ?? 0,
+      locale: json['locale']?.toString() ?? '',
+      name: json['Name']?.toString() ?? '',
+      title: json['Title']?.toString() ?? '',
+    );
+  }
+
+  CreatureTemplateLocaleKey get key {
+    return CreatureTemplateLocaleKey(entry: entry, locale: locale);
+  }
+}

@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:foxy/constant/page_text_constants.dart';
-import 'package:foxy/entity/brief_page_text_locale_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
-import 'package:foxy/entity/page_text_locale_key.dart';
 import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';

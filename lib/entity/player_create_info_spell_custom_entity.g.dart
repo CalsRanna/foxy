@@ -72,3 +72,79 @@ mixin _PlayerCreateInfoSpellCustomEntityMixin {
         ')';
   }
 }
+
+final class PlayerCreateInfoSpellCustomKey {
+  final int raceMask;
+  final int classMask;
+  final int spell;
+
+  const PlayerCreateInfoSpellCustomKey({
+    required this.raceMask,
+    required this.classMask,
+    required this.spell,
+  });
+
+  factory PlayerCreateInfoSpellCustomKey.fromEntity(
+    PlayerCreateInfoSpellCustomEntity entity,
+  ) {
+    return PlayerCreateInfoSpellCustomKey(
+      raceMask: entity.raceMask,
+      classMask: entity.classMask,
+      spell: entity.spell,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PlayerCreateInfoSpellCustomKey &&
+            raceMask == other.raceMask &&
+            classMask == other.classMask &&
+            spell == other.spell;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([raceMask, classMask, spell]);
+
+  @override
+  String toString() {
+    return 'PlayerCreateInfoSpellCustomKey('
+        'raceMask: $raceMask, '
+        'classMask: $classMask, '
+        'spell: $spell'
+        ')';
+  }
+}
+
+final class BriefPlayerCreateInfoSpellCustomEntity {
+  final int raceMask;
+  final int classMask;
+  final int spell;
+  final String note;
+
+  const BriefPlayerCreateInfoSpellCustomEntity({
+    this.raceMask = 0,
+    this.classMask = 0,
+    this.spell = 0,
+    this.note = '',
+  });
+
+  factory BriefPlayerCreateInfoSpellCustomEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefPlayerCreateInfoSpellCustomEntity(
+      raceMask: (json['racemask'] as num?)?.toInt() ?? 0,
+      classMask: (json['classmask'] as num?)?.toInt() ?? 0,
+      spell: (json['Spell'] as num?)?.toInt() ?? 0,
+      note: json['Note']?.toString() ?? '',
+    );
+  }
+
+  PlayerCreateInfoSpellCustomKey get key {
+    return PlayerCreateInfoSpellCustomKey(
+      raceMask: raceMask,
+      classMask: classMask,
+      spell: spell,
+    );
+  }
+}

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_item_set_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 
 void main() {

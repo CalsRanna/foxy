@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_group_key.dart';
+import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/page/spell/spell_group_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';

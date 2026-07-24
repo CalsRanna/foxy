@@ -1,4 +1,4 @@
-import 'package:foxy/entity/creature_loot_template_key.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 
 class BriefCreatureLootTemplateEntity {
   final int entry;

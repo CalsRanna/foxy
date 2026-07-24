@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/entity/npc_trainer_key.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/npc_trainer_entity_validation_mixin.dart';

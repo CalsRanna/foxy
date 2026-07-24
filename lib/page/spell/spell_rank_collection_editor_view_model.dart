@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:foxy/entity/brief_spell_rank_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
-import 'package:foxy/entity/spell_rank_key.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/spell_rank_entity_validation_mixin.dart';

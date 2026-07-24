@@ -8,10 +8,10 @@ import 'generator_test_support.dart';
 void main() {
   test('生成全部 Full Entity Mixin 成员并保留字段顺序与常量默认值', () async {
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
       outputs: {
-        'foxy|lib/entity/codegen_sample_entity.foxy_full_entity.g.part':
+        'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part':
             decodedMatches(
               allOf(<Matcher>[
                 contains('mixin _CodegenSampleEntityMixin'),
@@ -47,7 +47,7 @@ void main() {
     final logs = <String>[];
 
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, source),
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
@@ -63,7 +63,7 @@ void main() {
     final logs = <String>[];
 
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, source),
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
@@ -78,7 +78,7 @@ void main() {
     );
     final missingLogs = <String>[];
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, missingAnnotation),
       outputs: {},
       onLog: (record) => missingLogs.add(record.toString()),
@@ -91,7 +91,7 @@ void main() {
     );
     final unsupportedLogs = <String>[];
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, unsupportedType),
       outputs: {},
       onLog: (record) => unsupportedLogs.add(record.toString()),
@@ -107,7 +107,7 @@ void main() {
     final logs = <String>[];
 
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, source),
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
@@ -139,12 +139,11 @@ void main() {
               '  )\n'
               '@FoxyBriefField()',
         );
-    const output =
-        'foxy|lib/entity/codegen_sample_entity.foxy_full_entity.g.part';
+    const output = 'foxy|lib/entity/codegen_sample_entity.foxy_entity.g.part';
     String? firstSource;
     String? secondSource;
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, standardEntitySource),
       outputs: {
         output: decodedMatches(
@@ -156,7 +155,7 @@ void main() {
       },
     );
     await testBuilder(
-      foxyFullEntityBuilder(BuilderOptions.empty),
+      foxyEntityBuilder(BuilderOptions.empty),
       sourceAsset(standardEntityAsset, reordered),
       outputs: {
         output: decodedMatches(
