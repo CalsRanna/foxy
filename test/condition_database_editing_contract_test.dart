@@ -179,8 +179,7 @@ void main() {
 
     test('重复键按 MySQL 错误码转换且其他错误继续传播', () async {
       final duplicate = LaconicException(
-        'write failed',
-        cause: const MySQLServerException('duplicate', 1062),
+        'MysqlServerException [1062]: duplicate',
       );
       final repository = _TestConditionRepository(
         Laconic(_RecordingDriver(error: duplicate)),
@@ -190,7 +189,19 @@ void main() {
       expect(MysqlErrorUtil.isDuplicateEntry(duplicate), isTrue);
       expect(
         MysqlErrorUtil.isDuplicateEntry(
-          const MySQLServerException('other', 1452),
+          LaconicException('MysqlServerException [1452]: other'),
+        ),
+        isFalse,
+      );
+      expect(
+        MysqlErrorUtil.isDuplicateEntry(
+          LaconicException('transaction failed', cause: duplicate),
+        ),
+        isTrue,
+      );
+      expect(
+        MysqlErrorUtil.isDuplicateEntry(
+          LaconicException('request 1062 failed'),
         ),
         isFalse,
       );
