@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'scaling_stat_distribution_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_scaling_stat_distribution')
 class ScalingStatDistributionEntity with _ScalingStatDistributionEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

@@ -4,11 +4,9 @@ part 'point_of_interest_entity.g.dart';
 
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeName')
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'points_of_interest')
 class PointOfInterestEntity with _PointOfInterestEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
@@ -28,7 +26,6 @@ class PointOfInterestEntity with _PointOfInterestEntityMixin {
   final int importance;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Name')
   final String name;
 

@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
-import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'quest_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'QuestTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'title',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class QuestTemplateRepository with RepositoryMixin {
   static const _table = 'quest_template';
 
@@ -17,7 +34,7 @@ class QuestTemplateRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countQuestTemplates({QuestTemplateFilterEntity? filter}) async {
+  Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.title.isNotEmpty;
     if (!needsLocaleJoin) {
@@ -57,7 +74,7 @@ class QuestTemplateRepository with RepositoryMixin {
 
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
-    QuestTemplateFilterEntity? filter,
+    QuestTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS qt');
@@ -132,10 +149,7 @@ class QuestTemplateRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    QuestTemplateFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       var idValue = int.tryParse(filter.id) ?? 0;

@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/entity/gem_property_filter_entity.dart';
+import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -79,8 +78,8 @@ class GemPropertyListViewModel with FieldControllerMixin {
     }
   }
 
-  GemPropertyFilterEntity _collectFilter() {
-    return GemPropertyFilterEntity(id: entryController.collect());
+  GemPropertyFilter _collectFilter() {
+    return GemPropertyFilter(id: entryController.collect());
   }
 
   Future<void> _refresh() async {

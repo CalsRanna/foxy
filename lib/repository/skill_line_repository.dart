@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
-import 'package:foxy/entity/skill_line_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'skill_line_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SkillLineFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SkillLineRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_skill_line';
 
@@ -20,7 +37,7 @@ class SkillLineRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSkillLines({SkillLineFilterEntity? filter}) =>
+  Future<int> countSkillLines({SkillLineFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<SkillLineEntity> createSkillLine() async =>
@@ -35,7 +52,7 @@ class SkillLineRepository with RepositoryMixin {
 
   Future<List<BriefSkillLineEntity>> getBriefSkillLines({
     int page = 1,
-    SkillLineFilterEntity? filter,
+    SkillLineFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -96,10 +113,7 @@ class SkillLineRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SkillLineFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SkillLineFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {

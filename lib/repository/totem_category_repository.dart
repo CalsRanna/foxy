@@ -1,23 +1,40 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
-import 'package:foxy/entity/totem_category_filter_entity.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'totem_category_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'TotemCategoryFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class TotemCategoryRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_totem_category';
 
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<int> countTotemCategories({TotemCategoryFilterEntity? filter}) {
+  Future<int> countTotemCategories({TotemCategoryFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<List<BriefTotemCategoryEntity>> getBriefTotemCategories({
     int page = 1,
-    TotemCategoryFilterEntity? filter,
+    TotemCategoryFilter? filter,
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
@@ -54,10 +71,7 @@ class TotemCategoryRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    TotemCategoryFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, TotemCategoryFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {

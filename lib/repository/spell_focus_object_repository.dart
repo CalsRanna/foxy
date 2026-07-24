@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
-import 'package:foxy/entity/spell_focus_object_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_focus_object_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellFocusObjectFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellFocusObjectRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_spell_focus_object';
@@ -26,7 +43,7 @@ class SpellFocusObjectRepository
     return copied.id;
   }
 
-  Future<int> countSpellFocusObjects({SpellFocusObjectFilterEntity? filter}) =>
+  Future<int> countSpellFocusObjects({SpellFocusObjectFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<SpellFocusObjectEntity> createSpellFocusObject() async =>
@@ -41,7 +58,7 @@ class SpellFocusObjectRepository
 
   Future<List<BriefSpellFocusObjectEntity>> getBriefSpellFocusObjects({
     int page = 1,
-    SpellFocusObjectFilterEntity? filter,
+    SpellFocusObjectFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select(['ID', 'Name_lang_zhCN', 'Name_lang_enUS']),
@@ -113,7 +130,7 @@ class SpellFocusObjectRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    SpellFocusObjectFilterEntity? filter,
+    SpellFocusObjectFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/entity/talent_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'talent_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'TalentFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'spell',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class TalentRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_talent';
 
@@ -17,7 +34,7 @@ class TalentRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countTalents({TalentFilterEntity? filter}) {
+  Future<int> countTalents({TalentFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -34,7 +51,7 @@ class TalentRepository with RepositoryMixin {
 
   Future<List<BriefTalentEntity>> getBriefTalents({
     int page = 1,
-    TalentFilterEntity? filter,
+    TalentFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -93,7 +110,7 @@ class TalentRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, TalentFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.spell.isNotEmpty) {

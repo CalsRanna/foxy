@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
-import 'package:foxy/entity/item_visuals_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_visuals_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemVisualsFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemVisualsRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_item_visuals';
 
@@ -17,7 +29,7 @@ class ItemVisualsRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countItemVisuals({ItemVisualsFilterEntity? filter}) async {
+  Future<int> countItemVisuals({ItemVisualsFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class ItemVisualsRepository with RepositoryMixin {
 
   Future<List<BriefItemVisualsEntity>> getBriefItemVisuals({
     int page = 1,
-    ItemVisualsFilterEntity? filter,
+    ItemVisualsFilter? filter,
   }) async {
     var builder = laconic.table(_table).select(const [
       'ID',
@@ -104,10 +116,7 @@ class ItemVisualsRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ItemVisualsFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemVisualsFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

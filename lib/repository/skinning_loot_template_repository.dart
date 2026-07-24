@@ -1,6 +1,6 @@
 import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
-import 'package:foxy/entity/loot_template_filter_entity.dart';
+import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -18,7 +18,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
     await storeLootTemplate(copied);
   }
 
-  Future<int> countLootTemplateRows({LootTemplateFilterEntity? filter}) async {
+  Future<int> countLootTemplateRows({LootTemplateFilter? filter}) async {
     final needsNameJoin = filter != null && filter.name.isNotEmpty;
     if (!needsNameJoin) {
       var builder = laconic.table(_table);
@@ -42,7 +42,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<int> countLootTemplates({LootTemplateFilterEntity? filter}) async {
+  Future<int> countLootTemplates({LootTemplateFilter? filter}) async {
     var builder = laconic.table(_table);
     if (filter != null && filter.entry.isNotEmpty) {
       builder = builder.where('Entry', filter.entry);
@@ -68,7 +68,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
 
   Future<List<BriefSkinningLootTemplateEntryEntity>>
   getBriefLootTemplateEntries({
-    LootTemplateFilterEntity? filter,
+    LootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -87,7 +87,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
   }
 
   Future<List<BriefSkinningLootTemplateEntity>> getBriefLootTemplateRows({
-    LootTemplateFilterEntity? filter,
+    LootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -214,7 +214,7 @@ class SkinningLootTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
-    LootTemplateFilterEntity? filter,
+    LootTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {

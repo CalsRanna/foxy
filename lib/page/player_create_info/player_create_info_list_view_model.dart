@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/entity/player_create_info_filter_entity.dart';
+import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -66,8 +65,8 @@ class PlayerCreateInfoListViewModel with FieldControllerMixin {
     }
   }
 
-  PlayerCreateInfoFilterEntity _collectFilter() {
-    return PlayerCreateInfoFilterEntity(
+  PlayerCreateInfoFilter _collectFilter() {
+    return PlayerCreateInfoFilter(
       race: raceController.collect(),
       class_: classController.collect(),
     );

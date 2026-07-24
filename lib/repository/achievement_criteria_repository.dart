@@ -1,11 +1,38 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
-import 'package:foxy/entity/achievement_criteria_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'achievement_criteria_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'AchievementCriteriaFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'achievementId',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'type',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'description',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class AchievementCriteriaRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_achievement_criteria';
@@ -23,9 +50,8 @@ class AchievementCriteriaRepository
     return copied.id;
   }
 
-  Future<int> countAchievementCriteria({
-    AchievementCriteriaFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
+  Future<int> countAchievementCriteria({AchievementCriteriaFilter? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
 
   Future<AchievementCriteriaEntity> createAchievementCriterion() async {
     return AchievementCriteriaEntity(id: await _getNextId());
@@ -58,7 +84,7 @@ class AchievementCriteriaRepository
 
   Future<List<BriefAchievementCriteriaEntity>> getBriefAchievementCriteria({
     int page = 1,
-    AchievementCriteriaFilterEntity? filter,
+    AchievementCriteriaFilter? filter,
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
@@ -116,7 +142,7 @@ class AchievementCriteriaRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    AchievementCriteriaFilterEntity? filter,
+    AchievementCriteriaFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

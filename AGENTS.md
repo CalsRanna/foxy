@@ -47,8 +47,8 @@ Do not globally format the repository as incidental cleanup. Format only changed
   - `database/` — MySQL-specific error helpers.
   - `dbc/` — DBC definitions, import worker, sync orchestration, export encoding, locale codecs, and export registry.
   - `logging/`, `preferences/`, `util/`, `window/` — shared infrastructure.
-- `lib/entity/` — immutable full entities, brief/list entities, filters, and typed composite/special row keys.
-- `lib/repository/` — Laconic query and persistence layer. Most repositories map one physical table or a tightly related table family.
+- `lib/entity/` — immutable full entities, brief/list entities, and typed composite/special row keys.
+- `lib/repository/` — Laconic query and persistence layer plus Repository-owned Filter query models. Most repositories map one physical table or a tightly related table family.
 - `lib/use_case/` — concrete user-intent operations for cross-repository orchestration, transactions, migrations, and cancellable workflows.
 - `lib/page/<module>/` — MVVM feature folders containing pages, views, view models, and occasional module validation.
 - `lib/widget/` — shared shadcn-based widgets, form controllers, pickers, locale editors, tables, and dialogs.
@@ -125,7 +125,10 @@ These are deliberate repository-wide invariants, enforced by many tests.
 - Repeated physical columns remain explicit scalar fields. Do not collapse them into lists or maps unless the database model itself requires that representation.
 - List/picker queries return a dedicated `Brief...Entity` from its own file. A brief entity contains only display data and complete persisted identity; it must not expose write-model APIs such as `toJson` or `copyWith`.
 - A brief entity exposes `key`. Use a plain `int` or `String` for a single-column locator. Create a dedicated immutable `...Key` value object only for composite or genuinely special locators; implement value equality and `hashCode`.
-- Filter entities are separate from row entities.
+- Filter query models belong to Repository libraries and use the `...Filter`
+  suffix without `Entity`. Repository-specific Filters are generated from
+  `@FoxyRepositoryFilter`; genuinely shared Filters remain independent
+  Repository-layer query models.
 
 ### Explicit row identity
 
@@ -162,7 +165,7 @@ Brief list queries are paginated with `kPageSize` (currently 50), and count quer
 
 A new navigable data module usually requires all applicable pieces below:
 
-1. Full, brief, filter, and composite-key entities.
+1. Full/brief row entities, Repository Filter, and composite-key types.
 2. A repository with count/list/create/get/store/update/destroy behavior and explicit identity handling.
 3. Validation mixin and tests for SQL/DBC value constraints.
 4. List/detail view models, pages, and views.

@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/item_purchase_group_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_purchase_group_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemPurchaseGroupFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemPurchaseGroupRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_purchase_group';
@@ -23,7 +40,7 @@ class ItemPurchaseGroupRepository
     return candidate.id;
   }
 
-  Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilterEntity? filter}) {
+  Future<int> countItemPurchaseGroups({ItemPurchaseGroupFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -40,7 +57,7 @@ class ItemPurchaseGroupRepository
 
   Future<List<BriefItemPurchaseGroupEntity>> getBriefItemPurchaseGroups({
     int page = 1,
-    ItemPurchaseGroupFilterEntity? filter,
+    ItemPurchaseGroupFilter? filter,
   }) async {
     var builder = laconic.table(_table).select(['ID', 'Name_lang_zhCN']);
     builder = _applyFilter(builder, filter);
@@ -115,7 +132,7 @@ class ItemPurchaseGroupRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemPurchaseGroupFilterEntity? filter,
+    ItemPurchaseGroupFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

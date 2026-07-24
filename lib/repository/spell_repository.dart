@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/spell_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_spell';
 
@@ -22,7 +39,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSpells({SpellFilterEntity? filter}) async {
+  Future<int> countSpells({SpellFilter? filter}) async {
     var builder = laconic.table('$_table AS ds');
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +58,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefSpellEntity>> getBriefSpells({
     int page = 1,
-    SpellFilterEntity? filter,
+    SpellFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS ds');
@@ -126,7 +143,7 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, SpellFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SpellFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ds.ID', filter.id);

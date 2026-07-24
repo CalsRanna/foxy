@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
-import 'package:foxy/entity/achievement_category_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'achievement_category_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'AchievementCategoryFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class AchievementCategoryRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_achievement_category';
@@ -23,9 +40,8 @@ class AchievementCategoryRepository
     return copied.id;
   }
 
-  Future<int> countAchievementCategories({
-    AchievementCategoryFilterEntity? filter,
-  }) => _applyFilter(laconic.table(_table), filter).count();
+  Future<int> countAchievementCategories({AchievementCategoryFilter? filter}) =>
+      _applyFilter(laconic.table(_table), filter).count();
 
   Future<AchievementCategoryEntity> createAchievementCategory() async {
     return AchievementCategoryEntity(id: await _getNextId());
@@ -58,7 +74,7 @@ class AchievementCategoryRepository
 
   Future<List<BriefAchievementCategoryEntity>> getBriefAchievementCategories({
     int page = 1,
-    AchievementCategoryFilterEntity? filter,
+    AchievementCategoryFilter? filter,
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
@@ -117,7 +133,7 @@ class AchievementCategoryRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    AchievementCategoryFilterEntity? filter,
+    AchievementCategoryFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

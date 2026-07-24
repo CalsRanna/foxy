@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
-import 'package:foxy/entity/game_object_art_kit_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'game_object_art_kit_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GameObjectArtKitFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'path',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GameObjectArtKitRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_art_kit';
 
@@ -20,7 +37,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countGameObjectArtKits({GameObjectArtKitFilterEntity? filter}) =>
+  Future<int> countGameObjectArtKits({GameObjectArtKitFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<GameObjectArtKitEntity> createGameObjectArtKit() async =>
@@ -35,7 +52,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
 
   Future<List<BriefGameObjectArtKitEntity>> getBriefGameObjectArtKits({
     int page = 1,
-    GameObjectArtKitFilterEntity? filter,
+    GameObjectArtKitFilter? filter,
   }) async {
     var builder = _applyFilter(
       laconic.table(_table).select(['ID', 'TextureVariation0', 'AttachModel0']),
@@ -101,7 +118,7 @@ class GameObjectArtKitRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    GameObjectArtKitFilterEntity? filter,
+    GameObjectArtKitFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

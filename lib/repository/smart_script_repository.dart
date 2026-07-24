@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
-import 'package:foxy/entity/smart_script_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'smart_script_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SmartScriptFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entryOrGuid',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'comment',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SmartScriptRepository with RepositoryMixin {
   static const _table = 'smart_scripts';
   static const primaryKeyColumns = {'entryorguid', 'source_type', 'id', 'link'};
@@ -26,7 +43,7 @@ class SmartScriptRepository with RepositoryMixin {
     return SmartScriptKey.fromEntity(candidate);
   }
 
-  Future<int> countSmartScripts({SmartScriptFilterEntity? filter}) async {
+  Future<int> countSmartScripts({SmartScriptFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -57,7 +74,7 @@ class SmartScriptRepository with RepositoryMixin {
 
   Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
     int page = 1,
-    SmartScriptFilterEntity? filter,
+    SmartScriptFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -127,10 +144,7 @@ class SmartScriptRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SmartScriptFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilter? filter) {
     if (filter == null) return builder;
     if (filter.entryOrGuid.isNotEmpty) {
       builder = builder.where('entryorguid', filter.entryOrGuid);

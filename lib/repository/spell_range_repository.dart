@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/spell_range_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_range_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellRangeFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_spell_range';
 
@@ -25,7 +42,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSpellRanges({SpellRangeFilterEntity? filter}) async {
+  Future<int> countSpellRanges({SpellRangeFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -44,7 +61,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefSpellRangeEntity>> getBriefSpellRanges({
     int page = 1,
-    SpellRangeFilterEntity? filter,
+    SpellRangeFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -116,10 +133,7 @@ class SpellRangeRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SpellRangeFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SpellRangeFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

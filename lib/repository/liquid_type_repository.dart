@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
-import 'package:foxy/entity/liquid_type_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'liquid_type_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'LiquidTypeFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class LiquidTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_liquid_type';
 
@@ -20,7 +37,7 @@ class LiquidTypeRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countLiquidTypes({LiquidTypeFilterEntity? filter}) =>
+  Future<int> countLiquidTypes({LiquidTypeFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<LiquidTypeEntity> createLiquidType() async =>
@@ -35,7 +52,7 @@ class LiquidTypeRepository with RepositoryMixin {
 
   Future<List<BriefLiquidTypeEntity>> getBriefLiquidTypes({
     int page = 1,
-    LiquidTypeFilterEntity? filter,
+    LiquidTypeFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select([
@@ -96,10 +113,7 @@ class LiquidTypeRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    LiquidTypeFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, LiquidTypeFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {

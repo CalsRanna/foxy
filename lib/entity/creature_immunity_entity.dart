@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'creature_immunity_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'creature_immunities')
 class CreatureImmunityEntity with _CreatureImmunityEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
@@ -37,7 +35,6 @@ class CreatureImmunityEntity with _CreatureImmunityEntityMixin {
   final int immuneChain;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Comment')
   final String comment;
 

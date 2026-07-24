@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/area_table_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'area_table_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'AreaTableFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
@@ -25,7 +42,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countAreaTables({AreaTableFilterEntity? filter}) async {
+  Future<int> countAreaTables({AreaTableFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -63,7 +80,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefAreaTableEntity>> getBriefAreaTables({
     int page = 1,
-    AreaTableFilterEntity? filter,
+    AreaTableFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -131,10 +148,7 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    AreaTableFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/entity/game_object_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'game_object_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GameObjectTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GameObjectTemplateRepository with RepositoryMixin {
   static const _table = 'gameobject_template';
 
@@ -20,7 +37,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countGameObjectTemplates({
-    GameObjectTemplateFilterEntity? filter,
+    GameObjectTemplateFilter? filter,
   }) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.name.isNotEmpty;
@@ -58,7 +75,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
 
   Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
-    GameObjectTemplateFilterEntity? filter,
+    GameObjectTemplateFilter? filter,
   }) async {
     var builder = laconic.table('$_table AS gt');
     final fields = <String>[
@@ -135,7 +152,7 @@ class GameObjectTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    GameObjectTemplateFilterEntity? filter,
+    GameObjectTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {

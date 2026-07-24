@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/entity/page_text_filter_entity.dart';
+import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -82,8 +81,8 @@ class PageTextListViewModel with FieldControllerMixin {
     }
   }
 
-  PageTextFilterEntity _collectFilter() {
-    return PageTextFilterEntity(
+  PageTextFilter _collectFilter() {
+    return PageTextFilter(
       id: idController.collect(),
       text: textController.collect(),
     );

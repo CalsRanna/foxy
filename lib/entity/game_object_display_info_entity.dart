@@ -3,16 +3,13 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'game_object_display_info_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_game_object_display_info')
 class GameObjectDisplayInfoEntity with _GameObjectDisplayInfoEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ModelName')
   final String modelName;
 

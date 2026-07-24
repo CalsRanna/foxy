@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/mail_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'mail_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'MailTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'subject',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_mail_template';
 
@@ -25,7 +42,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countMailTemplates({MailTemplateFilterEntity? filter}) {
+  Future<int> countMailTemplates({MailTemplateFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -42,7 +59,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefMailTemplateEntity>> getBriefMailTemplates({
     int page = 1,
-    MailTemplateFilterEntity? filter,
+    MailTemplateFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -117,10 +134,7 @@ class MailTemplateRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    MailTemplateFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, MailTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.subject.isNotEmpty) {

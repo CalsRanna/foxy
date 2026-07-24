@@ -1,10 +1,27 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
-import 'package:foxy/entity/item_limit_category_filter_entity.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_limit_category_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemLimitCategoryFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemLimitCategoryRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_limit_category';
@@ -12,15 +29,13 @@ class ItemLimitCategoryRepository
   @override
   String get dbcLocaleTableName => _table;
 
-  Future<int> countItemLimitCategories({
-    ItemLimitCategoryFilterEntity? filter,
-  }) {
+  Future<int> countItemLimitCategories({ItemLimitCategoryFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<List<BriefItemLimitCategoryEntity>> getBriefItemLimitCategories({
     int page = 1,
-    ItemLimitCategoryFilterEntity? filter,
+    ItemLimitCategoryFilter? filter,
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
@@ -54,7 +69,7 @@ class ItemLimitCategoryRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemLimitCategoryFilterEntity? filter,
+    ItemLimitCategoryFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

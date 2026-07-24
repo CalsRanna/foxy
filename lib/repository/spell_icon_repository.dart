@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
-import 'package:foxy/entity/spell_icon_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_icon_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellIconFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellIconRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
@@ -17,7 +34,7 @@ class SpellIconRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countSpellIcons({SpellIconFilterEntity? filter}) async {
+  Future<int> countSpellIcons({SpellIconFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +53,7 @@ class SpellIconRepository with RepositoryMixin {
 
   Future<List<BriefSpellIconEntity>> getBriefSpellIcons({
     int page = 1,
-    SpellIconFilterEntity? filter,
+    SpellIconFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -92,10 +109,7 @@ class SpellIconRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    SpellIconFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, SpellIconFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

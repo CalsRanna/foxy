@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_condition_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'spell_item_enchantment_condition_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'SpellItemEnchantmentConditionFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_spell_item_enchantment_condition';
 
@@ -18,7 +30,7 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   }
 
   Future<int> countSpellItemEnchantmentConditions({
-    SpellItemEnchantmentConditionFilterEntity? filter,
+    SpellItemEnchantmentConditionFilter? filter,
   }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -42,7 +54,7 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
   Future<List<BriefSpellItemEnchantmentConditionEntity>>
   getBriefSpellItemEnchantmentConditions({
     int page = 1,
-    SpellItemEnchantmentConditionFilterEntity? filter,
+    SpellItemEnchantmentConditionFilter? filter,
   }) async {
     var builder = laconic.table(_table).select(const ['ID']);
     builder = _applyFilter(builder, filter);
@@ -113,7 +125,7 @@ class SpellItemEnchantmentConditionRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    SpellItemEnchantmentConditionFilterEntity? filter,
+    SpellItemEnchantmentConditionFilter? filter,
   ) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

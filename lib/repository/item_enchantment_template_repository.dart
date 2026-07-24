@@ -1,10 +1,22 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_enchantment_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemEnchantmentTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemEnchantmentTemplateRepository with RepositoryMixin {
   static const _table = 'item_enchantment_template';
   static const primaryKeyColumns = {'entry', 'ench'};
@@ -17,7 +29,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
 
   Future<int> countItemEnchantmentGroups({
     required ItemEnchantmentKind kind,
-    ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentTemplateFilter? filter,
   }) async {
     final dbcTable = dbcTableFor(kind);
     var builder = laconic.table('$_table AS iet');
@@ -32,7 +44,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   }
 
   Future<int> countItemEnchantmentTemplates({
-    ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentTemplateFilter? filter,
     ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
     var builder = laconic.table('$_table AS iet');
@@ -72,7 +84,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
   Future<List<BriefItemEnchantmentTemplateEntity>>
   getBriefItemEnchantmentGroups({
     required ItemEnchantmentKind kind,
-    ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentTemplateFilter? filter,
     int page = 1,
   }) async {
     final dbcTable = dbcTableFor(kind);
@@ -101,7 +113,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
 
   Future<List<BriefItemEnchantmentTemplateEntity>>
   getBriefItemEnchantmentTemplates({
-    ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentTemplateFilter? filter,
     int page = 1,
     ItemEnchantmentKind kind = ItemEnchantmentKind.randomProperty,
   }) async {
@@ -177,7 +189,7 @@ class ItemEnchantmentTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemEnchantmentTemplateFilterEntity? filter,
+    ItemEnchantmentTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {

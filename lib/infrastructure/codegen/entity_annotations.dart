@@ -29,21 +29,6 @@ class FoxyBriefField {
 }
 
 @Target({TargetKind.classType})
-class FoxyFilterEntity {
-  const FoxyFilterEntity();
-}
-
-enum FoxyFilterFieldType { boolean, decimal, integer, text }
-
-@Target({TargetKind.field})
-class FoxyFilterField {
-  final Object? defaultValue;
-  final FoxyFilterFieldType type;
-
-  const FoxyFilterField({required this.defaultValue, required this.type});
-}
-
-@Target({TargetKind.classType})
 class FoxyFullEntity {
   final String table;
 

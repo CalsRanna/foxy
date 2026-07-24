@@ -5,11 +5,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'condition_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'conditions')
 class ConditionEntity with _ConditionEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('SourceTypeOrReferenceId', key: true)
   final int sourceTypeOrReferenceId;
 
@@ -18,7 +16,6 @@ class ConditionEntity with _ConditionEntityMixin {
   final int sourceGroup;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('SourceEntry', key: true)
   final int sourceEntry;
 

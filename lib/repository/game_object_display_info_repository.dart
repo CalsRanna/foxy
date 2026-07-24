@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
-import 'package:foxy/entity/game_object_display_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'game_object_display_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'GameObjectDisplayInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'modelName',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class GameObjectDisplayInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_game_object_display_info';
 
@@ -21,7 +38,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   }
 
   Future<int> countGameObjectDisplayInfos({
-    GameObjectDisplayInfoFilterEntity? filter,
+    GameObjectDisplayInfoFilter? filter,
   }) => _applyFilter(laconic.table(_table), filter).count();
 
   Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
@@ -37,7 +54,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   Future<List<BriefGameObjectDisplayInfoEntity>>
   getBriefGameObjectDisplayInfos({
     int page = 1,
-    GameObjectDisplayInfoFilterEntity? filter,
+    GameObjectDisplayInfoFilter? filter,
   }) async {
     var builder = _applyFilter(
       laconic.table(_table).select(['ID', 'ModelName']),
@@ -105,7 +122,7 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    GameObjectDisplayInfoFilterEntity? filter,
+    GameObjectDisplayInfoFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

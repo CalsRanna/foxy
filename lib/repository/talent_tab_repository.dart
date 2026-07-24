@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/talent_tab_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'talent_tab_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'TalentTabFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_talent_tab';
 
@@ -22,7 +39,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countTalentTabs({TalentTabFilterEntity? filter}) {
+  Future<int> countTalentTabs({TalentTabFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -39,7 +56,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefTalentTabEntity>> getBriefTalentTabs({
     int page = 1,
-    TalentTabFilterEntity? filter,
+    TalentTabFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -114,10 +131,7 @@ class TalentTabRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    TalentTabFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, TalentTabFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {

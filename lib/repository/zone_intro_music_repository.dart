@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
-import 'package:foxy/entity/zone_intro_music_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'zone_intro_music_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ZoneIntroMusicFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ZoneIntroMusicRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_zone_intro_music_table';
 
@@ -17,7 +34,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countZoneIntroMusics({ZoneIntroMusicFilterEntity? filter}) =>
+  Future<int> countZoneIntroMusics({ZoneIntroMusicFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<ZoneIntroMusicEntity> createZoneIntroMusic() async =>
@@ -32,7 +49,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
 
   Future<List<BriefZoneIntroMusicEntity>> getBriefZoneIntroMusics({
     int page = 1,
-    ZoneIntroMusicFilterEntity? filter,
+    ZoneIntroMusicFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select(['ID', 'Name', 'SoundID']),
@@ -93,7 +110,7 @@ class ZoneIntroMusicRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ZoneIntroMusicFilterEntity? filter,
+    ZoneIntroMusicFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

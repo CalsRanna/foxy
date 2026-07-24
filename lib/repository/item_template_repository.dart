@@ -1,9 +1,41 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'description',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'classId',
+      type: FoxyFilterFieldType.integer,
+      defaultValue: -1,
+    ),
+    FoxyRepositoryFilterField(
+      name: 'subclass',
+      type: FoxyFilterFieldType.integer,
+      defaultValue: -1,
+    ),
+  ],
+)
 class ItemTemplateRepository with RepositoryMixin {
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
@@ -20,7 +52,7 @@ class ItemTemplateRepository with RepositoryMixin {
     return copied.entry;
   }
 
-  Future<int> countItemTemplates({ItemTemplateFilterEntity? filter}) async {
+  Future<int> countItemTemplates({ItemTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled &&
         filter != null &&
@@ -76,7 +108,7 @@ class ItemTemplateRepository with RepositoryMixin {
 
   Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
     int page = 1,
-    ItemTemplateFilterEntity? filter,
+    ItemTemplateFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table('$_table AS it');
@@ -159,10 +191,7 @@ class ItemTemplateRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ItemTemplateFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
       builder = builder.where('it.entry', filter.entry);

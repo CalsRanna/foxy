@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/condition_entity.dart';
-import 'package:foxy/entity/condition_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'condition_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ConditionFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'sourceTypeOrReferenceId',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'sourceEntry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ConditionRepository with RepositoryMixin {
   static const _table = 'conditions';
 
@@ -34,7 +51,7 @@ class ConditionRepository with RepositoryMixin {
     await storeCondition(source.copyWith(elseGroup: nextElseGroup));
   }
 
-  Future<int> countConditions({ConditionFilterEntity? filter}) async {
+  Future<int> countConditions({ConditionFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -53,7 +70,7 @@ class ConditionRepository with RepositoryMixin {
 
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
-    ConditionFilterEntity? filter,
+    ConditionFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     const fields = [
@@ -124,10 +141,7 @@ class ConditionRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ConditionFilterEntity? filter,
-  ) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ConditionFilter? filter) {
     if (filter == null) return builder;
     if (filter.sourceTypeOrReferenceId.isNotEmpty) {
       builder = builder.where(

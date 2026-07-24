@@ -3,16 +3,13 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'sound_provider_preferences_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_sound_provider_preferences')
 class SoundProviderPreferencesEntity with _SoundProviderPreferencesEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Description')
   final String description;
 

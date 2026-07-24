@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/entity/player_create_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'player_create_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'PlayerCreateInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'race',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'class_',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class PlayerCreateInfoRepository with RepositoryMixin {
   static const _table = 'playercreateinfo';
 
@@ -11,9 +28,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
     throw UnsupportedError('出生信息使用种族/职业语义主键，请新增有效组合。');
   }
 
-  Future<int> countPlayerCreateInfos({
-    PlayerCreateInfoFilterEntity? filter,
-  }) async {
+  Future<int> countPlayerCreateInfos({PlayerCreateInfoFilter? filter}) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     return builder.count();
   }
@@ -30,7 +45,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
   }
 
   Future<List<BriefPlayerCreateInfoEntity>> getBriefPlayerCreateInfos({
-    PlayerCreateInfoFilterEntity? filter,
+    PlayerCreateInfoFilter? filter,
     int page = 1,
   }) async {
     var builder = laconic.table(_table).select([
@@ -96,7 +111,7 @@ class PlayerCreateInfoRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    PlayerCreateInfoFilterEntity? filter,
+    PlayerCreateInfoFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.race.isNotEmpty) builder = builder.where('race', filter.race);

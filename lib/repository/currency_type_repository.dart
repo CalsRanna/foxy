@@ -1,13 +1,30 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/currency_type_entity.dart';
-import 'package:foxy/entity/currency_type_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'currency_type_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CurrencyTypeFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CurrencyTypeRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
 
-  Future<int> countCurrencyTypes({CurrencyTypeFilterEntity? filter}) {
+  Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {
     final joinLocale = localeEnabled;
     var builder = laconic
         .table('$_table AS ct')
@@ -37,7 +54,7 @@ class CurrencyTypeRepository with RepositoryMixin {
 
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
     int page = 1,
-    CurrencyTypeFilterEntity? filter,
+    CurrencyTypeFilter? filter,
   }) async {
     final joinLocale = localeEnabled;
     var builder = laconic.table('$_table AS ct').select([
@@ -117,7 +134,7 @@ class CurrencyTypeRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CurrencyTypeFilterEntity? filter, {
+    CurrencyTypeFilter? filter, {
     required bool joinLocale,
   }) {
     if (filter == null) return builder;

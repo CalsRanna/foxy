@@ -15,17 +15,11 @@ const _fullEntityChecker = TypeChecker.fromUrl(
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyBriefEntity',
 );
-const _filterEntityChecker = TypeChecker.fromUrl(
-  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFilterEntity',
-);
 const _fullFieldChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullField',
 );
 const _briefFieldChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyBriefField',
-);
-const _filterFieldChecker = TypeChecker.fromUrl(
-  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFilterField',
 );
 
 final class EntityReader {
@@ -99,11 +93,6 @@ final class EntityReader {
         classElement,
         _briefEntityChecker,
         'FoxyBriefEntity',
-      ),
-      generateFilter: _hasSingleAnnotation(
-        classElement,
-        _filterEntityChecker,
-        'FoxyFilterEntity',
       ),
       inputFileName: inputFileName,
       mixinName: mixinName,
@@ -204,23 +193,12 @@ final class EntityReader {
       nullable,
     );
     final includeInBrief = _readPhysicalBriefField(field);
-    final filterAnnotations = _filterFieldChecker.annotationsOf(field).toList();
-    if (filterAnnotations.length > 1) {
-      _fail(
-        '${classElement.name}.$fieldName 重复使用 @FoxyFilterField。',
-        field,
-        '只保留一个 @FoxyFilterField。',
-      );
-    }
 
     return EntityFieldModel(
       dartName: fieldName,
       dartType: typeName,
       columnName: full.read('name').stringValue,
       constructorDefaultValue: defaultValue,
-      filter: filterAnnotations.isEmpty
-          ? null
-          : _readFilter(ConstantReader(filterAnnotations.single), field),
       includeInBrief: includeInBrief,
       nullable: nullable,
       key: full.peek('key')?.boolValue ?? false,
@@ -301,7 +279,6 @@ final class EntityReader {
           dartType: dartType,
           columnName: name,
           constructorDefaultValue: defaultValue,
-          filter: null,
           includeInBrief: true,
           nullable: false,
           key: false,
@@ -353,37 +330,6 @@ final class EntityReader {
       );
     }
     return converted;
-  }
-
-  FilterFieldGenerationModel _readFilter(
-    ConstantReader annotation,
-    FieldElement field,
-  ) {
-    final typeIndex = annotation
-        .read('type')
-        .objectValue
-        .getField('index')
-        ?.toIntValue();
-    if (typeIndex == null ||
-        typeIndex < 0 ||
-        typeIndex >= FoxyFilterFieldType.values.length) {
-      _fail(
-        '${field.enclosingElement.name}.${field.name} 的 Filter 类型无法识别。',
-        field,
-        '使用 FoxyFilterFieldType 中的值。',
-      );
-    }
-    final type = FoxyFilterFieldType.values[typeIndex];
-    final defaultObject = annotation.read('defaultValue').objectValue;
-    final defaultValue = defaultObject.isNull
-        ? null
-        : _convertConstant(defaultObject, switch (type) {
-            FoxyFilterFieldType.boolean => 'bool',
-            FoxyFilterFieldType.decimal => 'double',
-            FoxyFilterFieldType.integer => 'int',
-            FoxyFilterFieldType.text => 'String',
-          });
-    return FilterFieldGenerationModel(defaultValue: defaultValue, type: type);
   }
 
   Object? _convertConstant(DartObject value, String type) => switch (type) {

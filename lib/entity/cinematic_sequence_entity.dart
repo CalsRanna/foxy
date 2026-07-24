@@ -3,11 +3,9 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'cinematic_sequence_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_cinematic_sequences')
 class CinematicSequenceEntity with _CinematicSequenceEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

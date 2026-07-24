@@ -3,16 +3,13 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 part 'zone_intro_music_entity.g.dart';
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_zone_intro_music_table')
 class ZoneIntroMusicEntity with _ZoneIntroMusicEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('Name')
   final String name;
 

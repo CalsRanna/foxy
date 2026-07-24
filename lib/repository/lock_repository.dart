@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/lock_entity.dart';
-import 'package:foxy/entity/lock_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'lock_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'LockFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class LockRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_lock';
 
@@ -17,7 +29,7 @@ class LockRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countLocks({LockFilterEntity? filter}) async {
+  Future<int> countLocks({LockFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -36,7 +48,7 @@ class LockRepository with RepositoryMixin {
 
   Future<List<BriefLockEntity>> getBriefLocks({
     int page = 1,
-    LockFilterEntity? filter,
+    LockFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -90,7 +102,7 @@ class LockRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, LockFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, LockFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

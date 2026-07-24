@@ -1,18 +1,30 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/holiday_entity.dart';
-import 'package:foxy/entity/holiday_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'holiday_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'HolidayFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class HolidayRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_holidays';
 
-  Future<int> countHolidays({HolidayFilterEntity? filter}) {
+  Future<int> countHolidays({HolidayFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
   Future<List<BriefHolidayEntity>> getBriefHolidays({
     int page = 1,
-    HolidayFilterEntity? filter,
+    HolidayFilter? filter,
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
@@ -29,7 +41,7 @@ class HolidayRepository with RepositoryMixin {
     return rows.map((row) => HolidayEntity.fromJson(row.toMap())).toList();
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, HolidayFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, HolidayFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }

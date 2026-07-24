@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/entity/npc_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'npc_text_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'NpcTextFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'text',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class NpcTextRepository with RepositoryMixin {
   static const _table = 'npc_text';
 
@@ -19,7 +36,7 @@ class NpcTextRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countNpcTexts({NpcTextFilterEntity? filter}) async {
+  Future<int> countNpcTexts({NpcTextFilter? filter}) async {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -36,7 +53,7 @@ class NpcTextRepository with RepositoryMixin {
 
   Future<List<BriefNpcTextEntity>> getBriefNpcTexts({
     int page = 1,
-    NpcTextFilterEntity? filter,
+    NpcTextFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -94,7 +111,7 @@ class NpcTextRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.text.isNotEmpty) {

@@ -5,11 +5,9 @@ part 'item_extended_cost_entity.g.dart';
 /// 扩展价格
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_item_extended_cost')
 class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 

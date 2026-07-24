@@ -5,11 +5,9 @@ part 'creature_model_data_entity.g.dart';
 /// DBC 生物模型数据 — 对应 foxy.dbc_creature_model_data 表。
 
 @FoxyBriefEntity()
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'foxy.dbc_creature_model_data')
 class CreatureModelDataEntity with _CreatureModelDataEntityMixin {
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ID', key: true)
   final int id;
 
@@ -17,7 +15,6 @@ class CreatureModelDataEntity with _CreatureModelDataEntityMixin {
   final int flags;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('ModelName')
   final String modelName;
 

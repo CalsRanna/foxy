@@ -1,9 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
-import 'package:foxy/entity/quest_template_filter_entity.dart';
+import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -85,8 +84,8 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     }
   }
 
-  QuestTemplateFilterEntity _collectFilter() {
-    return QuestTemplateFilterEntity(
+  QuestTemplateFilter _collectFilter() {
+    return QuestTemplateFilter(
       id: idController.collect(),
       title: titleController.collect(),
     );

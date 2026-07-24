@@ -5,7 +5,6 @@ part 'creature_template_entity.g.dart';
 @FoxyBriefEntity()
 @FoxyBriefField.text('localeName')
 @FoxyBriefField.text('localeSubName')
-@FoxyFilterEntity()
 @FoxyFullEntity(table: 'creature_template')
 class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   @FoxyFullField('AIName')
@@ -42,7 +41,6 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   final int dynamicFlags;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('entry', key: true)
   final int entry;
 
@@ -106,7 +104,6 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   final int movementType;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('name')
   final String name;
 
@@ -153,7 +150,6 @@ class CreatureTemplateEntity with _CreatureTemplateEntityMixin {
   final double speedWalk;
 
   @FoxyBriefField()
-  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
   @FoxyFullField('subname')
   final String subName;
 

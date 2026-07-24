@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/map_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'map_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'MapInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_map';
 
@@ -26,7 +43,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   }
 
   Future<int> countMapInfos({
-    MapInfoFilterEntity? filter,
+    MapInfoFilter? filter,
     bool nonInstanceableOnly = false,
   }) async {
     var builder = laconic.table(_table);
@@ -50,7 +67,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefMapInfoEntity>> getBriefMapInfos({
     int page = 1,
-    MapInfoFilterEntity? filter,
+    MapInfoFilter? filter,
     bool nonInstanceableOnly = false,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -124,7 +141,7 @@ class MapInfoRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, MapInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);

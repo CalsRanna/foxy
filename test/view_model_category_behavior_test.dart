@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/condition_filter_entity.dart';
+import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/event/event_bus.dart';
@@ -15,7 +15,6 @@ import 'package:foxy/page/more/more_read_view_model.dart';
 import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
-import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -143,13 +142,13 @@ FeatureEntity _feature(int id, String name) {
 }
 
 final class _ConditionRepository extends ConditionRepository {
-  ConditionFilterEntity? countFilter;
-  ConditionFilterEntity? listFilter;
+  ConditionFilter? countFilter;
+  ConditionFilter? listFilter;
   final destroyStarted = Completer<void>();
   final releaseDestroy = Completer<void>();
 
   @override
-  Future<int> countConditions({ConditionFilterEntity? filter}) async {
+  Future<int> countConditions({ConditionFilter? filter}) async {
     countFilter = filter;
     return 0;
   }
@@ -157,7 +156,7 @@ final class _ConditionRepository extends ConditionRepository {
   @override
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
-    ConditionFilterEntity? filter,
+    ConditionFilter? filter,
   }) async {
     listFilter = filter;
     return const [];

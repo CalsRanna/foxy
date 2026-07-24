@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
-import 'package:foxy/entity/point_of_interest_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'point_of_interest_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'PointOfInterestFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class PointOfInterestRepository with RepositoryMixin {
   static const _table = 'points_of_interest';
   static const _localeTable = 'points_of_interest_locale';
@@ -18,9 +35,7 @@ class PointOfInterestRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countPointsOfInterest({
-    PointOfInterestFilterEntity? filter,
-  }) async {
+  Future<int> countPointsOfInterest({PointOfInterestFilter? filter}) async {
     var builder = laconic.table('$_table AS poi');
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -39,7 +54,7 @@ class PointOfInterestRepository with RepositoryMixin {
 
   Future<List<BriefPointOfInterestEntity>> getBriefPointsOfInterest({
     int page = 1,
-    PointOfInterestFilterEntity? filter,
+    PointOfInterestFilter? filter,
   }) async {
     var builder = laconic.table('$_table AS poi').select([
       'poi.ID',
@@ -112,7 +127,7 @@ class PointOfInterestRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    PointOfInterestFilterEntity? filter,
+    PointOfInterestFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('poi.ID', filter.id);

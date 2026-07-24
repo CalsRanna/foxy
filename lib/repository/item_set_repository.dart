@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/item_set_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_set_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemSetFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_set';
 
@@ -22,7 +39,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countItemSets({ItemSetFilterEntity? filter}) async {
+  Future<int> countItemSets({ItemSetFilter? filter}) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
     return builder.count();
@@ -41,7 +58,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<List<BriefItemSetEntity>> getBriefItemSets({
     int page = 1,
-    ItemSetFilterEntity? filter,
+    ItemSetFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -111,7 +128,7 @@ class ItemSetRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.name.isNotEmpty) {

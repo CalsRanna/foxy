@@ -1,14 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
-import 'package:foxy/entity/quest_faction_reward_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'quest_faction_reward_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'QuestFactionRewardFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class QuestFactionRewardRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_quest_faction_reward';
 
   Future<int> countQuestFactionRewards({
-    QuestFactionRewardFilterEntity? filter,
+    QuestFactionRewardFilter? filter,
   }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -28,7 +40,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
 
   Future<List<BriefQuestFactionRewardEntity>> getBriefQuestFactionRewards({
     int page = 1,
-    QuestFactionRewardFilterEntity? filter,
+    QuestFactionRewardFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -106,7 +118,7 @@ class QuestFactionRewardRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    QuestFactionRewardFilterEntity? filter,
+    QuestFactionRewardFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

@@ -1,9 +1,21 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
-import 'package:foxy/entity/creature_movement_info_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'creature_movement_info_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CreatureMovementInfoFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CreatureMovementInfoRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_creature_movement_info';
 
@@ -18,7 +30,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
   }
 
   Future<int> countCreatureMovementInfos({
-    CreatureMovementInfoFilterEntity? filter,
+    CreatureMovementInfoFilter? filter,
   }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -38,7 +50,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
 
   Future<List<BriefCreatureMovementInfoEntity>> getBriefCreatureMovementInfos({
     int page = 1,
-    CreatureMovementInfoFilterEntity? filter,
+    CreatureMovementInfoFilter? filter,
   }) async {
     final offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table).select(['ID', 'SmoothFacingChaseRate']);
@@ -102,7 +114,7 @@ class CreatureMovementInfoRepository with RepositoryMixin {
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CreatureMovementInfoFilterEntity? filter,
+    CreatureMovementInfoFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

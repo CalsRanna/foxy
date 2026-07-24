@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/entity/item_random_properties_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'item_random_properties_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'ItemRandomPropertiesFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class ItemRandomPropertiesRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_properties';
@@ -24,7 +41,7 @@ class ItemRandomPropertiesRepository
   }
 
   Future<int> countItemRandomProperties({
-    ItemRandomPropertiesFilterEntity? filter,
+    ItemRandomPropertiesFilter? filter,
   }) async {
     var builder = laconic.table(_table);
     builder = _applyFilter(builder, filter);
@@ -44,7 +61,7 @@ class ItemRandomPropertiesRepository
 
   Future<List<BriefItemRandomPropertiesEntity>> getBriefItemRandomProperties({
     int page = 1,
-    ItemRandomPropertiesFilterEntity? filter,
+    ItemRandomPropertiesFilter? filter,
   }) async {
     var offset = (page - 1) * kPageSize;
     var builder = laconic.table(_table);
@@ -120,7 +137,7 @@ class ItemRandomPropertiesRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    ItemRandomPropertiesFilterEntity? filter,
+    ItemRandomPropertiesFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

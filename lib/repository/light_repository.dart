@@ -1,9 +1,26 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/light_entity.dart';
-import 'package:foxy/entity/light_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'light_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'LightFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'continentId',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class LightRepository with RepositoryMixin {
   static const _table = 'foxy.dbc_light';
 
@@ -20,7 +37,7 @@ class LightRepository with RepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countLights({LightFilterEntity? filter}) =>
+  Future<int> countLights({LightFilter? filter}) =>
       _applyFilter(laconic.table(_table), filter).count();
 
   Future<LightEntity> createLight() async =>
@@ -35,7 +52,7 @@ class LightRepository with RepositoryMixin {
 
   Future<List<BriefLightEntity>> getBriefLights({
     int page = 1,
-    LightFilterEntity? filter,
+    LightFilter? filter,
   }) async {
     final rows = await _applyFilter(
       laconic.table(_table).select([
@@ -91,7 +108,7 @@ class LightRepository with RepositoryMixin {
     }
   }
 
-  QueryBuilder _applyFilter(QueryBuilder builder, LightFilterEntity? filter) {
+  QueryBuilder _applyFilter(QueryBuilder builder, LightFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
     if (filter.continentId.isNotEmpty) {

@@ -1,11 +1,28 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
-import 'package:foxy/entity/currency_category_filter_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'currency_category_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'CurrencyCategoryFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'id',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class CurrencyCategoryRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_currency_category';
@@ -23,7 +40,7 @@ class CurrencyCategoryRepository
     return copied.id;
   }
 
-  Future<int> countCurrencyCategories({CurrencyCategoryFilterEntity? filter}) {
+  Future<int> countCurrencyCategories({CurrencyCategoryFilter? filter}) {
     return _applyFilter(laconic.table(_table), filter).count();
   }
 
@@ -40,7 +57,7 @@ class CurrencyCategoryRepository
 
   Future<List<BriefCurrencyCategoryEntity>> getBriefCurrencyCategories({
     int page = 1,
-    CurrencyCategoryFilterEntity? filter,
+    CurrencyCategoryFilter? filter,
   }) async {
     var builder = laconic.table(_table).select([
       'ID',
@@ -119,7 +136,7 @@ class CurrencyCategoryRepository
 
   QueryBuilder _applyFilter(
     QueryBuilder builder,
-    CurrencyCategoryFilterEntity? filter,
+    CurrencyCategoryFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
