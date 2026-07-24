@@ -2,6 +2,15 @@
 
 part of 'disenchant_loot_template_repository.dart';
 
+mixin _DisenchantLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, DisenchantLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class DisenchantLootTemplateFilter {
   final String entry;
   final String name;

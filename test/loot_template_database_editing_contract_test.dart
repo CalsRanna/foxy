@@ -30,6 +30,7 @@ import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   group('loot template dedicated key and Brief boundaries', () {
@@ -347,9 +348,9 @@ void main() {
       expect(source, contains('FoxyPagination('), reason: path);
     }
 
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/creature_loot_template_repository.dart',
-    ).readAsStringSync();
+    );
     final referenceViewModel = File(
       'lib/page/reference_loot_template/'
       'reference_loot_template_detail_view_model.dart',

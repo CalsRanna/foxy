@@ -2,6 +2,15 @@
 
 part of 'skinning_loot_template_repository.dart';
 
+mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, SkinningLootTemplateKey key) {
+    var query = builder;
+    query = query.where('Entry', key.entry);
+    query = query.where('Item', key.item);
+    return query;
+  }
+}
+
 final class SkinningLootTemplateFilter {
   final String entry;
   final String name;

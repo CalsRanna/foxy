@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_emote_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DbcEmoteFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'command',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class DbcEmoteRepository with RepositoryMixin {
+@FoxyRepository(DbcEmoteEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('command')
+class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
   static const _table = 'foxy.dbc_emotes';
 
   Future<int> copyDbcEmote(int key) async {
@@ -43,13 +31,6 @@ class DbcEmoteRepository with RepositoryMixin {
   Future<DbcEmoteEntity> createDbcEmote() async =>
       DbcEmoteEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDbcEmote(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原表情不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefDbcEmoteEntity>> getBriefDbcEmotes({
     int page = 1,
     DbcEmoteFilter? filter,
@@ -67,11 +48,6 @@ class DbcEmoteRepository with RepositoryMixin {
     return rows
         .map((row) => BriefDbcEmoteEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<DbcEmoteEntity?> getDbcEmote(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : DbcEmoteEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DbcEmoteEntity>> getDbcEmotes() async {
@@ -93,23 +69,6 @@ class DbcEmoteRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateDbcEmote(int originalKey, DbcEmoteEntity emote) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(emote.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原表情不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的表情 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, DbcEmoteFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -121,9 +80,5 @@ class DbcEmoteRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -6,6 +6,7 @@ import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 reference_loot_template 的 10 个标量物理列', () {
@@ -161,9 +162,9 @@ void main() {
       'Entry',
       'Item',
     });
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/reference_loot_template_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, isNot(contains(".table('item_template')")));
     expect(source, isNot(contains('reference.abs()')));
     expect(source, contains("builder = builder.groupBy('Entry')"));
@@ -171,9 +172,9 @@ void main() {
   });
 
   test('Repository 复制行时保留 Reference 并复用单表写入路径', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/reference_loot_template_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("entry: await nextMaxPlusOne(_table, 'Entry')"));
     expect(source, contains('await storeLootTemplate(copied);'));
     expect(source, isNot(contains("json['Reference'] = nextItem")));

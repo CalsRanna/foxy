@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -11,9 +12,9 @@ void main() {
   });
 
   test('Repository 使用原 key、完整 candidate 和 DBC 单表写入边界', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('int originalKey'));
     expect(source, contains(').update(spell.toJson())'));
     expect(source, contains('if (matchedRows == 0)'));

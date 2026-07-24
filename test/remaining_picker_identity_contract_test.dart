@@ -6,6 +6,7 @@ import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
 import 'package:foxy/entity/waypoint_data_key.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('DBC Picker Brief 只读取精确物理列名', () {
@@ -23,9 +24,9 @@ void main() {
       const WaypointDataKey(id: 10),
     );
 
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/waypoint_data_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, isNot(contains('createWaypointData')));
     expect(source, isNot(contains('copyWaypointData')));
     expect(source, isNot(contains('destroyWaypointData')));

@@ -7,6 +7,7 @@ import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/constant/item_extended_cost_constants.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('ItemExtendedCost Entity 精确覆盖 16 个物理列且全部为标量', () {
@@ -142,9 +143,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/item_extended_cost_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('int originalKey'));
     expect(source, contains('.update(itemExtendedCost.toJson())'));
     expect(source, contains('matchedRows == 0'));

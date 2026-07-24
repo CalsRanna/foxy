@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'scaling_stat_value_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ScalingStatValueFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'charlevel',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ScalingStatValueRepository with RepositoryMixin {
+@FoxyRepository(ScalingStatValueEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('charlevel')
+class ScalingStatValueRepository
+    with RepositoryMixin, _ScalingStatValueRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
   Future<int> copyScalingStatValue(int key) async {
@@ -48,13 +37,6 @@ class ScalingStatValueRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyScalingStatValue(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
     int page = 1,
     ScalingStatValueFilter? filter,
@@ -79,13 +61,6 @@ class ScalingStatValueRepository with RepositoryMixin {
     return rows
         .map((row) => BriefScalingStatValueEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<ScalingStatValueEntity?> getScalingStatValue(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : ScalingStatValueEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<ScalingStatValueEntity>> getScalingStatValues() async {
@@ -175,9 +150,5 @@ class ScalingStatValueRepository with RepositoryMixin {
     if (duplicates > 0) {
       throw StateError('Charlevel ${value.charlevel} 已存在');
     }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

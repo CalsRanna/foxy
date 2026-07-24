@@ -2,6 +2,12 @@
 
 part of 'achievement_criteria_repository.dart';
 
+mixin _AchievementCriteriaRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class AchievementCriteriaFilter {
   final String id;
   final String achievementId;

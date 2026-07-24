@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -17,9 +16,9 @@ void main() {
   });
 
   test('ZoneIntroMusic Repository 显式分配创建键并用原始键写入', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/zone_intro_music_repository.dart',
-    ).readAsStringSync();
+    );
 
     expect(source, contains('Future<int> copyZoneIntroMusic('));
     expect(source, contains('Future<void> storeZoneIntroMusic('));

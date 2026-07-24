@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -10,9 +9,9 @@ void main() {
   });
 
   test('TalentTab Repository 使用显式键、完整 candidate 和单表边界', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/talent_tab_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('int key'));
     expect(source, contains('Future<void> storeTalentTab('));
     expect(source, contains('int originalKey'));

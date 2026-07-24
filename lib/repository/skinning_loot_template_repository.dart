@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'skinning_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SkinningLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SkinningLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(SkinningLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class SkinningLootTemplateRepository
+    with RepositoryMixin, _SkinningLootTemplateRepositoryMixin {
   static const _table = 'skinning_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -255,9 +244,5 @@ class SkinningLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SkinningLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

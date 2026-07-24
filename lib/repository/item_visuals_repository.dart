@@ -6,17 +6,9 @@ import 'package:laconic/laconic.dart';
 
 part 'item_visuals_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemVisualsFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ItemVisualsRepository with RepositoryMixin {
+@FoxyRepository(ItemVisualsEntity)
+@FoxyFilter.text('id')
+class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
   static const _table = 'foxy.dbc_item_visuals';
 
   Future<int> copyItemVisual(int key) async {
@@ -121,9 +113,5 @@ class ItemVisualsRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -2,6 +2,51 @@
 
 part of 'quest_sort_repository.dart';
 
+mixin _QuestSortRepositoryMixin on RepositoryMixin {
+  Future<void> destroyQuestSort(int key) async {
+    final deletedRows = await _whereKey(
+      laconic.table('foxy.dbc_quest_sort'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<QuestSortEntity?> getQuestSort(int key) async {
+    final results = await _whereKey(
+      laconic.table('foxy.dbc_quest_sort'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return QuestSortEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> updateQuestSort(
+    int originalKey,
+    QuestSortEntity questSort,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table('foxy.dbc_quest_sort'),
+        originalKey,
+      ).update(questSort.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class QuestSortFilter {
   final String id;
   final String name;

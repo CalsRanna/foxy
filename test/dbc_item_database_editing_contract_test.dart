@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('DbcItem Entity 精确覆盖八个标量物理列', () {
@@ -28,9 +29,9 @@ void main() {
   });
 
   test('DbcItem Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/dbc_item_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<int> copyDbcItem('));
     expect(source, contains('Future<void> storeDbcItem('));
     expect(source, contains('if (item.id <= 0)'));

@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'pickpocketing_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'PickpocketingLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class PickpocketingLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(PickpocketingLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class PickpocketingLootTemplateRepository
+    with RepositoryMixin, _PickpocketingLootTemplateRepositoryMixin {
   static const _table = 'pickpocketing_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -259,12 +248,5 @@ class PickpocketingLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(
-    QueryBuilder builder,
-    PickpocketingLootTemplateKey key,
-  ) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

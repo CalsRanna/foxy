@@ -127,9 +127,14 @@ These are deliberate repository-wide invariants, enforced by many tests.
 - A brief entity exposes `key`. Use a plain `int` or `String` for a single-column locator. Create a dedicated immutable `...Key` value object only for composite or genuinely special locators; implement value equality and `hashCode`.
 - Filter query models belong to Repository libraries and use the `...Filter`
   suffix without `Entity`. Repository-specific Filters are generated from
-  `@FoxyRepositoryFilter`. Do not share one Filter type across Repository
-  libraries; each Repository owns its query contract even when field shapes
-  currently match.
+  repeatable `@FoxyFilter.text/integer/decimal/boolean` annotations. Standard
+  persisted-row repositories use `@FoxyRepository(EntityType)` to generate
+  missing public `get/store/update/destroy` row operations and physical-key
+  query binding from Entity metadata. A Repository method with the same
+  operation signature is a complete special implementation and suppresses
+  only that generated operation; do not add thin forwarding wrappers. Do not
+  share one Filter type across Repository libraries; each Repository owns its
+  query contract even when field shapes currently match.
 
 ### Explicit row identity
 

@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'item_extended_cost_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemExtendedCostFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ItemExtendedCostRepository with RepositoryMixin {
+@FoxyRepository(ItemExtendedCostEntity)
+@FoxyFilter.text('id')
+class ItemExtendedCostRepository
+    with RepositoryMixin, _ItemExtendedCostRepositoryMixin {
   static const _table = 'foxy.dbc_item_extended_cost';
 
   Future<int> copyItemExtendedCost(int key) async {
@@ -37,13 +30,6 @@ class ItemExtendedCostRepository with RepositoryMixin {
 
   Future<ItemExtendedCostEntity> createItemExtendedCost() async {
     return ItemExtendedCostEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyItemExtendedCost(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefItemExtendedCostEntity>> getBriefItemExtendedCosts({
@@ -78,12 +64,6 @@ class ItemExtendedCostRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<ItemExtendedCostEntity?> getItemExtendedCost(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemExtendedCostEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<ItemExtendedCostEntity>> getItemExtendedCosts() async {
     var results = await laconic.table(_table).get();
     return results
@@ -107,26 +87,6 @@ class ItemExtendedCostRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateItemExtendedCost(
-    int originalKey,
-    ItemExtendedCostEntity itemExtendedCost,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(itemExtendedCost.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的扩展价格 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemExtendedCostFilter? filter,
@@ -144,9 +104,5 @@ class ItemExtendedCostRepository with RepositoryMixin {
       throw StateError('扩展价格编号已超出 signed int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

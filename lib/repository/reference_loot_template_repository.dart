@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'reference_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ReferenceLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class ReferenceLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(ReferenceLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class ReferenceLootTemplateRepository
+    with RepositoryMixin, _ReferenceLootTemplateRepositoryMixin {
   static const _table = 'reference_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -257,9 +246,5 @@ class ReferenceLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, ReferenceLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

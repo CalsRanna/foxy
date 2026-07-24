@@ -7,21 +7,8 @@ import 'package:laconic/laconic.dart';
 
 part 'item_limit_category_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemLimitCategoryFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class ItemLimitCategoryRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_item_limit_category';

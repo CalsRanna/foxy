@@ -2,6 +2,12 @@
 
 part of 'sound_provider_preferences_repository.dart';
 
+mixin _SoundProviderPreferencesRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class SoundProviderPreferencesFilter {
   final String id;
   final String description;

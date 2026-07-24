@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_icon_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SpellIconFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SpellIconRepository with RepositoryMixin {
+@FoxyRepository(SpellIconEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class SpellIconRepository with RepositoryMixin, _SpellIconRepositoryMixin {
   static const _table = 'foxy.dbc_spell_icon';
 
   Future<int> copySpellIcon(int key) async {
@@ -44,13 +32,6 @@ class SpellIconRepository with RepositoryMixin {
     return SpellIconEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroySpellIcon(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSpellIconEntity>> getBriefSpellIcons({
     int page = 1,
     SpellIconFilter? filter,
@@ -65,12 +46,6 @@ class SpellIconRepository with RepositoryMixin {
     return results
         .map((e) => BriefSpellIconEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<SpellIconEntity?> getSpellIcon(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellIconEntity.fromJson(results.first.toMap());
   }
 
   Future<List<SpellIconEntity>> getSpellIcons() async {
@@ -92,23 +67,6 @@ class SpellIconRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateSpellIcon(int originalKey, SpellIconEntity icon) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(icon.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术图标不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术图标 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SpellIconFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -122,9 +80,5 @@ class SpellIconRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

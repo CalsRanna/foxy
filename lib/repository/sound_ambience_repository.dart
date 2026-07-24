@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'sound_ambience_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SoundAmbienceFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SoundAmbienceRepository with RepositoryMixin {
+@FoxyRepository(SoundAmbienceEntity)
+@FoxyFilter.text('id')
+class SoundAmbienceRepository
+    with RepositoryMixin, _SoundAmbienceRepositoryMixin {
   static const _table = 'foxy.dbc_sound_ambience';
 
   Future<int> copySoundAmbience(int key) async {
@@ -35,13 +28,6 @@ class SoundAmbienceRepository with RepositoryMixin {
   Future<SoundAmbienceEntity> createSoundAmbience() async =>
       SoundAmbienceEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroySoundAmbience(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSoundAmbienceEntity>> getBriefSoundAmbiences({
     int page = 1,
     SoundAmbienceFilter? filter,
@@ -53,13 +39,6 @@ class SoundAmbienceRepository with RepositoryMixin {
     return rows
         .map((row) => BriefSoundAmbienceEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<SoundAmbienceEntity?> getSoundAmbience(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : SoundAmbienceEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<SoundAmbienceEntity>> getSoundAmbiences() async {
@@ -83,34 +62,10 @@ class SoundAmbienceRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateSoundAmbience(
-    int originalKey,
-    SoundAmbienceEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原环境声音不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的环境声音 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SoundAmbienceFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

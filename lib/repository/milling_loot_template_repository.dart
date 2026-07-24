@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'milling_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'MillingLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class MillingLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(MillingLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class MillingLootTemplateRepository
+    with RepositoryMixin, _MillingLootTemplateRepositoryMixin {
   static const _table = 'milling_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -253,9 +242,5 @@ class MillingLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, MillingLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

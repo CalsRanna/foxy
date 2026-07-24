@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/area_table_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回完整物理 ID 标量', () {
@@ -18,9 +19,9 @@ void main() {
   });
 
   test('AreaTable Repository 使用显式创建键、原始键更新和受影响行结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/area_table_repository.dart',
-    ).readAsStringSync();
+    );
 
     expect(source, contains('Future<int> copyAreaTable('));
     expect(source, contains('Future<AreaTableEntity> createAreaTable()'));

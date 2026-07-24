@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'dbc_item_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DbcItemFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'handEquippableOnly',
-      type: FoxyFilterFieldType.boolean,
-      defaultValue: false,
-    ),
-  ],
-)
-class DbcItemRepository with RepositoryMixin {
+@FoxyRepository(DbcItemEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.boolean('handEquippableOnly')
+class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
   static const _table = 'foxy.dbc_item';
   static const handEquippableInventoryTypes = [
     13,
@@ -51,13 +39,6 @@ class DbcItemRepository with RepositoryMixin {
   Future<DbcItemEntity> createDbcItem() async =>
       DbcItemEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDbcItem(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefDbcItemEntity>> getBriefDbcItems({
     int page = 1,
     DbcItemFilter? filter,
@@ -75,11 +56,6 @@ class DbcItemRepository with RepositoryMixin {
         .offset((page - 1) * kPageSize)
         .get();
     return rows.map((row) => BriefDbcItemEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<DbcItemEntity?> getDbcItem(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : DbcItemEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DbcItemEntity>> getDbcItems() async {
@@ -101,23 +77,6 @@ class DbcItemRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateDbcItem(int originalKey, DbcItemEntity item) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(item.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原 DBC 物品不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的 DBC 物品 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -125,9 +84,5 @@ class DbcItemRepository with RepositoryMixin {
       builder = builder.whereIn('InventoryType', handEquippableInventoryTypes);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

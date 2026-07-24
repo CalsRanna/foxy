@@ -8,23 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'item_random_suffix_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'ItemRandomSuffixFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(ItemRandomSuffixEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class ItemRandomSuffixRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _ItemRandomSuffixRepositoryMixin {
   static const _table = 'foxy.dbc_item_random_suffix';
 
   @override
@@ -50,13 +41,6 @@ class ItemRandomSuffixRepository
     return ItemRandomSuffixEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyItemRandomSuffix(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefItemRandomSuffixEntity>> getBriefItemRandomSuffixes({
     int page = 1,
     ItemRandomSuffixFilter? filter,
@@ -71,12 +55,6 @@ class ItemRandomSuffixRepository
     return results
         .map((e) => BriefItemRandomSuffixEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<ItemRandomSuffixEntity?> getItemRandomSuffix(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return ItemRandomSuffixEntity.fromJson(results.first.toMap());
   }
 
   Future<List<ItemRandomSuffixEntity>> getItemRandomSuffixes() async {
@@ -111,26 +89,6 @@ class ItemRandomSuffixRepository
     }
   }
 
-  Future<void> updateItemRandomSuffix(
-    int originalKey,
-    ItemRandomSuffixEntity suffix,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(suffix.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的随机后缀 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     ItemRandomSuffixFilter? filter,
@@ -147,9 +105,5 @@ class ItemRandomSuffixRepository
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

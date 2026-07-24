@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'area_table_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'AreaTableFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(AreaTableEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class AreaTableRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _AreaTableRepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
 
   @override
@@ -53,19 +42,6 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       id: await nextMaxPlusOne(_table, 'ID'),
       areaBit: await nextMaxPlusOne(_table, 'AreaBit'),
     );
-  }
-
-  Future<void> destroyAreaTable(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原区域不存在，可能已被其他操作修改或删除');
-    }
-  }
-
-  Future<AreaTableEntity?> getAreaTable(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return AreaTableEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getAreaTableLocales(
@@ -131,23 +107,6 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateAreaTable(int originalKey, AreaTableEntity area) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(area.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原区域不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的区域 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -161,9 +120,5 @@ class AreaTableRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

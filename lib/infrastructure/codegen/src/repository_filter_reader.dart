@@ -12,22 +12,15 @@ final class RepositoryFilterReader {
   const RepositoryFilterReader();
 
   Future<RepositoryFilterGenerationModel> read(
-    Element element,
-    ConstantReader annotation,
+    ClassElement element,
+    List<DartObject> annotations,
     BuildStep buildStep,
   ) async {
-    if (element is! ClassElement) {
-      _fail(
-        '@FoxyRepositoryFilter 只能标注 Repository class。',
-        element,
-        '把注解移动到具体 Repository class。',
-      );
-    }
     final repositoryClassName = element.name;
     if (repositoryClassName == null ||
         !repositoryClassName.endsWith('Repository')) {
       _fail(
-        '@FoxyRepositoryFilter 只能标注以 Repository 结尾的 class。',
+        '@FoxyFilter 只能标注以 Repository 结尾的 class。',
         element,
         '使用具体 Repository class 作为 Filter owner。',
       );
@@ -44,15 +37,6 @@ final class RepositoryFilterReader {
       );
     }
 
-    final filterClassName = annotation.read('name').stringValue;
-    if (!RegExp(r'^[A-Z][A-Za-z0-9]*Filter$').hasMatch(filterClassName)) {
-      _fail(
-        '$repositoryClassName 的 Filter 名称 $filterClassName 不合法。',
-        element,
-        '使用以 Filter 结尾且不带 Entity 后缀的 UpperCamelCase 名称。',
-      );
-    }
-
     final source = await buildStep.readAsString(buildStep.inputId);
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
     if (!source.contains("part '$partName';") &&
@@ -64,24 +48,20 @@ final class RepositoryFilterReader {
       );
     }
 
-    final fieldObjects = annotation.read('fields').listValue;
-    if (fieldObjects.isEmpty) {
-      _fail(
-        '$filterClassName 必须至少声明一个字段。',
-        element,
-        '在 FoxyRepositoryFilter.fields 中声明查询字段。',
-      );
-    }
-
+    final baseName = repositoryClassName.substring(
+      0,
+      repositoryClassName.length - 'Repository'.length,
+    );
+    final filterClassName = '${baseName}Filter';
     final names = <String>{};
     final fields = <RepositoryFilterFieldModel>[];
-    for (final object in fieldObjects) {
+    for (final object in annotations) {
       final field = _readField(object, filterClassName, element);
       if (!names.add(field.name)) {
         _fail(
           '$filterClassName 重复声明字段 ${field.name}。',
           element,
-          '确保 Filter 字段名唯一。',
+          '确保每个 @FoxyFilter 字段名唯一。',
         );
       }
       fields.add(field);
@@ -116,14 +96,14 @@ final class RepositoryFilterReader {
         ?.toIntValue();
     if (typeIndex == null ||
         typeIndex < 0 ||
-        typeIndex >= FoxyFilterFieldType.values.length) {
+        typeIndex >= FoxyFilterType.values.length) {
       _fail(
         '$filterClassName.$name 的类型无法识别。',
         element,
-        '使用 FoxyFilterFieldType 中的类型。',
+        '使用 FoxyFilter 的 text/integer/decimal/boolean 具名构造函数。',
       );
     }
-    final type = FoxyFilterFieldType.values[typeIndex];
+    final type = FoxyFilterType.values[typeIndex];
     final defaultValue = _convertDefault(
       reader.read('defaultValue').objectValue,
       type,
@@ -132,7 +112,7 @@ final class RepositoryFilterReader {
       _fail(
         '$filterClassName.$name 的默认值与 ${type.name} 类型不兼容。',
         element,
-        '提供与 Filter 字段类型匹配的常量默认值。',
+        '通过对应的 FoxyFilter 具名构造函数传入正确默认值。',
       );
     }
 
@@ -143,13 +123,13 @@ final class RepositoryFilterReader {
     );
   }
 
-  Object? _convertDefault(DartObject object, FoxyFilterFieldType type) =>
+  Object? _convertDefault(DartObject object, FoxyFilterType type) =>
       switch (type) {
-        FoxyFilterFieldType.boolean => object.toBoolValue(),
-        FoxyFilterFieldType.decimal =>
+        FoxyFilterType.boolean => object.toBoolValue(),
+        FoxyFilterType.decimal =>
           object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
-        FoxyFilterFieldType.integer => object.toIntValue(),
-        FoxyFilterFieldType.text => object.toStringValue(),
+        FoxyFilterType.integer => object.toIntValue(),
+        FoxyFilterType.text => object.toStringValue(),
       };
 
   String _toSnakeCase(String value) {

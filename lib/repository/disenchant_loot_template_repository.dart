@@ -7,22 +7,11 @@ import 'package:laconic/laconic.dart';
 
 part 'disenchant_loot_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DisenchantLootTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class DisenchantLootTemplateRepository with RepositoryMixin {
+@FoxyRepository(DisenchantLootTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+class DisenchantLootTemplateRepository
+    with RepositoryMixin, _DisenchantLootTemplateRepositoryMixin {
   static const _table = 'disenchant_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
@@ -255,9 +244,5 @@ class DisenchantLootTemplateRepository with RepositoryMixin {
       }
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, DisenchantLootTemplateKey key) {
-    return builder.where('Entry', key.entry).where('Item', key.item);
   }
 }

@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -15,9 +14,9 @@ void main() {
   });
 
   test('SoundAmbience Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/sound_ambience_repository.dart',
-    ).readAsStringSync();
+    );
 
     expect(source, contains('Future<int> copySoundAmbience('));
     expect(source, contains('Future<void> storeSoundAmbience('));

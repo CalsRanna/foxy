@@ -6,6 +6,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/spell_item_enchantment_constants.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('主 Entity 精确覆盖 38 个物理列且全部为标量', () {
@@ -167,9 +168,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_item_enchantment_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell_item_enchantment/spell_item_enchantment_detail_view_model.dart',
     ).readAsStringSync();

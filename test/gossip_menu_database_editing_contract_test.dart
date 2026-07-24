@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('GossipMenuKey 与 Brief 完整覆盖 MenuID + TextID', () {
@@ -16,9 +17,9 @@ void main() {
   });
 
   test('Repository 使用原 key、完整 candidate 和单表写入边界', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/gossip_menu_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('GossipMenuKey originalKey'));
     expect(source, contains(').update(menu.toJson())'));
     expect(source, contains('if (matchedRows == 0)'));

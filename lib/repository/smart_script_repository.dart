@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'smart_script_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SmartScriptFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entryOrGuid',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'comment',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SmartScriptRepository with RepositoryMixin {
+@FoxyRepository(SmartScriptEntity)
+@FoxyFilter.text('entryOrGuid')
+@FoxyFilter.text('comment')
+class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
   static const _table = 'smart_scripts';
   static const primaryKeyColumns = {'entryorguid', 'source_type', 'id', 'link'};
 
@@ -65,13 +53,6 @@ class SmartScriptRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroySmartScript(SmartScriptKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
     int page = 1,
     SmartScriptFilter? filter,
@@ -102,46 +83,9 @@ class SmartScriptRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<SmartScriptEntity?> getSmartScript(SmartScriptKey key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SmartScriptEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<SmartScriptEntity>> getSmartScripts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeSmartScript(SmartScriptEntity script) async {
-    try {
-      await laconic.table(_table).insert([script.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('SmartAI 脚本主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateSmartScript(
-    SmartScriptKey originalKey,
-    SmartScriptEntity script,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(script.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的 SmartAI 脚本主键已存在，无法保存');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilter? filter) {
@@ -157,13 +101,5 @@ class SmartScriptRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SmartScriptKey key) {
-    return builder
-        .where('entryorguid', key.entryOrGuid)
-        .where('source_type', key.sourceType)
-        .where('id', key.id)
-        .where('link', key.link);
   }
 }

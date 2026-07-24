@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_model_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureModelInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureModelInfoRepository with RepositoryMixin {
+@FoxyRepository(CreatureModelInfoEntity)
+@FoxyFilter.text('id')
+class CreatureModelInfoRepository
+    with RepositoryMixin, _CreatureModelInfoRepositoryMixin {
   static const _table = 'creature_model_info';
 
   Future<int> copyCreatureModelInfo(int key) async {
@@ -44,13 +37,6 @@ class CreatureModelInfoRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroyCreatureModelInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物模型信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureModelInfoEntity>> getBriefCreatureModelInfos({
     int page = 1,
     CreatureModelInfoFilter? filter,
@@ -71,12 +57,6 @@ class CreatureModelInfoRepository with RepositoryMixin {
     return results
         .map((e) => BriefCreatureModelInfoEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<CreatureModelInfoEntity?> getCreatureModelInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureModelInfoEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureModelInfoEntity>> getCreatureModelInfos() async {
@@ -100,26 +80,6 @@ class CreatureModelInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateCreatureModelInfo(
-    int originalKey,
-    CreatureModelInfoEntity info,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(info.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物模型信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物模型信息 DisplayID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureModelInfoFilter? filter,
@@ -129,9 +89,5 @@ class CreatureModelInfoRepository with RepositoryMixin {
       builder = builder.where('DisplayID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('DisplayID', key);
   }
 }

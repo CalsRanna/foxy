@@ -7,21 +7,8 @@ import 'package:laconic/laconic.dart';
 
 part 'totem_category_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'TotemCategoryFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class TotemCategoryRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
   static const _table = 'foxy.dbc_totem_category';
 

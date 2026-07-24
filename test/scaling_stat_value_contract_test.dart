@@ -7,6 +7,7 @@ import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/scaling_stat_value_constants.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 ScalingStatValues.dbc 的 24 个标量物理列', () {
@@ -150,9 +151,9 @@ void main() {
   });
 
   test('Repository 按 Charlevel 导出并使用原始键写入当前表', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/scaling_stat_value_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
     ).readAsStringSync();

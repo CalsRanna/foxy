@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'quest_sort_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'QuestSortFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(QuestSortEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class QuestSortRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestSortRepositoryMixin {
   static const _table = 'foxy.dbc_quest_sort';
 
   @override
@@ -49,13 +38,6 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return QuestSortEntity(id: await _getNextId());
   }
 
-  Future<void> destroyQuestSort(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefQuestSortEntity>> getBriefQuestSorts({
     int page = 1,
     QuestSortFilter? filter,
@@ -71,12 +53,6 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results
         .map((e) => BriefQuestSortEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<QuestSortEntity?> getQuestSort(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return QuestSortEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getQuestSortLocales(
@@ -109,26 +85,6 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateQuestSort(
-    int originalKey,
-    QuestSortEntity questSort,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(questSort.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的任务排序 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, QuestSortFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -150,9 +106,5 @@ class QuestSortRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       throw StateError('任务排序编号已超出 QuestSortID 可引用范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

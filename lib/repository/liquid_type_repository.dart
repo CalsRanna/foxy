@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'liquid_type_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'LiquidTypeFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class LiquidTypeRepository with RepositoryMixin {
+@FoxyRepository(LiquidTypeEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
   static const _table = 'foxy.dbc_liquid_type';
 
   Future<int> copyLiquidType(int key) async {
@@ -43,13 +31,6 @@ class LiquidTypeRepository with RepositoryMixin {
   Future<LiquidTypeEntity> createLiquidType() async =>
       LiquidTypeEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyLiquidType(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原液体类型不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefLiquidTypeEntity>> getBriefLiquidTypes({
     int page = 1,
     LiquidTypeFilter? filter,
@@ -67,11 +48,6 @@ class LiquidTypeRepository with RepositoryMixin {
     return rows
         .map((row) => BriefLiquidTypeEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<LiquidTypeEntity?> getLiquidType(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : LiquidTypeEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<LiquidTypeEntity>> getLiquidTypes() async {
@@ -93,26 +69,6 @@ class LiquidTypeRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateLiquidType(
-    int originalKey,
-    LiquidTypeEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原液体类型不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的液体类型 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, LiquidTypeFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -120,9 +76,5 @@ class LiquidTypeRepository with RepositoryMixin {
       builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

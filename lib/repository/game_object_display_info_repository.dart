@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_display_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'GameObjectDisplayInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'modelName',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class GameObjectDisplayInfoRepository with RepositoryMixin {
+@FoxyRepository(GameObjectDisplayInfoEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('modelName')
+class GameObjectDisplayInfoRepository
+    with RepositoryMixin, _GameObjectDisplayInfoRepositoryMixin {
   static const _table = 'foxy.dbc_game_object_display_info';
 
   Future<int> copyGameObjectDisplayInfo(int key) async {
@@ -44,13 +33,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
   Future<GameObjectDisplayInfoEntity> createGameObjectDisplayInfo() async =>
       GameObjectDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyGameObjectDisplayInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefGameObjectDisplayInfoEntity>>
   getBriefGameObjectDisplayInfos({
     int page = 1,
@@ -68,13 +50,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     return rows
         .map((row) => BriefGameObjectDisplayInfoEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<GameObjectDisplayInfoEntity?> getGameObjectDisplayInfo(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : GameObjectDisplayInfoEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<GameObjectDisplayInfoEntity>> getGameObjectDisplayInfos() async {
@@ -100,26 +75,6 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateGameObjectDisplayInfo(
-    int originalKey,
-    GameObjectDisplayInfoEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的游戏物体显示信息 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     GameObjectDisplayInfoFilter? filter,
@@ -134,9 +89,5 @@ class GameObjectDisplayInfoRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_immunity_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureImmunityFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'comment',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureImmunityRepository with RepositoryMixin {
+@FoxyRepository(CreatureImmunityEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('comment')
+class CreatureImmunityRepository
+    with RepositoryMixin, _CreatureImmunityRepositoryMixin {
   static const _table = 'creature_immunities';
 
   Future<int> copyCreatureImmunity(int key) async {
@@ -45,13 +34,6 @@ class CreatureImmunityRepository with RepositoryMixin {
 
   Future<CreatureImmunityEntity> createCreatureImmunity() async {
     return CreatureImmunityEntity(id: await nextMaxPlusOne(_table, 'ID'));
-  }
-
-  Future<void> destroyCreatureImmunity(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物免疫配置不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefCreatureImmunityEntity>> getBriefCreatureImmunities({
@@ -84,12 +66,6 @@ class CreatureImmunityRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureImmunityEntity?> getCreatureImmunity(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureImmunityEntity.fromJson(results.first.toMap());
-  }
-
   Future<void> storeCreatureImmunity(CreatureImmunityEntity immunity) async {
     if (immunity.id <= 0) {
       throw StateError('生物免疫配置 ID 必须在新建表单打开时显式分配');
@@ -99,26 +75,6 @@ class CreatureImmunityRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('生物免疫配置 ${immunity.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureImmunity(
-    int originalKey,
-    CreatureImmunityEntity immunity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(immunity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物免疫配置不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物免疫配置 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -140,9 +96,5 @@ class CreatureImmunityRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -7,6 +7,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Achievement Entity 精确覆盖 62 个标量物理列', () {
@@ -163,12 +164,12 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/achievement_repository.dart',
-    ).readAsStringSync();
-    final criteriaRepository = File(
+    );
+    final criteriaRepository = readLocalDartLibrarySource(
       'lib/repository/achievement_criteria_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/achievement/achievement_detail_view_model.dart',
     ).readAsStringSync();

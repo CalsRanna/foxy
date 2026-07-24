@@ -8,25 +8,30 @@ const annotationAsset =
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
 
 const annotationSource = r'''
-enum FoxyFilterFieldType { boolean, decimal, integer, text }
+enum FoxyFilterType { boolean, decimal, integer, text }
 
-class FoxyRepositoryFilterField {
+class FoxyFilter {
   final Object defaultValue;
   final String name;
-  final FoxyFilterFieldType type;
+  final FoxyFilterType type;
 
-  const FoxyRepositoryFilterField({
-    required this.name,
-    required this.type,
-    required this.defaultValue,
-  });
+  const FoxyFilter.boolean(this.name, {bool this.defaultValue = false})
+    : type = FoxyFilterType.boolean;
+
+  const FoxyFilter.decimal(this.name, {double this.defaultValue = 0.0})
+    : type = FoxyFilterType.decimal;
+
+  const FoxyFilter.integer(this.name, {int this.defaultValue = 0})
+    : type = FoxyFilterType.integer;
+
+  const FoxyFilter.text(this.name, {String this.defaultValue = ''})
+    : type = FoxyFilterType.text;
 }
 
-class FoxyRepositoryFilter {
-  final List<FoxyRepositoryFilterField> fields;
-  final String name;
+class FoxyRepository {
+  final Type entity;
 
-  const FoxyRepositoryFilter({required this.name, required this.fields});
+  const FoxyRepository(this.entity);
 }
 ''';
 
@@ -35,41 +40,20 @@ import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 
 part 'sample_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SampleFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'kind',
-      type: FoxyFilterFieldType.integer,
-      defaultValue: -1,
-    ),
-    FoxyRepositoryFilterField(
-      name: 'ratio',
-      type: FoxyFilterFieldType.decimal,
-      defaultValue: 0,
-    ),
-    FoxyRepositoryFilterField(
-      name: 'enabled',
-      type: FoxyFilterFieldType.boolean,
-      defaultValue: false,
-    ),
-  ],
-)
+@FoxyFilter.text('id')
+@FoxyFilter.integer('kind', defaultValue: -1)
+@FoxyFilter.decimal('ratio')
+@FoxyFilter.boolean('enabled')
 class SampleRepository {}
 ''';
 
 void main() {
-  test('Repository 注解生成无 Entity 后缀的 Filter DTO', () async {
+  test('可重复 FoxyFilter 注解生成无 Entity 后缀的 Filter DTO', () async {
     await testBuilder(
-      foxyRepositoryFilterBuilder(BuilderOptions.empty),
+      foxyRepositoryBuilder(BuilderOptions.empty),
       {annotationAsset: annotationSource, repositoryAsset: repositorySource},
       outputs: {
-        'foxy|lib/repository/sample_repository.foxy_repository_filter.g.part':
+        'foxy|lib/repository/sample_repository.foxy_repository.g.part':
             decodedMatches(
               allOf(<Matcher>[
                 contains('final class SampleFilter'),
@@ -95,37 +79,35 @@ void main() {
     );
   });
 
-  test('Repository Filter 拒绝 Entity 后缀和重复字段', () async {
-    final source = repositorySource
-        .replaceFirst("'SampleFilter'", "'SampleFilterEntity'")
-        .replaceFirst("name: 'kind'", "name: 'id'");
+  test('Filter 名称由 Repository 推导且重复字段会失败', () async {
+    final source = repositorySource.replaceFirst(
+      "@FoxyFilter.integer('kind', defaultValue: -1)",
+      "@FoxyFilter.integer('id', defaultValue: -1)",
+    );
     final logs = <String>[];
 
     await testBuilder(
-      foxyRepositoryFilterBuilder(BuilderOptions.empty),
+      foxyRepositoryBuilder(BuilderOptions.empty),
       {annotationAsset: annotationSource, repositoryAsset: source},
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(
-      logs.any((log) => log.contains('Filter 名称') || log.contains('重复声明')),
-      isTrue,
-    );
+    expect(logs.any((log) => log.contains('重复声明字段 id')), isTrue);
   });
 
-  test('Repository Filter 默认值必须匹配类型', () async {
+  test('非法字段名在生成期给出明确诊断', () async {
     final source = repositorySource.replaceFirst(
-      "type: FoxyFilterFieldType.integer,\n      defaultValue: -1,",
-      "type: FoxyFilterFieldType.integer,\n      defaultValue: '',",
+      "@FoxyFilter.text('id')",
+      "@FoxyFilter.text('bad-name')",
     );
     final logs = <String>[];
 
     await testBuilder(
-      foxyRepositoryFilterBuilder(BuilderOptions.empty),
+      foxyRepositoryBuilder(BuilderOptions.empty),
       {annotationAsset: annotationSource, repositoryAsset: source},
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('默认值')), isTrue);
+    expect(logs.any((log) => log.contains('不是合法 lowerCamelCase')), isTrue);
   });
 }

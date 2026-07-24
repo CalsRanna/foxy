@@ -6,27 +6,12 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_template_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureTemplateFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'entry',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'subName',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureTemplateRepository with RepositoryMixin {
+@FoxyRepository(CreatureTemplateEntity)
+@FoxyFilter.text('entry')
+@FoxyFilter.text('name')
+@FoxyFilter.text('subName')
+class CreatureTemplateRepository
+    with RepositoryMixin, _CreatureTemplateRepositoryMixin {
   static const _table = 'creature_template';
 
   Future<int> copyCreatureTemplate(int key) async {
@@ -76,13 +61,6 @@ class CreatureTemplateRepository with RepositoryMixin {
     return CreatureTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
-  Future<void> destroyCreatureTemplate(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilter? filter,
@@ -114,12 +92,6 @@ class CreatureTemplateRepository with RepositoryMixin {
     return results
         .map((e) => BriefCreatureTemplateEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<CreatureTemplateEntity?> getCreatureTemplate(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureTemplateEntity.fromJson(results.first.toMap());
   }
 
   Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
@@ -212,9 +184,5 @@ class CreatureTemplateRepository with RepositoryMixin {
     if (json.containsKey('rank')) {
       json['`rank`'] = json.remove('rank');
     }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('entry', key);
   }
 }

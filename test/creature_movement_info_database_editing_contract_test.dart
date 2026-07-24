@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('CreatureMovementInfo 使用独立 Brief 和物理标量 key', () {
@@ -15,9 +16,9 @@ void main() {
   });
 
   test('CreatureMovementInfo Repository 使用窄查询和原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/creature_movement_info_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<List<BriefCreatureMovementInfoEntity>>'));
     expect(source, contains("'SmoothFacingChaseRate'"));
     expect(source, contains('int originalKey'));

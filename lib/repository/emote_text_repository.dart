@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'emote_text_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'EmoteTextFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class EmoteTextRepository with RepositoryMixin {
+@FoxyRepository(EmoteTextEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
   static const _table = 'foxy.dbc_emotes_text';
 
   Future<int> copyEmoteText(int key) async {
@@ -44,13 +32,6 @@ class EmoteTextRepository with RepositoryMixin {
     return EmoteTextEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyEmoteText(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefEmoteTextEntity>> getBriefEmoteTexts({
     int page = 1,
     EmoteTextFilter? filter,
@@ -66,12 +47,6 @@ class EmoteTextRepository with RepositoryMixin {
     return results
         .map((e) => BriefEmoteTextEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<EmoteTextEntity?> getEmoteText(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return EmoteTextEntity.fromJson(results.first.toMap());
   }
 
   Future<List<EmoteTextEntity>> getEmoteTexts() async {
@@ -93,26 +68,6 @@ class EmoteTextRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateEmoteText(
-    int originalKey,
-    EmoteTextEntity emoteText,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(emoteText.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原表情文本不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的表情文本 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -122,9 +77,5 @@ class EmoteTextRepository with RepositoryMixin {
       builder = builder.where('Name', '%${filter.name}%', comparator: 'like');
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'talent_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'TalentFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'spell',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class TalentRepository with RepositoryMixin {
+@FoxyRepository(TalentEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('spell')
+class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   static const _table = 'foxy.dbc_talent';
 
   Future<int> copyTalent(int key) async {
@@ -40,13 +28,6 @@ class TalentRepository with RepositoryMixin {
 
   Future<TalentEntity> createTalent() async {
     return TalentEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyTalent(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原天赋不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefTalentEntity>> getBriefTalents({
@@ -69,11 +50,6 @@ class TalentRepository with RepositoryMixin {
     return rows.map((row) => BriefTalentEntity.fromJson(row.toMap())).toList();
   }
 
-  Future<TalentEntity?> getTalent(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : TalentEntity.fromJson(rows.first.toMap());
-  }
-
   Future<List<TalentEntity>> getTalents() async {
     final rows = await laconic.table(_table).orderBy('ID').get();
     return rows.map((row) => TalentEntity.fromJson(row.toMap())).toList();
@@ -88,23 +64,6 @@ class TalentRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('天赋 ${talent.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateTalent(int originalKey, TalentEntity talent) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(talent.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原天赋不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的天赋 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -136,9 +95,5 @@ class TalentRepository with RepositoryMixin {
       throw StateError('Talent ID 已超出 DBC int32 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

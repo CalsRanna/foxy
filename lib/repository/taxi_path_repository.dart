@@ -6,17 +6,9 @@ import 'package:laconic/laconic.dart';
 
 part 'taxi_path_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'TaxiPathFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class TaxiPathRepository with RepositoryMixin {
+@FoxyRepository(TaxiPathEntity)
+@FoxyFilter.text('id')
+class TaxiPathRepository with RepositoryMixin, _TaxiPathRepositoryMixin {
   static const _table = 'foxy.dbc_taxi_path';
 
   Future<int> copyTaxiPath(int key) async {
@@ -38,13 +30,6 @@ class TaxiPathRepository with RepositoryMixin {
   Future<TaxiPathEntity> createTaxiPath() async =>
       TaxiPathEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyTaxiPath(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原飞行路径不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefTaxiPathEntity>> getBriefTaxiPaths({
     int page = 1,
     TaxiPathFilter? filter,
@@ -61,11 +46,6 @@ class TaxiPathRepository with RepositoryMixin {
     return rows
         .map((row) => BriefTaxiPathEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<TaxiPathEntity?> getTaxiPath(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty ? null : TaxiPathEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<TaxiPathEntity>> getTaxiPaths() async {
@@ -87,31 +67,10 @@ class TaxiPathRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateTaxiPath(int originalKey, TaxiPathEntity entity) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原飞行路径不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的飞行路径 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, TaxiPathFilter? filter) {
     if (filter != null && filter.id.isNotEmpty) {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

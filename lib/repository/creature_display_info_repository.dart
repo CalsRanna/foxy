@@ -6,22 +6,11 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_display_info_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'CreatureDisplayInfoFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'modelName',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class CreatureDisplayInfoRepository with RepositoryMixin {
+@FoxyRepository(CreatureDisplayInfoEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('modelName')
+class CreatureDisplayInfoRepository
+    with RepositoryMixin, _CreatureDisplayInfoRepositoryMixin {
   static const _table = 'foxy.dbc_creature_display_info';
   static const _modelDataTable = 'foxy.dbc_creature_model_data';
 
@@ -56,13 +45,6 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     return CreatureDisplayInfoEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
-  Future<void> destroyCreatureDisplayInfo(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原生物显示信息不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefCreatureDisplayInfoEntity>> getBriefCreatureDisplayInfos({
     int page = 1,
     CreatureDisplayInfoFilter? filter,
@@ -87,12 +69,6 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureDisplayInfoEntity?> getCreatureDisplayInfo(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureDisplayInfoEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<CreatureDisplayInfoEntity>> getCreatureDisplayInfos() async {
     var results = await laconic.table(_table).get();
     return results
@@ -109,26 +85,6 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('生物显示信息 ${info.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureDisplayInfo(
-    int originalKey,
-    CreatureDisplayInfoEntity info,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(info.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原生物显示信息不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物显示信息 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -157,9 +113,5 @@ class CreatureDisplayInfoRepository with RepositoryMixin {
       '$_modelDataTable AS cmd',
       (join) => join.on('cdi.ModelID', 'cmd.ID'),
     );
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

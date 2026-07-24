@@ -8,33 +8,16 @@ import 'package:laconic/laconic.dart';
 
 part 'achievement_criteria_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'AchievementCriteriaFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'achievementId',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'type',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'description',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(AchievementCriteriaEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('achievementId')
+@FoxyFilter.text('type')
+@FoxyFilter.text('description')
 class AchievementCriteriaRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _AchievementCriteriaRepositoryMixin {
   static const _table = 'foxy.dbc_achievement_criteria';
 
   @override
@@ -166,9 +149,5 @@ class AchievementCriteriaRepository
       throw StateError('Achievement_Criteria.dbc 已无可用 smallint unsigned ID');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

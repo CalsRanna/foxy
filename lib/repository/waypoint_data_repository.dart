@@ -8,16 +8,7 @@ part 'waypoint_data_repository.g.dart';
 /// 路径点选择器按 path `id` 聚合展示（points = COUNT(point)）。
 ///
 /// 聚合结果不是 `waypoint_data` 的物理行，不在此仓储提供伪 CRUD。
-@FoxyRepositoryFilter(
-  name: 'WaypointDataFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyFilter.text('id')
 class WaypointDataRepository with RepositoryMixin {
   static const _table = 'waypoint_data';
 

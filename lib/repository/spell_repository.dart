@@ -8,22 +8,11 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'SpellFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(SpellEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
+class SpellRepository
+    with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRepositoryMixin {
   static const _table = 'foxy.dbc_spell';
 
   @override
@@ -47,13 +36,6 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<SpellEntity> createSpell() async {
     return SpellEntity(id: await nextMaxPlusOne(_table, 'ID'));
-  }
-
-  Future<void> destroySpell(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefSpellEntity>> getBriefSpells({
@@ -90,12 +72,6 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     return results.map((e) => BriefSpellEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<SpellEntity?> getSpell(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<DbcLocaleFieldValue>> getSpellLocales(
     int id,
     DbcLocaleFieldDefinition field,
@@ -126,23 +102,6 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateSpell(int originalKey, SpellEntity spell) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(spell.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {
@@ -156,9 +115,5 @@ class SpellRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

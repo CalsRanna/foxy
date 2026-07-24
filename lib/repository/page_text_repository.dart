@@ -7,22 +7,10 @@ import 'package:laconic/laconic.dart';
 
 part 'page_text_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'PageTextFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'text',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class PageTextRepository with RepositoryMixin {
+@FoxyRepository(PageTextEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('text')
+class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   static const _table = 'page_text';
   static const _localeTable = 'page_text_locale';
 
@@ -64,13 +52,6 @@ class PageTextRepository with RepositoryMixin {
     return PageTextEntity(id: await _getNextId());
   }
 
-  Future<void> destroyPageText(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefPageTextEntity>> getBriefPageTexts({
     int page = 1,
     PageTextFilter? filter,
@@ -95,12 +76,6 @@ class PageTextRepository with RepositoryMixin {
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
     return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<PageTextEntity?> getPageText(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PageTextEntity.fromJson(results.first.toMap());
   }
 
   Future<List<PageTextEntity>> getPageTexts() async {
@@ -186,9 +161,5 @@ class PageTextRepository with RepositoryMixin {
       }
       current = page.nextPageId;
     }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

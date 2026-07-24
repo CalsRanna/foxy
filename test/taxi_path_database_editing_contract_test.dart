@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 返回物理 ID 标量', () {
@@ -11,9 +10,9 @@ void main() {
   });
 
   test('TaxiPath Repository 使用显式 Brief、创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/taxi_path_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('Future<int> copyTaxiPath('));
     expect(source, contains("laconic.table(_table).select(["));
     expect(source, contains("'FromTaxiNode'"));

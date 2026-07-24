@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Brief key 直接解码物理 ID 标量', () {
@@ -17,9 +16,9 @@ void main() {
   });
 
   test('DestructibleModelData Repository 使用显式创建键与原始更新键', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/destructible_model_data_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('int key'));
     expect(source, contains('Future<void> storeDestructibleModelData('));
     expect(source, contains('int originalKey'));

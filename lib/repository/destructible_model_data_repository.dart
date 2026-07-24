@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'destructible_model_data_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'DestructibleModelDataFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class DestructibleModelDataRepository with RepositoryMixin {
+@FoxyRepository(DestructibleModelDataEntity)
+@FoxyFilter.text('id')
+class DestructibleModelDataRepository
+    with RepositoryMixin, _DestructibleModelDataRepositoryMixin {
   static const _table = 'foxy.dbc_destructible_model_data';
 
   Future<int> copyDestructibleModelData(int key) async {
@@ -39,13 +32,6 @@ class DestructibleModelDataRepository with RepositoryMixin {
   Future<DestructibleModelDataEntity> createDestructibleModelData() async =>
       DestructibleModelDataEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
-  Future<void> destroyDestructibleModelData(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原可破坏模型数据不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefDestructibleModelDataEntity>>
   getBriefDestructibleModelDatas({
     int page = 1,
@@ -63,13 +49,6 @@ class DestructibleModelDataRepository with RepositoryMixin {
     return rows
         .map((row) => BriefDestructibleModelDataEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<DestructibleModelDataEntity?> getDestructibleModelData(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    return rows.isEmpty
-        ? null
-        : DestructibleModelDataEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DestructibleModelDataEntity>> getDestructibleModelDatas() async {
@@ -95,26 +74,6 @@ class DestructibleModelDataRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateDestructibleModelData(
-    int originalKey,
-    DestructibleModelDataEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原可破坏模型数据不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的可破坏模型数据 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     DestructibleModelDataFilter? filter,
@@ -123,9 +82,5 @@ class DestructibleModelDataRepository with RepositoryMixin {
       builder = builder.where('ID', filter.id);
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

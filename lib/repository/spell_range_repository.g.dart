@@ -2,6 +2,48 @@
 
 part of 'spell_range_repository.dart';
 
+mixin _SpellRangeRepositoryMixin on RepositoryMixin {
+  Future<void> destroySpellRange(int key) async {
+    final deletedRows = await _whereKey(
+      laconic.table('foxy.dbc_spell_range'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<SpellRangeEntity?> getSpellRange(int key) async {
+    final results = await _whereKey(
+      laconic.table('foxy.dbc_spell_range'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return SpellRangeEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> updateSpellRange(int originalKey, SpellRangeEntity range) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table('foxy.dbc_spell_range'),
+        originalKey,
+      ).update(range.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class SpellRangeFilter {
   final String id;
   final String name;

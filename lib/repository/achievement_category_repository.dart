@@ -8,23 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'achievement_category_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'AchievementCategoryFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'name',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
+@FoxyRepository(AchievementCategoryEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name')
 class AchievementCategoryRepository
-    with RepositoryMixin, DbcLocaleRepositoryMixin {
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _AchievementCategoryRepositoryMixin {
   static const _table = 'foxy.dbc_achievement_category';
 
   @override
@@ -47,24 +38,11 @@ class AchievementCategoryRepository
     return AchievementCategoryEntity(id: await _getNextId());
   }
 
-  Future<void> destroyAchievementCategory(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<AchievementCategoryEntity>> getAchievementCategories() async {
     final rows = await laconic.table(_table).orderBy('ID').get();
     return rows
         .map((row) => AchievementCategoryEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<AchievementCategoryEntity?> getAchievementCategory(int key) async {
-    final rows = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (rows.isEmpty) return null;
-    return AchievementCategoryEntity.fromJson(rows.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getAchievementCategoryLocales(
@@ -111,26 +89,6 @@ class AchievementCategoryRepository
     }
   }
 
-  Future<void> updateAchievementCategory(
-    int originalKey,
-    AchievementCategoryEntity category,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(category.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的成就分类 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     AchievementCategoryFilter? filter,
@@ -153,9 +111,5 @@ class AchievementCategoryRepository
       throw StateError('Achievement_Category.dbc 已无可用 int32 ID');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

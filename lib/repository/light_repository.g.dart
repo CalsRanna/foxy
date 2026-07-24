@@ -2,6 +2,48 @@
 
 part of 'light_repository.dart';
 
+mixin _LightRepositoryMixin on RepositoryMixin {
+  Future<void> destroyLight(int key) async {
+    final deletedRows = await _whereKey(
+      laconic.table('foxy.dbc_light'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<LightEntity?> getLight(int key) async {
+    final results = await _whereKey(
+      laconic.table('foxy.dbc_light'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return LightEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> updateLight(int originalKey, LightEntity entity) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table('foxy.dbc_light'),
+        originalKey,
+      ).update(entity.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class LightFilter {
   final String id;
   final String continentId;

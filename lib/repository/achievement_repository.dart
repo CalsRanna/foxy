@@ -8,22 +8,14 @@ import 'package:laconic/laconic.dart';
 
 part 'achievement_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'AchievementFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'title',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
+@FoxyRepository(AchievementEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('title')
+class AchievementRepository
+    with
+        RepositoryMixin,
+        DbcLocaleRepositoryMixin,
+        _AchievementRepositoryMixin {
   static const _table = 'foxy.dbc_achievement';
 
   @override
@@ -45,19 +37,6 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<AchievementEntity> createAchievement() async {
     return AchievementEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyAchievement(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原成就不存在，可能已被其他操作修改或删除');
-    }
-  }
-
-  Future<AchievementEntity?> getAchievement(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return AchievementEntity.fromJson(results.first.toMap());
   }
 
   Future<List<DbcLocaleFieldValue>> getAchievementLocales(
@@ -111,26 +90,6 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     }
   }
 
-  Future<void> updateAchievement(
-    int originalKey,
-    AchievementEntity achievement,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(achievement.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原成就不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的成就 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
@@ -150,9 +109,5 @@ class AchievementRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
       throw StateError('Achievement.dbc 已无可用 smallint unsigned ID');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }

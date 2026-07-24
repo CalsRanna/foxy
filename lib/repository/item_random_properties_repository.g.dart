@@ -2,6 +2,12 @@
 
 part of 'item_random_properties_repository.dart';
 
+mixin _ItemRandomPropertiesRepositoryMixin on RepositoryMixin {
+  QueryBuilder _whereKey(QueryBuilder builder, int key) {
+    return builder.where('ID', key);
+  }
+}
+
 final class ItemRandomPropertiesFilter {
   final String id;
   final String name;

@@ -6,22 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'gossip_menu_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'GossipMenuFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'menuId',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-    FoxyRepositoryFilterField(
-      name: 'text',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class GossipMenuRepository with RepositoryMixin {
+@FoxyRepository(GossipMenuEntity)
+@FoxyFilter.text('menuId')
+@FoxyFilter.text('text')
+class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
   static const _table = 'gossip_menu';
 
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
@@ -62,13 +50,6 @@ class GossipMenuRepository with RepositoryMixin {
     return GossipMenuEntity(menuId: await getNextMenuId());
   }
 
-  Future<void> destroyGossipMenu(GossipMenuKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilter? filter,
@@ -104,12 +85,6 @@ class GossipMenuRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<GossipMenuEntity?> getGossipMenu(GossipMenuKey key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GossipMenuEntity.fromJson(results.first.toMap());
-  }
-
   Future<List<GossipMenuEntity>> getGossipMenus() async {
     final results = await laconic
         .table(_table)
@@ -135,26 +110,6 @@ class GossipMenuRepository with RepositoryMixin {
     }
   }
 
-  Future<void> updateGossipMenu(
-    GossipMenuKey originalKey,
-    GossipMenuEntity menu,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(menu.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的对话菜单主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
     if (filter == null) return builder;
     if (filter.menuId.isNotEmpty) {
@@ -171,9 +126,5 @@ class GossipMenuRepository with RepositoryMixin {
       );
     }
     return builder;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, GossipMenuKey key) {
-    return builder.where('MenuID', key.menuId).where('TextID', key.textId);
   }
 }

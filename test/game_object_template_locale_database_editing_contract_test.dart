@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Key 与 Brief 完整覆盖 entry + locale', () {
@@ -41,9 +42,9 @@ void main() {
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
     expect(source, isNot(contains(".table('gameobject_template')")));
 
-    final parent = File(
+    final parent = readLocalDartLibrarySource(
       'lib/repository/game_object_template_repository.dart',
-    ).readAsStringSync();
+    );
     expect(parent, isNot(contains('saveGameObjectTemplateLocales(')));
     expect(parent, isNot(contains('getGameObjectTemplateLocales(')));
     expect(parent, isNot(contains('laconic.table(_localeTable)')));

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 22 个物理列且全部为标量', () {
@@ -123,9 +124,9 @@ void main() {
   });
 
   test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/scaling_stat_distribution_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart',
     ).readAsStringSync();

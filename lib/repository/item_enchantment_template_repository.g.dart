@@ -2,6 +2,73 @@
 
 part of 'item_enchantment_template_repository.dart';
 
+mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
+  Future<void> destroyItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey key,
+  ) async {
+    final deletedRows = await _whereKey(
+      laconic.table('item_enchantment_template'),
+      key,
+    ).delete();
+    if (deletedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+  }
+
+  Future<ItemEnchantmentTemplateEntity?> getItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey key,
+  ) async {
+    final results = await _whereKey(
+      laconic.table('item_enchantment_template'),
+      key,
+    ).limit(1).get();
+    if (results.isEmpty) return null;
+    return ItemEnchantmentTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<void> storeItemEnchantmentTemplate(
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) async {
+    try {
+      await laconic.table('item_enchantment_template').insert([
+        itemEnchantmentTemplate.toJson(),
+      ]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateItemEnchantmentTemplate(
+    ItemEnchantmentTemplateKey originalKey,
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) async {
+    try {
+      final matchedRows = await _whereKey(
+        laconic.table('item_enchantment_template'),
+        originalKey,
+      ).update(itemEnchantmentTemplate.toJson());
+      if (matchedRows == 0) {
+        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      }
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('修改后的主键已存在');
+      }
+      rethrow;
+    }
+  }
+
+  QueryBuilder _whereKey(QueryBuilder builder, ItemEnchantmentTemplateKey key) {
+    var query = builder;
+    query = query.where('entry', key.entry);
+    query = query.where('ench', key.ench);
+    return query;
+  }
+}
+
 final class ItemEnchantmentTemplateFilter {
   final String entry;
 

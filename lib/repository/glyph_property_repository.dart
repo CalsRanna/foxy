@@ -6,17 +6,10 @@ import 'package:laconic/laconic.dart';
 
 part 'glyph_property_repository.g.dart';
 
-@FoxyRepositoryFilter(
-  name: 'GlyphPropertyFilter',
-  fields: [
-    FoxyRepositoryFilterField(
-      name: 'id',
-      type: FoxyFilterFieldType.text,
-      defaultValue: '',
-    ),
-  ],
-)
-class GlyphPropertyRepository with RepositoryMixin {
+@FoxyRepository(GlyphPropertyEntity)
+@FoxyFilter.text('id')
+class GlyphPropertyRepository
+    with RepositoryMixin, _GlyphPropertyRepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
   Future<int> copyGlyphProperty(int key) async {
@@ -37,13 +30,6 @@ class GlyphPropertyRepository with RepositoryMixin {
 
   Future<GlyphPropertyEntity> createGlyphProperty() async {
     return GlyphPropertyEntity(id: await _getNextId());
-  }
-
-  Future<void> destroyGlyphProperty(int key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefGlyphPropertyEntity>> getBriefGlyphProperties({
@@ -68,12 +54,6 @@ class GlyphPropertyRepository with RepositoryMixin {
     return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
-  Future<GlyphPropertyEntity?> getGlyphProperty(int key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return GlyphPropertyEntity.fromJson(results.first.toMap());
-  }
-
   Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     if (glyphProperty.id <= 0) {
       throw StateError('雕文属性 ID 必须在新建表单打开时显式分配');
@@ -83,26 +63,6 @@ class GlyphPropertyRepository with RepositoryMixin {
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('雕文属性 ${glyphProperty.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateGlyphProperty(
-    int originalKey,
-    GlyphPropertyEntity glyphProperty,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(glyphProperty.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的雕文属性 ID 已存在，无法保存');
       }
       rethrow;
     }
@@ -122,9 +82,5 @@ class GlyphPropertyRepository with RepositoryMixin {
       throw StateError('GlyphProperties ID 已超出角色数据和客户端协议的 uint16 范围');
     }
     return id;
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
   }
 }
