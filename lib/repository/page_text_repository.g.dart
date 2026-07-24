@@ -62,12 +62,13 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
   Future<void> _beforeUpdate(int originalKey, PageTextEntity pageText) async {}
 
   Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    for (final key in json.keys.toList()) {
-      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
-        json['`$key`'] = json.remove(key);
-      }
-    }
-    return json;
+    return {
+      for (final entry in json.entries)
+        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
+          '`${entry.key}`': entry.value
+        else
+          entry.key: entry.value,
+    };
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

@@ -17,13 +17,13 @@ final class RepositoryEmitter {
     );
     if (model.keyFields.length == 1) {
       buffer.writeln(
-        "    return builder.where('${_escape(model.keyFields.single.columnName)}', key);",
+        "    return builder.where('${_escape(_queryColumn(model.keyFields.single.columnName))}', key);",
       );
     } else {
       buffer.writeln('    var query = builder;');
       for (final field in model.keyFields) {
         buffer.writeln(
-          "    query = query.where('${_escape(field.columnName)}', "
+          "    query = query.where('${_escape(_queryColumn(field.columnName))}', "
           'key.${field.dartName});',
         );
       }
@@ -33,6 +33,13 @@ final class RepositoryEmitter {
       ..writeln('  }')
       ..writeln('}');
     return buffer.toString();
+  }
+
+  String _queryColumn(String columnName) {
+    if (const {'index', 'rank'}.contains(columnName.toLowerCase())) {
+      return '`$columnName`';
+    }
+    return columnName;
   }
 
   void _emitDestroy(StringBuffer buffer, RepositoryGenerationModel model) {
@@ -141,14 +148,15 @@ final class RepositoryEmitter {
       ..writeln(
         '  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {',
       )
-      ..writeln('    for (final key in json.keys.toList()) {')
+      ..writeln('    return {')
+      ..writeln('      for (final entry in json.entries)')
       ..writeln(
-        "      if (const {'index', 'rank'}.contains(key.toLowerCase())) {",
+        "        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))",
       )
-      ..writeln("        json['`\$key`'] = json.remove(key);")
-      ..writeln('      }')
-      ..writeln('    }')
-      ..writeln('    return json;')
+      ..writeln("          '`\${entry.key}`': entry.value")
+      ..writeln('        else')
+      ..writeln('          entry.key: entry.value,')
+      ..writeln('    };')
       ..writeln('  }')
       ..writeln();
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_bonus_data_entity.dart';
 import 'package:foxy/entity/spell_custom_attr_entity.dart';
+import 'support/local_dart_library_source.dart';
 
 void main() {
   test('两张法术单行子表的 Brief key 直接返回物理标量', () {
@@ -16,9 +17,9 @@ void main() {
 
   test('两张法术单行子表按原始标量 key 更新完整 candidate', () {
     for (final stem in ['spell_bonus_data', 'spell_custom_attr']) {
-      final source = File(
+      final source = readLocalDartLibrarySource(
         'lib/repository/${stem}_repository.dart',
-      ).readAsStringSync();
+      );
       expect(source, contains('originalKey'));
       expect(source, contains('.update(json)'));
       expect(source, contains('if (matchedRows == 0)'));
