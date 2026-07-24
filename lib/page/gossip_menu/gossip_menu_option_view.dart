@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/gossip_menu_option_key.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';

@@ -1,6 +1,6 @@
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/entity/brief_item_template_entity.dart';
+import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';

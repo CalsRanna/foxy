@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_holiday_entity.dart';
 import 'package:foxy/entity/holiday_entity.dart';
 import 'package:foxy/entity/holiday_filter_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';

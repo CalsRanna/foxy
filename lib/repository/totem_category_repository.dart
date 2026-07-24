@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_totem_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/totem_category_entity.dart';
 import 'package:foxy/entity/totem_category_filter_entity.dart';
@@ -24,7 +23,7 @@ class TotemCategoryRepository with RepositoryMixin, DbcLocaleRepositoryMixin {
     builder = builder
         .select([
           'ID',
-          'Name_lang_zhCN',
+          'Name_lang_zhCN AS name',
           'TotemCategoryType',
           'TotemCategoryMask',
         ])

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_game_object_display_info_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
 
 void main() {

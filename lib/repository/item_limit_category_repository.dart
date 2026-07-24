@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_item_limit_category_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
 import 'package:foxy/entity/item_limit_category_filter_entity.dart';
@@ -25,7 +24,7 @@ class ItemLimitCategoryRepository
   }) async {
     var builder = _applyFilter(laconic.table(_table), filter);
     builder = builder
-        .select(['ID', 'Name_lang_zhCN', 'Quantity', 'Flags'])
+        .select(['ID', 'Name_lang_zhCN AS name', 'Quantity', 'Flags'])
         .orderBy('ID')
         .limit(kPageSize)
         .offset((page - 1) * kPageSize);

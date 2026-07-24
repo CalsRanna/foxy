@@ -1,8 +1,30 @@
-class CreatureQuestItemEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_quest_item_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('itemName')
+@FoxyBriefField.text('itemLocaleName')
+@FoxyBriefField.integer('itemQuality')
+@FoxyBriefField.text('itemIcon')
+@FoxyFullEntity(table: 'creature_questitem')
+class CreatureQuestItemEntity with _CreatureQuestItemEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('CreatureEntry', key: true)
   final int creatureEntry;
+
+  @FoxyBriefField()
+  @FoxyFullField('Idx', key: true)
   final int idx;
+
+  @FoxyBriefField()
+  @FoxyFullField('ItemId')
   final int itemId;
+
+  @FoxyBriefField()
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
+
   const CreatureQuestItemEntity({
     this.creatureEntry = 0,
     this.idx = 0,
@@ -10,35 +32,11 @@ class CreatureQuestItemEntity {
     this.verifiedBuild = 0,
   });
 
-  factory CreatureQuestItemEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureQuestItemEntity(
-      creatureEntry: json['CreatureEntry'] ?? json['creatureEntry'] ?? 0,
-      idx: json['Idx'] ?? json['idx'] ?? 0,
-      itemId: json['ItemId'] ?? json['itemId'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
-    );
-  }
+  factory CreatureQuestItemEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureQuestItemEntityMixin.fromJson(json);
+}
 
-  CreatureQuestItemEntity copyWith({
-    int? creatureEntry,
-    int? idx,
-    int? itemId,
-    int? verifiedBuild,
-  }) {
-    return CreatureQuestItemEntity(
-      creatureEntry: creatureEntry ?? this.creatureEntry,
-      idx: idx ?? this.idx,
-      itemId: itemId ?? this.itemId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureEntry': creatureEntry,
-      'Idx': idx,
-      'ItemId': itemId,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+extension BriefCreatureQuestItemEntityDisplay on BriefCreatureQuestItemEntity {
+  String get displayName =>
+      itemLocaleName.isNotEmpty ? itemLocaleName : itemName;
 }

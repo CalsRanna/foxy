@@ -1,13 +1,44 @@
-class CreatureOnKillReputationEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_on_kill_reputation_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'creature_onkill_reputation')
+class CreatureOnKillReputationEntity with _CreatureOnKillReputationEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('creature_id', key: true)
   final int creatureID;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewOnKillRepFaction1')
   final int rewOnKillRepFaction1;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewOnKillRepFaction2')
   final int rewOnKillRepFaction2;
+
+  @FoxyFullField('MaxStanding1')
   final int maxStanding1;
+
+  @FoxyFullField('MaxStanding2')
   final int maxStanding2;
+
+  @FoxyFullField('IsTeamAward1')
   final bool isTeamAward1;
+
+  @FoxyFullField('IsTeamAward2')
   final bool isTeamAward2;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewOnKillRepValue1')
   final double rewOnKillRepValue1;
+
+  @FoxyBriefField()
+  @FoxyFullField('RewOnKillRepValue2')
   final double rewOnKillRepValue2;
+
+  @FoxyBriefField()
+  @FoxyFullField('TeamDependent')
   final int teamDependent;
 
   const CreatureOnKillReputationEntity({
@@ -23,67 +54,6 @@ class CreatureOnKillReputationEntity {
     this.teamDependent = 0,
   });
 
-  factory CreatureOnKillReputationEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureOnKillReputationEntity(
-      creatureID: json['creature_id'] ?? json['creatureID'] ?? 0,
-      rewOnKillRepFaction1:
-          json['RewOnKillRepFaction1'] ?? json['rewOnKillRepFaction1'] ?? 0,
-      rewOnKillRepFaction2:
-          json['RewOnKillRepFaction2'] ?? json['rewOnKillRepFaction2'] ?? 0,
-      maxStanding1: json['MaxStanding1'] ?? json['maxStanding1'] ?? 0,
-      maxStanding2: json['MaxStanding2'] ?? json['maxStanding2'] ?? 0,
-      isTeamAward1: (json['IsTeamAward1'] ?? json['isTeamAward1'] ?? 0) == 1,
-      isTeamAward2: (json['IsTeamAward2'] ?? json['isTeamAward2'] ?? 0) == 1,
-      rewOnKillRepValue1:
-          ((json['RewOnKillRepValue1'] ?? json['rewOnKillRepValue1']) as num?)
-              ?.toDouble() ??
-          0.0,
-      rewOnKillRepValue2:
-          ((json['RewOnKillRepValue2'] ?? json['rewOnKillRepValue2']) as num?)
-              ?.toDouble() ??
-          0.0,
-      teamDependent: json['TeamDependent'] ?? json['teamDependent'] ?? 0,
-    );
-  }
-
-  CreatureOnKillReputationEntity copyWith({
-    int? creatureID,
-    int? rewOnKillRepFaction1,
-    int? rewOnKillRepFaction2,
-    int? maxStanding1,
-    int? maxStanding2,
-    bool? isTeamAward1,
-    bool? isTeamAward2,
-    double? rewOnKillRepValue1,
-    double? rewOnKillRepValue2,
-    int? teamDependent,
-  }) {
-    return CreatureOnKillReputationEntity(
-      creatureID: creatureID ?? this.creatureID,
-      rewOnKillRepFaction1: rewOnKillRepFaction1 ?? this.rewOnKillRepFaction1,
-      rewOnKillRepFaction2: rewOnKillRepFaction2 ?? this.rewOnKillRepFaction2,
-      maxStanding1: maxStanding1 ?? this.maxStanding1,
-      maxStanding2: maxStanding2 ?? this.maxStanding2,
-      isTeamAward1: isTeamAward1 ?? this.isTeamAward1,
-      isTeamAward2: isTeamAward2 ?? this.isTeamAward2,
-      rewOnKillRepValue1: rewOnKillRepValue1 ?? this.rewOnKillRepValue1,
-      rewOnKillRepValue2: rewOnKillRepValue2 ?? this.rewOnKillRepValue2,
-      teamDependent: teamDependent ?? this.teamDependent,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'creature_id': creatureID,
-      'RewOnKillRepFaction1': rewOnKillRepFaction1,
-      'RewOnKillRepFaction2': rewOnKillRepFaction2,
-      'MaxStanding1': maxStanding1,
-      'MaxStanding2': maxStanding2,
-      'IsTeamAward1': isTeamAward1 ? 1 : 0,
-      'IsTeamAward2': isTeamAward2 ? 1 : 0,
-      'RewOnKillRepValue1': rewOnKillRepValue1,
-      'RewOnKillRepValue2': rewOnKillRepValue2,
-      'TeamDependent': teamDependent,
-    };
-  }
+  factory CreatureOnKillReputationEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureOnKillReputationEntityMixin.fromJson(json);
 }

@@ -9,7 +9,6 @@ import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/repository/spell_bonus_data_repository.dart';

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -39,7 +38,11 @@ class NpcTextRepository with RepositoryMixin {
     int page = 1,
     NpcTextFilterEntity? filter,
   }) async {
-    var builder = laconic.table(_table).select(['ID', 'text0_0', 'text0_1']);
+    var builder = laconic.table(_table).select([
+      'ID',
+      'text0_0 AS text0',
+      'text0_1 AS text1',
+    ]);
     builder = _applyFilter(builder, filter);
     final results = await builder
         .orderBy('ID')

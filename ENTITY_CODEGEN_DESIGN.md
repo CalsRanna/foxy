@@ -460,10 +460,14 @@ import 'package:foxy/entity/creature_template_entity.brief.g.dart';
 纯物理字段 Brief 以及可表达为四种标量类型的 JOIN、locale 和聚合投影均已迁入
 所属 Full Entity library；原有展示 getter 以同库 extension 保留。生成型 Full
 Entity 目前只剩 `BriefItemEnchantmentTemplateEntity` 继续独立手写，因为它包含
-`ItemEnchantmentKind` enum 投影和自定义转换。其他独立 Brief 要么没有对应 Full
-行模型，要么其 Full Entity 本身仍采用非对称手写映射。剩余独立 Key 中，普通物理
-复合 Key 依赖这些手写 Full Entity；`WaypointDataKey` 和
-`ItemEnchantmentTemplateParentKey` 则不是物理行主键。
+`ItemEnchantmentKind` enum 投影和自定义转换。其他独立 Brief 都没有对应的标准
+Full 行模型。标准物理复合 Key 已全部生成；`WaypointDataKey` 和
+`ItemEnchantmentTemplateParentKey` 不是普通物理行主键，因此继续手写。
+
+除 `ActivityLogEntity`、`FeatureEntity` 和 `VersionEntity` 外，所有 Full Entity
+都已迁移为显式字段生成模型。原先 DBC 的 `Map<String, dynamic>` 行透传已展开为
+精确物理字段；历史 `ID/id`、`CreatureID/creatureID` 等读取回退已删除。数据库
+Schema 是唯一事实来源，Generator 不提供也不会增加列名 alias 能力。
 
 ### 5.1 注解排序
 

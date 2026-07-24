@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_template_spell_key.dart';
+import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_collection_editor_view_model.dart';

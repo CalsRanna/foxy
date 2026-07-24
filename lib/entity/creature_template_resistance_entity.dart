@@ -1,8 +1,27 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_template_resistance_entity.g.dart';
+
 /// 生物模板抗性
-class CreatureTemplateResistanceEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'creature_template_resistance')
+class CreatureTemplateResistanceEntity
+    with _CreatureTemplateResistanceEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('CreatureID', key: true)
   final int creatureID;
+
+  @FoxyBriefField()
+  @FoxyFullField('School', key: true)
   final int school;
+
+  @FoxyBriefField()
+  @FoxyFullField('Resistance')
   final int resistance;
+
+  @FoxyBriefField()
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const CreatureTemplateResistanceEntity({
@@ -12,35 +31,7 @@ class CreatureTemplateResistanceEntity {
     this.verifiedBuild = 0,
   });
 
-  factory CreatureTemplateResistanceEntity.fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateResistanceEntity(
-      creatureID: json['CreatureID'] ?? json['creatureID'] ?? 0,
-      school: json['School'] ?? json['school'] ?? 0,
-      resistance: json['Resistance'] ?? json['resistance'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? json['verifiedBuild'] ?? 0,
-    );
-  }
-
-  CreatureTemplateResistanceEntity copyWith({
-    int? creatureID,
-    int? school,
-    int? resistance,
-    int? verifiedBuild,
-  }) {
-    return CreatureTemplateResistanceEntity(
-      creatureID: creatureID ?? this.creatureID,
-      school: school ?? this.school,
-      resistance: resistance ?? this.resistance,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'CreatureID': creatureID,
-      'School': school,
-      'Resistance': resistance,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  factory CreatureTemplateResistanceEntity.fromJson(
+    Map<String, dynamic> json,
+  ) => _CreatureTemplateResistanceEntityMixin.fromJson(json);
 }

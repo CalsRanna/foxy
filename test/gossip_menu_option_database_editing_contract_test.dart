@@ -1,10 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_gossip_menu_option_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_key.dart';
+import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
@@ -80,9 +78,12 @@ void main() {
           locale: 'zhCN',
         ),
       );
-      final optionSource = File(
-        'lib/entity/brief_gossip_menu_option_entity.dart',
-      ).readAsStringSync();
+      final optionLibrarySource = readLocalDartLibrarySource(
+        'lib/entity/gossip_menu_option_entity.dart',
+      );
+      final optionSource = optionLibrarySource.substring(
+        optionLibrarySource.indexOf('final class BriefGossipMenuOptionEntity'),
+      );
       final localeLibrarySource = readLocalDartLibrarySource(
         'lib/entity/gossip_menu_option_locale_entity.dart',
       );

@@ -1,6 +1,1 @@
-class GameObjectDisplayInfoFilterEntity {
-  final String id;
-  final String modelName;
-
-  const GameObjectDisplayInfoFilterEntity({this.id = '', this.modelName = ''});
-}
+export 'game_object_display_info_entity.filter.g.dart';

@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
 import 'package:foxy/entity/quest_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -65,9 +64,9 @@ class QuestTemplateRepository with RepositoryMixin {
     final fields = <String>[
       'qt.ID',
       'qt.LogTitle',
-      if (localeEnabled) 'qtl.Title',
+      if (localeEnabled) 'qtl.Title AS localeTitle',
       'qt.QuestDescription',
-      if (localeEnabled) 'qtl.Details',
+      if (localeEnabled) 'qtl.Details AS localeDetails',
       'qt.QuestType',
       'qt.QuestLevel',
       'qt.MinLevel',

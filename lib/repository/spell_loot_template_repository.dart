@@ -1,6 +1,4 @@
-import 'package:foxy/entity/brief_spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -44,10 +42,10 @@ class SpellLootTemplateRepository with RepositoryMixin {
       'slt.MinCount',
       'slt.MaxCount',
       'slt.Comment',
-      'it.name',
+      'it.name AS itemName',
       if (localeEnabled) 'itl.Name as localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
+      'it.Quality AS quality',
+      'didi.InventoryIcon0 AS icon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

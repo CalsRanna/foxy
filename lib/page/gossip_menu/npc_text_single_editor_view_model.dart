@@ -1,6 +1,5 @@
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
-import 'package:foxy/entity/npc_text_locale_key.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
@@ -198,7 +197,7 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   int _parentToken = 0;
 
-NpcTextEntity _collectCandidate() {
+  NpcTextEntity _collectCandidate() {
     return NpcTextEntity(
       id: idController.collect(),
       text00: text00Controller.collect(),
@@ -293,7 +292,7 @@ NpcTextEntity _collectCandidate() {
     );
   }
 
-void _applyCandidate(NpcTextEntity entity) {
+  void _applyCandidate(NpcTextEntity entity) {
     idController.init(entity.id);
     text00Controller.init(entity.text00);
     text01Controller.init(entity.text01);
@@ -386,7 +385,7 @@ void _applyCandidate(NpcTextEntity entity) {
     verifiedBuildController.init(entity.verifiedBuild);
   }
 
-NpcTextLocaleEntity _collectLocale(int id) {
+  NpcTextLocaleEntity _collectLocale(int id) {
     return NpcTextLocaleEntity(
       id: id,
       text00: localeText00Controller.collect(),
@@ -408,7 +407,7 @@ NpcTextLocaleEntity _collectLocale(int id) {
     );
   }
 
-void _applyLocale(NpcTextLocaleEntity entity) {
+  void _applyLocale(NpcTextLocaleEntity entity) {
     localeText00Controller.init(entity.text00);
     localeText01Controller.init(entity.text01);
     localeText10Controller.init(entity.text10);
@@ -483,8 +482,7 @@ void _applyLocale(NpcTextLocaleEntity entity) {
           localeCandidate: localeCandidate,
         ),
       );
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       entity.value = candidate;
@@ -492,8 +490,7 @@ void _applyLocale(NpcTextLocaleEntity entity) {
       localeEditingKey.value = result.localeKey;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       errorMessage.value = error.toString();
@@ -515,16 +512,14 @@ void _applyLocale(NpcTextLocaleEntity entity) {
       await _destroyUseCase.execute(
         DestroyNpcTextInput(key: key, localeKey: localeEditingKey.value),
       );
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       editingKey.value = null;
       localeEditingKey.value = null;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       errorMessage.value = error.toString();

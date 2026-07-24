@@ -1,32 +1,101 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'creature_model_data_entity.g.dart';
+
 /// DBC 生物模型数据 — 对应 foxy.dbc_creature_model_data 表。
-class CreatureModelDataEntity {
+
+@FoxyBriefEntity()
+@FoxyFilterEntity()
+@FoxyFullEntity(table: 'foxy.dbc_creature_model_data')
+class CreatureModelDataEntity with _CreatureModelDataEntityMixin {
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('Flags')
   final int flags;
+
+  @FoxyBriefField()
+  @FoxyFilterField(defaultValue: '', type: FoxyFilterFieldType.text)
+  @FoxyFullField('ModelName')
   final String modelName;
+
+  @FoxyBriefField()
+  @FoxyFullField('SizeClass')
   final int sizeClass;
+
+  @FoxyBriefField()
+  @FoxyFullField('ModelScale')
   final double modelScale;
+
+  @FoxyFullField('BloodID')
   final int bloodId;
+
+  @FoxyFullField('FootprintTextureID')
   final int footprintTextureId;
+
+  @FoxyFullField('FootprintTextureLength')
   final double footprintTextureLength;
+
+  @FoxyFullField('FootprintTextureWidth')
   final double footprintTextureWidth;
+
+  @FoxyFullField('FootprintParticleScale')
   final double footprintParticleScale;
+
+  @FoxyFullField('FoleyMaterialID')
   final int foleyMaterialId;
+
+  @FoxyFullField('FootstepShakeSize')
   final int footstepShakeSize;
+
+  @FoxyFullField('DeathThudShakeSize')
   final int deathThudShakeSize;
+
+  @FoxyFullField('SoundID')
   final int soundId;
+
+  @FoxyFullField('CollisionWidth')
   final double collisionWidth;
+
+  @FoxyFullField('CollisionHeight')
   final double collisionHeight;
+
+  @FoxyFullField('MountHeight')
   final double mountHeight;
+
+  @FoxyFullField('GeoBoxMinX')
   final double geoBoxMinX;
+
+  @FoxyFullField('GeoBoxMinY')
   final double geoBoxMinY;
+
+  @FoxyFullField('GeoBoxMinZ')
   final double geoBoxMinZ;
+
+  @FoxyFullField('GeoBoxMaxX')
   final double geoBoxMaxX;
+
+  @FoxyFullField('GeoBoxMaxY')
   final double geoBoxMaxY;
+
+  @FoxyFullField('GeoBoxMaxZ')
   final double geoBoxMaxZ;
+
+  @FoxyFullField('WorldEffectScale')
   final double worldEffectScale;
+
+  @FoxyFullField('AttachedEffectScale')
   final double attachedEffectScale;
+
+  @FoxyFullField('MissileCollisionRadius')
   final double missileCollisionRadius;
+
+  @FoxyFullField('MissileCollisionPush')
   final double missileCollisionPush;
+
+  @FoxyFullField('MissileCollisionRaise')
   final double missileCollisionRaise;
 
   const CreatureModelDataEntity({
@@ -60,138 +129,6 @@ class CreatureModelDataEntity {
     this.missileCollisionRaise = 0,
   });
 
-  factory CreatureModelDataEntity.fromJson(Map<String, dynamic> json) {
-    double number(String key) => (json[key] as num?)?.toDouble() ?? 0;
-
-    return CreatureModelDataEntity(
-      id: json['ID'] ?? 0,
-      flags: json['Flags'] ?? 0,
-      modelName: json['ModelName'] ?? '',
-      sizeClass: json['SizeClass'] ?? 0,
-      modelScale: number('ModelScale'),
-      bloodId: json['BloodID'] ?? 0,
-      footprintTextureId: json['FootprintTextureID'] ?? 0,
-      footprintTextureLength: number('FootprintTextureLength'),
-      footprintTextureWidth: number('FootprintTextureWidth'),
-      footprintParticleScale: number('FootprintParticleScale'),
-      foleyMaterialId: json['FoleyMaterialID'] ?? 0,
-      footstepShakeSize: json['FootstepShakeSize'] ?? 0,
-      deathThudShakeSize: json['DeathThudShakeSize'] ?? 0,
-      soundId: json['SoundID'] ?? 0,
-      collisionWidth: number('CollisionWidth'),
-      collisionHeight: number('CollisionHeight'),
-      mountHeight: number('MountHeight'),
-      geoBoxMinX: number('GeoBoxMinX'),
-      geoBoxMinY: number('GeoBoxMinY'),
-      geoBoxMinZ: number('GeoBoxMinZ'),
-      geoBoxMaxX: number('GeoBoxMaxX'),
-      geoBoxMaxY: number('GeoBoxMaxY'),
-      geoBoxMaxZ: number('GeoBoxMaxZ'),
-      worldEffectScale: number('WorldEffectScale'),
-      attachedEffectScale: number('AttachedEffectScale'),
-      missileCollisionRadius: number('MissileCollisionRadius'),
-      missileCollisionPush: number('MissileCollisionPush'),
-      missileCollisionRaise: number('MissileCollisionRaise'),
-    );
-  }
-
-  CreatureModelDataEntity copyWith({
-    int? id,
-    int? flags,
-    String? modelName,
-    int? sizeClass,
-    double? modelScale,
-    int? bloodId,
-    int? footprintTextureId,
-    double? footprintTextureLength,
-    double? footprintTextureWidth,
-    double? footprintParticleScale,
-    int? foleyMaterialId,
-    int? footstepShakeSize,
-    int? deathThudShakeSize,
-    int? soundId,
-    double? collisionWidth,
-    double? collisionHeight,
-    double? mountHeight,
-    double? geoBoxMinX,
-    double? geoBoxMinY,
-    double? geoBoxMinZ,
-    double? geoBoxMaxX,
-    double? geoBoxMaxY,
-    double? geoBoxMaxZ,
-    double? worldEffectScale,
-    double? attachedEffectScale,
-    double? missileCollisionRadius,
-    double? missileCollisionPush,
-    double? missileCollisionRaise,
-  }) {
-    return CreatureModelDataEntity(
-      id: id ?? this.id,
-      flags: flags ?? this.flags,
-      modelName: modelName ?? this.modelName,
-      sizeClass: sizeClass ?? this.sizeClass,
-      modelScale: modelScale ?? this.modelScale,
-      bloodId: bloodId ?? this.bloodId,
-      footprintTextureId: footprintTextureId ?? this.footprintTextureId,
-      footprintTextureLength:
-          footprintTextureLength ?? this.footprintTextureLength,
-      footprintTextureWidth:
-          footprintTextureWidth ?? this.footprintTextureWidth,
-      footprintParticleScale:
-          footprintParticleScale ?? this.footprintParticleScale,
-      foleyMaterialId: foleyMaterialId ?? this.foleyMaterialId,
-      footstepShakeSize: footstepShakeSize ?? this.footstepShakeSize,
-      deathThudShakeSize: deathThudShakeSize ?? this.deathThudShakeSize,
-      soundId: soundId ?? this.soundId,
-      collisionWidth: collisionWidth ?? this.collisionWidth,
-      collisionHeight: collisionHeight ?? this.collisionHeight,
-      mountHeight: mountHeight ?? this.mountHeight,
-      geoBoxMinX: geoBoxMinX ?? this.geoBoxMinX,
-      geoBoxMinY: geoBoxMinY ?? this.geoBoxMinY,
-      geoBoxMinZ: geoBoxMinZ ?? this.geoBoxMinZ,
-      geoBoxMaxX: geoBoxMaxX ?? this.geoBoxMaxX,
-      geoBoxMaxY: geoBoxMaxY ?? this.geoBoxMaxY,
-      geoBoxMaxZ: geoBoxMaxZ ?? this.geoBoxMaxZ,
-      worldEffectScale: worldEffectScale ?? this.worldEffectScale,
-      attachedEffectScale: attachedEffectScale ?? this.attachedEffectScale,
-      missileCollisionRadius:
-          missileCollisionRadius ?? this.missileCollisionRadius,
-      missileCollisionPush: missileCollisionPush ?? this.missileCollisionPush,
-      missileCollisionRaise:
-          missileCollisionRaise ?? this.missileCollisionRaise,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'Flags': flags,
-      'ModelName': modelName,
-      'SizeClass': sizeClass,
-      'ModelScale': modelScale,
-      'BloodID': bloodId,
-      'FootprintTextureID': footprintTextureId,
-      'FootprintTextureLength': footprintTextureLength,
-      'FootprintTextureWidth': footprintTextureWidth,
-      'FootprintParticleScale': footprintParticleScale,
-      'FoleyMaterialID': foleyMaterialId,
-      'FootstepShakeSize': footstepShakeSize,
-      'DeathThudShakeSize': deathThudShakeSize,
-      'SoundID': soundId,
-      'CollisionWidth': collisionWidth,
-      'CollisionHeight': collisionHeight,
-      'MountHeight': mountHeight,
-      'GeoBoxMinX': geoBoxMinX,
-      'GeoBoxMinY': geoBoxMinY,
-      'GeoBoxMinZ': geoBoxMinZ,
-      'GeoBoxMaxX': geoBoxMaxX,
-      'GeoBoxMaxY': geoBoxMaxY,
-      'GeoBoxMaxZ': geoBoxMaxZ,
-      'WorldEffectScale': worldEffectScale,
-      'AttachedEffectScale': attachedEffectScale,
-      'MissileCollisionRadius': missileCollisionRadius,
-      'MissileCollisionPush': missileCollisionPush,
-      'MissileCollisionRaise': missileCollisionRaise,
-    };
-  }
+  factory CreatureModelDataEntity.fromJson(Map<String, dynamic> json) =>
+      _CreatureModelDataEntityMixin.fromJson(json);
 }

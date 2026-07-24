@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_item_template_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_template_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -85,13 +84,13 @@ class ItemTemplateRepository with RepositoryMixin {
       'it.entry',
       'it.name',
       'it.Quality',
-      'it.class',
       'it.subclass',
       'it.InventoryType',
       'it.ItemLevel',
       'it.RequiredLevel',
       if (localeEnabled) 'itl.Name AS localeName',
-      'didi.InventoryIcon0',
+      'it.class AS classId',
+      'didi.InventoryIcon0 AS inventoryIcon',
     ];
     builder = builder.select(fields);
     if (localeEnabled) {
@@ -114,27 +113,8 @@ class ItemTemplateRepository with RepositoryMixin {
   }
 
   Future<ItemTemplateEntity?> getItemTemplate(int key) async {
-    var builder = laconic.table('$_table AS it');
-    final fields = <String>[
-      'it.*',
-      if (localeEnabled) ...[
-        'itl.Name AS localeName',
-        'itl.Description AS localeDescription',
-      ],
-      'didi.InventoryIcon0',
-    ];
-    builder = builder.select(fields);
-    if (localeEnabled) {
-      builder = builder.leftJoin(
-        '$_localeTable AS itl',
-        (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
-      );
-    }
-    builder = builder.leftJoin(
-      'foxy.dbc_item_display_info AS didi',
-      (join) => join.on('it.displayid', 'didi.ID'),
-    );
-    builder = builder.where('it.entry', key).limit(1);
+    var builder = laconic.table(_table);
+    builder = builder.where('entry', key).limit(1);
     var results = await builder.get();
     if (results.isEmpty) return null;
     return ItemTemplateEntity.fromJson(results.first.toMap());

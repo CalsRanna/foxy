@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:foxy/entity/brief_creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
-import 'package:foxy/entity/creature_template_resistance_key.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/form/validation/creature_template_resistance_entity_validation_mixin.dart';
@@ -37,8 +35,7 @@ class CreatureTemplateResistanceCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) =>
-      setParentKey(parentKey);
+  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
 
   Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
@@ -58,7 +55,9 @@ class CreatureTemplateResistanceCollectionEditorViewModel
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createCreatureTemplateResistance(parent);
+      final candidate = await _repository.createCreatureTemplateResistance(
+        parent,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -114,7 +113,10 @@ class CreatureTemplateResistanceCollectionEditorViewModel
       if (originalKey == null) {
         await _repository.storeCreatureTemplateResistance(candidate);
       } else {
-        await _repository.updateCreatureTemplateResistance(originalKey, candidate);
+        await _repository.updateCreatureTemplateResistance(
+          originalKey,
+          candidate,
+        );
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -207,7 +209,10 @@ class CreatureTemplateResistanceCollectionEditorViewModel
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefCreatureTemplateResistances(parent, page: nextPage);
+      final data = await _repository.getBriefCreatureTemplateResistances(
+        parent,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;

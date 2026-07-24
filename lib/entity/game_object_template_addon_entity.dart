@@ -1,12 +1,40 @@
-class GameObjectTemplateAddonEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'game_object_template_addon_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'gameobject_template_addon')
+class GameObjectTemplateAddonEntity with _GameObjectTemplateAddonEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('entry', key: true)
   final int entry;
+
+  @FoxyBriefField()
+  @FoxyFullField('faction')
   final int faction;
+
+  @FoxyBriefField()
+  @FoxyFullField('flags')
   final int flags;
+
+  @FoxyBriefField()
+  @FoxyFullField('mingold')
   final int minGold;
+
+  @FoxyBriefField()
+  @FoxyFullField('maxgold')
   final int maxGold;
+
+  @FoxyFullField('artkit0')
   final int artkit0;
+
+  @FoxyFullField('artkit1')
   final int artkit1;
+
+  @FoxyFullField('artkit2')
   final int artkit2;
+
+  @FoxyFullField('artkit3')
   final int artkit3;
 
   const GameObjectTemplateAddonEntity({
@@ -21,55 +49,6 @@ class GameObjectTemplateAddonEntity {
     this.artkit3 = 0,
   });
 
-  factory GameObjectTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateAddonEntity(
-      entry: json['entry'] ?? 0,
-      faction: json['faction'] ?? 0,
-      flags: json['flags'] ?? 0,
-      minGold: json['mingold'] ?? json['Mingold'] ?? 0,
-      maxGold: json['maxgold'] ?? json['Maxgold'] ?? 0,
-      artkit0: json['artkit0'] ?? json['Artkit0'] ?? 0,
-      artkit1: json['artkit1'] ?? json['Artkit1'] ?? 0,
-      artkit2: json['artkit2'] ?? json['Artkit2'] ?? 0,
-      artkit3: json['artkit3'] ?? json['Artkit3'] ?? 0,
-    );
-  }
-
-  GameObjectTemplateAddonEntity copyWith({
-    int? entry,
-    int? faction,
-    int? flags,
-    int? minGold,
-    int? maxGold,
-    int? artkit0,
-    int? artkit1,
-    int? artkit2,
-    int? artkit3,
-  }) {
-    return GameObjectTemplateAddonEntity(
-      entry: entry ?? this.entry,
-      faction: faction ?? this.faction,
-      flags: flags ?? this.flags,
-      minGold: minGold ?? this.minGold,
-      maxGold: maxGold ?? this.maxGold,
-      artkit0: artkit0 ?? this.artkit0,
-      artkit1: artkit1 ?? this.artkit1,
-      artkit2: artkit2 ?? this.artkit2,
-      artkit3: artkit3 ?? this.artkit3,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'entry': entry,
-      'faction': faction,
-      'flags': flags,
-      'mingold': minGold,
-      'maxgold': maxGold,
-      'artkit0': artkit0,
-      'artkit1': artkit1,
-      'artkit2': artkit2,
-      'artkit3': artkit3,
-    };
-  }
+  factory GameObjectTemplateAddonEntity.fromJson(Map<String, dynamic> json) =>
+      _GameObjectTemplateAddonEntityMixin.fromJson(json);
 }

@@ -1,5 +1,5 @@
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
-import 'package:foxy/entity/gossip_menu_option_key.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';

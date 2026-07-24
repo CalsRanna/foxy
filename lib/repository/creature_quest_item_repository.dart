@@ -1,6 +1,4 @@
-import 'package:foxy/entity/brief_creature_quest_item_entity.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
-import 'package:foxy/entity/creature_quest_item_key.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -52,10 +50,10 @@ class CreatureQuestItemRepository with RepositoryMixin {
       'cq.Idx',
       'cq.ItemId',
       'cq.VerifiedBuild',
-      'it.name',
-      if (localeEnabled) 'itl.Name AS localeName',
-      'it.Quality',
-      'didi.InventoryIcon0',
+      'it.name AS itemName',
+      if (localeEnabled) 'itl.Name AS itemLocaleName',
+      'it.Quality AS itemQuality',
+      'didi.InventoryIcon0 AS itemIcon',
     ];
     builder = builder.select(fields);
     builder = builder.leftJoin(

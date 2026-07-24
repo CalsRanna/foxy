@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/entity/gossip_menu_key.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_detail_view_model.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';

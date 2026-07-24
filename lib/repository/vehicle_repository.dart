@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/vehicle_filter_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';

@@ -34,7 +34,7 @@ class BriefItemEnchantmentTemplateEntity {
     entry: json['entry'] ?? 0,
     ench: json['ench'] ?? 0,
     chance: ((json['chance'] ?? 0) as num).toDouble(),
-    name: json['Name_lang_zhCN'] ?? json['Name'] ?? '',
+    name: json['name'] ?? '',
     enchantment1Name: json['Enchantment_1'] ?? '',
     enchantment2Name: json['Enchantment_2'] ?? '',
     enchantment3Name: json['Enchantment_3'] ?? '',

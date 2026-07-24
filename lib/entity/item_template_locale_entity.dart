@@ -1,9 +1,28 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'item_template_locale_entity.g.dart';
+
 /// item_template_locale 表模型（1:N locale，复合主键 ID + Locale）
-class ItemTemplateLocaleEntity {
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'item_template_locale')
+class ItemTemplateLocaleEntity with _ItemTemplateLocaleEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('locale', key: true)
   final String locale;
+
+  @FoxyBriefField()
+  @FoxyFullField('Name')
   final String name;
+
+  @FoxyFullField('Description')
   final String description;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const ItemTemplateLocaleEntity({
@@ -14,39 +33,6 @@ class ItemTemplateLocaleEntity {
     this.verifiedBuild = 0,
   });
 
-  factory ItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return ItemTemplateLocaleEntity(
-      id: (json['ID'] ?? json['id'] ?? 0) as int,
-      locale: json['locale']?.toString() ?? 'zhCN',
-      name: json['Name']?.toString() ?? '',
-      description: json['Description']?.toString() ?? '',
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
-
-  ItemTemplateLocaleEntity copyWith({
-    int? id,
-    String? locale,
-    String? name,
-    String? description,
-    int? verifiedBuild,
-  }) {
-    return ItemTemplateLocaleEntity(
-      id: id ?? this.id,
-      locale: locale ?? this.locale,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'locale': locale,
-      'Name': name,
-      'Description': description,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+  factory ItemTemplateLocaleEntity.fromJson(Map<String, dynamic> json) =>
+      _ItemTemplateLocaleEntityMixin.fromJson(json);
 }

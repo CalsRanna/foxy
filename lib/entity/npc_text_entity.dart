@@ -1,93 +1,281 @@
-class NpcTextEntity {
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'npc_text_entity.g.dart';
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('text0')
+@FoxyBriefField.text('text1')
+@FoxyFullEntity(table: 'npc_text')
+class NpcTextEntity with _NpcTextEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
   final int id;
+
+  @FoxyFullField('text0_0')
   final String text00;
+
+  @FoxyFullField('text0_1')
   final String text01;
+
+  @FoxyFullField('BroadcastTextID0')
   final int broadcastTextId0;
+
+  @FoxyFullField('lang0')
   final int lang0;
+
+  @FoxyFullField('Probability0')
   final double probability0;
+
+  @FoxyFullField('em0_0')
   final int em00;
+
+  @FoxyFullField('em0_1')
   final int em01;
+
+  @FoxyFullField('em0_2')
   final int em02;
+
+  @FoxyFullField('em0_3')
   final int em03;
+
+  @FoxyFullField('em0_4')
   final int em04;
+
+  @FoxyFullField('em0_5')
   final int em05;
+
+  @FoxyFullField('text1_0')
   final String text10;
+
+  @FoxyFullField('text1_1')
   final String text11;
+
+  @FoxyFullField('BroadcastTextID1')
   final int broadcastTextId1;
+
+  @FoxyFullField('lang1')
   final int lang1;
+
+  @FoxyFullField('Probability1')
   final double probability1;
+
+  @FoxyFullField('em1_0')
   final int em10;
+
+  @FoxyFullField('em1_1')
   final int em11;
+
+  @FoxyFullField('em1_2')
   final int em12;
+
+  @FoxyFullField('em1_3')
   final int em13;
+
+  @FoxyFullField('em1_4')
   final int em14;
+
+  @FoxyFullField('em1_5')
   final int em15;
+
+  @FoxyFullField('text2_0')
   final String text20;
+
+  @FoxyFullField('text2_1')
   final String text21;
+
+  @FoxyFullField('BroadcastTextID2')
   final int broadcastTextId2;
+
+  @FoxyFullField('lang2')
   final int lang2;
+
+  @FoxyFullField('Probability2')
   final double probability2;
+
+  @FoxyFullField('em2_0')
   final int em20;
+
+  @FoxyFullField('em2_1')
   final int em21;
+
+  @FoxyFullField('em2_2')
   final int em22;
+
+  @FoxyFullField('em2_3')
   final int em23;
+
+  @FoxyFullField('em2_4')
   final int em24;
+
+  @FoxyFullField('em2_5')
   final int em25;
+
+  @FoxyFullField('text3_0')
   final String text30;
+
+  @FoxyFullField('text3_1')
   final String text31;
+
+  @FoxyFullField('BroadcastTextID3')
   final int broadcastTextId3;
+
+  @FoxyFullField('lang3')
   final int lang3;
+
+  @FoxyFullField('Probability3')
   final double probability3;
+
+  @FoxyFullField('em3_0')
   final int em30;
+
+  @FoxyFullField('em3_1')
   final int em31;
+
+  @FoxyFullField('em3_2')
   final int em32;
+
+  @FoxyFullField('em3_3')
   final int em33;
+
+  @FoxyFullField('em3_4')
   final int em34;
+
+  @FoxyFullField('em3_5')
   final int em35;
+
+  @FoxyFullField('text4_0')
   final String text40;
+
+  @FoxyFullField('text4_1')
   final String text41;
+
+  @FoxyFullField('BroadcastTextID4')
   final int broadcastTextId4;
+
+  @FoxyFullField('lang4')
   final int lang4;
+
+  @FoxyFullField('Probability4')
   final double probability4;
+
+  @FoxyFullField('em4_0')
   final int em40;
+
+  @FoxyFullField('em4_1')
   final int em41;
+
+  @FoxyFullField('em4_2')
   final int em42;
+
+  @FoxyFullField('em4_3')
   final int em43;
+
+  @FoxyFullField('em4_4')
   final int em44;
+
+  @FoxyFullField('em4_5')
   final int em45;
+
+  @FoxyFullField('text5_0')
   final String text50;
+
+  @FoxyFullField('text5_1')
   final String text51;
+
+  @FoxyFullField('BroadcastTextID5')
   final int broadcastTextId5;
+
+  @FoxyFullField('lang5')
   final int lang5;
+
+  @FoxyFullField('Probability5')
   final double probability5;
+
+  @FoxyFullField('em5_0')
   final int em50;
+
+  @FoxyFullField('em5_1')
   final int em51;
+
+  @FoxyFullField('em5_2')
   final int em52;
+
+  @FoxyFullField('em5_3')
   final int em53;
+
+  @FoxyFullField('em5_4')
   final int em54;
+
+  @FoxyFullField('em5_5')
   final int em55;
+
+  @FoxyFullField('text6_0')
   final String text60;
+
+  @FoxyFullField('text6_1')
   final String text61;
+
+  @FoxyFullField('BroadcastTextID6')
   final int broadcastTextId6;
+
+  @FoxyFullField('lang6')
   final int lang6;
+
+  @FoxyFullField('Probability6')
   final double probability6;
+
+  @FoxyFullField('em6_0')
   final int em60;
+
+  @FoxyFullField('em6_1')
   final int em61;
+
+  @FoxyFullField('em6_2')
   final int em62;
+
+  @FoxyFullField('em6_3')
   final int em63;
+
+  @FoxyFullField('em6_4')
   final int em64;
+
+  @FoxyFullField('em6_5')
   final int em65;
+
+  @FoxyFullField('text7_0')
   final String text70;
+
+  @FoxyFullField('text7_1')
   final String text71;
+
+  @FoxyFullField('BroadcastTextID7')
   final int broadcastTextId7;
+
+  @FoxyFullField('lang7')
   final int lang7;
+
+  @FoxyFullField('Probability7')
   final double probability7;
+
+  @FoxyFullField('em7_0')
   final int em70;
+
+  @FoxyFullField('em7_1')
   final int em71;
+
+  @FoxyFullField('em7_2')
   final int em72;
+
+  @FoxyFullField('em7_3')
   final int em73;
+
+  @FoxyFullField('em7_4')
   final int em74;
+
+  @FoxyFullField('em7_5')
   final int em75;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const NpcTextEntity({
@@ -183,197 +371,10 @@ class NpcTextEntity {
     this.verifiedBuild = 0,
   });
 
-  factory NpcTextEntity.fromJson(Map<String, dynamic> json) {
-    return NpcTextEntity(
-      id: _int(json['ID'] ?? json['id']),
-      text00: json['text0_0']?.toString() ?? '',
-      text01: json['text0_1']?.toString() ?? '',
-      broadcastTextId0: _int(json['BroadcastTextID0']),
-      lang0: _int(json['lang0']),
-      probability0: _double(json['Probability0']),
-      em00: _int(json['em0_0']),
-      em01: _int(json['em0_1']),
-      em02: _int(json['em0_2']),
-      em03: _int(json['em0_3']),
-      em04: _int(json['em0_4']),
-      em05: _int(json['em0_5']),
-      text10: json['text1_0']?.toString() ?? '',
-      text11: json['text1_1']?.toString() ?? '',
-      broadcastTextId1: _int(json['BroadcastTextID1']),
-      lang1: _int(json['lang1']),
-      probability1: _double(json['Probability1']),
-      em10: _int(json['em1_0']),
-      em11: _int(json['em1_1']),
-      em12: _int(json['em1_2']),
-      em13: _int(json['em1_3']),
-      em14: _int(json['em1_4']),
-      em15: _int(json['em1_5']),
-      text20: json['text2_0']?.toString() ?? '',
-      text21: json['text2_1']?.toString() ?? '',
-      broadcastTextId2: _int(json['BroadcastTextID2']),
-      lang2: _int(json['lang2']),
-      probability2: _double(json['Probability2']),
-      em20: _int(json['em2_0']),
-      em21: _int(json['em2_1']),
-      em22: _int(json['em2_2']),
-      em23: _int(json['em2_3']),
-      em24: _int(json['em2_4']),
-      em25: _int(json['em2_5']),
-      text30: json['text3_0']?.toString() ?? '',
-      text31: json['text3_1']?.toString() ?? '',
-      broadcastTextId3: _int(json['BroadcastTextID3']),
-      lang3: _int(json['lang3']),
-      probability3: _double(json['Probability3']),
-      em30: _int(json['em3_0']),
-      em31: _int(json['em3_1']),
-      em32: _int(json['em3_2']),
-      em33: _int(json['em3_3']),
-      em34: _int(json['em3_4']),
-      em35: _int(json['em3_5']),
-      text40: json['text4_0']?.toString() ?? '',
-      text41: json['text4_1']?.toString() ?? '',
-      broadcastTextId4: _int(json['BroadcastTextID4']),
-      lang4: _int(json['lang4']),
-      probability4: _double(json['Probability4']),
-      em40: _int(json['em4_0']),
-      em41: _int(json['em4_1']),
-      em42: _int(json['em4_2']),
-      em43: _int(json['em4_3']),
-      em44: _int(json['em4_4']),
-      em45: _int(json['em4_5']),
-      text50: json['text5_0']?.toString() ?? '',
-      text51: json['text5_1']?.toString() ?? '',
-      broadcastTextId5: _int(json['BroadcastTextID5']),
-      lang5: _int(json['lang5']),
-      probability5: _double(json['Probability5']),
-      em50: _int(json['em5_0']),
-      em51: _int(json['em5_1']),
-      em52: _int(json['em5_2']),
-      em53: _int(json['em5_3']),
-      em54: _int(json['em5_4']),
-      em55: _int(json['em5_5']),
-      text60: json['text6_0']?.toString() ?? '',
-      text61: json['text6_1']?.toString() ?? '',
-      broadcastTextId6: _int(json['BroadcastTextID6']),
-      lang6: _int(json['lang6']),
-      probability6: _double(json['Probability6']),
-      em60: _int(json['em6_0']),
-      em61: _int(json['em6_1']),
-      em62: _int(json['em6_2']),
-      em63: _int(json['em6_3']),
-      em64: _int(json['em6_4']),
-      em65: _int(json['em6_5']),
-      text70: json['text7_0']?.toString() ?? '',
-      text71: json['text7_1']?.toString() ?? '',
-      broadcastTextId7: _int(json['BroadcastTextID7']),
-      lang7: _int(json['lang7']),
-      probability7: _double(json['Probability7']),
-      em70: _int(json['em7_0']),
-      em71: _int(json['em7_1']),
-      em72: _int(json['em7_2']),
-      em73: _int(json['em7_3']),
-      em74: _int(json['em7_4']),
-      em75: _int(json['em7_5']),
-      verifiedBuild: _int(json['VerifiedBuild']),
-    );
-  }
+  factory NpcTextEntity.fromJson(Map<String, dynamic> json) =>
+      _NpcTextEntityMixin.fromJson(json);
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'ID': id,
-      'text0_0': text00,
-      'text0_1': text01,
-      'BroadcastTextID0': broadcastTextId0,
-      'lang0': lang0,
-      'Probability0': probability0,
-      'em0_0': em00,
-      'em0_1': em01,
-      'em0_2': em02,
-      'em0_3': em03,
-      'em0_4': em04,
-      'em0_5': em05,
-      'text1_0': text10,
-      'text1_1': text11,
-      'BroadcastTextID1': broadcastTextId1,
-      'lang1': lang1,
-      'Probability1': probability1,
-      'em1_0': em10,
-      'em1_1': em11,
-      'em1_2': em12,
-      'em1_3': em13,
-      'em1_4': em14,
-      'em1_5': em15,
-      'text2_0': text20,
-      'text2_1': text21,
-      'BroadcastTextID2': broadcastTextId2,
-      'lang2': lang2,
-      'Probability2': probability2,
-      'em2_0': em20,
-      'em2_1': em21,
-      'em2_2': em22,
-      'em2_3': em23,
-      'em2_4': em24,
-      'em2_5': em25,
-      'text3_0': text30,
-      'text3_1': text31,
-      'BroadcastTextID3': broadcastTextId3,
-      'lang3': lang3,
-      'Probability3': probability3,
-      'em3_0': em30,
-      'em3_1': em31,
-      'em3_2': em32,
-      'em3_3': em33,
-      'em3_4': em34,
-      'em3_5': em35,
-      'text4_0': text40,
-      'text4_1': text41,
-      'BroadcastTextID4': broadcastTextId4,
-      'lang4': lang4,
-      'Probability4': probability4,
-      'em4_0': em40,
-      'em4_1': em41,
-      'em4_2': em42,
-      'em4_3': em43,
-      'em4_4': em44,
-      'em4_5': em45,
-      'text5_0': text50,
-      'text5_1': text51,
-      'BroadcastTextID5': broadcastTextId5,
-      'lang5': lang5,
-      'Probability5': probability5,
-      'em5_0': em50,
-      'em5_1': em51,
-      'em5_2': em52,
-      'em5_3': em53,
-      'em5_4': em54,
-      'em5_5': em55,
-      'text6_0': text60,
-      'text6_1': text61,
-      'BroadcastTextID6': broadcastTextId6,
-      'lang6': lang6,
-      'Probability6': probability6,
-      'em6_0': em60,
-      'em6_1': em61,
-      'em6_2': em62,
-      'em6_3': em63,
-      'em6_4': em64,
-      'em6_5': em65,
-      'text7_0': text70,
-      'text7_1': text71,
-      'BroadcastTextID7': broadcastTextId7,
-      'lang7': lang7,
-      'Probability7': probability7,
-      'em7_0': em70,
-      'em7_1': em71,
-      'em7_2': em72,
-      'em7_3': em73,
-      'em7_4': em74,
-      'em7_5': em75,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
-
-  static double _double(dynamic value) => (value as num?)?.toDouble() ?? 0;
-
-  static int _int(dynamic value) => (value as num?)?.toInt() ?? 0;
+extension BriefNpcTextEntityDisplay on BriefNpcTextEntity {
+  String get displayText => text0.isNotEmpty ? text0 : text1;
 }

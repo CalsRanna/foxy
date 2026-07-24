@@ -1,18 +1,60 @@
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+part 'gossip_menu_option_entity.g.dart';
+
 /// gossip_menu_option 模型（复合键: MenuID + OptionID）。
-class GossipMenuOptionEntity {
+
+@FoxyBriefEntity()
+@FoxyBriefField.text('localeOptionText')
+@FoxyFullEntity(table: 'gossip_menu_option')
+class GossipMenuOptionEntity with _GossipMenuOptionEntityMixin {
+  @FoxyBriefField()
+  @FoxyFullField('MenuID', key: true)
   final int menuId;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionID', key: true)
   final int optionId;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionIcon')
   final int optionIcon;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionText')
   final String optionText;
+
+  @FoxyFullField('OptionBroadcastTextID')
   final int optionBroadcastTextId;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionType')
   final int optionType;
+
+  @FoxyBriefField()
+  @FoxyFullField('OptionNpcFlag')
   final int optionNpcFlag;
+
+  @FoxyFullField('BoxCoded')
   final int boxCoded;
+
+  @FoxyFullField('BoxMoney')
   final int boxMoney;
+
+  @FoxyFullField('BoxText')
   final String boxText;
+
+  @FoxyFullField('BoxBroadcastTextID')
   final int boxBroadcastTextId;
+
+  @FoxyBriefField()
+  @FoxyFullField('ActionMenuID')
   final int actionMenuId;
+
+  @FoxyFullField('ActionPoiID')
   final int actionPoiId;
+
+  @FoxyFullField('VerifiedBuild')
   final int verifiedBuild;
 
   const GossipMenuOptionEntity({
@@ -32,76 +74,11 @@ class GossipMenuOptionEntity {
     this.verifiedBuild = 0,
   });
 
-  factory GossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
-    return GossipMenuOptionEntity(
-      menuId: json['MenuID'] ?? json['menuid'] ?? 0,
-      optionId: json['OptionID'] ?? json['optionid'] ?? 0,
-      optionIcon: json['OptionIcon'] ?? json['optionicon'] ?? 0,
-      optionText: json['OptionText']?.toString() ?? '',
-      optionBroadcastTextId: json['OptionBroadcastTextID'] ?? 0,
-      optionType: json['OptionType'] ?? 0,
-      optionNpcFlag: json['OptionNpcFlag'] ?? 0,
-      boxCoded: json['BoxCoded'] ?? 0,
-      boxMoney: json['BoxMoney'] ?? 0,
-      boxText: json['BoxText']?.toString() ?? '',
-      boxBroadcastTextId: json['BoxBroadcastTextID'] ?? 0,
-      actionMenuId: json['ActionMenuID'] ?? 0,
-      actionPoiId: json['ActionPoiID'] ?? 0,
-      verifiedBuild: json['VerifiedBuild'] ?? 0,
-    );
-  }
+  factory GossipMenuOptionEntity.fromJson(Map<String, dynamic> json) =>
+      _GossipMenuOptionEntityMixin.fromJson(json);
+}
 
-  GossipMenuOptionEntity copyWith({
-    int? menuId,
-    int? optionId,
-    int? optionIcon,
-    String? optionText,
-    int? optionBroadcastTextId,
-    int? optionType,
-    int? optionNpcFlag,
-    int? boxCoded,
-    int? boxMoney,
-    String? boxText,
-    int? boxBroadcastTextId,
-    int? actionMenuId,
-    int? actionPoiId,
-    int? verifiedBuild,
-  }) {
-    return GossipMenuOptionEntity(
-      menuId: menuId ?? this.menuId,
-      optionId: optionId ?? this.optionId,
-      optionIcon: optionIcon ?? this.optionIcon,
-      optionText: optionText ?? this.optionText,
-      optionBroadcastTextId:
-          optionBroadcastTextId ?? this.optionBroadcastTextId,
-      optionType: optionType ?? this.optionType,
-      optionNpcFlag: optionNpcFlag ?? this.optionNpcFlag,
-      boxCoded: boxCoded ?? this.boxCoded,
-      boxMoney: boxMoney ?? this.boxMoney,
-      boxText: boxText ?? this.boxText,
-      boxBroadcastTextId: boxBroadcastTextId ?? this.boxBroadcastTextId,
-      actionMenuId: actionMenuId ?? this.actionMenuId,
-      actionPoiId: actionPoiId ?? this.actionPoiId,
-      verifiedBuild: verifiedBuild ?? this.verifiedBuild,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'MenuID': menuId,
-      'OptionID': optionId,
-      'OptionIcon': optionIcon,
-      'OptionText': optionText,
-      'OptionBroadcastTextID': optionBroadcastTextId,
-      'OptionType': optionType,
-      'OptionNpcFlag': optionNpcFlag,
-      'BoxCoded': boxCoded,
-      'BoxMoney': boxMoney,
-      'BoxText': boxText,
-      'BoxBroadcastTextID': boxBroadcastTextId,
-      'ActionMenuID': actionMenuId,
-      'ActionPoiID': actionPoiId,
-      'VerifiedBuild': verifiedBuild,
-    };
-  }
+extension BriefGossipMenuOptionEntityDisplay on BriefGossipMenuOptionEntity {
+  String get displayText =>
+      localeOptionText.isNotEmpty ? localeOptionText : optionText;
 }

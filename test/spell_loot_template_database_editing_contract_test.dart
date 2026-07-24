@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
-import 'package:foxy/entity/spell_loot_template_key.dart';
 import 'package:foxy/page/spell/spell_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -160,7 +158,8 @@ void main() {
       'lib/page/spell/spell_loot_template_view.dart',
     ).readAsStringSync();
 
-    expect(entity, isNot(contains('itemName')));
+    expect(entity, isNot(contains('final String itemName;')));
+    expect(entity, isNot(contains('this.itemName')));
     expect(repository, isNot(contains('saveSpellLootTemplate')));
     expect(
       viewModel,
