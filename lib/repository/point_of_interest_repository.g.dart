@@ -22,15 +22,35 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
     return PointOfInterestEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storePointOfInterest(
+    PointOfInterestEntity pointOfInterest,
+  ) async {
+    if (pointOfInterest.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(pointOfInterest);
+    final json = _prepareWriteJson(pointOfInterest.toJson());
+    try {
+      await laconic.table('points_of_interest').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updatePointOfInterest(
     int originalKey,
-    PointOfInterestEntity entity,
+    PointOfInterestEntity pointOfInterest,
   ) async {
+    await _beforeUpdate(originalKey, pointOfInterest);
+    final json = _prepareWriteJson(pointOfInterest.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('points_of_interest'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _PointOfInterestRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(PointOfInterestEntity pointOfInterest) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    PointOfInterestEntity pointOfInterest,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

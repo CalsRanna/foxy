@@ -27,10 +27,10 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
   Future<void> storePlayerCreateInfo(
     PlayerCreateInfoEntity playerCreateInfo,
   ) async {
+    await _beforeStore(playerCreateInfo);
+    final json = _prepareWriteJson(playerCreateInfo.toJson());
     try {
-      await laconic.table('playercreateinfo').insert([
-        playerCreateInfo.toJson(),
-      ]);
+      await laconic.table('playercreateinfo').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('相同主键的记录已存在');
@@ -43,11 +43,13 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoKey originalKey,
     PlayerCreateInfoEntity playerCreateInfo,
   ) async {
+    await _beforeUpdate(originalKey, playerCreateInfo);
+    final json = _prepareWriteJson(playerCreateInfo.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('playercreateinfo'),
         originalKey,
-      ).update(playerCreateInfo.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -57,6 +59,22 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(PlayerCreateInfoEntity playerCreateInfo) async {}
+
+  Future<void> _beforeUpdate(
+    PlayerCreateInfoKey originalKey,
+    PlayerCreateInfoEntity playerCreateInfo,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoKey key) {

@@ -143,7 +143,7 @@ void main() {
     expect(source, contains('final deletedRows ='));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('int originalKey'));
-    expect(source, contains(').update(pageText.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('Future<void> storePageText('));
     expect(source, isNot(contains('Future<int> storePageText(')));
@@ -165,9 +165,9 @@ void main() {
   });
 
   test('locale Repository 独立写表并按原始联合 Key 定位', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/page_text_locale_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains("static const _table = 'page_text_locale';"));
     expect(source, contains("{'ID', 'locale'}"));
     expect(source, contains('Future<List<BriefPageTextLocaleEntity>>'));
@@ -176,7 +176,7 @@ void main() {
       contains(".select(['ID', 'locale', 'Text', 'VerifiedBuild'])"),
     );
     expect(source, contains('PageTextLocaleKey originalKey'));
-    expect(source, contains(').update(locale.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('final matchedRows ='));
     expect(source, contains('final deletedRows ='));
     expect(source, isNot(contains(".table('page_text')")));

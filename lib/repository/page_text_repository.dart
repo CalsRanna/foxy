@@ -1,7 +1,7 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -12,6 +12,14 @@ part 'page_text_repository.g.dart';
 @FoxyFilter.text('text')
 class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   static const _table = 'page_text';
+
+  @override
+  Future<void> _beforeStore(PageTextEntity pageText) =>
+      _validateNextPage(pageText.id, pageText.nextPageId);
+
+  @override
+  Future<void> _beforeUpdate(int originalKey, PageTextEntity pageText) =>
+      _validateNextPage(pageText.id, pageText.nextPageId);
   static const _localeTable = 'page_text_locale';
 
   Future<int> copyPageText(int key) async {
@@ -81,39 +89,6 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   Future<List<PageTextEntity>> getPageTexts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storePageText(PageTextEntity pageText) async {
-    if (pageText.id <= 0) {
-      throw StateError('页面文本 ID 必须在新建表单打开时显式分配');
-    }
-    await _validateNextPage(pageText.id, pageText.nextPageId);
-    try {
-      await laconic.table(_table).insert([pageText.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('页面文本 ${pageText.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updatePageText(int originalKey, PageTextEntity pageText) async {
-    await _validateNextPage(pageText.id, pageText.nextPageId);
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(pageText.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的页面文本 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {

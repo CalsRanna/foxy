@@ -22,15 +22,35 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
     return DbcFactionTemplateEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeDbcFactionTemplate(
+    DbcFactionTemplateEntity dbcFactionTemplate,
+  ) async {
+    if (dbcFactionTemplate.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(dbcFactionTemplate);
+    final json = _prepareWriteJson(dbcFactionTemplate.toJson());
+    try {
+      await laconic.table('foxy.dbc_faction_template').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateDbcFactionTemplate(
     int originalKey,
-    DbcFactionTemplateEntity factionTemplate,
+    DbcFactionTemplateEntity dbcFactionTemplate,
   ) async {
+    await _beforeUpdate(originalKey, dbcFactionTemplate);
+    final json = _prepareWriteJson(dbcFactionTemplate.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_faction_template'),
         originalKey,
-      ).update(factionTemplate.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,24 @@ mixin _DbcFactionTemplateRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(
+    DbcFactionTemplateEntity dbcFactionTemplate,
+  ) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    DbcFactionTemplateEntity dbcFactionTemplate,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

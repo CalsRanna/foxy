@@ -16,7 +16,7 @@ void main() {
       'lib/repository/quest_template_repository.dart',
     );
     expect(source, contains('int originalKey'));
-    expect(source, contains(').update(template.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

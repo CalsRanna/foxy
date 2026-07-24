@@ -1,7 +1,7 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -77,20 +77,6 @@ class SpellRangeRepository
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-
-  Future<void> storeSpellRange(SpellRangeEntity range) async {
-    if (range.id <= 0) {
-      throw StateError('法术射程 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([range.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('法术射程 ${range.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellRangeFilter? filter) {
     if (filter == null) return builder;

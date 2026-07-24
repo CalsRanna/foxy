@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -61,20 +61,6 @@ class DbcItemRepository with RepositoryMixin, _DbcItemRepositoryMixin {
   Future<List<DbcItemEntity>> getDbcItems() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => DbcItemEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<void> storeDbcItem(DbcItemEntity item) async {
-    if (item.id <= 0) {
-      throw StateError('DBC 物品 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([item.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('DBC 物品 ${item.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, DbcItemFilter? filter) {

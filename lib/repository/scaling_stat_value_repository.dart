@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -12,6 +12,16 @@ part 'scaling_stat_value_repository.g.dart';
 class ScalingStatValueRepository
     with RepositoryMixin, _ScalingStatValueRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
+
+  @override
+  Future<void> _beforeStore(ScalingStatValueEntity scalingStatValue) =>
+      _validateUniqueCharlevel(scalingStatValue);
+
+  @override
+  Future<void> _beforeUpdate(
+    int originalKey,
+    ScalingStatValueEntity scalingStatValue,
+  ) => _validateUniqueCharlevel(scalingStatValue, originalKey: originalKey);
 
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
@@ -72,42 +82,6 @@ class ScalingStatValueRepository
     return rows
         .map((row) => ScalingStatValueEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<void> storeScalingStatValue(ScalingStatValueEntity value) async {
-    if (value.id <= 0) {
-      throw StateError('缩放属性值 ID 必须在新建表单打开时显式分配');
-    }
-    await _validateUniqueCharlevel(value);
-    try {
-      await laconic.table(_table).insert([value.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('缩放属性值 ${value.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateScalingStatValue(
-    int originalKey,
-    ScalingStatValueEntity value,
-  ) async {
-    await _validateUniqueCharlevel(value, originalKey: originalKey);
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(value.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的缩放属性值 ID 已存在，无法保存');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

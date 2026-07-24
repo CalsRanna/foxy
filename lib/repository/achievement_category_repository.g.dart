@@ -22,15 +22,35 @@ mixin _AchievementCategoryRepositoryMixin on RepositoryMixin {
     return AchievementCategoryEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeAchievementCategory(
+    AchievementCategoryEntity achievementCategory,
+  ) async {
+    if (achievementCategory.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(achievementCategory);
+    final json = _prepareWriteJson(achievementCategory.toJson());
+    try {
+      await laconic.table('foxy.dbc_achievement_category').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateAchievementCategory(
     int originalKey,
-    AchievementCategoryEntity category,
+    AchievementCategoryEntity achievementCategory,
   ) async {
+    await _beforeUpdate(originalKey, achievementCategory);
+    final json = _prepareWriteJson(achievementCategory.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_achievement_category'),
         originalKey,
-      ).update(category.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,24 @@ mixin _AchievementCategoryRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(
+    AchievementCategoryEntity achievementCategory,
+  ) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    AchievementCategoryEntity achievementCategory,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

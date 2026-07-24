@@ -22,15 +22,35 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
     return ItemDisplayInfoEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeItemDisplayInfo(
+    ItemDisplayInfoEntity itemDisplayInfo,
+  ) async {
+    if (itemDisplayInfo.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(itemDisplayInfo);
+    final json = _prepareWriteJson(itemDisplayInfo.toJson());
+    try {
+      await laconic.table('foxy.dbc_item_display_info').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateItemDisplayInfo(
     int originalKey,
-    ItemDisplayInfoEntity info,
+    ItemDisplayInfoEntity itemDisplayInfo,
   ) async {
+    await _beforeUpdate(originalKey, itemDisplayInfo);
+    final json = _prepareWriteJson(itemDisplayInfo.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_item_display_info'),
         originalKey,
-      ).update(info.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _ItemDisplayInfoRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(ItemDisplayInfoEntity itemDisplayInfo) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    ItemDisplayInfoEntity itemDisplayInfo,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

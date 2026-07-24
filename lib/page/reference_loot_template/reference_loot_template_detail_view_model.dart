@@ -89,7 +89,7 @@ class ReferenceLootTemplateDetailViewModel
     try {
       final candidate = key == null
           ? await _repository.createLootTemplate(0)
-          : await _repository.getLootTemplate(key);
+          : await _repository.getReferenceLootTemplate(key);
       if (candidate == null) {
         throw StateError('原关联掉落不存在，可能已被其他操作修改或删除');
       }
@@ -116,9 +116,9 @@ class ReferenceLootTemplateDetailViewModel
           ? ActivityActionType.create
           : ActivityActionType.update;
       if (originalKey == null) {
-        await _repository.storeLootTemplate(candidate);
+        await _repository.storeReferenceLootTemplate(candidate);
       } else {
-        await _repository.updateLootTemplate(originalKey, candidate);
+        await _repository.updateReferenceLootTemplate(originalKey, candidate);
       }
       entity.value = candidate;
       persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);

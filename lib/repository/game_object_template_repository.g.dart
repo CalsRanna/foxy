@@ -22,15 +22,35 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     return GameObjectTemplateEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeGameObjectTemplate(
+    GameObjectTemplateEntity gameObjectTemplate,
+  ) async {
+    if (gameObjectTemplate.entry <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(gameObjectTemplate);
+    final json = _prepareWriteJson(gameObjectTemplate.toJson());
+    try {
+      await laconic.table('gameobject_template').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateGameObjectTemplate(
     int originalKey,
-    GameObjectTemplateEntity template,
+    GameObjectTemplateEntity gameObjectTemplate,
   ) async {
+    await _beforeUpdate(originalKey, gameObjectTemplate);
+    final json = _prepareWriteJson(gameObjectTemplate.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('gameobject_template'),
         originalKey,
-      ).update(template.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,24 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(
+    GameObjectTemplateEntity gameObjectTemplate,
+  ) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    GameObjectTemplateEntity gameObjectTemplate,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

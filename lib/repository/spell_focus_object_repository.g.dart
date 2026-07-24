@@ -22,15 +22,35 @@ mixin _SpellFocusObjectRepositoryMixin on RepositoryMixin {
     return SpellFocusObjectEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeSpellFocusObject(
+    SpellFocusObjectEntity spellFocusObject,
+  ) async {
+    if (spellFocusObject.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(spellFocusObject);
+    final json = _prepareWriteJson(spellFocusObject.toJson());
+    try {
+      await laconic.table('foxy.dbc_spell_focus_object').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateSpellFocusObject(
     int originalKey,
-    SpellFocusObjectEntity entity,
+    SpellFocusObjectEntity spellFocusObject,
   ) async {
+    await _beforeUpdate(originalKey, spellFocusObject);
+    final json = _prepareWriteJson(spellFocusObject.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_spell_focus_object'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _SpellFocusObjectRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(SpellFocusObjectEntity spellFocusObject) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    SpellFocusObjectEntity spellFocusObject,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

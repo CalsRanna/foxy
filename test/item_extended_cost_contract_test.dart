@@ -147,7 +147,7 @@ void main() {
       'lib/repository/item_extended_cost_repository.dart',
     );
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(itemExtendedCost.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains('matchedRows == 0'));
     expect(source, contains('deletedRows == 0'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

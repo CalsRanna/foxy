@@ -1,9 +1,14 @@
 import 'package:foxy/entity/creature_equip_template_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class CreatureEquipTemplateRepository with RepositoryMixin {
+part 'creature_equip_template_repository.g.dart';
+
+@FoxyRepository(CreatureEquipTemplateEntity)
+class CreatureEquipTemplateRepository
+    with RepositoryMixin, _CreatureEquipTemplateRepositoryMixin {
   static const _table = 'creature_equip_template';
   static const primaryKeyColumns = {'CreatureID', 'ID'};
 
@@ -31,15 +36,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
       creatureID: creatureID,
       id: await getNextId(creatureID),
     );
-  }
-
-  Future<void> destroyCreatureEquipTemplate(
-    CreatureEquipTemplateKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
-    }
   }
 
   Future<List<BriefCreatureEquipTemplateEntity>> getBriefCreatureEquipTemplates(
@@ -122,51 +118,6 @@ class CreatureEquipTemplateRepository with RepositoryMixin {
         .toList();
   }
 
-  Future<CreatureEquipTemplateEntity?> getCreatureEquipTemplate(
-    CreatureEquipTemplateKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return CreatureEquipTemplateEntity.fromJson(results.first.toMap());
-  }
-
   Future<int> getNextId(int creatureID) =>
       nextMaxPlusOne(_table, 'ID', where: {'CreatureID': creatureID});
-
-  Future<void> storeCreatureEquipTemplate(
-    CreatureEquipTemplateEntity equip,
-  ) async {
-    try {
-      await laconic.table(_table).insert([equip.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('生物装备模板主键已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureEquipTemplate(
-    CreatureEquipTemplateKey originalKey,
-    CreatureEquipTemplateEntity equip,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(equip.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物装备模板主键已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, CreatureEquipTemplateKey key) {
-    return builder.where('CreatureID', key.creatureID).where('ID', key.id);
-  }
 }

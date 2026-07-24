@@ -29,10 +29,10 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
   Future<void> storeItemEnchantmentTemplate(
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) async {
+    await _beforeStore(itemEnchantmentTemplate);
+    final json = _prepareWriteJson(itemEnchantmentTemplate.toJson());
     try {
-      await laconic.table('item_enchantment_template').insert([
-        itemEnchantmentTemplate.toJson(),
-      ]);
+      await laconic.table('item_enchantment_template').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('相同主键的记录已存在');
@@ -45,11 +45,13 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     ItemEnchantmentTemplateKey originalKey,
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) async {
+    await _beforeUpdate(originalKey, itemEnchantmentTemplate);
+    final json = _prepareWriteJson(itemEnchantmentTemplate.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('item_enchantment_template'),
         originalKey,
-      ).update(itemEnchantmentTemplate.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -59,6 +61,24 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) async {}
+
+  Future<void> _beforeUpdate(
+    ItemEnchantmentTemplateKey originalKey,
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, ItemEnchantmentTemplateKey key) {

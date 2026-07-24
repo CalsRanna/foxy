@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('Repository 分配调用点不再手写 MAX 聚合', () {
@@ -44,9 +45,9 @@ void main() {
     final mixin = File(
       'lib/repository/repository_mixin.dart',
     ).readAsStringSync();
-    final npcVendor = File(
+    final npcVendor = readLocalDartLibrarySource(
       'lib/repository/npc_vendor_repository.dart',
-    ).readAsStringSync();
+    );
     expect(mixin, contains('int firstValue = 1'));
     expect(mixin, contains('if (raw == null) return firstValue;'));
     expect(npcVendor, contains('firstValue: 0'));

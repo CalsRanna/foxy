@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_group_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('SpellGroupKey 和 Brief 覆盖 id + spell_id', () {
@@ -15,11 +16,11 @@ void main() {
   });
 
   test('Repository 使用完整旧 key、完整 candidate 和写入结果', () {
-    final source = File(
+    final source = readLocalDartLibrarySource(
       'lib/repository/spell_group_repository.dart',
-    ).readAsStringSync();
+    );
     expect(source, contains('SpellGroupKey originalKey'));
-    expect(source, contains('.update(data.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(source, contains("where('id', key.id)"));
     expect(source, contains("where('spell_id', key.spellId)"));
     expect(source, contains('if (matchedRows == 0)'));
@@ -29,9 +30,9 @@ void main() {
   });
 
   test('内嵌编辑器使用 Brief、editingKey、分页且两个键都可编辑', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_group_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell/spell_group_collection_editor_view_model.dart',
     ).readAsStringSync();

@@ -8,6 +8,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -148,9 +149,9 @@ void main() {
     final entity = File(
       'lib/entity/spell_loot_template_entity.dart',
     ).readAsStringSync();
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/spell_loot_template_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/spell/spell_loot_template_collection_editor_view_model.dart',
     ).readAsStringSync();

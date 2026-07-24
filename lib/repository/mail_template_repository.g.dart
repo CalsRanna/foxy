@@ -22,15 +22,33 @@ mixin _MailTemplateRepositoryMixin on RepositoryMixin {
     return MailTemplateEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeMailTemplate(MailTemplateEntity mailTemplate) async {
+    if (mailTemplate.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(mailTemplate);
+    final json = _prepareWriteJson(mailTemplate.toJson());
+    try {
+      await laconic.table('foxy.dbc_mail_template').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateMailTemplate(
     int originalKey,
-    MailTemplateEntity template,
+    MailTemplateEntity mailTemplate,
   ) async {
+    await _beforeUpdate(originalKey, mailTemplate);
+    final json = _prepareWriteJson(mailTemplate.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_mail_template'),
         originalKey,
-      ).update(template.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +58,22 @@ mixin _MailTemplateRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(MailTemplateEntity mailTemplate) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    MailTemplateEntity mailTemplate,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

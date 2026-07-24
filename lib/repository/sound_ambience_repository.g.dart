@@ -22,15 +22,33 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
     return SoundAmbienceEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeSoundAmbience(SoundAmbienceEntity soundAmbience) async {
+    if (soundAmbience.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(soundAmbience);
+    final json = _prepareWriteJson(soundAmbience.toJson());
+    try {
+      await laconic.table('foxy.dbc_sound_ambience').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateSoundAmbience(
     int originalKey,
-    SoundAmbienceEntity entity,
+    SoundAmbienceEntity soundAmbience,
   ) async {
+    await _beforeUpdate(originalKey, soundAmbience);
+    final json = _prepareWriteJson(soundAmbience.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_sound_ambience'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +58,22 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(SoundAmbienceEntity soundAmbience) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    SoundAmbienceEntity soundAmbience,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

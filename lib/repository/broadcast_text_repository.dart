@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -59,20 +59,6 @@ class BroadcastTextRepository
   Future<List<BroadcastTextEntity>> getBroadcastTexts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => BroadcastTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeBroadcastText(BroadcastTextEntity text) async {
-    if (text.id <= 0) {
-      throw StateError('广播文本 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([text.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('广播文本 ${text.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, BroadcastTextFilter? filter) {

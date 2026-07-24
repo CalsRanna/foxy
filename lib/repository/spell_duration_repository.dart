@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -56,20 +56,6 @@ class SpellDurationRepository
   Future<List<SpellDurationEntity>> getSpellDurations() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SpellDurationEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeSpellDuration(SpellDurationEntity duration) async {
-    if (duration.id <= 0) {
-      throw StateError('法术持续时间 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([duration.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('法术持续时间 ${duration.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, SpellDurationFilter? filter) {

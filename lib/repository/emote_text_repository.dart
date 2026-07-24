@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -52,20 +52,6 @@ class EmoteTextRepository with RepositoryMixin, _EmoteTextRepositoryMixin {
   Future<List<EmoteTextEntity>> getEmoteTexts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => EmoteTextEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeEmoteText(EmoteTextEntity emoteText) async {
-    if (emoteText.id <= 0) {
-      throw StateError('表情文本 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([emoteText.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('表情文本 ${emoteText.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, EmoteTextFilter? filter) {

@@ -84,7 +84,7 @@ class CreatureLootTemplateCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.getLootTemplate(key);
+      final candidate = await _repository.getCreatureLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -114,9 +114,9 @@ class CreatureLootTemplateCollectionEditorViewModel
     errorMessage.value = null;
     try {
       if (originalKey == null) {
-        await _repository.storeLootTemplate(candidate);
+        await _repository.storeCreatureLootTemplate(candidate);
       } else {
-        await _repository.updateLootTemplate(originalKey, candidate);
+        await _repository.updateCreatureLootTemplate(originalKey, candidate);
       }
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
@@ -139,7 +139,7 @@ class CreatureLootTemplateCollectionEditorViewModel
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _repository.destroyLootTemplate(key);
+      await _repository.destroyCreatureLootTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       await _refresh();
     } catch (error) {

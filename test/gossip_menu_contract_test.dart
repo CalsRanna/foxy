@@ -8,6 +8,7 @@ import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('gossip_menu 与全部关联 Entity 逐列覆盖物理结构', () {
@@ -140,9 +141,9 @@ void main() {
     final detailPage = File(
       'lib/page/gossip_menu/gossip_menu_detail_page.dart',
     ).readAsStringSync();
-    final optionRepository = File(
+    final optionRepository = readLocalDartLibrarySource(
       'lib/repository/gossip_menu_option_repository.dart',
-    ).readAsStringSync();
+    );
 
     expect(npcView, contains('FoxyEntityPickerDelegates.dbcEmote'));
     expect(npcView, contains("_delayField('延迟 1'"));

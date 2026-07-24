@@ -19,12 +19,11 @@ void main() {
       'lib/repository/npc_text_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('int originalKey'));
-    expect(source, contains('.update(npcText.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(generatedSource, contains("where('ID', key)"));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(source, contains('if (npcText.id <= 0)'));
     expect(source, isNot(contains('saveNpcText(')));
     expect(source, isNot(contains('Future<int> storeNpcText')));
   });

@@ -21,7 +21,7 @@ void main() {
       'lib/repository/gossip_menu_repository.dart',
     );
     expect(source, contains('GossipMenuKey originalKey'));
-    expect(source, contains(').update(menu.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

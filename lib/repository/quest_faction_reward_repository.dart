@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -58,22 +58,6 @@ class QuestFactionRewardRepository
     return results
         .map((e) => QuestFactionRewardEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeQuestFactionReward(
-    QuestFactionRewardEntity questFactionReward,
-  ) async {
-    if (questFactionReward.id <= 0) {
-      throw StateError('任务声望 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([questFactionReward.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('任务声望 ${questFactionReward.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

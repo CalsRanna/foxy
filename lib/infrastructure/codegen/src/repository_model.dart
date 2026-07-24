@@ -1,10 +1,6 @@
 final class RepositoryGenerationModel {
   final String entityClassName;
   final String entityParameterName;
-  final bool generateDestroy;
-  final bool generateGet;
-  final bool generateStore;
-  final bool generateUpdate;
   final List<RepositoryKeyFieldModel> keyFields;
   final String mixinName;
   final String repositoryClassName;
@@ -13,10 +9,6 @@ final class RepositoryGenerationModel {
   const RepositoryGenerationModel({
     required this.entityClassName,
     required this.entityParameterName,
-    required this.generateDestroy,
-    required this.generateGet,
-    required this.generateStore,
-    required this.generateUpdate,
     required this.keyFields,
     required this.mixinName,
     required this.repositoryClassName,

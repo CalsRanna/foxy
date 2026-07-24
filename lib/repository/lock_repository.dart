@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -48,20 +48,6 @@ class LockRepository with RepositoryMixin, _LockRepositoryMixin {
   Future<List<LockEntity>> getLocks() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => LockEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeLock(LockEntity lock) async {
-    if (lock.id <= 0) {
-      throw StateError('锁定义 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([lock.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('锁定义 ${lock.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, LockFilter? filter) {

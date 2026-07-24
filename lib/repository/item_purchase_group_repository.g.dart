@@ -22,15 +22,35 @@ mixin _ItemPurchaseGroupRepositoryMixin on RepositoryMixin {
     return ItemPurchaseGroupEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeItemPurchaseGroup(
+    ItemPurchaseGroupEntity itemPurchaseGroup,
+  ) async {
+    if (itemPurchaseGroup.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(itemPurchaseGroup);
+    final json = _prepareWriteJson(itemPurchaseGroup.toJson());
+    try {
+      await laconic.table('foxy.dbc_item_purchase_group').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateItemPurchaseGroup(
     int originalKey,
-    ItemPurchaseGroupEntity group,
+    ItemPurchaseGroupEntity itemPurchaseGroup,
   ) async {
+    await _beforeUpdate(originalKey, itemPurchaseGroup);
+    final json = _prepareWriteJson(itemPurchaseGroup.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_item_purchase_group'),
         originalKey,
-      ).update(group.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -40,6 +60,22 @@ mixin _ItemPurchaseGroupRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(ItemPurchaseGroupEntity itemPurchaseGroup) async {}
+
+  Future<void> _beforeUpdate(
+    int originalKey,
+    ItemPurchaseGroupEntity itemPurchaseGroup,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

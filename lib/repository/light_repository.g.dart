@@ -22,12 +22,30 @@ mixin _LightRepositoryMixin on RepositoryMixin {
     return LightEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> updateLight(int originalKey, LightEntity entity) async {
+  Future<void> storeLight(LightEntity light) async {
+    if (light.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(light);
+    final json = _prepareWriteJson(light.toJson());
+    try {
+      await laconic.table('foxy.dbc_light').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateLight(int originalKey, LightEntity light) async {
+    await _beforeUpdate(originalKey, light);
+    final json = _prepareWriteJson(light.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_light'),
         originalKey,
-      ).update(entity.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -37,6 +55,19 @@ mixin _LightRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(LightEntity light) async {}
+
+  Future<void> _beforeUpdate(int originalKey, LightEntity light) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

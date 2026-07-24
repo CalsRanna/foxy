@@ -176,7 +176,7 @@ void main() {
       'lib/repository/reference_loot_template_repository.dart',
     );
     expect(source, contains("entry: await nextMaxPlusOne(_table, 'Entry')"));
-    expect(source, contains('await storeLootTemplate(copied);'));
+    expect(source, contains('await storeReferenceLootTemplate(copied);'));
     expect(source, isNot(contains("json['Reference'] = nextItem")));
   });
 

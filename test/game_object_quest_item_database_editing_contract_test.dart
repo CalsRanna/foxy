@@ -8,6 +8,7 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -150,9 +151,9 @@ void main() {
     final entity = File(
       'lib/entity/game_object_quest_item_entity.dart',
     ).readAsStringSync();
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/game_object_quest_item_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/game_object/game_object_quest_item_collection_editor_view_model.dart',
     ).readAsStringSync();

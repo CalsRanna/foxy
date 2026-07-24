@@ -10,6 +10,7 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -128,9 +129,9 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/creature_on_kill_reputation_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart',
     ).readAsStringSync();

@@ -212,7 +212,7 @@ class DbcExportRegistry {
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_achievement_criteria': DbcExportDelegate.typed(
-        load: achievementCriteria.getAchievementCriteria,
+        load: achievementCriteria.getAllAchievementCriteria,
         count: () => achievementCriteria.countAchievementCriteria(),
         toJson: (entity) => entity.toJson(),
       ),
@@ -347,7 +347,7 @@ class DbcExportRegistry {
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_item_random_properties': DbcExportDelegate.typed(
-        load: itemRandomProperties.getItemRandomProperties,
+        load: itemRandomProperties.getAllItemRandomProperties,
         count: () => itemRandomProperties.countItemRandomProperties(),
         toJson: (entity) => entity.toJson(),
       ),
@@ -367,7 +367,7 @@ class DbcExportRegistry {
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_item_visuals': DbcExportDelegate.typed(
-        load: itemVisuals.getItemVisuals,
+        load: itemVisuals.getAllItemVisuals,
         count: () => itemVisuals.countItemVisuals(),
         toJson: (entity) => entity.toJson(),
       ),
@@ -442,7 +442,7 @@ class DbcExportRegistry {
         toJson: (entity) => entity.toJson(),
       ),
       'dbc_sound_provider_preferences': DbcExportDelegate.typed(
-        load: soundProviderPreferences.getSoundProviderPreferences,
+        load: soundProviderPreferences.getAllSoundProviderPreferences,
         count: () => soundProviderPreferences.countSoundProviderPreferences(),
         toJson: (entity) => entity.toJson(),
       ),

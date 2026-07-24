@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -81,22 +81,6 @@ class ScalingStatDistributionRepository
     return results
         .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
         .toList();
-  }
-
-  Future<void> storeScalingStatDistribution(
-    ScalingStatDistributionEntity distribution,
-  ) async {
-    if (distribution.id <= 0) {
-      throw StateError('属性缩放分布 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([distribution.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('属性缩放分布 ${distribution.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(

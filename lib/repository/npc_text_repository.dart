@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -55,18 +55,6 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
   Future<List<NpcTextEntity>> getNpcTexts() async {
     final results = await laconic.table(_table).get();
     return results.map((row) => NpcTextEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<void> storeNpcText(NpcTextEntity npcText) async {
-    if (npcText.id <= 0) throw StateError('NPC 文本 ID 必须大于 0');
-    try {
-      await laconic.table(_table).insert([npcText.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同 NPC 文本 ID 的记录已存在');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, NpcTextFilter? filter) {

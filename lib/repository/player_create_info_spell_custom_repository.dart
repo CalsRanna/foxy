@@ -1,10 +1,15 @@
 import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
+part 'player_create_info_spell_custom_repository.g.dart';
+
+@FoxyRepository(PlayerCreateInfoSpellCustomEntity)
+class PlayerCreateInfoSpellCustomRepository
+    with RepositoryMixin, _PlayerCreateInfoSpellCustomRepositoryMixin {
   static const _table = 'playercreateinfo_spell_custom';
 
   Future<void> copyPlayerCreateInfoSpellCustom(
@@ -31,15 +36,6 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
     classMask: playerCreateClassBit(playerClass),
   );
 
-  Future<void> destroyPlayerCreateInfoSpellCustom(
-    PlayerCreateInfoSpellCustomKey key,
-  ) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原自定义法术记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefPlayerCreateInfoSpellCustomEntity>>
   getBriefPlayerCreateInfoSpellCustoms(
     int race,
@@ -64,56 +60,5 @@ class PlayerCreateInfoSpellCustomRepository with RepositoryMixin {
           (row) => BriefPlayerCreateInfoSpellCustomEntity.fromJson(row.toMap()),
         )
         .toList();
-  }
-
-  Future<PlayerCreateInfoSpellCustomEntity?> getPlayerCreateInfoSpellCustom(
-    PlayerCreateInfoSpellCustomKey key,
-  ) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return PlayerCreateInfoSpellCustomEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storePlayerCreateInfoSpellCustom(
-    PlayerCreateInfoSpellCustomEntity entity,
-  ) async {
-    try {
-      await laconic.table(_table).insert([entity.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同种族、职业与法术 ID 的记录已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updatePlayerCreateInfoSpellCustom(
-    PlayerCreateInfoSpellCustomKey originalKey,
-    PlayerCreateInfoSpellCustomEntity entity,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(entity.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原自定义法术记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的种族、职业与法术 ID 组合已存在');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(
-    QueryBuilder builder,
-    PlayerCreateInfoSpellCustomKey key,
-  ) {
-    return builder
-        .where('racemask', key.raceMask)
-        .where('classmask', key.classMask)
-        .where('Spell', key.spell);
   }
 }

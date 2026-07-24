@@ -23,8 +23,10 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
   }
 
   Future<void> storeSmartScript(SmartScriptEntity smartScript) async {
+    await _beforeStore(smartScript);
+    final json = _prepareWriteJson(smartScript.toJson());
     try {
-      await laconic.table('smart_scripts').insert([smartScript.toJson()]);
+      await laconic.table('smart_scripts').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('相同主键的记录已存在');
@@ -37,11 +39,13 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     SmartScriptKey originalKey,
     SmartScriptEntity smartScript,
   ) async {
+    await _beforeUpdate(originalKey, smartScript);
+    final json = _prepareWriteJson(smartScript.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('smart_scripts'),
         originalKey,
-      ).update(smartScript.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -51,6 +55,22 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(SmartScriptEntity smartScript) async {}
+
+  Future<void> _beforeUpdate(
+    SmartScriptKey originalKey,
+    SmartScriptEntity smartScript,
+  ) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, SmartScriptKey key) {

@@ -205,9 +205,7 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = File(
-      'lib/repository/npc_vendor_repository.dart',
-    ).readAsStringSync();
+    final repository = readLocalDartLibrarySource('lib/repository/npc_vendor_repository.dart');
     final view = File(
       'lib/page/creature_template/npc_vendor_view.dart',
     ).readAsStringSync();

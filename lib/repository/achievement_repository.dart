@@ -1,7 +1,7 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -75,20 +75,6 @@ class AchievementRepository
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
-
-  Future<void> storeAchievement(AchievementEntity achievement) async {
-    if (achievement.id <= 0) {
-      throw StateError('成就 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([achievement.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('成就 ${achievement.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
 
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;

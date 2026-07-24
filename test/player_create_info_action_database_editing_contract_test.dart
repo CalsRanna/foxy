@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/player_create_info_action_entity.dart';
+import './support/local_dart_library_source.dart';
 
 void main() {
   test('动作 Key 和 Brief 覆盖 race + class + button', () {
@@ -23,9 +24,9 @@ void main() {
   });
 
   test('Repository 与内嵌编辑器使用旧 Key、完整 candidate 和分页 Brief', () {
-    final repository = File(
+    final repository = readLocalDartLibrarySource(
       'lib/repository/player_create_info_action_repository.dart',
-    ).readAsStringSync();
+    );
     final viewModel = File(
       'lib/page/player_create_info/player_create_info_action_collection_editor_view_model.dart',
     ).readAsStringSync();
@@ -33,7 +34,7 @@ void main() {
       'lib/page/player_create_info/player_create_info_action_view.dart',
     ).readAsStringSync();
     expect(repository, contains('PlayerCreateInfoActionKey originalKey'));
-    expect(repository, contains('.update(action.toJson())'));
+    expect(repository, contains('.update(json)'));
     expect(repository, contains('if (matchedRows == 0)'));
     expect(repository, contains('if (deletedRows == 0)'));
     expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

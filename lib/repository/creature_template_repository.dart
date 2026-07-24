@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -101,44 +101,6 @@ class CreatureTemplateRepository
         .toList();
   }
 
-  Future<void> storeCreatureTemplate(CreatureTemplateEntity template) async {
-    if (template.entry <= 0) {
-      throw StateError('生物模板 entry 必须在新建表单打开时显式分配');
-    }
-    final json = template.toJson();
-    _handleReservedWords(json);
-    try {
-      await laconic.table(_table).insert([json]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('生物模板 ${template.entry} 已存在，无法新建');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateCreatureTemplate(
-    int originalKey,
-    CreatureTemplateEntity template,
-  ) async {
-    final json = template.toJson();
-    _handleReservedWords(json);
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原生物模板不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的生物模板 entry 已存在，无法保存');
-      }
-      rethrow;
-    }
-  }
-
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureTemplateFilter? filter,
@@ -178,11 +140,5 @@ class CreatureTemplateRepository
       }
     }
     return builder;
-  }
-
-  void _handleReservedWords(Map<String, dynamic> json) {
-    if (json.containsKey('rank')) {
-      json['`rank`'] = json.remove('rank');
-    }
   }
 }

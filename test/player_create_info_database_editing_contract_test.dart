@@ -21,7 +21,7 @@ void main() {
       'lib/repository/player_create_info_repository.g.dart',
     ).readAsStringSync();
     expect(source, contains('PlayerCreateInfoKey originalKey'));
-    expect(source, contains('.update(playerCreateInfo.toJson())'));
+    expect(source, contains('.update(json)'));
     expect(generatedSource, contains("where('race', key.race)"));
     expect(generatedSource, contains("where('class', key.class_)"));
     expect(source, contains('if (matchedRows == 0)'));

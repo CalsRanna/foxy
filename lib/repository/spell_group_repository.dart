@@ -1,9 +1,13 @@
 import 'package:foxy/entity/spell_group_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
-class SpellGroupRepository with RepositoryMixin {
+part 'spell_group_repository.g.dart';
+
+@FoxyRepository(SpellGroupEntity)
+class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
   static const _table = 'spell_group';
 
   Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
@@ -27,13 +31,6 @@ class SpellGroupRepository with RepositoryMixin {
     );
   }
 
-  Future<void> destroySpellGroup(SpellGroupKey key) async {
-    final deletedRows = await _whereKey(laconic.table(_table), key).delete();
-    if (deletedRows == 0) {
-      throw StateError('原法术组记录不存在，可能已被其他操作修改或删除');
-    }
-  }
-
   Future<List<BriefSpellGroupEntity>> getBriefSpellGroups(
     int spellId, {
     int page = 1,
@@ -50,46 +47,5 @@ class SpellGroupRepository with RepositoryMixin {
     return results
         .map((row) => BriefSpellGroupEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  Future<SpellGroupEntity?> getSpellGroup(SpellGroupKey key) async {
-    final results = await _whereKey(laconic.table(_table), key).limit(1).get();
-    if (results.isEmpty) return null;
-    return SpellGroupEntity.fromJson(results.first.toMap());
-  }
-
-  Future<void> storeSpellGroup(SpellGroupEntity data) async {
-    try {
-      await laconic.table(_table).insert([data.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同法术组与法术 ID 的记录已存在');
-      }
-      rethrow;
-    }
-  }
-
-  Future<void> updateSpellGroup(
-    SpellGroupKey originalKey,
-    SpellGroupEntity data,
-  ) async {
-    try {
-      final matchedRows = await _whereKey(
-        laconic.table(_table),
-        originalKey,
-      ).update(data.toJson());
-      if (matchedRows == 0) {
-        throw StateError('原法术组记录不存在，可能已被其他操作修改或删除');
-      }
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的法术组与法术 ID 组合已存在');
-      }
-      rethrow;
-    }
-  }
-
-  QueryBuilder _whereKey(QueryBuilder builder, SpellGroupKey key) {
-    return builder.where('id', key.id).where('spell_id', key.spellId);
   }
 }

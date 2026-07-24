@@ -1,6 +1,6 @@
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -48,20 +48,6 @@ class VehicleRepository with RepositoryMixin, _VehicleRepositoryMixin {
   Future<List<VehicleEntity>> getVehicles() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => VehicleEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<void> storeVehicle(VehicleEntity vehicle) async {
-    if (vehicle.id <= 0) {
-      throw StateError('载具 ID 必须在新建表单打开时显式分配');
-    }
-    try {
-      await laconic.table(_table).insert([vehicle.toJson()]);
-    } catch (error) {
-      if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('载具 ${vehicle.id} 已存在，无法新建');
-      }
-      rethrow;
-    }
   }
 
   QueryBuilder _applyFilter(QueryBuilder builder, VehicleFilter? filter) {

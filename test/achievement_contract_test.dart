@@ -176,7 +176,7 @@ void main() {
     expect(repository, isNot(contains('.validate()')));
     expect(viewModel, contains('validateAchievementFields(candidate);'));
     expect(repository, contains('int originalKey'));
-    expect(repository, contains('.update(achievement.toJson())'));
+    expect(repository, contains('.update(json)'));
     expect(repository, contains('matchedRows == 0'));
     expect(repository, contains('deletedRows == 0'));
     expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

@@ -16,7 +16,7 @@ void main() {
       'lib/repository/spell_repository.dart',
     );
     expect(source, contains('int originalKey'));
-    expect(source, contains(').update(spell.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
     expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));

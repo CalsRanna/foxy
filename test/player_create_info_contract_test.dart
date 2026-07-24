@@ -131,18 +131,10 @@ void main() {
   });
 
   test('Repository 使用通配与按位父项筛选', () {
-    final itemRepository = File(
-      'lib/repository/player_create_info_item_repository.dart',
-    ).readAsStringSync();
-    final skillRepository = File(
-      'lib/repository/player_create_info_skill_repository.dart',
-    ).readAsStringSync();
-    final customRepository = File(
-      'lib/repository/player_create_info_spell_custom_repository.dart',
-    ).readAsStringSync();
-    final castRepository = File(
-      'lib/repository/player_create_info_cast_spell_repository.dart',
-    ).readAsStringSync();
+    final itemRepository = readLocalDartLibrarySource('lib/repository/player_create_info_item_repository.dart');
+    final skillRepository = readLocalDartLibrarySource('lib/repository/player_create_info_skill_repository.dart');
+    final customRepository = readLocalDartLibrarySource('lib/repository/player_create_info_spell_custom_repository.dart');
+    final castRepository = readLocalDartLibrarySource('lib/repository/player_create_info_cast_spell_repository.dart');
 
     expect(itemRepository, contains('`race` = 0 OR `race` = ?'));
     expect(itemRepository, contains('`class` = 0 OR `class` = ?'));

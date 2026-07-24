@@ -22,12 +22,30 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
     return NpcTextEntity.fromJson(results.first.toMap());
   }
 
+  Future<void> storeNpcText(NpcTextEntity npcText) async {
+    if (npcText.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(npcText);
+    final json = _prepareWriteJson(npcText.toJson());
+    try {
+      await laconic.table('npc_text').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
   Future<void> updateNpcText(int originalKey, NpcTextEntity npcText) async {
+    await _beforeUpdate(originalKey, npcText);
+    final json = _prepareWriteJson(npcText.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('npc_text'),
         originalKey,
-      ).update(npcText.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -37,6 +55,19 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(NpcTextEntity npcText) async {}
+
+  Future<void> _beforeUpdate(int originalKey, NpcTextEntity npcText) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

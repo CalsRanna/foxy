@@ -203,7 +203,7 @@ void main() {
           Laconic(_RecordingDriver(), listen: queries.add),
         );
 
-        await repository.updateLootTemplate(spec.key, candidate);
+        await _updateLootTemplate(repository, spec.table, spec.key, candidate);
 
         expect(queries.single.sql, contains(spec.table), reason: spec.table);
         expect(queries.single.bindings, [
@@ -234,7 +234,7 @@ void main() {
         groupId: 41,
       );
 
-      await repository.updateLootTemplate(originalKey, candidate);
+      await repository.updateCreatureLootTemplate(originalKey, candidate);
 
       expect(queries.single.bindings, [
         ...candidate.toJson().values,
@@ -248,7 +248,9 @@ void main() {
     test('九张表的 UPDATE、DELETE 与复制均报告原记录不存在', () async {
       for (final spec in _allRepositorySpecs(affectedRows: 0)) {
         await expectLater(
-          spec.repository.updateLootTemplate(
+          _updateLootTemplate(
+            spec.repository,
+            spec.table,
             spec.key,
             _candidateFor(spec.table),
           ),
@@ -256,7 +258,7 @@ void main() {
           reason: '${spec.table} update',
         );
         await expectLater(
-          spec.repository.destroyLootTemplate(spec.key),
+          _destroyLootTemplate(spec.repository, spec.table, spec.key),
           throwsA(isA<StateError>()),
           reason: '${spec.table} delete',
         );
@@ -333,8 +335,12 @@ void main() {
         contains('final editingKey = signal<${entry.value}?>(null)'),
         reason: entry.key,
       );
-      expect(source, contains('getLootTemplate(key)'), reason: entry.key);
-      expect(source, contains('destroyLootTemplate(key)'), reason: entry.key);
+      final methodBase = entry.value.substring(
+        0,
+        entry.value.length - 'Key'.length,
+      );
+      expect(source, contains('get$methodBase(key)'), reason: entry.key);
+      expect(source, contains('destroy$methodBase(key)'), reason: entry.key);
       expect(source, isNot(contains('editingItem')), reason: entry.key);
       expect(
         source,
@@ -442,6 +448,108 @@ dynamic _candidateFor(String table, {bool updated = false}) {
       reference: reference,
       groupId: groupId,
     ),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
+}
+
+Future<void> _updateLootTemplate(
+  dynamic repository,
+  String table,
+  dynamic key,
+  dynamic candidate,
+) {
+  return switch (table) {
+    'creature_loot_template' =>
+      (repository as CreatureLootTemplateRepository).updateCreatureLootTemplate(
+        key as CreatureLootTemplateKey,
+        candidate as CreatureLootTemplateEntity,
+      ),
+    'pickpocketing_loot_template' =>
+      (repository as PickpocketingLootTemplateRepository)
+          .updatePickpocketingLootTemplate(
+            key as PickpocketingLootTemplateKey,
+            candidate as PickpocketingLootTemplateEntity,
+          ),
+    'skinning_loot_template' =>
+      (repository as SkinningLootTemplateRepository).updateSkinningLootTemplate(
+        key as SkinningLootTemplateKey,
+        candidate as SkinningLootTemplateEntity,
+      ),
+    'item_loot_template' =>
+      (repository as ItemLootTemplateRepository).updateItemLootTemplate(
+        key as ItemLootTemplateKey,
+        candidate as ItemLootTemplateEntity,
+      ),
+    'disenchant_loot_template' =>
+      (repository as DisenchantLootTemplateRepository)
+          .updateDisenchantLootTemplate(
+            key as DisenchantLootTemplateKey,
+            candidate as DisenchantLootTemplateEntity,
+          ),
+    'prospecting_loot_template' =>
+      (repository as ProspectingLootTemplateRepository)
+          .updateProspectingLootTemplate(
+            key as ProspectingLootTemplateKey,
+            candidate as ProspectingLootTemplateEntity,
+          ),
+    'milling_loot_template' =>
+      (repository as MillingLootTemplateRepository).updateMillingLootTemplate(
+        key as MillingLootTemplateKey,
+        candidate as MillingLootTemplateEntity,
+      ),
+    'reference_loot_template' =>
+      (repository as ReferenceLootTemplateRepository)
+          .updateReferenceLootTemplate(
+            key as ReferenceLootTemplateKey,
+            candidate as ReferenceLootTemplateEntity,
+          ),
+    'gameobject_loot_template' =>
+      (repository as GameObjectLootTemplateRepository)
+          .updateGameObjectLootTemplate(
+            key as GameObjectLootTemplateKey,
+            candidate as GameObjectLootTemplateEntity,
+          ),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
+}
+
+Future<void> _destroyLootTemplate(
+  dynamic repository,
+  String table,
+  dynamic key,
+) {
+  return switch (table) {
+    'creature_loot_template' =>
+      (repository as CreatureLootTemplateRepository)
+          .destroyCreatureLootTemplate(key as CreatureLootTemplateKey),
+    'pickpocketing_loot_template' =>
+      (repository as PickpocketingLootTemplateRepository)
+          .destroyPickpocketingLootTemplate(
+            key as PickpocketingLootTemplateKey,
+          ),
+    'skinning_loot_template' =>
+      (repository as SkinningLootTemplateRepository)
+          .destroySkinningLootTemplate(key as SkinningLootTemplateKey),
+    'item_loot_template' =>
+      (repository as ItemLootTemplateRepository).destroyItemLootTemplate(
+        key as ItemLootTemplateKey,
+      ),
+    'disenchant_loot_template' =>
+      (repository as DisenchantLootTemplateRepository)
+          .destroyDisenchantLootTemplate(key as DisenchantLootTemplateKey),
+    'prospecting_loot_template' =>
+      (repository as ProspectingLootTemplateRepository)
+          .destroyProspectingLootTemplate(key as ProspectingLootTemplateKey),
+    'milling_loot_template' =>
+      (repository as MillingLootTemplateRepository).destroyMillingLootTemplate(
+        key as MillingLootTemplateKey,
+      ),
+    'reference_loot_template' =>
+      (repository as ReferenceLootTemplateRepository)
+          .destroyReferenceLootTemplate(key as ReferenceLootTemplateKey),
+    'gameobject_loot_template' =>
+      (repository as GameObjectLootTemplateRepository)
+          .destroyGameObjectLootTemplate(key as GameObjectLootTemplateKey),
     _ => throw ArgumentError.value(table, 'table'),
   };
 }

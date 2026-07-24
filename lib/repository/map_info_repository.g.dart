@@ -22,12 +22,30 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin {
     return MapInfoEntity.fromJson(results.first.toMap());
   }
 
-  Future<void> updateMapInfo(int originalKey, MapInfoEntity map) async {
+  Future<void> storeMapInfo(MapInfoEntity mapInfo) async {
+    if (mapInfo.id <= 0) {
+      throw StateError('主键必须在新建时显式分配');
+    }
+    await _beforeStore(mapInfo);
+    final json = _prepareWriteJson(mapInfo.toJson());
+    try {
+      await laconic.table('foxy.dbc_map').insert([json]);
+    } catch (error) {
+      if (MysqlErrorUtil.isDuplicateEntry(error)) {
+        throw StateError('相同主键的记录已存在');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> updateMapInfo(int originalKey, MapInfoEntity mapInfo) async {
+    await _beforeUpdate(originalKey, mapInfo);
+    final json = _prepareWriteJson(mapInfo.toJson());
     try {
       final matchedRows = await _whereKey(
         laconic.table('foxy.dbc_map'),
         originalKey,
-      ).update(map.toJson());
+      ).update(json);
       if (matchedRows == 0) {
         throw StateError('原记录不存在，可能已被其他操作修改或删除');
       }
@@ -37,6 +55,19 @@ mixin _MapInfoRepositoryMixin on RepositoryMixin {
       }
       rethrow;
     }
+  }
+
+  Future<void> _beforeStore(MapInfoEntity mapInfo) async {}
+
+  Future<void> _beforeUpdate(int originalKey, MapInfoEntity mapInfo) async {}
+
+  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
+    for (final key in json.keys.toList()) {
+      if (const {'index', 'rank'}.contains(key.toLowerCase())) {
+        json['`$key`'] = json.remove(key);
+      }
+    }
+    return json;
   }
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {

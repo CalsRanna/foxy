@@ -22,12 +22,11 @@ void main() {
     );
     expect(source, contains('Future<int> copySpellFocusObject('));
     expect(source, contains('Future<void> storeSpellFocusObject('));
-    expect(source, contains('if (entity.id <= 0)'));
-    expect(source, contains('insert([entity.toJson()])'));
+    expect(source, contains('insert([json])'));
     expect(source, isNot(contains('Future<int> storeSpellFocusObject')));
     expect(source, isNot(contains('saveSpellFocusObject(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(entity.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));

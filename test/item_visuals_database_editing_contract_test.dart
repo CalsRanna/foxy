@@ -14,13 +14,12 @@ void main() {
       'lib/repository/item_visuals_repository.dart',
     );
     expect(source, contains('Future<int> copyItemVisual('));
-    expect(source, contains('Future<void> storeItemVisual('));
-    expect(source, contains('if (entity.id <= 0)'));
-    expect(source, contains('insert([entity.toJson()])'));
-    expect(source, isNot(contains('Future<int> storeItemVisual')));
+    expect(source, contains('Future<void> storeItemVisuals('));
+    expect(source, contains('insert([json])'));
+    expect(source, isNot(contains('Future<int> storeItemVisuals')));
     expect(source, isNot(contains('saveItemVisual(')));
     expect(source, contains('int originalKey,'));
-    expect(source, contains(').update(entity.toJson())'));
+    expect(source, contains(').update(json)'));
     expect(source, isNot(contains("remove('ID')")));
     expect(source, contains('if (matchedRows == 0)'));
     expect(source, contains('if (deletedRows == 0)'));
