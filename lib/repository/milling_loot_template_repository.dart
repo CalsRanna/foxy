@@ -1,10 +1,27 @@
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
-import 'package:foxy/repository/loot_template_filter.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
+part 'milling_loot_template_repository.g.dart';
+
+@FoxyRepositoryFilter(
+  name: 'MillingLootTemplateFilter',
+  fields: [
+    FoxyRepositoryFilterField(
+      name: 'entry',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+    FoxyRepositoryFilterField(
+      name: 'name',
+      type: FoxyFilterFieldType.text,
+      defaultValue: '',
+    ),
+  ],
+)
 class MillingLootTemplateRepository with RepositoryMixin {
   static const _table = 'milling_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
@@ -18,7 +35,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
     await storeLootTemplate(copied);
   }
 
-  Future<int> countLootTemplateRows({LootTemplateFilter? filter}) async {
+  Future<int> countLootTemplateRows({MillingLootTemplateFilter? filter}) async {
     final needsNameJoin = filter != null && filter.name.isNotEmpty;
     if (!needsNameJoin) {
       var builder = laconic.table(_table);
@@ -42,7 +59,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
     return builder.count();
   }
 
-  Future<int> countLootTemplates({LootTemplateFilter? filter}) async {
+  Future<int> countLootTemplates({MillingLootTemplateFilter? filter}) async {
     var builder = laconic.table(_table);
     if (filter != null && filter.entry.isNotEmpty) {
       builder = builder.where('Entry', filter.entry);
@@ -68,7 +85,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
 
   Future<List<BriefMillingLootTemplateEntryEntity>>
   getBriefLootTemplateEntries({
-    LootTemplateFilter? filter,
+    MillingLootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -87,7 +104,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
   }
 
   Future<List<BriefMillingLootTemplateEntity>> getBriefLootTemplateRows({
-    LootTemplateFilter? filter,
+    MillingLootTemplateFilter? filter,
     int page = 1,
   }) async {
     var offset = (page - 1) * kPageSize;
@@ -214,7 +231,7 @@ class MillingLootTemplateRepository with RepositoryMixin {
 
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
-    LootTemplateFilter? filter,
+    MillingLootTemplateFilter? filter,
   ) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {
