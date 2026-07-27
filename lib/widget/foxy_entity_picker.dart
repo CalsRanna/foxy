@@ -123,10 +123,11 @@ class _EntityPickerDialog<T> extends StatefulWidget {
   final FoxyEntityPickerDelegate<T> delegate;
   final int initialValue;
 
-  const _EntityPickerDialog({
-    required this.delegate,
-    required this.initialValue,
-  });
+  _EntityPickerDialog({required this.delegate, required this.initialValue})
+    : assert(
+        delegate.filters.length <= 3,
+        'FoxyEntityPickerDelegate.filters 最多支持 3 个筛选条件',
+      );
 
   @override
   State<_EntityPickerDialog<T>> createState() => _EntityPickerDialogState<T>();
@@ -234,7 +235,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
     return ShadCard(
       padding: const EdgeInsets.all(16),
       child: Row(
-        spacing: 8,
+        spacing: 16,
         children: [
           for (int i = 0; i < _filterControllers.length; i++)
             Expanded(
@@ -244,8 +245,9 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
               ),
             ),
           Expanded(
+            flex: 4 - _filterControllers.length,
             child: Row(
-              spacing: 8,
+              spacing: 16,
               children: [
                 ShadButton(
                   onPressed: _doSearch,
