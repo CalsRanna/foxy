@@ -81,6 +81,7 @@ void main() {
                   3306,
               username:
                   Platform.environment['FOXY_TEST_MYSQL_USERNAME'] ?? 'root',
+              useSsl: false,
             ),
           ),
           listen: queries.add,

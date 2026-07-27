@@ -63,6 +63,7 @@ final class BootstrapApplicationUseCase {
       database: input.database,
       username: input.username,
       password: input.password,
+      useSsl: false,
     );
     await Database.instance.connect(
       config,

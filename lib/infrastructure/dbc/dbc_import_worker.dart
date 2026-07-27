@@ -88,6 +88,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
           database: database,
           username: username,
           password: password,
+          useSsl: false,
         ),
       ),
     );

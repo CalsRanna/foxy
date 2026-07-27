@@ -59,6 +59,7 @@ final class ImportDbcUseCase {
         database: config['database']?.toString() ?? 'acore_world',
         username: config['username']?.toString() ?? 'acore',
         password: config['password']?.toString() ?? 'acore',
+        useSsl: false,
       );
 
       DbcSyncResult? result;

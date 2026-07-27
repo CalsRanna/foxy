@@ -14,6 +14,7 @@ void main() {
     database: 'unused',
     username: 'unused',
     password: 'unused',
+    useSsl: false,
   );
 
   test('DBC 导入：目录不存在时发出唯一失败结果并关闭流', () async {
