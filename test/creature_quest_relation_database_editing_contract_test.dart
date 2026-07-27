@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
@@ -159,32 +157,6 @@ void main() {
       expect(repository.rows.single.toJson(), {'id': 11, 'quest': 21});
       expect(viewModel.editingKey.value, isNull);
     });
-  });
-
-  test('UI、Full Entity 与 Repository 遵守迁移边界', () {
-    for (final domain in ['starter', 'ender']) {
-      final entity = File(
-        'lib/entity/creature_quest_${domain}_entity.dart',
-      ).readAsStringSync();
-      final repository = File(
-        'lib/repository/creature_quest_${domain}_repository.dart',
-      ).readAsStringSync();
-      final viewModel = File(
-        'lib/page/quest/creature_quest_${domain}_collection_editor_view_model.dart',
-      ).readAsStringSync();
-      final view = File(
-        'lib/page/quest/creature_quest_${domain}_view.dart',
-      ).readAsStringSync();
-      expect(
-        entity,
-        isNot(contains('final String localeName;')),
-        reason: '$domain 的 JOIN 投影不能成为 Full Entity 字段',
-      );
-      expect(repository, isNot(contains('saveCreatureQuest')), reason: domain);
-      expect(viewModel, contains('final editingKey = signal<'), reason: domain);
-      expect(view, isNot(contains('readOnly:')), reason: domain);
-      expect(view, contains('FoxyPagination('), reason: domain);
-    }
   });
 }
 

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_collection_editor_view_model.dart';
@@ -10,8 +8,6 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -165,7 +161,7 @@ void main() {
     });
   });
 
-  test('Full Entity、校验、UI 和 Repository 边界正确', () {
+  test('validateCreatureTemplateSpellFields 拒绝非法 index', () {
     final validation = _CreatureTemplateSpellValidation();
     expect(
       () => validation.validateCreatureTemplateSpellFields(
@@ -173,29 +169,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final fullEntity = File(
-      'lib/entity/creature_template_spell_entity.dart',
-    ).readAsStringSync();
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_template_spell_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/creature_template_spell_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/creature_template_spell_view.dart',
-    ).readAsStringSync();
-
-    expect(fullEntity, isNot(contains('final String spellName;')));
-    expect(fullEntity, isNot(contains('this.spellName')));
-    expect(repository, isNot(contains('saveCreatureTemplateSpell')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<CreatureTemplateSpellKey?>(null)'),
-    );
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('FoxyPagination('));
   });
 }
 

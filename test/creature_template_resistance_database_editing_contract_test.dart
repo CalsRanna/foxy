@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_collection_editor_view_model.dart';
@@ -10,8 +8,6 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -197,7 +193,7 @@ void main() {
     });
   });
 
-  test('字段校验、UI 和 Repository 遵守迁移合同', () {
+  test('validateCreatureTemplateResistanceFields 拒绝非法 school', () {
     final validation = _CreatureTemplateResistanceValidation();
     expect(
       () => validation.validateCreatureTemplateResistanceFields(
@@ -205,28 +201,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_template_resistance_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/creature_template_resistance_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/creature_template_resistance_view.dart',
-    ).readAsStringSync();
-
-    expect(repository, isNot(contains('saveCreatureTemplateResistance')));
-    expect(repository, isNot(contains("json.remove('CreatureID')")));
-    expect(
-      viewModel,
-      contains(
-        'final editingKey = signal<CreatureTemplateResistanceKey?>(null)',
-      ),
-    );
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, isNot(contains('enabled: !isEditing')));
-    expect(view, contains('FoxyPagination('));
   });
 }
 

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_template_locale_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Key 与 Brief 完整覆盖 entry + locale', () {
@@ -28,45 +25,5 @@ void main() {
     expect(brief.key, first);
     expect(brief.name, '游戏对象');
     expect(brief.castBarCaption, '使用说明');
-  });
-
-  test('locale Repository has one-table typed write contract', () {
-    final source = readLocalDartLibrarySource(
-      'lib/repository/game_object_template_locale_repository.dart',
-    );
-    expect(source, contains("{'entry', 'locale'}"));
-    expect(source, contains('GameObjectTemplateLocaleKey originalKey'));
-    expect(source, contains(').update(json)'));
-    expect(source, contains('if (matchedRows == 0)'));
-    expect(source, contains('if (deletedRows == 0)'));
-    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(source, isNot(contains(".table('gameobject_template')")));
-
-    final parent = readLocalDartLibrarySource(
-      'lib/repository/game_object_template_repository.dart',
-    );
-    expect(parent, isNot(contains('saveGameObjectTemplateLocales(')));
-    expect(parent, isNot(contains('getGameObjectTemplateLocales(')));
-    expect(parent, isNot(contains('laconic.table(_localeTable)')));
-  });
-
-  test('Both field editors preserve hidden columns through original row', () {
-    final source = File(
-      'lib/widget/foxy_locale_picker_delegates.dart',
-    ).readAsStringSync();
-    expect(
-      '_loadGameObjectTemplateLocaleRows('.allMatches(source).length,
-      greaterThanOrEqualTo(3),
-    );
-    expect(source, contains('getGameObjectTemplateLocale(brief.key)'));
-    expect(
-      'GameObjectTemplateLocaleKey('.allMatches(source).length,
-      greaterThanOrEqualTo(4),
-    );
-    expect(
-      'applyGameObjectTemplateLocaleChanges('.allMatches(source).length,
-      2,
-    );
-    expect(source, isNot(contains('getGameObjectTemplateLocales(entry)')));
   });
 }

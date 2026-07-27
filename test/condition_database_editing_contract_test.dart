@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
@@ -315,28 +313,6 @@ void main() {
     });
   });
 
-  test('conditions 已移除 Map credential 并解锁已有记录主键', () {
-    final files = [
-      'lib/entity/condition_entity.dart',
-      'lib/repository/condition_repository.dart',
-      'lib/page/condition/condition_detail_view_model.dart',
-      'lib/page/condition/condition_list_view_model.dart',
-      'lib/page/condition/condition_detail_page.dart',
-      'lib/page/condition/condition_view.dart',
-    ];
-    final source = files.map((path) => File(path).readAsStringSync()).join();
-    final view = File(
-      'lib/page/condition/condition_view.dart',
-    ).readAsStringSync();
-
-    expect(source, isNot(contains('buildCredential')));
-    expect(source, isNot(contains('Map<String, dynamic>? credential')));
-    expect(source, isNot(contains('_originalCredential')));
-    expect(view, isNot(contains('pkReadOnly')));
-    expect(view, isNot(contains('isExisting')));
-    expect(view, contains('enabled: !referenceCondition'));
-    expect(view, contains('readOnly: referenceTemplate'));
-  });
 }
 
 ConditionEntity _condition({

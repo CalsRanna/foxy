@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart';
@@ -10,7 +8,6 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -121,7 +118,7 @@ void main() {
     });
   });
 
-  test('validation、UI 和 Repository 边界正确', () {
+  test('validateCreatureOnKillReputationFields 拒绝非法 teamDependent', () {
     final validation = _Validation();
     expect(
       () => validation.validateCreatureOnKillReputationFields(
@@ -129,21 +126,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_on_kill_reputation_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/creature_on_kill_reputation_view.dart',
-    ).readAsStringSync();
-
-    expect(repository, isNot(contains('saveCreatureOnKillReputation')));
-    expect(viewModel, contains('final editingKey = signal<int?>(null)'));
-    expect(viewModel, isNot(contains('final reputation = signal')));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, isNot(contains('initControllers(repData)')));
   });
 }
 

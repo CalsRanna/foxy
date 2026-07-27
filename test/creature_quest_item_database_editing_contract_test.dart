@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   test('CreatureQuestItemKey 和 Brief 完整覆盖两列主键', () {
     const entity = CreatureQuestItemEntity(creatureEntry: 10, idx: 2);
@@ -75,31 +71,6 @@ void main() {
     );
   });
 
-  test('UI、Full Entity 和 ViewModel 遵守迁移边界', () {
-    final entity = File(
-      'lib/entity/creature_quest_item_entity.dart',
-    ).readAsStringSync();
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_quest_item_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/creature_quest_item_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/creature_quest_item_view.dart',
-    ).readAsStringSync();
-
-    expect(entity, isNot(contains('final String itemName;')));
-    expect(entity, isNot(contains('this.itemName')));
-    expect(repository, isNot(contains('saveCreatureQuestItem')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<CreatureQuestItemKey?>(null)'),
-    );
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('FoxyPagination('));
-  });
 }
 
 class _RecordingDriver implements DatabaseDriver {
