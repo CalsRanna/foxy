@@ -282,7 +282,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
 
   FoxyFormItem _clientMaximumInput(int slot, IntFieldController controller) {
     return FoxyFormItem(
-      label: '客户端效果值 $slot',
+      label: '客户端效果 $slot',
       child: FoxyNumberInput<int>(
         placeholder: 'EffectPointsMax$slot',
         controller: controller,
@@ -348,7 +348,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
       3 => '法术数值 $slot',
       4 => '抗性数值 $slot',
       5 => '属性数值 $slot',
-      6 => '武器伤害系数 $slot',
+      6 => '武器伤害率 $slot',
       _ => '效果数值 $slot',
     };
   }

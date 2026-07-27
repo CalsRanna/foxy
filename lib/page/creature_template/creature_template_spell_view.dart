@@ -220,7 +220,7 @@ class _CreatureTemplateSpellViewState extends State<CreatureTemplateSpellView> {
           SizedBox(height: 16),
           // VerifiedBuild
           FoxyFormItem(
-            label: 'VerifiedBuild',
+            label: '验证版本',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',

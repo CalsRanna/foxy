@@ -89,7 +89,7 @@ void main() {
       ConditionValueReference.gameObject,
     );
     expect(conditionValueConfig(47).value2.flags, kConditionQuestStatusFlags);
-    expect(conditionValueConfig(103).value1.label, '世界脚本条件 ID');
+    expect(conditionValueConfig(103).value1.label, '世界脚本 ID');
   });
 
   test('核心跨字段约束会在保存前拒绝无效条件', () {
@@ -166,5 +166,4 @@ void main() {
       throwsArgumentError,
     );
   });
-
 }

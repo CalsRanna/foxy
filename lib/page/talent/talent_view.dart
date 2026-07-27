@@ -164,21 +164,21 @@ class TalentView extends StatelessWidget {
     );
 
     final prereqRank0Input = FoxyFormItem(
-      label: '前置等级索引 1',
+      label: '前置等级 1',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank0',
         controller: viewModel.prereqRank0Controller,
       ),
     );
     final prereqRank1Input = FoxyFormItem(
-      label: '前置等级索引 2',
+      label: '前置等级 2',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank1',
         controller: viewModel.prereqRank1Controller,
       ),
     );
     final prereqRank2Input = FoxyFormItem(
-      label: '前置等级索引 3',
+      label: '前置等级 3',
       child: FoxyNumberInput<int>(
         placeholder: 'PrereqRank2',
         controller: viewModel.prereqRank2Controller,
@@ -186,14 +186,14 @@ class TalentView extends StatelessWidget {
     );
 
     final categoryMask0Input = FoxyFormItem(
-      label: '分类掩码低 32 位',
+      label: '分类低 32 位',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask0',
         controller: viewModel.categoryMask0Controller,
       ),
     );
     final categoryMask1Input = FoxyFormItem(
-      label: '分类掩码高 32 位',
+      label: '分类高 32 位',
       child: FoxyNumberInput<int>(
         placeholder: 'CategoryMask1',
         controller: viewModel.categoryMask1Controller,

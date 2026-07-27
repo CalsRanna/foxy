@@ -173,7 +173,7 @@ class _CreatureOnKillReputationViewState
                   children: [
                     Expanded(
                       child: FoxyFormItem(
-                        label: '最高声望等级1',
+                        label: '最高声望1',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding1Controller,
                           options: kMaxStandingOptions,
@@ -183,7 +183,7 @@ class _CreatureOnKillReputationViewState
                     ),
                     Expanded(
                       child: FoxyFormItem(
-                        label: '最高声望等级2',
+                        label: '最高声望2',
                         child: FoxyShadSelect<int>(
                           controller: viewModel.maxStanding2Controller,
                           options: kMaxStandingOptions,

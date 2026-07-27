@@ -132,7 +132,7 @@ class AreaTableView extends StatelessWidget {
       ),
     );
     final soundProviderPrefInput = FoxyFormItem(
-      label: '声音提供器偏好',
+      label: '声音偏好',
       child: FoxyEntityPicker(
         placeholder: 'SoundProviderPref',
         controller: viewModel.soundProviderPrefController,
@@ -140,7 +140,7 @@ class AreaTableView extends StatelessWidget {
       ),
     );
     final soundProviderPrefUnderwaterInput = FoxyFormItem(
-      label: '水下声音提供器偏好',
+      label: '水下声音偏好',
       child: FoxyEntityPicker(
         placeholder: 'SoundProviderPrefUnderwater',
         controller: viewModel.soundProviderPrefUnderwaterController,

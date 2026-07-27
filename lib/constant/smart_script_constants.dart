@@ -546,17 +546,14 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
   switch (type) {
     case 1:
       return _g(
-        _f('creature_text 组 ID'),
+        _f('文本组 ID'),
         _f('持续时间'),
         _f('使用动作目标', options: kSmartBooleanOptions),
         _f('延迟'),
       );
     case 2:
       return _g(
-        _f(
-          'FactionTemplate ID',
-          reference: SmartParameterReference.factionTemplate,
-        ),
+        _f('阵营模板 ID', reference: SmartParameterReference.factionTemplate),
       );
     case 3:
     case 43:
@@ -605,15 +602,15 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 12:
       return _g(
         _f('生物 Entry', reference: SmartParameterReference.creature),
-        _f('TempSummonType'),
+        _f('临时召唤类型'),
         _f('持续时间'),
         _f('攻击触发者', options: kSmartBooleanOptions),
-        _f('攻击脚本所有者', options: kSmartBooleanOptions),
+        _f('攻击所有者', options: kSmartBooleanOptions),
         _f('召唤标志', flags: kSummonCreatureFlagItems),
       );
     case 13:
     case 14:
-      return _g(_f('增加仇恨百分比'), _f('减少仇恨百分比'));
+      return _g(_f('增加仇恨率'), _f('减少仇恨率'));
     case 18:
     case 19:
       return _g(_f('UnitFlags', flags: kUnitFlagOptions), _f('字段索引'));
@@ -636,7 +633,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       return _g(
         _f('距离'),
         _f('角度'),
-        _f('结束生物 Entry', reference: SmartParameterReference.creature),
+        _f('结束生物 ID', reference: SmartParameterReference.creature),
         _f('Credit ID'),
         _f('Credit 类型'),
         _f('存活状态', options: kLivingStateOptions),
@@ -700,7 +697,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       return _g(_f('状态', options: kSmartBooleanOptions));
     case 50:
       return _g(
-        _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+        _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
         _f('消失时间'),
         _f('目标召唤'),
         _f('召唤类型'),
@@ -784,7 +781,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
         _f('禁用强制终点', options: kSmartBooleanOptions),
       );
     case 70:
-      return _g(_f('游戏对象刷新时间'));
+      return _g(_f('对象刷新时间'));
     case 71:
       return _g(_f('装备 ID'), _f('槽位掩码'), _f('主手物品'), _f('副手物品'), _f('远程物品'));
     case 73:
@@ -796,7 +793,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       return _g(_f('距离'), _f('角度'));
     case 80:
       return _g(
-        _f('定时动作列表 ID'),
+        _f('定时列表 ID'),
         _f('计时类型'),
         _f('允许覆盖', options: kSmartBooleanOptions),
       );
@@ -805,15 +802,15 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 83:
       return _g(_f('NPCFlags', flags: kNpcFlagOptions));
     case 84:
-      return _g(_f('creature_text 组 ID'), _f('持续时间'));
+      return _g(_f('文本组 ID'), _f('持续时间'));
     case 86:
       return _g(
         _f('法术 ID', reference: SmartParameterReference.spell),
         _f('施法标志', flags: kSmartCastFlagItems),
-        _f('施法者目标类型', options: kTargetTypes),
-        _f('施法者目标参数 1'),
-        _f('施法者目标参数 2'),
-        _f('施法者目标参数 3'),
+        _f('施法目标类型', options: kTargetTypes),
+        _f('施法参数 1'),
+        _f('施法参数 2'),
+        _f('施法参数 3'),
       );
     case 87:
       return _g(
@@ -825,10 +822,10 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
         _f('动作列表 6'),
       );
     case 88:
-      return _g(_f('最小动作列表 ID'), _f('最大动作列表 ID'));
+      return _g(_f('最小动作 ID'), _f('最大动作 ID'));
     case 90:
     case 91:
-      return _g(_f('UNIT_FIELD_BYTES_1 值'), _f('字段类型'));
+      return _g(_f('单位字节值'), _f('字段类型'));
     case 92:
       return _g(
         _f('包含延迟法术', options: kSmartBooleanOptions),
@@ -860,12 +857,12 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 104:
     case 105:
     case 106:
-      return _g(_f('GameObjectFlags', flags: kGameObjectFlagItems));
+      return _g(_f('对象标志', flags: kGameObjectFlagItems));
     case 107:
       return _g(
         _f('生物组 ID'),
         _f('攻击触发者', options: kSmartBooleanOptions),
-        _f('攻击脚本所有者', options: kSmartBooleanOptions),
+        _f('攻击所有者', options: kSmartBooleanOptions),
       );
     case 108:
     case 109:
@@ -873,7 +870,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       return _g(_f('能量类型'), _f('能量值'));
     case 111:
     case 112:
-      return _g(_f('game_event Entry'));
+      return _g(_f('游戏事件 ID'));
     case 113:
       return _g(
         _f('路径 ID 1', reference: SmartParameterReference.waypointPath),
@@ -902,7 +899,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 124:
       return _g(_f('装备 ID'), _f('强制加载', options: kSmartBooleanOptions));
     case 125:
-      return _g(_f('最小定时事件 ID'), _f('最大定时事件 ID'));
+      return _g(_f('最小定时 ID'), _f('最大定时 ID'));
     case 131:
     case 132:
       return _g(
@@ -960,7 +957,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       );
     case 219:
       return _g(
-        _f('召唤生物 Entry', reference: SmartParameterReference.creature),
+        _f('召唤生物 ID', reference: SmartParameterReference.creature),
         _f('持续时间'),
         _f('环间距'),
         _f('召唤间距'),
@@ -968,13 +965,10 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
         _f('锥体角度'),
       );
     case 220:
-      return _g(
-        _f('acore_string Entry'),
-        _f('喊话', options: kSmartBooleanOptions),
-      );
+      return _g(_f('系统文本 ID'), _f('喊话', options: kSmartBooleanOptions));
     case 221:
       return _g(
-        _f('召唤生物 Entry', reference: SmartParameterReference.creature),
+        _f('召唤生物 ID', reference: SmartParameterReference.creature),
         _f('持续时间'),
         _f('螺旋 A'),
         _f('螺旋 K'),
@@ -988,7 +982,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
         _f('副本目标', options: kSmartBooleanOptions),
       );
     case 225:
-      return _g(_f('使用触发者 GUID', options: kSmartBooleanOptions), _f('索引'));
+      return _g(_f('使用触发者 ID', options: kSmartBooleanOptions), _f('索引'));
     case 226:
       return _g(
         _f('状态', options: kSmartBooleanOptions),
@@ -1002,7 +996,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
       return _g(_f('缩放值'));
     case 228:
       return _g(
-        _f('召唤生物 Entry', reference: SmartParameterReference.creature),
+        _f('召唤生物 ID', reference: SmartParameterReference.creature),
         _f('持续时间'),
         _f('重复次数'),
         _f('起始角度'),
@@ -1043,7 +1037,7 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 236:
       return _g(_f('覆盖计时器'));
     case 237:
-      return _g(_f('世界脚本事件 ID'), _f('参数'));
+      return _g(_f('脚本事件 ID'), _f('参数'));
     case 238:
       return _g(
         _f('禁用声望奖励', options: kSmartBooleanOptions),
@@ -1168,9 +1162,9 @@ SmartParameterGroupConfig smartEventParameterConfig(int type) {
     42 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
     44 => _g(_f('点 ID')),
     45 => _g(_f('阵营'), _f('冷却最短时间'), _f('冷却最长时间')),
-    46 => _g(_f('AreaTrigger ID')),
+    46 => _g(_f('区域触发 ID')),
     52 => _g(
-      _f('creature_text 组 ID'),
+      _f('文本组 ID'),
       _f('生物 Entry', reference: SmartParameterReference.creature),
     ),
     59 => _g(_f('定时事件 ID')),
@@ -1180,7 +1174,7 @@ SmartParameterGroupConfig smartEventParameterConfig(int type) {
     ),
     64 => _g(_f('过滤方式', options: kGossipHelloFilterOptions)),
     66 => _g(_f('事件阶段掩码', flags: kEventPhaseFlagItems)),
-    68 || 69 => _g(_f('game_event Entry')),
+    68 || 69 => _g(_f('游戏事件 ID')),
     70 => _g(_f('GO 状态')),
     71 => _g(_f('事件 ID')),
     72 => _g(_f('事件 ID'), _f('冷却最短时间'), _f('冷却最长时间')),
@@ -1192,7 +1186,7 @@ SmartParameterGroupConfig smartEventParameterConfig(int type) {
     ),
     76 => _g(
       _f('游戏对象 GUID'),
-      _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+      _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
       _f('距离'),
       _f('重复时间'),
     ),
@@ -1251,16 +1245,16 @@ SmartParameterGroupConfig smartTargetParameterConfig(
   ),
   12 => _g(_f('已存储目标 ID')),
   13 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
     _f('最小距离'),
     _f('最大距离'),
   ),
   14 => _g(
     _f('游戏对象 GUID'),
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
   ),
   15 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
     _f('最大距离'),
   ),
   16 => _g(_f('包含宠物', options: kSmartBooleanOptions)),
@@ -1272,11 +1266,11 @@ SmartParameterGroupConfig smartTargetParameterConfig(
     _f('死亡目标', options: kSmartBooleanOptions),
   ),
   20 => _g(
-    _f('游戏对象 Entry', reference: SmartParameterReference.gameObject),
+    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
     _f('最大距离'),
     _f('仅已生成', options: kSmartBooleanOptions),
   ),
-  23 => _g(_f('使用控制者/所有者', options: kSmartBooleanOptions)),
+  23 => _g(_f('控制/所有者', options: kSmartBooleanOptions)),
   24 => _g(_f('最大距离')),
   25 || 26 => _g(_f('最大距离'), _f('仅玩家', options: kSmartBooleanOptions)),
   28 => _g(

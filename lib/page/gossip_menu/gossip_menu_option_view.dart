@@ -287,7 +287,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: '选项文本（zhCN）',
+                      label: '选项中文',
                       child: FoxyStringInput(
                         controller: viewModel.localeOptionTextController,
                         placeholder: 'zhCN OptionText',
@@ -306,7 +306,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: 'VerifiedBuild',
+                      label: '验证版本',
                       child: FoxyNumberInput<int>(
                         controller: viewModel.verifiedBuildController,
                         placeholder: 'VerifiedBuild',
@@ -329,7 +329,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: '确认文本（zhCN）',
+                      label: '确认中文',
                       child: FoxyStringInput(
                         controller: viewModel.localeBoxTextController,
                         placeholder: 'zhCN BoxText',

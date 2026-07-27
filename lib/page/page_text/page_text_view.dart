@@ -40,7 +40,7 @@ class _PageTextViewState extends State<PageTextView> {
       ),
     );
     final nextPageIdInput = FoxyFormItem(
-      label: '下一页页面文本',
+      label: '下一页文本',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.pageText,
         placeholder: 'NextPageID',
@@ -48,7 +48,7 @@ class _PageTextViewState extends State<PageTextView> {
       ),
     );
     final verifiedBuildInput = FoxyFormItem(
-      label: 'VerifiedBuild',
+      label: '验证版本',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
         controller: viewModel.verifiedBuildController,

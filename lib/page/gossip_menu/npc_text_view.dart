@@ -235,7 +235,7 @@ class _NpcTextViewState extends State<NpcTextView> {
             ),
             Expanded(
               child: FoxyFormItem(
-                label: 'VerifiedBuild',
+                label: '验证版本',
                 child: FoxyNumberInput<int>(
                   controller: viewModel.verifiedBuildController,
                   placeholder: 'VerifiedBuild',

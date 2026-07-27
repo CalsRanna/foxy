@@ -336,7 +336,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
     IntFieldController controller,
   ) {
     return FoxyFormItem(
-      label: '${config.label} ($column)',
+      label: config.label,
       child: _parameterEditor(column, config, controller),
     );
   }

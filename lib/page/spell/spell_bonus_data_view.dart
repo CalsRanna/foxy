@@ -126,7 +126,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                       ),
                       Expanded(
                         child: FoxyFormItem(
-                          label: '法术强度(dot)',
+                          label: '法强（DOT）',
                           child: FoxyNumberInput<double>(
                             controller: viewModel.dotBonusController,
                             placeholder: 'dot_bonus',
@@ -144,7 +144,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                       ),
                       Expanded(
                         child: FoxyFormItem(
-                          label: '攻击强度(dot)',
+                          label: '攻强（DOT）',
                           child: FoxyNumberInput<double>(
                             controller: viewModel.apDotBonusController,
                             placeholder: 'ap_dot_bonus',

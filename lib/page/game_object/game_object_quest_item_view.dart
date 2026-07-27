@@ -222,7 +222,7 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
               ),
               Expanded(
                 child: FoxyFormItem(
-                  label: 'VerifiedBuild',
+                  label: '验证版本',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.verifiedBuildController,
                     placeholder: 'VerifiedBuild',

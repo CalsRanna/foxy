@@ -237,7 +237,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
     final extraFlagInput = FoxyFormItem(
-      label: '服务端额外标志',
+      label: '服务端标志',
       child: FoxyFlagPicker(
         controller: viewModel.extraFlagController,
         flags: kFlagsExtraOptions,
@@ -288,28 +288,28 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
     final baseAttackTimeInput = FoxyFormItem(
-      label: '基础攻击间隔（毫秒）',
+      label: '基础攻击间隔',
       child: FoxyNumberInput<int>(
         controller: viewModel.baseAttackTimeController,
         placeholder: 'BaseAttackTime',
       ),
     );
     final baseVarianceInput = FoxyFormItem(
-      label: '近战伤害浮动系数',
+      label: '近战伤害系数',
       child: FoxyNumberInput<double>(
         controller: viewModel.baseVarianceController,
         placeholder: 'BaseVariance',
       ),
     );
     final rangeAttackTimeInput = FoxyFormItem(
-      label: '远程攻击间隔（毫秒）',
+      label: '远程攻击间隔',
       child: FoxyNumberInput<int>(
         controller: viewModel.rangeAttackTimeController,
         placeholder: 'RangeAttackTime',
       ),
     );
     final rangeVarianceInput = FoxyFormItem(
-      label: '远程伤害浮动系数',
+      label: '远程伤害系数',
       child: FoxyNumberInput<double>(
         controller: viewModel.rangeVarianceController,
         placeholder: 'RangeVariance',
@@ -398,14 +398,14 @@ class CreatureTemplateView extends StatelessWidget {
 
     /// Loot
     final minGoldInput = FoxyFormItem(
-      label: '最小金钱掉落（铜）',
+      label: '最小金钱掉落',
       child: FoxyNumberInput<int>(
         controller: viewModel.minGoldController,
         placeholder: 'mingold',
       ),
     );
     final maxGoldInput = FoxyFormItem(
-      label: '最大金钱掉落（铜）',
+      label: '最大金钱掉落',
       child: FoxyNumberInput<int>(
         controller: viewModel.maxGoldController,
         placeholder: 'maxgold',
@@ -446,7 +446,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
     final movementTypeInput = FoxyFormItem(
-      label: '默认移动生成器',
+      label: '默认移动方式',
       child: FoxyShadSelect<int>(
         controller: viewModel.movementTypeController,
         options: kMovementTypeOptions,
@@ -533,7 +533,7 @@ class CreatureTemplateView extends StatelessWidget {
 
     /// 难度与脚本输入
     final killCredit1Input = FoxyFormItem(
-      label: '击杀计数目标 1',
+      label: '击杀目标 1',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
         controller: viewModel.killCredit1Controller,
@@ -541,7 +541,7 @@ class CreatureTemplateView extends StatelessWidget {
       ),
     );
     final killCredit2input = FoxyFormItem(
-      label: '击杀计数目标 2',
+      label: '击杀目标 2',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.creatureTemplate,
         controller: viewModel.killCredit2Controller,

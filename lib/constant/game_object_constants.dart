@@ -154,8 +154,8 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
       '消耗型',
       options: kGameObjectBooleanOptions,
     ),
-    (3, 4) => const GameObjectDataFieldConfig('最少成功次数（废弃）'),
-    (3, 5) => const GameObjectDataFieldConfig('最多成功次数（废弃）'),
+    (3, 4) => const GameObjectDataFieldConfig('废弃最少次数'),
+    (3, 5) => const GameObjectDataFieldConfig('废弃最多次数'),
     (3, 6) => const GameObjectDataFieldConfig('事件 ID'),
     (3, 7) => const GameObjectDataFieldConfig(
       '关联陷阱',
@@ -171,7 +171,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
       options: kGameObjectBooleanOptions,
     ),
     (3, 11) => const GameObjectDataFieldConfig(
-      '离开时保留掉落',
+      '离开保留掉落',
       options: kGameObjectBooleanOptions,
     ),
     (3, 12) => const GameObjectDataFieldConfig(
@@ -366,7 +366,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
     ),
     (11, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
     (11, 3) => const GameObjectDataFieldConfig('首次暂停事件'),
-    (11, 4) => const GameObjectDataFieldConfig('第二次暂停事件'),
+    (11, 4) => const GameObjectDataFieldConfig('二次暂停事件'),
     (12, 0) => const GameObjectDataFieldConfig(
       '锁 ID',
       reference: GameObjectDataReference.lock,
@@ -420,7 +420,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
       options: kGameObjectBooleanOptions,
     ),
     (18, 4) => const GameObjectDataFieldConfig(
-      '施法者目标法术',
+      '施法目标法术',
       reference: GameObjectDataReference.spell,
     ),
     (18, 5) => const GameObjectDataFieldConfig('目标数量'),
@@ -575,7 +575,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
       options: kGameObjectChairHeightOptions,
     ),
     (32, 1) => const GameObjectDataFieldConfig('高度偏移'),
-    (33, 0) => const GameObjectDataFieldConfig('完整状态生命值'),
+    (33, 0) => const GameObjectDataFieldConfig('完整态生命值'),
     (33, 1) => const GameObjectDataFieldConfig(
       '奖励生物',
       reference: GameObjectDataReference.creatureTemplate,
@@ -586,7 +586,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
       '损坏显示 ID',
       reference: GameObjectDataReference.gameObjectDisplayInfo,
     ),
-    (33, 5) => const GameObjectDataFieldConfig('损坏状态生命值'),
+    (33, 5) => const GameObjectDataFieldConfig('损坏态生命值'),
     (33, 9) => const GameObjectDataFieldConfig('损坏状态事件'),
     (33, 10) => const GameObjectDataFieldConfig(
       '摧毁显示 ID',
@@ -595,7 +595,7 @@ GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
     (33, 14) => const GameObjectDataFieldConfig('摧毁状态事件'),
     (33, 16) => const GameObjectDataFieldConfig('重建秒数'),
     (33, 18) => const GameObjectDataFieldConfig(
-      '可破坏模型数据',
+      '可破坏模型',
       reference: GameObjectDataReference.destructibleModelData,
     ),
     (33, 19) => const GameObjectDataFieldConfig('重建状态事件'),

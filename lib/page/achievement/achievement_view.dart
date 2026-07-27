@@ -226,7 +226,7 @@ class AchievementView extends StatelessWidget {
       ),
     );
     final minimumCriteriaInput = FoxyFormItem(
-      label: '最少完成条件数',
+      label: '最少条件数',
       child: FoxyNumberInput<int>(
         placeholder: 'Minimum_criteria',
         controller: viewModel.minimumCriteriaController,

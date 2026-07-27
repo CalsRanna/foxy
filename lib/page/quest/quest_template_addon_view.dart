@@ -154,7 +154,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
           ),
           Expanded(
             child: FoxyFormItem(
-              label: '面包屑目标任务',
+              label: '面包屑任务',
               child: FoxyEntityPicker(
                 delegate: FoxyEntityPickerDelegates.questTemplate,
                 controller: vm.breadcrumbForQuestIdController,

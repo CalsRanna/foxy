@@ -190,7 +190,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
             children: [
               Expanded(
                 child: FoxyFormItem(
-                  label: '触发法术（可为负值）',
+                  label: '触发法术',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.spellTriggerController,
                     placeholder: 'spell_trigger',
@@ -199,7 +199,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
               ),
               Expanded(
                 child: FoxyFormItem(
-                  label: '效果法术（可为负值）',
+                  label: '效果法术',
                   child: FoxyNumberInput<int>(
                     controller: viewModel.spellEffectController,
                     placeholder: 'spell_effect',

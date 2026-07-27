@@ -225,7 +225,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: 'VerifiedBuild',
+                      label: '验证版本',
                       child: FoxyNumberInput<int>(
                         controller: viewModel.verifiedBuildController,
                         placeholder: 'VerifiedBuild',

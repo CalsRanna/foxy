@@ -223,7 +223,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
                   ),
                   Expanded(
                     child: FoxyFormItem(
-                      label: 'VerifiedBuild',
+                      label: '验证版本',
                       child: FoxyNumberInput<int>(
                         placeholder: 'VerifiedBuild',
                         controller: viewModel.verifiedBuildController,
@@ -271,7 +271,7 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       index,
     );
     return FoxyFormItem(
-      label: '${config.label} (Data$index)',
+      label: config.label,
       child: _dataEditor(config, controller, index),
     );
   }

@@ -35,14 +35,14 @@ class GemPropertyView extends StatelessWidget {
       ),
     );
     final maxcountInvInput = FoxyFormItem(
-      label: '客户端库存计数',
+      label: '库存上限',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_inv',
         controller: viewModel.maxCountInvController,
       ),
     );
     final maxcountItemInput = FoxyFormItem(
-      label: '客户端物品计数',
+      label: '物品上限',
       child: FoxyNumberInput<int>(
         placeholder: 'Maxcount_item',
         controller: viewModel.maxCountItemController,

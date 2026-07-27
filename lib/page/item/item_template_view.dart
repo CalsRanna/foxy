@@ -1065,7 +1065,7 @@ class ItemTemplateView extends StatelessWidget {
       ),
     );
     final verifiedBuildInput = FoxyFormItem(
-      label: 'VerifiedBuild',
+      label: '验证版本',
       child: FoxyNumberInput<int>(
         placeholder: 'VerifiedBuild',
         controller: viewModel.verifiedBuildController,

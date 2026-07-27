@@ -133,7 +133,7 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
         options: {3: '单位', 4: '玩家', 5: '游戏对象', 7: '尸体'},
       ),
       ConditionValueFieldConfig('对象条目', reference: entryReference),
-      const ConditionValueFieldConfig('生成 GUID / 可攻击检查'),
+      const ConditionValueFieldConfig('生成/可攻击'),
     );
   }
   if (type == 42) {
@@ -271,7 +271,7 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
       ),
     ),
     30 => _config(
-      _reference('游戏对象 Entry', ConditionValueReference.gameObject),
+      _reference('游戏对象 ID', ConditionValueReference.gameObject),
       const ConditionValueFieldConfig('搜索距离'),
       const ConditionValueFieldConfig(
         '对象状态',
@@ -369,7 +369,7 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
       ConditionValueFieldConfig('光环类型', options: kConditionAuraTypeOptions),
     ),
     103 => _config(
-      const ConditionValueFieldConfig('世界脚本条件 ID'),
+      const ConditionValueFieldConfig('世界脚本 ID'),
       const ConditionValueFieldConfig('状态'),
     ),
     104 => _config(

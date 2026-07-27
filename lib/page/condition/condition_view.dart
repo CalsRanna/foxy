@@ -50,7 +50,7 @@ class ConditionView extends StatelessWidget {
               children: [
                 _row(
                   FoxyFormItem(
-                    label: '源类型 / 引用模板',
+                    label: '来源/引用',
                     child: FoxyIntEnumInput(
                       controller: viewModel.sourceTypeOrReferenceIdController,
                       options: kConditionSourceTypeLabels,
@@ -89,7 +89,7 @@ class ConditionView extends StatelessWidget {
               children: [
                 _row(
                   FoxyFormItem(
-                    label: '条件类型 / 引用',
+                    label: '条件/引用',
                     child: FoxyIntEnumInput(
                       controller: viewModel.conditionTypeOrReferenceController,
                       options: kConditionTypeLabels,
@@ -152,7 +152,7 @@ class ConditionView extends StatelessWidget {
                     ),
                   ),
                   FoxyFormItem(
-                    label: '自定义错误文本',
+                    label: '自定义错误',
                     child: FoxyIntShadSelect(
                       controller: viewModel.errorTextIdController,
                       options: kConditionCustomErrorOptions,
@@ -316,7 +316,7 @@ class ConditionView extends StatelessWidget {
   }) {
     if (sourceType == 22) {
       return FoxyFormItem(
-        label: 'SmartAI 来源类型',
+        label: 'SmartAI类型',
         child: FoxyIntShadSelect(
           controller: viewModel.sourceIdController,
           options: kSourceTypes,

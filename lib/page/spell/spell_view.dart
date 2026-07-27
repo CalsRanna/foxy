@@ -101,7 +101,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final nameSubtextLangFlagsInput = FoxyFormItem(
-      label: '子名称语言标志',
+      label: '子名称语言',
       child: FoxyNumberInput<int>(
         controller: vm.nameSubtextLangFlagsController,
         placeholder: 'NameSubtext_lang_Flags',
@@ -115,7 +115,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final auraDescriptionLangFlagsInput = FoxyFormItem(
-      label: '光环描述语言标志',
+      label: '光环描述语言',
       child: FoxyNumberInput<int>(
         controller: vm.auraDescriptionLangFlagsController,
         placeholder: 'AuraDescription_lang_Flags',
@@ -417,7 +417,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final manaCostPctInput = FoxyFormItem(
-      label: '法力消耗百分比',
+      label: '法力消耗率',
       child: FoxyNumberInput<int>(
         placeholder: 'ManaCostPct',
         controller: vm.manaCostPctController,
@@ -757,7 +757,7 @@ class SpellView extends StatelessWidget {
 
     // === 其他高级属性 ===
     final casterAuraSpellInput = FoxyFormItem(
-      label: '施法者光环法术',
+      label: '自身光环法术',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spell,
         placeholder: 'CasterAuraSpell',
@@ -823,7 +823,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final shapeshiftMask0Input = FoxyFormItem(
-      label: '变形掩码低32位',
+      label: '变形低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftMask0Controller,
         flags: kShapeshiftFormMaskOptions,
@@ -832,7 +832,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final shapeshiftMask1Input = FoxyFormItem(
-      label: '变形掩码高32位',
+      label: '变形高32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftMask1Controller,
         flags: kSpellClassMaskBits,
@@ -841,7 +841,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final shapeshiftExclude0Input = FoxyFormItem(
-      label: '变形排除低32位',
+      label: '排除低32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude0Controller,
         flags: kShapeshiftFormMaskOptions,
@@ -850,7 +850,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final shapeshiftExclude1Input = FoxyFormItem(
-      label: '变形排除高32位',
+      label: '排除高32位',
       child: FoxyFlagPicker(
         controller: vm.shapeshiftExclude1Controller,
         flags: kSpellClassMaskBits,
@@ -859,7 +859,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final excludeCasterAuraStateInput = FoxyFormItem(
-      label: '排除施法者光环状态',
+      label: '排除自身状态',
       child: FoxyShadSelect<int>(
         controller: vm.excludeCasterAuraStateController,
         options: kAuraStateTypeOptions,
@@ -867,7 +867,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final excludeTargetAuraStateInput = FoxyFormItem(
-      label: '排除目标光环状态',
+      label: '排除目标状态',
       child: FoxyShadSelect<int>(
         controller: vm.excludeTargetAuraStateController,
         options: kAuraStateTypeOptions,
@@ -875,7 +875,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final excludeCasterAuraSpellInput = FoxyFormItem(
-      label: '排除施法者光环法术',
+      label: '排除自身法术',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spell,
         controller: vm.excludeCasterAuraSpellController,
@@ -883,7 +883,7 @@ class SpellView extends StatelessWidget {
       ),
     );
     final excludeTargetAuraSpellInput = FoxyFormItem(
-      label: '排除目标光环法术',
+      label: '排除目标法术',
       child: FoxyEntityPicker(
         delegate: FoxyEntityPickerDelegates.spell,
         controller: vm.excludeTargetAuraSpellController,

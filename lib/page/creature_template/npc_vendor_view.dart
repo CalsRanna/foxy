@@ -112,7 +112,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
           ),
           const SizedBox(height: 16),
           FoxyFormItem(
-            label: 'VerifiedBuild',
+            label: '验证版本',
             child: FoxyNumberInput<int>(
               controller: viewModel.verifiedBuildController,
               placeholder: 'VerifiedBuild',
