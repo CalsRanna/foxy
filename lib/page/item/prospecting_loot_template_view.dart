@@ -292,6 +292,8 @@ class _ProspectingLootTemplateViewState
                   ),
                 ),
               ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 16),

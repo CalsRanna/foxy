@@ -303,6 +303,8 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
                   ),
                 ),
               ),
+              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
             ],
           ),
           SizedBox(height: 16),
