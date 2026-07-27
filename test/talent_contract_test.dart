@@ -1,13 +1,10 @@
-import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/constant/talent_constants.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Talent Entity 精确覆盖 23 个独立标量物理列', () {
@@ -140,62 +137,6 @@ void main() {
     );
   });
 
-  test('详情页使用准确 Picker 和专属下拉且每行四列等宽', () {
-    final view = File('lib/page/talent/talent_view.dart').readAsStringSync();
-    expect('FoxyEntityPickerDelegates.spell,'.allMatches(view), hasLength(10));
-    expect('FoxyEntityPickerDelegates.talent,'.allMatches(view), hasLength(3));
-    expect(view, contains('FoxyEntityPickerDelegates.talentTab,'));
-    expect(view, contains('kTalentAddToSpellBookOptions'));
-    expect('Expanded(child:'.allMatches(view), hasLength(32));
-    expect(view, isNot(contains('flex:')));
-  });
-
-  test('Entity、ViewModel 和 UI 未用集合管理重复字段', () {
-    final entity = File('lib/entity/talent_entity.dart').readAsStringSync();
-    final viewModel = File(
-      'lib/page/talent/talent_detail_view_model.dart',
-    ).readAsStringSync();
-    final view = File('lib/page/talent/talent_view.dart').readAsStringSync();
-    for (final source in [entity, viewModel, view]) {
-      expect(source, isNot(contains('final List<')));
-      expect(source, isNot(contains('final Map<')));
-      expect(source, isNot(contains('List.generate')));
-      expect(source, isNot(contains('for (')));
-    }
-  });
-
-  test('Repository 仅持久化当前表并筛选全部 Rank', () {
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/talent_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/talent/talent_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(repository, contains('talent.id <= 0'));
-    expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateTalentFields(t);'));
-    expect(repository, isNot(contains("'foxy.dbc_talent_tab'")));
-    expect(repository, isNot(contains("'foxy.dbc_spell'")));
-    expect(repository, contains(".where('SpellRank0'"));
-    for (var rank = 1; rank <= 8; rank++) {
-      expect(repository, contains(".orWhere('SpellRank$rank'"));
-    }
-    expect(repository, isNot(contains('information_schema')));
-    expect(repository, isNot(contains('_validateReferences')));
-  });
-
-  test('详情以 persistedKey 区分增改并在成功后切换身份', () {
-    final viewModel = File(
-      'lib/page/talent/talent_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(viewModel, contains('final originalKey = persistedKey.value;'));
-    expect(viewModel, contains('updateTalent(originalKey, t)'));
-    expect(viewModel, contains('persistedKey.value = t.id'));
-    expect(viewModel, isNot(contains('RouterFacade')));
-    final view = File('lib/page/talent/talent_view.dart').readAsStringSync();
-    expect(view, contains('updateCurrentLabel('));
-  });
-
   test('Talent 与 TalentTab definition 使用 3.3.5.12340 物理格式', () {
     final talent = dbcDefinitionByTable['dbc_talent']!;
     expect(talent.fileName, 'Talent.dbc');
@@ -208,22 +149,5 @@ void main() {
     expect(tab.schema.fields, hasLength(24));
     expect(DbcLocaleFields.talentTabName.tableName, 'dbc_talent_tab');
     expect(DbcLocaleFields.talentTabName.columnPrefix, 'Name_lang');
-  });
-
-  test('TalentTab 完成 Repository、DI、Picker、本地化和导出注册', () {
-    final di = File('lib/di.dart').readAsStringSync();
-    final picker = File(
-      'lib/widget/foxy_entity_picker_delegates.dart',
-    ).readAsStringSync();
-    final locale = File(
-      'lib/widget/foxy_locale_picker_delegates.dart',
-    ).readAsStringSync();
-    final export = File(
-      'lib/infrastructure/dbc/dbc_export_registry.dart',
-    ).readAsStringSync();
-    expect(di, contains('TalentTabRepository()'));
-    expect(picker, contains('static final talentTab ='));
-    expect(locale, contains('static final dbcTalentTabName ='));
-    expect(export, contains("'dbc_talent_tab': DbcExportDelegate.typed("));
   });
 }

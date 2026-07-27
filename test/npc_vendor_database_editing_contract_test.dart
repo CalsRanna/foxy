@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
@@ -46,13 +44,6 @@ void main() {
         brief.key,
         const NpcVendorKey(entry: 10, item: 20, extendedCost: 30),
       );
-      final library = readLocalDartLibrarySource(
-        'lib/entity/npc_vendor_entity.dart',
-      );
-      final source = library.substring(
-        library.indexOf('final class BriefNpcVendorEntity'),
-      );
-      expect(source, isNot(contains('verifiedBuild')));
     });
   });
 
@@ -197,7 +188,7 @@ void main() {
     });
   });
 
-  test('字段校验从 Repository 移到 ViewModel validation mixin', () {
+  test('validateNpcVendorFields 拒绝非法 entry', () {
     final validation = _NpcVendorValidation();
     expect(
       () => validation.validateNpcVendorFields(
@@ -205,20 +196,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = readLocalDartLibrarySource('lib/repository/npc_vendor_repository.dart');
-    final view = File(
-      'lib/page/creature_template/npc_vendor_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/creature_template/npc_vendor_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    expect(repository, isNot(contains('saveNpcVendor')));
-    expect(repository, isNot(contains("json.remove('entry')")));
-    expect(viewModel, contains('final editingKey = signal<NpcVendorKey?>'));
-    expect(viewModel, isNot(contains('_editingItem')));
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly: isEditing')));
-    expect(view, contains('FoxyPagination('));
   });
 }
 

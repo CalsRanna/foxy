@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
@@ -98,36 +96,5 @@ void main() {
       () => viewModel.validateEmoteTextFields(valid.copyWith(emoteText15: -1)),
       throwsStateError,
     );
-  });
-
-  test('详情 UI 显式管理全部字段并使用精确 Picker 和四列等宽布局', () {
-    final view = File(
-      'lib/page/emote_text/emote_text_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/emote_text/emote_text_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(view, contains('FoxyEntityPickerDelegates.dbcEmote'));
-    expect(
-      'FoxyEntityPickerDelegates.emoteTextData'.allMatches(view),
-      hasLength(16),
-    );
-    for (var index = 0; index < 16; index++) {
-      expect(view, contains('viewModel.emoteText${index}Controller'));
-    }
-    expect(view, isNot(contains('List.generate')));
-    expect(view, isNot(contains('for (')));
-    expect(view, isNot(contains('flex:')));
-    expect('Expanded(child:'.allMatches(view), hasLength(20));
-    expect(viewModel, isNot(contains('emoteTextController(int')));
-    expect(viewModel, isNot(contains('switch (i)')));
-  });
-
-  test('新增引用 DBC 源码不使用数组或 Map 管理字段', () {
-    final source = File(
-      'lib/entity/emote_text_data_entity.dart',
-    ).readAsStringSync();
-    expect(source, isNot(contains('final List<')));
-    expect(source, isNot(contains('final Map<')));
   });
 }

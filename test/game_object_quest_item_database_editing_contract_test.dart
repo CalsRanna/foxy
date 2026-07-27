@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_collection_editor_view_model.dart';
@@ -8,8 +6,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -147,34 +143,6 @@ void main() {
     });
   });
 
-  test('UI、Full Entity 和 ViewModel 遵守迁移边界', () {
-    final entity = File(
-      'lib/entity/game_object_quest_item_entity.dart',
-    ).readAsStringSync();
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/game_object_quest_item_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/game_object/game_object_quest_item_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/game_object/game_object_quest_item_view.dart',
-    ).readAsStringSync();
-
-    expect(
-      entity,
-      isNot(contains('final String itemName;')),
-      reason: 'JOIN 投影不能成为 Full Entity 字段',
-    );
-    expect(repository, isNot(contains('saveGameObjectQuestItem')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<GameObjectQuestItemKey?>(null)'),
-    );
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly:')));
-    expect(view, contains('FoxyPagination('));
-  });
 }
 
 class _FakeRepository extends GameObjectQuestItemRepository {

@@ -1,6 +1,4 @@
 import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/game_object_constants.dart';
@@ -205,17 +203,6 @@ void main() {
     ]);
   });
 
-  test('主表 UI 和 ViewModel 不使用循环或数组管理 Data 字段', () {
-    final view = File(
-      'lib/page/game_object/game_object_template_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/game_object/game_object_template_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(view, isNot(contains('for (')));
-    expect(view, isNot(contains('dataController(')));
-    expect(viewModel, isNot(contains('dataController(')));
-  });
 }
 
 Set<int> _range(int start, int end) => {

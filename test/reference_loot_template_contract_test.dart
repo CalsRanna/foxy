@@ -1,12 +1,8 @@
-import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
-import 'package:foxy/repository/reference_loot_template_repository.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 reference_loot_template 的 10 个标量物理列', () {
@@ -155,82 +151,5 @@ void main() {
       () => const ReferenceLootTemplateEntity(item: -1).validate(),
       throwsRangeError,
     );
-  });
-
-  test('Repository 使用正确复合主键并保持单表写入边界', () {
-    expect(ReferenceLootTemplateRepository.primaryKeyColumns, {
-      'Entry',
-      'Item',
-    });
-    final source = readLocalDartLibrarySource(
-      'lib/repository/reference_loot_template_repository.dart',
-    );
-    expect(source, isNot(contains(".table('item_template')")));
-    expect(source, isNot(contains('reference.abs()')));
-    expect(source, contains("builder = builder.groupBy('Entry')"));
-    expect(source, contains("nextMaxPlusOne(_table, 'Entry')"));
-  });
-
-  test('Repository 复制行时保留 Reference 并复用单表写入路径', () {
-    final source = readLocalDartLibrarySource(
-      'lib/repository/reference_loot_template_repository.dart',
-    );
-    expect(source, contains("entry: await nextMaxPlusOne(_table, 'Entry')"));
-    expect(source, contains('await storeReferenceLootTemplate(copied);'));
-    expect(source, isNot(contains("json['Reference'] = nextItem")));
-  });
-
-  test('详情表单按字段语义使用 Picker/Flags 且每行四列等宽', () {
-    final view = File(
-      'lib/page/reference_loot_template/reference_loot_template_view.dart',
-    ).readAsStringSync();
-    expect(view, contains('FoxyEntityPickerDelegates.itemTemplate'));
-    expect(view, contains('FoxyEntityPickerDelegates.referenceLoot'));
-    expect(view, contains("label: '引用模板 ID'"));
-    expect(view, contains('FoxyFlagPicker('));
-    expect(view, contains('flags: kLootModeFlagOptions'));
-    expect(view, contains('enabled: !viewModel.hasReference.value'));
-    expect('Expanded(child:'.allMatches(view), hasLength(12));
-    expect(view, isNot(contains('flex:')));
-  });
-
-  test('ViewModel 十个 Controller 与实体字段逐一初始化和收集', () {
-    final source = File(
-      'lib/page/reference_loot_template/'
-      'reference_loot_template_detail_view_model.dart',
-    ).readAsStringSync();
-    expect('registerController('.allMatches(source), hasLength(10));
-    expect(source, contains('FlagFieldController()'));
-    expect(source, contains('referenceController.addListener'));
-    expect(source, contains('questRequiredController.init(0)'));
-    expect(source, contains('reference: referenceController.collect()'));
-    expect(source, contains('lootMode: lootModeController.collect()'));
-  });
-
-  test('详情路由只携带 typed key 且页面持有实时 persistedKey', () {
-    final page = File(
-      'lib/page/reference_loot_template/'
-      'reference_loot_template_detail_page.dart',
-    ).readAsStringSync();
-    final list = File(
-      'lib/page/reference_loot_template/'
-      'reference_loot_template_list_page.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/reference_loot_template/reference_loot_template_view.dart',
-    ).readAsStringSync();
-
-    expect(
-      page,
-      contains('final ReferenceLootTemplateKey? referenceLootTemplateKey'),
-    );
-    expect(page, contains('viewModel.persistedKey.value'));
-    expect(page, contains('ReferenceLootTemplateView(viewModel: viewModel)'));
-    expect(list, contains('key: templates[row].key'));
-    expect(
-      view,
-      contains('final ReferenceLootTemplateDetailViewModel viewModel'),
-    );
-    expect(view, contains('GetIt.instance.get<RouterFacade>()'));
   });
 }

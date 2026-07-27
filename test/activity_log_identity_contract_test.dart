@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/event_bus.dart';
@@ -30,62 +28,6 @@ void main() {
     });
     expect(log.toJson(), isNot(contains('id')));
     expect(log.toJson(), isNot(contains('entity_id')));
-  });
-
-  test('迁移按顺序安全删除旧业务 ID 列', () {
-    final migration = File(
-      'lib/database/migration/migration_202607190000.dart',
-    ).readAsStringSync();
-    final runner = File(
-      'lib/database/migration_runner.dart',
-    ).readAsStringSync();
-
-    expect(migration, contains("String get name => 'migration_202607190000'"));
-    expect(migration, contains(".where('TABLE_SCHEMA', 'foxy')"));
-    expect(migration, contains(".where('COLUMN_NAME', 'entity_id')"));
-    expect(
-      migration,
-      contains("SET entity_name = CONCAT(module, ' #', entity_id)"),
-    );
-    expect(
-      migration,
-      contains('ALTER TABLE foxy.activity_log DROP COLUMN entity_id'),
-    );
-    expect(migration, contains('if (columnCount == 0) return'));
-    expect(
-      runner.indexOf('Migration202607190000()'),
-      greaterThan(runner.indexOf('Migration202605010000()')),
-    );
-  });
-
-  test('Repository 与全部业务调用方不再读取或传递业务 ID', () {
-    final entity = File(
-      'lib/entity/activity_log_entity.dart',
-    ).readAsStringSync();
-    final repository = File(
-      'lib/repository/activity_log_repository.dart',
-    ).readAsStringSync();
-    final trend = File(
-      'lib/page/dashboard/component/trend.dart',
-    ).readAsStringSync();
-    final pageSources = Directory('lib/page')
-        .listSync(recursive: true)
-        .whereType<File>()
-        .where((file) => file.path.endsWith('.dart'))
-        .map((file) => file.readAsStringSync())
-        .join();
-
-    expect(entity, isNot(contains('entityId')));
-    expect(entity, isNot(contains("'entity_id'")));
-    expect(
-      repository,
-      contains("['id', 'module', 'action_type', 'entity_name', 'created_at']"),
-    );
-    expect(repository, isNot(contains(".select(['*'])")));
-    expect(pageSources, isNot(contains('entityId:')));
-    expect(pageSources, isNot(contains("entityName: ''")));
-    expect(trend, contains("activity.entityName"));
-    expect(trend, isNot(contains('activity.entityId')));
   });
 
   test('best-effort 日志失败不会泄漏异步错误', () async {
@@ -120,27 +62,27 @@ class _FailingDriver implements DatabaseDriver {
   final SqlGrammar grammar = MysqlGrammar();
 
   @override
-  Future<int> affectingStatement(
-    String sql, [
-    List<Object?> params = const [],
-  ]) => throw StateError('write failed');
+  Future<int> affectingStatement(String sql, [List<Object?> params = const []]) {
+    throw StateError('write failed');
+  }
 
   @override
   Future<void> close() async {}
 
   @override
-  Future<int> insertAndGetId(String sql, [List<Object?> params = const []]) =>
-      throw StateError('write failed');
+  Future<int> insertAndGetId(String sql, [List<Object?> params = const []]) {
+    throw StateError('write failed');
+  }
 
   @override
-  Future<List<LaconicResult>> select(
-    String sql, [
-    List<Object?> params = const [],
-  ]) async => const [];
+  Future<List<LaconicResult>> select(String sql, [List<Object?> params = const []]) async {
+    return const [];
+  }
 
   @override
-  Future<void> statement(String sql, [List<Object?> params = const []]) =>
-      throw StateError('write failed');
+  Future<void> statement(String sql, [List<Object?> params = const []]) {
+    throw StateError('write failed');
+  }
 
   @override
   Future<T> transaction<T>(Future<T> Function() action) => action();

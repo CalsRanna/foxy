@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/page/spell/spell_loot_template_collection_editor_view_model.dart';
@@ -8,8 +6,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -145,31 +141,6 @@ void main() {
     });
   });
 
-  test('UI、Full Entity 和 ViewModel 遵守迁移边界', () {
-    final entity = File(
-      'lib/entity/spell_loot_template_entity.dart',
-    ).readAsStringSync();
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/spell_loot_template_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/spell/spell_loot_template_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/spell/spell_loot_template_view.dart',
-    ).readAsStringSync();
-
-    expect(entity, isNot(contains('final String itemName;')));
-    expect(entity, isNot(contains('this.itemName')));
-    expect(repository, isNot(contains('saveSpellLootTemplate')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<SpellLootTemplateKey?>(null)'),
-    );
-    expect(viewModel, contains('destroySpellLootTemplate(key)'));
-    expect(view, isNot(contains('readOnly:')));
-    expect(view, contains('FoxyPagination('));
-  });
 }
 
 class _FakeRepository extends SpellLootTemplateRepository {

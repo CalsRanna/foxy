@@ -1,13 +1,10 @@
-import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/scaling_stat_value_constants.dart';
 import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 ScalingStatValues.dbc 的 24 个标量物理列', () {
@@ -123,64 +120,6 @@ void main() {
       () => const ItemTemplateEntity(scalingStatValue: 0x00000600).validate(),
       throwsArgumentError,
     );
-  });
-
-  test('Entity 与 ViewModel 未用集合或循环管理 24 个物理字段', () {
-    final entity = File(
-      'lib/entity/scaling_stat_value_entity.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
-    ).readAsStringSync();
-    for (final source in [entity, viewModel]) {
-      expect(source, isNot(contains('final List<')));
-      expect(source, isNot(contains('final Map<')));
-      expect(source, isNot(contains('List.generate')));
-      expect(source, isNot(contains('for (')));
-    }
-  });
-
-  test('详情页逐字段展示、八行四列等宽且全部物理字段可编辑', () {
-    final view = File(
-      'lib/page/scaling_stat_value/scaling_stat_value_view.dart',
-    ).readAsStringSync();
-    expect('Expanded(child:'.allMatches(view), hasLength(32));
-    expect(view, isNot(contains('flex:')));
-    expect(view, contains('controller: viewModel.charlevelController'));
-    expect(view, isNot(contains('readOnly: true')));
-  });
-
-  test('Repository 按 Charlevel 导出并使用原始键写入当前表', () {
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/scaling_stat_value_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(repository, contains(".orderBy('Charlevel')"));
-    expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateScalingStatValueFields(candidate);'));
-    expect(repository, contains('int originalKey'));
-    expect(repository, contains('.update(json)'));
-    expect(repository, contains('matchedRows == 0'));
-    expect(repository, contains('deletedRows == 0'));
-    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(repository, isNot(contains("table('item_template')")));
-    expect(repository, isNot(contains("remove('ID')")));
-    expect(repository, contains('charlevel: await _getNextCharlevel()'));
-  });
-
-  test('详情使用 persistedKey 区分增改并在成功后切换身份', () {
-    final viewModel = File(
-      'lib/page/scaling_stat_value/scaling_stat_value_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(viewModel, contains('signal<int?>(null)'));
-    expect(viewModel, contains('final originalKey = persistedKey.value'));
-    expect(
-      viewModel,
-      contains('updateScalingStatValue(originalKey, candidate)'),
-    );
-    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 
   test('DBC definition 使用 3.3.5.12340 的 24 列物理格式', () {

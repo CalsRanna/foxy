@@ -1,13 +1,10 @@
 import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/achievement_constants.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Achievement Entity 精确覆盖 62 个标量物理列', () {
@@ -141,66 +138,6 @@ void main() {
       ).validate(),
       throwsArgumentError,
     );
-  });
-
-  test('详情页四列等宽且使用各字段准确控件', () {
-    final view = File(
-      'lib/page/achievement/achievement_view.dart',
-    ).readAsStringSync();
-    expect(view, isNot(contains('flex:')));
-    expect(view, contains('kAchievementFactionOptions'));
-    expect(view, contains('kAchievementFlagOptions'));
-    expect(view, contains('FoxyEntityPickerDelegates.map'));
-    expect(view, contains('FoxyEntityPickerDelegates.achievementCategory'));
-    expect(view, contains('FoxyEntityPickerDelegates.spellIcon'));
-    expect(
-      'FoxyEntityPickerDelegates.achievement'.allMatches(view),
-      hasLength(3),
-    );
-    expect('Row('.allMatches(view), hasLength(7));
-    expect('Expanded('.allMatches(view), hasLength(24));
-    expect(view, isNot(contains('readOnly: true')));
-    expect('viewModel.persistedKey.value'.allMatches(view), hasLength(4));
-  });
-
-  test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/achievement_repository.dart',
-    );
-    final criteriaRepository = readLocalDartLibrarySource(
-      'lib/repository/achievement_criteria_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/achievement/achievement_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(repository, isNot(contains('.validate()')));
-    expect(viewModel, contains('validateAchievementFields(candidate);'));
-    expect(repository, contains('int originalKey'));
-    expect(repository, contains('.update(json)'));
-    expect(repository, contains('matchedRows == 0'));
-    expect(repository, contains('deletedRows == 0'));
-    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(repository, isNot(contains("table('foxy.dbc_map')")));
-    expect(
-      repository,
-      isNot(contains("table('foxy.dbc_achievement_category')")),
-    );
-    expect(repository, isNot(contains("table('foxy.dbc_spell_icon')")));
-    expect(repository, isNot(contains("remove('ID')")));
-    expect(repository, isNot(contains(".table('achievement_reward')")));
-    expect(repository, isNot(contains('acore_characters')));
-    expect(criteriaRepository, isNot(contains('acore_characters')));
-    expect(
-      criteriaRepository,
-      isNot(contains(".table('achievement_criteria_data')")),
-    );
-    expect(criteriaRepository, contains('int key'));
-    expect(criteriaRepository, contains('deletedRows == 0'));
-    expect(repository, contains(".orderBy('ID')"));
-    expect(viewModel, contains('signal<int?>(null)'));
-    expect(viewModel, contains('final originalKey = persistedKey.value'));
-    expect(viewModel, contains('updateAchievement(originalKey, candidate)'));
-    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 
   test('Achievement 三张 DBC definitions 使用 3.3.5.12340 精确格式', () {

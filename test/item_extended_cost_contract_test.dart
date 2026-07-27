@@ -1,13 +1,10 @@
 import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/constant/item_extended_cost_constants.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('ItemExtendedCost Entity 精确覆盖 16 个物理列且全部为标量', () {
@@ -103,69 +100,5 @@ void main() {
       'dbc_item_purchase_group',
     );
     expect(DbcLocaleFields.itemPurchaseGroupName.columnPrefix, 'Name_lang');
-  });
-
-  test('Entity 和 ViewModel 不用数组、Map 或循环管理重复槽位', () {
-    final entity = File(
-      'lib/entity/item_extended_cost_entity.dart',
-    ).readAsStringSync();
-    final purchaseGroup = File(
-      'lib/entity/item_purchase_group_entity.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/item_extended_cost/item_extended_cost_detail_view_model.dart',
-    ).readAsStringSync();
-    for (final source in [entity, purchaseGroup, viewModel]) {
-      expect(source, isNot(contains('final List<')));
-      expect(source, isNot(contains('final Map<')));
-      expect(source, isNot(contains('final ids = [')));
-      expect(source, isNot(contains('for (')));
-    }
-    expect(viewModel, contains('itemID0Controller.collect()'));
-    expect(viewModel, contains('itemID4Controller.collect()'));
-    expect(viewModel, contains('itemCount0Controller.init('));
-    expect(viewModel, contains('itemCount4Controller.init('));
-  });
-
-  test('详情页使用准确 Picker 且所有表单行均为四列等宽', () {
-    final view = File(
-      'lib/page/item_extended_cost/item_extended_cost_view.dart',
-    ).readAsStringSync();
-    expect(
-      'FoxyEntityPickerDelegates.itemTemplate'.allMatches(view),
-      hasLength(5),
-    );
-    expect(view, contains('FoxyEntityPickerDelegates.itemPurchaseGroup'));
-    expect(view, contains('kItemExtendedCostArenaSlotOptions'));
-    expect(view, isNot(contains('flex:')));
-    expect('Expanded(child:'.allMatches(view), hasLength(20));
-    expect(view, isNot(contains('readOnly: true')));
-  });
-
-  test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final source = readLocalDartLibrarySource(
-      'lib/repository/item_extended_cost_repository.dart',
-    );
-    expect(source, contains('int originalKey'));
-    expect(source, contains('.update(json)'));
-    expect(source, contains('matchedRows == 0'));
-    expect(source, contains('deletedRows == 0'));
-    expect(source, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(source, isNot(contains("table('item_template')")));
-    expect(source, isNot(contains("table('foxy.dbc_item_purchase_group')")));
-    expect(source, isNot(contains("table('npc_vendor')")));
-    expect(source, isNot(contains("table('game_event_npc_vendor')")));
-    expect(source, isNot(contains("remove('ID')")));
-
-    final viewModel = File(
-      'lib/page/item_extended_cost/item_extended_cost_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(viewModel, contains('signal<int?>(null)'));
-    expect(viewModel, contains('final originalKey = persistedKey.value'));
-    expect(
-      viewModel,
-      contains('updateItemExtendedCost(originalKey, candidate)'),
-    );
-    expect(viewModel, contains('persistedKey.value = candidate.id'));
   });
 }

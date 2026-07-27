@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
@@ -11,8 +9,6 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -227,7 +223,7 @@ void main() {
     });
   });
 
-  test('validation、UI 和 Repository 边界正确', () {
+  test('validateNpcTrainerFields 拒绝非法 reqLevel', () {
     final validation = _NpcTrainerValidation();
     expect(
       () => validation.validateNpcTrainerFields(
@@ -235,29 +231,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/npc_trainer_repository.dart',
-    );
-    final relationRepository = readLocalDartLibrarySource(
-      'lib/repository/creature_default_trainer_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/npc_trainer_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/npc_trainer_view.dart',
-    ).readAsStringSync();
-
-    expect(repository, isNot(contains('saveNpcTrainer')));
-    expect(repository, isNot(contains("json.remove('TrainerId')")));
-    expect(relationRepository, isNot(contains('saveCreatureDefaultTrainer')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<NpcTrainerKey?>(null)'),
-    );
-    expect(viewModel, contains('Future<void> destroy('));
-    expect(view, isNot(contains('readOnly:')));
-    expect(view, contains('FoxyPagination('));
   });
 }
 

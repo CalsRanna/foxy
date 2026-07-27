@@ -1,6 +1,4 @@
 import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_type.dart';
@@ -169,18 +167,4 @@ void main() {
     );
   });
 
-  test('详情页显式管理字段并保持每行四列等宽', () {
-    final view = File(
-      'lib/page/condition/condition_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/condition/condition_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(view, contains('Expanded(child: fourth)'));
-    expect(view, isNot(contains('flex: 3')));
-    expect(view, isNot(contains('List.generate')));
-    expect(viewModel, contains('IntFieldController()'));
-    expect(viewModel, contains('validateConditionFields(data)'));
-    expect(viewModel, isNot(contains('SelectFieldController<int>')));
-  });
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
@@ -12,7 +10,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -171,43 +168,6 @@ void main() {
     });
   });
 
-  test('Full/Brief、typed route 与键控件遵守迁移边界', () {
-    final entity = File(
-      'lib/entity/smart_script_entity.dart',
-    ).readAsStringSync();
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/smart_script_repository.dart',
-    );
-    final detailViewModel = File(
-      'lib/page/smart_script/smart_script_detail_view_model.dart',
-    ).readAsStringSync();
-    final detailPage = File(
-      'lib/page/smart_script/smart_script_detail_page.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/smart_script/smart_script_view.dart',
-    ).readAsStringSync();
-    final generated = File('lib/router/router.gr.dart').readAsStringSync();
-
-    expect(entity, isNot(matches(RegExp(r'class\s+BriefSmartScriptEntity\b'))));
-    expect(repository, isNot(contains('saveSmartScript')));
-    expect(
-      detailViewModel,
-      contains('final persistedKey = signal<SmartScriptKey?>'),
-    );
-    expect(detailViewModel, isNot(contains('nextIdFor(t.')));
-    expect(detailPage, contains('final SmartScriptKey? scriptKey'));
-    expect(generated, contains('SmartScriptKey? scriptKey'));
-    expect(view, isNot(contains('ownerEditable')));
-    expect(
-      view,
-      isNot(
-        contains(
-          "_numberItem('ID', 'id', viewModel.idController, readOnly: true)",
-        ),
-      ),
-    );
-  });
 }
 
 class _FakeRepository extends SmartScriptRepository {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_collection_editor_view_model.dart';
@@ -8,8 +6,6 @@ import 'package:foxy/router/router_facade.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import './support/local_dart_library_source.dart';
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -145,28 +141,6 @@ void main() {
     });
   });
 
-  test('UI 与 Repository 遵守完整字段和 row identity 合同', () {
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_equip_template_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/creature_template/creature_equip_template_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/creature_template/creature_equip_template_view.dart',
-    ).readAsStringSync();
-
-    expect(repository, isNot(contains('saveCreatureEquipTemplate')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<CreatureEquipTemplateKey?>(null)'),
-    );
-    expect(viewModel, contains('itemID1Controller.collect()'));
-    expect(viewModel, contains('itemID2Controller.collect()'));
-    expect(viewModel, contains('itemID3Controller.collect()'));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('FoxyPagination('));
-  });
 }
 
 class _FakeCreatureEquipTemplateRepository

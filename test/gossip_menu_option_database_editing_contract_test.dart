@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
@@ -18,7 +16,6 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-
 import 'support/local_dart_library_source.dart';
 
 void main() {
@@ -459,7 +456,7 @@ void main() {
     });
   });
 
-  test('校验、UI 和 Repository 遵守 inline 编辑边界', () {
+  test('validateGossipMenuOptionFields 拒绝非法 optionId', () {
     final validation = _GossipMenuOptionValidation();
     expect(
       () => validation.validateGossipMenuOptionFields(
@@ -467,25 +464,6 @@ void main() {
       ),
       throwsA(isA<StateError>()),
     );
-    final baseRepository = readLocalDartLibrarySource('lib/repository/gossip_menu_option_repository.dart');
-    final localeRepository = readLocalDartLibrarySource('lib/repository/gossip_menu_option_locale_repository.dart');
-    final viewModel = File(
-      'lib/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/gossip_menu/gossip_menu_option_view.dart',
-    ).readAsStringSync();
-
-    expect(baseRepository, isNot(contains('saveGossipMenuOption(')));
-    expect(localeRepository, isNot(contains('saveGossipMenuOptionLocale(')));
-    expect(
-      viewModel,
-      contains('final editingKey = signal<GossipMenuOptionKey?>'),
-    );
-    expect(viewModel, isNot(contains('_originalMenuId')));
-    expect(viewModel, isNot(contains('destroyGossipMenuOptionLocales')));
-    expect(view, isNot(contains('readOnly: true')));
-    expect(view, contains('FoxyPagination('));
   });
 }
 

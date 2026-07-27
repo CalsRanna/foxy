@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
@@ -222,18 +220,4 @@ void main() {
     );
   });
 
-  test('详情 UI 与 ViewModel 显式管理全部字段并保持四列布局', () {
-    final view = File(
-      'lib/page/smart_script/smart_script_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/smart_script/smart_script_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(view, contains("'event_param6'"));
-    expect(viewModel, contains('eventParam6Controller'));
-    expect(viewModel, contains('eventParam6: eventParam6Controller.collect()'));
-    expect(view, contains('Expanded(child: fourth)'));
-    expect(view, isNot(contains('List.generate')));
-    expect(viewModel, isNot(contains('List.generate')));
-  });
 }

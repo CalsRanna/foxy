@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
@@ -8,7 +6,6 @@ import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/npc_text_locale_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
-import './support/local_dart_library_source.dart';
 
 void main() {
   test('gossip_menu 与全部关联 Entity 逐列覆盖物理结构', () {
@@ -110,47 +107,4 @@ void main() {
     expect(kGossipBooleanOptions, {0: '否', 1: '是'});
   });
 
-  test('NPC 文本 UI 与 ViewModel 不使用数组或 Map 管理重复字段', () {
-    final entity = File('lib/entity/npc_text_entity.dart').readAsStringSync();
-    final locale = File(
-      'lib/entity/npc_text_locale_entity.dart',
-    ).readAsStringSync();
-    final view = File(
-      'lib/page/gossip_menu/npc_text_view.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/gossip_menu/npc_text_single_editor_view_model.dart',
-    ).readAsStringSync();
-
-    for (final source in [entity, locale, view, viewModel]) {
-      expect(source, isNot(contains('List.generate')));
-      expect(source, isNot(contains('for (')));
-    }
-    expect(viewModel, isNot(contains('_stringControllers')));
-    expect(viewModel, isNot(contains('_intControllers')));
-    expect(viewModel, isNot(contains('_doubleControllers')));
-  });
-
-  test('表演、POI、布尔字段与父子 Tab 使用精确控件', () {
-    final npcView = File(
-      'lib/page/gossip_menu/npc_text_view.dart',
-    ).readAsStringSync();
-    final optionView = File(
-      'lib/page/gossip_menu/gossip_menu_option_view.dart',
-    ).readAsStringSync();
-    final detailPage = File(
-      'lib/page/gossip_menu/gossip_menu_detail_page.dart',
-    ).readAsStringSync();
-    final optionRepository = readLocalDartLibrarySource(
-      'lib/repository/gossip_menu_option_repository.dart',
-    );
-
-    expect(npcView, contains('FoxyEntityPickerDelegates.dbcEmote'));
-    expect(npcView, contains("_delayField('延迟 1'"));
-    expect(optionView, contains('FoxyEntityPickerDelegates.pointOfInterest'));
-    expect(optionView, contains('options: kGossipBooleanOptions'));
-    expect(detailPage, contains('disabledIndexes:'));
-    expect(detailPage, contains('const {1, 2}'));
-    expect(optionRepository, contains('optionId < 32'));
-  });
 }

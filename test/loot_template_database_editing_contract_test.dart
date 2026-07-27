@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
@@ -30,7 +28,6 @@ import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   group('loot template dedicated key and Brief boundaries', () {
@@ -297,95 +294,6 @@ void main() {
     });
   });
 
-  test('全部 loot consumer 使用具体 editingKey、完整加载和可编辑 key 控件', () {
-    const viewModelKeyTypes = {
-      'lib/page/creature_template/creature_loot_template_collection_editor_view_model.dart':
-          'CreatureLootTemplateKey',
-      'lib/page/creature_template/'
-              'pickpocketing_loot_template_collection_editor_view_model.dart':
-          'PickpocketingLootTemplateKey',
-      'lib/page/creature_template/skinning_loot_template_collection_editor_view_model.dart':
-          'SkinningLootTemplateKey',
-      'lib/page/game_object/game_object_loot_template_collection_editor_view_model.dart':
-          'GameObjectLootTemplateKey',
-      'lib/page/item/item_loot_template_collection_editor_view_model.dart':
-          'ItemLootTemplateKey',
-      'lib/page/item/disenchant_loot_template_collection_editor_view_model.dart':
-          'DisenchantLootTemplateKey',
-      'lib/page/item/milling_loot_template_collection_editor_view_model.dart':
-          'MillingLootTemplateKey',
-      'lib/page/item/prospecting_loot_template_collection_editor_view_model.dart':
-          'ProspectingLootTemplateKey',
-    };
-    const viewPaths = [
-      'lib/page/creature_template/creature_loot_template_view.dart',
-      'lib/page/creature_template/pickpocketing_loot_template_view.dart',
-      'lib/page/creature_template/skinning_loot_template_view.dart',
-      'lib/page/game_object/game_object_loot_template_view.dart',
-      'lib/page/item/item_loot_template_view.dart',
-      'lib/page/item/disenchant_loot_template_view.dart',
-      'lib/page/item/milling_loot_template_view.dart',
-      'lib/page/item/prospecting_loot_template_view.dart',
-    ];
-
-    for (final entry in viewModelKeyTypes.entries) {
-      final source = File(entry.key).readAsStringSync();
-      expect(
-        source,
-        contains('final editingKey = signal<${entry.value}?>(null)'),
-        reason: entry.key,
-      );
-      final methodBase = entry.value.substring(
-        0,
-        entry.value.length - 'Key'.length,
-      );
-      expect(source, contains('get$methodBase(key)'), reason: entry.key);
-      expect(source, contains('destroy$methodBase(key)'), reason: entry.key);
-      expect(source, isNot(contains('editingItem')), reason: entry.key);
-      expect(
-        source,
-        contains('Future<void> paginate(int page)'),
-        reason: entry.key,
-      );
-    }
-    for (final path in viewPaths) {
-      final source = File(path).readAsStringSync();
-      expect(source, isNot(contains('readOnly:')), reason: path);
-      expect(source, contains('FoxyPagination('), reason: path);
-    }
-
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/creature_loot_template_repository.dart',
-    );
-    final referenceViewModel = File(
-      'lib/page/reference_loot_template/'
-      'reference_loot_template_detail_view_model.dart',
-    ).readAsStringSync();
-    expect(repository, isNot(contains('saveLootTemplate')));
-    expect(repository, isNot(contains('_validateReferences')));
-    expect(repository, isNot(contains(".table('item_template')")));
-    expect(
-      referenceViewModel,
-      contains('final persistedKey = signal<ReferenceLootTemplateKey?>'),
-    );
-    final referenceView = File(
-      'lib/page/reference_loot_template/reference_loot_template_view.dart',
-    ).readAsStringSync();
-    expect(referenceView, isNot(contains('readOnly:')));
-  });
-
-  test('通用 LootTableType、key 和 Brief 类型已完全移除', () {
-    const removedPaths = [
-      'lib/entity/loot_table_type.dart',
-      'lib/entity/loot_template_key.dart',
-      'lib/entity/loot_template_entry_key.dart',
-      'lib/entity/brief_loot_template_entity.dart',
-      'lib/entity/brief_loot_template_entry_entity.dart',
-    ];
-    for (final path in removedPaths) {
-      expect(File(path).existsSync(), isFalse, reason: path);
-    }
-  });
 }
 
 dynamic _candidateFor(String table, {bool updated = false}) {

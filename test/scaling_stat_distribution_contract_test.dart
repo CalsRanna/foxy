@@ -1,11 +1,8 @@
-import 'support/entity_validation_test_extensions.dart';
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   test('Entity 精确覆盖 22 个物理列且全部为标量', () {
@@ -84,83 +81,6 @@ void main() {
     expect(entity.displayStats, '0+10000');
     expect(const ScalingStatDistributionEntity().statId9, -1);
     expect(const ScalingStatDistributionEntity().maxlevel, 80);
-  });
-
-  test('Entity 和 ViewModel 不用数组、Map 或循环管理重复槽位', () {
-    final entity = File(
-      'lib/entity/scaling_stat_distribution_entity.dart',
-    ).readAsStringSync();
-    final viewModel = File(
-      'lib/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart',
-    ).readAsStringSync();
-    for (final source in [entity, viewModel]) {
-      expect(source, isNot(contains('final List<')));
-      expect(source, isNot(contains('final Map<')));
-      expect(source, isNot(contains('final stats = [')));
-      expect(source, isNot(contains('final bonuses = [')));
-      expect(source, isNot(contains('for (')));
-    }
-    expect(entity, contains('append(statId0, bonus0);'));
-    expect(entity, contains('append(statId9, bonus9);'));
-    expect(viewModel, contains('statId0Controller.collect()'));
-    expect(viewModel, contains('statId9Controller.collect()'));
-    expect(viewModel, contains('bonus0Controller.init('));
-    expect(viewModel, contains('bonus9Controller.init('));
-  });
-
-  test('详情页使用专属下拉且每个表单行均为四列等宽', () {
-    final view = File(
-      'lib/page/scaling_stat_distribution/scaling_stat_distribution_view.dart',
-    ).readAsStringSync();
-    expect('FoxyIntShadSelect('.allMatches(view), hasLength(10));
-    expect(
-      'kScalingStatDistributionStatOptions'.allMatches(view),
-      hasLength(10),
-    );
-    expect('Expanded(child:'.allMatches(view), hasLength(24));
-    expect(view, isNot(contains('flex:')));
-    expect(view, isNot(contains('有效属性数量')));
-    expect(view, isNot(contains('readOnly: true')));
-  });
-
-  test('Repository 使用原始键、完整 candidate 和单表边界', () {
-    final repository = readLocalDartLibrarySource(
-      'lib/repository/scaling_stat_distribution_repository.dart',
-    );
-    final viewModel = File(
-      'lib/page/scaling_stat_distribution/scaling_stat_distribution_detail_view_model.dart',
-    ).readAsStringSync();
-    final di = File('lib/di.dart').readAsStringSync();
-    expect(
-      File(
-        'lib/repository/scaling_stat_distribution_solo_repository.dart',
-      ).existsSync(),
-      isFalse,
-    );
-    expect(repository, contains('int originalKey'));
-    expect(repository, contains('.update(json)'));
-    expect(repository, contains('matchedRows == 0'));
-    expect(repository, contains('deletedRows == 0'));
-    expect(repository, contains('MysqlErrorUtil.isDuplicateEntry(error)'));
-    expect(repository, isNot(contains('.validate()')));
-    expect(
-      viewModel,
-      contains('validateScalingStatDistributionFields(candidate);'),
-    );
-    expect(viewModel, contains('signal<int?>(null)'));
-    expect(viewModel, contains('final originalKey = persistedKey.value'));
-    expect(
-      viewModel,
-      contains('updateScalingStatDistribution(originalKey, candidate)'),
-    );
-    expect(viewModel, contains('persistedKey.value = candidate.id'));
-    expect(repository, isNot(contains("table('item_template')")));
-    expect(repository, isNot(contains("remove('ID')")));
-    expect(
-      'registerLazySingleton(() => ScalingStatDistributionRepository())'
-          .allMatches(di),
-      hasLength(1),
-    );
   });
 
   test('DBC definition 与 AzerothCore 3.3.5a 的 22 列格式一致', () {

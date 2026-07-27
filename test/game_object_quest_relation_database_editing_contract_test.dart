@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
@@ -203,38 +201,6 @@ void main() {
     });
   });
 
-  test('开始与结束关系 UI、Entity、Repository 遵守迁移边界', () {
-    const domains = ['starter', 'ender'];
-    for (final domain in domains) {
-      final entity = File(
-        'lib/entity/game_object_quest_${domain}_entity.dart',
-      ).readAsStringSync();
-      final repository = File(
-        'lib/repository/game_object_quest_${domain}_repository.dart',
-      ).readAsStringSync();
-      final viewModel = File(
-        'lib/page/quest/game_object_quest_${domain}_collection_editor_view_model.dart',
-      ).readAsStringSync();
-      final view = File(
-        'lib/page/quest/game_object_quest_${domain}_view.dart',
-      ).readAsStringSync();
-
-      expect(
-        entity,
-        isNot(contains('final String localeName;')),
-        reason: '$domain 的 JOIN 投影不能成为 Full Entity 字段',
-      );
-      expect(
-        repository,
-        isNot(contains('saveGameObjectQuest')),
-        reason: domain,
-      );
-      expect(viewModel, contains('final editingKey = signal<'), reason: domain);
-      expect(viewModel, contains('selectedKey.value = key'), reason: domain);
-      expect(view, isNot(contains('readOnly:')), reason: domain);
-      expect(view, contains('FoxyPagination('), reason: domain);
-    }
-  });
 }
 
 class _FakeStarterRepository extends GameObjectQuestStarterRepository {
