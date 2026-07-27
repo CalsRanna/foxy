@@ -75,7 +75,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: nameInput),
-      Expanded(child: row),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

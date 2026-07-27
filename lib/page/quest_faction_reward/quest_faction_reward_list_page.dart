@@ -72,7 +72,7 @@ class _QuestFactionRewardListPageState
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: entryInput),
-      Expanded(child: row),
+      Expanded(flex: 3, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

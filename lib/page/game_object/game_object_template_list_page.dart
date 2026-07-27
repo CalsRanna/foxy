@@ -115,7 +115,7 @@ class _GameObjectTemplateListPageState
               0 => ShadTableCell(child: Text(template.entry.toString())),
               1 => ShadTableCell(child: Text(template.displayName)),
               2 => ShadTableCell(child: Text(template.type.toString())),
-              3 => ShadTableCell(child: Text(template.size.toString())),
+              3 => ShadTableCell(child: Text(template.size.toStringAsFixed(2))),
               _ => ShadTableCell(child: SizedBox()),
             };
           },

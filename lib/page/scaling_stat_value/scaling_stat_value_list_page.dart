@@ -76,8 +76,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
     final credentialChildren = [
       Expanded(child: entryInput),
       Expanded(child: charlevelInput),
-      Expanded(child: row),
-      Expanded(child: SizedBox()),
+      Expanded(flex: 2, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),

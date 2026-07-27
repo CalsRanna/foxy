@@ -117,18 +117,24 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
               2 => ShadTableCell(
                 child: Text(
                   kEventTypes[script.eventType] ?? script.eventType.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               3 => ShadTableCell(
                 child: Text(
                   kActionTypes[script.actionType] ??
                       script.actionType.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               4 => ShadTableCell(
                 child: Text(
                   kTargetTypes[script.targetType] ??
                       script.targetType.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               5 => ShadTableCell(

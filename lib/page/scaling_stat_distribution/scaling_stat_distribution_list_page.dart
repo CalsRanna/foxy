@@ -37,7 +37,7 @@ class _ScalingStatDistributionListPageState
   @override
   Widget build(BuildContext context) {
     final children = [
-      FoxyHeader('属性缩放分布'),
+      FoxyHeader('属性缩放分布列表'),
       _buildFilter(),
       Expanded(child: Watch((_) => _buildTable())),
     ];
@@ -73,8 +73,7 @@ class _ScalingStatDistributionListPageState
     var row = Row(spacing: 16, children: [searchButton, resetButton]);
     final credentialChildren = [
       Expanded(child: idInput),
-      Expanded(child: SizedBox()),
-      Expanded(child: row),
+      Expanded(flex: 3, child: row),
     ];
     return ShadCard(
       padding: const EdgeInsets.all(16),
