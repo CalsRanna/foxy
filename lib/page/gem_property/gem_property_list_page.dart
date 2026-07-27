@@ -100,7 +100,7 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
     final headers = ['编号', '法术物品附魔', '客户端库存计数', '客户端物品计数', '宝石颜色'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 480;
+        var width = constraints.maxWidth - 360;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -112,6 +112,8 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
               4 => ShadTableCell(
                 child: Text(
                   kGemPropertyColorOptions[item.type] ?? item.type.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               _ => ShadTableCell(child: SizedBox()),
@@ -121,10 +123,10 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(width),
+              1 => FixedTableSpanExtent(width / 2),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(width / 2),
               _ => null,
             };
           },

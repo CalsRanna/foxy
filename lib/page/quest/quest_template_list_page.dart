@@ -132,7 +132,13 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
             final item = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.displayTitle)),
+              1 => ShadTableCell(
+                child: Text(
+                  item.displayTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               2 => ShadTableCell(
                 child: Text(
                   item.displayDescription,

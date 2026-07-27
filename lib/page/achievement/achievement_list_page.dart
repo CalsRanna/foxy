@@ -110,9 +110,27 @@ class _AchievementListPageState extends State<AchievementListPage> {
             final item = items[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(item.id.toString())),
-              1 => ShadTableCell(child: Text(item.titleLangZhCN)),
-              2 => ShadTableCell(child: Text(item.descriptionLangZhCN)),
-              3 => ShadTableCell(child: Text(item.rewardLangZhCN)),
+              1 => ShadTableCell(
+                child: Text(
+                  item.titleLangZhCN,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              2 => ShadTableCell(
+                child: Text(
+                  item.descriptionLangZhCN,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              3 => ShadTableCell(
+                child: Text(
+                  item.rewardLangZhCN,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },

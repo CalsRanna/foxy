@@ -111,7 +111,7 @@ class _ScalingStatDistributionListPageState
               1 => ShadTableCell(
                 child: Text(
                   item.displayStats,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
