@@ -160,7 +160,8 @@ lib/
 ├── database/        # 数据库连接与 Foxy migrations
 ├── entity/          # 完整实体、Brief 实体、筛选条件与复合 Key
 ├── event/           # 应用事件总线
-├── infrastructure/  # 配置、DBC、日志、偏好、窗口及工具
+├── infrastructure/  # 配置、DBC、日志、偏好、窗口、代码生成及工具
+├── lint/            # custom_lint 插件与规则
 ├── page/            # 按功能组织的 Page / View / ViewModel
 ├── repository/      # Laconic 查询与持久化层
 ├── router/          # AutoRoute 配置和导航门面
@@ -169,7 +170,7 @@ lib/
 ├── di.dart          # GetIt 依赖注册
 └── main.dart        # 应用入口
 
-test/                # 单元、Widget、数据库编辑及架构契约测试
+test/                # 单元、Widget、数据库编辑及代码生成行为测试
 asset/image/         # Flutter asset 图片
 asset/icon/          # 外置游戏图标
 linux|macos|windows/ # 桌面平台工程
@@ -177,19 +178,23 @@ linux|macos|windows/ # 桌面平台工程
 
 详细的仓库架构、持久化约束和 AI 编码规范参见 [`AGENTS.md`](AGENTS.md)。
 
+### 代码生成与 Lint
+
+项目使用代码生成和 custom_lint 保证架构约束，不再依赖手工编写的源码级契约测试：
+
+- **代码生成** (`lib/infrastructure/codegen/`)：从注解生成 Entity 样板代码（`fromJson`/`toJson`/`copyWith`/`==`）和 Repository CRUD 方法，构建期即可发现字段类型、文件命名等问题。
+- **Lint 规则** (`lib/lint/`)：通过 `custom_lint` 在 `flutter analyze` 中检查 Entity 字段类型、Repository 方法签名、View 布局参数等 7 条约束。
+- **CI 脚本**：`dart run tool/foxy_lint.dart` 提供相同的独立检查。
+
 ### 数据编辑约定
 
-项目通过契约测试严格约束数据库编辑行为，主要原则包括：
+主要原则：
 
 - 编辑中的候选值与数据库中原始行身份分离；
 - 更新始终使用完整原始 Key 定位旧行；
-- 单列主键使用标量，复合主键使用专用 Key 类型；
 - 更新和删除必须检查 MySQL 返回的匹配行数；
-- 列表与 Picker 使用只包含展示字段和完整身份的 Brief 实体；
 - Repository 不隐式删除关联表数据；
 - DBC Entity 的字段必须精确覆盖物理 Schema。
-
-新增模块前，建议先寻找主键形态和存储类型最接近的现有模块，并同步添加对应契约测试。
 
 ### ViewModel 与 UseCase 边界
 

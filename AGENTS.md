@@ -55,8 +55,9 @@ Do not globally format the repository as incidental cleanup. Format only changed
 - `lib/constant/` — AzerothCore/DBC enums, flags, schemas, and UI option definitions.
 - `lib/router/` — AutoRoute configuration, navigation facade/menu model, and generated routes.
 - `lib/event/` — small synchronous application event bus.
-- `test/` — unit/widget tests plus extensive source-level architecture and database-editing contract tests.
-- `asset/image/` — Flutter-bundled app images.
+- `test/` — unit/widget tests, database-editing contract tests, and codegen behavior tests.
+- `lib/lint/` — custom_lint plugin and rules for codebase-wide constraints.
+- `tool/foxy_lint.dart` — standalone CI script for the same lint rules.
 - `asset/icon/` — thousands of game icons deliberately kept out of the Flutter asset bundle.
 - `linux/`, `macos/`, `windows/` — desktop runners and packaging configuration.
 
@@ -196,9 +197,31 @@ DBC support targets the 3.3.5.12340/3.3.5a physical layouts asserted in tests.
 
 Game icons in `asset/icon/` are intentionally loaded from the filesystem beside the executable (`data/icon/`) by `FoxyGameAssetIcon`, not through `Image.asset`. Do not add this large directory to `pubspec.yaml`. The current explicit copy rule is in `windows/runner/CMakeLists.txt`; if changing other platform packaging, verify equivalent `data/icon` placement rather than bundling all icons.
 
+## Lint and code generation
+
+### Custom lint rules
+
+A custom_lint plugin at `lib/lint/` enforces architecture constraints during `flutter analyze`:
+
+| Rule | Scope | Constraint |
+|------|-------|------------|
+| `entity_scalar_only` | Entity | Fields must be int/double/String/bool; no List/Map/Set |
+| `repository_no_save` | Repository | No handwritten `save*`/`insertAndGetId` (excludes `*Locales`) |
+| `no_collection_loops` | Entity/ViewModel/View | No `List.generate` or `for (` |
+| `entity_no_flutter_import` | Entity | No Flutter material/widget/rendering/page/widget imports |
+| `viewmodel_no_router_facade` | ViewModel | No RouterFacade import |
+| `no_flex_in_view` | View files | No `flex:` parameter |
+| `no_readonly_in_view` | View files | No `readOnly: true` |
+
+The same rules are also available as a standalone CI script: `dart run tool/foxy_lint.dart`.
+
+### Code generation
+
+`lib/infrastructure/codegen/` contains annotation-driven builders that generate entity boilerplate and repository CRUD methods. The codegen enforces many constraints at build time (single entity per file, field types, file naming, etc.) that previously were verified by source-level contract tests. Codegen failures are build errors, not test failures.
+
 ## Testing expectations
 
-Tests are part of the design specification. Many contract tests read Dart source and assert method names, signatures, selected columns, exact identity flow, DI/route/registry coverage, and even the absence of prohibited APIs. Preserve the established shapes rather than working around those assertions.
+Behavioral tests verify actual runtime behavior: entity serialization, validation, repository write contracts, view model identity flows, and DBC format correctness. Do not write tests that read Dart source files to assert method names, signatures, import boundaries, or prohibited APIs — those constraints belong to codegen (build-time) or custom lint rules (`flutter analyze`).
 
 For a change:
 
@@ -226,8 +249,8 @@ The schema must be non-empty, alphanumeric/underscore only, and not named `foxy`
 
 At the time this guide was generated:
 
-- `flutter analyze` passes.
-- The full suite passes all other tests but fails `test/dbc_sync_util_test.dart` test `DBC 导入：同一定义匹配多个文件时报错` on the default case-insensitive macOS filesystem. `SpellDuration.dbc` and `SpellDuration.DBC` cannot coexist, so the test reaches the intentionally invalid MySQL connection instead of detecting duplicates. The test only skips Windows. Do not attribute this pre-existing failure to unrelated changes; still report it.
+- `flutter analyze` has 9 remaining issues (all `deprecated_member_use` in the lint plugin itself).
+- The full suite passes all other tests with one pre-existing failure: `creature_template_spell_database_editing_contract_test.dart` — codegen `toJson` field order does not match the test's expected binding order.
 - Five MySQL integration tests are skipped unless the environment variables above are supplied.
 - A repository-wide format check currently flags only `test/macos_file_selector_entitlements_test.dart`; do not reformat that unrelated file as part of another task.
 - Some widget tests intentionally log error stack traces while verifying failure UI; an error log is not itself a test failure—use the final test status.
