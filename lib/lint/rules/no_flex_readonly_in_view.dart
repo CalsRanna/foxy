@@ -17,7 +17,7 @@ class NoFlexInView extends DartLintRule {
   const NoFlexInView() : super(code: _flexCode);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     if (!isViewFile(resolver.path)) return;
 
     context.registry.addNamedExpression((node) {
@@ -32,7 +32,7 @@ class NoReadOnlyInView extends DartLintRule {
   const NoReadOnlyInView() : super(code: _readOnlyCode);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     if (!isViewFile(resolver.path)) return;
 
     context.registry.addNamedExpression((node) {

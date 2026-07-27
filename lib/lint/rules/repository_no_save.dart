@@ -12,7 +12,7 @@ class RepositoryNoSave extends DartLintRule {
   const RepositoryNoSave() : super(code: _code);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     if (!isRepositoryFile(resolver.path)) return;
 
     context.registry.addMethodDeclaration((node) {

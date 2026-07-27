@@ -39,7 +39,6 @@ dev_dependencies:
     sdk: flutter
 
   auto_route_generator: ^10.2.5
-  analyzer: ^8.1.1
   build: ^3.1.0
   build_runner: ^2.4.9
   build_test: ^3.3.2

@@ -12,7 +12,7 @@ class EntityScalarOnly extends DartLintRule {
   const EntityScalarOnly() : super(code: _code);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     if (!isEntityFile(resolver.path)) return;
 
     context.registry.addFieldDeclaration((node) {

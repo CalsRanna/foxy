@@ -12,7 +12,7 @@ class NoCollectionLoops extends DartLintRule {
   const NoCollectionLoops() : super(code: _code);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     final scope = collectionLoopScope(resolver.path);
     if (scope == null) return;
 

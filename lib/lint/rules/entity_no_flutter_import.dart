@@ -1,3 +1,4 @@
+import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'file_scopes.dart';
 
@@ -10,7 +11,7 @@ class EntityNoFlutterImport extends DartLintRule {
   const EntityNoFlutterImport() : super(code: _code);
 
   @override
-  void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  void run(CustomLintResolver resolver, DiagnosticReporter reporter, CustomLintContext context) {
     if (!isEntityFile(resolver.path)) return;
 
     context.registry.addImportDirective((node) {
