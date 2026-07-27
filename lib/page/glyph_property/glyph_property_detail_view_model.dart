@@ -29,7 +29,7 @@ class GlyphPropertyDetailViewModel
   /// Property
   late final spellIdController = registerController(IntFieldController());
   late final glyphSlotFlagsController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final spellIconIdController = registerController(IntFieldController());
 

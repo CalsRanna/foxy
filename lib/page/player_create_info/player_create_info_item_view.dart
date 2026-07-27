@@ -182,7 +182,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '种族',
-                      child: FoxyIntShadSelect(
+                      child: FoxyShadSelect<int>(
                         controller: viewModel.raceController,
                         options: kPlayerRaceOptions,
                         placeholder: const Text('race'),
@@ -192,7 +192,7 @@ class _PlayerCreateInfoItemViewState extends State<PlayerCreateInfoItemView> {
                   Expanded(
                     child: FoxyFormItem(
                       label: '职业',
-                      child: FoxyIntShadSelect(
+                      child: FoxyShadSelect<int>(
                         controller: viewModel.classController,
                         options: kPlayerClassOptions,
                         placeholder: const Text('class'),

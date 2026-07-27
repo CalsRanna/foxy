@@ -99,7 +99,7 @@ class ConditionView extends StatelessWidget {
                   ),
                   FoxyFormItem(
                     label: '条件目标',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.conditionTargetController,
                       options: _targetOptions(sourceType),
                       placeholder: const Text('ConditionTarget'),
@@ -108,7 +108,7 @@ class ConditionView extends StatelessWidget {
                   ),
                   FoxyFormItem(
                     label: '否定条件',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.negativeConditionController,
                       options: kConditionBooleanOptions,
                       placeholder: const Text('NegativeCondition'),
@@ -143,7 +143,7 @@ class ConditionView extends StatelessWidget {
                 _row(
                   FoxyFormItem(
                     label: '法术失败类型',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.errorTypeController,
                       options: kConditionErrorTypeOptions,
                       placeholder: const Text('ErrorType'),
@@ -153,7 +153,7 @@ class ConditionView extends StatelessWidget {
                   ),
                   FoxyFormItem(
                     label: '自定义错误',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.errorTextIdController,
                       options: kConditionCustomErrorOptions,
                       placeholder: const Text('ErrorTextId'),
@@ -237,11 +237,12 @@ class ConditionView extends StatelessWidget {
     if (sourceType == 30) {
       return FoxyFormItem(
         label: '对象类型',
-        child: FoxyIntShadSelect(
+        child: FoxyIntEnumInput(
           controller: viewModel.sourceGroupController,
           options: const {0: '生物', 1: '游戏对象'},
-          placeholder: const Text('SourceGroup'),
-          enabled: !referenceTemplate,
+          placeholder: 'SourceGroup',
+          title: '对象类型',
+          readOnly: referenceTemplate,
         ),
       );
     }
@@ -317,11 +318,12 @@ class ConditionView extends StatelessWidget {
     if (sourceType == 22) {
       return FoxyFormItem(
         label: 'SmartAI类型',
-        child: FoxyIntShadSelect(
+        child: FoxyIntEnumInput(
           controller: viewModel.sourceIdController,
           options: kSourceTypes,
-          placeholder: const Text('SourceId'),
-          enabled: !referenceTemplate,
+          placeholder: 'SourceId',
+          title: 'SmartAI类型',
+          readOnly: referenceTemplate,
         ),
       );
     }
@@ -387,12 +389,12 @@ class ConditionView extends StatelessWidget {
       );
     }
     if (config.options != null) {
-      return FoxyIntShadSelect(
+      return FoxyIntEnumInput(
         controller: controller,
         options: config.options!,
-        placeholder: Text(column),
-        enabled: !readOnly,
-        maxHeight: 360,
+        placeholder: column,
+        title: config.label,
+        readOnly: readOnly,
       );
     }
     return FoxyNumberInput<int>(

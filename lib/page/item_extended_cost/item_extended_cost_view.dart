@@ -43,7 +43,7 @@ class ItemExtendedCostView extends StatelessWidget {
     );
     final arenaBracketInput = FoxyFormItem(
       label: '最低竞技槽位',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.arenaBracketController,
         options: kItemExtendedCostArenaSlotOptions,
         placeholder: const Text('ArenaBracket'),

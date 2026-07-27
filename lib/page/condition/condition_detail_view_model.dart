@@ -42,7 +42,7 @@ class ConditionDetailViewModel
     IntFieldController(),
   );
   late final conditionTargetController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final conditionValue1Controller = registerController(
     IntFieldController(),
@@ -55,10 +55,14 @@ class ConditionDetailViewModel
   );
   // 非键字段
   late final negativeConditionController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
-  late final errorTypeController = registerController(IntFieldController());
-  late final errorTextIdController = registerController(IntFieldController());
+  late final errorTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final errorTextIdController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final scriptNameController = registerController(StringFieldController());
   late final commentController = registerController(StringFieldController());
 

@@ -34,7 +34,7 @@ class ScalingStatDistributionView extends StatelessWidget {
 
     final statId0Input = FoxyFormItem(
       label: '属性类型 0',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId0Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID0'),
@@ -49,7 +49,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId1Input = FoxyFormItem(
       label: '属性类型 1',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId1Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID1'),
@@ -64,7 +64,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId2Input = FoxyFormItem(
       label: '属性类型 2',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId2Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID2'),
@@ -79,7 +79,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId3Input = FoxyFormItem(
       label: '属性类型 3',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId3Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID3'),
@@ -94,7 +94,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId4Input = FoxyFormItem(
       label: '属性类型 4',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId4Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID4'),
@@ -109,7 +109,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId5Input = FoxyFormItem(
       label: '属性类型 5',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId5Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID5'),
@@ -124,7 +124,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId6Input = FoxyFormItem(
       label: '属性类型 6',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId6Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID6'),
@@ -139,7 +139,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId7Input = FoxyFormItem(
       label: '属性类型 7',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId7Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID7'),
@@ -154,7 +154,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId8Input = FoxyFormItem(
       label: '属性类型 8',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId8Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID8'),
@@ -169,7 +169,7 @@ class ScalingStatDistributionView extends StatelessWidget {
     );
     final statId9Input = FoxyFormItem(
       label: '属性类型 9',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.statId9Controller,
         options: kScalingStatDistributionStatOptions,
         placeholder: const Text('StatID9'),

@@ -257,7 +257,7 @@ class _NpcTextViewState extends State<NpcTextView> {
     required StringFieldController localeText0Controller,
     required StringFieldController localeText1Controller,
     required IntFieldController broadcastController,
-    required IntFieldController languageController,
+    required SelectFieldController<int> languageController,
     required DoubleFieldController probabilityController,
     required IntFieldController delay0Controller,
     required IntFieldController emote0Controller,
@@ -276,7 +276,7 @@ class _NpcTextViewState extends State<NpcTextView> {
             Expanded(
               child: FoxyFormItem(
                 label: '语言',
-                child: FoxyIntShadSelect(
+                child: FoxyShadSelect<int>(
                   controller: languageController,
                   options: kNpcTextLanguages,
                   placeholder: Text('lang$index'),

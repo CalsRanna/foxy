@@ -50,7 +50,7 @@ class GemPropertyView extends StatelessWidget {
     );
     final typeInput = FoxyFormItem(
       label: '宝石颜色',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.typeController,
         options: kGemPropertyColorOptions,
         placeholder: const Text('Type'),

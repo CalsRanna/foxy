@@ -25,7 +25,9 @@ class TalentDetailViewModel
   late final tabIdController = registerController(IntFieldController());
   late final tierIdController = registerController(IntFieldController());
   late final columnIndexController = registerController(IntFieldController());
-  late final flagsController = registerController(IntFieldController());
+  late final flagsController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final requiredSpellIdController = registerController(
     IntFieldController(),
   );

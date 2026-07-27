@@ -39,7 +39,7 @@ class GlyphPropertyView extends StatelessWidget {
     );
     final glyphSlotFlagsInput = FoxyFormItem(
       label: '雕文类型',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.glyphSlotFlagsController,
         options: kGlyphPropertySlotTypeOptions,
         placeholder: const Text('GlyphSlotFlags'),

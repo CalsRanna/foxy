@@ -30,7 +30,9 @@ class GemPropertyDetailViewModel
   late final enchantIdController = registerController(IntFieldController());
   late final maxCountInvController = registerController(IntFieldController());
   late final maxCountItemController = registerController(IntFieldController());
-  late final typeController = registerController(IntFieldController());
+  late final typeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   /// 从所有 Controller 收集数据构建 GemProperty
 

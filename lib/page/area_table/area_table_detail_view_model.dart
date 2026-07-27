@@ -32,7 +32,7 @@ class AreaTableDetailViewModel
   late final areaBitController = registerController(IntFieldController());
   late final flagsController = registerController(FlagFieldController());
   late final factionGroupMaskController = registerController(
-    IntFieldController(),
+    SelectFieldController<int>(fallback: 0),
   );
   late final explorationLevelController = registerController(
     IntFieldController(),

@@ -50,7 +50,7 @@ class TalentView extends StatelessWidget {
     );
     final flagsInput = FoxyFormItem(
       label: '加入法术书',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.flagsController,
         options: kTalentAddToSpellBookOptions,
         placeholder: const Text('Flags'),

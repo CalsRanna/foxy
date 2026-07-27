@@ -82,7 +82,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
                 ),
                 FoxyFormItem(
                   label: '源类型',
-                  child: FoxyIntShadSelect(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.sourceTypeController,
                     options: kSourceTypes,
                     placeholder: const Text('source_type'),
@@ -111,7 +111,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               _row(
                 FoxyFormItem(
                   label: '事件类型',
-                  child: FoxyIntShadSelect(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.eventTypeController,
                     options: smartEventTypesForSource(
                       viewModel.sourceTypeController.collect(),
@@ -187,7 +187,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               _row(
                 FoxyFormItem(
                   label: '动作类型',
-                  child: FoxyIntShadSelect(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.actionTypeController,
                     options: kActionTypes,
                     placeholder: const Text('action_type'),
@@ -235,7 +235,7 @@ class _SmartScriptViewState extends State<SmartScriptView> {
               _row(
                 FoxyFormItem(
                   label: '目标类型',
-                  child: FoxyIntShadSelect(
+                  child: FoxyShadSelect<int>(
                     controller: viewModel.targetTypeController,
                     options: kTargetTypes,
                     placeholder: const Text('target_type'),
@@ -389,11 +389,12 @@ class _SmartScriptViewState extends State<SmartScriptView> {
       );
     }
     if (config.options != null) {
-      return FoxyIntShadSelect(
+      return FoxyIntEnumInput(
         controller: controller,
         options: config.options!,
-        placeholder: Text(column),
-        enabled: config.editable,
+        placeholder: column,
+        title: config.label,
+        readOnly: !config.editable,
       );
     }
     return FoxyNumberInput<int>(

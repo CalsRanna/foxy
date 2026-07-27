@@ -30,9 +30,15 @@ class SpellItemEnchantmentDetailViewModel
   late final chargesController = registerController(IntFieldController());
 
   /// Effect
-  late final effect0Controller = registerController(IntFieldController());
-  late final effect1Controller = registerController(IntFieldController());
-  late final effect2Controller = registerController(IntFieldController());
+  late final effect0Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effect1Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final effect2Controller = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   /// EffectPointsMin
   late final effectPointsMin0Controller = registerController(

@@ -27,7 +27,9 @@ class ItemExtendedCostDetailViewModel
   late final idController = registerController(IntFieldController());
   late final honorPointsController = registerController(IntFieldController());
   late final arenaPointsController = registerController(IntFieldController());
-  late final arenaBracketController = registerController(IntFieldController());
+  late final arenaBracketController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final requiredArenaRatingController = registerController(
     IntFieldController(),
   );

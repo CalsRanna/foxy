@@ -249,10 +249,13 @@ class SpellItemEnchantmentView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _effectTypeInput(int slot, IntFieldController controller) {
+  FoxyFormItem _effectTypeInput(
+    int slot,
+    SelectFieldController<int> controller,
+  ) {
     return FoxyFormItem(
       label: '效果类型 $slot',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: controller,
         options: kSpellItemEnchantmentEffectTypeOptions,
         placeholder: Text('Effect$slot'),
@@ -262,7 +265,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
 
   Widget _effectAmountInput(
     int slot,
-    IntFieldController typeController,
+    SelectFieldController<int> typeController,
     IntFieldController amountController,
   ) {
     return ListenableBuilder(
@@ -292,7 +295,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
 
   Widget _effectArgumentInput(
     int slot,
-    IntFieldController typeController,
+    SelectFieldController<int> typeController,
     IntFieldController argumentController,
   ) {
     return ListenableBuilder(
@@ -312,21 +315,22 @@ class SpellItemEnchantmentView extends StatelessWidget {
         if (type == 4) {
           return FoxyFormItem(
             label: '抗性系别 $slot',
-            child: FoxyIntShadSelect(
+            child: FoxyIntEnumInput(
               controller: argumentController,
               options: kSpellItemEnchantmentSchoolOptions,
-              placeholder: Text('EffectArg$slot'),
+              placeholder: 'EffectArg$slot',
+              title: '抗性系别 $slot',
             ),
           );
         }
         if (type == 5) {
           return FoxyFormItem(
             label: '附魔属性 $slot',
-            child: FoxyIntShadSelect(
+            child: FoxyIntEnumInput(
               controller: argumentController,
               options: kSpellItemEnchantmentStatOptions,
-              placeholder: Text('EffectArg$slot'),
-              maxHeight: 360,
+              placeholder: 'EffectArg$slot',
+              title: '附魔属性 $slot',
             ),
           );
         }

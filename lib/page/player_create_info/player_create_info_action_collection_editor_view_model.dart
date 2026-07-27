@@ -26,11 +26,17 @@ class PlayerCreateInfoActionCollectionEditorViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
-  late final raceController = registerController(IntFieldController());
-  late final classController = registerController(IntFieldController());
+  late final raceController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final classController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final buttonController = registerController(IntFieldController());
   late final actionController = registerController(IntFieldController());
-  late final typeController = registerController(IntFieldController());
+  late final typeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
 
   int _refreshToken = 0;
   int _interactionToken = 0;

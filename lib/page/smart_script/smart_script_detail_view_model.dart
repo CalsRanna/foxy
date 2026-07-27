@@ -24,11 +24,15 @@ class SmartScriptDetailViewModel
   final errorMessage = signal<String?>(null);
 
   late final entryOrGuidController = registerController(IntFieldController());
-  late final sourceTypeController = registerController(IntFieldController());
+  late final sourceTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final idController = registerController(IntFieldController());
   late final linkController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
-  late final eventTypeController = registerController(IntFieldController());
+  late final eventTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final eventPhaseMaskController = registerController(
     FlagFieldController(),
   );
@@ -40,14 +44,18 @@ class SmartScriptDetailViewModel
   late final eventParam4Controller = registerController(IntFieldController());
   late final eventParam5Controller = registerController(IntFieldController());
   late final eventParam6Controller = registerController(IntFieldController());
-  late final actionTypeController = registerController(IntFieldController());
+  late final actionTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final actionParam1Controller = registerController(IntFieldController());
   late final actionParam2Controller = registerController(IntFieldController());
   late final actionParam3Controller = registerController(IntFieldController());
   late final actionParam4Controller = registerController(IntFieldController());
   late final actionParam5Controller = registerController(IntFieldController());
   late final actionParam6Controller = registerController(IntFieldController());
-  late final targetTypeController = registerController(IntFieldController());
+  late final targetTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final targetParam1Controller = registerController(IntFieldController());
   late final targetParam2Controller = registerController(IntFieldController());
   late final targetParam3Controller = registerController(IntFieldController());

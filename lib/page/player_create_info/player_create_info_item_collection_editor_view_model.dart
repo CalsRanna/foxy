@@ -25,8 +25,12 @@ class PlayerCreateInfoItemCollectionEditorViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
-  late final raceController = registerController(IntFieldController());
-  late final classController = registerController(IntFieldController());
+  late final raceController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final classController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final itemIdController = registerController(IntFieldController());
   late final amountController = registerController(IntFieldController());
   late final noteController = registerController(StringFieldController());

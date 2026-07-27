@@ -60,14 +60,13 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
   @override
   void didUpdateWidget(FoxyShadSelect<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Rebuild the cached option widgets only when the source map changes.
     if (!identical(widget.options, oldWidget.options)) {
       _shadOptions = _buildOptions(widget.options);
     }
   }
 
   List<ShadOption<T>> _buildOptions(Map<T, String> options) => options.entries
-      .map((e) => ShadOption(value: e.key, child: Text(e.value)))
+      .map((entry) => ShadOption(value: entry.key, child: Text(entry.value)))
       .toList();
 
   @override
@@ -76,102 +75,15 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
       controller: widget.controller.controller,
       options: _shadOptions,
       selectedOptionBuilder: (context, value) => Text(
-        widget.options[value] ?? '',
+        widget.options[value] ?? value.toString(),
         maxLines: 1,
+        softWrap: false,
         overflow: TextOverflow.ellipsis,
       ),
       placeholder: widget.placeholder,
       enabled: widget.enabled,
       minWidth: widget.minWidth,
       maxHeight: widget.maxHeight,
-    );
-  }
-}
-
-/// 将整数枚举下拉框直接绑定到现有的数字字段 Controller。
-///
-/// 适用于同一物理列会随类型判别字段切换语义的场景；Entity/ViewModel 仍只持有
-/// 一个 [IntFieldController]，不会为下拉框复制第二份业务状态。
-class FoxyIntShadSelect extends StatefulWidget {
-  final IntFieldController controller;
-  final Map<int, String> options;
-  final Widget placeholder;
-  final bool enabled;
-  final double? maxHeight;
-
-  const FoxyIntShadSelect({
-    super.key,
-    required this.controller,
-    required this.options,
-    required this.placeholder,
-    this.enabled = true,
-    this.maxHeight,
-  });
-
-  @override
-  State<FoxyIntShadSelect> createState() => _FoxyIntShadSelectState();
-}
-
-class _FoxyIntShadSelectState extends State<FoxyIntShadSelect> {
-  final selectController = ShadSelectController<int>();
-  var syncing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_syncFromField);
-    _syncFromField();
-  }
-
-  @override
-  void didUpdateWidget(FoxyIntShadSelect oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller.removeListener(_syncFromField);
-      widget.controller.addListener(_syncFromField);
-    }
-    _syncFromField();
-  }
-
-  void _syncFromField() {
-    if (syncing) return;
-    final value = widget.controller.collect();
-    final selected = {value};
-    if (selectController.value.length == 1 &&
-        selectController.value.first == value) {
-      return;
-    }
-    selectController.value = selected;
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_syncFromField);
-    selectController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadSelect<int>(
-      controller: selectController,
-      options: widget.options.entries
-          .map(
-            (entry) =>
-                ShadOption<int>(value: entry.key, child: Text(entry.value)),
-          )
-          .toList(),
-      selectedOptionBuilder: (context, value) =>
-          Text(widget.options[value] ?? value.toString()),
-      placeholder: widget.placeholder,
-      enabled: widget.enabled,
-      maxHeight: widget.maxHeight,
-      onChanged: (value) {
-        if (value == null) return;
-        syncing = true;
-        widget.controller.init(value);
-        syncing = false;
-      },
     );
   }
 }

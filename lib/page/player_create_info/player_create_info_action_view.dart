@@ -184,7 +184,7 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '种族',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.raceController,
                       options: kPlayerRaceOptions,
                       placeholder: const Text('race'),
@@ -194,7 +194,7 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '职业',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.classController,
                       options: kPlayerClassOptions,
                       placeholder: const Text('class'),
@@ -224,7 +224,7 @@ class _PlayerCreateInfoActionViewState
                 Expanded(
                   child: FoxyFormItem(
                     label: '类型',
-                    child: FoxyIntShadSelect(
+                    child: FoxyShadSelect<int>(
                       controller: viewModel.typeController,
                       options: kPlayerActionButtonTypeOptions,
                       placeholder: const Text('type'),

@@ -78,7 +78,7 @@ class AreaTableView extends StatelessWidget {
     );
     final factionGroupMaskInput = FoxyFormItem(
       label: '区域阵营',
-      child: FoxyIntShadSelect(
+      child: FoxyShadSelect<int>(
         controller: viewModel.factionGroupMaskController,
         options: kAreaTeamOptions,
         placeholder: const Text('FactionGroupMask'),

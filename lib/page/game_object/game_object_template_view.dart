@@ -316,11 +316,12 @@ class _GameObjectTemplateViewState extends State<GameObjectTemplateView> {
       );
     }
     if (config.options != null) {
-      return FoxyIntShadSelect(
+      return FoxyIntEnumInput(
         controller: controller,
         options: config.options!,
-        placeholder: Text('Data$index'),
-        enabled: config.editable,
+        placeholder: 'Data$index',
+        title: config.label,
+        readOnly: !config.editable,
       );
     }
     return FoxyNumberInput<int>(

@@ -23,8 +23,12 @@ class PlayerCreateInfoDetailViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
-  late final raceController = registerController(IntFieldController());
-  late final playerClassController = registerController(IntFieldController());
+  late final raceController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final playerClassController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
   late final mapController = registerController(IntFieldController());
   late final zoneController = registerController(IntFieldController());
   late final positionXController = registerController(DoubleFieldController());
