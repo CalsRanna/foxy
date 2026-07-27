@@ -90,7 +90,7 @@ class _GameObjectLootTemplateViewState
         ),
         LayoutBuilder(
           builder: (context, constraints) {
-            var width = constraints.maxWidth - 560;
+            var width = constraints.maxWidth - 600;
             return FoxyShadTable(
               shrinkWrap: true,
               builder: (context, vicinity) {
@@ -126,8 +126,8 @@ class _GameObjectLootTemplateViewState
                   1 => FixedTableSpanExtent(width),
                   2 => FixedTableSpanExtent(120),
                   3 => FixedTableSpanExtent(120),
-                  4 => FixedTableSpanExtent(100),
-                  5 => FixedTableSpanExtent(100),
+                  4 => FixedTableSpanExtent(120),
+                  5 => FixedTableSpanExtent(120),
                   _ => null,
                 };
               },

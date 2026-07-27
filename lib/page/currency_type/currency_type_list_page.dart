@@ -106,7 +106,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
     final headers = ['编号', '物品编号', '名称', '分类', '位索引'];
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var width = constraints.maxWidth - 460;
+        var width = constraints.maxWidth - 480;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final item = items[vicinity.row];
@@ -126,7 +126,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
               1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(width),
               3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(100),
+              4 => FixedTableSpanExtent(120),
               _ => null,
             };
           },

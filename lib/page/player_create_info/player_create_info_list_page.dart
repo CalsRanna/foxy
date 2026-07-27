@@ -113,7 +113,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
     );
     final toolbar = Row(children: [createButton, const Spacer(), pagination]);
 
-    final headers = ['种族', '职业', '地图', '区域', 'X坐标', 'Y坐标', 'Z坐标', '朝向'];
+    final headers = ['种族', '职业', '地图', '区域', '坐标'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
@@ -126,32 +126,25 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
               2 => ShadTableCell(child: Text(info.map.toString())),
               3 => ShadTableCell(child: Text(info.zone.toString())),
               4 => ShadTableCell(
-                child: Text(info.positionX.toStringAsFixed(2)),
-              ),
-              5 => ShadTableCell(
-                child: Text(info.positionY.toStringAsFixed(2)),
-              ),
-              6 => ShadTableCell(
-                child: Text(info.positionZ.toStringAsFixed(2)),
-              ),
-              7 => ShadTableCell(
-                child: Text(info.orientation.toStringAsFixed(2)),
+                child: Text(
+                  '${info.positionX.toStringAsFixed(2)}, '
+                  '${info.positionY.toStringAsFixed(2)}, '
+                  '${info.positionZ.toStringAsFixed(2)}, '
+                  '${info.orientation.toStringAsFixed(2)}',
+                ),
               ),
               _ => ShadTableCell(child: SizedBox()),
             };
           },
           columnCount: headers.length,
           columnSpanExtent: (index) {
-            var flexWidth = constraints.maxWidth - 840;
+            var flexWidth = constraints.maxWidth - 480;
             return switch (index) {
               0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              6 => FixedTableSpanExtent(120),
-              7 => FixedTableSpanExtent(flexWidth > 120 ? flexWidth : 120),
+              4 => FixedTableSpanExtent(flexWidth),
               _ => null,
             };
           },

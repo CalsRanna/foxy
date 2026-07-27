@@ -88,7 +88,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final width = constraints.maxWidth - (80 + 120 + 120 + 120 + 120);
+        final width = constraints.maxWidth - 600;
         return FoxyShadTable(
           shrinkWrap: true,
           columnCount: headers.length,
@@ -99,7 +99,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
           },
           columnSpanExtent: (index) {
             return switch (index) {
-              0 => FixedTableSpanExtent(80),
+              0 => FixedTableSpanExtent(120),
               1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(width),
               3 => FixedTableSpanExtent(120),

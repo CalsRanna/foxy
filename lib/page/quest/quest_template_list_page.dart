@@ -106,7 +106,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
 
     final table = LayoutBuilder(
       builder: (context, constraints) {
-        final descriptionWidth = constraints.maxWidth - 720;
+        final flexWidth = constraints.maxWidth - 480;
         return FoxyShadTable(
           columnCount: headers.length,
           rowCount: templates.length,
@@ -117,8 +117,8 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(240),
-              2 => FixedTableSpanExtent(descriptionWidth),
+              1 => FixedTableSpanExtent(flexWidth / 2),
+              2 => FixedTableSpanExtent(flexWidth / 2),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),
               5 => FixedTableSpanExtent(120),

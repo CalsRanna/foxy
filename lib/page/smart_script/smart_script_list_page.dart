@@ -103,42 +103,35 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
     final toolbarChildren = [createButton, const Spacer(), pagination];
     final toolbar = Row(children: toolbarChildren);
 
-    final headers = ['编号', '源类型', 'ID', '链接', '事件类型', '动作类型', '目标类型', '备注'];
+    final headers = ['编号', 'ID', '事件类型', '动作类型', '目标类型', '备注'];
 
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
-        var commentWidth = constraints.maxWidth - 960;
+        var commentWidth = constraints.maxWidth - 600;
         return FoxyShadTable(
           builder: (context, vicinity) {
             final script = templates[vicinity.row];
             return switch (vicinity.column) {
               0 => ShadTableCell(child: Text(script.entryOrGuid.toString())),
-              1 => ShadTableCell(
-                child: Text(
-                  kSourceTypes[script.sourceType] ??
-                      script.sourceType.toString(),
-                ),
-              ),
-              2 => ShadTableCell(child: Text(script.id.toString())),
-              3 => ShadTableCell(child: Text(script.link.toString())),
-              4 => ShadTableCell(
+              1 => ShadTableCell(child: Text(script.id.toString())),
+              2 => ShadTableCell(
                 child: Text(
                   kEventTypes[script.eventType] ?? script.eventType.toString(),
                 ),
               ),
-              5 => ShadTableCell(
+              3 => ShadTableCell(
                 child: Text(
                   kActionTypes[script.actionType] ??
                       script.actionType.toString(),
                 ),
               ),
-              6 => ShadTableCell(
+              4 => ShadTableCell(
                 child: Text(
                   kTargetTypes[script.targetType] ??
                       script.targetType.toString(),
                 ),
               ),
-              7 => ShadTableCell(
+              5 => ShadTableCell(
                 child: Text(
                   script.comment,
                   maxLines: 1,
@@ -152,13 +145,11 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
           columnSpanExtent: (index) {
             return switch (index) {
               0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(240),
+              1 => FixedTableSpanExtent(120),
               2 => FixedTableSpanExtent(120),
               3 => FixedTableSpanExtent(120),
               4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              6 => FixedTableSpanExtent(120),
-              7 => FixedTableSpanExtent(commentWidth),
+              5 => FixedTableSpanExtent(commentWidth),
               _ => null,
             };
           },
