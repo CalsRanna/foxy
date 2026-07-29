@@ -104,4 +104,27 @@ final class BriefCreatureQuestEnderEntity {
   CreatureQuestEnderKey get key {
     return CreatureQuestEnderKey(id: id, quest: quest);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureQuestEnderEntity &&
+            id == other.id &&
+            quest == other.quest &&
+            name == other.name &&
+            localeName == other.localeName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, quest, name, localeName]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureQuestEnderEntity('
+        'id: $id, '
+        'quest: $quest, '
+        'name: $name, '
+        'localeName: $localeName'
+        ')';
+  }
 }

@@ -82,4 +82,25 @@ final class BriefSoundAmbienceEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSoundAmbienceEntity &&
+            id == other.id &&
+            ambienceId0 == other.ambienceId0 &&
+            ambienceId1 == other.ambienceId1;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, ambienceId0, ambienceId1]);
+
+  @override
+  String toString() {
+    return 'BriefSoundAmbienceEntity('
+        'id: $id, '
+        'ambienceId0: $ambienceId0, '
+        'ambienceId1: $ambienceId1'
+        ')';
+  }
 }

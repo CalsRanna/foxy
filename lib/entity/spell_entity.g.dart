@@ -1826,4 +1826,50 @@ final class BriefSpellEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellEntity &&
+            id == other.id &&
+            name == other.name &&
+            subtext == other.subtext &&
+            localeName == other.localeName &&
+            localeSubtext == other.localeSubtext &&
+            description == other.description &&
+            localeDescription == other.localeDescription &&
+            auraDescription == other.auraDescription &&
+            localeAuraDescription == other.localeAuraDescription &&
+            textureFilename == other.textureFilename;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    name,
+    subtext,
+    localeName,
+    localeSubtext,
+    description,
+    localeDescription,
+    auraDescription,
+    localeAuraDescription,
+    textureFilename,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSpellEntity('
+        'id: $id, '
+        'name: $name, '
+        'subtext: $subtext, '
+        'localeName: $localeName, '
+        'localeSubtext: $localeSubtext, '
+        'description: $description, '
+        'localeDescription: $localeDescription, '
+        'auraDescription: $auraDescription, '
+        'localeAuraDescription: $localeAuraDescription, '
+        'textureFilename: $textureFilename'
+        ')';
+  }
 }

@@ -1,51 +1,17 @@
+import 'dart:io';
+
 const standardEntityAsset = 'foxy|lib/entity/codegen_sample_entity.dart';
 
 const annotationAsset =
     'foxy|lib/infrastructure/codegen/entity_annotations.dart';
 
-const annotationSource = r'''
-class FoxyBriefEntity {
-  const FoxyBriefEntity();
-}
-
-class FoxyBriefField {
-  final Object? defaultValue;
-  final String? name;
-  final FoxyBriefFieldType? type;
-
-  const FoxyBriefField()
-      : defaultValue = null,
-        name = null,
-        type = null;
-
-  const FoxyBriefField.boolean(this.name, {bool this.defaultValue = false})
-    : type = FoxyBriefFieldType.boolean;
-
-  const FoxyBriefField.decimal(this.name, {double this.defaultValue = 0.0})
-    : type = FoxyBriefFieldType.decimal;
-
-  const FoxyBriefField.integer(this.name, {int this.defaultValue = 0})
-    : type = FoxyBriefFieldType.integer;
-
-  const FoxyBriefField.text(this.name, {String this.defaultValue = ''})
-    : type = FoxyBriefFieldType.text;
-}
-
-enum FoxyBriefFieldType { boolean, decimal, integer, text }
-
-class FoxyFullEntity {
-  final String table;
-
-  const FoxyFullEntity({required this.table});
-}
-
-class FoxyFullField {
-  final String name;
-  final bool key;
-
-  const FoxyFullField(this.name, {this.key = false});
-}
-''';
+/// 直接读取真实注解源码，而不是在测试里维护一份手抄副本。
+///
+/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
+/// 测试从仓库根目录运行（见 AGENTS.md）。
+final annotationSource = File(
+  'lib/infrastructure/codegen/entity_annotations.dart',
+).readAsStringSync();
 
 const standardEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';

@@ -389,4 +389,29 @@ final class BriefLiquidTypeEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLiquidTypeEntity &&
+            id == other.id &&
+            name == other.name &&
+            flags == other.flags &&
+            soundBank == other.soundBank &&
+            spellId == other.spellId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, flags, soundBank, spellId]);
+
+  @override
+  String toString() {
+    return 'BriefLiquidTypeEntity('
+        'id: $id, '
+        'name: $name, '
+        'flags: $flags, '
+        'soundBank: $soundBank, '
+        'spellId: $spellId'
+        ')';
+  }
 }

@@ -143,4 +143,44 @@ final class BriefCreatureQuestItemEntity {
   CreatureQuestItemKey get key {
     return CreatureQuestItemKey(creatureEntry: creatureEntry, idx: idx);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureQuestItemEntity &&
+            creatureEntry == other.creatureEntry &&
+            idx == other.idx &&
+            itemId == other.itemId &&
+            verifiedBuild == other.verifiedBuild &&
+            itemName == other.itemName &&
+            itemLocaleName == other.itemLocaleName &&
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    creatureEntry,
+    idx,
+    itemId,
+    verifiedBuild,
+    itemName,
+    itemLocaleName,
+    itemQuality,
+    itemIcon,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureQuestItemEntity('
+        'creatureEntry: $creatureEntry, '
+        'idx: $idx, '
+        'itemId: $itemId, '
+        'verifiedBuild: $verifiedBuild, '
+        'itemName: $itemName, '
+        'itemLocaleName: $itemLocaleName, '
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
+        ')';
+  }
 }

@@ -126,4 +126,27 @@ final class BriefPageTextLocaleEntity {
   PageTextLocaleKey get key {
     return PageTextLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPageTextLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            text == other.text &&
+            verifiedBuild == other.verifiedBuild;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, text, verifiedBuild]);
+
+  @override
+  String toString() {
+    return 'BriefPageTextLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'text: $text, '
+        'verifiedBuild: $verifiedBuild'
+        ')';
+  }
 }

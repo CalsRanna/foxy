@@ -198,4 +198,25 @@ final class BriefCurrencyCategoryEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCurrencyCategoryEntity &&
+            id == other.id &&
+            flags == other.flags &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, flags, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefCurrencyCategoryEntity('
+        'id: $id, '
+        'flags: $flags, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

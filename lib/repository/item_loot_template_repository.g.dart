@@ -4,6 +4,7 @@ part of 'item_loot_template_repository.dart';
 
 mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemLootTemplate(ItemLootTemplateKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('item_loot_template'),
       key,
@@ -28,7 +29,7 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ItemLootTemplateEntity itemLootTemplate,
   ) async {
     await _beforeStore(itemLootTemplate);
-    final json = _prepareWriteJson(itemLootTemplate.toJson());
+    final json = prepareWriteJson(itemLootTemplate.toJson());
     try {
       await laconic.table('item_loot_template').insert([json]);
     } catch (error) {
@@ -44,22 +45,25 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ItemLootTemplateEntity itemLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, itemLootTemplate);
-    final json = _prepareWriteJson(itemLootTemplate.toJson());
+    final json = prepareWriteJson(itemLootTemplate.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('item_loot_template'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(ItemLootTemplateKey key) async {}
 
   Future<void> _beforeStore(ItemLootTemplateEntity itemLootTemplate) async {}
 
@@ -68,20 +72,10 @@ mixin _ItemLootTemplateRepositoryMixin on RepositoryMixin {
     ItemLootTemplateEntity itemLootTemplate,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, ItemLootTemplateKey key) {
     var query = builder;
-    query = query.where('Entry', key.entry);
-    query = query.where('Item', key.item);
+    query = query.where('`Entry`', key.entry);
+    query = query.where('`Item`', key.item);
     return query;
   }
 }

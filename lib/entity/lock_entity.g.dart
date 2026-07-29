@@ -299,4 +299,27 @@ final class BriefLockEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLockEntity &&
+            id == other.id &&
+            type0 == other.type0 &&
+            index0 == other.index0 &&
+            skill0 == other.skill0;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, type0, index0, skill0]);
+
+  @override
+  String toString() {
+    return 'BriefLockEntity('
+        'id: $id, '
+        'type0: $type0, '
+        'index0: $index0, '
+        'skill0: $skill0'
+        ')';
+  }
 }

@@ -232,4 +232,30 @@ final class BriefTalentEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTalentEntity &&
+            id == other.id &&
+            tabId == other.tabId &&
+            tierId == other.tierId &&
+            columnIndex == other.columnIndex &&
+            spellRank0 == other.spellRank0;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, tabId, tierId, columnIndex, spellRank0]);
+
+  @override
+  String toString() {
+    return 'BriefTalentEntity('
+        'id: $id, '
+        'tabId: $tabId, '
+        'tierId: $tierId, '
+        'columnIndex: $columnIndex, '
+        'spellRank0: $spellRank0'
+        ')';
+  }
 }

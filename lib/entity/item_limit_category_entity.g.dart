@@ -208,4 +208,27 @@ final class BriefItemLimitCategoryEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemLimitCategoryEntity &&
+            id == other.id &&
+            quantity == other.quantity &&
+            flags == other.flags &&
+            name == other.name;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, quantity, flags, name]);
+
+  @override
+  String toString() {
+    return 'BriefItemLimitCategoryEntity('
+        'id: $id, '
+        'quantity: $quantity, '
+        'flags: $flags, '
+        'name: $name'
+        ')';
+  }
 }

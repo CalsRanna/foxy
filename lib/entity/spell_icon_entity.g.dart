@@ -63,4 +63,23 @@ final class BriefSpellIconEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellIconEntity &&
+            id == other.id &&
+            textureFilename == other.textureFilename;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, textureFilename]);
+
+  @override
+  String toString() {
+    return 'BriefSpellIconEntity('
+        'id: $id, '
+        'textureFilename: $textureFilename'
+        ')';
+  }
 }

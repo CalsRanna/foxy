@@ -141,4 +141,28 @@ final class BriefCreatureTemplateResistanceEntity {
       school: school,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateResistanceEntity &&
+            creatureID == other.creatureID &&
+            school == other.school &&
+            resistance == other.resistance &&
+            verifiedBuild == other.verifiedBuild;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([creatureID, school, resistance, verifiedBuild]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateResistanceEntity('
+        'creatureID: $creatureID, '
+        'school: $school, '
+        'resistance: $resistance, '
+        'verifiedBuild: $verifiedBuild'
+        ')';
+  }
 }

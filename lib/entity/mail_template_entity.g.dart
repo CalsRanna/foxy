@@ -310,4 +310,25 @@ final class BriefMailTemplateEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefMailTemplateEntity &&
+            id == other.id &&
+            subjectLangZhCN == other.subjectLangZhCN &&
+            bodyLangZhCN == other.bodyLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, subjectLangZhCN, bodyLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefMailTemplateEntity('
+        'id: $id, '
+        'subjectLangZhCN: $subjectLangZhCN, '
+        'bodyLangZhCN: $bodyLangZhCN'
+        ')';
+  }
 }

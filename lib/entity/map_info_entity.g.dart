@@ -598,4 +598,27 @@ final class BriefMapInfoEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefMapInfoEntity &&
+            id == other.id &&
+            instanceType == other.instanceType &&
+            pvp == other.pvp &&
+            mapNameLangZhCN == other.mapNameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, instanceType, pvp, mapNameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefMapInfoEntity('
+        'id: $id, '
+        'instanceType: $instanceType, '
+        'pvp: $pvp, '
+        'mapNameLangZhCN: $mapNameLangZhCN'
+        ')';
+  }
 }

@@ -5,6 +5,7 @@ import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'naming.dart';
 import 'repository_model.dart';
 
 const _fullEntityChecker = TypeChecker.fromUrl(
@@ -40,7 +41,7 @@ final class RepositoryReader {
     }
 
     final inputFileName = buildStep.inputId.pathSegments.last;
-    final expectedFileName = '${_toSnakeCase(repositoryClassName)}.dart';
+    final expectedFileName = '${toSnakeCase(repositoryClassName)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
         '$repositoryClassName 必须位于 $expectedFileName，'
@@ -100,11 +101,21 @@ final class RepositoryReader {
       if (annotations.length != 1) continue;
       final fieldAnnotation = ConstantReader(annotations.single);
       if (!(fieldAnnotation.peek('key')?.boolValue ?? false)) continue;
+      final dartType = field.type.getDisplayString();
+      if (dartType.endsWith('?')) {
+        _fail(
+          '$entityClassName.${field.name} 是 nullable，不能作为生成 CRUD 的物理 Key。',
+          field,
+          'SQL 中 `列 = NULL` 恒不成立，生成的 _whereKey 会静默匹配 0 行并'
+              '误报「原记录不存在」。把该列改成 non-nullable，'
+              '或让该 Repository 保持手写并用 `<=>` 做 NULL 安全比较。',
+        );
+      }
       keyFields.add(
         RepositoryKeyFieldModel(
           columnName: fieldAnnotation.read('name').stringValue,
           dartName: field.name!,
-          dartType: field.type.getDisplayString(),
+          dartType: dartType,
         ),
       );
     }
@@ -204,17 +215,6 @@ final class RepositoryReader {
 
   bool _returns(MethodElement method, String type) =>
       method.returnType.getDisplayString() == type;
-
-  String _toSnakeCase(String value) {
-    final buffer = StringBuffer();
-    for (var index = 0; index < value.length; index++) {
-      final codeUnit = value.codeUnitAt(index);
-      final isUpper = codeUnit >= 65 && codeUnit <= 90;
-      if (isUpper && index > 0) buffer.write('_');
-      buffer.writeCharCode(isUpper ? codeUnit + 32 : codeUnit);
-    }
-    return buffer.toString();
-  }
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(

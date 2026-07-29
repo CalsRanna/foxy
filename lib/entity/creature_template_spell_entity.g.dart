@@ -142,4 +142,38 @@ final class BriefCreatureTemplateSpellEntity {
   CreatureTemplateSpellKey get key {
     return CreatureTemplateSpellKey(creatureID: creatureID, index: index);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateSpellEntity &&
+            creatureID == other.creatureID &&
+            index == other.index &&
+            spell == other.spell &&
+            verifiedBuild == other.verifiedBuild &&
+            spellName == other.spellName &&
+            spellSubtext == other.spellSubtext;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    creatureID,
+    index,
+    spell,
+    verifiedBuild,
+    spellName,
+    spellSubtext,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateSpellEntity('
+        'creatureID: $creatureID, '
+        'index: $index, '
+        'spell: $spell, '
+        'verifiedBuild: $verifiedBuild, '
+        'spellName: $spellName, '
+        'spellSubtext: $spellSubtext'
+        ')';
+  }
 }

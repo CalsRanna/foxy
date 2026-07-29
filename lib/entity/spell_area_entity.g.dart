@@ -219,4 +219,47 @@ final class BriefSpellAreaEntity {
       gender: gender,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellAreaEntity &&
+            spell == other.spell &&
+            area == other.area &&
+            questStart == other.questStart &&
+            questEnd == other.questEnd &&
+            auraSpell == other.auraSpell &&
+            racemask == other.racemask &&
+            gender == other.gender &&
+            questStartStatus == other.questStartStatus &&
+            questEndStatus == other.questEndStatus;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    spell,
+    area,
+    questStart,
+    questEnd,
+    auraSpell,
+    racemask,
+    gender,
+    questStartStatus,
+    questEndStatus,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSpellAreaEntity('
+        'spell: $spell, '
+        'area: $area, '
+        'questStart: $questStart, '
+        'questEnd: $questEnd, '
+        'auraSpell: $auraSpell, '
+        'racemask: $racemask, '
+        'gender: $gender, '
+        'questStartStatus: $questStartStatus, '
+        'questEndStatus: $questEndStatus'
+        ')';
+  }
 }

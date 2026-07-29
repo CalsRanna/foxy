@@ -63,4 +63,23 @@ final class BriefSpellCustomAttrEntity {
   }
 
   int get key => spellId;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellCustomAttrEntity &&
+            spellId == other.spellId &&
+            attributes == other.attributes;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([spellId, attributes]);
+
+  @override
+  String toString() {
+    return 'BriefSpellCustomAttrEntity('
+        'spellId: $spellId, '
+        'attributes: $attributes'
+        ')';
+  }
 }

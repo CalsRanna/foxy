@@ -4,6 +4,7 @@ part of 'creature_quest_ender_repository.dart';
 
 mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureQuestEnder(CreatureQuestEnderKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('creature_questender'),
       key,
@@ -28,7 +29,7 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     CreatureQuestEnderEntity creatureQuestEnder,
   ) async {
     await _beforeStore(creatureQuestEnder);
-    final json = _prepareWriteJson(creatureQuestEnder.toJson());
+    final json = prepareWriteJson(creatureQuestEnder.toJson());
     try {
       await laconic.table('creature_questender').insert([json]);
     } catch (error) {
@@ -44,22 +45,25 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     CreatureQuestEnderEntity creatureQuestEnder,
   ) async {
     await _beforeUpdate(originalKey, creatureQuestEnder);
-    final json = _prepareWriteJson(creatureQuestEnder.toJson());
+    final json = prepareWriteJson(creatureQuestEnder.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('creature_questender'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(CreatureQuestEnderKey key) async {}
 
   Future<void> _beforeStore(
     CreatureQuestEnderEntity creatureQuestEnder,
@@ -70,20 +74,10 @@ mixin _CreatureQuestEnderRepositoryMixin on RepositoryMixin {
     CreatureQuestEnderEntity creatureQuestEnder,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, CreatureQuestEnderKey key) {
     var query = builder;
-    query = query.where('id', key.id);
-    query = query.where('quest', key.quest);
+    query = query.where('`id`', key.id);
+    query = query.where('`quest`', key.quest);
     return query;
   }
 }

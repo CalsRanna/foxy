@@ -115,4 +115,35 @@ final class BriefCreatureModelInfoEntity {
   }
 
   int get key => displayId;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureModelInfoEntity &&
+            displayId == other.displayId &&
+            boundingRadius == other.boundingRadius &&
+            combatReach == other.combatReach &&
+            gender == other.gender &&
+            displayIdOtherGender == other.displayIdOtherGender;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    displayId,
+    boundingRadius,
+    combatReach,
+    gender,
+    displayIdOtherGender,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureModelInfoEntity('
+        'displayId: $displayId, '
+        'boundingRadius: $boundingRadius, '
+        'combatReach: $combatReach, '
+        'gender: $gender, '
+        'displayIdOtherGender: $displayIdOtherGender'
+        ')';
+  }
 }

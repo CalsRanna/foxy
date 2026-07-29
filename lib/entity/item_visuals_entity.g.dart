@@ -116,4 +116,31 @@ final class BriefItemVisualsEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemVisualsEntity &&
+            id == other.id &&
+            slot0 == other.slot0 &&
+            slot1 == other.slot1 &&
+            slot2 == other.slot2 &&
+            slot3 == other.slot3 &&
+            slot4 == other.slot4;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, slot0, slot1, slot2, slot3, slot4]);
+
+  @override
+  String toString() {
+    return 'BriefItemVisualsEntity('
+        'id: $id, '
+        'slot0: $slot0, '
+        'slot1: $slot1, '
+        'slot2: $slot2, '
+        'slot3: $slot3, '
+        'slot4: $slot4'
+        ')';
+  }
 }

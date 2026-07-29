@@ -18,6 +18,14 @@ mixin RepositoryMixin {
     }
   }
 
+  /// 把 Entity `toJson()` 的物理列名包装成反引号标识符，用于写入语句。
+  ///
+  /// laconic 不转义标识符，列名会原样拼进 SQL。统一加反引号后，
+  /// `index`、`rank` 这类 MySQL 保留字列不需要逐个登记白名单。
+  Map<String, dynamic> prepareWriteJson(Map<String, dynamic> json) {
+    return {for (final entry in json.entries) '`${entry.key}`': entry.value};
+  }
+
   /// 主键下一序号：`MAX(column) + 1`，空表默认从 `1`。
   ///
   /// [table] 为表名（DBC 可用 `foxy.dbc_*` 全名）。

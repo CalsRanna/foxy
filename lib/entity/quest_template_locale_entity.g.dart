@@ -181,4 +181,25 @@ final class BriefQuestTemplateLocaleEntity {
   QuestTemplateLocaleKey get key {
     return QuestTemplateLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            title == other.title;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, title]);
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'title: $title'
+        ')';
+  }
 }

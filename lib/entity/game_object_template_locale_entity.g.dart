@@ -145,4 +145,27 @@ final class BriefGameObjectTemplateLocaleEntity {
   GameObjectTemplateLocaleKey get key {
     return GameObjectTemplateLocaleKey(entry: entry, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectTemplateLocaleEntity &&
+            entry == other.entry &&
+            locale == other.locale &&
+            name == other.name &&
+            castBarCaption == other.castBarCaption;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, locale, name, castBarCaption]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectTemplateLocaleEntity('
+        'entry: $entry, '
+        'locale: $locale, '
+        'name: $name, '
+        'castBarCaption: $castBarCaption'
+        ')';
+  }
 }

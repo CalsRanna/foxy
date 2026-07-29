@@ -208,4 +208,27 @@ final class BriefTotemCategoryEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTotemCategoryEntity &&
+            id == other.id &&
+            categoryType == other.categoryType &&
+            categoryMask == other.categoryMask &&
+            name == other.name;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, categoryType, categoryMask, name]);
+
+  @override
+  String toString() {
+    return 'BriefTotemCategoryEntity('
+        'id: $id, '
+        'categoryType: $categoryType, '
+        'categoryMask: $categoryMask, '
+        'name: $name'
+        ')';
+  }
 }

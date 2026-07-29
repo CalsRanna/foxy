@@ -166,4 +166,53 @@ final class BriefQuestFactionRewardEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestFactionRewardEntity &&
+            id == other.id &&
+            difficulty0 == other.difficulty0 &&
+            difficulty1 == other.difficulty1 &&
+            difficulty2 == other.difficulty2 &&
+            difficulty3 == other.difficulty3 &&
+            difficulty4 == other.difficulty4 &&
+            difficulty5 == other.difficulty5 &&
+            difficulty6 == other.difficulty6 &&
+            difficulty7 == other.difficulty7 &&
+            difficulty8 == other.difficulty8 &&
+            difficulty9 == other.difficulty9;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    difficulty0,
+    difficulty1,
+    difficulty2,
+    difficulty3,
+    difficulty4,
+    difficulty5,
+    difficulty6,
+    difficulty7,
+    difficulty8,
+    difficulty9,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefQuestFactionRewardEntity('
+        'id: $id, '
+        'difficulty0: $difficulty0, '
+        'difficulty1: $difficulty1, '
+        'difficulty2: $difficulty2, '
+        'difficulty3: $difficulty3, '
+        'difficulty4: $difficulty4, '
+        'difficulty5: $difficulty5, '
+        'difficulty6: $difficulty6, '
+        'difficulty7: $difficulty7, '
+        'difficulty8: $difficulty8, '
+        'difficulty9: $difficulty9'
+        ')';
+  }
 }

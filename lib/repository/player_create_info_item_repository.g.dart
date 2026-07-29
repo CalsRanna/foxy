@@ -4,6 +4,7 @@ part of 'player_create_info_item_repository.dart';
 
 mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
   Future<void> destroyPlayerCreateInfoItem(PlayerCreateInfoItemKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('playercreateinfo_item'),
       key,
@@ -28,7 +29,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoItemEntity playerCreateInfoItem,
   ) async {
     await _beforeStore(playerCreateInfoItem);
-    final json = _prepareWriteJson(playerCreateInfoItem.toJson());
+    final json = prepareWriteJson(playerCreateInfoItem.toJson());
     try {
       await laconic.table('playercreateinfo_item').insert([json]);
     } catch (error) {
@@ -44,22 +45,25 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoItemEntity playerCreateInfoItem,
   ) async {
     await _beforeUpdate(originalKey, playerCreateInfoItem);
-    final json = _prepareWriteJson(playerCreateInfoItem.toJson());
+    final json = prepareWriteJson(playerCreateInfoItem.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('playercreateinfo_item'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(PlayerCreateInfoItemKey key) async {}
 
   Future<void> _beforeStore(
     PlayerCreateInfoItemEntity playerCreateInfoItem,
@@ -70,21 +74,11 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoItemEntity playerCreateInfoItem,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, PlayerCreateInfoItemKey key) {
     var query = builder;
-    query = query.where('race', key.race);
-    query = query.where('class', key.class_);
-    query = query.where('itemid', key.itemId);
+    query = query.where('`race`', key.race);
+    query = query.where('`class`', key.class_);
+    query = query.where('`itemid`', key.itemId);
     return query;
   }
 }

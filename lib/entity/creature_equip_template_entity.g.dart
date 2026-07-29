@@ -189,4 +189,74 @@ final class BriefCreatureEquipTemplateEntity {
   CreatureEquipTemplateKey get key {
     return CreatureEquipTemplateKey(creatureID: creatureID, id: id);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureEquipTemplateEntity &&
+            creatureID == other.creatureID &&
+            id == other.id &&
+            itemID1 == other.itemID1 &&
+            itemID2 == other.itemID2 &&
+            itemID3 == other.itemID3 &&
+            verifiedBuild == other.verifiedBuild &&
+            name1 == other.name1 &&
+            localeName1 == other.localeName1 &&
+            quality1 == other.quality1 &&
+            icon1 == other.icon1 &&
+            name2 == other.name2 &&
+            localeName2 == other.localeName2 &&
+            quality2 == other.quality2 &&
+            icon2 == other.icon2 &&
+            name3 == other.name3 &&
+            localeName3 == other.localeName3 &&
+            quality3 == other.quality3 &&
+            icon3 == other.icon3;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    creatureID,
+    id,
+    itemID1,
+    itemID2,
+    itemID3,
+    verifiedBuild,
+    name1,
+    localeName1,
+    quality1,
+    icon1,
+    name2,
+    localeName2,
+    quality2,
+    icon2,
+    name3,
+    localeName3,
+    quality3,
+    icon3,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureEquipTemplateEntity('
+        'creatureID: $creatureID, '
+        'id: $id, '
+        'itemID1: $itemID1, '
+        'itemID2: $itemID2, '
+        'itemID3: $itemID3, '
+        'verifiedBuild: $verifiedBuild, '
+        'name1: $name1, '
+        'localeName1: $localeName1, '
+        'quality1: $quality1, '
+        'icon1: $icon1, '
+        'name2: $name2, '
+        'localeName2: $localeName2, '
+        'quality2: $quality2, '
+        'icon2: $icon2, '
+        'name3: $name3, '
+        'localeName3: $localeName3, '
+        'quality3: $quality3, '
+        'icon3: $icon3'
+        ')';
+  }
 }

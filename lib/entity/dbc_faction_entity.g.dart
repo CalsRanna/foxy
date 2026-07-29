@@ -469,4 +469,25 @@ final class BriefDbcFactionEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcFactionEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            descriptionLangZhCN == other.descriptionLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN, descriptionLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefDbcFactionEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'descriptionLangZhCN: $descriptionLangZhCN'
+        ')';
+  }
 }

@@ -276,4 +276,27 @@ final class BriefCreatureModelDataEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureModelDataEntity &&
+            id == other.id &&
+            modelName == other.modelName &&
+            sizeClass == other.sizeClass &&
+            modelScale == other.modelScale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, modelName, sizeClass, modelScale]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureModelDataEntity('
+        'id: $id, '
+        'modelName: $modelName, '
+        'sizeClass: $sizeClass, '
+        'modelScale: $modelScale'
+        ')';
+  }
 }

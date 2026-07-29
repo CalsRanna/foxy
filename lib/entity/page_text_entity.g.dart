@@ -96,4 +96,27 @@ final class BriefPageTextEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPageTextEntity &&
+            id == other.id &&
+            text == other.text &&
+            nextPageId == other.nextPageId &&
+            localeText == other.localeText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, text, nextPageId, localeText]);
+
+  @override
+  String toString() {
+    return 'BriefPageTextEntity('
+        'id: $id, '
+        'text: $text, '
+        'nextPageId: $nextPageId, '
+        'localeText: $localeText'
+        ')';
+  }
 }

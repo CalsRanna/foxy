@@ -93,4 +93,23 @@ final class BriefSpellGroupEntity {
   SpellGroupKey get key {
     return SpellGroupKey(id: id, spellId: spellId);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellGroupEntity &&
+            id == other.id &&
+            spellId == other.spellId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, spellId]);
+
+  @override
+  String toString() {
+    return 'BriefSpellGroupEntity('
+        'id: $id, '
+        'spellId: $spellId'
+        ')';
+  }
 }

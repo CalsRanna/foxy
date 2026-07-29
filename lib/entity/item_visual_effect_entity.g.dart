@@ -63,4 +63,23 @@ final class BriefItemVisualEffectEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemVisualEffectEntity &&
+            id == other.id &&
+            model == other.model;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, model]);
+
+  @override
+  String toString() {
+    return 'BriefItemVisualEffectEntity('
+        'id: $id, '
+        'model: $model'
+        ')';
+  }
 }

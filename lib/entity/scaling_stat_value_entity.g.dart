@@ -249,4 +249,44 @@ final class BriefScalingStatValueEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefScalingStatValueEntity &&
+            id == other.id &&
+            charlevel == other.charlevel &&
+            shoulderBudget == other.shoulderBudget &&
+            trinketBudget == other.trinketBudget &&
+            weaponBudget1H == other.weaponBudget1H &&
+            rangedBudget == other.rangedBudget &&
+            primaryBudget == other.primaryBudget &&
+            tertiaryBudget == other.tertiaryBudget;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    charlevel,
+    shoulderBudget,
+    trinketBudget,
+    weaponBudget1H,
+    rangedBudget,
+    primaryBudget,
+    tertiaryBudget,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefScalingStatValueEntity('
+        'id: $id, '
+        'charlevel: $charlevel, '
+        'shoulderBudget: $shoulderBudget, '
+        'trinketBudget: $trinketBudget, '
+        'weaponBudget1H: $weaponBudget1H, '
+        'rangedBudget: $rangedBudget, '
+        'primaryBudget: $primaryBudget, '
+        'tertiaryBudget: $tertiaryBudget'
+        ')';
+  }
 }

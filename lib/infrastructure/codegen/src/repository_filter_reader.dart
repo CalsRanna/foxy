@@ -6,6 +6,7 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
 import '../repository_annotations.dart';
+import 'naming.dart';
 import 'repository_filter_model.dart';
 
 final class RepositoryFilterReader {
@@ -27,7 +28,7 @@ final class RepositoryFilterReader {
     }
 
     final inputFileName = buildStep.inputId.pathSegments.last;
-    final expectedFileName = '${_toSnakeCase(repositoryClassName)}.dart';
+    final expectedFileName = '${toSnakeCase(repositoryClassName)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
         '$repositoryClassName 必须位于 $expectedFileName，'
@@ -131,17 +132,6 @@ final class RepositoryFilterReader {
         FoxyFilterType.integer => object.toIntValue(),
         FoxyFilterType.text => object.toStringValue(),
       };
-
-  String _toSnakeCase(String value) {
-    final buffer = StringBuffer();
-    for (var index = 0; index < value.length; index++) {
-      final codeUnit = value.codeUnitAt(index);
-      final isUpper = codeUnit >= 65 && codeUnit <= 90;
-      if (isUpper && index > 0) buffer.write('_');
-      buffer.writeCharCode(isUpper ? codeUnit + 32 : codeUnit);
-    }
-    return buffer.toString();
-  }
 
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(

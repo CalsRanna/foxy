@@ -153,4 +153,27 @@ final class BriefPlayerCreateInfoCastSpellEntity {
       note: note,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoCastSpellEntity &&
+            raceMask == other.raceMask &&
+            classMask == other.classMask &&
+            spell == other.spell &&
+            note == other.note;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([raceMask, classMask, spell, note]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoCastSpellEntity('
+        'raceMask: $raceMask, '
+        'classMask: $classMask, '
+        'spell: $spell, '
+        'note: $note'
+        ')';
+  }
 }

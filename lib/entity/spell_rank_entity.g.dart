@@ -126,4 +126,41 @@ final class BriefSpellRankEntity {
   SpellRankKey get key {
     return SpellRankKey(firstSpellId: firstSpellId, rank: rank);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellRankEntity &&
+            firstSpellId == other.firstSpellId &&
+            spellId == other.spellId &&
+            rank == other.rank &&
+            firstSpellName == other.firstSpellName &&
+            firstSpellSubtext == other.firstSpellSubtext &&
+            spellName == other.spellName &&
+            spellSubtext == other.spellSubtext;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    firstSpellId,
+    spellId,
+    rank,
+    firstSpellName,
+    firstSpellSubtext,
+    spellName,
+    spellSubtext,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSpellRankEntity('
+        'firstSpellId: $firstSpellId, '
+        'spellId: $spellId, '
+        'rank: $rank, '
+        'firstSpellName: $firstSpellName, '
+        'firstSpellSubtext: $firstSpellSubtext, '
+        'spellName: $spellName, '
+        'spellSubtext: $spellSubtext'
+        ')';
+  }
 }

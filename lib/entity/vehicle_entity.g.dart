@@ -361,4 +361,25 @@ final class BriefVehicleEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefVehicleEntity &&
+            id == other.id &&
+            flags == other.flags &&
+            turnSpeed == other.turnSpeed;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, flags, turnSpeed]);
+
+  @override
+  String toString() {
+    return 'BriefVehicleEntity('
+        'id: $id, '
+        'flags: $flags, '
+        'turnSpeed: $turnSpeed'
+        ')';
+  }
 }

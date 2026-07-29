@@ -76,4 +76,23 @@ final class BriefCreatureMovementInfoEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureMovementInfoEntity &&
+            id == other.id &&
+            smoothFacingChaseRate == other.smoothFacingChaseRate;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, smoothFacingChaseRate]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureMovementInfoEntity('
+        'id: $id, '
+        'smoothFacingChaseRate: $smoothFacingChaseRate'
+        ')';
+  }
 }

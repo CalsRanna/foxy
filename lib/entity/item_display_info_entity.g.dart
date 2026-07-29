@@ -240,4 +240,25 @@ final class BriefItemDisplayInfoEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemDisplayInfoEntity &&
+            id == other.id &&
+            modelName0 == other.modelName0 &&
+            inventoryIcon0 == other.inventoryIcon0;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, modelName0, inventoryIcon0]);
+
+  @override
+  String toString() {
+    return 'BriefItemDisplayInfoEntity('
+        'id: $id, '
+        'modelName0: $modelName0, '
+        'inventoryIcon0: $inventoryIcon0'
+        ')';
+  }
 }

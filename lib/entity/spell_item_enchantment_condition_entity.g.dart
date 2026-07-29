@@ -278,4 +278,20 @@ final class BriefSpellItemEnchantmentConditionEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellItemEnchantmentConditionEntity && id == other.id;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id]);
+
+  @override
+  String toString() {
+    return 'BriefSpellItemEnchantmentConditionEntity('
+        'id: $id'
+        ')';
+  }
 }

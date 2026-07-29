@@ -96,4 +96,28 @@ final class BriefGlyphPropertyEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGlyphPropertyEntity &&
+            id == other.id &&
+            spellId == other.spellId &&
+            glyphSlotFlags == other.glyphSlotFlags &&
+            spellIconId == other.spellIconId;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, spellId, glyphSlotFlags, spellIconId]);
+
+  @override
+  String toString() {
+    return 'BriefGlyphPropertyEntity('
+        'id: $id, '
+        'spellId: $spellId, '
+        'glyphSlotFlags: $glyphSlotFlags, '
+        'spellIconId: $spellIconId'
+        ')';
+  }
 }

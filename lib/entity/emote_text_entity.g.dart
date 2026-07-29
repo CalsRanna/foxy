@@ -194,4 +194,25 @@ final class BriefEmoteTextEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefEmoteTextEntity &&
+            id == other.id &&
+            name == other.name &&
+            emoteId == other.emoteId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, emoteId]);
+
+  @override
+  String toString() {
+    return 'BriefEmoteTextEntity('
+        'id: $id, '
+        'name: $name, '
+        'emoteId: $emoteId'
+        ')';
+  }
 }

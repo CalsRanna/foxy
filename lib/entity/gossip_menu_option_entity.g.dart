@@ -215,4 +215,44 @@ final class BriefGossipMenuOptionEntity {
   GossipMenuOptionKey get key {
     return GossipMenuOptionKey(menuId: menuId, optionId: optionId);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGossipMenuOptionEntity &&
+            menuId == other.menuId &&
+            optionId == other.optionId &&
+            optionIcon == other.optionIcon &&
+            optionText == other.optionText &&
+            optionType == other.optionType &&
+            optionNpcFlag == other.optionNpcFlag &&
+            actionMenuId == other.actionMenuId &&
+            localeOptionText == other.localeOptionText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    menuId,
+    optionId,
+    optionIcon,
+    optionText,
+    optionType,
+    optionNpcFlag,
+    actionMenuId,
+    localeOptionText,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefGossipMenuOptionEntity('
+        'menuId: $menuId, '
+        'optionId: $optionId, '
+        'optionIcon: $optionIcon, '
+        'optionText: $optionText, '
+        'optionType: $optionType, '
+        'optionNpcFlag: $optionNpcFlag, '
+        'actionMenuId: $actionMenuId, '
+        'localeOptionText: $localeOptionText'
+        ')';
+  }
 }

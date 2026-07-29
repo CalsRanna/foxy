@@ -151,4 +151,29 @@ final class BriefPlayerCreateInfoItemEntity {
   PlayerCreateInfoItemKey get key {
     return PlayerCreateInfoItemKey(race: race, class_: class_, itemId: itemId);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoItemEntity &&
+            race == other.race &&
+            class_ == other.class_ &&
+            itemId == other.itemId &&
+            amount == other.amount &&
+            note == other.note;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([race, class_, itemId, amount, note]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoItemEntity('
+        'race: $race, '
+        'class_: $class_, '
+        'itemId: $itemId, '
+        'amount: $amount, '
+        'note: $note'
+        ')';
+  }
 }

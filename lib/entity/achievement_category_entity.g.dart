@@ -208,4 +208,27 @@ final class BriefAchievementCategoryEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAchievementCategoryEntity &&
+            id == other.id &&
+            parent == other.parent &&
+            nameLangZhCN == other.nameLangZhCN &&
+            uiOrder == other.uiOrder;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, parent, nameLangZhCN, uiOrder]);
+
+  @override
+  String toString() {
+    return 'BriefAchievementCategoryEntity('
+        'id: $id, '
+        'parent: $parent, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'uiOrder: $uiOrder'
+        ')';
+  }
 }

@@ -318,4 +318,23 @@ final class BriefCharTitleEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCharTitleEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefCharTitleEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

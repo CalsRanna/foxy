@@ -233,4 +233,25 @@ final class BriefItemRandomPropertiesEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemRandomPropertiesEntity &&
+            id == other.id &&
+            name == other.name &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefItemRandomPropertiesEntity('
+        'id: $id, '
+        'name: $name, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

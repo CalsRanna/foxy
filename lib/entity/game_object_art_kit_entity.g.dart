@@ -121,4 +121,25 @@ final class BriefGameObjectArtKitEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectArtKitEntity &&
+            id == other.id &&
+            textureVariation0 == other.textureVariation0 &&
+            attachModel0 == other.attachModel0;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, textureVariation0, attachModel0]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectArtKitEntity('
+        'id: $id, '
+        'textureVariation0: $textureVariation0, '
+        'attachModel0: $attachModel0'
+        ')';
+  }
 }

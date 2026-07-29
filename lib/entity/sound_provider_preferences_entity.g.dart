@@ -243,4 +243,25 @@ final class BriefSoundProviderPreferencesEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSoundProviderPreferencesEntity &&
+            id == other.id &&
+            description == other.description &&
+            flags == other.flags;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, description, flags]);
+
+  @override
+  String toString() {
+    return 'BriefSoundProviderPreferencesEntity('
+        'id: $id, '
+        'description: $description, '
+        'flags: $flags'
+        ')';
+  }
 }

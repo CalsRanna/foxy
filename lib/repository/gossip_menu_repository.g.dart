@@ -4,6 +4,7 @@ part of 'gossip_menu_repository.dart';
 
 mixin _GossipMenuRepositoryMixin on RepositoryMixin {
   Future<void> destroyGossipMenu(GossipMenuKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('gossip_menu'),
       key,
@@ -24,7 +25,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
 
   Future<void> storeGossipMenu(GossipMenuEntity gossipMenu) async {
     await _beforeStore(gossipMenu);
-    final json = _prepareWriteJson(gossipMenu.toJson());
+    final json = prepareWriteJson(gossipMenu.toJson());
     try {
       await laconic.table('gossip_menu').insert([json]);
     } catch (error) {
@@ -40,22 +41,25 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     GossipMenuEntity gossipMenu,
   ) async {
     await _beforeUpdate(originalKey, gossipMenu);
-    final json = _prepareWriteJson(gossipMenu.toJson());
+    final json = prepareWriteJson(gossipMenu.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('gossip_menu'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(GossipMenuKey key) async {}
 
   Future<void> _beforeStore(GossipMenuEntity gossipMenu) async {}
 
@@ -64,20 +68,10 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     GossipMenuEntity gossipMenu,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, GossipMenuKey key) {
     var query = builder;
-    query = query.where('MenuID', key.menuId);
-    query = query.where('TextID', key.textId);
+    query = query.where('`MenuID`', key.menuId);
+    query = query.where('`TextID`', key.textId);
     return query;
   }
 }

@@ -6,6 +6,7 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyItemEnchantmentTemplate(
     ItemEnchantmentTemplateKey key,
   ) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('item_enchantment_template'),
       key,
@@ -30,7 +31,7 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) async {
     await _beforeStore(itemEnchantmentTemplate);
-    final json = _prepareWriteJson(itemEnchantmentTemplate.toJson());
+    final json = prepareWriteJson(itemEnchantmentTemplate.toJson());
     try {
       await laconic.table('item_enchantment_template').insert([json]);
     } catch (error) {
@@ -46,22 +47,25 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) async {
     await _beforeUpdate(originalKey, itemEnchantmentTemplate);
-    final json = _prepareWriteJson(itemEnchantmentTemplate.toJson());
+    final json = prepareWriteJson(itemEnchantmentTemplate.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('item_enchantment_template'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(ItemEnchantmentTemplateKey key) async {}
 
   Future<void> _beforeStore(
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
@@ -72,20 +76,10 @@ mixin _ItemEnchantmentTemplateRepositoryMixin on RepositoryMixin {
     ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, ItemEnchantmentTemplateKey key) {
     var query = builder;
-    query = query.where('entry', key.entry);
-    query = query.where('ench', key.ench);
+    query = query.where('`entry`', key.entry);
+    query = query.where('`ench`', key.ench);
     return query;
   }
 }

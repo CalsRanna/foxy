@@ -106,4 +106,30 @@ final class BriefGemPropertyEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGemPropertyEntity &&
+            id == other.id &&
+            enchantId == other.enchantId &&
+            maxCountInv == other.maxCountInv &&
+            maxCountItem == other.maxCountItem &&
+            type == other.type;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, enchantId, maxCountInv, maxCountItem, type]);
+
+  @override
+  String toString() {
+    return 'BriefGemPropertyEntity('
+        'id: $id, '
+        'enchantId: $enchantId, '
+        'maxCountInv: $maxCountInv, '
+        'maxCountItem: $maxCountItem, '
+        'type: $type'
+        ')';
+  }
 }

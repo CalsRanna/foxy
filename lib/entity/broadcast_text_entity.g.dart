@@ -93,4 +93,25 @@ final class BriefBroadcastTextEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefBroadcastTextEntity &&
+            id == other.id &&
+            languageId == other.languageId &&
+            maleText == other.maleText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, languageId, maleText]);
+
+  @override
+  String toString() {
+    return 'BriefBroadcastTextEntity('
+        'id: $id, '
+        'languageId: $languageId, '
+        'maleText: $maleText'
+        ')';
+  }
 }

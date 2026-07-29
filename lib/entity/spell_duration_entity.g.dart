@@ -96,4 +96,28 @@ final class BriefSpellDurationEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellDurationEntity &&
+            id == other.id &&
+            duration == other.duration &&
+            durationPerLevel == other.durationPerLevel &&
+            maxDuration == other.maxDuration;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, duration, durationPerLevel, maxDuration]);
+
+  @override
+  String toString() {
+    return 'BriefSpellDurationEntity('
+        'id: $id, '
+        'duration: $duration, '
+        'durationPerLevel: $durationPerLevel, '
+        'maxDuration: $maxDuration'
+        ')';
+  }
 }

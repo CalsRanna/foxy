@@ -1073,4 +1073,50 @@ final class BriefItemTemplateEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemTemplateEntity &&
+            entry == other.entry &&
+            name == other.name &&
+            quality == other.quality &&
+            subclass == other.subclass &&
+            inventoryType == other.inventoryType &&
+            itemLevel == other.itemLevel &&
+            requiredLevel == other.requiredLevel &&
+            localeName == other.localeName &&
+            classId == other.classId &&
+            inventoryIcon == other.inventoryIcon;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    name,
+    quality,
+    subclass,
+    inventoryType,
+    itemLevel,
+    requiredLevel,
+    localeName,
+    classId,
+    inventoryIcon,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefItemTemplateEntity('
+        'entry: $entry, '
+        'name: $name, '
+        'quality: $quality, '
+        'subclass: $subclass, '
+        'inventoryType: $inventoryType, '
+        'itemLevel: $itemLevel, '
+        'requiredLevel: $requiredLevel, '
+        'localeName: $localeName, '
+        'classId: $classId, '
+        'inventoryIcon: $inventoryIcon'
+        ')';
+  }
 }

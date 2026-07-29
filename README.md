@@ -184,7 +184,6 @@ linux|macos|windows/ # 桌面平台工程
 
 - **代码生成** (`lib/infrastructure/codegen/`)：从注解生成 Entity 样板代码（`fromJson`/`toJson`/`copyWith`/`==`）和 Repository CRUD 方法，构建期即可发现字段类型、文件命名等问题。
 - **Lint 规则** (`lib/lint/`)：通过 `custom_lint` 在 `flutter analyze` 中检查 Entity 字段类型、Repository 方法签名、View 布局参数等 7 条约束。
-- **CI 脚本**：`dart run tool/foxy_lint.dart` 提供相同的独立检查。
 
 ### 数据编辑约定
 

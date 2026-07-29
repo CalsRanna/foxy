@@ -185,4 +185,23 @@ final class BriefEmoteTextDataEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefEmoteTextDataEntity &&
+            id == other.id &&
+            textLangZhCN == other.textLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, textLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefEmoteTextDataEntity('
+        'id: $id, '
+        'textLangZhCN: $textLangZhCN'
+        ')';
+  }
 }

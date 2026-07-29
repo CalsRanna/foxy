@@ -146,4 +146,44 @@ final class BriefGameObjectQuestItemEntity {
   GameObjectQuestItemKey get key {
     return GameObjectQuestItemKey(gameObjectEntry: gameObjectEntry, idx: idx);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectQuestItemEntity &&
+            gameObjectEntry == other.gameObjectEntry &&
+            idx == other.idx &&
+            itemId == other.itemId &&
+            verifiedBuild == other.verifiedBuild &&
+            itemName == other.itemName &&
+            itemLocaleName == other.itemLocaleName &&
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    gameObjectEntry,
+    idx,
+    itemId,
+    verifiedBuild,
+    itemName,
+    itemLocaleName,
+    itemQuality,
+    itemIcon,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectQuestItemEntity('
+        'gameObjectEntry: $gameObjectEntry, '
+        'idx: $idx, '
+        'itemId: $itemId, '
+        'verifiedBuild: $verifiedBuild, '
+        'itemName: $itemName, '
+        'itemLocaleName: $itemLocaleName, '
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
+        ')';
+  }
 }

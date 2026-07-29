@@ -477,4 +477,25 @@ final class BriefSkillLineEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSkillLineEntity &&
+            id == other.id &&
+            categoryId == other.categoryId &&
+            displayNameZhCN == other.displayNameZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, categoryId, displayNameZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefSkillLineEntity('
+        'id: $id, '
+        'categoryId: $categoryId, '
+        'displayNameZhCN: $displayNameZhCN'
+        ')';
+  }
 }

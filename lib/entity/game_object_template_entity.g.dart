@@ -316,4 +316,29 @@ final class BriefGameObjectTemplateEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectTemplateEntity &&
+            entry == other.entry &&
+            type == other.type &&
+            name == other.name &&
+            size == other.size &&
+            localeName == other.localeName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, type, name, size, localeName]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectTemplateEntity('
+        'entry: $entry, '
+        'type: $type, '
+        'name: $name, '
+        'size: $size, '
+        'localeName: $localeName'
+        ')';
+  }
 }

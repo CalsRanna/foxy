@@ -185,4 +185,23 @@ final class BriefQuestSortEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestSortEntity &&
+            id == other.id &&
+            sortNameLangZhCN == other.sortNameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, sortNameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefQuestSortEntity('
+        'id: $id, '
+        'sortNameLangZhCN: $sortNameLangZhCN'
+        ')';
+  }
 }

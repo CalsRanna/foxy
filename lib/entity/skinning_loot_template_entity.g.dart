@@ -200,4 +200,56 @@ final class BriefSkinningLootTemplateEntity {
   SkinningLootTemplateKey get key {
     return SkinningLootTemplateKey(entry: entry, item: item);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSkinningLootTemplateEntity &&
+            entry == other.entry &&
+            item == other.item &&
+            reference == other.reference &&
+            chance == other.chance &&
+            questRequired == other.questRequired &&
+            groupId == other.groupId &&
+            minCount == other.minCount &&
+            maxCount == other.maxCount &&
+            itemName == other.itemName &&
+            itemLocaleName == other.itemLocaleName &&
+            itemQuality == other.itemQuality &&
+            itemIcon == other.itemIcon;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    item,
+    reference,
+    chance,
+    questRequired,
+    groupId,
+    minCount,
+    maxCount,
+    itemName,
+    itemLocaleName,
+    itemQuality,
+    itemIcon,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSkinningLootTemplateEntity('
+        'entry: $entry, '
+        'item: $item, '
+        'reference: $reference, '
+        'chance: $chance, '
+        'questRequired: $questRequired, '
+        'groupId: $groupId, '
+        'minCount: $minCount, '
+        'maxCount: $maxCount, '
+        'itemName: $itemName, '
+        'itemLocaleName: $itemLocaleName, '
+        'itemQuality: $itemQuality, '
+        'itemIcon: $itemIcon'
+        ')';
+  }
 }

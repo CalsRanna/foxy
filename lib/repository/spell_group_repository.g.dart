@@ -4,6 +4,7 @@ part of 'spell_group_repository.dart';
 
 mixin _SpellGroupRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellGroup(SpellGroupKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('spell_group'),
       key,
@@ -24,7 +25,7 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
 
   Future<void> storeSpellGroup(SpellGroupEntity spellGroup) async {
     await _beforeStore(spellGroup);
-    final json = _prepareWriteJson(spellGroup.toJson());
+    final json = prepareWriteJson(spellGroup.toJson());
     try {
       await laconic.table('spell_group').insert([json]);
     } catch (error) {
@@ -40,22 +41,25 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     SpellGroupEntity spellGroup,
   ) async {
     await _beforeUpdate(originalKey, spellGroup);
-    final json = _prepareWriteJson(spellGroup.toJson());
+    final json = prepareWriteJson(spellGroup.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('spell_group'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(SpellGroupKey key) async {}
 
   Future<void> _beforeStore(SpellGroupEntity spellGroup) async {}
 
@@ -64,20 +68,10 @@ mixin _SpellGroupRepositoryMixin on RepositoryMixin {
     SpellGroupEntity spellGroup,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, SpellGroupKey key) {
     var query = builder;
-    query = query.where('id', key.id);
-    query = query.where('spell_id', key.spellId);
+    query = query.where('`id`', key.id);
+    query = query.where('`spell_id`', key.spellId);
     return query;
   }
 }

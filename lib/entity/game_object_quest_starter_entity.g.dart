@@ -108,4 +108,27 @@ final class BriefGameObjectQuestStarterEntity {
   GameObjectQuestStarterKey get key {
     return GameObjectQuestStarterKey(id: id, quest: quest);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectQuestStarterEntity &&
+            id == other.id &&
+            quest == other.quest &&
+            name == other.name &&
+            localeName == other.localeName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, quest, name, localeName]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectQuestStarterEntity('
+        'id: $id, '
+        'quest: $quest, '
+        'name: $name, '
+        'localeName: $localeName'
+        ')';
+  }
 }

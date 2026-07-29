@@ -4,6 +4,7 @@ part of 'spell_rank_repository.dart';
 
 mixin _SpellRankRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellRank(SpellRankKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('spell_ranks'),
       key,
@@ -24,7 +25,7 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
 
   Future<void> storeSpellRank(SpellRankEntity spellRank) async {
     await _beforeStore(spellRank);
-    final json = _prepareWriteJson(spellRank.toJson());
+    final json = prepareWriteJson(spellRank.toJson());
     try {
       await laconic.table('spell_ranks').insert([json]);
     } catch (error) {
@@ -40,22 +41,25 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     SpellRankEntity spellRank,
   ) async {
     await _beforeUpdate(originalKey, spellRank);
-    final json = _prepareWriteJson(spellRank.toJson());
+    final json = prepareWriteJson(spellRank.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('spell_ranks'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(SpellRankKey key) async {}
 
   Future<void> _beforeStore(SpellRankEntity spellRank) async {}
 
@@ -64,19 +68,9 @@ mixin _SpellRankRepositoryMixin on RepositoryMixin {
     SpellRankEntity spellRank,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, SpellRankKey key) {
     var query = builder;
-    query = query.where('first_spell_id', key.firstSpellId);
+    query = query.where('`first_spell_id`', key.firstSpellId);
     query = query.where('`rank`', key.rank);
     return query;
   }

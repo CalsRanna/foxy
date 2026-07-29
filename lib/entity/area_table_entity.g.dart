@@ -330,4 +330,38 @@ final class BriefAreaTableEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAreaTableEntity &&
+            id == other.id &&
+            continentId == other.continentId &&
+            zoneMusic == other.zoneMusic &&
+            explorationLevel == other.explorationLevel &&
+            areaNameLangZhCN == other.areaNameLangZhCN &&
+            minElevation == other.minElevation;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    continentId,
+    zoneMusic,
+    explorationLevel,
+    areaNameLangZhCN,
+    minElevation,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefAreaTableEntity('
+        'id: $id, '
+        'continentId: $continentId, '
+        'zoneMusic: $zoneMusic, '
+        'explorationLevel: $explorationLevel, '
+        'areaNameLangZhCN: $areaNameLangZhCN, '
+        'minElevation: $minElevation'
+        ')';
+  }
 }

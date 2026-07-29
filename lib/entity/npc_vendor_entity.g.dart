@@ -175,4 +175,47 @@ final class BriefNpcVendorEntity {
   NpcVendorKey get key {
     return NpcVendorKey(entry: entry, item: item, extendedCost: extendedCost);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefNpcVendorEntity &&
+            entry == other.entry &&
+            slot == other.slot &&
+            item == other.item &&
+            maxcount == other.maxcount &&
+            incrtime == other.incrtime &&
+            extendedCost == other.extendedCost &&
+            itemName == other.itemName &&
+            itemLocaleName == other.itemLocaleName &&
+            itemQuality == other.itemQuality;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    slot,
+    item,
+    maxcount,
+    incrtime,
+    extendedCost,
+    itemName,
+    itemLocaleName,
+    itemQuality,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefNpcVendorEntity('
+        'entry: $entry, '
+        'slot: $slot, '
+        'item: $item, '
+        'maxcount: $maxcount, '
+        'incrtime: $incrtime, '
+        'extendedCost: $extendedCost, '
+        'itemName: $itemName, '
+        'itemLocaleName: $itemLocaleName, '
+        'itemQuality: $itemQuality'
+        ')';
+  }
 }

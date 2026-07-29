@@ -116,4 +116,38 @@ final class BriefSpellBonusDataEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellBonusDataEntity &&
+            entry == other.entry &&
+            directBonus == other.directBonus &&
+            dotBonus == other.dotBonus &&
+            apBonus == other.apBonus &&
+            apDotBonus == other.apDotBonus &&
+            comments == other.comments;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    directBonus,
+    dotBonus,
+    apBonus,
+    apDotBonus,
+    comments,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSpellBonusDataEntity('
+        'entry: $entry, '
+        'directBonus: $directBonus, '
+        'dotBonus: $dotBonus, '
+        'apBonus: $apBonus, '
+        'apDotBonus: $apDotBonus, '
+        'comments: $comments'
+        ')';
+  }
 }

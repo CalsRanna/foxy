@@ -129,4 +129,29 @@ final class BriefCreatureTemplateAddonEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateAddonEntity &&
+            entry == other.entry &&
+            pathId == other.pathId &&
+            mount == other.mount &&
+            emote == other.emote &&
+            auras == other.auras;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, pathId, mount, emote, auras]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateAddonEntity('
+        'entry: $entry, '
+        'pathId: $pathId, '
+        'mount: $mount, '
+        'emote: $emote, '
+        'auras: $auras'
+        ')';
+  }
 }

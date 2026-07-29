@@ -179,4 +179,41 @@ final class BriefNpcTrainerEntity {
   NpcTrainerKey get key {
     return NpcTrainerKey(trainerId: trainerId, spellId: spellId);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefNpcTrainerEntity &&
+            trainerId == other.trainerId &&
+            spellId == other.spellId &&
+            moneyCost == other.moneyCost &&
+            reqSkillLine == other.reqSkillLine &&
+            reqLevel == other.reqLevel &&
+            spellName == other.spellName &&
+            spellSubtext == other.spellSubtext;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    trainerId,
+    spellId,
+    moneyCost,
+    reqSkillLine,
+    reqLevel,
+    spellName,
+    spellSubtext,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefNpcTrainerEntity('
+        'trainerId: $trainerId, '
+        'spellId: $spellId, '
+        'moneyCost: $moneyCost, '
+        'reqSkillLine: $reqSkillLine, '
+        'reqLevel: $reqLevel, '
+        'spellName: $spellName, '
+        'spellSubtext: $spellSubtext'
+        ')';
+  }
 }

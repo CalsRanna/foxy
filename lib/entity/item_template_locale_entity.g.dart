@@ -132,4 +132,25 @@ final class BriefItemTemplateLocaleEntity {
   ItemTemplateLocaleKey get key {
     return ItemTemplateLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemTemplateLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            name == other.name;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, name]);
+
+  @override
+  String toString() {
+    return 'BriefItemTemplateLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'name: $name'
+        ')';
+  }
 }

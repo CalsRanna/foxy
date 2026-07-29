@@ -103,4 +103,28 @@ final class BriefQuestRequestItemsEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestRequestItemsEntity &&
+            id == other.id &&
+            emoteOnComplete == other.emoteOnComplete &&
+            emoteOnIncomplete == other.emoteOnIncomplete &&
+            completionText == other.completionText;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, emoteOnComplete, emoteOnIncomplete, completionText]);
+
+  @override
+  String toString() {
+    return 'BriefQuestRequestItemsEntity('
+        'id: $id, '
+        'emoteOnComplete: $emoteOnComplete, '
+        'emoteOnIncomplete: $emoteOnIncomplete, '
+        'completionText: $completionText'
+        ')';
+  }
 }

@@ -102,4 +102,38 @@ final class BriefCurrencyTypeEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCurrencyTypeEntity &&
+            id == other.id &&
+            itemId == other.itemId &&
+            categoryId == other.categoryId &&
+            bitIndex == other.bitIndex &&
+            itemName == other.itemName &&
+            localeItemName == other.localeItemName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    itemId,
+    categoryId,
+    bitIndex,
+    itemName,
+    localeItemName,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCurrencyTypeEntity('
+        'id: $id, '
+        'itemId: $itemId, '
+        'categoryId: $categoryId, '
+        'bitIndex: $bitIndex, '
+        'itemName: $itemName, '
+        'localeItemName: $localeItemName'
+        ')';
+  }
 }

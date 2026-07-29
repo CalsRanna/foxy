@@ -286,4 +286,28 @@ final class BriefAchievementCriteriaEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAchievementCriteriaEntity &&
+            id == other.id &&
+            achievementId == other.achievementId &&
+            type == other.type &&
+            descriptionLangZhCN == other.descriptionLangZhCN;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, achievementId, type, descriptionLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefAchievementCriteriaEntity('
+        'id: $id, '
+        'achievementId: $achievementId, '
+        'type: $type, '
+        'descriptionLangZhCN: $descriptionLangZhCN'
+        ')';
+  }
 }

@@ -137,4 +137,38 @@ final class BriefCreatureImmunityEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureImmunityEntity &&
+            id == other.id &&
+            schoolMask == other.schoolMask &&
+            mechanicsMask == other.mechanicsMask &&
+            immuneAoE == other.immuneAoE &&
+            immuneChain == other.immuneChain &&
+            comment == other.comment;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    schoolMask,
+    mechanicsMask,
+    immuneAoE,
+    immuneChain,
+    comment,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureImmunityEntity('
+        'id: $id, '
+        'schoolMask: $schoolMask, '
+        'mechanicsMask: $mechanicsMask, '
+        'immuneAoE: $immuneAoE, '
+        'immuneChain: $immuneChain, '
+        'comment: $comment'
+        ')';
+  }
 }

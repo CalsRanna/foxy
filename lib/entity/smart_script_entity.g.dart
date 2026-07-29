@@ -350,4 +350,44 @@ final class BriefSmartScriptEntity {
       link: link,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSmartScriptEntity &&
+            entryOrGuid == other.entryOrGuid &&
+            sourceType == other.sourceType &&
+            id == other.id &&
+            link == other.link &&
+            eventType == other.eventType &&
+            actionType == other.actionType &&
+            targetType == other.targetType &&
+            comment == other.comment;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entryOrGuid,
+    sourceType,
+    id,
+    link,
+    eventType,
+    actionType,
+    targetType,
+    comment,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSmartScriptEntity('
+        'entryOrGuid: $entryOrGuid, '
+        'sourceType: $sourceType, '
+        'id: $id, '
+        'link: $link, '
+        'eventType: $eventType, '
+        'actionType: $actionType, '
+        'targetType: $targetType, '
+        'comment: $comment'
+        ')';
+  }
 }

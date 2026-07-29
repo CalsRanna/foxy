@@ -142,4 +142,25 @@ final class BriefQuestOfferRewardEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestOfferRewardEntity &&
+            id == other.id &&
+            emote1 == other.emote1 &&
+            rewardText == other.rewardText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, emote1, rewardText]);
+
+  @override
+  String toString() {
+    return 'BriefQuestOfferRewardEntity('
+        'id: $id, '
+        'emote1: $emote1, '
+        'rewardText: $rewardText'
+        ')';
+  }
 }

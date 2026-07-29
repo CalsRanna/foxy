@@ -154,4 +154,27 @@ final class BriefGossipMenuOptionLocaleEntity {
       locale: locale,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGossipMenuOptionLocaleEntity &&
+            menuId == other.menuId &&
+            optionId == other.optionId &&
+            locale == other.locale &&
+            optionText == other.optionText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([menuId, optionId, locale, optionText]);
+
+  @override
+  String toString() {
+    return 'BriefGossipMenuOptionLocaleEntity('
+        'menuId: $menuId, '
+        'optionId: $optionId, '
+        'locale: $locale, '
+        'optionText: $optionText'
+        ')';
+  }
 }

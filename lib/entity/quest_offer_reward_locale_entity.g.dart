@@ -129,4 +129,25 @@ final class BriefQuestOfferRewardLocaleEntity {
   QuestOfferRewardLocaleKey get key {
     return QuestOfferRewardLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestOfferRewardLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            rewardText == other.rewardText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, rewardText]);
+
+  @override
+  String toString() {
+    return 'BriefQuestOfferRewardLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'rewardText: $rewardText'
+        ')';
+  }
 }

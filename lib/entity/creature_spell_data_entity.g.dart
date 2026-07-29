@@ -146,4 +146,47 @@ final class BriefCreatureSpellDataEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureSpellDataEntity &&
+            id == other.id &&
+            spells0 == other.spells0 &&
+            spells1 == other.spells1 &&
+            spells2 == other.spells2 &&
+            spells3 == other.spells3 &&
+            spellName1 == other.spellName1 &&
+            spellName2 == other.spellName2 &&
+            spellName3 == other.spellName3 &&
+            spellName4 == other.spellName4;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    spells0,
+    spells1,
+    spells2,
+    spells3,
+    spellName1,
+    spellName2,
+    spellName3,
+    spellName4,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureSpellDataEntity('
+        'id: $id, '
+        'spells0: $spells0, '
+        'spells1: $spells1, '
+        'spells2: $spells2, '
+        'spells3: $spells3, '
+        'spellName1: $spellName1, '
+        'spellName2: $spellName2, '
+        'spellName3: $spellName3, '
+        'spellName4: $spellName4'
+        ')';
+  }
 }

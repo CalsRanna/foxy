@@ -210,4 +210,62 @@ final class BriefItemExtendedCostEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemExtendedCostEntity &&
+            id == other.id &&
+            honorPoints == other.honorPoints &&
+            arenaPoints == other.arenaPoints &&
+            arenaBracket == other.arenaBracket &&
+            itemID0 == other.itemID0 &&
+            itemID1 == other.itemID1 &&
+            itemID2 == other.itemID2 &&
+            itemID3 == other.itemID3 &&
+            itemID4 == other.itemID4 &&
+            itemCount0 == other.itemCount0 &&
+            itemCount1 == other.itemCount1 &&
+            itemCount2 == other.itemCount2 &&
+            itemCount3 == other.itemCount3 &&
+            itemCount4 == other.itemCount4;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    honorPoints,
+    arenaPoints,
+    arenaBracket,
+    itemID0,
+    itemID1,
+    itemID2,
+    itemID3,
+    itemID4,
+    itemCount0,
+    itemCount1,
+    itemCount2,
+    itemCount3,
+    itemCount4,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefItemExtendedCostEntity('
+        'id: $id, '
+        'honorPoints: $honorPoints, '
+        'arenaPoints: $arenaPoints, '
+        'arenaBracket: $arenaBracket, '
+        'itemID0: $itemID0, '
+        'itemID1: $itemID1, '
+        'itemID2: $itemID2, '
+        'itemID3: $itemID3, '
+        'itemID4: $itemID4, '
+        'itemCount0: $itemCount0, '
+        'itemCount1: $itemCount1, '
+        'itemCount2: $itemCount2, '
+        'itemCount3: $itemCount3, '
+        'itemCount4: $itemCount4'
+        ')';
+  }
 }

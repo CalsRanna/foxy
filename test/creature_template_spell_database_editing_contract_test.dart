@@ -8,6 +8,7 @@ import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -45,11 +46,23 @@ void main() {
       await repository.updateCreatureTemplateSpell(originalKey, candidate);
 
       expect(queries, hasLength(1));
-      expect(queries.single.bindings, [
-        candidate.creatureID,
-        candidate.spell,
-        candidate.verifiedBuild,
-        candidate.index,
+      final sql = queries.single.sql;
+      final setColumns = sql
+          .substring(sql.indexOf(' set ') + 5, sql.indexOf(' where '))
+          .split(', ')
+          .map((assignment) => assignment.split(' = ').first)
+          .toList();
+      final bindings = queries.single.bindings;
+
+      // 断言列→值映射而不是绑定下标，SET 子句的列顺序由 Entity 字段声明
+      // 顺序决定，不属于写入契约。反引号是保留字列 `Index` 的转义要求。
+      expect(Map.fromIterables(setColumns, bindings.take(setColumns.length)), {
+        '`CreatureID`': candidate.creatureID,
+        '`Index`': candidate.index,
+        '`Spell`': candidate.spell,
+        '`VerifiedBuild`': candidate.verifiedBuild,
+      });
+      expect(bindings.skip(setColumns.length).toList(), [
         originalKey.creatureID,
         originalKey.index,
       ]);

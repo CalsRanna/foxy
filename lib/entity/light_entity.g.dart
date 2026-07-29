@@ -176,4 +176,30 @@ final class BriefLightEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLightEntity &&
+            id == other.id &&
+            continentId == other.continentId &&
+            gameCoords0 == other.gameCoords0 &&
+            gameCoords1 == other.gameCoords1 &&
+            gameCoords2 == other.gameCoords2;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, continentId, gameCoords0, gameCoords1, gameCoords2]);
+
+  @override
+  String toString() {
+    return 'BriefLightEntity('
+        'id: $id, '
+        'continentId: $continentId, '
+        'gameCoords0: $gameCoords0, '
+        'gameCoords1: $gameCoords1, '
+        'gameCoords2: $gameCoords2'
+        ')';
+  }
 }

@@ -4,6 +4,7 @@ part of 'spell_loot_template_repository.dart';
 
 mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellLootTemplate(SpellLootTemplateKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('spell_loot_template'),
       key,
@@ -28,7 +29,7 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     SpellLootTemplateEntity spellLootTemplate,
   ) async {
     await _beforeStore(spellLootTemplate);
-    final json = _prepareWriteJson(spellLootTemplate.toJson());
+    final json = prepareWriteJson(spellLootTemplate.toJson());
     try {
       await laconic.table('spell_loot_template').insert([json]);
     } catch (error) {
@@ -44,22 +45,25 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     SpellLootTemplateEntity spellLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, spellLootTemplate);
-    final json = _prepareWriteJson(spellLootTemplate.toJson());
+    final json = prepareWriteJson(spellLootTemplate.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('spell_loot_template'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(SpellLootTemplateKey key) async {}
 
   Future<void> _beforeStore(SpellLootTemplateEntity spellLootTemplate) async {}
 
@@ -68,20 +72,10 @@ mixin _SpellLootTemplateRepositoryMixin on RepositoryMixin {
     SpellLootTemplateEntity spellLootTemplate,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, SpellLootTemplateKey key) {
     var query = builder;
-    query = query.where('Entry', key.entry);
-    query = query.where('Item', key.item);
+    query = query.where('`Entry`', key.entry);
+    query = query.where('`Item`', key.item);
     return query;
   }
 }

@@ -136,4 +136,29 @@ final class BriefGameObjectTemplateAddonEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectTemplateAddonEntity &&
+            entry == other.entry &&
+            faction == other.faction &&
+            flags == other.flags &&
+            minGold == other.minGold &&
+            maxGold == other.maxGold;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, faction, flags, minGold, maxGold]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectTemplateAddonEntity('
+        'entry: $entry, '
+        'faction: $faction, '
+        'flags: $flags, '
+        'minGold: $minGold, '
+        'maxGold: $maxGold'
+        ')';
+  }
 }

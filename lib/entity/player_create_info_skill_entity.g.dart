@@ -155,4 +155,30 @@ final class BriefPlayerCreateInfoSkillEntity {
       skill: skill,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoSkillEntity &&
+            raceMask == other.raceMask &&
+            classMask == other.classMask &&
+            skill == other.skill &&
+            rank == other.rank &&
+            comment == other.comment;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([raceMask, classMask, skill, rank, comment]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoSkillEntity('
+        'raceMask: $raceMask, '
+        'classMask: $classMask, '
+        'skill: $skill, '
+        'rank: $rank, '
+        'comment: $comment'
+        ')';
+  }
 }

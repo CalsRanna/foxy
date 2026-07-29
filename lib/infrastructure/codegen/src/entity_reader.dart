@@ -8,6 +8,7 @@ import 'package:source_gen/source_gen.dart';
 import '../entity_annotations.dart';
 import 'entity_model.dart';
 import 'entity_validator.dart';
+import 'naming.dart';
 
 const _fullEntityChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullEntity',
@@ -47,7 +48,7 @@ final class EntityReader {
       _fail('Full Entity class 必须有名称。', classElement, '为 class 命名。');
     }
     final inputFileName = buildStep.inputId.pathSegments.last;
-    final expectedFileName = '${_toSnakeCase(className)}.dart';
+    final expectedFileName = '${toSnakeCase(className)}.dart';
     if (inputFileName != expectedFileName) {
       _fail(
         '$className 必须位于 $expectedFileName，当前文件是 $inputFileName。',
@@ -446,13 +447,6 @@ final class EntityReader {
     }
     return annotations.isNotEmpty;
   }
-
-  String _toSnakeCase(String value) => value
-      .replaceAllMapped(
-        RegExp(r'([a-z0-9])([A-Z])'),
-        (match) => '${match[1]}_${match[2]}',
-      )
-      .toLowerCase();
 
   String _quote(String value) => "'$value'";
 

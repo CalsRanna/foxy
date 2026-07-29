@@ -178,4 +178,44 @@ final class BriefDbcFactionTemplateEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcFactionTemplateEntity &&
+            id == other.id &&
+            faction == other.faction &&
+            flags == other.flags &&
+            factionGroup == other.factionGroup &&
+            friendGroup == other.friendGroup &&
+            enemyGroup == other.enemyGroup &&
+            factionNameZhCN == other.factionNameZhCN &&
+            factionNameEnUS == other.factionNameEnUS;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    faction,
+    flags,
+    factionGroup,
+    friendGroup,
+    enemyGroup,
+    factionNameZhCN,
+    factionNameEnUS,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefDbcFactionTemplateEntity('
+        'id: $id, '
+        'faction: $faction, '
+        'flags: $flags, '
+        'factionGroup: $factionGroup, '
+        'friendGroup: $friendGroup, '
+        'enemyGroup: $enemyGroup, '
+        'factionNameZhCN: $factionNameZhCN, '
+        'factionNameEnUS: $factionNameEnUS'
+        ')';
+  }
 }

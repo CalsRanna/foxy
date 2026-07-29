@@ -241,4 +241,23 @@ final class BriefItemPurchaseGroupEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemPurchaseGroupEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefItemPurchaseGroupEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

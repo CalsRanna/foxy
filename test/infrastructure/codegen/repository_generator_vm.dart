@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:build/build.dart';
 import 'package:build_test/build_test.dart';
 import 'package:foxy/infrastructure/codegen/builder.dart';
@@ -10,34 +12,17 @@ const entityAnnotationAsset =
 const entityAsset = 'foxy|lib/entity/sample_entity.dart';
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
 
-const repositoryAnnotationSource = r'''
-class FoxyRepository {
-  final Type entity;
+/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
+///
+/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
+/// 测试从仓库根目录运行（见 AGENTS.md）。
+final repositoryAnnotationSource = File(
+  'lib/infrastructure/codegen/repository_annotations.dart',
+).readAsStringSync();
 
-  const FoxyRepository(this.entity);
-}
-
-class FoxyFilter {
-  final Object defaultValue;
-  final String name;
-  final Object type;
-}
-''';
-
-const entityAnnotationSource = r'''
-class FoxyFullEntity {
-  final String table;
-
-  const FoxyFullEntity({required this.table});
-}
-
-class FoxyFullField {
-  final String name;
-  final bool key;
-
-  const FoxyFullField(this.name, {this.key = false});
-}
-''';
+final entityAnnotationSource = File(
+  'lib/infrastructure/codegen/entity_annotations.dart',
+).readAsStringSync();
 
 const scalarEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
@@ -88,10 +73,12 @@ void main() {
                 ),
                 contains("laconic.table('foxy.sample')"),
                 contains('MysqlErrorUtil.isDuplicateEntry(error)'),
+                contains('prepareWriteJson(sample.toJson())'),
+                contains('Future<void> _beforeDestroy(int key) async {}'),
                 contains(
                   'QueryBuilder _whereKey(QueryBuilder builder, int key)',
                 ),
-                contains("return builder.where('ID', key);"),
+                contains(r"return builder.where('`ID`', key);"),
                 isNot(contains('Filter')),
               ]),
             ),
@@ -155,11 +142,46 @@ class SampleEntity {
                   'QueryBuilder _whereKey('
                   'QueryBuilder builder, SampleKey key)',
                 ),
-                contains("query = query.where('OwnerID', key.ownerId);"),
-                contains("query = query.where('Locale', key.locale);"),
+                contains(r"query = query.where('`OwnerID`', key.ownerId);"),
+                contains(r"query = query.where('`Locale`', key.locale);"),
               ]),
             ),
       },
+    );
+  });
+
+  test('Entity 的 nullable key 字段拒绝生成 CRUD', () async {
+    const nullableKeyEntity = r'''
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+@FoxyFullEntity(table: 'foxy.sample')
+class SampleEntity {
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  @FoxyFullField('Note', key: true)
+  final String? note;
+
+  const SampleEntity({this.id = 0, this.note});
+}
+''';
+
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: nullableKeyEntity,
+        repositoryAsset: scalarRepositorySource,
+      },
+      outputs: {},
+      onLog: (record) => logs.add(record.toString()),
+    );
+    expect(
+      logs.any((log) => log.contains('不能作为生成 CRUD 的物理 Key')),
+      isTrue,
+      reason: '`列 = NULL` 恒不成立，生成的 _whereKey 会静默匹配 0 行',
     );
   });
 

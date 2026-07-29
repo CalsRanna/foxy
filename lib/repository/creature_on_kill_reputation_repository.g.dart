@@ -4,6 +4,7 @@ part of 'creature_on_kill_reputation_repository.dart';
 
 mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureOnKillReputation(int key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('creature_onkill_reputation'),
       key,
@@ -31,7 +32,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
       throw StateError('主键必须在新建时显式分配');
     }
     await _beforeStore(creatureOnKillReputation);
-    final json = _prepareWriteJson(creatureOnKillReputation.toJson());
+    final json = prepareWriteJson(creatureOnKillReputation.toJson());
     try {
       await laconic.table('creature_onkill_reputation').insert([json]);
     } catch (error) {
@@ -47,22 +48,25 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     CreatureOnKillReputationEntity creatureOnKillReputation,
   ) async {
     await _beforeUpdate(originalKey, creatureOnKillReputation);
-    final json = _prepareWriteJson(creatureOnKillReputation.toJson());
+    final json = prepareWriteJson(creatureOnKillReputation.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('creature_onkill_reputation'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(int key) async {}
 
   Future<void> _beforeStore(
     CreatureOnKillReputationEntity creatureOnKillReputation,
@@ -73,17 +77,7 @@ mixin _CreatureOnKillReputationRepositoryMixin on RepositoryMixin {
     CreatureOnKillReputationEntity creatureOnKillReputation,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('creature_id', key);
+    return builder.where('`creature_id`', key);
   }
 }

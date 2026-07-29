@@ -6,6 +6,7 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectLootTemplate(
     GameObjectLootTemplateKey key,
   ) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('gameobject_loot_template'),
       key,
@@ -30,7 +31,7 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
     GameObjectLootTemplateEntity gameObjectLootTemplate,
   ) async {
     await _beforeStore(gameObjectLootTemplate);
-    final json = _prepareWriteJson(gameObjectLootTemplate.toJson());
+    final json = prepareWriteJson(gameObjectLootTemplate.toJson());
     try {
       await laconic.table('gameobject_loot_template').insert([json]);
     } catch (error) {
@@ -46,22 +47,25 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
     GameObjectLootTemplateEntity gameObjectLootTemplate,
   ) async {
     await _beforeUpdate(originalKey, gameObjectLootTemplate);
-    final json = _prepareWriteJson(gameObjectLootTemplate.toJson());
+    final json = prepareWriteJson(gameObjectLootTemplate.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('gameobject_loot_template'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(GameObjectLootTemplateKey key) async {}
 
   Future<void> _beforeStore(
     GameObjectLootTemplateEntity gameObjectLootTemplate,
@@ -72,20 +76,10 @@ mixin _GameObjectLootTemplateRepositoryMixin on RepositoryMixin {
     GameObjectLootTemplateEntity gameObjectLootTemplate,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, GameObjectLootTemplateKey key) {
     var query = builder;
-    query = query.where('Entry', key.entry);
-    query = query.where('Item', key.item);
+    query = query.where('`Entry`', key.entry);
+    query = query.where('`Item`', key.item);
     return query;
   }
 }

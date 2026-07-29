@@ -30,6 +30,7 @@ Useful focused commands:
 ```bash
 flutter test test/<name>_test.dart
 flutter test test/<name>_test.dart --plain-name '<exact test name>'
+dart test test/infrastructure/codegen
 dart format <changed .dart files>
 dart run build_runner build --delete-conflicting-outputs
 flutter build macos        # or windows/linux
@@ -57,7 +58,6 @@ Do not globally format the repository as incidental cleanup. Format only changed
 - `lib/event/` — small synchronous application event bus.
 - `test/` — unit/widget tests, database-editing contract tests, and codegen behavior tests.
 - `lib/lint/` — custom_lint plugin and rules for codebase-wide constraints.
-- `tool/foxy_lint.dart` — standalone CI script for the same lint rules.
 - `asset/icon/` — thousands of game icons deliberately kept out of the Flutter asset bundle.
 - `linux/`, `macos/`, `windows/` — desktop runners and packaging configuration.
 
@@ -213,11 +213,37 @@ A custom_lint plugin at `lib/lint/` enforces architecture constraints during `fl
 | `no_flex_in_view` | View files | No `flex:` parameter |
 | `no_readonly_in_view` | View files | No `readOnly: true` |
 
-The same rules are also available as a standalone CI script: `dart run tool/foxy_lint.dart`.
-
 ### Code generation
 
-`lib/infrastructure/codegen/` contains annotation-driven builders that generate entity boilerplate and repository CRUD methods. The codegen enforces many constraints at build time (single entity per file, field types, file naming, etc.) that previously were verified by source-level contract tests. Codegen failures are build errors, not test failures.
+`lib/infrastructure/codegen/` contains annotation-driven builders. Each builder is split into reader (element inspection + validation), model, and emitter (pure string building), so the emitters are unit-testable in isolation.
+
+Annotation vocabulary:
+
+| Annotation | Target | Effect |
+|------------|--------|--------|
+| `@FoxyFullEntity(table:)` | Entity class | Generates the `_<Name>EntityMixin` with `fromJson`/`copyWith`/`toJson`/`==`/`hashCode`/`toString` |
+| `@FoxyFullField(column, key:)` | Entity field | Maps the field to a physical column; `key: true` marks physical identity |
+| `@FoxyBriefEntity` | Entity class | Also generates `Brief<Name>Entity` (read model, value semantics, no write API) |
+| `@FoxyBriefField()` | Entity field | Includes that physical field in the Brief projection |
+| `@FoxyBriefField.text/integer/decimal/boolean(name)` | Entity class | Declares a Brief-only projection field supplied by a query alias |
+| `@FoxyRepository(Entity)` | Repository class | Generates `get`/`store`/`update`/`destroy` plus `_whereKey` in `_<Name>RepositoryMixin` |
+| `@FoxyFilter.text/integer/decimal/boolean(name)` | Repository class | Generates the `<Name>Filter` query input object |
+
+Conventions the generators enforce at build time (violations are build errors, not test failures):
+
+- One `@FoxyFullEntity` class per file, and the file name must be the class name in snake_case.
+- The class must apply the generated mixin, declare `part '<file>.g.dart';`, and delegate `fromJson`.
+- Fields must be `final`, scalar (`int`/`double`/`String`/`bool` and their nullable forms), and bound to named initializing formals with constant defaults.
+- Repository and Entity share a base name; `Repository._table` must match `@FoxyFullEntity.table`.
+- Standard CRUD may not be handwritten, and key fields may not be nullable — `column = NULL` is never true in SQL, so a generated lookup would silently match zero rows.
+
+A composite `<Name>Key` class is generated only when there is more than one key field; a single key field is used as a plain scalar.
+
+Generated write statements go through `RepositoryMixin.prepareWriteJson`, which backtick-quotes every column. laconic does not escape identifiers, so this is what keeps reserved-word columns such as `index` and `rank` working.
+
+Repositories can customize writes by overriding `_beforeStore`, `_beforeUpdate`, or `_beforeDestroy` in the repository class.
+
+The generator suites use `build_test` and require `dart:mirrors`, so they are skipped under `flutter test`. Run them with `dart test test/infrastructure/codegen`.
 
 ## Testing expectations
 
@@ -249,9 +275,9 @@ The schema must be non-empty, alphanumeric/underscore only, and not named `foxy`
 
 At the time this guide was generated:
 
-- `flutter analyze` has 9 remaining issues (all `deprecated_member_use` in the lint plugin itself).
-- The full suite passes all other tests with one pre-existing failure: `creature_template_spell_database_editing_contract_test.dart` — codegen `toJson` field order does not match the test's expected binding order.
+- `flutter analyze` is clean.
 - Five MySQL integration tests are skipped unless the environment variables above are supplied.
+- The generator suites under `test/infrastructure/codegen/` are skipped by `flutter test`; run them with `dart test test/infrastructure/codegen`.
 - A repository-wide format check currently flags only `test/macos_file_selector_entitlements_test.dart`; do not reformat that unrelated file as part of another task.
 - Some widget tests intentionally log error stack traces while verifying failure UI; an error log is not itself a test failure—use the final test status.
 

@@ -157,4 +157,29 @@ final class BriefPlayerCreateInfoActionEntity {
       button: button,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoActionEntity &&
+            race == other.race &&
+            class_ == other.class_ &&
+            button == other.button &&
+            action == other.action &&
+            type == other.type;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([race, class_, button, action, type]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoActionEntity('
+        'race: $race, '
+        'class_: $class_, '
+        'button: $button, '
+        'action: $action, '
+        'type: $type'
+        ')';
+  }
 }

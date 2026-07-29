@@ -439,4 +439,28 @@ final class BriefItemSetEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemSetEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            requiredSkill == other.requiredSkill &&
+            requiredSkillRank == other.requiredSkillRank;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, nameLangZhCN, requiredSkill, requiredSkillRank]);
+
+  @override
+  String toString() {
+    return 'BriefItemSetEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'requiredSkill: $requiredSkill, '
+        'requiredSkillRank: $requiredSkillRank'
+        ')';
+  }
 }

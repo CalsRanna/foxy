@@ -135,4 +135,25 @@ final class BriefCinematicSequenceEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCinematicSequenceEntity &&
+            id == other.id &&
+            soundId == other.soundId &&
+            camera0 == other.camera0;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, soundId, camera0]);
+
+  @override
+  String toString() {
+    return 'BriefCinematicSequenceEntity('
+        'id: $id, '
+        'soundId: $soundId, '
+        'camera0: $camera0'
+        ')';
+  }
 }

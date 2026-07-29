@@ -6,6 +6,7 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestRequestItemsLocale(
     QuestRequestItemsLocaleKey key,
   ) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('quest_request_items_locale'),
       key,
@@ -30,7 +31,7 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
   ) async {
     await _beforeStore(questRequestItemsLocale);
-    final json = _prepareWriteJson(questRequestItemsLocale.toJson());
+    final json = prepareWriteJson(questRequestItemsLocale.toJson());
     try {
       await laconic.table('quest_request_items_locale').insert([json]);
     } catch (error) {
@@ -46,22 +47,25 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
   ) async {
     await _beforeUpdate(originalKey, questRequestItemsLocale);
-    final json = _prepareWriteJson(questRequestItemsLocale.toJson());
+    final json = prepareWriteJson(questRequestItemsLocale.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('quest_request_items_locale'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(QuestRequestItemsLocaleKey key) async {}
 
   Future<void> _beforeStore(
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
@@ -72,20 +76,10 @@ mixin _QuestRequestItemsLocaleRepositoryMixin on RepositoryMixin {
     QuestRequestItemsLocaleEntity questRequestItemsLocale,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, QuestRequestItemsLocaleKey key) {
     var query = builder;
-    query = query.where('ID', key.id);
-    query = query.where('locale', key.locale);
+    query = query.where('`ID`', key.id);
+    query = query.where('`locale`', key.locale);
     return query;
   }
 }

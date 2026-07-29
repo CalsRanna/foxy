@@ -340,4 +340,32 @@ final class BriefSpellItemEnchantmentEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellItemEnchantmentEntity &&
+            id == other.id &&
+            charges == other.charges &&
+            effect0 == other.effect0 &&
+            effect1 == other.effect1 &&
+            effect2 == other.effect2 &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, charges, effect0, effect1, effect2, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefSpellItemEnchantmentEntity('
+        'id: $id, '
+        'charges: $charges, '
+        'effect0: $effect0, '
+        'effect1: $effect1, '
+        'effect2: $effect2, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

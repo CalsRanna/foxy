@@ -96,4 +96,27 @@ final class BriefTaxiPathEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTaxiPathEntity &&
+            id == other.id &&
+            fromTaxiNode == other.fromTaxiNode &&
+            toTaxiNode == other.toTaxiNode &&
+            cost == other.cost;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, fromTaxiNode, toTaxiNode, cost]);
+
+  @override
+  String toString() {
+    return 'BriefTaxiPathEntity('
+        'id: $id, '
+        'fromTaxiNode: $fromTaxiNode, '
+        'toTaxiNode: $toTaxiNode, '
+        'cost: $cost'
+        ')';
+  }
 }

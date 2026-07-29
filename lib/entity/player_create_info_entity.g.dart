@@ -168,4 +168,44 @@ final class BriefPlayerCreateInfoEntity {
   PlayerCreateInfoKey get key {
     return PlayerCreateInfoKey(race: race, class_: class_);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoEntity &&
+            race == other.race &&
+            class_ == other.class_ &&
+            map == other.map &&
+            zone == other.zone &&
+            positionX == other.positionX &&
+            positionY == other.positionY &&
+            positionZ == other.positionZ &&
+            orientation == other.orientation;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    race,
+    class_,
+    map,
+    zone,
+    positionX,
+    positionY,
+    positionZ,
+    orientation,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoEntity('
+        'race: $race, '
+        'class_: $class_, '
+        'map: $map, '
+        'zone: $zone, '
+        'positionX: $positionX, '
+        'positionY: $positionY, '
+        'positionZ: $positionZ, '
+        'orientation: $orientation'
+        ')';
+  }
 }

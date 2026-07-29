@@ -203,4 +203,30 @@ final class BriefQuestTemplateAddonEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateAddonEntity &&
+            id == other.id &&
+            maxLevel == other.maxLevel &&
+            prevQuestId == other.prevQuestId &&
+            nextQuestId == other.nextQuestId &&
+            specialFlags == other.specialFlags;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, maxLevel, prevQuestId, nextQuestId, specialFlags]);
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateAddonEntity('
+        'id: $id, '
+        'maxLevel: $maxLevel, '
+        'prevQuestId: $prevQuestId, '
+        'nextQuestId: $nextQuestId, '
+        'specialFlags: $specialFlags'
+        ')';
+  }
 }

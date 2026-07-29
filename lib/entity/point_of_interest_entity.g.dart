@@ -114,4 +114,25 @@ final class BriefPointOfInterestEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPointOfInterestEntity &&
+            id == other.id &&
+            name == other.name &&
+            localeName == other.localeName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, localeName]);
+
+  @override
+  String toString() {
+    return 'BriefPointOfInterestEntity('
+        'id: $id, '
+        'name: $name, '
+        'localeName: $localeName'
+        ')';
+  }
 }

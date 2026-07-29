@@ -691,4 +691,25 @@ final class BriefNpcTextEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefNpcTextEntity &&
+            id == other.id &&
+            text0 == other.text0 &&
+            text1 == other.text1;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, text0, text1]);
+
+  @override
+  String toString() {
+    return 'BriefNpcTextEntity('
+        'id: $id, '
+        'text0: $text0, '
+        'text1: $text1'
+        ')';
+  }
 }

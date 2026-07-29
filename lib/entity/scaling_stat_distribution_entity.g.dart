@@ -278,4 +278,86 @@ final class BriefScalingStatDistributionEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefScalingStatDistributionEntity &&
+            id == other.id &&
+            statId0 == other.statId0 &&
+            statId1 == other.statId1 &&
+            statId2 == other.statId2 &&
+            statId3 == other.statId3 &&
+            statId4 == other.statId4 &&
+            statId5 == other.statId5 &&
+            statId6 == other.statId6 &&
+            statId7 == other.statId7 &&
+            statId8 == other.statId8 &&
+            statId9 == other.statId9 &&
+            bonus0 == other.bonus0 &&
+            bonus1 == other.bonus1 &&
+            bonus2 == other.bonus2 &&
+            bonus3 == other.bonus3 &&
+            bonus4 == other.bonus4 &&
+            bonus5 == other.bonus5 &&
+            bonus6 == other.bonus6 &&
+            bonus7 == other.bonus7 &&
+            bonus8 == other.bonus8 &&
+            bonus9 == other.bonus9 &&
+            maxlevel == other.maxlevel;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    statId0,
+    statId1,
+    statId2,
+    statId3,
+    statId4,
+    statId5,
+    statId6,
+    statId7,
+    statId8,
+    statId9,
+    bonus0,
+    bonus1,
+    bonus2,
+    bonus3,
+    bonus4,
+    bonus5,
+    bonus6,
+    bonus7,
+    bonus8,
+    bonus9,
+    maxlevel,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefScalingStatDistributionEntity('
+        'id: $id, '
+        'statId0: $statId0, '
+        'statId1: $statId1, '
+        'statId2: $statId2, '
+        'statId3: $statId3, '
+        'statId4: $statId4, '
+        'statId5: $statId5, '
+        'statId6: $statId6, '
+        'statId7: $statId7, '
+        'statId8: $statId8, '
+        'statId9: $statId9, '
+        'bonus0: $bonus0, '
+        'bonus1: $bonus1, '
+        'bonus2: $bonus2, '
+        'bonus3: $bonus3, '
+        'bonus4: $bonus4, '
+        'bonus5: $bonus5, '
+        'bonus6: $bonus6, '
+        'bonus7: $bonus7, '
+        'bonus8: $bonus8, '
+        'bonus9: $bonus9, '
+        'maxlevel: $maxlevel'
+        ')';
+  }
 }

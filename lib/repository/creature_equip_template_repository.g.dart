@@ -6,6 +6,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureEquipTemplate(
     CreatureEquipTemplateKey key,
   ) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('creature_equip_template'),
       key,
@@ -30,7 +31,7 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     CreatureEquipTemplateEntity creatureEquipTemplate,
   ) async {
     await _beforeStore(creatureEquipTemplate);
-    final json = _prepareWriteJson(creatureEquipTemplate.toJson());
+    final json = prepareWriteJson(creatureEquipTemplate.toJson());
     try {
       await laconic.table('creature_equip_template').insert([json]);
     } catch (error) {
@@ -46,22 +47,25 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     CreatureEquipTemplateEntity creatureEquipTemplate,
   ) async {
     await _beforeUpdate(originalKey, creatureEquipTemplate);
-    final json = _prepareWriteJson(creatureEquipTemplate.toJson());
+    final json = prepareWriteJson(creatureEquipTemplate.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('creature_equip_template'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(CreatureEquipTemplateKey key) async {}
 
   Future<void> _beforeStore(
     CreatureEquipTemplateEntity creatureEquipTemplate,
@@ -72,20 +76,10 @@ mixin _CreatureEquipTemplateRepositoryMixin on RepositoryMixin {
     CreatureEquipTemplateEntity creatureEquipTemplate,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, CreatureEquipTemplateKey key) {
     var query = builder;
-    query = query.where('CreatureID', key.creatureID);
-    query = query.where('ID', key.id);
+    query = query.where('`CreatureID`', key.creatureID);
+    query = query.where('`ID`', key.id);
     return query;
   }
 }

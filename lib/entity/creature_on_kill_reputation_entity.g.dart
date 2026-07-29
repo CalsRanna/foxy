@@ -158,4 +158,38 @@ final class BriefCreatureOnKillReputationEntity {
   }
 
   int get key => creatureID;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureOnKillReputationEntity &&
+            creatureID == other.creatureID &&
+            rewOnKillRepFaction1 == other.rewOnKillRepFaction1 &&
+            rewOnKillRepFaction2 == other.rewOnKillRepFaction2 &&
+            rewOnKillRepValue1 == other.rewOnKillRepValue1 &&
+            rewOnKillRepValue2 == other.rewOnKillRepValue2 &&
+            teamDependent == other.teamDependent;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    creatureID,
+    rewOnKillRepFaction1,
+    rewOnKillRepFaction2,
+    rewOnKillRepValue1,
+    rewOnKillRepValue2,
+    teamDependent,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureOnKillReputationEntity('
+        'creatureID: $creatureID, '
+        'rewOnKillRepFaction1: $rewOnKillRepFaction1, '
+        'rewOnKillRepFaction2: $rewOnKillRepFaction2, '
+        'rewOnKillRepValue1: $rewOnKillRepValue1, '
+        'rewOnKillRepValue2: $rewOnKillRepValue2, '
+        'teamDependent: $teamDependent'
+        ')';
+  }
 }

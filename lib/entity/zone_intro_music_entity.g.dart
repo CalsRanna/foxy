@@ -100,4 +100,25 @@ final class BriefZoneIntroMusicEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefZoneIntroMusicEntity &&
+            id == other.id &&
+            name == other.name &&
+            soundId == other.soundId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, soundId]);
+
+  @override
+  String toString() {
+    return 'BriefZoneIntroMusicEntity('
+        'id: $id, '
+        'name: $name, '
+        'soundId: $soundId'
+        ')';
+  }
 }

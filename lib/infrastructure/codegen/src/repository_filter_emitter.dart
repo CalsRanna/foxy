@@ -1,3 +1,4 @@
+import 'dart_literal.dart';
 import 'repository_filter_model.dart';
 
 final class RepositoryFilterEmitter {
@@ -14,7 +15,7 @@ final class RepositoryFilterEmitter {
     for (final field in model.fields) {
       buffer.writeln(
         '    this.${field.name} = '
-        '${_literal(field.defaultValue, asType: field.dartType)},',
+        '${dartLiteral(field.defaultValue, asType: field.dartType)},',
       );
     }
     buffer
@@ -61,34 +62,12 @@ final class RepositoryFilterEmitter {
 
   String _fromJson(RepositoryFilterFieldModel field) {
     final key = "'${field.name}'";
-    final fallback = _literal(field.defaultValue, asType: field.dartType);
+    final fallback = dartLiteral(field.defaultValue, asType: field.dartType);
     return switch (field.dartType) {
       'bool' => 'json[$key] as bool? ?? $fallback',
       'double' => '(json[$key] as num?)?.toDouble() ?? $fallback',
       'int' => '(json[$key] as num?)?.toInt() ?? $fallback',
       _ => 'json[$key]?.toString() ?? $fallback',
     };
-  }
-
-  String _literal(Object value, {required String asType}) {
-    if (value is String) {
-      final escaped = value
-          .replaceAll(r'\', r'\\')
-          .replaceAll("'", r"\'")
-          .replaceAll(r'$', r'\$')
-          .replaceAll('\n', r'\n')
-          .replaceAll('\r', r'\r')
-          .replaceAll('\t', r'\t');
-      return "'$escaped'";
-    }
-    if (value is bool || value is int) {
-      if (asType == 'double' && value is int) return '$value.0';
-      return '$value';
-    }
-    if (value is double && value.isFinite) {
-      final text = value.toString();
-      return text.contains('.') ? text : '$text.0';
-    }
-    throw StateError('Unsupported Filter literal $value');
   }
 }

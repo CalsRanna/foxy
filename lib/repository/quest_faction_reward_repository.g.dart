@@ -4,6 +4,7 @@ part of 'quest_faction_reward_repository.dart';
 
 mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestFactionReward(int key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('foxy.dbc_quest_faction_reward'),
       key,
@@ -29,7 +30,7 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
       throw StateError('主键必须在新建时显式分配');
     }
     await _beforeStore(questFactionReward);
-    final json = _prepareWriteJson(questFactionReward.toJson());
+    final json = prepareWriteJson(questFactionReward.toJson());
     try {
       await laconic.table('foxy.dbc_quest_faction_reward').insert([json]);
     } catch (error) {
@@ -45,22 +46,25 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     QuestFactionRewardEntity questFactionReward,
   ) async {
     await _beforeUpdate(originalKey, questFactionReward);
-    final json = _prepareWriteJson(questFactionReward.toJson());
+    final json = prepareWriteJson(questFactionReward.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('foxy.dbc_quest_faction_reward'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(int key) async {}
 
   Future<void> _beforeStore(
     QuestFactionRewardEntity questFactionReward,
@@ -71,18 +75,8 @@ mixin _QuestFactionRewardRepositoryMixin on RepositoryMixin {
     QuestFactionRewardEntity questFactionReward,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
+    return builder.where('`ID`', key);
   }
 }
 

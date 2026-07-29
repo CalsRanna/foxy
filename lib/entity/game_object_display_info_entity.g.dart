@@ -194,4 +194,23 @@ final class BriefGameObjectDisplayInfoEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectDisplayInfoEntity &&
+            id == other.id &&
+            modelName == other.modelName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, modelName]);
+
+  @override
+  String toString() {
+    return 'BriefGameObjectDisplayInfoEntity('
+        'id: $id, '
+        'modelName: $modelName'
+        ')';
+  }
 }

@@ -191,4 +191,25 @@ final class BriefSpellFocusObjectEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellFocusObjectEntity &&
+            id == other.id &&
+            nameLangEnUS == other.nameLangEnUS &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangEnUS, nameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefSpellFocusObjectEntity('
+        'id: $id, '
+        'nameLangEnUS: $nameLangEnUS, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
 }

@@ -383,4 +383,28 @@ final class BriefSpellRangeEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellRangeEntity &&
+            id == other.id &&
+            rangeMin0 == other.rangeMin0 &&
+            rangeMax0 == other.rangeMax0 &&
+            displayNameLangZhCN == other.displayNameLangZhCN;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, rangeMin0, rangeMax0, displayNameLangZhCN]);
+
+  @override
+  String toString() {
+    return 'BriefSpellRangeEntity('
+        'id: $id, '
+        'rangeMin0: $rangeMin0, '
+        'rangeMax0: $rangeMax0, '
+        'displayNameLangZhCN: $displayNameLangZhCN'
+        ')';
+  }
 }

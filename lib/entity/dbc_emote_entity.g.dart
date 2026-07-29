@@ -114,4 +114,25 @@ final class BriefDbcEmoteEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcEmoteEntity &&
+            id == other.id &&
+            slashCommand == other.slashCommand &&
+            animId == other.animId;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, slashCommand, animId]);
+
+  @override
+  String toString() {
+    return 'BriefDbcEmoteEntity('
+        'id: $id, '
+        'slashCommand: $slashCommand, '
+        'animId: $animId'
+        ')';
+  }
 }

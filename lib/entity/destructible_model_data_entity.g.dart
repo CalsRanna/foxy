@@ -224,4 +224,27 @@ final class BriefDestructibleModelDataEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDestructibleModelDataEntity &&
+            id == other.id &&
+            state1Wmo == other.state1Wmo &&
+            state2Wmo == other.state2Wmo &&
+            state3Wmo == other.state3Wmo;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, state1Wmo, state2Wmo, state3Wmo]);
+
+  @override
+  String toString() {
+    return 'BriefDestructibleModelDataEntity('
+        'id: $id, '
+        'state1Wmo: $state1Wmo, '
+        'state2Wmo: $state2Wmo, '
+        'state3Wmo: $state3Wmo'
+        ')';
+  }
 }

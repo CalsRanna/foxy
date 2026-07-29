@@ -4,6 +4,7 @@ part of 'scaling_stat_distribution_repository.dart';
 
 mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
   Future<void> destroyScalingStatDistribution(int key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('foxy.dbc_scaling_stat_distribution'),
       key,
@@ -31,7 +32,7 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
       throw StateError('主键必须在新建时显式分配');
     }
     await _beforeStore(scalingStatDistribution);
-    final json = _prepareWriteJson(scalingStatDistribution.toJson());
+    final json = prepareWriteJson(scalingStatDistribution.toJson());
     try {
       await laconic.table('foxy.dbc_scaling_stat_distribution').insert([json]);
     } catch (error) {
@@ -47,22 +48,25 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     ScalingStatDistributionEntity scalingStatDistribution,
   ) async {
     await _beforeUpdate(originalKey, scalingStatDistribution);
-    final json = _prepareWriteJson(scalingStatDistribution.toJson());
+    final json = prepareWriteJson(scalingStatDistribution.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('foxy.dbc_scaling_stat_distribution'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(int key) async {}
 
   Future<void> _beforeStore(
     ScalingStatDistributionEntity scalingStatDistribution,
@@ -73,18 +77,8 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     ScalingStatDistributionEntity scalingStatDistribution,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
+    return builder.where('`ID`', key);
   }
 }
 

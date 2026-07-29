@@ -143,4 +143,28 @@ final class BriefSpellLinkedSpellEntity {
       type: type,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellLinkedSpellEntity &&
+            spellTrigger == other.spellTrigger &&
+            spellEffect == other.spellEffect &&
+            type == other.type &&
+            comment == other.comment;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([spellTrigger, spellEffect, type, comment]);
+
+  @override
+  String toString() {
+    return 'BriefSpellLinkedSpellEntity('
+        'spellTrigger: $spellTrigger, '
+        'spellEffect: $spellEffect, '
+        'type: $type, '
+        'comment: $comment'
+        ')';
+  }
 }

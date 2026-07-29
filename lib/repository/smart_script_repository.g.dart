@@ -4,6 +4,7 @@ part of 'smart_script_repository.dart';
 
 mixin _SmartScriptRepositoryMixin on RepositoryMixin {
   Future<void> destroySmartScript(SmartScriptKey key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('smart_scripts'),
       key,
@@ -24,7 +25,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
 
   Future<void> storeSmartScript(SmartScriptEntity smartScript) async {
     await _beforeStore(smartScript);
-    final json = _prepareWriteJson(smartScript.toJson());
+    final json = prepareWriteJson(smartScript.toJson());
     try {
       await laconic.table('smart_scripts').insert([json]);
     } catch (error) {
@@ -40,22 +41,25 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     SmartScriptEntity smartScript,
   ) async {
     await _beforeUpdate(originalKey, smartScript);
-    final json = _prepareWriteJson(smartScript.toJson());
+    final json = prepareWriteJson(smartScript.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('smart_scripts'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(SmartScriptKey key) async {}
 
   Future<void> _beforeStore(SmartScriptEntity smartScript) async {}
 
@@ -64,22 +68,12 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     SmartScriptEntity smartScript,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, SmartScriptKey key) {
     var query = builder;
-    query = query.where('entryorguid', key.entryOrGuid);
-    query = query.where('source_type', key.sourceType);
-    query = query.where('id', key.id);
-    query = query.where('link', key.link);
+    query = query.where('`entryorguid`', key.entryOrGuid);
+    query = query.where('`source_type`', key.sourceType);
+    query = query.where('`id`', key.id);
+    query = query.where('`link`', key.link);
     return query;
   }
 }

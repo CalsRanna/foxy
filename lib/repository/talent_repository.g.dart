@@ -4,6 +4,7 @@ part of 'talent_repository.dart';
 
 mixin _TalentRepositoryMixin on RepositoryMixin {
   Future<void> destroyTalent(int key) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('foxy.dbc_talent'),
       key,
@@ -27,7 +28,7 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
       throw StateError('主键必须在新建时显式分配');
     }
     await _beforeStore(talent);
-    final json = _prepareWriteJson(talent.toJson());
+    final json = prepareWriteJson(talent.toJson());
     try {
       await laconic.table('foxy.dbc_talent').insert([json]);
     } catch (error) {
@@ -40,39 +41,32 @@ mixin _TalentRepositoryMixin on RepositoryMixin {
 
   Future<void> updateTalent(int originalKey, TalentEntity talent) async {
     await _beforeUpdate(originalKey, talent);
-    final json = _prepareWriteJson(talent.toJson());
+    final json = prepareWriteJson(talent.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('foxy.dbc_talent'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(int key) async {}
 
   Future<void> _beforeStore(TalentEntity talent) async {}
 
   Future<void> _beforeUpdate(int originalKey, TalentEntity talent) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
-    return builder.where('ID', key);
+    return builder.where('`ID`', key);
   }
 }
 

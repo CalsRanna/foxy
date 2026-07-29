@@ -110,4 +110,38 @@ final class BriefGossipMenuEntity {
   GossipMenuKey get key {
     return GossipMenuKey(menuId: menuId, textId: textId);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGossipMenuEntity &&
+            menuId == other.menuId &&
+            textId == other.textId &&
+            text00 == other.text00 &&
+            text01 == other.text01 &&
+            textLocale00 == other.textLocale00 &&
+            textLocale01 == other.textLocale01;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    menuId,
+    textId,
+    text00,
+    text01,
+    textLocale00,
+    textLocale01,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefGossipMenuEntity('
+        'menuId: $menuId, '
+        'textId: $textId, '
+        'text00: $text00, '
+        'text01: $text01, '
+        'textLocale00: $textLocale00, '
+        'textLocale01: $textLocale01'
+        ')';
+  }
 }

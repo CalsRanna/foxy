@@ -268,4 +268,25 @@ final class BriefItemRandomSuffixEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemRandomSuffixEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            internalName == other.internalName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN, internalName]);
+
+  @override
+  String toString() {
+    return 'BriefItemRandomSuffixEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'internalName: $internalName'
+        ')';
+  }
 }

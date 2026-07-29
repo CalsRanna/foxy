@@ -239,4 +239,30 @@ final class BriefTalentTabEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTalentTabEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            classMask == other.classMask &&
+            categoryEnumId == other.categoryEnumId &&
+            orderIndex == other.orderIndex;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, nameLangZhCN, classMask, categoryEnumId, orderIndex]);
+
+  @override
+  String toString() {
+    return 'BriefTalentTabEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'classMask: $classMask, '
+        'categoryEnumId: $categoryEnumId, '
+        'orderIndex: $orderIndex'
+        ')';
+  }
 }

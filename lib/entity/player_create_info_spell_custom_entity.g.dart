@@ -147,4 +147,27 @@ final class BriefPlayerCreateInfoSpellCustomEntity {
       spell: spell,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPlayerCreateInfoSpellCustomEntity &&
+            raceMask == other.raceMask &&
+            classMask == other.classMask &&
+            spell == other.spell &&
+            note == other.note;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([raceMask, classMask, spell, note]);
+
+  @override
+  String toString() {
+    return 'BriefPlayerCreateInfoSpellCustomEntity('
+        'raceMask: $raceMask, '
+        'classMask: $classMask, '
+        'spell: $spell, '
+        'note: $note'
+        ')';
+  }
 }

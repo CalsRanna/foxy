@@ -300,4 +300,53 @@ final class BriefConditionEntity {
       conditionValue3: conditionValue3,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefConditionEntity &&
+            sourceTypeOrReferenceId == other.sourceTypeOrReferenceId &&
+            sourceGroup == other.sourceGroup &&
+            sourceEntry == other.sourceEntry &&
+            sourceId == other.sourceId &&
+            elseGroup == other.elseGroup &&
+            conditionTypeOrReference == other.conditionTypeOrReference &&
+            conditionTarget == other.conditionTarget &&
+            conditionValue1 == other.conditionValue1 &&
+            conditionValue2 == other.conditionValue2 &&
+            conditionValue3 == other.conditionValue3 &&
+            comment == other.comment;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    sourceTypeOrReferenceId,
+    sourceGroup,
+    sourceEntry,
+    sourceId,
+    elseGroup,
+    conditionTypeOrReference,
+    conditionTarget,
+    conditionValue1,
+    conditionValue2,
+    conditionValue3,
+    comment,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefConditionEntity('
+        'sourceTypeOrReferenceId: $sourceTypeOrReferenceId, '
+        'sourceGroup: $sourceGroup, '
+        'sourceEntry: $sourceEntry, '
+        'sourceId: $sourceId, '
+        'elseGroup: $elseGroup, '
+        'conditionTypeOrReference: $conditionTypeOrReference, '
+        'conditionTarget: $conditionTarget, '
+        'conditionValue1: $conditionValue1, '
+        'conditionValue2: $conditionValue2, '
+        'conditionValue3: $conditionValue3, '
+        'comment: $comment'
+        ')';
+  }
 }

@@ -200,4 +200,62 @@ final class BriefSpellLootTemplateEntity {
   SpellLootTemplateKey get key {
     return SpellLootTemplateKey(entry: entry, item: item);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellLootTemplateEntity &&
+            entry == other.entry &&
+            item == other.item &&
+            reference == other.reference &&
+            chance == other.chance &&
+            questRequired == other.questRequired &&
+            lootMode == other.lootMode &&
+            groupId == other.groupId &&
+            minCount == other.minCount &&
+            maxCount == other.maxCount &&
+            comment == other.comment &&
+            itemName == other.itemName &&
+            localeName == other.localeName &&
+            quality == other.quality &&
+            icon == other.icon;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    item,
+    reference,
+    chance,
+    questRequired,
+    lootMode,
+    groupId,
+    minCount,
+    maxCount,
+    comment,
+    itemName,
+    localeName,
+    quality,
+    icon,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefSpellLootTemplateEntity('
+        'entry: $entry, '
+        'item: $item, '
+        'reference: $reference, '
+        'chance: $chance, '
+        'questRequired: $questRequired, '
+        'lootMode: $lootMode, '
+        'groupId: $groupId, '
+        'minCount: $minCount, '
+        'maxCount: $maxCount, '
+        'comment: $comment, '
+        'itemName: $itemName, '
+        'localeName: $localeName, '
+        'quality: $quality, '
+        'icon: $icon'
+        ')';
+  }
 }

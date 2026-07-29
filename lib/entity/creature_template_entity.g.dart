@@ -464,4 +464,41 @@ final class BriefCreatureTemplateEntity {
   }
 
   int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateEntity &&
+            entry == other.entry &&
+            maxLevel == other.maxLevel &&
+            minLevel == other.minLevel &&
+            name == other.name &&
+            subName == other.subName &&
+            localeName == other.localeName &&
+            localeSubName == other.localeSubName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    maxLevel,
+    minLevel,
+    name,
+    subName,
+    localeName,
+    localeSubName,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateEntity('
+        'entry: $entry, '
+        'maxLevel: $maxLevel, '
+        'minLevel: $minLevel, '
+        'name: $name, '
+        'subName: $subName, '
+        'localeName: $localeName, '
+        'localeSubName: $localeSubName'
+        ')';
+  }
 }

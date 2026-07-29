@@ -215,4 +215,23 @@ final class BriefNpcTextLocaleEntity {
   NpcTextLocaleKey get key {
     return NpcTextLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefNpcTextLocaleEntity &&
+            id == other.id &&
+            locale == other.locale;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale]);
+
+  @override
+  String toString() {
+    return 'BriefNpcTextLocaleEntity('
+        'id: $id, '
+        'locale: $locale'
+        ')';
+  }
 }

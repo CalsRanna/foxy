@@ -129,4 +129,30 @@ final class BriefDbcItemEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcItemEntity &&
+            id == other.id &&
+            classId == other.classId &&
+            subclassId == other.subclassId &&
+            displayInfoId == other.displayInfoId &&
+            inventoryType == other.inventoryType;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, classId, subclassId, displayInfoId, inventoryType]);
+
+  @override
+  String toString() {
+    return 'BriefDbcItemEntity('
+        'id: $id, '
+        'classId: $classId, '
+        'subclassId: $subclassId, '
+        'displayInfoId: $displayInfoId, '
+        'inventoryType: $inventoryType'
+        ')';
+  }
 }

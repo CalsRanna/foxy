@@ -6,6 +6,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
   Future<void> destroyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
+    await _beforeDestroy(key);
     final deletedRows = await _whereKey(
       laconic.table('playercreateinfo_spell_custom'),
       key,
@@ -30,7 +31,7 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
   ) async {
     await _beforeStore(playerCreateInfoSpellCustom);
-    final json = _prepareWriteJson(playerCreateInfoSpellCustom.toJson());
+    final json = prepareWriteJson(playerCreateInfoSpellCustom.toJson());
     try {
       await laconic.table('playercreateinfo_spell_custom').insert([json]);
     } catch (error) {
@@ -46,22 +47,25 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
   ) async {
     await _beforeUpdate(originalKey, playerCreateInfoSpellCustom);
-    final json = _prepareWriteJson(playerCreateInfoSpellCustom.toJson());
+    final json = prepareWriteJson(playerCreateInfoSpellCustom.toJson());
+    final int matchedRows;
     try {
-      final matchedRows = await _whereKey(
+      matchedRows = await _whereKey(
         laconic.table('playercreateinfo_spell_custom'),
         originalKey,
       ).update(json);
-      if (matchedRows == 0) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
-      }
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
         throw StateError('修改后的主键已存在');
       }
       rethrow;
     }
+    if (matchedRows == 0) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
   }
+
+  Future<void> _beforeDestroy(PlayerCreateInfoSpellCustomKey key) async {}
 
   Future<void> _beforeStore(
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
@@ -72,24 +76,14 @@ mixin _PlayerCreateInfoSpellCustomRepositoryMixin on RepositoryMixin {
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
   ) async {}
 
-  Map<String, dynamic> _prepareWriteJson(Map<String, dynamic> json) {
-    return {
-      for (final entry in json.entries)
-        if (const {'index', 'rank'}.contains(entry.key.toLowerCase()))
-          '`${entry.key}`': entry.value
-        else
-          entry.key: entry.value,
-    };
-  }
-
   QueryBuilder _whereKey(
     QueryBuilder builder,
     PlayerCreateInfoSpellCustomKey key,
   ) {
     var query = builder;
-    query = query.where('racemask', key.raceMask);
-    query = query.where('classmask', key.classMask);
-    query = query.where('Spell', key.spell);
+    query = query.where('`racemask`', key.raceMask);
+    query = query.where('`classmask`', key.classMask);
+    query = query.where('`Spell`', key.spell);
     return query;
   }
 }

@@ -451,4 +451,25 @@ final class BriefHolidayEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefHolidayEntity &&
+            id == other.id &&
+            holidayNameId == other.holidayNameId &&
+            textureFileName == other.textureFileName;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, holidayNameId, textureFileName]);
+
+  @override
+  String toString() {
+    return 'BriefHolidayEntity('
+        'id: $id, '
+        'holidayNameId: $holidayNameId, '
+        'textureFileName: $textureFileName'
+        ')';
+  }
 }

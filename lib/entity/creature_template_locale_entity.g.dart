@@ -142,4 +142,27 @@ final class BriefCreatureTemplateLocaleEntity {
   CreatureTemplateLocaleKey get key {
     return CreatureTemplateLocaleKey(entry: entry, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateLocaleEntity &&
+            entry == other.entry &&
+            locale == other.locale &&
+            name == other.name &&
+            title == other.title;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, locale, name, title]);
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateLocaleEntity('
+        'entry: $entry, '
+        'locale: $locale, '
+        'name: $name, '
+        'title: $title'
+        ')';
+  }
 }

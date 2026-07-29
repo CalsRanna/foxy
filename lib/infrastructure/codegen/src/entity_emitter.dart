@@ -1,3 +1,4 @@
+import 'dart_literal.dart';
 import 'entity_model.dart';
 
 final class EntityEmitter {
@@ -52,7 +53,7 @@ final class EntityEmitter {
       ..writeln('    return {');
     for (final field in model.fields) {
       buffer.writeln(
-        '      ${_literal(field.columnName)}: '
+        '      ${dartLiteral(field.columnName)}: '
         '${_fullToJson(field, receiver: 'self')},',
       );
     }
@@ -189,7 +190,7 @@ final class EntityEmitter {
         field.nullable && field.constructorDefaultValue == null
             ? '    this.${field.dartName},'
             : '    this.${field.dartName} = '
-                  '${_literal(field.constructorDefaultValue, asType: field.nonNullableType)},',
+                  '${dartLiteral(field.constructorDefaultValue, asType: field.nonNullableType)},',
       );
     }
     buffer
@@ -221,22 +222,69 @@ final class EntityEmitter {
         ..writeln('    );')
         ..writeln('  }');
     }
+    _emitValueSemantics(buffer, model.briefClassName, fields);
     buffer.writeln('}');
     return buffer.toString();
   }
 
+  /// 为 Brief 这类无继承的 `final class` 生成 `==` / `hashCode` / `toString`。
+  ///
+  /// Full Entity 的版本要额外做 `this as` 转型和 `runtimeType` 比较，
+  /// 所以不复用这里的实现。
+  void _emitValueSemantics(
+    StringBuffer buffer,
+    String className,
+    List<EntityFieldModel> fields,
+  ) {
+    buffer
+      ..writeln()
+      ..writeln('  @override')
+      ..writeln('  bool operator ==(Object other) {')
+      ..writeln('    return identical(this, other) ||')
+      ..writeln('        other is $className &&');
+    for (var index = 0; index < fields.length; index++) {
+      final field = fields[index];
+      final suffix = index == fields.length - 1 ? ';' : ' &&';
+      buffer.writeln(
+        '            ${field.dartName} == other.${field.dartName}$suffix',
+      );
+    }
+    buffer
+      ..writeln('  }')
+      ..writeln()
+      ..writeln('  @override')
+      ..writeln('  int get hashCode => Object.hashAll([');
+    for (final field in fields) {
+      buffer.writeln('    ${field.dartName},');
+    }
+    buffer
+      ..writeln('  ]);')
+      ..writeln()
+      ..writeln('  @override')
+      ..writeln('  String toString() {')
+      ..writeln("    return '$className('");
+    for (var index = 0; index < fields.length; index++) {
+      final field = fields[index];
+      final suffix = index == fields.length - 1 ? "'" : ", '";
+      buffer.writeln("        '${field.dartName}: \$${field.dartName}$suffix");
+    }
+    buffer
+      ..writeln("        ')';")
+      ..writeln('  }');
+  }
+
   String _fullFromJson(EntityFieldModel field) {
-    final key = _literal(field.columnName);
+    final key = dartLiteral(field.columnName);
     final fallback = field.constructorDefaultValue == null
         ? ''
-        : ' ?? ${_literal(field.constructorDefaultValue, asType: field.nonNullableType)}';
+        : ' ?? ${dartLiteral(field.constructorDefaultValue, asType: field.nonNullableType)}';
     return switch (field.nonNullableType) {
       'int' => "(json[$key] as num?)?.toInt()$fallback",
       'double' => "(json[$key] as num?)?.toDouble()$fallback",
       'String' => "json[$key]?.toString()$fallback",
       'bool' =>
         "json[$key] == null ? "
-            "${_literal(field.constructorDefaultValue, asType: 'bool')} : "
+            "${dartLiteral(field.constructorDefaultValue, asType: 'bool')} : "
             "(json[$key] as num).toInt() == 1",
       _ => throw StateError('Unsupported field type ${field.dartType}'),
     };
@@ -253,31 +301,4 @@ final class EntityEmitter {
 
   String _copyParameterType(String type) =>
       type.endsWith('?') ? type : '$type?';
-
-  String _literal(Object? value, {String? asType}) {
-    if (value == null) return 'null';
-    if (value is String) return _stringLiteral(value);
-    if (value is bool || value is int) {
-      if (asType == 'double' && value is int) return '$value.0';
-      return '$value';
-    }
-    if (value is double) {
-      if (value.isFinite) {
-        final text = value.toString();
-        return text.contains('.') ? text : '$text.0';
-      }
-    }
-    throw StateError('Unsupported literal $value (${value.runtimeType})');
-  }
-
-  String _stringLiteral(String value) {
-    final escaped = value
-        .replaceAll(r'\', r'\\')
-        .replaceAll("'", r"\'")
-        .replaceAll(r'$', r'\$')
-        .replaceAll('\n', r'\n')
-        .replaceAll('\r', r'\r')
-        .replaceAll('\t', r'\t');
-    return "'$escaped'";
-  }
 }

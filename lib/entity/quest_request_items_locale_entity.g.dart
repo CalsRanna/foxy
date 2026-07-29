@@ -129,4 +129,25 @@ final class BriefQuestRequestItemsLocaleEntity {
   QuestRequestItemsLocaleKey get key {
     return QuestRequestItemsLocaleKey(id: id, locale: locale);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestRequestItemsLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            completionText == other.completionText;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, completionText]);
+
+  @override
+  String toString() {
+    return 'BriefQuestRequestItemsLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'completionText: $completionText'
+        ')';
+  }
 }

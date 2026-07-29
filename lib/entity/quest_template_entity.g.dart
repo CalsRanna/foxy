@@ -851,4 +851,44 @@ final class BriefQuestTemplateEntity {
   }
 
   int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateEntity &&
+            id == other.id &&
+            questType == other.questType &&
+            questLevel == other.questLevel &&
+            minLevel == other.minLevel &&
+            logTitle == other.logTitle &&
+            questDescription == other.questDescription &&
+            localeTitle == other.localeTitle &&
+            localeDetails == other.localeDetails;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    questType,
+    questLevel,
+    minLevel,
+    logTitle,
+    questDescription,
+    localeTitle,
+    localeDetails,
+  ]);
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateEntity('
+        'id: $id, '
+        'questType: $questType, '
+        'questLevel: $questLevel, '
+        'minLevel: $minLevel, '
+        'logTitle: $logTitle, '
+        'questDescription: $questDescription, '
+        'localeTitle: $localeTitle, '
+        'localeDetails: $localeDetails'
+        ')';
+  }
 }
