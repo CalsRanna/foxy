@@ -11,12 +11,14 @@ const _kDialogWidth = 640.0;
 
 // ─── 公共壳 ───────────────────────────────────────────────────────────────
 
-class _DialogShell extends StatelessWidget {
+/// 设置相关对话框的公共壳（标题 + 内容 + 操作区）。
+class SettingDialogShell extends StatelessWidget {
   final Widget title;
   final Widget child;
   final List<Widget> actions;
 
-  const _DialogShell({
+  const SettingDialogShell({
+    super.key,
     required this.title,
     required this.child,
     this.actions = const [],
@@ -34,7 +36,8 @@ class _DialogShell extends StatelessWidget {
   }
 }
 
-Widget _titleRow(IconData icon, String text, {Color? iconColor}) {
+/// 对话框标题行（图标 + 文本）。
+Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
   return Row(
     spacing: 10,
     children: [
@@ -44,12 +47,14 @@ Widget _titleRow(IconData icon, String text, {Color? iconColor}) {
   );
 }
 
-Widget _mutedHint(BuildContext context, String text) {
+/// 弱化提示文本。
+Widget settingDialogMutedHint(BuildContext context, String text) {
   final theme = ShadTheme.of(context);
   return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
 }
 
-Widget _banner(
+/// 结果横幅（成功/错误/警告，带颜色与图标）。
+Widget settingDialogBanner(
   BuildContext context, {
   required String text,
   required Color color,
@@ -79,7 +84,8 @@ Widget _banner(
   );
 }
 
-Widget _pathField({
+/// 路径输入行（输入框 + 浏览按钮）。
+Widget settingDialogPathField({
   required StringFieldController controller,
   required String placeholder,
   required VoidCallback onBrowse,
@@ -116,7 +122,8 @@ Widget _pathField({
   );
 }
 
-Widget _progressPanel(
+/// 进度面板（比例条或加载指示 + 标签 + 详情）。
+Widget settingDialogProgressPanel(
   BuildContext context, {
   required double? ratio,
   required String label,
@@ -179,7 +186,10 @@ class DbcImportDialog extends StatefulWidget {
 class _DbcImportDialogState extends State<DbcImportDialog> {
   DbcImportWorkflowViewModel get _vm => widget.vm;
   final _pathController = StringFieldController();
-  bool _ready = false;
+
+  /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
+  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  final _ready = signal(false);
 
   @override
   void initState() {
@@ -196,7 +206,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     if (!mounted) return;
     final path = _vm.path.value;
     if (path != null) _pathController.init(path);
-    setState(() => _ready = true);
+    _ready.value = true;
   }
 
   @override
@@ -210,7 +220,6 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     if (dir == null || !mounted) return;
     _pathController.init(dir);
     _vm.setPath(dir);
-    setState(() {});
   }
 
   Future<void> _start() async {
@@ -227,9 +236,9 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
     return SizedBox(
       width: _kDialogWidth,
       child: Watch((_) {
-        if (!_ready) {
-          return _DialogShell(
-            title: _titleRow(LucideIcons.fileInput, '导入 DBC'),
+        if (!_ready.value) {
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
             child: const SizedBox(
               height: 120,
               child: Center(
@@ -252,8 +261,8 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
         final theme = ShadTheme.of(context);
 
         if (success) {
-          return _DialogShell(
-            title: _titleRow(
+          return SettingDialogShell(
+            title: settingDialogTitleRow(
               LucideIcons.circleCheck,
               '导入完成',
               iconColor: theme.colorScheme.primary,
@@ -264,7 +273,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                 child: const Text('完成'),
               ),
             ],
-            child: _banner(
+            child: settingDialogBanner(
               context,
               text:
                   '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
@@ -276,9 +285,9 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
         }
 
         if (importing) {
-          return _DialogShell(
-            title: _titleRow(LucideIcons.fileInput, '正在导入 DBC'),
-            child: _progressPanel(
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileInput, '正在导入 DBC'),
+            child: settingDialogProgressPanel(
               context,
               ratio: _vm.progress.value,
               label: _vm.progressLabel.value,
@@ -298,8 +307,8 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
           );
         }
 
-        return _DialogShell(
-          title: _titleRow(LucideIcons.fileInput, '导入 DBC'),
+        return SettingDialogShell(
+          title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
@@ -322,7 +331,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 14,
             children: [
-              _mutedHint(
+              settingDialogMutedHint(
                 context,
                 '选择包含 Spell.dbc、Faction.dbc 等文件的客户端 DBC 目录。'
                 '导入以 DBC 为准：将覆盖数据库中对应表的数据；若需保留库内数据请先自行备份。',
@@ -333,18 +342,17 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              _pathField(
+              settingDialogPathField(
                 controller: _pathController,
                 placeholder: '选择或输入 DBC 目录路径',
                 onBrowse: _browse,
                 onChanged: (value) {
                   _vm.setPath(value);
-                  setState(() {});
                 },
                 onSubmitted: (_) => _start(),
               ),
               if (error != null)
-                _banner(
+                settingDialogBanner(
                   context,
                   text: error,
                   color: theme.colorScheme.destructive,
@@ -372,15 +380,17 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   DbcExportWorkflowViewModel get _vm => widget.vm;
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
-  String? _outputDir;
-  bool _loaded = false;
-  String _query = '';
+  /// 以下状态用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
+  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  final _outputDir = signal<String?>(null);
+  final _loaded = signal(false);
+  final _query = signal('');
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(() {
-      setState(() => _query = _searchController.collect().trim().toLowerCase());
+      _query.value = _searchController.collect().trim().toLowerCase();
     });
     _bootstrap();
   }
@@ -395,9 +405,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
     final defaultDir = _vm.outputDirectory.value;
     if (defaultDir != null) {
       _dirController.init(defaultDir);
-      _outputDir = defaultDir;
+      _outputDir.value = defaultDir;
     }
-    if (mounted) setState(() => _loaded = true);
+    if (mounted) _loaded.value = true;
   }
 
   @override
@@ -408,12 +418,13 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   }
 
   List<DbcExportItem> _filterItems(List<DbcExportItem> items) {
-    if (_query.isEmpty) return items;
+    final query = _query.value;
+    if (query.isEmpty) return items;
     return items
         .where(
           (item) =>
-              item.dbcFileName.toLowerCase().contains(_query) ||
-              item.tableName.toLowerCase().contains(_query),
+              item.dbcFileName.toLowerCase().contains(query) ||
+              item.tableName.toLowerCase().contains(query),
         )
         .toList();
   }
@@ -421,11 +432,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   Future<void> _browse() async {
     final dir = await getDirectoryPath();
     if (dir == null || !mounted) return;
-    setState(() {
-      _dirController.init(dir);
-      _outputDir = dir;
-      _vm.setOutputDirectory(dir);
-    });
+    _dirController.init(dir);
+    _outputDir.value = dir;
+    _vm.setOutputDirectory(dir);
   }
 
   @override
@@ -444,9 +453,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         final success = workflowStatus == WorkflowStatus.succeeded;
         final theme = ShadTheme.of(context);
 
-        if (!_loaded && !exporting) {
-          return _DialogShell(
-            title: _titleRow(LucideIcons.fileOutput, '导出 DBC'),
+        if (!_loaded.value && !exporting) {
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileOutput, '导出 DBC'),
             child: const SizedBox(
               height: 140,
               child: Center(
@@ -467,8 +476,8 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         }
 
         if (success) {
-          return _DialogShell(
-            title: _titleRow(
+          return SettingDialogShell(
+            title: settingDialogTitleRow(
               LucideIcons.circleCheck,
               '导出完成',
               iconColor: theme.colorScheme.primary,
@@ -484,7 +493,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                _banner(
+                settingDialogBanner(
                   context,
                   text:
                       '成功导出 ${_vm.result.value?.completed ?? 0} 个文件'
@@ -492,16 +501,17 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   color: theme.colorScheme.primary,
                   icon: LucideIcons.circleCheck,
                 ),
-                if (_outputDir != null) _mutedHint(context, '输出目录：$_outputDir'),
+                if (_outputDir.value != null)
+                  settingDialogMutedHint(context, '输出目录：${_outputDir.value}'),
               ],
             ),
           );
         }
 
         if (exporting) {
-          return _DialogShell(
-            title: _titleRow(LucideIcons.fileOutput, '正在导出 DBC'),
-            child: _progressPanel(
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileOutput, '正在导出 DBC'),
+            child: settingDialogProgressPanel(
               context,
               ratio: _vm.progress.value,
               label: _vm.progressLabel.value,
@@ -522,18 +532,18 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                 .every((item) => item.selected);
         final failureCount = allItems.where((item) => item.countFailed).length;
 
-        return _DialogShell(
-          title: _titleRow(LucideIcons.fileOutput, '导出 DBC'),
+        return SettingDialogShell(
+          title: settingDialogTitleRow(LucideIcons.fileOutput, '导出 DBC'),
           actions: [
             ShadButton.outline(
               onPressed: () => Navigator.of(context).maybePop(),
               child: const Text('关闭'),
             ),
             ShadButton(
-              onPressed: selectedCount == 0 || _outputDir == null
+              onPressed: selectedCount == 0 || _outputDir.value == null
                   ? null
                   : () async {
-                      _vm.setOutputDirectory(_outputDir!);
+                      _vm.setOutputDirectory(_outputDir.value!);
                       try {
                         await _vm.start();
                       } catch (_) {
@@ -552,22 +562,20 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              _mutedHint(context, '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。'),
+              settingDialogMutedHint(context, '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。'),
               Text(
                 '输出目录',
                 style: theme.textTheme.small.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              _pathField(
+              settingDialogPathField(
                 controller: _dirController,
                 placeholder: '选择导出目录',
                 onBrowse: _browse,
                 onChanged: (value) {
                   final trimmed = value.trim();
-                  setState(() {
-                    _outputDir = trimmed.isEmpty ? null : trimmed;
-                  });
+                  _outputDir.value = trimmed.isEmpty ? null : trimmed;
                   _vm.setOutputDirectory(value);
                 },
               ),
@@ -576,7 +584,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 8,
                   children: [
-                    _banner(
+                    settingDialogBanner(
                       context,
                       text: error,
                       color: theme.colorScheme.destructive,
@@ -586,10 +594,10 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                       alignment: Alignment.centerRight,
                       child: ShadButton.outline(
                         size: ShadButtonSize.sm,
-                        onPressed: _outputDir == null
+                        onPressed: _outputDir.value == null
                             ? null
                             : () {
-                                _vm.setOutputDirectory(_outputDir!);
+                                _vm.setOutputDirectory(_outputDir.value!);
                                 _vm.retry();
                               },
                         child: const Row(
@@ -605,7 +613,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                   ],
                 ),
               if (failureCount > 0)
-                _banner(
+                settingDialogBanner(
                   context,
                   text: '$failureCount 张表统计失败，已禁用勾选。将鼠标悬停在表名上可查看原因。',
                   color: theme.colorScheme.destructive,
@@ -684,7 +692,9 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                       child: items.isEmpty
                           ? Center(
                               child: Text(
-                                _query.isEmpty ? '没有可导出的表' : '没有匹配的表',
+                                _query.value.isEmpty
+                                    ? '没有可导出的表'
+                                    : '没有匹配的表',
                                 style: theme.textTheme.muted,
                               ),
                             )

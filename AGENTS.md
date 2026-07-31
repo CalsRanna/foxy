@@ -58,7 +58,7 @@ Do not globally format the repository as incidental cleanup. Format only changed
 - `lib/event/` — small synchronous application event bus.
 - `test/` — unit/widget tests, database-editing contract tests, and codegen behavior tests.
 - `lib/lint/` — custom_lint plugin and rules for codebase-wide constraints.
-- `asset/icon/` — thousands of game icons deliberately kept out of the Flutter asset bundle.
+- `lib/infrastructure/game_asset/` — BLP decoder, MPQ icon extractor, and icon cache (icons are extracted from the player's WoW client, never bundled).
 - `linux/`, `macos/`, `windows/` — desktop runners and packaging configuration.
 
 `build/`, `.dart_tool/`, Flutter plugin metadata, IDE state, logs, and `config.yaml` are generated/local artifacts; do not edit or commit them.
@@ -195,7 +195,7 @@ DBC support targets the 3.3.5.12340/3.3.5a physical layouts asserted in tests.
 - Imports currently target the hard-coded `foxy` schema. Do not run destructive integration work against a real/default `foxy` schema from tests.
 - DBC filename matching is case-insensitive.
 
-Game icons in `asset/icon/` are intentionally loaded from the filesystem beside the executable (`data/icon/`) by `FoxyGameAssetIcon`, not through `Image.asset`. Do not add this large directory to `pubspec.yaml`. The current explicit copy rule is in `windows/runner/CMakeLists.txt`; if changing other platform packaging, verify equivalent `data/icon` placement rather than bundling all icons.
+Game icons are extracted from the player's WoW client by the user via Settings → 游戏图标 (extract from `Data/<locale>/*.MPQ` as BLP), cached beside the executable in `data/icon/`, and rendered by `FoxyGameAssetIcon` through `GameIconCache` (BLP2 DXT1/3/5 decoded in memory). No game icons are bundled — do not add an icon directory to `pubspec.yaml` assets. The extraction pipeline lives in `lib/infrastructure/game_asset/` and runs in a background isolate (`game_icon_extract_worker.dart`).
 
 ## Lint and code generation
 

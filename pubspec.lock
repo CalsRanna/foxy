@@ -1342,10 +1342,10 @@ packages:
     dependency: "direct main"
     description:
       name: warcrafty
-      sha256: "62c0c9c52fc27ce3526a99469e8814496d7d1d97e2195fa728601fb5452ce4d2"
+      sha256: f0e15f4f2bb3c0624adb703e87c46381f3abd1f4ea354f41ffff5b9edca1f123
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "2.1.2"
   watcher:
     dependency: transitive
     description:

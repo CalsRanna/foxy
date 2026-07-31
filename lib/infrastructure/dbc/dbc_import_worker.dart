@@ -426,7 +426,10 @@ String _readAndEscape(dynamic record, int index, String type) {
   return switch (type) {
     'string' => _escapeString(record.getString(index) as String),
     'float' => record.getFloat(index).toString(),
-    'int32' || 'id' => record.getInt(index).toString(),
+    'int32' || 'uint32' || 'id' => record.getInt(index).toString(),
+    'int64' || 'uint64' => record.getInt64(index).toString(),
+    'int16' || 'uint16' => record.getInt16(index).toString(),
+    'int8' => record.getInt8(index).toString(),
     'uint8' => record.getUint8(index).toString(),
     'boolean' => record.getInt(index) != 0 ? '1' : '0',
     'sort' => 'NULL',
@@ -456,8 +459,10 @@ String _escapeString(String value) {
 String _sqlType(FieldType type) {
   return switch (type) {
     FieldType.id => 'INT NOT NULL PRIMARY KEY',
-    FieldType.int32 => 'INT',
-    FieldType.uint8 => 'TINYINT UNSIGNED',
+    FieldType.int32 || FieldType.uint32 => 'INT',
+    FieldType.int64 || FieldType.uint64 => 'BIGINT',
+    FieldType.int16 || FieldType.uint16 => 'SMALLINT',
+    FieldType.int8 || FieldType.uint8 => 'TINYINT UNSIGNED',
     FieldType.float => 'FLOAT',
     FieldType.string => 'TEXT',
     FieldType.boolean => 'TINYINT(1)',

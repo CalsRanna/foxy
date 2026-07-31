@@ -1,17 +1,18 @@
-import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as p;
+import 'package:foxy/infrastructure/game_asset/game_icon_cache.dart';
+import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 游戏图标（物品/法术）统一渲染组件。
 ///
 /// 输入是 DBC 里的原始图标路径（如 `Interface\Icons\INV_Misc_Foo`），
-/// 统一规范化为文件系统路径并从 exe 同级的 `data/icon/` 目录加载。
+/// 规范化为小写纯文件名后从运行时当前目录的 `data/icon/<纯名>.blp` 加载。
 ///
-/// 图标由 CMake install 步骤从 `asset/icon/` 拷贝到输出目录，不在 Flutter
-/// asset bundle 中，以避免每次构建重建 150MB 的 asset bundle。
-class FoxyGameAssetIcon extends StatelessWidget {
+/// 图标由用户在设置页从客户端 MPQ 提取（BLP 原始格式），应用不内置图标；
+/// 未提取或客户端不存在的图标显示占位符。解码结果经 [GameIconCache] 缓存复用。
+class FoxyGameAssetIcon extends StatefulWidget {
   /// DBC 原始图标路径（反斜杠、大小写不敏感，可含 `interface/icons` 前缀）。
   final String rawPath;
 
@@ -20,36 +21,56 @@ class FoxyGameAssetIcon extends StatelessWidget {
 
   const FoxyGameAssetIcon({super.key, required this.rawPath, this.size = 40});
 
-  /// 图标目录路径（懒加载，基于 exe 所在目录）。
-  static final String _iconDir = () {
-    return p.join(p.dirname(Platform.resolvedExecutable), 'data', 'icon');
-  }();
+  @override
+  State<FoxyGameAssetIcon> createState() => _FoxyGameAssetIconState();
+}
 
-  /// 将 DBC 原始路径规范化为文件系统路径。
-  static String normalize(String rawPath) {
-    var icon = rawPath
-        .toLowerCase()
-        .replaceAll('\\', '/')
-        .replaceAll('interface/icons/', '');
-    if (!icon.endsWith('.png')) icon = '$icon.png';
-    return p.join(_iconDir, icon);
+class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
+  ui.Image? _image;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.rawPath != widget.rawPath) _load();
+  }
+
+  Future<void> _load() async {
+    final path = GameIconPaths.blpPath(
+      GameIconPaths.normalizeIconName(widget.rawPath),
+    );
+    final image = await GameIconCache.instance.load(path);
+    if (!mounted) return;
+    setState(() {
+      _image = image;
+      _loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cache = (size * MediaQuery.devicePixelRatioOf(context)).round();
-    return Image.file(
-      File(normalize(rawPath)),
-      height: size,
-      width: size,
-      fit: BoxFit.cover,
-      cacheWidth: cache,
-      cacheHeight: cache,
-      errorBuilder: (context, error, stackTrace) => Icon(
-        LucideIcons.image,
-        size: size * 0.6,
-        color: Theme.of(context).disabledColor,
-      ),
+    final image = _image;
+    if (image != null) {
+      return RawImage(
+        image: image,
+        height: widget.size,
+        width: widget.size,
+        fit: BoxFit.cover,
+      );
+    }
+    if (_loading) {
+      return SizedBox.square(dimension: widget.size);
+    }
+    return Icon(
+      LucideIcons.image,
+      size: widget.size * 0.6,
+      color: Theme.of(context).disabledColor,
     );
   }
 }

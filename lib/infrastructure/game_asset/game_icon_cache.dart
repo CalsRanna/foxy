@@ -1,0 +1,80 @@
+import 'dart:async';
+import 'dart:collection';
+import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'blp_decoder.dart';
+
+/// BLP 游戏图标的内存缓存：文件 → 解码 → `ui.Image` 复用。
+///
+/// 图标为 64×64，解码亚毫秒级；缓存避免列表滚动时同一图标反复解码。
+/// 采用 LRU（访问即置顶），超限时淘汰最久未用条目。
+class GameIconCache {
+  GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
+
+  static final GameIconCache instance = GameIconCache();
+
+  final int _maxEntries;
+
+  final LinkedHashMap<String, ui.Image> _images = LinkedHashMap();
+  final Map<String, Future<ui.Image?>> _pending = {};
+
+  /// 加载并解码 BLP 文件；文件缺失或解码失败返回 null。
+  Future<ui.Image?> load(String path) async {
+    final cached = _images.remove(path);
+    if (cached != null) {
+      _images[path] = cached; // 置顶
+      return cached;
+    }
+    final inFlight = _pending[path];
+    if (inFlight != null) return inFlight;
+
+    final future = _decode(path).then((image) {
+      if (image != null) {
+        _images.remove(path);
+        _images[path] = image;
+        while (_images.length > _maxEntries) {
+          // 淘汰最久未用条目并显式释放其 GPU 纹理。
+          final evicted = _images.remove(_images.keys.first);
+          evicted?.dispose();
+        }
+      }
+      _pending.remove(path);
+      return image;
+    });
+    _pending[path] = future;
+    return future;
+  }
+
+  /// 是否已缓存（供测试与诊断）。
+  bool contains(String path) => _images.containsKey(path);
+
+  /// 清空缓存（提取完成后调用，避免引用已删除的旧图标）。
+  void clear() {
+    for (final image in _images.values) {
+      image.dispose();
+    }
+    _images.clear();
+  }
+
+  Future<ui.Image?> _decode(String path) async {
+    final file = File(path);
+    if (!await file.exists()) return null;
+    final bytes = await file.readAsBytes();
+    final BlpImage decoded;
+    try {
+      decoded = decodeBlp(bytes);
+    } on Object {
+      return null; // 损坏/不支持的 BLP 按缺失处理，显示占位。
+    }
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      decoded.rgba,
+      decoded.width,
+      decoded.height,
+      ui.PixelFormat.rgba8888,
+      completer.complete,
+    );
+    return completer.future;
+  }
+}

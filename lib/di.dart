@@ -83,6 +83,7 @@ import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_view_mode
 import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_view_model.dart';
 import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
 import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/page/spell/spell_area_collection_editor_view_model.dart';
@@ -240,6 +241,7 @@ import 'package:foxy/use_case/bootstrap/bootstrap_application_use_case.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
+import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/create_gossip_menu_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
@@ -429,6 +431,11 @@ class DI {
         dbcSyncUtil: _instance.get<DbcSyncUtil>(),
       ),
     );
+    _instance.registerLazySingleton(
+      () => ExtractGameIconsUseCase(
+        configUtil: _instance.get<ConfigUtil>(),
+      ),
+    );
     _instance.registerFactory(
       () => ExportDbcUseCase(
         registry: _instance.get<DbcExportRegistry>(),
@@ -497,6 +504,7 @@ class DI {
     _instance.registerSingleton(FoxyStateViewModel());
     _instance.registerSingleton(FeatureStateViewModel());
     _instance.registerSingleton(DbcImportWorkflowViewModel());
+    _instance.registerSingleton(IconExtractWorkflowViewModel());
   }
 
   static void _registerInteractionViewModels() {
