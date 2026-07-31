@@ -1,4 +1,5 @@
 import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 
 const kGameObjectBooleanOptions = <int, String>{0: '否', 1: '是'};
 
@@ -62,566 +63,477 @@ const kGameObjectTypeOptions = <int, String>{
   35: '活板门',
 };
 
-const _unusedGameObjectData = GameObjectDataFieldConfig('未使用', editable: false);
+const kUnusedGameObjectDataField =
+    IntegerNumberFieldSpec<GameObjectDataReference>('未使用', editable: false);
 
-/// `GameObjectData.h::GameObjectTemplate` 联合体的逐字段映射。
-GameObjectDataFieldConfig gameObjectDataFieldConfig(int type, int index) {
-  return switch ((type, index)) {
-    (0, 0) => const GameObjectDataFieldConfig(
-      '初始开启',
-      options: kGameObjectBooleanOptions,
-    ),
-    (0, 1) => const GameObjectDataFieldConfig(
+/// 一个 GameObject type 的 Data0..Data23 编辑规格。
+///
+/// 对应 `GameObjectData.h::GameObjectTemplate` 联合体的一个 struct；
+/// Map 只写实际字段，缺失槽位由 [field] 回落为只读「未使用」。
+class GameObjectDataSchema {
+  final Map<int, IntegerFieldSpec<GameObjectDataReference>> fields;
+
+  const GameObjectDataSchema(this.fields);
+
+  IntegerFieldSpec<GameObjectDataReference> field(int index) =>
+      fields[index] ?? kUnusedGameObjectDataField;
+}
+
+/// `GameObjectData.h::GameObjectTemplate` 联合体按 GameObject type 分组的 schema registry。
+const kGameObjectDataSchemas = <int, GameObjectDataSchema>{
+  // GameObjectDoor
+  0: GameObjectDataSchema({
+    0: IntegerSelectFieldSpec('初始开启', options: kGameObjectBooleanOptions),
+    1: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (0, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (0, 3) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (0, 4) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (0, 5) => const GameObjectDataFieldConfig('关闭文本 ID'),
-    (0, 6) => const GameObjectDataFieldConfig(
-      '寻路忽略',
-      options: kGameObjectBooleanOptions,
-    ),
-    (1, 0) => const GameObjectDataFieldConfig(
-      '初始开启',
-      options: kGameObjectBooleanOptions,
-    ),
-    (1, 1) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('自动关闭时间'),
+    3: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    4: IntegerNumberFieldSpec('开启文本 ID'),
+    5: IntegerNumberFieldSpec('关闭文本 ID'),
+    6: IntegerSelectFieldSpec('寻路忽略', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectButton
+  1: GameObjectDataSchema({
+    0: IntegerSelectFieldSpec('初始开启', options: kGameObjectBooleanOptions),
+    1: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (1, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (1, 3) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('自动关闭时间'),
+    3: IntegerReferenceFieldSpec(
       '关联陷阱',
       reference: GameObjectDataReference.gameObjectTemplate,
     ),
-    (1, 4) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (1, 5) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (1, 6) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (1, 7) => const GameObjectDataFieldConfig('关闭文本 ID'),
-    (1, 8) => const GameObjectDataFieldConfig(
-      '忽略视线',
-      options: kGameObjectBooleanOptions,
-    ),
-    (2, 0) => const GameObjectDataFieldConfig(
+    4: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    5: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    6: IntegerNumberFieldSpec('开启文本 ID'),
+    7: IntegerNumberFieldSpec('关闭文本 ID'),
+    8: IntegerSelectFieldSpec('忽略视线', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectQuestGiver
+  2: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (2, 1) => const GameObjectDataFieldConfig('任务列表 ID'),
-    (2, 2) => const GameObjectDataFieldConfig('页面材质'),
-    (2, 3) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('任务列表 ID'),
+    2: IntegerNumberFieldSpec('页面材质'),
+    3: IntegerReferenceFieldSpec(
       '对话菜单',
       reference: GameObjectDataReference.gossipMenu,
     ),
-    (2, 4) => const GameObjectDataFieldConfig('自定义动画'),
-    (2, 5) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (2, 6) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (2, 7) => const GameObjectDataFieldConfig(
-      '忽略视线',
-      options: kGameObjectBooleanOptions,
-    ),
-    (2, 8) => const GameObjectDataFieldConfig(
-      '允许骑乘使用',
-      options: kGameObjectBooleanOptions,
-    ),
-    (2, 9) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 0) => const GameObjectDataFieldConfig(
+    4: IntegerNumberFieldSpec('自定义动画'),
+    5: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    6: IntegerNumberFieldSpec('开启文本 ID'),
+    7: IntegerSelectFieldSpec('忽略视线', options: kGameObjectBooleanOptions),
+    8: IntegerSelectFieldSpec('允许骑乘使用', options: kGameObjectBooleanOptions),
+    9: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectChest
+  3: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (3, 1) => const GameObjectDataFieldConfig(
+    1: IntegerReferenceFieldSpec(
       '掉落模板',
       reference: GameObjectDataReference.gameObjectLoot,
     ),
-    (3, 2) => const GameObjectDataFieldConfig('刷新时间'),
-    (3, 3) => const GameObjectDataFieldConfig(
-      '消耗型',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 4) => const GameObjectDataFieldConfig('废弃最少次数'),
-    (3, 5) => const GameObjectDataFieldConfig('废弃最多次数'),
-    (3, 6) => const GameObjectDataFieldConfig('事件 ID'),
-    (3, 7) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('刷新时间'),
+    3: IntegerSelectFieldSpec('消耗型', options: kGameObjectBooleanOptions),
+    4: IntegerNumberFieldSpec('废弃最少次数'),
+    5: IntegerNumberFieldSpec('废弃最多次数'),
+    6: IntegerNumberFieldSpec('事件 ID'),
+    7: IntegerReferenceFieldSpec(
       '关联陷阱',
       reference: GameObjectDataReference.gameObjectTemplate,
     ),
-    (3, 8) => const GameObjectDataFieldConfig(
+    8: IntegerReferenceFieldSpec(
       '任务 ID',
       reference: GameObjectDataReference.questTemplate,
     ),
-    (3, 9) => const GameObjectDataFieldConfig('等级'),
-    (3, 10) => const GameObjectDataFieldConfig(
-      '忽略视线',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 11) => const GameObjectDataFieldConfig(
-      '离开保留掉落',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 12) => const GameObjectDataFieldConfig(
-      '不受战斗限制',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 13) => const GameObjectDataFieldConfig(
-      '记录掉落',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 14) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (3, 15) => const GameObjectDataFieldConfig(
-      '组掉落规则',
-      options: kGameObjectBooleanOptions,
-    ),
-    (3, 16) => const GameObjectDataFieldConfig(
-      '浮动提示',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 0) => const GameObjectDataFieldConfig(
-      '浮动提示',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 1) => const GameObjectDataFieldConfig(
-      '高亮',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 2) => const GameObjectDataFieldConfig(
-      '仅服务端',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 3) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 4) => const GameObjectDataFieldConfig(
-      '水面漂浮',
-      options: kGameObjectBooleanOptions,
-    ),
-    (5, 5) => const GameObjectDataFieldConfig(
+    9: IntegerNumberFieldSpec('等级'),
+    10: IntegerSelectFieldSpec('忽略视线', options: kGameObjectBooleanOptions),
+    11: IntegerSelectFieldSpec('离开保留掉落', options: kGameObjectBooleanOptions),
+    12: IntegerSelectFieldSpec('不受战斗限制', options: kGameObjectBooleanOptions),
+    13: IntegerSelectFieldSpec('记录掉落', options: kGameObjectBooleanOptions),
+    14: IntegerNumberFieldSpec('开启文本 ID'),
+    15: IntegerSelectFieldSpec('组掉落规则', options: kGameObjectBooleanOptions),
+    16: IntegerSelectFieldSpec('浮动提示', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectGeneric
+  5: GameObjectDataSchema({
+    0: IntegerSelectFieldSpec('浮动提示', options: kGameObjectBooleanOptions),
+    1: IntegerSelectFieldSpec('高亮', options: kGameObjectBooleanOptions),
+    2: IntegerSelectFieldSpec('仅服务端', options: kGameObjectBooleanOptions),
+    3: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    4: IntegerSelectFieldSpec('水面漂浮', options: kGameObjectBooleanOptions),
+    5: IntegerReferenceFieldSpec(
       '任务 ID',
       reference: GameObjectDataReference.questTemplate,
     ),
-    (6, 0) => const GameObjectDataFieldConfig(
+  }),
+  // GameObjectTrap
+  6: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (6, 1) => const GameObjectDataFieldConfig('等级'),
-    (6, 2) => const GameObjectDataFieldConfig('触发直径'),
-    (6, 3) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('等级'),
+    2: IntegerNumberFieldSpec('触发直径'),
+    3: IntegerReferenceFieldSpec(
       '法术 ID',
       reference: GameObjectDataReference.spell,
     ),
-    (6, 4) => const GameObjectDataFieldConfig(
-      '陷阱类型',
-      options: kGameObjectTrapTypeOptions,
-    ),
-    (6, 5) => const GameObjectDataFieldConfig('冷却时间'),
-    (6, 6) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (6, 7) => const GameObjectDataFieldConfig('启动延迟'),
-    (6, 8) => const GameObjectDataFieldConfig(
-      '仅服务端',
-      options: kGameObjectBooleanOptions,
-    ),
-    (6, 9) => const GameObjectDataFieldConfig(
-      '潜行',
-      options: kGameObjectBooleanOptions,
-    ),
-    (6, 10) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (6, 11) => const GameObjectDataFieldConfig(
-      '不可见',
-      options: kGameObjectBooleanOptions,
-    ),
-    (6, 12) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (6, 13) => const GameObjectDataFieldConfig('关闭文本 ID'),
-    (6, 14) => const GameObjectDataFieldConfig(
-      '忽略图腾',
-      options: kGameObjectBooleanOptions,
-    ),
-    (7, 0) => const GameObjectDataFieldConfig('座位数量'),
-    (7, 1) => const GameObjectDataFieldConfig(
-      '椅子高度',
-      options: kGameObjectChairHeightOptions,
-    ),
-    (7, 2) => const GameObjectDataFieldConfig(
-      '仅创建者使用',
-      options: kGameObjectBooleanOptions,
-    ),
-    (7, 3) => const GameObjectDataFieldConfig('触发事件 ID'),
-    (8, 0) => const GameObjectDataFieldConfig(
+    4: IntegerSelectFieldSpec('陷阱类型', options: kGameObjectTrapTypeOptions),
+    5: IntegerNumberFieldSpec('冷却时间'),
+    6: IntegerNumberFieldSpec('自动关闭时间'),
+    7: IntegerNumberFieldSpec('启动延迟'),
+    8: IntegerSelectFieldSpec('仅服务端', options: kGameObjectBooleanOptions),
+    9: IntegerSelectFieldSpec('潜行', options: kGameObjectBooleanOptions),
+    10: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    11: IntegerSelectFieldSpec('不可见', options: kGameObjectBooleanOptions),
+    12: IntegerNumberFieldSpec('开启文本 ID'),
+    13: IntegerNumberFieldSpec('关闭文本 ID'),
+    14: IntegerSelectFieldSpec('忽略图腾', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectChair
+  7: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('座位数量'),
+    1: IntegerSelectFieldSpec('椅子高度', options: kGameObjectChairHeightOptions),
+    2: IntegerSelectFieldSpec('仅创建者使用', options: kGameObjectBooleanOptions),
+    3: IntegerNumberFieldSpec('触发事件 ID'),
+  }),
+  // GameObjectSpellFocus
+  8: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '法术焦点 ID',
       reference: GameObjectDataReference.spellFocusObject,
     ),
-    (8, 1) => const GameObjectDataFieldConfig('作用距离'),
-    (8, 2) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('作用距离'),
+    2: IntegerReferenceFieldSpec(
       '关联陷阱',
       reference: GameObjectDataReference.gameObjectTemplate,
     ),
-    (8, 3) => const GameObjectDataFieldConfig(
-      '仅服务端',
-      options: kGameObjectBooleanOptions,
-    ),
-    (8, 4) => const GameObjectDataFieldConfig(
+    3: IntegerSelectFieldSpec('仅服务端', options: kGameObjectBooleanOptions),
+    4: IntegerReferenceFieldSpec(
       '任务 ID',
       reference: GameObjectDataReference.questTemplate,
     ),
-    (8, 5) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (8, 6) => const GameObjectDataFieldConfig(
-      '浮动提示',
-      options: kGameObjectBooleanOptions,
-    ),
-    (9, 0) => const GameObjectDataFieldConfig(
+    5: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    6: IntegerSelectFieldSpec('浮动提示', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectText
+  9: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '页面文本',
       reference: GameObjectDataReference.pageText,
     ),
-    (9, 1) => const GameObjectDataFieldConfig('语言 ID'),
-    (9, 2) => const GameObjectDataFieldConfig('页面材质'),
-    (9, 3) => const GameObjectDataFieldConfig(
-      '允许骑乘使用',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 0) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('语言 ID'),
+    2: IntegerNumberFieldSpec('页面材质'),
+    3: IntegerSelectFieldSpec('允许骑乘使用', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectGoober
+  10: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (10, 1) => const GameObjectDataFieldConfig(
+    1: IntegerReferenceFieldSpec(
       '任务 ID',
       reference: GameObjectDataReference.questTemplate,
     ),
-    (10, 2) => const GameObjectDataFieldConfig('事件 ID'),
-    (10, 3) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (10, 4) => const GameObjectDataFieldConfig('自定义动画'),
-    (10, 5) => const GameObjectDataFieldConfig(
-      '消耗型',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 6) => const GameObjectDataFieldConfig('冷却时间'),
-    (10, 7) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('事件 ID'),
+    3: IntegerNumberFieldSpec('自动关闭时间'),
+    4: IntegerNumberFieldSpec('自定义动画'),
+    5: IntegerSelectFieldSpec('消耗型', options: kGameObjectBooleanOptions),
+    6: IntegerNumberFieldSpec('冷却时间'),
+    7: IntegerReferenceFieldSpec(
       '页面文本',
       reference: GameObjectDataReference.pageText,
     ),
-    (10, 8) => const GameObjectDataFieldConfig('语言 ID'),
-    (10, 9) => const GameObjectDataFieldConfig('页面材质'),
-    (10, 10) => const GameObjectDataFieldConfig(
+    8: IntegerNumberFieldSpec('语言 ID'),
+    9: IntegerNumberFieldSpec('页面材质'),
+    10: IntegerReferenceFieldSpec(
       '法术 ID',
       reference: GameObjectDataReference.spell,
     ),
-    (10, 11) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 12) => const GameObjectDataFieldConfig(
+    11: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    12: IntegerReferenceFieldSpec(
       '关联陷阱',
       reference: GameObjectDataReference.gameObjectTemplate,
     ),
-    (10, 13) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 14) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (10, 15) => const GameObjectDataFieldConfig('关闭文本 ID'),
-    (10, 16) => const GameObjectDataFieldConfig(
-      '忽略视线',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 17) => const GameObjectDataFieldConfig(
-      '允许骑乘使用',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 18) => const GameObjectDataFieldConfig(
-      '浮动提示',
-      options: kGameObjectBooleanOptions,
-    ),
-    (10, 19) => const GameObjectDataFieldConfig(
+    13: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    14: IntegerNumberFieldSpec('开启文本 ID'),
+    15: IntegerNumberFieldSpec('关闭文本 ID'),
+    16: IntegerSelectFieldSpec('忽略视线', options: kGameObjectBooleanOptions),
+    17: IntegerSelectFieldSpec('允许骑乘使用', options: kGameObjectBooleanOptions),
+    18: IntegerSelectFieldSpec('浮动提示', options: kGameObjectBooleanOptions),
+    19: IntegerReferenceFieldSpec(
       '对话菜单',
       reference: GameObjectDataReference.gossipMenu,
     ),
-    (10, 20) => const GameObjectDataFieldConfig(
-      '设置世界状态',
-      options: kGameObjectBooleanOptions,
-    ),
-    (11, 0) => const GameObjectDataFieldConfig('暂停时间'),
-    (11, 1) => const GameObjectDataFieldConfig(
-      '初始开启',
-      options: kGameObjectBooleanOptions,
-    ),
-    (11, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (11, 3) => const GameObjectDataFieldConfig('首次暂停事件'),
-    (11, 4) => const GameObjectDataFieldConfig('二次暂停事件'),
-    (12, 0) => const GameObjectDataFieldConfig(
+    20: IntegerSelectFieldSpec('设置世界状态', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectTransport
+  11: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('暂停时间'),
+    1: IntegerSelectFieldSpec('初始开启', options: kGameObjectBooleanOptions),
+    2: IntegerNumberFieldSpec('自动关闭时间'),
+    3: IntegerNumberFieldSpec('首次暂停事件'),
+    4: IntegerNumberFieldSpec('二次暂停事件'),
+  }),
+  // GameObjectAreaDamage
+  12: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (12, 1) => const GameObjectDataFieldConfig('半径'),
-    (12, 2) => const GameObjectDataFieldConfig('最小伤害'),
-    (12, 3) => const GameObjectDataFieldConfig('最大伤害'),
-    (12, 4) => const GameObjectDataFieldConfig('法术学派'),
-    (12, 5) => const GameObjectDataFieldConfig('自动关闭时间'),
-    (12, 6) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (12, 7) => const GameObjectDataFieldConfig('关闭文本 ID'),
-    (13, 0) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('半径'),
+    2: IntegerNumberFieldSpec('最小伤害'),
+    3: IntegerNumberFieldSpec('最大伤害'),
+    4: IntegerNumberFieldSpec('法术学派'),
+    5: IntegerNumberFieldSpec('自动关闭时间'),
+    6: IntegerNumberFieldSpec('开启文本 ID'),
+    7: IntegerNumberFieldSpec('关闭文本 ID'),
+  }),
+  // GameObjectCamera
+  13: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (13, 1) => const GameObjectDataFieldConfig(
+    1: IntegerReferenceFieldSpec(
       '过场动画',
       reference: GameObjectDataReference.cinematicSequence,
     ),
-    (13, 2) => const GameObjectDataFieldConfig('事件 ID'),
-    (13, 3) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (15, 0) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('事件 ID'),
+    3: IntegerNumberFieldSpec('开启文本 ID'),
+  }),
+  // GameObjectMapObjTransport
+  15: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '飞行路径',
       reference: GameObjectDataReference.taxiPath,
     ),
-    (15, 1) => const GameObjectDataFieldConfig('移动速度'),
-    (15, 2) => const GameObjectDataFieldConfig('加速度'),
-    (15, 3) => const GameObjectDataFieldConfig('开始事件 ID'),
-    (15, 4) => const GameObjectDataFieldConfig('停止事件 ID'),
-    (15, 5) => const GameObjectDataFieldConfig('物理行为'),
-    (15, 6) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('移动速度'),
+    2: IntegerNumberFieldSpec('加速度'),
+    3: IntegerNumberFieldSpec('开始事件 ID'),
+    4: IntegerNumberFieldSpec('停止事件 ID'),
+    5: IntegerNumberFieldSpec('物理行为'),
+    6: IntegerReferenceFieldSpec(
       '地图 ID',
       reference: GameObjectDataReference.map,
     ),
-    (15, 7) => const GameObjectDataFieldConfig('世界状态 ID'),
-    (15, 8) => const GameObjectDataFieldConfig(
-      '可停止',
-      options: kGameObjectBooleanOptions,
-    ),
-    (18, 0) => const GameObjectDataFieldConfig('参与人数'),
-    (18, 1) => const GameObjectDataFieldConfig(
+    7: IntegerNumberFieldSpec('世界状态 ID'),
+    8: IntegerSelectFieldSpec('可停止', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectRitual
+  18: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('参与人数'),
+    1: IntegerReferenceFieldSpec(
       '法术 ID',
       reference: GameObjectDataReference.spell,
     ),
-    (18, 2) => const GameObjectDataFieldConfig(
+    2: IntegerReferenceFieldSpec(
       '动画法术',
       reference: GameObjectDataReference.spell,
     ),
-    (18, 3) => const GameObjectDataFieldConfig(
-      '持续存在',
-      options: kGameObjectBooleanOptions,
-    ),
-    (18, 4) => const GameObjectDataFieldConfig(
+    3: IntegerSelectFieldSpec('持续存在', options: kGameObjectBooleanOptions),
+    4: IntegerReferenceFieldSpec(
       '施法目标法术',
       reference: GameObjectDataReference.spell,
     ),
-    (18, 5) => const GameObjectDataFieldConfig('目标数量'),
-    (18, 6) => const GameObjectDataFieldConfig(
-      '要求同组',
-      options: kGameObjectBooleanOptions,
-    ),
-    (18, 7) => const GameObjectDataFieldConfig(
-      '跳过目标检查',
-      options: kGameObjectBooleanOptions,
-    ),
-    (21, 0) => const GameObjectDataFieldConfig(
+    5: IntegerNumberFieldSpec('目标数量'),
+    6: IntegerSelectFieldSpec('要求同组', options: kGameObjectBooleanOptions),
+    7: IntegerSelectFieldSpec('跳过目标检查', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectGuardPost
+  21: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '生物模板',
       reference: GameObjectDataReference.creatureTemplate,
     ),
-    (21, 1) => const GameObjectDataFieldConfig('使用次数'),
-    (22, 0) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('使用次数'),
+  }),
+  // GameObjectSpellCaster
+  22: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '法术 ID',
       reference: GameObjectDataReference.spell,
     ),
-    (22, 1) => const GameObjectDataFieldConfig('使用次数'),
-    (22, 2) => const GameObjectDataFieldConfig(
-      '仅队伍',
-      options: kGameObjectBooleanOptions,
-    ),
-    (22, 3) => const GameObjectDataFieldConfig(
-      '允许骑乘使用',
-      options: kGameObjectBooleanOptions,
-    ),
-    (22, 4) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (23, 0) => const GameObjectDataFieldConfig('最低等级'),
-    (23, 1) => const GameObjectDataFieldConfig('最高等级'),
-    (23, 2) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('使用次数'),
+    2: IntegerSelectFieldSpec('仅队伍', options: kGameObjectBooleanOptions),
+    3: IntegerSelectFieldSpec('允许骑乘使用', options: kGameObjectBooleanOptions),
+    4: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectMeetingStone
+  23: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('最低等级'),
+    1: IntegerNumberFieldSpec('最高等级'),
+    2: IntegerReferenceFieldSpec(
       '区域 ID',
       reference: GameObjectDataReference.area,
     ),
-    (24, 0) => const GameObjectDataFieldConfig(
+  }),
+  // GameObjectFlagStand
+  24: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (24, 1) => const GameObjectDataFieldConfig(
+    1: IntegerReferenceFieldSpec(
       '拾取法术',
       reference: GameObjectDataReference.spell,
     ),
-    (24, 2) => const GameObjectDataFieldConfig('拾取半径'),
-    (24, 3) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('拾取半径'),
+    3: IntegerReferenceFieldSpec(
       '归还光环',
       reference: GameObjectDataReference.spell,
     ),
-    (24, 4) => const GameObjectDataFieldConfig(
+    4: IntegerReferenceFieldSpec(
       '归还法术',
       reference: GameObjectDataReference.spell,
     ),
-    (24, 5) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (24, 6) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (24, 7) => const GameObjectDataFieldConfig(
-      '忽略视线',
-      options: kGameObjectBooleanOptions,
-    ),
-    (25, 0) => const GameObjectDataFieldConfig('半径'),
-    (25, 1) => const GameObjectDataFieldConfig(
+    5: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    6: IntegerNumberFieldSpec('开启文本 ID'),
+    7: IntegerSelectFieldSpec('忽略视线', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectFishingHole
+  25: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('半径'),
+    1: IntegerReferenceFieldSpec(
       '掉落模板',
       reference: GameObjectDataReference.gameObjectLoot,
     ),
-    (25, 2) => const GameObjectDataFieldConfig('最少开启次数'),
-    (25, 3) => const GameObjectDataFieldConfig('最多开启次数'),
-    (25, 4) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('最少开启次数'),
+    3: IntegerNumberFieldSpec('最多开启次数'),
+    4: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (26, 0) => const GameObjectDataFieldConfig(
+  }),
+  // GameObjectFlagDrop
+  26: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '锁 ID',
       reference: GameObjectDataReference.lock,
     ),
-    (26, 1) => const GameObjectDataFieldConfig('事件 ID'),
-    (26, 2) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('事件 ID'),
+    2: IntegerReferenceFieldSpec(
       '拾取法术',
       reference: GameObjectDataReference.spell,
     ),
-    (26, 3) => const GameObjectDataFieldConfig(
-      '无伤害免疫',
-      options: kGameObjectBooleanOptions,
-    ),
-    (26, 4) => const GameObjectDataFieldConfig('开启文本 ID'),
-    (27, 0) => const GameObjectDataFieldConfig('游戏类型'),
-    (29, 0) => const GameObjectDataFieldConfig('半径'),
-    (29, 1) => const GameObjectDataFieldConfig(
+    3: IntegerSelectFieldSpec('无伤害免疫', options: kGameObjectBooleanOptions),
+    4: IntegerNumberFieldSpec('开启文本 ID'),
+  }),
+  // GameObjectMiniGame
+  27: GameObjectDataSchema({0: IntegerNumberFieldSpec('游戏类型')}),
+  // GameObjectCapturePoint
+  29: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('半径'),
+    1: IntegerReferenceFieldSpec(
       '法术 ID',
       reference: GameObjectDataReference.spell,
     ),
-    (29, 2) => const GameObjectDataFieldConfig('世界状态 1'),
-    (29, 3) => const GameObjectDataFieldConfig('世界状态 2'),
-    (29, 4) => const GameObjectDataFieldConfig('占领事件 1'),
-    (29, 5) => const GameObjectDataFieldConfig('占领事件 2'),
-    (29, 6) => const GameObjectDataFieldConfig('争夺事件 1'),
-    (29, 7) => const GameObjectDataFieldConfig('争夺事件 2'),
-    (29, 8) => const GameObjectDataFieldConfig('进度事件 1'),
-    (29, 9) => const GameObjectDataFieldConfig('进度事件 2'),
-    (29, 10) => const GameObjectDataFieldConfig('中立事件 1'),
-    (29, 11) => const GameObjectDataFieldConfig('中立事件 2'),
-    (29, 12) => const GameObjectDataFieldConfig('中立百分比'),
-    (29, 13) => const GameObjectDataFieldConfig('世界状态 3'),
-    (29, 14) => const GameObjectDataFieldConfig('最小优势'),
-    (29, 15) => const GameObjectDataFieldConfig('最大优势'),
-    (29, 16) => const GameObjectDataFieldConfig('最短时间'),
-    (29, 17) => const GameObjectDataFieldConfig('最长时间'),
-    (29, 18) => const GameObjectDataFieldConfig(
-      '大型对象',
-      options: kGameObjectBooleanOptions,
-    ),
-    (29, 19) => const GameObjectDataFieldConfig(
-      '高亮',
-      options: kGameObjectBooleanOptions,
-    ),
-    (29, 20) => const GameObjectDataFieldConfig('初始值'),
-    (29, 21) => const GameObjectDataFieldConfig(
-      '单向',
-      options: kGameObjectBooleanOptions,
-    ),
-    (30, 0) => const GameObjectDataFieldConfig(
-      '初始开启',
-      options: kGameObjectBooleanOptions,
-    ),
-    (30, 1) => const GameObjectDataFieldConfig('半径'),
-    (30, 2) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('世界状态 1'),
+    3: IntegerNumberFieldSpec('世界状态 2'),
+    4: IntegerNumberFieldSpec('占领事件 1'),
+    5: IntegerNumberFieldSpec('占领事件 2'),
+    6: IntegerNumberFieldSpec('争夺事件 1'),
+    7: IntegerNumberFieldSpec('争夺事件 2'),
+    8: IntegerNumberFieldSpec('进度事件 1'),
+    9: IntegerNumberFieldSpec('进度事件 2'),
+    10: IntegerNumberFieldSpec('中立事件 1'),
+    11: IntegerNumberFieldSpec('中立事件 2'),
+    12: IntegerNumberFieldSpec('中立百分比'),
+    13: IntegerNumberFieldSpec('世界状态 3'),
+    14: IntegerNumberFieldSpec('最小优势'),
+    15: IntegerNumberFieldSpec('最大优势'),
+    16: IntegerNumberFieldSpec('最短时间'),
+    17: IntegerNumberFieldSpec('最长时间'),
+    18: IntegerSelectFieldSpec('大型对象', options: kGameObjectBooleanOptions),
+    19: IntegerSelectFieldSpec('高亮', options: kGameObjectBooleanOptions),
+    20: IntegerNumberFieldSpec('初始值'),
+    21: IntegerSelectFieldSpec('单向', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectAuraGenerator
+  30: GameObjectDataSchema({
+    0: IntegerSelectFieldSpec('初始开启', options: kGameObjectBooleanOptions),
+    1: IntegerNumberFieldSpec('半径'),
+    2: IntegerReferenceFieldSpec(
       '光环法术 1',
       reference: GameObjectDataReference.spell,
     ),
-    (30, 3) => const GameObjectDataFieldConfig('条件 ID 1'),
-    (30, 4) => const GameObjectDataFieldConfig(
+    3: IntegerNumberFieldSpec('条件 ID 1'),
+    4: IntegerReferenceFieldSpec(
       '光环法术 2',
       reference: GameObjectDataReference.spell,
     ),
-    (30, 5) => const GameObjectDataFieldConfig('条件 ID 2'),
-    (30, 6) => const GameObjectDataFieldConfig(
-      '仅服务端',
-      options: kGameObjectBooleanOptions,
-    ),
-    (31, 0) => const GameObjectDataFieldConfig(
+    5: IntegerNumberFieldSpec('条件 ID 2'),
+    6: IntegerSelectFieldSpec('仅服务端', options: kGameObjectBooleanOptions),
+  }),
+  // GameObjectDungeonDifficulty
+  31: GameObjectDataSchema({
+    0: IntegerReferenceFieldSpec(
       '地图 ID',
       reference: GameObjectDataReference.map,
     ),
-    (31, 1) => const GameObjectDataFieldConfig('难度 ID'),
-    (32, 0) => const GameObjectDataFieldConfig(
-      '椅子高度',
-      options: kGameObjectChairHeightOptions,
-    ),
-    (32, 1) => const GameObjectDataFieldConfig('高度偏移'),
-    (33, 0) => const GameObjectDataFieldConfig('完整态生命值'),
-    (33, 1) => const GameObjectDataFieldConfig(
+    1: IntegerNumberFieldSpec('难度 ID'),
+  }),
+  // GameObjectBarberChair
+  32: GameObjectDataSchema({
+    0: IntegerSelectFieldSpec('椅子高度', options: kGameObjectChairHeightOptions),
+    1: IntegerNumberFieldSpec('高度偏移'),
+  }),
+  // GameObjectDestructibleBuilding
+  33: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('完整态生命值'),
+    1: IntegerReferenceFieldSpec(
       '奖励生物',
       reference: GameObjectDataReference.creatureTemplate,
     ),
-    (33, 2) => const GameObjectDataFieldConfig('状态名称 ID'),
-    (33, 3) => const GameObjectDataFieldConfig('完整状态事件'),
-    (33, 4) => const GameObjectDataFieldConfig(
+    2: IntegerNumberFieldSpec('状态名称 ID'),
+    3: IntegerNumberFieldSpec('完整状态事件'),
+    4: IntegerReferenceFieldSpec(
       '损坏显示 ID',
       reference: GameObjectDataReference.gameObjectDisplayInfo,
     ),
-    (33, 5) => const GameObjectDataFieldConfig('损坏态生命值'),
-    (33, 9) => const GameObjectDataFieldConfig('损坏状态事件'),
-    (33, 10) => const GameObjectDataFieldConfig(
+    5: IntegerNumberFieldSpec('损坏态生命值'),
+    9: IntegerNumberFieldSpec('损坏状态事件'),
+    10: IntegerReferenceFieldSpec(
       '摧毁显示 ID',
       reference: GameObjectDataReference.gameObjectDisplayInfo,
     ),
-    (33, 14) => const GameObjectDataFieldConfig('摧毁状态事件'),
-    (33, 16) => const GameObjectDataFieldConfig('重建秒数'),
-    (33, 18) => const GameObjectDataFieldConfig(
+    14: IntegerNumberFieldSpec('摧毁状态事件'),
+    16: IntegerNumberFieldSpec('重建秒数'),
+    18: IntegerReferenceFieldSpec(
       '可破坏模型',
       reference: GameObjectDataReference.destructibleModelData,
     ),
-    (33, 19) => const GameObjectDataFieldConfig('重建状态事件'),
-    (33, 22) => const GameObjectDataFieldConfig('受损事件'),
-    (35, 0) => const GameObjectDataFieldConfig('暂停时触发'),
-    (35, 1) => const GameObjectDataFieldConfig(
-      '初始开启',
-      options: kGameObjectBooleanOptions,
-    ),
-    (35, 2) => const GameObjectDataFieldConfig('自动关闭时间'),
-    _ => _unusedGameObjectData,
-  };
-}
+    19: IntegerNumberFieldSpec('重建状态事件'),
+    22: IntegerNumberFieldSpec('受损事件'),
+  }),
+  // GameObjectTrapDoor
+  35: GameObjectDataSchema({
+    0: IntegerNumberFieldSpec('暂停时触发'),
+    1: IntegerSelectFieldSpec('初始开启', options: kGameObjectBooleanOptions),
+    2: IntegerNumberFieldSpec('自动关闭时间'),
+  }),
+};
 
-class GameObjectDataFieldConfig {
-  final String label;
-  final bool editable;
-  final GameObjectDataReference reference;
-  final Map<int, String>? options;
-
-  const GameObjectDataFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = GameObjectDataReference.none,
-    this.options,
-  });
+/// 查询某个 GameObject type 的某个 Data 槽位的编辑规格。
+///
+/// 缺失槽位统一回落为只读「未使用」。稀疏类型（如 33）无需填充占位。
+IntegerFieldSpec<GameObjectDataReference> gameObjectDataFieldSpec(
+  int type,
+  int index,
+) {
+  RangeError.checkValueInInterval(index, 0, 23, 'index');
+  return kGameObjectDataSchemas[type]?.field(index) ??
+      kUnusedGameObjectDataField;
 }
 
 enum GameObjectDataReference {

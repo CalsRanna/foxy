@@ -1,3 +1,4 @@
+import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -23,6 +24,9 @@ class GameObjectTemplateDetailViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
+  /// 当前选中的 GameObject 类型，驱动 Data0..Data23 的编辑规格
+  final selectedType = signal(0);
+
   late final nameController = registerController(StringFieldController());
   late final castBarCaptionController = registerController(
     StringFieldController(),
@@ -37,35 +41,36 @@ class GameObjectTemplateDetailViewModel
   late final entryController = registerController(IntFieldController());
   late final displayIdController = registerController(IntFieldController());
   late final sizeController = registerController(DoubleFieldController());
-  late final data0Controller = registerController(IntFieldController());
-  late final data1Controller = registerController(IntFieldController());
-  late final data2Controller = registerController(IntFieldController());
-  late final data3Controller = registerController(IntFieldController());
-  late final data4Controller = registerController(IntFieldController());
-  late final data5Controller = registerController(IntFieldController());
-  late final data6Controller = registerController(IntFieldController());
-  late final data7Controller = registerController(IntFieldController());
-  late final data8Controller = registerController(IntFieldController());
-  late final data9Controller = registerController(IntFieldController());
-  late final data10Controller = registerController(IntFieldController());
-  late final data11Controller = registerController(IntFieldController());
-  late final data12Controller = registerController(IntFieldController());
-  late final data13Controller = registerController(IntFieldController());
-  late final data14Controller = registerController(IntFieldController());
-  late final data15Controller = registerController(IntFieldController());
-  late final data16Controller = registerController(IntFieldController());
-  late final data17Controller = registerController(IntFieldController());
-  late final data18Controller = registerController(IntFieldController());
-  late final data19Controller = registerController(IntFieldController());
-  late final data20Controller = registerController(IntFieldController());
-  late final data21Controller = registerController(IntFieldController());
-  late final data22Controller = registerController(IntFieldController());
-  late final data23Controller = registerController(IntFieldController());
+  late final data0Controller = registerController(IntFieldControllerGroup());
+  late final data1Controller = registerController(IntFieldControllerGroup());
+  late final data2Controller = registerController(IntFieldControllerGroup());
+  late final data3Controller = registerController(IntFieldControllerGroup());
+  late final data4Controller = registerController(IntFieldControllerGroup());
+  late final data5Controller = registerController(IntFieldControllerGroup());
+  late final data6Controller = registerController(IntFieldControllerGroup());
+  late final data7Controller = registerController(IntFieldControllerGroup());
+  late final data8Controller = registerController(IntFieldControllerGroup());
+  late final data9Controller = registerController(IntFieldControllerGroup());
+  late final data10Controller = registerController(IntFieldControllerGroup());
+  late final data11Controller = registerController(IntFieldControllerGroup());
+  late final data12Controller = registerController(IntFieldControllerGroup());
+  late final data13Controller = registerController(IntFieldControllerGroup());
+  late final data14Controller = registerController(IntFieldControllerGroup());
+  late final data15Controller = registerController(IntFieldControllerGroup());
+  late final data16Controller = registerController(IntFieldControllerGroup());
+  late final data17Controller = registerController(IntFieldControllerGroup());
+  late final data18Controller = registerController(IntFieldControllerGroup());
+  late final data19Controller = registerController(IntFieldControllerGroup());
+  late final data20Controller = registerController(IntFieldControllerGroup());
+  late final data21Controller = registerController(IntFieldControllerGroup());
+  late final data22Controller = registerController(IntFieldControllerGroup());
+  late final data23Controller = registerController(IntFieldControllerGroup());
   late final verifiedBuildController = registerController(IntFieldController());
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
     errorMessage.value = null;
+    typeController.addListener(_onTypeChanged);
     try {
       if (key == null) {
         final blank = await _repository.createGameObjectTemplate();
@@ -193,6 +198,41 @@ class GameObjectTemplateDetailViewModel
     aiNameController.init(template.aiName);
     scriptNameController.init(template.scriptName);
     verifiedBuildController.init(template.verifiedBuild);
+    // 显式刷新一次编辑规格，不依赖 typeController 监听的回调顺序。
+    _refreshDataFieldEditors();
+  }
+
+  void _onTypeChanged() {
+    selectedType.value = typeController.collect();
+    _refreshDataFieldEditors();
+  }
+
+  void _refreshDataFieldEditors() {
+    final type = selectedType.value;
+    data0Controller.configure(gameObjectDataFieldSpec(type, 0).editor);
+    data1Controller.configure(gameObjectDataFieldSpec(type, 1).editor);
+    data2Controller.configure(gameObjectDataFieldSpec(type, 2).editor);
+    data3Controller.configure(gameObjectDataFieldSpec(type, 3).editor);
+    data4Controller.configure(gameObjectDataFieldSpec(type, 4).editor);
+    data5Controller.configure(gameObjectDataFieldSpec(type, 5).editor);
+    data6Controller.configure(gameObjectDataFieldSpec(type, 6).editor);
+    data7Controller.configure(gameObjectDataFieldSpec(type, 7).editor);
+    data8Controller.configure(gameObjectDataFieldSpec(type, 8).editor);
+    data9Controller.configure(gameObjectDataFieldSpec(type, 9).editor);
+    data10Controller.configure(gameObjectDataFieldSpec(type, 10).editor);
+    data11Controller.configure(gameObjectDataFieldSpec(type, 11).editor);
+    data12Controller.configure(gameObjectDataFieldSpec(type, 12).editor);
+    data13Controller.configure(gameObjectDataFieldSpec(type, 13).editor);
+    data14Controller.configure(gameObjectDataFieldSpec(type, 14).editor);
+    data15Controller.configure(gameObjectDataFieldSpec(type, 15).editor);
+    data16Controller.configure(gameObjectDataFieldSpec(type, 16).editor);
+    data17Controller.configure(gameObjectDataFieldSpec(type, 17).editor);
+    data18Controller.configure(gameObjectDataFieldSpec(type, 18).editor);
+    data19Controller.configure(gameObjectDataFieldSpec(type, 19).editor);
+    data20Controller.configure(gameObjectDataFieldSpec(type, 20).editor);
+    data21Controller.configure(gameObjectDataFieldSpec(type, 21).editor);
+    data22Controller.configure(gameObjectDataFieldSpec(type, 22).editor);
+    data23Controller.configure(gameObjectDataFieldSpec(type, 23).editor);
   }
 
   void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {
@@ -206,6 +246,7 @@ class GameObjectTemplateDetailViewModel
   }
 
   void dispose() {
+    typeController.removeListener(_onTypeChanged);
     disposeControllers();
   }
 }

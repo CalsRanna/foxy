@@ -2,6 +2,7 @@ import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/game_object_constants.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
@@ -109,37 +110,34 @@ void main() {
     for (var type = 0; type <= 35; type++) {
       final actual = <int>{};
       for (var index = 0; index < 24; index++) {
-        if (gameObjectDataFieldConfig(type, index).editable) actual.add(index);
+        if (gameObjectDataFieldSpec(type, index).editable) actual.add(index);
       }
       expect(actual, expected[type], reason: 'GameObject type $type');
     }
   });
 
   test('关键 Data 外键指向精确 Store 或世界表', () {
-    expect(
-      gameObjectDataFieldConfig(8, 0).reference,
-      GameObjectDataReference.spellFocusObject,
-    );
-    expect(
-      gameObjectDataFieldConfig(13, 1).reference,
-      GameObjectDataReference.cinematicSequence,
-    );
-    expect(
-      gameObjectDataFieldConfig(15, 0).reference,
-      GameObjectDataReference.taxiPath,
-    );
-    expect(
-      gameObjectDataFieldConfig(33, 18).reference,
-      GameObjectDataReference.destructibleModelData,
-    );
-    expect(
-      gameObjectDataFieldConfig(33, 4).reference,
-      GameObjectDataReference.gameObjectDisplayInfo,
-    );
-    expect(
-      gameObjectDataFieldConfig(3, 1).reference,
-      GameObjectDataReference.gameObjectLoot,
-    );
+    GameObjectDataReference referenceOf(int type, int index) =>
+        switch (gameObjectDataFieldSpec(type, index)) {
+          IntegerReferenceFieldSpec(:final reference) => reference,
+          _ => fail('Data$index of type $type 不是引用规格'),
+        };
+
+    expect(referenceOf(8, 0), GameObjectDataReference.spellFocusObject);
+    expect(referenceOf(13, 1), GameObjectDataReference.cinematicSequence);
+    expect(referenceOf(15, 0), GameObjectDataReference.taxiPath);
+    expect(referenceOf(33, 18), GameObjectDataReference.destructibleModelData);
+    expect(referenceOf(33, 4), GameObjectDataReference.gameObjectDisplayInfo);
+    expect(referenceOf(3, 1), GameObjectDataReference.gameObjectLoot);
+  });
+
+  test('trap type、boolean、椅子高度为 select 规格，未使用槽位回落只读 number', () {
+    expect(gameObjectDataFieldSpec(6, 4), isA<IntegerSelectFieldSpec>());
+    expect(gameObjectDataFieldSpec(0, 0), isA<IntegerSelectFieldSpec>());
+    expect(gameObjectDataFieldSpec(7, 1), isA<IntegerSelectFieldSpec>());
+    expect(gameObjectDataFieldSpec(4, 0), isA<IntegerNumberFieldSpec>());
+    expect(gameObjectDataFieldSpec(4, 0).editable, isFalse);
+    expect(gameObjectDataFieldSpec(6, 3), isA<IntegerReferenceFieldSpec>());
   });
 
   test('新增 GameObject DBC Entity 全部使用独立标量字段', () {
@@ -202,7 +200,6 @@ void main() {
       'castBarCaption',
     ]);
   });
-
 }
 
 Set<int> _range(int start, int end) => {
