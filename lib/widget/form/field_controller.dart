@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/infrastructure/util/format_util.dart';
 import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -218,4 +219,132 @@ class SelectFieldController<T> extends FieldController<T> {
 
   @override
   void dispose() => controller.dispose();
+}
+
+/// 同一物理整数列的 typed controller 组。
+///
+/// 动态字段的编辑语义随判别字段切换（数字/枚举/Flags/引用），单个
+/// [IntFieldController] 无法直接交给 `FoxyShadSelect`/`FoxyFlagPicker`。
+/// 本类持有三个现有 typed controller，按当前 [editor] 转发读写，
+/// 解决「一个物理 int 字段需要多个现有 typed controller」的适配问题；
+/// 不承担 label、options、引用解析或 Widget 构建。
+class IntFieldControllerGroup extends FieldController<int> {
+  final IntFieldController numberController = IntFieldController();
+  final SelectFieldController<int> selectController =
+      SelectFieldController<int>(fallback: 0);
+  final FlagFieldController flagController = FlagFieldController();
+
+  IntegerFieldEditor _editor;
+  int _lastValidValue = 0;
+  bool _syncing = false;
+  final _listeners = <VoidCallback>[];
+
+  IntFieldControllerGroup({
+    IntegerFieldEditor editor = IntegerFieldEditor.number,
+  }) : _editor = editor {
+    numberController.addListener(_onNumberChanged);
+    selectController.addListener(_onSelectChanged);
+    flagController.addListener(_onFlagChanged);
+  }
+
+  IntegerFieldEditor get editor => _editor;
+
+  /// 切换当前编辑器。
+  ///
+  /// 幂等：editor 未变化时直接返回，不触碰任何文本状态——GameObject 类型
+  /// 切换会对全部 24 个组调用本方法，不能把用户正在输入的其他字段草稿清掉。
+  ///
+  /// editor 真正变化且旧编辑器是数字输入时，若正处于非法临时文本（如裸负号
+  /// `-`），丢弃该草稿并恢复最后一次合法整数。这是唯一可预测的行为，因为
+  /// 非法文本不是可持久化的字段值。
+  void configure(IntegerFieldEditor editor) {
+    if (editor == _editor) return;
+    if (_editor == IntegerFieldEditor.number ||
+        _editor == IntegerFieldEditor.reference) {
+      final text = numberController.controller.text.trim();
+      final valid = text.isEmpty ? 0 : int.tryParse(text);
+      if (valid == null) _setAll(_lastValidValue);
+    }
+    _editor = editor;
+  }
+
+  @override
+  void init(int value) {
+    final changed = value != _lastValidValue;
+    _setAll(value);
+    if (changed) _notify();
+  }
+
+  @override
+  int collect() {
+    return switch (_editor) {
+      IntegerFieldEditor.number ||
+      IntegerFieldEditor.reference => numberController.collect(),
+      IntegerFieldEditor.select => selectController.collect(),
+      IntegerFieldEditor.flags => flagController.collect(),
+    };
+  }
+
+  @override
+  void addListener(VoidCallback listener) => _listeners.add(listener);
+
+  @override
+  void removeListener(VoidCallback listener) => _listeners.remove(listener);
+
+  @override
+  void dispose() {
+    numberController.dispose();
+    selectController.dispose();
+    flagController.dispose();
+    _listeners.clear();
+  }
+
+  void _onNumberChanged() {
+    if (_syncing) return;
+    final text = numberController.controller.text.trim();
+    final value = text.isEmpty ? 0 : int.tryParse(text);
+    // 非法非空文本（如 `-`）是编辑草稿，不同步、不通知；保存时 collect()
+    // 仍抛 FormatException 由校验层拦截。
+    if (value == null) return;
+    _syncFromValue(value);
+  }
+
+  void _onSelectChanged() {
+    if (_syncing) return;
+    _syncFromValue(selectController.collect());
+  }
+
+  void _onFlagChanged() {
+    if (_syncing) return;
+    final text = flagController.controller.text.trim();
+    final value = text.isEmpty ? 0 : int.tryParse(text.split(' ').first);
+    if (value == null) return;
+    _syncFromValue(value);
+  }
+
+  /// 当前可见 controller 的合法变化同步到另外两个 typed controller，
+  /// 并用 `_syncing` 防重入；与最后一次合法整数相同时不产生空通知。
+  void _syncFromValue(int value) {
+    if (value == _lastValidValue) return;
+    _setAll(value);
+    _notify();
+  }
+
+  void _setAll(int value) {
+    _lastValidValue = value;
+    _syncing = true;
+    try {
+      numberController.init(value);
+      selectController.init(value);
+      flagController.init(value);
+    } finally {
+      _syncing = false;
+    }
+  }
+
+  void _notify() {
+    for (final listener in List.of(_listeners)) {
+      listener();
+    }
+  }
 }

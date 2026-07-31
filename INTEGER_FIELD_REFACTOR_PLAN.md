@@ -265,11 +265,22 @@ class IntFieldControllerGroup extends FieldController<int> {
    - 恢复 controller 组最后一次合法整数；
    - 再切换 editor。
    这是唯一可预测的行为，因为非法文本不是可持久化的字段值。
+   注意：上述「丢弃并恢复」只在 editor 真正变化时发生，见规则 10。
 7. 当前值不在新 `options` 中时不得自动改成首项或 0。`FoxyShadSelect` 现有 `selectedOptionBuilder` 会显示原始整数文本，可保留未知但真实存在的数据库值。
 8. `dispose()` 统一释放三个子 controller；ViewModel 仍然只调用一次 `registerController(...)`。
 9. `addListener/removeListener` 对外暴露 controller 组的有效整数变化，使 Condition 的 `ConditionValue1` 联动仍由 ViewModel 管理。
+   内部通知做双重去重：`_syncing` 重入保护 + 与最后一次合法整数比较，只有值实际变化才通知。
+   `init()` 写入 `TextEditingController.text` 无论新旧值都会触发 listener，值比较确保 init/configure 不产生空通知。
+10. `configure(editor)` 幂等：editor 与当前一致时直接返回，不触碰任何文本状态。
+    GameObject 类型切换会对全部 24 个组调用 configure；若每次都执行「丢弃非法文本并恢复 lastValid」，
+    用户在某字段输入裸负号 `-`（非法中间态）后切换一个与该字段无关的类型，该字段的非法文本会被静默丢弃，
+    而今天的行为是保留文本、保存时 FormatException 显式报错。静默丢输入是行为回退，必须避免。
 
 这个类解决的是“一个物理 int 字段需要多个现有 typed controller”的适配问题，不承担 label、options、引用解析或 Widget 构建。
+
+实现成本说明：24 个 GameObject 组 = 72 个 controller 对象（2/3 为 TextEditingController），
+创建与注册开销可忽略（对照本仓库 per-detail-open 的成本量级）；同步只在被编辑的组活跃时发生，
+每次按键 = 1 次 parse + 2 次隐藏 controller 写入 + 3 次内部回调。不需要为性能做额外设计。
 
 ### 4.3 View 直接使用现有组件
 
@@ -311,6 +322,9 @@ return switch (spec) {
 - reference 分支就是 `FoxyEntityPicker`
 
 三个模块的引用枚举仍然保持独立，因为它们代表不同领域集合；各 View 使用 exhaustive switch 映射到现有 `FoxyEntityPickerDelegates`。
+
+renderer 的 `spec` 参数由 View 提供：`Watch((_) => gameObjectDataFieldSpec(viewModel.selectedType.value, index))`。
+label/options/flags/reference 来自 constant 层，editor 由 ViewModel 配置，两者在 View 汇合——View 不自己推断任何类型。
 
 ## 5. Condition 详细迁移
 
@@ -436,6 +450,10 @@ IntegerFieldSpec<ConditionValueReference>
   - `ConditionTarget`
   - `ConditionValue1..3`
   - `NegativeCondition`
+
+`ErrorType`/`ErrorTextId` 投影为 0 后，必须显式确认现有 Condition validation 不要求这两个字段非 0：
+阶段 4 增加一条「引用模式下 ErrorType=0 不触发校验错误」的测试。
+若迁移中发现投影与现有校验冲突，说明存在未记录的交互，应单独设计，不在本阶段静默放宽校验。
 
 这样既不会因为隐藏的旧值导致保存失败，也不会在用户临时切换模式时销毁原编辑草稿。切回普通模式后原草稿继续可用。
 
@@ -700,6 +718,7 @@ lib/widget/foxy_shad_select.dart
 - `-7` 仍编码为物理值 `-7`，不会变成枚举值或字符串。
 - 自引用、未使用字段、ConditionTarget 等现有校验继续生效。
 - Value1 驱动 Value2 类型变化的两个特殊分支继续生效。
+- 裸负号 `-` 输入不再在 listener 回调中抛未捕获异常（顺带修复的现有 bug）。
 
 ### 阶段 5：删除旧组件
 
@@ -749,7 +768,8 @@ flutter test
 - flags 修改后，number/select 同步。
 - number 非法非空文本在 number editor 下 `collect()` 抛 `FormatException`。
 - 从非法 number 草稿切到 select 时恢复最后合法整数。
-- 多次 configure 不产生 listener 重入或重复通知。
+- editor 不变时 configure 幂等：非法文本保留，不触发丢弃-恢复。
+- 多次 configure 不产生 listener 重入或重复通知；init()/configure() 不产生空通知（值比较去重）。
 - dispose 后无残留 listener。
 
 ### 配置规格
@@ -767,6 +787,8 @@ flutter test
 - Condition source reference encode/decode。
 - Condition condition reference encode/decode。
 - 引用模式投影未使用列为 0，但切回普通模式仍保留 controller 草稿。
+- 引用模式投影后 ErrorType=0 不触发现有校验错误。
+- 裸负号 `-` 输入不抛未捕获异常（顺带修复的现有 bug：TextEditingController listener 中直接 collect() 抛 FormatException）。
 - GameObject/SmartScript 判别 controller 改变后，相应 controller 组 editor 正确更新。
 - Repository store/update 调用和 persistedKey 变化保持原 contract。
 
