@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/page/smart_script/smart_script_validation_mixin.dart';
@@ -154,24 +155,31 @@ void main() {
   });
 
   test('关键联合参数指向 SmartScriptMgr 使用的精确表或 DBC', () {
+    SmartParameterReference referenceOf(
+      IntegerFieldSpec<SmartParameterReference> spec,
+    ) => switch (spec) {
+      IntegerReferenceFieldSpec(:final reference) => reference,
+      _ => fail('参数不是引用规格：${spec.label}'),
+    };
+
     expect(
-      smartEventParameterConfig(22).param1.reference,
+      referenceOf(smartEventParameterConfig(22).param1),
       SmartParameterReference.textEmote,
     );
     expect(
-      smartActionParameterConfig(5).param1.reference,
+      referenceOf(smartActionParameterConfig(5).param1),
       SmartParameterReference.emote,
     );
     expect(
-      smartActionParameterConfig(2).param1.reference,
+      referenceOf(smartActionParameterConfig(2).param1),
       SmartParameterReference.factionTemplate,
     );
     expect(
-      smartActionParameterConfig(52).param1.reference,
+      referenceOf(smartActionParameterConfig(52).param1),
       SmartParameterReference.taxiPath,
     );
     expect(
-      smartTargetParameterConfig(201).param1.reference,
+      referenceOf(smartTargetParameterConfig(201).param1),
       SmartParameterReference.spell,
     );
     expect(smartEventParameterConfig(4).param1.editable, isFalse);
@@ -219,5 +227,4 @@ void main() {
       throwsArgumentError,
     );
   });
-
 }

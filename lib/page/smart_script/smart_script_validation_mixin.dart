@@ -1,3 +1,4 @@
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
@@ -131,10 +132,10 @@ mixin SmartScriptValidationMixin on ViewModelValidationMixin {
 
   void _requireZeroIfUnused(
     int value,
-    SmartParameterFieldConfig config,
+    IntegerFieldSpec<SmartParameterReference> spec,
     String name,
   ) {
-    if (!config.editable && value != 0) {
+    if (!spec.editable && value != 0) {
       throw ArgumentError.value(value, name, '未使用字段必须为 0');
     }
   }

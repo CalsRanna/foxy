@@ -1,6 +1,7 @@
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/game_object_constants.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 
 const kActionTypes = <int, String>{
   1: 'TALK',
@@ -540,151 +541,234 @@ const _none = SmartParameterGroupConfig(
   _unused,
   _unused,
 );
-const _unused = SmartParameterFieldConfig('未使用', editable: false);
+const _unused = IntegerNumberFieldSpec<SmartParameterReference>(
+  '未使用',
+  editable: false,
+);
 
 SmartParameterGroupConfig smartActionParameterConfig(int type) {
   switch (type) {
     case 1:
       return _g(
-        _f('文本组 ID'),
-        _f('持续时间'),
-        _f('使用动作目标', options: kSmartBooleanOptions),
-        _f('延迟'),
+        IntegerNumberFieldSpec('文本组 ID'),
+        IntegerNumberFieldSpec('持续时间'),
+        IntegerSelectFieldSpec('使用动作目标', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('延迟'),
       );
     case 2:
       return _g(
-        _f('阵营模板 ID', reference: SmartParameterReference.factionTemplate),
+        IntegerReferenceFieldSpec(
+          '阵营模板 ID',
+          reference: SmartParameterReference.factionTemplate,
+        ),
       );
     case 3:
     case 43:
       return _g(
-        _f('生物 Entry', reference: SmartParameterReference.creature),
-        _f('模型 ID', reference: SmartParameterReference.creatureDisplay),
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerReferenceFieldSpec(
+          '模型 ID',
+          reference: SmartParameterReference.creatureDisplay,
+        ),
       );
     case 4:
       return _g(
-        _f('声音 ID'),
-        _f('仅自身', options: kSmartBooleanOptions),
-        _f('距离'),
+        IntegerNumberFieldSpec('声音 ID'),
+        IntegerSelectFieldSpec('仅自身', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('距离'),
       );
     case 5:
     case 17:
-      return _g(_f('Emotes ID', reference: SmartParameterReference.emote));
+      return _g(
+        IntegerReferenceFieldSpec(
+          'Emotes ID',
+          reference: SmartParameterReference.emote,
+        ),
+      );
     case 6:
     case 15:
     case 26:
-      return _g(_f('任务 ID', reference: SmartParameterReference.quest));
+      return _g(
+        IntegerReferenceFieldSpec(
+          '任务 ID',
+          reference: SmartParameterReference.quest,
+        ),
+      );
     case 7:
       return _g(
-        _f('任务 ID', reference: SmartParameterReference.quest),
-        _f('直接添加', options: kSmartBooleanOptions),
+        IntegerReferenceFieldSpec(
+          '任务 ID',
+          reference: SmartParameterReference.quest,
+        ),
+        IntegerSelectFieldSpec('直接添加', options: kSmartBooleanOptions),
       );
     case 8:
-      return _g(_f('ReactState'));
+      return _g(IntegerNumberFieldSpec('ReactState'));
     case 10:
       return _g(
-        _f('Emotes ID 1', reference: SmartParameterReference.emote),
-        _f('Emotes ID 2', reference: SmartParameterReference.emote),
-        _f('Emotes ID 3', reference: SmartParameterReference.emote),
-        _f('Emotes ID 4', reference: SmartParameterReference.emote),
-        _f('Emotes ID 5', reference: SmartParameterReference.emote),
-        _f('Emotes ID 6', reference: SmartParameterReference.emote),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 1',
+          reference: SmartParameterReference.emote,
+        ),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 2',
+          reference: SmartParameterReference.emote,
+        ),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 3',
+          reference: SmartParameterReference.emote,
+        ),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 4',
+          reference: SmartParameterReference.emote,
+        ),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 5',
+          reference: SmartParameterReference.emote,
+        ),
+        IntegerReferenceFieldSpec(
+          'Emotes ID 6',
+          reference: SmartParameterReference.emote,
+        ),
       );
     case 11:
     case 85:
     case 134:
       return _g(
-        _f('法术 ID', reference: SmartParameterReference.spell),
-        _f('施法标志', flags: kSmartCastFlagItems),
-        _f('触发标志'),
-        _f('目标数量限制'),
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerFlagsFieldSpec('施法标志', flags: kSmartCastFlagItems),
+        IntegerNumberFieldSpec('触发标志'),
+        IntegerNumberFieldSpec('目标数量限制'),
       );
     case 12:
       return _g(
-        _f('生物 Entry', reference: SmartParameterReference.creature),
-        _f('临时召唤类型'),
-        _f('持续时间'),
-        _f('攻击触发者', options: kSmartBooleanOptions),
-        _f('攻击所有者', options: kSmartBooleanOptions),
-        _f('召唤标志', flags: kSummonCreatureFlagItems),
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('临时召唤类型'),
+        IntegerNumberFieldSpec('持续时间'),
+        IntegerSelectFieldSpec('攻击触发者', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('攻击所有者', options: kSmartBooleanOptions),
+        IntegerFlagsFieldSpec('召唤标志', flags: kSummonCreatureFlagItems),
       );
     case 13:
     case 14:
-      return _g(_f('增加仇恨率'), _f('减少仇恨率'));
+      return _g(
+        IntegerNumberFieldSpec('增加仇恨率'),
+        IntegerNumberFieldSpec('减少仇恨率'),
+      );
     case 18:
     case 19:
-      return _g(_f('UnitFlags', flags: kUnitFlagOptions), _f('字段索引'));
+      return _g(
+        IntegerFlagsFieldSpec('UnitFlags', flags: kUnitFlagOptions),
+        IntegerNumberFieldSpec('字段索引'),
+      );
     case 20:
-      return _g(_f('允许自动攻击', options: kSmartBooleanOptions));
+      return _g(
+        IntegerSelectFieldSpec('允许自动攻击', options: kSmartBooleanOptions),
+      );
     case 21:
-      return _g(_f('允许战斗移动', options: kSmartBooleanOptions));
+      return _g(
+        IntegerSelectFieldSpec('允许战斗移动', options: kSmartBooleanOptions),
+      );
     case 22:
-      return _g(_f('事件阶段'));
+      return _g(IntegerNumberFieldSpec('事件阶段'));
     case 23:
-      return _g(_f('增加阶段'), _f('减少阶段'));
+      return _g(IntegerNumberFieldSpec('增加阶段'), IntegerNumberFieldSpec('减少阶段'));
     case 25:
-      return _g(_f('播放表情', options: kSmartBooleanOptions));
+      return _g(IntegerSelectFieldSpec('播放表情', options: kSmartBooleanOptions));
     case 28:
       return _g(
-        _f('法术 ID', reference: SmartParameterReference.spell),
-        _f('层数'),
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerNumberFieldSpec('层数'),
       );
     case 29:
       return _g(
-        _f('距离'),
-        _f('角度'),
-        _f('结束生物 ID', reference: SmartParameterReference.creature),
-        _f('Credit ID'),
-        _f('Credit 类型'),
-        _f('存活状态', options: kLivingStateOptions),
+        IntegerNumberFieldSpec('距离'),
+        IntegerNumberFieldSpec('角度'),
+        IntegerReferenceFieldSpec(
+          '结束生物 ID',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('Credit ID'),
+        IntegerNumberFieldSpec('Credit 类型'),
+        IntegerSelectFieldSpec('存活状态', options: kLivingStateOptions),
       );
     case 30:
       return _g(
-        _f('阶段 1'),
-        _f('阶段 2'),
-        _f('阶段 3'),
-        _f('阶段 4'),
-        _f('阶段 5'),
-        _f('阶段 6'),
+        IntegerNumberFieldSpec('阶段 1'),
+        IntegerNumberFieldSpec('阶段 2'),
+        IntegerNumberFieldSpec('阶段 3'),
+        IntegerNumberFieldSpec('阶段 4'),
+        IntegerNumberFieldSpec('阶段 5'),
+        IntegerNumberFieldSpec('阶段 6'),
       );
     case 31:
-      return _g(_f('最小阶段'), _f('最大阶段'));
+      return _g(IntegerNumberFieldSpec('最小阶段'), IntegerNumberFieldSpec('最大阶段'));
     case 33:
-      return _g(_f('生物 Entry', reference: SmartParameterReference.creature));
+      return _g(
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+      );
     case 34:
-      return _g(_f('字段'), _f('数据'), _f('数据类型'));
+      return _g(
+        IntegerNumberFieldSpec('字段'),
+        IntegerNumberFieldSpec('数据'),
+        IntegerNumberFieldSpec('数据类型'),
+      );
     case 35:
-      return _g(_f('字段'));
+      return _g(IntegerNumberFieldSpec('字段'));
     case 36:
       return _g(
-        _f('生物 Entry', reference: SmartParameterReference.creature),
-        _f('更新等级', options: kSmartBooleanOptions),
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerSelectFieldSpec('更新等级', options: kSmartBooleanOptions),
       );
     case 37:
-      return _g(_f('延迟毫秒'));
+      return _g(IntegerNumberFieldSpec('延迟毫秒'));
     case 38:
-      return _g(_f('范围'));
+      return _g(IntegerNumberFieldSpec('范围'));
     case 39:
-      return _g(_f('半径'), _f('播放表情', options: kSmartBooleanOptions));
+      return _g(
+        IntegerNumberFieldSpec('半径'),
+        IntegerSelectFieldSpec('播放表情', options: kSmartBooleanOptions),
+      );
     case 40:
-      return _g(_f('武器状态'));
+      return _g(IntegerNumberFieldSpec('武器状态'));
     case 41:
       return _g(
-        _f('延迟'),
-        _f('强制刷新计时'),
-        _f('从世界移除', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('延迟'),
+        IntegerNumberFieldSpec('强制刷新计时'),
+        IntegerSelectFieldSpec('从世界移除', options: kSmartBooleanOptions),
       );
     case 42:
-      return _g(_f('最低生命值'), _f('百分比'));
+      return _g(IntegerNumberFieldSpec('最低生命值'), IntegerNumberFieldSpec('百分比'));
     case 44:
-      return _g(_f('PhaseMask'));
+      return _g(IntegerNumberFieldSpec('PhaseMask'));
     case 45:
     case 242:
-      return _g(_f('数据字段'), _f(type == 242 ? '增量' : '数据值'));
+      return _g(
+        IntegerNumberFieldSpec('数据字段'),
+        IntegerNumberFieldSpec(type == 242 ? '增量' : '数据值'),
+      );
     case 46:
     case 89:
     case 114:
-      return _g(_f('距离'));
+      return _g(IntegerNumberFieldSpec('距离'));
     case 47:
     case 48:
     case 59:
@@ -694,363 +778,478 @@ SmartParameterGroupConfig smartActionParameterConfig(int type) {
     case 117:
     case 207:
     case 211:
-      return _g(_f('状态', options: kSmartBooleanOptions));
+      return _g(IntegerSelectFieldSpec('状态', options: kSmartBooleanOptions));
     case 50:
       return _g(
-        _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-        _f('消失时间'),
-        _f('目标召唤'),
-        _f('召唤类型'),
+        IntegerReferenceFieldSpec(
+          '游戏对象 ID',
+          reference: SmartParameterReference.gameObject,
+        ),
+        IntegerNumberFieldSpec('消失时间'),
+        IntegerNumberFieldSpec('目标召唤'),
+        IntegerNumberFieldSpec('召唤类型'),
       );
     case 52:
-      return _g(_f('TaxiPath ID', reference: SmartParameterReference.taxiPath));
+      return _g(
+        IntegerReferenceFieldSpec(
+          'TaxiPath ID',
+          reference: SmartParameterReference.taxiPath,
+        ),
+      );
     case 53:
       return _g(
-        _f('强制移动'),
-        _f('路径 ID', reference: SmartParameterReference.waypointPath),
-        _f('重复', options: kSmartBooleanOptions),
-        _f('任务 ID', reference: SmartParameterReference.quest),
-        _f('消失时间'),
-        _f('ReactState'),
+        IntegerNumberFieldSpec('强制移动'),
+        IntegerReferenceFieldSpec(
+          '路径 ID',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerSelectFieldSpec('重复', options: kSmartBooleanOptions),
+        IntegerReferenceFieldSpec(
+          '任务 ID',
+          reference: SmartParameterReference.quest,
+        ),
+        IntegerNumberFieldSpec('消失时间'),
+        IntegerNumberFieldSpec('ReactState'),
       );
     case 54:
-      return _g(_f('暂停时间'));
+      return _g(IntegerNumberFieldSpec('暂停时间'));
     case 55:
       return _g(
-        _f('消失时间'),
-        _f('任务 ID', reference: SmartParameterReference.quest),
-        _f('任务失败', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('消失时间'),
+        IntegerReferenceFieldSpec(
+          '任务 ID',
+          reference: SmartParameterReference.quest,
+        ),
+        IntegerSelectFieldSpec('任务失败', options: kSmartBooleanOptions),
       );
     case 56:
     case 57:
       return _g(
-        _f('物品 Entry', reference: SmartParameterReference.item),
-        _f('数量'),
+        IntegerReferenceFieldSpec(
+          '物品 Entry',
+          reference: SmartParameterReference.item,
+        ),
+        IntegerNumberFieldSpec('数量'),
       );
     case 58:
       return _g(
-        _f('AI 模板 ID'),
-        _f('参数 1'),
-        _f('参数 2'),
-        _f('参数 3'),
-        _f('参数 4'),
-        _f('参数 5'),
+        IntegerNumberFieldSpec('AI 模板 ID'),
+        IntegerNumberFieldSpec('参数 1'),
+        IntegerNumberFieldSpec('参数 2'),
+        IntegerNumberFieldSpec('参数 3'),
+        IntegerNumberFieldSpec('参数 4'),
+        IntegerNumberFieldSpec('参数 5'),
       );
     case 60:
       return _g(
-        _f('飞行', options: kSmartBooleanOptions),
-        _f('速度'),
-        _f('禁用重力', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('飞行', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('速度'),
+        IntegerSelectFieldSpec('禁用重力', options: kSmartBooleanOptions),
       );
     case 62:
-      return _g(_f('地图 ID', reference: SmartParameterReference.map));
+      return _g(
+        IntegerReferenceFieldSpec(
+          '地图 ID',
+          reference: SmartParameterReference.map,
+        ),
+      );
     case 63:
       return _g(
-        _f('计数器 ID'),
-        _f('值'),
-        _f('重置', options: kSmartBooleanOptions),
-        _f('减法值'),
+        IntegerNumberFieldSpec('计数器 ID'),
+        IntegerNumberFieldSpec('值'),
+        IntegerSelectFieldSpec('重置', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('减法值'),
       );
     case 64:
     case 100:
-      return _g(_f('目标列表 ID'));
+      return _g(IntegerNumberFieldSpec('目标列表 ID'));
     case 66:
       return _g(
-        _f('立即转向', options: kSmartBooleanOptions),
-        _f('随机朝向', options: kSmartBooleanOptions),
-        _f('转向角度'),
+        IntegerSelectFieldSpec('立即转向', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('随机朝向', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('转向角度'),
       );
     case 67:
       return _g(
-        _f('定时事件 ID'),
-        _f('首次最短时间'),
-        _f('首次最长时间'),
-        _f('重复最短时间'),
-        _f('重复最长时间'),
-        _f('几率'),
+        IntegerNumberFieldSpec('定时事件 ID'),
+        IntegerNumberFieldSpec('首次最短时间'),
+        IntegerNumberFieldSpec('首次最长时间'),
+        IntegerNumberFieldSpec('重复最短时间'),
+        IntegerNumberFieldSpec('重复最长时间'),
+        IntegerNumberFieldSpec('几率'),
       );
     case 68:
-      return _g(_f('Movie ID'));
+      return _g(IntegerNumberFieldSpec('Movie ID'));
     case 69:
       return _g(
-        _f('点 ID'),
-        _f('运输坐标', options: kSmartBooleanOptions),
-        _f('受控移动', options: kSmartBooleanOptions),
-        _f('接触距离'),
-        _f('战斗距离'),
-        _f('禁用强制终点', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('点 ID'),
+        IntegerSelectFieldSpec('运输坐标', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('受控移动', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('接触距离'),
+        IntegerNumberFieldSpec('战斗距离'),
+        IntegerSelectFieldSpec('禁用强制终点', options: kSmartBooleanOptions),
       );
     case 70:
-      return _g(_f('对象刷新时间'));
+      return _g(IntegerNumberFieldSpec('对象刷新时间'));
     case 71:
-      return _g(_f('装备 ID'), _f('槽位掩码'), _f('主手物品'), _f('副手物品'), _f('远程物品'));
+      return _g(
+        IntegerNumberFieldSpec('装备 ID'),
+        IntegerNumberFieldSpec('槽位掩码'),
+        IntegerNumberFieldSpec('主手物品'),
+        IntegerNumberFieldSpec('副手物品'),
+        IntegerNumberFieldSpec('远程物品'),
+      );
     case 73:
     case 74:
-      return _g(_f('定时事件 ID'));
+      return _g(IntegerNumberFieldSpec('定时事件 ID'));
     case 75:
-      return _g(_f('法术 ID', reference: SmartParameterReference.spell));
+      return _g(
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+      );
     case 79:
-      return _g(_f('距离'), _f('角度'));
+      return _g(IntegerNumberFieldSpec('距离'), IntegerNumberFieldSpec('角度'));
     case 80:
       return _g(
-        _f('定时列表 ID'),
-        _f('计时类型'),
-        _f('允许覆盖', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('定时列表 ID'),
+        IntegerNumberFieldSpec('计时类型'),
+        IntegerSelectFieldSpec('允许覆盖', options: kSmartBooleanOptions),
       );
     case 81:
     case 82:
     case 83:
-      return _g(_f('NPCFlags', flags: kNpcFlagOptions));
+      return _g(IntegerFlagsFieldSpec('NPCFlags', flags: kNpcFlagOptions));
     case 84:
-      return _g(_f('文本组 ID'), _f('持续时间'));
+      return _g(
+        IntegerNumberFieldSpec('文本组 ID'),
+        IntegerNumberFieldSpec('持续时间'),
+      );
     case 86:
       return _g(
-        _f('法术 ID', reference: SmartParameterReference.spell),
-        _f('施法标志', flags: kSmartCastFlagItems),
-        _f('施法目标类型', options: kTargetTypes),
-        _f('施法参数 1'),
-        _f('施法参数 2'),
-        _f('施法参数 3'),
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerFlagsFieldSpec('施法标志', flags: kSmartCastFlagItems),
+        IntegerSelectFieldSpec('施法目标类型', options: kTargetTypes),
+        IntegerNumberFieldSpec('施法参数 1'),
+        IntegerNumberFieldSpec('施法参数 2'),
+        IntegerNumberFieldSpec('施法参数 3'),
       );
     case 87:
       return _g(
-        _f('动作列表 1'),
-        _f('动作列表 2'),
-        _f('动作列表 3'),
-        _f('动作列表 4'),
-        _f('动作列表 5'),
-        _f('动作列表 6'),
+        IntegerNumberFieldSpec('动作列表 1'),
+        IntegerNumberFieldSpec('动作列表 2'),
+        IntegerNumberFieldSpec('动作列表 3'),
+        IntegerNumberFieldSpec('动作列表 4'),
+        IntegerNumberFieldSpec('动作列表 5'),
+        IntegerNumberFieldSpec('动作列表 6'),
       );
     case 88:
-      return _g(_f('最小动作 ID'), _f('最大动作 ID'));
+      return _g(
+        IntegerNumberFieldSpec('最小动作 ID'),
+        IntegerNumberFieldSpec('最大动作 ID'),
+      );
     case 90:
     case 91:
-      return _g(_f('单位字节值'), _f('字段类型'));
+      return _g(
+        IntegerNumberFieldSpec('单位字节值'),
+        IntegerNumberFieldSpec('字段类型'),
+      );
     case 92:
       return _g(
-        _f('包含延迟法术', options: kSmartBooleanOptions),
-        _f('法术 ID', reference: SmartParameterReference.spell),
-        _f('包含瞬发法术', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('包含延迟法术', options: kSmartBooleanOptions),
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerSelectFieldSpec('包含瞬发法术', options: kSmartBooleanOptions),
       );
     case 93:
-      return _g(_f('自定义动画 ID'));
+      return _g(IntegerNumberFieldSpec('自定义动画 ID'));
     case 94:
     case 95:
     case 96:
-      return _g(_f('DynamicFlags', flags: kDynamicFlagOptions));
+      return _g(
+        IntegerFlagsFieldSpec('DynamicFlags', flags: kDynamicFlagOptions),
+      );
     case 97:
       return _g(
-        _f('水平速度'),
-        _f('垂直速度'),
-        _f('自身跳跃', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('水平速度'),
+        IntegerNumberFieldSpec('垂直速度'),
+        IntegerSelectFieldSpec('自身跳跃', options: kSmartBooleanOptions),
       );
     case 98:
       return _g(
-        _f('GossipMenu ID', reference: SmartParameterReference.gossipMenu),
-        _f('NpcText ID', reference: SmartParameterReference.npcText),
+        IntegerReferenceFieldSpec(
+          'GossipMenu ID',
+          reference: SmartParameterReference.gossipMenu,
+        ),
+        IntegerReferenceFieldSpec(
+          'NpcText ID',
+          reference: SmartParameterReference.npcText,
+        ),
       );
     case 99:
     case 118:
-      return _g(_f(type == 99 ? 'LootState' : 'GOState'));
+      return _g(IntegerNumberFieldSpec(type == 99 ? 'LootState' : 'GOState'));
     case 101:
-      return _g(_f('生成位置'));
+      return _g(IntegerNumberFieldSpec('生成位置'));
     case 104:
     case 105:
     case 106:
-      return _g(_f('对象标志', flags: kGameObjectFlagItems));
+      return _g(IntegerFlagsFieldSpec('对象标志', flags: kGameObjectFlagItems));
     case 107:
       return _g(
-        _f('生物组 ID'),
-        _f('攻击触发者', options: kSmartBooleanOptions),
-        _f('攻击所有者', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('生物组 ID'),
+        IntegerSelectFieldSpec('攻击触发者', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('攻击所有者', options: kSmartBooleanOptions),
       );
     case 108:
     case 109:
     case 110:
-      return _g(_f('能量类型'), _f('能量值'));
+      return _g(IntegerNumberFieldSpec('能量类型'), IntegerNumberFieldSpec('能量值'));
     case 111:
     case 112:
-      return _g(_f('游戏事件 ID'));
+      return _g(IntegerNumberFieldSpec('游戏事件 ID'));
     case 113:
       return _g(
-        _f('路径 ID 1', reference: SmartParameterReference.waypointPath),
-        _f('路径 ID 2', reference: SmartParameterReference.waypointPath),
-        _f('重复', options: kSmartBooleanOptions),
-        _f('强制移动'),
-        _f('路径来源'),
+        IntegerReferenceFieldSpec(
+          '路径 ID 1',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerReferenceFieldSpec(
+          '路径 ID 2',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerSelectFieldSpec('重复', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('强制移动'),
+        IntegerNumberFieldSpec('路径来源'),
       );
     case 115:
       return _g(
-        _f('声音 ID 1'),
-        _f('声音 ID 2'),
-        _f('声音 ID 3'),
-        _f('声音 ID 4'),
-        _f('仅自身', options: kSmartBooleanOptions),
-        _f('距离'),
+        IntegerNumberFieldSpec('声音 ID 1'),
+        IntegerNumberFieldSpec('声音 ID 2'),
+        IntegerNumberFieldSpec('声音 ID 3'),
+        IntegerNumberFieldSpec('声音 ID 4'),
+        IntegerSelectFieldSpec('仅自身', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('距离'),
       );
     case 116:
-      return _g(_f('尸体延迟'));
+      return _g(IntegerNumberFieldSpec('尸体延迟'));
     case 121:
-      return _g(_f('视野距离'));
+      return _g(IntegerNumberFieldSpec('视野距离'));
     case 122:
-      return _g(_f('逃跑时间'));
+      return _g(IntegerNumberFieldSpec('逃跑时间'));
     case 123:
-      return _g(_f('增加仇恨'), _f('减少仇恨'));
+      return _g(IntegerNumberFieldSpec('增加仇恨'), IntegerNumberFieldSpec('减少仇恨'));
     case 124:
-      return _g(_f('装备 ID'), _f('强制加载', options: kSmartBooleanOptions));
+      return _g(
+        IntegerNumberFieldSpec('装备 ID'),
+        IntegerSelectFieldSpec('强制加载', options: kSmartBooleanOptions),
+      );
     case 125:
-      return _g(_f('最小定时 ID'), _f('最大定时 ID'));
+      return _g(
+        IntegerNumberFieldSpec('最小定时 ID'),
+        IntegerNumberFieldSpec('最大定时 ID'),
+      );
     case 131:
     case 132:
       return _g(
-        _f('SpawnGroup ID'),
-        _f('忽略刷新', options: kSmartBooleanOptions),
-        _f('强制', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('SpawnGroup ID'),
+        IntegerSelectFieldSpec('忽略刷新', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('强制', options: kSmartBooleanOptions),
       );
     case 135:
       return _g(
-        _f(
+        IntegerReferenceFieldSpec(
           'Cinematic ID',
           reference: SmartParameterReference.cinematicSequence,
         ),
       );
     case 136:
-      return _g(_f('移动类型'), _f('速度整数部分'), _f('速度小数部分'));
+      return _g(
+        IntegerNumberFieldSpec('移动类型'),
+        IntegerNumberFieldSpec('速度整数部分'),
+        IntegerNumberFieldSpec('速度小数部分'),
+      );
     case 142:
-      return _g(_f('生命百分比'));
+      return _g(IntegerNumberFieldSpec('生命百分比'));
     case 201:
-      return _g(_f('点 ID'), _f('禁用强制终点', options: kSmartBooleanOptions));
+      return _g(
+        IntegerNumberFieldSpec('点 ID'),
+        IntegerSelectFieldSpec('禁用强制终点', options: kSmartBooleanOptions),
+      );
     case 204:
-      return _g(_f('单位移动标志'));
+      return _g(IntegerNumberFieldSpec('单位移动标志'));
     case 205:
-      return _g(_f('战斗距离'));
+      return _g(IntegerNumberFieldSpec('战斗距离'));
     case 208:
     case 209:
-      return _g(_f('免疫类型'), _f('免疫 ID'), _f('值'));
+      return _g(
+        IntegerNumberFieldSpec('免疫类型'),
+        IntegerNumberFieldSpec('免疫 ID'),
+        IntegerNumberFieldSpec('值'),
+      );
     case 212:
       return _g(
-        _f('停止移动', options: kSmartBooleanOptions),
-        _f('移动过期', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('停止移动', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('移动过期', options: kSmartBooleanOptions),
       );
     case 216:
       return _g(
-        _f('声音 ID'),
-        _f('仅自身', options: kSmartBooleanOptions),
-        _f('音乐类型'),
+        IntegerNumberFieldSpec('声音 ID'),
+        IntegerSelectFieldSpec('仅自身', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('音乐类型'),
       );
     case 217:
       return _g(
-        _f('声音 ID 1'),
-        _f('声音 ID 2'),
-        _f('声音 ID 3'),
-        _f('声音 ID 4'),
-        _f('仅自身', options: kSmartBooleanOptions),
-        _f('音乐类型'),
+        IntegerNumberFieldSpec('声音 ID 1'),
+        IntegerNumberFieldSpec('声音 ID 2'),
+        IntegerNumberFieldSpec('声音 ID 3'),
+        IntegerNumberFieldSpec('声音 ID 4'),
+        IntegerSelectFieldSpec('仅自身', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('音乐类型'),
       );
     case 218:
       return _g(
-        _f('法术 ID', reference: SmartParameterReference.spell),
-        _f('施法标志', flags: kSmartCastFlagItems),
-        _f('BasePoint 0'),
-        _f('BasePoint 1'),
-        _f('BasePoint 2'),
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerFlagsFieldSpec('施法标志', flags: kSmartCastFlagItems),
+        IntegerNumberFieldSpec('BasePoint 0'),
+        IntegerNumberFieldSpec('BasePoint 1'),
+        IntegerNumberFieldSpec('BasePoint 2'),
       );
     case 219:
       return _g(
-        _f('召唤生物 ID', reference: SmartParameterReference.creature),
-        _f('持续时间'),
-        _f('环间距'),
-        _f('召唤间距'),
-        _f('锥体长度'),
-        _f('锥体角度'),
+        IntegerReferenceFieldSpec(
+          '召唤生物 ID',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('持续时间'),
+        IntegerNumberFieldSpec('环间距'),
+        IntegerNumberFieldSpec('召唤间距'),
+        IntegerNumberFieldSpec('锥体长度'),
+        IntegerNumberFieldSpec('锥体角度'),
       );
     case 220:
-      return _g(_f('系统文本 ID'), _f('喊话', options: kSmartBooleanOptions));
+      return _g(
+        IntegerNumberFieldSpec('系统文本 ID'),
+        IntegerSelectFieldSpec('喊话', options: kSmartBooleanOptions),
+      );
     case 221:
       return _g(
-        _f('召唤生物 ID', reference: SmartParameterReference.creature),
-        _f('持续时间'),
-        _f('螺旋 A'),
-        _f('螺旋 K'),
-        _f('最大范围'),
-        _f('Phi 增量'),
+        IntegerReferenceFieldSpec(
+          '召唤生物 ID',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('持续时间'),
+        IntegerNumberFieldSpec('螺旋 A'),
+        IntegerNumberFieldSpec('螺旋 K'),
+        IntegerNumberFieldSpec('最大范围'),
+        IntegerNumberFieldSpec('Phi 增量'),
       );
     case 223:
       return _g(
-        _f('Action ID'),
-        _f('负值', options: kSmartBooleanOptions),
-        _f('副本目标', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('Action ID'),
+        IntegerSelectFieldSpec('负值', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('副本目标', options: kSmartBooleanOptions),
       );
     case 225:
-      return _g(_f('使用触发者 ID', options: kSmartBooleanOptions), _f('索引'));
+      return _g(
+        IntegerSelectFieldSpec('使用触发者 ID', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('索引'),
+      );
     case 226:
       return _g(
-        _f('状态', options: kSmartBooleanOptions),
-        _f('生成最短时间'),
-        _f('生成最长时间'),
-        _f('刷新延迟'),
-        _f('尸体延迟'),
-        _f('不消失', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('状态', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('生成最短时间'),
+        IntegerNumberFieldSpec('生成最长时间'),
+        IntegerNumberFieldSpec('刷新延迟'),
+        IntegerNumberFieldSpec('尸体延迟'),
+        IntegerSelectFieldSpec('不消失', options: kSmartBooleanOptions),
       );
     case 227:
-      return _g(_f('缩放值'));
+      return _g(IntegerNumberFieldSpec('缩放值'));
     case 228:
       return _g(
-        _f('召唤生物 ID', reference: SmartParameterReference.creature),
-        _f('持续时间'),
-        _f('重复次数'),
-        _f('起始角度'),
-        _f('步进角度'),
-        _f('距离'),
+        IntegerReferenceFieldSpec(
+          '召唤生物 ID',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('持续时间'),
+        IntegerNumberFieldSpec('重复次数'),
+        IntegerNumberFieldSpec('起始角度'),
+        IntegerNumberFieldSpec('步进角度'),
+        IntegerNumberFieldSpec('距离'),
       );
     case 229:
-      return _g(_f('法术视觉 ID'));
+      return _g(IntegerNumberFieldSpec('法术视觉 ID'));
     case 230:
       return _g(
-        _f('跟随状态', options: kSmartBooleanOptions),
-        _f('跟随类型'),
-        _f('距离'),
+        IntegerSelectFieldSpec('跟随状态', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('跟随类型'),
+        IntegerNumberFieldSpec('距离'),
       );
     case 231:
       return _g(
-        _f('朝向模式'),
-        _f('目标类型', options: kTargetTypes),
-        _f('目标参数 1'),
-        _f('目标参数 2'),
-        _f('目标参数 3'),
-        _f('目标参数 4'),
+        IntegerNumberFieldSpec('朝向模式'),
+        IntegerSelectFieldSpec('目标类型', options: kTargetTypes),
+        IntegerNumberFieldSpec('目标参数 1'),
+        IntegerNumberFieldSpec('目标参数 2'),
+        IntegerNumberFieldSpec('目标参数 3'),
+        IntegerNumberFieldSpec('目标参数 4'),
       );
     case 232:
       return _g(
-        _f('路径 ID', reference: SmartParameterReference.waypointPath),
-        _f('重复', options: kSmartBooleanOptions),
-        _f('路径来源'),
+        IntegerReferenceFieldSpec(
+          '路径 ID',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerSelectFieldSpec('重复', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('路径来源'),
       );
     case 233:
       return _g(
-        _f('路径 ID 1', reference: SmartParameterReference.waypointPath),
-        _f('路径 ID 2', reference: SmartParameterReference.waypointPath),
-        _f('重复', options: kSmartBooleanOptions),
+        IntegerReferenceFieldSpec(
+          '路径 ID 1',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerReferenceFieldSpec(
+          '路径 ID 2',
+          reference: SmartParameterReference.waypointPath,
+        ),
+        IntegerSelectFieldSpec('重复', options: kSmartBooleanOptions),
       );
     case 235:
-      return _g(_f('暂停时间'));
+      return _g(IntegerNumberFieldSpec('暂停时间'));
     case 236:
-      return _g(_f('覆盖计时器'));
+      return _g(IntegerNumberFieldSpec('覆盖计时器'));
     case 237:
-      return _g(_f('脚本事件 ID'), _f('参数'));
+      return _g(
+        IntegerNumberFieldSpec('脚本事件 ID'),
+        IntegerNumberFieldSpec('参数'),
+      );
     case 238:
       return _g(
-        _f('禁用声望奖励', options: kSmartBooleanOptions),
-        _f('禁用掉落奖励', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('禁用声望奖励', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('禁用掉落奖励', options: kSmartBooleanOptions),
       );
     case 239:
-      return _g(_f('动画层级'));
+      return _g(IntegerNumberFieldSpec('动画层级'));
     case 240:
       return _g(
-        _f('GossipMenu ID', reference: SmartParameterReference.gossipMenu),
+        IntegerReferenceFieldSpec(
+          'GossipMenu ID',
+          reference: SmartParameterReference.gossipMenu,
+        ),
       );
     case 241:
-      return _g(_f('游戏对象组 ID'));
+      return _g(IntegerNumberFieldSpec('游戏对象组 ID'));
     default:
       return _none;
   }
@@ -1062,12 +1261,12 @@ SmartParameterGroupConfig smartEventParameterConfig(int type) {
     final hasParam5 = const {9, 32, 67, 74, 105, 106, 110}.contains(type);
     final hasParam6 = const {9, 67, 74, 105, 106, 110}.contains(type);
     return _g(
-      _f(percent ? '最小百分比' : '最小值'),
-      _f(percent ? '最大百分比' : '最大值'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
+      IntegerNumberFieldSpec(percent ? '最小百分比' : '最小值'),
+      IntegerNumberFieldSpec(percent ? '最大百分比' : '最大值'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
       hasParam5
-          ? _f(
+          ? IntegerNumberFieldSpec(
               type == 74
                   ? '生命百分比'
                   : type == 110
@@ -1076,129 +1275,227 @@ SmartParameterGroupConfig smartEventParameterConfig(int type) {
             )
           : _unused,
       hasParam6
-          ? _f(
-              type == 74
-                  ? '半径'
-                  : type == 110
-                  ? '反向'
-                  : '范围最大值',
-              options: type == 110 ? kSmartBooleanOptions : null,
-            )
+          ? type == 110
+                ? IntegerSelectFieldSpec('范围最大值', options: kSmartBooleanOptions)
+                : IntegerNumberFieldSpec(
+                    type == 74
+                        ? '半径'
+                        : type == 110
+                        ? '反向'
+                        : '范围最大值',
+                  )
           : _unused,
     );
   }
   return switch (type) {
     5 => _g(
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-      _f('仅玩家', options: kSmartBooleanOptions),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+      IntegerSelectFieldSpec('仅玩家', options: kSmartBooleanOptions),
+      IntegerReferenceFieldSpec(
+        '生物 Entry',
+        reference: SmartParameterReference.creature,
+      ),
     ),
     8 || 31 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('法术学派掩码'),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
+      IntegerReferenceFieldSpec(
+        '法术 ID',
+        reference: SmartParameterReference.spell,
+      ),
+      IntegerNumberFieldSpec('法术学派掩码'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
     ),
     10 || 26 => _g(
-      _f('敌对模式', options: kLosHostilityOptions),
-      _f('最大距离'),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
-      _f('仅玩家', options: kSmartBooleanOptions),
+      IntegerSelectFieldSpec('敌对模式', options: kLosHostilityOptions),
+      IntegerNumberFieldSpec('最大距离'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+      IntegerSelectFieldSpec('仅玩家', options: kSmartBooleanOptions),
     ),
     11 => _g(
-      _f('重生条件', options: kRespawnConditionOptions),
-      _f('地图 ID', reference: SmartParameterReference.map),
-      _f('区域 ID', reference: SmartParameterReference.area),
+      IntegerSelectFieldSpec('重生条件', options: kRespawnConditionOptions),
+      IntegerReferenceFieldSpec(
+        '地图 ID',
+        reference: SmartParameterReference.map,
+      ),
+      IntegerReferenceFieldSpec(
+        '区域 ID',
+        reference: SmartParameterReference.area,
+      ),
     ),
     13 => _g(
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-      _f('法术 ID', reference: SmartParameterReference.spell),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+      IntegerReferenceFieldSpec(
+        '法术 ID',
+        reference: SmartParameterReference.spell,
+      ),
     ),
-    14 => _g(_f('生命缺口'), _f('半径'), _f('重复最短时间'), _f('重复最长时间')),
-    15 => _g(_f('半径'), _f('重复最短时间'), _f('重复最长时间')),
+    14 => _g(
+      IntegerNumberFieldSpec('生命缺口'),
+      IntegerNumberFieldSpec('半径'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+    ),
+    15 => _g(
+      IntegerNumberFieldSpec('半径'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+    ),
     16 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('半径'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
-      _f('仅战斗中', options: kSmartBooleanOptions),
+      IntegerReferenceFieldSpec(
+        '法术 ID',
+        reference: SmartParameterReference.spell,
+      ),
+      IntegerNumberFieldSpec('半径'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+      IntegerSelectFieldSpec('仅战斗中', options: kSmartBooleanOptions),
     ),
     17 || 35 || 82 || 107 => _g(
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
+      IntegerReferenceFieldSpec(
+        '生物 Entry',
+        reference: SmartParameterReference.creature,
+      ),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
     ),
     19 || 20 => _g(
-      _f('任务 ID', reference: SmartParameterReference.quest),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
+      IntegerReferenceFieldSpec(
+        '任务 ID',
+        reference: SmartParameterReference.quest,
+      ),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
     ),
     22 => _g(
-      _f('文本表情 ID', reference: SmartParameterReference.textEmote),
-      _f('冷却最短时间'),
-      _f('冷却最长时间'),
+      IntegerReferenceFieldSpec(
+        '文本表情 ID',
+        reference: SmartParameterReference.textEmote,
+      ),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
     ),
     23 || 24 => _g(
-      _f('法术 ID', reference: SmartParameterReference.spell),
-      _f('层数'),
-      _f('重复最短时间'),
-      _f('重复最长时间'),
+      IntegerReferenceFieldSpec(
+        '法术 ID',
+        reference: SmartParameterReference.spell,
+      ),
+      IntegerNumberFieldSpec('层数'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
     ),
-    27 || 28 => _g(_f('冷却最短时间'), _f('冷却最长时间')),
-    29 => _g(_f('移除时触发', options: kSmartBooleanOptions)),
+    27 || 28 => _g(
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+    ),
+    29 => _g(IntegerSelectFieldSpec('移除时触发', options: kSmartBooleanOptions)),
     34 => _g(
-      _f('移动类型'),
-      _f('点 ID'),
-      _f('路径 ID', reference: SmartParameterReference.waypointPath),
+      IntegerNumberFieldSpec('移动类型'),
+      IntegerNumberFieldSpec('点 ID'),
+      IntegerReferenceFieldSpec(
+        '路径 ID',
+        reference: SmartParameterReference.waypointPath,
+      ),
     ),
-    38 => _g(_f('数据 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
+    38 => _g(
+      IntegerNumberFieldSpec('数据 ID'),
+      IntegerNumberFieldSpec('值'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+    ),
     39 || 40 || 55 || 56 || 57 || 58 || 108 || 109 => _g(
-      _f('点 ID'),
-      _f('路径 ID', reference: SmartParameterReference.waypointPath),
+      IntegerNumberFieldSpec('点 ID'),
+      IntegerReferenceFieldSpec(
+        '路径 ID',
+        reference: SmartParameterReference.waypointPath,
+      ),
     ),
-    42 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
-    44 => _g(_f('点 ID')),
-    45 => _g(_f('阵营'), _f('冷却最短时间'), _f('冷却最长时间')),
-    46 => _g(_f('区域触发 ID')),
+    42 => _g(
+      IntegerReferenceFieldSpec(
+        '生物 Entry',
+        reference: SmartParameterReference.creature,
+      ),
+    ),
+    44 => _g(IntegerNumberFieldSpec('点 ID')),
+    45 => _g(
+      IntegerNumberFieldSpec('阵营'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+    ),
+    46 => _g(IntegerNumberFieldSpec('区域触发 ID')),
     52 => _g(
-      _f('文本组 ID'),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
+      IntegerNumberFieldSpec('文本组 ID'),
+      IntegerReferenceFieldSpec(
+        '生物 Entry',
+        reference: SmartParameterReference.creature,
+      ),
     ),
-    59 => _g(_f('定时事件 ID')),
+    59 => _g(IntegerNumberFieldSpec('定时事件 ID')),
     62 => _g(
-      _f('菜单 ID', reference: SmartParameterReference.gossipMenu),
-      _f('Action ID'),
+      IntegerReferenceFieldSpec(
+        '菜单 ID',
+        reference: SmartParameterReference.gossipMenu,
+      ),
+      IntegerNumberFieldSpec('Action ID'),
     ),
-    64 => _g(_f('过滤方式', options: kGossipHelloFilterOptions)),
-    66 => _g(_f('事件阶段掩码', flags: kEventPhaseFlagItems)),
-    68 || 69 => _g(_f('游戏事件 ID')),
-    70 => _g(_f('GO 状态')),
-    71 => _g(_f('事件 ID')),
-    72 => _g(_f('事件 ID'), _f('冷却最短时间'), _f('冷却最长时间')),
+    64 => _g(
+      IntegerSelectFieldSpec('过滤方式', options: kGossipHelloFilterOptions),
+    ),
+    66 => _g(IntegerFlagsFieldSpec('事件阶段掩码', flags: kEventPhaseFlagItems)),
+    68 || 69 => _g(IntegerNumberFieldSpec('游戏事件 ID')),
+    70 => _g(IntegerNumberFieldSpec('GO 状态')),
+    71 => _g(IntegerNumberFieldSpec('事件 ID')),
+    72 => _g(
+      IntegerNumberFieldSpec('事件 ID'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+    ),
     75 => _g(
-      _f('生物 GUID'),
-      _f('生物 Entry', reference: SmartParameterReference.creature),
-      _f('距离'),
-      _f('重复时间'),
+      IntegerNumberFieldSpec('生物 GUID'),
+      IntegerReferenceFieldSpec(
+        '生物 Entry',
+        reference: SmartParameterReference.creature,
+      ),
+      IntegerNumberFieldSpec('距离'),
+      IntegerNumberFieldSpec('重复时间'),
     ),
     76 => _g(
-      _f('游戏对象 GUID'),
-      _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-      _f('距离'),
-      _f('重复时间'),
+      IntegerNumberFieldSpec('游戏对象 GUID'),
+      IntegerReferenceFieldSpec(
+        '游戏对象 ID',
+        reference: SmartParameterReference.gameObject,
+      ),
+      IntegerNumberFieldSpec('距离'),
+      IntegerNumberFieldSpec('重复时间'),
     ),
-    77 => _g(_f('计数器 ID'), _f('值'), _f('冷却最短时间'), _f('冷却最长时间')),
-    101 => _g(_f('最少玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
-    102 => _g(_f('最多玩家数'), _f('半径'), _f('首次时间'), _f('重复最短时间'), _f('重复最长时间')),
+    77 => _g(
+      IntegerNumberFieldSpec('计数器 ID'),
+      IntegerNumberFieldSpec('值'),
+      IntegerNumberFieldSpec('冷却最短时间'),
+      IntegerNumberFieldSpec('冷却最长时间'),
+    ),
+    101 => _g(
+      IntegerNumberFieldSpec('最少玩家数'),
+      IntegerNumberFieldSpec('半径'),
+      IntegerNumberFieldSpec('首次时间'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+    ),
+    102 => _g(
+      IntegerNumberFieldSpec('最多玩家数'),
+      IntegerNumberFieldSpec('半径'),
+      IntegerNumberFieldSpec('首次时间'),
+      IntegerNumberFieldSpec('重复最短时间'),
+      IntegerNumberFieldSpec('重复最长时间'),
+    ),
     103 || 104 => _g(
-      _f('单位类型', options: kNearUnitTypeOptions),
-      _f('Entry'),
-      _f('数量'),
-      _f('范围'),
-      _f('计时器'),
+      IntegerSelectFieldSpec('单位类型', options: kNearUnitTypeOptions),
+      IntegerNumberFieldSpec('Entry'),
+      IntegerNumberFieldSpec('数量'),
+      IntegerNumberFieldSpec('范围'),
+      IntegerNumberFieldSpec('计时器'),
     ),
     _ => _none,
   };
@@ -1219,129 +1516,156 @@ Map<int, String> smartEventTypesForSource(int sourceType) {
   );
 }
 
-SmartParameterGroupConfig smartTargetParameterConfig(
-  int type,
-) => switch (type) {
-  3 || 4 || 5 || 6 => _g(
-    _f('最大距离'),
-    _f('仅玩家', options: kSmartBooleanOptions),
-    _f('能量类型 + 1'),
-    _f('缺少的光环', reference: SmartParameterReference.spell),
-  ),
-  9 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最小距离'),
-    _f('最大距离'),
-    _f('存活状态', options: kLivingStateOptions),
-  ),
-  10 => _g(
-    _f('生物 GUID'),
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-  ),
-  11 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最大距离'),
-    _f('存活状态', options: kLivingStateOptions),
-  ),
-  12 => _g(_f('已存储目标 ID')),
-  13 => _g(
-    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-    _f('最小距离'),
-    _f('最大距离'),
-  ),
-  14 => _g(
-    _f('游戏对象 GUID'),
-    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-  ),
-  15 => _g(
-    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-    _f('最大距离'),
-  ),
-  16 => _g(_f('包含宠物', options: kSmartBooleanOptions)),
-  17 => _g(_f('最小距离'), _f('最大距离'), _f('最大数量')),
-  18 || 21 => _g(_f('最大距离')),
-  19 => _g(
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('最大距离'),
-    _f('死亡目标', options: kSmartBooleanOptions),
-  ),
-  20 => _g(
-    _f('游戏对象 ID', reference: SmartParameterReference.gameObject),
-    _f('最大距离'),
-    _f('仅已生成', options: kSmartBooleanOptions),
-  ),
-  23 => _g(_f('控制/所有者', options: kSmartBooleanOptions)),
-  24 => _g(_f('最大距离')),
-  25 || 26 => _g(_f('最大距离'), _f('仅玩家', options: kSmartBooleanOptions)),
-  28 => _g(
-    _f('最大距离'),
-    _f('仅玩家', options: kSmartBooleanOptions),
-    _f('要求视线', options: kSmartBooleanOptions),
-    _f('最小距离'),
-  ),
-  29 => _g(_f('座位掩码')),
-  201 => _g(
-    _f('法术 ID', reference: SmartParameterReference.spell),
-    _f('反向', options: kSmartBooleanOptions),
-    _f('最大距离'),
-    _f('最小距离'),
-  ),
-  202 => _g(_f('范围'), _f('数量'), _f('以自身为中心', options: kSmartBooleanOptions)),
-  203 => _g(_f('最大范围'), _f('职责掩码', flags: kTargetRoleFlagItems), _f('结果数量')),
-  204 => _g(_f('生物 Entry', reference: SmartParameterReference.creature)),
-  205 => _g(_f('存储索引'), _f('对象类型', options: kInstanceStorageTypeOptions)),
-  206 => _g(
-    _f('编队目标', options: kFormationTargetTypeOptions),
-    _f('生物 Entry', reference: SmartParameterReference.creature),
-    _f('排除自身', options: kSmartBooleanOptions),
-  ),
-  _ => _none,
-};
-
-SmartParameterFieldConfig _f(
-  String label, {
-  SmartParameterReference reference = SmartParameterReference.none,
-  Map<int, String>? options,
-  List<FlagItem>? flags,
-}) => SmartParameterFieldConfig(
-  label,
-  reference: reference,
-  options: options,
-  flags: flags,
-);
+SmartParameterGroupConfig smartTargetParameterConfig(int type) =>
+    switch (type) {
+      3 || 4 || 5 || 6 => _g(
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('仅玩家', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('能量类型 + 1'),
+        IntegerReferenceFieldSpec(
+          '缺少的光环',
+          reference: SmartParameterReference.spell,
+        ),
+      ),
+      9 => _g(
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('最小距离'),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('存活状态', options: kLivingStateOptions),
+      ),
+      10 => _g(
+        IntegerNumberFieldSpec('生物 GUID'),
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+      ),
+      11 => _g(
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('存活状态', options: kLivingStateOptions),
+      ),
+      12 => _g(IntegerNumberFieldSpec('已存储目标 ID')),
+      13 => _g(
+        IntegerReferenceFieldSpec(
+          '游戏对象 ID',
+          reference: SmartParameterReference.gameObject,
+        ),
+        IntegerNumberFieldSpec('最小距离'),
+        IntegerNumberFieldSpec('最大距离'),
+      ),
+      14 => _g(
+        IntegerNumberFieldSpec('游戏对象 GUID'),
+        IntegerReferenceFieldSpec(
+          '游戏对象 ID',
+          reference: SmartParameterReference.gameObject,
+        ),
+      ),
+      15 => _g(
+        IntegerReferenceFieldSpec(
+          '游戏对象 ID',
+          reference: SmartParameterReference.gameObject,
+        ),
+        IntegerNumberFieldSpec('最大距离'),
+      ),
+      16 => _g(IntegerSelectFieldSpec('包含宠物', options: kSmartBooleanOptions)),
+      17 => _g(
+        IntegerNumberFieldSpec('最小距离'),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerNumberFieldSpec('最大数量'),
+      ),
+      18 || 21 => _g(IntegerNumberFieldSpec('最大距离')),
+      19 => _g(
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('死亡目标', options: kSmartBooleanOptions),
+      ),
+      20 => _g(
+        IntegerReferenceFieldSpec(
+          '游戏对象 ID',
+          reference: SmartParameterReference.gameObject,
+        ),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('仅已生成', options: kSmartBooleanOptions),
+      ),
+      23 => _g(IntegerSelectFieldSpec('控制/所有者', options: kSmartBooleanOptions)),
+      24 => _g(IntegerNumberFieldSpec('最大距离')),
+      25 || 26 => _g(
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('仅玩家', options: kSmartBooleanOptions),
+      ),
+      28 => _g(
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerSelectFieldSpec('仅玩家', options: kSmartBooleanOptions),
+        IntegerSelectFieldSpec('要求视线', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('最小距离'),
+      ),
+      29 => _g(IntegerNumberFieldSpec('座位掩码')),
+      201 => _g(
+        IntegerReferenceFieldSpec(
+          '法术 ID',
+          reference: SmartParameterReference.spell,
+        ),
+        IntegerSelectFieldSpec('反向', options: kSmartBooleanOptions),
+        IntegerNumberFieldSpec('最大距离'),
+        IntegerNumberFieldSpec('最小距离'),
+      ),
+      202 => _g(
+        IntegerNumberFieldSpec('范围'),
+        IntegerNumberFieldSpec('数量'),
+        IntegerSelectFieldSpec('以自身为中心', options: kSmartBooleanOptions),
+      ),
+      203 => _g(
+        IntegerNumberFieldSpec('最大范围'),
+        IntegerFlagsFieldSpec('职责掩码', flags: kTargetRoleFlagItems),
+        IntegerNumberFieldSpec('结果数量'),
+      ),
+      204 => _g(
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+      ),
+      205 => _g(
+        IntegerNumberFieldSpec('存储索引'),
+        IntegerSelectFieldSpec('对象类型', options: kInstanceStorageTypeOptions),
+      ),
+      206 => _g(
+        IntegerSelectFieldSpec('编队目标', options: kFormationTargetTypeOptions),
+        IntegerReferenceFieldSpec(
+          '生物 Entry',
+          reference: SmartParameterReference.creature,
+        ),
+        IntegerSelectFieldSpec('排除自身', options: kSmartBooleanOptions),
+      ),
+      _ => _none,
+    };
 
 SmartParameterGroupConfig _g(
-  SmartParameterFieldConfig p1, [
-  SmartParameterFieldConfig p2 = _unused,
-  SmartParameterFieldConfig p3 = _unused,
-  SmartParameterFieldConfig p4 = _unused,
-  SmartParameterFieldConfig p5 = _unused,
-  SmartParameterFieldConfig p6 = _unused,
+  IntegerFieldSpec<SmartParameterReference> p1, [
+  IntegerFieldSpec<SmartParameterReference> p2 = _unused,
+  IntegerFieldSpec<SmartParameterReference> p3 = _unused,
+  IntegerFieldSpec<SmartParameterReference> p4 = _unused,
+  IntegerFieldSpec<SmartParameterReference> p5 = _unused,
+  IntegerFieldSpec<SmartParameterReference> p6 = _unused,
 ]) => SmartParameterGroupConfig(p1, p2, p3, p4, p5, p6);
 
-class SmartParameterFieldConfig {
-  final String label;
-  final bool editable;
-  final SmartParameterReference reference;
-  final Map<int, String>? options;
-  final List<FlagItem>? flags;
-
-  const SmartParameterFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = SmartParameterReference.none,
-    this.options,
-    this.flags,
-  });
-}
-
 class SmartParameterGroupConfig {
-  final SmartParameterFieldConfig param1;
-  final SmartParameterFieldConfig param2;
-  final SmartParameterFieldConfig param3;
-  final SmartParameterFieldConfig param4;
-  final SmartParameterFieldConfig param5;
-  final SmartParameterFieldConfig param6;
+  final IntegerFieldSpec<SmartParameterReference> param1;
+  final IntegerFieldSpec<SmartParameterReference> param2;
+  final IntegerFieldSpec<SmartParameterReference> param3;
+  final IntegerFieldSpec<SmartParameterReference> param4;
+  final IntegerFieldSpec<SmartParameterReference> param5;
+  final IntegerFieldSpec<SmartParameterReference> param6;
 
   const SmartParameterGroupConfig(
     this.param1,
@@ -1352,7 +1676,7 @@ class SmartParameterGroupConfig {
     this.param6,
   );
 
-  SmartParameterFieldConfig field(int index) => switch (index) {
+  IntegerFieldSpec<SmartParameterReference> field(int index) => switch (index) {
     1 => param1,
     2 => param2,
     3 => param3,
@@ -1364,7 +1688,6 @@ class SmartParameterGroupConfig {
 }
 
 enum SmartParameterReference {
-  none,
   area,
   cinematicSequence,
   creature,

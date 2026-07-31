@@ -1,3 +1,4 @@
+import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -23,6 +24,12 @@ class SmartScriptDetailViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
 
+  /// 当前选中的四个判别类型，驱动各自参数组的编辑规格
+  final selectedSourceType = signal(0);
+  final selectedEventType = signal(0);
+  final selectedActionType = signal(0);
+  final selectedTargetType = signal(0);
+
   late final entryOrGuidController = registerController(IntFieldController());
   late final sourceTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
@@ -38,28 +45,60 @@ class SmartScriptDetailViewModel
   );
   late final eventChanceController = registerController(IntFieldController());
   late final eventFlagsController = registerController(FlagFieldController());
-  late final eventParam1Controller = registerController(IntFieldController());
-  late final eventParam2Controller = registerController(IntFieldController());
-  late final eventParam3Controller = registerController(IntFieldController());
-  late final eventParam4Controller = registerController(IntFieldController());
-  late final eventParam5Controller = registerController(IntFieldController());
-  late final eventParam6Controller = registerController(IntFieldController());
+  late final eventParam1Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final eventParam2Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final eventParam3Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final eventParam4Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final eventParam5Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final eventParam6Controller = registerController(
+    IntFieldControllerGroup(),
+  );
   late final actionTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final actionParam1Controller = registerController(IntFieldController());
-  late final actionParam2Controller = registerController(IntFieldController());
-  late final actionParam3Controller = registerController(IntFieldController());
-  late final actionParam4Controller = registerController(IntFieldController());
-  late final actionParam5Controller = registerController(IntFieldController());
-  late final actionParam6Controller = registerController(IntFieldController());
+  late final actionParam1Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final actionParam2Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final actionParam3Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final actionParam4Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final actionParam5Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final actionParam6Controller = registerController(
+    IntFieldControllerGroup(),
+  );
   late final targetTypeController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
-  late final targetParam1Controller = registerController(IntFieldController());
-  late final targetParam2Controller = registerController(IntFieldController());
-  late final targetParam3Controller = registerController(IntFieldController());
-  late final targetParam4Controller = registerController(IntFieldController());
+  late final targetParam1Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final targetParam2Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final targetParam3Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final targetParam4Controller = registerController(
+    IntFieldControllerGroup(),
+  );
   late final targetXController = registerController(DoubleFieldController());
   late final targetYController = registerController(DoubleFieldController());
   late final targetZController = registerController(DoubleFieldController());
@@ -68,6 +107,10 @@ class SmartScriptDetailViewModel
   Future<void> initSignals({SmartScriptKey? key}) async {
     loading.value = true;
     errorMessage.value = null;
+    sourceTypeController.addListener(_onSourceTypeChange);
+    eventTypeController.addListener(_onEventTypeChange);
+    actionTypeController.addListener(_onActionTypeChange);
+    targetTypeController.addListener(_onTargetTypeChange);
     try {
       if (key == null) {
         final blank = await _repository.createSmartScript();
@@ -191,6 +234,63 @@ class SmartScriptDetailViewModel
     targetYController.init(t.targetY);
     targetZController.init(t.targetZ);
     targetOController.init(t.targetO);
+    // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
+    _refreshParamEditors();
+  }
+
+  void _onSourceTypeChange() {
+    selectedSourceType.value = sourceTypeController.collect();
+    // source type 决定 event type 可选项，刷新事件参数规格以保持联动。
+    _refreshEventEditors();
+  }
+
+  void _onEventTypeChange() {
+    selectedEventType.value = eventTypeController.collect();
+    _refreshEventEditors();
+  }
+
+  void _onActionTypeChange() {
+    selectedActionType.value = actionTypeController.collect();
+    _refreshActionEditors();
+  }
+
+  void _onTargetTypeChange() {
+    selectedTargetType.value = targetTypeController.collect();
+    _refreshTargetEditors();
+  }
+
+  void _refreshParamEditors() {
+    _refreshEventEditors();
+    _refreshActionEditors();
+    _refreshTargetEditors();
+  }
+
+  void _refreshEventEditors() {
+    final config = smartEventParameterConfig(selectedEventType.value);
+    eventParam1Controller.configure(config.param1.editor);
+    eventParam2Controller.configure(config.param2.editor);
+    eventParam3Controller.configure(config.param3.editor);
+    eventParam4Controller.configure(config.param4.editor);
+    eventParam5Controller.configure(config.param5.editor);
+    eventParam6Controller.configure(config.param6.editor);
+  }
+
+  void _refreshActionEditors() {
+    final config = smartActionParameterConfig(selectedActionType.value);
+    actionParam1Controller.configure(config.param1.editor);
+    actionParam2Controller.configure(config.param2.editor);
+    actionParam3Controller.configure(config.param3.editor);
+    actionParam4Controller.configure(config.param4.editor);
+    actionParam5Controller.configure(config.param5.editor);
+    actionParam6Controller.configure(config.param6.editor);
+  }
+
+  void _refreshTargetEditors() {
+    final config = smartTargetParameterConfig(selectedTargetType.value);
+    targetParam1Controller.configure(config.param1.editor);
+    targetParam2Controller.configure(config.param2.editor);
+    targetParam3Controller.configure(config.param3.editor);
+    targetParam4Controller.configure(config.param4.editor);
   }
 
   void _logActivity(ActivityActionType action, SmartScriptEntity t) {
@@ -206,6 +306,10 @@ class SmartScriptDetailViewModel
   }
 
   void dispose() {
+    sourceTypeController.removeListener(_onSourceTypeChange);
+    eventTypeController.removeListener(_onEventTypeChange);
+    actionTypeController.removeListener(_onActionTypeChange);
+    targetTypeController.removeListener(_onTargetTypeChange);
     disposeControllers();
   }
 }
