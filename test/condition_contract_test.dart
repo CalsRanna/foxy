@@ -4,6 +4,7 @@ import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/condition_entity.dart';
 
 void main() {
@@ -74,21 +75,42 @@ void main() {
 
   test('三个 Value 字段分别使用运行时消费的枚举、Flags 和引用', () {
     final item = conditionValueConfig(2);
-    expect(item.value1.reference, ConditionValueReference.item);
+    expect(
+      (item.value1 as IntegerReferenceFieldSpec).reference,
+      ConditionValueReference.item,
+    );
     expect(item.value2.label, '数量');
-    expect(item.value3.options, kConditionBooleanOptions);
+    expect(
+      (item.value3 as IntegerSelectFieldSpec).options,
+      kConditionBooleanOptions,
+    );
 
     final instance = conditionValueConfig(13);
-    expect(instance.value3.options!.keys.toSet(), {0, 1, 2, 3});
+    expect((instance.value3 as IntegerSelectFieldSpec).options.keys.toSet(), {
+      0,
+      1,
+      2,
+      3,
+    });
     expect(
-      conditionValueConfig(31, value1: 3).value2.reference,
+      (conditionValueConfig(31, value1: 3).value2 as IntegerReferenceFieldSpec)
+          .reference,
       ConditionValueReference.creature,
     );
     expect(
-      conditionValueConfig(31, value1: 5).value2.reference,
+      (conditionValueConfig(31, value1: 5).value2 as IntegerReferenceFieldSpec)
+          .reference,
       ConditionValueReference.gameObject,
     );
-    expect(conditionValueConfig(47).value2.flags, kConditionQuestStatusFlags);
+    expect(
+      (conditionValueConfig(31, value1: 4).value2 as IntegerNumberFieldSpec)
+          .label,
+      '对象条目',
+    );
+    expect(
+      (conditionValueConfig(47).value2 as IntegerFlagsFieldSpec).flags,
+      kConditionQuestStatusFlags,
+    );
     expect(conditionValueConfig(103).value1.label, '世界脚本 ID');
   });
 

@@ -1,5 +1,6 @@
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/flag_item.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/spell_enums.dart';
 
 const kConditionBooleanOptions = <int, String>{0: '否', 1: '是'};
@@ -113,7 +114,10 @@ const kConditionUnitStateFlags = <FlagItem>[
   FlagItem(0x20000000, '不更新环境'),
 ];
 
-const _unused = ConditionValueFieldConfig('未使用', editable: false);
+const _unused = IntegerNumberFieldSpec<ConditionValueReference>(
+  '未使用',
+  editable: false,
+);
 
 final kConditionAuraTypeOptions = Map<int, String>.unmodifiable(
   Map<int, String>.from(kSpellAuraTypeOptions)..remove(0),
@@ -122,27 +126,32 @@ final kConditionAuraTypeOptions = Map<int, String>.unmodifiable(
 ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
   if (type < 0) return const ConditionValueConfig(_unused, _unused, _unused);
   if (type == 31) {
-    final entryReference = switch (value1) {
-      3 => ConditionValueReference.creature,
-      5 => ConditionValueReference.gameObject,
-      _ => ConditionValueReference.none,
-    };
     return _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '对象类型',
         options: {3: '单位', 4: '玩家', 5: '游戏对象', 7: '尸体'},
       ),
-      ConditionValueFieldConfig('对象条目', reference: entryReference),
-      const ConditionValueFieldConfig('生成/可攻击'),
+      switch (value1) {
+        3 => const IntegerReferenceFieldSpec<ConditionValueReference>(
+          '对象条目',
+          reference: ConditionValueReference.creature,
+        ),
+        5 => const IntegerReferenceFieldSpec<ConditionValueReference>(
+          '对象条目',
+          reference: ConditionValueReference.gameObject,
+        ),
+        _ => const IntegerNumberFieldSpec<ConditionValueReference>('对象条目'),
+      },
+      const IntegerNumberFieldSpec<ConditionValueReference>('生成/可攻击'),
     );
   }
   if (type == 42) {
     return _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '状态模式',
         options: {0: '精确状态', 1: '站立/坐下分类'},
       ),
-      ConditionValueFieldConfig(
+      IntegerSelectFieldSpec<ConditionValueReference>(
         '站立状态',
         options: value1 == 0
             ? const {
@@ -163,89 +172,144 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
   }
   return switch (type) {
     1 => _config(
-      _reference('法术 ID', ConditionValueReference.spell),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '法术 ID',
+        reference: ConditionValueReference.spell,
+      ),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '效果索引',
         options: {0: '效果 0', 1: '效果 1', 2: '效果 2'},
       ),
     ),
     2 => _config(
-      _reference('物品 ID', ConditionValueReference.item),
-      const ConditionValueFieldConfig('数量'),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '物品 ID',
+        reference: ConditionValueReference.item,
+      ),
+      const IntegerNumberFieldSpec<ConditionValueReference>('数量'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '包含银行',
         options: kConditionBooleanOptions,
       ),
     ),
-    3 => _config(_reference('物品 ID', ConditionValueReference.item)),
-    4 => _config(_reference('区域 ID', ConditionValueReference.area)),
+    3 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '物品 ID',
+        reference: ConditionValueReference.item,
+      ),
+    ),
+    4 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '区域 ID',
+        reference: ConditionValueReference.area,
+      ),
+    ),
     5 => _config(
-      _reference('阵营 ID', ConditionValueReference.faction),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '阵营 ID',
+        reference: ConditionValueReference.faction,
+      ),
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '声望等级掩码',
         flags: kConditionReputationRankFlags,
       ),
     ),
     6 => _config(
-      const ConditionValueFieldConfig('阵营', options: {469: '联盟', 67: '部落'}),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
+        '阵营',
+        options: {469: '联盟', 67: '部落'},
+      ),
     ),
     7 => _config(
-      _reference('技能线 ID', ConditionValueReference.skill),
-      const ConditionValueFieldConfig('技能值'),
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '技能线 ID',
+        reference: ConditionValueReference.skill,
+      ),
+      const IntegerNumberFieldSpec<ConditionValueReference>('技能值'),
     ),
-    8 ||
-    9 ||
-    14 ||
-    28 ||
-    43 ||
-    101 => _config(_reference('任务 ID', ConditionValueReference.quest)),
+    8 || 9 || 14 || 28 || 43 || 101 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '任务 ID',
+        reference: ConditionValueReference.quest,
+      ),
+    ),
     10 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '最低醉酒状态',
         options: {0: '清醒', 1: '微醺', 2: '醉酒', 3: '酩酊'},
       ),
     ),
     11 => _config(
-      const ConditionValueFieldConfig('世界状态 ID'),
-      const ConditionValueFieldConfig('数值'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('世界状态 ID'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('数值'),
     ),
-    12 => _config(const ConditionValueFieldConfig('游戏事件 ID')),
+    12 => _config(
+      const IntegerNumberFieldSpec<ConditionValueReference>('游戏事件 ID'),
+    ),
     13 => _config(
-      const ConditionValueFieldConfig('数据条目'),
-      const ConditionValueFieldConfig('期望值'),
-      const ConditionValueFieldConfig(
+      const IntegerNumberFieldSpec<ConditionValueReference>('数据条目'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('期望值'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '实例信息类型',
         options: {0: '数据', 1: 'GUID 数据', 2: '首领状态', 3: '64位数据'},
       ),
     ),
     15 => _config(
-      const ConditionValueFieldConfig('职业掩码', flags: kConditionClassFlags),
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
+        '职业掩码',
+        flags: kConditionClassFlags,
+      ),
     ),
     16 => _config(
-      const ConditionValueFieldConfig('种族掩码', flags: kConditionRaceFlags),
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
+        '种族掩码',
+        flags: kConditionRaceFlags,
+      ),
     ),
-    17 ||
-    39 => _config(_reference('成就 ID', ConditionValueReference.achievement)),
-    18 => _config(_reference('称号 ID', ConditionValueReference.title)),
+    17 || 39 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '成就 ID',
+        reference: ConditionValueReference.achievement,
+      ),
+    ),
+    18 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '称号 ID',
+        reference: ConditionValueReference.title,
+      ),
+    ),
     19 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '生成模式掩码',
         flags: kConditionSpawnMaskFlags,
       ),
     ),
     20 => _config(
-      const ConditionValueFieldConfig('性别', options: {0: '男性', 1: '女性'}),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
+        '性别',
+        options: {0: '男性', 1: '女性'},
+      ),
     ),
     21 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '单位状态掩码',
         flags: kConditionUnitStateFlags,
       ),
     ),
-    22 => _config(_reference('地图 ID', ConditionValueReference.map)),
-    23 => _config(_reference('区域 ID', ConditionValueReference.area)),
+    22 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '地图 ID',
+        reference: ConditionValueReference.map,
+      ),
+    ),
+    23 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '区域 ID',
+        reference: ConditionValueReference.area,
+      ),
+    ),
     24 => _config(
-      ConditionValueFieldConfig(
+      IntegerSelectFieldSpec<ConditionValueReference>(
         '生物类型',
         options: {
           for (final entry in kCreatureTypeOptions.entries)
@@ -253,43 +317,56 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
         },
       ),
     ),
-    25 => _config(_reference('法术 ID', ConditionValueReference.spell)),
-    26 => _config(const ConditionValueFieldConfig('相位掩码')),
+    25 => _config(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '法术 ID',
+        reference: ConditionValueReference.spell,
+      ),
+    ),
+    26 => _config(
+      const IntegerNumberFieldSpec<ConditionValueReference>('相位掩码'),
+    ),
     27 => _config(
-      const ConditionValueFieldConfig('等级'),
-      const ConditionValueFieldConfig(
+      const IntegerNumberFieldSpec<ConditionValueReference>('等级'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '比较类型',
         options: kConditionComparisonOptions,
       ),
     ),
     29 => _config(
-      _reference('生物 Entry', ConditionValueReference.creature),
-      const ConditionValueFieldConfig('搜索距离'),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '生物 Entry',
+        reference: ConditionValueReference.creature,
+      ),
+      const IntegerNumberFieldSpec<ConditionValueReference>('搜索距离'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '搜索死亡生物',
         options: kConditionBooleanOptions,
       ),
     ),
     30 => _config(
-      _reference('游戏对象 ID', ConditionValueReference.gameObject),
-      const ConditionValueFieldConfig('搜索距离'),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '游戏对象 ID',
+        reference: ConditionValueReference.gameObject,
+      ),
+      const IntegerNumberFieldSpec<ConditionValueReference>('搜索距离'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '对象状态',
         options: {0: '不检查', 1: '就绪', 2: '非就绪'},
       ),
     ),
     32 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '对象类型掩码',
         flags: kConditionObjectTypeMaskFlags,
       ),
     ),
     33 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '另一条件目标',
         options: kConditionTargetOptions,
       ),
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '关系类型',
         options: {
           0: '自身',
@@ -302,22 +379,22 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
       ),
     ),
     34 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '另一条件目标',
         options: kConditionTargetOptions,
       ),
-      const ConditionValueFieldConfig(
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '反应等级掩码',
         flags: kConditionReputationRankFlags,
       ),
     ),
     35 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '另一条件目标',
         options: kConditionTargetOptions,
       ),
-      const ConditionValueFieldConfig('距离'),
-      const ConditionValueFieldConfig(
+      const IntegerNumberFieldSpec<ConditionValueReference>('距离'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '比较类型',
         options: kConditionComparisonOptions,
       ),
@@ -328,109 +405,99 @@ ConditionValueConfig conditionValueConfig(int type, {int value1 = 0}) {
     46 ||
     106 => const ConditionValueConfig(_unused, _unused, _unused),
     37 => _config(
-      const ConditionValueFieldConfig('生命值'),
-      const ConditionValueFieldConfig(
+      const IntegerNumberFieldSpec<ConditionValueReference>('生命值'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '比较类型',
         options: kConditionComparisonOptions,
       ),
     ),
     38 => _config(
-      const ConditionValueFieldConfig('生命值百分比'),
-      const ConditionValueFieldConfig(
+      const IntegerNumberFieldSpec<ConditionValueReference>('生命值百分比'),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '比较类型',
         options: kConditionComparisonOptions,
       ),
     ),
     45 => _config(
-      const ConditionValueFieldConfig('宠物类型掩码', flags: kConditionPetTypeFlags),
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
+        '宠物类型掩码',
+        flags: kConditionPetTypeFlags,
+      ),
     ),
     47 => _config(
-      _reference('任务 ID', ConditionValueReference.quest),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '任务 ID',
+        reference: ConditionValueReference.quest,
+      ),
+      const IntegerFlagsFieldSpec<ConditionValueReference>(
         '任务状态掩码',
         flags: kConditionQuestStatusFlags,
       ),
     ),
     48 => _config(
-      _reference('任务 ID', ConditionValueReference.quest),
-      const ConditionValueFieldConfig(
+      IntegerReferenceFieldSpec<ConditionValueReference>(
+        '任务 ID',
+        reference: ConditionValueReference.quest,
+      ),
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '目标索引',
         options: {0: '目标 0', 1: '目标 1', 2: '目标 2', 3: '目标 3'},
       ),
-      const ConditionValueFieldConfig('目标计数'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('目标计数'),
     ),
     49 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '地图难度',
         options: kConditionDifficultyOptions,
       ),
     ),
     102 => _config(
-      ConditionValueFieldConfig('光环类型', options: kConditionAuraTypeOptions),
+      IntegerSelectFieldSpec<ConditionValueReference>(
+        '光环类型',
+        options: kConditionAuraTypeOptions,
+      ),
     ),
     103 => _config(
-      const ConditionValueFieldConfig('世界脚本 ID'),
-      const ConditionValueFieldConfig('状态'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('世界脚本 ID'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('状态'),
     ),
     104 => _config(
-      const ConditionValueFieldConfig('AI 数据 ID'),
-      const ConditionValueFieldConfig('期望值'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('AI 数据 ID'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('期望值'),
     ),
     105 => _config(
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '检查当前难度',
         options: kConditionBooleanOptions,
       ),
-      const ConditionValueFieldConfig(
+      const IntegerSelectFieldSpec<ConditionValueReference>(
         '地图难度',
         options: kConditionDifficultyOptions,
       ),
     ),
     _ => _config(
-      const ConditionValueFieldConfig('参数 1'),
-      const ConditionValueFieldConfig('参数 2'),
-      const ConditionValueFieldConfig('参数 3'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('参数 1'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('参数 2'),
+      const IntegerNumberFieldSpec<ConditionValueReference>('参数 3'),
     ),
   };
 }
 
 ConditionValueConfig _config(
-  ConditionValueFieldConfig value1, [
-  ConditionValueFieldConfig value2 = _unused,
-  ConditionValueFieldConfig value3 = _unused,
+  IntegerFieldSpec<ConditionValueReference> value1, [
+  IntegerFieldSpec<ConditionValueReference> value2 = _unused,
+  IntegerFieldSpec<ConditionValueReference> value3 = _unused,
 ]) => ConditionValueConfig(value1, value2, value3);
 
-ConditionValueFieldConfig _reference(
-  String label,
-  ConditionValueReference reference,
-) => ConditionValueFieldConfig(label, reference: reference);
-
 class ConditionValueConfig {
-  final ConditionValueFieldConfig value1;
-  final ConditionValueFieldConfig value2;
-  final ConditionValueFieldConfig value3;
+  final IntegerFieldSpec<ConditionValueReference> value1;
+  final IntegerFieldSpec<ConditionValueReference> value2;
+  final IntegerFieldSpec<ConditionValueReference> value3;
 
   const ConditionValueConfig(this.value1, this.value2, this.value3);
 }
 
-class ConditionValueFieldConfig {
-  final String label;
-  final bool editable;
-  final ConditionValueReference reference;
-  final Map<int, String>? options;
-  final List<FlagItem>? flags;
-
-  const ConditionValueFieldConfig(
-    this.label, {
-    this.editable = true,
-    this.reference = ConditionValueReference.none,
-    this.options,
-    this.flags,
-  });
-}
-
 enum ConditionValueReference {
-  none,
   achievement,
   area,
   creature,

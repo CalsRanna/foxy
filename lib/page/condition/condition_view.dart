@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/condition_error_types.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/page/condition/condition_detail_view_model.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -32,12 +33,12 @@ class ConditionView extends StatelessWidget {
       final conditionType = viewModel.selectedConditionType.value;
       final conditionValue1 = viewModel.selectedConditionValue1.value;
       final errorType = viewModel.selectedErrorType.value;
+      final referenceTemplate = viewModel.selectedSourceMode.value == 1;
+      final referenceCondition = viewModel.selectedConditionMode.value == 1;
       final valueConfig = conditionValueConfig(
-        conditionType,
+        referenceCondition ? -1 : conditionType,
         value1: conditionValue1,
       );
-      final referenceCondition = conditionType < 0;
-      final referenceTemplate = sourceType < 0;
 
       return SingleChildScrollView(
         padding: const EdgeInsets.only(top: 16),
@@ -50,13 +51,25 @@ class ConditionView extends StatelessWidget {
               children: [
                 _row(
                   FoxyFormItem(
-                    label: '来源/引用',
-                    child: FoxyIntEnumInput(
-                      controller: viewModel.sourceTypeOrReferenceIdController,
-                      options: kConditionSourceTypeLabels,
-                      placeholder: 'SourceTypeOrReferenceId',
-                      title: '来源类型',
+                    label: '来源模式',
+                    child: FoxyShadSelect<int>(
+                      controller: viewModel.sourceModeController,
+                      options: kConditionModeOptions,
+                      placeholder: const Text('模式'),
                     ),
+                  ),
+                  FoxyFormItem(
+                    label: referenceTemplate ? '引用模板 ID' : '来源类型',
+                    child: referenceTemplate
+                        ? FoxyNumberInput<int>(
+                            controller: viewModel.sourceReferenceIdController,
+                            placeholder: 'SourceTypeOrReferenceId',
+                          )
+                        : FoxyShadSelect<int>(
+                            controller: viewModel.sourceTypeController,
+                            options: kConditionSourceTypeLabels,
+                            placeholder: const Text('SourceTypeOrReferenceId'),
+                          ),
                   ),
                   _sourceGroupItem(
                     sourceType,
@@ -67,18 +80,17 @@ class ConditionView extends StatelessWidget {
                     sourceGroup,
                     referenceTemplate: referenceTemplate,
                   ),
+                ),
+                _row(
                   _sourceIdItem(
                     sourceType,
                     referenceTemplate: referenceTemplate,
                   ),
-                ),
-                _row(
                   _numberItem(
                     '逻辑分组',
                     'ElseGroup',
                     viewModel.elseGroupController,
                   ),
-                  const SizedBox(),
                   const SizedBox(),
                   const SizedBox(),
                 ),
@@ -89,13 +101,26 @@ class ConditionView extends StatelessWidget {
               children: [
                 _row(
                   FoxyFormItem(
-                    label: '条件/引用',
-                    child: FoxyIntEnumInput(
-                      controller: viewModel.conditionTypeOrReferenceController,
-                      options: kConditionTypeLabels,
-                      placeholder: 'ConditionTypeOrReference',
-                      title: '条件类型',
+                    label: '条件模式',
+                    child: FoxyShadSelect<int>(
+                      controller: viewModel.conditionModeController,
+                      options: kConditionModeOptions,
+                      placeholder: const Text('模式'),
                     ),
+                  ),
+                  FoxyFormItem(
+                    label: referenceCondition ? '引用条件 ID' : '条件类型',
+                    child: referenceCondition
+                        ? FoxyNumberInput<int>(
+                            controller:
+                                viewModel.conditionReferenceIdController,
+                            placeholder: 'ConditionTypeOrReference',
+                          )
+                        : FoxyShadSelect<int>(
+                            controller: viewModel.conditionTypeController,
+                            options: kConditionTypeLabels,
+                            placeholder: const Text('ConditionTypeOrReference'),
+                          ),
                   ),
                   FoxyFormItem(
                     label: '条件目标',
@@ -115,7 +140,6 @@ class ConditionView extends StatelessWidget {
                       enabled: !referenceCondition,
                     ),
                   ),
-                  const SizedBox(),
                 ),
                 _row(
                   _valueItem(
@@ -234,15 +258,13 @@ class ConditionView extends StatelessWidget {
     int sourceType, {
     required bool referenceTemplate,
   }) {
-    if (sourceType == 30) {
+    if (!referenceTemplate && sourceType == 30) {
       return FoxyFormItem(
         label: '对象类型',
-        child: FoxyIntEnumInput(
-          controller: viewModel.sourceGroupController,
+        child: FoxyShadSelect<int>(
+          controller: viewModel.sourceGroupController.selectController,
           options: const {0: '生物', 1: '游戏对象'},
-          placeholder: 'SourceGroup',
-          title: '对象类型',
-          readOnly: referenceTemplate,
+          placeholder: const Text('SourceGroup'),
         ),
       );
     }
@@ -261,7 +283,7 @@ class ConditionView extends StatelessWidget {
     return _numberItem(
       label,
       'SourceGroup',
-      viewModel.sourceGroupController,
+      viewModel.sourceGroupController.numberController,
       readOnly: referenceTemplate || !canEdit,
     );
   }
@@ -315,22 +337,20 @@ class ConditionView extends StatelessWidget {
     int sourceType, {
     required bool referenceTemplate,
   }) {
-    if (sourceType == 22) {
+    if (!referenceTemplate && sourceType == 22) {
       return FoxyFormItem(
         label: 'SmartAI类型',
-        child: FoxyIntEnumInput(
-          controller: viewModel.sourceIdController,
+        child: FoxyShadSelect<int>(
+          controller: viewModel.sourceIdController.selectController,
           options: kSourceTypes,
-          placeholder: 'SourceId',
-          title: 'SmartAI类型',
-          readOnly: referenceTemplate,
+          placeholder: const Text('SourceId'),
         ),
       );
     }
     return _numberItem(
       sourceType == 30 ? '生成 GUID' : '来源 ID',
       'SourceId',
-      viewModel.sourceIdController,
+      viewModel.sourceIdController.numberController,
       readOnly:
           referenceTemplate ||
           !kConditionSourceTypesWithSourceId.contains(sourceType),
@@ -339,23 +359,51 @@ class ConditionView extends StatelessWidget {
 
   FoxyFormItem _valueItem(
     String column,
-    ConditionValueFieldConfig config,
-    IntFieldController controller,
+    IntegerFieldSpec<ConditionValueReference> spec,
+    IntFieldControllerGroup controllers,
   ) {
-    final readOnly = !config.editable;
     return FoxyFormItem(
-      label: config.label,
-      child: _valueEditor(column, config, controller, readOnly: readOnly),
+      label: spec.label,
+      child: _valueEditor(column, spec, controllers),
     );
   }
 
   Widget _valueEditor(
     String column,
-    ConditionValueFieldConfig config,
-    IntFieldController controller, {
-    required bool readOnly,
-  }) {
-    final delegate = switch (config.reference) {
+    IntegerFieldSpec<ConditionValueReference> spec,
+    IntFieldControllerGroup controllers,
+  ) {
+    return switch (spec) {
+      IntegerNumberFieldSpec() => FoxyNumberInput<int>(
+        controller: controllers.numberController,
+        placeholder: column,
+        readOnly: !spec.editable,
+      ),
+      IntegerSelectFieldSpec(:final options) => FoxyShadSelect<int>(
+        controller: controllers.selectController,
+        options: options,
+        placeholder: Text(column),
+        enabled: spec.editable,
+      ),
+      IntegerFlagsFieldSpec(:final flags) => FoxyFlagPicker(
+        controller: controllers.flagController,
+        flags: flags,
+        title: spec.label,
+        placeholder: column,
+      ),
+      IntegerReferenceFieldSpec(:final reference) => FoxyEntityPicker(
+        controller: controllers.numberController,
+        delegate: _delegateFor(reference),
+        placeholder: column,
+        readOnly: !spec.editable,
+      ),
+    };
+  }
+
+  FoxyEntityPickerDelegate<Object?> _delegateFor(
+    ConditionValueReference reference,
+  ) {
+    return switch (reference) {
       ConditionValueReference.achievement =>
         FoxyEntityPickerDelegates.achievement,
       ConditionValueReference.area => FoxyEntityPickerDelegates.areaTable,
@@ -370,38 +418,7 @@ class ConditionView extends StatelessWidget {
       ConditionValueReference.skill => FoxyEntityPickerDelegates.skillLine,
       ConditionValueReference.spell => FoxyEntityPickerDelegates.spell,
       ConditionValueReference.title => FoxyEntityPickerDelegates.charTitle,
-      ConditionValueReference.none => null,
     };
-    if (delegate != null) {
-      return FoxyEntityPicker(
-        controller: controller,
-        delegate: delegate,
-        placeholder: column,
-        readOnly: readOnly,
-      );
-    }
-    if (config.flags != null && !readOnly) {
-      return FoxyFlagPicker(
-        controller: controller,
-        flags: config.flags!,
-        title: config.label,
-        placeholder: column,
-      );
-    }
-    if (config.options != null) {
-      return FoxyIntEnumInput(
-        controller: controller,
-        options: config.options!,
-        placeholder: column,
-        title: config.label,
-        readOnly: readOnly,
-      );
-    }
-    return FoxyNumberInput<int>(
-      placeholder: column,
-      controller: controller,
-      readOnly: readOnly,
-    );
   }
 
   Future<void> _persist(BuildContext context) async {

@@ -2,6 +2,7 @@ import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 
@@ -114,10 +115,10 @@ mixin ConditionValidationMixin on ViewModelValidationMixin {
 
     void requireZeroIfUnused(
       int value,
-      ConditionValueFieldConfig config,
+      IntegerFieldSpec<ConditionValueReference> spec,
       String name,
     ) {
-      if (!config.editable && value != 0) {
+      if (!spec.editable && value != 0) {
         throw ArgumentError.value(value, name, '当前条件类型不使用该字段');
       }
     }

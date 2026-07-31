@@ -313,19 +313,187 @@ void main() {
     });
   });
 
+  group('ConditionDetailViewModel 引用模式 encode/decode', () {
+    late _FakeConditionRepository repository;
+    late _RecordingActivityLogRepository activityLogs;
+
+    setUp(() {
+      repository = _FakeConditionRepository(_condition());
+      GetIt.instance.registerSingleton<EventBus>(EventBus(sync: true));
+      activityLogs = _RecordingActivityLogRepository();
+      GetIt.instance.registerSingleton<ActivityLogRepository>(activityLogs);
+      GetIt.instance.registerSingleton(ActivityLogService(activityLogs));
+      GetIt.instance.registerSingleton<ConditionRepository>(repository);
+      GetIt.instance.registerSingleton<RouterFacade>(RouterFacade());
+    });
+
+    tearDown(() async {
+      await GetIt.instance.reset();
+    });
+
+    test('普通类型无损加载与保存', () async {
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(key: ConditionKey.fromEntity(_condition()));
+
+      expect(viewModel.selectedSourceMode.value, 0);
+      expect(viewModel.selectedConditionMode.value, 0);
+      expect(viewModel.selectedSourceType.value, 17);
+      expect(viewModel.selectedConditionType.value, 2);
+
+      await viewModel.persist();
+      expect(repository.stored!.sourceTypeOrReferenceId, 17);
+      expect(repository.stored!.conditionTypeOrReference, 2);
+    });
+
+    test('来源引用 -7 无损加载、编辑、保存', () async {
+      final reference = _condition(sourceTypeOrReferenceId: -7);
+      repository.stored = reference;
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(key: ConditionKey.fromEntity(reference));
+
+      expect(viewModel.selectedSourceMode.value, 1);
+      expect(viewModel.sourceReferenceIdController.collect(), 7);
+      expect(viewModel.selectedSourceType.value, 0);
+
+      viewModel.sourceReferenceIdController.init(13);
+      await viewModel.persist();
+      expect(repository.stored!.sourceTypeOrReferenceId, -13);
+    });
+
+    test('条件引用 -5 无损加载、编辑、保存', () async {
+      final reference = _condition(conditionTypeOrReference: -5);
+      repository.stored = reference;
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(key: ConditionKey.fromEntity(reference));
+
+      expect(viewModel.selectedConditionMode.value, 1);
+      expect(viewModel.conditionReferenceIdController.collect(), 5);
+      expect(viewModel.selectedConditionType.value, 0);
+
+      viewModel.conditionReferenceIdController.init(9);
+      await viewModel.persist();
+      expect(repository.stored!.conditionTypeOrReference, -9);
+    });
+
+    test('int32 边界附近的引用 ID 可往返', () async {
+      repository.stored = _condition(sourceTypeOrReferenceId: -1);
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals(
+        key: ConditionKey.fromEntity(_condition(sourceTypeOrReferenceId: -1)),
+      );
+      expect(viewModel.sourceReferenceIdController.collect(), 1);
+
+      viewModel.sourceReferenceIdController.init(0x7FFFFFFF);
+      await viewModel.persist();
+      expect(repository.stored!.sourceTypeOrReferenceId, -0x7FFFFFFF);
+    });
+
+    test('引用模式投影未使用列为 0，切回普通模式保留 controller 草稿', () async {
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      _initControllers(viewModel, _condition());
+      // 切换到来源引用模式
+      viewModel.sourceModeController.init(1);
+      viewModel.sourceReferenceIdController.init(7);
+      // 隐藏字段的旧草稿
+      viewModel.sourceGroupController.init(5);
+      viewModel.sourceEntryController.init(2);
+      viewModel.sourceIdController.init(1);
+      viewModel.conditionTargetController.init(1);
+      viewModel.errorTypeController.init(12);
+      viewModel.errorTextIdController.init(3);
+
+      await viewModel.persist();
+
+      final stored = repository.stored!;
+      expect(stored.sourceTypeOrReferenceId, -7);
+      expect(stored.sourceGroup, 0);
+      expect(stored.sourceEntry, 0);
+      expect(stored.sourceId, 0);
+      expect(stored.conditionTarget, 0);
+      expect(stored.errorType, 0);
+      expect(stored.errorTextId, 0);
+
+      // 切回普通模式，草稿仍保留
+      viewModel.sourceModeController.init(0);
+      expect(viewModel.sourceGroupController.collect(), 5);
+      expect(viewModel.sourceEntryController.collect(), 2);
+      expect(viewModel.sourceIdController.collect(), 1);
+    });
+
+    test('条件引用模式投影 Value 与目标为 0', () async {
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      _initControllers(viewModel, _condition());
+      // 切换到条件引用模式
+      viewModel.conditionModeController.init(1);
+      viewModel.conditionReferenceIdController.init(5);
+      viewModel.conditionValue1Controller.init(3);
+      viewModel.conditionValue2Controller.init(4);
+      viewModel.conditionValue3Controller.init(5);
+      viewModel.conditionTargetController.init(1);
+      viewModel.negativeConditionController.init(1);
+
+      await viewModel.persist();
+
+      final stored = repository.stored!;
+      expect(stored.conditionTypeOrReference, -5);
+      expect(stored.conditionValue1, 0);
+      expect(stored.conditionValue2, 0);
+      expect(stored.conditionValue3, 0);
+      expect(stored.conditionTarget, 0);
+      expect(stored.negativeCondition, 0);
+    });
+
+    test('引用 ID 为 0 时保存报错', () async {
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      _initControllers(viewModel, _condition(sourceTypeOrReferenceId: -7));
+      viewModel.sourceReferenceIdController.init(0);
+
+      await expectLater(viewModel.persist(), throwsArgumentError);
+      expect(repository.stored!.sourceTypeOrReferenceId, isNot(-0));
+    });
+
+    test('Value1 裸负号输入不抛未捕获异常，修复后保存成功', () async {
+      final viewModel = ConditionDetailViewModel();
+      addTearDown(viewModel.dispose);
+      await viewModel.initSignals();
+      _initControllers(viewModel, _condition());
+
+      // 裸负号是非法草稿：组不通知、不抛异常，最后合法值保留。
+      viewModel.conditionValue1Controller.numberController.controller.text =
+          '-';
+      expect(viewModel.selectedConditionValue1.value, 1);
+
+      // 修复后正常保存。
+      viewModel.conditionValue1Controller.numberController.controller.text =
+          '3';
+      await viewModel.persist();
+      expect(repository.stored!.conditionValue1, 3);
+    });
+  });
 }
 
 ConditionEntity _condition({
   int sourceTypeOrReferenceId = 17,
   int sourceEntry = 1,
   int elseGroup = 0,
+  int conditionTypeOrReference = 2,
   String comment = 'condition',
 }) {
   return ConditionEntity(
     sourceTypeOrReferenceId: sourceTypeOrReferenceId,
     sourceEntry: sourceEntry,
     elseGroup: elseGroup,
-    conditionTypeOrReference: 2,
+    conditionTypeOrReference: conditionTypeOrReference,
     conditionValue1: 1,
     conditionValue2: 1,
     conditionValue3: 1,
@@ -337,16 +505,15 @@ void _initControllers(
   ConditionDetailViewModel viewModel,
   ConditionEntity condition,
 ) {
-  viewModel.sourceTypeOrReferenceIdController.init(
-    condition.sourceTypeOrReferenceId,
-  );
+  // 普通类型模式（测试数据均为非负来源/条件类型）。
+  viewModel.sourceModeController.init(0);
+  viewModel.sourceTypeController.init(condition.sourceTypeOrReferenceId);
   viewModel.sourceGroupController.init(condition.sourceGroup);
   viewModel.sourceEntryController.init(condition.sourceEntry);
   viewModel.sourceIdController.init(condition.sourceId);
   viewModel.elseGroupController.init(condition.elseGroup);
-  viewModel.conditionTypeOrReferenceController.init(
-    condition.conditionTypeOrReference,
-  );
+  viewModel.conditionModeController.init(0);
+  viewModel.conditionTypeController.init(condition.conditionTypeOrReference);
   viewModel.conditionTargetController.init(condition.conditionTarget);
   viewModel.conditionValue1Controller.init(condition.conditionValue1);
   viewModel.conditionValue2Controller.init(condition.conditionValue2);

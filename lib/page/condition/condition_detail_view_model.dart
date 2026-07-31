@@ -1,3 +1,5 @@
+import 'package:foxy/constant/condition_value_config.dart';
+import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
@@ -8,6 +10,9 @@ import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.da
 import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+
+/// 来源/条件两列的「普通类型 | 引用模板」模式选项。
+const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 
 class ConditionDetailViewModel
     with
@@ -29,29 +34,47 @@ class ConditionDetailViewModel
   final selectedSourceGroup = signal(0);
   final selectedConditionValue1 = signal(0);
   final selectedErrorType = signal(0);
+  final selectedSourceMode = signal(0);
+  final selectedConditionMode = signal(0);
 
-  // 主键字段（完整 10 列）
-  late final sourceTypeOrReferenceIdController = registerController(
+  // 来源：模式 + 类型/引用 ID 两组语义 controller
+  late final sourceModeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final sourceTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final sourceReferenceIdController = registerController(
     IntFieldController(),
   );
-  late final sourceGroupController = registerController(IntFieldController());
+  late final sourceGroupController = registerController(
+    IntFieldControllerGroup(),
+  );
   late final sourceEntryController = registerController(IntFieldController());
-  late final sourceIdController = registerController(IntFieldController());
+  late final sourceIdController = registerController(IntFieldControllerGroup());
   late final elseGroupController = registerController(IntFieldController());
-  late final conditionTypeOrReferenceController = registerController(
+
+  // 条件：模式 + 类型/引用 ID 两组语义 controller
+  late final conditionModeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final conditionTypeController = registerController(
+    SelectFieldController<int>(fallback: 0),
+  );
+  late final conditionReferenceIdController = registerController(
     IntFieldController(),
   );
   late final conditionTargetController = registerController(
     SelectFieldController<int>(fallback: 0),
   );
   late final conditionValue1Controller = registerController(
-    IntFieldController(),
+    IntFieldControllerGroup(),
   );
   late final conditionValue2Controller = registerController(
-    IntFieldController(),
+    IntFieldControllerGroup(),
   );
   late final conditionValue3Controller = registerController(
-    IntFieldController(),
+    IntFieldControllerGroup(),
   );
   // 非键字段
   late final negativeConditionController = registerController(
@@ -69,9 +92,11 @@ class ConditionDetailViewModel
   Future<void> initSignals({ConditionKey? key}) async {
     loading.value = true;
     errorMessage.value = null;
-    sourceTypeOrReferenceIdController.addListener(_onSourceTypeChange);
+    sourceModeController.addListener(_onSourceModeChange);
+    sourceTypeController.addListener(_onSourceTypeChange);
     sourceGroupController.addListener(_onSourceGroupChange);
-    conditionTypeOrReferenceController.addListener(_onConditionTypeChange);
+    conditionModeController.addListener(_onConditionModeChange);
+    conditionTypeController.addListener(_onConditionTypeChange);
     conditionValue1Controller.addListener(_onConditionValue1Change);
     errorTypeController.addListener(_onErrorTypeChange);
     try {
@@ -128,35 +153,71 @@ class ConditionDetailViewModel
   }
 
   ConditionEntity _collectCandidate() {
+    final sourceReferenceMode = sourceModeController.collect() == 1;
+    final conditionReferenceMode = conditionModeController.collect() == 1;
+    final sourceTypeOrReferenceId = sourceReferenceMode
+        ? -_positiveReferenceId(
+            sourceReferenceIdController.collect(),
+            'SourceTypeOrReferenceId',
+          )
+        : sourceTypeController.collect();
+    final conditionTypeOrReference = conditionReferenceMode
+        ? -_positiveReferenceId(
+            conditionReferenceIdController.collect(),
+            'ConditionTypeOrReference',
+          )
+        : conditionTypeController.collect();
     return ConditionEntity(
-      sourceTypeOrReferenceId: sourceTypeOrReferenceIdController.collect(),
-      sourceGroup: sourceGroupController.collect(),
-      sourceEntry: sourceEntryController.collect(),
-      sourceId: sourceIdController.collect(),
+      sourceTypeOrReferenceId: sourceTypeOrReferenceId,
+      // 引用模式下 AzerothCore 明确不使用的物理字段投影为 0；
+      // controller 草稿保留，切回普通模式后仍可继续编辑。
+      sourceGroup: sourceReferenceMode ? 0 : sourceGroupController.collect(),
+      sourceEntry: sourceReferenceMode ? 0 : sourceEntryController.collect(),
+      sourceId: sourceReferenceMode ? 0 : sourceIdController.collect(),
       elseGroup: elseGroupController.collect(),
-      conditionTypeOrReference: conditionTypeOrReferenceController.collect(),
-      conditionTarget: conditionTargetController.collect(),
-      conditionValue1: conditionValue1Controller.collect(),
-      conditionValue2: conditionValue2Controller.collect(),
-      conditionValue3: conditionValue3Controller.collect(),
-      negativeCondition: negativeConditionController.collect(),
-      errorType: errorTypeController.collect(),
-      errorTextId: errorTextIdController.collect(),
+      conditionTypeOrReference: conditionTypeOrReference,
+      conditionTarget: (sourceReferenceMode || conditionReferenceMode)
+          ? 0
+          : conditionTargetController.collect(),
+      conditionValue1: conditionReferenceMode
+          ? 0
+          : conditionValue1Controller.collect(),
+      conditionValue2: conditionReferenceMode
+          ? 0
+          : conditionValue2Controller.collect(),
+      conditionValue3: conditionReferenceMode
+          ? 0
+          : conditionValue3Controller.collect(),
+      negativeCondition: conditionReferenceMode
+          ? 0
+          : negativeConditionController.collect(),
+      errorType: sourceReferenceMode ? 0 : errorTypeController.collect(),
+      errorTextId: sourceReferenceMode ? 0 : errorTextIdController.collect(),
       scriptName: scriptNameController.collect(),
       comment: commentController.collect(),
     );
   }
 
   void _applyCandidate(ConditionEntity c) {
-    sourceTypeOrReferenceIdController.init(c.sourceTypeOrReferenceId);
-    selectedSourceType.value = c.sourceTypeOrReferenceId;
+    sourceModeController.init(_decodeMode(c.sourceTypeOrReferenceId));
+    sourceTypeController.init(_decodeType(c.sourceTypeOrReferenceId));
+    sourceReferenceIdController.init(
+      _decodeReferenceId(c.sourceTypeOrReferenceId),
+    );
+    selectedSourceMode.value = sourceModeController.collect();
+    selectedSourceType.value = sourceTypeController.collect();
     sourceGroupController.init(c.sourceGroup);
     selectedSourceGroup.value = c.sourceGroup;
     sourceEntryController.init(c.sourceEntry);
     sourceIdController.init(c.sourceId);
     elseGroupController.init(c.elseGroup);
-    conditionTypeOrReferenceController.init(c.conditionTypeOrReference);
-    selectedConditionType.value = c.conditionTypeOrReference;
+    conditionModeController.init(_decodeMode(c.conditionTypeOrReference));
+    conditionTypeController.init(_decodeType(c.conditionTypeOrReference));
+    conditionReferenceIdController.init(
+      _decodeReferenceId(c.conditionTypeOrReference),
+    );
+    selectedConditionMode.value = conditionModeController.collect();
+    selectedConditionType.value = conditionTypeController.collect();
     conditionTargetController.init(c.conditionTarget);
     conditionValue1Controller.init(c.conditionValue1);
     selectedConditionValue1.value = c.conditionValue1;
@@ -168,6 +229,55 @@ class ConditionDetailViewModel
     errorTextIdController.init(c.errorTextId);
     scriptNameController.init(c.scriptName);
     commentController.init(c.comment);
+    // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
+    _refreshSourceEditors();
+    _refreshConditionValueEditors();
+  }
+
+  /// 物理值 → 模式：负数表示引用模板，否则为普通类型。
+  static int _decodeMode(int value) => value < 0 ? 1 : 0;
+
+  /// 物理值 → 类型（非负）。
+  static int _decodeType(int value) => value < 0 ? 0 : value;
+
+  /// 物理值 → 引用 ID（正数）。
+  static int _decodeReferenceId(int value) => value < 0 ? -value : 0;
+
+  static int _positiveReferenceId(int id, String field) {
+    if (id <= 0) {
+      throw ArgumentError.value(id, field, '引用 ID 必须为正数');
+    }
+    return id;
+  }
+
+  void _refreshSourceEditors() {
+    final mode = sourceModeController.collect();
+    final type = sourceTypeController.collect();
+    if (mode == 1) {
+      // 引用模式下来源组/来源 ID 始终是只读数字输入。
+      sourceGroupController.configure(IntegerFieldEditor.number);
+      sourceIdController.configure(IntegerFieldEditor.number);
+      return;
+    }
+    sourceGroupController.configure(
+      type == 30 ? IntegerFieldEditor.select : IntegerFieldEditor.number,
+    );
+    sourceIdController.configure(
+      type == 22 ? IntegerFieldEditor.select : IntegerFieldEditor.number,
+    );
+  }
+
+  void _refreshConditionValueEditors() {
+    final type = conditionModeController.collect() == 1
+        ? -1
+        : conditionTypeController.collect();
+    final config = conditionValueConfig(
+      type,
+      value1: conditionValue1Controller.collect(),
+    );
+    conditionValue1Controller.configure(config.value1.editor);
+    conditionValue2Controller.configure(config.value2.editor);
+    conditionValue3Controller.configure(config.value3.editor);
   }
 
   void _logActivity(ActivityActionType action, ConditionEntity c) {
@@ -187,8 +297,24 @@ class ConditionDetailViewModel
     }
   }
 
+  void _onSourceModeChange() {
+    selectedSourceMode.value = sourceModeController.collect();
+    _refreshSourceEditors();
+  }
+
+  void _onSourceTypeChange() {
+    selectedSourceType.value = sourceTypeController.collect();
+    _refreshSourceEditors();
+  }
+
+  void _onConditionModeChange() {
+    selectedConditionMode.value = conditionModeController.collect();
+    _refreshConditionValueEditors();
+  }
+
   void _onConditionTypeChange() {
-    selectedConditionType.value = conditionTypeOrReferenceController.collect();
+    selectedConditionType.value = conditionTypeController.collect();
+    _refreshConditionValueEditors();
   }
 
   void _onConditionValue1Change() {
@@ -203,14 +329,12 @@ class ConditionDetailViewModel
     selectedSourceGroup.value = sourceGroupController.collect();
   }
 
-  void _onSourceTypeChange() {
-    selectedSourceType.value = sourceTypeOrReferenceIdController.collect();
-  }
-
   void dispose() {
-    sourceTypeOrReferenceIdController.removeListener(_onSourceTypeChange);
+    sourceModeController.removeListener(_onSourceModeChange);
+    sourceTypeController.removeListener(_onSourceTypeChange);
     sourceGroupController.removeListener(_onSourceGroupChange);
-    conditionTypeOrReferenceController.removeListener(_onConditionTypeChange);
+    conditionModeController.removeListener(_onConditionModeChange);
+    conditionTypeController.removeListener(_onConditionTypeChange);
     conditionValue1Controller.removeListener(_onConditionValue1Change);
     errorTypeController.removeListener(_onErrorTypeChange);
     disposeControllers();
