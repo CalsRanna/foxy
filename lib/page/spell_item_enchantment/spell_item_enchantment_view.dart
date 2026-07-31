@@ -296,7 +296,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
   Widget _effectArgumentInput(
     int slot,
     SelectFieldController<int> typeController,
-    IntFieldController argumentController,
+    IntFieldControllerGroup argumentController,
   ) {
     return ListenableBuilder(
       listenable: typeController.controller,
@@ -306,7 +306,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
           return FoxyFormItem(
             label: '法术 $slot',
             child: FoxyEntityPicker(
-              controller: argumentController,
+              controller: argumentController.numberController,
               delegate: FoxyEntityPickerDelegates.spell,
               placeholder: 'EffectArg$slot',
             ),
@@ -315,22 +315,20 @@ class SpellItemEnchantmentView extends StatelessWidget {
         if (type == 4) {
           return FoxyFormItem(
             label: '抗性系别 $slot',
-            child: FoxyIntEnumInput(
-              controller: argumentController,
+            child: FoxyShadSelect<int>(
+              controller: argumentController.selectController,
               options: kSpellItemEnchantmentSchoolOptions,
-              placeholder: 'EffectArg$slot',
-              title: '抗性系别 $slot',
+              placeholder: Text('EffectArg$slot'),
             ),
           );
         }
         if (type == 5) {
           return FoxyFormItem(
             label: '附魔属性 $slot',
-            child: FoxyIntEnumInput(
-              controller: argumentController,
+            child: FoxyShadSelect<int>(
+              controller: argumentController.selectController,
               options: kSpellItemEnchantmentStatOptions,
-              placeholder: 'EffectArg$slot',
-              title: '附魔属性 $slot',
+              placeholder: Text('EffectArg$slot'),
             ),
           );
         }
@@ -338,7 +336,7 @@ class SpellItemEnchantmentView extends StatelessWidget {
           label: '效果参数 $slot',
           child: FoxyNumberInput<int>(
             placeholder: 'EffectArg$slot',
-            controller: argumentController,
+            controller: argumentController.numberController,
           ),
         );
       },

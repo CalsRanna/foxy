@@ -62,10 +62,16 @@ class SpellItemEnchantmentDetailViewModel
     IntFieldController(),
   );
 
-  /// EffectArg
-  late final effectArg0Controller = registerController(IntFieldController());
-  late final effectArg1Controller = registerController(IntFieldController());
-  late final effectArg2Controller = registerController(IntFieldController());
+  /// EffectArg：随 Effect 类型切换数字/枚举/引用编辑语义
+  late final effectArg0Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final effectArg1Controller = registerController(
+    IntFieldControllerGroup(),
+  );
+  late final effectArg2Controller = registerController(
+    IntFieldControllerGroup(),
+  );
 
   /// Other
   late final itemVisualController = registerController(IntFieldController());
