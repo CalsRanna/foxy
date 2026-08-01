@@ -122,6 +122,32 @@ Widget settingDialogPathField({
   );
 }
 
+/// 只读路径展示框（目录配置来自设置页，动作对话框不再直接编辑）。
+Widget settingDialogReadonlyPath(BuildContext context, String path) {
+  final theme = ShadTheme.of(context);
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: theme.colorScheme.border),
+    ),
+    child: Row(
+      spacing: 8,
+      children: [
+        Icon(
+          LucideIcons.folder,
+          size: 15,
+          color: theme.colorScheme.mutedForeground,
+        ),
+        Expanded(
+          child: SelectableText(path, style: const TextStyle(fontSize: 13)),
+        ),
+      ],
+    ),
+  );
+}
+
 /// 进度面板（比例条或加载指示 + 标签 + 详情）。
 Widget settingDialogProgressPanel(
   BuildContext context, {
@@ -185,7 +211,6 @@ class DbcImportDialog extends StatefulWidget {
 
 class _DbcImportDialogState extends State<DbcImportDialog> {
   DbcImportWorkflowViewModel get _vm => widget.vm;
-  final _pathController = StringFieldController();
 
   /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
   /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
@@ -204,26 +229,10 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
       // The workflow exposes the failure through errorMessage.
     }
     if (!mounted) return;
-    final path = _vm.path.value;
-    if (path != null) _pathController.init(path);
     _ready.value = true;
   }
 
-  @override
-  void dispose() {
-    _pathController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    _pathController.init(dir);
-    _vm.setPath(dir);
-  }
-
   Future<void> _start() async {
-    _vm.setPath(_pathController.collect());
     try {
       await _vm.start();
     } catch (_) {
@@ -307,6 +316,8 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
           );
         }
 
+        final path = _vm.path.value;
+        final configured = path != null && path.trim().isNotEmpty;
         return SettingDialogShell(
           title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
           actions: [
@@ -315,10 +326,7 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
               child: const Text('关闭'),
             ),
             ShadButton(
-              onPressed:
-                  (_vm.path.value == null || _vm.path.value!.trim().isEmpty)
-                  ? null
-                  : _start,
+              onPressed: configured ? _start : null,
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
@@ -333,24 +341,22 @@ class _DbcImportDialogState extends State<DbcImportDialog> {
             children: [
               settingDialogMutedHint(
                 context,
-                '选择包含 Spell.dbc、Faction.dbc 等文件的客户端 DBC 目录。'
-                '导入以 DBC 为准：将覆盖数据库中对应表的数据；若需保留库内数据请先自行备份。',
+                '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
+                '对应表的数据；若需保留库内数据请先自行备份。',
               ),
               Text(
-                '源目录',
+                '服务端 DBC 目录',
                 style: theme.textTheme.small.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              settingDialogPathField(
-                controller: _pathController,
-                placeholder: '选择或输入 DBC 目录路径',
-                onBrowse: _browse,
-                onChanged: (value) {
-                  _vm.setPath(value);
-                },
-                onSubmitted: (_) => _start(),
-              ),
+              if (configured)
+                settingDialogReadonlyPath(context, path)
+              else
+                settingDialogMutedHint(
+                  context,
+                  '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
+                ),
               if (error != null)
                 settingDialogBanner(
                   context,

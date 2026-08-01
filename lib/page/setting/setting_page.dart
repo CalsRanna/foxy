@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
 import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/setting/dbc_sync_dialogs.dart';
+import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
+import 'package:foxy/page/setting/setup_status_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -20,9 +22,16 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
   final iconViewModel = GetIt.instance.get<IconExtractWorkflowViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    setupViewModel.prepare();
+  }
 
   @override
   void dispose() {
@@ -47,17 +56,33 @@ class _SettingPageState extends State<SettingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
+                  '目录设置',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '应用运行所需的两个目录，分别用于图标提取与 DBC 数据导入。',
+                  style: _mutedDescription(context),
+                ),
+                const SizedBox(height: 16),
+                DirectorySettingRow(
+                  vm: setupViewModel,
+                  target: DirectoryConfigTarget.clientDir,
+                ),
+                const SizedBox(height: 12),
+                DirectorySettingRow(
+                  vm: setupViewModel,
+                  target: DirectoryConfigTarget.dbcPath,
+                ),
+                const SizedBox(height: 24),
+                const Text(
                   'DBC 数据管理',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '从客户端目录导入 .dbc 到数据库，或将库内 DBC 表导出为文件。',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.65),
-                  ),
+                  '从服务端 DBC 目录导入 .dbc 到数据库，或将库内 DBC 表导出为文件。',
+                  style: _mutedDescription(context),
                 ),
                 const SizedBox(height: 16),
                 _buildDbcActions(),
@@ -69,11 +94,7 @@ class _SettingPageState extends State<SettingPage> {
                 const SizedBox(height: 8),
                 Text(
                   '从客户端 MPQ 归档提取游戏图标到本地缓存，应用不内置图标。',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.65),
-                  ),
+                  style: _mutedDescription(context),
                 ),
                 const SizedBox(height: 16),
                 _buildIconActions(),
@@ -85,6 +106,16 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  TextStyle _mutedDescription(BuildContext context) {
+    return Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(
+      color: Theme.of(
+        context,
+      ).colorScheme.onSurface.withValues(alpha: 0.65),
+    ) ?? const TextStyle(fontSize: 13);
+  }
+
   Widget _buildDbcActions() {
     return Watch((_) {
       final busy = importViewModel.isRunning || exportViewModel.isRunning;
@@ -93,7 +124,7 @@ class _SettingPageState extends State<SettingPage> {
           _SettingItem(
             title: '导入 DBC 文件',
             description:
-                '选择魔兽客户端中的 DBC 目录，以 DBC 为准写入 foxy 库并覆盖对应表。'
+                '从配置的服务端 DBC 目录导入数据，以 DBC 为准写入 foxy 库并覆盖对应表。'
                 '若需保留库内数据请先自行备份。',
             trailing: ShadButton(
               size: ShadButtonSize.sm,
@@ -132,7 +163,7 @@ class _SettingPageState extends State<SettingPage> {
           _SettingItem(
             title: '提取游戏图标',
             description:
-                '选择魔兽客户端根目录，从 Data\\<语言> 的 MPQ 归档中提取全部图标'
+                '从配置的客户端目录的 Data\\<语言> MPQ 归档中提取全部图标'
                 '（约 6300 个，BLP 原始格式）。未提取的图标在列表页显示占位符。',
             trailing: ShadButton(
               size: ShadButtonSize.sm,

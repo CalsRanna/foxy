@@ -1,20 +1,19 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/page/feature/feature_state_view_model.dart';
 import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
+import 'package:foxy/page/setting/setup_status_view_model.dart';
+import 'package:foxy/page/setting/setup_wizard_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
@@ -50,167 +49,39 @@ class _NavigateSettingIntent extends Intent {}
 
 class _ScaffoldPageState extends State<ScaffoldPage> {
   final featureState = GetIt.instance.get<FeatureStateViewModel>();
-  final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
+  final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        await importViewModel.prepare();
-      } catch (_) {
-        // The workflow exposes the failure through errorMessage.
-      }
-      await importViewModel.checkTables();
-      if (!mounted) return;
-      _showDbcDialog();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkSetup());
   }
 
-  void _showDbcDialog() {
-    final vm = importViewModel;
-
-    // 已导入，无需操作
-    if (vm.tablesReady || vm.status.value == WorkflowStatus.succeeded) return;
-
-    // 检查失败 / 表结构不兼容：专用恢复对话框，禁止误开「未导入」或自动导入。
-    if (vm.blockingTableChecks.isNotEmpty ||
-        (vm.status.value == WorkflowStatus.failed &&
-            vm.tableCheckResults.value.isEmpty)) {
-      _showDbcCheckErrorDialog();
-      return;
-    }
-
-    // 路径已配置 → 自动导入（显示进度对话框并启动导入）
-    if (vm.path.value != null) {
-      _startImport();
-      showFoxyDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => _DbcImportDialog(vm: vm),
-      );
-      return;
-    }
-
-    // 未配置路径 → 显示提醒对话框
-    showFoxyDialog(
-      context: context,
-      builder: (ctx) => ShadDialog.alert(
-        title: const Text('DBC 数据未导入'),
-        description: const Text(
-          '导入 DBC 数据后才能正常使用应用的全部功能，'
-          '包括法术、物品、生物等数据的完整展示与编辑。',
-        ),
-        actions: [
-          ShadButton.outline(
-            child: const Text('稍后再说'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          ShadButton(
-            child: const Text('立即导入'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              showFoxyDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (ctx) => _DbcImportDialog(vm: vm),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDbcCheckErrorDialog() {
-    final vm = importViewModel;
-    final message = vm.errorMessage.value ?? 'DBC 表检查失败';
-    final incompatible = vm.blockingTableChecks.any(
-      (result) => result.state == DbcTableState.incompatible,
-    );
-    final theme = ShadTheme.of(context);
-
-    showFoxyDialog(
-      context: context,
-      builder: (ctx) => ShadDialog.alert(
-        title: Text(incompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败'),
-        description: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 10,
-          children: [
-            Text(
-              incompatible
-                  ? '当前数据库中的 DBC 表与应用期望的字段结构不一致。'
-                        '可重新检查，或重新导入（以 DBC 为准覆盖库内对应表）。'
-                  : '无法完成 DBC 表状态检查。请确认数据库连接正常后重试。',
-              style: theme.textTheme.muted.copyWith(fontSize: 13),
-            ),
-            Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(maxHeight: 180),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.destructive.withValues(alpha: 0.2),
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: SelectableText(
-                  message,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          ShadButton.outline(
-            child: const Text('稍后再说'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          ShadButton.outline(
-            child: const Text('重新检查'),
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              await vm.checkTables();
-              if (!mounted) return;
-              _showDbcDialog();
-            },
-          ),
-          ShadButton(
-            child: Text(incompatible ? '重新导入' : '尝试导入'),
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              vm.reset();
-              try {
-                await vm.prepare();
-              } catch (_) {
-                // The workflow exposes the failure through errorMessage.
-              }
-              if (vm.path.value != null) _startImport();
-              if (!mounted) return;
-              showFoxyDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (importCtx) => _DbcImportDialog(vm: vm),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _startImport() async {
+  /// 强制检查首次设置：未完成（两个目录未配置或图标未提取）则弹出
+  /// 不可关闭的三步引导；已完成步骤由引导内部判定并跳过。
+  Future<void> _checkSetup() async {
     try {
-      await importViewModel.start();
+      await setupViewModel.prepare();
     } catch (_) {
-      // The workflow exposes the failure through errorMessage.
+      // 配置读取失败按未完成处理，引导会再次弹出。
     }
+    if (!mounted) return;
+    if (!setupViewModel.isSetupComplete) {
+      _showSetupWizard();
+    }
+  }
+
+  void _showSetupWizard() {
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => SetupWizardDialog(
+        setupVm: setupViewModel,
+        importVm: GetIt.instance.get<DbcImportWorkflowViewModel>(),
+        iconVm: GetIt.instance.get<IconExtractWorkflowViewModel>(),
+      ),
+    );
   }
 
   @override
@@ -331,307 +202,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: iconButton,
-    );
-  }
-}
-
-const _kDbcDialogWidth = 480.0;
-
-/// DBC 导入对话框，使用 showFoxyDialog 自带遮罩，不可关闭
-class _DbcImportDialog extends StatefulWidget {
-  final DbcImportWorkflowViewModel vm;
-  const _DbcImportDialog({required this.vm});
-
-  @override
-  State<_DbcImportDialog> createState() => _DbcImportDialogState();
-}
-
-class _DbcImportDialogState extends State<_DbcImportDialog> {
-  DbcImportWorkflowViewModel get _vm => widget.vm;
-  final _pathController = StringFieldController();
-  final _pathFocus = FocusNode();
-  void Function()? _unsub;
-
-  @override
-  void initState() {
-    super.initState();
-    _pathController.addListener(() {
-      if (mounted) setState(() {});
-    });
-    _unsub = _vm.status.subscribe(_onStatusChanged);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _pathFocus.requestFocus();
-    });
-  }
-
-  @override
-  void dispose() {
-    _unsub?.call();
-    _pathController.dispose();
-    _pathFocus.dispose();
-    super.dispose();
-  }
-
-  void _onStatusChanged(WorkflowStatus status) {
-    if (status == WorkflowStatus.succeeded && mounted) {
-      _unsub?.call();
-      _unsub = null;
-      Navigator.of(context).maybePop();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(width: _kDbcDialogWidth, child: Watch((_) => _buildBody()));
-  }
-
-  Widget _buildBody() {
-    final error = _vm.errorMessage.value;
-    final path = _vm.path.value;
-    final importing =
-        _vm.status.value == WorkflowStatus.preparing ||
-        _vm.status.value == WorkflowStatus.running ||
-        _vm.status.value == WorkflowStatus.cancelling;
-
-    if (error != null) {
-      return _buildErrorBody(error);
-    }
-    if (path == null) {
-      return _buildPathBody();
-    }
-    if (importing) {
-      return _buildProgressBody();
-    }
-    // 正在扫描目录 / 准备中
-    return _buildProgressBody();
-  }
-
-  Widget _buildPathBody() {
-    final theme = ShadTheme.of(context);
-    final descStyle = theme.textTheme.muted.copyWith(fontSize: 13);
-
-    return ShadDialog(
-      closeIcon: const SizedBox.shrink(),
-      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-      title: Row(
-        spacing: 10,
-        children: [
-          Icon(LucideIcons.folderOpen, size: 20),
-          const Text('导入 DBC 数据'),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 18,
-        children: [
-          Text(
-            '请选择魔兽世界客户端中 DBC 文件的所在目录\n（包含 Spell.dbc、Faction.dbc 等 .dbc 文件的文件夹）',
-            style: descStyle,
-          ),
-          ShadInput(
-            controller: _pathController.controller,
-            focusNode: _pathFocus,
-            placeholder: const Text('选择或输入 DBC 目录路径...'),
-            leading: const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(LucideIcons.folderSearch, size: 16),
-            ),
-            trailing: ShadButton.ghost(
-              height: 28,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              onPressed: _pathController.collect().isEmpty
-                  ? null
-                  : () => _pathController.init(''),
-              child: const Icon(LucideIcons.x, size: 14),
-            ),
-            onSubmitted: (_) => _submitPath(),
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              ShadButton.outline(
-                onPressed: () async {
-                  final dir = await getDirectoryPath();
-                  if (dir != null) _pathController.init(dir);
-                },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [
-                    Icon(LucideIcons.folderOpen, size: 15),
-                    Text('浏览...'),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              ShadButton(
-                onPressed: _submitPath,
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 6,
-                  children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _submitPath() async {
-    final path = _pathController.collect().trim();
-    if (path.isEmpty) return;
-    _vm.setPath(path);
-    try {
-      await _vm.start();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-  }
-
-  Widget _buildProgressBody() {
-    final theme = ShadTheme.of(context);
-    final mutedStyle = theme.textTheme.muted.copyWith(fontSize: 12);
-    final ratio = _vm.progress.value;
-    final label = _vm.progressLabel.value;
-    final detail = _vm.progressDetail.value;
-    final cancelling = _vm.status.value == WorkflowStatus.cancelling;
-
-    return ShadDialog(
-      closeIcon: const SizedBox.shrink(),
-      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-      title: Row(
-        spacing: 10,
-        children: [
-          const SizedBox.square(
-            dimension: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-          const Text('正在导入 DBC 数据'),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 14,
-        children: [
-          if (ratio != null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('总体进度', style: mutedStyle),
-                Text('${(ratio * 100).toStringAsFixed(0)}%', style: mutedStyle),
-              ],
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(value: ratio, minHeight: 6),
-            ),
-          ],
-          if (label.isNotEmpty) ...[
-            Row(
-              spacing: 8,
-              children: [
-                Icon(
-                  LucideIcons.fileInput,
-                  size: 15,
-                  color: theme.colorScheme.mutedForeground,
-                ),
-                Expanded(
-                  child: Text(label, style: const TextStyle(fontSize: 13)),
-                ),
-              ],
-            ),
-            if (detail.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(left: 23),
-                child: Text(detail, style: mutedStyle),
-              ),
-          ],
-          if (ratio == null && label.isEmpty)
-            Text('正在准备...', style: const TextStyle(fontSize: 13)),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ShadButton.outline(
-              onPressed: cancelling ? null : _vm.cancel,
-              child: Text(cancelling ? '正在取消...' : '取消导入'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorBody(String error) {
-    final theme = ShadTheme.of(context);
-    final isCancelled = error.contains('取消');
-    return ShadDialog(
-      closeIcon: const SizedBox.shrink(),
-      constraints: const BoxConstraints(maxWidth: _kDbcDialogWidth),
-      title: Row(
-        spacing: 10,
-        children: [
-          Icon(
-            isCancelled ? LucideIcons.circleX : LucideIcons.triangleAlert,
-            size: 20,
-            color: theme.colorScheme.destructive,
-          ),
-          Text(isCancelled ? 'DBC 导入已取消' : 'DBC 导入失败'),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.destructive.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.2),
-              ),
-            ),
-            child: SelectableText(error, style: const TextStyle(fontSize: 13)),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 8,
-              children: [
-                ShadButton.outline(
-                  onPressed: () {
-                    _vm.reset();
-                    Navigator.of(context).maybePop();
-                  },
-                  child: const Text('关闭'),
-                ),
-                ShadButton(
-                  onPressed: () async {
-                    try {
-                      await _vm.retry();
-                    } catch (_) {
-                      // The workflow exposes the failure through errorMessage.
-                    }
-                  },
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 6,
-                    children: [
-                      Icon(LucideIcons.rotateCw, size: 15),
-                      Text('重试'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

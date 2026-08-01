@@ -84,6 +84,7 @@ import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_view_model.
 import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
 import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
+import 'package:foxy/page/setting/setup_status_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_list_view_model.dart';
 import 'package:foxy/page/spell/spell_area_collection_editor_view_model.dart';
@@ -505,6 +506,7 @@ class DI {
     _instance.registerSingleton(FeatureStateViewModel());
     _instance.registerSingleton(DbcImportWorkflowViewModel());
     _instance.registerSingleton(IconExtractWorkflowViewModel());
+    _instance.registerSingleton(SetupStatusViewModel());
   }
 
   static void _registerInteractionViewModels() {

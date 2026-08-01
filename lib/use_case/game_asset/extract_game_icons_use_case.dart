@@ -54,7 +54,16 @@ final class ExtractGameIconsUseCase {
     try {
       await _configUtil.update({'client_dir': clientDir});
       if (cancelGeneration != _cancelGeneration) return _cancelledResult;
-      return await _spawnWorker(clientDir, input.onProgress, cancelGeneration);
+      final result = await _spawnWorker(
+        clientDir,
+        input.onProgress,
+        cancelGeneration,
+      );
+      if (result.success && !result.cancelled) {
+        // 完整提取成功标记，供首次设置引导判定「提取图标」步骤完成。
+        await _configUtil.update({'icons_extracted': true});
+      }
+      return result;
     } finally {
       _executing = false;
     }

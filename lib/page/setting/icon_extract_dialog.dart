@@ -1,9 +1,7 @@
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/dbc_sync_dialogs.dart';
 import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -19,7 +17,6 @@ class IconExtractDialog extends StatefulWidget {
 
 class _IconExtractDialogState extends State<IconExtractDialog> {
   IconExtractWorkflowViewModel get _vm => widget.vm;
-  final _pathController = StringFieldController();
 
   /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
   /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
@@ -38,26 +35,10 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
       // The workflow exposes the failure through errorMessage.
     }
     if (!mounted) return;
-    final path = _vm.path.value;
-    if (path != null) _pathController.init(path);
     _ready.value = true;
   }
 
-  @override
-  void dispose() {
-    _pathController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    _pathController.init(dir);
-    _vm.setPath(dir);
-  }
-
   Future<void> _start() async {
-    _vm.setPath(_pathController.collect());
     try {
       await _vm.start();
     } catch (_) {
@@ -143,6 +124,8 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
           );
         }
 
+        final path = _vm.path.value;
+        final configured = path != null && path.trim().isNotEmpty;
         return SettingDialogShell(
           title: settingDialogTitleRow(LucideIcons.image, '提取游戏图标'),
           actions: [
@@ -151,10 +134,7 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
               child: const Text('关闭'),
             ),
             ShadButton(
-              onPressed:
-                  (_vm.path.value == null || _vm.path.value!.trim().isEmpty)
-                  ? null
-                  : _start,
+              onPressed: configured ? _start : null,
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 6,
@@ -169,9 +149,8 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
             children: [
               settingDialogMutedHint(
                 context,
-                '选择魔兽客户端根目录（含 Data 目录，如 D:\\World of Warcraft）。'
-                'foxy 将从 Data\\<语言> 下的 MPQ 归档提取全部图标（BLP 格式，'
-                '约 6300 个），不内置在应用中。',
+                '从配置的客户端目录的 Data\\<语言> 下 MPQ 归档提取全部图标'
+                '（BLP 格式，约 6300 个），不内置在应用中。',
               ),
               Text(
                 '客户端目录',
@@ -179,15 +158,13 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              settingDialogPathField(
-                controller: _pathController,
-                placeholder: '选择或输入客户端目录路径',
-                onBrowse: _browse,
-                onChanged: (value) {
-                  _vm.setPath(value);
-                },
-                onSubmitted: (_) => _start(),
-              ),
+              if (configured)
+                settingDialogReadonlyPath(context, path)
+              else
+                settingDialogMutedHint(
+                  context,
+                  '尚未配置客户端目录，请先前往设置页「目录设置」中配置。',
+                ),
               if (error != null)
                 settingDialogBanner(
                   context,
