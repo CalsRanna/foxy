@@ -10,7 +10,7 @@ part 'achievement_repository.g.dart';
 
 @FoxyRepository(AchievementEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('title')
+@FoxyFilter.text('title', column: 'Title_lang_zhCN')
 class AchievementRepository
     with
         RepositoryMixin,
@@ -21,6 +21,7 @@ class AchievementRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copyAchievement(int key) async {
     final source = await getAchievement(key);
     if (source == null) {
@@ -31,10 +32,7 @@ class AchievementRepository
     return copied.id;
   }
 
-  Future<int> countAchievements({AchievementFilter? filter}) async {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
+  @override
   Future<AchievementEntity> createAchievement() async {
     return AchievementEntity(id: await _getNextId());
   }
@@ -44,38 +42,13 @@ class AchievementRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<List<AchievementEntity>> getAchievements() async {
-    final results = await laconic.table(_table).orderBy('ID').get();
-    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<List<BriefAchievementEntity>> getBriefAchievements({
-    int page = 1,
-    AchievementFilter? filter,
-  }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'Title_lang_zhCN',
-      'Description_lang_zhCN',
-      'Reward_lang_zhCN',
-    ]);
-    builder = _applyFilter(builder, filter);
-    final results = await builder
-        .orderBy('ID')
-        .limit(kPageSize)
-        .offset((page - 1) * kPageSize)
-        .get();
-    return results
-        .map((e) => BriefAchievementEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
   Future<void> saveAchievementLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

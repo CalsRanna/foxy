@@ -12,6 +12,7 @@ class GlyphPropertyRepository
     with RepositoryMixin, _GlyphPropertyRepositoryMixin {
   static const _table = 'foxy.dbc_glyph_properties';
 
+  @override
   Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);
     if (source == null) {
@@ -22,44 +23,9 @@ class GlyphPropertyRepository
     return copied.id;
   }
 
-  Future<int> countGlyphProperties({GlyphPropertyFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<GlyphPropertyEntity> createGlyphProperty() async {
     return GlyphPropertyEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefGlyphPropertyEntity>> getBriefGlyphProperties({
-    int page = 1,
-    GlyphPropertyFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = ['ID', 'SpellID', 'GlyphSlotFlags', 'SpellIconID'];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefGlyphPropertyEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<GlyphPropertyEntity>> getGlyphProperties() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, GlyphPropertyFilter? filter) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    return builder;
   }
 
   Future<int> _getNextId() async {

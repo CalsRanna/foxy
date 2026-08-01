@@ -8,11 +8,12 @@ part 'quest_template_repository.g.dart';
 
 @FoxyRepository(QuestTemplateEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('title')
+@FoxyFilter.text('title', column: 'qt.LogTitle')
 class QuestTemplateRepository
     with RepositoryMixin, _QuestTemplateRepositoryMixin {
   static const _table = 'quest_template';
 
+  @override
   Future<int> copyQuestTemplate(int key) async {
     final source = await getQuestTemplate(key);
     if (source == null) {
@@ -23,6 +24,7 @@ class QuestTemplateRepository
     return copied.id;
   }
 
+  @override
   Future<int> countQuestTemplates({QuestTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.title.isNotEmpty;
@@ -50,10 +52,12 @@ class QuestTemplateRepository
     return builder.count();
   }
 
+  @override
   Future<QuestTemplateEntity> createQuestTemplate() async {
     return QuestTemplateEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
+  @override
   Future<List<BriefQuestTemplateEntity>> getBriefQuestTemplates({
     int page = 1,
     QuestTemplateFilter? filter,
@@ -86,11 +90,13 @@ class QuestTemplateRepository
         .toList();
   }
 
+  @override
   Future<List<QuestTemplateEntity>> getQuestTemplates() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => QuestTemplateEntity.fromJson(e.toMap())).toList();
   }
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

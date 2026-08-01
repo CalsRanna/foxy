@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
-import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
 import 'package:foxy/entity/broadcast_text_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
 import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_immunity_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
@@ -24,10 +19,12 @@ import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
 import 'package:foxy/entity/destructible_model_data_entity.dart';
+import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
 import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
@@ -49,11 +46,14 @@ import 'package:foxy/entity/mail_template_entity.dart';
 import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/npc_text_entity.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/point_of_interest_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/entity/sound_ambience_entity.dart';
 import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
@@ -300,7 +300,7 @@ class FoxyEntityPickerDelegates {
       .get<DisenchantLootTemplateRepository>();
 
   static final referenceLoot =
-      FoxyEntityPickerDelegate<BriefReferenceLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefReferenceLootTemplateEntity>(
         title: '关联掉落模板',
         errorLabel: '搜索关联掉落模板失败',
         filters: const [FoxyEntityPickerFilter('模板 ID')],
@@ -308,22 +308,21 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '模板 ID',
             width: 160,
-            text: (BriefReferenceLootTemplateEntryEntity t) =>
-                t.entry.toString(),
+            text: (BriefReferenceLootTemplateEntity t) => t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '掉落项数',
-            text: (BriefReferenceLootTemplateEntryEntity t) =>
-                t.itemCount.toString(),
+            header: '物品名',
+            text: (BriefReferenceLootTemplateEntity t) =>
+                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
           ),
         ],
-        idOf: (BriefReferenceLootTemplateEntryEntity t) => t.key,
+        idOf: (BriefReferenceLootTemplateEntity t) => t.entry,
         fetch: (page, v) =>
-            _referenceLootRepository.getBriefLootTemplateEntries(
+            _referenceLootRepository.getBriefReferenceLootTemplates(
               page: page,
               filter: ReferenceLootTemplateFilter(entry: v[0]),
             ),
-        count: (v) => _referenceLootRepository.countLootTemplates(
+        count: (v) => _referenceLootRepository.countReferenceLootTemplates(
           filter: ReferenceLootTemplateFilter(entry: v[0]),
         ),
       );
@@ -1550,7 +1549,7 @@ class FoxyEntityPickerDelegates {
   );
 
   static final disenchantLoot =
-      FoxyEntityPickerDelegate<BriefDisenchantLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefDisenchantLootTemplateEntity>(
         title: '分解掉落模板',
         errorLabel: '搜索分解掉落模板失败',
         filters: const [FoxyEntityPickerFilter('模板 ID')],
@@ -1558,22 +1557,22 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '模板 ID',
             width: 160,
-            text: (BriefDisenchantLootTemplateEntryEntity row) =>
+            text: (BriefDisenchantLootTemplateEntity row) =>
                 row.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '掉落项数',
-            text: (BriefDisenchantLootTemplateEntryEntity row) =>
-                row.itemCount.toString(),
+            header: '物品名',
+            text: (BriefDisenchantLootTemplateEntity row) =>
+                row.reference != 0 ? '引用 #${row.reference}' : row.displayName,
           ),
         ],
-        idOf: (BriefDisenchantLootTemplateEntryEntity row) => row.key,
+        idOf: (BriefDisenchantLootTemplateEntity row) => row.entry,
         fetch: (page, values) =>
-            _disenchantLootRepository.getBriefLootTemplateEntries(
+            _disenchantLootRepository.getBriefLootTemplateRows(
               page: page,
               filter: DisenchantLootTemplateFilter(entry: values[0]),
             ),
-        count: (values) => _disenchantLootRepository.countLootTemplates(
+        count: (values) => _disenchantLootRepository.countLootTemplateRows(
           filter: DisenchantLootTemplateFilter(entry: values[0]),
         ),
       );
@@ -2049,7 +2048,7 @@ class FoxyEntityPickerDelegates {
   );
 
   static final creatureLoot =
-      FoxyEntityPickerDelegate<BriefCreatureLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefCreatureLootTemplateEntity>(
         title: '击杀掉落',
         errorLabel: '搜索掉落模板失败',
         filters: const [FoxyEntityPickerFilter('掉落编号')],
@@ -2057,31 +2056,30 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '掉落编号',
             width: 120,
-            text: (BriefCreatureLootTemplateEntryEntity t) =>
-                t.entry.toString(),
+            text: (BriefCreatureLootTemplateEntity t) => t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '物品数量',
-            text: (BriefCreatureLootTemplateEntryEntity t) =>
-                t.itemCount.toString(),
+            header: '物品名',
+            text: (BriefCreatureLootTemplateEntity t) =>
+                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
           ),
         ],
-        idOf: (BriefCreatureLootTemplateEntryEntity t) => t.key,
+        idOf: (BriefCreatureLootTemplateEntity t) => t.entry,
         fetch: (page, v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
-            .getBriefLootTemplateEntries(
+            .getBriefLootTemplateRows(
               filter: CreatureLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<CreatureLootTemplateRepository>()
-            .countLootTemplates(
+            .countLootTemplateRows(
               filter: CreatureLootTemplateFilter(entry: v[0]),
             ),
       );
 
   static final pickpocketLoot =
-      FoxyEntityPickerDelegate<BriefPickpocketingLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefPickpocketingLootTemplateEntity>(
         title: '偷窃掉落',
         errorLabel: '搜索掉落模板失败',
         filters: const [FoxyEntityPickerFilter('掉落编号')],
@@ -2089,31 +2087,31 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '掉落编号',
             width: 120,
-            text: (BriefPickpocketingLootTemplateEntryEntity t) =>
+            text: (BriefPickpocketingLootTemplateEntity t) =>
                 t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '物品数量',
-            text: (BriefPickpocketingLootTemplateEntryEntity t) =>
-                t.itemCount.toString(),
+            header: '物品名',
+            text: (BriefPickpocketingLootTemplateEntity t) =>
+                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
           ),
         ],
-        idOf: (BriefPickpocketingLootTemplateEntryEntity t) => t.key,
+        idOf: (BriefPickpocketingLootTemplateEntity t) => t.entry,
         fetch: (page, v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
-            .getBriefLootTemplateEntries(
+            .getBriefLootTemplateRows(
               filter: PickpocketingLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<PickpocketingLootTemplateRepository>()
-            .countLootTemplates(
+            .countLootTemplateRows(
               filter: PickpocketingLootTemplateFilter(entry: v[0]),
             ),
       );
 
   static final skinningLoot =
-      FoxyEntityPickerDelegate<BriefSkinningLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefSkinningLootTemplateEntity>(
         title: '剥皮掉落',
         errorLabel: '搜索掉落模板失败',
         filters: const [FoxyEntityPickerFilter('掉落编号')],
@@ -2121,31 +2119,30 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '掉落编号',
             width: 120,
-            text: (BriefSkinningLootTemplateEntryEntity t) =>
-                t.entry.toString(),
+            text: (BriefSkinningLootTemplateEntity t) => t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '物品数量',
-            text: (BriefSkinningLootTemplateEntryEntity t) =>
-                t.itemCount.toString(),
+            header: '物品名',
+            text: (BriefSkinningLootTemplateEntity t) =>
+                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
           ),
         ],
-        idOf: (BriefSkinningLootTemplateEntryEntity t) => t.key,
+        idOf: (BriefSkinningLootTemplateEntity t) => t.entry,
         fetch: (page, v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
-            .getBriefLootTemplateEntries(
+            .getBriefLootTemplateRows(
               filter: SkinningLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<SkinningLootTemplateRepository>()
-            .countLootTemplates(
+            .countLootTemplateRows(
               filter: SkinningLootTemplateFilter(entry: v[0]),
             ),
       );
 
   static final gameObjectLoot =
-      FoxyEntityPickerDelegate<BriefGameObjectLootTemplateEntryEntity>(
+      FoxyEntityPickerDelegate<BriefGameObjectLootTemplateEntity>(
         title: '游戏对象掉落模板',
         errorLabel: '搜索掉落模板失败',
         filters: const [FoxyEntityPickerFilter('掉落编号')],
@@ -2153,25 +2150,24 @@ class FoxyEntityPickerDelegates {
           FoxyEntityPickerColumn(
             header: '掉落编号',
             width: 120,
-            text: (BriefGameObjectLootTemplateEntryEntity t) =>
-                t.entry.toString(),
+            text: (BriefGameObjectLootTemplateEntity t) => t.entry.toString(),
           ),
           FoxyEntityPickerColumn(
-            header: '物品数量',
-            text: (BriefGameObjectLootTemplateEntryEntity t) =>
-                t.itemCount.toString(),
+            header: '物品名',
+            text: (BriefGameObjectLootTemplateEntity t) =>
+                t.reference != 0 ? '引用 #${t.reference}' : t.displayName,
           ),
         ],
-        idOf: (BriefGameObjectLootTemplateEntryEntity t) => t.key,
+        idOf: (BriefGameObjectLootTemplateEntity t) => t.entry,
         fetch: (page, v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
-            .getBriefLootTemplateEntries(
+            .getBriefLootTemplateRows(
               filter: GameObjectLootTemplateFilter(entry: v[0]),
               page: page,
             ),
         count: (v) => GetIt.instance
             .get<GameObjectLootTemplateRepository>()
-            .countLootTemplates(
+            .countLootTemplateRows(
               filter: GameObjectLootTemplateFilter(entry: v[0]),
             ),
       );

@@ -13,6 +13,7 @@ class GameObjectTemplateRepository
     with RepositoryMixin, _GameObjectTemplateRepositoryMixin {
   static const _table = 'gameobject_template';
 
+  @override
   Future<int> copyGameObjectTemplate(int key) async {
     final source = await getGameObjectTemplate(key);
     if (source == null) {
@@ -25,6 +26,7 @@ class GameObjectTemplateRepository
     return copied.entry;
   }
 
+  @override
   Future<int> countGameObjectTemplates({
     GameObjectTemplateFilter? filter,
   }) async {
@@ -49,12 +51,14 @@ class GameObjectTemplateRepository
     return builder.count();
   }
 
+  @override
   Future<GameObjectTemplateEntity> createGameObjectTemplate() async {
     return GameObjectTemplateEntity(
       entry: await nextMaxPlusOne(_table, 'entry'),
     );
   }
 
+  @override
   Future<List<BriefGameObjectTemplateEntity>> getBriefGameObjectTemplates({
     int page = 1,
     GameObjectTemplateFilter? filter,
@@ -83,6 +87,7 @@ class GameObjectTemplateRepository
         .toList();
   }
 
+  @override
   Future<List<GameObjectTemplateEntity>> getGameObjectTemplates() async {
     final results = await laconic.table(_table).orderBy('entry').get();
     return results
@@ -90,6 +95,7 @@ class GameObjectTemplateRepository
         .toList();
   }
 
+  @override
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     GameObjectTemplateFilter? filter,

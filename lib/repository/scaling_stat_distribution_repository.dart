@@ -12,6 +12,7 @@ class ScalingStatDistributionRepository
     with RepositoryMixin, _ScalingStatDistributionRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_distribution';
 
+  @override
   Future<int> copyScalingStatDistribution(int key) async {
     final source = await getScalingStatDistribution(key);
     if (source == null) {
@@ -22,76 +23,9 @@ class ScalingStatDistributionRepository
     return copied.id;
   }
 
-  Future<int> countScalingStatDistributions({
-    ScalingStatDistributionFilter? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
     return ScalingStatDistributionEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefScalingStatDistributionEntity>>
-  getBriefScalingStatDistributions({
-    int page = 1,
-    ScalingStatDistributionFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'ID',
-      'StatID0',
-      'StatID1',
-      'StatID2',
-      'StatID3',
-      'StatID4',
-      'StatID5',
-      'StatID6',
-      'StatID7',
-      'StatID8',
-      'StatID9',
-      'Bonus0',
-      'Bonus1',
-      'Bonus2',
-      'Bonus3',
-      'Bonus4',
-      'Bonus5',
-      'Bonus6',
-      'Bonus7',
-      'Bonus8',
-      'Bonus9',
-      'Maxlevel',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefScalingStatDistributionEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<ScalingStatDistributionEntity>>
-  getScalingStatDistributions() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ScalingStatDistributionFilter? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    return builder;
   }
 
   Future<int> _getNextId() async {

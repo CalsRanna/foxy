@@ -39,6 +39,27 @@ final class CreatureTemplateFilter {
 }
 
 mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
+  Future<int> copyCreatureTemplate(int key) async {
+    final source = await getCreatureTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCreatureTemplate();
+    final copied = source.copyWith(entry: blank.entry);
+    await storeCreatureTemplate(copied);
+    return copied.entry;
+  }
+
+  Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {
+    return _applyFilter(laconic.table('creature_template'), filter).count();
+  }
+
+  Future<CreatureTemplateEntity> createCreatureTemplate() async {
+    return CreatureTemplateEntity(
+      entry: await nextMaxPlusOne('creature_template', '`entry`'),
+    );
+  }
+
   Future<void> destroyCreatureTemplate(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -57,6 +78,35 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CreatureTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
+    int page = 1,
+    CreatureTemplateFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('creature_template').select([
+      '`entry`',
+      '`maxlevel`',
+      '`minlevel`',
+      '`name`',
+      '`subname`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`entry`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCreatureTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
+    var builder = laconic.table('creature_template').orderBy('`entry`');
+    final results = await builder.get();
+    return results
+        .map((e) => CreatureTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeCreatureTemplate(
@@ -98,6 +148,23 @@ mixin _CreatureTemplateRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    CreatureTemplateFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('`entry`', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('`name`', filter.name);
+    }
+    if (filter.subName.isNotEmpty) {
+      builder = builder.where('`subname`', filter.subName);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

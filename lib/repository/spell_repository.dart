@@ -10,7 +10,7 @@ part 'spell_repository.g.dart';
 
 @FoxyRepository(SpellEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'ds.Name_lang_zhCN')
 class SpellRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _SpellRepositoryMixin {
   static const _table = 'foxy.dbc_spell';
@@ -18,6 +18,7 @@ class SpellRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copySpell(int key) async {
     final source = await getSpell(key);
     if (source == null) {
@@ -28,16 +29,19 @@ class SpellRepository
     return copied.id;
   }
 
+  @override
   Future<int> countSpells({SpellFilter? filter}) async {
     var builder = laconic.table('$_table AS ds');
     builder = _applyFilter(builder, filter);
     return builder.count();
   }
 
+  @override
   Future<SpellEntity> createSpell() async {
     return SpellEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
+  @override
   Future<List<BriefSpellEntity>> getBriefSpells({
     int page = 1,
     SpellFilter? filter,
@@ -77,6 +81,7 @@ class SpellRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
+  @override
   Future<List<SpellEntity>> getSpells() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => SpellEntity.fromJson(e.toMap())).toList();
@@ -88,6 +93,7 @@ class SpellRepository
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, SpellFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

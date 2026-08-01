@@ -135,7 +135,7 @@ DBC 功能面向客户端版本 `3.3.5.12340` / 3.3.5a。表、文件名及物�
 | Builder           | 作用域                              | 生成内容                                       |
 | ----------------- | ----------------------------------- | ---------------------------------------------- |
 | `foxy_entity`     | `lib/entity/**_entity.dart`         | Full Entity 值语义 mixin、Brief 实体、复合 Key |
-| `foxy_repository` | `lib/repository/**_repository.dart` | 标准 CRUD 方法、物理键查询、Filter 查询输入    |
+| `foxy_repository` | `lib/repository/**_repository.dart` | 标准 CRUD、列表/统计/复制/新建查询层、Filter 查询输入 |
 | `foxy_view_model` | `lib/view_model/**_view_model.dart` | 列表 ViewModel 样板、表单 controller 与收集    |
 
 ### 注解一览
@@ -147,12 +147,14 @@ DBC 功能面向客户端版本 `3.3.5.12340` / 3.3.5a。表、文件名及物�
 | `@FoxyBriefEntity`                                                              | Entity class     | 同时生成只读 `Brief<Name>Entity`（值语义，无写 API）                                       |
 | `@FoxyBriefField()`                                                             | Entity 字段      | 把该物理字段纳入 Brief 投影                                                                |
 | `@FoxyBriefField.text/integer/decimal/boolean(name)`                            | Entity class     | 声明 Brief 投影补充字段（由查询 alias 提供）                                               |
-| `@FoxyRepository(Entity)`                                                       | Repository class | 生成 `get` / `store` / `update` / `destroy` 与 `_whereKey`                                 |
-| `@FoxyFilter.text/integer/decimal/boolean(name)`                                | Repository class | 生成该仓库的 `<Name>Filter` 查询输入                                                       |
+| `@FoxyRepository(Entity)`                                                       | Repository class | 生成 CRUD；有列表页的仓库再生成 `create` / `copy` / `getBrief*` / `count*` / `get*` 查询层 |
+| `@FoxyFilter.text/integer/decimal/boolean(name, column:)`                       | Repository class | 生成该仓库的 `<Name>Filter` 查询输入；`column` 显式指定物理列（无法按字段名推断时必填）   |
 | `@FoxyListViewModel(entity:, repository:)`                                      | List ViewModel   | 生成列表状态、筛选 controller 与 search/reset/paginate/copy/destroy/刷新                   |
 | `@FoxyDetailViewModel(entity:, selects:, flags:, groups:, nullable:, exclude:)` | Detail ViewModel | 生成表单 controller 与 `_applyCandidate` / `_collectCandidate`                             |
 
 典型用法：Entity 声明字段与物理列的对应关系（单一事实来源），Repository 声明表名与筛选字段，Detail ViewModel 只声明表单例外（select/flag/group/nullable/exclude），列表筛选字段直接从 Repository 的 `@FoxyFilter` 读取。生成器在构建期校验文件名、`part` 声明、mixin 混入、字段类型、命名约定等约束，违规即构建失败，而不是留到运行时。
+
+查询层（`create` / `copy` / `getBrief*` / `count*` / `get*` / `_applyFilter`）按命名约定全量生成，手写方法同签名时自动成为 `@override`（类成员优先于 mixin 成员）——带 join / LIKE / 上限校验等特殊逻辑的仓库保留手写版本即可。列表查询方法名固定为 `getBrief<Base>s` / `count<Base>s` / `copy<Base>` / `destroy<Base>`（辅音 + y 结尾按 y → ies 复数化，如 `GemProperty` → `GemProperties`）。子表仓库（无列表页）本期不生成查询层。
 
 ### 重新生成
 

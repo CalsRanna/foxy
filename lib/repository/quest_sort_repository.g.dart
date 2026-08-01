@@ -25,6 +25,27 @@ final class QuestSortFilter {
 }
 
 mixin _QuestSortRepositoryMixin on RepositoryMixin {
+  Future<int> copyQuestSort(int key) async {
+    final source = await getQuestSort(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createQuestSort();
+    final copied = source.copyWith(id: blank.id);
+    await storeQuestSort(copied);
+    return copied.id;
+  }
+
+  Future<int> countQuestSorts({QuestSortFilter? filter}) async {
+    return _applyFilter(laconic.table('foxy.dbc_quest_sort'), filter).count();
+  }
+
+  Future<QuestSortEntity> createQuestSort() async {
+    return QuestSortEntity(
+      id: await nextMaxPlusOne('foxy.dbc_quest_sort', '`ID`'),
+    );
+  }
+
   Future<void> destroyQuestSort(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -43,6 +64,30 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return QuestSortEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefQuestSortEntity>> getBriefQuestSorts({
+    int page = 1,
+    QuestSortFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_quest_sort').select([
+      '`ID`',
+      '`SortName_lang_zhCN`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefQuestSortEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<QuestSortEntity>> getQuestSorts() async {
+    var builder = laconic.table('foxy.dbc_quest_sort').orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => QuestSortEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeQuestSort(QuestSortEntity questSort) async {
@@ -82,6 +127,17 @@ mixin _QuestSortRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, QuestSortFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('`SortName_lang_zhCN`', filter.name);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

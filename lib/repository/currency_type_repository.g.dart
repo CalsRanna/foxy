@@ -25,6 +25,30 @@ final class CurrencyTypeFilter {
 }
 
 mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
+  Future<int> copyCurrencyType(int key) async {
+    final source = await getCurrencyType(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createCurrencyType();
+    final copied = source.copyWith(id: blank.id);
+    await storeCurrencyType(copied);
+    return copied.id;
+  }
+
+  Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) async {
+    return _applyFilter(
+      laconic.table('foxy.dbc_currency_types'),
+      filter,
+    ).count();
+  }
+
+  Future<CurrencyTypeEntity> createCurrencyType() async {
+    return CurrencyTypeEntity(
+      id: await nextMaxPlusOne('foxy.dbc_currency_types', '`ID`'),
+    );
+  }
+
   Future<void> destroyCurrencyType(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -43,6 +67,32 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return CurrencyTypeEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
+    int page = 1,
+    CurrencyTypeFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_currency_types').select([
+      '`ID`',
+      '`ItemID`',
+      '`CategoryID`',
+      '`BitIndex`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefCurrencyTypeEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
+    var builder = laconic.table('foxy.dbc_currency_types').orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => CurrencyTypeEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
@@ -82,6 +132,17 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, CurrencyTypeFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('`it.name`', filter.name);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

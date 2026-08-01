@@ -28,6 +28,30 @@ final class ScalingStatValueFilter {
 }
 
 mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
+  Future<int> copyScalingStatValue(int key) async {
+    final source = await getScalingStatValue(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createScalingStatValue();
+    final copied = source.copyWith(id: blank.id);
+    await storeScalingStatValue(copied);
+    return copied.id;
+  }
+
+  Future<int> countScalingStatValues({ScalingStatValueFilter? filter}) async {
+    return _applyFilter(
+      laconic.table('foxy.dbc_scaling_stat_values'),
+      filter,
+    ).count();
+  }
+
+  Future<ScalingStatValueEntity> createScalingStatValue() async {
+    return ScalingStatValueEntity(
+      id: await nextMaxPlusOne('foxy.dbc_scaling_stat_values', '`ID`'),
+    );
+  }
+
   Future<void> destroyScalingStatValue(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -46,6 +70,38 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ScalingStatValueEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
+    int page = 1,
+    ScalingStatValueFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_scaling_stat_values').select([
+      '`ID`',
+      '`Charlevel`',
+      '`ShoulderBudget`',
+      '`TrinketBudget`',
+      '`WeaponBudget1H`',
+      '`RangedBudget`',
+      '`PrimaryBudget`',
+      '`TertiaryBudget`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefScalingStatValueEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<ScalingStatValueEntity>> getScalingStatValues() async {
+    var builder = laconic.table('foxy.dbc_scaling_stat_values').orderBy('`ID`');
+    final results = await builder.get();
+    return results
+        .map((e) => ScalingStatValueEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeScalingStatValue(
@@ -87,6 +143,20 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ScalingStatValueFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.charlevel.isNotEmpty) {
+      builder = builder.where('`Charlevel`', filter.charlevel);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

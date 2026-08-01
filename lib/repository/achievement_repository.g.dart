@@ -25,6 +25,27 @@ final class AchievementFilter {
 }
 
 mixin _AchievementRepositoryMixin on RepositoryMixin {
+  Future<int> copyAchievement(int key) async {
+    final source = await getAchievement(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createAchievement();
+    final copied = source.copyWith(id: blank.id);
+    await storeAchievement(copied);
+    return copied.id;
+  }
+
+  Future<int> countAchievements({AchievementFilter? filter}) async {
+    return _applyFilter(laconic.table('foxy.dbc_achievement'), filter).count();
+  }
+
+  Future<AchievementEntity> createAchievement() async {
+    return AchievementEntity(
+      id: await nextMaxPlusOne('foxy.dbc_achievement', '`ID`'),
+    );
+  }
+
   Future<void> destroyAchievement(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -43,6 +64,32 @@ mixin _AchievementRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return AchievementEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefAchievementEntity>> getBriefAchievements({
+    int page = 1,
+    AchievementFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_achievement').select([
+      '`ID`',
+      '`Title_lang_zhCN`',
+      '`Description_lang_zhCN`',
+      '`Reward_lang_zhCN`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefAchievementEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<AchievementEntity>> getAchievements() async {
+    var builder = laconic.table('foxy.dbc_achievement').orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => AchievementEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeAchievement(AchievementEntity achievement) async {
@@ -82,6 +129,17 @@ mixin _AchievementRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, AchievementFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.title.isNotEmpty) {
+      builder = builder.where('`Title_lang_zhCN`', filter.title);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

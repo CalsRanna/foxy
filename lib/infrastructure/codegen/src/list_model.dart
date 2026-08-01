@@ -28,16 +28,16 @@ final class ListGenerationModel {
   /// 按 repository `@FoxyFilter` 声明顺序排列的 text 筛选字段。
   final List<ListFilterFieldModel> fields;
 
-  /// repository 中返回 Brief 列表的实例方法名(签名匹配,非命名规则)。
+  /// repository 中返回 Brief 列表的实例方法名(命名约定,见 ListReader)。
   final String getBriefMethodName;
 
   /// repository 中统计总数的实例方法名。
   final String countMethodName;
 
-  /// repository 中复制记录的方法名;null 表示不支持复制(不生成 copy)。
-  final String? copyMethodName;
+  /// repository 中复制记录的方法名(查询层全量生成,恒存在)。
+  final String copyMethodName;
 
-  /// 物理 Key 类型:`int` 或复合 `XxxKey`(来自 copy/destroy 参数类型)。
+  /// 物理 Key 类型:`int` 或复合 `XxxKey`(来自 entity key 字段)。
   final String keyType;
 
   const ListGenerationModel({

@@ -1,11 +1,14 @@
 import '../repository_annotations.dart';
 
 final class RepositoryFilterFieldModel {
+  /// 物理列名；生成 `_applyFilter` 时按此列做等值匹配。
+  final String column;
   final Object defaultValue;
   final String name;
   final FoxyFilterType type;
 
   const RepositoryFilterFieldModel({
+    required this.column,
     required this.defaultValue,
     required this.name,
     required this.type,

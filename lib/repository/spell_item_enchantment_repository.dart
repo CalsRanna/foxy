@@ -10,7 +10,7 @@ part 'spell_item_enchantment_repository.g.dart';
 
 @FoxyRepository(SpellItemEnchantmentEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'Name_lang_zhCN')
 class SpellItemEnchantmentRepository
     with
         RepositoryMixin,
@@ -21,6 +21,7 @@ class SpellItemEnchantmentRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
@@ -31,37 +32,9 @@ class SpellItemEnchantmentRepository
     return copied.id;
   }
 
-  Future<int> countSpellItemEnchantments({
-    SpellItemEnchantmentFilter? filter,
-  }) async {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
+  @override
   Future<SpellItemEnchantmentEntity> createSpellItemEnchantment() async {
     return SpellItemEnchantmentEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefSpellItemEnchantmentEntity>> getBriefSpellItemEnchantments({
-    int page = 1,
-    SpellItemEnchantmentFilter? filter,
-  }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'Name_lang_zhCN',
-      'Charges',
-      'Effect0',
-      'Effect1',
-      'Effect2',
-    ]);
-    builder = _applyFilter(builder, filter);
-    final results = await builder
-        .orderBy('ID')
-        .limit(kPageSize)
-        .offset((page - 1) * kPageSize)
-        .get();
-    return results
-        .map((row) => BriefSpellItemEnchantmentEntity.fromJson(row.toMap()))
-        .toList();
   }
 
   Future<List<DbcLocaleFieldValue>> getSpellItemEnchantmentLocales(
@@ -69,19 +42,13 @@ class SpellItemEnchantmentRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<List<SpellItemEnchantmentEntity>> getSpellItemEnchantments() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((row) => SpellItemEnchantmentEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
   Future<void> saveSpellItemEnchantmentLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     SpellItemEnchantmentFilter? filter,

@@ -8,10 +8,11 @@ part 'gossip_menu_repository.g.dart';
 
 @FoxyRepository(GossipMenuEntity)
 @FoxyFilter.text('menuId')
-@FoxyFilter.text('text')
+@FoxyFilter.text('text', column: 'nt.text0_0')
 class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
   static const _table = 'gossip_menu';
 
+  @override
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
     final source = await getGossipMenu(key);
     if (source == null) {
@@ -22,6 +23,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
     return GossipMenuKey.fromEntity(copied);
   }
 
+  @override
   Future<int> countGossipMenus({GossipMenuFilter? filter}) async {
     final needsTextJoin = filter != null && filter.text.isNotEmpty;
     if (!needsTextJoin) {
@@ -46,10 +48,12 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
     return builder.count();
   }
 
+  @override
   Future<GossipMenuEntity> createGossipMenu() async {
     return GossipMenuEntity(menuId: await getNextMenuId());
   }
 
+  @override
   Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
     int page = 1,
     GossipMenuFilter? filter,
@@ -85,6 +89,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
         .toList();
   }
 
+  @override
   Future<List<GossipMenuEntity>> getGossipMenus() async {
     final results = await laconic
         .table(_table)
@@ -96,6 +101,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
 
   Future<int> getNextMenuId() => nextMaxPlusOne(_table, 'MenuID');
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
     if (filter == null) return builder;
     if (filter.menuId.isNotEmpty) {

@@ -28,6 +28,35 @@ final class SmartScriptFilter {
 }
 
 mixin _SmartScriptRepositoryMixin on RepositoryMixin {
+  Future<SmartScriptKey> copySmartScript(SmartScriptKey key) async {
+    final source = await getSmartScript(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createSmartScript();
+    final copied = source.copyWith(
+      entryOrGuid: blank.entryOrGuid,
+      sourceType: blank.sourceType,
+      id: blank.id,
+      link: blank.link,
+    );
+    await storeSmartScript(copied);
+    return SmartScriptKey.fromEntity(copied);
+  }
+
+  Future<int> countSmartScripts({SmartScriptFilter? filter}) async {
+    return _applyFilter(laconic.table('smart_scripts'), filter).count();
+  }
+
+  Future<SmartScriptEntity> createSmartScript() async {
+    return SmartScriptEntity(
+      entryOrGuid: await nextMaxPlusOne('smart_scripts', '`entryorguid`'),
+      sourceType: await nextMaxPlusOne('smart_scripts', '`source_type`'),
+      id: await nextMaxPlusOne('smart_scripts', '`id`'),
+      link: await nextMaxPlusOne('smart_scripts', '`link`'),
+    );
+  }
+
   Future<void> destroySmartScript(SmartScriptKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -46,6 +75,45 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return SmartScriptEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
+    int page = 1,
+    SmartScriptFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('smart_scripts').select([
+      '`entryorguid`',
+      '`source_type`',
+      '`id`',
+      '`link`',
+      '`event_type`',
+      '`action_type`',
+      '`target_type`',
+      '`comment`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder
+        .orderBy('`entryorguid`')
+        .orderBy('`source_type`')
+        .orderBy('`id`')
+        .orderBy('`link`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefSmartScriptEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<SmartScriptEntity>> getSmartScripts() async {
+    var builder = laconic
+        .table('smart_scripts')
+        .orderBy('`entryorguid`')
+        .orderBy('`source_type`')
+        .orderBy('`id`')
+        .orderBy('`link`');
+    final results = await builder.get();
+    return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeSmartScript(SmartScriptEntity smartScript) async {
@@ -82,6 +150,17 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.entryOrGuid.isNotEmpty) {
+      builder = builder.where('`entryorguid`', filter.entryOrGuid);
+    }
+    if (filter.comment.isNotEmpty) {
+      builder = builder.where('`comment`', filter.comment);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(SmartScriptKey key) async {}

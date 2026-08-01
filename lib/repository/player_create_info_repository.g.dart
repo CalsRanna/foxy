@@ -28,6 +28,30 @@ final class PlayerCreateInfoFilter {
 }
 
 mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
+  Future<PlayerCreateInfoKey> copyPlayerCreateInfo(
+    PlayerCreateInfoKey key,
+  ) async {
+    final source = await getPlayerCreateInfo(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPlayerCreateInfo();
+    final copied = source.copyWith(race: blank.race, class_: blank.class_);
+    await storePlayerCreateInfo(copied);
+    return PlayerCreateInfoKey.fromEntity(copied);
+  }
+
+  Future<int> countPlayerCreateInfos({PlayerCreateInfoFilter? filter}) async {
+    return _applyFilter(laconic.table('playercreateinfo'), filter).count();
+  }
+
+  Future<PlayerCreateInfoEntity> createPlayerCreateInfo() async {
+    return PlayerCreateInfoEntity(
+      race: await nextMaxPlusOne('playercreateinfo', '`race`'),
+      class_: await nextMaxPlusOne('playercreateinfo', '`class`'),
+    );
+  }
+
   Future<void> destroyPlayerCreateInfo(PlayerCreateInfoKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -48,6 +72,41 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PlayerCreateInfoEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPlayerCreateInfoEntity>> getBriefPlayerCreateInfos({
+    int page = 1,
+    PlayerCreateInfoFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('playercreateinfo').select([
+      '`race`',
+      '`class`',
+      '`map`',
+      '`zone`',
+      '`position_x`',
+      '`position_y`',
+      '`position_z`',
+      '`orientation`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`race`').orderBy('`class`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefPlayerCreateInfoEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<PlayerCreateInfoEntity>> getPlayerCreateInfos() async {
+    var builder = laconic
+        .table('playercreateinfo')
+        .orderBy('`race`')
+        .orderBy('`class`');
+    final results = await builder.get();
+    return results
+        .map((e) => PlayerCreateInfoEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storePlayerCreateInfo(
@@ -86,6 +145,20 @@ mixin _PlayerCreateInfoRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    PlayerCreateInfoFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.race.isNotEmpty) {
+      builder = builder.where('`race`', filter.race);
+    }
+    if (filter.class_.isNotEmpty) {
+      builder = builder.where('`class`', filter.class_);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(PlayerCreateInfoKey key) async {}

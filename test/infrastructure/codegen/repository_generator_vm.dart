@@ -43,16 +43,16 @@ void main() {
     );
   });
 
-  test('Repository 已有手写标准 CRUD 时拒绝生成', () async {
+  test('无列表页时手写 CRUD 合法(壳 override 生成版)', () async {
     final source = scalarRepositorySource.replaceFirst(
       '  static const _table',
       '''
+  @override
   Future<SampleEntity?> getSample(int key) async => null;
 
   static const _table''',
     );
 
-    final logs = <String>[];
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -61,10 +61,115 @@ void main() {
         entityAsset: scalarEntitySource,
         repositoryAsset: source,
       },
+      outputs: {
+        'foxy|lib/repository/sample_repository.foxy_repository.g.part':
+            decodedMatches(
+              contains('Future<SampleEntity?> getSample(int key) async {'),
+            ),
+      },
+    );
+  });
+
+  test('有列表页时生成查询层(create/copy/getBrief/count/getXxxs/_applyFilter)', () async {
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: briefEntitySource,
+        repositoryAsset: filterRepositorySource,
+        listViewModelAsset: listViewModelSource,
+      },
+      outputs: {
+        'foxy|lib/repository/sample_repository.foxy_repository.g.part':
+            decodedMatches(
+              allOf(<Matcher>[
+                // copy:get + create + copyWith 新 key + store,返回新 key
+                contains('Future<int> copySample(int key) async {'),
+                contains('final blank = await createSample();'),
+                contains('final copied = source.copyWith(id: blank.id);'),
+                contains('return copied.id;'),
+                // count:走 _applyFilter
+                contains('Future<int> countSamples({SampleFilter? filter})'),
+                contains(
+                  '_applyFilter(laconic.table(\'foxy.sample\'), filter)',
+                ),
+                // create:key 字段 nextMaxPlusOne 预分配
+                contains('Future<SampleEntity> createSample() async {'),
+                contains("id: await nextMaxPlusOne('foxy.sample', '`ID`')"),
+                // getBrief:brief 投影列 + orderBy key + 分页
+                contains('Future<List<BriefSampleEntity>> getBriefSamples({'),
+                contains("'`ID`',"),
+                contains("'`Name`'"),
+                contains('builder = builder.orderBy(\'`ID`\');'),
+                contains('builder = builder.limit(kPageSize).offset(offset);'),
+                // getXxxs:全量列表
+                contains('Future<List<SampleEntity>> getSamples() async {'),
+                // _applyFilter:text 精确匹配 + column 显式列名
+                contains(
+                  'QueryBuilder _applyFilter('
+                  'QueryBuilder builder, SampleFilter? filter)',
+                ),
+                contains("'`ID`',"),
+                contains('filter.id'),
+                contains("'`Name_lang_zhCN`',"),
+                contains('filter.name'),
+              ]),
+            ),
+      },
+    );
+  });
+
+  test('辅音 + y 结尾的 base name 按 y → ies 复数化', () async {
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        propertyEntityAsset: propertyEntitySource,
+        propertyRepositoryAsset: propertyRepositorySource,
+        propertyListViewModelAsset: listViewModelSource,
+      },
+      outputs: {
+        'foxy|lib/repository/sample_property_repository'
+            '.foxy_repository.g.part': decodedMatches(
+          allOf(<Matcher>[
+            contains('Future<int> countSampleProperties('),
+            contains(
+              'Future<List<BriefSamplePropertyEntity>> '
+              'getBriefSampleProperties({',
+            ),
+            contains(
+              'Future<List<SamplePropertyEntity>> '
+              'getSampleProperties() async {',
+            ),
+            isNot(contains('countSamplePropertys')),
+          ]),
+        ),
+      },
+    );
+  });
+
+  test('filter 无同名实体字段且未声明 column 时拒绝生成查询层', () async {
+    final repository = filterRepositorySource.replaceFirst(
+      "@FoxyFilter.text('name', column: 'Name_lang_zhCN')",
+      "@FoxyFilter.text('unknown')",
+    );
+
+    final logs = <String>[];
+    await testBuilder(
+      foxyRepositoryBuilder(BuilderOptions.empty),
+      {
+        repositoryAnnotationAsset: repositoryAnnotationSource,
+        entityAnnotationAsset: entityAnnotationSource,
+        entityAsset: briefEntitySource,
+        repositoryAsset: repository,
+        listViewModelAsset: listViewModelSource,
+      },
       outputs: {},
       onLog: (record) => logs.add(record.toString()),
     );
-    expect(logs.any((log) => log.contains('不允许手写标准 CRUD')), isTrue);
+    expect(logs.any((log) => log.contains('无法推断物理列')), isTrue);
   });
 
   test('FoxyRepository 按 Entity 字段顺序生成复合 Key 定位', () async {
@@ -169,13 +274,54 @@ class SampleEntity {
     expect(logs.any((log) => log.contains('不符合一对一命名约定')), isTrue);
   });
 }
+
 const entityAnnotationAsset =
     'foxy|lib/infrastructure/codegen/entity_annotations.dart';
 const entityAsset = 'foxy|lib/entity/sample_entity.dart';
+const listViewModelAsset = 'foxy|lib/view_model/sample_list_view_model.dart';
+const propertyEntityAsset = 'foxy|lib/entity/sample_property_entity.dart';
 const repositoryAnnotationAsset =
     'foxy|lib/infrastructure/codegen/repository_annotations.dart';
 
 const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
+
+const propertyRepositoryAsset =
+    'foxy|lib/repository/sample_property_repository.dart';
+
+const propertyListViewModelAsset =
+    'foxy|lib/view_model/sample_property_list_view_model.dart';
+
+/// 辅音 + y 结尾的 base name(SampleProperty → SampleProperties)。
+const propertyEntitySource = r'''
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.sample')
+class SamplePropertyEntity {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Name')
+  final String name;
+
+  const SamplePropertyEntity({this.id = 0, this.name = ''});
+}
+''';
+
+const propertyRepositorySource = r'''
+import 'package:foxy/entity/sample_property_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+
+part 'sample_property_repository.g.dart';
+
+@FoxyRepository(SamplePropertyEntity)
+@FoxyFilter.text('id')
+class SamplePropertyRepository with _SamplePropertyRepositoryMixin {
+  static const _table = 'foxy.sample';
+}
+''';
 
 const scalarEntitySource = r'''
 import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
@@ -199,6 +345,48 @@ part 'sample_repository.g.dart';
 class SampleRepository with _SampleRepositoryMixin {
   static const _table = 'foxy.sample';
 }
+''';
+
+/// 带 Brief 投影与 key 的实体,供查询层生成测试使用。
+const briefEntitySource = r'''
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+@FoxyBriefEntity()
+@FoxyFullEntity(table: 'foxy.sample')
+class SampleEntity {
+  @FoxyBriefField()
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  @FoxyBriefField()
+  @FoxyFullField('Name')
+  final String name;
+
+  const SampleEntity({this.id = 0, this.name = ''});
+}
+''';
+
+/// 声明 text filter(含显式 column)的仓库,供查询层生成测试使用。
+const filterRepositorySource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+
+part 'sample_repository.g.dart';
+
+@FoxyRepository(SampleEntity)
+@FoxyFilter.text('id')
+@FoxyFilter.text('name', column: 'Name_lang_zhCN')
+class SampleRepository with _SampleRepositoryMixin {
+  static const _table = 'foxy.sample';
+}
+''';
+
+/// 列表页存在标记:Repository 生成器只检查文件存在性,不解析内容。
+/// 不用真实 `@FoxyListViewModel` 源码,避免 testBuilder 里 list_annotations
+/// 的 meta 依赖导致注解无法解析、整次构建失败。
+const listViewModelSource = r'''
+// 仅作为「存在列表页」标记。
+class SampleListViewModel {}
 ''';
 
 final entityAnnotationSource = File(

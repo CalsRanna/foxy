@@ -13,6 +13,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
   static const _table = 'smart_scripts';
   static const primaryKeyColumns = {'entryorguid', 'source_type', 'id', 'link'};
 
+  @override
   Future<SmartScriptKey> copySmartScript(SmartScriptKey key) async {
     final script = await getSmartScript(key);
     if (script == null) {
@@ -31,12 +32,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
     return SmartScriptKey.fromEntity(candidate);
   }
 
-  Future<int> countSmartScripts({SmartScriptFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<SmartScriptEntity> createSmartScript({
     int entryOrGuid = 0,
     int sourceType = 0,
@@ -53,41 +49,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
     );
   }
 
-  Future<List<BriefSmartScriptEntity>> getBriefSmartScripts({
-    int page = 1,
-    SmartScriptFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'entryorguid',
-      'source_type',
-      'id',
-      'link',
-      'comment',
-      'event_type',
-      'action_type',
-      'target_type',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder
-        .orderBy('entryorguid')
-        .orderBy('source_type')
-        .orderBy('id')
-        .orderBy('link');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefSmartScriptEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<SmartScriptEntity>> getSmartScripts() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => SmartScriptEntity.fromJson(e.toMap())).toList();
-  }
-
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, SmartScriptFilter? filter) {
     if (filter == null) return builder;
     if (filter.entryOrGuid.isNotEmpty) {

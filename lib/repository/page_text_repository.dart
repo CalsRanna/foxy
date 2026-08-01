@@ -15,6 +15,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
 
   static const _localeTable = 'page_text_locale';
 
+  @override
   Future<int> copyPageText(int key) async {
     final source = await getPageText(key);
     if (source == null) {
@@ -26,6 +27,8 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     await storePageText(copied);
     return copied.id;
   }
+
+  @override
   Future<int> countPageTexts({PageTextFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.text.isNotEmpty;
@@ -48,10 +51,12 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     return builder.count();
   }
 
+  @override
   Future<PageTextEntity> createPageText() async {
     return PageTextEntity(id: await _getNextId());
   }
 
+  @override
   Future<List<BriefPageTextEntity>> getBriefPageTexts({
     int page = 1,
     PageTextFilter? filter,
@@ -78,11 +83,13 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
   }
 
+  @override
   Future<List<PageTextEntity>> getPageTexts() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

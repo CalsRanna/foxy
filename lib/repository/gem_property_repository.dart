@@ -11,6 +11,7 @@ part 'gem_property_repository.g.dart';
 class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   static const _table = 'foxy.dbc_gem_properties';
 
+  @override
   Future<int> copyGemProperty(int key) async {
     final source = await getGemProperty(key);
     if (source == null) {
@@ -21,50 +22,9 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countGemProperties({GemPropertyFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<GemPropertyEntity> createGemProperty() async {
     return GemPropertyEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefGemPropertyEntity>> getBriefGemProperties({
-    int page = 1,
-    GemPropertyFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'ID',
-      'Enchant_ID',
-      'Maxcount_inv',
-      'Maxcount_item',
-      'Type',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefGemPropertyEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<GemPropertyEntity>> getGemProperties() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => GemPropertyEntity.fromJson(e.toMap())).toList();
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, GemPropertyFilter? filter) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    return builder;
   }
 
   Future<int> _getNextId() async {

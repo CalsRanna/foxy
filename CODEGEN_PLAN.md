@@ -1,8 +1,16 @@
 # 代码生成演进计划:Repository 查询层全量生成
 
-> 状态:已批准,待实施
+> 状态:已实施(2026-08-01)
 > 创建日期:2026-08-01
 > 关联文档:[`AGENTS.md`](AGENTS.md)(当前架构约束)、[`README.md`](README.md)(代码生成概览)
+
+## 实施结果摘要
+
+- Step 1 完成:9 个聚合 Brief 实体与 `getBriefLootTemplateEntries`/`countLootTemplates` 已删除,6 个 picker 委托改用行级 `getBrief*Rows`/`count*Rows`(`idOf` 取 `t.entry`);reference 方法名规范化为 `getBriefReferenceLootTemplates`/`countReferenceLootTemplates`/`copyReferenceLootTemplate`(`Future<ReferenceLootTemplateKey>`);condition 的 `copyCondition` 改为返回 `Future<ConditionKey>`;契约测试同步更新。
+- Step 2 完成:`@FoxyFilter` 增加可选 `column:`;`_applyFilter` 列名按「filter 名 → 同名实体字段 → 该字段列名」推断,无法推断且未声明 `column` 时构建期报错;`repository_emitter` 新增 `create`/`copy`/`getBrief*`/`count*`/`get*`/`_applyFilter` 生成(查询层仅对存在 `lib/view_model/<base>_list_view_model.dart` 的仓库生成);`repository_reader` 删除「同签名手写 CRUD 禁止」;`list_reader` 删除文本正则签名匹配,改为约定名(`getBrief<Base>s`/`count<Base>s`/`copy<Base>`,辅音 + y 结尾按 y → ies 复数化)。
+- Step 3 完成:16 个纯仓库删除手写查询层改用生成版;10 个 join/like/上限校验仓库保留手写 `@override`(area_table 的 `create`/`copy` 保留 AreaBit 预分配;currency_type 的 locale 过滤改名为 `_applyLocaleFilter` 避免签名冲突;reference 的 `_applyRowFilter` 改名为 `_applyFilter` 以覆盖生成版);12 个无法推断的 filter 补了 `column:`;`dart run build_runner build --delete-conflicting-outputs` 全量重新生成,`flutter analyze` 无告警。
+- Step 4 完成:`repository_generator_vm` 新增查询层生成/复数化/`column` 推断错误断言,删除「手写标准 CRUD 拒绝」;`list_generator_vm` 删除 reference 特例测试,改为约定名断言;`dart test test/infrastructure/codegen`(38 个)与 `flutter test`(375 个)全绿。
+- 与计划的主要偏差:纯仓库的 `getXxxs` 统一带 key orderBy(导出层自行按 ID 排序,无行为影响);`_table` 常量在 4 个完全迁移的仓库标记 `ignore: unused_field`(mixin 无法访问类静态成员,生成代码内联表名字面量)。
 
 ## Context
 

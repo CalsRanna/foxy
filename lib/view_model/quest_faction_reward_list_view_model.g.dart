@@ -23,6 +23,22 @@ mixin _QuestFactionRewardListViewModelMixin
 
   int _refreshToken = 0;
 
+  Future<void> copy(int key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.copyQuestFactionReward(key);
+      _logActivity(ActivityActionType.copy, key);
+      await _refresh();
+    } catch (error) {
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
   Future<void> destroy(int key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     submitting.value = true;

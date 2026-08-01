@@ -10,7 +10,7 @@ part 'area_table_repository.g.dart';
 
 @FoxyRepository(AreaTableEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'AreaName_lang_zhCN')
 class AreaTableRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _AreaTableRepositoryMixin {
   static const _table = 'foxy.dbc_area_table';
@@ -18,6 +18,7 @@ class AreaTableRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copyAreaTable(int key) async {
     final source = await getAreaTable(key);
     if (source == null) {
@@ -31,12 +32,7 @@ class AreaTableRepository
     return copied.id;
   }
 
-  Future<int> countAreaTables({AreaTableFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<AreaTableEntity> createAreaTable() async {
     return AreaTableEntity(
       id: await nextMaxPlusOne(_table, 'ID'),
@@ -48,35 +44,6 @@ class AreaTableRepository
     int id,
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
-
-  Future<List<AreaTableEntity>> getAreaTables() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => AreaTableEntity.fromJson(e.toMap())).toList();
-  }
-
-  Future<List<BriefAreaTableEntity>> getBriefAreaTables({
-    int page = 1,
-    AreaTableFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'ID',
-      'AreaName_lang_zhCN',
-      'ContinentID',
-      'MinElevation',
-      'ZoneMusic',
-      'ExplorationLevel',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefAreaTableEntity.fromJson(e.toMap()))
-        .toList();
-  }
 
   Future<bool> isAreaBitAvailable(int areaBit, {int? excludingKey}) async {
     var builder = laconic.table(_table).where('AreaBit', areaBit);
@@ -93,6 +60,7 @@ class AreaTableRepository
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, AreaTableFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

@@ -25,6 +25,25 @@ final class PageTextFilter {
 }
 
 mixin _PageTextRepositoryMixin on RepositoryMixin {
+  Future<int> copyPageText(int key) async {
+    final source = await getPageText(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createPageText();
+    final copied = source.copyWith(id: blank.id);
+    await storePageText(copied);
+    return copied.id;
+  }
+
+  Future<int> countPageTexts({PageTextFilter? filter}) async {
+    return _applyFilter(laconic.table('page_text'), filter).count();
+  }
+
+  Future<PageTextEntity> createPageText() async {
+    return PageTextEntity(id: await nextMaxPlusOne('page_text', '`ID`'));
+  }
+
   Future<void> destroyPageText(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -43,6 +62,29 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return PageTextEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefPageTextEntity>> getBriefPageTexts({
+    int page = 1,
+    PageTextFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('page_text').select([
+      '`ID`',
+      '`Text`',
+      '`NextPageID`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results.map((e) => BriefPageTextEntity.fromJson(e.toMap())).toList();
+  }
+
+  Future<List<PageTextEntity>> getPageTexts() async {
+    var builder = laconic.table('page_text').orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => PageTextEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storePageText(PageTextEntity pageText) async {
@@ -79,6 +121,17 @@ mixin _PageTextRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, PageTextFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    if (filter.text.isNotEmpty) {
+      builder = builder.where('`Text`', filter.text);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

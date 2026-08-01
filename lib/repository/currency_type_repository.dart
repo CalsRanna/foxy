@@ -8,11 +8,12 @@ part 'currency_type_repository.g.dart';
 
 @FoxyRepository(CurrencyTypeEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'it.name')
 class CurrencyTypeRepository
     with RepositoryMixin, _CurrencyTypeRepositoryMixin {
   static const _table = 'foxy.dbc_currency_types';
 
+  @override
   Future<int> countCurrencyTypes({CurrencyTypeFilter? filter}) {
     final joinLocale = localeEnabled;
     var builder = laconic
@@ -27,13 +28,15 @@ class CurrencyTypeRepository
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    return _applyFilter(builder, filter, joinLocale: joinLocale).count();
+    return _applyLocaleFilter(builder, filter, joinLocale: joinLocale).count();
   }
 
+  @override
   Future<CurrencyTypeEntity> createCurrencyType() async {
     return CurrencyTypeEntity(id: await _getNextId());
   }
 
+  @override
   Future<List<BriefCurrencyTypeEntity>> getBriefCurrencyTypes({
     int page = 1,
     CurrencyTypeFilter? filter,
@@ -57,7 +60,7 @@ class CurrencyTypeRepository
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    builder = _applyFilter(builder, filter, joinLocale: joinLocale);
+    builder = _applyLocaleFilter(builder, filter, joinLocale: joinLocale);
     final rows = await builder
         .orderBy('ct.ID')
         .limit(kPageSize)
@@ -68,12 +71,15 @@ class CurrencyTypeRepository
         .toList();
   }
 
+  @override
   Future<List<CurrencyTypeEntity>> getCurrencyTypes() async {
     final rows = await laconic.table(_table).get();
     return rows.map((row) => CurrencyTypeEntity.fromJson(row.toMap())).toList();
   }
 
-  QueryBuilder _applyFilter(
+  // 带 joinLocale 参数的过滤实现；生成版 _applyFilter 由生成器提供
+  //（仅精确匹配），本方法服务于带物品 join 的手写列表/统计查询。
+  QueryBuilder _applyLocaleFilter(
     QueryBuilder builder,
     CurrencyTypeFilter? filter, {
     required bool joinLocale,

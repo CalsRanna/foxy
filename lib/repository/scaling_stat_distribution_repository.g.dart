@@ -21,6 +21,32 @@ final class ScalingStatDistributionFilter {
 }
 
 mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
+  Future<int> copyScalingStatDistribution(int key) async {
+    final source = await getScalingStatDistribution(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createScalingStatDistribution();
+    final copied = source.copyWith(id: blank.id);
+    await storeScalingStatDistribution(copied);
+    return copied.id;
+  }
+
+  Future<int> countScalingStatDistributions({
+    ScalingStatDistributionFilter? filter,
+  }) async {
+    return _applyFilter(
+      laconic.table('foxy.dbc_scaling_stat_distribution'),
+      filter,
+    ).count();
+  }
+
+  Future<ScalingStatDistributionEntity> createScalingStatDistribution() async {
+    return ScalingStatDistributionEntity(
+      id: await nextMaxPlusOne('foxy.dbc_scaling_stat_distribution', '`ID`'),
+    );
+  }
+
   Future<void> destroyScalingStatDistribution(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -41,6 +67,56 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ScalingStatDistributionEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefScalingStatDistributionEntity>>
+  getBriefScalingStatDistributions({
+    int page = 1,
+    ScalingStatDistributionFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_scaling_stat_distribution').select([
+      '`ID`',
+      '`StatID0`',
+      '`StatID1`',
+      '`StatID2`',
+      '`StatID3`',
+      '`StatID4`',
+      '`StatID5`',
+      '`StatID6`',
+      '`StatID7`',
+      '`StatID8`',
+      '`StatID9`',
+      '`Bonus0`',
+      '`Bonus1`',
+      '`Bonus2`',
+      '`Bonus3`',
+      '`Bonus4`',
+      '`Bonus5`',
+      '`Bonus6`',
+      '`Bonus7`',
+      '`Bonus8`',
+      '`Bonus9`',
+      '`Maxlevel`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefScalingStatDistributionEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<ScalingStatDistributionEntity>>
+  getScalingStatDistributions() async {
+    var builder = laconic
+        .table('foxy.dbc_scaling_stat_distribution')
+        .orderBy('`ID`');
+    final results = await builder.get();
+    return results
+        .map((e) => ScalingStatDistributionEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeScalingStatDistribution(
@@ -82,6 +158,17 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ScalingStatDistributionFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

@@ -24,10 +24,10 @@ const _filterChecker = TypeChecker.fromUrl(
 
 /// 解析 `@FoxyListViewModel`。
 ///
-/// 方法名一律按「返回类型 + filter 具名参数」从 repository 实际方法匹配,
-/// 不依赖命名规则——reference_loot_template 的 `getBriefLootTemplateRows` /
-/// `countLootTemplateRows` / `copyLootTemplate` 前缀与 base name 不匹配,
-/// 签名匹配天然命中。
+/// 查询层方法一律按命名约定直接调用:`getBrief<Base>s` / `count<Base>s` /
+/// `copy<Base>` / `destroy<Base>`。这些方法由 Repository 生成器全量生成
+/// (查询层仓库),手写壳的 `@override` 顶掉生成版,方法名不变——签名
+/// 不匹配由编译器报错,生成器不再做源码文本匹配。
 final class ListReader {
   const ListReader();
 
@@ -83,24 +83,7 @@ final class ListReader {
       element,
     );
 
-    // Brief/Filter 是生成类(在 .g.dart),build 期对同 phase 的 builder
-    // 不可见(解析为 InvalidType),所以方法签名从 repository 源码文本提取,
-    // 元素只做方法存在性校验。
-    final repositorySource = await buildStep.readAsString(
-      AssetId(
-        buildStep.inputId.package,
-        'lib/repository/${toSnakeCase(repositoryClassName)}.dart',
-      ),
-    );
-    final fallbackKeyType = _readEntityKeyType(entityElement);
-    final methods = _readMethods(
-      repositorySource,
-      repositoryElement,
-      baseName,
-      fallbackKeyType,
-      element,
-    );
-
+    final keyType = _readEntityKeyType(entityElement, element);
     final mixinName = '_${className}Mixin';
     final source = await buildStep.readAsString(buildStep.inputId);
     final partName = inputFileName.replaceFirst(RegExp(r'\.dart$'), '.g.dart');
@@ -148,14 +131,14 @@ final class ListReader {
     return ListGenerationModel(
       className: className,
       entityClassName: entityElement.name!,
-      briefEntityClassName: methods.briefEntityClassName,
+      briefEntityClassName: 'Brief${baseName}Entity',
       repositoryClassName: repositoryClassName,
       mixinName: mixinName,
       fields: List.unmodifiable(fields),
-      getBriefMethodName: methods.getBriefMethodName,
-      countMethodName: methods.countMethodName,
-      copyMethodName: methods.copyMethodName,
-      keyType: methods.keyType,
+      getBriefMethodName: 'getBrief${pluralize(baseName)}',
+      countMethodName: 'count${pluralize(baseName)}',
+      copyMethodName: 'copy$baseName',
+      keyType: keyType,
     );
   }
 
@@ -299,10 +282,9 @@ final class ListReader {
     return fields;
   }
 
-  /// 方法匹配结果:getBrief/count 方法、可选的 copy 方法与 Key 类型。
   /// 从 entity 的 `@FoxyFullField(key: true)` 推断 Key 类型:
   /// 单 key 为字段类型,复合 key 为 `XxxKey`(生成类,仅类名可推断)。
-  String _readEntityKeyType(InterfaceElement entityElement) {
+  String _readEntityKeyType(InterfaceElement entityElement, Element element) {
     final keyFieldTypes = <String>[];
     for (final field in entityElement.fields.where(
       (field) => !field.isStatic && !field.isSynthetic,
@@ -316,7 +298,11 @@ final class ListReader {
       keyFieldTypes.add(field.type.getDisplayString());
     }
     if (keyFieldTypes.isEmpty) {
-      return '';
+      _fail(
+        '${entityElement.name} 没有可用于列表操作的物理 Key。',
+        element,
+        '在至少一个 @FoxyFullField 上设置 key: true。',
+      );
     }
     if (keyFieldTypes.length == 1) return keyFieldTypes.single;
     final baseName = entityElement.name!.substring(
@@ -326,188 +312,10 @@ final class ListReader {
     return '${baseName}Key';
   }
 
-  _ListMethods _readMethods(
-    String repositorySource,
-    InterfaceElement repositoryElement,
-    String baseName,
-    String fallbackKeyType,
-    Element element,
-  ) {
-    // 元素只做存在性校验:防止源码注释/文档中的示例签名被文本正则误匹配。
-    final methodNames = {
-      for (final method in repositoryElement.methods.where(
-        (method) => !method.isStatic && !method.isSynthetic,
-      ))
-        method.name,
-    };
-
-    // getBrief:返回 Future<List<BriefXxxEntity>> 且参数含 filter,且 Brief
-    // 类名与 entity base name 严格匹配(排除 reference 的 Entry 投影等)。
-    final expectedBrief = 'Brief${baseName}Entity';
-    final getBriefCandidates = <_MethodCandidate>[];
-    final briefRegex = RegExp(
-      r'Future<List<(Brief[A-Za-z0-9]+Entity)>>\s+([A-Za-z0-9_]+)\s*\(',
-    );
-    for (final match in briefRegex.allMatches(repositorySource)) {
-      if (match.group(1) != expectedBrief) continue;
-      final name = match.group(2)!;
-      if (!methodNames.contains(name)) continue;
-      final params = _balancedParams(repositorySource, match.end - 1);
-      if (_hasFilterParameter(params)) {
-        getBriefCandidates.add(_MethodCandidate(name, params));
-      }
-    }
-    _dedupe(getBriefCandidates);
-    if (getBriefCandidates.length != 1) {
-      _fail(
-        '${repositoryElement.name} 必须且只能有一个返回 '
-            'Future<List<BriefXxxEntity>> 且带 filter 具名参数的方法。'
-            '当前 ${getBriefCandidates.length} 个。',
-        element,
-        '确认列表查询方法返回 Brief 列表并接收 filter 具名参数。',
-      );
-    }
-    final getBrief = getBriefCandidates.single;
-
-    final countCandidates = <_MethodCandidate>[];
-    final countRegex = RegExp(r'Future<int>\s+([A-Za-z0-9_]+)\s*\(');
-    for (final match in countRegex.allMatches(repositorySource)) {
-      final name = match.group(1)!;
-      if (!methodNames.contains(name)) continue;
-      final params = _balancedParams(repositorySource, match.end - 1);
-      if (_hasFilterParameter(params)) {
-        countCandidates.add(_MethodCandidate(name, params));
-      }
-    }
-    _dedupe(countCandidates);
-    if (countCandidates.isEmpty) {
-      _fail(
-        '${repositoryElement.name} 没有返回 Future<int> 且带 filter '
-            '具名参数的统计方法。',
-        element,
-        '提供 count 方法，如 count$baseName({filter})。',
-      );
-    }
-    final count = countCandidates.length == 1
-        ? countCandidates.single
-        : _disambiguateCount(countCandidates, getBrief, element);
-
-    // copy:单参数 `key`(int 或 XxxKey),返回 Future<int>/Future<XxxKey>/
-    // Future<void>(reference 的 copyLootTemplate 返回 void)。
-    final copyCandidates = <_MethodCandidate>[];
-    final copyRegex = RegExp(
-      r'Future<(void|int|[A-Za-z0-9]+Key)>\s+(copy[A-Za-z0-9_]+)'
-      r'\s*\(\s*(int|[A-Za-z0-9]+Key)\s+key\s*\)',
-    );
-    for (final match in copyRegex.allMatches(repositorySource)) {
-      final name = match.group(2)!;
-      if (!methodNames.contains(name)) continue;
-      final returnType = match.group(1)!;
-      final keyType = match.group(3)!;
-      if (returnType != 'void' && returnType != keyType) continue;
-      copyCandidates.add(_MethodCandidate(name, keyType));
-    }
-    _dedupe(copyCandidates);
-    if (copyCandidates.length > 1) {
-      _fail(
-        '${repositoryElement.name} 有多个 copy 方法，无法确定复制入口。',
-        element,
-        '只保留一个返回 Key 类型的 copy 方法。',
-      );
-    }
-    final copy = copyCandidates.isEmpty ? null : copyCandidates.single;
-
-    // destroy 由 Repository 生成器按命名约定输出(destroy$baseName,
-    // 在 .g.dart 的 mixin 里,build 期对元素不可见),生成器不校验其
-    // 存在性——编译期兜底。Key 类型取 copy 参数或 entity key 推断。
-    final keyType = copy?.params ?? fallbackKeyType;
-    if (keyType.isEmpty) {
-      _fail(
-        '${repositoryElement.name} 无法推断 Key 类型。',
-        element,
-        '提供 copy 方法,或让 Entity 声明 key 字段(@FoxyFullField key: true)。',
-      );
-    }
-
-    return _ListMethods(
-      briefEntityClassName: expectedBrief,
-      getBriefMethodName: getBrief.name,
-      countMethodName: count.name,
-      copyMethodName: copy?.name,
-      keyType: keyType,
-    );
-  }
-
-  /// 多个 count 候选时,用 getBrief 方法名去掉 `getBrief` 前缀消歧:
-  /// `getBriefLootTemplateRows` → `countLootTemplateRows`。
-  _MethodCandidate _disambiguateCount(
-    List<_MethodCandidate> candidates,
-    _MethodCandidate getBrief,
-    Element element,
-  ) {
-    final suffix = getBrief.name.substring('getBrief'.length);
-    final matched = candidates.where((c) => c.name == 'count$suffix').toList();
-    if (matched.length != 1) {
-      _fail(
-        '${getBrief.name} 有 ${candidates.length} 个对应 count 方法，'
-            '无法确定哪个是列表统计入口。',
-        element,
-        '提供与 getBrief 同后缀的 count 方法，如 count$suffix。',
-      );
-    }
-    return matched.single;
-  }
-
-  /// 从方法名后的 `(` 开始配平括号,返回参数块文本(可能跨行)。
-  String _balancedParams(String source, int openParenIndex) {
-    var depth = 0;
-    for (var index = openParenIndex; index < source.length; index++) {
-      if (source[index] == '(') depth++;
-      if (source[index] == ')') {
-        depth--;
-        if (depth == 0) return source.substring(openParenIndex + 1, index);
-      }
-    }
-    return '';
-  }
-
-  /// 参数块文本中是否存在具名参数 `filter`。
-  bool _hasFilterParameter(String params) =>
-      RegExp(r'\bfilter\b').hasMatch(params);
-
-  void _dedupe(List<_MethodCandidate> candidates) {
-    final seen = <String>{};
-    candidates.removeWhere((candidate) => !seen.add(candidate.name));
-  }
-
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
       '$message\n修复方式：$correction',
       element: element,
     );
   }
-}
-
-final class _ListMethods {
-  final String briefEntityClassName;
-  final String getBriefMethodName;
-  final String countMethodName;
-  final String? copyMethodName;
-  final String keyType;
-
-  const _ListMethods({
-    required this.briefEntityClassName,
-    required this.getBriefMethodName,
-    required this.countMethodName,
-    required this.copyMethodName,
-    required this.keyType,
-  });
-}
-
-/// 文本解析出的方法候选:方法名 + 参数块(或 copy 的 Key 类型)。
-final class _MethodCandidate {
-  final String name;
-  final String params;
-
-  const _MethodCandidate(this.name, this.params);
 }

@@ -10,65 +10,13 @@ part 'quest_faction_reward_repository.g.dart';
 @FoxyFilter.text('id')
 class QuestFactionRewardRepository
     with RepositoryMixin, _QuestFactionRewardRepositoryMixin {
+  // 生成版查询层内联表名字面量（mixin 无法访问类静态成员），此处仅作契约校验。
+  // ignore: unused_field
   static const _table = 'foxy.dbc_quest_faction_reward';
 
-  Future<int> countQuestFactionRewards({
-    QuestFactionRewardFilter? filter,
-  }) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<QuestFactionRewardEntity> createQuestFactionReward() async {
     return QuestFactionRewardEntity(id: await _getAvailableId());
-  }
-
-  Future<List<BriefQuestFactionRewardEntity>> getBriefQuestFactionRewards({
-    int page = 1,
-    QuestFactionRewardFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = [
-      'ID',
-      'Difficulty0',
-      'Difficulty1',
-      'Difficulty2',
-      'Difficulty3',
-      'Difficulty4',
-      'Difficulty5',
-      'Difficulty6',
-      'Difficulty7',
-      'Difficulty8',
-      'Difficulty9',
-    ];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefQuestFactionRewardEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<QuestFactionRewardEntity>> getQuestFactionRewards() async {
-    var results = await laconic.table(_table).get();
-    return results
-        .map((e) => QuestFactionRewardEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    QuestFactionRewardFilter? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) {
-      builder = builder.where('ID', filter.id);
-    }
-    return builder;
   }
 
   Future<int> _getAvailableId() async {

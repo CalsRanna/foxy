@@ -13,6 +13,7 @@ class ScalingStatValueRepository
     with RepositoryMixin, _ScalingStatValueRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
 
+  @override
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
     if (source == null) {
@@ -26,10 +27,7 @@ class ScalingStatValueRepository
     return copied.id;
   }
 
-  Future<int> countScalingStatValues({ScalingStatValueFilter? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
+  @override
   Future<ScalingStatValueEntity> createScalingStatValue() async {
     return ScalingStatValueEntity(
       id: await _getNextId(),
@@ -37,6 +35,7 @@ class ScalingStatValueRepository
     );
   }
 
+  @override
   Future<List<BriefScalingStatValueEntity>> getBriefScalingStatValues({
     int page = 1,
     ScalingStatValueFilter? filter,
@@ -63,6 +62,7 @@ class ScalingStatValueRepository
         .toList();
   }
 
+  @override
   Future<List<ScalingStatValueEntity>> getScalingStatValues() async {
     final rows = await laconic
         .table(_table)
@@ -72,18 +72,6 @@ class ScalingStatValueRepository
     return rows
         .map((row) => ScalingStatValueEntity.fromJson(row.toMap()))
         .toList();
-  }
-
-  QueryBuilder _applyFilter(
-    QueryBuilder builder,
-    ScalingStatValueFilter? filter,
-  ) {
-    if (filter == null) return builder;
-    if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);
-    if (filter.charlevel.isNotEmpty) {
-      builder = builder.where('Charlevel', filter.charlevel);
-    }
-    return builder;
   }
 
   @override

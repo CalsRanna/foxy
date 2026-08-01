@@ -14,6 +14,7 @@ class CreatureTemplateRepository
     with RepositoryMixin, _CreatureTemplateRepositoryMixin {
   static const _table = 'creature_template';
 
+  @override
   Future<int> copyCreatureTemplate(int key) async {
     final source = await getCreatureTemplate(key);
     if (source == null) {
@@ -26,6 +27,7 @@ class CreatureTemplateRepository
     return copied.entry;
   }
 
+  @override
   Future<int> countCreatureTemplates({CreatureTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled &&
@@ -57,10 +59,12 @@ class CreatureTemplateRepository
     return builder.count();
   }
 
+  @override
   Future<CreatureTemplateEntity> createCreatureTemplate() async {
     return CreatureTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
+  @override
   Future<List<BriefCreatureTemplateEntity>> getBriefCreatureTemplates({
     int page = 1,
     CreatureTemplateFilter? filter,
@@ -94,6 +98,7 @@ class CreatureTemplateRepository
         .toList();
   }
 
+  @override
   Future<List<CreatureTemplateEntity>> getCreatureTemplates() async {
     var results = await laconic.table(_table).get();
     return results
@@ -101,6 +106,7 @@ class CreatureTemplateRepository
         .toList();
   }
 
+  @override
   QueryBuilder _applyFilter(
     QueryBuilder builder,
     CreatureTemplateFilter? filter,

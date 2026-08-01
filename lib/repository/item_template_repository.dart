@@ -15,6 +15,7 @@ class ItemTemplateRepository
   static const _table = 'item_template';
   static const _localeTable = 'item_template_locale';
 
+  @override
   Future<int> copyItemTemplate(int key) async {
     final source = await getItemTemplate(key);
     if (source == null) {
@@ -27,6 +28,7 @@ class ItemTemplateRepository
     return copied.entry;
   }
 
+  @override
   Future<int> countItemTemplates({ItemTemplateFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled &&
@@ -64,10 +66,12 @@ class ItemTemplateRepository
     return builder.count();
   }
 
+  @override
   Future<ItemTemplateEntity> createItemTemplate() async {
     return ItemTemplateEntity(entry: await nextMaxPlusOne(_table, 'entry'));
   }
 
+  @override
   Future<List<BriefItemTemplateEntity>> getBriefItemTemplates({
     int page = 1,
     ItemTemplateFilter? filter,
@@ -106,11 +110,13 @@ class ItemTemplateRepository
         .toList();
   }
 
+  @override
   Future<List<ItemTemplateEntity>> getItemTemplates() async {
     var results = await laconic.table(_table).get();
     return results.map((e) => ItemTemplateEntity.fromJson(e.toMap())).toList();
   }
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, ItemTemplateFilter? filter) {
     if (filter == null) return builder;
     if (filter.entry.isNotEmpty) {

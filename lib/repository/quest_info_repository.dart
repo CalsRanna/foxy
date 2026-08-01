@@ -10,7 +10,7 @@ part 'quest_info_repository.g.dart';
 
 @FoxyRepository(QuestInfoEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'InfoName_lang_zhCN')
 class QuestInfoRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _QuestInfoRepositoryMixin {
   static const _table = 'foxy.dbc_quest_info';
@@ -18,6 +18,7 @@ class QuestInfoRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copyQuestInfo(int key) async {
     final source = await getQuestInfo(key);
     if (source == null) {
@@ -28,31 +29,9 @@ class QuestInfoRepository
     return copied.id;
   }
 
-  Future<int> countQuestInfos({QuestInfoFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<QuestInfoEntity> createQuestInfo() async {
     return QuestInfoEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefQuestInfoEntity>> getBriefQuestInfos({
-    int page = 1,
-    QuestInfoFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    const fields = ['ID', 'InfoName_lang_zhCN'];
-    builder = builder.select(fields);
-    builder = _applyFilter(builder, filter);
-    builder = builder.orderBy('ID');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefQuestInfoEntity.fromJson(e.toMap()))
-        .toList();
   }
 
   Future<List<DbcLocaleFieldValue>> getQuestInfoLocales(
@@ -60,17 +39,13 @@ class QuestInfoRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<List<QuestInfoEntity>> getQuestInfos() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => QuestInfoEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<void> saveQuestInfoLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, QuestInfoFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) {

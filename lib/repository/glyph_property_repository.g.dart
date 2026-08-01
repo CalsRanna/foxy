@@ -21,6 +21,30 @@ final class GlyphPropertyFilter {
 }
 
 mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
+  Future<int> copyGlyphProperty(int key) async {
+    final source = await getGlyphProperty(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGlyphProperty();
+    final copied = source.copyWith(id: blank.id);
+    await storeGlyphProperty(copied);
+    return copied.id;
+  }
+
+  Future<int> countGlyphProperties({GlyphPropertyFilter? filter}) async {
+    return _applyFilter(
+      laconic.table('foxy.dbc_glyph_properties'),
+      filter,
+    ).count();
+  }
+
+  Future<GlyphPropertyEntity> createGlyphProperty() async {
+    return GlyphPropertyEntity(
+      id: await nextMaxPlusOne('foxy.dbc_glyph_properties', '`ID`'),
+    );
+  }
+
   Future<void> destroyGlyphProperty(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -39,6 +63,32 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GlyphPropertyEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGlyphPropertyEntity>> getBriefGlyphProperties({
+    int page = 1,
+    GlyphPropertyFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_glyph_properties').select([
+      '`ID`',
+      '`SpellID`',
+      '`GlyphSlotFlags`',
+      '`SpellIconID`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGlyphPropertyEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<GlyphPropertyEntity>> getGlyphProperties() async {
+    var builder = laconic.table('foxy.dbc_glyph_properties').orderBy('`ID`');
+    final results = await builder.get();
+    return results.map((e) => GlyphPropertyEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
@@ -78,6 +128,14 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, GlyphPropertyFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

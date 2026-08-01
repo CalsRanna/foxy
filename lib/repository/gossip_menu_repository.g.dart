@@ -28,6 +28,28 @@ final class GossipMenuFilter {
 }
 
 mixin _GossipMenuRepositoryMixin on RepositoryMixin {
+  Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
+    final source = await getGossipMenu(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createGossipMenu();
+    final copied = source.copyWith(menuId: blank.menuId, textId: blank.textId);
+    await storeGossipMenu(copied);
+    return GossipMenuKey.fromEntity(copied);
+  }
+
+  Future<int> countGossipMenus({GossipMenuFilter? filter}) async {
+    return _applyFilter(laconic.table('gossip_menu'), filter).count();
+  }
+
+  Future<GossipMenuEntity> createGossipMenu() async {
+    return GossipMenuEntity(
+      menuId: await nextMaxPlusOne('gossip_menu', '`MenuID`'),
+      textId: await nextMaxPlusOne('gossip_menu', '`TextID`'),
+    );
+  }
+
   Future<void> destroyGossipMenu(GossipMenuKey key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -46,6 +68,30 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return GossipMenuEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefGossipMenuEntity>> getBriefGossipMenus({
+    int page = 1,
+    GossipMenuFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('gossip_menu').select(['`MenuID`', '`TextID`']);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`MenuID`').orderBy('`TextID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefGossipMenuEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<GossipMenuEntity>> getGossipMenus() async {
+    var builder = laconic
+        .table('gossip_menu')
+        .orderBy('`MenuID`')
+        .orderBy('`TextID`');
+    final results = await builder.get();
+    return results.map((e) => GossipMenuEntity.fromJson(e.toMap())).toList();
   }
 
   Future<void> storeGossipMenu(GossipMenuEntity gossipMenu) async {
@@ -82,6 +128,17 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(QueryBuilder builder, GossipMenuFilter? filter) {
+    if (filter == null) return builder;
+    if (filter.menuId.isNotEmpty) {
+      builder = builder.where('`MenuID`', filter.menuId);
+    }
+    if (filter.text.isNotEmpty) {
+      builder = builder.where('`nt.text0_0`', filter.text);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(GossipMenuKey key) async {}

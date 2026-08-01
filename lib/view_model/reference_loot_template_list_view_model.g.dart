@@ -30,7 +30,7 @@ mixin _ReferenceLootTemplateListViewModelMixin
     submitting.value = true;
     errorMessage.value = null;
     try {
-      await _repository.copyLootTemplate(key);
+      await _repository.copyReferenceLootTemplate(key);
       _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
@@ -104,8 +104,11 @@ mixin _ReferenceLootTemplateListViewModelMixin
     errorMessage.value = null;
     try {
       final (nextItems, nextTotal) = await (
-        _repository.getBriefLootTemplateRows(page: currentPage, filter: filter),
-        _repository.countLootTemplateRows(filter: filter),
+        _repository.getBriefReferenceLootTemplates(
+          page: currentPage,
+          filter: filter,
+        ),
+        _repository.countReferenceLootTemplates(filter: filter),
       ).wait;
       if (token != _refreshToken) return;
       items.value = nextItems;

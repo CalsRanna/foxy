@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -9,13 +8,16 @@ part 'reference_loot_template_repository.g.dart';
 
 @FoxyRepository(ReferenceLootTemplateEntity)
 @FoxyFilter.text('entry')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'it.name')
 class ReferenceLootTemplateRepository
     with RepositoryMixin, _ReferenceLootTemplateRepositoryMixin {
   static const _table = 'reference_loot_template';
   static const primaryKeyColumns = {'Entry', 'Item'};
 
-  Future<void> copyLootTemplate(ReferenceLootTemplateKey key) async {
+  @override
+  Future<ReferenceLootTemplateKey> copyReferenceLootTemplate(
+    ReferenceLootTemplateKey key,
+  ) async {
     final source = await getReferenceLootTemplate(key);
     if (source == null) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
@@ -24,9 +26,15 @@ class ReferenceLootTemplateRepository
       entry: await nextMaxPlusOne(_table, 'Entry'),
     );
     await storeReferenceLootTemplate(copied);
+    return ReferenceLootTemplateKey.fromEntity(copied);
   }
 
-  Future<int> countLootTemplateRows({
+  Future<int> countLootTemplatesForEntry(int entry) {
+    return laconic.table(_table).where('Entry', entry).count();
+  }
+
+  @override
+  Future<int> countReferenceLootTemplates({
     ReferenceLootTemplateFilter? filter,
   }) async {
     final needsNameJoin = filter != null && filter.name.isNotEmpty;
@@ -48,48 +56,17 @@ class ReferenceLootTemplateRepository
         (join) => join.on('it.entry', 'itl.ID').where('itl.locale', 'zhCN'),
       );
     }
-    builder = _applyRowFilter(builder, filter);
+    builder = _applyFilter(builder, filter);
     return builder.count();
-  }
-
-  Future<int> countLootTemplates({ReferenceLootTemplateFilter? filter}) async {
-    var builder = laconic.table(_table);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    return builder.count();
-  }
-
-  Future<int> countLootTemplatesForEntry(int entry) {
-    return laconic.table(_table).where('Entry', entry).count();
   }
 
   Future<ReferenceLootTemplateEntity> createLootTemplate(int entry) async {
     return ReferenceLootTemplateEntity(entry: entry);
   }
 
-  Future<List<BriefReferenceLootTemplateEntryEntity>>
-  getBriefLootTemplateEntries({
-    ReferenceLootTemplateFilter? filter,
-    int page = 1,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    builder = builder.orderBy('Entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefReferenceLootTemplateEntryEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<BriefReferenceLootTemplateEntity>> getBriefLootTemplateRows({
+  @override
+  Future<List<BriefReferenceLootTemplateEntity>>
+  getBriefReferenceLootTemplates({
     ReferenceLootTemplateFilter? filter,
     int page = 1,
   }) async {
@@ -117,7 +94,7 @@ class ReferenceLootTemplateRepository
       'foxy.dbc_item_display_info AS didi',
       (join) => join.on('it.displayid', 'didi.ID'),
     );
-    builder = _applyRowFilter(builder, filter);
+    builder = _applyFilter(builder, filter);
     builder = builder.orderBy('lt.Entry').orderBy('lt.Item');
     builder = builder.limit(kPageSize).offset(offset);
     var results = await builder.get();
@@ -165,7 +142,8 @@ class ReferenceLootTemplateRepository
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  QueryBuilder _applyRowFilter(
+  @override
+  QueryBuilder _applyFilter(
     QueryBuilder builder,
     ReferenceLootTemplateFilter? filter,
   ) {

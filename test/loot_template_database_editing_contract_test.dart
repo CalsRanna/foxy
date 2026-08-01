@@ -1,13 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_item_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_prospecting_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
-import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
@@ -148,7 +139,7 @@ void main() {
       );
     });
 
-    test('九张表的行 Brief 返回各自具体 key，Entry Brief 使用标量 key', () {
+    test('九张表的行 Brief 返回各自具体 key', () {
       const row = {'Entry': 10, 'Item': 20, 'Reference': 30, 'GroupId': 40};
       final briefs = <dynamic>[
         BriefCreatureLootTemplateEntity.fromJson(row),
@@ -170,24 +161,6 @@ void main() {
       expect(briefs[6].key, isA<MillingLootTemplateKey>());
       expect(briefs[7].key, isA<ReferenceLootTemplateKey>());
       expect(briefs[8].key, isA<GameObjectLootTemplateKey>());
-
-      const entryRow = {'Entry': 10, 'ItemCount': 5};
-      final entryBriefs = <dynamic>[
-        BriefCreatureLootTemplateEntryEntity.fromJson(entryRow),
-        BriefPickpocketingLootTemplateEntryEntity.fromJson(entryRow),
-        BriefSkinningLootTemplateEntryEntity.fromJson(entryRow),
-        BriefItemLootTemplateEntryEntity.fromJson(entryRow),
-        BriefDisenchantLootTemplateEntryEntity.fromJson(entryRow),
-        BriefProspectingLootTemplateEntryEntity.fromJson(entryRow),
-        BriefMillingLootTemplateEntryEntity.fromJson(entryRow),
-        BriefReferenceLootTemplateEntryEntity.fromJson(entryRow),
-        BriefGameObjectLootTemplateEntryEntity.fromJson(entryRow),
-      ];
-      for (final brief in entryBriefs) {
-        expect(brief.entry, 10);
-        expect(brief.itemCount, 5);
-        expect(brief.key, 10);
-      }
     });
   });
 
@@ -260,7 +233,7 @@ void main() {
           reason: '${spec.table} delete',
         );
         await expectLater(
-          spec.repository.copyLootTemplate(spec.key),
+          _copyLootTemplate(spec.repository, spec.table, spec.key),
           throwsA(isA<StateError>()),
           reason: '${spec.table} copy',
         );
@@ -293,7 +266,6 @@ void main() {
       }
     });
   });
-
 }
 
 List<
@@ -393,6 +365,52 @@ dynamic _candidateFor(String table, {bool updated = false}) {
       reference: reference,
       groupId: groupId,
     ),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
+}
+
+Future<dynamic> _copyLootTemplate(
+  dynamic repository,
+  String table,
+  dynamic key,
+) {
+  return switch (table) {
+    'creature_loot_template' =>
+      (repository as CreatureLootTemplateRepository).copyLootTemplate(
+        key as CreatureLootTemplateKey,
+      ),
+    'pickpocketing_loot_template' =>
+      (repository as PickpocketingLootTemplateRepository).copyLootTemplate(
+        key as PickpocketingLootTemplateKey,
+      ),
+    'skinning_loot_template' =>
+      (repository as SkinningLootTemplateRepository).copyLootTemplate(
+        key as SkinningLootTemplateKey,
+      ),
+    'item_loot_template' =>
+      (repository as ItemLootTemplateRepository).copyLootTemplate(
+        key as ItemLootTemplateKey,
+      ),
+    'disenchant_loot_template' =>
+      (repository as DisenchantLootTemplateRepository).copyLootTemplate(
+        key as DisenchantLootTemplateKey,
+      ),
+    'prospecting_loot_template' =>
+      (repository as ProspectingLootTemplateRepository).copyLootTemplate(
+        key as ProspectingLootTemplateKey,
+      ),
+    'milling_loot_template' =>
+      (repository as MillingLootTemplateRepository).copyLootTemplate(
+        key as MillingLootTemplateKey,
+      ),
+    'reference_loot_template' =>
+      (repository as ReferenceLootTemplateRepository).copyReferenceLootTemplate(
+        key as ReferenceLootTemplateKey,
+      ),
+    'gameobject_loot_template' =>
+      (repository as GameObjectLootTemplateRepository).copyLootTemplate(
+        key as GameObjectLootTemplateKey,
+      ),
     _ => throw ArgumentError.value(table, 'table'),
   };
 }

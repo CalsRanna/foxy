@@ -10,7 +10,7 @@ part 'item_set_repository.g.dart';
 
 @FoxyRepository(ItemSetEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('name')
+@FoxyFilter.text('name', column: 'Name_lang_zhCN')
 class ItemSetRepository
     with RepositoryMixin, DbcLocaleRepositoryMixin, _ItemSetRepositoryMixin {
   static const _table = 'foxy.dbc_item_set';
@@ -18,6 +18,7 @@ class ItemSetRepository
   @override
   String get dbcLocaleTableName => _table;
 
+  @override
   Future<int> copyItemSet(int key) async {
     final source = await getItemSet(key);
     if (source == null) {
@@ -28,33 +29,9 @@ class ItemSetRepository
     return copied.id;
   }
 
-  Future<int> countItemSets({ItemSetFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<ItemSetEntity> createItemSet() async {
     return ItemSetEntity(id: await _getNextId());
-  }
-
-  Future<List<BriefItemSetEntity>> getBriefItemSets({
-    int page = 1,
-    ItemSetFilter? filter,
-  }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'Name_lang_zhCN',
-      'RequiredSkill',
-      'RequiredSkillRank',
-    ]);
-    builder = _applyFilter(builder, filter);
-    final results = await builder
-        .orderBy('ID')
-        .limit(kPageSize)
-        .offset((page - 1) * kPageSize)
-        .get();
-    return results.map((e) => BriefItemSetEntity.fromJson(e.toMap())).toList();
   }
 
   Future<List<DbcLocaleFieldValue>> getItemSetLocales(
@@ -62,17 +39,13 @@ class ItemSetRepository
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
 
-  Future<List<ItemSetEntity>> getItemSets() async {
-    final results = await laconic.table(_table).orderBy('ID').get();
-    return results.map((e) => ItemSetEntity.fromJson(e.toMap())).toList();
-  }
-
   Future<void> saveItemSetLocales(
     int id,
     DbcLocaleFieldDefinition field,
     List<DbcLocaleFieldValue> locales,
   ) => storeDbcLocaleField(id, field, locales);
 
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, ItemSetFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

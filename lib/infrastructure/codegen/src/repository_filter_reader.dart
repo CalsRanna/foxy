@@ -57,7 +57,7 @@ final class RepositoryFilterReader {
     final names = <String>{};
     final fields = <RepositoryFilterFieldModel>[];
     for (final object in annotations) {
-      final field = _readField(object, filterClassName, element);
+      final field = readFilterField(object, filterClassName, element);
       if (!names.add(field.name)) {
         _fail(
           '$filterClassName 重复声明字段 ${field.name}。',
@@ -75,68 +75,80 @@ final class RepositoryFilterReader {
     );
   }
 
-  Object? _convertDefault(DartObject object, FoxyFilterType type) =>
-      switch (type) {
-        FoxyFilterType.boolean => object.toBoolValue(),
-        FoxyFilterType.decimal =>
-          object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
-        FoxyFilterType.integer => object.toIntValue(),
-        FoxyFilterType.text => object.toStringValue(),
-      };
-
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
       '$message\n修复方式：$correction',
       element: element,
     );
   }
+}
 
-  RepositoryFilterFieldModel _readField(
-    DartObject object,
-    String filterClassName,
-    Element element,
-  ) {
-    final reader = ConstantReader(object);
-    final name = reader.read('name').stringValue;
-    if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
-      _fail(
-        '$filterClassName 的字段名 $name 不是合法 lowerCamelCase 标识符。',
-        element,
-        '使用 lowerCamelCase；Dart 保留字允许追加单个下划线。',
-      );
-    }
-
-    final typeIndex = reader
-        .read('type')
-        .objectValue
-        .getField('index')
-        ?.toIntValue();
-    if (typeIndex == null ||
-        typeIndex < 0 ||
-        typeIndex >= FoxyFilterType.values.length) {
-      _fail(
-        '$filterClassName.$name 的类型无法识别。',
-        element,
-        '使用 FoxyFilter 的 text/integer/decimal/boolean 具名构造函数。',
-      );
-    }
-    final type = FoxyFilterType.values[typeIndex];
-    final defaultValue = _convertDefault(
-      reader.read('defaultValue').objectValue,
-      type,
-    );
-    if (defaultValue == null) {
-      _fail(
-        '$filterClassName.$name 的默认值与 ${type.name} 类型不兼容。',
-        element,
-        '通过对应的 FoxyFilter 具名构造函数传入正确默认值。',
-      );
-    }
-
-    return RepositoryFilterFieldModel(
-      defaultValue: defaultValue,
-      name: name,
-      type: type,
+/// 从单个 `@FoxyFilter` 注解对象解析字段模型，供 Filter 生成器与
+/// Repository 生成器共用，保证两边读到一致的字段定义。
+///
+/// `column` 未显式声明时返回空字符串，由调用方决定推断或报错。
+RepositoryFilterFieldModel readFilterField(
+  DartObject object,
+  String filterClassName,
+  Element element,
+) {
+  final reader = ConstantReader(object);
+  final name = reader.read('name').stringValue;
+  if (!RegExp(r'^[a-z][A-Za-z0-9]*_?$').hasMatch(name)) {
+    _fail(
+      '$filterClassName 的字段名 $name 不是合法 lowerCamelCase 标识符。',
+      element,
+      '使用 lowerCamelCase；Dart 保留字允许追加单个下划线。',
     );
   }
+
+  final typeIndex = reader
+      .read('type')
+      .objectValue
+      .getField('index')
+      ?.toIntValue();
+  if (typeIndex == null ||
+      typeIndex < 0 ||
+      typeIndex >= FoxyFilterType.values.length) {
+    _fail(
+      '$filterClassName.$name 的类型无法识别。',
+      element,
+      '使用 FoxyFilter 的 text/integer/decimal/boolean 具名构造函数。',
+    );
+  }
+  final type = FoxyFilterType.values[typeIndex];
+  final defaultValue = _convertDefault(
+    reader.read('defaultValue').objectValue,
+    type,
+  );
+  if (defaultValue == null) {
+    _fail(
+      '$filterClassName.$name 的默认值与 ${type.name} 类型不兼容。',
+      element,
+      '通过对应的 FoxyFilter 具名构造函数传入正确默认值。',
+    );
+  }
+
+  return RepositoryFilterFieldModel(
+    column: reader.peek('column')?.stringValue ?? '',
+    defaultValue: defaultValue,
+    name: name,
+    type: type,
+  );
 }
+
+Never _fail(String message, Element element, String correction) {
+  throw InvalidGenerationSourceError(
+    '$message\n修复方式：$correction',
+    element: element,
+  );
+}
+
+Object? _convertDefault(DartObject object, FoxyFilterType type) =>
+    switch (type) {
+      FoxyFilterType.boolean => object.toBoolValue(),
+      FoxyFilterType.decimal =>
+        object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
+      FoxyFilterType.integer => object.toIntValue(),
+      FoxyFilterType.text => object.toStringValue(),
+    };

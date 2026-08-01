@@ -28,6 +28,35 @@ final class ReferenceLootTemplateFilter {
 }
 
 mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
+  Future<ReferenceLootTemplateKey> copyReferenceLootTemplate(
+    ReferenceLootTemplateKey key,
+  ) async {
+    final source = await getReferenceLootTemplate(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createReferenceLootTemplate();
+    final copied = source.copyWith(entry: blank.entry, item: blank.item);
+    await storeReferenceLootTemplate(copied);
+    return ReferenceLootTemplateKey.fromEntity(copied);
+  }
+
+  Future<int> countReferenceLootTemplates({
+    ReferenceLootTemplateFilter? filter,
+  }) async {
+    return _applyFilter(
+      laconic.table('reference_loot_template'),
+      filter,
+    ).count();
+  }
+
+  Future<ReferenceLootTemplateEntity> createReferenceLootTemplate() async {
+    return ReferenceLootTemplateEntity(
+      entry: await nextMaxPlusOne('reference_loot_template', '`Entry`'),
+      item: await nextMaxPlusOne('reference_loot_template', '`Item`'),
+    );
+  }
+
   Future<void> destroyReferenceLootTemplate(
     ReferenceLootTemplateKey key,
   ) async {
@@ -50,6 +79,42 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ReferenceLootTemplateEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefReferenceLootTemplateEntity>>
+  getBriefReferenceLootTemplates({
+    int page = 1,
+    ReferenceLootTemplateFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('reference_loot_template').select([
+      '`Entry`',
+      '`Item`',
+      '`Reference`',
+      '`Chance`',
+      '`QuestRequired`',
+      '`GroupId`',
+      '`MinCount`',
+      '`MaxCount`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`Entry`').orderBy('`Item`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefReferenceLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<ReferenceLootTemplateEntity>> getReferenceLootTemplates() async {
+    var builder = laconic
+        .table('reference_loot_template')
+        .orderBy('`Entry`')
+        .orderBy('`Item`');
+    final results = await builder.get();
+    return results
+        .map((e) => ReferenceLootTemplateEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeReferenceLootTemplate(
@@ -88,6 +153,20 @@ mixin _ReferenceLootTemplateRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ReferenceLootTemplateFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.entry.isNotEmpty) {
+      builder = builder.where('`Entry`', filter.entry);
+    }
+    if (filter.name.isNotEmpty) {
+      builder = builder.where('`it.name`', filter.name);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(ReferenceLootTemplateKey key) async {}

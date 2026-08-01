@@ -8,10 +8,11 @@ part 'talent_repository.g.dart';
 
 @FoxyRepository(TalentEntity)
 @FoxyFilter.text('id')
-@FoxyFilter.text('spell')
+@FoxyFilter.text('spell', column: 'SpellRank0')
 class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
   static const _table = 'foxy.dbc_talent';
 
+  @override
   Future<int> copyTalent(int key) async {
     final source = await getTalent(key);
     if (source == null) {
@@ -22,39 +23,12 @@ class TalentRepository with RepositoryMixin, _TalentRepositoryMixin {
     return copied.id;
   }
 
-  Future<int> countTalents({TalentFilter? filter}) {
-    return _applyFilter(laconic.table(_table), filter).count();
-  }
-
+  @override
   Future<TalentEntity> createTalent() async {
     return TalentEntity(id: await _getNextId());
   }
 
-  Future<List<BriefTalentEntity>> getBriefTalents({
-    int page = 1,
-    TalentFilter? filter,
-  }) async {
-    var builder = laconic.table(_table).select([
-      'ID',
-      'TabID',
-      'TierID',
-      'ColumnIndex',
-      'SpellRank0',
-    ]);
-    builder = _applyFilter(builder, filter);
-    final rows = await builder
-        .orderBy('ID')
-        .limit(kPageSize)
-        .offset((page - 1) * kPageSize)
-        .get();
-    return rows.map((row) => BriefTalentEntity.fromJson(row.toMap())).toList();
-  }
-
-  Future<List<TalentEntity>> getTalents() async {
-    final rows = await laconic.table(_table).orderBy('ID').get();
-    return rows.map((row) => TalentEntity.fromJson(row.toMap())).toList();
-  }
-
+  @override
   QueryBuilder _applyFilter(QueryBuilder builder, TalentFilter? filter) {
     if (filter == null) return builder;
     if (filter.id.isNotEmpty) builder = builder.where('ID', filter.id);

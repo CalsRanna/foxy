@@ -10,6 +10,8 @@ part 'condition_repository.g.dart';
 @FoxyFilter.text('sourceTypeOrReferenceId')
 @FoxyFilter.text('sourceEntry')
 class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
+  // 生成版查询层内联表名字面量（mixin 无法访问类静态成员），此处仅作契约校验。
+  // ignore: unused_field
   static const _table = 'conditions';
 
   /// acore_world.conditions 完整 10 列主键
@@ -26,9 +28,10 @@ class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
     'ConditionValue3',
   ];
 
-  Future<void> copyCondition(ConditionKey key) async {
+  @override
+  Future<ConditionKey> copyCondition(ConditionKey key) async {
     var source = await getCondition(key);
-    if (source == null) return;
+    if (source == null) return key;
     var nextElseGroup = source.elseGroup + 1;
     while (await getCondition(
           ConditionKey.fromEntity(source.copyWith(elseGroup: nextElseGroup)),
@@ -36,66 +39,13 @@ class ConditionRepository with RepositoryMixin, _ConditionRepositoryMixin {
         null) {
       nextElseGroup++;
     }
-    await storeCondition(source.copyWith(elseGroup: nextElseGroup));
+    final copied = source.copyWith(elseGroup: nextElseGroup);
+    await storeCondition(copied);
+    return ConditionKey.fromEntity(copied);
   }
 
-  Future<int> countConditions({ConditionFilter? filter}) async {
-    var builder = laconic.table(_table);
-    builder = _applyFilter(builder, filter);
-    return builder.count();
-  }
-
+  @override
   Future<ConditionEntity> createCondition() async {
     return const ConditionEntity();
-  }
-
-  Future<List<BriefConditionEntity>> getBriefConditions({
-    int page = 1,
-    ConditionFilter? filter,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    const fields = [
-      'SourceTypeOrReferenceId',
-      'SourceGroup',
-      'SourceEntry',
-      'SourceId',
-      'ElseGroup',
-      'ConditionTypeOrReference',
-      'ConditionTarget',
-      'ConditionValue1',
-      'ConditionValue2',
-      'ConditionValue3',
-      'Comment',
-    ];
-    var builder = laconic.table(_table).select(fields);
-    builder = _applyFilter(builder, filter);
-    // 完整主键排序，保证 LIMIT/OFFSET 稳定
-    for (final col in pkColumns) {
-      builder = builder.orderBy(col);
-    }
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefConditionEntity.fromJson(e.toMap()))
-        .toList();
-  }
-
-  Future<List<ConditionEntity>> getConditions() async {
-    var results = await laconic.table(_table).get();
-    return results.map((e) => ConditionEntity.fromJson(e.toMap())).toList();
-  }
-
-  QueryBuilder _applyFilter(QueryBuilder builder, ConditionFilter? filter) {
-    if (filter == null) return builder;
-    if (filter.sourceTypeOrReferenceId.isNotEmpty) {
-      builder = builder.where(
-        'SourceTypeOrReferenceId',
-        filter.sourceTypeOrReferenceId,
-      );
-    }
-    if (filter.sourceEntry.isNotEmpty) {
-      builder = builder.where('SourceEntry', filter.sourceEntry);
-    }
-    return builder;
   }
 }

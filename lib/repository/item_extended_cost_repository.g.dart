@@ -21,6 +21,30 @@ final class ItemExtendedCostFilter {
 }
 
 mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
+  Future<int> copyItemExtendedCost(int key) async {
+    final source = await getItemExtendedCost(key);
+    if (source == null) {
+      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+    }
+    final blank = await createItemExtendedCost();
+    final copied = source.copyWith(id: blank.id);
+    await storeItemExtendedCost(copied);
+    return copied.id;
+  }
+
+  Future<int> countItemExtendedCosts({ItemExtendedCostFilter? filter}) async {
+    return _applyFilter(
+      laconic.table('foxy.dbc_item_extended_cost'),
+      filter,
+    ).count();
+  }
+
+  Future<ItemExtendedCostEntity> createItemExtendedCost() async {
+    return ItemExtendedCostEntity(
+      id: await nextMaxPlusOne('foxy.dbc_item_extended_cost', '`ID`'),
+    );
+  }
+
   Future<void> destroyItemExtendedCost(int key) async {
     await _beforeDestroy(key);
     final deletedRows = await _whereKey(
@@ -39,6 +63,44 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     ).limit(1).get();
     if (results.isEmpty) return null;
     return ItemExtendedCostEntity.fromJson(results.first.toMap());
+  }
+
+  Future<List<BriefItemExtendedCostEntity>> getBriefItemExtendedCosts({
+    int page = 1,
+    ItemExtendedCostFilter? filter,
+  }) async {
+    var offset = (page - 1) * kPageSize;
+    var builder = laconic.table('foxy.dbc_item_extended_cost').select([
+      '`ID`',
+      '`HonorPoints`',
+      '`ArenaPoints`',
+      '`ArenaBracket`',
+      '`ItemID0`',
+      '`ItemID1`',
+      '`ItemID2`',
+      '`ItemID3`',
+      '`ItemID4`',
+      '`ItemCount0`',
+      '`ItemCount1`',
+      '`ItemCount2`',
+      '`ItemCount3`',
+      '`ItemCount4`',
+    ]);
+    builder = _applyFilter(builder, filter);
+    builder = builder.orderBy('`ID`');
+    builder = builder.limit(kPageSize).offset(offset);
+    final results = await builder.get();
+    return results
+        .map((e) => BriefItemExtendedCostEntity.fromJson(e.toMap()))
+        .toList();
+  }
+
+  Future<List<ItemExtendedCostEntity>> getItemExtendedCosts() async {
+    var builder = laconic.table('foxy.dbc_item_extended_cost').orderBy('`ID`');
+    final results = await builder.get();
+    return results
+        .map((e) => ItemExtendedCostEntity.fromJson(e.toMap()))
+        .toList();
   }
 
   Future<void> storeItemExtendedCost(
@@ -80,6 +142,17 @@ mixin _ItemExtendedCostRepositoryMixin on RepositoryMixin {
     if (matchedRows == 0) {
       throw StateError('原记录不存在，可能已被其他操作修改或删除');
     }
+  }
+
+  QueryBuilder _applyFilter(
+    QueryBuilder builder,
+    ItemExtendedCostFilter? filter,
+  ) {
+    if (filter == null) return builder;
+    if (filter.id.isNotEmpty) {
+      builder = builder.where('`ID`', filter.id);
+    }
+    return builder;
   }
 
   Future<void> _beforeDestroy(int key) async {}

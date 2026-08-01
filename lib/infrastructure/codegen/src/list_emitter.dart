@@ -12,10 +12,8 @@ final class ListEmitter {
       ..writeln('mixin ${model.mixinName}')
       ..writeln('    on FieldControllerMixin, QueryVersionMixin {');
     _emitFields(buffer, model);
-    if (model.copyMethodName != null) {
-      buffer.writeln();
-      _emitCopy(buffer, model);
-    }
+    buffer.writeln();
+    _emitCopy(buffer, model);
     buffer
       ..writeln()
       ..writeln('  Future<void> destroy(${model.keyParameter}) async {')

@@ -106,7 +106,7 @@ void main() {
     );
   });
 
-  test('Repository 无 copy 方法时不生成 copy', () async {
+  test('copy 恒按约定名生成(查询层全量生成)', () async {
     final repository = sampleRepositorySource.replaceFirst(
       '  Future<void> copySample(int key) async {}\n',
       '',
@@ -126,7 +126,8 @@ void main() {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                isNot(contains('Future<void> copy(')),
+                contains('Future<void> copy(int key) async {'),
+                contains('await _repository.copySample(key);'),
                 contains('Future<void> destroy(int key) async {'),
               ]),
             ),
@@ -135,23 +136,12 @@ void main() {
   });
 
   test('复合 Key 时 copy/destroy 使用 XxxKey 参数', () async {
-    final repository = sampleRepositorySource
-        .replaceFirst(
-          'Future<void> copySample(int key) async {}',
-          'Future<SampleKey> copySample(SampleKey key) async => key;',
-        )
-        .replaceFirst(
-          'Future<void> destroySample(int key) async {}',
-          'Future<void> destroySample(SampleKey key) async {}',
-        )
-        .replaceFirst(
-          "class BriefSampleEntity {",
-          "class SampleKey {\n"
-              "  final int entry;\n"
-              "  const SampleKey({required this.entry});\n"
-              "}\n\n"
-              "class BriefSampleEntity {",
-        );
+    final entity = sampleEntitySource.replaceFirst(
+      "  const SampleEntity({this.id = 0});",
+      "  @FoxyFullField('Owner', key: true)\n"
+          "  final int owner;\n\n"
+          "  const SampleEntity({this.id = 0, this.owner = 0});",
+    );
 
     await testBuilder(
       foxyViewModelBuilder(BuilderOptions.empty),
@@ -159,8 +149,8 @@ void main() {
         listAnnotationAsset: listAnnotationSource,
         entityAnnotationAsset: entityAnnotationSource,
         repositoryAnnotationAsset: repositoryAnnotationSource,
-        entityAsset: sampleEntitySource,
-        repositoryAsset: repository,
+        entityAsset: entity,
+        repositoryAsset: sampleRepositorySource,
         viewModelAsset: sampleViewModelSource,
       },
       outputs: {
@@ -178,7 +168,7 @@ void main() {
     );
   });
 
-  test('方法名与 base name 不匹配时按签名匹配(reference 特例)', () async {
+  test('查询方法一律按命名约定调用(不读仓库源码)', () async {
     const repository = r'''
 import 'package:foxy/entity/sample_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
@@ -189,28 +179,7 @@ part 'sample_repository.g.dart';
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SampleRepository with _SampleRepositoryMixin {
-  Future<SampleKey> copyLootTemplate(SampleKey key) async => key;
-
-  Future<int> countLootTemplateRows({SampleFilter? filter}) async => 0;
-
-  Future<int> countLootTemplates({SampleFilter? filter}) async => 0;
-
-  Future<void> destroySample(SampleKey key) async {}
-
-  Future<List<BriefSampleEntity>> getBriefLootTemplateRows({
-    int page = 1,
-    SampleFilter? filter,
-  }) async => [];
-
-  Future<List<BriefSampleEntity>> getBriefLootTemplates(int entry) async => [];
-
   static const _table = 'foxy.sample';
-}
-
-class SampleKey {
-  final int entry;
-
-  const SampleKey({required this.entry});
 }
 
 class SampleFilter {
@@ -239,14 +208,11 @@ class BriefSampleEntity {
         'foxy|lib/view_model/sample_list_view_model.foxy_view_model.g.part':
             decodedMatches(
               allOf(<Matcher>[
-                contains('Future<void> copy(SampleKey key) async {'),
-                contains('await _repository.copyLootTemplate(key);'),
+                contains('Future<void> copy(int key) async {'),
+                contains('await _repository.copySample(key);'),
                 contains('await _repository.destroySample(key);'),
-                contains('_repository.getBriefLootTemplateRows('),
-                contains('_repository.countLootTemplateRows(filter: filter),'),
-                // 无 filter 参数的 getBrief 候选被排除
-                isNot(contains('getBriefLootTemplates(')),
-                isNot(contains('countLootTemplates(')),
+                contains('_repository.getBriefSamples('),
+                contains('_repository.countSamples(filter: filter),'),
               ]),
             ),
       },

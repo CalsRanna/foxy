@@ -1,4 +1,3 @@
-import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
 import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
@@ -48,41 +47,12 @@ class MillingLootTemplateRepository
     return builder.count();
   }
 
-  Future<int> countLootTemplates({MillingLootTemplateFilter? filter}) async {
-    var builder = laconic.table(_table);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    return builder.count();
-  }
-
   Future<int> countLootTemplatesForEntry(int entry) {
     return laconic.table(_table).where('Entry', entry).count();
   }
 
   Future<MillingLootTemplateEntity> createLootTemplate(int entry) async {
     return MillingLootTemplateEntity(entry: entry);
-  }
-
-  Future<List<BriefMillingLootTemplateEntryEntity>>
-  getBriefLootTemplateEntries({
-    MillingLootTemplateFilter? filter,
-    int page = 1,
-  }) async {
-    var offset = (page - 1) * kPageSize;
-    var builder = laconic.table(_table);
-    builder = builder.select(['Entry', 'COUNT(*) as ItemCount']);
-    if (filter != null && filter.entry.isNotEmpty) {
-      builder = builder.where('Entry', filter.entry);
-    }
-    builder = builder.groupBy('Entry');
-    builder = builder.orderBy('Entry');
-    builder = builder.limit(kPageSize).offset(offset);
-    var results = await builder.get();
-    return results
-        .map((e) => BriefMillingLootTemplateEntryEntity.fromJson(e.toMap()))
-        .toList();
   }
 
   Future<List<BriefMillingLootTemplateEntity>> getBriefLootTemplateRows({
