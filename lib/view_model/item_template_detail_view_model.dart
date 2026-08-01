@@ -1,12 +1,12 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'item_template_detail_view_model.g.dart';
 
@@ -23,6 +23,23 @@ class ItemTemplateDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+
+  bool get hasDisenchantLoot => (entity.value?.disenchantId ?? 0) != 0;
+
+  /// Computed conditions
+  bool get hasEnchantment =>
+      (entity.value?.randomProperty ?? 0) != 0 ||
+      (entity.value?.randomSuffix ?? 0) != 0;
+
+  bool get hasItemLoot => ((entity.value?.flags ?? 0) & 4) != 0;
+
+  bool get hasMillingLoot => ((entity.value?.flags ?? 0) & 536870912) != 0;
+
+  bool get hasProspectingLoot => ((entity.value?.flags ?? 0) & 262144) != 0;
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -77,19 +94,6 @@ class ItemTemplateDetailViewModel
     }
   }
 
-  bool get hasDisenchantLoot => (entity.value?.disenchantId ?? 0) != 0;
-
-  /// Computed conditions
-  bool get hasEnchantment =>
-      (entity.value?.randomProperty ?? 0) != 0 ||
-      (entity.value?.randomSuffix ?? 0) != 0;
-
-  bool get hasItemLoot => ((entity.value?.flags ?? 0) & 4) != 0;
-
-  bool get hasMillingLoot => ((entity.value?.flags ?? 0) & 536870912) != 0;
-
-  bool get hasProspectingLoot => ((entity.value?.flags ?? 0) & 262144) != 0;
-
   void _logActivity(ActivityActionType action, ItemTemplateEntity t) {
     final log = ActivityLogEntity(
       module: 'item_template',
@@ -98,9 +102,5 @@ class ItemTemplateDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

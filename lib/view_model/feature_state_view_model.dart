@@ -22,6 +22,13 @@ class FeatureStateViewModel {
   FeatureStateViewModel({FeatureRepository? repository})
     : _repository = repository ?? GetIt.instance.get<FeatureRepository>();
 
+  void dispose() {
+    allFeatures.value = const [];
+    initialized.value = false;
+    loading.value = false;
+    errorMessage.value = null;
+  }
+
   Future<void> initSignals() async {
     if (initialized.value) return;
     await refresh();
@@ -88,12 +95,5 @@ class FeatureStateViewModel {
       errorMessage.value = '更新固定状态失败: $error';
       rethrow;
     }
-  }
-
-  void dispose() {
-    allFeatures.value = const [];
-    initialized.value = false;
-    loading.value = false;
-    errorMessage.value = null;
   }
 }

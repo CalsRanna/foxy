@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
 
 void main() {
 

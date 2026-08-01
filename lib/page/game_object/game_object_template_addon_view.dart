@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
-import 'package:foxy/view_model/game_object_template_addon_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/game_object_template_addon_single_editor_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -27,56 +27,6 @@ class _GameObjectTemplateAddonViewState
     extends State<GameObjectTemplateAddonView> {
   final viewModel = GetIt.instance
       .get<GameObjectTemplateAddonSingleEditorViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  @override
-  void didUpdateWidget(covariant GameObjectTemplateAddonView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.gameObjectId != widget.gameObjectId) {
-      _initialize();
-    }
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(parentKey: widget.gameObjectId);
-    } catch (error) {
-      if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  Future<void> _persist() async {
-    try {
-      await viewModel.persist();
-      if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(const ShadToast(description: Text('模板补充数据已保存')));
-    } catch (error) {
-      if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +129,26 @@ class _GameObjectTemplateAddonViewState
     );
   }
 
+  @override
+  void didUpdateWidget(covariant GameObjectTemplateAddonView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.gameObjectId != widget.gameObjectId) {
+      _initialize();
+    }
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
   FoxyFormItem _artKitInput(int index, IntFieldController controller) {
     return FoxyFormItem(
       label: 'ArtKit $index',
@@ -188,5 +158,35 @@ class _GameObjectTemplateAddonViewState
         placeholder: 'artkit$index',
       ),
     );
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(parentKey: widget.gameObjectId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('模板补充数据已保存')));
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
   }
 }

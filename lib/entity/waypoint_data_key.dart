@@ -8,10 +8,10 @@ final class WaypointDataKey {
   const WaypointDataKey({required this.id});
 
   @override
+  int get hashCode => id.hashCode;
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) || other is WaypointDataKey && id == other.id;
   }
-
-  @override
-  int get hashCode => id.hashCode;
 }

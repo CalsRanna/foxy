@@ -1,8 +1,8 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -10,48 +10,6 @@ import 'package:signals/signals_flutter.dart';
 const _kDialogWidth = 640.0;
 
 // ─── 公共壳 ───────────────────────────────────────────────────────────────
-
-/// 设置相关对话框的公共壳（标题 + 内容 + 操作区）。
-class SettingDialogShell extends StatelessWidget {
-  final Widget title;
-  final Widget child;
-  final List<Widget> actions;
-
-  const SettingDialogShell({
-    super.key,
-    required this.title,
-    required this.child,
-    this.actions = const [],
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShadDialog(
-      closeIcon: const SizedBox.shrink(),
-      constraints: const BoxConstraints(maxWidth: _kDialogWidth),
-      title: title,
-      actions: actions,
-      child: child,
-    );
-  }
-}
-
-/// 对话框标题行（图标 + 文本）。
-Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
-  return Row(
-    spacing: 10,
-    children: [
-      Icon(icon, size: 20, color: iconColor),
-      Text(text),
-    ],
-  );
-}
-
-/// 弱化提示文本。
-Widget settingDialogMutedHint(BuildContext context, String text) {
-  final theme = ShadTheme.of(context);
-  return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
-}
 
 /// 结果横幅（成功/错误/警告，带颜色与图标）。
 Widget settingDialogBanner(
@@ -82,6 +40,12 @@ Widget settingDialogBanner(
       ],
     ),
   );
+}
+
+/// 弱化提示文本。
+Widget settingDialogMutedHint(BuildContext context, String text) {
+  final theme = ShadTheme.of(context);
+  return Text(text, style: theme.textTheme.muted.copyWith(fontSize: 13));
 }
 
 /// 路径输入行（输入框 + 浏览按钮）。
@@ -119,32 +83,6 @@ Widget settingDialogPathField({
         ),
       ),
     ],
-  );
-}
-
-/// 只读路径展示框（目录配置来自设置页，动作对话框不再直接编辑）。
-Widget settingDialogReadonlyPath(BuildContext context, String path) {
-  final theme = ShadTheme.of(context);
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: theme.colorScheme.border),
-    ),
-    child: Row(
-      spacing: 8,
-      children: [
-        Icon(
-          LucideIcons.folder,
-          size: 15,
-          color: theme.colorScheme.mutedForeground,
-        ),
-        Expanded(
-          child: SelectableText(path, style: const TextStyle(fontSize: 13)),
-        ),
-      ],
-    ),
   );
 }
 
@@ -199,177 +137,41 @@ Widget settingDialogProgressPanel(
   );
 }
 
-// ─── 导入对话框 ───────────────────────────────────────────────────────────
-
-class DbcImportDialog extends StatefulWidget {
-  final DbcImportWorkflowViewModel vm;
-  const DbcImportDialog({super.key, required this.vm});
-
-  @override
-  State<DbcImportDialog> createState() => _DbcImportDialogState();
+/// 只读路径展示框（目录配置来自设置页，动作对话框不再直接编辑）。
+Widget settingDialogReadonlyPath(BuildContext context, String path) {
+  final theme = ShadTheme.of(context);
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: theme.colorScheme.border),
+    ),
+    child: Row(
+      spacing: 8,
+      children: [
+        Icon(
+          LucideIcons.folder,
+          size: 15,
+          color: theme.colorScheme.mutedForeground,
+        ),
+        Expanded(
+          child: SelectableText(path, style: const TextStyle(fontSize: 13)),
+        ),
+      ],
+    ),
+  );
 }
 
-class _DbcImportDialogState extends State<DbcImportDialog> {
-  DbcImportWorkflowViewModel get _vm => widget.vm;
-
-  /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
-  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
-  final _ready = signal(false);
-
-  @override
-  void initState() {
-    super.initState();
-    _prepare();
-  }
-
-  Future<void> _prepare() async {
-    try {
-      await _vm.prepare();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-    if (!mounted) return;
-    _ready.value = true;
-  }
-
-  Future<void> _start() async {
-    try {
-      await _vm.start();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: _kDialogWidth,
-      child: Watch((_) {
-        if (!_ready.value) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
-            child: const SizedBox(
-              height: 120,
-              child: Center(
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-            ),
-          );
-        }
-
-        final workflowStatus = _vm.status.value;
-        final importing =
-            workflowStatus == WorkflowStatus.preparing ||
-            workflowStatus == WorkflowStatus.running ||
-            workflowStatus == WorkflowStatus.cancelling;
-        final error = _vm.errorMessage.value;
-        final success = workflowStatus == WorkflowStatus.succeeded;
-        final theme = ShadTheme.of(context);
-
-        if (success) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(
-              LucideIcons.circleCheck,
-              '导入完成',
-              iconColor: theme.colorScheme.primary,
-            ),
-            actions: [
-              ShadButton(
-                onPressed: () => Navigator.of(context).maybePop(),
-                child: const Text('完成'),
-              ),
-            ],
-            child: settingDialogBanner(
-              context,
-              text:
-                  '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
-                  '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
-              color: theme.colorScheme.primary,
-              icon: LucideIcons.circleCheck,
-            ),
-          );
-        }
-
-        if (importing) {
-          return SettingDialogShell(
-            title: settingDialogTitleRow(LucideIcons.fileInput, '正在导入 DBC'),
-            child: settingDialogProgressPanel(
-              context,
-              ratio: _vm.progress.value,
-              label: _vm.progressLabel.value,
-              detail: _vm.progressDetail.value,
-              trailing: ShadButton.outline(
-                size: ShadButtonSize.sm,
-                onPressed: workflowStatus == WorkflowStatus.cancelling
-                    ? null
-                    : _vm.cancel,
-                child: Text(
-                  workflowStatus == WorkflowStatus.cancelling
-                      ? '正在取消…'
-                      : '取消导入',
-                ),
-              ),
-            ),
-          );
-        }
-
-        final path = _vm.path.value;
-        final configured = path != null && path.trim().isNotEmpty;
-        return SettingDialogShell(
-          title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
-          actions: [
-            ShadButton.outline(
-              onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('关闭'),
-            ),
-            ShadButton(
-              onPressed: configured ? _start : null,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 6,
-                children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
-              ),
-            ),
-          ],
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: 14,
-            children: [
-              settingDialogMutedHint(
-                context,
-                '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
-                '对应表的数据；若需保留库内数据请先自行备份。',
-              ),
-              Text(
-                '服务端 DBC 目录',
-                style: theme.textTheme.small.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              if (configured)
-                settingDialogReadonlyPath(context, path)
-              else
-                settingDialogMutedHint(
-                  context,
-                  '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
-                ),
-              if (error != null)
-                settingDialogBanner(
-                  context,
-                  text: error,
-                  color: theme.colorScheme.destructive,
-                  icon: LucideIcons.triangleAlert,
-                ),
-            ],
-          ),
-        );
-      }),
-    );
-  }
+/// 对话框标题行（图标 + 文本）。
+Widget settingDialogTitleRow(IconData icon, String text, {Color? iconColor}) {
+  return Row(
+    spacing: 10,
+    children: [
+      Icon(icon, size: 20, color: iconColor),
+      Text(text),
+    ],
+  );
 }
 
 // ─── 导出对话框 ───────────────────────────────────────────────────────────
@@ -382,8 +184,42 @@ class DbcExportDialog extends StatefulWidget {
   State<DbcExportDialog> createState() => _DbcExportDialogState();
 }
 
+// ─── 导入对话框 ───────────────────────────────────────────────────────────
+
+class DbcImportDialog extends StatefulWidget {
+  final DbcImportWorkflowViewModel vm;
+  const DbcImportDialog({super.key, required this.vm});
+
+  @override
+  State<DbcImportDialog> createState() => _DbcImportDialogState();
+}
+
+/// 设置相关对话框的公共壳（标题 + 内容 + 操作区）。
+class SettingDialogShell extends StatelessWidget {
+  final Widget title;
+  final Widget child;
+  final List<Widget> actions;
+
+  const SettingDialogShell({
+    super.key,
+    required this.title,
+    required this.child,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ShadDialog(
+      closeIcon: const SizedBox.shrink(),
+      constraints: const BoxConstraints(maxWidth: _kDialogWidth),
+      title: title,
+      actions: actions,
+      child: child,
+    );
+  }
+}
+
 class _DbcExportDialogState extends State<DbcExportDialog> {
-  DbcExportWorkflowViewModel get _vm => widget.vm;
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
   /// 以下状态用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
@@ -391,57 +227,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
   final _outputDir = signal<String?>(null);
   final _loaded = signal(false);
   final _query = signal('');
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      _query.value = _searchController.collect().trim().toLowerCase();
-    });
-    _bootstrap();
-  }
-
-  Future<void> _bootstrap() async {
-    try {
-      await _vm.prepare();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-    if (!mounted) return;
-    final defaultDir = _vm.outputDirectory.value;
-    if (defaultDir != null) {
-      _dirController.init(defaultDir);
-      _outputDir.value = defaultDir;
-    }
-    if (mounted) _loaded.value = true;
-  }
-
-  @override
-  void dispose() {
-    _dirController.dispose();
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  List<DbcExportItem> _filterItems(List<DbcExportItem> items) {
-    final query = _query.value;
-    if (query.isEmpty) return items;
-    return items
-        .where(
-          (item) =>
-              item.dbcFileName.toLowerCase().contains(query) ||
-              item.tableName.toLowerCase().contains(query),
-        )
-        .toList();
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    _dirController.init(dir);
-    _outputDir.value = dir;
-    _vm.setOutputDirectory(dir);
-  }
+  DbcExportWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {
@@ -735,6 +521,220 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
         );
       }),
     );
+  }
+
+  @override
+  void dispose() {
+    _dirController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      _query.value = _searchController.collect().trim().toLowerCase();
+    });
+    _bootstrap();
+  }
+
+  Future<void> _bootstrap() async {
+    try {
+      await _vm.prepare();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
+    if (!mounted) return;
+    final defaultDir = _vm.outputDirectory.value;
+    if (defaultDir != null) {
+      _dirController.init(defaultDir);
+      _outputDir.value = defaultDir;
+    }
+    if (mounted) _loaded.value = true;
+  }
+
+  Future<void> _browse() async {
+    final dir = await getDirectoryPath();
+    if (dir == null || !mounted) return;
+    _dirController.init(dir);
+    _outputDir.value = dir;
+    _vm.setOutputDirectory(dir);
+  }
+
+  List<DbcExportItem> _filterItems(List<DbcExportItem> items) {
+    final query = _query.value;
+    if (query.isEmpty) return items;
+    return items
+        .where(
+          (item) =>
+              item.dbcFileName.toLowerCase().contains(query) ||
+              item.tableName.toLowerCase().contains(query),
+        )
+        .toList();
+  }
+}
+
+class _DbcImportDialogState extends State<DbcImportDialog> {
+  /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
+  /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
+  final _ready = signal(false);
+
+  DbcImportWorkflowViewModel get _vm => widget.vm;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: _kDialogWidth,
+      child: Watch((_) {
+        if (!_ready.value) {
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
+            child: const SizedBox(
+              height: 120,
+              child: Center(
+                child: SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+          );
+        }
+
+        final workflowStatus = _vm.status.value;
+        final importing =
+            workflowStatus == WorkflowStatus.preparing ||
+            workflowStatus == WorkflowStatus.running ||
+            workflowStatus == WorkflowStatus.cancelling;
+        final error = _vm.errorMessage.value;
+        final success = workflowStatus == WorkflowStatus.succeeded;
+        final theme = ShadTheme.of(context);
+
+        if (success) {
+          return SettingDialogShell(
+            title: settingDialogTitleRow(
+              LucideIcons.circleCheck,
+              '导入完成',
+              iconColor: theme.colorScheme.primary,
+            ),
+            actions: [
+              ShadButton(
+                onPressed: () => Navigator.of(context).maybePop(),
+                child: const Text('完成'),
+              ),
+            ],
+            child: settingDialogBanner(
+              context,
+              text:
+                  '导入完成：写入 ${_vm.result.value?.completed ?? 0} 个文件'
+                  '${(_vm.result.value?.skipped ?? 0) > 0 ? '，跳过 ${_vm.result.value!.skipped} 个' : ''}。',
+              color: theme.colorScheme.primary,
+              icon: LucideIcons.circleCheck,
+            ),
+          );
+        }
+
+        if (importing) {
+          return SettingDialogShell(
+            title: settingDialogTitleRow(LucideIcons.fileInput, '正在导入 DBC'),
+            child: settingDialogProgressPanel(
+              context,
+              ratio: _vm.progress.value,
+              label: _vm.progressLabel.value,
+              detail: _vm.progressDetail.value,
+              trailing: ShadButton.outline(
+                size: ShadButtonSize.sm,
+                onPressed: workflowStatus == WorkflowStatus.cancelling
+                    ? null
+                    : _vm.cancel,
+                child: Text(
+                  workflowStatus == WorkflowStatus.cancelling
+                      ? '正在取消…'
+                      : '取消导入',
+                ),
+              ),
+            ),
+          );
+        }
+
+        final path = _vm.path.value;
+        final configured = path != null && path.trim().isNotEmpty;
+        return SettingDialogShell(
+          title: settingDialogTitleRow(LucideIcons.fileInput, '导入 DBC'),
+          actions: [
+            ShadButton.outline(
+              onPressed: () => Navigator.of(context).maybePop(),
+              child: const Text('关闭'),
+            ),
+            ShadButton(
+              onPressed: configured ? _start : null,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [Icon(LucideIcons.play, size: 15), Text('开始导入')],
+              ),
+            ),
+          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 14,
+            children: [
+              settingDialogMutedHint(
+                context,
+                '从配置的服务端 DBC 目录导入。导入以 DBC 为准：将覆盖数据库中'
+                '对应表的数据；若需保留库内数据请先自行备份。',
+              ),
+              Text(
+                '服务端 DBC 目录',
+                style: theme.textTheme.small.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (configured)
+                settingDialogReadonlyPath(context, path)
+              else
+                settingDialogMutedHint(
+                  context,
+                  '尚未配置服务端 DBC 目录，请先前往设置页「目录设置」中配置。',
+                ),
+              if (error != null)
+                settingDialogBanner(
+                  context,
+                  text: error,
+                  color: theme.colorScheme.destructive,
+                  icon: LucideIcons.triangleAlert,
+                ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _prepare();
+  }
+
+  Future<void> _prepare() async {
+    try {
+      await _vm.prepare();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
+    if (!mounted) return;
+    _ready.value = true;
+  }
+
+  Future<void> _start() async {
+    try {
+      await _vm.start();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
   }
 }
 

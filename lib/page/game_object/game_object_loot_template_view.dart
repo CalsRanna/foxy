@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/view_model/game_object_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -13,8 +13,8 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class GameObjectLootTemplateView extends StatefulWidget {
   final int parentKey;
@@ -32,9 +32,8 @@ class _GameObjectLootTemplateViewState
       .get<GameObjectLootTemplateCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+  Widget build(BuildContext context) {
+    return Watch((_) => _buildContent(context));
   }
 
   @override
@@ -44,8 +43,9 @@ class _GameObjectLootTemplateViewState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((_) => _buildContent(context));
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.parentKey);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -145,38 +145,6 @@ class _GameObjectLootTemplateViewState
           },
         ),
       ],
-    );
-  }
-
-  Future<void> _showCreateDialog() async {
-    try {
-      await viewModel.create();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
-      return;
-    }
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增掉落'),
-        description: Text('新增一条掉落记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
-    );
-  }
-
-  Future<void> _showEditDialog() async {
-    if (!await _load(viewModel.selectedKey.value!)) return;
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑掉落'),
-        description: Text('编辑选中的掉落记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
     );
   }
 
@@ -337,6 +305,24 @@ class _GameObjectLootTemplateViewState
     );
   }
 
+  Future<void> _destroy(GameObjectLootTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
   Color _getQualityColor(int quality) {
     return switch (quality) {
       1 => const Color(0xFFFFFFFF),
@@ -358,21 +344,35 @@ class _GameObjectLootTemplateViewState
     }
   }
 
-  Future<void> _destroy(GameObjectLootTemplateKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
+  Future<void> _showCreateDialog() async {
     try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
+      await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
+      DialogUtil.instance.error('创建失败：$error');
+      return;
     }
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('新增掉落'),
+        description: Text('新增一条掉落记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
+  }
+
+  Future<void> _showEditDialog() async {
+    if (!await _load(viewModel.selectedKey.value!)) return;
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('编辑掉落'),
+        description: Text('编辑选中的掉落记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
   }
 }

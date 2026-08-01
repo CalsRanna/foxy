@@ -13,10 +13,18 @@ final class ImportDbcInput {
 }
 
 final class ImportDbcUseCase {
+  static const _cancelledResult = DbcSyncResult(
+    operation: DbcSyncOperation.import,
+    completed: 0,
+    skipped: 0,
+    errors: [],
+    cancelled: true,
+  );
   final ConfigUtil _configUtil;
-  final DbcSyncUtil _dbcSyncUtil;
 
+  final DbcSyncUtil _dbcSyncUtil;
   var _cancelGeneration = 0;
+
   var _executing = false;
 
   ImportDbcUseCase({
@@ -26,6 +34,15 @@ final class ImportDbcUseCase {
        _dbcSyncUtil = dbcSyncUtil;
 
   bool get isRunning => _executing || _dbcSyncUtil.isRunning;
+
+  Future<void> cancel() async {
+    _cancelGeneration++;
+    await _dbcSyncUtil.cancel();
+  }
+
+  Future<List<DbcTableCheckResult>> checkTables() {
+    return _dbcSyncUtil.checkTables();
+  }
 
   Future<DbcSyncResult> execute(ImportDbcInput input) async {
     if (_executing || _dbcSyncUtil.isRunning) {
@@ -78,25 +95,8 @@ final class ImportDbcUseCase {
     }
   }
 
-  Future<void> cancel() async {
-    _cancelGeneration++;
-    await _dbcSyncUtil.cancel();
-  }
-
-  Future<List<DbcTableCheckResult>> checkTables() {
-    return _dbcSyncUtil.checkTables();
-  }
-
   static int _parsePort(Object? value) {
     if (value is int) return value;
     return int.tryParse(value?.toString() ?? '') ?? 3306;
   }
-
-  static const _cancelledResult = DbcSyncResult(
-    operation: DbcSyncOperation.import,
-    completed: 0,
-    skipped: 0,
-    errors: [],
-    cancelled: true,
-  );
 }

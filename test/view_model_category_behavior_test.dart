@@ -2,21 +2,21 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
-import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/view_model/condition_list_view_model.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
-import 'package:foxy/view_model/more_read_view_model.dart';
-import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
+import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
+import 'package:foxy/view_model/condition_list_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/more_read_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 void main() {
@@ -141,6 +141,11 @@ FeatureEntity _feature(int id, String name) {
   );
 }
 
+final class _ActivityLogRepository extends ActivityLogRepository {
+  @override
+  void storeActivityLogBestEffort(ActivityLogEntity log) {}
+}
+
 final class _ConditionRepository extends ConditionRepository {
   ConditionFilter? countFilter;
   ConditionFilter? listFilter;
@@ -154,6 +159,12 @@ final class _ConditionRepository extends ConditionRepository {
   }
 
   @override
+  Future<void> destroyCondition(ConditionKey key) async {
+    if (!destroyStarted.isCompleted) destroyStarted.complete();
+    await releaseDestroy.future;
+  }
+
+  @override
   Future<List<BriefConditionEntity>> getBriefConditions({
     int page = 1,
     ConditionFilter? filter,
@@ -161,19 +172,13 @@ final class _ConditionRepository extends ConditionRepository {
     listFilter = filter;
     return const [];
   }
-
-  @override
-  Future<void> destroyCondition(ConditionKey key) async {
-    if (!destroyStarted.isCompleted) destroyStarted.complete();
-    await releaseDestroy.future;
-  }
 }
 
 final class _FeatureRepository extends FeatureRepository {
-  _FeatureRepository(this.features);
-
   final List<FeatureEntity> features;
+
   bool failFavorite = false;
+  _FeatureRepository(this.features);
 
   @override
   Future<List<FeatureEntity>> getFeatures() async => List.of(features);
@@ -182,9 +187,4 @@ final class _FeatureRepository extends FeatureRepository {
   Future<void> updateFavorite(int id, bool favorite) async {
     if (failFavorite) throw StateError('favorite failed');
   }
-}
-
-final class _ActivityLogRepository extends ActivityLogRepository {
-  @override
-  void storeActivityLogBestEffort(ActivityLogEntity log) {}
 }

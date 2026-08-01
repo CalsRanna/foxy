@@ -33,14 +33,6 @@ class FoxyFormItem extends StatelessWidget {
     return SizedBox(width: 96, child: Text(label!, textAlign: TextAlign.end));
   }
 
-  static int _labelWidth(String? label) {
-    if (label == null) return 0;
-    return label.runes.fold(0, (width, rune) {
-      if (_isWhitespace(rune)) return width;
-      return width + (_isWideCharacter(rune) ? 2 : 1);
-    });
-  }
-
   static bool _isWhitespace(int rune) {
     return rune == 0x20 || rune == 0x09 || rune == 0x0A || rune == 0x0D;
   }
@@ -52,5 +44,13 @@ class FoxyFormItem extends StatelessWidget {
         (rune >= 0x20000 && rune <= 0x2FA1F) ||
         (rune >= 0x3000 && rune <= 0x303F) ||
         (rune >= 0xFF01 && rune <= 0xFF60);
+  }
+
+  static int _labelWidth(String? label) {
+    if (label == null) return 0;
+    return label.runes.fold(0, (width, rune) {
+      if (_isWhitespace(rune)) return width;
+      return width + (_isWideCharacter(rune) ? 2 : 1);
+    });
   }
 }

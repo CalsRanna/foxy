@@ -1,9 +1,9 @@
 import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/achievement_repository.dart';
-import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -196,59 +196,6 @@ class AchievementDetailViewModel
     IntFieldController(),
   );
 
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createAchievement();
-        entity.value = blank;
-        _applyCandidate(blank);
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getAchievement(key);
-      if (result == null) {
-        throw StateError('原成就不存在，可能已被其他操作修改或删除');
-      }
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-    } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        await _repository.storeAchievement(candidate);
-      } else {
-        await _repository.updateAchievement(originalKey, candidate);
-      }
-      persistedKey.value = candidate.id;
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
   void applyDescriptionLocales(List<DbcLocaleFieldValue> values) {
     _applyLangControllers(
       values,
@@ -318,71 +265,61 @@ class AchievementDetailViewModel
     entity.value = _collectCandidate();
   }
 
-  AchievementEntity _collectCandidate() {
-    return AchievementEntity(
-      id: idController.collect(),
-      faction: factionController.collect(),
-      instanceId: instanceIdController.collect(),
-      supercedes: supercedesController.collect(),
-      titleLangEnUS: titleLangEnUSController.collect(),
-      titleLangKoKR: titleLangKoKRController.collect(),
-      titleLangFrFR: titleLangFrFRController.collect(),
-      titleLangDeDE: titleLangDeDEController.collect(),
-      titleLangZhCN: titleLangZhCNController.collect(),
-      titleLangZhTW: titleLangZhTWController.collect(),
-      titleLangEsES: titleLangEsESController.collect(),
-      titleLangEsMX: titleLangEsMXController.collect(),
-      titleLangRuRU: titleLangRuRUController.collect(),
-      titleLangJaJP: titleLangJaJPController.collect(),
-      titleLangPtPT: titleLangPtPTController.collect(),
-      titleLangPtBR: titleLangPtBRController.collect(),
-      titleLangItIT: titleLangItITController.collect(),
-      titleLangUnk1: titleLangUnk1Controller.collect(),
-      titleLangUnk2: titleLangUnk2Controller.collect(),
-      titleLangUnk3: titleLangUnk3Controller.collect(),
-      titleLangFlags: titleLangFlags.value,
-      descriptionLangEnUS: descriptionLangEnUSController.collect(),
-      descriptionLangKoKR: descriptionLangKoKRController.collect(),
-      descriptionLangFrFR: descriptionLangFrFRController.collect(),
-      descriptionLangDeDE: descriptionLangDeDEController.collect(),
-      descriptionLangZhCN: descriptionLangZhCNController.collect(),
-      descriptionLangZhTW: descriptionLangZhTWController.collect(),
-      descriptionLangEsES: descriptionLangEsESController.collect(),
-      descriptionLangEsMX: descriptionLangEsMXController.collect(),
-      descriptionLangRuRU: descriptionLangRuRUController.collect(),
-      descriptionLangJaJP: descriptionLangJaJPController.collect(),
-      descriptionLangPtPT: descriptionLangPtPTController.collect(),
-      descriptionLangPtBR: descriptionLangPtBRController.collect(),
-      descriptionLangItIT: descriptionLangItITController.collect(),
-      descriptionLangUnk1: descriptionLangUnk1Controller.collect(),
-      descriptionLangUnk2: descriptionLangUnk2Controller.collect(),
-      descriptionLangUnk3: descriptionLangUnk3Controller.collect(),
-      descriptionLangFlags: descriptionLangFlags.value,
-      category: categoryController.collect(),
-      points: pointsController.collect(),
-      uiOrder: uiOrderController.collect(),
-      flags: flagsController.collect(),
-      iconId: iconIdController.collect(),
-      rewardLangEnUS: rewardLangEnUSController.collect(),
-      rewardLangKoKR: rewardLangKoKRController.collect(),
-      rewardLangFrFR: rewardLangFrFRController.collect(),
-      rewardLangDeDE: rewardLangDeDEController.collect(),
-      rewardLangZhCN: rewardLangZhCNController.collect(),
-      rewardLangZhTW: rewardLangZhTWController.collect(),
-      rewardLangEsES: rewardLangEsESController.collect(),
-      rewardLangEsMX: rewardLangEsMXController.collect(),
-      rewardLangRuRU: rewardLangRuRUController.collect(),
-      rewardLangJaJP: rewardLangJaJPController.collect(),
-      rewardLangPtPT: rewardLangPtPTController.collect(),
-      rewardLangPtBR: rewardLangPtBRController.collect(),
-      rewardLangItIT: rewardLangItITController.collect(),
-      rewardLangUnk1: rewardLangUnk1Controller.collect(),
-      rewardLangUnk2: rewardLangUnk2Controller.collect(),
-      rewardLangUnk3: rewardLangUnk3Controller.collect(),
-      rewardLangFlags: rewardLangFlags.value,
-      minimumCriteria: minimumCriteriaController.collect(),
-      sharesCriteria: sharesCriteriaController.collect(),
-    );
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createAchievement();
+        entity.value = blank;
+        _applyCandidate(blank);
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getAchievement(key);
+      if (result == null) {
+        throw StateError('原成就不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeAchievement(candidate);
+      } else {
+        await _repository.updateAchievement(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
   void _applyCandidate(AchievementEntity achievement) {
@@ -487,6 +424,73 @@ class AchievementDetailViewModel
     unk3.init(values.valueOf('unk3'));
   }
 
+  AchievementEntity _collectCandidate() {
+    return AchievementEntity(
+      id: idController.collect(),
+      faction: factionController.collect(),
+      instanceId: instanceIdController.collect(),
+      supercedes: supercedesController.collect(),
+      titleLangEnUS: titleLangEnUSController.collect(),
+      titleLangKoKR: titleLangKoKRController.collect(),
+      titleLangFrFR: titleLangFrFRController.collect(),
+      titleLangDeDE: titleLangDeDEController.collect(),
+      titleLangZhCN: titleLangZhCNController.collect(),
+      titleLangZhTW: titleLangZhTWController.collect(),
+      titleLangEsES: titleLangEsESController.collect(),
+      titleLangEsMX: titleLangEsMXController.collect(),
+      titleLangRuRU: titleLangRuRUController.collect(),
+      titleLangJaJP: titleLangJaJPController.collect(),
+      titleLangPtPT: titleLangPtPTController.collect(),
+      titleLangPtBR: titleLangPtBRController.collect(),
+      titleLangItIT: titleLangItITController.collect(),
+      titleLangUnk1: titleLangUnk1Controller.collect(),
+      titleLangUnk2: titleLangUnk2Controller.collect(),
+      titleLangUnk3: titleLangUnk3Controller.collect(),
+      titleLangFlags: titleLangFlags.value,
+      descriptionLangEnUS: descriptionLangEnUSController.collect(),
+      descriptionLangKoKR: descriptionLangKoKRController.collect(),
+      descriptionLangFrFR: descriptionLangFrFRController.collect(),
+      descriptionLangDeDE: descriptionLangDeDEController.collect(),
+      descriptionLangZhCN: descriptionLangZhCNController.collect(),
+      descriptionLangZhTW: descriptionLangZhTWController.collect(),
+      descriptionLangEsES: descriptionLangEsESController.collect(),
+      descriptionLangEsMX: descriptionLangEsMXController.collect(),
+      descriptionLangRuRU: descriptionLangRuRUController.collect(),
+      descriptionLangJaJP: descriptionLangJaJPController.collect(),
+      descriptionLangPtPT: descriptionLangPtPTController.collect(),
+      descriptionLangPtBR: descriptionLangPtBRController.collect(),
+      descriptionLangItIT: descriptionLangItITController.collect(),
+      descriptionLangUnk1: descriptionLangUnk1Controller.collect(),
+      descriptionLangUnk2: descriptionLangUnk2Controller.collect(),
+      descriptionLangUnk3: descriptionLangUnk3Controller.collect(),
+      descriptionLangFlags: descriptionLangFlags.value,
+      category: categoryController.collect(),
+      points: pointsController.collect(),
+      uiOrder: uiOrderController.collect(),
+      flags: flagsController.collect(),
+      iconId: iconIdController.collect(),
+      rewardLangEnUS: rewardLangEnUSController.collect(),
+      rewardLangKoKR: rewardLangKoKRController.collect(),
+      rewardLangFrFR: rewardLangFrFRController.collect(),
+      rewardLangDeDE: rewardLangDeDEController.collect(),
+      rewardLangZhCN: rewardLangZhCNController.collect(),
+      rewardLangZhTW: rewardLangZhTWController.collect(),
+      rewardLangEsES: rewardLangEsESController.collect(),
+      rewardLangEsMX: rewardLangEsMXController.collect(),
+      rewardLangRuRU: rewardLangRuRUController.collect(),
+      rewardLangJaJP: rewardLangJaJPController.collect(),
+      rewardLangPtPT: rewardLangPtPTController.collect(),
+      rewardLangPtBR: rewardLangPtBRController.collect(),
+      rewardLangItIT: rewardLangItITController.collect(),
+      rewardLangUnk1: rewardLangUnk1Controller.collect(),
+      rewardLangUnk2: rewardLangUnk2Controller.collect(),
+      rewardLangUnk3: rewardLangUnk3Controller.collect(),
+      rewardLangFlags: rewardLangFlags.value,
+      minimumCriteria: minimumCriteriaController.collect(),
+      sharesCriteria: sharesCriteriaController.collect(),
+    );
+  }
+
   void _logActivity(ActivityActionType action, AchievementEntity t) {
     final log = ActivityLogEntity(
       module: 'achievement',
@@ -495,9 +499,5 @@ class AchievementDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

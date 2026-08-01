@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/gossip_menu_option_entity.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
+import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
@@ -34,11 +34,13 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       .get<GossipMenuOptionCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.menuId != 0) {
-      viewModel.initSignals(parentKey: widget.menuId);
-    }
+  Widget build(BuildContext context) {
+    return Watch((_) {
+      if (viewModel.formVisible.value) {
+        return _buildForm();
+      }
+      return _buildList();
+    });
   }
 
   @override
@@ -56,122 +58,11 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((_) {
-      if (viewModel.formVisible.value) {
-        return _buildForm();
-      }
-      return _buildList();
-    });
-  }
-
-  Widget _buildList() {
-    final createBtn = ShadButton(
-      leading: Icon(LucideIcons.plus, size: 16),
-      onPressed: _create,
-      child: Text('新增'),
-    );
-    final toolbar = Row(
-      children: [
-        createBtn,
-        const Spacer(),
-        FoxyPagination(
-          page: viewModel.page.value,
-          pageSize: 50,
-          total: viewModel.total.value,
-          onChange: viewModel.paginate,
-        ),
-      ],
-    );
-
-    final options = viewModel.items.value;
-    final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
-    final table = LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth - 600;
-        return FoxyShadTable(
-          shrinkWrap: true,
-          columnCount: headers.length,
-          rowCount: options.length,
-          pinnedRowCount: 1,
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(120),
-              1 => FixedTableSpanExtent(120),
-              2 => FixedTableSpanExtent(width),
-              3 => FixedTableSpanExtent(120),
-              4 => FixedTableSpanExtent(120),
-              5 => FixedTableSpanExtent(120),
-              _ => null,
-            };
-          },
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= options.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final o = options[vicinity.row];
-            final iconName =
-                kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString();
-            final typeName =
-                kGossipOptionTypes[o.optionType] ?? o.optionType.toString();
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(o.optionId.toString())),
-              1 => ShadTableCell(child: Text(iconName)),
-              2 => ShadTableCell(
-                child: Text(
-                  o.displayText,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              3 => ShadTableCell(child: Text(typeName)),
-              4 => ShadTableCell(child: Text(o.optionNpcFlag.toString())),
-              5 => ShadTableCell(child: Text(o.actionMenuId.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          onRowDoubleTap: (row) {
-            final o = options[row];
-            _edit(o.key);
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            final o = options[row];
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () => _edit(o.key),
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.copy, size: 16),
-                  onPressed: () => _copy(o.key),
-                  child: Text('复制'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(o.key),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: ShadCard(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Column(spacing: 16, children: [toolbar, table]),
-      ),
-    );
+  void initState() {
+    super.initState();
+    if (widget.menuId != 0) {
+      viewModel.initSignals(parentKey: widget.menuId);
+    }
   }
 
   Widget _buildForm() {
@@ -377,26 +268,113 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     );
   }
 
-  Widget _labeled(String label, Widget child) {
-    return FoxyFormItem(label: label, child: child);
-  }
+  Widget _buildList() {
+    final createBtn = ShadButton(
+      leading: Icon(LucideIcons.plus, size: 16),
+      onPressed: _create,
+      child: Text('新增'),
+    );
+    final toolbar = Row(
+      children: [
+        createBtn,
+        const Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
 
-  Future<void> _create() async {
-    try {
-      await viewModel.create();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
-    }
-  }
+    final options = viewModel.items.value;
+    final headers = ['编号', '图标', '文本', '类型', 'NPC标识', '子选项'];
+    final table = LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth - 600;
+        return FoxyShadTable(
+          shrinkWrap: true,
+          columnCount: headers.length,
+          rowCount: options.length,
+          pinnedRowCount: 1,
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(120),
+              1 => FixedTableSpanExtent(120),
+              2 => FixedTableSpanExtent(width),
+              3 => FixedTableSpanExtent(120),
+              4 => FixedTableSpanExtent(120),
+              5 => FixedTableSpanExtent(120),
+              _ => null,
+            };
+          },
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= options.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final o = options[vicinity.row];
+            final iconName =
+                kGossipOptionIcons[o.optionIcon] ?? o.optionIcon.toString();
+            final typeName =
+                kGossipOptionTypes[o.optionType] ?? o.optionType.toString();
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(o.optionId.toString())),
+              1 => ShadTableCell(child: Text(iconName)),
+              2 => ShadTableCell(
+                child: Text(
+                  o.displayText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              3 => ShadTableCell(child: Text(typeName)),
+              4 => ShadTableCell(child: Text(o.optionNpcFlag.toString())),
+              5 => ShadTableCell(child: Text(o.actionMenuId.toString())),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          onRowDoubleTap: (row) {
+            final o = options[row];
+            _edit(o.key);
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            final o = options[row];
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () => _edit(o.key),
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.copy, size: 16),
+                  onPressed: () => _copy(o.key),
+                  child: Text('复制'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => _destroy(o.key),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
 
-  Future<void> _edit(GossipMenuOptionKey key) async {
-    try {
-      await viewModel.edit(key);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: ShadCard(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+        child: Column(spacing: 16, children: [toolbar, table]),
+      ),
+    );
   }
 
   Future<void> _copy(GossipMenuOptionKey key) async {
@@ -416,6 +394,15 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
     }
   }
 
+  Future<void> _create() async {
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+    }
+  }
+
   Future<void> _destroy(GossipMenuOptionKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认删除',
@@ -432,6 +419,19 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  Future<void> _edit(GossipMenuOptionKey key) async {
+    try {
+      await viewModel.edit(key);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
+  }
+
+  Widget _labeled(String label, Widget child) {
+    return FoxyFormItem(label: label, child: child);
   }
 
   Future<void> _persist() async {

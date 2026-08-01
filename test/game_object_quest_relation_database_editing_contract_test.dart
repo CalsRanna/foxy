@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
-import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
+import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_starter_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -203,54 +203,6 @@ void main() {
 
 }
 
-class _FakeStarterRepository extends GameObjectQuestStarterRepository {
-  final List<GameObjectQuestStarterEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <GameObjectQuestStarterKey>[];
-
-  _FakeStarterRepository(this.rows);
-
-  @override
-  Future<int> countGameObjectQuestStarters(int questId) async =>
-      rows.where((row) => row.quest == questId).length;
-
-  @override
-  Future<List<BriefGameObjectQuestStarterEntity>>
-  getBriefGameObjectQuestStarters(int questId, {int page = 1}) async {
-    return rows
-        .where((row) => row.quest == questId)
-        .map(
-          (row) =>
-              BriefGameObjectQuestStarterEntity(id: row.id, quest: row.quest),
-        )
-        .toList();
-  }
-
-  @override
-  Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
-    GameObjectQuestStarterKey key,
-  ) async {
-    for (final row in rows) {
-      if (GameObjectQuestStarterKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
-
-  @override
-  Future<void> updateGameObjectQuestStarter(
-    GameObjectQuestStarterKey originalKey,
-    GameObjectQuestStarterEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => GameObjectQuestStarterKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
-}
-
 class _FakeEnderRepository extends GameObjectQuestEnderRepository {
   final List<GameObjectQuestEnderEntity> rows;
   bool failUpdates = false;
@@ -301,6 +253,54 @@ class _FakeEnderRepository extends GameObjectQuestEnderRepository {
   }
 }
 
+class _FakeStarterRepository extends GameObjectQuestStarterRepository {
+  final List<GameObjectQuestStarterEntity> rows;
+  bool failUpdates = false;
+  final updateKeys = <GameObjectQuestStarterKey>[];
+
+  _FakeStarterRepository(this.rows);
+
+  @override
+  Future<int> countGameObjectQuestStarters(int questId) async =>
+      rows.where((row) => row.quest == questId).length;
+
+  @override
+  Future<List<BriefGameObjectQuestStarterEntity>>
+  getBriefGameObjectQuestStarters(int questId, {int page = 1}) async {
+    return rows
+        .where((row) => row.quest == questId)
+        .map(
+          (row) =>
+              BriefGameObjectQuestStarterEntity(id: row.id, quest: row.quest),
+        )
+        .toList();
+  }
+
+  @override
+  Future<GameObjectQuestStarterEntity?> getGameObjectQuestStarter(
+    GameObjectQuestStarterKey key,
+  ) async {
+    for (final row in rows) {
+      if (GameObjectQuestStarterKey.fromEntity(row) == key) return row;
+    }
+    return null;
+  }
+
+  @override
+  Future<void> updateGameObjectQuestStarter(
+    GameObjectQuestStarterKey originalKey,
+    GameObjectQuestStarterEntity model,
+  ) async {
+    updateKeys.add(originalKey);
+    if (failUpdates) throw StateError('write failed');
+    final index = rows.indexWhere(
+      (row) => GameObjectQuestStarterKey.fromEntity(row) == originalKey,
+    );
+    if (index < 0) throw StateError('missing');
+    rows[index] = model;
+  }
+}
+
 class _RecordingDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
@@ -336,16 +336,16 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _TestStarterRepository extends GameObjectQuestStarterRepository {
-  @override
-  final Laconic laconic;
-
-  _TestStarterRepository(this.laconic);
-}
-
 class _TestEnderRepository extends GameObjectQuestEnderRepository {
   @override
   final Laconic laconic;
 
   _TestEnderRepository(this.laconic);
+}
+
+class _TestStarterRepository extends GameObjectQuestStarterRepository {
+  @override
+  final Laconic laconic;
+
+  _TestStarterRepository(this.laconic);
 }

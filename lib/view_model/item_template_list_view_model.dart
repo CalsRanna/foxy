@@ -1,9 +1,9 @@
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/repository/item_template_repository.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/item_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
@@ -39,31 +39,33 @@ class ItemTemplateListViewModel with FieldControllerMixin, QueryVersionMixin {
 
   int _refreshToken = 0;
 
-  Future<void> initSignals() async {
-    await _refresh();
+  /// 获取当前类别下的子类别列表
+  List<String> get currentSubclasses {
+    if (selectedClassId.value < 0 ||
+        selectedClassId.value >= kItemSubclasses.length) {
+      return [];
+    }
+    return kItemSubclasses[selectedClassId.value];
   }
 
-  Future<void> search() async {
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
+  /// 当前选中的类别名称
+  String get selectedClassName {
+    return selectedClassId.value >= 0
+        ? kItemClasses[selectedClassId.value]
+        : '';
   }
 
-  Future<void> reset() async {
-    entryController.init('');
-    nameController.init('');
-    descriptionController.init('');
+  /// 清除类别选择
+  void clearClass() {
     selectedClassId.value = -1;
     selectedSubclass.value = -1;
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
+    search();
   }
 
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    markQueryVersion();
-    await _refresh();
+  /// 清除子类别选择
+  void clearSubclass() {
+    selectedSubclass.value = -1;
+    search();
   }
 
   Future<void> copy(int key) async {
@@ -99,33 +101,35 @@ class ItemTemplateListViewModel with FieldControllerMixin, QueryVersionMixin {
     }
   }
 
-  /// 获取当前类别下的子类别列表
-  List<String> get currentSubclasses {
-    if (selectedClassId.value < 0 ||
-        selectedClassId.value >= kItemSubclasses.length) {
-      return [];
-    }
-    return kItemSubclasses[selectedClassId.value];
+  void dispose() {
+    disposeControllers();
   }
 
-  /// 当前选中的类别名称
-  String get selectedClassName {
-    return selectedClassId.value >= 0
-        ? kItemClasses[selectedClassId.value]
-        : '';
+  Future<void> initSignals() async {
+    await _refresh();
   }
 
-  /// 清除类别选择
-  void clearClass() {
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    nameController.init('');
+    descriptionController.init('');
     selectedClassId.value = -1;
     selectedSubclass.value = -1;
-    search();
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
   }
 
-  /// 清除子类别选择
-  void clearSubclass() {
-    selectedSubclass.value = -1;
-    search();
+  Future<void> search() async {
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
   }
 
   /// 选择类别
@@ -151,6 +155,19 @@ class ItemTemplateListViewModel with FieldControllerMixin, QueryVersionMixin {
     );
   }
 
+  void _logActivity(ActivityActionType action, int key) {
+    final items = this.items.value;
+    final template = items.where((t) => t.entry == key).firstOrNull;
+    final name = template?.name ?? '';
+    final log = ActivityLogEntity(
+      module: 'item_template',
+      actionType: action,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
+  }
+
   Future<void> _refresh() async {
     final token = ++_refreshToken;
     final filter = _collectFilter();
@@ -172,22 +189,5 @@ class ItemTemplateListViewModel with FieldControllerMixin, QueryVersionMixin {
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void _logActivity(ActivityActionType action, int key) {
-    final items = this.items.value;
-    final template = items.where((t) => t.entry == key).firstOrNull;
-    final name = template?.name ?? '';
-    final log = ActivityLogEntity(
-      module: 'item_template',
-      actionType: action,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

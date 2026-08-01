@@ -62,19 +62,6 @@ class _TargetDialogState extends State<_TargetDialog>
   late bool isGameObject;
 
   @override
-  void initState() {
-    super.initState();
-    isGameObject = widget.initialValue < 0;
-    targetController.init(widget.initialValue.abs());
-  }
-
-  @override
-  void dispose() {
-    disposeControllers();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ShadDialog(
       title: const Text('任务目标'),
@@ -121,6 +108,19 @@ class _TargetDialogState extends State<_TargetDialog>
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    disposeControllers();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isGameObject = widget.initialValue < 0;
+    targetController.init(widget.initialValue.abs());
   }
 
   void _selectCreature() {

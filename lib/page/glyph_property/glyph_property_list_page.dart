@@ -1,15 +1,15 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/glyph_property_constants.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/glyph_property_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -27,12 +27,6 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
   final viewModel = GetIt.instance.get<GlyphPropertyListViewModel>();
 
   @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('雕文属性列表'),
@@ -45,6 +39,12 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -176,15 +176,6 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _navigateToDetail({int? key}) {
-    final label = key != null ? '雕文属性 #$key' : '新建雕文属性';
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
-      route: GlyphPropertyDetailRoute(glyphPropertyKey: key),
-      parentMenu: RouterMenu.glyphProperty,
-    );
-  }
-
   Future<void> _copy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -218,5 +209,14 @@ class _GlyphPropertyListPageState extends State<GlyphPropertyListPage> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({int? key}) {
+    final label = key != null ? '雕文属性 #$key' : '新建雕文属性';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: GlyphPropertyDetailRoute(glyphPropertyKey: key),
+      parentMenu: RouterMenu.glyphProperty,
+    );
   }
 }

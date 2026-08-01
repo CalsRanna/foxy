@@ -10,8 +10,8 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class GameObjectQuestItemView extends StatefulWidget {
   final int gameObjectId;
@@ -28,9 +28,8 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
       .get<GameObjectQuestItemCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.gameObjectId);
+  Widget build(BuildContext context) {
+    return Watch((_) => _buildContent(context));
   }
 
   @override
@@ -48,8 +47,9 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((_) => _buildContent(context));
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.gameObjectId);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -147,38 +147,6 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     );
   }
 
-  Future<void> _showCreateDialog() async {
-    try {
-      await viewModel.create();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
-      return;
-    }
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增任务物品'),
-        description: Text('新增一条任务物品记录'),
-        child: _buildDialogForm(dialogContext, isEditing: false),
-      ),
-    );
-  }
-
-  Future<void> _showEditDialog() async {
-    if (!await _load(viewModel.selectedKey.value!)) return;
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑任务物品'),
-        description: Text('编辑选中的任务物品记录'),
-        child: _buildDialogForm(dialogContext, isEditing: true),
-      ),
-    );
-  }
-
   Widget _buildDialogForm(
     BuildContext dialogContext, {
     required bool isEditing,
@@ -267,24 +235,14 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     );
   }
 
-  Color _getQualityColor(int quality) {
-    return switch (quality) {
-      1 => const Color(0xFFFFFFFF),
-      2 => const Color(0xFF1EFF00),
-      3 => const Color(0xFF0070DD),
-      4 => const Color(0xFFA335EE),
-      5 => const Color(0xFFFF8000),
-      _ => const Color(0xFF9D9D9D),
-    };
-  }
-
-  Future<bool> _load(GameObjectQuestItemKey key) async {
+  Future<void> _copy(GameObjectQuestItemKey key) async {
     try {
-      await viewModel.edit(key);
-      return true;
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
     }
   }
 
@@ -306,14 +264,56 @@ class _GameObjectQuestItemViewState extends State<GameObjectQuestItemView> {
     }
   }
 
-  Future<void> _copy(GameObjectQuestItemKey key) async {
+  Color _getQualityColor(int quality) {
+    return switch (quality) {
+      1 => const Color(0xFFFFFFFF),
+      2 => const Color(0xFF1EFF00),
+      3 => const Color(0xFF0070DD),
+      4 => const Color(0xFFA335EE),
+      5 => const Color(0xFFFF8000),
+      _ => const Color(0xFF9D9D9D),
+    };
+  }
+
+  Future<bool> _load(GameObjectQuestItemKey key) async {
     try {
-      await viewModel.copy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('复制成功');
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _showCreateDialog() async {
+    try {
+      await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：$error');
+      DialogUtil.instance.error('创建失败：$error');
+      return;
     }
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('新增任务物品'),
+        description: Text('新增一条任务物品记录'),
+        child: _buildDialogForm(dialogContext, isEditing: false),
+      ),
+    );
+  }
+
+  Future<void> _showEditDialog() async {
+    if (!await _load(viewModel.selectedKey.value!)) return;
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('编辑任务物品'),
+        description: Text('编辑选中的任务物品记录'),
+        child: _buildDialogForm(dialogContext, isEditing: true),
+      ),
+    );
   }
 }

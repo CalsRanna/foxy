@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/view_model/scaling_stat_distribution_detail_view_model.dart';
 import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_view.dart';
+import 'package:foxy/view_model/scaling_stat_distribution_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -27,27 +27,6 @@ class _ScalingStatDistributionDetailPageState
       .get<ScalingStatDistributionDetailViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.scalingStatDistributionKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
@@ -69,5 +48,26 @@ class _ScalingStatDistributionDetailPageState
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.scalingStatDistributionKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

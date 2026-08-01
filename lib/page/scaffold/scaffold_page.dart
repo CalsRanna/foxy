@@ -4,16 +4,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
-import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/page/setting/setup_wizard_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/window_button.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
@@ -52,36 +52,16 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkSetup());
-  }
-
-  /// 强制检查首次设置：未完成（两个目录未配置或图标未提取）则弹出
-  /// 不可关闭的三步引导；已完成步骤由引导内部判定并跳过。
-  Future<void> _checkSetup() async {
-    try {
-      await setupViewModel.prepare();
-    } catch (_) {
-      // 配置读取失败按未完成处理，引导会再次弹出。
-    }
-    if (!mounted) return;
-    if (!setupViewModel.isSetupComplete) {
-      _showSetupWizard();
-    }
-  }
-
-  void _showSetupWizard() {
-    showFoxyDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => SetupWizardDialog(
-        setupVm: setupViewModel,
-        importVm: GetIt.instance.get<DbcImportWorkflowViewModel>(),
-        iconVm: GetIt.instance.get<IconExtractWorkflowViewModel>(),
-      ),
-    );
+  List<RouterMenu> get _menus {
+    final pinned = featureState.pinnedFeatures.value
+        .map((f) => RouterMenu.values.byName(f.routerMenu))
+        .toList();
+    return [
+      RouterMenu.dashboard,
+      ...pinned,
+      RouterMenu.more,
+      RouterMenu.setting,
+    ];
   }
 
   @override
@@ -113,6 +93,12 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
         child: scaffold,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkSetup());
   }
 
   Widget _buildBreadcrumb() {
@@ -156,18 +142,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     );
   }
 
-  List<RouterMenu> get _menus {
-    final pinned = featureState.pinnedFeatures.value
-        .map((f) => RouterMenu.values.byName(f.routerMenu))
-        .toList();
-    return [
-      RouterMenu.dashboard,
-      ...pinned,
-      RouterMenu.more,
-      RouterMenu.setting,
-    ];
-  }
-
   Widget _buildLeftBar() {
     var iconButtons = _menus.map(_buildLeftBarTile).toList();
     var children = [
@@ -202,6 +176,32 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: iconButton,
+    );
+  }
+
+  /// 强制检查首次设置：未完成（两个目录未配置或图标未提取）则弹出
+  /// 不可关闭的三步引导；已完成步骤由引导内部判定并跳过。
+  Future<void> _checkSetup() async {
+    try {
+      await setupViewModel.prepare();
+    } catch (_) {
+      // 配置读取失败按未完成处理，引导会再次弹出。
+    }
+    if (!mounted) return;
+    if (!setupViewModel.isSetupComplete) {
+      _showSetupWizard();
+    }
+  }
+
+  void _showSetupWizard() {
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => SetupWizardDialog(
+        setupVm: setupViewModel,
+        importVm: GetIt.instance.get<DbcImportWorkflowViewModel>(),
+        iconVm: GetIt.instance.get<IconExtractWorkflowViewModel>(),
+      ),
     );
   }
 }

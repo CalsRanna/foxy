@@ -6,9 +6,9 @@ import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
-import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/achievement_criteria_repository.dart';
+import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/creature_template_locale_repository.dart';
@@ -20,8 +20,8 @@ import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_template_locale_repository.dart';
-import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
+import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_offer_reward_locale_repository.dart';
 import 'package:foxy/repository/quest_request_items_locale_repository.dart';
@@ -674,26 +674,27 @@ class FoxyLocalePickerDelegates {
     (repo, id, field, values) => repo.saveSpellRangeLocales(id, field, values),
   );
 
-  static Future<List<DatabaseLocaleRow>> _loadItemTemplateLocaleRows(
-    int entry,
-    Map<String, String> Function(ItemTemplateLocaleEntity locale) valuesOf,
-  ) async {
-    final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
-    final (briefs, count) = await (
-      repo.getBriefItemTemplateLocales(id: entry),
-      repo.countItemTemplateLocales(id: entry),
-    ).wait;
-    if (briefs.length != count) {
-      throw StateError('物品本地化数量超过当前编辑器分页范围');
-    }
-    return Future.wait(
-      briefs.map((brief) async {
-        final locale = await repo.getItemTemplateLocale(brief.key);
-        if (locale == null) {
-          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
-        }
-        return DatabaseLocaleRow.persisted(valuesOf(locale));
-      }),
+  static DbcLocaleFieldEditorDelegate _dbc<T>(
+    DbcLocaleFieldDefinition field,
+    T Function() repoOf,
+    Future<List<DbcLocaleFieldValue>> Function(
+      T repo,
+      int id,
+      DbcLocaleFieldDefinition field,
+    )
+    onLoad,
+    Future<void> Function(
+      T repo,
+      int id,
+      DbcLocaleFieldDefinition field,
+      List<DbcLocaleFieldValue> values,
+    )
+    onSave,
+  ) {
+    return DbcLocaleFieldEditorDelegate(
+      field: field,
+      onLoad: (entry) => onLoad(repoOf(), entry, field),
+      onSave: (entry, values) => onSave(repoOf(), entry, field, values),
     );
   }
 
@@ -741,6 +742,29 @@ class FoxyLocalePickerDelegates {
         final locale = await repo.getGameObjectTemplateLocale(brief.key);
         if (locale == null) {
           throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+        }
+        return DatabaseLocaleRow.persisted(valuesOf(locale));
+      }),
+    );
+  }
+
+  static Future<List<DatabaseLocaleRow>> _loadItemTemplateLocaleRows(
+    int entry,
+    Map<String, String> Function(ItemTemplateLocaleEntity locale) valuesOf,
+  ) async {
+    final repo = GetIt.instance.get<ItemTemplateLocaleRepository>();
+    final (briefs, count) = await (
+      repo.getBriefItemTemplateLocales(id: entry),
+      repo.countItemTemplateLocales(id: entry),
+    ).wait;
+    if (briefs.length != count) {
+      throw StateError('物品本地化数量超过当前编辑器分页范围');
+    }
+    return Future.wait(
+      briefs.map((brief) async {
+        final locale = await repo.getItemTemplateLocale(brief.key);
+        if (locale == null) {
+          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
         }
         return DatabaseLocaleRow.persisted(valuesOf(locale));
       }),
@@ -846,30 +870,6 @@ class FoxyLocalePickerDelegates {
       objectiveText2: values['objectiveText2'] ?? '',
       objectiveText3: values['objectiveText3'] ?? '',
       objectiveText4: values['objectiveText4'] ?? '',
-    );
-  }
-
-  static DbcLocaleFieldEditorDelegate _dbc<T>(
-    DbcLocaleFieldDefinition field,
-    T Function() repoOf,
-    Future<List<DbcLocaleFieldValue>> Function(
-      T repo,
-      int id,
-      DbcLocaleFieldDefinition field,
-    )
-    onLoad,
-    Future<void> Function(
-      T repo,
-      int id,
-      DbcLocaleFieldDefinition field,
-      List<DbcLocaleFieldValue> values,
-    )
-    onSave,
-  ) {
-    return DbcLocaleFieldEditorDelegate(
-      field: field,
-      onLoad: (entry) => onLoad(repoOf(), entry, field),
-      onSave: (entry, values) => onSave(repoOf(), entry, field, values),
     );
   }
 }

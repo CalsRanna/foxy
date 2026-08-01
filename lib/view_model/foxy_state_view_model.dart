@@ -9,6 +9,17 @@ class FoxyStateViewModel {
   final hasLocaleTables = signal(false);
   final localeEnabled = signal(false);
 
+  void dispose() {
+    initialized.value = false;
+    loading.value = false;
+    errorMessage.value = null;
+    hasLocaleTables.value = false;
+    localeEnabled.value = false;
+    if (GetIt.instance.isRegistered<LocaleQuerySettings>()) {
+      GetIt.instance.get<LocaleQuerySettings>().reset();
+    }
+  }
+
   Future<void> initSignals() async {
     if (initialized.value) return;
     initialized.value = true;
@@ -27,16 +38,5 @@ class FoxyStateViewModel {
     );
     initialized.value = true;
     errorMessage.value = null;
-  }
-
-  void dispose() {
-    initialized.value = false;
-    loading.value = false;
-    errorMessage.value = null;
-    hasLocaleTables.value = false;
-    localeEnabled.value = false;
-    if (GetIt.instance.isRegistered<LocaleQuerySettings>()) {
-      GetIt.instance.get<LocaleQuerySettings>().reset();
-    }
   }
 }

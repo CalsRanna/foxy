@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/foxy_input_readonly.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_input_readonly.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 一个筛选输入框（输入编号）。
-class FoxyEntityPickerFilter {
-  final String placeholder;
-  const FoxyEntityPickerFilter(this.placeholder);
+/// 通过值查库挑记录的表单字段：ShadInput + 搜索按钮，点击打开分页查询弹窗，
+/// 双击行或确定回填选中 id。状态完全由弹窗内部 setState 管理，无 signals。
+class FoxyEntityPicker<T> extends StatefulWidget {
+  final IntFieldController controller;
+  final FoxyEntityPickerDelegate<T> delegate;
+  final String? placeholder;
+  final bool readOnly;
+
+  const FoxyEntityPicker({
+    super.key,
+    required this.controller,
+    required this.delegate,
+    this.placeholder,
+    this.readOnly = false,
+  });
+
+  @override
+  State<FoxyEntityPicker<T>> createState() => _FoxyEntityPickerState<T>();
 }
 
 /// 表格的一列。[width] 为 null 表示弹性列（与其他弹性列均分剩余宽度）。
@@ -52,71 +66,10 @@ class FoxyEntityPickerDelegate<T> {
   });
 }
 
-/// 通过值查库挑记录的表单字段：ShadInput + 搜索按钮，点击打开分页查询弹窗，
-/// 双击行或确定回填选中 id。状态完全由弹窗内部 setState 管理，无 signals。
-class FoxyEntityPicker<T> extends StatefulWidget {
-  final IntFieldController controller;
-  final FoxyEntityPickerDelegate<T> delegate;
-  final String? placeholder;
-  final bool readOnly;
-
-  const FoxyEntityPicker({
-    super.key,
-    required this.controller,
-    required this.delegate,
-    this.placeholder,
-    this.readOnly = false,
-  });
-
-  @override
-  State<FoxyEntityPicker<T>> createState() => _FoxyEntityPickerState<T>();
-}
-
-class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
-  Future<void> _openDialog() async {
-    if (widget.readOnly) return;
-    final currentId = widget.controller.collect();
-    if (!mounted) return;
-    final result = await showFoxyDialog<int>(
-      context: context,
-      builder: (context) => _EntityPickerDialog<T>(
-        delegate: widget.delegate,
-        initialValue: currentId,
-      ),
-    );
-    if (result != null) {
-      widget.controller.init(result);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // 可编辑时用户可手改 ID；只读时为纯展示（无搜索按钮）。
-    final readonly = FoxyReadonlyInput.resolve(
-      context,
-      readOnly: widget.readOnly,
-    );
-    return readonly.wrap(
-      ShadInput(
-        controller: widget.controller.controller,
-        placeholder: Text(widget.placeholder ?? ''),
-        readOnly: widget.readOnly,
-        style: readonly.style,
-        decoration: readonly.decoration,
-        mouseCursor: readonly.mouseCursor,
-        showCursor: readonly.showCursor,
-        trailing: widget.readOnly
-            ? null
-            : ShadButton.ghost(
-                height: 20,
-                width: 20,
-                padding: EdgeInsets.zero,
-                onPressed: _openDialog,
-                child: Icon(LucideIcons.search, size: 12),
-              ),
-      ),
-    );
-  }
+/// 一个筛选输入框（输入编号）。
+class FoxyEntityPickerFilter {
+  final String placeholder;
+  const FoxyEntityPickerFilter(this.placeholder);
 }
 
 class _EntityPickerDialog<T> extends StatefulWidget {
@@ -141,66 +94,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   int _total = 0;
   int? _selectedId;
 
-  @override
-  void initState() {
-    super.initState();
-    _filterControllers = widget.delegate.filters
-        .map((_) => TextEditingController())
-        .toList();
-    if (widget.initialValue != 0 && _filterControllers.isNotEmpty) {
-      _filterControllers.first.text = widget.initialValue.toString();
-      _selectedId = widget.initialValue;
-    }
-    _search();
-  }
-
-  @override
-  void dispose() {
-    for (final c in _filterControllers) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
   List<String> get _filterValues =>
       _filterControllers.map((c) => c.text).toList();
-
-  Future<void> _search() async {
-    final values = _filterValues;
-    try {
-      final result = await widget.delegate.fetch(_page, values);
-      final count = await widget.delegate.count(values);
-      if (!mounted) return;
-      setState(() {
-        _items = result;
-        _total = count;
-      });
-    } catch (e) {
-      LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
-      DialogUtil.instance.error('${widget.delegate.errorLabel}: $e');
-    }
-  }
-
-  void _doSearch() {
-    _page = 1;
-    _queryVersion++;
-    _search();
-  }
-
-  void _paginate(int p) {
-    _page = p;
-    _queryVersion++;
-    _search();
-  }
-
-  void _reset() {
-    for (final c in _filterControllers) {
-      c.clear();
-    }
-    _page = 1;
-    _queryVersion++;
-    _search();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +128,27 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       constraints: const BoxConstraints(maxWidth: 720),
       child: Column(spacing: 8, children: [_buildFilter(), _buildTable()]),
     );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _filterControllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _filterControllers = widget.delegate.filters
+        .map((_) => TextEditingController())
+        .toList();
+    if (widget.initialValue != 0 && _filterControllers.isNotEmpty) {
+      _filterControllers.first.text = widget.initialValue.toString();
+      _selectedId = widget.initialValue;
+    }
+    _search();
   }
 
   Widget _buildFilter() {
@@ -350,5 +266,89 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         },
       ),
     );
+  }
+
+  void _doSearch() {
+    _page = 1;
+    _queryVersion++;
+    _search();
+  }
+
+  void _paginate(int p) {
+    _page = p;
+    _queryVersion++;
+    _search();
+  }
+
+  void _reset() {
+    for (final c in _filterControllers) {
+      c.clear();
+    }
+    _page = 1;
+    _queryVersion++;
+    _search();
+  }
+
+  Future<void> _search() async {
+    final values = _filterValues;
+    try {
+      final result = await widget.delegate.fetch(_page, values);
+      final count = await widget.delegate.count(values);
+      if (!mounted) return;
+      setState(() {
+        _items = result;
+        _total = count;
+      });
+    } catch (e) {
+      LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
+      DialogUtil.instance.error('${widget.delegate.errorLabel}: $e');
+    }
+  }
+}
+
+class _FoxyEntityPickerState<T> extends State<FoxyEntityPicker<T>> {
+  @override
+  Widget build(BuildContext context) {
+    // 可编辑时用户可手改 ID；只读时为纯展示（无搜索按钮）。
+    final readonly = FoxyReadonlyInput.resolve(
+      context,
+      readOnly: widget.readOnly,
+    );
+    return readonly.wrap(
+      ShadInput(
+        controller: widget.controller.controller,
+        placeholder: Text(widget.placeholder ?? ''),
+        readOnly: widget.readOnly,
+        style: readonly.style,
+        decoration: readonly.decoration,
+        mouseCursor: readonly.mouseCursor,
+        showCursor: readonly.showCursor,
+        trailing: widget.readOnly
+            ? null
+            : ShadButton.ghost(
+                height: 20,
+                width: 20,
+                padding: EdgeInsets.zero,
+                onPressed: _openDialog,
+                child: Icon(LucideIcons.search, size: 12),
+              ),
+      ),
+    );
+  }
+
+  Future<void> _openDialog() async {
+    if (widget.readOnly) return;
+    final currentId = widget.controller.collect();
+    if (!mounted) return;
+    final result = await showFoxyDialog<int>(
+      context: context,
+      builder: (context) => _EntityPickerDialog<T>(
+        delegate: widget.delegate,
+        initialValue: currentId,
+      ),
+    );
+    if (result != null) {
+      widget.controller.init(result);
+    }
   }
 }

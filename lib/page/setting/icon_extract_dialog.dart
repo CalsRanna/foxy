@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -16,35 +16,11 @@ class IconExtractDialog extends StatefulWidget {
 }
 
 class _IconExtractDialogState extends State<IconExtractDialog> {
-  IconExtractWorkflowViewModel get _vm => widget.vm;
-
   /// 就绪标记用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
   /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
   final _ready = signal(false);
 
-  @override
-  void initState() {
-    super.initState();
-    _prepare();
-  }
-
-  Future<void> _prepare() async {
-    try {
-      await _vm.prepare();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-    if (!mounted) return;
-    _ready.value = true;
-  }
-
-  Future<void> _start() async {
-    try {
-      await _vm.start();
-    } catch (_) {
-      // The workflow exposes the failure through errorMessage.
-    }
-  }
+  IconExtractWorkflowViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {
@@ -177,5 +153,29 @@ class _IconExtractDialogState extends State<IconExtractDialog> {
         );
       }),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _prepare();
+  }
+
+  Future<void> _prepare() async {
+    try {
+      await _vm.prepare();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
+    if (!mounted) return;
+    _ready.value = true;
+  }
+
+  Future<void> _start() async {
+    try {
+      await _vm.start();
+    } catch (_) {
+      // The workflow exposes the failure through errorMessage.
+    }
   }
 }

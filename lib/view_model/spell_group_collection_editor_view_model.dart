@@ -1,10 +1,11 @@
 import 'dart:math';
+
 import 'package:foxy/entity/spell_group_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'spell_group_collection_editor_view_model.g.dart';
 
@@ -27,18 +28,26 @@ class SpellGroupCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) =>
-      setParentKey(parentKey);
-
-  Future<void> setParentKey(int parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    final parent = parentKey;
-    editingKey.value = null;
-    selectedKey.value = null;
-    _applyCandidate(SpellGroupEntity(spellId: parent));
-    await _refresh();
+  Future<void> copy(SpellGroupKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.copySpellGroup(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
   Future<void> create() async {
@@ -61,6 +70,30 @@ class SpellGroupCollectionEditorViewModel
       rethrow;
     }
   }
+
+  Future<void> destroy(SpellGroupKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroySpellGroup(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
 
   Future<void> edit(SpellGroupKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -88,6 +121,15 @@ class SpellGroupCollectionEditorViewModel
     } finally {
       if (token == _interactionToken) loading.value = false;
     }
+  }
+
+  Future<void> initSignals({required int parentKey}) =>
+      setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
   }
 
   Future<void> persist() async {
@@ -118,53 +160,14 @@ class SpellGroupCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(SpellGroupKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroySpellGroup(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> copy(SpellGroupKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copySpellGroup(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    final parent = parentKey;
+    editingKey.value = null;
+    selectedKey.value = null;
+    _applyCandidate(SpellGroupEntity(spellId: parent));
     await _refresh();
   }
 
@@ -194,6 +197,4 @@ class SpellGroupCollectionEditorViewModel
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void dispose() => disposeControllers();
 }

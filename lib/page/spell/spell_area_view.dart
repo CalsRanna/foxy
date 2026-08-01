@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
+import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/view_model/spell_area_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class SpellAreaView extends StatefulWidget {
   final int spellId;
@@ -33,9 +33,10 @@ class _SpellAreaViewState extends State<SpellAreaView> {
   final viewModel = GetIt.instance.get<SpellAreaCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.spellId);
+  Widget build(BuildContext context) {
+    return Watch((context) {
+      return _buildTable();
+    });
   }
 
   @override
@@ -53,132 +54,9 @@ class _SpellAreaViewState extends State<SpellAreaView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
-  }
-
-  Widget _buildTable() {
-    var createButton = ShadButton(
-      onPressed: _showCreateDialog,
-      child: Text('新增'),
-    );
-
-    final toolbar = Row(
-      children: [
-        createButton,
-        Spacer(),
-        FoxyPagination(
-          page: viewModel.page.value,
-          pageSize: 50,
-          total: viewModel.total.value,
-          onChange: viewModel.paginate,
-        ),
-      ],
-    );
-
-    final items = viewModel.items.value;
-    final headers = ['区域', '开始任务', '结束任务', '光环', '开始任务掩码', '结束任务掩码'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var flexWidth = maxWidth - 600;
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = items[vicinity.row];
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.area.toString())),
-              1 => ShadTableCell(child: Text(item.questStart.toString())),
-              2 => ShadTableCell(child: Text(item.questEnd.toString())),
-              3 => ShadTableCell(child: Text(item.auraSpell.toString())),
-              4 => ShadTableCell(child: Text(item.questStartStatus.toString())),
-              5 => ShadTableCell(child: Text(item.questEndStatus.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(100),
-              1 => FixedTableSpanExtent(100),
-              2 => FixedTableSpanExtent(100),
-              3 => FixedTableSpanExtent(100),
-              4 => FixedTableSpanExtent(100),
-              5 => FixedTableSpanExtent(flexWidth),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (context.mounted) {
-                      _showEditDialog(context);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
-        );
-      },
-    );
-
-    var children = [toolbar, layoutBuilder];
-    final column = Column(spacing: 16, children: children);
-    return Padding(padding: const EdgeInsets.only(top: 16), child: column);
-  }
-
-  Future<void> _showCreateDialog() async {
-    try {
-      await viewModel.create();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
-      return;
-    }
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增区域技能'),
-        description: Text('新增一条区域技能记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
-    );
-  }
-
-  void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑区域技能'),
-        description: Text('编辑选中的区域技能记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
-    );
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.spellId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
@@ -346,14 +224,96 @@ class _SpellAreaViewState extends State<SpellAreaView> {
     );
   }
 
-  Future<bool> _load(SpellAreaKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
+  Widget _buildTable() {
+    var createButton = ShadButton(
+      onPressed: _showCreateDialog,
+      child: Text('新增'),
+    );
+
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
+
+    final items = viewModel.items.value;
+    final headers = ['区域', '开始任务', '结束任务', '光环', '开始任务掩码', '结束任务掩码'];
+
+    Widget layoutBuilder = LayoutBuilder(
+      builder: (context, constraints) {
+        var maxWidth = constraints.maxWidth;
+        var flexWidth = maxWidth - 600;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= items.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final item = items[vicinity.row];
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.area.toString())),
+              1 => ShadTableCell(child: Text(item.questStart.toString())),
+              2 => ShadTableCell(child: Text(item.questEnd.toString())),
+              3 => ShadTableCell(child: Text(item.auraSpell.toString())),
+              4 => ShadTableCell(child: Text(item.questStartStatus.toString())),
+              5 => ShadTableCell(child: Text(item.questEndStatus.toString())),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(100),
+              1 => FixedTableSpanExtent(100),
+              2 => FixedTableSpanExtent(100),
+              3 => FixedTableSpanExtent(100),
+              4 => FixedTableSpanExtent(100),
+              5 => FixedTableSpanExtent(flexWidth),
+              _ => null,
+            };
+          },
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            viewModel.selectedKey.value = items[row].key;
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () async {
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (context.mounted) {
+                      _showEditDialog(context);
+                    }
+                  },
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+          rowCount: items.length,
+          shrinkWrap: true,
+        );
+      },
+    );
+
+    var children = [toolbar, layoutBuilder];
+    final column = Column(spacing: 16, children: children);
+    return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
   Future<void> _destroy(SpellAreaKey key) async {
@@ -372,5 +332,45 @@ class _SpellAreaViewState extends State<SpellAreaView> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  Future<bool> _load(SpellAreaKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _showCreateDialog() async {
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('新增区域技能'),
+        description: Text('新增一条区域技能记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context) {
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('编辑区域技能'),
+        description: Text('编辑选中的区域技能记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
   }
 }

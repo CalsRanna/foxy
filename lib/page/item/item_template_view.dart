@@ -1,32 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
-import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
-import 'package:foxy/widget/foxy_number_input.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
+import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+
+const Map<int, String> _kAmmoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
+
+const Map<int, String> _kLanguageOptions = {
+  0: '通用语',
+  1: '兽人语',
+  2: '矮人语',
+  3: '达纳苏斯语',
+  6: '亡灵语',
+  7: '牛头人语',
+  8: '侏儒语',
+  10: '血精灵语',
+  11: '德莱尼语',
+  12: '龙语',
+  13: '恶魔语',
+  14: '泰坦语',
+  33: '纳迦语',
+  35: '亡灵语',
+};
+
+const Map<int, String> _kPageMaterialOptions = {
+  0: '纸质',
+  1: '石头',
+  2: '大理石',
+  3: '银质',
+  4: '青铜',
+  5: '铁质',
+  6: '铜质',
+  7: '未知',
+};
+
+final Map<int, String> _kInventoryTypeOptions = kItemInventoryTypes.asMap();
+
+// 模块级常量选项表：稳定引用，供 FoxyShadSelect 缓存其 ShadOption 列表。
+// （此前这些是每次 build 重建 Map 的 getter，破坏了下拉选项缓存。）
+final Map<int, String> _kItemClassOptions = kItemClasses.asMap();
 
 class ItemTemplateView extends StatelessWidget {
   final ItemTemplateDetailViewModel viewModel;
 
   const ItemTemplateView({super.key, required this.viewModel});
 
-  // Convert kItemClasses List<String> to Map<int, String>
-  Map<int, String> get _itemClassOptions => _kItemClassOptions;
+  // Ammo type options
+  Map<int, String> get _ammoTypeOptions => _kAmmoTypeOptions;
 
   // Get subclass options based on selected class
   Map<int, String> get _currentSubclassOptions {
@@ -39,163 +75,14 @@ class ItemTemplateView extends StatelessWidget {
   // Convert kItemInventoryTypes List<String> to Map<int, String>
   Map<int, String> get _inventoryTypeOptions => _kInventoryTypeOptions;
 
-  // Ammo type options
-  Map<int, String> get _ammoTypeOptions => _kAmmoTypeOptions;
-
-  // Page material options
-  Map<int, String> get _pageMaterialOptions => _kPageMaterialOptions;
+  // Convert kItemClasses List<String> to Map<int, String>
+  Map<int, String> get _itemClassOptions => _kItemClassOptions;
 
   // Language options
   Map<int, String> get _languageOptions => _kLanguageOptions;
 
-  Widget _buildStatRow({
-    required int firstNumber,
-    required SelectFieldController<int> firstTypeController,
-    required IntFieldController firstValueController,
-    required int secondNumber,
-    required SelectFieldController<int> secondTypeController,
-    required IntFieldController secondValueController,
-  }) {
-    return Row(
-      spacing: 8,
-      children: [
-        Expanded(
-          child: FoxyFormItem(
-            label: '属性类型$firstNumber',
-            child: FoxyShadSelect<int>(
-              controller: firstTypeController,
-              options: kItemStatTypeOptions,
-              placeholder: Text('stat_type$firstNumber'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: FoxyFormItem(
-            label: '属性值$firstNumber',
-            child: FoxyNumberInput<int>(
-              placeholder: 'stat_value$firstNumber',
-              controller: firstValueController,
-            ),
-          ),
-        ),
-        Expanded(
-          child: FoxyFormItem(
-            label: '属性类型$secondNumber',
-            child: FoxyShadSelect<int>(
-              controller: secondTypeController,
-              options: kItemStatTypeOptions,
-              placeholder: Text('stat_type$secondNumber'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: FoxyFormItem(
-            label: '属性值$secondNumber',
-            child: FoxyNumberInput<int>(
-              placeholder: 'stat_value$secondNumber',
-              controller: secondValueController,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSpellCard({
-    required int number,
-    required IntFieldController idController,
-    required SelectFieldController<int> triggerController,
-    required IntFieldController chargesController,
-    required DoubleFieldController ppmRateController,
-    required IntFieldController cooldownController,
-    required IntFieldController categoryController,
-    required IntFieldController categoryCooldownController,
-  }) {
-    return ShadCard(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        spacing: 8,
-        children: [
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '法术$number',
-                  child: FoxyEntityPicker(
-                    delegate: FoxyEntityPickerDelegates.spell,
-                    controller: idController,
-                    placeholder: 'spellid_$number',
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '触发类型',
-                  child: FoxyShadSelect<int>(
-                    controller: triggerController,
-                    options: kItemSpellTriggerOptions,
-                    placeholder: Text('spelltrigger_$number'),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '充能',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcharges_$number',
-                    controller: chargesController,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: 'PPM率',
-                  child: FoxyNumberInput<double>(
-                    placeholder: 'spellppmRate_$number',
-                    controller: ppmRateController,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: FoxyFormItem(
-                  label: '冷却',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcooldown_$number',
-                    controller: cooldownController,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '类别',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcategory_$number',
-                    controller: categoryController,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FoxyFormItem(
-                  label: '类别冷却',
-                  child: FoxyNumberInput<int>(
-                    placeholder: 'spellcategorycooldown_$number',
-                    controller: categoryCooldownController,
-                  ),
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // Page material options
+  Map<int, String> get _pageMaterialOptions => _kPageMaterialOptions;
 
   @override
   Widget build(BuildContext context) {
@@ -1232,6 +1119,159 @@ class ItemTemplateView extends StatelessWidget {
     );
   }
 
+  Widget _buildSpellCard({
+    required int number,
+    required IntFieldController idController,
+    required SelectFieldController<int> triggerController,
+    required IntFieldController chargesController,
+    required DoubleFieldController ppmRateController,
+    required IntFieldController cooldownController,
+    required IntFieldController categoryController,
+    required IntFieldController categoryCooldownController,
+  }) {
+    return ShadCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        spacing: 8,
+        children: [
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '法术$number',
+                  child: FoxyEntityPicker(
+                    delegate: FoxyEntityPickerDelegates.spell,
+                    controller: idController,
+                    placeholder: 'spellid_$number',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '触发类型',
+                  child: FoxyShadSelect<int>(
+                    controller: triggerController,
+                    options: kItemSpellTriggerOptions,
+                    placeholder: Text('spelltrigger_$number'),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '充能',
+                  child: FoxyNumberInput<int>(
+                    placeholder: 'spellcharges_$number',
+                    controller: chargesController,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: 'PPM率',
+                  child: FoxyNumberInput<double>(
+                    placeholder: 'spellppmRate_$number',
+                    controller: ppmRateController,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: FoxyFormItem(
+                  label: '冷却',
+                  child: FoxyNumberInput<int>(
+                    placeholder: 'spellcooldown_$number',
+                    controller: cooldownController,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '类别',
+                  child: FoxyNumberInput<int>(
+                    placeholder: 'spellcategory_$number',
+                    controller: categoryController,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FoxyFormItem(
+                  label: '类别冷却',
+                  child: FoxyNumberInput<int>(
+                    placeholder: 'spellcategorycooldown_$number',
+                    controller: categoryCooldownController,
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow({
+    required int firstNumber,
+    required SelectFieldController<int> firstTypeController,
+    required IntFieldController firstValueController,
+    required int secondNumber,
+    required SelectFieldController<int> secondTypeController,
+    required IntFieldController secondValueController,
+  }) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(
+          child: FoxyFormItem(
+            label: '属性类型$firstNumber',
+            child: FoxyShadSelect<int>(
+              controller: firstTypeController,
+              options: kItemStatTypeOptions,
+              placeholder: Text('stat_type$firstNumber'),
+            ),
+          ),
+        ),
+        Expanded(
+          child: FoxyFormItem(
+            label: '属性值$firstNumber',
+            child: FoxyNumberInput<int>(
+              placeholder: 'stat_value$firstNumber',
+              controller: firstValueController,
+            ),
+          ),
+        ),
+        Expanded(
+          child: FoxyFormItem(
+            label: '属性类型$secondNumber',
+            child: FoxyShadSelect<int>(
+              controller: secondTypeController,
+              options: kItemStatTypeOptions,
+              placeholder: Text('stat_type$secondNumber'),
+            ),
+          ),
+        ),
+        Expanded(
+          child: FoxyFormItem(
+            label: '属性值$secondNumber',
+            child: FoxyNumberInput<int>(
+              placeholder: 'stat_value$secondNumber',
+              controller: secondValueController,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
   Future<void> _persist(BuildContext context) async {
     try {
       await viewModel.persist();
@@ -1249,44 +1289,4 @@ class ItemTemplateView extends StatelessWidget {
       ).show(ShadToast(description: Text(error.toString())));
     }
   }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
-  }
 }
-
-// 模块级常量选项表：稳定引用，供 FoxyShadSelect 缓存其 ShadOption 列表。
-// （此前这些是每次 build 重建 Map 的 getter，破坏了下拉选项缓存。）
-final Map<int, String> _kItemClassOptions = kItemClasses.asMap();
-
-final Map<int, String> _kInventoryTypeOptions = kItemInventoryTypes.asMap();
-
-const Map<int, String> _kAmmoTypeOptions = {0: '无', 2: '箭', 3: '子弹'};
-
-const Map<int, String> _kPageMaterialOptions = {
-  0: '纸质',
-  1: '石头',
-  2: '大理石',
-  3: '银质',
-  4: '青铜',
-  5: '铁质',
-  6: '铜质',
-  7: '未知',
-};
-
-const Map<int, String> _kLanguageOptions = {
-  0: '通用语',
-  1: '兽人语',
-  2: '矮人语',
-  3: '达纳苏斯语',
-  6: '亡灵语',
-  7: '牛头人语',
-  8: '侏儒语',
-  10: '血精灵语',
-  11: '德莱尼语',
-  12: '龙语',
-  13: '恶魔语',
-  14: '泰坦语',
-  33: '纳迦语',
-  35: '亡灵语',
-};

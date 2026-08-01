@@ -5,8 +5,6 @@ class FoxyBriefEntity {
   const FoxyBriefEntity();
 }
 
-enum FoxyBriefFieldType { boolean, decimal, integer, text }
-
 @Target({TargetKind.classType, TargetKind.field})
 class FoxyBriefField {
   final Object? defaultValue;
@@ -27,6 +25,8 @@ class FoxyBriefField {
   const FoxyBriefField.text(this.name, {String this.defaultValue = ''})
     : type = FoxyBriefFieldType.text;
 }
+
+enum FoxyBriefFieldType { boolean, decimal, integer, text }
 
 @Target({TargetKind.classType})
 class FoxyFullEntity {

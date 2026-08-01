@@ -1,27 +1,14 @@
 import 'dart:io';
 
-import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/page/setting/icon_extract_dialog.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
-import 'package:foxy/page/workflow/workflow_status.dart';
-import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/page/setting/icon_extract_dialog.dart';
+import 'package:foxy/page/workflow/workflow_status.dart';
+import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
-
-/// 同步 ConfigUtil：load 无真实 IO（测试环境不需要 runAsync）。
-final class _SyncConfigUtil extends ConfigUtil {
-  _SyncConfigUtil(this._dir);
-
-  final String _dir;
-
-  @override
-  String get configPath => p.join(_dir, 'config.yaml');
-
-  @override
-  Future<Map<String, dynamic>> load() async => {};
-}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -88,4 +75,17 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
     expect(find.text('正在扫描 zhCN 客户端归档...'), findsOneWidget);
   });
+}
+
+/// 同步 ConfigUtil：load 无真实 IO（测试环境不需要 runAsync）。
+final class _SyncConfigUtil extends ConfigUtil {
+  final String _dir;
+
+  _SyncConfigUtil(this._dir);
+
+  @override
+  String get configPath => p.join(_dir, 'config.yaml');
+
+  @override
+  Future<Map<String, dynamic>> load() async => {};
 }

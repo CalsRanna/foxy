@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/view_model/player_create_info_cast_spell_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -14,8 +14,8 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class PlayerCreateInfoCastSpellView extends StatefulWidget {
   final int? race;
@@ -32,37 +32,6 @@ class _PlayerCreateInfoCastSpellViewState
     extends State<PlayerCreateInfoCastSpellView> {
   final viewModel = GetIt.instance
       .get<PlayerCreateInfoCastSpellCollectionEditorViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    final race = widget.race;
-    final playerClass = widget.playerClass;
-    if (race == null || playerClass == null) return;
-    viewModel.initSignals(
-      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
-    );
-  }
-
-  @override
-  void didUpdateWidget(covariant PlayerCreateInfoCastSpellView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.race != widget.race ||
-        oldWidget.playerClass != widget.playerClass) {
-      final race = widget.race;
-      final playerClass = widget.playerClass;
-      if (race == null || playerClass == null) return;
-      viewModel.setParentKey(
-        PlayerCreateInfoKey(race: race, class_: playerClass),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) => Watch(
@@ -93,6 +62,37 @@ class _PlayerCreateInfoCastSpellViewState
       ),
     ),
   );
+
+  @override
+  void didUpdateWidget(covariant PlayerCreateInfoCastSpellView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.race != widget.race ||
+        oldWidget.playerClass != widget.playerClass) {
+      final race = widget.race;
+      final playerClass = widget.playerClass;
+      if (race == null || playerClass == null) return;
+      viewModel.setParentKey(
+        PlayerCreateInfoKey(race: race, class_: playerClass),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final race = widget.race;
+    final playerClass = widget.playerClass;
+    if (race == null || playerClass == null) return;
+    viewModel.initSignals(
+      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
+    );
+  }
 
   Widget _buildTable() {
     final rows = viewModel.items.value;
@@ -140,6 +140,34 @@ class _PlayerCreateInfoCastSpellViewState
       rowCount: rows.length,
       shrinkWrap: true,
     );
+  }
+
+  Future<void> _destroy(PlayerCreateInfoCastSpellKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<bool> _load(PlayerCreateInfoCastSpellKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
   }
 
   Future<void> _showCreateDialog() async {
@@ -241,33 +269,5 @@ class _PlayerCreateInfoCastSpellViewState
         ),
       ),
     );
-  }
-
-  Future<bool> _load(PlayerCreateInfoCastSpellKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
-  }
-
-  Future<void> _destroy(PlayerCreateInfoCastSpellKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
-    }
   }
 }

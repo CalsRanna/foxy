@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:foxy/router/router.gr.dart';
 
+final router = FoxyRouter();
+
 @AutoRouterConfig()
 class FoxyRouter extends RootStackRouter {
   @override
@@ -129,5 +131,3 @@ class FoxyRouter extends RootStackRouter {
     ];
   }
 }
-
-final router = FoxyRouter();

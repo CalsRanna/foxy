@@ -7,30 +7,35 @@ import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 
 final class SaveGossipMenuOptionInput {
+  final GossipMenuOptionKey? originalKey;
+
+  final GossipMenuOptionEntity candidate;
+  final GossipMenuOptionLocaleKey? originalLocaleKey;
+  final GossipMenuOptionLocaleEntity? localeCandidate;
   const SaveGossipMenuOptionInput({
     required this.originalKey,
     required this.candidate,
     required this.originalLocaleKey,
     required this.localeCandidate,
   });
-
-  final GossipMenuOptionKey? originalKey;
-  final GossipMenuOptionEntity candidate;
-  final GossipMenuOptionLocaleKey? originalLocaleKey;
-  final GossipMenuOptionLocaleEntity? localeCandidate;
 }
 
 final class SaveGossipMenuOptionResult {
+  final GossipMenuOptionKey persistedKey;
+
+  final GossipMenuOptionLocaleKey? localeKey;
   const SaveGossipMenuOptionResult({
     required this.persistedKey,
     required this.localeKey,
   });
-
-  final GossipMenuOptionKey persistedKey;
-  final GossipMenuOptionLocaleKey? localeKey;
 }
 
 final class SaveGossipMenuOptionUseCase {
+  final DatabaseTransaction _transaction;
+
+  final GossipMenuOptionRepository _optionRepository;
+  final GossipMenuOptionLocaleRepository _localeRepository;
+  final ActivityLogService _activityLogService;
   SaveGossipMenuOptionUseCase({
     required DatabaseTransaction transaction,
     required GossipMenuOptionRepository optionRepository,
@@ -40,11 +45,6 @@ final class SaveGossipMenuOptionUseCase {
        _optionRepository = optionRepository,
        _localeRepository = localeRepository,
        _activityLogService = activityLogService;
-
-  final DatabaseTransaction _transaction;
-  final GossipMenuOptionRepository _optionRepository;
-  final GossipMenuOptionLocaleRepository _localeRepository;
-  final ActivityLogService _activityLogService;
 
   Future<SaveGossipMenuOptionResult> execute(
     SaveGossipMenuOptionInput input,

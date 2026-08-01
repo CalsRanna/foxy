@@ -7,14 +7,6 @@ import 'package:foxy/entity/dbc_locale.dart';
 class DbcLocaleFieldCodec {
   const DbcLocaleFieldCodec._();
 
-  /// 生成 16 个空值行（固定顺序）。
-  static List<DbcLocaleFieldValue> empty() {
-    return [
-      for (final locale in DbcLocale.values)
-        DbcLocaleFieldValue(locale: locale, value: ''),
-    ];
-  }
-
   /// 从数据库行解码为固定顺序的 16 个 [DbcLocaleFieldValue]。
   static List<DbcLocaleFieldValue> decode(
     DbcLocaleFieldDefinition field,
@@ -26,6 +18,14 @@ class DbcLocaleFieldCodec {
           locale: locale,
           value: _asString(row[field.columnFor(locale)]),
         ),
+    ];
+  }
+
+  /// 生成 16 个空值行（固定顺序）。
+  static List<DbcLocaleFieldValue> empty() {
+    return [
+      for (final locale in DbcLocale.values)
+        DbcLocaleFieldValue(locale: locale, value: ''),
     ];
   }
 

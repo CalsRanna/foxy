@@ -4,6 +4,9 @@ import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+/// 兼容旧名称。
+typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
+
 /// 普通数据库 `*_locale` 分表的动态行编辑器。
 ///
 /// 支持按实际数据添加和删除 locale 行。
@@ -24,6 +27,9 @@ class DatabaseLocaleEditor extends StatefulWidget {
     required this.initialRows,
     required this.onSave,
   });
+
+  @override
+  State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
 
   /// 弹出多语言编辑对话框。
   ///
@@ -62,19 +68,86 @@ class DatabaseLocaleEditor extends StatefulWidget {
       ),
     );
   }
-
-  @override
-  State<DatabaseLocaleEditor> createState() => _DatabaseLocaleEditorState();
 }
 
-/// 兼容旧名称。
-typedef FoxyLocaleCrudDialog = DatabaseLocaleEditor;
+final class _DatabaseLocaleEditingRow {
+  final String? originalLocale;
+  final List<TextEditingController> controllers;
+
+  _DatabaseLocaleEditingRow({
+    required this.originalLocale,
+    required this.controllers,
+  });
+
+  void dispose() {
+    for (final controller in controllers) {
+      controller.dispose();
+    }
+  }
+}
 
 class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
   late List<_DatabaseLocaleEditingRow> _rows;
   late Set<String> _initialLocales;
   bool _saving = false;
   String? _errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return ShadDialog(
+      title: Text(widget.title),
+      description: Text('编号: ${widget.entry}'),
+      constraints: const BoxConstraints(maxWidth: 720),
+      actions: [
+        ShadButton.outline(onPressed: _addRow, child: const Text('添加')),
+        const Spacer(),
+        ShadButton.outline(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('取消'),
+        ),
+        ShadButton(
+          onPressed: _saving ? null : _save,
+          child: Text(_saving ? '保存中...' : '保存'),
+        ),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_errorMessage != null) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.destructive.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: theme.colorScheme.destructive.withValues(alpha: 0.4),
+                ),
+              ),
+              child: Text(
+                _errorMessage!,
+                style: theme.textTheme.small.copyWith(
+                  color: theme.colorScheme.destructive,
+                ),
+              ),
+            ),
+          ],
+          _buildHeader(theme),
+          Flexible(child: _buildTable()),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (var row in _rows) {
+      row.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -95,14 +168,6 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
     }).toList();
   }
 
-  @override
-  void dispose() {
-    for (var row in _rows) {
-      row.dispose();
-    }
-    super.dispose();
-  }
-
   void _addRow() {
     setState(() {
       _rows.add(
@@ -114,6 +179,57 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
         ),
       );
     });
+  }
+
+  Widget _buildHeader(ShadThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: theme.colorScheme.border)),
+      ),
+      child: Row(
+        children: [
+          for (var label in widget.fieldLabels)
+            Expanded(child: Text(label, style: theme.textTheme.muted)),
+          const SizedBox(width: 40),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTable() {
+    if (_rows.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(32),
+        child: Text('暂无多语言数据，点击添加按钮新增'),
+      );
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: _rows.length,
+      itemBuilder: (context, index) {
+        final row = _rows[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            spacing: 16,
+            children: [
+              for (var c in row.controllers)
+                Expanded(child: ShadInput(controller: c)),
+              SizedBox(
+                width: 40,
+                child: ShadButton.ghost(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => _removeRow(index),
+                  size: ShadButtonSize.sm,
+                  child: const Icon(LucideIcons.trash, size: 16),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _removeRow(int index) {
@@ -168,122 +284,6 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       if (mounted) {
         setState(() => _saving = false);
       }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return ShadDialog(
-      title: Text(widget.title),
-      description: Text('编号: ${widget.entry}'),
-      constraints: const BoxConstraints(maxWidth: 720),
-      actions: [
-        ShadButton.outline(onPressed: _addRow, child: const Text('添加')),
-        const Spacer(),
-        ShadButton.outline(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('取消'),
-        ),
-        ShadButton(
-          onPressed: _saving ? null : _save,
-          child: Text(_saving ? '保存中...' : '保存'),
-        ),
-      ],
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_errorMessage != null) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.destructive.withValues(alpha: 0.4),
-                ),
-              ),
-              child: Text(
-                _errorMessage!,
-                style: theme.textTheme.small.copyWith(
-                  color: theme.colorScheme.destructive,
-                ),
-              ),
-            ),
-          ],
-          _buildHeader(theme),
-          Flexible(child: _buildTable()),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(ShadThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: theme.colorScheme.border)),
-      ),
-      child: Row(
-        children: [
-          for (var label in widget.fieldLabels)
-            Expanded(child: Text(label, style: theme.textTheme.muted)),
-          const SizedBox(width: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTable() {
-    if (_rows.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(32),
-        child: Text('暂无多语言数据，点击添加按钮新增'),
-      );
-    }
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _rows.length,
-      itemBuilder: (context, index) {
-        final row = _rows[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            spacing: 16,
-            children: [
-              for (var c in row.controllers)
-                Expanded(child: ShadInput(controller: c)),
-              SizedBox(
-                width: 40,
-                child: ShadButton.ghost(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => _removeRow(index),
-                  size: ShadButtonSize.sm,
-                  child: const Icon(LucideIcons.trash, size: 16),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-final class _DatabaseLocaleEditingRow {
-  final String? originalLocale;
-  final List<TextEditingController> controllers;
-
-  _DatabaseLocaleEditingRow({
-    required this.originalLocale,
-    required this.controllers,
-  });
-
-  void dispose() {
-    for (final controller in controllers) {
-      controller.dispose();
     }
   }
 }

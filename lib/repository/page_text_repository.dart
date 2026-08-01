@@ -1,7 +1,7 @@
-import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+import 'package:foxy/infrastructure/database/mysql_error_util.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -13,13 +13,6 @@ part 'page_text_repository.g.dart';
 class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   static const _table = 'page_text';
 
-  @override
-  Future<void> _beforeStore(PageTextEntity pageText) =>
-      _validateNextPage(pageText.id, pageText.nextPageId);
-
-  @override
-  Future<void> _beforeUpdate(int originalKey, PageTextEntity pageText) =>
-      _validateNextPage(pageText.id, pageText.nextPageId);
   static const _localeTable = 'page_text_locale';
 
   Future<int> copyPageText(int key) async {
@@ -33,7 +26,6 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     await storePageText(copied);
     return copied.id;
   }
-
   Future<int> countPageTexts({PageTextFilter? filter}) async {
     final needsLocaleJoin =
         localeEnabled && filter != null && filter.text.isNotEmpty;
@@ -113,6 +105,14 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     }
     return builder;
   }
+
+  @override
+  Future<void> _beforeStore(PageTextEntity pageText) =>
+      _validateNextPage(pageText.id, pageText.nextPageId);
+
+  @override
+  Future<void> _beforeUpdate(int originalKey, PageTextEntity pageText) =>
+      _validateNextPage(pageText.id, pageText.nextPageId);
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');

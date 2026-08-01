@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/achievement_constants.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/achievement_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -12,6 +11,7 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -36,6 +36,22 @@ class AchievementView extends StatelessWidget {
           _buildActions(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    return Row(
+      children: [
+        Watch(
+          (_) => ShadButton(
+            enabled: !viewModel.submitting.value,
+            onPressed: () => _persist(context),
+            child: Text('保存'),
+          ),
+        ),
+        const SizedBox(width: 8),
+        ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
+      ],
     );
   }
 
@@ -88,38 +104,6 @@ class AchievementView extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleCard() {
-    return FoxyFormSection(
-      title: '标题文本',
-      children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '标题',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.titleLangZhCNController,
-                    title: '标题本地化',
-                    placeholder: 'Title_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
-                    onSaved: viewModel.applyTitleLocales,
-                  );
-                }),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildDescriptionCard() {
     return FoxyFormSection(
       title: '描述文本',
@@ -140,38 +124,6 @@ class AchievementView extends StatelessWidget {
                     delegate:
                         FoxyLocalePickerDelegates.dbcAchievementDescription,
                     onSaved: viewModel.applyDescriptionLocales,
-                  );
-                }),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRewardCard() {
-    return FoxyFormSection(
-      title: '奖励文本',
-      children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '奖励',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.rewardLangZhCNController,
-                    title: '奖励文本本地化',
-                    placeholder: 'Reward_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
-                    onSaved: viewModel.applyRewardLocales,
                   );
                 }),
               ),
@@ -266,20 +218,72 @@ class AchievementView extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
-    return Row(
+  Widget _buildRewardCard() {
+    return FoxyFormSection(
+      title: '奖励文本',
       children: [
-        Watch(
-          (_) => ShadButton(
-            enabled: !viewModel.submitting.value,
-            onPressed: () => _persist(context),
-            child: Text('保存'),
-          ),
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '奖励',
+                child: Watch((_) {
+                  final id = viewModel.persistedKey.value;
+                  return FoxyLocalePicker(
+                    entry: id,
+                    controller: viewModel.rewardLangZhCNController,
+                    title: '奖励文本本地化',
+                    placeholder: 'Reward_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementReward,
+                    onSaved: viewModel.applyRewardLocales,
+                  );
+                }),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+          ],
         ),
-        const SizedBox(width: 8),
-        ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
       ],
     );
+  }
+
+  Widget _buildTitleCard() {
+    return FoxyFormSection(
+      title: '标题文本',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '标题',
+                child: Watch((_) {
+                  final id = viewModel.persistedKey.value;
+                  return FoxyLocalePicker(
+                    entry: id,
+                    controller: viewModel.titleLangZhCNController,
+                    title: '标题本地化',
+                    placeholder: 'Title_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcAchievementTitle,
+                    onSaved: viewModel.applyTitleLocales,
+                  );
+                }),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   Future<void> _persist(BuildContext context) async {
@@ -298,9 +302,5 @@ class AchievementView extends StatelessWidget {
         context,
       ).show(ShadToast(description: Text(error.toString())));
     }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

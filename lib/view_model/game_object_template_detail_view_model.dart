@@ -1,13 +1,13 @@
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'game_object_template_detail_view_model.g.dart';
 
@@ -26,6 +26,11 @@ class GameObjectTemplateDetailViewModel
 
   /// 当前选中的 GameObject 类型，驱动 Data0..Data23 的编辑规格
   final selectedType = signal(0);
+
+  void dispose() {
+    typeController.removeListener(_onTypeChanged);
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -81,6 +86,16 @@ class GameObjectTemplateDetailViewModel
     }
   }
 
+  void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {
+    final log = ActivityLogEntity(
+      module: 'gameobject_template',
+      actionType: action,
+      entityName: t.name,
+      createdAt: DateTime.now(),
+    );
+    _activityLogService.recordBestEffort(log);
+  }
+
   void _onTypeChanged() {
     selectedType.value = typeController.collect();
     _refreshDataFieldEditors();
@@ -112,20 +127,5 @@ class GameObjectTemplateDetailViewModel
     data21Controller.configure(gameObjectDataFieldSpec(type, 21).editor);
     data22Controller.configure(gameObjectDataFieldSpec(type, 22).editor);
     data23Controller.configure(gameObjectDataFieldSpec(type, 23).editor);
-  }
-
-  void _logActivity(ActivityActionType action, GameObjectTemplateEntity t) {
-    final log = ActivityLogEntity(
-      module: 'gameobject_template',
-      actionType: action,
-      entityName: t.name,
-      createdAt: DateTime.now(),
-    );
-    _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    typeController.removeListener(_onTypeChanged);
-    disposeControllers();
   }
 }

@@ -97,19 +97,6 @@ import 'package:foxy/page/talent/talent_list_page.dart' as _i57;
 /// [_i1.AchievementDetailPage]
 class AchievementDetailRoute
     extends _i58.PageRouteInfo<AchievementDetailRouteArgs> {
-  AchievementDetailRoute({
-    _i59.Key? key,
-    int? achievementKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         AchievementDetailRoute.name,
-         args: AchievementDetailRouteArgs(
-           key: key,
-           achievementKey: achievementKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'AchievementDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -124,19 +111,30 @@ class AchievementDetailRoute
       );
     },
   );
+
+  AchievementDetailRoute({
+    _i59.Key? key,
+    int? achievementKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         AchievementDetailRoute.name,
+         args: AchievementDetailRouteArgs(
+           key: key,
+           achievementKey: achievementKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class AchievementDetailRouteArgs {
-  const AchievementDetailRouteArgs({this.key, this.achievementKey});
-
   final _i59.Key? key;
 
   final int? achievementKey;
 
+  const AchievementDetailRouteArgs({this.key, this.achievementKey});
+
   @override
-  String toString() {
-    return 'AchievementDetailRouteArgs{key: $key, achievementKey: $achievementKey}';
-  }
+  int get hashCode => key.hashCode ^ achievementKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -146,15 +144,14 @@ class AchievementDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ achievementKey.hashCode;
+  String toString() {
+    return 'AchievementDetailRouteArgs{key: $key, achievementKey: $achievementKey}';
+  }
 }
 
 /// generated route for
 /// [_i2.AchievementListPage]
 class AchievementListRoute extends _i58.PageRouteInfo<void> {
-  const AchievementListRoute({List<_i58.PageRouteInfo>? children})
-    : super(AchievementListRoute.name, initialChildren: children);
-
   static const String name = 'AchievementListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -163,22 +160,15 @@ class AchievementListRoute extends _i58.PageRouteInfo<void> {
       return const _i2.AchievementListPage();
     },
   );
+
+  const AchievementListRoute({List<_i58.PageRouteInfo>? children})
+    : super(AchievementListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i3.AreaTableDetailPage]
 class AreaTableDetailRoute
     extends _i58.PageRouteInfo<AreaTableDetailRouteArgs> {
-  AreaTableDetailRoute({
-    _i59.Key? key,
-    int? areaTableKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         AreaTableDetailRoute.name,
-         args: AreaTableDetailRouteArgs(key: key, areaTableKey: areaTableKey),
-         initialChildren: children,
-       );
-
   static const String name = 'AreaTableDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -193,19 +183,27 @@ class AreaTableDetailRoute
       );
     },
   );
+
+  AreaTableDetailRoute({
+    _i59.Key? key,
+    int? areaTableKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         AreaTableDetailRoute.name,
+         args: AreaTableDetailRouteArgs(key: key, areaTableKey: areaTableKey),
+         initialChildren: children,
+       );
 }
 
 class AreaTableDetailRouteArgs {
-  const AreaTableDetailRouteArgs({this.key, this.areaTableKey});
-
   final _i59.Key? key;
 
   final int? areaTableKey;
 
+  const AreaTableDetailRouteArgs({this.key, this.areaTableKey});
+
   @override
-  String toString() {
-    return 'AreaTableDetailRouteArgs{key: $key, areaTableKey: $areaTableKey}';
-  }
+  int get hashCode => key.hashCode ^ areaTableKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -215,15 +213,14 @@ class AreaTableDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ areaTableKey.hashCode;
+  String toString() {
+    return 'AreaTableDetailRouteArgs{key: $key, areaTableKey: $areaTableKey}';
+  }
 }
 
 /// generated route for
 /// [_i4.AreaTableListPage]
 class AreaTableListRoute extends _i58.PageRouteInfo<void> {
-  const AreaTableListRoute({List<_i58.PageRouteInfo>? children})
-    : super(AreaTableListRoute.name, initialChildren: children);
-
   static const String name = 'AreaTableListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -232,14 +229,14 @@ class AreaTableListRoute extends _i58.PageRouteInfo<void> {
       return const _i4.AreaTableListPage();
     },
   );
+
+  const AreaTableListRoute({List<_i58.PageRouteInfo>? children})
+    : super(AreaTableListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i5.BootstrapPage]
 class BootstrapRoute extends _i58.PageRouteInfo<void> {
-  const BootstrapRoute({List<_i58.PageRouteInfo>? children})
-    : super(BootstrapRoute.name, initialChildren: children);
-
   static const String name = 'BootstrapRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -248,22 +245,15 @@ class BootstrapRoute extends _i58.PageRouteInfo<void> {
       return const _i5.BootstrapPage();
     },
   );
+
+  const BootstrapRoute({List<_i58.PageRouteInfo>? children})
+    : super(BootstrapRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i6.ConditionDetailPage]
 class ConditionDetailRoute
     extends _i58.PageRouteInfo<ConditionDetailRouteArgs> {
-  ConditionDetailRoute({
-    _i59.Key? key,
-    _i60.ConditionKey? conditionKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ConditionDetailRoute.name,
-         args: ConditionDetailRouteArgs(key: key, conditionKey: conditionKey),
-         initialChildren: children,
-       );
-
   static const String name = 'ConditionDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -278,19 +268,27 @@ class ConditionDetailRoute
       );
     },
   );
+
+  ConditionDetailRoute({
+    _i59.Key? key,
+    _i60.ConditionKey? conditionKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ConditionDetailRoute.name,
+         args: ConditionDetailRouteArgs(key: key, conditionKey: conditionKey),
+         initialChildren: children,
+       );
 }
 
 class ConditionDetailRouteArgs {
-  const ConditionDetailRouteArgs({this.key, this.conditionKey});
-
   final _i59.Key? key;
 
   final _i60.ConditionKey? conditionKey;
 
+  const ConditionDetailRouteArgs({this.key, this.conditionKey});
+
   @override
-  String toString() {
-    return 'ConditionDetailRouteArgs{key: $key, conditionKey: $conditionKey}';
-  }
+  int get hashCode => key.hashCode ^ conditionKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -300,15 +298,14 @@ class ConditionDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ conditionKey.hashCode;
+  String toString() {
+    return 'ConditionDetailRouteArgs{key: $key, conditionKey: $conditionKey}';
+  }
 }
 
 /// generated route for
 /// [_i7.ConditionListPage]
 class ConditionListRoute extends _i58.PageRouteInfo<void> {
-  const ConditionListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ConditionListRoute.name, initialChildren: children);
-
   static const String name = 'ConditionListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -317,25 +314,15 @@ class ConditionListRoute extends _i58.PageRouteInfo<void> {
       return const _i7.ConditionListPage();
     },
   );
+
+  const ConditionListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ConditionListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i8.CreatureTemplateDetailPage]
 class CreatureTemplateDetailRoute
     extends _i58.PageRouteInfo<CreatureTemplateDetailRouteArgs> {
-  CreatureTemplateDetailRoute({
-    _i59.Key? key,
-    int? creatureTemplateKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         CreatureTemplateDetailRoute.name,
-         args: CreatureTemplateDetailRouteArgs(
-           key: key,
-           creatureTemplateKey: creatureTemplateKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'CreatureTemplateDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -350,19 +337,30 @@ class CreatureTemplateDetailRoute
       );
     },
   );
+
+  CreatureTemplateDetailRoute({
+    _i59.Key? key,
+    int? creatureTemplateKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         CreatureTemplateDetailRoute.name,
+         args: CreatureTemplateDetailRouteArgs(
+           key: key,
+           creatureTemplateKey: creatureTemplateKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class CreatureTemplateDetailRouteArgs {
-  const CreatureTemplateDetailRouteArgs({this.key, this.creatureTemplateKey});
-
   final _i59.Key? key;
 
   final int? creatureTemplateKey;
 
+  const CreatureTemplateDetailRouteArgs({this.key, this.creatureTemplateKey});
+
   @override
-  String toString() {
-    return 'CreatureTemplateDetailRouteArgs{key: $key, creatureTemplateKey: $creatureTemplateKey}';
-  }
+  int get hashCode => key.hashCode ^ creatureTemplateKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -372,15 +370,14 @@ class CreatureTemplateDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ creatureTemplateKey.hashCode;
+  String toString() {
+    return 'CreatureTemplateDetailRouteArgs{key: $key, creatureTemplateKey: $creatureTemplateKey}';
+  }
 }
 
 /// generated route for
 /// [_i9.CreatureTemplateListPage]
 class CreatureTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const CreatureTemplateListRoute({List<_i58.PageRouteInfo>? children})
-    : super(CreatureTemplateListRoute.name, initialChildren: children);
-
   static const String name = 'CreatureTemplateListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -389,25 +386,15 @@ class CreatureTemplateListRoute extends _i58.PageRouteInfo<void> {
       return const _i9.CreatureTemplateListPage();
     },
   );
+
+  const CreatureTemplateListRoute({List<_i58.PageRouteInfo>? children})
+    : super(CreatureTemplateListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i10.CurrencyTypeDetailPage]
 class CurrencyTypeDetailRoute
     extends _i58.PageRouteInfo<CurrencyTypeDetailRouteArgs> {
-  CurrencyTypeDetailRoute({
-    _i59.Key? key,
-    int? currencyTypeKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         CurrencyTypeDetailRoute.name,
-         args: CurrencyTypeDetailRouteArgs(
-           key: key,
-           currencyTypeKey: currencyTypeKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'CurrencyTypeDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -422,19 +409,30 @@ class CurrencyTypeDetailRoute
       );
     },
   );
+
+  CurrencyTypeDetailRoute({
+    _i59.Key? key,
+    int? currencyTypeKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         CurrencyTypeDetailRoute.name,
+         args: CurrencyTypeDetailRouteArgs(
+           key: key,
+           currencyTypeKey: currencyTypeKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class CurrencyTypeDetailRouteArgs {
-  const CurrencyTypeDetailRouteArgs({this.key, this.currencyTypeKey});
-
   final _i59.Key? key;
 
   final int? currencyTypeKey;
 
+  const CurrencyTypeDetailRouteArgs({this.key, this.currencyTypeKey});
+
   @override
-  String toString() {
-    return 'CurrencyTypeDetailRouteArgs{key: $key, currencyTypeKey: $currencyTypeKey}';
-  }
+  int get hashCode => key.hashCode ^ currencyTypeKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -444,15 +442,14 @@ class CurrencyTypeDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ currencyTypeKey.hashCode;
+  String toString() {
+    return 'CurrencyTypeDetailRouteArgs{key: $key, currencyTypeKey: $currencyTypeKey}';
+  }
 }
 
 /// generated route for
 /// [_i11.CurrencyTypeListPage]
 class CurrencyTypeListRoute extends _i58.PageRouteInfo<void> {
-  const CurrencyTypeListRoute({List<_i58.PageRouteInfo>? children})
-    : super(CurrencyTypeListRoute.name, initialChildren: children);
-
   static const String name = 'CurrencyTypeListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -461,14 +458,14 @@ class CurrencyTypeListRoute extends _i58.PageRouteInfo<void> {
       return const _i11.CurrencyTypeListPage();
     },
   );
+
+  const CurrencyTypeListRoute({List<_i58.PageRouteInfo>? children})
+    : super(CurrencyTypeListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i12.DashboardPage]
 class DashboardRoute extends _i58.PageRouteInfo<void> {
-  const DashboardRoute({List<_i58.PageRouteInfo>? children})
-    : super(DashboardRoute.name, initialChildren: children);
-
   static const String name = 'DashboardRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -477,22 +474,15 @@ class DashboardRoute extends _i58.PageRouteInfo<void> {
       return const _i12.DashboardPage();
     },
   );
+
+  const DashboardRoute({List<_i58.PageRouteInfo>? children})
+    : super(DashboardRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i13.EmoteTextDetailPage]
 class EmoteTextDetailRoute
     extends _i58.PageRouteInfo<EmoteTextDetailRouteArgs> {
-  EmoteTextDetailRoute({
-    _i59.Key? key,
-    int? emoteTextKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         EmoteTextDetailRoute.name,
-         args: EmoteTextDetailRouteArgs(key: key, emoteTextKey: emoteTextKey),
-         initialChildren: children,
-       );
-
   static const String name = 'EmoteTextDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -507,19 +497,27 @@ class EmoteTextDetailRoute
       );
     },
   );
+
+  EmoteTextDetailRoute({
+    _i59.Key? key,
+    int? emoteTextKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         EmoteTextDetailRoute.name,
+         args: EmoteTextDetailRouteArgs(key: key, emoteTextKey: emoteTextKey),
+         initialChildren: children,
+       );
 }
 
 class EmoteTextDetailRouteArgs {
-  const EmoteTextDetailRouteArgs({this.key, this.emoteTextKey});
-
   final _i59.Key? key;
 
   final int? emoteTextKey;
 
+  const EmoteTextDetailRouteArgs({this.key, this.emoteTextKey});
+
   @override
-  String toString() {
-    return 'EmoteTextDetailRouteArgs{key: $key, emoteTextKey: $emoteTextKey}';
-  }
+  int get hashCode => key.hashCode ^ emoteTextKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -529,15 +527,14 @@ class EmoteTextDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ emoteTextKey.hashCode;
+  String toString() {
+    return 'EmoteTextDetailRouteArgs{key: $key, emoteTextKey: $emoteTextKey}';
+  }
 }
 
 /// generated route for
 /// [_i14.EmoteTextListPage]
 class EmoteTextListRoute extends _i58.PageRouteInfo<void> {
-  const EmoteTextListRoute({List<_i58.PageRouteInfo>? children})
-    : super(EmoteTextListRoute.name, initialChildren: children);
-
   static const String name = 'EmoteTextListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -546,25 +543,15 @@ class EmoteTextListRoute extends _i58.PageRouteInfo<void> {
       return const _i14.EmoteTextListPage();
     },
   );
+
+  const EmoteTextListRoute({List<_i58.PageRouteInfo>? children})
+    : super(EmoteTextListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i15.GameObjectTemplateDetailPage]
 class GameObjectTemplateDetailRoute
     extends _i58.PageRouteInfo<GameObjectTemplateDetailRouteArgs> {
-  GameObjectTemplateDetailRoute({
-    _i59.Key? key,
-    int? gameObjectTemplateKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         GameObjectTemplateDetailRoute.name,
-         args: GameObjectTemplateDetailRouteArgs(
-           key: key,
-           gameObjectTemplateKey: gameObjectTemplateKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'GameObjectTemplateDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -579,22 +566,33 @@ class GameObjectTemplateDetailRoute
       );
     },
   );
+
+  GameObjectTemplateDetailRoute({
+    _i59.Key? key,
+    int? gameObjectTemplateKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         GameObjectTemplateDetailRoute.name,
+         args: GameObjectTemplateDetailRouteArgs(
+           key: key,
+           gameObjectTemplateKey: gameObjectTemplateKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class GameObjectTemplateDetailRouteArgs {
+  final _i59.Key? key;
+
+  final int? gameObjectTemplateKey;
+
   const GameObjectTemplateDetailRouteArgs({
     this.key,
     this.gameObjectTemplateKey,
   });
 
-  final _i59.Key? key;
-
-  final int? gameObjectTemplateKey;
-
   @override
-  String toString() {
-    return 'GameObjectTemplateDetailRouteArgs{key: $key, gameObjectTemplateKey: $gameObjectTemplateKey}';
-  }
+  int get hashCode => key.hashCode ^ gameObjectTemplateKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -605,15 +603,14 @@ class GameObjectTemplateDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ gameObjectTemplateKey.hashCode;
+  String toString() {
+    return 'GameObjectTemplateDetailRouteArgs{key: $key, gameObjectTemplateKey: $gameObjectTemplateKey}';
+  }
 }
 
 /// generated route for
 /// [_i16.GameObjectTemplateListPage]
 class GameObjectTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const GameObjectTemplateListRoute({List<_i58.PageRouteInfo>? children})
-    : super(GameObjectTemplateListRoute.name, initialChildren: children);
-
   static const String name = 'GameObjectTemplateListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -622,25 +619,15 @@ class GameObjectTemplateListRoute extends _i58.PageRouteInfo<void> {
       return const _i16.GameObjectTemplateListPage();
     },
   );
+
+  const GameObjectTemplateListRoute({List<_i58.PageRouteInfo>? children})
+    : super(GameObjectTemplateListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i17.GemPropertyDetailPage]
 class GemPropertyDetailRoute
     extends _i58.PageRouteInfo<GemPropertyDetailRouteArgs> {
-  GemPropertyDetailRoute({
-    _i59.Key? key,
-    int? gemPropertyKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         GemPropertyDetailRoute.name,
-         args: GemPropertyDetailRouteArgs(
-           key: key,
-           gemPropertyKey: gemPropertyKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'GemPropertyDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -655,19 +642,30 @@ class GemPropertyDetailRoute
       );
     },
   );
+
+  GemPropertyDetailRoute({
+    _i59.Key? key,
+    int? gemPropertyKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         GemPropertyDetailRoute.name,
+         args: GemPropertyDetailRouteArgs(
+           key: key,
+           gemPropertyKey: gemPropertyKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class GemPropertyDetailRouteArgs {
-  const GemPropertyDetailRouteArgs({this.key, this.gemPropertyKey});
-
   final _i59.Key? key;
 
   final int? gemPropertyKey;
 
+  const GemPropertyDetailRouteArgs({this.key, this.gemPropertyKey});
+
   @override
-  String toString() {
-    return 'GemPropertyDetailRouteArgs{key: $key, gemPropertyKey: $gemPropertyKey}';
-  }
+  int get hashCode => key.hashCode ^ gemPropertyKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -677,15 +675,14 @@ class GemPropertyDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ gemPropertyKey.hashCode;
+  String toString() {
+    return 'GemPropertyDetailRouteArgs{key: $key, gemPropertyKey: $gemPropertyKey}';
+  }
 }
 
 /// generated route for
 /// [_i18.GemPropertyListPage]
 class GemPropertyListRoute extends _i58.PageRouteInfo<void> {
-  const GemPropertyListRoute({List<_i58.PageRouteInfo>? children})
-    : super(GemPropertyListRoute.name, initialChildren: children);
-
   static const String name = 'GemPropertyListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -694,25 +691,15 @@ class GemPropertyListRoute extends _i58.PageRouteInfo<void> {
       return const _i18.GemPropertyListPage();
     },
   );
+
+  const GemPropertyListRoute({List<_i58.PageRouteInfo>? children})
+    : super(GemPropertyListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i19.GlyphPropertyDetailPage]
 class GlyphPropertyDetailRoute
     extends _i58.PageRouteInfo<GlyphPropertyDetailRouteArgs> {
-  GlyphPropertyDetailRoute({
-    _i59.Key? key,
-    int? glyphPropertyKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         GlyphPropertyDetailRoute.name,
-         args: GlyphPropertyDetailRouteArgs(
-           key: key,
-           glyphPropertyKey: glyphPropertyKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'GlyphPropertyDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -727,19 +714,30 @@ class GlyphPropertyDetailRoute
       );
     },
   );
+
+  GlyphPropertyDetailRoute({
+    _i59.Key? key,
+    int? glyphPropertyKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         GlyphPropertyDetailRoute.name,
+         args: GlyphPropertyDetailRouteArgs(
+           key: key,
+           glyphPropertyKey: glyphPropertyKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class GlyphPropertyDetailRouteArgs {
-  const GlyphPropertyDetailRouteArgs({this.key, this.glyphPropertyKey});
-
   final _i59.Key? key;
 
   final int? glyphPropertyKey;
 
+  const GlyphPropertyDetailRouteArgs({this.key, this.glyphPropertyKey});
+
   @override
-  String toString() {
-    return 'GlyphPropertyDetailRouteArgs{key: $key, glyphPropertyKey: $glyphPropertyKey}';
-  }
+  int get hashCode => key.hashCode ^ glyphPropertyKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -749,15 +747,14 @@ class GlyphPropertyDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ glyphPropertyKey.hashCode;
+  String toString() {
+    return 'GlyphPropertyDetailRouteArgs{key: $key, glyphPropertyKey: $glyphPropertyKey}';
+  }
 }
 
 /// generated route for
 /// [_i20.GlyphPropertyListPage]
 class GlyphPropertyListRoute extends _i58.PageRouteInfo<void> {
-  const GlyphPropertyListRoute({List<_i58.PageRouteInfo>? children})
-    : super(GlyphPropertyListRoute.name, initialChildren: children);
-
   static const String name = 'GlyphPropertyListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -766,25 +763,15 @@ class GlyphPropertyListRoute extends _i58.PageRouteInfo<void> {
       return const _i20.GlyphPropertyListPage();
     },
   );
+
+  const GlyphPropertyListRoute({List<_i58.PageRouteInfo>? children})
+    : super(GlyphPropertyListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i21.GossipMenuDetailPage]
 class GossipMenuDetailRoute
     extends _i58.PageRouteInfo<GossipMenuDetailRouteArgs> {
-  GossipMenuDetailRoute({
-    _i59.Key? key,
-    _i61.GossipMenuKey? gossipMenuKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         GossipMenuDetailRoute.name,
-         args: GossipMenuDetailRouteArgs(
-           key: key,
-           gossipMenuKey: gossipMenuKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'GossipMenuDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -799,19 +786,30 @@ class GossipMenuDetailRoute
       );
     },
   );
+
+  GossipMenuDetailRoute({
+    _i59.Key? key,
+    _i61.GossipMenuKey? gossipMenuKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         GossipMenuDetailRoute.name,
+         args: GossipMenuDetailRouteArgs(
+           key: key,
+           gossipMenuKey: gossipMenuKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class GossipMenuDetailRouteArgs {
-  const GossipMenuDetailRouteArgs({this.key, this.gossipMenuKey});
-
   final _i59.Key? key;
 
   final _i61.GossipMenuKey? gossipMenuKey;
 
+  const GossipMenuDetailRouteArgs({this.key, this.gossipMenuKey});
+
   @override
-  String toString() {
-    return 'GossipMenuDetailRouteArgs{key: $key, gossipMenuKey: $gossipMenuKey}';
-  }
+  int get hashCode => key.hashCode ^ gossipMenuKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -821,15 +819,14 @@ class GossipMenuDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ gossipMenuKey.hashCode;
+  String toString() {
+    return 'GossipMenuDetailRouteArgs{key: $key, gossipMenuKey: $gossipMenuKey}';
+  }
 }
 
 /// generated route for
 /// [_i22.GossipMenuListPage]
 class GossipMenuListRoute extends _i58.PageRouteInfo<void> {
-  const GossipMenuListRoute({List<_i58.PageRouteInfo>? children})
-    : super(GossipMenuListRoute.name, initialChildren: children);
-
   static const String name = 'GossipMenuListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -838,25 +835,15 @@ class GossipMenuListRoute extends _i58.PageRouteInfo<void> {
       return const _i22.GossipMenuListPage();
     },
   );
+
+  const GossipMenuListRoute({List<_i58.PageRouteInfo>? children})
+    : super(GossipMenuListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i23.ItemExtendedCostDetailPage]
 class ItemExtendedCostDetailRoute
     extends _i58.PageRouteInfo<ItemExtendedCostDetailRouteArgs> {
-  ItemExtendedCostDetailRoute({
-    _i59.Key? key,
-    int? itemExtendedCostKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ItemExtendedCostDetailRoute.name,
-         args: ItemExtendedCostDetailRouteArgs(
-           key: key,
-           itemExtendedCostKey: itemExtendedCostKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'ItemExtendedCostDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -871,19 +858,30 @@ class ItemExtendedCostDetailRoute
       );
     },
   );
+
+  ItemExtendedCostDetailRoute({
+    _i59.Key? key,
+    int? itemExtendedCostKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ItemExtendedCostDetailRoute.name,
+         args: ItemExtendedCostDetailRouteArgs(
+           key: key,
+           itemExtendedCostKey: itemExtendedCostKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class ItemExtendedCostDetailRouteArgs {
-  const ItemExtendedCostDetailRouteArgs({this.key, this.itemExtendedCostKey});
-
   final _i59.Key? key;
 
   final int? itemExtendedCostKey;
 
+  const ItemExtendedCostDetailRouteArgs({this.key, this.itemExtendedCostKey});
+
   @override
-  String toString() {
-    return 'ItemExtendedCostDetailRouteArgs{key: $key, itemExtendedCostKey: $itemExtendedCostKey}';
-  }
+  int get hashCode => key.hashCode ^ itemExtendedCostKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -893,15 +891,14 @@ class ItemExtendedCostDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ itemExtendedCostKey.hashCode;
+  String toString() {
+    return 'ItemExtendedCostDetailRouteArgs{key: $key, itemExtendedCostKey: $itemExtendedCostKey}';
+  }
 }
 
 /// generated route for
 /// [_i24.ItemExtendedCostListPage]
 class ItemExtendedCostListRoute extends _i58.PageRouteInfo<void> {
-  const ItemExtendedCostListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ItemExtendedCostListRoute.name, initialChildren: children);
-
   static const String name = 'ItemExtendedCostListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -910,21 +907,14 @@ class ItemExtendedCostListRoute extends _i58.PageRouteInfo<void> {
       return const _i24.ItemExtendedCostListPage();
     },
   );
+
+  const ItemExtendedCostListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ItemExtendedCostListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i25.ItemSetDetailPage]
 class ItemSetDetailRoute extends _i58.PageRouteInfo<ItemSetDetailRouteArgs> {
-  ItemSetDetailRoute({
-    _i59.Key? key,
-    int? itemSetKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ItemSetDetailRoute.name,
-         args: ItemSetDetailRouteArgs(key: key, itemSetKey: itemSetKey),
-         initialChildren: children,
-       );
-
   static const String name = 'ItemSetDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -936,19 +926,27 @@ class ItemSetDetailRoute extends _i58.PageRouteInfo<ItemSetDetailRouteArgs> {
       return _i25.ItemSetDetailPage(key: args.key, itemSetKey: args.itemSetKey);
     },
   );
+
+  ItemSetDetailRoute({
+    _i59.Key? key,
+    int? itemSetKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ItemSetDetailRoute.name,
+         args: ItemSetDetailRouteArgs(key: key, itemSetKey: itemSetKey),
+         initialChildren: children,
+       );
 }
 
 class ItemSetDetailRouteArgs {
-  const ItemSetDetailRouteArgs({this.key, this.itemSetKey});
-
   final _i59.Key? key;
 
   final int? itemSetKey;
 
+  const ItemSetDetailRouteArgs({this.key, this.itemSetKey});
+
   @override
-  String toString() {
-    return 'ItemSetDetailRouteArgs{key: $key, itemSetKey: $itemSetKey}';
-  }
+  int get hashCode => key.hashCode ^ itemSetKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -958,15 +956,14 @@ class ItemSetDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ itemSetKey.hashCode;
+  String toString() {
+    return 'ItemSetDetailRouteArgs{key: $key, itemSetKey: $itemSetKey}';
+  }
 }
 
 /// generated route for
 /// [_i26.ItemSetListPage]
 class ItemSetListRoute extends _i58.PageRouteInfo<void> {
-  const ItemSetListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ItemSetListRoute.name, initialChildren: children);
-
   static const String name = 'ItemSetListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -975,25 +972,15 @@ class ItemSetListRoute extends _i58.PageRouteInfo<void> {
       return const _i26.ItemSetListPage();
     },
   );
+
+  const ItemSetListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ItemSetListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i27.ItemTemplateDetailPage]
 class ItemTemplateDetailRoute
     extends _i58.PageRouteInfo<ItemTemplateDetailRouteArgs> {
-  ItemTemplateDetailRoute({
-    _i59.Key? key,
-    int? itemTemplateKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ItemTemplateDetailRoute.name,
-         args: ItemTemplateDetailRouteArgs(
-           key: key,
-           itemTemplateKey: itemTemplateKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'ItemTemplateDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1008,19 +995,30 @@ class ItemTemplateDetailRoute
       );
     },
   );
+
+  ItemTemplateDetailRoute({
+    _i59.Key? key,
+    int? itemTemplateKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ItemTemplateDetailRoute.name,
+         args: ItemTemplateDetailRouteArgs(
+           key: key,
+           itemTemplateKey: itemTemplateKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class ItemTemplateDetailRouteArgs {
-  const ItemTemplateDetailRouteArgs({this.key, this.itemTemplateKey});
-
   final _i59.Key? key;
 
   final int? itemTemplateKey;
 
+  const ItemTemplateDetailRouteArgs({this.key, this.itemTemplateKey});
+
   @override
-  String toString() {
-    return 'ItemTemplateDetailRouteArgs{key: $key, itemTemplateKey: $itemTemplateKey}';
-  }
+  int get hashCode => key.hashCode ^ itemTemplateKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1030,15 +1028,14 @@ class ItemTemplateDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ itemTemplateKey.hashCode;
+  String toString() {
+    return 'ItemTemplateDetailRouteArgs{key: $key, itemTemplateKey: $itemTemplateKey}';
+  }
 }
 
 /// generated route for
 /// [_i28.ItemTemplateListPage]
 class ItemTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const ItemTemplateListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ItemTemplateListRoute.name, initialChildren: children);
-
   static const String name = 'ItemTemplateListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1047,14 +1044,14 @@ class ItemTemplateListRoute extends _i58.PageRouteInfo<void> {
       return const _i28.ItemTemplateListPage();
     },
   );
+
+  const ItemTemplateListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ItemTemplateListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i29.MorePage]
 class MoreRoute extends _i58.PageRouteInfo<void> {
-  const MoreRoute({List<_i58.PageRouteInfo>? children})
-    : super(MoreRoute.name, initialChildren: children);
-
   static const String name = 'MoreRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1063,94 +1060,15 @@ class MoreRoute extends _i58.PageRouteInfo<void> {
       return const _i29.MorePage();
     },
   );
-}
 
-/// generated route for
-/// [_i30.PageTextDetailPage]
-class RouteTextDetailRoute
-    extends _i58.PageRouteInfo<RouteTextDetailRouteArgs> {
-  RouteTextDetailRoute({
-    _i59.Key? key,
-    int? pageTextKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         RouteTextDetailRoute.name,
-         args: RouteTextDetailRouteArgs(key: key, pageTextKey: pageTextKey),
-         initialChildren: children,
-       );
-
-  static const String name = 'RouteTextDetailRoute';
-
-  static _i58.PageInfo page = _i58.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<RouteTextDetailRouteArgs>(
-        orElse: () => const RouteTextDetailRouteArgs(),
-      );
-      return _i30.PageTextDetailPage(
-        key: args.key,
-        pageTextKey: args.pageTextKey,
-      );
-    },
-  );
-}
-
-class RouteTextDetailRouteArgs {
-  const RouteTextDetailRouteArgs({this.key, this.pageTextKey});
-
-  final _i59.Key? key;
-
-  final int? pageTextKey;
-
-  @override
-  String toString() {
-    return 'RouteTextDetailRouteArgs{key: $key, pageTextKey: $pageTextKey}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! RouteTextDetailRouteArgs) return false;
-    return key == other.key && pageTextKey == other.pageTextKey;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ pageTextKey.hashCode;
-}
-
-/// generated route for
-/// [_i31.PageTextListPage]
-class RouteTextListRoute extends _i58.PageRouteInfo<void> {
-  const RouteTextListRoute({List<_i58.PageRouteInfo>? children})
-    : super(RouteTextListRoute.name, initialChildren: children);
-
-  static const String name = 'RouteTextListRoute';
-
-  static _i58.PageInfo page = _i58.PageInfo(
-    name,
-    builder: (data) {
-      return const _i31.PageTextListPage();
-    },
-  );
+  const MoreRoute({List<_i58.PageRouteInfo>? children})
+    : super(MoreRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i32.PlayerCreateInfoDetailPage]
 class PlayerCreateInfoDetailRoute
     extends _i58.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
-  PlayerCreateInfoDetailRoute({
-    _i59.Key? key,
-    _i62.PlayerCreateInfoKey? playerCreateInfoKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         PlayerCreateInfoDetailRoute.name,
-         args: PlayerCreateInfoDetailRouteArgs(
-           key: key,
-           playerCreateInfoKey: playerCreateInfoKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'PlayerCreateInfoDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1165,19 +1083,30 @@ class PlayerCreateInfoDetailRoute
       );
     },
   );
+
+  PlayerCreateInfoDetailRoute({
+    _i59.Key? key,
+    _i62.PlayerCreateInfoKey? playerCreateInfoKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         PlayerCreateInfoDetailRoute.name,
+         args: PlayerCreateInfoDetailRouteArgs(
+           key: key,
+           playerCreateInfoKey: playerCreateInfoKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class PlayerCreateInfoDetailRouteArgs {
-  const PlayerCreateInfoDetailRouteArgs({this.key, this.playerCreateInfoKey});
-
   final _i59.Key? key;
 
   final _i62.PlayerCreateInfoKey? playerCreateInfoKey;
 
+  const PlayerCreateInfoDetailRouteArgs({this.key, this.playerCreateInfoKey});
+
   @override
-  String toString() {
-    return 'PlayerCreateInfoDetailRouteArgs{key: $key, playerCreateInfoKey: $playerCreateInfoKey}';
-  }
+  int get hashCode => key.hashCode ^ playerCreateInfoKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1187,15 +1116,14 @@ class PlayerCreateInfoDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ playerCreateInfoKey.hashCode;
+  String toString() {
+    return 'PlayerCreateInfoDetailRouteArgs{key: $key, playerCreateInfoKey: $playerCreateInfoKey}';
+  }
 }
 
 /// generated route for
 /// [_i33.PlayerCreateInfoListPage]
 class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
-  const PlayerCreateInfoListRoute({List<_i58.PageRouteInfo>? children})
-    : super(PlayerCreateInfoListRoute.name, initialChildren: children);
-
   static const String name = 'PlayerCreateInfoListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1204,25 +1132,15 @@ class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
       return const _i33.PlayerCreateInfoListPage();
     },
   );
+
+  const PlayerCreateInfoListRoute({List<_i58.PageRouteInfo>? children})
+    : super(PlayerCreateInfoListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i34.QuestFactionRewardDetailPage]
 class QuestFactionRewardDetailRoute
     extends _i58.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
-  QuestFactionRewardDetailRoute({
-    _i59.Key? key,
-    int? questFactionRewardKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         QuestFactionRewardDetailRoute.name,
-         args: QuestFactionRewardDetailRouteArgs(
-           key: key,
-           questFactionRewardKey: questFactionRewardKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'QuestFactionRewardDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1237,22 +1155,33 @@ class QuestFactionRewardDetailRoute
       );
     },
   );
+
+  QuestFactionRewardDetailRoute({
+    _i59.Key? key,
+    int? questFactionRewardKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         QuestFactionRewardDetailRoute.name,
+         args: QuestFactionRewardDetailRouteArgs(
+           key: key,
+           questFactionRewardKey: questFactionRewardKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class QuestFactionRewardDetailRouteArgs {
+  final _i59.Key? key;
+
+  final int? questFactionRewardKey;
+
   const QuestFactionRewardDetailRouteArgs({
     this.key,
     this.questFactionRewardKey,
   });
 
-  final _i59.Key? key;
-
-  final int? questFactionRewardKey;
-
   @override
-  String toString() {
-    return 'QuestFactionRewardDetailRouteArgs{key: $key, questFactionRewardKey: $questFactionRewardKey}';
-  }
+  int get hashCode => key.hashCode ^ questFactionRewardKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1263,15 +1192,14 @@ class QuestFactionRewardDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ questFactionRewardKey.hashCode;
+  String toString() {
+    return 'QuestFactionRewardDetailRouteArgs{key: $key, questFactionRewardKey: $questFactionRewardKey}';
+  }
 }
 
 /// generated route for
 /// [_i35.QuestFactionRewardListPage]
 class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
-  const QuestFactionRewardListRoute({List<_i58.PageRouteInfo>? children})
-    : super(QuestFactionRewardListRoute.name, initialChildren: children);
-
   static const String name = 'QuestFactionRewardListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1280,22 +1208,15 @@ class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
       return const _i35.QuestFactionRewardListPage();
     },
   );
+
+  const QuestFactionRewardListRoute({List<_i58.PageRouteInfo>? children})
+    : super(QuestFactionRewardListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i36.QuestInfoDetailPage]
 class QuestInfoDetailRoute
     extends _i58.PageRouteInfo<QuestInfoDetailRouteArgs> {
-  QuestInfoDetailRoute({
-    _i59.Key? key,
-    int? questInfoKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         QuestInfoDetailRoute.name,
-         args: QuestInfoDetailRouteArgs(key: key, questInfoKey: questInfoKey),
-         initialChildren: children,
-       );
-
   static const String name = 'QuestInfoDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1310,19 +1231,27 @@ class QuestInfoDetailRoute
       );
     },
   );
+
+  QuestInfoDetailRoute({
+    _i59.Key? key,
+    int? questInfoKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         QuestInfoDetailRoute.name,
+         args: QuestInfoDetailRouteArgs(key: key, questInfoKey: questInfoKey),
+         initialChildren: children,
+       );
 }
 
 class QuestInfoDetailRouteArgs {
-  const QuestInfoDetailRouteArgs({this.key, this.questInfoKey});
-
   final _i59.Key? key;
 
   final int? questInfoKey;
 
+  const QuestInfoDetailRouteArgs({this.key, this.questInfoKey});
+
   @override
-  String toString() {
-    return 'QuestInfoDetailRouteArgs{key: $key, questInfoKey: $questInfoKey}';
-  }
+  int get hashCode => key.hashCode ^ questInfoKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1332,15 +1261,14 @@ class QuestInfoDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ questInfoKey.hashCode;
+  String toString() {
+    return 'QuestInfoDetailRouteArgs{key: $key, questInfoKey: $questInfoKey}';
+  }
 }
 
 /// generated route for
 /// [_i37.QuestInfoListPage]
 class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
-  const QuestInfoListRoute({List<_i58.PageRouteInfo>? children})
-    : super(QuestInfoListRoute.name, initialChildren: children);
-
   static const String name = 'QuestInfoListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1349,22 +1277,15 @@ class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
       return const _i37.QuestInfoListPage();
     },
   );
+
+  const QuestInfoListRoute({List<_i58.PageRouteInfo>? children})
+    : super(QuestInfoListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i38.QuestSortDetailPage]
 class QuestSortDetailRoute
     extends _i58.PageRouteInfo<QuestSortDetailRouteArgs> {
-  QuestSortDetailRoute({
-    _i59.Key? key,
-    int? questSortKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         QuestSortDetailRoute.name,
-         args: QuestSortDetailRouteArgs(key: key, questSortKey: questSortKey),
-         initialChildren: children,
-       );
-
   static const String name = 'QuestSortDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1379,19 +1300,27 @@ class QuestSortDetailRoute
       );
     },
   );
+
+  QuestSortDetailRoute({
+    _i59.Key? key,
+    int? questSortKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         QuestSortDetailRoute.name,
+         args: QuestSortDetailRouteArgs(key: key, questSortKey: questSortKey),
+         initialChildren: children,
+       );
 }
 
 class QuestSortDetailRouteArgs {
-  const QuestSortDetailRouteArgs({this.key, this.questSortKey});
-
   final _i59.Key? key;
 
   final int? questSortKey;
 
+  const QuestSortDetailRouteArgs({this.key, this.questSortKey});
+
   @override
-  String toString() {
-    return 'QuestSortDetailRouteArgs{key: $key, questSortKey: $questSortKey}';
-  }
+  int get hashCode => key.hashCode ^ questSortKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1401,15 +1330,14 @@ class QuestSortDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ questSortKey.hashCode;
+  String toString() {
+    return 'QuestSortDetailRouteArgs{key: $key, questSortKey: $questSortKey}';
+  }
 }
 
 /// generated route for
 /// [_i39.QuestSortListPage]
 class QuestSortListRoute extends _i58.PageRouteInfo<void> {
-  const QuestSortListRoute({List<_i58.PageRouteInfo>? children})
-    : super(QuestSortListRoute.name, initialChildren: children);
-
   static const String name = 'QuestSortListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1418,25 +1346,15 @@ class QuestSortListRoute extends _i58.PageRouteInfo<void> {
       return const _i39.QuestSortListPage();
     },
   );
+
+  const QuestSortListRoute({List<_i58.PageRouteInfo>? children})
+    : super(QuestSortListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i40.QuestTemplateDetailPage]
 class QuestTemplateDetailRoute
     extends _i58.PageRouteInfo<QuestTemplateDetailRouteArgs> {
-  QuestTemplateDetailRoute({
-    _i59.Key? key,
-    int? questTemplateKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         QuestTemplateDetailRoute.name,
-         args: QuestTemplateDetailRouteArgs(
-           key: key,
-           questTemplateKey: questTemplateKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'QuestTemplateDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1451,19 +1369,30 @@ class QuestTemplateDetailRoute
       );
     },
   );
+
+  QuestTemplateDetailRoute({
+    _i59.Key? key,
+    int? questTemplateKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         QuestTemplateDetailRoute.name,
+         args: QuestTemplateDetailRouteArgs(
+           key: key,
+           questTemplateKey: questTemplateKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class QuestTemplateDetailRouteArgs {
-  const QuestTemplateDetailRouteArgs({this.key, this.questTemplateKey});
-
   final _i59.Key? key;
 
   final int? questTemplateKey;
 
+  const QuestTemplateDetailRouteArgs({this.key, this.questTemplateKey});
+
   @override
-  String toString() {
-    return 'QuestTemplateDetailRouteArgs{key: $key, questTemplateKey: $questTemplateKey}';
-  }
+  int get hashCode => key.hashCode ^ questTemplateKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1473,15 +1402,14 @@ class QuestTemplateDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ questTemplateKey.hashCode;
+  String toString() {
+    return 'QuestTemplateDetailRouteArgs{key: $key, questTemplateKey: $questTemplateKey}';
+  }
 }
 
 /// generated route for
 /// [_i41.QuestTemplateListPage]
 class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const QuestTemplateListRoute({List<_i58.PageRouteInfo>? children})
-    : super(QuestTemplateListRoute.name, initialChildren: children);
-
   static const String name = 'QuestTemplateListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1490,25 +1418,15 @@ class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
       return const _i41.QuestTemplateListPage();
     },
   );
+
+  const QuestTemplateListRoute({List<_i58.PageRouteInfo>? children})
+    : super(QuestTemplateListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i42.ReferenceLootTemplateDetailPage]
 class ReferenceLootTemplateDetailRoute
     extends _i58.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
-  ReferenceLootTemplateDetailRoute({
-    _i59.Key? key,
-    _i63.ReferenceLootTemplateKey? referenceLootTemplateKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ReferenceLootTemplateDetailRoute.name,
-         args: ReferenceLootTemplateDetailRouteArgs(
-           key: key,
-           referenceLootTemplateKey: referenceLootTemplateKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'ReferenceLootTemplateDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1523,22 +1441,33 @@ class ReferenceLootTemplateDetailRoute
       );
     },
   );
+
+  ReferenceLootTemplateDetailRoute({
+    _i59.Key? key,
+    _i63.ReferenceLootTemplateKey? referenceLootTemplateKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ReferenceLootTemplateDetailRoute.name,
+         args: ReferenceLootTemplateDetailRouteArgs(
+           key: key,
+           referenceLootTemplateKey: referenceLootTemplateKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class ReferenceLootTemplateDetailRouteArgs {
+  final _i59.Key? key;
+
+  final _i63.ReferenceLootTemplateKey? referenceLootTemplateKey;
+
   const ReferenceLootTemplateDetailRouteArgs({
     this.key,
     this.referenceLootTemplateKey,
   });
 
-  final _i59.Key? key;
-
-  final _i63.ReferenceLootTemplateKey? referenceLootTemplateKey;
-
   @override
-  String toString() {
-    return 'ReferenceLootTemplateDetailRouteArgs{key: $key, referenceLootTemplateKey: $referenceLootTemplateKey}';
-  }
+  int get hashCode => key.hashCode ^ referenceLootTemplateKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1549,15 +1478,14 @@ class ReferenceLootTemplateDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ referenceLootTemplateKey.hashCode;
+  String toString() {
+    return 'ReferenceLootTemplateDetailRouteArgs{key: $key, referenceLootTemplateKey: $referenceLootTemplateKey}';
+  }
 }
 
 /// generated route for
 /// [_i43.ReferenceLootTemplateListPage]
 class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
-  const ReferenceLootTemplateListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ReferenceLootTemplateListRoute.name, initialChildren: children);
-
   static const String name = 'ReferenceLootTemplateListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1566,14 +1494,83 @@ class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
       return const _i43.ReferenceLootTemplateListPage();
     },
   );
+
+  const ReferenceLootTemplateListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ReferenceLootTemplateListRoute.name, initialChildren: children);
+}
+
+/// generated route for
+/// [_i30.PageTextDetailPage]
+class RouteTextDetailRoute
+    extends _i58.PageRouteInfo<RouteTextDetailRouteArgs> {
+  static const String name = 'RouteTextDetailRoute';
+
+  static _i58.PageInfo page = _i58.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<RouteTextDetailRouteArgs>(
+        orElse: () => const RouteTextDetailRouteArgs(),
+      );
+      return _i30.PageTextDetailPage(
+        key: args.key,
+        pageTextKey: args.pageTextKey,
+      );
+    },
+  );
+
+  RouteTextDetailRoute({
+    _i59.Key? key,
+    int? pageTextKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         RouteTextDetailRoute.name,
+         args: RouteTextDetailRouteArgs(key: key, pageTextKey: pageTextKey),
+         initialChildren: children,
+       );
+}
+
+class RouteTextDetailRouteArgs {
+  final _i59.Key? key;
+
+  final int? pageTextKey;
+
+  const RouteTextDetailRouteArgs({this.key, this.pageTextKey});
+
+  @override
+  int get hashCode => key.hashCode ^ pageTextKey.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! RouteTextDetailRouteArgs) return false;
+    return key == other.key && pageTextKey == other.pageTextKey;
+  }
+
+  @override
+  String toString() {
+    return 'RouteTextDetailRouteArgs{key: $key, pageTextKey: $pageTextKey}';
+  }
+}
+
+/// generated route for
+/// [_i31.PageTextListPage]
+class RouteTextListRoute extends _i58.PageRouteInfo<void> {
+  static const String name = 'RouteTextListRoute';
+
+  static _i58.PageInfo page = _i58.PageInfo(
+    name,
+    builder: (data) {
+      return const _i31.PageTextListPage();
+    },
+  );
+
+  const RouteTextListRoute({List<_i58.PageRouteInfo>? children})
+    : super(RouteTextListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i44.ScaffoldPage]
 class ScaffoldRoute extends _i58.PageRouteInfo<void> {
-  const ScaffoldRoute({List<_i58.PageRouteInfo>? children})
-    : super(ScaffoldRoute.name, initialChildren: children);
-
   static const String name = 'ScaffoldRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1582,25 +1579,15 @@ class ScaffoldRoute extends _i58.PageRouteInfo<void> {
       return const _i44.ScaffoldPage();
     },
   );
+
+  const ScaffoldRoute({List<_i58.PageRouteInfo>? children})
+    : super(ScaffoldRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i45.ScalingStatDistributionDetailPage]
 class ScalingStatDistributionDetailRoute
     extends _i58.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
-  ScalingStatDistributionDetailRoute({
-    _i59.Key? key,
-    int? scalingStatDistributionKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ScalingStatDistributionDetailRoute.name,
-         args: ScalingStatDistributionDetailRouteArgs(
-           key: key,
-           scalingStatDistributionKey: scalingStatDistributionKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'ScalingStatDistributionDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1615,22 +1602,33 @@ class ScalingStatDistributionDetailRoute
       );
     },
   );
+
+  ScalingStatDistributionDetailRoute({
+    _i59.Key? key,
+    int? scalingStatDistributionKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ScalingStatDistributionDetailRoute.name,
+         args: ScalingStatDistributionDetailRouteArgs(
+           key: key,
+           scalingStatDistributionKey: scalingStatDistributionKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class ScalingStatDistributionDetailRouteArgs {
+  final _i59.Key? key;
+
+  final int? scalingStatDistributionKey;
+
   const ScalingStatDistributionDetailRouteArgs({
     this.key,
     this.scalingStatDistributionKey,
   });
 
-  final _i59.Key? key;
-
-  final int? scalingStatDistributionKey;
-
   @override
-  String toString() {
-    return 'ScalingStatDistributionDetailRouteArgs{key: $key, scalingStatDistributionKey: $scalingStatDistributionKey}';
-  }
+  int get hashCode => key.hashCode ^ scalingStatDistributionKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1641,15 +1639,14 @@ class ScalingStatDistributionDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ scalingStatDistributionKey.hashCode;
+  String toString() {
+    return 'ScalingStatDistributionDetailRouteArgs{key: $key, scalingStatDistributionKey: $scalingStatDistributionKey}';
+  }
 }
 
 /// generated route for
 /// [_i46.ScalingStatDistributionListPage]
 class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
-  const ScalingStatDistributionListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ScalingStatDistributionListRoute.name, initialChildren: children);
-
   static const String name = 'ScalingStatDistributionListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1658,25 +1655,15 @@ class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
       return const _i46.ScalingStatDistributionListPage();
     },
   );
+
+  const ScalingStatDistributionListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ScalingStatDistributionListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i47.ScalingStatValueDetailPage]
 class ScalingStatValueDetailRoute
     extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
-  ScalingStatValueDetailRoute({
-    _i59.Key? key,
-    int? scalingStatValueKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         ScalingStatValueDetailRoute.name,
-         args: ScalingStatValueDetailRouteArgs(
-           key: key,
-           scalingStatValueKey: scalingStatValueKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'ScalingStatValueDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1691,19 +1678,30 @@ class ScalingStatValueDetailRoute
       );
     },
   );
+
+  ScalingStatValueDetailRoute({
+    _i59.Key? key,
+    int? scalingStatValueKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         ScalingStatValueDetailRoute.name,
+         args: ScalingStatValueDetailRouteArgs(
+           key: key,
+           scalingStatValueKey: scalingStatValueKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class ScalingStatValueDetailRouteArgs {
-  const ScalingStatValueDetailRouteArgs({this.key, this.scalingStatValueKey});
-
   final _i59.Key? key;
 
   final int? scalingStatValueKey;
 
+  const ScalingStatValueDetailRouteArgs({this.key, this.scalingStatValueKey});
+
   @override
-  String toString() {
-    return 'ScalingStatValueDetailRouteArgs{key: $key, scalingStatValueKey: $scalingStatValueKey}';
-  }
+  int get hashCode => key.hashCode ^ scalingStatValueKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1713,15 +1711,14 @@ class ScalingStatValueDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ scalingStatValueKey.hashCode;
+  String toString() {
+    return 'ScalingStatValueDetailRouteArgs{key: $key, scalingStatValueKey: $scalingStatValueKey}';
+  }
 }
 
 /// generated route for
 /// [_i48.ScalingStatValueListPage]
 class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
-  const ScalingStatValueListRoute({List<_i58.PageRouteInfo>? children})
-    : super(ScalingStatValueListRoute.name, initialChildren: children);
-
   static const String name = 'ScalingStatValueListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1730,14 +1727,14 @@ class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
       return const _i48.ScalingStatValueListPage();
     },
   );
+
+  const ScalingStatValueListRoute({List<_i58.PageRouteInfo>? children})
+    : super(ScalingStatValueListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i49.SettingPage]
 class SettingRoute extends _i58.PageRouteInfo<void> {
-  const SettingRoute({List<_i58.PageRouteInfo>? children})
-    : super(SettingRoute.name, initialChildren: children);
-
   static const String name = 'SettingRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1746,22 +1743,15 @@ class SettingRoute extends _i58.PageRouteInfo<void> {
       return const _i49.SettingPage();
     },
   );
+
+  const SettingRoute({List<_i58.PageRouteInfo>? children})
+    : super(SettingRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i50.SmartScriptDetailPage]
 class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
-  SmartScriptDetailRoute({
-    _i59.Key? key,
-    _i64.SmartScriptKey? scriptKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         SmartScriptDetailRoute.name,
-         args: SmartScriptDetailRouteArgs(key: key, scriptKey: scriptKey),
-         initialChildren: children,
-       );
-
   static const String name = 'SmartScriptDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1776,19 +1766,27 @@ class SmartScriptDetailRoute
       );
     },
   );
+
+  SmartScriptDetailRoute({
+    _i59.Key? key,
+    _i64.SmartScriptKey? scriptKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         SmartScriptDetailRoute.name,
+         args: SmartScriptDetailRouteArgs(key: key, scriptKey: scriptKey),
+         initialChildren: children,
+       );
 }
 
 class SmartScriptDetailRouteArgs {
-  const SmartScriptDetailRouteArgs({this.key, this.scriptKey});
-
   final _i59.Key? key;
 
   final _i64.SmartScriptKey? scriptKey;
 
+  const SmartScriptDetailRouteArgs({this.key, this.scriptKey});
+
   @override
-  String toString() {
-    return 'SmartScriptDetailRouteArgs{key: $key, scriptKey: $scriptKey}';
-  }
+  int get hashCode => key.hashCode ^ scriptKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1798,15 +1796,14 @@ class SmartScriptDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ scriptKey.hashCode;
+  String toString() {
+    return 'SmartScriptDetailRouteArgs{key: $key, scriptKey: $scriptKey}';
+  }
 }
 
 /// generated route for
 /// [_i51.SmartScriptListPage]
 class SmartScriptListRoute extends _i58.PageRouteInfo<void> {
-  const SmartScriptListRoute({List<_i58.PageRouteInfo>? children})
-    : super(SmartScriptListRoute.name, initialChildren: children);
-
   static const String name = 'SmartScriptListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1815,21 +1812,14 @@ class SmartScriptListRoute extends _i58.PageRouteInfo<void> {
       return const _i51.SmartScriptListPage();
     },
   );
+
+  const SmartScriptListRoute({List<_i58.PageRouteInfo>? children})
+    : super(SmartScriptListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i52.SpellDetailPage]
 class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
-  SpellDetailRoute({
-    _i59.Key? key,
-    int? spellKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         SpellDetailRoute.name,
-         args: SpellDetailRouteArgs(key: key, spellKey: spellKey),
-         initialChildren: children,
-       );
-
   static const String name = 'SpellDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1841,19 +1831,27 @@ class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
       return _i52.SpellDetailPage(key: args.key, spellKey: args.spellKey);
     },
   );
+
+  SpellDetailRoute({
+    _i59.Key? key,
+    int? spellKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         SpellDetailRoute.name,
+         args: SpellDetailRouteArgs(key: key, spellKey: spellKey),
+         initialChildren: children,
+       );
 }
 
 class SpellDetailRouteArgs {
-  const SpellDetailRouteArgs({this.key, this.spellKey});
-
   final _i59.Key? key;
 
   final int? spellKey;
 
+  const SpellDetailRouteArgs({this.key, this.spellKey});
+
   @override
-  String toString() {
-    return 'SpellDetailRouteArgs{key: $key, spellKey: $spellKey}';
-  }
+  int get hashCode => key.hashCode ^ spellKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1863,26 +1861,15 @@ class SpellDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ spellKey.hashCode;
+  String toString() {
+    return 'SpellDetailRouteArgs{key: $key, spellKey: $spellKey}';
+  }
 }
 
 /// generated route for
 /// [_i53.SpellItemEnchantmentDetailPage]
 class SpellItemEnchantmentDetailRoute
     extends _i58.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
-  SpellItemEnchantmentDetailRoute({
-    _i59.Key? key,
-    int? spellItemEnchantmentKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         SpellItemEnchantmentDetailRoute.name,
-         args: SpellItemEnchantmentDetailRouteArgs(
-           key: key,
-           spellItemEnchantmentKey: spellItemEnchantmentKey,
-         ),
-         initialChildren: children,
-       );
-
   static const String name = 'SpellItemEnchantmentDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1897,22 +1884,33 @@ class SpellItemEnchantmentDetailRoute
       );
     },
   );
+
+  SpellItemEnchantmentDetailRoute({
+    _i59.Key? key,
+    int? spellItemEnchantmentKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         SpellItemEnchantmentDetailRoute.name,
+         args: SpellItemEnchantmentDetailRouteArgs(
+           key: key,
+           spellItemEnchantmentKey: spellItemEnchantmentKey,
+         ),
+         initialChildren: children,
+       );
 }
 
 class SpellItemEnchantmentDetailRouteArgs {
+  final _i59.Key? key;
+
+  final int? spellItemEnchantmentKey;
+
   const SpellItemEnchantmentDetailRouteArgs({
     this.key,
     this.spellItemEnchantmentKey,
   });
 
-  final _i59.Key? key;
-
-  final int? spellItemEnchantmentKey;
-
   @override
-  String toString() {
-    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, spellItemEnchantmentKey: $spellItemEnchantmentKey}';
-  }
+  int get hashCode => key.hashCode ^ spellItemEnchantmentKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -1923,15 +1921,14 @@ class SpellItemEnchantmentDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ spellItemEnchantmentKey.hashCode;
+  String toString() {
+    return 'SpellItemEnchantmentDetailRouteArgs{key: $key, spellItemEnchantmentKey: $spellItemEnchantmentKey}';
+  }
 }
 
 /// generated route for
 /// [_i54.SpellItemEnchantmentListPage]
 class SpellItemEnchantmentListRoute extends _i58.PageRouteInfo<void> {
-  const SpellItemEnchantmentListRoute({List<_i58.PageRouteInfo>? children})
-    : super(SpellItemEnchantmentListRoute.name, initialChildren: children);
-
   static const String name = 'SpellItemEnchantmentListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1940,14 +1937,14 @@ class SpellItemEnchantmentListRoute extends _i58.PageRouteInfo<void> {
       return const _i54.SpellItemEnchantmentListPage();
     },
   );
+
+  const SpellItemEnchantmentListRoute({List<_i58.PageRouteInfo>? children})
+    : super(SpellItemEnchantmentListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i55.SpellListPage]
 class SpellListRoute extends _i58.PageRouteInfo<void> {
-  const SpellListRoute({List<_i58.PageRouteInfo>? children})
-    : super(SpellListRoute.name, initialChildren: children);
-
   static const String name = 'SpellListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1956,21 +1953,14 @@ class SpellListRoute extends _i58.PageRouteInfo<void> {
       return const _i55.SpellListPage();
     },
   );
+
+  const SpellListRoute({List<_i58.PageRouteInfo>? children})
+    : super(SpellListRoute.name, initialChildren: children);
 }
 
 /// generated route for
 /// [_i56.TalentDetailPage]
 class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
-  TalentDetailRoute({
-    _i59.Key? key,
-    int? talentKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         TalentDetailRoute.name,
-         args: TalentDetailRouteArgs(key: key, talentKey: talentKey),
-         initialChildren: children,
-       );
-
   static const String name = 'TalentDetailRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -1982,19 +1972,27 @@ class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
       return _i56.TalentDetailPage(key: args.key, talentKey: args.talentKey);
     },
   );
+
+  TalentDetailRoute({
+    _i59.Key? key,
+    int? talentKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         TalentDetailRoute.name,
+         args: TalentDetailRouteArgs(key: key, talentKey: talentKey),
+         initialChildren: children,
+       );
 }
 
 class TalentDetailRouteArgs {
-  const TalentDetailRouteArgs({this.key, this.talentKey});
-
   final _i59.Key? key;
 
   final int? talentKey;
 
+  const TalentDetailRouteArgs({this.key, this.talentKey});
+
   @override
-  String toString() {
-    return 'TalentDetailRouteArgs{key: $key, talentKey: $talentKey}';
-  }
+  int get hashCode => key.hashCode ^ talentKey.hashCode;
 
   @override
   bool operator ==(Object other) {
@@ -2004,15 +2002,14 @@ class TalentDetailRouteArgs {
   }
 
   @override
-  int get hashCode => key.hashCode ^ talentKey.hashCode;
+  String toString() {
+    return 'TalentDetailRouteArgs{key: $key, talentKey: $talentKey}';
+  }
 }
 
 /// generated route for
 /// [_i57.TalentListPage]
 class TalentListRoute extends _i58.PageRouteInfo<void> {
-  const TalentListRoute({List<_i58.PageRouteInfo>? children})
-    : super(TalentListRoute.name, initialChildren: children);
-
   static const String name = 'TalentListRoute';
 
   static _i58.PageInfo page = _i58.PageInfo(
@@ -2021,4 +2018,7 @@ class TalentListRoute extends _i58.PageRouteInfo<void> {
       return const _i57.TalentListPage();
     },
   );
+
+  const TalentListRoute({List<_i58.PageRouteInfo>? children})
+    : super(TalentListRoute.name, initialChildren: children);
 }

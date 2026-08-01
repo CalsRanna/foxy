@@ -71,37 +71,6 @@ class DbcExportUtil {
     }
   }
 
-  List<dynamic> _rowToRecord(
-    Map<String, dynamic> row,
-    DbcSchema schema,
-    int recordIndex,
-  ) {
-    final fieldByIndex = <int, Field>{
-      for (final field in schema.fields) field.index: field,
-    };
-
-    return List<dynamic>.generate(schema.format.length, (index) {
-      final format = schema.format[index];
-      final field = fieldByIndex[index];
-      if (field == null || field.type.isSkip || field.type == FieldType.sort) {
-        return 0;
-      }
-      if (!row.containsKey(field.name)) {
-        throw FormatException(
-          '${schema.name} 第 ${recordIndex + 1} 条记录缺少字段 ${field.name}',
-        );
-      }
-      final value = row[field.name];
-      return _normalizeValue(
-        value,
-        format: format,
-        schemaName: schema.name,
-        fieldName: field.name,
-        recordIndex: recordIndex,
-      );
-    });
-  }
-
   dynamic _normalizeValue(
     Object? value, {
     required String format,
@@ -166,26 +135,6 @@ class DbcExportUtil {
     };
   }
 
-  void _validateWrittenFile(
-    String path,
-    DbcSchema schema, {
-    required int expectedRecords,
-  }) {
-    final loader = DbcLoader(path, schema.format);
-    if (loader.recordCount != expectedRecords) {
-      throw FormatException(
-        '${schema.name} 回读行数不一致：'
-        '期望 $expectedRecords，实际 ${loader.recordCount}',
-      );
-    }
-    if (loader.fieldCount != schema.format.length) {
-      throw FormatException(
-        '${schema.name} 回读字段数不一致：'
-        '期望 ${schema.format.length}，实际 ${loader.fieldCount}',
-      );
-    }
-  }
-
   Future<void> _replaceFile({
     required File temporaryFile,
     required File targetFile,
@@ -209,6 +158,57 @@ class DbcExportUtil {
       } catch (_) {
         // 目标文件已安全替换，残留 backup 不影响导出结果。
       }
+    }
+  }
+
+  List<dynamic> _rowToRecord(
+    Map<String, dynamic> row,
+    DbcSchema schema,
+    int recordIndex,
+  ) {
+    final fieldByIndex = <int, Field>{
+      for (final field in schema.fields) field.index: field,
+    };
+
+    return List<dynamic>.generate(schema.format.length, (index) {
+      final format = schema.format[index];
+      final field = fieldByIndex[index];
+      if (field == null || field.type.isSkip || field.type == FieldType.sort) {
+        return 0;
+      }
+      if (!row.containsKey(field.name)) {
+        throw FormatException(
+          '${schema.name} 第 ${recordIndex + 1} 条记录缺少字段 ${field.name}',
+        );
+      }
+      final value = row[field.name];
+      return _normalizeValue(
+        value,
+        format: format,
+        schemaName: schema.name,
+        fieldName: field.name,
+        recordIndex: recordIndex,
+      );
+    });
+  }
+
+  void _validateWrittenFile(
+    String path,
+    DbcSchema schema, {
+    required int expectedRecords,
+  }) {
+    final loader = DbcLoader(path, schema.format);
+    if (loader.recordCount != expectedRecords) {
+      throw FormatException(
+        '${schema.name} 回读行数不一致：'
+        '期望 $expectedRecords，实际 ${loader.recordCount}',
+      );
+    }
+    if (loader.fieldCount != schema.format.length) {
+      throw FormatException(
+        '${schema.name} 回读字段数不一致：'
+        '期望 ${schema.format.length}，实际 ${loader.fieldCount}',
+      );
     }
   }
 }

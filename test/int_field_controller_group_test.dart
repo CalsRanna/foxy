@@ -2,11 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 
-/// 模拟 ViewModel 的「声明即注册」用法。
-class _GroupHost with FieldControllerMixin {
-  late final group = registerController(IntFieldControllerGroup());
-}
-
 void main() {
   group('IntFieldControllerGroup', () {
     test('init(7) 后三个 typed controller 都是 7', () {
@@ -183,4 +178,9 @@ void main() {
       host.disposeControllers();
     });
   });
+}
+
+/// 模拟 ViewModel 的「声明即注册」用法。
+class _GroupHost with FieldControllerMixin {
+  late final group = registerController(IntFieldControllerGroup());
 }

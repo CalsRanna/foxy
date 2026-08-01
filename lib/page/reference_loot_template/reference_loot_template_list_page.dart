@@ -1,18 +1,18 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/reference_loot_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:get_it/get_it.dart';
 import 'package:foxy/widget/item_quality_color.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -30,12 +30,6 @@ class _ReferenceLootTemplateListPageState
   final viewModel = GetIt.instance.get<ReferenceLootTemplateListViewModel>();
 
   @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('关联掉落列表'),
@@ -48,6 +42,12 @@ class _ReferenceLootTemplateListPageState
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -195,15 +195,6 @@ class _ReferenceLootTemplateListPageState
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _navigateToDetail({ReferenceLootTemplateKey? key}) {
-    final name = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: name,
-      route: ReferenceLootTemplateDetailRoute(referenceLootTemplateKey: key),
-      parentMenu: RouterMenu.more,
-    );
-  }
-
   Future<void> _copy(ReferenceLootTemplateKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -237,5 +228,14 @@ class _ReferenceLootTemplateListPageState
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({ReferenceLootTemplateKey? key}) {
+    final name = key == null ? '新建关联掉落' : '关联掉落 ${key.entry}-${key.item}';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: name,
+      route: ReferenceLootTemplateDetailRoute(referenceLootTemplateKey: key),
+      parentMenu: RouterMenu.more,
+    );
   }
 }

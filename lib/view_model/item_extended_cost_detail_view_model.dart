@@ -1,12 +1,12 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'item_extended_cost_detail_view_model.g.dart';
 
@@ -22,6 +22,10 @@ class ItemExtendedCostDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+
+  void dispose() {
+    disposeControllers();
+  }
 
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
 
@@ -87,9 +91,5 @@ class ItemExtendedCostDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

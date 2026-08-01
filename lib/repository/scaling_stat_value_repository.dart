@@ -1,6 +1,6 @@
+import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/scaling_stat_value_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -12,16 +12,6 @@ part 'scaling_stat_value_repository.g.dart';
 class ScalingStatValueRepository
     with RepositoryMixin, _ScalingStatValueRepositoryMixin {
   static const _table = 'foxy.dbc_scaling_stat_values';
-
-  @override
-  Future<void> _beforeStore(ScalingStatValueEntity scalingStatValue) =>
-      _validateUniqueCharlevel(scalingStatValue);
-
-  @override
-  Future<void> _beforeUpdate(
-    int originalKey,
-    ScalingStatValueEntity scalingStatValue,
-  ) => _validateUniqueCharlevel(scalingStatValue, originalKey: originalKey);
 
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
@@ -95,6 +85,16 @@ class ScalingStatValueRepository
     }
     return builder;
   }
+
+  @override
+  Future<void> _beforeStore(ScalingStatValueEntity scalingStatValue) =>
+      _validateUniqueCharlevel(scalingStatValue);
+
+  @override
+  Future<void> _beforeUpdate(
+    int originalKey,
+    ScalingStatValueEntity scalingStatValue,
+  ) => _validateUniqueCharlevel(scalingStatValue, originalKey: originalKey);
 
   Future<int> _getNextCharlevel() async {
     final charlevel = await nextMaxPlusOne(_table, 'Charlevel');

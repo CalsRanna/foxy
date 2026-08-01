@@ -4,20 +4,6 @@
 /// 统一放在这里，避免各自维护一套转义规则。
 library;
 
-/// 把 [value] 写成单引号 Dart 字符串字面量（含引号）。
-///
-/// 同时转义 `$`，否则表名或列名里的 `$` 会在生成代码里变成字符串插值。
-String dartStringLiteral(String value) {
-  final escaped = value
-      .replaceAll(r'\', r'\\')
-      .replaceAll("'", r"\'")
-      .replaceAll(r'$', r'\$')
-      .replaceAll('\n', r'\n')
-      .replaceAll('\r', r'\r')
-      .replaceAll('\t', r'\t');
-  return "'$escaped'";
-}
-
 /// 把常量 [value] 写成 Dart 字面量。
 ///
 /// [asType] 为目标字段类型：`'double'` 时整数常量补成 `1.0` 形式，
@@ -33,4 +19,18 @@ String dartLiteral(Object? value, {String? asType}) {
     return RegExp(r'^-?\d+$').hasMatch(text) ? '$text.0' : text;
   }
   throw StateError('Unsupported literal $value (${value.runtimeType})');
+}
+
+/// 把 [value] 写成单引号 Dart 字符串字面量（含引号）。
+///
+/// 同时转义 `$`，否则表名或列名里的 `$` 会在生成代码里变成字符串插值。
+String dartStringLiteral(String value) {
+  final escaped = value
+      .replaceAll(r'\', r'\\')
+      .replaceAll("'", r"\'")
+      .replaceAll(r'$', r'\$')
+      .replaceAll('\n', r'\n')
+      .replaceAll('\r', r'\r')
+      .replaceAll('\t', r'\t');
+  return "'$escaped'";
 }

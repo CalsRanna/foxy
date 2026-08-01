@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -485,61 +485,6 @@ class SpellDetailViewModel with FieldControllerMixin {
 
   bool _effectSignalsWired = false;
 
-  Future<void> initSignals({int? key}) async {
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      if (key == null) {
-        final blank = await _repository.createSpell();
-        entity.value = blank;
-        _applyCandidate(blank);
-        _wireEffectSignals();
-        persistedKey.value = null;
-        return;
-      }
-      final result = await _repository.getSpell(key);
-      if (result == null) {
-        throw StateError('原法术不存在，可能已被其他操作修改或删除');
-      }
-      entity.value = result;
-      _applyCandidate(result);
-      persistedKey.value = key;
-      _wireEffectSignals();
-    } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
-      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
-      rethrow;
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final candidate = _collectCandidate();
-      final originalKey = persistedKey.value;
-      final action = originalKey == null
-          ? ActivityActionType.create
-          : ActivityActionType.update;
-      if (originalKey == null) {
-        await _repository.storeSpell(candidate);
-      } else {
-        await _repository.updateSpell(originalKey, candidate);
-      }
-      persistedKey.value = candidate.id;
-      entity.value = candidate;
-      _logActivity(action, candidate);
-    } catch (error) {
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
   void applyAuraDescriptionLocales(List<DbcLocaleFieldValue> values) {
     entity.value = entity.value!.copyWith(
       auraDescriptionLangEnUS: values.valueOf('enUS'),
@@ -628,223 +573,63 @@ class SpellDetailViewModel with FieldControllerMixin {
     nameSubtextLangZhCNController.init(values.zhCN);
   }
 
-  SpellEntity _collectCandidate() {
-    // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
-    return entity.value!.copyWith(
-      id: idController.collect(),
-      // === 基础文本 ===
-      nameLangZhCN: nameLangZhCNController.collect(),
-      nameSubtextLangZhCN: nameSubtextLangZhCNController.collect(),
-      descriptionLangZhCN: descriptionLangZhCNController.collect(),
-      auraDescriptionLangZhCN: auraDescriptionLangZhCNController.collect(),
-      nameLangFlags: nameLangFlagsController.collect(),
-      nameSubtextLangFlags: nameSubtextLangFlagsController.collect(),
-      descriptionLangFlags: descriptionLangFlagsController.collect(),
-      auraDescriptionLangFlags: auraDescriptionLangFlagsController.collect(),
+  void dispose() {
+    disposeControllers();
+  }
 
-      // === 图标/视觉 ===
-      spellIconID: spellIconIDController.collect(),
-      activeIconID: activeIconIDController.collect(),
-      spellVisualID0: spellVisualID0Controller.collect(),
-      spellVisualID1: spellVisualID1Controller.collect(),
+  Future<void> initSignals({int? key}) async {
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      if (key == null) {
+        final blank = await _repository.createSpell();
+        entity.value = blank;
+        _applyCandidate(blank);
+        _wireEffectSignals();
+        persistedKey.value = null;
+        return;
+      }
+      final result = await _repository.getSpell(key);
+      if (result == null) {
+        throw StateError('原法术不存在，可能已被其他操作修改或删除');
+      }
+      entity.value = result;
+      _applyCandidate(result);
+      persistedKey.value = key;
+      _wireEffectSignals();
+    } catch (error, stackTrace) {
+      errorMessage.value = error.toString();
+      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      loading.value = false;
+    }
+  }
 
-      // === 分类/类型 ===
-      category: categoryController.collect(),
-      // schoolMask 以 Flag UI 为准（schoolMaskController 仅冗余保留）
-      schoolMask: schoolMaskFlagController.collect(),
-      mechanic: mechanicController.collect(),
-      defenseType: defenseTypeController.collect(),
-      dispelType: dispelTypeController.collect(),
-      preventionType: preventionTypeController.collect(),
-
-      // === 施法参数 ===
-      castingTimeIndex: castingTimeIndexController.collect(),
-      durationIndex: durationIndexController.collect(),
-      rangeIndex: rangeIndexController.collect(),
-      spellDescriptionVariableID: spellDescriptionVariableIDController
-          .collect(),
-
-      // === 等级 ===
-      baseLevel: baseLevelController.collect(),
-      spellLevel: spellLevelController.collect(),
-      maxLevel: maxLevelController.collect(),
-      spellDifficultyID: spellDifficultyIDController.collect(),
-
-      // === 冷却/恢复 ===
-      startRecoveryCategory: startRecoveryCategoryController.collect(),
-      startRecoveryTime: startRecoveryTimeController.collect(),
-      recoveryTime: recoveryTimeController.collect(),
-      categoryRecoveryTime: categoryRecoveryTimeController.collect(),
-
-      // === 目标 ===
-      targetCreatureType: targetCreatureTypeController.collect(),
-      targets: targetsController.collect(),
-      maxTargets: maxTargetsController.collect(),
-      maxTargetLevel: maxTargetLevelController.collect(),
-
-      // === 状态 ===
-      casterAuraState: casterAuraStateController.collect(),
-      targetAuraState: targetAuraStateController.collect(),
-      spellMissileID: spellMissileIDController.collect(),
-      speed: speedController.collect(),
-
-      // === 需求 ===
-      requiredAreasID: requiredAreasIDController.collect(),
-      requiresSpellFocus: requiresSpellFocusController.collect(),
-      facingCasterFlags: facingCasterFlagsController.collect(),
-
-      // === 能量消耗 ===
-      powerDisplayID: powerDisplayIDController.collect(),
-      powerType: powerTypeController.collect(),
-      runeCostID: runeCostIDController.collect(),
-      manaCost: manaCostController.collect(),
-      manaCostPct: manaCostPctController.collect(),
-      manaCostPerLevel: manaCostPerLevelController.collect(),
-      manaPerSecond: manaPerSecondController.collect(),
-      manaPerSecondPerLevel: manaPerSecondPerLevelController.collect(),
-
-      // === 标志位 ===
-      interruptFlags: interruptFlagsController.collect(),
-      auraInterruptFlags: auraInterruptFlagsController.collect(),
-      channelInterruptFlags: channelInterruptFlagsController.collect(),
-      attributes: attributesController.collect(),
-      attributesEx: attributesExController.collect(),
-      attributesExB: attributesExBController.collect(),
-      attributesExC: attributesExCController.collect(),
-      attributesExD: attributesExDController.collect(),
-      attributesExE: attributesExEController.collect(),
-      attributesExF: attributesExFController.collect(),
-      attributesExG: attributesExGController.collect(),
-
-      // === 触发 ===
-      procTypeMask: procTypeMaskController.collect(),
-      procChance: procChanceController.collect(),
-      procCharges: procChargesController.collect(),
-
-      // === 法术分类 ===
-      spellClassSet: spellClassSetController.collect(),
-      spellClassMask0: spellClassMask0Controller.collect(),
-      spellClassMask1: spellClassMask1Controller.collect(),
-      spellClassMask2: spellClassMask2Controller.collect(),
-
-      // === 效果0 ===
-      effect0: effect0Controller.collect(),
-      effectBasePoints0: effectBasePoints0Controller.collect(),
-      effectDieSides0: effectDieSides0Controller.collect(),
-      effectRealPointsPerLevel0: effectRealPointsPerLevel0Controller.collect(),
-      effectMechanic0: effectMechanic0Controller.collect(),
-      effectChainTargets0: effectChainTargets0Controller.collect(),
-      effectAura0: effectAura0Controller.collect(),
-      effectAuraPeriod0: effectAuraPeriod0Controller.collect(),
-      effectAmplitude0: effectAmplitude0Controller.collect(),
-      implicitTargetA0: implicitTargetA0Controller.collect(),
-      implicitTargetB0: implicitTargetB0Controller.collect(),
-      effectMiscValue0: effectMiscValue0Controller.collect(),
-      effectMiscValueB0: effectMiscValueB0Controller.collect(),
-      effectRadiusIndex0: effectRadiusIndex0Controller.collect(),
-      effectChainAmplitude0: effectChainAmplitude0Controller.collect(),
-      effectBonusCoefficient0: effectBonusCoefficient0Controller.collect(),
-      effectItemType0: effectItemType0Controller.collect(),
-      effectTriggerSpell0: effectTriggerSpell0Controller.collect(),
-      effectPointsPerCombo0: effectPointsPerCombo0Controller.collect(),
-      effectSpellClassMaskA0: effectSpellClassMaskA0Controller.collect(),
-      effectSpellClassMaskB0: effectSpellClassMaskB0Controller.collect(),
-      effectSpellClassMaskC0: effectSpellClassMaskC0Controller.collect(),
-
-      // === 效果1 ===
-      effect1: effect1Controller.collect(),
-      effectBasePoints1: effectBasePoints1Controller.collect(),
-      effectDieSides1: effectDieSides1Controller.collect(),
-      effectRealPointsPerLevel1: effectRealPointsPerLevel1Controller.collect(),
-      effectMechanic1: effectMechanic1Controller.collect(),
-      effectChainTargets1: effectChainTargets1Controller.collect(),
-      effectAura1: effectAura1Controller.collect(),
-      effectAuraPeriod1: effectAuraPeriod1Controller.collect(),
-      effectAmplitude1: effectAmplitude1Controller.collect(),
-      implicitTargetA1: implicitTargetA1Controller.collect(),
-      implicitTargetB1: implicitTargetB1Controller.collect(),
-      effectMiscValue1: effectMiscValue1Controller.collect(),
-      effectMiscValueB1: effectMiscValueB1Controller.collect(),
-      effectRadiusIndex1: effectRadiusIndex1Controller.collect(),
-      effectChainAmplitude1: effectChainAmplitude1Controller.collect(),
-      effectBonusCoefficient1: effectBonusCoefficient1Controller.collect(),
-      effectItemType1: effectItemType1Controller.collect(),
-      effectTriggerSpell1: effectTriggerSpell1Controller.collect(),
-      effectPointsPerCombo1: effectPointsPerCombo1Controller.collect(),
-      effectSpellClassMaskA1: effectSpellClassMaskA1Controller.collect(),
-      effectSpellClassMaskB1: effectSpellClassMaskB1Controller.collect(),
-      effectSpellClassMaskC1: effectSpellClassMaskC1Controller.collect(),
-
-      // === 效果2 ===
-      effect2: effect2Controller.collect(),
-      effectBasePoints2: effectBasePoints2Controller.collect(),
-      effectDieSides2: effectDieSides2Controller.collect(),
-      effectRealPointsPerLevel2: effectRealPointsPerLevel2Controller.collect(),
-      effectMechanic2: effectMechanic2Controller.collect(),
-      effectChainTargets2: effectChainTargets2Controller.collect(),
-      effectAura2: effectAura2Controller.collect(),
-      effectAuraPeriod2: effectAuraPeriod2Controller.collect(),
-      effectAmplitude2: effectAmplitude2Controller.collect(),
-      implicitTargetA2: implicitTargetA2Controller.collect(),
-      implicitTargetB2: implicitTargetB2Controller.collect(),
-      effectMiscValue2: effectMiscValue2Controller.collect(),
-      effectMiscValueB2: effectMiscValueB2Controller.collect(),
-      effectRadiusIndex2: effectRadiusIndex2Controller.collect(),
-      effectChainAmplitude2: effectChainAmplitude2Controller.collect(),
-      effectBonusCoefficient2: effectBonusCoefficient2Controller.collect(),
-      effectItemType2: effectItemType2Controller.collect(),
-      effectTriggerSpell2: effectTriggerSpell2Controller.collect(),
-      effectPointsPerCombo2: effectPointsPerCombo2Controller.collect(),
-      effectSpellClassMaskA2: effectSpellClassMaskA2Controller.collect(),
-      effectSpellClassMaskB2: effectSpellClassMaskB2Controller.collect(),
-      effectSpellClassMaskC2: effectSpellClassMaskC2Controller.collect(),
-
-      // === 装备限制 ===
-      equippedItemClass: equippedItemClassController.collect(),
-      equippedItemSubclass: equippedItemSubclassController.collect(),
-      equippedItemInvTypes: equippedItemInvTypesController.collect(),
-
-      // === 图腾/施法材料 ===
-      requiredTotemCategoryID0: requiredTotemCategoryID0Controller.collect(),
-      totem0: totem0Controller.collect(),
-      requiredTotemCategoryID1: requiredTotemCategoryID1Controller.collect(),
-      totem1: totem1Controller.collect(),
-      reagent0: reagent0Controller.collect(),
-      reagent1: reagent1Controller.collect(),
-      reagent2: reagent2Controller.collect(),
-      reagent3: reagent3Controller.collect(),
-      reagent4: reagent4Controller.collect(),
-      reagent5: reagent5Controller.collect(),
-      reagent6: reagent6Controller.collect(),
-      reagent7: reagent7Controller.collect(),
-      reagentCount0: reagentCount0Controller.collect(),
-      reagentCount1: reagentCount1Controller.collect(),
-      reagentCount2: reagentCount2Controller.collect(),
-      reagentCount3: reagentCount3Controller.collect(),
-      reagentCount4: reagentCount4Controller.collect(),
-      reagentCount5: reagentCount5Controller.collect(),
-      reagentCount6: reagentCount6Controller.collect(),
-      reagentCount7: reagentCount7Controller.collect(),
-
-      // === 其他高级属性 ===
-      casterAuraSpell: casterAuraSpellController.collect(),
-      cumulativeAura: cumulativeAuraController.collect(),
-      minFactionID: minFactionIDController.collect(),
-      minReputation: minReputationController.collect(),
-      excludeCasterAuraSpell: excludeCasterAuraSpellController.collect(),
-      excludeCasterAuraState: excludeCasterAuraStateController.collect(),
-      excludeTargetAuraSpell: excludeTargetAuraSpellController.collect(),
-      excludeTargetAuraState: excludeTargetAuraStateController.collect(),
-      spellPriority: spellPriorityController.collect(),
-      modalNextSpell: modalNextSpellController.collect(),
-      requiredAuraVision: requiredAuraVisionController.collect(),
-      targetAuraSpell: targetAuraSpellController.collect(),
-      stanceBarOrder: stanceBarOrderController.collect(),
-      shapeshiftMask0: shapeshiftMask0Controller.collect(),
-      shapeshiftMask1: shapeshiftMask1Controller.collect(),
-      shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
-      shapeshiftExclude1: shapeshiftExclude1Controller.collect(),
-    );
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final candidate = _collectCandidate();
+      final originalKey = persistedKey.value;
+      final action = originalKey == null
+          ? ActivityActionType.create
+          : ActivityActionType.update;
+      if (originalKey == null) {
+        await _repository.storeSpell(candidate);
+      } else {
+        await _repository.updateSpell(originalKey, candidate);
+      }
+      persistedKey.value = candidate.id;
+      entity.value = candidate;
+      _logActivity(action, candidate);
+    } catch (error) {
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
   void _applyCandidate(SpellEntity template) {
@@ -1069,6 +854,225 @@ class SpellDetailViewModel with FieldControllerMixin {
     shapeshiftExclude1Controller.init(template.shapeshiftExclude1);
   }
 
+  SpellEntity _collectCandidate() {
+    // 基于已加载实体覆盖 UI 字段，避免把未展示的多语言/扩展字段写成默认空值。
+    return entity.value!.copyWith(
+      id: idController.collect(),
+      // === 基础文本 ===
+      nameLangZhCN: nameLangZhCNController.collect(),
+      nameSubtextLangZhCN: nameSubtextLangZhCNController.collect(),
+      descriptionLangZhCN: descriptionLangZhCNController.collect(),
+      auraDescriptionLangZhCN: auraDescriptionLangZhCNController.collect(),
+      nameLangFlags: nameLangFlagsController.collect(),
+      nameSubtextLangFlags: nameSubtextLangFlagsController.collect(),
+      descriptionLangFlags: descriptionLangFlagsController.collect(),
+      auraDescriptionLangFlags: auraDescriptionLangFlagsController.collect(),
+
+      // === 图标/视觉 ===
+      spellIconID: spellIconIDController.collect(),
+      activeIconID: activeIconIDController.collect(),
+      spellVisualID0: spellVisualID0Controller.collect(),
+      spellVisualID1: spellVisualID1Controller.collect(),
+
+      // === 分类/类型 ===
+      category: categoryController.collect(),
+      // schoolMask 以 Flag UI 为准（schoolMaskController 仅冗余保留）
+      schoolMask: schoolMaskFlagController.collect(),
+      mechanic: mechanicController.collect(),
+      defenseType: defenseTypeController.collect(),
+      dispelType: dispelTypeController.collect(),
+      preventionType: preventionTypeController.collect(),
+
+      // === 施法参数 ===
+      castingTimeIndex: castingTimeIndexController.collect(),
+      durationIndex: durationIndexController.collect(),
+      rangeIndex: rangeIndexController.collect(),
+      spellDescriptionVariableID: spellDescriptionVariableIDController
+          .collect(),
+
+      // === 等级 ===
+      baseLevel: baseLevelController.collect(),
+      spellLevel: spellLevelController.collect(),
+      maxLevel: maxLevelController.collect(),
+      spellDifficultyID: spellDifficultyIDController.collect(),
+
+      // === 冷却/恢复 ===
+      startRecoveryCategory: startRecoveryCategoryController.collect(),
+      startRecoveryTime: startRecoveryTimeController.collect(),
+      recoveryTime: recoveryTimeController.collect(),
+      categoryRecoveryTime: categoryRecoveryTimeController.collect(),
+
+      // === 目标 ===
+      targetCreatureType: targetCreatureTypeController.collect(),
+      targets: targetsController.collect(),
+      maxTargets: maxTargetsController.collect(),
+      maxTargetLevel: maxTargetLevelController.collect(),
+
+      // === 状态 ===
+      casterAuraState: casterAuraStateController.collect(),
+      targetAuraState: targetAuraStateController.collect(),
+      spellMissileID: spellMissileIDController.collect(),
+      speed: speedController.collect(),
+
+      // === 需求 ===
+      requiredAreasID: requiredAreasIDController.collect(),
+      requiresSpellFocus: requiresSpellFocusController.collect(),
+      facingCasterFlags: facingCasterFlagsController.collect(),
+
+      // === 能量消耗 ===
+      powerDisplayID: powerDisplayIDController.collect(),
+      powerType: powerTypeController.collect(),
+      runeCostID: runeCostIDController.collect(),
+      manaCost: manaCostController.collect(),
+      manaCostPct: manaCostPctController.collect(),
+      manaCostPerLevel: manaCostPerLevelController.collect(),
+      manaPerSecond: manaPerSecondController.collect(),
+      manaPerSecondPerLevel: manaPerSecondPerLevelController.collect(),
+
+      // === 标志位 ===
+      interruptFlags: interruptFlagsController.collect(),
+      auraInterruptFlags: auraInterruptFlagsController.collect(),
+      channelInterruptFlags: channelInterruptFlagsController.collect(),
+      attributes: attributesController.collect(),
+      attributesEx: attributesExController.collect(),
+      attributesExB: attributesExBController.collect(),
+      attributesExC: attributesExCController.collect(),
+      attributesExD: attributesExDController.collect(),
+      attributesExE: attributesExEController.collect(),
+      attributesExF: attributesExFController.collect(),
+      attributesExG: attributesExGController.collect(),
+
+      // === 触发 ===
+      procTypeMask: procTypeMaskController.collect(),
+      procChance: procChanceController.collect(),
+      procCharges: procChargesController.collect(),
+
+      // === 法术分类 ===
+      spellClassSet: spellClassSetController.collect(),
+      spellClassMask0: spellClassMask0Controller.collect(),
+      spellClassMask1: spellClassMask1Controller.collect(),
+      spellClassMask2: spellClassMask2Controller.collect(),
+
+      // === 效果0 ===
+      effect0: effect0Controller.collect(),
+      effectBasePoints0: effectBasePoints0Controller.collect(),
+      effectDieSides0: effectDieSides0Controller.collect(),
+      effectRealPointsPerLevel0: effectRealPointsPerLevel0Controller.collect(),
+      effectMechanic0: effectMechanic0Controller.collect(),
+      effectChainTargets0: effectChainTargets0Controller.collect(),
+      effectAura0: effectAura0Controller.collect(),
+      effectAuraPeriod0: effectAuraPeriod0Controller.collect(),
+      effectAmplitude0: effectAmplitude0Controller.collect(),
+      implicitTargetA0: implicitTargetA0Controller.collect(),
+      implicitTargetB0: implicitTargetB0Controller.collect(),
+      effectMiscValue0: effectMiscValue0Controller.collect(),
+      effectMiscValueB0: effectMiscValueB0Controller.collect(),
+      effectRadiusIndex0: effectRadiusIndex0Controller.collect(),
+      effectChainAmplitude0: effectChainAmplitude0Controller.collect(),
+      effectBonusCoefficient0: effectBonusCoefficient0Controller.collect(),
+      effectItemType0: effectItemType0Controller.collect(),
+      effectTriggerSpell0: effectTriggerSpell0Controller.collect(),
+      effectPointsPerCombo0: effectPointsPerCombo0Controller.collect(),
+      effectSpellClassMaskA0: effectSpellClassMaskA0Controller.collect(),
+      effectSpellClassMaskB0: effectSpellClassMaskB0Controller.collect(),
+      effectSpellClassMaskC0: effectSpellClassMaskC0Controller.collect(),
+
+      // === 效果1 ===
+      effect1: effect1Controller.collect(),
+      effectBasePoints1: effectBasePoints1Controller.collect(),
+      effectDieSides1: effectDieSides1Controller.collect(),
+      effectRealPointsPerLevel1: effectRealPointsPerLevel1Controller.collect(),
+      effectMechanic1: effectMechanic1Controller.collect(),
+      effectChainTargets1: effectChainTargets1Controller.collect(),
+      effectAura1: effectAura1Controller.collect(),
+      effectAuraPeriod1: effectAuraPeriod1Controller.collect(),
+      effectAmplitude1: effectAmplitude1Controller.collect(),
+      implicitTargetA1: implicitTargetA1Controller.collect(),
+      implicitTargetB1: implicitTargetB1Controller.collect(),
+      effectMiscValue1: effectMiscValue1Controller.collect(),
+      effectMiscValueB1: effectMiscValueB1Controller.collect(),
+      effectRadiusIndex1: effectRadiusIndex1Controller.collect(),
+      effectChainAmplitude1: effectChainAmplitude1Controller.collect(),
+      effectBonusCoefficient1: effectBonusCoefficient1Controller.collect(),
+      effectItemType1: effectItemType1Controller.collect(),
+      effectTriggerSpell1: effectTriggerSpell1Controller.collect(),
+      effectPointsPerCombo1: effectPointsPerCombo1Controller.collect(),
+      effectSpellClassMaskA1: effectSpellClassMaskA1Controller.collect(),
+      effectSpellClassMaskB1: effectSpellClassMaskB1Controller.collect(),
+      effectSpellClassMaskC1: effectSpellClassMaskC1Controller.collect(),
+
+      // === 效果2 ===
+      effect2: effect2Controller.collect(),
+      effectBasePoints2: effectBasePoints2Controller.collect(),
+      effectDieSides2: effectDieSides2Controller.collect(),
+      effectRealPointsPerLevel2: effectRealPointsPerLevel2Controller.collect(),
+      effectMechanic2: effectMechanic2Controller.collect(),
+      effectChainTargets2: effectChainTargets2Controller.collect(),
+      effectAura2: effectAura2Controller.collect(),
+      effectAuraPeriod2: effectAuraPeriod2Controller.collect(),
+      effectAmplitude2: effectAmplitude2Controller.collect(),
+      implicitTargetA2: implicitTargetA2Controller.collect(),
+      implicitTargetB2: implicitTargetB2Controller.collect(),
+      effectMiscValue2: effectMiscValue2Controller.collect(),
+      effectMiscValueB2: effectMiscValueB2Controller.collect(),
+      effectRadiusIndex2: effectRadiusIndex2Controller.collect(),
+      effectChainAmplitude2: effectChainAmplitude2Controller.collect(),
+      effectBonusCoefficient2: effectBonusCoefficient2Controller.collect(),
+      effectItemType2: effectItemType2Controller.collect(),
+      effectTriggerSpell2: effectTriggerSpell2Controller.collect(),
+      effectPointsPerCombo2: effectPointsPerCombo2Controller.collect(),
+      effectSpellClassMaskA2: effectSpellClassMaskA2Controller.collect(),
+      effectSpellClassMaskB2: effectSpellClassMaskB2Controller.collect(),
+      effectSpellClassMaskC2: effectSpellClassMaskC2Controller.collect(),
+
+      // === 装备限制 ===
+      equippedItemClass: equippedItemClassController.collect(),
+      equippedItemSubclass: equippedItemSubclassController.collect(),
+      equippedItemInvTypes: equippedItemInvTypesController.collect(),
+
+      // === 图腾/施法材料 ===
+      requiredTotemCategoryID0: requiredTotemCategoryID0Controller.collect(),
+      totem0: totem0Controller.collect(),
+      requiredTotemCategoryID1: requiredTotemCategoryID1Controller.collect(),
+      totem1: totem1Controller.collect(),
+      reagent0: reagent0Controller.collect(),
+      reagent1: reagent1Controller.collect(),
+      reagent2: reagent2Controller.collect(),
+      reagent3: reagent3Controller.collect(),
+      reagent4: reagent4Controller.collect(),
+      reagent5: reagent5Controller.collect(),
+      reagent6: reagent6Controller.collect(),
+      reagent7: reagent7Controller.collect(),
+      reagentCount0: reagentCount0Controller.collect(),
+      reagentCount1: reagentCount1Controller.collect(),
+      reagentCount2: reagentCount2Controller.collect(),
+      reagentCount3: reagentCount3Controller.collect(),
+      reagentCount4: reagentCount4Controller.collect(),
+      reagentCount5: reagentCount5Controller.collect(),
+      reagentCount6: reagentCount6Controller.collect(),
+      reagentCount7: reagentCount7Controller.collect(),
+
+      // === 其他高级属性 ===
+      casterAuraSpell: casterAuraSpellController.collect(),
+      cumulativeAura: cumulativeAuraController.collect(),
+      minFactionID: minFactionIDController.collect(),
+      minReputation: minReputationController.collect(),
+      excludeCasterAuraSpell: excludeCasterAuraSpellController.collect(),
+      excludeCasterAuraState: excludeCasterAuraStateController.collect(),
+      excludeTargetAuraSpell: excludeTargetAuraSpellController.collect(),
+      excludeTargetAuraState: excludeTargetAuraStateController.collect(),
+      spellPriority: spellPriorityController.collect(),
+      modalNextSpell: modalNextSpellController.collect(),
+      requiredAuraVision: requiredAuraVisionController.collect(),
+      targetAuraSpell: targetAuraSpellController.collect(),
+      stanceBarOrder: stanceBarOrderController.collect(),
+      shapeshiftMask0: shapeshiftMask0Controller.collect(),
+      shapeshiftMask1: shapeshiftMask1Controller.collect(),
+      shapeshiftExclude0: shapeshiftExclude0Controller.collect(),
+      shapeshiftExclude1: shapeshiftExclude1Controller.collect(),
+    );
+  }
+
   void _logActivity(ActivityActionType action, SpellEntity t) {
     final log = ActivityLogEntity(
       module: 'spell',
@@ -1098,9 +1102,5 @@ class SpellDetailViewModel with FieldControllerMixin {
     sync(effectAura1Controller, effectAura1Signal);
     sync(effectAura2Controller, effectAura2Signal);
     sync(spellClassSetController, spellClassSetSignal);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

@@ -1,13 +1,13 @@
 import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'smart_script_detail_view_model.g.dart';
 
@@ -29,6 +29,14 @@ class SmartScriptDetailViewModel
   final selectedEventType = signal(0);
   final selectedActionType = signal(0);
   final selectedTargetType = signal(0);
+
+  void dispose() {
+    sourceTypeController.removeListener(_onSourceTypeChange);
+    eventTypeController.removeListener(_onEventTypeChange);
+    actionTypeController.removeListener(_onActionTypeChange);
+    targetTypeController.removeListener(_onTargetTypeChange);
+    disposeControllers();
+  }
 
   Future<void> initSignals({SmartScriptKey? key}) async {
     loading.value = true;
@@ -88,65 +96,10 @@ class SmartScriptDetailViewModel
     }
   }
 
-  void _onSourceTypeChange() {
-    selectedSourceType.value = sourceTypeController.collect();
-    // source type 决定 event type 可选项，刷新事件参数规格以保持联动。
-    _refreshEventEditors();
-  }
-
-  void _onEventTypeChange() {
-    selectedEventType.value = eventTypeController.collect();
-    _refreshEventEditors();
-  }
-
-  void _onActionTypeChange() {
-    selectedActionType.value = actionTypeController.collect();
-    _refreshActionEditors();
-  }
-
-  void _onTargetTypeChange() {
-    selectedTargetType.value = targetTypeController.collect();
-    _refreshTargetEditors();
-  }
-
   @override
   void _afterApplyCandidate(SmartScriptEntity smartScript) {
     // 显式刷新一次编辑规格，不依赖类型 controller 监听的回调顺序。
     _refreshParamEditors();
-  }
-
-  void _refreshParamEditors() {
-    _refreshEventEditors();
-    _refreshActionEditors();
-    _refreshTargetEditors();
-  }
-
-  void _refreshEventEditors() {
-    final config = smartEventParameterConfig(selectedEventType.value);
-    eventParam1Controller.configure(config.param1.editor);
-    eventParam2Controller.configure(config.param2.editor);
-    eventParam3Controller.configure(config.param3.editor);
-    eventParam4Controller.configure(config.param4.editor);
-    eventParam5Controller.configure(config.param5.editor);
-    eventParam6Controller.configure(config.param6.editor);
-  }
-
-  void _refreshActionEditors() {
-    final config = smartActionParameterConfig(selectedActionType.value);
-    actionParam1Controller.configure(config.param1.editor);
-    actionParam2Controller.configure(config.param2.editor);
-    actionParam3Controller.configure(config.param3.editor);
-    actionParam4Controller.configure(config.param4.editor);
-    actionParam5Controller.configure(config.param5.editor);
-    actionParam6Controller.configure(config.param6.editor);
-  }
-
-  void _refreshTargetEditors() {
-    final config = smartTargetParameterConfig(selectedTargetType.value);
-    targetParam1Controller.configure(config.param1.editor);
-    targetParam2Controller.configure(config.param2.editor);
-    targetParam3Controller.configure(config.param3.editor);
-    targetParam4Controller.configure(config.param4.editor);
   }
 
   void _logActivity(ActivityActionType action, SmartScriptEntity t) {
@@ -161,11 +114,58 @@ class SmartScriptDetailViewModel
     _activityLogService.recordBestEffort(log);
   }
 
-  void dispose() {
-    sourceTypeController.removeListener(_onSourceTypeChange);
-    eventTypeController.removeListener(_onEventTypeChange);
-    actionTypeController.removeListener(_onActionTypeChange);
-    targetTypeController.removeListener(_onTargetTypeChange);
-    disposeControllers();
+  void _onActionTypeChange() {
+    selectedActionType.value = actionTypeController.collect();
+    _refreshActionEditors();
+  }
+
+  void _onEventTypeChange() {
+    selectedEventType.value = eventTypeController.collect();
+    _refreshEventEditors();
+  }
+
+  void _onSourceTypeChange() {
+    selectedSourceType.value = sourceTypeController.collect();
+    // source type 决定 event type 可选项，刷新事件参数规格以保持联动。
+    _refreshEventEditors();
+  }
+
+  void _onTargetTypeChange() {
+    selectedTargetType.value = targetTypeController.collect();
+    _refreshTargetEditors();
+  }
+
+  void _refreshActionEditors() {
+    final config = smartActionParameterConfig(selectedActionType.value);
+    actionParam1Controller.configure(config.param1.editor);
+    actionParam2Controller.configure(config.param2.editor);
+    actionParam3Controller.configure(config.param3.editor);
+    actionParam4Controller.configure(config.param4.editor);
+    actionParam5Controller.configure(config.param5.editor);
+    actionParam6Controller.configure(config.param6.editor);
+  }
+
+  void _refreshEventEditors() {
+    final config = smartEventParameterConfig(selectedEventType.value);
+    eventParam1Controller.configure(config.param1.editor);
+    eventParam2Controller.configure(config.param2.editor);
+    eventParam3Controller.configure(config.param3.editor);
+    eventParam4Controller.configure(config.param4.editor);
+    eventParam5Controller.configure(config.param5.editor);
+    eventParam6Controller.configure(config.param6.editor);
+  }
+
+  void _refreshParamEditors() {
+    _refreshEventEditors();
+    _refreshActionEditors();
+    _refreshTargetEditors();
+  }
+
+  void _refreshTargetEditors() {
+    final config = smartTargetParameterConfig(selectedTargetType.value);
+    targetParam1Controller.configure(config.param1.editor);
+    targetParam2Controller.configure(config.param2.editor);
+    targetParam3Controller.configure(config.param3.editor);
+    targetParam4Controller.configure(config.param4.editor);
   }
 }

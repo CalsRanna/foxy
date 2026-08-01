@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
-import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
+import 'package:foxy/entity/achievement_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/char_title_entity.dart';
 import 'package:foxy/entity/cinematic_sequence_entity.dart';
@@ -10,50 +10,50 @@ import 'package:foxy/entity/creature_display_info_entity.dart';
 import 'package:foxy/entity/creature_model_data_entity.dart';
 import 'package:foxy/entity/creature_movement_info_entity.dart';
 import 'package:foxy/entity/creature_spell_data_entity.dart';
-import 'package:foxy/entity/currency_type_entity.dart';
 import 'package:foxy/entity/currency_category_entity.dart';
-import 'package:foxy/entity/destructible_model_data_entity.dart';
+import 'package:foxy/entity/currency_type_entity.dart';
+import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_faction_entity.dart';
 import 'package:foxy/entity/dbc_faction_template_entity.dart';
-import 'package:foxy/entity/dbc_emote_entity.dart';
 import 'package:foxy/entity/dbc_item_entity.dart';
-import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/entity/destructible_model_data_entity.dart';
 import 'package:foxy/entity/emote_text_data_entity.dart';
-import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/entity/glyph_property_entity.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
 import 'package:foxy/entity/game_object_art_kit_entity.dart';
 import 'package:foxy/entity/game_object_display_info_entity.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
+import 'package:foxy/entity/glyph_property_entity.dart';
 import 'package:foxy/entity/holiday_entity.dart';
 import 'package:foxy/entity/item_bag_family_entity.dart';
 import 'package:foxy/entity/item_display_info_entity.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_limit_category_entity.dart';
+import 'package:foxy/entity/item_purchase_group_entity.dart';
 import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/entity/item_random_suffix_entity.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/item_visual_effect_entity.dart';
 import 'package:foxy/entity/item_visuals_entity.dart';
-import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/light_entity.dart';
 import 'package:foxy/entity/liquid_type_entity.dart';
-import 'package:foxy/entity/map_info_entity.dart';
+import 'package:foxy/entity/lock_entity.dart';
 import 'package:foxy/entity/mail_template_entity.dart';
+import 'package:foxy/entity/map_info_entity.dart';
 import 'package:foxy/entity/quest_faction_reward_entity.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
+import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/sound_ambience_entity.dart';
+import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/spell_duration_entity.dart';
 import 'package:foxy/entity/spell_entity.dart';
 import 'package:foxy/entity/spell_focus_object_entity.dart';
 import 'package:foxy/entity/spell_icon_entity.dart';
-import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
 import 'package:foxy/entity/spell_range_entity.dart';
-import 'package:foxy/entity/skill_line_entity.dart';
-import 'package:foxy/entity/sound_ambience_entity.dart';
-import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/entity/talent_tab_entity.dart';
 import 'package:foxy/entity/taxi_path_entity.dart';
@@ -62,6 +62,41 @@ import 'package:foxy/entity/vehicle_entity.dart';
 import 'package:foxy/entity/zone_intro_music_entity.dart';
 import 'package:foxy/entity/zone_music_entity.dart';
 import 'package:warcrafty/warcrafty.dart';
+
+void main() {
+  test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
+    expect(dbcDefinitions, hasLength(61));
+
+    for (final definition in dbcDefinitions) {
+      final json = _emptyEntityJson(definition.tableName);
+      final missing = <String>[];
+      for (final field in definition.schema.fields) {
+        if (field.type.isSkip || field.type == FieldType.sort) continue;
+        if (!json.containsKey(field.name)) missing.add(field.name);
+      }
+      expect(
+        missing,
+        isEmpty,
+        reason: '${definition.tableName} 缺少: ${missing.join(', ')}',
+      );
+    }
+  });
+
+  test('全部 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
+    for (final definition in dbcDefinitions) {
+      final sample = _sampleRow(definition);
+      final json = _roundTrip(definition.tableName, sample);
+      for (final field in definition.schema.fields) {
+        if (field.type.isSkip || field.type == FieldType.sort) continue;
+        expect(
+          json[field.name],
+          sample[field.name],
+          reason: '${definition.tableName}.${field.name}',
+        );
+      }
+    }
+  });
+}
 
 Map<String, dynamic> _emptyEntityJson(String tableName) {
   return switch (tableName) {
@@ -141,31 +176,6 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_zone_music' => const ZoneMusicEntity().toJson(),
     _ => throw StateError('未覆盖的导出表: $tableName'),
   };
-}
-
-Map<String, dynamic> _schemaDefaults(String tableName) {
-  final definition = dbcDefinitionByTable[tableName]!;
-  return {
-    for (final field in definition.schema.fields)
-      if (!field.type.isSkip && field.type != FieldType.sort)
-        field.name: field.type == FieldType.string ? '' : 0,
-  };
-}
-
-Map<String, dynamic> _sampleRow(DbcDefinition definition) {
-  final row = <String, dynamic>{};
-  for (final field in definition.schema.fields) {
-    if (field.type.isSkip || field.type == FieldType.sort) continue;
-    switch (field.type) {
-      case FieldType.string:
-        row[field.name] = 'sample-${field.name}';
-      case FieldType.float:
-        row[field.name] = 1.5;
-      default:
-        row[field.name] = field.name == 'ID' ? 42 : 7;
-    }
-  }
-  return row;
 }
 
 Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
@@ -258,37 +268,27 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
   };
 }
 
-void main() {
-  test('全部 DBC 表：默认 toJson 覆盖 Schema 全部必需字段', () {
-    expect(dbcDefinitions, hasLength(61));
-
-    for (final definition in dbcDefinitions) {
-      final json = _emptyEntityJson(definition.tableName);
-      final missing = <String>[];
-      for (final field in definition.schema.fields) {
-        if (field.type.isSkip || field.type == FieldType.sort) continue;
-        if (!json.containsKey(field.name)) missing.add(field.name);
-      }
-      expect(
-        missing,
-        isEmpty,
-        reason: '${definition.tableName} 缺少: ${missing.join(', ')}',
-      );
+Map<String, dynamic> _sampleRow(DbcDefinition definition) {
+  final row = <String, dynamic>{};
+  for (final field in definition.schema.fields) {
+    if (field.type.isSkip || field.type == FieldType.sort) continue;
+    switch (field.type) {
+      case FieldType.string:
+        row[field.name] = 'sample-${field.name}';
+      case FieldType.float:
+        row[field.name] = 1.5;
+      default:
+        row[field.name] = field.name == 'ID' ? 42 : 7;
     }
-  });
+  }
+  return row;
+}
 
-  test('全部 DBC 表：fromJson/toJson round-trip 保留字段取值', () {
-    for (final definition in dbcDefinitions) {
-      final sample = _sampleRow(definition);
-      final json = _roundTrip(definition.tableName, sample);
-      for (final field in definition.schema.fields) {
-        if (field.type.isSkip || field.type == FieldType.sort) continue;
-        expect(
-          json[field.name],
-          sample[field.name],
-          reason: '${definition.tableName}.${field.name}',
-        );
-      }
-    }
-  });
+Map<String, dynamic> _schemaDefaults(String tableName) {
+  final definition = dbcDefinitionByTable[tableName]!;
+  return {
+    for (final field in definition.schema.fields)
+      if (!field.type.isSkip && field.type != FieldType.sort)
+        field.name: field.type == FieldType.string ? '' : 0,
+  };
 }

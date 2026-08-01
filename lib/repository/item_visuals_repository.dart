@@ -1,6 +1,6 @@
+import 'package:foxy/entity/item_visuals_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/item_visuals_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -31,6 +31,13 @@ class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
     return ItemVisualsEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
+  Future<List<ItemVisualsEntity>> getAllItemVisuals() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((row) => ItemVisualsEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
   Future<List<BriefItemVisualsEntity>> getBriefItemVisuals({
     int page = 1,
     ItemVisualsFilter? filter,
@@ -51,13 +58,6 @@ class ItemVisualsRepository with RepositoryMixin, _ItemVisualsRepositoryMixin {
         .get();
     return results
         .map((row) => BriefItemVisualsEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<List<ItemVisualsEntity>> getAllItemVisuals() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((row) => ItemVisualsEntity.fromJson(row.toMap()))
         .toList();
   }
 

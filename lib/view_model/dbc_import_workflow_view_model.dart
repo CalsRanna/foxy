@@ -5,6 +5,25 @@ import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
+String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
+  final hasIncompatible = blocking.any(
+    (result) => result.state == DbcTableState.incompatible,
+  );
+  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
+  final details = blocking
+      .take(5)
+      .map((result) {
+        final message = result.message;
+        if (message == null || message.isEmpty) {
+          return '${result.tableName} (${result.state.name})';
+        }
+        return '${result.tableName}: $message';
+      })
+      .join('\n');
+  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
+  return '$title\n$details$suffix';
+}
+
 class DbcImportWorkflowViewModel {
   final ImportDbcUseCase _useCase;
   final ConfigUtil _configUtil;
@@ -26,6 +45,14 @@ class DbcImportWorkflowViewModel {
   }) : _useCase = useCase ?? GetIt.instance.get<ImportDbcUseCase>(),
        _configUtil = configUtil ?? GetIt.instance.get<ConfigUtil>();
 
+  List<DbcTableCheckResult> get blockingTableChecks => tableCheckResults.value
+      .where(
+        (result) =>
+            result.state == DbcTableState.error ||
+            result.state == DbcTableState.incompatible,
+      )
+      .toList();
+
   bool get isRunning => _isActive || _useCase.isRunning;
 
   bool get tablesReady =>
@@ -34,13 +61,43 @@ class DbcImportWorkflowViewModel {
         (result) => result.state == DbcTableState.ready,
       );
 
-  List<DbcTableCheckResult> get blockingTableChecks => tableCheckResults.value
-      .where(
-        (result) =>
-            result.state == DbcTableState.error ||
-            result.state == DbcTableState.incompatible,
-      )
-      .toList();
+  bool get _isActive =>
+      status.value == WorkflowStatus.preparing ||
+      status.value == WorkflowStatus.running ||
+      status.value == WorkflowStatus.cancelling;
+
+  Future<void> cancel() async {
+    if (!_isActive && !_useCase.isRunning) return;
+    status.value = WorkflowStatus.cancelling;
+    await _useCase.cancel();
+  }
+
+  Future<void> checkTables() async {
+    if (_isActive) return;
+    final token = ++_attemptToken;
+    status.value = WorkflowStatus.preparing;
+    errorMessage.value = null;
+    try {
+      final checks = await _useCase.checkTables();
+      if (token != _attemptToken) return;
+      tableCheckResults.value = List.unmodifiable(checks);
+      final blocking = blockingTableChecks;
+      if (blocking.isNotEmpty) {
+        errorMessage.value = formatDbcCheckBlockingMessage(blocking);
+        status.value = WorkflowStatus.failed;
+      } else {
+        status.value = WorkflowStatus.idle;
+      }
+    } catch (error) {
+      if (token != _attemptToken) return;
+      errorMessage.value = '检查 DBC 导入状态失败: $error';
+      status.value = WorkflowStatus.failed;
+    }
+  }
+
+  void dispose() {
+    _attemptToken++;
+  }
 
   Future<void> prepare() async {
     if (_isActive) return;
@@ -61,6 +118,27 @@ class DbcImportWorkflowViewModel {
       status.value = WorkflowStatus.failed;
       rethrow;
     }
+  }
+
+  void reset() {
+    if (_isActive || _useCase.isRunning) return;
+    _attemptToken++;
+    status.value = WorkflowStatus.idle;
+    progress.value = null;
+    progressLabel.value = '';
+    progressDetail.value = '';
+    errorMessage.value = null;
+    result.value = null;
+  }
+
+  Future<void> retry() async {
+    errorMessage.value = null;
+    await start();
+  }
+
+  void setPath(String value) {
+    final trimmed = value.trim();
+    path.value = trimmed.isEmpty ? null : trimmed;
   }
 
   Future<void> start() async {
@@ -112,56 +190,6 @@ class DbcImportWorkflowViewModel {
     }
   }
 
-  Future<void> cancel() async {
-    if (!_isActive && !_useCase.isRunning) return;
-    status.value = WorkflowStatus.cancelling;
-    await _useCase.cancel();
-  }
-
-  Future<void> retry() async {
-    errorMessage.value = null;
-    await start();
-  }
-
-  void reset() {
-    if (_isActive || _useCase.isRunning) return;
-    _attemptToken++;
-    status.value = WorkflowStatus.idle;
-    progress.value = null;
-    progressLabel.value = '';
-    progressDetail.value = '';
-    errorMessage.value = null;
-    result.value = null;
-  }
-
-  void setPath(String value) {
-    final trimmed = value.trim();
-    path.value = trimmed.isEmpty ? null : trimmed;
-  }
-
-  Future<void> checkTables() async {
-    if (_isActive) return;
-    final token = ++_attemptToken;
-    status.value = WorkflowStatus.preparing;
-    errorMessage.value = null;
-    try {
-      final checks = await _useCase.checkTables();
-      if (token != _attemptToken) return;
-      tableCheckResults.value = List.unmodifiable(checks);
-      final blocking = blockingTableChecks;
-      if (blocking.isNotEmpty) {
-        errorMessage.value = formatDbcCheckBlockingMessage(blocking);
-        status.value = WorkflowStatus.failed;
-      } else {
-        status.value = WorkflowStatus.idle;
-      }
-    } catch (error) {
-      if (token != _attemptToken) return;
-      errorMessage.value = '检查 DBC 导入状态失败: $error';
-      status.value = WorkflowStatus.failed;
-    }
-  }
-
   void _applyProgress(int token, DbcSyncProgress event) {
     if (token != _attemptToken) return;
     status.value = WorkflowStatus.running;
@@ -191,32 +219,4 @@ class DbcImportWorkflowViewModel {
     return '导入结束，部分文件失败（成功 ${result.completed}，跳过 ${result.skipped}）：\n'
         '$top${result.errors.length > 5 ? '\n...等 ${result.errors.length} 个错误' : ''}';
   }
-
-  bool get _isActive =>
-      status.value == WorkflowStatus.preparing ||
-      status.value == WorkflowStatus.running ||
-      status.value == WorkflowStatus.cancelling;
-
-  void dispose() {
-    _attemptToken++;
-  }
-}
-
-String formatDbcCheckBlockingMessage(List<DbcTableCheckResult> blocking) {
-  final hasIncompatible = blocking.any(
-    (result) => result.state == DbcTableState.incompatible,
-  );
-  final title = hasIncompatible ? 'DBC 表结构不兼容' : 'DBC 表检查失败';
-  final details = blocking
-      .take(5)
-      .map((result) {
-        final message = result.message;
-        if (message == null || message.isEmpty) {
-          return '${result.tableName} (${result.state.name})';
-        }
-        return '${result.tableName}: $message';
-      })
-      .join('\n');
-  final suffix = blocking.length > 5 ? '\n...等 ${blocking.length} 张表' : '';
-  return '$title\n$details$suffix';
 }

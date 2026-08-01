@@ -4,13 +4,13 @@ import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
+import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -421,6 +421,76 @@ void main() {
 
 }
 
+final class _FakeActivityRepository extends ActivityLogRepository {
+  @override
+  void storeActivityLogBestEffort(_) {}
+}
+
+class _FakeGossipMenuOptionLocaleRepository
+    extends GossipMenuOptionLocaleRepository {
+  final List<GossipMenuOptionLocaleEntity> rows;
+  final destroyKeys = <GossipMenuOptionLocaleKey>[];
+  bool failUpdates = false;
+  bool failStores = false;
+  final updateKeys = <GossipMenuOptionLocaleKey>[];
+
+  _FakeGossipMenuOptionLocaleRepository(this.rows);
+
+  @override
+  Future<void> destroyGossipMenuOptionLocale(
+    GossipMenuOptionLocaleKey key,
+  ) async {
+    destroyKeys.add(key);
+    final index = rows.indexWhere(
+      (row) => GossipMenuOptionLocaleKey.fromEntity(row) == key,
+    );
+    if (index < 0) throw StateError('missing');
+    rows.removeAt(index);
+  }
+
+  @override
+  Future<GossipMenuOptionLocaleEntity?> getGossipMenuOptionLocale(
+    GossipMenuOptionLocaleKey key,
+  ) async {
+    for (final row in rows) {
+      if (GossipMenuOptionLocaleKey.fromEntity(row) == key) return row;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<GossipMenuOptionLocaleEntity>>
+  getGossipMenuOptionLocalesForOption(GossipMenuOptionKey key) async {
+    return rows
+        .where(
+          (row) => row.menuId == key.menuId && row.optionId == key.optionId,
+        )
+        .toList();
+  }
+
+  @override
+  Future<void> storeGossipMenuOptionLocale(
+    GossipMenuOptionLocaleEntity model,
+  ) async {
+    if (failStores) throw StateError('locale store failed');
+    rows.add(model);
+  }
+
+  @override
+  Future<void> updateGossipMenuOptionLocale(
+    GossipMenuOptionLocaleKey originalKey,
+    GossipMenuOptionLocaleEntity model,
+  ) async {
+    updateKeys.add(originalKey);
+    if (failUpdates) throw StateError('locale write failed');
+    final index = rows.indexWhere(
+      (row) => GossipMenuOptionLocaleKey.fromEntity(row) == originalKey,
+    );
+    if (index < 0) throw StateError('missing');
+    rows[index] = model;
+  }
+}
+
 class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
   final List<GossipMenuOptionEntity> rows;
   final updateKeys = <GossipMenuOptionKey>[];
@@ -444,6 +514,16 @@ class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
       optionId++;
     }
     return GossipMenuOptionEntity(menuId: menuId, optionId: optionId);
+  }
+
+  @override
+  Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
+    if (failDestroys) throw StateError('base destroy failed');
+    final index = rows.indexWhere(
+      (row) => GossipMenuOptionKey.fromEntity(row) == key,
+    );
+    if (index < 0) throw StateError('missing');
+    rows.removeAt(index);
   }
 
   @override
@@ -487,16 +567,6 @@ class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
   }
 
   @override
-  Future<void> destroyGossipMenuOption(GossipMenuOptionKey key) async {
-    if (failDestroys) throw StateError('base destroy failed');
-    final index = rows.indexWhere(
-      (row) => GossipMenuOptionKey.fromEntity(row) == key,
-    );
-    if (index < 0) throw StateError('missing');
-    rows.removeAt(index);
-  }
-
-  @override
   Future<void> updateGossipMenuOption(
     GossipMenuOptionKey originalKey,
     GossipMenuOptionEntity model,
@@ -510,76 +580,11 @@ class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
   }
 }
 
-class _FakeGossipMenuOptionLocaleRepository
-    extends GossipMenuOptionLocaleRepository {
-  final List<GossipMenuOptionLocaleEntity> rows;
-  final destroyKeys = <GossipMenuOptionLocaleKey>[];
-  bool failUpdates = false;
-  bool failStores = false;
-  final updateKeys = <GossipMenuOptionLocaleKey>[];
-
-  _FakeGossipMenuOptionLocaleRepository(this.rows);
-
-  @override
-  Future<void> destroyGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey key,
-  ) async {
-    destroyKeys.add(key);
-    final index = rows.indexWhere(
-      (row) => GossipMenuOptionLocaleKey.fromEntity(row) == key,
-    );
-    if (index < 0) throw StateError('missing');
-    rows.removeAt(index);
-  }
-
-  @override
-  Future<GossipMenuOptionLocaleEntity?> getGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey key,
-  ) async {
-    for (final row in rows) {
-      if (GossipMenuOptionLocaleKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
-
-  @override
-  Future<void> storeGossipMenuOptionLocale(
-    GossipMenuOptionLocaleEntity model,
-  ) async {
-    if (failStores) throw StateError('locale store failed');
-    rows.add(model);
-  }
-
-  @override
-  Future<List<GossipMenuOptionLocaleEntity>>
-  getGossipMenuOptionLocalesForOption(GossipMenuOptionKey key) async {
-    return rows
-        .where(
-          (row) => row.menuId == key.menuId && row.optionId == key.optionId,
-        )
-        .toList();
-  }
-
-  @override
-  Future<void> updateGossipMenuOptionLocale(
-    GossipMenuOptionLocaleKey originalKey,
-    GossipMenuOptionLocaleEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('locale write failed');
-    final index = rows.indexWhere(
-      (row) => GossipMenuOptionLocaleKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
-}
-
 final class _FakeTransaction extends DatabaseTransaction {
-  _FakeTransaction(this.optionRepository, this.localeRepository);
-
   final _FakeGossipMenuOptionRepository optionRepository;
+
   final _FakeGossipMenuOptionLocaleRepository localeRepository;
+  _FakeTransaction(this.optionRepository, this.localeRepository);
 
   @override
   Future<void> execute(Future<void> Function() action) async {
@@ -601,11 +606,6 @@ final class _FakeTransaction extends DatabaseTransaction {
       rethrow;
     }
   }
-}
-
-final class _FakeActivityRepository extends ActivityLogRepository {
-  @override
-  void storeActivityLogBestEffort(_) {}
 }
 
 class _RecordingDriver implements DatabaseDriver {
@@ -644,17 +644,17 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _TestGossipMenuOptionRepository extends GossipMenuOptionRepository {
-  @override
-  final Laconic laconic;
-
-  _TestGossipMenuOptionRepository(this.laconic);
-}
-
 class _TestGossipMenuOptionLocaleRepository
     extends GossipMenuOptionLocaleRepository {
   @override
   final Laconic laconic;
 
   _TestGossipMenuOptionLocaleRepository(this.laconic);
+}
+
+class _TestGossipMenuOptionRepository extends GossipMenuOptionRepository {
+  @override
+  final Laconic laconic;
+
+  _TestGossipMenuOptionRepository(this.laconic);
 }

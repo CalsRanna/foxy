@@ -1,12 +1,12 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'player_create_info_detail_view_model.g.dart';
 
@@ -22,6 +22,10 @@ class PlayerCreateInfoDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({PlayerCreateInfoKey? key}) async {
     loading.value = true;
@@ -84,9 +88,5 @@ class PlayerCreateInfoDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

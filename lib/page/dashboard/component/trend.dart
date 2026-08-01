@@ -3,6 +3,15 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/widget/foxy_card.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+final _kCopyColor = ShadOrangeColorScheme.light().primary;
+
+/// 动作图标色取自 shadcn 各色系的 `primary`（light），与 shadcn 调色板保持一致，
+/// 替代原先硬编码的 Material `Colors.green/blue/red/orange`。
+final _kCreateColor = ShadGreenColorScheme.light().primary;
+
+final _kDeleteColor = ShadRedColorScheme.light().primary;
+
+final _kUpdateColor = ShadBlueColorScheme.light().primary;
 class Trend extends StatelessWidget {
   final List<ActivityLogEntity> activities;
 
@@ -43,7 +52,20 @@ class Trend extends StatelessWidget {
     );
   }
 }
+class _Divider extends StatelessWidget {
+  const _Divider();
 
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final outline = colorScheme.outline;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Divider(color: outline.withValues(alpha: 0.2), height: 1),
+    );
+  }
+}
 class _TrendItem extends StatelessWidget {
   final ActivityLogEntity activity;
 
@@ -81,21 +103,21 @@ class _TrendItem extends StatelessWidget {
     );
   }
 
-  IconData _actionIcon(ActivityActionType type) {
-    return switch (type) {
-      ActivityActionType.create => LucideIcons.plus,
-      ActivityActionType.update => LucideIcons.pencil,
-      ActivityActionType.delete => LucideIcons.trash2,
-      ActivityActionType.copy => LucideIcons.copy,
-    };
-  }
-
   Color _actionColor(ActivityActionType type) {
     return switch (type) {
       ActivityActionType.create => _kCreateColor,
       ActivityActionType.update => _kUpdateColor,
       ActivityActionType.delete => _kDeleteColor,
       ActivityActionType.copy => _kCopyColor,
+    };
+  }
+
+  IconData _actionIcon(ActivityActionType type) {
+    return switch (type) {
+      ActivityActionType.create => LucideIcons.plus,
+      ActivityActionType.update => LucideIcons.pencil,
+      ActivityActionType.delete => LucideIcons.trash2,
+      ActivityActionType.copy => LucideIcons.copy,
     };
   }
 
@@ -109,25 +131,3 @@ class _TrendItem extends StatelessWidget {
     return '${dateTime.month}-${dateTime.day}';
   }
 }
-
-class _Divider extends StatelessWidget {
-  const _Divider();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final outline = colorScheme.outline;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Divider(color: outline.withValues(alpha: 0.2), height: 1),
-    );
-  }
-}
-
-/// 动作图标色取自 shadcn 各色系的 `primary`（light），与 shadcn 调色板保持一致，
-/// 替代原先硬编码的 Material `Colors.green/blue/red/orange`。
-final _kCreateColor = ShadGreenColorScheme.light().primary;
-final _kUpdateColor = ShadBlueColorScheme.light().primary;
-final _kDeleteColor = ShadRedColorScheme.light().primary;
-final _kCopyColor = ShadOrangeColorScheme.light().primary;

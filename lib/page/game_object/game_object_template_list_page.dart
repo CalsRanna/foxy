@@ -1,15 +1,15 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/game_object_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -29,12 +29,6 @@ class _GameObjectTemplateListPageState
   final viewModel = GetIt.instance.get<GameObjectTemplateListViewModel>();
 
   @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('游戏对象列表'),
@@ -47,6 +41,12 @@ class _GameObjectTemplateListPageState
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -184,19 +184,6 @@ class _GameObjectTemplateListPageState
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = key == null
-        ? '新建游戏对象'
-        : name?.isNotEmpty == true
-        ? name!
-        : '游戏对象 #$key';
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
-      route: GameObjectTemplateDetailRoute(gameObjectTemplateKey: key),
-      parentMenu: RouterMenu.gameObjectTemplate,
-    );
-  }
-
   Future<void> _copy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -230,5 +217,18 @@ class _GameObjectTemplateListPageState
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({int? key, String? name}) {
+    final label = key == null
+        ? '新建游戏对象'
+        : name?.isNotEmpty == true
+        ? name!
+        : '游戏对象 #$key';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: GameObjectTemplateDetailRoute(gameObjectTemplateKey: key),
+      parentMenu: RouterMenu.gameObjectTemplate,
+    );
   }
 }

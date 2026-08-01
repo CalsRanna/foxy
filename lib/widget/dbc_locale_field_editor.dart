@@ -23,6 +23,9 @@ class DbcLocaleFieldEditor extends StatefulWidget {
     required this.onSave,
   });
 
+  @override
+  State<DbcLocaleFieldEditor> createState() => _DbcLocaleFieldEditorState();
+
   /// 弹出 DBC 字段本地化编辑对话框。
   ///
   /// 保存成功返回编辑后的 16 行值；取消或加载失败返回 null。
@@ -63,69 +66,12 @@ class DbcLocaleFieldEditor extends StatefulWidget {
       // 测试或无 Sonner 宿主时忽略，避免二次异常掩盖原始错误。
     }
   }
-
-  @override
-  State<DbcLocaleFieldEditor> createState() => _DbcLocaleFieldEditorState();
 }
 
 class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
   late final List<TextEditingController> _controllers;
   bool _saving = false;
   String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    assert(
-      widget.initialValues.length == DbcLocale.values.length,
-      'DBC locale editor 必须固定 16 行',
-    );
-    _controllers = [
-      for (final item in widget.initialValues)
-        TextEditingController(text: item.value),
-    ];
-  }
-
-  @override
-  void dispose() {
-    for (final c in _controllers) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  Future<void> _save() async {
-    setState(() {
-      _saving = true;
-      _errorMessage = null;
-    });
-    try {
-      final values = [
-        for (var i = 0; i < DbcLocale.values.length; i++)
-          DbcLocaleFieldValue(
-            locale: DbcLocale.values[i],
-            value: _controllers[i].text,
-          ),
-      ];
-      await widget.onSave(values);
-      if (mounted) {
-        Navigator.of(context).pop(values);
-      }
-    } catch (e, s) {
-      LoggerUtil.instance.e(
-        '保存 DBC 本地化失败: ${widget.title}',
-        error: e,
-        stackTrace: s,
-      );
-      if (!mounted) return;
-      setState(() => _errorMessage = '保存失败: $e');
-      DbcLocaleFieldEditor._showErrorToast(context, '保存失败: $e');
-    } finally {
-      if (mounted) {
-        setState(() => _saving = false);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +122,27 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    assert(
+      widget.initialValues.length == DbcLocale.values.length,
+      'DBC locale editor 必须固定 16 行',
+    );
+    _controllers = [
+      for (final item in widget.initialValues)
+        TextEditingController(text: item.value),
+    ];
   }
 
   Widget _buildHeader(ShadThemeData theme) {
@@ -233,5 +200,38 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
         );
       },
     );
+  }
+
+  Future<void> _save() async {
+    setState(() {
+      _saving = true;
+      _errorMessage = null;
+    });
+    try {
+      final values = [
+        for (var i = 0; i < DbcLocale.values.length; i++)
+          DbcLocaleFieldValue(
+            locale: DbcLocale.values[i],
+            value: _controllers[i].text,
+          ),
+      ];
+      await widget.onSave(values);
+      if (mounted) {
+        Navigator.of(context).pop(values);
+      }
+    } catch (e, s) {
+      LoggerUtil.instance.e(
+        '保存 DBC 本地化失败: ${widget.title}',
+        error: e,
+        stackTrace: s,
+      );
+      if (!mounted) return;
+      setState(() => _errorMessage = '保存失败: $e');
+      DbcLocaleFieldEditor._showErrorToast(context, '保存失败: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _saving = false);
+      }
+    }
   }
 }

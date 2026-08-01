@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_view.dart';
@@ -8,8 +7,9 @@ import 'package:foxy/page/quest/game_object_quest_starter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
-import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
+import 'package:foxy/view_model/quest_template_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -27,27 +27,6 @@ class QuestTemplateDetailPage extends StatefulWidget {
 
 class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
   final viewModel = GetIt.instance.get<QuestTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.questTemplateKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,5 +98,26 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.questTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

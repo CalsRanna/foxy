@@ -34,15 +34,6 @@ enum DirectoryConfigTarget {
     required this.description,
   });
 
-  String? pathOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.clientDir.value : vm.dbcPath.value;
-
-  bool configuredOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.isClientDirConfigured : vm.isDbcPathConfigured;
-
-  String? errorOf(SetupStatusViewModel vm) =>
-      this == clientDir ? vm.clientDirError.value : vm.dbcPathError.value;
-
   void clearError(SetupStatusViewModel vm) {
     if (this == clientDir) {
       vm.clientDirError.value = null;
@@ -51,8 +42,113 @@ enum DirectoryConfigTarget {
     }
   }
 
+  bool configuredOf(SetupStatusViewModel vm) =>
+      this == clientDir ? vm.isClientDirConfigured : vm.isDbcPathConfigured;
+
+  String? errorOf(SetupStatusViewModel vm) =>
+      this == clientDir ? vm.clientDirError.value : vm.dbcPathError.value;
+
+  String? pathOf(SetupStatusViewModel vm) =>
+      this == clientDir ? vm.clientDir.value : vm.dbcPath.value;
+
   Future<bool> save(SetupStatusViewModel vm, String path) =>
       this == clientDir ? vm.saveClientDir(path) : vm.saveDbcPath(path);
+}
+
+/// 单个目录的配置对话框：基于 [DirectoryPathForm]，带「取消 / 保存」。
+class DirectoryPathConfigDialog extends StatefulWidget {
+  final SetupStatusViewModel vm;
+  final DirectoryConfigTarget target;
+
+  const DirectoryPathConfigDialog({
+    super.key,
+    required this.vm,
+    required this.target,
+  });
+
+  @override
+  State<DirectoryPathConfigDialog> createState() =>
+      _DirectoryPathConfigDialogState();
+}
+
+/// 内联目录路径表单：路径输入/浏览 + 存在性校验错误横幅。
+///
+/// 供目录配置对话框与引导步骤 1/2 复用；保存逻辑走 [SetupStatusViewModel]
+/// 的校验与持久化，错误经目标的 error 信号展示。
+class DirectoryPathForm extends StatefulWidget {
+  final SetupStatusViewModel vm;
+  final DirectoryConfigTarget target;
+
+  const DirectoryPathForm({
+    super.key,
+    required this.vm,
+    required this.target,
+  });
+
+  @override
+  State<DirectoryPathForm> createState() => DirectoryPathFormState();
+}
+
+class DirectoryPathFormState extends State<DirectoryPathForm> {
+  final controller = StringFieldController();
+
+  DirectoryConfigTarget get target => widget.target;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    return Watch((_) {
+      final error = target.errorOf(widget.vm);
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 14,
+        children: [
+          settingDialogMutedHint(context, target.description),
+          Text(
+            '目录路径',
+            style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600),
+          ),
+          settingDialogPathField(
+            controller: controller,
+            placeholder: '选择或输入${target.title}路径',
+            onBrowse: _browse,
+          ),
+          if (error != null)
+            settingDialogBanner(
+              context,
+              text: error,
+              color: theme.colorScheme.destructive,
+              icon: LucideIcons.triangleAlert,
+            ),
+        ],
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 清除上一次的校验错误，避免重新打开时残留。
+    target.clearError(widget.vm);
+    final path = target.pathOf(widget.vm);
+    if (path != null) controller.init(path);
+  }
+
+  /// 校验并保存目录配置；成功返回 true，失败时错误显示在横幅。
+  Future<bool> save() => target.save(widget.vm, controller.collect());
+
+  Future<void> _browse() async {
+    final dir = await getDirectoryPath();
+    if (dir == null || !mounted) return;
+    controller.init(dir);
+  }
 }
 
 /// 设置页的目录配置项：标题 + 描述 + 当前路径 + 「修改」按钮。
@@ -153,109 +249,8 @@ class DirectorySettingRow extends StatelessWidget {
   }
 }
 
-/// 内联目录路径表单：路径输入/浏览 + 存在性校验错误横幅。
-///
-/// 供目录配置对话框与引导步骤 1/2 复用；保存逻辑走 [SetupStatusViewModel]
-/// 的校验与持久化，错误经目标的 error 信号展示。
-class DirectoryPathForm extends StatefulWidget {
-  final SetupStatusViewModel vm;
-  final DirectoryConfigTarget target;
-
-  const DirectoryPathForm({
-    super.key,
-    required this.vm,
-    required this.target,
-  });
-
-  @override
-  State<DirectoryPathForm> createState() => DirectoryPathFormState();
-}
-
-class DirectoryPathFormState extends State<DirectoryPathForm> {
-  final controller = StringFieldController();
-
-  DirectoryConfigTarget get target => widget.target;
-
-  @override
-  void initState() {
-    super.initState();
-    // 清除上一次的校验错误，避免重新打开时残留。
-    target.clearError(widget.vm);
-    final path = target.pathOf(widget.vm);
-    if (path != null) controller.init(path);
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _browse() async {
-    final dir = await getDirectoryPath();
-    if (dir == null || !mounted) return;
-    controller.init(dir);
-  }
-
-  /// 校验并保存目录配置；成功返回 true，失败时错误显示在横幅。
-  Future<bool> save() => target.save(widget.vm, controller.collect());
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = ShadTheme.of(context);
-    return Watch((_) {
-      final error = target.errorOf(widget.vm);
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: 14,
-        children: [
-          settingDialogMutedHint(context, target.description),
-          Text(
-            '目录路径',
-            style: theme.textTheme.small.copyWith(fontWeight: FontWeight.w600),
-          ),
-          settingDialogPathField(
-            controller: controller,
-            placeholder: '选择或输入${target.title}路径',
-            onBrowse: _browse,
-          ),
-          if (error != null)
-            settingDialogBanner(
-              context,
-              text: error,
-              color: theme.colorScheme.destructive,
-              icon: LucideIcons.triangleAlert,
-            ),
-        ],
-      );
-    });
-  }
-}
-
-/// 单个目录的配置对话框：基于 [DirectoryPathForm]，带「取消 / 保存」。
-class DirectoryPathConfigDialog extends StatefulWidget {
-  final SetupStatusViewModel vm;
-  final DirectoryConfigTarget target;
-
-  const DirectoryPathConfigDialog({
-    super.key,
-    required this.vm,
-    required this.target,
-  });
-
-  @override
-  State<DirectoryPathConfigDialog> createState() =>
-      _DirectoryPathConfigDialogState();
-}
-
 class _DirectoryPathConfigDialogState extends State<DirectoryPathConfigDialog> {
   final _formKey = GlobalKey<DirectoryPathFormState>();
-
-  Future<void> _save() async {
-    final saved = await _formKey.currentState?.save() ?? false;
-    if (saved && mounted) Navigator.of(context).maybePop();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,5 +272,10 @@ class _DirectoryPathConfigDialogState extends State<DirectoryPathConfigDialog> {
         target: widget.target,
       ),
     );
+  }
+
+  Future<void> _save() async {
+    final saved = await _formKey.currentState?.save() ?? false;
+    if (saved && mounted) Navigator.of(context).maybePop();
   }
 }

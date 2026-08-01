@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
-import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
+import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -223,6 +223,20 @@ void main() {
 
 }
 
+class _FakeCreatureDefaultTrainerRepository
+    extends CreatureDefaultTrainerRepository {
+  final Map<int, CreatureDefaultTrainerEntity> rows;
+
+  _FakeCreatureDefaultTrainerRepository(this.rows);
+
+  @override
+  Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
+    int key,
+  ) async {
+    return rows[key];
+  }
+}
+
 class _FakeNpcTrainerRepository extends NpcTrainerRepository {
   final List<NpcTrainerEntity> rows;
   bool failUpdates = false;
@@ -284,20 +298,6 @@ class _FakeNpcTrainerRepository extends NpcTrainerRepository {
   }
 }
 
-class _FakeCreatureDefaultTrainerRepository
-    extends CreatureDefaultTrainerRepository {
-  final Map<int, CreatureDefaultTrainerEntity> rows;
-
-  _FakeCreatureDefaultTrainerRepository(this.rows);
-
-  @override
-  Future<CreatureDefaultTrainerEntity?> getCreatureDefaultTrainer(
-    int key,
-  ) async {
-    return rows[key];
-  }
-}
-
 class _RecordingDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
@@ -333,17 +333,17 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _TestNpcTrainerRepository extends NpcTrainerRepository {
-  @override
-  final Laconic laconic;
-
-  _TestNpcTrainerRepository(this.laconic);
-}
-
 class _TestCreatureDefaultTrainerRepository
     extends CreatureDefaultTrainerRepository {
   @override
   final Laconic laconic;
 
   _TestCreatureDefaultTrainerRepository(this.laconic);
+}
+
+class _TestNpcTrainerRepository extends NpcTrainerRepository {
+  @override
+  final Laconic laconic;
+
+  _TestNpcTrainerRepository(this.laconic);
 }

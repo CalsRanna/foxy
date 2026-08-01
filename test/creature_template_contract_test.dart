@@ -2,44 +2,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/flag_item.dart';
-import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
+import 'package:foxy/entity/creature_equip_template_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
-import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';
+import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
-import 'package:foxy/repository/creature_loot_template_repository.dart';
-import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
-import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
-
-String normalizeCreatureTemplateAddonAuras(String value) {
-  final tokens = value.trim().isEmpty
-      ? const <String>[]
-      : value.trim().split(RegExp(r'\s+'));
-  final spellIds = <int>[];
-  final seen = <int>{};
-  for (final token in tokens) {
-    final spellId = int.tryParse(token);
-    if (spellId == null || spellId <= 0) {
-      throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
-    }
-    if (!seen.add(spellId)) {
-      throw FormatException('光环列表不能包含重复法术 ID: $spellId');
-    }
-    spellIds.add(spellId);
-  }
-  return spellIds.join(' ');
-}
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
+import 'package:foxy/repository/skinning_loot_template_repository.dart';
 
 void main() {
 
@@ -296,9 +277,28 @@ void main() {
   });
 }
 
-Set<int> _valuesOf(List<FlagItem> flags) =>
-    flags.map((flag) => flag.value).toSet();
+String normalizeCreatureTemplateAddonAuras(String value) {
+  final tokens = value.trim().isEmpty
+      ? const <String>[]
+      : value.trim().split(RegExp(r'\s+'));
+  final spellIds = <int>[];
+  final seen = <int>{};
+  for (final token in tokens) {
+    final spellId = int.tryParse(token);
+    if (spellId == null || spellId <= 0) {
+      throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
+    }
+    if (!seen.add(spellId)) {
+      throw FormatException('光环列表不能包含重复法术 ID: $spellId');
+    }
+    spellIds.add(spellId);
+  }
+  return spellIds.join(' ');
+}
 
 Set<int> _bits(int first, int last) => {
   for (var bit = first; bit <= last; bit++) 1 << bit,
 };
+
+Set<int> _valuesOf(List<FlagItem> flags) =>
+    flags.map((flag) => flag.value).toSet();

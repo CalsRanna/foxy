@@ -1,19 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
-
-/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
-final class _TempConfigUtil extends ConfigUtil {
-  _TempConfigUtil(this._dir);
-
-  final String _dir;
-
-  @override
-  String get configPath => p.join(_dir, 'config.yaml');
-}
 
 void main() {
   late Directory tempDir;
@@ -105,4 +95,14 @@ void main() {
     await vm.prepare();
     expect(vm.isSetupComplete, isTrue);
   });
+}
+
+/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
+final class _TempConfigUtil extends ConfigUtil {
+  final String _dir;
+
+  _TempConfigUtil(this._dir);
+
+  @override
+  String get configPath => p.join(_dir, 'config.yaml');
 }

@@ -27,6 +27,21 @@ class IconExtractWorkflowViewModel {
 
   bool get isRunning => _isActive || _useCase.isRunning;
 
+  bool get _isActive =>
+      status.value == WorkflowStatus.preparing ||
+      status.value == WorkflowStatus.running ||
+      status.value == WorkflowStatus.cancelling;
+
+  Future<void> cancel() async {
+    if (!_isActive && !_useCase.isRunning) return;
+    status.value = WorkflowStatus.cancelling;
+    await _useCase.cancel();
+  }
+
+  void dispose() {
+    _attemptToken++;
+  }
+
   Future<void> prepare() async {
     if (_isActive) return;
     final token = ++_attemptToken;
@@ -46,6 +61,27 @@ class IconExtractWorkflowViewModel {
       status.value = WorkflowStatus.failed;
       rethrow;
     }
+  }
+
+  void reset() {
+    if (_isActive || _useCase.isRunning) return;
+    _attemptToken++;
+    status.value = WorkflowStatus.idle;
+    progress.value = null;
+    progressLabel.value = '';
+    progressDetail.value = '';
+    errorMessage.value = null;
+    result.value = null;
+  }
+
+  Future<void> retry() async {
+    errorMessage.value = null;
+    await start();
+  }
+
+  void setPath(String value) {
+    final trimmed = value.trim();
+    path.value = trimmed.isEmpty ? null : trimmed;
   }
 
   Future<void> start() async {
@@ -97,33 +133,6 @@ class IconExtractWorkflowViewModel {
     }
   }
 
-  Future<void> cancel() async {
-    if (!_isActive && !_useCase.isRunning) return;
-    status.value = WorkflowStatus.cancelling;
-    await _useCase.cancel();
-  }
-
-  Future<void> retry() async {
-    errorMessage.value = null;
-    await start();
-  }
-
-  void reset() {
-    if (_isActive || _useCase.isRunning) return;
-    _attemptToken++;
-    status.value = WorkflowStatus.idle;
-    progress.value = null;
-    progressLabel.value = '';
-    progressDetail.value = '';
-    errorMessage.value = null;
-    result.value = null;
-  }
-
-  void setPath(String value) {
-    final trimmed = value.trim();
-    path.value = trimmed.isEmpty ? null : trimmed;
-  }
-
   void _applyProgress(int token, GameIconExtractProgress event) {
     if (token != _attemptToken) return;
     status.value = WorkflowStatus.running;
@@ -150,14 +159,5 @@ class IconExtractWorkflowViewModel {
         : '';
     return '提取结束，部分文件失败（成功 ${result.extracted}，跳过 ${result.skipped}）：\n'
         '$top$suffix';
-  }
-
-  bool get _isActive =>
-      status.value == WorkflowStatus.preparing ||
-      status.value == WorkflowStatus.running ||
-      status.value == WorkflowStatus.cancelling;
-
-  void dispose() {
-    _attemptToken++;
   }
 }

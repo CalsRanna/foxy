@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
 import 'package:foxy/infrastructure/codegen/form_annotations.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +23,10 @@ class TalentDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+
+  void dispose() {
+    disposeControllers();
+  }
 
   /// 从所有 Controller 收集数据构建 Talent
 
@@ -88,9 +92,5 @@ class TalentDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

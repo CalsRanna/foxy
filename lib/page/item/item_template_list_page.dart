@@ -1,19 +1,19 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/item_quality_color.dart';
-import 'package:foxy/infrastructure/util/item_helpers.dart';
 import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/infrastructure/util/item_helpers.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -30,18 +30,6 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
   final viewModel = GetIt.instance.get<ItemTemplateListViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals();
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('物品列表'),
@@ -56,11 +44,42 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
   }
 
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals();
+  }
+
   Widget _buildFilter() {
     return ShadCard(
       padding: const EdgeInsets.all(16),
       child: _buildSearchInputs(),
     );
+  }
+
+  Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
+    var children = [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: FoxyGameAssetIcon(rawPath: item.inventoryIcon),
+      ),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Text(
+          item.displayName,
+          style: TextStyle(color: qualityColor),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ];
+    return Row(children: children);
   }
 
   Widget _buildSearchInputs() {
@@ -94,25 +113,6 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       Expanded(child: row),
     ];
     return Row(spacing: 16, children: children);
-  }
-
-  Widget _buildIconAndName(BriefItemTemplateEntity item, Color qualityColor) {
-    var children = [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: FoxyGameAssetIcon(rawPath: item.inventoryIcon),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Text(
-          item.displayName,
-          style: TextStyle(color: qualityColor),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    ];
-    return Row(children: children);
   }
 
   Widget _buildTable() {
@@ -228,19 +228,6 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _navigateToDetail({int? key, String? name}) {
-    final label = key == null
-        ? '新建物品'
-        : name?.isNotEmpty == true
-        ? name!
-        : '物品 #$key';
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
-      route: ItemTemplateDetailRoute(itemTemplateKey: key),
-      parentMenu: RouterMenu.itemTemplate,
-    );
-  }
-
   Future<void> _copy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -274,5 +261,18 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({int? key, String? name}) {
+    final label = key == null
+        ? '新建物品'
+        : name?.isNotEmpty == true
+        ? name!
+        : '物品 #$key';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: ItemTemplateDetailRoute(itemTemplateKey: key),
+      parentMenu: RouterMenu.itemTemplate,
+    );
   }
 }

@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
-import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/page/spell/spell_group_view.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view.dart';
 import 'package:foxy/page/spell/spell_loot_template_view.dart';
 import 'package:foxy/page/spell/spell_rank_view.dart';
 import 'package:foxy/page/spell/spell_view.dart';
+import 'package:foxy/view_model/spell_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -26,27 +26,6 @@ class SpellDetailPage extends StatefulWidget {
 
 class _SpellDetailPageState extends State<SpellDetailPage> {
   final viewModel = GetIt.instance.get<SpellDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.spellKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,5 +90,26 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.spellKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

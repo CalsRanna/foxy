@@ -1,7 +1,5 @@
 import 'package:meta/meta_meta.dart';
 
-enum FoxyFilterType { boolean, decimal, integer, text }
-
 @Target({TargetKind.classType})
 final class FoxyFilter {
   final Object defaultValue;
@@ -20,6 +18,8 @@ final class FoxyFilter {
   const FoxyFilter.text(this.name, {String this.defaultValue = ''})
     : type = FoxyFilterType.text;
 }
+
+enum FoxyFilterType { boolean, decimal, integer, text }
 
 @Target({TargetKind.classType})
 final class FoxyRepository {

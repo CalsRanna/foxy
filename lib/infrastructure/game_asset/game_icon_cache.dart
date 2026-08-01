@@ -10,14 +10,25 @@ import 'blp_decoder.dart';
 /// 图标为 64×64，解码亚毫秒级；缓存避免列表滚动时同一图标反复解码。
 /// 采用 LRU（访问即置顶），超限时淘汰最久未用条目。
 class GameIconCache {
-  GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
-
   static final GameIconCache instance = GameIconCache();
 
   final int _maxEntries;
 
   final LinkedHashMap<String, ui.Image> _images = LinkedHashMap();
+
   final Map<String, Future<ui.Image?>> _pending = {};
+  GameIconCache({int maxEntries = 256}) : _maxEntries = maxEntries;
+
+  /// 清空缓存（提取完成后调用，避免引用已删除的旧图标）。
+  void clear() {
+    for (final image in _images.values) {
+      image.dispose();
+    }
+    _images.clear();
+  }
+
+  /// 是否已缓存（供测试与诊断）。
+  bool contains(String path) => _images.containsKey(path);
 
   /// 加载并解码 BLP 文件；文件缺失或解码失败返回 null。
   Future<ui.Image?> load(String path) async {
@@ -44,17 +55,6 @@ class GameIconCache {
     });
     _pending[path] = future;
     return future;
-  }
-
-  /// 是否已缓存（供测试与诊断）。
-  bool contains(String path) => _images.containsKey(path);
-
-  /// 清空缓存（提取完成后调用，避免引用已删除的旧图标）。
-  void clear() {
-    for (final image in _images.values) {
-      image.dispose();
-    }
-    _images.clear();
   }
 
   Future<ui.Image?> _decode(String path) async {

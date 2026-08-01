@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -60,6 +60,33 @@ class AreaTableDetailViewModel
   late final liquidTypeId1Controller = registerController(IntFieldController());
   late final liquidTypeId2Controller = registerController(IntFieldController());
   late final liquidTypeId3Controller = registerController(IntFieldController());
+
+  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
+  void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
+    entity.value = entity.value!.copyWith(
+      areaNameLangEnUS: values.valueOf('enUS'),
+      areaNameLangKoKR: values.valueOf('koKR'),
+      areaNameLangFrFR: values.valueOf('frFR'),
+      areaNameLangDeDE: values.valueOf('deDE'),
+      areaNameLangZhCN: values.valueOf('zhCN'),
+      areaNameLangZhTW: values.valueOf('zhTW'),
+      areaNameLangEsES: values.valueOf('esES'),
+      areaNameLangEsMX: values.valueOf('esMX'),
+      areaNameLangRuRU: values.valueOf('ruRU'),
+      areaNameLangJaJP: values.valueOf('jaJP'),
+      areaNameLangPtPT: values.valueOf('ptPT'),
+      areaNameLangPtBR: values.valueOf('ptBR'),
+      areaNameLangItIT: values.valueOf('itIT'),
+      areaNameLangUnk1: values.valueOf('unk1'),
+      areaNameLangUnk2: values.valueOf('unk2'),
+      areaNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
 
   /// 从所有 Controller 收集数据构建 AreaTable
 
@@ -119,27 +146,30 @@ class AreaTableDetailViewModel
     }
   }
 
-  /// 弹窗保存区域名称本地化后，合并回当前 Entity 并同步主语言输入框。
-  void applyAreaNameLocales(List<DbcLocaleFieldValue> values) {
-    entity.value = entity.value!.copyWith(
-      areaNameLangEnUS: values.valueOf('enUS'),
-      areaNameLangKoKR: values.valueOf('koKR'),
-      areaNameLangFrFR: values.valueOf('frFR'),
-      areaNameLangDeDE: values.valueOf('deDE'),
-      areaNameLangZhCN: values.valueOf('zhCN'),
-      areaNameLangZhTW: values.valueOf('zhTW'),
-      areaNameLangEsES: values.valueOf('esES'),
-      areaNameLangEsMX: values.valueOf('esMX'),
-      areaNameLangRuRU: values.valueOf('ruRU'),
-      areaNameLangJaJP: values.valueOf('jaJP'),
-      areaNameLangPtPT: values.valueOf('ptPT'),
-      areaNameLangPtBR: values.valueOf('ptBR'),
-      areaNameLangItIT: values.valueOf('itIT'),
-      areaNameLangUnk1: values.valueOf('unk1'),
-      areaNameLangUnk2: values.valueOf('unk2'),
-      areaNameLangUnk3: values.valueOf('unk3'),
+  void _applyCandidate(AreaTableEntity table) {
+    idController.init(table.id);
+    nameController.init(table.areaNameLangZhCN);
+    continentIdController.init(table.continentId);
+    parentAreaIdController.init(table.parentAreaId);
+    areaBitController.init(table.areaBit);
+    flagsController.init(table.flags);
+    factionGroupMaskController.init(table.factionGroupMask);
+    explorationLevelController.init(table.explorationLevel);
+    areaNameLangFlagsController.init(table.areaNameLangFlags);
+    soundProviderPrefController.init(table.soundProviderPref);
+    soundProviderPrefUnderwaterController.init(
+      table.soundProviderPrefUnderwater,
     );
-    nameController.init(values.zhCN);
+    ambienceIdController.init(table.ambienceId);
+    zoneMusicController.init(table.zoneMusic);
+    introSoundController.init(table.introSound);
+    ambientMultiplierController.init(table.ambientMultiplier);
+    lightIdController.init(table.lightId);
+    minElevationController.init(table.minElevation);
+    liquidTypeId0Controller.init(table.liquidTypeId0);
+    liquidTypeId1Controller.init(table.liquidTypeId1);
+    liquidTypeId2Controller.init(table.liquidTypeId2);
+    liquidTypeId3Controller.init(table.liquidTypeId3);
   }
 
   AreaTableEntity _collectCandidate() {
@@ -170,32 +200,6 @@ class AreaTableDetailViewModel
     );
   }
 
-  void _applyCandidate(AreaTableEntity table) {
-    idController.init(table.id);
-    nameController.init(table.areaNameLangZhCN);
-    continentIdController.init(table.continentId);
-    parentAreaIdController.init(table.parentAreaId);
-    areaBitController.init(table.areaBit);
-    flagsController.init(table.flags);
-    factionGroupMaskController.init(table.factionGroupMask);
-    explorationLevelController.init(table.explorationLevel);
-    areaNameLangFlagsController.init(table.areaNameLangFlags);
-    soundProviderPrefController.init(table.soundProviderPref);
-    soundProviderPrefUnderwaterController.init(
-      table.soundProviderPrefUnderwater,
-    );
-    ambienceIdController.init(table.ambienceId);
-    zoneMusicController.init(table.zoneMusic);
-    introSoundController.init(table.introSound);
-    ambientMultiplierController.init(table.ambientMultiplier);
-    lightIdController.init(table.lightId);
-    minElevationController.init(table.minElevation);
-    liquidTypeId0Controller.init(table.liquidTypeId0);
-    liquidTypeId1Controller.init(table.liquidTypeId1);
-    liquidTypeId2Controller.init(table.liquidTypeId2);
-    liquidTypeId3Controller.init(table.liquidTypeId3);
-  }
-
   void _logActivity(ActivityActionType action, AreaTableEntity t) {
     final log = ActivityLogEntity(
       module: 'area_table',
@@ -220,9 +224,5 @@ class AreaTableDetailViewModel
     )) {
       throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
     }
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

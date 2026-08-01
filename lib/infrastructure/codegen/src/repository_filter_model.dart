@@ -1,17 +1,5 @@
 import '../repository_annotations.dart';
 
-final class RepositoryFilterGenerationModel {
-  final String className;
-  final List<RepositoryFilterFieldModel> fields;
-  final String repositoryClassName;
-
-  const RepositoryFilterGenerationModel({
-    required this.className,
-    required this.fields,
-    required this.repositoryClassName,
-  });
-}
-
 final class RepositoryFilterFieldModel {
   final Object defaultValue;
   final String name;
@@ -29,4 +17,16 @@ final class RepositoryFilterFieldModel {
     FoxyFilterType.integer => 'int',
     FoxyFilterType.text => 'String',
   };
+}
+
+final class RepositoryFilterGenerationModel {
+  final String className;
+  final List<RepositoryFilterFieldModel> fields;
+  final String repositoryClassName;
+
+  const RepositoryFilterGenerationModel({
+    required this.className,
+    required this.fields,
+    required this.repositoryClassName,
+  });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/view_model/spell_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -12,8 +12,8 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class SpellLootTemplateView extends StatefulWidget {
   final int spellId;
@@ -29,9 +29,10 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       .get<SpellLootTemplateCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.spellId);
+  Widget build(BuildContext context) {
+    return Watch((context) {
+      return _buildTable();
+    });
   }
 
   @override
@@ -49,139 +50,9 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
-  }
-
-  Widget _buildTable() {
-    var createButton = ShadButton(
-      onPressed: _showCreateDialog,
-      child: Text('新增'),
-    );
-
-    final toolbar = Row(
-      children: [
-        createButton,
-        Spacer(),
-        FoxyPagination(
-          page: viewModel.page.value,
-          pageSize: 50,
-          total: viewModel.total.value,
-          onChange: viewModel.paginate,
-        ),
-      ],
-    );
-
-    final items = viewModel.items.value;
-    final headers = ['编号', '名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
-
-    Widget layoutBuilder = LayoutBuilder(
-      builder: (context, constraints) {
-        var maxWidth = constraints.maxWidth;
-        var flexWidth = maxWidth - 600;
-        return FoxyShadTable(
-          builder: (context, vicinity) {
-            if (vicinity.row < 0 || vicinity.row >= items.length) {
-              return ShadTableCell(child: SizedBox());
-            }
-            final item = items[vicinity.row];
-            final displayName = item.localeName.isNotEmpty
-                ? item.localeName
-                : item.itemName;
-            return switch (vicinity.column) {
-              0 => ShadTableCell(child: Text(item.item.toString())),
-              1 => ShadTableCell(child: Text(displayName)),
-              2 => ShadTableCell(child: Text(item.reference.toString())),
-              3 => ShadTableCell(child: Text('${item.chance.toString()}%')),
-              4 => ShadTableCell(
-                child: Text(item.questRequired == 1 ? '需要' : '不需要'),
-              ),
-              5 => ShadTableCell(child: Text(item.minCount.toString())),
-              6 => ShadTableCell(child: Text(item.maxCount.toString())),
-              _ => ShadTableCell(child: SizedBox()),
-            };
-          },
-          columnCount: headers.length,
-          columnSpanExtent: (index) {
-            return switch (index) {
-              0 => FixedTableSpanExtent(80),
-              1 => FixedTableSpanExtent(flexWidth * 0.4),
-              2 => FixedTableSpanExtent(80),
-              3 => FixedTableSpanExtent(100),
-              4 => FixedTableSpanExtent(100),
-              5 => FixedTableSpanExtent(80),
-              6 => FixedTableSpanExtent(80),
-              _ => null,
-            };
-          },
-          header: (context, index) {
-            return ShadTableCell.header(child: Text(headers[index]));
-          },
-          onRowSecondaryTapDownWithDetails: (row, details) {
-            viewModel.selectedKey.value = items[row].key;
-            showFoxyContextMenu(
-              context: context,
-              position: details.globalPosition,
-              items: [
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.squarePen, size: 16),
-                  onPressed: () async {
-                    if (!await _load(viewModel.selectedKey.value!)) return;
-                    if (context.mounted) {
-                      _showEditDialog(context);
-                    }
-                  },
-                  child: Text('编辑'),
-                ),
-                ShadContextMenuItem(
-                  leading: Icon(LucideIcons.trash, size: 16),
-                  onPressed: () => _destroy(viewModel.selectedKey.value!),
-                  child: Text('删除'),
-                ),
-              ],
-            );
-          },
-          rowCount: items.length,
-          shrinkWrap: true,
-        );
-      },
-    );
-
-    var children = [toolbar, layoutBuilder];
-    final column = Column(spacing: 16, children: children);
-    return Padding(padding: const EdgeInsets.only(top: 16), child: column);
-  }
-
-  Future<void> _showCreateDialog() async {
-    try {
-      await viewModel.create();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
-      return;
-    }
-    if (!mounted) return;
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('新增技能掉落'),
-        description: Text('新增一条技能掉落记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
-    );
-  }
-
-  void _showEditDialog(BuildContext context) {
-    showFoxyDialog(
-      context: context,
-      builder: (dialogContext) => ShadDialog(
-        title: Text('编辑技能掉落'),
-        description: Text('编辑选中的技能掉落记录'),
-        child: _buildDialogForm(dialogContext),
-      ),
-    );
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.spellId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
@@ -339,14 +210,103 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
     );
   }
 
-  Future<bool> _load(SpellLootTemplateKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
+  Widget _buildTable() {
+    var createButton = ShadButton(
+      onPressed: _showCreateDialog,
+      child: Text('新增'),
+    );
+
+    final toolbar = Row(
+      children: [
+        createButton,
+        Spacer(),
+        FoxyPagination(
+          page: viewModel.page.value,
+          pageSize: 50,
+          total: viewModel.total.value,
+          onChange: viewModel.paginate,
+        ),
+      ],
+    );
+
+    final items = viewModel.items.value;
+    final headers = ['编号', '名称', '关联', '几率', '需要任务', '最小数量', '最大数量'];
+
+    Widget layoutBuilder = LayoutBuilder(
+      builder: (context, constraints) {
+        var maxWidth = constraints.maxWidth;
+        var flexWidth = maxWidth - 600;
+        return FoxyShadTable(
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= items.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final item = items[vicinity.row];
+            final displayName = item.localeName.isNotEmpty
+                ? item.localeName
+                : item.itemName;
+            return switch (vicinity.column) {
+              0 => ShadTableCell(child: Text(item.item.toString())),
+              1 => ShadTableCell(child: Text(displayName)),
+              2 => ShadTableCell(child: Text(item.reference.toString())),
+              3 => ShadTableCell(child: Text('${item.chance.toString()}%')),
+              4 => ShadTableCell(
+                child: Text(item.questRequired == 1 ? '需要' : '不需要'),
+              ),
+              5 => ShadTableCell(child: Text(item.minCount.toString())),
+              6 => ShadTableCell(child: Text(item.maxCount.toString())),
+              _ => ShadTableCell(child: SizedBox()),
+            };
+          },
+          columnCount: headers.length,
+          columnSpanExtent: (index) {
+            return switch (index) {
+              0 => FixedTableSpanExtent(80),
+              1 => FixedTableSpanExtent(flexWidth * 0.4),
+              2 => FixedTableSpanExtent(80),
+              3 => FixedTableSpanExtent(100),
+              4 => FixedTableSpanExtent(100),
+              5 => FixedTableSpanExtent(80),
+              6 => FixedTableSpanExtent(80),
+              _ => null,
+            };
+          },
+          header: (context, index) {
+            return ShadTableCell.header(child: Text(headers[index]));
+          },
+          onRowSecondaryTapDownWithDetails: (row, details) {
+            viewModel.selectedKey.value = items[row].key;
+            showFoxyContextMenu(
+              context: context,
+              position: details.globalPosition,
+              items: [
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.squarePen, size: 16),
+                  onPressed: () async {
+                    if (!await _load(viewModel.selectedKey.value!)) return;
+                    if (context.mounted) {
+                      _showEditDialog(context);
+                    }
+                  },
+                  child: Text('编辑'),
+                ),
+                ShadContextMenuItem(
+                  leading: Icon(LucideIcons.trash, size: 16),
+                  onPressed: () => _destroy(viewModel.selectedKey.value!),
+                  child: Text('删除'),
+                ),
+              ],
+            );
+          },
+          rowCount: items.length,
+          shrinkWrap: true,
+        );
+      },
+    );
+
+    var children = [toolbar, layoutBuilder];
+    final column = Column(spacing: 16, children: children);
+    return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
   Future<void> _destroy(SpellLootTemplateKey key) async {
@@ -365,5 +325,45 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  Future<bool> _load(SpellLootTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
+  Future<void> _showCreateDialog() async {
+    try {
+      await viewModel.create();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('创建失败：$error');
+      return;
+    }
+    if (!mounted) return;
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('新增技能掉落'),
+        description: Text('新增一条技能掉落记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context) {
+    showFoxyDialog(
+      context: context,
+      builder: (dialogContext) => ShadDialog(
+        title: Text('编辑技能掉落'),
+        description: Text('编辑选中的技能掉落记录'),
+        child: _buildDialogForm(dialogContext),
+      ),
+    );
   }
 }

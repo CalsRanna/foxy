@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:foxy/infrastructure/game_asset/game_icon_cache.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/infrastructure/game_asset/game_icon_cache.dart';
 import 'package:path/path.dart' as p;
 
 void main() {

@@ -5,11 +5,11 @@
 final class LocaleQuerySettings {
   bool localeEnabled = true;
 
-  void update({required bool localeEnabled}) {
-    this.localeEnabled = localeEnabled;
-  }
-
   void reset() {
     localeEnabled = true;
+  }
+
+  void update({required bool localeEnabled}) {
+    this.localeEnabled = localeEnabled;
   }
 }

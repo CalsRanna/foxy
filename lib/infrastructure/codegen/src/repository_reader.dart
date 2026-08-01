@@ -213,13 +213,13 @@ final class RepositoryReader {
     return true;
   }
 
-  bool _returns(MethodElement method, String type) =>
-      method.returnType.getDisplayString() == type;
-
   Never _fail(String message, Element element, String correction) {
     throw InvalidGenerationSourceError(
       '$message\n修复方式：$correction',
       element: element,
     );
   }
+
+  bool _returns(MethodElement method, String type) =>
+      method.returnType.getDisplayString() == type;
 }

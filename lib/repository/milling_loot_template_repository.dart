@@ -1,7 +1,7 @@
+import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/milling_loot_template_entity.dart';
-import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -161,17 +161,6 @@ class MillingLootTemplateRepository
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  List<String> _briefFields(String alias) => [
-    '$alias.Entry',
-    '$alias.Item',
-    '$alias.Reference',
-    '$alias.Chance',
-    '$alias.QuestRequired',
-    '$alias.GroupId',
-    '$alias.MinCount',
-    '$alias.MaxCount',
-  ];
-
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
     MillingLootTemplateFilter? filter,
@@ -197,4 +186,15 @@ class MillingLootTemplateRepository
     }
     return builder;
   }
+
+  List<String> _briefFields(String alias) => [
+    '$alias.Entry',
+    '$alias.Item',
+    '$alias.Reference',
+    '$alias.Chance',
+    '$alias.QuestRequired',
+    '$alias.GroupId',
+    '$alias.MinCount',
+    '$alias.MaxCount',
+  ];
 }

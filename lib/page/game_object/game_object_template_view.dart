@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
-import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -15,13 +14,14 @@ import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 class GameObjectTemplateView extends StatelessWidget {
-  final GameObjectTemplateDetailViewModel viewModel;
   static final gameObjectLootDelegate =
       FoxyEntityPickerDelegates.gameObjectLoot;
+  final GameObjectTemplateDetailViewModel viewModel;
 
   const GameObjectTemplateView({super.key, required this.viewModel});
 
@@ -234,26 +234,6 @@ class GameObjectTemplateView extends StatelessWidget {
     });
   }
 
-  Widget _dataRow(Widget first, Widget second, Widget third, Widget fourth) {
-    return Row(
-      spacing: 8,
-      children: [
-        Expanded(child: first),
-        Expanded(child: second),
-        Expanded(child: third),
-        Expanded(child: fourth),
-      ],
-    );
-  }
-
-  FoxyFormItem _dataInput(int index, IntFieldControllerGroup controllers) {
-    final spec = gameObjectDataFieldSpec(viewModel.selectedType.value, index);
-    return FoxyFormItem(
-      label: spec.label,
-      child: _dataEditor(spec, controllers, index),
-    );
-  }
-
   Widget _dataEditor(
     IntegerFieldSpec<GameObjectDataReference> spec,
     IntFieldControllerGroup controllers,
@@ -285,6 +265,26 @@ class GameObjectTemplateView extends StatelessWidget {
         readOnly: !spec.editable,
       ),
     };
+  }
+
+  FoxyFormItem _dataInput(int index, IntFieldControllerGroup controllers) {
+    final spec = gameObjectDataFieldSpec(viewModel.selectedType.value, index);
+    return FoxyFormItem(
+      label: spec.label,
+      child: _dataEditor(spec, controllers, index),
+    );
+  }
+
+  Widget _dataRow(Widget first, Widget second, Widget third, Widget fourth) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(child: first),
+        Expanded(child: second),
+        Expanded(child: third),
+        Expanded(child: fourth),
+      ],
+    );
   }
 
   FoxyEntityPickerDelegate<Object?> _delegateFor(
@@ -322,6 +322,10 @@ class GameObjectTemplateView extends StatelessWidget {
     };
   }
 
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
   Future<void> _persist(BuildContext context) async {
     try {
       await viewModel.persist();
@@ -338,9 +342,5 @@ class GameObjectTemplateView extends StatelessWidget {
         context,
       ).show(ShadToast(description: Text(error.toString())));
     }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

@@ -216,10 +216,10 @@ class FoxyShadTable extends StatefulWidget {
 }
 
 class _FoxyShadTableState extends State<FoxyShadTable> {
+  static const _doubleTapTimeout = Duration(milliseconds: 300);
   // 用于双击检测
   int? _lastTappedRow;
   Timer? _doubleTapTimer;
-  static const _doubleTapTimeout = Duration(milliseconds: 300);
 
   // 用于右键点击位置捕获
   Offset? _lastSecondaryTapPosition;
@@ -227,81 +227,6 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   // 垂直滚动控制器：外部传入时复用，否则内部创建，用于版本变化时回到第一行
   late final ScrollController _verticalScrollController =
       widget.verticalScrollController ?? ScrollController();
-
-  @override
-  void didUpdateWidget(FoxyShadTable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // 浏览基线变化（翻页/搜索/重置/删除导致页码缩减）时垂直滚动回到第一行。
-    // 此刻旧 TableView 的 ScrollPosition 仍 attach，jumpTo 立即生效；
-    // 若已卸载（无 position）则静默无操作，重挂载后 PageStorage 恢复的也是 0。
-    if (widget.queryVersion != oldWidget.queryVersion) {
-      _verticalScrollController.jumpTo(0);
-    }
-  }
-
-  @override
-  void dispose() {
-    _doubleTapTimer?.cancel();
-    // 仅释放内部创建的控制器；外部传入的由调用方负责
-    if (widget.verticalScrollController == null) {
-      _verticalScrollController.dispose();
-    }
-    super.dispose();
-  }
-
-  void _handleRowTap(int row) {
-    // ShadTable 返回的 row 包含 header，需要调整
-    final dataRow = widget.header != null ? row - 1 : row;
-
-    // 忽略 header 行的点击
-    if (dataRow < 0) return;
-
-    // 先处理双击检测
-    if (widget.onRowDoubleTap != null) {
-      if (_lastTappedRow == dataRow && _doubleTapTimer?.isActive == true) {
-        // 双击触发
-        _doubleTapTimer?.cancel();
-        _lastTappedRow = null;
-        widget.onRowDoubleTap!(dataRow);
-        return;
-      }
-
-      // 开始新的双击检测周期
-      _lastTappedRow = dataRow;
-      _doubleTapTimer?.cancel();
-      _doubleTapTimer = Timer(_doubleTapTimeout, () {
-        _lastTappedRow = null;
-      });
-    }
-
-    // 触发原始的 onRowTap
-    widget.onRowTap?.call(dataRow);
-  }
-
-  void _handleRowSecondaryTapDown(int row) {
-    // ShadTable 返回的 row 包含 header，需要调整
-    final dataRow = widget.header != null ? row - 1 : row;
-
-    // 忽略 header 行的点击
-    if (dataRow < 0) return;
-
-    // 组合行索引和之前捕获的位置
-    if (widget.onRowSecondaryTapDownWithDetails != null &&
-        _lastSecondaryTapPosition != null) {
-      final details = TapDownDetails(
-        globalPosition: _lastSecondaryTapPosition!,
-        localPosition: _lastSecondaryTapPosition!,
-      );
-      widget.onRowSecondaryTapDownWithDetails!(dataRow, details);
-    }
-  }
-
-  void _handlePointerDown(PointerDownEvent event) {
-    // 捕获右键点击的位置
-    if (event.buttons == kSecondaryMouseButton) {
-      _lastSecondaryTapPosition = event.position;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -397,5 +322,80 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
     }
 
     return table;
+  }
+
+  @override
+  void didUpdateWidget(FoxyShadTable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 浏览基线变化（翻页/搜索/重置/删除导致页码缩减）时垂直滚动回到第一行。
+    // 此刻旧 TableView 的 ScrollPosition 仍 attach，jumpTo 立即生效；
+    // 若已卸载（无 position）则静默无操作，重挂载后 PageStorage 恢复的也是 0。
+    if (widget.queryVersion != oldWidget.queryVersion) {
+      _verticalScrollController.jumpTo(0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _doubleTapTimer?.cancel();
+    // 仅释放内部创建的控制器；外部传入的由调用方负责
+    if (widget.verticalScrollController == null) {
+      _verticalScrollController.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handlePointerDown(PointerDownEvent event) {
+    // 捕获右键点击的位置
+    if (event.buttons == kSecondaryMouseButton) {
+      _lastSecondaryTapPosition = event.position;
+    }
+  }
+
+  void _handleRowSecondaryTapDown(int row) {
+    // ShadTable 返回的 row 包含 header，需要调整
+    final dataRow = widget.header != null ? row - 1 : row;
+
+    // 忽略 header 行的点击
+    if (dataRow < 0) return;
+
+    // 组合行索引和之前捕获的位置
+    if (widget.onRowSecondaryTapDownWithDetails != null &&
+        _lastSecondaryTapPosition != null) {
+      final details = TapDownDetails(
+        globalPosition: _lastSecondaryTapPosition!,
+        localPosition: _lastSecondaryTapPosition!,
+      );
+      widget.onRowSecondaryTapDownWithDetails!(dataRow, details);
+    }
+  }
+
+  void _handleRowTap(int row) {
+    // ShadTable 返回的 row 包含 header，需要调整
+    final dataRow = widget.header != null ? row - 1 : row;
+
+    // 忽略 header 行的点击
+    if (dataRow < 0) return;
+
+    // 先处理双击检测
+    if (widget.onRowDoubleTap != null) {
+      if (_lastTappedRow == dataRow && _doubleTapTimer?.isActive == true) {
+        // 双击触发
+        _doubleTapTimer?.cancel();
+        _lastTappedRow = null;
+        widget.onRowDoubleTap!(dataRow);
+        return;
+      }
+
+      // 开始新的双击检测周期
+      _lastTappedRow = dataRow;
+      _doubleTapTimer?.cancel();
+      _doubleTapTimer = Timer(_doubleTapTimeout, () {
+        _lastTappedRow = null;
+      });
+    }
+
+    // 触发原始的 onRowTap
+    widget.onRowTap?.call(dataRow);
   }
 }

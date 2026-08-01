@@ -7,25 +7,25 @@ abstract interface class GameMpqSource {
   /// 归档内全部文件路径（`\` 分隔）。
   List<String> get files;
 
+  void close();
+
   /// 提取归档内文件为内存字节。
   Uint8List extract(String name);
-
-  void close();
 }
 
 /// 基于 warcrafty（纯 Dart MPQ）的实现。
 final class WarcraftyMpqSource implements GameMpqSource {
+  final MpqArchive _archive;
+
   WarcraftyMpqSource(String archivePath)
     : _archive = MpqArchive.open(archivePath);
-
-  final MpqArchive _archive;
 
   @override
   List<String> get files => _archive.files;
 
   @override
-  Uint8List extract(String name) => _archive.extract(name);
+  void close() => _archive.close();
 
   @override
-  void close() => _archive.close();
+  Uint8List extract(String name) => _archive.extract(name);
 }

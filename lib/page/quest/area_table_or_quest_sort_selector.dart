@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
-import 'package:foxy/repository/quest_sort_repository.dart';
-import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
-import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/area_table_repository.dart';
+import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 区域或任务排序选择器，通过 [mode] 切换数据源
 class AreaTableOrQuestSortSelector extends StatefulWidget {
@@ -129,6 +129,35 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
     _search();
   }
 
+  Widget _buildFilter() {
+    var idInput = _currentMode == 'AreaTable'
+        ? FoxyStringInput(controller: _idController, placeholder: '区域ID')
+        : FoxyStringInput(controller: _idController, placeholder: '任务排序ID');
+    var nameInput = FoxyStringInput(
+      controller: _nameController,
+      placeholder: '名称',
+    );
+    var searchButton = ShadButton(
+      onPressed: _doSearch,
+      size: ShadButtonSize.sm,
+      child: Text('查询'),
+    );
+    var resetButton = ShadButton.ghost(
+      onPressed: _reset,
+      size: ShadButtonSize.sm,
+      child: Text('重置'),
+    );
+    var children = [
+      Expanded(child: idInput),
+      Expanded(child: nameInput),
+      Expanded(child: Row(spacing: 8, children: [searchButton, resetButton])),
+    ];
+    return ShadCard(
+      padding: const EdgeInsets.all(16),
+      child: Row(spacing: 8, children: children),
+    );
+  }
+
   Widget _buildModeSwitcher() {
     return Row(
       spacing: 8,
@@ -168,35 +197,6 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
           child: Text('任务排序'),
         ),
       ],
-    );
-  }
-
-  Widget _buildFilter() {
-    var idInput = _currentMode == 'AreaTable'
-        ? FoxyStringInput(controller: _idController, placeholder: '区域ID')
-        : FoxyStringInput(controller: _idController, placeholder: '任务排序ID');
-    var nameInput = FoxyStringInput(
-      controller: _nameController,
-      placeholder: '名称',
-    );
-    var searchButton = ShadButton(
-      onPressed: _doSearch,
-      size: ShadButtonSize.sm,
-      child: Text('查询'),
-    );
-    var resetButton = ShadButton.ghost(
-      onPressed: _reset,
-      size: ShadButtonSize.sm,
-      child: Text('重置'),
-    );
-    var children = [
-      Expanded(child: idInput),
-      Expanded(child: nameInput),
-      Expanded(child: Row(spacing: 8, children: [searchButton, resetButton])),
-    ];
-    return ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(spacing: 8, children: children),
     );
   }
 

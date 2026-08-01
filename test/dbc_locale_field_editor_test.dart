@@ -4,15 +4,11 @@ import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/dbc/dbc_locale_field_codec.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-
-Widget _wrap(Widget child) {
-  return ShadApp(home: Scaffold(body: child));
-}
 
 void main() {
   testWidgets('普通数据库 Delegate 打开动态行编辑器', (tester) async {
@@ -349,4 +345,8 @@ void main() {
     // 主输入框保持草稿，未被库中旧值冲掉
     expect(controller.collect(), '主框草稿');
   });
+}
+
+Widget _wrap(Widget child) {
+  return ShadApp(home: Scaffold(body: child));
 }

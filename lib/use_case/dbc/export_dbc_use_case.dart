@@ -41,25 +41,6 @@ final class ExportDbcUseCase {
 
   Future<void> cancel() => _dbcSyncUtil.cancel();
 
-  Future<List<DbcExportTable>> loadTables() async {
-    final tables = <DbcExportTable>[];
-    for (final definition in dbcDefinitions) {
-      final result = await _registry.countRows(definition.tableName);
-      tables.add(
-        DbcExportTable(
-          definition: definition,
-          recordCount: result.count,
-          countError: result.error,
-        ),
-      );
-    }
-    tables.sort(
-      (left, right) =>
-          left.definition.fileName.compareTo(right.definition.fileName),
-    );
-    return tables;
-  }
-
   Future<DbcSyncResult> execute(ExportDbcInput input) async {
     final outputDirectory = input.outputDirectory.trim();
     if (outputDirectory.isEmpty) {
@@ -88,5 +69,24 @@ final class ExportDbcUseCase {
       }
     }
     return result ?? (throw StateError('DBC 导出任务结束但未返回结果'));
+  }
+
+  Future<List<DbcExportTable>> loadTables() async {
+    final tables = <DbcExportTable>[];
+    for (final definition in dbcDefinitions) {
+      final result = await _registry.countRows(definition.tableName);
+      tables.add(
+        DbcExportTable(
+          definition: definition,
+          recordCount: result.count,
+          countError: result.error,
+        ),
+      );
+    }
+    tables.sort(
+      (left, right) =>
+          left.definition.fileName.compareTo(right.definition.fileName),
+    );
+    return tables;
   }
 }

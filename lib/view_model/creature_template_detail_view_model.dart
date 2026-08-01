@@ -1,12 +1,12 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'creature_template_detail_view_model.g.dart';
 
@@ -20,6 +20,10 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin, _CreatureTempla
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
+
+  void dispose() {
+    disposeControllers();
+  }
 
   /// 从所有字段收集数据构建 CreatureTemplate
 
@@ -86,9 +90,5 @@ class CreatureTemplateDetailViewModel with FieldControllerMixin, _CreatureTempla
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

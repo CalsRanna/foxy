@@ -50,24 +50,6 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
   late List<ShadOption<T>> _shadOptions;
 
   @override
-  void initState() {
-    super.initState();
-    _shadOptions = _buildOptions(widget.options);
-  }
-
-  @override
-  void didUpdateWidget(FoxyShadSelect<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!identical(widget.options, oldWidget.options)) {
-      _shadOptions = _buildOptions(widget.options);
-    }
-  }
-
-  List<ShadOption<T>> _buildOptions(Map<T, String> options) => options.entries
-      .map((entry) => ShadOption(value: entry.key, child: Text(entry.value)))
-      .toList();
-
-  @override
   Widget build(BuildContext context) {
     return ShadSelect<T>(
       controller: widget.controller.controller,
@@ -84,4 +66,22 @@ class _FoxyShadSelectState<T> extends State<FoxyShadSelect<T>> {
       maxHeight: widget.maxHeight,
     );
   }
+
+  @override
+  void didUpdateWidget(FoxyShadSelect<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(widget.options, oldWidget.options)) {
+      _shadOptions = _buildOptions(widget.options);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _shadOptions = _buildOptions(widget.options);
+  }
+
+  List<ShadOption<T>> _buildOptions(Map<T, String> options) => options.entries
+      .map((entry) => ShadOption(value: entry.key, child: Text(entry.value)))
+      .toList();
 }

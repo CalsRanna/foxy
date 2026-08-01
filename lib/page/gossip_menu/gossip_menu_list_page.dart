@@ -1,15 +1,15 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/gossip_menu_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -27,18 +27,6 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
   final viewModel = GetIt.instance.get<GossipMenuListViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals();
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('对话列表'),
@@ -51,6 +39,18 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.initSignals();
   }
 
   Widget _buildFilter() {
@@ -186,14 +186,6 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
     );
   }
 
-  void _navigateToDetail({GossipMenuKey? key}) {
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: key != null ? '对话 ${key.menuId}' : '新建对话',
-      route: GossipMenuDetailRoute(gossipMenuKey: key),
-      parentMenu: RouterMenu.gossipMenu,
-    );
-  }
-
   Future<void> _copy(GossipMenuKey key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -227,5 +219,13 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({GossipMenuKey? key}) {
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: key != null ? '对话 ${key.menuId}' : '新建对话',
+      route: GossipMenuDetailRoute(gossipMenuKey: key),
+      parentMenu: RouterMenu.gossipMenu,
+    );
   }
 }

@@ -1,32 +1,3 @@
-enum DbcSyncOperation { import, export }
-
-enum DbcSyncStage {
-  preparing,
-  scanning,
-  reading,
-  writing,
-  validating,
-  committing,
-}
-
-sealed class DbcSyncProgress {
-  const DbcSyncProgress();
-}
-
-class DbcSyncStatus extends DbcSyncProgress {
-  final DbcSyncOperation operation;
-  final DbcSyncStage stage;
-  final String message;
-  final String? fileName;
-
-  const DbcSyncStatus({
-    required this.operation,
-    required this.stage,
-    required this.message,
-    this.fileName,
-  });
-}
-
 class DbcSyncCount extends DbcSyncProgress {
   final DbcSyncOperation operation;
   final String fileName;
@@ -65,6 +36,12 @@ class DbcSyncError {
   }
 }
 
+enum DbcSyncOperation { import, export }
+
+sealed class DbcSyncProgress {
+  const DbcSyncProgress();
+}
+
 class DbcSyncResult extends DbcSyncProgress {
   final DbcSyncOperation operation;
   final int completed;
@@ -83,7 +60,28 @@ class DbcSyncResult extends DbcSyncProgress {
   bool get success => !cancelled && errors.isEmpty;
 }
 
-enum DbcTableState { missing, empty, ready, incompatible, error }
+enum DbcSyncStage {
+  preparing,
+  scanning,
+  reading,
+  writing,
+  validating,
+  committing,
+}
+
+class DbcSyncStatus extends DbcSyncProgress {
+  final DbcSyncOperation operation;
+  final DbcSyncStage stage;
+  final String message;
+  final String? fileName;
+
+  const DbcSyncStatus({
+    required this.operation,
+    required this.stage,
+    required this.message,
+    this.fileName,
+  });
+}
 
 class DbcTableCheckResult {
   final String tableName;
@@ -96,3 +94,5 @@ class DbcTableCheckResult {
     this.message,
   });
 }
+
+enum DbcTableState { missing, empty, ready, incompatible, error }

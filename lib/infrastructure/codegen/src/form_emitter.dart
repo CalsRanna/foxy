@@ -4,6 +4,12 @@ import 'form_model.dart';
 final class FormEmitter {
   const FormEmitter();
 
+  /// controller 标识:`class_` → `class`(保留字转义),其余原样。
+  String controllerName(FormFieldModel field) {
+    final name = field.dartName;
+    return name.endsWith('_') ? name.substring(0, name.length - 1) : name;
+  }
+
   /// 成员顺序遵循 "Sort Members" 规则:字段(controller,保持原序)
   /// 在前,私有方法按名(_afterApplyCandidate → _applyCandidate
   /// → _collectCandidate)。
@@ -21,12 +27,6 @@ final class FormEmitter {
     _emitCollect(buffer, model);
     buffer.writeln('}');
     return buffer.toString();
-  }
-
-  /// controller 标识:`class_` → `class`(保留字转义),其余原样。
-  String controllerName(FormFieldModel field) {
-    final name = field.dartName;
-    return name.endsWith('_') ? name.substring(0, name.length - 1) : name;
   }
 
   /// 与手写风格对齐:`SelectFieldController` 一族用换行形式,
@@ -55,34 +55,6 @@ final class FormEmitter {
         'registerController($expression);';
   }
 
-  /// `SelectFieldController` 表达式:fallback 类型决定泛型与字面量。
-  String _selectExpression(FormFieldModel field) {
-    final fallback = field.selectFallback;
-    if (fallback is String) {
-      return 'SelectFieldController<String>'
-          '(fallback: ${dartStringLiteral(fallback)})';
-    }
-    return 'SelectFieldController<int>(fallback: $fallback)';
-  }
-
-  void _emitCollect(StringBuffer buffer, FormGenerationModel model) {
-    buffer
-      ..writeln(
-        '  ${model.entityClassName} _collectCandidate() {',
-      )
-      ..writeln('    return ${model.entityClassName}(');
-    for (final field in model.fields) {
-      final controller = controllerName(field);
-      final collect = field.kind == FormFieldKind.plain && field.dartType == 'bool'
-          ? '${controller}Controller.collect() == 1'
-          : '${controller}Controller.collect()';
-      buffer.writeln('      ${field.dartName}: $collect,');
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }');
-  }
-
   void _emitAfterApply(StringBuffer buffer, FormGenerationModel model) {
     final parameter = _entityParameterName(model.entityClassName);
     buffer.writeln(
@@ -108,6 +80,24 @@ final class FormEmitter {
       ..writeln('  }');
   }
 
+  void _emitCollect(StringBuffer buffer, FormGenerationModel model) {
+    buffer
+      ..writeln(
+        '  ${model.entityClassName} _collectCandidate() {',
+      )
+      ..writeln('    return ${model.entityClassName}(');
+    for (final field in model.fields) {
+      final controller = controllerName(field);
+      final collect = field.kind == FormFieldKind.plain && field.dartType == 'bool'
+          ? '${controller}Controller.collect() == 1'
+          : '${controller}Controller.collect()';
+      buffer.writeln('      ${field.dartName}: $collect,');
+    }
+    buffer
+      ..writeln('    );')
+      ..writeln('  }');
+  }
+
   /// `TalentEntity` → `talent`(与 Repository 的实体参数命名一致)。
   String _entityParameterName(String entityClassName) {
     final baseName = entityClassName.substring(
@@ -115,5 +105,15 @@ final class FormEmitter {
       entityClassName.length - 'Entity'.length,
     );
     return '${baseName[0].toLowerCase()}${baseName.substring(1)}';
+  }
+
+  /// `SelectFieldController` 表达式:fallback 类型决定泛型与字面量。
+  String _selectExpression(FormFieldModel field) {
+    final fallback = field.selectFallback;
+    if (fallback is String) {
+      return 'SelectFieldController<String>'
+          '(fallback: ${dartStringLiteral(fallback)})';
+    }
+    return 'SelectFieldController<int>(fallback: $fallback)';
   }
 }

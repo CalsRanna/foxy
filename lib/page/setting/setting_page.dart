@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
-import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
-import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
+import 'package:foxy/page/setting/setting_dialog_shell.dart';
+import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -21,23 +21,61 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
+class _SettingItem extends StatelessWidget {
+  final String title;
+  final String description;
+  final Widget trailing;
+
+  const _SettingItem({
+    required this.title,
+    required this.description,
+    required this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          trailing,
+        ],
+      ),
+    );
+  }
+}
+
 class _SettingPageState extends State<SettingPage> {
   final setupViewModel = GetIt.instance.get<SetupStatusViewModel>();
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
   final iconViewModel = GetIt.instance.get<IconExtractWorkflowViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    setupViewModel.prepare();
-  }
-
-  @override
-  void dispose() {
-    exportViewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,14 +144,16 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  TextStyle _mutedDescription(BuildContext context) {
-    return Theme.of(
-      context,
-    ).textTheme.bodySmall?.copyWith(
-      color: Theme.of(
-        context,
-      ).colorScheme.onSurface.withValues(alpha: 0.65),
-    ) ?? const TextStyle(fontSize: 13);
+  @override
+  void dispose() {
+    exportViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupViewModel.prepare();
   }
 
   Widget _buildDbcActions() {
@@ -180,11 +220,21 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  void _showImportDialog() {
+  TextStyle _mutedDescription(BuildContext context) {
+    return Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(
+      color: Theme.of(
+        context,
+      ).colorScheme.onSurface.withValues(alpha: 0.65),
+    ) ?? const TextStyle(fontSize: 13);
+  }
+
+  void _showExportDialog() {
     showFoxyDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DbcImportDialog(vm: importViewModel),
+      builder: (context) => DbcExportDialog(vm: exportViewModel),
     );
   }
 
@@ -196,61 +246,11 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  void _showExportDialog() {
+  void _showImportDialog() {
     showFoxyDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DbcExportDialog(vm: exportViewModel),
-    );
-  }
-}
-
-class _SettingItem extends StatelessWidget {
-  final String title;
-  final String description;
-  final Widget trailing;
-
-  const _SettingItem({
-    required this.title,
-    required this.description,
-    required this.trailing,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          trailing,
-        ],
-      ),
+      builder: (context) => DbcImportDialog(vm: importViewModel),
     );
   }
 }

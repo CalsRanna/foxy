@@ -1,11 +1,12 @@
 import 'dart:math';
+
 import 'package:foxy/entity/player_create_info_action_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/repository/player_create_info_action_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'player_create_info_action_collection_editor_view_model.g.dart';
 
@@ -33,22 +34,6 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     typeController.addListener(_syncActionType);
   }
 
-  Future<void> initSignals({required PlayerCreateInfoKey parentKey}) =>
-      setParentKey(parentKey);
-
-  Future<void> setParentKey(PlayerCreateInfoKey parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    final parent = parentKey;
-    editingKey.value = null;
-    selectedKey.value = null;
-    _applyCandidate(
-      PlayerCreateInfoActionEntity(race: parent.race, class_: parent.class_),
-    );
-    await _refresh();
-  }
-
   Future<void> create() async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     final parent = parentKey.value;
@@ -71,6 +56,33 @@ class PlayerCreateInfoActionCollectionEditorViewModel
       errorMessage.value = '$error';
       rethrow;
     }
+  }
+
+  Future<void> destroy(PlayerCreateInfoActionKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyPlayerCreateInfoAction(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() {
+    typeController.removeListener(_syncActionType);
+    disposeControllers();
   }
 
   Future<void> edit(PlayerCreateInfoActionKey key) async {
@@ -101,6 +113,15 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     }
   }
 
+  Future<void> initSignals({required PlayerCreateInfoKey parentKey}) =>
+      setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
+  }
+
   Future<void> persist() async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     final parent = parentKey.value;
@@ -129,31 +150,16 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(PlayerCreateInfoActionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyPlayerCreateInfoAction(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(PlayerCreateInfoKey parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    final parent = parentKey;
+    editingKey.value = null;
+    selectedKey.value = null;
+    _applyCandidate(
+      PlayerCreateInfoActionEntity(race: parent.race, class_: parent.class_),
+    );
     await _refresh();
   }
 
@@ -189,11 +195,6 @@ class PlayerCreateInfoActionCollectionEditorViewModel
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void dispose() {
-    typeController.removeListener(_syncActionType);
-    disposeControllers();
   }
 
   void _syncActionType() => actionType.value = typeController.collect();

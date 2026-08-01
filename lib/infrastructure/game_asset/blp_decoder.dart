@@ -1,23 +1,5 @@
 import 'dart:typed_data';
 
-/// BLP2 解码结果：RGBA 像素（每像素 4 字节，未预乘 alpha）。
-final class BlpImage {
-  final int width;
-  final int height;
-  final Uint8List rgba;
-
-  const BlpImage({required this.width, required this.height, required this.rgba});
-}
-
-/// BLP 格式不支持或数据损坏。
-final class BlpFormatException implements Exception {
-  final String message;
-  const BlpFormatException(this.message);
-
-  @override
-  String toString() => 'BlpFormatException: $message';
-}
-
 /// 解码 BLP2 图片为 RGBA（仅主 mipmap）。
 ///
 /// 3.3.5a 客户端图标全部为 BLP2 64×64，编码变体为 DXT1/DXT3/DXT5
@@ -144,14 +126,6 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
   }
 }
 
-void _unpack565(int v, Uint8List out, int at) {
-  final r = (v >> 11) & 0x1F, g = (v >> 5) & 0x3F, b = v & 0x1F;
-  out[at] = (r << 3) | (r >> 2);
-  out[at + 1] = (g << 2) | (g >> 4);
-  out[at + 2] = (b << 3) | (b >> 2);
-  out[at + 3] = 255;
-}
-
 /// DXT5 8 值 alpha 插值查找。
 int _dxt5Alpha(Uint8List src, int base, int index) {
   final a0 = src[base], a1 = src[base + 1];
@@ -166,4 +140,30 @@ int _dxt5Alpha(Uint8List src, int base, int index) {
   if (code == 6) return 0;
   if (code == 7) return 255;
   return ((6 - code) * a0 + (code - 1) * a1) ~/ 5;
+}
+
+void _unpack565(int v, Uint8List out, int at) {
+  final r = (v >> 11) & 0x1F, g = (v >> 5) & 0x3F, b = v & 0x1F;
+  out[at] = (r << 3) | (r >> 2);
+  out[at + 1] = (g << 2) | (g >> 4);
+  out[at + 2] = (b << 3) | (b >> 2);
+  out[at + 3] = 255;
+}
+
+/// BLP 格式不支持或数据损坏。
+final class BlpFormatException implements Exception {
+  final String message;
+  const BlpFormatException(this.message);
+
+  @override
+  String toString() => 'BlpFormatException: $message';
+}
+
+/// BLP2 解码结果：RGBA 像素（每像素 4 字节，未预乘 alpha）。
+final class BlpImage {
+  final int width;
+  final int height;
+  final Uint8List rgba;
+
+  const BlpImage({required this.width, required this.height, required this.rgba});
 }

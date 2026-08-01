@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/view_model/creature_template_resistance_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_select.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 /// 抗性Tab
 class CreatureTemplateResistanceView extends StatefulWidget {
@@ -31,9 +31,10 @@ class _CreatureTemplateResistanceViewState
       .get<CreatureTemplateResistanceCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.creatureId);
+  Widget build(BuildContext context) {
+    return Watch((context) {
+      return _buildTable();
+    });
   }
 
   @override
@@ -51,10 +52,92 @@ class _CreatureTemplateResistanceViewState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.creatureId);
+  }
+
+  /// 对话框表单（垂直布局）
+  Widget _buildDialogForm(BuildContext dialogContext) {
+    final isEditing = viewModel.editingKey.value != null;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 500),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 生物ID
+          FoxyFormItem(
+            label: '生物ID',
+            child: FoxyNumberInput<int>(
+              controller: viewModel.creatureIDController,
+              placeholder: 'CreatureID',
+            ),
+          ),
+          SizedBox(height: 16),
+          // 抗性类型
+          FoxyFormItem(
+            label: '抗性类型',
+            child: FoxyShadSelect<int>(
+              controller: viewModel.schoolController,
+              options: kResistanceSchoolOptions,
+              placeholder: Text('School'),
+            ),
+          ),
+          SizedBox(height: 16),
+          // 抗性值
+          FoxyFormItem(
+            label: '抗性值',
+            child: FoxyNumberInput<int>(
+              controller: viewModel.resistanceController,
+              placeholder: 'Resistance',
+            ),
+          ),
+          SizedBox(height: 16),
+          // VerifiedBuild
+          FoxyFormItem(
+            label: '验证版本',
+            child: FoxyNumberInput<int>(
+              controller: viewModel.verifiedBuildController,
+              placeholder: 'VerifiedBuild',
+            ),
+          ),
+          SizedBox(height: 24),
+          // 按钮行
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text('取消'),
+              ),
+              SizedBox(width: 8),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTable() {
@@ -156,6 +239,45 @@ class _CreatureTemplateResistanceViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
+  Future<void> _copy(CreatureTemplateResistanceKey key) async {
+    try {
+      await viewModel.copy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('复制成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('复制失败：$error');
+    }
+  }
+
+  Future<void> _destroy(CreatureTemplateResistanceKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<bool> _load(CreatureTemplateResistanceKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
   /// 显示新增对话框
   Future<void> _showCreateDialog() async {
     try {
@@ -186,127 +308,5 @@ class _CreatureTemplateResistanceViewState
         child: _buildDialogForm(dialogContext),
       ),
     );
-  }
-
-  /// 对话框表单（垂直布局）
-  Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editingKey.value != null;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 生物ID
-          FoxyFormItem(
-            label: '生物ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIDController,
-              placeholder: 'CreatureID',
-            ),
-          ),
-          SizedBox(height: 16),
-          // 抗性类型
-          FoxyFormItem(
-            label: '抗性类型',
-            child: FoxyShadSelect<int>(
-              controller: viewModel.schoolController,
-              options: kResistanceSchoolOptions,
-              placeholder: Text('School'),
-            ),
-          ),
-          SizedBox(height: 16),
-          // 抗性值
-          FoxyFormItem(
-            label: '抗性值',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.resistanceController,
-              placeholder: 'Resistance',
-            ),
-          ),
-          SizedBox(height: 16),
-          // VerifiedBuild
-          FoxyFormItem(
-            label: '验证版本',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.verifiedBuildController,
-              placeholder: 'VerifiedBuild',
-            ),
-          ),
-          SizedBox(height: 24),
-          // 按钮行
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text('取消'),
-              ),
-              SizedBox(width: 8),
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () async {
-                    try {
-                      await viewModel.persist();
-                    } catch (error) {
-                      if (!mounted) return;
-                      DialogUtil.instance.error('保存失败：$error');
-                      return;
-                    }
-                    if (!dialogContext.mounted) return;
-                    ShadSonner.of(
-                      dialogContext,
-                    ).show(const ShadToast(description: Text('保存成功')));
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool> _load(CreatureTemplateResistanceKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
-  }
-
-  Future<void> _destroy(CreatureTemplateResistanceKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
-    }
-  }
-
-  Future<void> _copy(CreatureTemplateResistanceKey key) async {
-    try {
-      await viewModel.copy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('复制成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('复制失败：$error');
-    }
   }
 }

@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
 import 'package:foxy/page/item/item_loot_template_view.dart';
-import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_view.dart';
 import 'package:foxy/page/item/milling_loot_template_view.dart';
 import 'package:foxy/page/item/prospecting_loot_template_view.dart';
+import 'package:foxy/view_model/item_template_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -26,27 +26,6 @@ class ItemTemplateDetailPage extends StatefulWidget {
 
 class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
   final viewModel = GetIt.instance.get<ItemTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.itemTemplateKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,5 +98,26 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.itemTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

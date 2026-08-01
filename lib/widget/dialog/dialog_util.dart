@@ -43,6 +43,30 @@ class DialogUtil {
 
   DialogUtil._();
 
+  /// 显示阻塞式提示对话框，用户点「确定」后返回。
+  ///
+  /// 不隐式 pop 栈顶；调用方应先自行关闭 loading 等临时对话框。
+  Future<void> alert({required String title, required String message}) async {
+    final context = router.navigatorKey.currentContext!;
+    if (!context.mounted) return;
+
+    await showFoxyDialog<void>(
+      context: context,
+      builder: (context) {
+        return ShadDialog.alert(
+          title: Text(title),
+          description: Text(message),
+          actions: [
+            ShadButton(
+              child: const Text('确定'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<bool> confirm({
     required String title,
     String? description,
@@ -83,28 +107,13 @@ class DialogUtil {
     await Navigator.maybePop(router.navigatorKey.currentContext!);
   }
 
-  /// 显示阻塞式提示对话框，用户点「确定」后返回。
-  ///
-  /// 不隐式 pop 栈顶；调用方应先自行关闭 loading 等临时对话框。
-  Future<void> alert({required String title, required String message}) async {
+  void dismissAll() {
     final context = router.navigatorKey.currentContext!;
     if (!context.mounted) return;
-
-    await showFoxyDialog<void>(
-      context: context,
-      builder: (context) {
-        return ShadDialog.alert(
-          title: Text(title),
-          description: Text(message),
-          actions: [
-            ShadButton(
-              child: const Text('确定'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
+    // 关闭所有对话框
+    while (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
   }
 
   void error(String error) {
@@ -152,15 +161,6 @@ class DialogUtil {
         );
       },
     );
-  }
-
-  void dismissAll() {
-    final context = router.navigatorKey.currentContext!;
-    if (!context.mounted) return;
-    // 关闭所有对话框
-    while (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-    }
   }
 
   void success(String message) {

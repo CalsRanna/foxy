@@ -5,13 +5,13 @@ import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/item_loot_template_entity.dart';
+import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/repository/item_loot_template_repository.dart';
-import 'package:foxy/repository/disenchant_loot_template_repository.dart';
-import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 import 'package:foxy/repository/milling_loot_template_repository.dart';
+import 'package:foxy/repository/prospecting_loot_template_repository.dart';
 
 void main() {
 
@@ -156,10 +156,10 @@ void main() {
   });
 }
 
-Set<int> _valuesOf(List<FlagItem> flags) => {
-  for (final flag in flags) flag.value,
-};
-
 Set<int> _bits(int start, int end) => {
   for (var bit = start; bit <= end; bit++) 1 << bit,
+};
+
+Set<int> _valuesOf(List<FlagItem> flags) => {
+  for (final flag in flags) flag.value,
 };

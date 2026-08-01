@@ -1,77 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
 import 'package:foxy/infrastructure/game_asset/game_mpq_source.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
-
-/// 内存 MPQ 假源。
-final class _FakeMpqSource implements GameMpqSource {
-  _FakeMpqSource(this._files);
-
-  /// 归档内路径（`\` 分隔）→ 内容字节。内容首字节 = 标记值，用于验证覆盖。
-  final Map<String, List<int>> _files;
-  bool closed = false;
-  int extractCalls = 0;
-
-  @override
-  List<String> get files => _files.keys.toList();
-
-  @override
-  Uint8List extract(String name) {
-    extractCalls++;
-    final data = _files[name];
-    if (data == null) {
-      throw StateError('不存在: $name');
-    }
-    return Uint8List.fromList(data);
-  }
-
-  @override
-  void close() {
-    closed = true;
-  }
-}
-
-/// 在临时目录中搭建伪客户端结构：`client/Data/<locale>/<归档>.MPQ`。
-Directory _buildFakeClient(
-  Directory root, {
-  String locale = 'zhCN',
-  Map<String, Map<String, List<int>>> archives = const {},
-}) {
-  final dataDir = Directory(p.join(root.path, 'Data', locale));
-  dataDir.createSync(recursive: true);
-  archives.forEach((name, files) {
-    File(p.join(dataDir.path, name)).writeAsBytesSync([0]);
-  });
-  return dataDir;
-}
-
-/// 构造提取器：openSource 按归档名返回内存假源。
-GameIconExtractor _extractor(
-  Directory clientRoot,
-  Directory outputDir,
-  Map<String, Map<String, List<int>>> archives, {
-  Map<String, _FakeMpqSource>? created,
-}) {
-  return GameIconExtractor(
-    openSource: (archivePath) {
-      final name = p.basename(archivePath);
-      final files = archives[name];
-      if (files == null) {
-        // 模拟真实环境下归档损坏/无法打开。
-        throw StateError('无法打开归档: $name');
-      }
-      final source = _FakeMpqSource(files);
-      created?[name] = source;
-      return source;
-    },
-    clientDir: clientRoot.path,
-    outputDir: outputDir.path,
-  );
-}
 
 void main() {
   late Directory tempDir;
@@ -394,4 +328,70 @@ void main() {
       expect(result.errors.single, contains('Data'));
     });
   });
+}
+
+/// 在临时目录中搭建伪客户端结构：`client/Data/<locale>/<归档>.MPQ`。
+Directory _buildFakeClient(
+  Directory root, {
+  String locale = 'zhCN',
+  Map<String, Map<String, List<int>>> archives = const {},
+}) {
+  final dataDir = Directory(p.join(root.path, 'Data', locale));
+  dataDir.createSync(recursive: true);
+  archives.forEach((name, files) {
+    File(p.join(dataDir.path, name)).writeAsBytesSync([0]);
+  });
+  return dataDir;
+}
+
+/// 构造提取器：openSource 按归档名返回内存假源。
+GameIconExtractor _extractor(
+  Directory clientRoot,
+  Directory outputDir,
+  Map<String, Map<String, List<int>>> archives, {
+  Map<String, _FakeMpqSource>? created,
+}) {
+  return GameIconExtractor(
+    openSource: (archivePath) {
+      final name = p.basename(archivePath);
+      final files = archives[name];
+      if (files == null) {
+        // 模拟真实环境下归档损坏/无法打开。
+        throw StateError('无法打开归档: $name');
+      }
+      final source = _FakeMpqSource(files);
+      created?[name] = source;
+      return source;
+    },
+    clientDir: clientRoot.path,
+    outputDir: outputDir.path,
+  );
+}
+
+/// 内存 MPQ 假源。
+final class _FakeMpqSource implements GameMpqSource {
+  /// 归档内路径（`\` 分隔）→ 内容字节。内容首字节 = 标记值，用于验证覆盖。
+  final Map<String, List<int>> _files;
+
+  bool closed = false;
+  int extractCalls = 0;
+  _FakeMpqSource(this._files);
+
+  @override
+  List<String> get files => _files.keys.toList();
+
+  @override
+  void close() {
+    closed = true;
+  }
+
+  @override
+  Uint8List extract(String name) {
+    extractCalls++;
+    final data = _files[name];
+    if (data == null) {
+      throw StateError('不存在: $name');
+    }
+    return Uint8List.fromList(data);
+  }
 }

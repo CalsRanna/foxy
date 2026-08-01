@@ -14,18 +14,18 @@ import 'dart:async';
 /// sub.cancel(); // 消费者销毁时取消订阅
 /// ```
 class EventBus {
+  final StreamController<dynamic> _controller;
+
   EventBus({bool sync = false})
     : _controller = StreamController<dynamic>.broadcast(sync: sync);
 
-  final StreamController<dynamic> _controller;
-
-  /// 返回类型为 [T] 的事件流。
-  Stream<T> on<T>() =>
-      _controller.stream.where((event) => event is T).cast<T>();
+  /// 关闭总线（通常仅应用退出时调用）。
+  void destroy() => _controller.close();
 
   /// 发布一个事件，所有订阅该事件类型的监听者都会收到。
   void fire<T>(T event) => _controller.add(event);
 
-  /// 关闭总线（通常仅应用退出时调用）。
-  void destroy() => _controller.close();
+  /// 返回类型为 [T] 的事件流。
+  Stream<T> on<T>() =>
+      _controller.stream.where((event) => event is T).cast<T>();
 }

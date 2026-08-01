@@ -10,17 +10,17 @@ import 'entity_model.dart';
 import 'entity_validator.dart';
 import 'naming.dart';
 
-const _fullEntityChecker = TypeChecker.fromUrl(
-  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullEntity',
-);
 const _briefEntityChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyBriefEntity',
 );
-const _fullFieldChecker = TypeChecker.fromUrl(
-  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullField',
-);
 const _briefFieldChecker = TypeChecker.fromUrl(
   'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyBriefField',
+);
+const _fullEntityChecker = TypeChecker.fromUrl(
+  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullEntity',
+);
+const _fullFieldChecker = TypeChecker.fromUrl(
+  'package:foxy/infrastructure/codegen/entity_annotations.dart#FoxyFullField',
 );
 
 final class EntityReader {
@@ -105,6 +105,138 @@ final class EntityReader {
     );
     validator.validate(model, classElement);
     return model;
+  }
+
+  Object? _convertConstant(DartObject value, String type) => switch (type) {
+    'int' => value.toIntValue(),
+    'double' => value.toDoubleValue() ?? value.toIntValue()?.toDouble(),
+    'String' => value.toStringValue(),
+    'bool' => value.toBoolValue(),
+    _ => null,
+  };
+
+  Never _fail(String message, Element element, String todo) {
+    throw InvalidGenerationSourceError(message, element: element, todo: todo);
+  }
+
+  bool _hasSingleAnnotation(
+    Element element,
+    TypeChecker checker,
+    String annotationName,
+  ) {
+    final annotations = checker.annotationsOf(element).toList();
+    if (annotations.length > 1) {
+      _fail(
+        '${element.displayName} 重复使用 @$annotationName。',
+        element,
+        '只保留一个 @$annotationName。',
+      );
+    }
+    return annotations.isNotEmpty;
+  }
+
+  String _quote(String value) => "'$value'";
+
+  List<EntityFieldModel> _readBriefProjectionFields(ClassElement classElement) {
+    final result = <EntityFieldModel>[];
+    for (final value in _briefFieldChecker.annotationsOf(classElement)) {
+      final annotation = ConstantReader(value);
+      final nameReader = annotation.read('name');
+      final typeReader = annotation.read('type');
+      if (nameReader.isNull || typeReader.isNull) {
+        _fail(
+          '${classElement.name} 上的 @FoxyBriefField 必须使用'
+              ' text/integer/decimal/boolean 具名构造函数。',
+          classElement,
+          '无参数的 @FoxyBriefField() 只能标注 Full Entity 字段。',
+        );
+      }
+
+      final name = nameReader.stringValue;
+      final typeIndex = typeReader.objectValue.getField('index')?.toIntValue();
+      if (typeIndex == null ||
+          typeIndex < 0 ||
+          typeIndex >= FoxyBriefFieldType.values.length) {
+        _fail(
+          '${classElement.name} 的 Brief 投影字段 $name 类型无法识别。',
+          classElement,
+          '使用 FoxyBriefField 的具名构造函数。',
+        );
+      }
+      final type = FoxyBriefFieldType.values[typeIndex];
+      final dartType = switch (type) {
+        FoxyBriefFieldType.boolean => 'bool',
+        FoxyBriefFieldType.decimal => 'double',
+        FoxyBriefFieldType.integer => 'int',
+        FoxyBriefFieldType.text => 'String',
+      };
+      final defaultObject = annotation.read('defaultValue').objectValue;
+      final defaultValue = _convertConstant(defaultObject, dartType);
+      if (defaultValue == null) {
+        _fail(
+          '${classElement.name} 的 Brief 投影字段 $name 默认值类型不匹配。',
+          classElement,
+          '通过对应具名构造函数传入正确类型的 defaultValue。',
+        );
+      }
+
+      result.add(
+        EntityFieldModel(
+          dartName: name,
+          dartType: dartType,
+          columnName: name,
+          constructorDefaultValue: defaultValue,
+          includeInBrief: true,
+          nullable: false,
+          key: false,
+        ),
+      );
+    }
+    return result;
+  }
+
+  Object? _readConstructorDefault(
+    ClassElement classElement,
+    FieldElement field,
+    FormalParameterElement parameter,
+    String type,
+    bool nullable,
+  ) {
+    if (!parameter.hasDefaultValue) {
+      if (nullable) return null;
+      _fail(
+        '${classElement.name}.${field.name} 的 non-nullable 构造参数'
+            '必须提供显式常量默认值。',
+        parameter,
+        '为 this.${field.name} 添加与 $type 兼容的默认值。',
+      );
+    }
+    final value = parameter.computeConstantValue();
+    if (value == null || !value.hasKnownValue) {
+      _fail(
+        '${classElement.name}.${field.name} 的默认值必须是可求值的编译期常量。',
+        parameter,
+        '使用 int、double、String、bool 或 null 常量。',
+      );
+    }
+    if (value.isNull) {
+      if (nullable) return null;
+      _fail(
+        '${classElement.name}.${field.name} 是 non-nullable，默认值不能为 null。',
+        parameter,
+        '提供与 $type 兼容的非空默认值。',
+      );
+    }
+    final converted = _convertConstant(value, type);
+    if (converted == null) {
+      _fail(
+        '${classElement.name}.${field.name} 的构造参数默认值类型不匹配：'
+            '字段类型为 ${field.type.getDisplayString()}。',
+        parameter,
+        '提供与字段类型兼容的常量默认值。',
+      );
+    }
+    return converted;
   }
 
   EntityFieldModel _readField(
@@ -231,135 +363,28 @@ final class EntityReader {
     return true;
   }
 
-  List<EntityFieldModel> _readBriefProjectionFields(ClassElement classElement) {
-    final result = <EntityFieldModel>[];
-    for (final value in _briefFieldChecker.annotationsOf(classElement)) {
-      final annotation = ConstantReader(value);
-      final nameReader = annotation.read('name');
-      final typeReader = annotation.read('type');
-      if (nameReader.isNull || typeReader.isNull) {
+  void _validateNoGeneratedMemberConflicts(ClassElement element) {
+    const generatedMethods = {'copyWith', 'toJson', 'toString', '=='};
+    for (final method in element.methods) {
+      if (generatedMethods.contains(method.name)) {
         _fail(
-          '${classElement.name} 上的 @FoxyBriefField 必须使用'
-              ' text/integer/decimal/boolean 具名构造函数。',
-          classElement,
-          '无参数的 @FoxyBriefField() 只能标注 Full Entity 字段。',
+          '${element.name} 已手写 ${method.name}，与生成成员冲突。',
+          method,
+          '删除手写成员，保留 Entity 特有业务方法。',
         );
       }
-
-      final name = nameReader.stringValue;
-      final typeIndex = typeReader.objectValue.getField('index')?.toIntValue();
-      if (typeIndex == null ||
-          typeIndex < 0 ||
-          typeIndex >= FoxyBriefFieldType.values.length) {
-        _fail(
-          '${classElement.name} 的 Brief 投影字段 $name 类型无法识别。',
-          classElement,
-          '使用 FoxyBriefField 的具名构造函数。',
-        );
-      }
-      final type = FoxyBriefFieldType.values[typeIndex];
-      final dartType = switch (type) {
-        FoxyBriefFieldType.boolean => 'bool',
-        FoxyBriefFieldType.decimal => 'double',
-        FoxyBriefFieldType.integer => 'int',
-        FoxyBriefFieldType.text => 'String',
-      };
-      final defaultObject = annotation.read('defaultValue').objectValue;
-      final defaultValue = _convertConstant(defaultObject, dartType);
-      if (defaultValue == null) {
-        _fail(
-          '${classElement.name} 的 Brief 投影字段 $name 默认值类型不匹配。',
-          classElement,
-          '通过对应具名构造函数传入正确类型的 defaultValue。',
-        );
-      }
-
-      result.add(
-        EntityFieldModel(
-          dartName: name,
-          dartType: dartType,
-          columnName: name,
-          constructorDefaultValue: defaultValue,
-          includeInBrief: true,
-          nullable: false,
-          key: false,
-        ),
-      );
     }
-    return result;
-  }
-
-  Object? _readConstructorDefault(
-    ClassElement classElement,
-    FieldElement field,
-    FormalParameterElement parameter,
-    String type,
-    bool nullable,
-  ) {
-    if (!parameter.hasDefaultValue) {
-      if (nullable) return null;
-      _fail(
-        '${classElement.name}.${field.name} 的 non-nullable 构造参数'
-            '必须提供显式常量默认值。',
-        parameter,
-        '为 this.${field.name} 添加与 $type 兼容的默认值。',
-      );
+    if (element.getters.any((getter) => getter.name == 'hashCode')) {
+      _fail('${element.name} 已手写 hashCode，与生成成员冲突。', element, '删除手写 hashCode。');
     }
-    final value = parameter.computeConstantValue();
-    if (value == null || !value.hasKnownValue) {
+    final fromJson = element.constructors.where(
+      (constructor) => constructor.name == 'fromJson',
+    );
+    if (fromJson.length != 1 || !fromJson.single.isFactory) {
       _fail(
-        '${classElement.name}.${field.name} 的默认值必须是可求值的编译期常量。',
-        parameter,
-        '使用 int、double、String、bool 或 null 常量。',
-      );
-    }
-    if (value.isNull) {
-      if (nullable) return null;
-      _fail(
-        '${classElement.name}.${field.name} 是 non-nullable，默认值不能为 null。',
-        parameter,
-        '提供与 $type 兼容的非空默认值。',
-      );
-    }
-    final converted = _convertConstant(value, type);
-    if (converted == null) {
-      _fail(
-        '${classElement.name}.${field.name} 的构造参数默认值类型不匹配：'
-            '字段类型为 ${field.type.getDisplayString()}。',
-        parameter,
-        '提供与字段类型兼容的常量默认值。',
-      );
-    }
-    return converted;
-  }
-
-  Object? _convertConstant(DartObject value, String type) => switch (type) {
-    'int' => value.toIntValue(),
-    'double' => value.toDoubleValue() ?? value.toIntValue()?.toDouble(),
-    'String' => value.toStringValue(),
-    'bool' => value.toBoolValue(),
-    _ => null,
-  };
-
-  void _validateUniqueFullEntity(ClassElement element) {
-    final library = element.library;
-    final annotated = library.classes
-        .where((candidate) => _fullEntityChecker.hasAnnotationOf(candidate))
-        .toList(growable: false);
-    if (annotated.length != 1) {
-      _fail(
-        '${library.uri} 必须且只能声明一个 @FoxyFullEntity class，'
-            '当前为 ${annotated.length} 个。',
+        '${element.name} 必须声明唯一的 fromJson factory。',
         element,
-        '把每个 Full Entity 拆到独立源文件。',
-      );
-    }
-    final annotations = _fullEntityChecker.annotationsOf(element).toList();
-    if (annotations.length != 1) {
-      _fail(
-        '${element.name} 重复使用 @FoxyFullEntity。',
-        element,
-        '只保留一个 @FoxyFullEntity。',
+        '添加约定签名的 factory 委托。',
       );
     }
   }
@@ -406,51 +431,26 @@ final class EntityReader {
     }
   }
 
-  void _validateNoGeneratedMemberConflicts(ClassElement element) {
-    const generatedMethods = {'copyWith', 'toJson', 'toString', '=='};
-    for (final method in element.methods) {
-      if (generatedMethods.contains(method.name)) {
-        _fail(
-          '${element.name} 已手写 ${method.name}，与生成成员冲突。',
-          method,
-          '删除手写成员，保留 Entity 特有业务方法。',
-        );
-      }
-    }
-    if (element.getters.any((getter) => getter.name == 'hashCode')) {
-      _fail('${element.name} 已手写 hashCode，与生成成员冲突。', element, '删除手写 hashCode。');
-    }
-    final fromJson = element.constructors.where(
-      (constructor) => constructor.name == 'fromJson',
-    );
-    if (fromJson.length != 1 || !fromJson.single.isFactory) {
+  void _validateUniqueFullEntity(ClassElement element) {
+    final library = element.library;
+    final annotated = library.classes
+        .where((candidate) => _fullEntityChecker.hasAnnotationOf(candidate))
+        .toList(growable: false);
+    if (annotated.length != 1) {
       _fail(
-        '${element.name} 必须声明唯一的 fromJson factory。',
+        '${library.uri} 必须且只能声明一个 @FoxyFullEntity class，'
+            '当前为 ${annotated.length} 个。',
         element,
-        '添加约定签名的 factory 委托。',
+        '把每个 Full Entity 拆到独立源文件。',
       );
     }
-  }
-
-  bool _hasSingleAnnotation(
-    Element element,
-    TypeChecker checker,
-    String annotationName,
-  ) {
-    final annotations = checker.annotationsOf(element).toList();
-    if (annotations.length > 1) {
+    final annotations = _fullEntityChecker.annotationsOf(element).toList();
+    if (annotations.length != 1) {
       _fail(
-        '${element.displayName} 重复使用 @$annotationName。',
+        '${element.name} 重复使用 @FoxyFullEntity。',
         element,
-        '只保留一个 @$annotationName。',
+        '只保留一个 @FoxyFullEntity。',
       );
     }
-    return annotations.isNotEmpty;
-  }
-
-  String _quote(String value) => "'$value'";
-
-  Never _fail(String message, Element element, String todo) {
-    throw InvalidGenerationSourceError(message, element: element, todo: todo);
   }
 }

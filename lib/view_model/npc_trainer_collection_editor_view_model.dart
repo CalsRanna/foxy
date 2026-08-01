@@ -1,10 +1,11 @@
 import 'dart:math';
+
 import 'package:foxy/entity/npc_trainer_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'npc_trainer_collection_editor_view_model.g.dart';
 
@@ -27,18 +28,17 @@ class NpcTrainerCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) =>
-      setParentKey(parentKey);
-
-  Future<void> setParentKey(int parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    final parent = parentKey;
+  void clearParent() {
+    ++_refreshToken;
+    parentKey.value = null;
+    items.value = const [];
     editingKey.value = null;
     selectedKey.value = null;
-    _applyCandidate(NpcTrainerEntity(trainerId: parent));
-    await _refresh();
+    page.value = 1;
+    total.value = 0;
+    loading.value = false;
+    errorMessage.value = null;
+    _applyCandidate(const NpcTrainerEntity());
   }
 
   Future<void> create() async {
@@ -61,6 +61,30 @@ class NpcTrainerCollectionEditorViewModel
       rethrow;
     }
   }
+
+  Future<void> destroy(NpcTrainerKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyNpcTrainer(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
 
   Future<void> edit(NpcTrainerKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -88,6 +112,15 @@ class NpcTrainerCollectionEditorViewModel
     } finally {
       if (token == _interactionToken) loading.value = false;
     }
+  }
+
+  Future<void> initSignals({required int parentKey}) =>
+      setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
   }
 
   Future<void> persist() async {
@@ -118,31 +151,14 @@ class NpcTrainerCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(NpcTrainerKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyNpcTrainer(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    final parent = parentKey;
+    editingKey.value = null;
+    selectedKey.value = null;
+    _applyCandidate(NpcTrainerEntity(trainerId: parent));
     await _refresh();
   }
 
@@ -171,20 +187,5 @@ class NpcTrainerCollectionEditorViewModel
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void dispose() => disposeControllers();
-
-  void clearParent() {
-    ++_refreshToken;
-    parentKey.value = null;
-    items.value = const [];
-    editingKey.value = null;
-    selectedKey.value = null;
-    page.value = 1;
-    total.value = 0;
-    loading.value = false;
-    errorMessage.value = null;
-    _applyCandidate(const NpcTrainerEntity());
   }
 }

@@ -2,6 +2,12 @@ import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
 
 part 'item_extended_cost_entity.g.dart';
 
+String _appendDisplayItem(String current, int itemId, int count) {
+  if (itemId == 0) return current;
+  final value = '${itemId}x$count';
+  return current.isEmpty ? value : '$current, $value';
+}
+
 /// 扩展价格
 
 @FoxyBriefEntity()
@@ -90,12 +96,6 @@ class ItemExtendedCostEntity with _ItemExtendedCostEntityMixin {
 
   factory ItemExtendedCostEntity.fromJson(Map<String, dynamic> json) =>
       _ItemExtendedCostEntityMixin.fromJson(json);
-}
-
-String _appendDisplayItem(String current, int itemId, int count) {
-  if (itemId == 0) return current;
-  final value = '${itemId}x$count';
-  return current.isEmpty ? value : '$current, $value';
 }
 
 extension BriefItemExtendedCostEntityDisplay on BriefItemExtendedCostEntity {

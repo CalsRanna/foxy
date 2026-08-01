@@ -75,6 +75,22 @@ final class RepositoryFilterReader {
     );
   }
 
+  Object? _convertDefault(DartObject object, FoxyFilterType type) =>
+      switch (type) {
+        FoxyFilterType.boolean => object.toBoolValue(),
+        FoxyFilterType.decimal =>
+          object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
+        FoxyFilterType.integer => object.toIntValue(),
+        FoxyFilterType.text => object.toStringValue(),
+      };
+
+  Never _fail(String message, Element element, String correction) {
+    throw InvalidGenerationSourceError(
+      '$message\n修复方式：$correction',
+      element: element,
+    );
+  }
+
   RepositoryFilterFieldModel _readField(
     DartObject object,
     String filterClassName,
@@ -121,22 +137,6 @@ final class RepositoryFilterReader {
       defaultValue: defaultValue,
       name: name,
       type: type,
-    );
-  }
-
-  Object? _convertDefault(DartObject object, FoxyFilterType type) =>
-      switch (type) {
-        FoxyFilterType.boolean => object.toBoolValue(),
-        FoxyFilterType.decimal =>
-          object.toDoubleValue() ?? object.toIntValue()?.toDouble(),
-        FoxyFilterType.integer => object.toIntValue(),
-        FoxyFilterType.text => object.toStringValue(),
-      };
-
-  Never _fail(String message, Element element, String correction) {
-    throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
-      element: element,
     );
   }
 }

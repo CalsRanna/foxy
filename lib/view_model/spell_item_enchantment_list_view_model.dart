@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/repository/spell_item_enchantment_repository.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
@@ -29,30 +29,6 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin, QueryVersionM
   late final nameController = registerController(StringFieldController());
 
   int _refreshToken = 0;
-
-  Future<void> initSignals() async {
-    await _refresh();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    entryController.init('');
-    nameController.init('');
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    markQueryVersion();
-    await _refresh();
-  }
 
   Future<void> copy(int key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -87,11 +63,52 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin, QueryVersionM
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    await _refresh();
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    nameController.init('');
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
   SpellItemEnchantmentFilter _collectFilter() {
     return SpellItemEnchantmentFilter(
       id: entryController.collect(),
       name: nameController.collect(),
     );
+  }
+
+  void _logActivity(ActivityActionType action, int key) {
+    final items = this.items.value;
+    final enchantment = items.where((e) => e.key == key).firstOrNull;
+    final name = enchantment?.nameLangZhCN ?? '';
+    final log = ActivityLogEntity(
+      module: 'spell_item_enchantment',
+      actionType: action,
+      entityName: name,
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
   }
 
   Future<void> _refresh() async {
@@ -118,22 +135,5 @@ class SpellItemEnchantmentListViewModel with FieldControllerMixin, QueryVersionM
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void _logActivity(ActivityActionType action, int key) {
-    final items = this.items.value;
-    final enchantment = items.where((e) => e.key == key).firstOrNull;
-    final name = enchantment?.nameLangZhCN ?? '';
-    final log = ActivityLogEntity(
-      module: 'spell_item_enchantment',
-      actionType: action,
-      entityName: name,
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

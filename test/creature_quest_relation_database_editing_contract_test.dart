@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
-import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
+import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -160,6 +160,50 @@ void main() {
   });
 }
 
+class _FakeEnderRepository extends CreatureQuestEnderRepository {
+  final List<CreatureQuestEnderEntity> rows;
+  bool failUpdates = false;
+  final updateKeys = <CreatureQuestEnderKey>[];
+  _FakeEnderRepository(this.rows);
+
+  @override
+  Future<int> countCreatureQuestEnders(int questId) async =>
+      rows.where((row) => row.quest == questId).length;
+
+  @override
+  Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
+    int questId, {
+    int page = 1,
+  }) async => rows
+      .where((row) => row.quest == questId)
+      .map((row) => BriefCreatureQuestEnderEntity(id: row.id, quest: row.quest))
+      .toList();
+
+  @override
+  Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
+    CreatureQuestEnderKey key,
+  ) async {
+    for (final row in rows) {
+      if (CreatureQuestEnderKey.fromEntity(row) == key) return row;
+    }
+    return null;
+  }
+
+  @override
+  Future<void> updateCreatureQuestEnder(
+    CreatureQuestEnderKey originalKey,
+    CreatureQuestEnderEntity model,
+  ) async {
+    updateKeys.add(originalKey);
+    if (failUpdates) throw StateError('write failed');
+    final index = rows.indexWhere(
+      (row) => CreatureQuestEnderKey.fromEntity(row) == originalKey,
+    );
+    if (index < 0) throw StateError('missing');
+    rows[index] = model;
+  }
+}
+
 class _FakeStarterRepository extends CreatureQuestStarterRepository {
   final List<CreatureQuestStarterEntity> rows;
   bool failUpdates = false;
@@ -206,50 +250,6 @@ class _FakeStarterRepository extends CreatureQuestStarterRepository {
   }
 }
 
-class _FakeEnderRepository extends CreatureQuestEnderRepository {
-  final List<CreatureQuestEnderEntity> rows;
-  bool failUpdates = false;
-  final updateKeys = <CreatureQuestEnderKey>[];
-  _FakeEnderRepository(this.rows);
-
-  @override
-  Future<int> countCreatureQuestEnders(int questId) async =>
-      rows.where((row) => row.quest == questId).length;
-
-  @override
-  Future<List<BriefCreatureQuestEnderEntity>> getBriefCreatureQuestEnders(
-    int questId, {
-    int page = 1,
-  }) async => rows
-      .where((row) => row.quest == questId)
-      .map((row) => BriefCreatureQuestEnderEntity(id: row.id, quest: row.quest))
-      .toList();
-
-  @override
-  Future<CreatureQuestEnderEntity?> getCreatureQuestEnder(
-    CreatureQuestEnderKey key,
-  ) async {
-    for (final row in rows) {
-      if (CreatureQuestEnderKey.fromEntity(row) == key) return row;
-    }
-    return null;
-  }
-
-  @override
-  Future<void> updateCreatureQuestEnder(
-    CreatureQuestEnderKey originalKey,
-    CreatureQuestEnderEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failUpdates) throw StateError('write failed');
-    final index = rows.indexWhere(
-      (row) => CreatureQuestEnderKey.fromEntity(row) == originalKey,
-    );
-    if (index < 0) throw StateError('missing');
-    rows[index] = model;
-  }
-}
-
 class _RecordingDriver implements DatabaseDriver {
   @override
   final SqlGrammar grammar = MysqlGrammar();
@@ -279,14 +279,14 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _TestStarterRepository extends CreatureQuestStarterRepository {
-  @override
-  final Laconic laconic;
-  _TestStarterRepository(this.laconic);
-}
-
 class _TestEnderRepository extends CreatureQuestEnderRepository {
   @override
   final Laconic laconic;
   _TestEnderRepository(this.laconic);
+}
+
+class _TestStarterRepository extends CreatureQuestStarterRepository {
+  @override
+  final Laconic laconic;
+  _TestStarterRepository(this.laconic);
 }

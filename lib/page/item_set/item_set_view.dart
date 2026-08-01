@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/item_set_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
@@ -10,6 +9,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -78,34 +78,18 @@ class ItemSetView extends StatelessWidget {
     );
   }
 
-  Widget _buildNameText() {
-    return FoxyFormSection(
-      title: '名称文本',
+  Widget _buildButtons(BuildContext context) {
+    return Row(
       children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '名称',
-                child: Watch((_) {
-                  final id = viewModel.persistedKey.value;
-                  return FoxyLocalePicker(
-                    entry: id,
-                    controller: viewModel.nameLangZhCNController,
-                    title: '套装名称本地化',
-                    placeholder: 'Name_lang_zhCN',
-                    delegate: FoxyLocalePickerDelegates.dbcItemSetName,
-                    onSaved: viewModel.applyNameLocales,
-                  );
-                }),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-          ],
+        Watch(
+          (_) => ShadButton(
+            enabled: !viewModel.submitting.value,
+            onPressed: () => _persist(context),
+            child: Text('保存'),
+          ),
         ),
+        const SizedBox(width: 8),
+        ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
       ],
     );
   }
@@ -154,6 +138,38 @@ class ItemSetView extends StatelessWidget {
           spacing: 8,
           children: [
             _itemField('物品16', 'ItemID16', viewModel.itemId16Controller),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNameText() {
+    return FoxyFormSection(
+      title: '名称文本',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '名称',
+                child: Watch((_) {
+                  final id = viewModel.persistedKey.value;
+                  return FoxyLocalePicker(
+                    entry: id,
+                    controller: viewModel.nameLangZhCNController,
+                    title: '套装名称本地化',
+                    placeholder: 'Name_lang_zhCN',
+                    delegate: FoxyLocalePickerDelegates.dbcItemSetName,
+                    onSaved: viewModel.applyNameLocales,
+                  );
+                }),
+              ),
+            ),
             const Expanded(child: SizedBox()),
             const Expanded(child: SizedBox()),
             const Expanded(child: SizedBox()),
@@ -239,6 +255,10 @@ class ItemSetView extends StatelessWidget {
     );
   }
 
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
   Widget _itemField(
     String label,
     String placeholder,
@@ -254,6 +274,24 @@ class ItemSetView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _persist(BuildContext context) async {
+    try {
+      await viewModel.persist();
+      if (!context.mounted) return;
+      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
+        '套装 ${viewModel.persistedKey.value}',
+      );
+      ShadSonner.of(
+        context,
+      ).show(const ShadToast(description: Text('套装数据已保存')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
   }
 
   Widget _spellField(
@@ -287,43 +325,5 @@ class ItemSetView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildButtons(BuildContext context) {
-    return Row(
-      children: [
-        Watch(
-          (_) => ShadButton(
-            enabled: !viewModel.submitting.value,
-            onPressed: () => _persist(context),
-            child: Text('保存'),
-          ),
-        ),
-        const SizedBox(width: 8),
-        ShadButton.ghost(onPressed: _goBack, child: Text('取消')),
-      ],
-    );
-  }
-
-  Future<void> _persist(BuildContext context) async {
-    try {
-      await viewModel.persist();
-      if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '套装 ${viewModel.persistedKey.value}',
-      );
-      ShadSonner.of(
-        context,
-      ).show(const ShadToast(description: Text('套装数据已保存')));
-    } catch (error) {
-      if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

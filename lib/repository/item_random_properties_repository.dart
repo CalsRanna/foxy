@@ -1,7 +1,7 @@
+import 'package:foxy/entity/dbc_locale.dart';
+import 'package:foxy/entity/item_random_properties_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/item_random_properties_entity.dart';
-import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/repository/dbc_locale_repository_mixin.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
@@ -43,6 +43,13 @@ class ItemRandomPropertiesRepository
     return ItemRandomPropertiesEntity(id: await nextMaxPlusOne(_table, 'ID'));
   }
 
+  Future<List<ItemRandomPropertiesEntity>> getAllItemRandomProperties() async {
+    final results = await laconic.table(_table).get();
+    return results
+        .map((row) => ItemRandomPropertiesEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
   Future<List<BriefItemRandomPropertiesEntity>> getBriefItemRandomProperties({
     int page = 1,
     ItemRandomPropertiesFilter? filter,
@@ -63,13 +70,6 @@ class ItemRandomPropertiesRepository
     int id,
     DbcLocaleFieldDefinition field,
   ) => loadDbcLocaleField(id, field);
-
-  Future<List<ItemRandomPropertiesEntity>> getAllItemRandomProperties() async {
-    final results = await laconic.table(_table).get();
-    return results
-        .map((row) => ItemRandomPropertiesEntity.fromJson(row.toMap()))
-        .toList();
-  }
 
   Future<void> saveItemRandomPropertiesLocales(
     int id,

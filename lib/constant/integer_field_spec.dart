@@ -20,28 +20,6 @@ sealed class IntegerFieldSpec<R> {
   IntegerFieldEditor get editor;
 }
 
-/// 普通整数输入框（[FoxyNumberInput]）。
-final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
-  const IntegerNumberFieldSpec(super.label, {super.editable});
-
-  @override
-  IntegerFieldEditor get editor => IntegerFieldEditor.number;
-}
-
-/// 严格枚举下拉（[FoxyShadSelect]）。
-final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
-  final Map<int, String> options;
-
-  const IntegerSelectFieldSpec(
-    super.label, {
-    required this.options,
-    super.editable,
-  });
-
-  @override
-  IntegerFieldEditor get editor => IntegerFieldEditor.select;
-}
-
 /// 位标记选择器（[FoxyFlagPicker]）。
 ///
 /// 当前所有 Flags 字段都可编辑，因此不开放 `editable: false`；
@@ -56,6 +34,14 @@ final class IntegerFlagsFieldSpec<R> extends IntegerFieldSpec<R> {
   IntegerFieldEditor get editor => IntegerFieldEditor.flags;
 }
 
+/// 普通整数输入框（[FoxyNumberInput]）。
+final class IntegerNumberFieldSpec<R> extends IntegerFieldSpec<R> {
+  const IntegerNumberFieldSpec(super.label, {super.editable});
+
+  @override
+  IntegerFieldEditor get editor => IntegerFieldEditor.number;
+}
+
 /// 实体引用选择器（[FoxyEntityPicker]）。
 final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
   final R reference;
@@ -68,4 +54,18 @@ final class IntegerReferenceFieldSpec<R> extends IntegerFieldSpec<R> {
 
   @override
   IntegerFieldEditor get editor => IntegerFieldEditor.reference;
+}
+
+/// 严格枚举下拉（[FoxyShadSelect]）。
+final class IntegerSelectFieldSpec<R> extends IntegerFieldSpec<R> {
+  final Map<int, String> options;
+
+  const IntegerSelectFieldSpec(
+    super.label, {
+    required this.options,
+    super.editable,
+  });
+
+  @override
+  IntegerFieldEditor get editor => IntegerFieldEditor.select;
 }

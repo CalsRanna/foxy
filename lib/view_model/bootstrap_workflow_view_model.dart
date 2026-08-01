@@ -33,6 +33,20 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
   }) : _useCase = useCase ?? GetIt.instance.get<BootstrapApplicationUseCase>(),
        _configUtil = configUtil ?? GetIt.instance.get<ConfigUtil>();
 
+  bool get _isActive =>
+      status.value == WorkflowStatus.preparing ||
+      status.value == WorkflowStatus.running ||
+      status.value == WorkflowStatus.cancelling;
+
+  Future<void> cancel() async {
+    // Database connection and migrations have no safe mid-flight cancellation.
+  }
+
+  void dispose() {
+    _attemptToken++;
+    disposeControllers();
+  }
+
   Future<void> prepare() async {
     if (_isActive) return;
     final token = ++_attemptToken;
@@ -56,6 +70,22 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
       status.value = WorkflowStatus.failed;
       rethrow;
     }
+  }
+
+  void reset() {
+    if (_isActive) return;
+    _attemptToken++;
+    status.value = WorkflowStatus.idle;
+    progress.value = null;
+    progressLabel.value = '';
+    progressDetail.value = '';
+    errorMessage.value = null;
+    result.value = null;
+  }
+
+  Future<void> retry() async {
+    errorMessage.value = null;
+    await start();
   }
 
   Future<void> start() async {
@@ -96,35 +126,5 @@ class BootstrapWorkflowViewModel with FieldControllerMixin {
       status.value = WorkflowStatus.failed;
       rethrow;
     }
-  }
-
-  Future<void> cancel() async {
-    // Database connection and migrations have no safe mid-flight cancellation.
-  }
-
-  Future<void> retry() async {
-    errorMessage.value = null;
-    await start();
-  }
-
-  void reset() {
-    if (_isActive) return;
-    _attemptToken++;
-    status.value = WorkflowStatus.idle;
-    progress.value = null;
-    progressLabel.value = '';
-    progressDetail.value = '';
-    errorMessage.value = null;
-    result.value = null;
-  }
-
-  bool get _isActive =>
-      status.value == WorkflowStatus.preparing ||
-      status.value == WorkflowStatus.running ||
-      status.value == WorkflowStatus.cancelling;
-
-  void dispose() {
-    _attemptToken++;
-    disposeControllers();
   }
 }

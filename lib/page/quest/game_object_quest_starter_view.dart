@@ -9,8 +9,8 @@ import 'package:foxy/widget/foxy_pagination.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class GameObjectQuestStarterView extends StatefulWidget {
   final int questId;
@@ -27,9 +27,10 @@ class _GameObjectQuestStarterViewState
       .get<GameObjectQuestStarterCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.initSignals(parentKey: widget.questId);
+  Widget build(BuildContext context) {
+    return Watch((context) {
+      return _buildTable();
+    });
   }
 
   @override
@@ -47,10 +48,65 @@ class _GameObjectQuestStarterViewState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+  void initState() {
+    super.initState();
+    viewModel.initSignals(parentKey: widget.questId);
+  }
+
+  Widget _buildDialogForm(BuildContext dialogContext) {
+    final isEditing = viewModel.selectedKey.value != null;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 500),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FoxyFormItem(
+            label: '物体编号',
+            child: FoxyNumberInput<int>(
+              controller: viewModel.idController,
+              placeholder: 'GameobjectId',
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: '任务编号',
+            child: FoxyNumberInput<int>(controller: viewModel.questController),
+          ),
+          SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text('取消'),
+              ),
+              SizedBox(width: 8),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTable() {
@@ -142,6 +198,34 @@ class _GameObjectQuestStarterViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
+  Future<void> _destroy(GameObjectQuestStarterKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<bool> _load(GameObjectQuestStarterKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -168,89 +252,5 @@ class _GameObjectQuestStarterViewState
         child: _buildDialogForm(dialogContext),
       ),
     );
-  }
-
-  Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.selectedKey.value != null;
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FoxyFormItem(
-            label: '物体编号',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.idController,
-              placeholder: 'GameobjectId',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '任务编号',
-            child: FoxyNumberInput<int>(controller: viewModel.questController),
-          ),
-          SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text('取消'),
-              ),
-              SizedBox(width: 8),
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () async {
-                    try {
-                      await viewModel.persist();
-                    } catch (error) {
-                      if (!mounted) return;
-                      DialogUtil.instance.error('保存失败：$error');
-                      return;
-                    }
-                    if (!dialogContext.mounted) return;
-                    ShadSonner.of(
-                      dialogContext,
-                    ).show(const ShadToast(description: Text('保存成功')));
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool> _load(GameObjectQuestStarterKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
-  }
-
-  Future<void> _destroy(GameObjectQuestStarterKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
-    }
   }
 }

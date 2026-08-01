@@ -12,8 +12,8 @@ import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class PageTextLocaleView extends StatefulWidget {
   final int? id;
@@ -27,28 +27,6 @@ class PageTextLocaleView extends StatefulWidget {
 class _PageTextLocaleViewState extends State<PageTextLocaleView> {
   final viewModel = GetIt.instance
       .get<PageTextLocaleCollectionEditorViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    final id = widget.id;
-    if (id != null) viewModel.initSignals(parentKey: id);
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant PageTextLocaleView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final id = widget.id;
-    if (id != null && oldWidget.id != id) {
-      viewModel.setParentKey(id);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +120,28 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
     });
   }
 
+  @override
+  void didUpdateWidget(covariant PageTextLocaleView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final id = widget.id;
+    if (id != null && oldWidget.id != id) {
+      viewModel.setParentKey(id);
+    }
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final id = widget.id;
+    if (id != null) viewModel.initSignals(parentKey: id);
+  }
+
   Future<void> _create() async {
     try {
       await viewModel.create();
@@ -150,17 +150,6 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
     } catch (error) {
       if (!mounted) return;
       DialogUtil.instance.error('创建失败：$error');
-    }
-  }
-
-  Future<void> _edit(PageTextLocaleKey key) async {
-    try {
-      await viewModel.edit(key);
-      if (!mounted) return;
-      _showEditor();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
     }
   }
 
@@ -179,6 +168,29 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
     } catch (error) {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<void> _edit(PageTextLocaleKey key) async {
+    try {
+      await viewModel.edit(key);
+      if (!mounted) return;
+      _showEditor();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
+  }
+
+  Future<void> _persist(BuildContext dialogContext) async {
+    try {
+      await viewModel.persist();
+      if (!dialogContext.mounted) return;
+      Navigator.of(dialogContext).pop();
+      DialogUtil.instance.success('保存成功');
+    } catch (error) {
+      if (!dialogContext.mounted) return;
+      DialogUtil.instance.error('保存失败：$error');
     }
   }
 
@@ -257,17 +269,5 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
         ),
       ),
     );
-  }
-
-  Future<void> _persist(BuildContext dialogContext) async {
-    try {
-      await viewModel.persist();
-      if (!dialogContext.mounted) return;
-      Navigator.of(dialogContext).pop();
-      DialogUtil.instance.success('保存成功');
-    } catch (error) {
-      if (!dialogContext.mounted) return;
-      DialogUtil.instance.error('保存失败：$error');
-    }
   }
 }

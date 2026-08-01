@@ -30,30 +30,6 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
   bool _loading = true;
 
   @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  @override
-  void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.rawPath != widget.rawPath) _load();
-  }
-
-  Future<void> _load() async {
-    final path = GameIconPaths.blpPath(
-      GameIconPaths.normalizeIconName(widget.rawPath),
-    );
-    final image = await GameIconCache.instance.load(path);
-    if (!mounted) return;
-    setState(() {
-      _image = image;
-      _loading = false;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final image = _image;
     if (image != null) {
@@ -72,5 +48,29 @@ class _FoxyGameAssetIconState extends State<FoxyGameAssetIcon> {
       size: widget.size * 0.6,
       color: Theme.of(context).disabledColor,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant FoxyGameAssetIcon oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.rawPath != widget.rawPath) _load();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final path = GameIconPaths.blpPath(
+      GameIconPaths.normalizeIconName(widget.rawPath),
+    );
+    final image = await GameIconCache.instance.load(path);
+    if (!mounted) return;
+    setState(() {
+      _image = image;
+      _loading = false;
+    });
   }
 }

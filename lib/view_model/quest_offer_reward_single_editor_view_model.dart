@@ -1,10 +1,10 @@
 import 'package:foxy/entity/quest_offer_reward_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_offer_reward_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'quest_offer_reward_single_editor_view_model.g.dart';
 
@@ -22,16 +22,40 @@ class QuestOfferRewardSingleEditorViewModel with FieldControllerMixin, _QuestOff
   int _refreshToken = 0;
   int _parentToken = 0;
 
-  Future<void> initSignals({required int parentKey}) {
-    return setParentKey(parentKey);
+  Future<void> destroy() async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final key = editingKey.value;
+    if (key == null) return;
+    final parentSnapshot = parentKey.value;
+    final parentToken = _parentToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyQuestOfferReward(key);
+      if (parentToken != _parentToken ||
+          parentKey.value != parentSnapshot) {
+        return;
+      }
+      editingKey.value = null;
+      await _refresh();
+    } catch (error) {
+      if (parentToken != _parentToken ||
+          parentKey.value != parentSnapshot) {
+        return;
+      }
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
-  Future<void> setParentKey(int parentKey) async {
-    if (this.parentKey.value == parentKey && entity.value != null) return;
-    _parentToken++;
-    this.parentKey.value = parentKey;
-    editingKey.value = null;
-    await _refresh();
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({required int parentKey}) {
+    return setParentKey(parentKey);
   }
 
   Future<void> persist() async {
@@ -68,32 +92,12 @@ class QuestOfferRewardSingleEditorViewModel with FieldControllerMixin, _QuestOff
     }
   }
 
-  Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final key = editingKey.value;
-    if (key == null) return;
-    final parentSnapshot = parentKey.value;
-    final parentToken = _parentToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyQuestOfferReward(key);
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
-        return;
-      }
-      editingKey.value = null;
-      await _refresh();
-    } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
-        return;
-      }
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
+  Future<void> setParentKey(int parentKey) async {
+    if (this.parentKey.value == parentKey && entity.value != null) return;
+    _parentToken++;
+    this.parentKey.value = parentKey;
+    editingKey.value = null;
+    await _refresh();
   }
 
   Future<void> _refresh() async {
@@ -123,9 +127,5 @@ class QuestOfferRewardSingleEditorViewModel with FieldControllerMixin, _QuestOff
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

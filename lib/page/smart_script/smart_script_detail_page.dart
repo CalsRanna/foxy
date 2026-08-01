@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
-import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
+import 'package:foxy/view_model/smart_script_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -21,13 +21,16 @@ class SmartScriptDetailPage extends StatefulWidget {
 class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
   final viewModel = GetIt.instance.get<SmartScriptDetailViewModel>();
 
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.scriptKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
+  @override
+  Widget build(BuildContext context) {
+    var tabs = [const Text('脚本详情')];
+    var tabContents = [SmartScriptView(viewModel: viewModel)];
+    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [_buildHeader(), tabBar],
+    );
   }
 
   @override
@@ -42,18 +45,6 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
     _initialize();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var tabs = [const Text('脚本详情')];
-    var tabContents = [SmartScriptView(viewModel: viewModel)];
-    var tabBar = FoxyTab(tabs: tabs, contents: tabContents);
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [_buildHeader(), tabBar],
-    );
-  }
-
   Widget _buildHeader() {
     return Watch((_) {
       final key = viewModel.persistedKey.value;
@@ -64,5 +55,14 @@ class _SmartScriptDetailPageState extends State<SmartScriptDetailPage> {
       var text = Text(label, style: textStyle);
       return Padding(padding: EdgeInsets.only(bottom: 12), child: text);
     });
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.scriptKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

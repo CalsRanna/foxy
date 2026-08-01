@@ -25,9 +25,6 @@ final class RepositoryEmitter {
   /// `index`、`rank` 这类 MySQL 保留字列不需要逐个登记白名单。
   String _column(String columnName) => dartStringLiteral('`$columnName`');
 
-  String _table(RepositoryGenerationModel model) =>
-      dartStringLiteral(model.table);
-
   void _emitDestroy(StringBuffer buffer, RepositoryGenerationModel model) {
     buffer
       ..writeln(
@@ -123,23 +120,6 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
-  void _emitWriteHooks(StringBuffer buffer, RepositoryGenerationModel model) {
-    final parameter = model.entityParameterName;
-    buffer
-      ..writeln('  Future<void> _beforeDestroy(${model.keyType} key) async {}')
-      ..writeln()
-      ..writeln(
-        '  Future<void> _beforeStore'
-        '(${model.entityClassName} $parameter) async {}',
-      )
-      ..writeln()
-      ..writeln(
-        '  Future<void> _beforeUpdate(${model.keyType} originalKey, '
-        '${model.entityClassName} $parameter) async {}',
-      )
-      ..writeln();
-  }
-
   void _emitWhereKey(StringBuffer buffer, RepositoryGenerationModel model) {
     buffer.writeln(
       '  QueryBuilder _whereKey(QueryBuilder builder, ${model.keyType} key) {',
@@ -161,4 +141,24 @@ final class RepositoryEmitter {
     }
     buffer.writeln('  }');
   }
+
+  void _emitWriteHooks(StringBuffer buffer, RepositoryGenerationModel model) {
+    final parameter = model.entityParameterName;
+    buffer
+      ..writeln('  Future<void> _beforeDestroy(${model.keyType} key) async {}')
+      ..writeln()
+      ..writeln(
+        '  Future<void> _beforeStore'
+        '(${model.entityClassName} $parameter) async {}',
+      )
+      ..writeln()
+      ..writeln(
+        '  Future<void> _beforeUpdate(${model.keyType} originalKey, '
+        '${model.entityClassName} $parameter) async {}',
+      )
+      ..writeln();
+  }
+
+  String _table(RepositoryGenerationModel model) =>
+      dartStringLiteral(model.table);
 }

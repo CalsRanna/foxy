@@ -7,30 +7,35 @@ import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 
 final class SaveNpcTextInput {
+  final int? originalKey;
+
+  final NpcTextEntity candidate;
+  final NpcTextLocaleKey? originalLocaleKey;
+  final NpcTextLocaleEntity? localeCandidate;
   const SaveNpcTextInput({
     required this.originalKey,
     required this.candidate,
     required this.originalLocaleKey,
     required this.localeCandidate,
   });
-
-  final int? originalKey;
-  final NpcTextEntity candidate;
-  final NpcTextLocaleKey? originalLocaleKey;
-  final NpcTextLocaleEntity? localeCandidate;
 }
 
 final class SaveNpcTextResult {
+  final int persistedKey;
+
+  final NpcTextLocaleKey? localeKey;
   const SaveNpcTextResult({
     required this.persistedKey,
     required this.localeKey,
   });
-
-  final int persistedKey;
-  final NpcTextLocaleKey? localeKey;
 }
 
 final class SaveNpcTextUseCase {
+  final DatabaseTransaction _transaction;
+
+  final NpcTextRepository _npcTextRepository;
+  final NpcTextLocaleRepository _localeRepository;
+  final ActivityLogService _activityLogService;
   SaveNpcTextUseCase({
     required DatabaseTransaction transaction,
     required NpcTextRepository npcTextRepository,
@@ -40,11 +45,6 @@ final class SaveNpcTextUseCase {
        _npcTextRepository = npcTextRepository,
        _localeRepository = localeRepository,
        _activityLogService = activityLogService;
-
-  final DatabaseTransaction _transaction;
-  final NpcTextRepository _npcTextRepository;
-  final NpcTextLocaleRepository _localeRepository;
-  final ActivityLogService _activityLogService;
 
   Future<SaveNpcTextResult> execute(SaveNpcTextInput input) async {
     final candidate = input.candidate;

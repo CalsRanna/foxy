@@ -17,15 +17,24 @@ final class ExtractGameIconsInput {
 /// 从客户端 MPQ 提取游戏图标：校验客户端目录、持久化 `client_dir` 配置、
 /// 在后台 isolate 执行提取（进度经 SendPort 回报），支持取消。
 final class ExtractGameIconsUseCase {
+  static final GameIconExtractionResult _cancelledResult =
+      GameIconExtractionResult(
+        extracted: 0,
+        skipped: 0,
+        failed: 0,
+        errors: const [],
+        cancelled: true,
+      );
+
   final ConfigUtil _configUtil;
 
   /// 提取产物输出目录（测试注入临时目录；默认运行时当前目录下 data/icon）。
   final String outputDir;
-
   var _cancelGeneration = 0;
   var _executing = false;
   Isolate? _activeIsolate;
   SendPort? _controlPort;
+
   Completer<GameIconExtractionResult>? _activeCompleter;
 
   ExtractGameIconsUseCase({
@@ -35,6 +44,22 @@ final class ExtractGameIconsUseCase {
        outputDir = outputDir ?? GameIconPaths.iconDir;
 
   bool get isRunning => _executing;
+
+  Future<void> cancel() async {
+    _cancelGeneration++;
+    _controlPort?.send('cancel');
+    // 优雅取消：worker 每文件检查标志后自行终止。5 秒兜底强制终止，
+    // 覆盖 worker 卡死（如归档损坏导致长时间挂起）的极端情况。
+    final completer = _activeCompleter;
+    if (completer != null && !completer.isCompleted) {
+      Future.delayed(const Duration(seconds: 5), () {
+        _activeIsolate?.kill(priority: Isolate.immediate);
+        _activeIsolate = null;
+        _controlPort = null;
+        if (!completer.isCompleted) completer.complete(_cancelledResult);
+      });
+    }
+  }
 
   Future<GameIconExtractionResult> execute(ExtractGameIconsInput input) async {
     if (_executing) {
@@ -66,22 +91,6 @@ final class ExtractGameIconsUseCase {
       return result;
     } finally {
       _executing = false;
-    }
-  }
-
-  Future<void> cancel() async {
-    _cancelGeneration++;
-    _controlPort?.send('cancel');
-    // 优雅取消：worker 每文件检查标志后自行终止。5 秒兜底强制终止，
-    // 覆盖 worker 卡死（如归档损坏导致长时间挂起）的极端情况。
-    final completer = _activeCompleter;
-    if (completer != null && !completer.isCompleted) {
-      Future.delayed(const Duration(seconds: 5), () {
-        _activeIsolate?.kill(priority: Isolate.immediate);
-        _activeIsolate = null;
-        _controlPort = null;
-        if (!completer.isCompleted) completer.complete(_cancelledResult);
-      });
     }
   }
 
@@ -159,13 +168,4 @@ final class ExtractGameIconsUseCase {
     }
     return result;
   }
-
-  static final GameIconExtractionResult _cancelledResult =
-      GameIconExtractionResult(
-        extracted: 0,
-        skipped: 0,
-        failed: 0,
-        errors: const [],
-        cancelled: true,
-      );
 }

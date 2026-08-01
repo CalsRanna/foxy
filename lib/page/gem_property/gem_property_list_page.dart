@@ -1,15 +1,15 @@
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/router/router_menu.dart';
-import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/gem_property_constants.dart';
+import 'package:foxy/router/router.gr.dart';
+import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/gem_property_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -27,12 +27,6 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
   final viewModel = GetIt.instance.get<GemPropertyListViewModel>();
 
   @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('宝石属性列表'),
@@ -45,6 +39,12 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       children: children,
     );
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
   }
 
   @override
@@ -179,15 +179,6 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
     return ShadCard(padding: EdgeInsets.fromLTRB(16, 16, 16, 0), child: column);
   }
 
-  void _navigateToDetail({int? key}) {
-    final label = key != null ? '宝石属性 #$key' : '新建宝石属性';
-    GetIt.instance.get<RouterFacade>().navigateToDetail(
-      label: label,
-      route: GemPropertyDetailRoute(gemPropertyKey: key),
-      parentMenu: RouterMenu.gemProperty,
-    );
-  }
-
   Future<void> _copy(int key) async {
     final confirmed = await DialogUtil.instance.confirm(
       title: '确认复制',
@@ -221,5 +212,14 @@ class _GemPropertyListPageState extends State<GemPropertyListPage> {
       if (!mounted) return;
       DialogUtil.instance.error('删除失败：$error');
     }
+  }
+
+  void _navigateToDetail({int? key}) {
+    final label = key != null ? '宝石属性 #$key' : '新建宝石属性';
+    GetIt.instance.get<RouterFacade>().navigateToDetail(
+      label: label,
+      route: GemPropertyDetailRoute(gemPropertyKey: key),
+      parentMenu: RouterMenu.gemProperty,
+    );
   }
 }

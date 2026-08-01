@@ -32,28 +32,6 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin, QueryVersion
 
   int _refreshToken = 0;
 
-  Future<void> initSignals() => _refresh();
-
-  Future<void> search() async {
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    entryController.init('');
-    nameController.init('');
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    markQueryVersion();
-    await _refresh();
-  }
-
   Future<void> copy(ReferenceLootTemplateKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     submitting.value = true;
@@ -87,10 +65,45 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin, QueryVersion
     }
   }
 
+  void dispose() => disposeControllers();
+
+  Future<void> initSignals() => _refresh();
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    nameController.init('');
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
   ReferenceLootTemplateFilter _collectFilter() {
     return ReferenceLootTemplateFilter(
       entry: entryController.collect(),
       name: nameController.collect(),
+    );
+  }
+
+  void _logActivity(ActivityActionType action, ReferenceLootTemplateKey key) {
+    _activityLogService.recordBestEffort(
+      ActivityLogEntity(
+        module: 'reference_loot_template',
+        actionType: action,
+        entityName: 'ReferenceLoot ${key.entry}/${key.item}',
+        createdAt: DateTime.now(),
+      ),
     );
   }
 
@@ -116,17 +129,4 @@ class ReferenceLootTemplateListViewModel with FieldControllerMixin, QueryVersion
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void _logActivity(ActivityActionType action, ReferenceLootTemplateKey key) {
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'reference_loot_template',
-        actionType: action,
-        entityName: 'ReferenceLoot ${key.entry}/${key.item}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
-
-  void dispose() => disposeControllers();
 }

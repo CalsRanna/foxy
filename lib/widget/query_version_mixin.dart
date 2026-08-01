@@ -27,14 +27,14 @@ import 'package:signals/signals.dart';
 /// }
 /// ```
 mixin QueryVersionMixin {
+  /// 分页浏览基线版本：变化即代表表格内容整页切换，应回到第一行。
+  final queryVersion = signal(0);
+
   /// 当前分页页码（混入的 ViewModel 已声明 `final page = signal(1)`，天然满足）。
   Signal<int> get page;
 
   /// 每页行数（项目所有分页统一为 50）。
   int get pageSize => 50;
-
-  /// 分页浏览基线版本：变化即代表表格内容整页切换，应回到第一行。
-  final queryVersion = signal(0);
 
   /// 标记一次整页级变化（翻页 / 搜索 / 重置）。
   void markQueryVersion() => queryVersion.value++;

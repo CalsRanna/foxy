@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
-import 'package:foxy/view_model/more_read_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/more_read_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_feature_card.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
@@ -29,23 +29,6 @@ class _MorePageState extends State<MorePage> {
   void Function()? _featureSubscription;
 
   @override
-  void initState() {
-    super.initState();
-    viewModel.setFeatures(featureState.allFeatures.value);
-    viewModel.initSignals();
-    _featureSubscription = featureState.allFeatures.subscribe(
-      viewModel.setFeatures,
-    );
-  }
-
-  @override
-  void dispose() {
-    _featureSubscription?.call();
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final children = [
       FoxyHeader('更多功能'),
@@ -60,31 +43,20 @@ class _MorePageState extends State<MorePage> {
     return Padding(padding: const EdgeInsets.all(16.0), child: column);
   }
 
-  Widget _buildSearch() {
-    var searchInput = FoxyStringInput(
-      controller: viewModel.searchController,
-      placeholder: '搜索模块名称',
-    );
-    var searchButton = ShadButton(
-      onPressed: viewModel.search,
-      size: ShadButtonSize.sm,
-      child: const Text('查询'),
-    );
-    var resetButton = ShadButton.ghost(
-      onPressed: viewModel.reset,
-      size: ShadButtonSize.sm,
-      child: const Text('重置'),
-    );
-    var buttonsRow = Row(spacing: 16, children: [searchButton, resetButton]);
-    return ShadCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        spacing: 16,
-        children: [
-          Expanded(child: searchInput),
-          Expanded(flex: 3, child: buttonsRow),
-        ],
-      ),
+  @override
+  void dispose() {
+    _featureSubscription?.call();
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.setFeatures(featureState.allFeatures.value);
+    viewModel.initSignals();
+    _featureSubscription = featureState.allFeatures.subscribe(
+      viewModel.setFeatures,
     );
   }
 
@@ -124,6 +96,41 @@ class _MorePageState extends State<MorePage> {
     });
   }
 
+  Widget _buildSearch() {
+    var searchInput = FoxyStringInput(
+      controller: viewModel.searchController,
+      placeholder: '搜索模块名称',
+    );
+    var searchButton = ShadButton(
+      onPressed: viewModel.search,
+      size: ShadButtonSize.sm,
+      child: const Text('查询'),
+    );
+    var resetButton = ShadButton.ghost(
+      onPressed: viewModel.reset,
+      size: ShadButtonSize.sm,
+      child: const Text('重置'),
+    );
+    var buttonsRow = Row(spacing: 16, children: [searchButton, resetButton]);
+    return ShadCard(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        spacing: 16,
+        children: [
+          Expanded(child: searchInput),
+          Expanded(flex: 3, child: buttonsRow),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToModule(FeatureEntity module) {
+    routerFacade.navigateToMenu(
+      RouterMenu.values.byName(module.routerMenu),
+      parentMenu: module.isPinned ? null : RouterMenu.more,
+    );
+  }
+
   void _showContextMenu(
     BuildContext context,
     FeatureEntity feature,
@@ -150,13 +157,6 @@ class _MorePageState extends State<MorePage> {
           child: Text(feature.isFavorite ? '取消收藏' : '收藏到首页'),
         ),
       ],
-    );
-  }
-
-  void _navigateToModule(FeatureEntity module) {
-    routerFacade.navigateToMenu(
-      RouterMenu.values.byName(module.routerMenu),
-      parentMenu: module.isPinned ? null : RouterMenu.more,
     );
   }
 

@@ -13,19 +13,6 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 typedef DbcExportRowLoader =
     Future<List<Map<String, dynamic>>> Function(String tableName);
 
-/// 单次导入任务句柄：cancel 持有同一引用，可在 isolate spawn 完成后仍能 kill。
-class _ImportJobHandle {
-  final String jobId;
-  final Completer<void> done = Completer<void>();
-  Isolate? isolate;
-  SendPort? controlPort;
-  Future<void> Function(DbcSyncResult result)? finish;
-  bool cancelRequested = false;
-  bool forceCancelTerminal = false;
-
-  _ImportJobHandle(this.jobId);
-}
-
 class DbcSyncUtil {
   final _exportUtil = DbcExportUtil();
 
@@ -37,6 +24,74 @@ class DbcSyncUtil {
 
   bool get isRunning => _running;
   DbcSyncOperation? get operation => _operation;
+
+  Future<void> cancel() async {
+    if (!_running) return;
+    if (_operation == DbcSyncOperation.export) {
+      _exportCancelRequested = true;
+      return;
+    }
+    if (_operation != DbcSyncOperation.import) return;
+
+    // 持有 job 引用（非瞬时 isolate 快照），spawn 完成后仍可 kill。
+    final job = _activeImportJob;
+    if (job == null) return;
+
+    job.cancelRequested = true;
+    job.controlPort?.send('cancel');
+    if (job.done.isCompleted) return;
+
+    try {
+      await job.done.future.timeout(const Duration(seconds: 3));
+      return;
+    } on TimeoutException {
+      job.forceCancelTerminal = true;
+      // spawn 可能刚完成：再读一次 job.isolate
+      job.isolate?.kill(priority: Isolate.immediate);
+      // 短暂轮询，覆盖「cancel 时 isolate 尚未赋值」的窗口
+      for (var i = 0; i < 10 && job.isolate == null; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+      }
+      job.isolate?.kill(priority: Isolate.immediate);
+      try {
+        await _cleanupStaging(job.jobId).timeout(const Duration(seconds: 5));
+      } on TimeoutException {
+        LoggerUtil.instance.w('DBC 取消后清理 staging 表超时: ${job.jobId}');
+      }
+      final finish = job.finish;
+      if (finish != null) {
+        await finish(
+          const DbcSyncResult(
+            operation: DbcSyncOperation.import,
+            completed: 0,
+            skipped: 0,
+            errors: [],
+            cancelled: true,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<List<String>> checkRequiredTablesExist() async {
+    final results = await checkTables();
+    final errors = results.where(
+      (result) =>
+          result.state == DbcTableState.error ||
+          result.state == DbcTableState.incompatible,
+    );
+    if (errors.isNotEmpty) {
+      throw StateError('检查 DBC 表失败: ${errors.first.message}');
+    }
+    return results
+        .where(
+          (result) =>
+              result.state == DbcTableState.missing ||
+              result.state == DbcTableState.empty,
+        )
+        .map((result) => result.tableName)
+        .toList();
+  }
 
   Future<List<DbcTableCheckResult>> checkTables() async {
     final laconic = Database.instance.laconic;
@@ -165,68 +220,6 @@ class DbcSyncUtil {
     return results;
   }
 
-  Future<List<String>> checkRequiredTablesExist() async {
-    final results = await checkTables();
-    final errors = results.where(
-      (result) =>
-          result.state == DbcTableState.error ||
-          result.state == DbcTableState.incompatible,
-    );
-    if (errors.isNotEmpty) {
-      throw StateError('检查 DBC 表失败: ${errors.first.message}');
-    }
-    return results
-        .where(
-          (result) =>
-              result.state == DbcTableState.missing ||
-              result.state == DbcTableState.empty,
-        )
-        .map((result) => result.tableName)
-        .toList();
-  }
-
-  Stream<DbcSyncProgress> import({
-    required String directory,
-    required MysqlConfig mysqlConfig,
-  }) {
-    final controller = StreamController<DbcSyncProgress>();
-
-    if (_running) {
-      controller
-        ..add(
-          DbcSyncResult(
-            operation: DbcSyncOperation.import,
-            completed: 0,
-            skipped: 0,
-            errors: const [
-              DbcSyncError(
-                stage: DbcSyncStage.preparing,
-                message: '已有 DBC 任务正在运行',
-              ),
-            ],
-          ),
-        )
-        ..close();
-      return controller.stream;
-    }
-
-    _running = true;
-    _operation = DbcSyncOperation.import;
-    final jobId = DateTime.now().microsecondsSinceEpoch.toString();
-    final job = _ImportJobHandle(jobId);
-    _activeImportJob = job;
-    _activeJobId = jobId;
-    unawaited(
-      _startImport(
-        controller: controller,
-        directory: directory,
-        mysqlConfig: mysqlConfig,
-        job: job,
-      ),
-    );
-    return controller.stream;
-  }
-
   Stream<DbcSyncProgress> export({
     required List<DbcDefinition> definitions,
     required String outputDirectory,
@@ -279,6 +272,69 @@ class DbcSyncUtil {
       ),
     );
     return controller.stream;
+  }
+
+  Stream<DbcSyncProgress> import({
+    required String directory,
+    required MysqlConfig mysqlConfig,
+  }) {
+    final controller = StreamController<DbcSyncProgress>();
+
+    if (_running) {
+      controller
+        ..add(
+          DbcSyncResult(
+            operation: DbcSyncOperation.import,
+            completed: 0,
+            skipped: 0,
+            errors: const [
+              DbcSyncError(
+                stage: DbcSyncStage.preparing,
+                message: '已有 DBC 任务正在运行',
+              ),
+            ],
+          ),
+        )
+        ..close();
+      return controller.stream;
+    }
+
+    _running = true;
+    _operation = DbcSyncOperation.import;
+    final jobId = DateTime.now().microsecondsSinceEpoch.toString();
+    final job = _ImportJobHandle(jobId);
+    _activeImportJob = job;
+    _activeJobId = jobId;
+    unawaited(
+      _startImport(
+        controller: controller,
+        directory: directory,
+        mysqlConfig: mysqlConfig,
+        job: job,
+      ),
+    );
+    return controller.stream;
+  }
+
+  Future<void> _cleanupStaging(String jobId) async {
+    try {
+      final tables = dbcDefinitions
+          .map(
+            (definition) => '${definition.qualifiedTableName}__staging_$jobId',
+          )
+          .join(', ');
+      await Database.instance.laconic.statement('DROP TABLE IF EXISTS $tables');
+    } catch (error) {
+      LoggerUtil.instance.w('DBC 取消后清理 staging 表失败: $error');
+    }
+  }
+
+  void _clearActiveTask() {
+    _activeImportJob = null;
+    _activeJobId = null;
+    _exportCancelRequested = false;
+    _operation = null;
+    _running = false;
   }
 
   Future<void> _runExport({
@@ -389,54 +445,6 @@ class DbcSyncUtil {
       }
       _clearActiveTask();
       if (!controller.isClosed) await controller.close();
-    }
-  }
-
-  Future<void> cancel() async {
-    if (!_running) return;
-    if (_operation == DbcSyncOperation.export) {
-      _exportCancelRequested = true;
-      return;
-    }
-    if (_operation != DbcSyncOperation.import) return;
-
-    // 持有 job 引用（非瞬时 isolate 快照），spawn 完成后仍可 kill。
-    final job = _activeImportJob;
-    if (job == null) return;
-
-    job.cancelRequested = true;
-    job.controlPort?.send('cancel');
-    if (job.done.isCompleted) return;
-
-    try {
-      await job.done.future.timeout(const Duration(seconds: 3));
-      return;
-    } on TimeoutException {
-      job.forceCancelTerminal = true;
-      // spawn 可能刚完成：再读一次 job.isolate
-      job.isolate?.kill(priority: Isolate.immediate);
-      // 短暂轮询，覆盖「cancel 时 isolate 尚未赋值」的窗口
-      for (var i = 0; i < 10 && job.isolate == null; i++) {
-        await Future<void>.delayed(const Duration(milliseconds: 50));
-      }
-      job.isolate?.kill(priority: Isolate.immediate);
-      try {
-        await _cleanupStaging(job.jobId).timeout(const Duration(seconds: 5));
-      } on TimeoutException {
-        LoggerUtil.instance.w('DBC 取消后清理 staging 表超时: ${job.jobId}');
-      }
-      final finish = job.finish;
-      if (finish != null) {
-        await finish(
-          const DbcSyncResult(
-            operation: DbcSyncOperation.import,
-            completed: 0,
-            skipped: 0,
-            errors: [],
-            cancelled: true,
-          ),
-        );
-      }
     }
   }
 
@@ -640,14 +648,6 @@ class DbcSyncUtil {
     }
   }
 
-  void _clearActiveTask() {
-    _activeImportJob = null;
-    _activeJobId = null;
-    _exportCancelRequested = false;
-    _operation = null;
-    _running = false;
-  }
-
   static DbcSyncStage _parseStage(String value) {
     return DbcSyncStage.values.firstWhere(
       (stage) => stage.name == value,
@@ -673,17 +673,17 @@ class DbcSyncUtil {
   static bool _truthy(Object? value) {
     return value == 1 || value == true || value == '1';
   }
+}
 
-  Future<void> _cleanupStaging(String jobId) async {
-    try {
-      final tables = dbcDefinitions
-          .map(
-            (definition) => '${definition.qualifiedTableName}__staging_$jobId',
-          )
-          .join(', ');
-      await Database.instance.laconic.statement('DROP TABLE IF EXISTS $tables');
-    } catch (error) {
-      LoggerUtil.instance.w('DBC 取消后清理 staging 表失败: $error');
-    }
-  }
+/// 单次导入任务句柄：cancel 持有同一引用，可在 isolate spawn 完成后仍能 kill。
+class _ImportJobHandle {
+  final String jobId;
+  final Completer<void> done = Completer<void>();
+  Isolate? isolate;
+  SendPort? controlPort;
+  Future<void> Function(DbcSyncResult result)? finish;
+  bool cancelRequested = false;
+  bool forceCancelTerminal = false;
+
+  _ImportJobHandle(this.jobId);
 }

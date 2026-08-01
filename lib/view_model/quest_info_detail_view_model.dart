@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_info_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -25,6 +25,32 @@ class QuestInfoDetailViewModel
   late final infoNameLangFlagsController = registerController(
     IntFieldController(),
   );
+
+  void applyInfoNameLocales(List<DbcLocaleFieldValue> values) {
+    entity.value = entity.value!.copyWith(
+      infoNameLangEnUS: values.valueOf('enUS'),
+      infoNameLangKoKR: values.valueOf('koKR'),
+      infoNameLangFrFR: values.valueOf('frFR'),
+      infoNameLangDeDE: values.valueOf('deDE'),
+      infoNameLangZhCN: values.valueOf('zhCN'),
+      infoNameLangZhTW: values.valueOf('zhTW'),
+      infoNameLangEsES: values.valueOf('esES'),
+      infoNameLangEsMX: values.valueOf('esMX'),
+      infoNameLangRuRU: values.valueOf('ruRU'),
+      infoNameLangJaJP: values.valueOf('jaJP'),
+      infoNameLangPtPT: values.valueOf('ptPT'),
+      infoNameLangPtBR: values.valueOf('ptBR'),
+      infoNameLangItIT: values.valueOf('itIT'),
+      infoNameLangUnk1: values.valueOf('unk1'),
+      infoNameLangUnk2: values.valueOf('unk2'),
+      infoNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -79,26 +105,10 @@ class QuestInfoDetailViewModel
     }
   }
 
-  void applyInfoNameLocales(List<DbcLocaleFieldValue> values) {
-    entity.value = entity.value!.copyWith(
-      infoNameLangEnUS: values.valueOf('enUS'),
-      infoNameLangKoKR: values.valueOf('koKR'),
-      infoNameLangFrFR: values.valueOf('frFR'),
-      infoNameLangDeDE: values.valueOf('deDE'),
-      infoNameLangZhCN: values.valueOf('zhCN'),
-      infoNameLangZhTW: values.valueOf('zhTW'),
-      infoNameLangEsES: values.valueOf('esES'),
-      infoNameLangEsMX: values.valueOf('esMX'),
-      infoNameLangRuRU: values.valueOf('ruRU'),
-      infoNameLangJaJP: values.valueOf('jaJP'),
-      infoNameLangPtPT: values.valueOf('ptPT'),
-      infoNameLangPtBR: values.valueOf('ptBR'),
-      infoNameLangItIT: values.valueOf('itIT'),
-      infoNameLangUnk1: values.valueOf('unk1'),
-      infoNameLangUnk2: values.valueOf('unk2'),
-      infoNameLangUnk3: values.valueOf('unk3'),
-    );
-    nameController.init(values.zhCN);
+  void _applyCandidate(QuestInfoEntity table) {
+    idController.init(table.id);
+    nameController.init(table.infoNameLangZhCN);
+    infoNameLangFlagsController.init(table.infoNameLangFlags);
   }
 
   QuestInfoEntity _collectCandidate() {
@@ -109,12 +119,6 @@ class QuestInfoDetailViewModel
     );
   }
 
-  void _applyCandidate(QuestInfoEntity table) {
-    idController.init(table.id);
-    nameController.init(table.infoNameLangZhCN);
-    infoNameLangFlagsController.init(table.infoNameLangFlags);
-  }
-
   void _logActivity(ActivityActionType action, QuestInfoEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_info',
@@ -123,9 +127,5 @@ class QuestInfoDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
-import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
-import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/view_model/item_enchantment_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
-import 'package:foxy/widget/foxy_shad_table.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/foxy_entity_picker.dart';
+import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
+import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
-import 'package:foxy/widget/foxy_form_item.dart';
+import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:get_it/get_it.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 /// 物品附魔Tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
@@ -32,10 +32,10 @@ class _ItemEnchantmentTemplateViewState
       .get<ItemEnchantmentTemplateCollectionEditorViewModel>();
 
   @override
-  void initState() {
-    super.initState();
-    final parentKey = widget.parentKey;
-    if (parentKey != null) viewModel.initSignals(parentKey: parentKey);
+  Widget build(BuildContext context) {
+    return Watch((context) {
+      return _buildTable();
+    });
   }
 
   @override
@@ -58,10 +58,83 @@ class _ItemEnchantmentTemplateViewState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Watch((context) {
-      return _buildTable();
-    });
+  void initState() {
+    super.initState();
+    final parentKey = widget.parentKey;
+    if (parentKey != null) viewModel.initSignals(parentKey: parentKey);
+  }
+
+  Widget _buildDialogForm(BuildContext dialogContext) {
+    final isEditing = viewModel.editingKey.value != null;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 500),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FoxyFormItem(
+            label: '附魔组ID',
+            child: FoxyNumberInput<int>(
+              controller: viewModel.entryController,
+              placeholder: 'Entry',
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: '附魔ID',
+            child: FoxyEntityPicker(
+              delegate:
+                  viewModel.parentKey.value?.kind ==
+                      ItemEnchantmentKind.randomProperty
+                  ? FoxyEntityPickerDelegates.itemRandomProperties
+                  : FoxyEntityPickerDelegates.itemRandomSuffix,
+              controller: viewModel.enchController,
+              placeholder: 'Ench',
+            ),
+          ),
+          SizedBox(height: 16),
+          FoxyFormItem(
+            label: '几率',
+            child: FoxyNumberInput<double>(
+              controller: viewModel.chanceController,
+              placeholder: 'Chance (%)',
+            ),
+          ),
+          SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ShadButton.outline(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text('取消'),
+              ),
+              SizedBox(width: 8),
+              Watch(
+                (_) => ShadButton(
+                  enabled: !viewModel.submitting.value,
+                  onPressed: () async {
+                    try {
+                      await viewModel.persist();
+                    } catch (error) {
+                      if (!mounted) return;
+                      DialogUtil.instance.error('保存失败：$error');
+                      return;
+                    }
+                    if (!dialogContext.mounted) return;
+                    ShadSonner.of(
+                      dialogContext,
+                    ).show(const ShadToast(description: Text('保存成功')));
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text(isEditing ? '更新' : '保存'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildTable() {
@@ -157,6 +230,34 @@ class _ItemEnchantmentTemplateViewState
     return Padding(padding: const EdgeInsets.only(top: 16), child: column);
   }
 
+  Future<void> _destroy(ItemEnchantmentTemplateKey key) async {
+    final confirmed = await DialogUtil.instance.confirm(
+      title: '确认删除',
+      description: '将永久删除该记录，确认继续？',
+      confirmText: '删除',
+      destructive: true,
+    );
+    if (!confirmed) return;
+    try {
+      await viewModel.destroy(key);
+      if (!mounted) return;
+      DialogUtil.instance.success('删除成功');
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('删除失败：$error');
+    }
+  }
+
+  Future<bool> _load(ItemEnchantmentTemplateKey key) async {
+    try {
+      await viewModel.edit(key);
+      return true;
+    } catch (error) {
+      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      return false;
+    }
+  }
+
   Future<void> _showCreateDialog() async {
     try {
       await viewModel.create();
@@ -185,106 +286,5 @@ class _ItemEnchantmentTemplateViewState
         child: _buildDialogForm(dialogContext),
       ),
     );
-  }
-
-  Widget _buildDialogForm(BuildContext dialogContext) {
-    final isEditing = viewModel.editingKey.value != null;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 500),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FoxyFormItem(
-            label: '附魔组ID',
-            child: FoxyNumberInput<int>(
-              controller: viewModel.entryController,
-              placeholder: 'Entry',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '附魔ID',
-            child: FoxyEntityPicker(
-              delegate:
-                  viewModel.parentKey.value?.kind ==
-                      ItemEnchantmentKind.randomProperty
-                  ? FoxyEntityPickerDelegates.itemRandomProperties
-                  : FoxyEntityPickerDelegates.itemRandomSuffix,
-              controller: viewModel.enchController,
-              placeholder: 'Ench',
-            ),
-          ),
-          SizedBox(height: 16),
-          FoxyFormItem(
-            label: '几率',
-            child: FoxyNumberInput<double>(
-              controller: viewModel.chanceController,
-              placeholder: 'Chance (%)',
-            ),
-          ),
-          SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ShadButton.outline(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: Text('取消'),
-              ),
-              SizedBox(width: 8),
-              Watch(
-                (_) => ShadButton(
-                  enabled: !viewModel.submitting.value,
-                  onPressed: () async {
-                    try {
-                      await viewModel.persist();
-                    } catch (error) {
-                      if (!mounted) return;
-                      DialogUtil.instance.error('保存失败：$error');
-                      return;
-                    }
-                    if (!dialogContext.mounted) return;
-                    ShadSonner.of(
-                      dialogContext,
-                    ).show(const ShadToast(description: Text('保存成功')));
-                    Navigator.of(dialogContext).pop();
-                  },
-                  child: Text(isEditing ? '更新' : '保存'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<bool> _load(ItemEnchantmentTemplateKey key) async {
-    try {
-      await viewModel.edit(key);
-      return true;
-    } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
-      return false;
-    }
-  }
-
-  Future<void> _destroy(ItemEnchantmentTemplateKey key) async {
-    final confirmed = await DialogUtil.instance.confirm(
-      title: '确认删除',
-      description: '将永久删除该记录，确认继续？',
-      confirmText: '删除',
-      destructive: true,
-    );
-    if (!confirmed) return;
-    try {
-      await viewModel.destroy(key);
-      if (!mounted) return;
-      DialogUtil.instance.success('删除成功');
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
-    }
   }
 }

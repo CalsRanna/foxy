@@ -7,78 +7,17 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
-import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
-import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/page/setting/setup_wizard_dialog.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:warcrafty/warcrafty.dart';
-
-/// 内存 ConfigUtil：读写都无真实 IO，widget 测试无需 runAsync 也能完成。
-final class _MemoryConfigUtil extends ConfigUtil {
-  _MemoryConfigUtil(this.data);
-
-  final Map<String, dynamic> data;
-
-  @override
-  String get configPath => 'memory:config.yaml';
-
-  @override
-  Future<Map<String, dynamic>> load() async => Map<String, dynamic>.of(data);
-
-  @override
-  Future<void> update(Map<String, dynamic> values) async {
-    data.addAll(values);
-  }
-}
-
-/// 假 DbcSyncUtil：表检查全部就绪，导入立即成功（不触真实 MySQL/isolate）。
-final class _FakeDbcSyncUtil extends DbcSyncUtil {
-  @override
-  Future<List<DbcTableCheckResult>> checkTables() async => [
-        for (final definition in dbcDefinitions)
-          DbcTableCheckResult(
-            tableName: definition.tableName,
-            state: DbcTableState.ready,
-          ),
-      ];
-
-  @override
-  Stream<DbcSyncProgress> import({
-    required String directory,
-    required MysqlConfig mysqlConfig,
-  }) async* {
-    yield const DbcSyncResult(
-      operation: DbcSyncOperation.import,
-      completed: 1,
-      skipped: 0,
-      errors: [],
-      cancelled: false,
-    );
-  }
-}
-
-/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
-void _createFakeClientMpq(String localeDataDir) {
-  final archive = MpqArchive.create(
-    p.join(localeDataDir, 'locale-zhCN.MPQ'),
-    maxFileCount: 8,
-  );
-  archive.addFile(
-    r'Interface\Icons\INV_Foo.blp',
-    Uint8List.fromList([1, 2, 3, 4]),
-  );
-  archive.addFile(
-    r'Interface\Spellbook\UI-Glyph-Rune-1.blp',
-    Uint8List.fromList([5, 6, 7, 8]),
-  );
-  archive.close();
-}
 
 void main() {
   late Directory tempDir;
@@ -270,6 +209,23 @@ void main() {
   });
 }
 
+/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
+void _createFakeClientMpq(String localeDataDir) {
+  final archive = MpqArchive.create(
+    p.join(localeDataDir, 'locale-zhCN.MPQ'),
+    maxFileCount: 8,
+  );
+  archive.addFile(
+    r'Interface\Icons\INV_Foo.blp',
+    Uint8List.fromList([1, 2, 3, 4]),
+  );
+  archive.addFile(
+    r'Interface\Spellbook\UI-Glyph-Rune-1.blp',
+    Uint8List.fromList([5, 6, 7, 8]),
+  );
+  archive.close();
+}
+
 Future<void> _waitFor(bool Function() condition) async {
   final deadline = DateTime.now().add(const Duration(seconds: 20));
   while (!condition()) {
@@ -277,5 +233,49 @@ Future<void> _waitFor(bool Function() condition) async {
       fail('等待超时');
     }
     await Future<void>.delayed(const Duration(milliseconds: 50));
+  }
+}
+
+/// 假 DbcSyncUtil：表检查全部就绪，导入立即成功（不触真实 MySQL/isolate）。
+final class _FakeDbcSyncUtil extends DbcSyncUtil {
+  @override
+  Future<List<DbcTableCheckResult>> checkTables() async => [
+        for (final definition in dbcDefinitions)
+          DbcTableCheckResult(
+            tableName: definition.tableName,
+            state: DbcTableState.ready,
+          ),
+      ];
+
+  @override
+  Stream<DbcSyncProgress> import({
+    required String directory,
+    required MysqlConfig mysqlConfig,
+  }) async* {
+    yield const DbcSyncResult(
+      operation: DbcSyncOperation.import,
+      completed: 1,
+      skipped: 0,
+      errors: [],
+      cancelled: false,
+    );
+  }
+}
+
+/// 内存 ConfigUtil：读写都无真实 IO，widget 测试无需 runAsync 也能完成。
+final class _MemoryConfigUtil extends ConfigUtil {
+  final Map<String, dynamic> data;
+
+  _MemoryConfigUtil(this.data);
+
+  @override
+  String get configPath => 'memory:config.yaml';
+
+  @override
+  Future<Map<String, dynamic>> load() async => Map<String, dynamic>.of(data);
+
+  @override
+  Future<void> update(Map<String, dynamic> values) async {
+    data.addAll(values);
   }
 }

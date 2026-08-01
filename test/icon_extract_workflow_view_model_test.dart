@@ -1,40 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
-
-/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
-final class _TempConfigUtil extends ConfigUtil {
-  _TempConfigUtil(this._dir);
-
-  final String _dir;
-
-  @override
-  String get configPath => p.join(_dir, 'config.yaml');
-}
-
-/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
-void _createFakeClientMpq(String localeDataDir) {
-  final archive = MpqArchive.create(
-    p.join(localeDataDir, 'locale-zhCN.MPQ'),
-    maxFileCount: 8,
-  );
-  archive.addFile(
-    r'Interface\Icons\INV_Foo.blp',
-    Uint8List.fromList([1, 2, 3, 4]),
-  );
-  archive.addFile(
-    r'Interface\Spellbook\UI-Glyph-Rune-1.blp',
-    Uint8List.fromList([5, 6, 7, 8]),
-  );
-  archive.close();
-}
 
 void main() {
   late Directory tempDir;
@@ -139,6 +112,23 @@ void main() {
   });
 }
 
+/// 用 warcrafty 写一个含 2 个图标的最小 MPQ。
+void _createFakeClientMpq(String localeDataDir) {
+  final archive = MpqArchive.create(
+    p.join(localeDataDir, 'locale-zhCN.MPQ'),
+    maxFileCount: 8,
+  );
+  archive.addFile(
+    r'Interface\Icons\INV_Foo.blp',
+    Uint8List.fromList([1, 2, 3, 4]),
+  );
+  archive.addFile(
+    r'Interface\Spellbook\UI-Glyph-Rune-1.blp',
+    Uint8List.fromList([5, 6, 7, 8]),
+  );
+  archive.close();
+}
+
 Future<void> _waitFor(bool Function() condition) async {
   final deadline = DateTime.now().add(const Duration(seconds: 20));
   while (!condition()) {
@@ -147,4 +137,14 @@ Future<void> _waitFor(bool Function() condition) async {
     }
     await Future<void>.delayed(const Duration(milliseconds: 50));
   }
+}
+
+/// 指向临时目录的 ConfigUtil（避免测试污染项目根目录 config.yaml）。
+final class _TempConfigUtil extends ConfigUtil {
+  final String _dir;
+
+  _TempConfigUtil(this._dir);
+
+  @override
+  String get configPath => p.join(_dir, 'config.yaml');
 }

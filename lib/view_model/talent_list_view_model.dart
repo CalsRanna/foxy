@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/repository/talent_repository.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
@@ -29,30 +29,6 @@ class TalentListViewModel with FieldControllerMixin, QueryVersionMixin {
   late final spellController = registerController(StringFieldController());
 
   int _refreshToken = 0;
-
-  Future<void> initSignals() async {
-    await _refresh();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    entryController.init('');
-    spellController.init('');
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    markQueryVersion();
-    await _refresh();
-  }
 
   Future<void> copy(int key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -87,11 +63,49 @@ class TalentListViewModel with FieldControllerMixin, QueryVersionMixin {
     }
   }
 
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals() async {
+    await _refresh();
+  }
+
+  Future<void> paginate(int page) async {
+    this.page.value = page;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> reset() async {
+    entryController.init('');
+    spellController.init('');
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
+  Future<void> search() async {
+    page.value = 1;
+    markQueryVersion();
+    await _refresh();
+  }
+
   TalentFilter _collectFilter() {
     return TalentFilter(
       id: entryController.collect(),
       spell: spellController.collect(),
     );
+  }
+
+  void _logActivity(ActivityActionType action, int key) {
+    final log = ActivityLogEntity(
+      module: 'talent',
+      actionType: action,
+      entityName: 'Talent $key',
+      createdAt: DateTime.now(),
+    );
+    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
   }
 
   Future<void> _refresh() async {
@@ -115,19 +129,5 @@ class TalentListViewModel with FieldControllerMixin, QueryVersionMixin {
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void _logActivity(ActivityActionType action, int key) {
-    final log = ActivityLogEntity(
-      module: 'talent',
-      actionType: action,
-      entityName: 'Talent $key',
-      createdAt: DateTime.now(),
-    );
-    GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -25,6 +25,32 @@ class QuestSortDetailViewModel
   late final sortNameLangFlagsController = registerController(
     IntFieldController(),
   );
+
+  void applySortNameLocales(List<DbcLocaleFieldValue> values) {
+    entity.value = entity.value!.copyWith(
+      sortNameLangEnUS: values.valueOf('enUS'),
+      sortNameLangKoKR: values.valueOf('koKR'),
+      sortNameLangFrFR: values.valueOf('frFR'),
+      sortNameLangDeDE: values.valueOf('deDE'),
+      sortNameLangZhCN: values.valueOf('zhCN'),
+      sortNameLangZhTW: values.valueOf('zhTW'),
+      sortNameLangEsES: values.valueOf('esES'),
+      sortNameLangEsMX: values.valueOf('esMX'),
+      sortNameLangRuRU: values.valueOf('ruRU'),
+      sortNameLangJaJP: values.valueOf('jaJP'),
+      sortNameLangPtPT: values.valueOf('ptPT'),
+      sortNameLangPtBR: values.valueOf('ptBR'),
+      sortNameLangItIT: values.valueOf('itIT'),
+      sortNameLangUnk1: values.valueOf('unk1'),
+      sortNameLangUnk2: values.valueOf('unk2'),
+      sortNameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -79,26 +105,10 @@ class QuestSortDetailViewModel
     }
   }
 
-  void applySortNameLocales(List<DbcLocaleFieldValue> values) {
-    entity.value = entity.value!.copyWith(
-      sortNameLangEnUS: values.valueOf('enUS'),
-      sortNameLangKoKR: values.valueOf('koKR'),
-      sortNameLangFrFR: values.valueOf('frFR'),
-      sortNameLangDeDE: values.valueOf('deDE'),
-      sortNameLangZhCN: values.valueOf('zhCN'),
-      sortNameLangZhTW: values.valueOf('zhTW'),
-      sortNameLangEsES: values.valueOf('esES'),
-      sortNameLangEsMX: values.valueOf('esMX'),
-      sortNameLangRuRU: values.valueOf('ruRU'),
-      sortNameLangJaJP: values.valueOf('jaJP'),
-      sortNameLangPtPT: values.valueOf('ptPT'),
-      sortNameLangPtBR: values.valueOf('ptBR'),
-      sortNameLangItIT: values.valueOf('itIT'),
-      sortNameLangUnk1: values.valueOf('unk1'),
-      sortNameLangUnk2: values.valueOf('unk2'),
-      sortNameLangUnk3: values.valueOf('unk3'),
-    );
-    nameController.init(values.zhCN);
+  void _applyCandidate(QuestSortEntity table) {
+    idController.init(table.id);
+    nameController.init(table.sortNameLangZhCN);
+    sortNameLangFlagsController.init(table.sortNameLangFlags);
   }
 
   QuestSortEntity _collectCandidate() {
@@ -109,12 +119,6 @@ class QuestSortDetailViewModel
     );
   }
 
-  void _applyCandidate(QuestSortEntity table) {
-    idController.init(table.id);
-    nameController.init(table.sortNameLangZhCN);
-    sortNameLangFlagsController.init(table.sortNameLangFlags);
-  }
-
   void _logActivity(ActivityActionType action, QuestSortEntity t) {
     final log = ActivityLogEntity(
       module: 'quest_sort',
@@ -123,9 +127,5 @@ class QuestSortDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

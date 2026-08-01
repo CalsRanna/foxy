@@ -16,6 +16,24 @@ enum FormFieldKind {
   nullable,
 }
 
+final class FormFieldModel {
+  /// entity 字段名(collect/apply 的命名参数名;也是 controller 名的来源)。
+  final String dartName;
+
+  final String dartType;
+  final FormFieldKind kind;
+
+  /// `kind == select` 时的 fallback 值(int 或 String)。
+  final Object? selectFallback;
+
+  const FormFieldModel({
+    required this.dartName,
+    required this.dartType,
+    required this.kind,
+    this.selectFallback,
+  });
+}
+
 final class FormGenerationModel {
   /// 手写 Detail ViewModel 类名,如 `TalentDetailViewModel`。
   final String className;
@@ -34,23 +52,5 @@ final class FormGenerationModel {
     required this.entityClassName,
     required this.mixinName,
     required this.fields,
-  });
-}
-
-final class FormFieldModel {
-  /// entity 字段名(collect/apply 的命名参数名;也是 controller 名的来源)。
-  final String dartName;
-
-  final String dartType;
-  final FormFieldKind kind;
-
-  /// `kind == select` 时的 fallback 值(int 或 String)。
-  final Object? selectFallback;
-
-  const FormFieldModel({
-    required this.dartName,
-    required this.dartType,
-    required this.kind,
-    this.selectFallback,
   });
 }

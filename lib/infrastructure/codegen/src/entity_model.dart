@@ -1,3 +1,26 @@
+final class EntityFieldModel {
+  final String dartName;
+  final String dartType;
+  final String columnName;
+  final Object? constructorDefaultValue;
+  final bool includeInBrief;
+  final bool nullable;
+  final bool key;
+
+  const EntityFieldModel({
+    required this.dartName,
+    required this.dartType,
+    required this.columnName,
+    required this.constructorDefaultValue,
+    required this.includeInBrief,
+    required this.nullable,
+    required this.key,
+  });
+
+  String get nonNullableType =>
+      nullable ? dartType.substring(0, dartType.length - 1) : dartType;
+}
+
 final class EntityGenerationModel {
   final String className;
   final bool generateBrief;
@@ -23,36 +46,13 @@ final class EntityGenerationModel {
 
   String get briefClassName => 'Brief${baseName}Entity';
 
-  String get keyClassName => '${baseName}Key';
-
-  List<EntityFieldModel> get keyFields =>
-      fields.where((field) => field.key).toList(growable: false);
-
   List<EntityFieldModel> get briefFields => [
     ...fields.where((field) => field.includeInBrief),
     ...briefProjectionFields,
   ];
-}
 
-final class EntityFieldModel {
-  final String dartName;
-  final String dartType;
-  final String columnName;
-  final Object? constructorDefaultValue;
-  final bool includeInBrief;
-  final bool nullable;
-  final bool key;
+  String get keyClassName => '${baseName}Key';
 
-  const EntityFieldModel({
-    required this.dartName,
-    required this.dartType,
-    required this.columnName,
-    required this.constructorDefaultValue,
-    required this.includeInBrief,
-    required this.nullable,
-    required this.key,
-  });
-
-  String get nonNullableType =>
-      nullable ? dartType.substring(0, dartType.length - 1) : dartType;
+  List<EntityFieldModel> get keyFields =>
+      fields.where((field) => field.key).toList(growable: false);
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/spell_item_enchantment_constants.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -13,6 +12,7 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -249,16 +249,24 @@ class SpellItemEnchantmentView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _effectTypeInput(
-    int slot,
-    SelectFieldController<int> controller,
-  ) {
+  String _amountLabel(int type, int slot) {
+    return switch (type) {
+      1 => '触发几率 $slot',
+      2 => '武器伤害 $slot',
+      3 => '法术数值 $slot',
+      4 => '抗性数值 $slot',
+      5 => '属性数值 $slot',
+      6 => '武器伤害率 $slot',
+      _ => '效果数值 $slot',
+    };
+  }
+
+  FoxyFormItem _clientMaximumInput(int slot, IntFieldController controller) {
     return FoxyFormItem(
-      label: '效果类型 $slot',
-      child: FoxyShadSelect<int>(
+      label: '客户端效果 $slot',
+      child: FoxyNumberInput<int>(
+        placeholder: 'EffectPointsMax$slot',
         controller: controller,
-        options: kSpellItemEnchantmentEffectTypeOptions,
-        placeholder: Text('Effect$slot'),
       ),
     );
   }
@@ -280,16 +288,6 @@ class SpellItemEnchantmentView extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  FoxyFormItem _clientMaximumInput(int slot, IntFieldController controller) {
-    return FoxyFormItem(
-      label: '客户端效果 $slot',
-      child: FoxyNumberInput<int>(
-        placeholder: 'EffectPointsMax$slot',
-        controller: controller,
-      ),
     );
   }
 
@@ -343,16 +341,22 @@ class SpellItemEnchantmentView extends StatelessWidget {
     );
   }
 
-  String _amountLabel(int type, int slot) {
-    return switch (type) {
-      1 => '触发几率 $slot',
-      2 => '武器伤害 $slot',
-      3 => '法术数值 $slot',
-      4 => '抗性数值 $slot',
-      5 => '属性数值 $slot',
-      6 => '武器伤害率 $slot',
-      _ => '效果数值 $slot',
-    };
+  FoxyFormItem _effectTypeInput(
+    int slot,
+    SelectFieldController<int> controller,
+  ) {
+    return FoxyFormItem(
+      label: '效果类型 $slot',
+      child: FoxyShadSelect<int>(
+        controller: controller,
+        options: kSpellItemEnchantmentEffectTypeOptions,
+        placeholder: Text('Effect$slot'),
+      ),
+    );
+  }
+
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   Future<void> _persist(BuildContext context) async {
@@ -371,9 +375,5 @@ class SpellItemEnchantmentView extends StatelessWidget {
         context,
       ).show(ShadToast(description: Text(error.toString())));
     }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
   }
 }

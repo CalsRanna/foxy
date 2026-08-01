@@ -213,99 +213,90 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
   int _refreshToken = 0;
   int _parentToken = 0;
 
-  NpcTextEntity _collectCandidate() {
-    return NpcTextEntity(
-      id: idController.collect(),
-      text00: text00Controller.collect(),
-      text01: text01Controller.collect(),
-      broadcastTextId0: broadcastTextId0Controller.collect(),
-      lang0: lang0Controller.collect(),
-      probability0: probability0Controller.collect(),
-      em00: em00Controller.collect(),
-      em01: em01Controller.collect(),
-      em02: em02Controller.collect(),
-      em03: em03Controller.collect(),
-      em04: em04Controller.collect(),
-      em05: em05Controller.collect(),
-      text10: text10Controller.collect(),
-      text11: text11Controller.collect(),
-      broadcastTextId1: broadcastTextId1Controller.collect(),
-      lang1: lang1Controller.collect(),
-      probability1: probability1Controller.collect(),
-      em10: em10Controller.collect(),
-      em11: em11Controller.collect(),
-      em12: em12Controller.collect(),
-      em13: em13Controller.collect(),
-      em14: em14Controller.collect(),
-      em15: em15Controller.collect(),
-      text20: text20Controller.collect(),
-      text21: text21Controller.collect(),
-      broadcastTextId2: broadcastTextId2Controller.collect(),
-      lang2: lang2Controller.collect(),
-      probability2: probability2Controller.collect(),
-      em20: em20Controller.collect(),
-      em21: em21Controller.collect(),
-      em22: em22Controller.collect(),
-      em23: em23Controller.collect(),
-      em24: em24Controller.collect(),
-      em25: em25Controller.collect(),
-      text30: text30Controller.collect(),
-      text31: text31Controller.collect(),
-      broadcastTextId3: broadcastTextId3Controller.collect(),
-      lang3: lang3Controller.collect(),
-      probability3: probability3Controller.collect(),
-      em30: em30Controller.collect(),
-      em31: em31Controller.collect(),
-      em32: em32Controller.collect(),
-      em33: em33Controller.collect(),
-      em34: em34Controller.collect(),
-      em35: em35Controller.collect(),
-      text40: text40Controller.collect(),
-      text41: text41Controller.collect(),
-      broadcastTextId4: broadcastTextId4Controller.collect(),
-      lang4: lang4Controller.collect(),
-      probability4: probability4Controller.collect(),
-      em40: em40Controller.collect(),
-      em41: em41Controller.collect(),
-      em42: em42Controller.collect(),
-      em43: em43Controller.collect(),
-      em44: em44Controller.collect(),
-      em45: em45Controller.collect(),
-      text50: text50Controller.collect(),
-      text51: text51Controller.collect(),
-      broadcastTextId5: broadcastTextId5Controller.collect(),
-      lang5: lang5Controller.collect(),
-      probability5: probability5Controller.collect(),
-      em50: em50Controller.collect(),
-      em51: em51Controller.collect(),
-      em52: em52Controller.collect(),
-      em53: em53Controller.collect(),
-      em54: em54Controller.collect(),
-      em55: em55Controller.collect(),
-      text60: text60Controller.collect(),
-      text61: text61Controller.collect(),
-      broadcastTextId6: broadcastTextId6Controller.collect(),
-      lang6: lang6Controller.collect(),
-      probability6: probability6Controller.collect(),
-      em60: em60Controller.collect(),
-      em61: em61Controller.collect(),
-      em62: em62Controller.collect(),
-      em63: em63Controller.collect(),
-      em64: em64Controller.collect(),
-      em65: em65Controller.collect(),
-      text70: text70Controller.collect(),
-      text71: text71Controller.collect(),
-      broadcastTextId7: broadcastTextId7Controller.collect(),
-      lang7: lang7Controller.collect(),
-      probability7: probability7Controller.collect(),
-      em70: em70Controller.collect(),
-      em71: em71Controller.collect(),
-      em72: em72Controller.collect(),
-      em73: em73Controller.collect(),
-      em74: em74Controller.collect(),
-      em75: em75Controller.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
+  Future<void> destroy() async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final key = editingKey.value;
+    if (key == null) return;
+    final parentSnapshot = parentKey.value;
+    final parentToken = _parentToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _destroyUseCase.execute(
+        DestroyNpcTextInput(key: key, localeKey: localeEditingKey.value),
+      );
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
+        return;
+      }
+      editingKey.value = null;
+      localeEditingKey.value = null;
+      await _refresh();
+    } catch (error) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
+        return;
+      }
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
+
+  Future<void> initSignals({required int parentKey}) {
+    return setParentKey(parentKey);
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw StateError('正在保存，请稍候');
+    final parentSnapshot = parentKey.value;
+    if (parentSnapshot == null) throw StateError('父记录尚未加载');
+    final parentToken = _parentToken;
+    final candidate = _collectCandidate();
+    if (candidate.id <= 0) {
+      throw StateError('请先保存对话菜单并选择有效文本');
+    }
+    final locale = _collectLocale(candidate.id);
+    final localeCandidate = _localeHasText(locale) ? locale : null;
+    final originalKey = editingKey.value;
+    final originalLocaleKey = localeEditingKey.value;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      final result = await _persistUseCase.execute(
+        SaveNpcTextInput(
+          originalKey: originalKey,
+          candidate: candidate,
+          originalLocaleKey: originalLocaleKey,
+          localeCandidate: localeCandidate,
+        ),
+      );
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
+        return;
+      }
+      entity.value = candidate;
+      editingKey.value = result.persistedKey;
+      localeEditingKey.value = result.localeKey;
+      await _refresh();
+    } catch (error) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
+        return;
+      }
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  Future<void> setParentKey(int parentKey) async {
+    if (this.parentKey.value == parentKey && entity.value != null) return;
+    _parentToken++;
+    this.parentKey.value = parentKey;
+    editingKey.value = null;
+    localeEditingKey.value = null;
+    await _refresh();
   }
 
   void _applyCandidate(NpcTextEntity entity) {
@@ -401,6 +392,120 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
     verifiedBuildController.init(entity.verifiedBuild);
   }
 
+  void _applyLocale(NpcTextLocaleEntity entity) {
+    localeText00Controller.init(entity.text00);
+    localeText01Controller.init(entity.text01);
+    localeText10Controller.init(entity.text10);
+    localeText11Controller.init(entity.text11);
+    localeText20Controller.init(entity.text20);
+    localeText21Controller.init(entity.text21);
+    localeText30Controller.init(entity.text30);
+    localeText31Controller.init(entity.text31);
+    localeText40Controller.init(entity.text40);
+    localeText41Controller.init(entity.text41);
+    localeText50Controller.init(entity.text50);
+    localeText51Controller.init(entity.text51);
+    localeText60Controller.init(entity.text60);
+    localeText61Controller.init(entity.text61);
+    localeText70Controller.init(entity.text70);
+    localeText71Controller.init(entity.text71);
+  }
+
+  NpcTextEntity _collectCandidate() {
+    return NpcTextEntity(
+      id: idController.collect(),
+      text00: text00Controller.collect(),
+      text01: text01Controller.collect(),
+      broadcastTextId0: broadcastTextId0Controller.collect(),
+      lang0: lang0Controller.collect(),
+      probability0: probability0Controller.collect(),
+      em00: em00Controller.collect(),
+      em01: em01Controller.collect(),
+      em02: em02Controller.collect(),
+      em03: em03Controller.collect(),
+      em04: em04Controller.collect(),
+      em05: em05Controller.collect(),
+      text10: text10Controller.collect(),
+      text11: text11Controller.collect(),
+      broadcastTextId1: broadcastTextId1Controller.collect(),
+      lang1: lang1Controller.collect(),
+      probability1: probability1Controller.collect(),
+      em10: em10Controller.collect(),
+      em11: em11Controller.collect(),
+      em12: em12Controller.collect(),
+      em13: em13Controller.collect(),
+      em14: em14Controller.collect(),
+      em15: em15Controller.collect(),
+      text20: text20Controller.collect(),
+      text21: text21Controller.collect(),
+      broadcastTextId2: broadcastTextId2Controller.collect(),
+      lang2: lang2Controller.collect(),
+      probability2: probability2Controller.collect(),
+      em20: em20Controller.collect(),
+      em21: em21Controller.collect(),
+      em22: em22Controller.collect(),
+      em23: em23Controller.collect(),
+      em24: em24Controller.collect(),
+      em25: em25Controller.collect(),
+      text30: text30Controller.collect(),
+      text31: text31Controller.collect(),
+      broadcastTextId3: broadcastTextId3Controller.collect(),
+      lang3: lang3Controller.collect(),
+      probability3: probability3Controller.collect(),
+      em30: em30Controller.collect(),
+      em31: em31Controller.collect(),
+      em32: em32Controller.collect(),
+      em33: em33Controller.collect(),
+      em34: em34Controller.collect(),
+      em35: em35Controller.collect(),
+      text40: text40Controller.collect(),
+      text41: text41Controller.collect(),
+      broadcastTextId4: broadcastTextId4Controller.collect(),
+      lang4: lang4Controller.collect(),
+      probability4: probability4Controller.collect(),
+      em40: em40Controller.collect(),
+      em41: em41Controller.collect(),
+      em42: em42Controller.collect(),
+      em43: em43Controller.collect(),
+      em44: em44Controller.collect(),
+      em45: em45Controller.collect(),
+      text50: text50Controller.collect(),
+      text51: text51Controller.collect(),
+      broadcastTextId5: broadcastTextId5Controller.collect(),
+      lang5: lang5Controller.collect(),
+      probability5: probability5Controller.collect(),
+      em50: em50Controller.collect(),
+      em51: em51Controller.collect(),
+      em52: em52Controller.collect(),
+      em53: em53Controller.collect(),
+      em54: em54Controller.collect(),
+      em55: em55Controller.collect(),
+      text60: text60Controller.collect(),
+      text61: text61Controller.collect(),
+      broadcastTextId6: broadcastTextId6Controller.collect(),
+      lang6: lang6Controller.collect(),
+      probability6: probability6Controller.collect(),
+      em60: em60Controller.collect(),
+      em61: em61Controller.collect(),
+      em62: em62Controller.collect(),
+      em63: em63Controller.collect(),
+      em64: em64Controller.collect(),
+      em65: em65Controller.collect(),
+      text70: text70Controller.collect(),
+      text71: text71Controller.collect(),
+      broadcastTextId7: broadcastTextId7Controller.collect(),
+      lang7: lang7Controller.collect(),
+      probability7: probability7Controller.collect(),
+      em70: em70Controller.collect(),
+      em71: em71Controller.collect(),
+      em72: em72Controller.collect(),
+      em73: em73Controller.collect(),
+      em74: em74Controller.collect(),
+      em75: em75Controller.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
+
   NpcTextLocaleEntity _collectLocale(int id) {
     return NpcTextLocaleEntity(
       id: id,
@@ -423,25 +528,6 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
     );
   }
 
-  void _applyLocale(NpcTextLocaleEntity entity) {
-    localeText00Controller.init(entity.text00);
-    localeText01Controller.init(entity.text01);
-    localeText10Controller.init(entity.text10);
-    localeText11Controller.init(entity.text11);
-    localeText20Controller.init(entity.text20);
-    localeText21Controller.init(entity.text21);
-    localeText30Controller.init(entity.text30);
-    localeText31Controller.init(entity.text31);
-    localeText40Controller.init(entity.text40);
-    localeText41Controller.init(entity.text41);
-    localeText50Controller.init(entity.text50);
-    localeText51Controller.init(entity.text51);
-    localeText60Controller.init(entity.text60);
-    localeText61Controller.init(entity.text61);
-    localeText70Controller.init(entity.text70);
-    localeText71Controller.init(entity.text71);
-  }
-
   bool _localeHasText(NpcTextLocaleEntity entity) {
     return entity.text00.isNotEmpty ||
         entity.text01.isNotEmpty ||
@@ -459,90 +545,6 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
         entity.text61.isNotEmpty ||
         entity.text70.isNotEmpty ||
         entity.text71.isNotEmpty;
-  }
-
-  Future<void> initSignals({required int parentKey}) {
-    return setParentKey(parentKey);
-  }
-
-  Future<void> setParentKey(int parentKey) async {
-    if (this.parentKey.value == parentKey && entity.value != null) return;
-    _parentToken++;
-    this.parentKey.value = parentKey;
-    editingKey.value = null;
-    localeEditingKey.value = null;
-    await _refresh();
-  }
-
-  Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
-    final parentSnapshot = parentKey.value;
-    if (parentSnapshot == null) throw StateError('父记录尚未加载');
-    final parentToken = _parentToken;
-    final candidate = _collectCandidate();
-    if (candidate.id <= 0) {
-      throw StateError('请先保存对话菜单并选择有效文本');
-    }
-    final locale = _collectLocale(candidate.id);
-    final localeCandidate = _localeHasText(locale) ? locale : null;
-    final originalKey = editingKey.value;
-    final originalLocaleKey = localeEditingKey.value;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      final result = await _persistUseCase.execute(
-        SaveNpcTextInput(
-          originalKey: originalKey,
-          candidate: candidate,
-          originalLocaleKey: originalLocaleKey,
-          localeCandidate: localeCandidate,
-        ),
-      );
-      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
-        return;
-      }
-      entity.value = candidate;
-      editingKey.value = result.persistedKey;
-      localeEditingKey.value = result.localeKey;
-      await _refresh();
-    } catch (error) {
-      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
-        return;
-      }
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final key = editingKey.value;
-    if (key == null) return;
-    final parentSnapshot = parentKey.value;
-    final parentToken = _parentToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _destroyUseCase.execute(
-        DestroyNpcTextInput(key: key, localeKey: localeEditingKey.value),
-      );
-      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
-        return;
-      }
-      editingKey.value = null;
-      localeEditingKey.value = null;
-      await _refresh();
-    } catch (error) {
-      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
-        return;
-      }
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
   }
 
   Future<void> _refresh() async {
@@ -582,6 +584,4 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void dispose() => disposeControllers();
 }

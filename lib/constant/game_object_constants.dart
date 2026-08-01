@@ -5,80 +5,6 @@ const kGameObjectBooleanOptions = <int, String>{0: '否', 1: '是'};
 
 const kGameObjectChairHeightOptions = <int, String>{0: '低', 1: '中', 2: '高'};
 
-/// `GameObjectFlags` 中 AzerothCore 实际使用的位。
-const kGameObjectFlagItems = <FlagItem>[
-  FlagItem(0x00000001, '正在使用'),
-  FlagItem(0x00000002, '已锁定'),
-  FlagItem(0x00000004, '受交互条件限制'),
-  FlagItem(0x00000008, '运输对象'),
-  FlagItem(0x00000010, '不可选中'),
-  FlagItem(0x00000020, '不自动生成'),
-  FlagItem(0x00000040, '已触发'),
-  FlagItem(0x00000200, '已损坏'),
-  FlagItem(0x00000400, '已摧毁'),
-];
-const kGameObjectTrapTypeOptions = <int, String>{
-  0: '非炸弹陷阱',
-  1: '炸弹陷阱',
-  2: '自动关闭陷阱',
-};
-
-/// `SharedDefines.h::GameobjectTypes`，3.3.5a 共 0..35。
-const kGameObjectTypeOptions = <int, String>{
-  0: '门',
-  1: '按钮',
-  2: '任务发放者',
-  3: '宝箱',
-  4: '绑定者',
-  5: '通用',
-  6: '陷阱',
-  7: '椅子',
-  8: '法术焦点',
-  9: '文本',
-  10: 'Goober',
-  11: '运输装置',
-  12: '区域伤害',
-  13: '相机',
-  14: '地图对象',
-  15: '地图运输',
-  16: '决斗旗',
-  17: '钓鱼浮标',
-  18: '仪式',
-  19: '邮箱',
-  20: '保留类型',
-  21: '守卫岗哨',
-  22: '法术施放器',
-  23: '集合石',
-  24: '旗帜底座',
-  25: '钓鱼水域',
-  26: '掉落旗帜',
-  27: '小游戏',
-  28: '保留类型 2',
-  29: '占领点',
-  30: '光环生成器',
-  31: '副本难度',
-  32: '理发椅',
-  33: '可破坏建筑',
-  34: '公会银行',
-  35: '活板门',
-};
-
-const kUnusedGameObjectDataField =
-    IntegerNumberFieldSpec<GameObjectDataReference>('未使用', editable: false);
-
-/// 一个 GameObject type 的 Data0..Data23 编辑规格。
-///
-/// 对应 `GameObjectData.h::GameObjectTemplate` 联合体的一个 struct；
-/// Map 只写实际字段，缺失槽位由 [field] 回落为只读「未使用」。
-class GameObjectDataSchema {
-  final Map<int, IntegerFieldSpec<GameObjectDataReference>> fields;
-
-  const GameObjectDataSchema(this.fields);
-
-  IntegerFieldSpec<GameObjectDataReference> field(int index) =>
-      fields[index] ?? kUnusedGameObjectDataField;
-}
-
 /// `GameObjectData.h::GameObjectTemplate` 联合体按 GameObject type 分组的 schema registry。
 const kGameObjectDataSchemas = <int, GameObjectDataSchema>{
   // GameObjectDoor
@@ -523,6 +449,67 @@ const kGameObjectDataSchemas = <int, GameObjectDataSchema>{
     2: IntegerNumberFieldSpec('自动关闭时间'),
   }),
 };
+/// `GameObjectFlags` 中 AzerothCore 实际使用的位。
+const kGameObjectFlagItems = <FlagItem>[
+  FlagItem(0x00000001, '正在使用'),
+  FlagItem(0x00000002, '已锁定'),
+  FlagItem(0x00000004, '受交互条件限制'),
+  FlagItem(0x00000008, '运输对象'),
+  FlagItem(0x00000010, '不可选中'),
+  FlagItem(0x00000020, '不自动生成'),
+  FlagItem(0x00000040, '已触发'),
+  FlagItem(0x00000200, '已损坏'),
+  FlagItem(0x00000400, '已摧毁'),
+];
+
+const kGameObjectTrapTypeOptions = <int, String>{
+  0: '非炸弹陷阱',
+  1: '炸弹陷阱',
+  2: '自动关闭陷阱',
+};
+
+/// `SharedDefines.h::GameobjectTypes`，3.3.5a 共 0..35。
+const kGameObjectTypeOptions = <int, String>{
+  0: '门',
+  1: '按钮',
+  2: '任务发放者',
+  3: '宝箱',
+  4: '绑定者',
+  5: '通用',
+  6: '陷阱',
+  7: '椅子',
+  8: '法术焦点',
+  9: '文本',
+  10: 'Goober',
+  11: '运输装置',
+  12: '区域伤害',
+  13: '相机',
+  14: '地图对象',
+  15: '地图运输',
+  16: '决斗旗',
+  17: '钓鱼浮标',
+  18: '仪式',
+  19: '邮箱',
+  20: '保留类型',
+  21: '守卫岗哨',
+  22: '法术施放器',
+  23: '集合石',
+  24: '旗帜底座',
+  25: '钓鱼水域',
+  26: '掉落旗帜',
+  27: '小游戏',
+  28: '保留类型 2',
+  29: '占领点',
+  30: '光环生成器',
+  31: '副本难度',
+  32: '理发椅',
+  33: '可破坏建筑',
+  34: '公会银行',
+  35: '活板门',
+};
+
+const kUnusedGameObjectDataField =
+    IntegerNumberFieldSpec<GameObjectDataReference>('未使用', editable: false);
 
 /// 查询某个 GameObject type 的某个 Data 槽位的编辑规格。
 ///
@@ -553,4 +540,17 @@ enum GameObjectDataReference {
   spell,
   spellFocusObject,
   taxiPath,
+}
+
+/// 一个 GameObject type 的 Data0..Data23 编辑规格。
+///
+/// 对应 `GameObjectData.h::GameObjectTemplate` 联合体的一个 struct；
+/// Map 只写实际字段，缺失槽位由 [field] 回落为只读「未使用」。
+class GameObjectDataSchema {
+  final Map<int, IntegerFieldSpec<GameObjectDataReference>> fields;
+
+  const GameObjectDataSchema(this.fields);
+
+  IntegerFieldSpec<GameObjectDataReference> field(int index) =>
+      fields[index] ?? kUnusedGameObjectDataField;
 }

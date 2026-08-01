@@ -1,10 +1,11 @@
 import 'dart:math';
+
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'spell_linked_spell_collection_editor_view_model.g.dart';
 
@@ -27,18 +28,26 @@ class SpellLinkedSpellCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) =>
-      setParentKey(parentKey);
-
-  Future<void> setParentKey(int parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    final parent = parentKey;
-    editingKey.value = null;
-    selectedKey.value = null;
-    _applyCandidate(SpellLinkedSpellEntity(spellTrigger: parent));
-    await _refresh();
+  Future<void> copy(SpellLinkedSpellKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.copySpellLinkedSpell(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
   Future<void> create() async {
@@ -61,6 +70,30 @@ class SpellLinkedSpellCollectionEditorViewModel
       rethrow;
     }
   }
+
+  Future<void> destroy(SpellLinkedSpellKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroySpellLinkedSpell(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
 
   Future<void> edit(SpellLinkedSpellKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -88,6 +121,15 @@ class SpellLinkedSpellCollectionEditorViewModel
     } finally {
       if (token == _interactionToken) loading.value = false;
     }
+  }
+
+  Future<void> initSignals({required int parentKey}) =>
+      setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
   }
 
   Future<void> persist() async {
@@ -118,53 +160,14 @@ class SpellLinkedSpellCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(SpellLinkedSpellKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroySpellLinkedSpell(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> copy(SpellLinkedSpellKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copySpellLinkedSpell(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    final parent = parentKey;
+    editingKey.value = null;
+    selectedKey.value = null;
+    _applyCandidate(SpellLinkedSpellEntity(spellTrigger: parent));
     await _refresh();
   }
 
@@ -194,6 +197,4 @@ class SpellLinkedSpellCollectionEditorViewModel
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void dispose() => disposeControllers();
 }

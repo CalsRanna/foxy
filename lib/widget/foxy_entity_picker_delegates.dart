@@ -1,148 +1,148 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/item_quality_color.dart';
-import 'package:foxy/entity/area_table_entity.dart';
-import 'package:foxy/repository/area_table_repository.dart';
-import 'package:foxy/entity/achievement_entity.dart';
-import 'package:foxy/repository/achievement_repository.dart';
-import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
-import 'package:foxy/entity/broadcast_text_entity.dart';
-import 'package:foxy/repository/broadcast_text_repository.dart';
-import 'package:foxy/entity/char_title_entity.dart';
-import 'package:foxy/repository/char_title_repository.dart';
-import 'package:foxy/entity/cinematic_sequence_entity.dart';
-import 'package:foxy/repository/cinematic_sequence_repository.dart';
-import 'package:foxy/entity/creature_immunity_entity.dart';
-import 'package:foxy/repository/creature_immunity_repository.dart';
-import 'package:foxy/entity/creature_movement_info_entity.dart';
-import 'package:foxy/repository/creature_movement_info_repository.dart';
-import 'package:foxy/entity/creature_spell_data_entity.dart';
-import 'package:foxy/repository/creature_spell_data_repository.dart';
-import 'package:foxy/entity/creature_template_entity.dart';
-import 'package:foxy/repository/creature_template_repository.dart';
-import 'package:foxy/entity/currency_category_entity.dart';
-import 'package:foxy/repository/currency_category_repository.dart';
-import 'package:foxy/entity/creature_display_info_entity.dart';
-import 'package:foxy/repository/creature_display_info_repository.dart';
-import 'package:foxy/entity/dbc_faction_entity.dart';
-import 'package:foxy/repository/dbc_faction_repository.dart';
-import 'package:foxy/entity/dbc_faction_template_entity.dart';
-import 'package:foxy/repository/dbc_faction_template_repository.dart';
-import 'package:foxy/entity/emote_text_entity.dart';
-import 'package:foxy/repository/emote_text_repository.dart';
-import 'package:foxy/entity/emote_text_data_entity.dart';
-import 'package:foxy/repository/emote_text_data_repository.dart';
-import 'package:foxy/entity/dbc_emote_entity.dart';
-import 'package:foxy/repository/dbc_emote_repository.dart';
-import 'package:foxy/entity/dbc_item_entity.dart';
-import 'package:foxy/repository/dbc_item_repository.dart';
-import 'package:foxy/entity/destructible_model_data_entity.dart';
-import 'package:foxy/repository/destructible_model_data_repository.dart';
-import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/repository/gossip_menu_repository.dart';
-import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/repository/game_object_template_repository.dart';
-import 'package:foxy/entity/game_object_art_kit_entity.dart';
-import 'package:foxy/repository/game_object_art_kit_repository.dart';
-import 'package:foxy/entity/game_object_display_info_entity.dart';
-import 'package:foxy/repository/game_object_display_info_repository.dart';
-import 'package:foxy/entity/gem_property_entity.dart';
-import 'package:foxy/repository/gem_property_repository.dart';
-import 'package:foxy/entity/holiday_entity.dart';
-import 'package:foxy/repository/holiday_repository.dart';
-import 'package:foxy/entity/item_display_info_entity.dart';
-import 'package:foxy/repository/item_display_info_repository.dart';
-import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/repository/item_enchantment_template_repository.dart';
-import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/repository/item_extended_cost_repository.dart';
-import 'package:foxy/entity/item_purchase_group_entity.dart';
-import 'package:foxy/repository/item_purchase_group_repository.dart';
-import 'package:foxy/entity/item_limit_category_entity.dart';
-import 'package:foxy/repository/item_limit_category_repository.dart';
-import 'package:foxy/entity/item_random_properties_entity.dart';
-import 'package:foxy/repository/item_random_properties_repository.dart';
-import 'package:foxy/entity/item_random_suffix_entity.dart';
-import 'package:foxy/repository/item_random_suffix_repository.dart';
-import 'package:foxy/entity/item_set_entity.dart';
-import 'package:foxy/repository/item_set_repository.dart';
-import 'package:foxy/entity/item_visuals_entity.dart';
-import 'package:foxy/repository/item_visuals_repository.dart';
-import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/repository/item_template_repository.dart';
-import 'package:foxy/entity/lock_entity.dart';
-import 'package:foxy/repository/lock_repository.dart';
-import 'package:foxy/entity/light_entity.dart';
-import 'package:foxy/repository/light_repository.dart';
-import 'package:foxy/entity/liquid_type_entity.dart';
-import 'package:foxy/repository/liquid_type_repository.dart';
+import 'package:foxy/entity/achievement_entity.dart';
+import 'package:foxy/entity/area_table_entity.dart';
 import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
+import 'package:foxy/entity/brief_item_enchantment_template_entity.dart';
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
-import 'package:foxy/entity/map_info_entity.dart';
-import 'package:foxy/repository/map_info_repository.dart';
-import 'package:foxy/entity/mail_template_entity.dart';
-import 'package:foxy/repository/mail_template_repository.dart';
-import 'package:foxy/entity/npc_text_entity.dart';
-import 'package:foxy/repository/npc_text_repository.dart';
-import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/repository/page_text_repository.dart';
-import 'package:foxy/entity/point_of_interest_entity.dart';
-import 'package:foxy/repository/point_of_interest_repository.dart';
-import 'package:foxy/entity/quest_info_entity.dart';
-import 'package:foxy/repository/quest_info_repository.dart';
-import 'package:foxy/entity/quest_template_entity.dart';
-import 'package:foxy/repository/quest_template_repository.dart';
-import 'package:foxy/entity/spell_duration_entity.dart';
-import 'package:foxy/repository/spell_duration_repository.dart';
-import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/repository/spell_repository.dart';
-import 'package:foxy/entity/spell_focus_object_entity.dart';
-import 'package:foxy/repository/spell_focus_object_repository.dart';
-import 'package:foxy/entity/spell_icon_entity.dart';
-import 'package:foxy/repository/spell_icon_repository.dart';
-import 'package:foxy/entity/spell_range_entity.dart';
-import 'package:foxy/repository/spell_range_repository.dart';
-import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/repository/spell_item_enchantment_repository.dart';
-import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
-import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
-import 'package:foxy/entity/skill_line_entity.dart';
-import 'package:foxy/repository/skill_line_repository.dart';
-import 'package:foxy/entity/sound_ambience_entity.dart';
-import 'package:foxy/repository/sound_ambience_repository.dart';
-import 'package:foxy/entity/sound_provider_preferences_entity.dart';
-import 'package:foxy/repository/sound_provider_preferences_repository.dart';
-import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/repository/talent_repository.dart';
-import 'package:foxy/entity/talent_tab_entity.dart';
-import 'package:foxy/repository/talent_tab_repository.dart';
-import 'package:foxy/entity/totem_category_entity.dart';
-import 'package:foxy/repository/totem_category_repository.dart';
-import 'package:foxy/entity/taxi_path_entity.dart';
-import 'package:foxy/repository/taxi_path_repository.dart';
-import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
-import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
-import 'package:foxy/entity/vehicle_entity.dart';
-import 'package:foxy/repository/vehicle_repository.dart';
-import 'package:foxy/entity/zone_intro_music_entity.dart';
-import 'package:foxy/repository/zone_intro_music_repository.dart';
-import 'package:foxy/entity/zone_music_entity.dart';
-import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/entity/brief_waypoint_data_entity.dart';
-import 'package:foxy/repository/waypoint_data_repository.dart';
+import 'package:foxy/entity/broadcast_text_entity.dart';
+import 'package:foxy/entity/char_title_entity.dart';
+import 'package:foxy/entity/cinematic_sequence_entity.dart';
+import 'package:foxy/entity/creature_display_info_entity.dart';
+import 'package:foxy/entity/creature_immunity_entity.dart';
+import 'package:foxy/entity/creature_movement_info_entity.dart';
+import 'package:foxy/entity/creature_spell_data_entity.dart';
+import 'package:foxy/entity/creature_template_entity.dart';
+import 'package:foxy/entity/currency_category_entity.dart';
+import 'package:foxy/entity/dbc_emote_entity.dart';
+import 'package:foxy/entity/dbc_faction_entity.dart';
+import 'package:foxy/entity/dbc_faction_template_entity.dart';
+import 'package:foxy/entity/dbc_item_entity.dart';
+import 'package:foxy/entity/destructible_model_data_entity.dart';
+import 'package:foxy/entity/emote_text_data_entity.dart';
+import 'package:foxy/entity/emote_text_entity.dart';
+import 'package:foxy/entity/game_object_art_kit_entity.dart';
+import 'package:foxy/entity/game_object_display_info_entity.dart';
+import 'package:foxy/entity/game_object_template_entity.dart';
+import 'package:foxy/entity/gem_property_entity.dart';
+import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/entity/holiday_entity.dart';
+import 'package:foxy/entity/item_display_info_entity.dart';
+import 'package:foxy/entity/item_enchantment_template_entity.dart';
+import 'package:foxy/entity/item_extended_cost_entity.dart';
+import 'package:foxy/entity/item_limit_category_entity.dart';
+import 'package:foxy/entity/item_purchase_group_entity.dart';
+import 'package:foxy/entity/item_random_properties_entity.dart';
+import 'package:foxy/entity/item_random_suffix_entity.dart';
+import 'package:foxy/entity/item_set_entity.dart';
+import 'package:foxy/entity/item_template_entity.dart';
+import 'package:foxy/entity/item_visuals_entity.dart';
+import 'package:foxy/entity/light_entity.dart';
+import 'package:foxy/entity/liquid_type_entity.dart';
+import 'package:foxy/entity/lock_entity.dart';
+import 'package:foxy/entity/mail_template_entity.dart';
+import 'package:foxy/entity/map_info_entity.dart';
+import 'package:foxy/entity/npc_text_entity.dart';
+import 'package:foxy/entity/page_text_entity.dart';
+import 'package:foxy/entity/point_of_interest_entity.dart';
+import 'package:foxy/entity/quest_info_entity.dart';
+import 'package:foxy/entity/quest_template_entity.dart';
+import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
+import 'package:foxy/entity/skill_line_entity.dart';
+import 'package:foxy/entity/sound_ambience_entity.dart';
+import 'package:foxy/entity/sound_provider_preferences_entity.dart';
+import 'package:foxy/entity/spell_duration_entity.dart';
+import 'package:foxy/entity/spell_entity.dart';
+import 'package:foxy/entity/spell_focus_object_entity.dart';
+import 'package:foxy/entity/spell_icon_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_condition_entity.dart';
+import 'package:foxy/entity/spell_item_enchantment_entity.dart';
+import 'package:foxy/entity/spell_range_entity.dart';
+import 'package:foxy/entity/talent_entity.dart';
+import 'package:foxy/entity/talent_tab_entity.dart';
+import 'package:foxy/entity/taxi_path_entity.dart';
+import 'package:foxy/entity/totem_category_entity.dart';
+import 'package:foxy/entity/vehicle_entity.dart';
+import 'package:foxy/entity/zone_intro_music_entity.dart';
+import 'package:foxy/entity/zone_music_entity.dart';
+import 'package:foxy/repository/achievement_category_repository.dart';
+import 'package:foxy/repository/achievement_repository.dart';
+import 'package:foxy/repository/area_table_repository.dart';
+import 'package:foxy/repository/broadcast_text_repository.dart';
+import 'package:foxy/repository/char_title_repository.dart';
+import 'package:foxy/repository/cinematic_sequence_repository.dart';
+import 'package:foxy/repository/creature_display_info_repository.dart';
+import 'package:foxy/repository/creature_immunity_repository.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
-import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
-import 'package:foxy/repository/skinning_loot_template_repository.dart';
+import 'package:foxy/repository/creature_movement_info_repository.dart';
+import 'package:foxy/repository/creature_spell_data_repository.dart';
+import 'package:foxy/repository/creature_template_repository.dart';
+import 'package:foxy/repository/currency_category_repository.dart';
+import 'package:foxy/repository/dbc_emote_repository.dart';
+import 'package:foxy/repository/dbc_faction_repository.dart';
+import 'package:foxy/repository/dbc_faction_template_repository.dart';
+import 'package:foxy/repository/dbc_item_repository.dart';
+import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
-import 'package:foxy/repository/reference_loot_template_repository.dart';
+import 'package:foxy/repository/emote_text_data_repository.dart';
+import 'package:foxy/repository/emote_text_repository.dart';
+import 'package:foxy/repository/game_object_art_kit_repository.dart';
+import 'package:foxy/repository/game_object_display_info_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
+import 'package:foxy/repository/game_object_template_repository.dart';
+import 'package:foxy/repository/gem_property_repository.dart';
+import 'package:foxy/repository/gossip_menu_repository.dart';
+import 'package:foxy/repository/holiday_repository.dart';
+import 'package:foxy/repository/item_display_info_repository.dart';
+import 'package:foxy/repository/item_enchantment_template_repository.dart';
+import 'package:foxy/repository/item_extended_cost_repository.dart';
+import 'package:foxy/repository/item_limit_category_repository.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
+import 'package:foxy/repository/item_random_properties_repository.dart';
+import 'package:foxy/repository/item_random_suffix_repository.dart';
+import 'package:foxy/repository/item_set_repository.dart';
+import 'package:foxy/repository/item_template_repository.dart';
+import 'package:foxy/repository/item_visuals_repository.dart';
+import 'package:foxy/repository/light_repository.dart';
+import 'package:foxy/repository/liquid_type_repository.dart';
+import 'package:foxy/repository/lock_repository.dart';
+import 'package:foxy/repository/mail_template_repository.dart';
+import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/npc_text_repository.dart';
+import 'package:foxy/repository/page_text_repository.dart';
+import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
+import 'package:foxy/repository/point_of_interest_repository.dart';
+import 'package:foxy/repository/quest_info_repository.dart';
+import 'package:foxy/repository/quest_template_repository.dart';
+import 'package:foxy/repository/reference_loot_template_repository.dart';
+import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
+import 'package:foxy/repository/skill_line_repository.dart';
+import 'package:foxy/repository/skinning_loot_template_repository.dart';
+import 'package:foxy/repository/sound_ambience_repository.dart';
+import 'package:foxy/repository/sound_provider_preferences_repository.dart';
+import 'package:foxy/repository/spell_duration_repository.dart';
+import 'package:foxy/repository/spell_focus_object_repository.dart';
+import 'package:foxy/repository/spell_icon_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
+import 'package:foxy/repository/spell_range_repository.dart';
+import 'package:foxy/repository/spell_repository.dart';
+import 'package:foxy/repository/talent_repository.dart';
+import 'package:foxy/repository/talent_tab_repository.dart';
+import 'package:foxy/repository/taxi_path_repository.dart';
+import 'package:foxy/repository/totem_category_repository.dart';
+import 'package:foxy/repository/vehicle_repository.dart';
+import 'package:foxy/repository/waypoint_data_repository.dart';
+import 'package:foxy/repository/zone_intro_music_repository.dart';
+import 'package:foxy/repository/zone_music_repository.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';
+import 'package:foxy/widget/item_quality_color.dart';
 import 'package:get_it/get_it.dart';
 
 class FoxyEntityPickerDelegates {
@@ -1520,42 +1520,6 @@ class FoxyEntityPickerDelegates {
     kind: ItemEnchantmentKind.randomSuffix,
   );
 
-  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
-  _itemEnchantmentGroupDelegate({
-    required String title,
-    required ItemEnchantmentKind kind,
-  }) => FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
-    title: title,
-    errorLabel: '搜索$title失败',
-    filters: const [FoxyEntityPickerFilter('组 ID')],
-    columns: [
-      FoxyEntityPickerColumn(
-        header: '组 ID',
-        width: 160,
-        text: (BriefItemEnchantmentTemplateEntity row) => row.entry.toString(),
-      ),
-      FoxyEntityPickerColumn(
-        header: '有效附魔数',
-        text: (BriefItemEnchantmentTemplateEntity row) =>
-            row.itemCount.toString(),
-      ),
-    ],
-    idOf: (BriefItemEnchantmentTemplateEntity row) => row.entry,
-    fetch: (page, values) => GetIt.instance
-        .get<ItemEnchantmentTemplateRepository>()
-        .getBriefItemEnchantmentGroups(
-          kind: kind,
-          page: page,
-          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
-        ),
-    count: (values) => GetIt.instance
-        .get<ItemEnchantmentTemplateRepository>()
-        .countItemEnchantmentGroups(
-          kind: kind,
-          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
-        ),
-  );
-
   static final itemSet = FoxyEntityPickerDelegate<BriefItemSetEntity>(
     title: '物品套装',
     errorLabel: '搜索物品套装失败',
@@ -2745,5 +2709,41 @@ class FoxyEntityPickerDelegates {
     count: (v) => GetIt.instance.get<VehicleRepository>().countVehicles(
       filter: VehicleFilter(id: v[0]),
     ),
+  );
+
+  static FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>
+  _itemEnchantmentGroupDelegate({
+    required String title,
+    required ItemEnchantmentKind kind,
+  }) => FoxyEntityPickerDelegate<BriefItemEnchantmentTemplateEntity>(
+    title: title,
+    errorLabel: '搜索$title失败',
+    filters: const [FoxyEntityPickerFilter('组 ID')],
+    columns: [
+      FoxyEntityPickerColumn(
+        header: '组 ID',
+        width: 160,
+        text: (BriefItemEnchantmentTemplateEntity row) => row.entry.toString(),
+      ),
+      FoxyEntityPickerColumn(
+        header: '有效附魔数',
+        text: (BriefItemEnchantmentTemplateEntity row) =>
+            row.itemCount.toString(),
+      ),
+    ],
+    idOf: (BriefItemEnchantmentTemplateEntity row) => row.entry,
+    fetch: (page, values) => GetIt.instance
+        .get<ItemEnchantmentTemplateRepository>()
+        .getBriefItemEnchantmentGroups(
+          kind: kind,
+          page: page,
+          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
+        ),
+    count: (values) => GetIt.instance
+        .get<ItemEnchantmentTemplateRepository>()
+        .countItemEnchantmentGroups(
+          kind: kind,
+          filter: ItemEnchantmentTemplateFilter(entry: values[0]),
+        ),
   );
 }

@@ -2,85 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-/// 合成 DXT block 的最小编码器（测试专用，输出已知内容）。
-/// 每 block 4×4 像素，全部取同一个颜色索引 [index]，颜色为 [r]/[g]/[b]。
-Uint8List dxtColorBlock(int r, int g, int b, int index) {
-  int pack565(int v, int bits, int shift) {
-    final max = (1 << bits) - 1;
-    final value = (v * max + 127) ~/ 255;
-    return value << shift;
-  }
-
-  final c0 = pack565(r, 5, 11) | pack565(g, 6, 5) | pack565(b, 5, 0);
-  final c1 = 0; // 与 c0 不同即可；4 色模式要求 c0 > c1
-  var bits = 0;
-  for (var i = 0; i < 16; i++) {
-    bits |= index << (2 * i);
-  }
-  final out = BytesBuilder();
-  out.addByte(c0 & 0xFF);
-  out.addByte((c0 >> 8) & 0xFF);
-  out.addByte(c1 & 0xFF);
-  out.addByte((c1 >> 8) & 0xFF);
-  out.addByte(bits & 0xFF);
-  out.addByte((bits >> 8) & 0xFF);
-  out.addByte((bits >> 16) & 0xFF);
-  out.addByte((bits >> 24) & 0xFF);
-  return out.toBytes();
-}
-
-/// DXT3 alpha 半字节（全部同一值 [nibble]）。
-Uint8List dxt3AlphaBlock(int nibble) {
-  final byte = (nibble & 0xF) | ((nibble & 0xF) << 4);
-  return Uint8List.fromList(List.filled(8, byte));
-}
-
-/// DXT5 alpha：a0/a1 与全部索引 [code]。
-Uint8List dxt5AlphaBlock(int a0, int a1, int code) {
-  final out = BytesBuilder();
-  out.addByte(a0);
-  out.addByte(a1);
-  var bits = 0;
-  for (var i = 0; i < 16; i++) {
-    bits |= code << (3 * i);
-  }
-  for (var i = 0; i < 6; i++) {
-    out.addByte((bits >> (8 * i)) & 0xFF);
-  }
-  return out.toBytes();
-}
-
-/// 组装完整 BLP2 文件（64×64，单 block 平铺，无 mipmap）。
-Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0}) {
-  const width = 64, height = 64;
-  final header = BytesBuilder();
-  header.add('BLP2'.codeUnits);
-  header.add([1, 0, 0, 0]); // type=1（非 JPEG）
-  header.addByte(2); // encoding=DXT
-  header.addByte(alphaDepth);
-  header.addByte(alphaEncoding);
-  header.addByte(0); // hasMips=0
-  final dims = ByteData(8);
-  dims.setUint32(0, width, Endian.little);
-  dims.setUint32(4, height, Endian.little);
-  header.add(dims.buffer.asUint8List());
-  // mipOffsets[16]：mip0 偏移 = 20（头部）+ 16×4×2 = 148
-  final offsets = ByteData(64);
-  offsets.setUint32(0, 148, Endian.little);
-  header.add(offsets.buffer.asUint8List());
-  final sizes = ByteData(64);
-  sizes.setUint32(0, mip0.length, Endian.little);
-  header.add(sizes.buffer.asUint8List());
-  return Uint8List.fromList([...header.toBytes(), ...mip0]);
-}
-
-/// 重复 [block] 平铺成 64×64 的 mip0 数据。
-Uint8List tile(Uint8List block, int blockCount) {
-  return Uint8List.fromList([for (var i = 0; i < blockCount; i++) ...block]);
-}
+import 'package:foxy/infrastructure/game_asset/blp_decoder.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -204,4 +127,81 @@ void main() {
       });
     }
   });
+}
+
+/// 组装完整 BLP2 文件（64×64，单 block 平铺，无 mipmap）。
+Uint8List buildBlp2(Uint8List mip0, {int alphaDepth = 0, int alphaEncoding = 0}) {
+  const width = 64, height = 64;
+  final header = BytesBuilder();
+  header.add('BLP2'.codeUnits);
+  header.add([1, 0, 0, 0]); // type=1（非 JPEG）
+  header.addByte(2); // encoding=DXT
+  header.addByte(alphaDepth);
+  header.addByte(alphaEncoding);
+  header.addByte(0); // hasMips=0
+  final dims = ByteData(8);
+  dims.setUint32(0, width, Endian.little);
+  dims.setUint32(4, height, Endian.little);
+  header.add(dims.buffer.asUint8List());
+  // mipOffsets[16]：mip0 偏移 = 20（头部）+ 16×4×2 = 148
+  final offsets = ByteData(64);
+  offsets.setUint32(0, 148, Endian.little);
+  header.add(offsets.buffer.asUint8List());
+  final sizes = ByteData(64);
+  sizes.setUint32(0, mip0.length, Endian.little);
+  header.add(sizes.buffer.asUint8List());
+  return Uint8List.fromList([...header.toBytes(), ...mip0]);
+}
+
+/// DXT3 alpha 半字节（全部同一值 [nibble]）。
+Uint8List dxt3AlphaBlock(int nibble) {
+  final byte = (nibble & 0xF) | ((nibble & 0xF) << 4);
+  return Uint8List.fromList(List.filled(8, byte));
+}
+
+/// DXT5 alpha：a0/a1 与全部索引 [code]。
+Uint8List dxt5AlphaBlock(int a0, int a1, int code) {
+  final out = BytesBuilder();
+  out.addByte(a0);
+  out.addByte(a1);
+  var bits = 0;
+  for (var i = 0; i < 16; i++) {
+    bits |= code << (3 * i);
+  }
+  for (var i = 0; i < 6; i++) {
+    out.addByte((bits >> (8 * i)) & 0xFF);
+  }
+  return out.toBytes();
+}
+
+/// 合成 DXT block 的最小编码器（测试专用，输出已知内容）。
+/// 每 block 4×4 像素，全部取同一个颜色索引 [index]，颜色为 [r]/[g]/[b]。
+Uint8List dxtColorBlock(int r, int g, int b, int index) {
+  int pack565(int v, int bits, int shift) {
+    final max = (1 << bits) - 1;
+    final value = (v * max + 127) ~/ 255;
+    return value << shift;
+  }
+
+  final c0 = pack565(r, 5, 11) | pack565(g, 6, 5) | pack565(b, 5, 0);
+  final c1 = 0; // 与 c0 不同即可；4 色模式要求 c0 > c1
+  var bits = 0;
+  for (var i = 0; i < 16; i++) {
+    bits |= index << (2 * i);
+  }
+  final out = BytesBuilder();
+  out.addByte(c0 & 0xFF);
+  out.addByte((c0 >> 8) & 0xFF);
+  out.addByte(c1 & 0xFF);
+  out.addByte((c1 >> 8) & 0xFF);
+  out.addByte(bits & 0xFF);
+  out.addByte((bits >> 8) & 0xFF);
+  out.addByte((bits >> 16) & 0xFF);
+  out.addByte((bits >> 24) & 0xFF);
+  return out.toBytes();
+}
+
+/// 重复 [block] 平铺成 64×64 的 mip0 数据。
+Uint8List tile(Uint8List block, int blockCount) {
+  return Uint8List.fromList([for (var i = 0; i < blockCount; i++) ...block]);
 }

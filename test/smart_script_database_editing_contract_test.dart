@@ -3,10 +3,10 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -170,6 +170,11 @@ void main() {
 
 }
 
+class _FakeActivityLogRepository extends ActivityLogRepository {
+  @override
+  void storeActivityLogBestEffort(ActivityLogEntity log) {}
+}
+
 class _FakeRepository extends SmartScriptRepository {
   final List<SmartScriptEntity> rows;
   bool failUpdates = false;
@@ -215,11 +220,6 @@ class _FakeRepository extends SmartScriptRepository {
     if (index < 0) throw StateError('missing');
     rows[index] = script;
   }
-}
-
-class _FakeActivityLogRepository extends ActivityLogRepository {
-  @override
-  void storeActivityLogBestEffort(ActivityLogEntity log) {}
 }
 
 class _RecordingDriver implements DatabaseDriver {

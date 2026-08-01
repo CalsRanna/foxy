@@ -10,12 +10,12 @@ final class ItemEnchantmentTemplateParentKey {
   });
 
   @override
+  int get hashCode => Object.hash(entry, kind);
+
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ItemEnchantmentTemplateParentKey &&
           other.entry == entry &&
           other.kind == kind;
-
-  @override
-  int get hashCode => Object.hash(entry, kind);
 }

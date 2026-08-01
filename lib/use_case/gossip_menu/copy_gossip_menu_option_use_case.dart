@@ -6,6 +6,11 @@ import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
 
 final class CopyGossipMenuOptionUseCase {
+  final DatabaseTransaction _transaction;
+
+  final GossipMenuOptionRepository _optionRepository;
+  final GossipMenuOptionLocaleRepository _localeRepository;
+  final ActivityLogService _activityLogService;
   CopyGossipMenuOptionUseCase({
     required DatabaseTransaction transaction,
     required GossipMenuOptionRepository optionRepository,
@@ -15,11 +20,6 @@ final class CopyGossipMenuOptionUseCase {
        _optionRepository = optionRepository,
        _localeRepository = localeRepository,
        _activityLogService = activityLogService;
-
-  final DatabaseTransaction _transaction;
-  final GossipMenuOptionRepository _optionRepository;
-  final GossipMenuOptionLocaleRepository _localeRepository;
-  final ActivityLogService _activityLogService;
 
   Future<GossipMenuOptionKey> execute(GossipMenuOptionKey sourceKey) async {
     GossipMenuOptionKey? targetKey;

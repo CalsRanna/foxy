@@ -1,10 +1,10 @@
 import 'package:foxy/entity/creature_template_addon_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'creature_template_addon_single_editor_view_model.g.dart';
 
@@ -23,6 +23,39 @@ class CreatureTemplateAddonSingleEditorViewModel
 
   int _refreshToken = 0;
   int _parentToken = 0;
+  Future<void> destroy() async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final key = editingKey.value;
+    if (key == null) return;
+    final parentSnapshot = parentKey.value;
+    final parentToken = _parentToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyCreatureTemplateAddon(key);
+      if (parentToken != _parentToken ||
+          parentKey.value != parentSnapshot) {
+        return;
+      }
+      editingKey.value = null;
+      await _refresh();
+    } catch (error) {
+      if (parentToken != _parentToken ||
+          parentKey.value != parentSnapshot) {
+        return;
+      }
+      errorMessage.value = error.toString();
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  /// 清理资源
+  void dispose() {
+    disposeControllers();
+  }
+
   /// 初始化 ViewModel
   /// 退出页面
   /// 保存数据到数据库
@@ -32,14 +65,6 @@ class CreatureTemplateAddonSingleEditorViewModel
 
   Future<void> initSignals({required int parentKey}) {
     return setParentKey(parentKey);
-  }
-
-  Future<void> setParentKey(int parentKey) async {
-    if (this.parentKey.value == parentKey && entity.value != null) return;
-    _parentToken++;
-    this.parentKey.value = parentKey;
-    editingKey.value = null;
-    await _refresh();
   }
 
   Future<void> persist() async {
@@ -76,32 +101,12 @@ class CreatureTemplateAddonSingleEditorViewModel
     }
   }
 
-  Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final key = editingKey.value;
-    if (key == null) return;
-    final parentSnapshot = parentKey.value;
-    final parentToken = _parentToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyCreatureTemplateAddon(key);
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
-        return;
-      }
-      editingKey.value = null;
-      await _refresh();
-    } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
-        return;
-      }
-      errorMessage.value = error.toString();
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
+  Future<void> setParentKey(int parentKey) async {
+    if (this.parentKey.value == parentKey && entity.value != null) return;
+    _parentToken++;
+    this.parentKey.value = parentKey;
+    editingKey.value = null;
+    await _refresh();
   }
 
   Future<void> _refresh() async {
@@ -134,10 +139,5 @@ class CreatureTemplateAddonSingleEditorViewModel
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  /// 清理资源
-  void dispose() {
-    disposeControllers();
   }
 }

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
 
 void main() {
   test('FeatureStateViewModel 源码不持有 DBC 状态', () async {

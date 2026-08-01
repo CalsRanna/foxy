@@ -5,10 +5,10 @@ import 'package:foxy/page/dashboard/component/introduction.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
 import 'package:foxy/page/dashboard/component/version.dart';
 import 'package:foxy/page/dashboard/component/welcome.dart';
-import 'package:foxy/view_model/dashboard_read_view_model.dart';
-import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
+import 'package:foxy/view_model/dashboard_read_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
@@ -28,18 +28,6 @@ class _DashboardPageRoute extends State<DashboardPage> {
   final routerFacade = GetIt.instance.get<RouterFacade>();
 
   @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(16.0),
@@ -55,6 +43,18 @@ class _DashboardPageRoute extends State<DashboardPage> {
         _buildWorkspace(),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
   }
 
   Widget _buildWorkspace() {
@@ -93,6 +93,15 @@ class _DashboardPageRoute extends State<DashboardPage> {
     );
   }
 
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals();
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载仪表板数据失败：$error');
+    }
+  }
+
   void _navigateToMenu(RouterMenu menu) {
     final feature = featureState.allFeatures.value
         .where((feature) => feature.routerMenu == menu.name)
@@ -101,15 +110,6 @@ class _DashboardPageRoute extends State<DashboardPage> {
       menu,
       parentMenu: feature?.isPinned ?? true ? null : RouterMenu.more,
     );
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals();
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载仪表板数据失败：$error');
-    }
   }
 }
 

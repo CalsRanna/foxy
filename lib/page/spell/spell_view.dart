@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/flag_item.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
+import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -16,8 +15,26 @@ import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+
+class MiscValueDropdown extends MiscValueOptions {
+  final Map<int, String> items;
+  const MiscValueDropdown(this.items);
+}
+
+class MiscValueFlagPicker extends MiscValueOptions {
+  final List<FlagItem> flags;
+  const MiscValueFlagPicker(this.flags);
+}
+
+class MiscValueNumber extends MiscValueOptions {}
+
+/// MiscValue 的三态输入模式。
+sealed class MiscValueOptions {
+  const MiscValueOptions();
+}
 
 class SpellView extends StatelessWidget {
   final SpellDetailViewModel viewModel;
@@ -1285,111 +1302,6 @@ class SpellView extends StatelessWidget {
     );
   }
 
-  /// 根据 Effect 和 EffectAura 返回 MiscValue 的动态标签
-  String _miscValueLabel(int effect, int aura) {
-    if (effect == 0) return '杂项值';
-    switch (effect) {
-      case 6: // APPLY_AURA - 由 Aura 决定
-        return switch (aura) {
-          13 || 87 || 174 || 237 || 238 => '法术类型掩码',
-          22 || 83 => '抗性类型',
-          29 || 137 || 175 || 182 || 212 || 268 => '属性ID',
-          30 || 98 => '技能ID',
-          31 => '速度类型',
-          36 => '变形形态',
-          75 => '语言ID',
-          78 => '坐骑显示ID',
-          82 => '水下呼吸类型',
-          99 => '攻击强度类型',
-          107 || 108 => 'SpellModOp',
-          287 => '偏转几率%',
-          _ => '杂项值',
-        };
-      case 24:
-        return '物品ID';
-      case 28:
-        return '生物ID';
-      case 30:
-        return '能量类型';
-      case 36:
-        return '法术ID';
-      case 38:
-        return '驱散掩码';
-      case 44:
-        return '技能ID';
-      case 56:
-        return '宠物ID';
-      case 64:
-        return '触发法术ID';
-      case 77:
-        return '脚本参数';
-      case 80:
-        return '连击点数';
-      case 83:
-        return '决斗类型';
-      case 118:
-        return '技能ID';
-      default:
-        return '杂项值';
-    }
-  }
-
-  /// MiscValueB 的动态标签
-  String _miscValueBLabel(int effect, int aura) {
-    if (effect == 0) return '杂项值B';
-    return switch (effect) {
-      6 => switch (aura) {
-        30 => '技能步进值',
-        174 => '属性ID',
-        _ => '杂项值B',
-      },
-      _ => '杂项值B',
-    };
-  }
-
-  /// 返回 MiscValueB 对应的枚举选项
-  MiscValueOptions? _miscValueBOptions(int effect, int aura) {
-    if (effect == 0) return null;
-    return switch (effect) {
-      6 => switch (aura) {
-        174 => MiscValueDropdown(
-          kStatsEnumOptions,
-        ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
-        _ => null,
-      },
-      _ => null,
-    };
-  }
-
-  /// 返回 MiscValue 对应的枚举选项。
-  MiscValueOptions? _miscValueOptions(int effect, int aura) {
-    if (effect == 0) return null;
-    if (effect == 6) {
-      return switch (aura) {
-        13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
-          kSpellSchoolMaskOptions,
-        ), // school mask → FlagPicker!
-        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // 单值抗性 → 下拉
-        29 ||
-        137 ||
-        175 ||
-        182 ||
-        212 ||
-        268 => MiscValueDropdown(kStatTypeOptions), // 单值属性 → 下拉
-        30 || 98 => null, // 技能ID → 数字
-        31 => MiscValueDropdown(kSpeedTypeOptions),
-        36 => MiscValueDropdown(kShapeshiftFormOptions),
-        99 => MiscValueDropdown(kAttackPowerTypeOptions),
-        107 || 108 => MiscValueDropdown(kSpellModOpOptions),
-        _ => null,
-      };
-    }
-    return switch (effect) {
-      30 => MiscValueDropdown(kEnergizePowerTypeOptions), // ENERGIZE
-      _ => null,
-    };
-  }
-
   /// 构建响应式效果区域
   /// 根据 [effectSignal] 和 [effectAuraSignal] 决定子字段的 readonly 状态
   Widget _buildEffectSection(String title, int i) {
@@ -1860,6 +1772,115 @@ class SpellView extends StatelessWidget {
     });
   }
 
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
+  /// MiscValueB 的动态标签
+  String _miscValueBLabel(int effect, int aura) {
+    if (effect == 0) return '杂项值B';
+    return switch (effect) {
+      6 => switch (aura) {
+        30 => '技能步进值',
+        174 => '属性ID',
+        _ => '杂项值B',
+      },
+      _ => '杂项值B',
+    };
+  }
+
+  /// 返回 MiscValueB 对应的枚举选项
+  MiscValueOptions? _miscValueBOptions(int effect, int aura) {
+    if (effect == 0) return null;
+    return switch (effect) {
+      6 => switch (aura) {
+        174 => MiscValueDropdown(
+          kStatsEnumOptions,
+        ), // MOD_SPELL_DAMAGE_OF_STAT_PERCENT — 用 Stats 枚举！
+        _ => null,
+      },
+      _ => null,
+    };
+  }
+
+  /// 根据 Effect 和 EffectAura 返回 MiscValue 的动态标签
+  String _miscValueLabel(int effect, int aura) {
+    if (effect == 0) return '杂项值';
+    switch (effect) {
+      case 6: // APPLY_AURA - 由 Aura 决定
+        return switch (aura) {
+          13 || 87 || 174 || 237 || 238 => '法术类型掩码',
+          22 || 83 => '抗性类型',
+          29 || 137 || 175 || 182 || 212 || 268 => '属性ID',
+          30 || 98 => '技能ID',
+          31 => '速度类型',
+          36 => '变形形态',
+          75 => '语言ID',
+          78 => '坐骑显示ID',
+          82 => '水下呼吸类型',
+          99 => '攻击强度类型',
+          107 || 108 => 'SpellModOp',
+          287 => '偏转几率%',
+          _ => '杂项值',
+        };
+      case 24:
+        return '物品ID';
+      case 28:
+        return '生物ID';
+      case 30:
+        return '能量类型';
+      case 36:
+        return '法术ID';
+      case 38:
+        return '驱散掩码';
+      case 44:
+        return '技能ID';
+      case 56:
+        return '宠物ID';
+      case 64:
+        return '触发法术ID';
+      case 77:
+        return '脚本参数';
+      case 80:
+        return '连击点数';
+      case 83:
+        return '决斗类型';
+      case 118:
+        return '技能ID';
+      default:
+        return '杂项值';
+    }
+  }
+
+  /// 返回 MiscValue 对应的枚举选项。
+  MiscValueOptions? _miscValueOptions(int effect, int aura) {
+    if (effect == 0) return null;
+    if (effect == 6) {
+      return switch (aura) {
+        13 || 87 || 174 || 237 || 238 => MiscValueFlagPicker(
+          kSpellSchoolMaskOptions,
+        ), // school mask → FlagPicker!
+        22 || 83 => MiscValueDropdown(kDamageSchoolOptions), // 单值抗性 → 下拉
+        29 ||
+        137 ||
+        175 ||
+        182 ||
+        212 ||
+        268 => MiscValueDropdown(kStatTypeOptions), // 单值属性 → 下拉
+        30 || 98 => null, // 技能ID → 数字
+        31 => MiscValueDropdown(kSpeedTypeOptions),
+        36 => MiscValueDropdown(kShapeshiftFormOptions),
+        99 => MiscValueDropdown(kAttackPowerTypeOptions),
+        107 || 108 => MiscValueDropdown(kSpellModOpOptions),
+        _ => null,
+      };
+    }
+    return switch (effect) {
+      30 => MiscValueDropdown(kEnergizePowerTypeOptions), // ENERGIZE
+      _ => null,
+    };
+  }
+
   Future<void> _persist(BuildContext context) async {
     try {
       await viewModel.persist();
@@ -1877,27 +1898,6 @@ class SpellView extends StatelessWidget {
       ).show(ShadToast(description: Text(error.toString())));
     }
   }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
-  }
-}
-
-/// MiscValue 的三态输入模式。
-sealed class MiscValueOptions {
-  const MiscValueOptions();
-}
-
-class MiscValueNumber extends MiscValueOptions {}
-
-class MiscValueDropdown extends MiscValueOptions {
-  final Map<int, String> items;
-  const MiscValueDropdown(this.items);
-}
-
-class MiscValueFlagPicker extends MiscValueOptions {
-  final List<FlagItem> flags;
-  const MiscValueFlagPicker(this.flags);
 }
 
 /// 根据上下文动态切换 数字输入 / 下拉框 / FlagPicker。
@@ -1923,63 +1923,8 @@ class _MiscValueInputState extends State<_MiscValueInput> {
   SelectFieldController<int>? _selectController;
   FlagFieldController? _flagController;
 
-  void _onSelectChanged() {
-    final select = _selectController;
-    if (select == null) return;
-    widget.controller.init(select.collect());
-  }
-
-  void _onFlagChanged() {
-    final flag = _flagController;
-    if (flag == null) return;
-    widget.controller.init(flag.collect());
-  }
-
-  void _disposeAdapters() {
-    _selectController?.removeListener(_onSelectChanged);
-    _selectController?.dispose();
-    _selectController = null;
-    _flagController?.removeListener(_onFlagChanged);
-    _flagController?.dispose();
-    _flagController = null;
-  }
-
-  void _ensureAdapters() {
-    if (_isSelectMode && _selectController == null) {
-      _selectController = SelectFieldController<int>(fallback: 0);
-      _selectController!.init(widget.controller.collect());
-      _selectController!.addListener(_onSelectChanged);
-    }
-    if (_isFlagMode && _flagController == null) {
-      _flagController = FlagFieldController();
-      _flagController!.init(widget.controller.collect());
-      _flagController!.addListener(_onFlagChanged);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _ensureAdapters();
-  }
-
-  @override
-  void didUpdateWidget(_MiscValueInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.options.runtimeType != widget.options.runtimeType ||
-        oldWidget.controller != widget.controller) {
-      _disposeAdapters();
-      _ensureAdapters();
-    }
-  }
-
-  @override
-  void dispose() {
-    _disposeAdapters();
-    super.dispose();
-  }
-
   bool get _isFlagMode => widget.options is MiscValueFlagPicker;
+
   bool get _isSelectMode => widget.options is MiscValueDropdown;
 
   @override
@@ -2005,5 +1950,60 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       controller: widget.controller,
       readOnly: widget.readOnly,
     );
+  }
+
+  @override
+  void didUpdateWidget(_MiscValueInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.options.runtimeType != widget.options.runtimeType ||
+        oldWidget.controller != widget.controller) {
+      _disposeAdapters();
+      _ensureAdapters();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposeAdapters();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureAdapters();
+  }
+
+  void _disposeAdapters() {
+    _selectController?.removeListener(_onSelectChanged);
+    _selectController?.dispose();
+    _selectController = null;
+    _flagController?.removeListener(_onFlagChanged);
+    _flagController?.dispose();
+    _flagController = null;
+  }
+
+  void _ensureAdapters() {
+    if (_isSelectMode && _selectController == null) {
+      _selectController = SelectFieldController<int>(fallback: 0);
+      _selectController!.init(widget.controller.collect());
+      _selectController!.addListener(_onSelectChanged);
+    }
+    if (_isFlagMode && _flagController == null) {
+      _flagController = FlagFieldController();
+      _flagController!.init(widget.controller.collect());
+      _flagController!.addListener(_onFlagChanged);
+    }
+  }
+  void _onFlagChanged() {
+    final flag = _flagController;
+    if (flag == null) return;
+    widget.controller.init(flag.collect());
+  }
+
+  void _onSelectChanged() {
+    final select = _selectController;
+    if (select == null) return;
+    widget.controller.init(select.collect());
   }
 }

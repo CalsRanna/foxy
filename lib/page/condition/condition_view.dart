@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
-import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
-import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -17,6 +16,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -221,21 +221,29 @@ class ConditionView extends StatelessWidget {
     });
   }
 
-  Widget _row(Widget first, Widget second, Widget third, Widget fourth) {
-    return Row(
-      spacing: 8,
-      children: [
-        Expanded(child: first),
-        Expanded(child: second),
-        Expanded(child: third),
-        Expanded(child: fourth),
-      ],
-    );
+  FoxyEntityPickerDelegate<Object?> _delegateFor(
+    ConditionValueReference reference,
+  ) {
+    return switch (reference) {
+      ConditionValueReference.achievement =>
+        FoxyEntityPickerDelegates.achievement,
+      ConditionValueReference.area => FoxyEntityPickerDelegates.areaTable,
+      ConditionValueReference.creature =>
+        FoxyEntityPickerDelegates.creatureTemplate,
+      ConditionValueReference.faction => FoxyEntityPickerDelegates.dbcFaction,
+      ConditionValueReference.gameObject =>
+        FoxyEntityPickerDelegates.gameObjectTemplate,
+      ConditionValueReference.item => FoxyEntityPickerDelegates.itemTemplate,
+      ConditionValueReference.map => FoxyEntityPickerDelegates.map,
+      ConditionValueReference.quest => FoxyEntityPickerDelegates.questTemplate,
+      ConditionValueReference.skill => FoxyEntityPickerDelegates.skillLine,
+      ConditionValueReference.spell => FoxyEntityPickerDelegates.spell,
+      ConditionValueReference.title => FoxyEntityPickerDelegates.charTitle,
+    };
   }
 
-  Map<int, String> _targetOptions(int sourceType) {
-    final count = sourceType < 0 ? 1 : conditionTargetCount(sourceType);
-    return {0: '目标 0', if (count > 1) 1: '目标 1', if (count > 2) 2: '目标 2'};
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
   }
 
   FoxyFormItem _numberItem(
@@ -254,37 +262,31 @@ class ConditionView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _sourceGroupItem(
-    int sourceType, {
-    required bool referenceTemplate,
-  }) {
-    if (!referenceTemplate && sourceType == 30) {
-      return FoxyFormItem(
-        label: '对象类型',
-        child: FoxyShadSelect<int>(
-          controller: viewModel.sourceGroupController.selectController,
-          options: const {0: '生物', 1: '游戏对象'},
-          placeholder: const Text('SourceGroup'),
-        ),
+  Future<void> _persist(BuildContext context) async {
+    try {
+      await viewModel.persist();
+      if (!context.mounted) return;
+      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
+        '条件 ${viewModel.persistedKey.value}',
       );
+      ShadSonner.of(context).show(const ShadToast(description: Text('条件已保存')));
+    } catch (error) {
+      if (!context.mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
     }
-    final label = switch (sourceType) {
-      >= 1 && <= 12 || 28 => '掉落模板 Entry',
-      13 => '效果掩码',
-      14 => '对话菜单 ID',
-      15 => '对话菜单 ID',
-      18 || 21 => '生物 Entry',
-      20 => '对话菜单 ID',
-      22 => 'SmartAI 事件 ID',
-      23 => '商人生物 Entry',
-      _ => '来源组',
-    };
-    final canEdit = kConditionSourceTypesWithGroup.contains(sourceType);
-    return _numberItem(
-      label,
-      'SourceGroup',
-      viewModel.sourceGroupController.numberController,
-      readOnly: referenceTemplate || !canEdit,
+  }
+
+  Widget _row(Widget first, Widget second, Widget third, Widget fourth) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(child: first),
+        Expanded(child: second),
+        Expanded(child: third),
+        Expanded(child: fourth),
+      ],
     );
   }
 
@@ -333,6 +335,40 @@ class ConditionView extends StatelessWidget {
     );
   }
 
+  FoxyFormItem _sourceGroupItem(
+    int sourceType, {
+    required bool referenceTemplate,
+  }) {
+    if (!referenceTemplate && sourceType == 30) {
+      return FoxyFormItem(
+        label: '对象类型',
+        child: FoxyShadSelect<int>(
+          controller: viewModel.sourceGroupController.selectController,
+          options: const {0: '生物', 1: '游戏对象'},
+          placeholder: const Text('SourceGroup'),
+        ),
+      );
+    }
+    final label = switch (sourceType) {
+      >= 1 && <= 12 || 28 => '掉落模板 Entry',
+      13 => '效果掩码',
+      14 => '对话菜单 ID',
+      15 => '对话菜单 ID',
+      18 || 21 => '生物 Entry',
+      20 => '对话菜单 ID',
+      22 => 'SmartAI 事件 ID',
+      23 => '商人生物 Entry',
+      _ => '来源组',
+    };
+    final canEdit = kConditionSourceTypesWithGroup.contains(sourceType);
+    return _numberItem(
+      label,
+      'SourceGroup',
+      viewModel.sourceGroupController.numberController,
+      readOnly: referenceTemplate || !canEdit,
+    );
+  }
+
   FoxyFormItem _sourceIdItem(
     int sourceType, {
     required bool referenceTemplate,
@@ -357,15 +393,9 @@ class ConditionView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _valueItem(
-    String column,
-    IntegerFieldSpec<ConditionValueReference> spec,
-    IntFieldControllerGroup controllers,
-  ) {
-    return FoxyFormItem(
-      label: spec.label,
-      child: _valueEditor(column, spec, controllers),
-    );
+  Map<int, String> _targetOptions(int sourceType) {
+    final count = sourceType < 0 ? 1 : conditionTargetCount(sourceType);
+    return {0: '目标 0', if (count > 1) 1: '目标 1', if (count > 2) 2: '目标 2'};
   }
 
   Widget _valueEditor(
@@ -400,44 +430,14 @@ class ConditionView extends StatelessWidget {
     };
   }
 
-  FoxyEntityPickerDelegate<Object?> _delegateFor(
-    ConditionValueReference reference,
+  FoxyFormItem _valueItem(
+    String column,
+    IntegerFieldSpec<ConditionValueReference> spec,
+    IntFieldControllerGroup controllers,
   ) {
-    return switch (reference) {
-      ConditionValueReference.achievement =>
-        FoxyEntityPickerDelegates.achievement,
-      ConditionValueReference.area => FoxyEntityPickerDelegates.areaTable,
-      ConditionValueReference.creature =>
-        FoxyEntityPickerDelegates.creatureTemplate,
-      ConditionValueReference.faction => FoxyEntityPickerDelegates.dbcFaction,
-      ConditionValueReference.gameObject =>
-        FoxyEntityPickerDelegates.gameObjectTemplate,
-      ConditionValueReference.item => FoxyEntityPickerDelegates.itemTemplate,
-      ConditionValueReference.map => FoxyEntityPickerDelegates.map,
-      ConditionValueReference.quest => FoxyEntityPickerDelegates.questTemplate,
-      ConditionValueReference.skill => FoxyEntityPickerDelegates.skillLine,
-      ConditionValueReference.spell => FoxyEntityPickerDelegates.spell,
-      ConditionValueReference.title => FoxyEntityPickerDelegates.charTitle,
-    };
-  }
-
-  Future<void> _persist(BuildContext context) async {
-    try {
-      await viewModel.persist();
-      if (!context.mounted) return;
-      GetIt.instance.get<RouterFacade>().updateCurrentLabel(
-        '条件 ${viewModel.persistedKey.value}',
-      );
-      ShadSonner.of(context).show(const ShadToast(description: Text('条件已保存')));
-    } catch (error) {
-      if (!context.mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
+    return FoxyFormItem(
+      label: spec.label,
+      child: _valueEditor(column, spec, controllers),
+    );
   }
 }

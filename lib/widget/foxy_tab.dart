@@ -66,21 +66,6 @@ class _FoxyTabState extends State<FoxyTab> {
   bool _isAnimating = false;
 
   @override
-  void initState() {
-    super.initState();
-    keys = widget.tabs.map((e) => GlobalKey()).toList();
-    width = List.generate(widget.tabs.length, (index) => 0.0);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      for (var i = 0; i < keys.length; i++) {
-        final key = keys[i];
-        final renderBox = key.currentContext?.findRenderObject() as RenderBox;
-        width[i] = renderBox.size.width;
-      }
-      setState(() {});
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -138,6 +123,21 @@ class _FoxyTabState extends State<FoxyTab> {
     await Future.delayed(Duration(milliseconds: 150));
 
     _isAnimating = false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    keys = widget.tabs.map((e) => GlobalKey()).toList();
+    width = List.generate(widget.tabs.length, (index) => 0.0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (var i = 0; i < keys.length; i++) {
+        final key = keys[i];
+        final renderBox = key.currentContext?.findRenderObject() as RenderBox;
+        width[i] = renderBox.size.width;
+      }
+      setState(() {});
+    });
   }
 
   _FoxyTabItem _buildItem(int i) {

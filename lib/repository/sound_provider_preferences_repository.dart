@@ -1,6 +1,6 @@
+import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/sound_provider_preferences_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -34,6 +34,14 @@ class SoundProviderPreferencesRepository
   createSoundProviderPreference() async =>
       SoundProviderPreferencesEntity(id: await nextMaxPlusOne(_table, 'ID'));
 
+  Future<List<SoundProviderPreferencesEntity>>
+  getAllSoundProviderPreferences() async {
+    final rows = await laconic.table(_table).get();
+    return rows
+        .map((row) => SoundProviderPreferencesEntity.fromJson(row.toMap()))
+        .toList();
+  }
+
   Future<List<BriefSoundProviderPreferencesEntity>>
   getBriefSoundProviderPreferences({
     int page = 1,
@@ -45,14 +53,6 @@ class SoundProviderPreferencesRepository
     ).orderBy('ID').limit(kPageSize).offset((page - 1) * kPageSize).get();
     return rows
         .map((row) => BriefSoundProviderPreferencesEntity.fromJson(row.toMap()))
-        .toList();
-  }
-
-  Future<List<SoundProviderPreferencesEntity>>
-  getAllSoundProviderPreferences() async {
-    final rows = await laconic.table(_table).get();
-    return rows
-        .map((row) => SoundProviderPreferencesEntity.fromJson(row.toMap()))
         .toList();
   }
 

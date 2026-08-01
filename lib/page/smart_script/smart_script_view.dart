@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
-import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -13,6 +12,7 @@ import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -263,27 +263,34 @@ class SmartScriptView extends StatelessWidget {
     });
   }
 
-  Widget _row(Widget first, Widget second, Widget third, Widget fourth) {
-    return Row(
-      spacing: 8,
-      children: [
-        Expanded(child: first),
-        Expanded(child: second),
-        Expanded(child: third),
-        Expanded(child: fourth),
-      ],
-    );
-  }
-
-  FoxyFormItem _numberItem(
-    String label,
-    String column,
-    IntFieldController controller,
+  FoxyEntityPickerDelegate<Object?> _delegateFor(
+    SmartParameterReference reference,
   ) {
-    return FoxyFormItem(
-      label: label,
-      child: FoxyNumberInput<int>(placeholder: column, controller: controller),
-    );
+    return switch (reference) {
+      SmartParameterReference.area => FoxyEntityPickerDelegates.areaTable,
+      SmartParameterReference.cinematicSequence =>
+        FoxyEntityPickerDelegates.cinematicSequence,
+      SmartParameterReference.creature =>
+        FoxyEntityPickerDelegates.creatureTemplate,
+      SmartParameterReference.creatureDisplay =>
+        FoxyEntityPickerDelegates.creatureDisplayInfo,
+      SmartParameterReference.emote => FoxyEntityPickerDelegates.dbcEmote,
+      SmartParameterReference.factionTemplate =>
+        FoxyEntityPickerDelegates.dbcFactionTemplate,
+      SmartParameterReference.gameObject =>
+        FoxyEntityPickerDelegates.gameObjectTemplate,
+      SmartParameterReference.gossipMenu =>
+        FoxyEntityPickerDelegates.gossipMenu,
+      SmartParameterReference.item => FoxyEntityPickerDelegates.itemTemplate,
+      SmartParameterReference.map => FoxyEntityPickerDelegates.map,
+      SmartParameterReference.npcText => FoxyEntityPickerDelegates.npcText,
+      SmartParameterReference.quest => FoxyEntityPickerDelegates.questTemplate,
+      SmartParameterReference.spell => FoxyEntityPickerDelegates.spell,
+      SmartParameterReference.taxiPath => FoxyEntityPickerDelegates.taxiPath,
+      SmartParameterReference.textEmote => FoxyEntityPickerDelegates.emote,
+      SmartParameterReference.waypointPath =>
+        FoxyEntityPickerDelegates.waypointData,
+    };
   }
 
   FoxyFormItem _doubleItem(
@@ -300,14 +307,18 @@ class SmartScriptView extends StatelessWidget {
     );
   }
 
-  FoxyFormItem _parameterItem(
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
+  FoxyFormItem _numberItem(
+    String label,
     String column,
-    IntegerFieldSpec<SmartParameterReference> spec,
-    IntFieldControllerGroup controllers,
+    IntFieldController controller,
   ) {
     return FoxyFormItem(
-      label: spec.label,
-      child: _parameterEditor(column, spec, controllers),
+      label: label,
+      child: FoxyNumberInput<int>(placeholder: column, controller: controller),
     );
   }
 
@@ -343,34 +354,15 @@ class SmartScriptView extends StatelessWidget {
     };
   }
 
-  FoxyEntityPickerDelegate<Object?> _delegateFor(
-    SmartParameterReference reference,
+  FoxyFormItem _parameterItem(
+    String column,
+    IntegerFieldSpec<SmartParameterReference> spec,
+    IntFieldControllerGroup controllers,
   ) {
-    return switch (reference) {
-      SmartParameterReference.area => FoxyEntityPickerDelegates.areaTable,
-      SmartParameterReference.cinematicSequence =>
-        FoxyEntityPickerDelegates.cinematicSequence,
-      SmartParameterReference.creature =>
-        FoxyEntityPickerDelegates.creatureTemplate,
-      SmartParameterReference.creatureDisplay =>
-        FoxyEntityPickerDelegates.creatureDisplayInfo,
-      SmartParameterReference.emote => FoxyEntityPickerDelegates.dbcEmote,
-      SmartParameterReference.factionTemplate =>
-        FoxyEntityPickerDelegates.dbcFactionTemplate,
-      SmartParameterReference.gameObject =>
-        FoxyEntityPickerDelegates.gameObjectTemplate,
-      SmartParameterReference.gossipMenu =>
-        FoxyEntityPickerDelegates.gossipMenu,
-      SmartParameterReference.item => FoxyEntityPickerDelegates.itemTemplate,
-      SmartParameterReference.map => FoxyEntityPickerDelegates.map,
-      SmartParameterReference.npcText => FoxyEntityPickerDelegates.npcText,
-      SmartParameterReference.quest => FoxyEntityPickerDelegates.questTemplate,
-      SmartParameterReference.spell => FoxyEntityPickerDelegates.spell,
-      SmartParameterReference.taxiPath => FoxyEntityPickerDelegates.taxiPath,
-      SmartParameterReference.textEmote => FoxyEntityPickerDelegates.emote,
-      SmartParameterReference.waypointPath =>
-        FoxyEntityPickerDelegates.waypointData,
-    };
+    return FoxyFormItem(
+      label: spec.label,
+      child: _parameterEditor(column, spec, controllers),
+    );
   }
 
   Future<void> _persist(BuildContext context) async {
@@ -391,7 +383,15 @@ class SmartScriptView extends StatelessWidget {
     }
   }
 
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
+  Widget _row(Widget first, Widget second, Widget third, Widget fourth) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(child: first),
+        Expanded(child: second),
+        Expanded(child: third),
+        Expanded(child: fourth),
+      ],
+    );
   }
 }

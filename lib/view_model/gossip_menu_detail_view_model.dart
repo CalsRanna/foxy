@@ -1,14 +1,14 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 import 'package:foxy/use_case/gossip_menu/create_gossip_menu_use_case.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'gossip_menu_detail_view_model.g.dart';
 
@@ -26,6 +26,10 @@ class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailView
   final errorMessage = signal<String?>(null);
 
   int? _reservedTextId;
+
+  void dispose() {
+    disposeControllers();
+  }
 
   Future<void> initSignals({GossipMenuKey? key}) async {
     loading.value = true;
@@ -101,9 +105,5 @@ class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailView
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

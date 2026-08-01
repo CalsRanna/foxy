@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/view_model/npc_text_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/npc_text_single_editor_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -25,54 +25,6 @@ class NpcTextView extends StatefulWidget {
 
 class _NpcTextViewState extends State<NpcTextView> {
   final viewModel = GetIt.instance.get<NpcTextSingleEditorViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  @override
-  void didUpdateWidget(covariant NpcTextView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.textId != widget.textId) {
-      _initialize();
-    }
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(parentKey: widget.textId);
-    } catch (error) {
-      if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  Future<void> _persist() async {
-    try {
-      await viewModel.persist();
-      if (!mounted) return;
-      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
-    } catch (error) {
-      if (!mounted) return;
-      ShadSonner.of(
-        context,
-      ).show(ShadToast(description: Text(error.toString())));
-    }
-  }
-
-  void _goBack() {
-    GetIt.instance.get<RouterFacade>().goBack();
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,35 +169,38 @@ class _NpcTextViewState extends State<NpcTextView> {
     );
   }
 
-  Widget _buildMetaSection() {
-    return FoxyFormSection(
-      title: '基本信息',
+  @override
+  void didUpdateWidget(covariant NpcTextView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.textId != widget.textId) {
+      _initialize();
+    }
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Widget _buildActions() {
+    return Row(
       children: [
-        Row(
-          spacing: 8,
-          children: [
-            Expanded(
-              child: FoxyFormItem(
-                label: '编号',
-                child: FoxyNumberInput<int>(
-                  controller: viewModel.idController,
-                  placeholder: 'ID',
-                ),
-              ),
-            ),
-            Expanded(
-              child: FoxyFormItem(
-                label: '验证版本',
-                child: FoxyNumberInput<int>(
-                  controller: viewModel.verifiedBuildController,
-                  placeholder: 'VerifiedBuild',
-                ),
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            const Expanded(child: SizedBox()),
-          ],
+        Watch(
+          (_) => ShadButton(
+            enabled: !viewModel.submitting.value,
+            onPressed: _persist,
+            child: const Text('保存'),
+          ),
         ),
+        const SizedBox(width: 8),
+        ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
       ],
     );
   }
@@ -356,28 +311,36 @@ class _NpcTextViewState extends State<NpcTextView> {
     );
   }
 
-  Widget _localizedTextField({
-    required String label,
-    required StringFieldController mainController,
-    required StringFieldController localeController,
-    required String mainPlaceholder,
-    required String localePlaceholder,
-  }) {
-    return FoxyFormItem(
-      label: label,
-      child: Column(
-        spacing: 6,
-        children: [
-          FoxyStringInput(
-            controller: mainController,
-            placeholder: mainPlaceholder,
-          ),
-          FoxyStringInput(
-            controller: localeController,
-            placeholder: localePlaceholder,
-          ),
-        ],
-      ),
+  Widget _buildMetaSection() {
+    return FoxyFormSection(
+      title: '基本信息',
+      children: [
+        Row(
+          spacing: 8,
+          children: [
+            Expanded(
+              child: FoxyFormItem(
+                label: '编号',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.idController,
+                  placeholder: 'ID',
+                ),
+              ),
+            ),
+            Expanded(
+              child: FoxyFormItem(
+                label: '验证版本',
+                child: FoxyNumberInput<int>(
+                  controller: viewModel.verifiedBuildController,
+                  placeholder: 'VerifiedBuild',
+                ),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
     );
   }
 
@@ -410,19 +373,56 @@ class _NpcTextViewState extends State<NpcTextView> {
     );
   }
 
-  Widget _buildActions() {
-    return Row(
-      children: [
-        Watch(
-          (_) => ShadButton(
-            enabled: !viewModel.submitting.value,
-            onPressed: _persist,
-            child: const Text('保存'),
+  void _goBack() {
+    GetIt.instance.get<RouterFacade>().goBack();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(parentKey: widget.textId);
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
+  }
+
+  Widget _localizedTextField({
+    required String label,
+    required StringFieldController mainController,
+    required StringFieldController localeController,
+    required String mainPlaceholder,
+    required String localePlaceholder,
+  }) {
+    return FoxyFormItem(
+      label: label,
+      child: Column(
+        spacing: 6,
+        children: [
+          FoxyStringInput(
+            controller: mainController,
+            placeholder: mainPlaceholder,
           ),
-        ),
-        const SizedBox(width: 8),
-        ShadButton.ghost(onPressed: _goBack, child: const Text('取消')),
-      ],
+          FoxyStringInput(
+            controller: localeController,
+            placeholder: localePlaceholder,
+          ),
+        ],
+      ),
     );
+  }
+
+  Future<void> _persist() async {
+    try {
+      await viewModel.persist();
+      if (!mounted) return;
+      ShadSonner.of(context).show(const ShadToast(description: Text('保存成功')));
+    } catch (error) {
+      if (!mounted) return;
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(error.toString())));
+    }
   }
 }

@@ -6,17 +6,17 @@ import 'package:foxy/entity/game_object_template_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/page/condition/condition_view.dart';
-import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_view.dart';
-import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/page/smart_script/smart_script_view.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
 import 'package:foxy/router/router_facade.dart';
+import 'package:foxy/view_model/condition_detail_view_model.dart';
+import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
+import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -150,15 +150,15 @@ void main() {
   });
 }
 
+class _FakeConditionRepository extends ConditionRepository {
+  @override
+  Future<ConditionEntity> createCondition() async => const ConditionEntity();
+}
+
 class _FakeGameObjectTemplateRepository extends GameObjectTemplateRepository {
   @override
   Future<GameObjectTemplateEntity> createGameObjectTemplate() async =>
       const GameObjectTemplateEntity();
-}
-
-class _FakeConditionRepository extends ConditionRepository {
-  @override
-  Future<ConditionEntity> createCondition() async => const ConditionEntity();
 }
 
 class _FakeSmartScriptRepository extends SmartScriptRepository {

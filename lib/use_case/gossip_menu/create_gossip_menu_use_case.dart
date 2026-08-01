@@ -7,16 +7,21 @@ import 'package:foxy/repository/gossip_menu_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 
 final class CreateGossipMenuInput {
+  final GossipMenuEntity candidate;
+
+  final int? reservedTextId;
   const CreateGossipMenuInput({
     required this.candidate,
     required this.reservedTextId,
   });
-
-  final GossipMenuEntity candidate;
-  final int? reservedTextId;
 }
 
 final class CreateGossipMenuUseCase {
+  final DatabaseTransaction _transaction;
+
+  final GossipMenuRepository _gossipMenuRepository;
+  final NpcTextRepository _npcTextRepository;
+  final ActivityLogService _activityLogService;
   CreateGossipMenuUseCase({
     required DatabaseTransaction transaction,
     required GossipMenuRepository gossipMenuRepository,
@@ -26,11 +31,6 @@ final class CreateGossipMenuUseCase {
        _gossipMenuRepository = gossipMenuRepository,
        _npcTextRepository = npcTextRepository,
        _activityLogService = activityLogService;
-
-  final DatabaseTransaction _transaction;
-  final GossipMenuRepository _gossipMenuRepository;
-  final NpcTextRepository _npcTextRepository;
-  final ActivityLogService _activityLogService;
 
   Future<void> execute(CreateGossipMenuInput input) async {
     final candidate = input.candidate;

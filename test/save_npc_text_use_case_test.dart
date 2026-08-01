@@ -293,38 +293,67 @@ void main() {
   });
 }
 
-final class _Transaction extends DatabaseTransaction {
-  _Transaction(this.mainRepository, this.localeRepository);
-
-  final _NpcTextRepository mainRepository;
-  final _NpcTextLocaleRepository localeRepository;
+final class _ActivityLogRepository extends ActivityLogRepository {
+  final logs = <ActivityLogEntity>[];
+  bool failWrites = false;
 
   @override
-  Future<void> execute(Future<void> Function() action) async {
-    final mainSnapshot = Map<int, NpcTextEntity>.of(mainRepository.rows);
-    final localeSnapshot = Map<NpcTextLocaleKey, NpcTextLocaleEntity>.of(
-      localeRepository.rows,
-    );
-    try {
-      await action();
-    } catch (_) {
-      mainRepository.rows
-        ..clear()
-        ..addAll(mainSnapshot);
-      localeRepository.rows
-        ..clear()
-        ..addAll(localeSnapshot);
-      rethrow;
+  Future<void> storeActivityLog(ActivityLogEntity log) async {
+    logs.add(log);
+  }
+
+  @override
+  void storeActivityLogBestEffort(ActivityLogEntity log) {
+    if (failWrites) throw StateError('log failed');
+    logs.add(log);
+  }
+}
+
+final class _NpcTextLocaleRepository extends NpcTextLocaleRepository {
+  final Map<NpcTextLocaleKey, NpcTextLocaleEntity> rows;
+
+  bool failWrites = false;
+  final updateKeys = <NpcTextLocaleKey>[];
+  _NpcTextLocaleRepository(this.rows);
+
+  @override
+  Future<void> destroyNpcTextLocale(NpcTextLocaleKey key) async {
+    if (failWrites) throw StateError('locale failed');
+    rows.remove(key);
+  }
+
+  @override
+  Future<void> storeNpcTextLocale(NpcTextLocaleEntity model) async {
+    if (failWrites) throw StateError('locale failed');
+    final key = NpcTextLocaleKey.fromEntity(model);
+    if (rows.containsKey(key)) throw StateError('duplicate locale');
+    rows[key] = model;
+  }
+
+  @override
+  Future<void> updateNpcTextLocale(
+    NpcTextLocaleKey originalKey,
+    NpcTextLocaleEntity model,
+  ) async {
+    updateKeys.add(originalKey);
+    if (failWrites) throw StateError('locale failed');
+    if (!rows.containsKey(originalKey)) throw StateError('missing locale');
+    final nextKey = NpcTextLocaleKey.fromEntity(model);
+    if (nextKey != originalKey && rows.containsKey(nextKey)) {
+      throw StateError('duplicate locale');
     }
+    rows
+      ..remove(originalKey)
+      ..[nextKey] = model;
   }
 }
 
 final class _NpcTextRepository extends NpcTextRepository {
-  _NpcTextRepository(this.rows);
-
   final Map<int, NpcTextEntity> rows;
+
   final updateKeys = <int>[];
   bool failDestroys = false;
+  _NpcTextRepository(this.rows);
 
   @override
   Future<void> destroyNpcText(int key) async {
@@ -351,57 +380,28 @@ final class _NpcTextRepository extends NpcTextRepository {
   }
 }
 
-final class _NpcTextLocaleRepository extends NpcTextLocaleRepository {
-  _NpcTextLocaleRepository(this.rows);
+final class _Transaction extends DatabaseTransaction {
+  final _NpcTextRepository mainRepository;
 
-  final Map<NpcTextLocaleKey, NpcTextLocaleEntity> rows;
-  bool failWrites = false;
-  final updateKeys = <NpcTextLocaleKey>[];
-
-  @override
-  Future<void> storeNpcTextLocale(NpcTextLocaleEntity model) async {
-    if (failWrites) throw StateError('locale failed');
-    final key = NpcTextLocaleKey.fromEntity(model);
-    if (rows.containsKey(key)) throw StateError('duplicate locale');
-    rows[key] = model;
-  }
+  final _NpcTextLocaleRepository localeRepository;
+  _Transaction(this.mainRepository, this.localeRepository);
 
   @override
-  Future<void> updateNpcTextLocale(
-    NpcTextLocaleKey originalKey,
-    NpcTextLocaleEntity model,
-  ) async {
-    updateKeys.add(originalKey);
-    if (failWrites) throw StateError('locale failed');
-    if (!rows.containsKey(originalKey)) throw StateError('missing locale');
-    final nextKey = NpcTextLocaleKey.fromEntity(model);
-    if (nextKey != originalKey && rows.containsKey(nextKey)) {
-      throw StateError('duplicate locale');
+  Future<void> execute(Future<void> Function() action) async {
+    final mainSnapshot = Map<int, NpcTextEntity>.of(mainRepository.rows);
+    final localeSnapshot = Map<NpcTextLocaleKey, NpcTextLocaleEntity>.of(
+      localeRepository.rows,
+    );
+    try {
+      await action();
+    } catch (_) {
+      mainRepository.rows
+        ..clear()
+        ..addAll(mainSnapshot);
+      localeRepository.rows
+        ..clear()
+        ..addAll(localeSnapshot);
+      rethrow;
     }
-    rows
-      ..remove(originalKey)
-      ..[nextKey] = model;
-  }
-
-  @override
-  Future<void> destroyNpcTextLocale(NpcTextLocaleKey key) async {
-    if (failWrites) throw StateError('locale failed');
-    rows.remove(key);
-  }
-}
-
-final class _ActivityLogRepository extends ActivityLogRepository {
-  final logs = <ActivityLogEntity>[];
-  bool failWrites = false;
-
-  @override
-  Future<void> storeActivityLog(ActivityLogEntity log) async {
-    logs.add(log);
-  }
-
-  @override
-  void storeActivityLogBestEffort(ActivityLogEntity log) {
-    if (failWrites) throw StateError('log failed');
-    logs.add(log);
   }
 }

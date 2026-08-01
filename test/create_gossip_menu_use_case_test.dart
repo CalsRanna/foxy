@@ -154,11 +154,53 @@ CreateGossipMenuUseCase _createUseCase(
   );
 }
 
-final class _Transaction extends DatabaseTransaction {
-  _Transaction(this.gossipRepository, this.npcTextRepository);
+final class _ActivityLogRepository extends ActivityLogRepository {
+  final logs = <ActivityLogEntity>[];
+  bool failWrites = false;
 
+  @override
+  void storeActivityLogBestEffort(ActivityLogEntity log) {
+    if (failWrites) throw StateError('log failed');
+    logs.add(log);
+  }
+}
+
+final class _GossipMenuRepository extends GossipMenuRepository {
+  final Map<GossipMenuKey, GossipMenuEntity> rows;
+
+  final storeKeys = <GossipMenuKey>[];
+  bool failWrites = false;
+  _GossipMenuRepository(this.rows);
+
+  @override
+  Future<void> storeGossipMenu(GossipMenuEntity menu) async {
+    final key = GossipMenuKey.fromEntity(menu);
+    storeKeys.add(key);
+    if (failWrites) throw StateError('gossip write failed');
+    if (rows.containsKey(key)) throw StateError('duplicate gossip');
+    rows[key] = menu;
+  }
+}
+
+final class _NpcTextRepository extends NpcTextRepository {
+  final Map<int, NpcTextEntity> rows;
+
+  final storeKeys = <int>[];
+  _NpcTextRepository(this.rows);
+
+  @override
+  Future<void> storeNpcText(NpcTextEntity npcText) async {
+    storeKeys.add(npcText.id);
+    if (rows.containsKey(npcText.id)) throw StateError('duplicate npc text');
+    rows[npcText.id] = npcText;
+  }
+}
+
+final class _Transaction extends DatabaseTransaction {
   final _GossipMenuRepository gossipRepository;
+
   final _NpcTextRepository npcTextRepository;
+  _Transaction(this.gossipRepository, this.npcTextRepository);
 
   @override
   Future<void> execute(Future<void> Function() action) async {
@@ -177,47 +219,5 @@ final class _Transaction extends DatabaseTransaction {
         ..addAll(npcTextSnapshot);
       rethrow;
     }
-  }
-}
-
-final class _GossipMenuRepository extends GossipMenuRepository {
-  _GossipMenuRepository(this.rows);
-
-  final Map<GossipMenuKey, GossipMenuEntity> rows;
-  final storeKeys = <GossipMenuKey>[];
-  bool failWrites = false;
-
-  @override
-  Future<void> storeGossipMenu(GossipMenuEntity menu) async {
-    final key = GossipMenuKey.fromEntity(menu);
-    storeKeys.add(key);
-    if (failWrites) throw StateError('gossip write failed');
-    if (rows.containsKey(key)) throw StateError('duplicate gossip');
-    rows[key] = menu;
-  }
-}
-
-final class _NpcTextRepository extends NpcTextRepository {
-  _NpcTextRepository(this.rows);
-
-  final Map<int, NpcTextEntity> rows;
-  final storeKeys = <int>[];
-
-  @override
-  Future<void> storeNpcText(NpcTextEntity npcText) async {
-    storeKeys.add(npcText.id);
-    if (rows.containsKey(npcText.id)) throw StateError('duplicate npc text');
-    rows[npcText.id] = npcText;
-  }
-}
-
-final class _ActivityLogRepository extends ActivityLogRepository {
-  final logs = <ActivityLogEntity>[];
-  bool failWrites = false;
-
-  @override
-  void storeActivityLogBestEffort(ActivityLogEntity log) {
-    if (failWrites) throw StateError('log failed');
-    logs.add(log);
   }
 }

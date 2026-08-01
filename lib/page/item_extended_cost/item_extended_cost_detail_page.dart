@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/page/item_extended_cost/item_extended_cost_view.dart';
+import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -21,27 +21,6 @@ class ItemExtendedCostDetailPage extends StatefulWidget {
 class _ItemExtendedCostDetailPageState
     extends State<ItemExtendedCostDetailPage> {
   final viewModel = GetIt.instance.get<ItemExtendedCostDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.itemExtendedCostKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,5 +44,26 @@ class _ItemExtendedCostDetailPageState
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.itemExtendedCostKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

@@ -1,12 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/creature_template/creature_equip_template_view.dart';
 import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/creature_quest_item_view.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
-import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_view.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view.dart';
 import 'package:foxy/page/creature_template/creature_template_view.dart';
@@ -14,6 +12,8 @@ import 'package:foxy/page/creature_template/npc_trainer_view.dart';
 import 'package:foxy/page/creature_template/npc_vendor_view.dart';
 import 'package:foxy/page/creature_template/pickpocketing_loot_template_view.dart';
 import 'package:foxy/page/creature_template/skinning_loot_template_view.dart';
+import 'package:foxy/view_model/creature_template_detail_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -37,27 +37,6 @@ class CreatureTemplateDetailPage extends StatefulWidget {
 class _CreatureTemplateDetailPageState
     extends State<CreatureTemplateDetailPage> {
   final viewModel = GetIt.instance.get<CreatureTemplateDetailViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    try {
-      await viewModel.initSignals(key: widget.creatureTemplateKey);
-    } catch (error) {
-      if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
-    }
-  }
-
-  @override
-  void dispose() {
-    viewModel.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,5 +130,26 @@ class _CreatureTemplateDetailPageState
         ],
       );
     });
+  }
+
+  @override
+  void dispose() {
+    viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    try {
+      await viewModel.initSignals(key: widget.creatureTemplateKey);
+    } catch (error) {
+      if (!mounted) return;
+      DialogUtil.instance.error('加载失败：$error');
+    }
   }
 }

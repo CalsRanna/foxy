@@ -1,11 +1,11 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'reference_loot_template_detail_view_model.g.dart';
 
@@ -16,31 +16,20 @@ class ReferenceLootTemplateDetailViewModel
   final _repository = GetIt.instance.get<ReferenceLootTemplateRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
-  void _logActivity(
-    ActivityActionType action,
-    ReferenceLootTemplateEntity candidate,
-  ) {
-    _activityLogService.recordBestEffort(
-      ActivityLogEntity(
-        module: 'reference_loot_template',
-        actionType: action,
-        entityName:
-            'ReferenceLoot ${candidate.entry}/${candidate.item}/'
-            '${candidate.reference}/${candidate.groupId}',
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
-
   final entity = signal<ReferenceLootTemplateEntity?>(null);
+
   final persistedKey = signal<ReferenceLootTemplateKey?>(null);
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
   final hasReference = signal(false);
-
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
+  }
+
+  void dispose() {
+    referenceController.removeListener(_syncReferenceState);
+    disposeControllers();
   }
 
   Future<void> initSignals({ReferenceLootTemplateKey? key}) async {
@@ -90,6 +79,22 @@ class ReferenceLootTemplateDetailViewModel
     }
   }
 
+  void _logActivity(
+    ActivityActionType action,
+    ReferenceLootTemplateEntity candidate,
+  ) {
+    _activityLogService.recordBestEffort(
+      ActivityLogEntity(
+        module: 'reference_loot_template',
+        actionType: action,
+        entityName:
+            'ReferenceLoot ${candidate.entry}/${candidate.item}/'
+            '${candidate.reference}/${candidate.groupId}',
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
   void _syncReferenceState() {
     try {
       final value = referenceController.collect() != 0;
@@ -100,10 +105,5 @@ class ReferenceLootTemplateDetailViewModel
     } on FormatException {
       hasReference.value = false;
     }
-  }
-
-  void dispose() {
-    referenceController.removeListener(_syncReferenceState);
-    disposeControllers();
   }
 }

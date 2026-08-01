@@ -1,6 +1,6 @@
-import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/achievement_criteria_repository.dart';
+import 'package:foxy/repository/achievement_repository.dart';
 import 'package:foxy/repository/area_table_repository.dart';
 import 'package:foxy/repository/char_title_repository.dart';
 import 'package:foxy/repository/cinematic_sequence_repository.dart';
@@ -8,50 +8,50 @@ import 'package:foxy/repository/creature_display_info_repository.dart';
 import 'package:foxy/repository/creature_model_data_repository.dart';
 import 'package:foxy/repository/creature_movement_info_repository.dart';
 import 'package:foxy/repository/creature_spell_data_repository.dart';
-import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/repository/currency_category_repository.dart';
-import 'package:foxy/repository/destructible_model_data_repository.dart';
+import 'package:foxy/repository/currency_type_repository.dart';
+import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_faction_repository.dart';
 import 'package:foxy/repository/dbc_faction_template_repository.dart';
-import 'package:foxy/repository/dbc_emote_repository.dart';
 import 'package:foxy/repository/dbc_item_repository.dart';
+import 'package:foxy/repository/destructible_model_data_repository.dart';
 import 'package:foxy/repository/emote_text_data_repository.dart';
 import 'package:foxy/repository/emote_text_repository.dart';
-import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/game_object_art_kit_repository.dart';
 import 'package:foxy/repository/game_object_display_info_repository.dart';
+import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/repository/holiday_repository.dart';
-import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_bag_family_repository.dart';
+import 'package:foxy/repository/item_display_info_repository.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
-import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/repository/item_limit_category_repository.dart';
+import 'package:foxy/repository/item_purchase_group_repository.dart';
 import 'package:foxy/repository/item_random_properties_repository.dart';
 import 'package:foxy/repository/item_random_suffix_repository.dart';
 import 'package:foxy/repository/item_set_repository.dart';
 import 'package:foxy/repository/item_visual_effect_repository.dart';
 import 'package:foxy/repository/item_visuals_repository.dart';
-import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/light_repository.dart';
 import 'package:foxy/repository/liquid_type_repository.dart';
-import 'package:foxy/repository/map_info_repository.dart';
+import 'package:foxy/repository/lock_repository.dart';
 import 'package:foxy/repository/mail_template_repository.dart';
+import 'package:foxy/repository/map_info_repository.dart';
 import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/repository/quest_info_repository.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/repository/scaling_stat_distribution_repository.dart';
 import 'package:foxy/repository/scaling_stat_value_repository.dart';
-import 'package:foxy/repository/spell_duration_repository.dart';
-import 'package:foxy/repository/spell_focus_object_repository.dart';
-import 'package:foxy/repository/spell_icon_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_repository.dart';
-import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
-import 'package:foxy/repository/spell_range_repository.dart';
-import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/skill_line_repository.dart';
 import 'package:foxy/repository/sound_ambience_repository.dart';
 import 'package:foxy/repository/sound_provider_preferences_repository.dart';
+import 'package:foxy/repository/spell_duration_repository.dart';
+import 'package:foxy/repository/spell_focus_object_repository.dart';
+import 'package:foxy/repository/spell_icon_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_condition_repository.dart';
+import 'package:foxy/repository/spell_item_enchantment_repository.dart';
+import 'package:foxy/repository/spell_range_repository.dart';
+import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/repository/talent_tab_repository.dart';
 import 'package:foxy/repository/taxi_path_repository.dart';
@@ -65,10 +65,10 @@ class DbcExportCountResult {
   final int? count;
   final Object? error;
 
-  const DbcExportCountResult.success(int value) : count = value, error = null;
   const DbcExportCountResult.failure(Object value)
     : count = null,
       error = value;
+  const DbcExportCountResult.success(int value) : count = value, error = null;
 
   bool get success => error == null;
 }
@@ -107,17 +107,11 @@ class DbcExportDelegate {
 /// Registry 只负责选择 Repository 和将强类型 Entity 转成 JSON，
 /// 不参与 DBC 文件写入。
 class DbcExportRegistry {
-  DbcExportRegistry() : _delegates = _buildDelegates(GetIt.instance);
-
   final Map<String, DbcExportDelegate> _delegates;
 
-  Future<List<Map<String, dynamic>>> loadRows(String tableName) async {
-    final delegate = _delegates[tableName];
-    if (delegate == null) {
-      throw StateError('未注册的 DBC 导出表: $tableName');
-    }
-    return delegate.loadRows();
-  }
+  DbcExportRegistry() : _delegates = _buildDelegates(GetIt.instance);
+
+  bool contains(String tableName) => _delegates.containsKey(tableName);
 
   Future<DbcExportCountResult> countRows(String tableName) async {
     final delegate = _delegates[tableName];
@@ -133,7 +127,13 @@ class DbcExportRegistry {
     }
   }
 
-  bool contains(String tableName) => _delegates.containsKey(tableName);
+  Future<List<Map<String, dynamic>>> loadRows(String tableName) async {
+    final delegate = _delegates[tableName];
+    if (delegate == null) {
+      throw StateError('未注册的 DBC 导出表: $tableName');
+    }
+    return delegate.loadRows();
+  }
 
   static Map<String, DbcExportDelegate> _buildDelegates(GetIt getIt) {
     final achievement = getIt.get<AchievementRepository>();

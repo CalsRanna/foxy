@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
-import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
 part 'page_text_locale_collection_editor_view_model.g.dart';
 
@@ -28,18 +28,6 @@ class PageTextLocaleCollectionEditorViewModel
 
   int _refreshToken = 0;
   int _interactionToken = 0;
-
-  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
-
-  Future<void> setParentKey(int parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    editingKey.value = null;
-    selectedKey.value = null;
-    _applyCandidate(PageTextLocaleEntity(id: parentKey, locale: 'zhCN'));
-    await _refresh();
-  }
 
   Future<void> create() async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -72,6 +60,30 @@ class PageTextLocaleCollectionEditorViewModel
     }
   }
 
+  Future<void> destroy(PageTextLocaleKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyPageTextLocale(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
+
   Future<void> edit(PageTextLocaleKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     final parent = parentKey.value;
@@ -98,6 +110,14 @@ class PageTextLocaleCollectionEditorViewModel
     } finally {
       if (token == _interactionToken) loading.value = false;
     }
+  }
+
+  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
   }
 
   Future<void> persist() async {
@@ -128,31 +148,13 @@ class PageTextLocaleCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(PageTextLocaleKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyPageTextLocale(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    editingKey.value = null;
+    selectedKey.value = null;
+    _applyCandidate(PageTextLocaleEntity(id: parentKey, locale: 'zhCN'));
     await _refresh();
   }
 
@@ -185,6 +187,4 @@ class PageTextLocaleCollectionEditorViewModel
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void dispose() => disposeControllers();
 }

@@ -29,49 +29,6 @@ class FoxyFlagPicker extends StatefulWidget {
   State<FoxyFlagPicker> createState() => _FoxyFlagPickerState();
 }
 
-class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
-  @override
-  Widget build(BuildContext context) {
-    // 外观与可编辑输入框一致；外侧 MouseRegion 保证手型光标
-    // （readOnly 时 ShadInput 内部 AbsorbPointer 会使 mouseCursor 失效）。
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: ShadInput(
-        controller: widget.controller.controller,
-        placeholder: Text(widget.placeholder ?? ''),
-        readOnly: true,
-        showCursor: false,
-        onPressed: _openDialog,
-        trailing: ShadButton.ghost(
-          height: 20,
-          width: 20,
-          padding: EdgeInsets.zero,
-          onPressed: _openDialog,
-          child: Icon(LucideIcons.settings2, size: 12),
-        ),
-      ),
-    );
-  }
-
-  int get _currentValue => widget.controller.collect();
-
-  Future<void> _openDialog() async {
-    final result = await showFoxyDialog<int>(
-      context: context,
-      builder: (context) {
-        return _FlagPickerDialog(
-          title: widget.title,
-          flags: widget.flags,
-          initialValue: _currentValue,
-        );
-      },
-    );
-    if (result != null) {
-      widget.controller.init(result);
-    }
-  }
-}
-
 class _FlagPickerDialog extends StatefulWidget {
   final String title;
   final List<FlagItem> flags;
@@ -89,12 +46,6 @@ class _FlagPickerDialog extends StatefulWidget {
 
 class _FlagPickerDialogState extends State<_FlagPickerDialog> {
   late int _currentValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentValue = widget.initialValue;
-  }
 
   String get _displayValue {
     final hex = _currentValue.toRadixString(16).toUpperCase().padLeft(8, '0');
@@ -195,14 +146,10 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
     );
   }
 
-  void _toggleFlag(int flag) {
-    setState(() {
-      if ((_currentValue & flag) != 0) {
-        _currentValue &= ~flag;
-      } else {
-        _currentValue |= flag;
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.initialValue;
   }
 
   void _selectAll() {
@@ -217,5 +164,58 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
     setState(() {
       _currentValue = 0;
     });
+  }
+
+  void _toggleFlag(int flag) {
+    setState(() {
+      if ((_currentValue & flag) != 0) {
+        _currentValue &= ~flag;
+      } else {
+        _currentValue |= flag;
+      }
+    });
+  }
+}
+
+class _FoxyFlagPickerState extends State<FoxyFlagPicker> {
+  int get _currentValue => widget.controller.collect();
+
+  @override
+  Widget build(BuildContext context) {
+    // 外观与可编辑输入框一致；外侧 MouseRegion 保证手型光标
+    // （readOnly 时 ShadInput 内部 AbsorbPointer 会使 mouseCursor 失效）。
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: ShadInput(
+        controller: widget.controller.controller,
+        placeholder: Text(widget.placeholder ?? ''),
+        readOnly: true,
+        showCursor: false,
+        onPressed: _openDialog,
+        trailing: ShadButton.ghost(
+          height: 20,
+          width: 20,
+          padding: EdgeInsets.zero,
+          onPressed: _openDialog,
+          child: Icon(LucideIcons.settings2, size: 12),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openDialog() async {
+    final result = await showFoxyDialog<int>(
+      context: context,
+      builder: (context) {
+        return _FlagPickerDialog(
+          title: widget.title,
+          flags: widget.flags,
+          initialValue: _currentValue,
+        );
+      },
+    );
+    if (result != null) {
+      widget.controller.init(result);
+    }
   }
 }

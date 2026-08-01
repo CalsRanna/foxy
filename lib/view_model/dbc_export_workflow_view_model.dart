@@ -79,6 +79,21 @@ class DbcExportWorkflowViewModel {
   List<DbcExportItem> get selectedExportableItems =>
       items.value.where((item) => item.selected && item.canSelect).toList();
 
+  bool get _isActive =>
+      status.value == WorkflowStatus.preparing ||
+      status.value == WorkflowStatus.running ||
+      status.value == WorkflowStatus.cancelling;
+
+  Future<void> cancel() async {
+    if (!_isActive && !_useCase.isRunning) return;
+    status.value = WorkflowStatus.cancelling;
+    await _useCase.cancel();
+  }
+
+  void dispose() {
+    _attemptToken++;
+  }
+
   Future<void> prepare() async {
     if (_isActive) return;
     final token = ++_attemptToken;
@@ -110,6 +125,42 @@ class DbcExportWorkflowViewModel {
       status.value = WorkflowStatus.failed;
       rethrow;
     }
+  }
+
+  void reset() {
+    if (_isActive || _useCase.isRunning) return;
+    _attemptToken++;
+    status.value = WorkflowStatus.idle;
+    progress.value = null;
+    progressLabel.value = '';
+    progressDetail.value = '';
+    errorMessage.value = null;
+    result.value = null;
+  }
+
+  Future<void> retry() async {
+    errorMessage.value = null;
+    await start();
+  }
+
+  void setAllSelectableSelected(bool selected) {
+    items.value = [
+      for (final item in items.value)
+        item.copyWith(selected: item.canSelect && selected),
+    ];
+  }
+
+  void setItemSelected(String tableName, bool selected) {
+    final nextItems = [...items.value];
+    final index = nextItems.indexWhere((item) => item.tableName == tableName);
+    if (index == -1 || !nextItems[index].canSelect) return;
+    nextItems[index] = nextItems[index].copyWith(selected: selected);
+    items.value = nextItems;
+  }
+
+  void setOutputDirectory(String value) {
+    final trimmed = value.trim();
+    outputDirectory.value = trimmed.isEmpty ? null : trimmed;
   }
 
   Future<void> start() async {
@@ -169,48 +220,6 @@ class DbcExportWorkflowViewModel {
     }
   }
 
-  Future<void> cancel() async {
-    if (!_isActive && !_useCase.isRunning) return;
-    status.value = WorkflowStatus.cancelling;
-    await _useCase.cancel();
-  }
-
-  Future<void> retry() async {
-    errorMessage.value = null;
-    await start();
-  }
-
-  void reset() {
-    if (_isActive || _useCase.isRunning) return;
-    _attemptToken++;
-    status.value = WorkflowStatus.idle;
-    progress.value = null;
-    progressLabel.value = '';
-    progressDetail.value = '';
-    errorMessage.value = null;
-    result.value = null;
-  }
-
-  void setOutputDirectory(String value) {
-    final trimmed = value.trim();
-    outputDirectory.value = trimmed.isEmpty ? null : trimmed;
-  }
-
-  void setAllSelectableSelected(bool selected) {
-    items.value = [
-      for (final item in items.value)
-        item.copyWith(selected: item.canSelect && selected),
-    ];
-  }
-
-  void setItemSelected(String tableName, bool selected) {
-    final nextItems = [...items.value];
-    final index = nextItems.indexWhere((item) => item.tableName == tableName);
-    if (index == -1 || !nextItems[index].canSelect) return;
-    nextItems[index] = nextItems[index].copyWith(selected: selected);
-    items.value = nextItems;
-  }
-
   void _applyProgress(int token, DbcSyncProgress event) {
     if (token != _attemptToken) return;
     status.value = WorkflowStatus.running;
@@ -236,14 +245,5 @@ class DbcExportWorkflowViewModel {
     final top = result.errors.take(5).join('\n');
     return '导出结束，部分文件失败（成功 ${result.completed}，跳过 ${result.skipped}）：\n'
         '$top${result.errors.length > 5 ? '\n...等 ${result.errors.length} 个错误' : ''}';
-  }
-
-  bool get _isActive =>
-      status.value == WorkflowStatus.preparing ||
-      status.value == WorkflowStatus.running ||
-      status.value == WorkflowStatus.cancelling;
-
-  void dispose() {
-    _attemptToken++;
   }
 }

@@ -70,16 +70,28 @@ class GossipMenuOptionCollectionEditorViewModel
   int _refreshToken = 0;
   int _interactionToken = 0;
 
-  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
+  void cancel() => _clearEditingState();
 
-  Future<void> setParentKey(int parentKey) async {
-    _interactionToken++;
-    if (this.parentKey.value != parentKey) page.value = 1;
-    this.parentKey.value = parentKey;
-    _clearEditingState();
-    _applyCandidate(GossipMenuOptionEntity(menuId: parentKey));
-    _applyLocaleCandidate(null);
-    await _refresh();
+  Future<void> copy(GossipMenuOptionKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _copyUseCase.execute(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
   }
 
   Future<void> create() async {
@@ -105,6 +117,30 @@ class GossipMenuOptionCollectionEditorViewModel
       rethrow;
     }
   }
+
+  Future<void> destroy(GossipMenuOptionKey key) async {
+    if (submitting.value) throw StateError('正在提交，请稍候');
+    final parent = parentKey.value;
+    if (parent == null) throw StateError('父记录尚未加载');
+    final token = ++_interactionToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _destroyUseCase.execute(key);
+      if (token != _interactionToken || parentKey.value != parent) return;
+      await _refresh();
+    } catch (error) {
+      if (token != _interactionToken || parentKey.value != parent) {
+        return;
+      }
+      errorMessage.value = '$error';
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() => disposeControllers();
 
   Future<void> edit(GossipMenuOptionKey key) async {
     if (submitting.value) throw StateError('正在提交，请稍候');
@@ -146,6 +182,14 @@ class GossipMenuOptionCollectionEditorViewModel
     }
   }
 
+  Future<void> initSignals({required int parentKey}) => setParentKey(parentKey);
+
+  Future<void> paginate(int page) async {
+    _interactionToken++;
+    this.page.value = page;
+    await _refresh();
+  }
+
   Future<void> persist() async {
     if (submitting.value) throw StateError('正在提交，请稍候');
     final parent = parentKey.value;
@@ -181,57 +225,44 @@ class GossipMenuOptionCollectionEditorViewModel
     }
   }
 
-  Future<void> destroy(GossipMenuOptionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _destroyUseCase.execute(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> copy(GossipMenuOptionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
-    final token = ++_interactionToken;
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _copyUseCase.execute(key);
-      if (token != _interactionToken || parentKey.value != parent) return;
-      await _refresh();
-    } catch (error) {
-      if (token != _interactionToken || parentKey.value != parent) {
-        return;
-      }
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> paginate(int page) async {
+  Future<void> setParentKey(int parentKey) async {
     _interactionToken++;
-    this.page.value = page;
+    if (this.parentKey.value != parentKey) page.value = 1;
+    this.parentKey.value = parentKey;
+    _clearEditingState();
+    _applyCandidate(GossipMenuOptionEntity(menuId: parentKey));
+    _applyLocaleCandidate(null);
     await _refresh();
   }
 
-  void cancel() => _clearEditingState();
+  void _applyCandidate(GossipMenuOptionEntity candidate) {
+    menuIdController.init(candidate.menuId);
+    optionIdController.init(candidate.optionId);
+    optionIconController.init(candidate.optionIcon);
+    optionTextController.init(candidate.optionText);
+    optionBroadcastTextIdController.init(candidate.optionBroadcastTextId);
+    optionTypeController.init(candidate.optionType);
+    optionNpcFlagController.init(candidate.optionNpcFlag);
+    actionMenuIdController.init(candidate.actionMenuId);
+    actionPoiIdController.init(candidate.actionPoiId);
+    boxCodedController.init(candidate.boxCoded);
+    boxMoneyController.init(candidate.boxMoney);
+    boxTextController.init(candidate.boxText);
+    boxBroadcastTextIdController.init(candidate.boxBroadcastTextId);
+    verifiedBuildController.init(candidate.verifiedBuild);
+  }
+
+  void _applyLocaleCandidate(GossipMenuOptionLocaleEntity? candidate) {
+    localeOptionTextController.init(candidate?.optionText ?? '');
+    localeBoxTextController.init(candidate?.boxText ?? '');
+  }
+
+  void _clearEditingState() {
+    editingKey.value = null;
+    selectedKey.value = null;
+    localeEditingKey.value = null;
+    formVisible.value = false;
+  }
 
   GossipMenuOptionEntity _collectCandidate() {
     return GossipMenuOptionEntity(
@@ -267,35 +298,6 @@ class GossipMenuOptionCollectionEditorViewModel
     );
   }
 
-  void _applyCandidate(GossipMenuOptionEntity candidate) {
-    menuIdController.init(candidate.menuId);
-    optionIdController.init(candidate.optionId);
-    optionIconController.init(candidate.optionIcon);
-    optionTextController.init(candidate.optionText);
-    optionBroadcastTextIdController.init(candidate.optionBroadcastTextId);
-    optionTypeController.init(candidate.optionType);
-    optionNpcFlagController.init(candidate.optionNpcFlag);
-    actionMenuIdController.init(candidate.actionMenuId);
-    actionPoiIdController.init(candidate.actionPoiId);
-    boxCodedController.init(candidate.boxCoded);
-    boxMoneyController.init(candidate.boxMoney);
-    boxTextController.init(candidate.boxText);
-    boxBroadcastTextIdController.init(candidate.boxBroadcastTextId);
-    verifiedBuildController.init(candidate.verifiedBuild);
-  }
-
-  void _applyLocaleCandidate(GossipMenuOptionLocaleEntity? candidate) {
-    localeOptionTextController.init(candidate?.optionText ?? '');
-    localeBoxTextController.init(candidate?.boxText ?? '');
-  }
-
-  void _clearEditingState() {
-    editingKey.value = null;
-    selectedKey.value = null;
-    localeEditingKey.value = null;
-    formVisible.value = false;
-  }
-
   Future<void> _refresh() async {
     final parent = parentKey.value;
     if (parent == null) return;
@@ -324,6 +326,4 @@ class GossipMenuOptionCollectionEditorViewModel
       if (token == _refreshToken) loading.value = false;
     }
   }
-
-  void dispose() => disposeControllers();
 }

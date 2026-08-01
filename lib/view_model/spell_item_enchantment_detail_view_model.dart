@@ -1,8 +1,8 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/entity/spell_item_enchantment_entity.dart';
-import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -82,6 +82,32 @@ class SpellItemEnchantmentDetailViewModel
   );
   late final minLevelController = registerController(IntFieldController());
 
+  void applyNameLocales(List<DbcLocaleFieldValue> values) {
+    entity.value = entity.value!.copyWith(
+      nameLangEnUS: values.valueOf('enUS'),
+      nameLangKoKR: values.valueOf('koKR'),
+      nameLangFrFR: values.valueOf('frFR'),
+      nameLangDeDE: values.valueOf('deDE'),
+      nameLangZhCN: values.valueOf('zhCN'),
+      nameLangZhTW: values.valueOf('zhTW'),
+      nameLangEsES: values.valueOf('esES'),
+      nameLangEsMX: values.valueOf('esMX'),
+      nameLangRuRU: values.valueOf('ruRU'),
+      nameLangJaJP: values.valueOf('jaJP'),
+      nameLangPtPT: values.valueOf('ptPT'),
+      nameLangPtBR: values.valueOf('ptBR'),
+      nameLangItIT: values.valueOf('itIT'),
+      nameLangUnk1: values.valueOf('unk1'),
+      nameLangUnk2: values.valueOf('unk2'),
+      nameLangUnk3: values.valueOf('unk3'),
+    );
+    nameController.init(values.zhCN);
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
+
   /// 从所有 Controller 收集数据构建 SpellItemEnchantment
 
   Future<void> initSignals({int? key}) async {
@@ -138,26 +164,29 @@ class SpellItemEnchantmentDetailViewModel
     }
   }
 
-  void applyNameLocales(List<DbcLocaleFieldValue> values) {
-    entity.value = entity.value!.copyWith(
-      nameLangEnUS: values.valueOf('enUS'),
-      nameLangKoKR: values.valueOf('koKR'),
-      nameLangFrFR: values.valueOf('frFR'),
-      nameLangDeDE: values.valueOf('deDE'),
-      nameLangZhCN: values.valueOf('zhCN'),
-      nameLangZhTW: values.valueOf('zhTW'),
-      nameLangEsES: values.valueOf('esES'),
-      nameLangEsMX: values.valueOf('esMX'),
-      nameLangRuRU: values.valueOf('ruRU'),
-      nameLangJaJP: values.valueOf('jaJP'),
-      nameLangPtPT: values.valueOf('ptPT'),
-      nameLangPtBR: values.valueOf('ptBR'),
-      nameLangItIT: values.valueOf('itIT'),
-      nameLangUnk1: values.valueOf('unk1'),
-      nameLangUnk2: values.valueOf('unk2'),
-      nameLangUnk3: values.valueOf('unk3'),
-    );
-    nameController.init(values.zhCN);
+  void _applyCandidate(SpellItemEnchantmentEntity entry) {
+    idController.init(entry.id);
+    nameController.init(entry.nameLangZhCN);
+    chargesController.init(entry.charges);
+    effect0Controller.init(entry.effect0);
+    effect1Controller.init(entry.effect1);
+    effect2Controller.init(entry.effect2);
+    effectPointsMin0Controller.init(entry.effectPointsMin0);
+    effectPointsMin1Controller.init(entry.effectPointsMin1);
+    effectPointsMin2Controller.init(entry.effectPointsMin2);
+    effectPointsMax0Controller.init(entry.effectPointsMax0);
+    effectPointsMax1Controller.init(entry.effectPointsMax1);
+    effectPointsMax2Controller.init(entry.effectPointsMax2);
+    effectArg0Controller.init(entry.effectArg0);
+    effectArg1Controller.init(entry.effectArg1);
+    effectArg2Controller.init(entry.effectArg2);
+    itemVisualController.init(entry.itemVisual);
+    flagsController.init(entry.flags);
+    srcItemIdController.init(entry.srcItemId);
+    conditionIdController.init(entry.conditionId);
+    requiredSkillIdController.init(entry.requiredSkillId);
+    requiredSkillRankController.init(entry.requiredSkillRank);
+    minLevelController.init(entry.minLevel);
   }
 
   SpellItemEnchantmentEntity _collectCandidate() {
@@ -188,31 +217,6 @@ class SpellItemEnchantmentDetailViewModel
     );
   }
 
-  void _applyCandidate(SpellItemEnchantmentEntity entry) {
-    idController.init(entry.id);
-    nameController.init(entry.nameLangZhCN);
-    chargesController.init(entry.charges);
-    effect0Controller.init(entry.effect0);
-    effect1Controller.init(entry.effect1);
-    effect2Controller.init(entry.effect2);
-    effectPointsMin0Controller.init(entry.effectPointsMin0);
-    effectPointsMin1Controller.init(entry.effectPointsMin1);
-    effectPointsMin2Controller.init(entry.effectPointsMin2);
-    effectPointsMax0Controller.init(entry.effectPointsMax0);
-    effectPointsMax1Controller.init(entry.effectPointsMax1);
-    effectPointsMax2Controller.init(entry.effectPointsMax2);
-    effectArg0Controller.init(entry.effectArg0);
-    effectArg1Controller.init(entry.effectArg1);
-    effectArg2Controller.init(entry.effectArg2);
-    itemVisualController.init(entry.itemVisual);
-    flagsController.init(entry.flags);
-    srcItemIdController.init(entry.srcItemId);
-    conditionIdController.init(entry.conditionId);
-    requiredSkillIdController.init(entry.requiredSkillId);
-    requiredSkillRankController.init(entry.requiredSkillRank);
-    minLevelController.init(entry.minLevel);
-  }
-
   void _logActivity(ActivityActionType action, SpellItemEnchantmentEntity t) {
     final log = ActivityLogEntity(
       module: 'spell_item_enchantment',
@@ -221,9 +225,5 @@ class SpellItemEnchantmentDetailViewModel
       createdAt: DateTime.now(),
     );
     _activityLogService.recordBestEffort(log);
-  }
-
-  void dispose() {
-    disposeControllers();
   }
 }

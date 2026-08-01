@@ -2,12 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:signals/signals.dart';
 
-/// 假 ViewModel：仅提供 mixin 要求的 page 信号。
-class _FakeVm with QueryVersionMixin {
-  @override
-  final page = signal(1);
-}
-
 void main() {
   group('QueryVersionMixin', () {
     test('markQueryVersion 使 queryVersion 递增', () {
@@ -58,4 +52,10 @@ void main() {
       });
     });
   });
+}
+
+/// 假 ViewModel：仅提供 mixin 要求的 page 信号。
+class _FakeVm with QueryVersionMixin {
+  @override
+  final page = signal(1);
 }

@@ -9,33 +9,6 @@ import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
 import 'package:warcrafty/warcrafty.dart';
 
-typedef DbcImportWorkerArgs = ({
-  SendPort sendPort,
-  String directory,
-  String host,
-  int port,
-  String database,
-  String username,
-  String password,
-  String jobId,
-});
-
-typedef _FieldDef = ({int index, String name, String type, String sqlType});
-
-typedef _FileDef = ({
-  String name,
-  String path,
-  String tableName,
-  String format,
-  List<_FieldDef> fields,
-});
-
-typedef _WorkerError = Map<String, String?>;
-
-final class _ImportCancelled implements Exception {
-  const _ImportCancelled();
-}
-
 Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
   final (
     :sendPort,
@@ -279,63 +252,10 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
   }
 }
 
-Future<List<_FileDef>> _scanDirectory(String directory) async {
-  final dir = Directory(directory);
-  if (!await dir.exists()) {
-    throw FileSystemException('目录不存在', directory);
-  }
-
-  final matched = <String, _FileDef>{};
-  await for (final entry in dir.list()) {
-    if (entry is! File) continue;
-    final fileName = p.basename(entry.path);
-    if (!fileName.toLowerCase().endsWith('.dbc')) continue;
-    final definition = dbcDefinitionByFileName[fileName.toLowerCase()];
-    if (definition == null) continue;
-    if (matched.containsKey(definition.tableName)) {
-      throw StateError('目录中存在多个 ${definition.fileName} 匹配文件');
-    }
-    matched[definition.tableName] = (
-      name: definition.schema.name,
-      path: entry.path,
-      tableName: definition.qualifiedTableName,
-      format: definition.schema.format,
-      fields: [
-        for (final field in definition.schema.fields)
-          if (!field.type.isSkip)
-            (
-              index: field.index,
-              name: field.name,
-              type: field.type.name,
-              sqlType: _sqlType(field.type),
-            ),
-      ],
-    );
-  }
-
-  return matched.values.toList()
-    ..sort((left, right) => left.name.compareTo(right.name));
-}
-
-/// 检查正式表是否包含当前 DBC schema 所需的全部列（大小写不敏感）。
-Future<bool> _tableMatchesSchema(
-  Laconic connection,
-  String tableShort,
-  List<_FieldDef> fields,
-) async {
-  final rows = await connection.select(
-    "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
-    "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME = '$tableShort'",
-  );
-  final actual = {
-    for (final row in rows) (row['COLUMN_NAME'] as String).toLowerCase(),
-  };
-  for (final field in fields) {
-    if (!actual.contains(field.name.toLowerCase())) {
-      return false;
-    }
-  }
-  return true;
+int _asInt(Object? value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value?.toString() ?? '') ?? -1;
 }
 
 Future<void> _createTable(
@@ -353,6 +273,25 @@ Future<void> _createTable(
     'CREATE TABLE $table (\n  $columns\n) '
     'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4',
   );
+}
+
+String _escapeString(String value) {
+  if (!value.contains('\\') &&
+      !value.contains("'") &&
+      !value.contains('\x00') &&
+      !value.contains('\n') &&
+      !value.contains('\r') &&
+      !value.contains('\x1a')) {
+    return "'$value'";
+  }
+
+  // 特殊字符串使用 UTF-8 十六进制字面量，避免依赖 MySQL session 的
+  // NO_BACKSLASH_ESCAPES 设置，同时保持多行批量 INSERT 的吞吐。
+  final hex = StringBuffer();
+  for (final byte in utf8.encode(value)) {
+    hex.write(byte.toRadixString(16).padLeft(2, '0'));
+  }
+  return "CONVERT(X'$hex' USING utf8mb4)";
 }
 
 Future<int> _importFile(
@@ -412,16 +351,6 @@ Future<int> _importFile(
   return imported;
 }
 
-// warcrafty 1.0.2 的公共入口未实际导出 DbcRecord；这里保留 dynamic，
-// 避免依赖 package:warcrafty/src 下的私有实现路径。
-String _recordSql(dynamic record, List<_FieldDef> fields) {
-  final values = <String>[];
-  for (final field in fields) {
-    values.add(_readAndEscape(record, field.index, field.type));
-  }
-  return '(${values.join(',')})';
-}
-
 String _readAndEscape(dynamic record, int index, String type) {
   return switch (type) {
     'string' => _escapeString(record.getString(index) as String),
@@ -437,57 +366,52 @@ String _readAndEscape(dynamic record, int index, String type) {
   };
 }
 
-String _escapeString(String value) {
-  if (!value.contains('\\') &&
-      !value.contains("'") &&
-      !value.contains('\x00') &&
-      !value.contains('\n') &&
-      !value.contains('\r') &&
-      !value.contains('\x1a')) {
-    return "'$value'";
+// warcrafty 1.0.2 的公共入口未实际导出 DbcRecord；这里保留 dynamic，
+// 避免依赖 package:warcrafty/src 下的私有实现路径。
+String _recordSql(dynamic record, List<_FieldDef> fields) {
+  final values = <String>[];
+  for (final field in fields) {
+    values.add(_readAndEscape(record, field.index, field.type));
+  }
+  return '(${values.join(',')})';
+}
+
+Future<List<_FileDef>> _scanDirectory(String directory) async {
+  final dir = Directory(directory);
+  if (!await dir.exists()) {
+    throw FileSystemException('目录不存在', directory);
   }
 
-  // 特殊字符串使用 UTF-8 十六进制字面量，避免依赖 MySQL session 的
-  // NO_BACKSLASH_ESCAPES 设置，同时保持多行批量 INSERT 的吞吐。
-  final hex = StringBuffer();
-  for (final byte in utf8.encode(value)) {
-    hex.write(byte.toRadixString(16).padLeft(2, '0'));
+  final matched = <String, _FileDef>{};
+  await for (final entry in dir.list()) {
+    if (entry is! File) continue;
+    final fileName = p.basename(entry.path);
+    if (!fileName.toLowerCase().endsWith('.dbc')) continue;
+    final definition = dbcDefinitionByFileName[fileName.toLowerCase()];
+    if (definition == null) continue;
+    if (matched.containsKey(definition.tableName)) {
+      throw StateError('目录中存在多个 ${definition.fileName} 匹配文件');
+    }
+    matched[definition.tableName] = (
+      name: definition.schema.name,
+      path: entry.path,
+      tableName: definition.qualifiedTableName,
+      format: definition.schema.format,
+      fields: [
+        for (final field in definition.schema.fields)
+          if (!field.type.isSkip)
+            (
+              index: field.index,
+              name: field.name,
+              type: field.type.name,
+              sqlType: _sqlType(field.type),
+            ),
+      ],
+    );
   }
-  return "CONVERT(X'$hex' USING utf8mb4)";
-}
 
-String _sqlType(FieldType type) {
-  return switch (type) {
-    FieldType.id => 'INT NOT NULL PRIMARY KEY',
-    FieldType.int32 || FieldType.uint32 => 'INT',
-    FieldType.int64 || FieldType.uint64 => 'BIGINT',
-    FieldType.int16 || FieldType.uint16 => 'SMALLINT',
-    FieldType.int8 || FieldType.uint8 => 'TINYINT UNSIGNED',
-    FieldType.float => 'FLOAT',
-    FieldType.string => 'TEXT',
-    FieldType.boolean => 'TINYINT(1)',
-    FieldType.sort => 'INT',
-    FieldType.unused || FieldType.unusedByte => 'INT',
-  };
-}
-
-void _throwIfCancelled(bool cancelled) {
-  if (cancelled) throw const _ImportCancelled();
-}
-
-int _asInt(Object? value) {
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  return int.tryParse(value?.toString() ?? '') ?? -1;
-}
-
-void _sendStatus(
-  SendPort sendPort,
-  String stage,
-  String message, [
-  String? fileName,
-]) {
-  sendPort.send(('status', stage, message, fileName));
+  return matched.values.toList()
+    ..sort((left, right) => left.name.compareTo(right.name));
 }
 
 void _sendCount(
@@ -518,6 +442,55 @@ void _sendResult(
   sendPort.send(('result', completed, skipped, errors, cancelled));
 }
 
+void _sendStatus(
+  SendPort sendPort,
+  String stage,
+  String message, [
+  String? fileName,
+]) {
+  sendPort.send(('status', stage, message, fileName));
+}
+
+String _sqlType(FieldType type) {
+  return switch (type) {
+    FieldType.id => 'INT NOT NULL PRIMARY KEY',
+    FieldType.int32 || FieldType.uint32 => 'INT',
+    FieldType.int64 || FieldType.uint64 => 'BIGINT',
+    FieldType.int16 || FieldType.uint16 => 'SMALLINT',
+    FieldType.int8 || FieldType.uint8 => 'TINYINT UNSIGNED',
+    FieldType.float => 'FLOAT',
+    FieldType.string => 'TEXT',
+    FieldType.boolean => 'TINYINT(1)',
+    FieldType.sort => 'INT',
+    FieldType.unused || FieldType.unusedByte => 'INT',
+  };
+}
+
+/// 检查正式表是否包含当前 DBC schema 所需的全部列（大小写不敏感）。
+Future<bool> _tableMatchesSchema(
+  Laconic connection,
+  String tableShort,
+  List<_FieldDef> fields,
+) async {
+  final rows = await connection.select(
+    "SELECT COLUMN_NAME FROM information_schema.COLUMNS "
+    "WHERE TABLE_SCHEMA = 'foxy' AND TABLE_NAME = '$tableShort'",
+  );
+  final actual = {
+    for (final row in rows) (row['COLUMN_NAME'] as String).toLowerCase(),
+  };
+  for (final field in fields) {
+    if (!actual.contains(field.name.toLowerCase())) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void _throwIfCancelled(bool cancelled) {
+  if (cancelled) throw const _ImportCancelled();
+}
+
 _WorkerError _workerError({
   String? tableName,
   String? fileName,
@@ -530,4 +503,31 @@ _WorkerError _workerError({
     'stage': stage,
     'message': message,
   };
+}
+
+typedef DbcImportWorkerArgs = ({
+  SendPort sendPort,
+  String directory,
+  String host,
+  int port,
+  String database,
+  String username,
+  String password,
+  String jobId,
+});
+
+typedef _FieldDef = ({int index, String name, String type, String sqlType});
+
+typedef _FileDef = ({
+  String name,
+  String path,
+  String tableName,
+  String format,
+  List<_FieldDef> fields,
+});
+
+typedef _WorkerError = Map<String, String?>;
+
+final class _ImportCancelled implements Exception {
+  const _ImportCancelled();
 }

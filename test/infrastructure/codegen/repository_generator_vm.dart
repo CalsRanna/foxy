@@ -5,49 +5,6 @@ import 'package:build_test/build_test.dart';
 import 'package:foxy/infrastructure/codegen/builder.dart';
 import 'package:test/test.dart';
 
-const repositoryAnnotationAsset =
-    'foxy|lib/infrastructure/codegen/repository_annotations.dart';
-const entityAnnotationAsset =
-    'foxy|lib/infrastructure/codegen/entity_annotations.dart';
-const entityAsset = 'foxy|lib/entity/sample_entity.dart';
-const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
-
-/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
-///
-/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
-/// 测试从仓库根目录运行（见 AGENTS.md）。
-final repositoryAnnotationSource = File(
-  'lib/infrastructure/codegen/repository_annotations.dart',
-).readAsStringSync();
-
-final entityAnnotationSource = File(
-  'lib/infrastructure/codegen/entity_annotations.dart',
-).readAsStringSync();
-
-const scalarEntitySource = r'''
-import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
-
-@FoxyFullEntity(table: 'foxy.sample')
-class SampleEntity {
-  @FoxyFullField('ID', key: true)
-  final int id;
-
-  const SampleEntity({this.id = 0});
-}
-''';
-
-const scalarRepositorySource = r'''
-import 'package:foxy/entity/sample_entity.dart';
-import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
-
-part 'sample_repository.g.dart';
-
-@FoxyRepository(SampleEntity)
-class SampleRepository with _SampleRepositoryMixin {
-  static const _table = 'foxy.sample';
-}
-''';
-
 void main() {
   test('FoxyRepository 生成标准公有 CRUD 与标量物理 Key 定位', () async {
     await testBuilder(
@@ -212,3 +169,46 @@ class SampleEntity {
     expect(logs.any((log) => log.contains('不符合一对一命名约定')), isTrue);
   });
 }
+const entityAnnotationAsset =
+    'foxy|lib/infrastructure/codegen/entity_annotations.dart';
+const entityAsset = 'foxy|lib/entity/sample_entity.dart';
+const repositoryAnnotationAsset =
+    'foxy|lib/infrastructure/codegen/repository_annotations.dart';
+
+const repositoryAsset = 'foxy|lib/repository/sample_repository.dart';
+
+const scalarEntitySource = r'''
+import 'package:foxy/infrastructure/codegen/entity_annotations.dart';
+
+@FoxyFullEntity(table: 'foxy.sample')
+class SampleEntity {
+  @FoxyFullField('ID', key: true)
+  final int id;
+
+  const SampleEntity({this.id = 0});
+}
+''';
+
+const scalarRepositorySource = r'''
+import 'package:foxy/entity/sample_entity.dart';
+import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
+
+part 'sample_repository.g.dart';
+
+@FoxyRepository(SampleEntity)
+class SampleRepository with _SampleRepositoryMixin {
+  static const _table = 'foxy.sample';
+}
+''';
+
+final entityAnnotationSource = File(
+  'lib/infrastructure/codegen/entity_annotations.dart',
+).readAsStringSync();
+
+/// 直接读取真实注解源码，而不是在测试里维护手抄副本。
+///
+/// 副本会在注解新增参数或改默认值后悄悄失真，让测试对着旧定义通过。
+/// 测试从仓库根目录运行（见 AGENTS.md）。
+final repositoryAnnotationSource = File(
+  'lib/infrastructure/codegen/repository_annotations.dart',
+).readAsStringSync();

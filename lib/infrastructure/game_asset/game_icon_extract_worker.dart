@@ -3,12 +3,6 @@ import 'dart:isolate';
 import 'game_icon_extractor.dart';
 import 'game_mpq_source.dart';
 
-typedef GameIconExtractWorkerArgs = ({
-  SendPort sendPort,
-  String clientDir,
-  String outputDir,
-});
-
 /// 后台 isolate 入口：执行图标提取并通过 [GameIconExtractWorkerArgs.sendPort]
 /// 回报进度与结果。消息协议：
 ///
@@ -38,3 +32,9 @@ Future<void> runGameIconExtractWorker(GameIconExtractWorkerArgs args) async {
   await cancelSubscription.cancel();
   cancelPort.close();
 }
+
+typedef GameIconExtractWorkerArgs = ({
+  SendPort sendPort,
+  String clientDir,
+  String outputDir,
+});

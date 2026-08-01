@@ -188,6 +188,13 @@ final class FormReader {
     );
   }
 
+  Never _fail(String message, Element element, String correction) {
+    throw InvalidGenerationSourceError(
+      '$message\n修复方式：$correction',
+      element: element,
+    );
+  }
+
   FormFieldModel _readField(
     String className,
     String entityClassName,
@@ -341,12 +348,5 @@ final class FormReader {
         }
       }
     }
-  }
-
-  Never _fail(String message, Element element, String correction) {
-    throw InvalidGenerationSourceError(
-      '$message\n修复方式：$correction',
-      element: element,
-    );
   }
 }

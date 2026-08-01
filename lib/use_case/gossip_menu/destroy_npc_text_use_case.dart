@@ -6,13 +6,18 @@ import 'package:foxy/repository/npc_text_locale_repository.dart';
 import 'package:foxy/repository/npc_text_repository.dart';
 
 final class DestroyNpcTextInput {
-  const DestroyNpcTextInput({required this.key, required this.localeKey});
-
   final int key;
+
   final NpcTextLocaleKey? localeKey;
+  const DestroyNpcTextInput({required this.key, required this.localeKey});
 }
 
 final class DestroyNpcTextUseCase {
+  final DatabaseTransaction _transaction;
+
+  final NpcTextRepository _npcTextRepository;
+  final NpcTextLocaleRepository _localeRepository;
+  final ActivityLogService _activityLogService;
   DestroyNpcTextUseCase({
     required DatabaseTransaction transaction,
     required NpcTextRepository npcTextRepository,
@@ -22,11 +27,6 @@ final class DestroyNpcTextUseCase {
        _npcTextRepository = npcTextRepository,
        _localeRepository = localeRepository,
        _activityLogService = activityLogService;
-
-  final DatabaseTransaction _transaction;
-  final NpcTextRepository _npcTextRepository;
-  final NpcTextLocaleRepository _localeRepository;
-  final ActivityLogService _activityLogService;
 
   Future<void> execute(DestroyNpcTextInput input) async {
     await _transaction.execute(() async {

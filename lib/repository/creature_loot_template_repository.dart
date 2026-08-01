@@ -1,7 +1,7 @@
+import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
-import 'package:foxy/entity/creature_loot_template_entity.dart';
-import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
 import 'package:foxy/repository/repository_mixin.dart';
 import 'package:laconic/laconic.dart';
 
@@ -163,17 +163,6 @@ class CreatureLootTemplateRepository
   Future<int> getNextItemId(int entry) =>
       nextMaxPlusOne(_table, 'Item', where: {'Entry': entry});
 
-  List<String> _briefFields(String alias) => [
-    '$alias.Entry',
-    '$alias.Item',
-    '$alias.Reference',
-    '$alias.Chance',
-    '$alias.QuestRequired',
-    '$alias.GroupId',
-    '$alias.MinCount',
-    '$alias.MaxCount',
-  ];
-
   QueryBuilder _applyRowFilter(
     QueryBuilder builder,
     CreatureLootTemplateFilter? filter,
@@ -199,4 +188,15 @@ class CreatureLootTemplateRepository
     }
     return builder;
   }
+
+  List<String> _briefFields(String alias) => [
+    '$alias.Entry',
+    '$alias.Item',
+    '$alias.Reference',
+    '$alias.Chance',
+    '$alias.QuestRequired',
+    '$alias.GroupId',
+    '$alias.MinCount',
+    '$alias.MaxCount',
+  ];
 }

@@ -14,15 +14,17 @@ class MoreReadViewModel with FieldControllerMixin {
   List<FeatureEntity> _source = const [];
   int _refreshToken = 0;
 
+  void dispose() {
+    _refreshToken++;
+    disposeControllers();
+  }
+
   Future<void> initSignals() async {
     searchController.addListener(search);
     await _refresh();
   }
 
-  void setFeatures(List<FeatureEntity> features) {
-    _source = List.unmodifiable(features);
-    unawaited(_refresh());
-  }
+  Future<void> refresh() => _refresh();
 
   void reset() {
     searchController.init('');
@@ -33,7 +35,10 @@ class MoreReadViewModel with FieldControllerMixin {
     unawaited(_refresh());
   }
 
-  Future<void> refresh() => _refresh();
+  void setFeatures(List<FeatureEntity> features) {
+    _source = List.unmodifiable(features);
+    unawaited(_refresh());
+  }
 
   Future<void> _refresh() async {
     final token = ++_refreshToken;
@@ -54,10 +59,5 @@ class MoreReadViewModel with FieldControllerMixin {
     } finally {
       if (token == _refreshToken) loading.value = false;
     }
-  }
-
-  void dispose() {
-    _refreshToken++;
-    disposeControllers();
   }
 }

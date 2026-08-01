@@ -6,6 +6,13 @@ const _entityUtilities = {
   'dbc_locale_field_definition.dart',
 };
 
+String? collectionLoopScope(String path) {
+  if (isEntityFile(path)) return 'Entity';
+  if (isViewModelFile(path)) return 'ViewModel';
+  if (isViewFile(path)) return 'View';
+  return null;
+}
+
 bool isEntityFile(String path) {
   if (!path.endsWith('.dart')) return false;
   if (_entityUtilities.contains(p.basename(path))) return false;
@@ -15,6 +22,10 @@ bool isEntityFile(String path) {
 
 bool isRepositoryFile(String path) {
   return p.basename(path).endsWith('_repository.dart');
+}
+
+bool isViewFile(String path) {
+  return p.basename(path).endsWith('_view.dart');
 }
 
 bool isViewModelFile(String path) {
@@ -27,15 +38,4 @@ bool isViewModelFile(String path) {
       name.contains('read_view_model.dart') ||
       name.contains('workflow_view_model.dart') ||
       name.contains('state_view_model.dart');
-}
-
-bool isViewFile(String path) {
-  return p.basename(path).endsWith('_view.dart');
-}
-
-String? collectionLoopScope(String path) {
-  if (isEntityFile(path)) return 'Entity';
-  if (isViewModelFile(path)) return 'ViewModel';
-  if (isViewFile(path)) return 'View';
-  return null;
 }

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
-import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/dbc_locale_field_editor.dart';
+import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_locale_crud_dialog.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-/// 多语言编辑器入口的共同抽象。
-///
-/// 普通数据库 locale 分表与 DBC locstring 共用输入框 + 地球按钮入口，
-/// 但使用独立的强类型 Delegate 与编辑器主体，不在同一主体内堆叠条件分支。
-sealed class FoxyLocaleEditorDelegate {
-  const FoxyLocaleEditorDelegate();
-}
+/// 兼容旧名称。
+typedef FoxyLocalePickerDelegate = DatabaseLocaleEditorDelegate;
 
 /// 普通数据库 `*_locale` 分表编辑契约：动态语言行，可添加/删除。
 final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
@@ -40,9 +35,6 @@ final class DatabaseLocaleEditorDelegate extends FoxyLocaleEditorDelegate {
        );
 }
 
-/// 兼容旧名称。
-typedef FoxyLocalePickerDelegate = DatabaseLocaleEditorDelegate;
-
 /// DBC 宽表单字段本地化编辑契约：固定 16 行，局部更新主记录。
 final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
   final DbcLocaleFieldDefinition field;
@@ -55,6 +47,14 @@ final class DbcLocaleFieldEditorDelegate extends FoxyLocaleEditorDelegate {
     required this.onLoad,
     required this.onSave,
   });
+}
+
+/// 多语言编辑器入口的共同抽象。
+///
+/// 普通数据库 locale 分表与 DBC locstring 共用输入框 + 地球按钮入口，
+/// 但使用独立的强类型 Delegate 与编辑器主体，不在同一主体内堆叠条件分支。
+sealed class FoxyLocaleEditorDelegate {
+  const FoxyLocaleEditorDelegate();
 }
 
 /// 多语言字段选择器：ShadInput + 地球按钮。

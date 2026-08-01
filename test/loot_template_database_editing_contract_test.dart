@@ -1,22 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/entity/creature_loot_template_entity.dart';
 import 'package:foxy/entity/brief_creature_loot_template_entry_entity.dart';
-import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/entity/brief_disenchant_loot_template_entry_entity.dart';
-import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/entity/brief_game_object_loot_template_entry_entity.dart';
-import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/entity/brief_item_loot_template_entry_entity.dart';
-import 'package:foxy/entity/milling_loot_template_entity.dart';
 import 'package:foxy/entity/brief_milling_loot_template_entry_entity.dart';
-import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/brief_pickpocketing_loot_template_entry_entity.dart';
-import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/entity/brief_prospecting_loot_template_entry_entity.dart';
-import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/entity/brief_reference_loot_template_entry_entity.dart';
-import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/entity/brief_skinning_loot_template_entry_entity.dart';
+import 'package:foxy/entity/creature_loot_template_entity.dart';
+import 'package:foxy/entity/disenchant_loot_template_entity.dart';
+import 'package:foxy/entity/game_object_loot_template_entity.dart';
+import 'package:foxy/entity/item_loot_template_entity.dart';
+import 'package:foxy/entity/milling_loot_template_entity.dart';
+import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
+import 'package:foxy/entity/prospecting_loot_template_entity.dart';
+import 'package:foxy/entity/reference_loot_template_entity.dart';
+import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
@@ -296,6 +296,43 @@ void main() {
 
 }
 
+List<
+  ({
+    String table,
+    dynamic Function(Laconic) create,
+    dynamic repository,
+    dynamic key,
+  })
+>
+_allRepositorySpecs({int affectedRows = 1}) {
+  final standard = _standardRepositorySpecs();
+  final specs = [
+    (
+      table: 'creature_loot_template',
+      create: (Laconic laconic) => _CreatureTestRepository(laconic),
+      key: const CreatureLootTemplateKey(
+        entry: 10,
+        item: 20,
+        reference: 30,
+        groupId: 40,
+      ),
+    ),
+    ...standard,
+  ];
+  return specs
+      .map(
+        (spec) => (
+          table: spec.table,
+          create: spec.create,
+          repository: spec.create(
+            Laconic(_RecordingDriver(affectedRows: affectedRows)),
+          ),
+          key: spec.key,
+        ),
+      )
+      .toList();
+}
+
 dynamic _candidateFor(String table, {bool updated = false}) {
   final entry = updated ? 11 : 10;
   final item = updated ? 21 : 20;
@@ -356,67 +393,6 @@ dynamic _candidateFor(String table, {bool updated = false}) {
       reference: reference,
       groupId: groupId,
     ),
-    _ => throw ArgumentError.value(table, 'table'),
-  };
-}
-
-Future<void> _updateLootTemplate(
-  dynamic repository,
-  String table,
-  dynamic key,
-  dynamic candidate,
-) {
-  return switch (table) {
-    'creature_loot_template' =>
-      (repository as CreatureLootTemplateRepository).updateCreatureLootTemplate(
-        key as CreatureLootTemplateKey,
-        candidate as CreatureLootTemplateEntity,
-      ),
-    'pickpocketing_loot_template' =>
-      (repository as PickpocketingLootTemplateRepository)
-          .updatePickpocketingLootTemplate(
-            key as PickpocketingLootTemplateKey,
-            candidate as PickpocketingLootTemplateEntity,
-          ),
-    'skinning_loot_template' =>
-      (repository as SkinningLootTemplateRepository).updateSkinningLootTemplate(
-        key as SkinningLootTemplateKey,
-        candidate as SkinningLootTemplateEntity,
-      ),
-    'item_loot_template' =>
-      (repository as ItemLootTemplateRepository).updateItemLootTemplate(
-        key as ItemLootTemplateKey,
-        candidate as ItemLootTemplateEntity,
-      ),
-    'disenchant_loot_template' =>
-      (repository as DisenchantLootTemplateRepository)
-          .updateDisenchantLootTemplate(
-            key as DisenchantLootTemplateKey,
-            candidate as DisenchantLootTemplateEntity,
-          ),
-    'prospecting_loot_template' =>
-      (repository as ProspectingLootTemplateRepository)
-          .updateProspectingLootTemplate(
-            key as ProspectingLootTemplateKey,
-            candidate as ProspectingLootTemplateEntity,
-          ),
-    'milling_loot_template' =>
-      (repository as MillingLootTemplateRepository).updateMillingLootTemplate(
-        key as MillingLootTemplateKey,
-        candidate as MillingLootTemplateEntity,
-      ),
-    'reference_loot_template' =>
-      (repository as ReferenceLootTemplateRepository)
-          .updateReferenceLootTemplate(
-            key as ReferenceLootTemplateKey,
-            candidate as ReferenceLootTemplateEntity,
-          ),
-    'gameobject_loot_template' =>
-      (repository as GameObjectLootTemplateRepository)
-          .updateGameObjectLootTemplate(
-            key as GameObjectLootTemplateKey,
-            candidate as GameObjectLootTemplateEntity,
-          ),
     _ => throw ArgumentError.value(table, 'table'),
   };
 }
@@ -508,41 +484,107 @@ _standardRepositorySpecs() {
   ];
 }
 
-List<
-  ({
-    String table,
-    dynamic Function(Laconic) create,
-    dynamic repository,
-    dynamic key,
-  })
->
-_allRepositorySpecs({int affectedRows = 1}) {
-  final standard = _standardRepositorySpecs();
-  final specs = [
-    (
-      table: 'creature_loot_template',
-      create: (Laconic laconic) => _CreatureTestRepository(laconic),
-      key: const CreatureLootTemplateKey(
-        entry: 10,
-        item: 20,
-        reference: 30,
-        groupId: 40,
+Future<void> _updateLootTemplate(
+  dynamic repository,
+  String table,
+  dynamic key,
+  dynamic candidate,
+) {
+  return switch (table) {
+    'creature_loot_template' =>
+      (repository as CreatureLootTemplateRepository).updateCreatureLootTemplate(
+        key as CreatureLootTemplateKey,
+        candidate as CreatureLootTemplateEntity,
       ),
-    ),
-    ...standard,
-  ];
-  return specs
-      .map(
-        (spec) => (
-          table: spec.table,
-          create: spec.create,
-          repository: spec.create(
-            Laconic(_RecordingDriver(affectedRows: affectedRows)),
+    'pickpocketing_loot_template' =>
+      (repository as PickpocketingLootTemplateRepository)
+          .updatePickpocketingLootTemplate(
+            key as PickpocketingLootTemplateKey,
+            candidate as PickpocketingLootTemplateEntity,
           ),
-          key: spec.key,
-        ),
-      )
-      .toList();
+    'skinning_loot_template' =>
+      (repository as SkinningLootTemplateRepository).updateSkinningLootTemplate(
+        key as SkinningLootTemplateKey,
+        candidate as SkinningLootTemplateEntity,
+      ),
+    'item_loot_template' =>
+      (repository as ItemLootTemplateRepository).updateItemLootTemplate(
+        key as ItemLootTemplateKey,
+        candidate as ItemLootTemplateEntity,
+      ),
+    'disenchant_loot_template' =>
+      (repository as DisenchantLootTemplateRepository)
+          .updateDisenchantLootTemplate(
+            key as DisenchantLootTemplateKey,
+            candidate as DisenchantLootTemplateEntity,
+          ),
+    'prospecting_loot_template' =>
+      (repository as ProspectingLootTemplateRepository)
+          .updateProspectingLootTemplate(
+            key as ProspectingLootTemplateKey,
+            candidate as ProspectingLootTemplateEntity,
+          ),
+    'milling_loot_template' =>
+      (repository as MillingLootTemplateRepository).updateMillingLootTemplate(
+        key as MillingLootTemplateKey,
+        candidate as MillingLootTemplateEntity,
+      ),
+    'reference_loot_template' =>
+      (repository as ReferenceLootTemplateRepository)
+          .updateReferenceLootTemplate(
+            key as ReferenceLootTemplateKey,
+            candidate as ReferenceLootTemplateEntity,
+          ),
+    'gameobject_loot_template' =>
+      (repository as GameObjectLootTemplateRepository)
+          .updateGameObjectLootTemplate(
+            key as GameObjectLootTemplateKey,
+            candidate as GameObjectLootTemplateEntity,
+          ),
+    _ => throw ArgumentError.value(table, 'table'),
+  };
+}
+
+class _CreatureTestRepository extends CreatureLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _CreatureTestRepository(this.laconic);
+}
+
+class _DisenchantTestRepository extends DisenchantLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _DisenchantTestRepository(this.laconic);
+}
+
+class _GameObjectTestRepository extends GameObjectLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _GameObjectTestRepository(this.laconic);
+}
+
+class _ItemTestRepository extends ItemLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _ItemTestRepository(this.laconic);
+}
+
+class _MillingTestRepository extends MillingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _MillingTestRepository(this.laconic);
+}
+
+class _PickpocketingTestRepository extends PickpocketingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _PickpocketingTestRepository(this.laconic);
+}
+
+class _ProspectingTestRepository extends ProspectingLootTemplateRepository {
+  @override
+  final Laconic laconic;
+  _ProspectingTestRepository(this.laconic);
 }
 
 class _RecordingDriver implements DatabaseDriver {
@@ -580,56 +622,14 @@ class _RecordingDriver implements DatabaseDriver {
   Future<T> transaction<T>(Future<T> Function() action) => action();
 }
 
-class _CreatureTestRepository extends CreatureLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _CreatureTestRepository(this.laconic);
-}
-
-class _PickpocketingTestRepository extends PickpocketingLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _PickpocketingTestRepository(this.laconic);
-}
-
-class _SkinningTestRepository extends SkinningLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _SkinningTestRepository(this.laconic);
-}
-
-class _ItemTestRepository extends ItemLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _ItemTestRepository(this.laconic);
-}
-
-class _DisenchantTestRepository extends DisenchantLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _DisenchantTestRepository(this.laconic);
-}
-
-class _ProspectingTestRepository extends ProspectingLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _ProspectingTestRepository(this.laconic);
-}
-
-class _MillingTestRepository extends MillingLootTemplateRepository {
-  @override
-  final Laconic laconic;
-  _MillingTestRepository(this.laconic);
-}
-
 class _ReferenceTestRepository extends ReferenceLootTemplateRepository {
   @override
   final Laconic laconic;
   _ReferenceTestRepository(this.laconic);
 }
 
-class _GameObjectTestRepository extends GameObjectLootTemplateRepository {
+class _SkinningTestRepository extends SkinningLootTemplateRepository {
   @override
   final Laconic laconic;
-  _GameObjectTestRepository(this.laconic);
+  _SkinningTestRepository(this.laconic);
 }
