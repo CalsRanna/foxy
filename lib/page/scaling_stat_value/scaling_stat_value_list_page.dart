@@ -55,7 +55,7 @@ class _ScalingStatValueListPageState extends State<ScalingStatValueListPage> {
 
   Widget _buildFilter() {
     var entryInput = FoxyStringInput(
-      controller: viewModel.entryController,
+      controller: viewModel.idController,
       placeholder: '编号（ID）',
     );
     var charlevelInput = FoxyStringInput(

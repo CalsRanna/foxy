@@ -23,8 +23,11 @@ void main() {
                 contains("(json['ID'] as num?)?.toInt() ?? 0"),
                 contains('int get key => id;'),
                 predicate<String>((source) {
+                  // Brief 在顶层最前、私有 mixin 在最后(Sort Members 顺序),
+                  // 只截取 Brief 类自身区间。
                   final briefSource = source.substring(
                     source.indexOf('final class BriefCodegenSampleEntity'),
+                    source.indexOf('mixin _CodegenSampleEntityMixin'),
                   );
                   return !briefSource.contains('copyWith') &&
                       !briefSource.contains('toJson');
@@ -103,9 +106,9 @@ void main() {
                 contains("json['localeName']?.toString() ?? ''"),
                 contains("(json['quality'] as num?)?.toInt() ?? -1"),
                 predicate<String>((source) {
+                  // 私有 mixin 在顶层最后(Sort Members 顺序),只截取 mixin 区间。
                   final fullSource = source.substring(
-                    0,
-                    source.indexOf('final class BriefCodegenSampleEntity'),
+                    source.indexOf('mixin _CodegenSampleEntityMixin'),
                   );
                   return !fullSource.contains('active') &&
                       !fullSource.contains('score') &&

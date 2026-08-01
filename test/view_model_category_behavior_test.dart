@@ -44,7 +44,7 @@ void main() {
     test('筛选快照用于 count/list，写入期间拒绝第二次提交', () async {
       final viewModel = ConditionListViewModel();
       addTearDown(viewModel.dispose);
-      viewModel.sourceTypeController.init('17');
+      viewModel.sourceTypeOrReferenceIdController.init('17');
       viewModel.sourceEntryController.init('42');
       await viewModel.search();
 

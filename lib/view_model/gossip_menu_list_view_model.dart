@@ -1,5 +1,6 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/infrastructure/codegen/list_annotations.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/gossip_menu_repository.dart';
@@ -8,98 +9,15 @@ import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class GossipMenuListViewModel with FieldControllerMixin, QueryVersionMixin {
-  final _repository = GetIt.instance.get<GossipMenuRepository>();
+part 'gossip_menu_list_view_model.g.dart';
 
-  final items = signal<List<BriefGossipMenuEntity>>([]);
-
+@FoxyListViewModel(entity: GossipMenuEntity, repository: GossipMenuRepository)
+class GossipMenuListViewModel
+    with
+        FieldControllerMixin,
+        QueryVersionMixin,
+        _GossipMenuListViewModelMixin {
   @override
-  final page = signal(1);
-
-  final total = signal(0);
-
-  final loading = signal(false);
-
-  final submitting = signal(false);
-
-  final errorMessage = signal<String?>(null);
-
-  late final menuIdController = registerController(StringFieldController());
-
-  late final textController = registerController(StringFieldController());
-
-  int _refreshToken = 0;
-
-  Future<void> copy(GossipMenuKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.copyGossipMenu(key);
-      _logActivity(ActivityActionType.copy, key);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  Future<void> destroy(GossipMenuKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
-    submitting.value = true;
-    errorMessage.value = null;
-    try {
-      await _repository.destroyGossipMenu(key);
-      _logActivity(ActivityActionType.delete, key);
-      normalizePageAfterDelete(total.value - 1);
-      await _refresh();
-    } catch (error) {
-      errorMessage.value = '$error';
-      rethrow;
-    } finally {
-      submitting.value = false;
-    }
-  }
-
-  void dispose() {
-    disposeControllers();
-  }
-
-  Future<void> initSignals() async {
-    await _refresh();
-  }
-
-  /// 导航到详情页（null 表示新建）
-
-  Future<void> paginate(int page) async {
-    this.page.value = page;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> reset() async {
-    menuIdController.init('');
-    textController.init('');
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  Future<void> search() async {
-    page.value = 1;
-    markQueryVersion();
-    await _refresh();
-  }
-
-  GossipMenuFilter _collectFilter() {
-    return GossipMenuFilter(
-      menuId: menuIdController.collect(),
-      text: textController.collect(),
-    );
-  }
-
   void _logActivity(ActivityActionType action, GossipMenuKey key) {
     final templates = items.value;
     final template = templates.where((t) => t.key == key).firstOrNull;
@@ -112,28 +30,5 @@ class GossipMenuListViewModel with FieldControllerMixin, QueryVersionMixin {
       createdAt: DateTime.now(),
     );
     GetIt.instance.get<ActivityLogService>().recordBestEffort(log);
-  }
-
-  Future<void> _refresh() async {
-    final token = ++_refreshToken;
-    final filter = _collectFilter();
-    final currentPage = page.value;
-    loading.value = true;
-    errorMessage.value = null;
-    try {
-      final (nextItems, nextTotal) = await (
-        _repository.getBriefGossipMenus(filter: filter, page: currentPage),
-        _repository.countGossipMenus(filter: filter),
-      ).wait;
-      if (token != _refreshToken) return;
-      items.value = nextItems;
-      total.value = nextTotal;
-    } catch (error) {
-      if (token != _refreshToken) return;
-      LoggerUtil.instance.e('刷新列表失败: $error');
-      errorMessage.value = '刷新列表失败: $error';
-    } finally {
-      if (token == _refreshToken) loading.value = false;
-    }
   }
 }

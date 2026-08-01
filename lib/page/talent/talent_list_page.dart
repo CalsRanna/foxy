@@ -54,7 +54,7 @@ class _TalentListPageState extends State<TalentListPage> {
 
   Widget _buildFilter() {
     var entryInput = FoxyStringInput(
-      controller: viewModel.entryController,
+      controller: viewModel.idController,
       placeholder: '编号（ID）',
     );
     var spellInput = FoxyStringInput(

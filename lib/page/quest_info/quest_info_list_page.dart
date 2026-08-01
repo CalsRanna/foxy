@@ -54,7 +54,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
 
   Widget _buildFilter() {
     var entryInput = FoxyStringInput(
-      controller: viewModel.entryController,
+      controller: viewModel.idController,
       placeholder: '编号（ID）',
     );
     var nameInput = FoxyStringInput(

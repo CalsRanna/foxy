@@ -54,7 +54,7 @@ class _AchievementListPageState extends State<AchievementListPage> {
 
   Widget _buildFilter() {
     var entryInput = FoxyStringInput(
-      controller: viewModel.entryController,
+      controller: viewModel.idController,
       placeholder: '编号（ID）',
     );
     var titleInput = FoxyStringInput(
