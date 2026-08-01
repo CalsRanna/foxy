@@ -110,6 +110,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 240;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final pageText = pages[vicinity.row];
             return switch (vicinity.column) {

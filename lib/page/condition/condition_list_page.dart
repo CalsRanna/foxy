@@ -118,6 +118,7 @@ class _ConditionListPageState extends State<ConditionListPage> {
       builder: (context, constraints) {
         var flexWidth = constraints.maxWidth - 120;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final condition = conditions[vicinity.row];
             return switch (vicinity.column) {

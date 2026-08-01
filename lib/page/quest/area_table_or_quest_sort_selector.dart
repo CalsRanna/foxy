@@ -79,6 +79,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
   List<BriefQuestSortEntity> _questItems = [];
   int _total = 0;
   int _page = 1;
+  int _queryVersion = 0;
   int? _selectedId;
   late String _currentMode;
 
@@ -142,6 +143,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
                     _nameController.init('');
                     _selectedId = null;
                     _page = 1;
+                    _queryVersion++;
                   });
                   _search();
                 },
@@ -158,6 +160,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
                     _nameController.init('');
                     _selectedId = null;
                     _page = 1;
+                    _queryVersion++;
                   });
                   _search();
                 },
@@ -223,6 +226,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
           final maxWidth = constraints.maxWidth;
           var nameWidth = maxWidth - 120;
           return FoxyShadTable(
+            queryVersion: _queryVersion,
             columnCount: 2,
             rowCount: _currentMode == 'AreaTable'
                 ? _areaItems.length
@@ -316,11 +320,13 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
 
   void _doSearch() {
     _page = 1;
+    _queryVersion++;
     _search();
   }
 
   void _paginate(int page) {
     _page = page;
+    _queryVersion++;
     _search();
   }
 
@@ -328,6 +334,7 @@ class _DialogState extends State<_Dialog> with FieldControllerMixin {
     _idController.init('');
     _nameController.init('');
     _page = 1;
+    _queryVersion++;
     _search();
   }
 

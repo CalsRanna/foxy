@@ -136,6 +136,7 @@ class _EntityPickerDialog<T> extends StatefulWidget {
 class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   late final List<TextEditingController> _filterControllers;
   int _page = 1;
+  int _queryVersion = 0;
   List<T> _items = [];
   int _total = 0;
   int? _selectedId;
@@ -182,11 +183,13 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
 
   void _doSearch() {
     _page = 1;
+    _queryVersion++;
     _search();
   }
 
   void _paginate(int p) {
     _page = p;
+    _queryVersion++;
     _search();
   }
 
@@ -195,6 +198,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       c.clear();
     }
     _page = 1;
+    _queryVersion++;
     _search();
   }
 
@@ -293,6 +297,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
               : 0.0;
           if (flexWidth < 0) flexWidth = 0;
           return FoxyShadTable(
+            queryVersion: _queryVersion,
             columnCount: columns.length,
             rowCount: _items.length,
             pinnedRowCount: 1,

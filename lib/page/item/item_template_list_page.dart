@@ -138,6 +138,7 @@ class _ItemTemplateListPageState extends State<ItemTemplateListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 720;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());

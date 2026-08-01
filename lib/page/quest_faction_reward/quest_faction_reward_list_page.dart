@@ -118,6 +118,7 @@ class _QuestFactionRewardListPageState
       builder: (context, constraints) {
         var width = constraints.maxWidth - 120;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = rewards[vicinity.row];
             return switch (vicinity.column) {

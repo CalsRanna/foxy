@@ -108,6 +108,7 @@ class _QuestTemplateListPageState extends State<QuestTemplateListPage> {
       builder: (context, constraints) {
         final flexWidth = constraints.maxWidth - 480;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           columnCount: headers.length,
           rowCount: templates.length,
           pinnedRowCount: 1,

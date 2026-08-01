@@ -108,6 +108,7 @@ class _CurrencyTypeListPageState extends State<CurrencyTypeListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 480;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {

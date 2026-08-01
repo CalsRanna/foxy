@@ -4,14 +4,16 @@ import 'package:foxy/repository/quest_faction_reward_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class QuestFactionRewardListViewModel with FieldControllerMixin {
+class QuestFactionRewardListViewModel with FieldControllerMixin, QueryVersionMixin {
   final _repository = GetIt.instance.get<QuestFactionRewardRepository>();
 
   final items = signal(<BriefQuestFactionRewardEntity>[]);
 
+  @override
   final page = signal(1);
 
   final total = signal(0);
@@ -32,17 +34,20 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
 
   Future<void> search() async {
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> reset() async {
     entryController.init('');
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -53,6 +58,7 @@ class QuestFactionRewardListViewModel with FieldControllerMixin {
     try {
       await _repository.destroyQuestFactionReward(key);
       _logActivity(ActivityActionType.delete, key);
+      normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
       errorMessage.value = '$error';

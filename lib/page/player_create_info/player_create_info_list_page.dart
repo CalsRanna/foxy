@@ -118,6 +118,7 @@ class _PlayerCreateInfoListPageState extends State<PlayerCreateInfoListPage> {
     Widget layoutBuilder = LayoutBuilder(
       builder: (context, constraints) {
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final info = infos[vicinity.row];
             return switch (vicinity.column) {

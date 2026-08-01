@@ -111,6 +111,7 @@ class _ReferenceLootTemplateListPageState
       builder: (context, constraints) {
         var width = constraints.maxWidth - 720;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
             final qualityColor =

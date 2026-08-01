@@ -75,6 +75,13 @@ class FoxyShadTable extends StatefulWidget {
   /// 固定列数
   final int? pinnedColumnCount;
 
+  /// 分页浏览基线版本。
+  ///
+  /// 该值变化（翻页 / 搜索 / 重置 / 删除导致页码缩减）时，垂直滚动
+  /// 自动回到第一行；页内数据变化（删除、复制、编辑保存）保持位置。
+  /// 为 null 时不触发回顶（详情页 shrinkWrap 表格等场景）。
+  final int? queryVersion;
+
   /// 是否为主滚动视图
   final bool? primary;
 
@@ -201,6 +208,7 @@ class FoxyShadTable extends StatefulWidget {
     this.onColumnSecondaryTapCancel,
     this.onRowDoubleTap,
     this.onRowSecondaryTapDownWithDetails,
+    this.queryVersion,
   });
 
   @override
@@ -216,9 +224,28 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
   // 用于右键点击位置捕获
   Offset? _lastSecondaryTapPosition;
 
+  // 垂直滚动控制器：外部传入时复用，否则内部创建，用于版本变化时回到第一行
+  late final ScrollController _verticalScrollController =
+      widget.verticalScrollController ?? ScrollController();
+
+  @override
+  void didUpdateWidget(FoxyShadTable oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 浏览基线变化（翻页/搜索/重置/删除导致页码缩减）时垂直滚动回到第一行。
+    // 此刻旧 TableView 的 ScrollPosition 仍 attach，jumpTo 立即生效；
+    // 若已卸载（无 position）则静默无操作，重挂载后 PageStorage 恢复的也是 0。
+    if (widget.queryVersion != oldWidget.queryVersion) {
+      _verticalScrollController.jumpTo(0);
+    }
+  }
+
   @override
   void dispose() {
     _doubleTapTimer?.cancel();
+    // 仅释放内部创建的控制器；外部传入的由调用方负责
+    if (widget.verticalScrollController == null) {
+      _verticalScrollController.dispose();
+    }
     super.dispose();
   }
 
@@ -308,7 +335,7 @@ class _FoxyShadTableState extends State<FoxyShadTable> {
       columnSpanForegroundDecoration: widget.columnSpanForegroundDecoration,
       onHoveredRowIndex: widget.onHoveredRowIndex,
       horizontalScrollController: widget.horizontalScrollController,
-      verticalScrollController: widget.verticalScrollController,
+      verticalScrollController: _verticalScrollController,
       pinnedRowCount: widget.pinnedRowCount,
       pinnedColumnCount: widget.pinnedColumnCount,
       primary: widget.primary,

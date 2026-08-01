@@ -4,14 +4,16 @@ import 'package:foxy/repository/spell_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class SpellListViewModel with FieldControllerMixin {
+class SpellListViewModel with FieldControllerMixin, QueryVersionMixin {
   final _repository = GetIt.instance.get<SpellRepository>();
 
   final items = signal(<BriefSpellEntity>[]);
 
+  @override
   final page = signal(1);
 
   final total = signal(0);
@@ -34,6 +36,7 @@ class SpellListViewModel with FieldControllerMixin {
 
   Future<void> search() async {
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -41,11 +44,13 @@ class SpellListViewModel with FieldControllerMixin {
     idController.init('');
     nameController.init('');
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -72,6 +77,7 @@ class SpellListViewModel with FieldControllerMixin {
     try {
       await _repository.destroySpell(key);
       _logActivity(ActivityActionType.delete, key);
+      normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
       errorMessage.value = '$error';

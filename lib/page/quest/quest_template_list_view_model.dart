@@ -4,15 +4,17 @@ import 'package:foxy/repository/quest_template_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 /// 任务模板列表 ViewModel（LazySingleton，保留搜索状态）
-class QuestTemplateListViewModel with FieldControllerMixin {
+class QuestTemplateListViewModel with FieldControllerMixin, QueryVersionMixin {
   final _repository = GetIt.instance.get<QuestTemplateRepository>();
 
   final items = signal<List<BriefQuestTemplateEntity>>([]);
 
+  @override
   final page = signal(1);
 
   final total = signal(0);
@@ -35,6 +37,7 @@ class QuestTemplateListViewModel with FieldControllerMixin {
 
   Future<void> search() async {
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -42,6 +45,7 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     idController.init('');
     titleController.init('');
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -49,6 +53,7 @@ class QuestTemplateListViewModel with FieldControllerMixin {
 
   Future<void> paginate(int page) async {
     this.page.value = page;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -75,6 +80,7 @@ class QuestTemplateListViewModel with FieldControllerMixin {
     try {
       await _repository.destroyQuestTemplate(key);
       _logActivity(ActivityActionType.delete, key);
+      normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
       errorMessage.value = '$error';

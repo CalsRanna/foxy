@@ -113,6 +113,7 @@ class _CreatureTemplateListPageState extends State<CreatureTemplateListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());

@@ -106,6 +106,7 @@ class _QuestInfoListPageState extends State<QuestInfoListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 120;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = infos[vicinity.row];
             return switch (vicinity.column) {

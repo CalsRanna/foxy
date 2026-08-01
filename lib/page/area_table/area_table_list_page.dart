@@ -106,6 +106,7 @@ class _AreaTableListPageState extends State<AreaTableListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 480;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= areas.length) {
               return ShadTableCell(child: SizedBox());

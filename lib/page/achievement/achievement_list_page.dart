@@ -106,6 +106,7 @@ class _AchievementListPageState extends State<AchievementListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 120;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {

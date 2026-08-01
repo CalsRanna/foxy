@@ -125,6 +125,7 @@ class _SpellListPageState extends State<SpellListPage> {
       builder: (context, constraints) {
         var flexWidth = constraints.maxWidth - 360;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             if (vicinity.row < 0 || vicinity.row >= templates.length) {
               return ShadTableCell(child: SizedBox());

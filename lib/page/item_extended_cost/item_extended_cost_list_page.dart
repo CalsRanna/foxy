@@ -103,6 +103,7 @@ class _ItemExtendedCostListPageState extends State<ItemExtendedCostListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {

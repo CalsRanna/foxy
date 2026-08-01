@@ -106,6 +106,7 @@ class _EmoteTextListPageState extends State<EmoteTextListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 240;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = emotes[vicinity.row];
             return switch (vicinity.column) {

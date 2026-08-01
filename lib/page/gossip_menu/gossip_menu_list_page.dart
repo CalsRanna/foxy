@@ -107,6 +107,7 @@ class _GossipMenuListPageState extends State<GossipMenuListPage> {
       builder: (context, constraints) {
         final width = constraints.maxWidth - 240;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           columnCount: headers.length,
           rowCount: templates.length,
           pinnedRowCount: 1,

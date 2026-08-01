@@ -4,14 +4,16 @@ import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class SmartScriptListViewModel with FieldControllerMixin {
+class SmartScriptListViewModel with FieldControllerMixin, QueryVersionMixin {
   final _repository = GetIt.instance.get<SmartScriptRepository>();
 
   final items = signal(<BriefSmartScriptEntity>[]);
 
+  @override
   final page = signal(1);
 
   final total = signal(0);
@@ -36,6 +38,7 @@ class SmartScriptListViewModel with FieldControllerMixin {
 
   Future<void> search() async {
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -43,11 +46,13 @@ class SmartScriptListViewModel with FieldControllerMixin {
     entryOrGuidController.init('');
     commentController.init('');
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -74,6 +79,7 @@ class SmartScriptListViewModel with FieldControllerMixin {
     try {
       await _repository.destroySmartScript(key);
       _logActivity(ActivityActionType.delete, key);
+      normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
       errorMessage.value = '$error';

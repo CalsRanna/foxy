@@ -4,14 +4,16 @@ import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/widget/form/field_controller.dart';
+import 'package:foxy/widget/query_version_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class ItemExtendedCostListViewModel with FieldControllerMixin {
+class ItemExtendedCostListViewModel with FieldControllerMixin, QueryVersionMixin {
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
 
   final items = signal(<BriefItemExtendedCostEntity>[]);
 
+  @override
   final page = signal(1);
 
   final total = signal(0);
@@ -32,17 +34,20 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
 
   Future<void> search() async {
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> reset() async {
     entryController.init('');
     page.value = 1;
+    markQueryVersion();
     await _refresh();
   }
 
   Future<void> paginate(int page) async {
     this.page.value = page;
+    markQueryVersion();
     await _refresh();
   }
 
@@ -69,6 +74,7 @@ class ItemExtendedCostListViewModel with FieldControllerMixin {
     try {
       await _repository.destroyItemExtendedCost(key);
       _logActivity(ActivityActionType.delete, key);
+      normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
       errorMessage.value = '$error';

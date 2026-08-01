@@ -108,6 +108,7 @@ class _SpellItemEnchantmentListPageState
       builder: (context, constraints) {
         var width = constraints.maxWidth - 600;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = items[vicinity.row];
             return switch (vicinity.column) {

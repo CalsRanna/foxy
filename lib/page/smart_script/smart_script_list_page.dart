@@ -109,6 +109,7 @@ class _SmartScriptListPageState extends State<SmartScriptListPage> {
       builder: (context, constraints) {
         var commentWidth = constraints.maxWidth - 600;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final script = templates[vicinity.row];
             return switch (vicinity.column) {

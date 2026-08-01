@@ -106,6 +106,7 @@ class _QuestSortListPageState extends State<QuestSortListPage> {
       builder: (context, constraints) {
         var width = constraints.maxWidth - 120;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final item = sorts[vicinity.row];
             return switch (vicinity.column) {

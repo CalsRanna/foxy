@@ -109,6 +109,7 @@ class _GameObjectTemplateListPageState
       builder: (context, constraints) {
         var width = constraints.maxWidth - 360;
         return FoxyShadTable(
+          queryVersion: viewModel.queryVersion.value,
           builder: (context, vicinity) {
             final template = templates[vicinity.row];
             return switch (vicinity.column) {
