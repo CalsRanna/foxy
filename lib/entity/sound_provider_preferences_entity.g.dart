@@ -2,40 +2,114 @@
 
 part of 'sound_provider_preferences_entity.dart';
 
-mixin _SoundProviderPreferencesEntityMixin {
-  static SoundProviderPreferencesEntity fromJson(Map<String, dynamic> json) {
-    return SoundProviderPreferencesEntity(
+final class BriefSoundProviderPreferencesEntity {
+  final int id;
+  final String description;
+  final int flags;
+
+  const BriefSoundProviderPreferencesEntity({
+    this.id = 0,
+    this.description = '',
+    this.flags = 0,
+  });
+
+  factory BriefSoundProviderPreferencesEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefSoundProviderPreferencesEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       description: json['Description']?.toString() ?? '',
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      eaxEnvironmentSelection:
-          (json['EAXEnvironmentSelection'] as num?)?.toInt() ?? 0,
-      eaxDecayTime: (json['EAXDecayTime'] as num?)?.toDouble() ?? 0.0,
-      eax2EnvironmentSize:
-          (json['EAX2EnvironmentSize'] as num?)?.toDouble() ?? 0.0,
-      eax2EnvironmentDiffusion:
-          (json['EAX2EnvironmentDiffusion'] as num?)?.toDouble() ?? 0.0,
-      eax2Room: (json['EAX2Room'] as num?)?.toInt() ?? 0,
-      eax2RoomHf: (json['EAX2RoomHF'] as num?)?.toInt() ?? 0,
-      eax2DecayHfRatio: (json['EAX2DecayHFRatio'] as num?)?.toDouble() ?? 0.0,
-      eax2Reflections: (json['EAX2Reflections'] as num?)?.toInt() ?? 0,
-      eax2ReflectionsDelay:
-          (json['EAX2ReflectionsDelay'] as num?)?.toDouble() ?? 0.0,
-      eax2Reverb: (json['EAX2Reverb'] as num?)?.toInt() ?? 0,
-      eax2ReverbDelay: (json['EAX2ReverbDelay'] as num?)?.toDouble() ?? 0.0,
-      eax2RoomRolloff: (json['EAX2RoomRolloff'] as num?)?.toDouble() ?? 0.0,
-      eax2AirAbsorption: (json['EAX2AirAbsorption'] as num?)?.toDouble() ?? 0.0,
-      eax3RoomLf: (json['EAX3RoomLF'] as num?)?.toInt() ?? 0,
-      eax3DecayLfRatio: (json['EAX3DecayLFRatio'] as num?)?.toDouble() ?? 0.0,
-      eax3EchoTime: (json['EAX3EchoTime'] as num?)?.toDouble() ?? 0.0,
-      eax3EchoDepth: (json['EAX3EchoDepth'] as num?)?.toDouble() ?? 0.0,
-      eax3ModulationTime:
-          (json['EAX3ModulationTime'] as num?)?.toDouble() ?? 0.0,
-      eax3ModulationDepth:
-          (json['EAX3ModulationDepth'] as num?)?.toDouble() ?? 0.0,
-      eax3HfReference: (json['EAX3HFReference'] as num?)?.toDouble() ?? 0.0,
-      eax3LfReference: (json['EAX3LFReference'] as num?)?.toDouble() ?? 0.0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, description, flags]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSoundProviderPreferencesEntity &&
+            id == other.id &&
+            description == other.description &&
+            flags == other.flags;
+  }
+
+  @override
+  String toString() {
+    return 'BriefSoundProviderPreferencesEntity('
+        'id: $id, '
+        'description: $description, '
+        'flags: $flags'
+        ')';
+  }
+}
+
+mixin _SoundProviderPreferencesEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as SoundProviderPreferencesEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.description,
+      self.flags,
+      self.eaxEnvironmentSelection,
+      self.eaxDecayTime,
+      self.eax2EnvironmentSize,
+      self.eax2EnvironmentDiffusion,
+      self.eax2Room,
+      self.eax2RoomHf,
+      self.eax2DecayHfRatio,
+      self.eax2Reflections,
+      self.eax2ReflectionsDelay,
+      self.eax2Reverb,
+      self.eax2ReverbDelay,
+      self.eax2RoomRolloff,
+      self.eax2AirAbsorption,
+      self.eax3RoomLf,
+      self.eax3DecayLfRatio,
+      self.eax3EchoTime,
+      self.eax3EchoDepth,
+      self.eax3ModulationTime,
+      self.eax3ModulationDepth,
+      self.eax3HfReference,
+      self.eax3LfReference,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as SoundProviderPreferencesEntity;
+    return identical(self, other) ||
+        other is SoundProviderPreferencesEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.description == other.description &&
+            self.flags == other.flags &&
+            self.eaxEnvironmentSelection == other.eaxEnvironmentSelection &&
+            self.eaxDecayTime == other.eaxDecayTime &&
+            self.eax2EnvironmentSize == other.eax2EnvironmentSize &&
+            self.eax2EnvironmentDiffusion == other.eax2EnvironmentDiffusion &&
+            self.eax2Room == other.eax2Room &&
+            self.eax2RoomHf == other.eax2RoomHf &&
+            self.eax2DecayHfRatio == other.eax2DecayHfRatio &&
+            self.eax2Reflections == other.eax2Reflections &&
+            self.eax2ReflectionsDelay == other.eax2ReflectionsDelay &&
+            self.eax2Reverb == other.eax2Reverb &&
+            self.eax2ReverbDelay == other.eax2ReverbDelay &&
+            self.eax2RoomRolloff == other.eax2RoomRolloff &&
+            self.eax2AirAbsorption == other.eax2AirAbsorption &&
+            self.eax3RoomLf == other.eax3RoomLf &&
+            self.eax3DecayLfRatio == other.eax3DecayLfRatio &&
+            self.eax3EchoTime == other.eax3EchoTime &&
+            self.eax3EchoDepth == other.eax3EchoDepth &&
+            self.eax3ModulationTime == other.eax3ModulationTime &&
+            self.eax3ModulationDepth == other.eax3ModulationDepth &&
+            self.eax3HfReference == other.eax3HfReference &&
+            self.eax3LfReference == other.eax3LfReference;
   }
 
   SoundProviderPreferencesEntity copyWith({
@@ -126,70 +200,6 @@ mixin _SoundProviderPreferencesEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as SoundProviderPreferencesEntity;
-    return identical(self, other) ||
-        other is SoundProviderPreferencesEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.description == other.description &&
-            self.flags == other.flags &&
-            self.eaxEnvironmentSelection == other.eaxEnvironmentSelection &&
-            self.eaxDecayTime == other.eaxDecayTime &&
-            self.eax2EnvironmentSize == other.eax2EnvironmentSize &&
-            self.eax2EnvironmentDiffusion == other.eax2EnvironmentDiffusion &&
-            self.eax2Room == other.eax2Room &&
-            self.eax2RoomHf == other.eax2RoomHf &&
-            self.eax2DecayHfRatio == other.eax2DecayHfRatio &&
-            self.eax2Reflections == other.eax2Reflections &&
-            self.eax2ReflectionsDelay == other.eax2ReflectionsDelay &&
-            self.eax2Reverb == other.eax2Reverb &&
-            self.eax2ReverbDelay == other.eax2ReverbDelay &&
-            self.eax2RoomRolloff == other.eax2RoomRolloff &&
-            self.eax2AirAbsorption == other.eax2AirAbsorption &&
-            self.eax3RoomLf == other.eax3RoomLf &&
-            self.eax3DecayLfRatio == other.eax3DecayLfRatio &&
-            self.eax3EchoTime == other.eax3EchoTime &&
-            self.eax3EchoDepth == other.eax3EchoDepth &&
-            self.eax3ModulationTime == other.eax3ModulationTime &&
-            self.eax3ModulationDepth == other.eax3ModulationDepth &&
-            self.eax3HfReference == other.eax3HfReference &&
-            self.eax3LfReference == other.eax3LfReference;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as SoundProviderPreferencesEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.description,
-      self.flags,
-      self.eaxEnvironmentSelection,
-      self.eaxDecayTime,
-      self.eax2EnvironmentSize,
-      self.eax2EnvironmentDiffusion,
-      self.eax2Room,
-      self.eax2RoomHf,
-      self.eax2DecayHfRatio,
-      self.eax2Reflections,
-      self.eax2ReflectionsDelay,
-      self.eax2Reverb,
-      self.eax2ReverbDelay,
-      self.eax2RoomRolloff,
-      self.eax2AirAbsorption,
-      self.eax3RoomLf,
-      self.eax3DecayLfRatio,
-      self.eax3EchoTime,
-      self.eax3EchoDepth,
-      self.eax3ModulationTime,
-      self.eax3ModulationDepth,
-      self.eax3HfReference,
-      self.eax3LfReference,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as SoundProviderPreferencesEntity;
     return 'SoundProviderPreferencesEntity('
@@ -219,49 +229,39 @@ mixin _SoundProviderPreferencesEntityMixin {
         'eax3LfReference: ${self.eax3LfReference}'
         ')';
   }
-}
 
-final class BriefSoundProviderPreferencesEntity {
-  final int id;
-  final String description;
-  final int flags;
-
-  const BriefSoundProviderPreferencesEntity({
-    this.id = 0,
-    this.description = '',
-    this.flags = 0,
-  });
-
-  factory BriefSoundProviderPreferencesEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefSoundProviderPreferencesEntity(
+  static SoundProviderPreferencesEntity fromJson(Map<String, dynamic> json) {
+    return SoundProviderPreferencesEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       description: json['Description']?.toString() ?? '',
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      eaxEnvironmentSelection:
+          (json['EAXEnvironmentSelection'] as num?)?.toInt() ?? 0,
+      eaxDecayTime: (json['EAXDecayTime'] as num?)?.toDouble() ?? 0.0,
+      eax2EnvironmentSize:
+          (json['EAX2EnvironmentSize'] as num?)?.toDouble() ?? 0.0,
+      eax2EnvironmentDiffusion:
+          (json['EAX2EnvironmentDiffusion'] as num?)?.toDouble() ?? 0.0,
+      eax2Room: (json['EAX2Room'] as num?)?.toInt() ?? 0,
+      eax2RoomHf: (json['EAX2RoomHF'] as num?)?.toInt() ?? 0,
+      eax2DecayHfRatio: (json['EAX2DecayHFRatio'] as num?)?.toDouble() ?? 0.0,
+      eax2Reflections: (json['EAX2Reflections'] as num?)?.toInt() ?? 0,
+      eax2ReflectionsDelay:
+          (json['EAX2ReflectionsDelay'] as num?)?.toDouble() ?? 0.0,
+      eax2Reverb: (json['EAX2Reverb'] as num?)?.toInt() ?? 0,
+      eax2ReverbDelay: (json['EAX2ReverbDelay'] as num?)?.toDouble() ?? 0.0,
+      eax2RoomRolloff: (json['EAX2RoomRolloff'] as num?)?.toDouble() ?? 0.0,
+      eax2AirAbsorption: (json['EAX2AirAbsorption'] as num?)?.toDouble() ?? 0.0,
+      eax3RoomLf: (json['EAX3RoomLF'] as num?)?.toInt() ?? 0,
+      eax3DecayLfRatio: (json['EAX3DecayLFRatio'] as num?)?.toDouble() ?? 0.0,
+      eax3EchoTime: (json['EAX3EchoTime'] as num?)?.toDouble() ?? 0.0,
+      eax3EchoDepth: (json['EAX3EchoDepth'] as num?)?.toDouble() ?? 0.0,
+      eax3ModulationTime:
+          (json['EAX3ModulationTime'] as num?)?.toDouble() ?? 0.0,
+      eax3ModulationDepth:
+          (json['EAX3ModulationDepth'] as num?)?.toDouble() ?? 0.0,
+      eax3HfReference: (json['EAX3HFReference'] as num?)?.toDouble() ?? 0.0,
+      eax3LfReference: (json['EAX3LFReference'] as num?)?.toDouble() ?? 0.0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefSoundProviderPreferencesEntity &&
-            id == other.id &&
-            description == other.description &&
-            flags == other.flags;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, description, flags]);
-
-  @override
-  String toString() {
-    return 'BriefSoundProviderPreferencesEntity('
-        'id: $id, '
-        'description: $description, '
-        'flags: $flags'
-        ')';
   }
 }

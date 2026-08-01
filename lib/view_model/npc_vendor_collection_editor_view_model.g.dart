@@ -11,17 +11,7 @@ mixin _NpcVendorCollectionEditorViewModelMixin on FieldControllerMixin {
   late final extendedCostController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  NpcVendorEntity _collectCandidate() {
-    return NpcVendorEntity(
-      entry: entryController.collect(),
-      slot: slotController.collect(),
-      item: itemController.collect(),
-      maxcount: maxcountController.collect(),
-      incrtime: incrtimeController.collect(),
-      extendedCost: extendedCostController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(NpcVendorEntity npcVendor) {}
 
   void _applyCandidate(NpcVendorEntity npcVendor) {
     entryController.init(npcVendor.entry);
@@ -34,5 +24,15 @@ mixin _NpcVendorCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(npcVendor);
   }
 
-  void _afterApplyCandidate(NpcVendorEntity npcVendor) {}
+  NpcVendorEntity _collectCandidate() {
+    return NpcVendorEntity(
+      entry: entryController.collect(),
+      slot: slotController.collect(),
+      item: itemController.collect(),
+      maxcount: maxcountController.collect(),
+      incrtime: incrtimeController.collect(),
+      extendedCost: extendedCostController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

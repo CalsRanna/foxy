@@ -26,26 +26,7 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
 
-  ItemExtendedCostEntity _collectCandidate() {
-    return ItemExtendedCostEntity(
-      id: idController.collect(),
-      honorPoints: honorPointsController.collect(),
-      arenaPoints: arenaPointsController.collect(),
-      arenaBracket: arenaBracketController.collect(),
-      itemID0: itemID0Controller.collect(),
-      itemID1: itemID1Controller.collect(),
-      itemID2: itemID2Controller.collect(),
-      itemID3: itemID3Controller.collect(),
-      itemID4: itemID4Controller.collect(),
-      itemCount0: itemCount0Controller.collect(),
-      itemCount1: itemCount1Controller.collect(),
-      itemCount2: itemCount2Controller.collect(),
-      itemCount3: itemCount3Controller.collect(),
-      itemCount4: itemCount4Controller.collect(),
-      requiredArenaRating: requiredArenaRatingController.collect(),
-      itemPurchaseGroup: itemPurchaseGroupController.collect(),
-    );
-  }
+  void _afterApplyCandidate(ItemExtendedCostEntity itemExtendedCost) {}
 
   void _applyCandidate(ItemExtendedCostEntity itemExtendedCost) {
     idController.init(itemExtendedCost.id);
@@ -67,5 +48,24 @@ mixin _ItemExtendedCostDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(itemExtendedCost);
   }
 
-  void _afterApplyCandidate(ItemExtendedCostEntity itemExtendedCost) {}
+  ItemExtendedCostEntity _collectCandidate() {
+    return ItemExtendedCostEntity(
+      id: idController.collect(),
+      honorPoints: honorPointsController.collect(),
+      arenaPoints: arenaPointsController.collect(),
+      arenaBracket: arenaBracketController.collect(),
+      itemID0: itemID0Controller.collect(),
+      itemID1: itemID1Controller.collect(),
+      itemID2: itemID2Controller.collect(),
+      itemID3: itemID3Controller.collect(),
+      itemID4: itemID4Controller.collect(),
+      itemCount0: itemCount0Controller.collect(),
+      itemCount1: itemCount1Controller.collect(),
+      itemCount2: itemCount2Controller.collect(),
+      itemCount3: itemCount3Controller.collect(),
+      itemCount4: itemCount4Controller.collect(),
+      requiredArenaRating: requiredArenaRatingController.collect(),
+      itemPurchaseGroup: itemPurchaseGroupController.collect(),
+    );
+  }
 }

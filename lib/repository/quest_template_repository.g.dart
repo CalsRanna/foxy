@@ -2,6 +2,28 @@
 
 part of 'quest_template_repository.dart';
 
+final class QuestTemplateFilter {
+  final String id;
+  final String title;
+
+  const QuestTemplateFilter({this.id = '', this.title = ''});
+
+  factory QuestTemplateFilter.fromJson(Map<String, dynamic> json) {
+    return QuestTemplateFilter(
+      id: json['id']?.toString() ?? '',
+      title: json['title']?.toString() ?? '',
+    );
+  }
+
+  QuestTemplateFilter copyWith({String? id, String? title}) {
+    return QuestTemplateFilter(id: id ?? this.id, title: title ?? this.title);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'title': title};
+  }
+}
+
 mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyQuestTemplate(int key) async {
     await _beforeDestroy(key);
@@ -73,27 +95,5 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class QuestTemplateFilter {
-  final String id;
-  final String title;
-
-  const QuestTemplateFilter({this.id = '', this.title = ''});
-
-  factory QuestTemplateFilter.fromJson(Map<String, dynamic> json) {
-    return QuestTemplateFilter(
-      id: json['id']?.toString() ?? '',
-      title: json['title']?.toString() ?? '',
-    );
-  }
-
-  QuestTemplateFilter copyWith({String? id, String? title}) {
-    return QuestTemplateFilter(id: id ?? this.id, title: title ?? this.title);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'title': title};
   }
 }

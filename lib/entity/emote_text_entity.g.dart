@@ -2,29 +2,98 @@
 
 part of 'emote_text_entity.dart';
 
-mixin _EmoteTextEntityMixin {
-  static EmoteTextEntity fromJson(Map<String, dynamic> json) {
-    return EmoteTextEntity(
+final class BriefEmoteTextEntity {
+  final int id;
+  final String name;
+  final int emoteId;
+
+  const BriefEmoteTextEntity({this.id = 0, this.name = '', this.emoteId = 0});
+
+  factory BriefEmoteTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefEmoteTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       emoteId: (json['EmoteID'] as num?)?.toInt() ?? 0,
-      emoteText0: (json['EmoteText0'] as num?)?.toInt() ?? 0,
-      emoteText1: (json['EmoteText1'] as num?)?.toInt() ?? 0,
-      emoteText2: (json['EmoteText2'] as num?)?.toInt() ?? 0,
-      emoteText3: (json['EmoteText3'] as num?)?.toInt() ?? 0,
-      emoteText4: (json['EmoteText4'] as num?)?.toInt() ?? 0,
-      emoteText5: (json['EmoteText5'] as num?)?.toInt() ?? 0,
-      emoteText6: (json['EmoteText6'] as num?)?.toInt() ?? 0,
-      emoteText7: (json['EmoteText7'] as num?)?.toInt() ?? 0,
-      emoteText8: (json['EmoteText8'] as num?)?.toInt() ?? 0,
-      emoteText9: (json['EmoteText9'] as num?)?.toInt() ?? 0,
-      emoteText10: (json['EmoteText10'] as num?)?.toInt() ?? 0,
-      emoteText11: (json['EmoteText11'] as num?)?.toInt() ?? 0,
-      emoteText12: (json['EmoteText12'] as num?)?.toInt() ?? 0,
-      emoteText13: (json['EmoteText13'] as num?)?.toInt() ?? 0,
-      emoteText14: (json['EmoteText14'] as num?)?.toInt() ?? 0,
-      emoteText15: (json['EmoteText15'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, emoteId]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefEmoteTextEntity &&
+            id == other.id &&
+            name == other.name &&
+            emoteId == other.emoteId;
+  }
+
+  @override
+  String toString() {
+    return 'BriefEmoteTextEntity('
+        'id: $id, '
+        'name: $name, '
+        'emoteId: $emoteId'
+        ')';
+  }
+}
+
+mixin _EmoteTextEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as EmoteTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.name,
+      self.emoteId,
+      self.emoteText0,
+      self.emoteText1,
+      self.emoteText2,
+      self.emoteText3,
+      self.emoteText4,
+      self.emoteText5,
+      self.emoteText6,
+      self.emoteText7,
+      self.emoteText8,
+      self.emoteText9,
+      self.emoteText10,
+      self.emoteText11,
+      self.emoteText12,
+      self.emoteText13,
+      self.emoteText14,
+      self.emoteText15,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as EmoteTextEntity;
+    return identical(self, other) ||
+        other is EmoteTextEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.name == other.name &&
+            self.emoteId == other.emoteId &&
+            self.emoteText0 == other.emoteText0 &&
+            self.emoteText1 == other.emoteText1 &&
+            self.emoteText2 == other.emoteText2 &&
+            self.emoteText3 == other.emoteText3 &&
+            self.emoteText4 == other.emoteText4 &&
+            self.emoteText5 == other.emoteText5 &&
+            self.emoteText6 == other.emoteText6 &&
+            self.emoteText7 == other.emoteText7 &&
+            self.emoteText8 == other.emoteText8 &&
+            self.emoteText9 == other.emoteText9 &&
+            self.emoteText10 == other.emoteText10 &&
+            self.emoteText11 == other.emoteText11 &&
+            self.emoteText12 == other.emoteText12 &&
+            self.emoteText13 == other.emoteText13 &&
+            self.emoteText14 == other.emoteText14 &&
+            self.emoteText15 == other.emoteText15;
   }
 
   EmoteTextEntity copyWith({
@@ -98,60 +167,6 @@ mixin _EmoteTextEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as EmoteTextEntity;
-    return identical(self, other) ||
-        other is EmoteTextEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.name == other.name &&
-            self.emoteId == other.emoteId &&
-            self.emoteText0 == other.emoteText0 &&
-            self.emoteText1 == other.emoteText1 &&
-            self.emoteText2 == other.emoteText2 &&
-            self.emoteText3 == other.emoteText3 &&
-            self.emoteText4 == other.emoteText4 &&
-            self.emoteText5 == other.emoteText5 &&
-            self.emoteText6 == other.emoteText6 &&
-            self.emoteText7 == other.emoteText7 &&
-            self.emoteText8 == other.emoteText8 &&
-            self.emoteText9 == other.emoteText9 &&
-            self.emoteText10 == other.emoteText10 &&
-            self.emoteText11 == other.emoteText11 &&
-            self.emoteText12 == other.emoteText12 &&
-            self.emoteText13 == other.emoteText13 &&
-            self.emoteText14 == other.emoteText14 &&
-            self.emoteText15 == other.emoteText15;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as EmoteTextEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.name,
-      self.emoteId,
-      self.emoteText0,
-      self.emoteText1,
-      self.emoteText2,
-      self.emoteText3,
-      self.emoteText4,
-      self.emoteText5,
-      self.emoteText6,
-      self.emoteText7,
-      self.emoteText8,
-      self.emoteText9,
-      self.emoteText10,
-      self.emoteText11,
-      self.emoteText12,
-      self.emoteText13,
-      self.emoteText14,
-      self.emoteText15,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as EmoteTextEntity;
     return 'EmoteTextEntity('
@@ -176,43 +191,28 @@ mixin _EmoteTextEntityMixin {
         'emoteText15: ${self.emoteText15}'
         ')';
   }
-}
 
-final class BriefEmoteTextEntity {
-  final int id;
-  final String name;
-  final int emoteId;
-
-  const BriefEmoteTextEntity({this.id = 0, this.name = '', this.emoteId = 0});
-
-  factory BriefEmoteTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefEmoteTextEntity(
+  static EmoteTextEntity fromJson(Map<String, dynamic> json) {
+    return EmoteTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       emoteId: (json['EmoteID'] as num?)?.toInt() ?? 0,
+      emoteText0: (json['EmoteText0'] as num?)?.toInt() ?? 0,
+      emoteText1: (json['EmoteText1'] as num?)?.toInt() ?? 0,
+      emoteText2: (json['EmoteText2'] as num?)?.toInt() ?? 0,
+      emoteText3: (json['EmoteText3'] as num?)?.toInt() ?? 0,
+      emoteText4: (json['EmoteText4'] as num?)?.toInt() ?? 0,
+      emoteText5: (json['EmoteText5'] as num?)?.toInt() ?? 0,
+      emoteText6: (json['EmoteText6'] as num?)?.toInt() ?? 0,
+      emoteText7: (json['EmoteText7'] as num?)?.toInt() ?? 0,
+      emoteText8: (json['EmoteText8'] as num?)?.toInt() ?? 0,
+      emoteText9: (json['EmoteText9'] as num?)?.toInt() ?? 0,
+      emoteText10: (json['EmoteText10'] as num?)?.toInt() ?? 0,
+      emoteText11: (json['EmoteText11'] as num?)?.toInt() ?? 0,
+      emoteText12: (json['EmoteText12'] as num?)?.toInt() ?? 0,
+      emoteText13: (json['EmoteText13'] as num?)?.toInt() ?? 0,
+      emoteText14: (json['EmoteText14'] as num?)?.toInt() ?? 0,
+      emoteText15: (json['EmoteText15'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefEmoteTextEntity &&
-            id == other.id &&
-            name == other.name &&
-            emoteId == other.emoteId;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, name, emoteId]);
-
-  @override
-  String toString() {
-    return 'BriefEmoteTextEntity('
-        'id: $id, '
-        'name: $name, '
-        'emoteId: $emoteId'
-        ')';
   }
 }

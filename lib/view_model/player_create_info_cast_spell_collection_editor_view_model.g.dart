@@ -11,14 +11,9 @@ mixin _PlayerCreateInfoCastSpellCollectionEditorViewModelMixin
     NullableStringFieldController(),
   );
 
-  PlayerCreateInfoCastSpellEntity _collectCandidate() {
-    return PlayerCreateInfoCastSpellEntity(
-      raceMask: raceMaskController.collect(),
-      classMask: classMaskController.collect(),
-      spell: spellController.collect(),
-      note: noteController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    PlayerCreateInfoCastSpellEntity playerCreateInfoCastSpell,
+  ) {}
 
   void _applyCandidate(
     PlayerCreateInfoCastSpellEntity playerCreateInfoCastSpell,
@@ -30,7 +25,12 @@ mixin _PlayerCreateInfoCastSpellCollectionEditorViewModelMixin
     _afterApplyCandidate(playerCreateInfoCastSpell);
   }
 
-  void _afterApplyCandidate(
-    PlayerCreateInfoCastSpellEntity playerCreateInfoCastSpell,
-  ) {}
+  PlayerCreateInfoCastSpellEntity _collectCandidate() {
+    return PlayerCreateInfoCastSpellEntity(
+      raceMask: raceMaskController.collect(),
+      classMask: classMaskController.collect(),
+      spell: spellController.collect(),
+      note: noteController.collect(),
+    );
+  }
 }

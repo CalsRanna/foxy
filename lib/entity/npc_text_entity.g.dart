@@ -2,100 +2,240 @@
 
 part of 'npc_text_entity.dart';
 
-mixin _NpcTextEntityMixin {
-  static NpcTextEntity fromJson(Map<String, dynamic> json) {
-    return NpcTextEntity(
+final class BriefNpcTextEntity {
+  final int id;
+  final String text0;
+  final String text1;
+
+  const BriefNpcTextEntity({this.id = 0, this.text0 = '', this.text1 = ''});
+
+  factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefNpcTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      text00: json['text0_0']?.toString() ?? '',
-      text01: json['text0_1']?.toString() ?? '',
-      broadcastTextId0: (json['BroadcastTextID0'] as num?)?.toInt() ?? 0,
-      lang0: (json['lang0'] as num?)?.toInt() ?? 0,
-      probability0: (json['Probability0'] as num?)?.toDouble() ?? 0.0,
-      em00: (json['em0_0'] as num?)?.toInt() ?? 0,
-      em01: (json['em0_1'] as num?)?.toInt() ?? 0,
-      em02: (json['em0_2'] as num?)?.toInt() ?? 0,
-      em03: (json['em0_3'] as num?)?.toInt() ?? 0,
-      em04: (json['em0_4'] as num?)?.toInt() ?? 0,
-      em05: (json['em0_5'] as num?)?.toInt() ?? 0,
-      text10: json['text1_0']?.toString() ?? '',
-      text11: json['text1_1']?.toString() ?? '',
-      broadcastTextId1: (json['BroadcastTextID1'] as num?)?.toInt() ?? 0,
-      lang1: (json['lang1'] as num?)?.toInt() ?? 0,
-      probability1: (json['Probability1'] as num?)?.toDouble() ?? 0.0,
-      em10: (json['em1_0'] as num?)?.toInt() ?? 0,
-      em11: (json['em1_1'] as num?)?.toInt() ?? 0,
-      em12: (json['em1_2'] as num?)?.toInt() ?? 0,
-      em13: (json['em1_3'] as num?)?.toInt() ?? 0,
-      em14: (json['em1_4'] as num?)?.toInt() ?? 0,
-      em15: (json['em1_5'] as num?)?.toInt() ?? 0,
-      text20: json['text2_0']?.toString() ?? '',
-      text21: json['text2_1']?.toString() ?? '',
-      broadcastTextId2: (json['BroadcastTextID2'] as num?)?.toInt() ?? 0,
-      lang2: (json['lang2'] as num?)?.toInt() ?? 0,
-      probability2: (json['Probability2'] as num?)?.toDouble() ?? 0.0,
-      em20: (json['em2_0'] as num?)?.toInt() ?? 0,
-      em21: (json['em2_1'] as num?)?.toInt() ?? 0,
-      em22: (json['em2_2'] as num?)?.toInt() ?? 0,
-      em23: (json['em2_3'] as num?)?.toInt() ?? 0,
-      em24: (json['em2_4'] as num?)?.toInt() ?? 0,
-      em25: (json['em2_5'] as num?)?.toInt() ?? 0,
-      text30: json['text3_0']?.toString() ?? '',
-      text31: json['text3_1']?.toString() ?? '',
-      broadcastTextId3: (json['BroadcastTextID3'] as num?)?.toInt() ?? 0,
-      lang3: (json['lang3'] as num?)?.toInt() ?? 0,
-      probability3: (json['Probability3'] as num?)?.toDouble() ?? 0.0,
-      em30: (json['em3_0'] as num?)?.toInt() ?? 0,
-      em31: (json['em3_1'] as num?)?.toInt() ?? 0,
-      em32: (json['em3_2'] as num?)?.toInt() ?? 0,
-      em33: (json['em3_3'] as num?)?.toInt() ?? 0,
-      em34: (json['em3_4'] as num?)?.toInt() ?? 0,
-      em35: (json['em3_5'] as num?)?.toInt() ?? 0,
-      text40: json['text4_0']?.toString() ?? '',
-      text41: json['text4_1']?.toString() ?? '',
-      broadcastTextId4: (json['BroadcastTextID4'] as num?)?.toInt() ?? 0,
-      lang4: (json['lang4'] as num?)?.toInt() ?? 0,
-      probability4: (json['Probability4'] as num?)?.toDouble() ?? 0.0,
-      em40: (json['em4_0'] as num?)?.toInt() ?? 0,
-      em41: (json['em4_1'] as num?)?.toInt() ?? 0,
-      em42: (json['em4_2'] as num?)?.toInt() ?? 0,
-      em43: (json['em4_3'] as num?)?.toInt() ?? 0,
-      em44: (json['em4_4'] as num?)?.toInt() ?? 0,
-      em45: (json['em4_5'] as num?)?.toInt() ?? 0,
-      text50: json['text5_0']?.toString() ?? '',
-      text51: json['text5_1']?.toString() ?? '',
-      broadcastTextId5: (json['BroadcastTextID5'] as num?)?.toInt() ?? 0,
-      lang5: (json['lang5'] as num?)?.toInt() ?? 0,
-      probability5: (json['Probability5'] as num?)?.toDouble() ?? 0.0,
-      em50: (json['em5_0'] as num?)?.toInt() ?? 0,
-      em51: (json['em5_1'] as num?)?.toInt() ?? 0,
-      em52: (json['em5_2'] as num?)?.toInt() ?? 0,
-      em53: (json['em5_3'] as num?)?.toInt() ?? 0,
-      em54: (json['em5_4'] as num?)?.toInt() ?? 0,
-      em55: (json['em5_5'] as num?)?.toInt() ?? 0,
-      text60: json['text6_0']?.toString() ?? '',
-      text61: json['text6_1']?.toString() ?? '',
-      broadcastTextId6: (json['BroadcastTextID6'] as num?)?.toInt() ?? 0,
-      lang6: (json['lang6'] as num?)?.toInt() ?? 0,
-      probability6: (json['Probability6'] as num?)?.toDouble() ?? 0.0,
-      em60: (json['em6_0'] as num?)?.toInt() ?? 0,
-      em61: (json['em6_1'] as num?)?.toInt() ?? 0,
-      em62: (json['em6_2'] as num?)?.toInt() ?? 0,
-      em63: (json['em6_3'] as num?)?.toInt() ?? 0,
-      em64: (json['em6_4'] as num?)?.toInt() ?? 0,
-      em65: (json['em6_5'] as num?)?.toInt() ?? 0,
-      text70: json['text7_0']?.toString() ?? '',
-      text71: json['text7_1']?.toString() ?? '',
-      broadcastTextId7: (json['BroadcastTextID7'] as num?)?.toInt() ?? 0,
-      lang7: (json['lang7'] as num?)?.toInt() ?? 0,
-      probability7: (json['Probability7'] as num?)?.toDouble() ?? 0.0,
-      em70: (json['em7_0'] as num?)?.toInt() ?? 0,
-      em71: (json['em7_1'] as num?)?.toInt() ?? 0,
-      em72: (json['em7_2'] as num?)?.toInt() ?? 0,
-      em73: (json['em7_3'] as num?)?.toInt() ?? 0,
-      em74: (json['em7_4'] as num?)?.toInt() ?? 0,
-      em75: (json['em7_5'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      text0: json['text0']?.toString() ?? '',
+      text1: json['text1']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, text0, text1]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefNpcTextEntity &&
+            id == other.id &&
+            text0 == other.text0 &&
+            text1 == other.text1;
+  }
+
+  @override
+  String toString() {
+    return 'BriefNpcTextEntity('
+        'id: $id, '
+        'text0: $text0, '
+        'text1: $text1'
+        ')';
+  }
+}
+
+mixin _NpcTextEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as NpcTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.text00,
+      self.text01,
+      self.broadcastTextId0,
+      self.lang0,
+      self.probability0,
+      self.em00,
+      self.em01,
+      self.em02,
+      self.em03,
+      self.em04,
+      self.em05,
+      self.text10,
+      self.text11,
+      self.broadcastTextId1,
+      self.lang1,
+      self.probability1,
+      self.em10,
+      self.em11,
+      self.em12,
+      self.em13,
+      self.em14,
+      self.em15,
+      self.text20,
+      self.text21,
+      self.broadcastTextId2,
+      self.lang2,
+      self.probability2,
+      self.em20,
+      self.em21,
+      self.em22,
+      self.em23,
+      self.em24,
+      self.em25,
+      self.text30,
+      self.text31,
+      self.broadcastTextId3,
+      self.lang3,
+      self.probability3,
+      self.em30,
+      self.em31,
+      self.em32,
+      self.em33,
+      self.em34,
+      self.em35,
+      self.text40,
+      self.text41,
+      self.broadcastTextId4,
+      self.lang4,
+      self.probability4,
+      self.em40,
+      self.em41,
+      self.em42,
+      self.em43,
+      self.em44,
+      self.em45,
+      self.text50,
+      self.text51,
+      self.broadcastTextId5,
+      self.lang5,
+      self.probability5,
+      self.em50,
+      self.em51,
+      self.em52,
+      self.em53,
+      self.em54,
+      self.em55,
+      self.text60,
+      self.text61,
+      self.broadcastTextId6,
+      self.lang6,
+      self.probability6,
+      self.em60,
+      self.em61,
+      self.em62,
+      self.em63,
+      self.em64,
+      self.em65,
+      self.text70,
+      self.text71,
+      self.broadcastTextId7,
+      self.lang7,
+      self.probability7,
+      self.em70,
+      self.em71,
+      self.em72,
+      self.em73,
+      self.em74,
+      self.em75,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as NpcTextEntity;
+    return identical(self, other) ||
+        other is NpcTextEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.text00 == other.text00 &&
+            self.text01 == other.text01 &&
+            self.broadcastTextId0 == other.broadcastTextId0 &&
+            self.lang0 == other.lang0 &&
+            self.probability0 == other.probability0 &&
+            self.em00 == other.em00 &&
+            self.em01 == other.em01 &&
+            self.em02 == other.em02 &&
+            self.em03 == other.em03 &&
+            self.em04 == other.em04 &&
+            self.em05 == other.em05 &&
+            self.text10 == other.text10 &&
+            self.text11 == other.text11 &&
+            self.broadcastTextId1 == other.broadcastTextId1 &&
+            self.lang1 == other.lang1 &&
+            self.probability1 == other.probability1 &&
+            self.em10 == other.em10 &&
+            self.em11 == other.em11 &&
+            self.em12 == other.em12 &&
+            self.em13 == other.em13 &&
+            self.em14 == other.em14 &&
+            self.em15 == other.em15 &&
+            self.text20 == other.text20 &&
+            self.text21 == other.text21 &&
+            self.broadcastTextId2 == other.broadcastTextId2 &&
+            self.lang2 == other.lang2 &&
+            self.probability2 == other.probability2 &&
+            self.em20 == other.em20 &&
+            self.em21 == other.em21 &&
+            self.em22 == other.em22 &&
+            self.em23 == other.em23 &&
+            self.em24 == other.em24 &&
+            self.em25 == other.em25 &&
+            self.text30 == other.text30 &&
+            self.text31 == other.text31 &&
+            self.broadcastTextId3 == other.broadcastTextId3 &&
+            self.lang3 == other.lang3 &&
+            self.probability3 == other.probability3 &&
+            self.em30 == other.em30 &&
+            self.em31 == other.em31 &&
+            self.em32 == other.em32 &&
+            self.em33 == other.em33 &&
+            self.em34 == other.em34 &&
+            self.em35 == other.em35 &&
+            self.text40 == other.text40 &&
+            self.text41 == other.text41 &&
+            self.broadcastTextId4 == other.broadcastTextId4 &&
+            self.lang4 == other.lang4 &&
+            self.probability4 == other.probability4 &&
+            self.em40 == other.em40 &&
+            self.em41 == other.em41 &&
+            self.em42 == other.em42 &&
+            self.em43 == other.em43 &&
+            self.em44 == other.em44 &&
+            self.em45 == other.em45 &&
+            self.text50 == other.text50 &&
+            self.text51 == other.text51 &&
+            self.broadcastTextId5 == other.broadcastTextId5 &&
+            self.lang5 == other.lang5 &&
+            self.probability5 == other.probability5 &&
+            self.em50 == other.em50 &&
+            self.em51 == other.em51 &&
+            self.em52 == other.em52 &&
+            self.em53 == other.em53 &&
+            self.em54 == other.em54 &&
+            self.em55 == other.em55 &&
+            self.text60 == other.text60 &&
+            self.text61 == other.text61 &&
+            self.broadcastTextId6 == other.broadcastTextId6 &&
+            self.lang6 == other.lang6 &&
+            self.probability6 == other.probability6 &&
+            self.em60 == other.em60 &&
+            self.em61 == other.em61 &&
+            self.em62 == other.em62 &&
+            self.em63 == other.em63 &&
+            self.em64 == other.em64 &&
+            self.em65 == other.em65 &&
+            self.text70 == other.text70 &&
+            self.text71 == other.text71 &&
+            self.broadcastTextId7 == other.broadcastTextId7 &&
+            self.lang7 == other.lang7 &&
+            self.probability7 == other.probability7 &&
+            self.em70 == other.em70 &&
+            self.em71 == other.em71 &&
+            self.em72 == other.em72 &&
+            self.em73 == other.em73 &&
+            self.em74 == other.em74 &&
+            self.em75 == other.em75 &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   NpcTextEntity copyWith({
@@ -382,202 +522,6 @@ mixin _NpcTextEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as NpcTextEntity;
-    return identical(self, other) ||
-        other is NpcTextEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.text00 == other.text00 &&
-            self.text01 == other.text01 &&
-            self.broadcastTextId0 == other.broadcastTextId0 &&
-            self.lang0 == other.lang0 &&
-            self.probability0 == other.probability0 &&
-            self.em00 == other.em00 &&
-            self.em01 == other.em01 &&
-            self.em02 == other.em02 &&
-            self.em03 == other.em03 &&
-            self.em04 == other.em04 &&
-            self.em05 == other.em05 &&
-            self.text10 == other.text10 &&
-            self.text11 == other.text11 &&
-            self.broadcastTextId1 == other.broadcastTextId1 &&
-            self.lang1 == other.lang1 &&
-            self.probability1 == other.probability1 &&
-            self.em10 == other.em10 &&
-            self.em11 == other.em11 &&
-            self.em12 == other.em12 &&
-            self.em13 == other.em13 &&
-            self.em14 == other.em14 &&
-            self.em15 == other.em15 &&
-            self.text20 == other.text20 &&
-            self.text21 == other.text21 &&
-            self.broadcastTextId2 == other.broadcastTextId2 &&
-            self.lang2 == other.lang2 &&
-            self.probability2 == other.probability2 &&
-            self.em20 == other.em20 &&
-            self.em21 == other.em21 &&
-            self.em22 == other.em22 &&
-            self.em23 == other.em23 &&
-            self.em24 == other.em24 &&
-            self.em25 == other.em25 &&
-            self.text30 == other.text30 &&
-            self.text31 == other.text31 &&
-            self.broadcastTextId3 == other.broadcastTextId3 &&
-            self.lang3 == other.lang3 &&
-            self.probability3 == other.probability3 &&
-            self.em30 == other.em30 &&
-            self.em31 == other.em31 &&
-            self.em32 == other.em32 &&
-            self.em33 == other.em33 &&
-            self.em34 == other.em34 &&
-            self.em35 == other.em35 &&
-            self.text40 == other.text40 &&
-            self.text41 == other.text41 &&
-            self.broadcastTextId4 == other.broadcastTextId4 &&
-            self.lang4 == other.lang4 &&
-            self.probability4 == other.probability4 &&
-            self.em40 == other.em40 &&
-            self.em41 == other.em41 &&
-            self.em42 == other.em42 &&
-            self.em43 == other.em43 &&
-            self.em44 == other.em44 &&
-            self.em45 == other.em45 &&
-            self.text50 == other.text50 &&
-            self.text51 == other.text51 &&
-            self.broadcastTextId5 == other.broadcastTextId5 &&
-            self.lang5 == other.lang5 &&
-            self.probability5 == other.probability5 &&
-            self.em50 == other.em50 &&
-            self.em51 == other.em51 &&
-            self.em52 == other.em52 &&
-            self.em53 == other.em53 &&
-            self.em54 == other.em54 &&
-            self.em55 == other.em55 &&
-            self.text60 == other.text60 &&
-            self.text61 == other.text61 &&
-            self.broadcastTextId6 == other.broadcastTextId6 &&
-            self.lang6 == other.lang6 &&
-            self.probability6 == other.probability6 &&
-            self.em60 == other.em60 &&
-            self.em61 == other.em61 &&
-            self.em62 == other.em62 &&
-            self.em63 == other.em63 &&
-            self.em64 == other.em64 &&
-            self.em65 == other.em65 &&
-            self.text70 == other.text70 &&
-            self.text71 == other.text71 &&
-            self.broadcastTextId7 == other.broadcastTextId7 &&
-            self.lang7 == other.lang7 &&
-            self.probability7 == other.probability7 &&
-            self.em70 == other.em70 &&
-            self.em71 == other.em71 &&
-            self.em72 == other.em72 &&
-            self.em73 == other.em73 &&
-            self.em74 == other.em74 &&
-            self.em75 == other.em75 &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as NpcTextEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.text00,
-      self.text01,
-      self.broadcastTextId0,
-      self.lang0,
-      self.probability0,
-      self.em00,
-      self.em01,
-      self.em02,
-      self.em03,
-      self.em04,
-      self.em05,
-      self.text10,
-      self.text11,
-      self.broadcastTextId1,
-      self.lang1,
-      self.probability1,
-      self.em10,
-      self.em11,
-      self.em12,
-      self.em13,
-      self.em14,
-      self.em15,
-      self.text20,
-      self.text21,
-      self.broadcastTextId2,
-      self.lang2,
-      self.probability2,
-      self.em20,
-      self.em21,
-      self.em22,
-      self.em23,
-      self.em24,
-      self.em25,
-      self.text30,
-      self.text31,
-      self.broadcastTextId3,
-      self.lang3,
-      self.probability3,
-      self.em30,
-      self.em31,
-      self.em32,
-      self.em33,
-      self.em34,
-      self.em35,
-      self.text40,
-      self.text41,
-      self.broadcastTextId4,
-      self.lang4,
-      self.probability4,
-      self.em40,
-      self.em41,
-      self.em42,
-      self.em43,
-      self.em44,
-      self.em45,
-      self.text50,
-      self.text51,
-      self.broadcastTextId5,
-      self.lang5,
-      self.probability5,
-      self.em50,
-      self.em51,
-      self.em52,
-      self.em53,
-      self.em54,
-      self.em55,
-      self.text60,
-      self.text61,
-      self.broadcastTextId6,
-      self.lang6,
-      self.probability6,
-      self.em60,
-      self.em61,
-      self.em62,
-      self.em63,
-      self.em64,
-      self.em65,
-      self.text70,
-      self.text71,
-      self.broadcastTextId7,
-      self.lang7,
-      self.probability7,
-      self.em70,
-      self.em71,
-      self.em72,
-      self.em73,
-      self.em74,
-      self.em75,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as NpcTextEntity;
     return 'NpcTextEntity('
@@ -673,43 +617,99 @@ mixin _NpcTextEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class BriefNpcTextEntity {
-  final int id;
-  final String text0;
-  final String text1;
-
-  const BriefNpcTextEntity({this.id = 0, this.text0 = '', this.text1 = ''});
-
-  factory BriefNpcTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefNpcTextEntity(
+  static NpcTextEntity fromJson(Map<String, dynamic> json) {
+    return NpcTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      text0: json['text0']?.toString() ?? '',
-      text1: json['text1']?.toString() ?? '',
+      text00: json['text0_0']?.toString() ?? '',
+      text01: json['text0_1']?.toString() ?? '',
+      broadcastTextId0: (json['BroadcastTextID0'] as num?)?.toInt() ?? 0,
+      lang0: (json['lang0'] as num?)?.toInt() ?? 0,
+      probability0: (json['Probability0'] as num?)?.toDouble() ?? 0.0,
+      em00: (json['em0_0'] as num?)?.toInt() ?? 0,
+      em01: (json['em0_1'] as num?)?.toInt() ?? 0,
+      em02: (json['em0_2'] as num?)?.toInt() ?? 0,
+      em03: (json['em0_3'] as num?)?.toInt() ?? 0,
+      em04: (json['em0_4'] as num?)?.toInt() ?? 0,
+      em05: (json['em0_5'] as num?)?.toInt() ?? 0,
+      text10: json['text1_0']?.toString() ?? '',
+      text11: json['text1_1']?.toString() ?? '',
+      broadcastTextId1: (json['BroadcastTextID1'] as num?)?.toInt() ?? 0,
+      lang1: (json['lang1'] as num?)?.toInt() ?? 0,
+      probability1: (json['Probability1'] as num?)?.toDouble() ?? 0.0,
+      em10: (json['em1_0'] as num?)?.toInt() ?? 0,
+      em11: (json['em1_1'] as num?)?.toInt() ?? 0,
+      em12: (json['em1_2'] as num?)?.toInt() ?? 0,
+      em13: (json['em1_3'] as num?)?.toInt() ?? 0,
+      em14: (json['em1_4'] as num?)?.toInt() ?? 0,
+      em15: (json['em1_5'] as num?)?.toInt() ?? 0,
+      text20: json['text2_0']?.toString() ?? '',
+      text21: json['text2_1']?.toString() ?? '',
+      broadcastTextId2: (json['BroadcastTextID2'] as num?)?.toInt() ?? 0,
+      lang2: (json['lang2'] as num?)?.toInt() ?? 0,
+      probability2: (json['Probability2'] as num?)?.toDouble() ?? 0.0,
+      em20: (json['em2_0'] as num?)?.toInt() ?? 0,
+      em21: (json['em2_1'] as num?)?.toInt() ?? 0,
+      em22: (json['em2_2'] as num?)?.toInt() ?? 0,
+      em23: (json['em2_3'] as num?)?.toInt() ?? 0,
+      em24: (json['em2_4'] as num?)?.toInt() ?? 0,
+      em25: (json['em2_5'] as num?)?.toInt() ?? 0,
+      text30: json['text3_0']?.toString() ?? '',
+      text31: json['text3_1']?.toString() ?? '',
+      broadcastTextId3: (json['BroadcastTextID3'] as num?)?.toInt() ?? 0,
+      lang3: (json['lang3'] as num?)?.toInt() ?? 0,
+      probability3: (json['Probability3'] as num?)?.toDouble() ?? 0.0,
+      em30: (json['em3_0'] as num?)?.toInt() ?? 0,
+      em31: (json['em3_1'] as num?)?.toInt() ?? 0,
+      em32: (json['em3_2'] as num?)?.toInt() ?? 0,
+      em33: (json['em3_3'] as num?)?.toInt() ?? 0,
+      em34: (json['em3_4'] as num?)?.toInt() ?? 0,
+      em35: (json['em3_5'] as num?)?.toInt() ?? 0,
+      text40: json['text4_0']?.toString() ?? '',
+      text41: json['text4_1']?.toString() ?? '',
+      broadcastTextId4: (json['BroadcastTextID4'] as num?)?.toInt() ?? 0,
+      lang4: (json['lang4'] as num?)?.toInt() ?? 0,
+      probability4: (json['Probability4'] as num?)?.toDouble() ?? 0.0,
+      em40: (json['em4_0'] as num?)?.toInt() ?? 0,
+      em41: (json['em4_1'] as num?)?.toInt() ?? 0,
+      em42: (json['em4_2'] as num?)?.toInt() ?? 0,
+      em43: (json['em4_3'] as num?)?.toInt() ?? 0,
+      em44: (json['em4_4'] as num?)?.toInt() ?? 0,
+      em45: (json['em4_5'] as num?)?.toInt() ?? 0,
+      text50: json['text5_0']?.toString() ?? '',
+      text51: json['text5_1']?.toString() ?? '',
+      broadcastTextId5: (json['BroadcastTextID5'] as num?)?.toInt() ?? 0,
+      lang5: (json['lang5'] as num?)?.toInt() ?? 0,
+      probability5: (json['Probability5'] as num?)?.toDouble() ?? 0.0,
+      em50: (json['em5_0'] as num?)?.toInt() ?? 0,
+      em51: (json['em5_1'] as num?)?.toInt() ?? 0,
+      em52: (json['em5_2'] as num?)?.toInt() ?? 0,
+      em53: (json['em5_3'] as num?)?.toInt() ?? 0,
+      em54: (json['em5_4'] as num?)?.toInt() ?? 0,
+      em55: (json['em5_5'] as num?)?.toInt() ?? 0,
+      text60: json['text6_0']?.toString() ?? '',
+      text61: json['text6_1']?.toString() ?? '',
+      broadcastTextId6: (json['BroadcastTextID6'] as num?)?.toInt() ?? 0,
+      lang6: (json['lang6'] as num?)?.toInt() ?? 0,
+      probability6: (json['Probability6'] as num?)?.toDouble() ?? 0.0,
+      em60: (json['em6_0'] as num?)?.toInt() ?? 0,
+      em61: (json['em6_1'] as num?)?.toInt() ?? 0,
+      em62: (json['em6_2'] as num?)?.toInt() ?? 0,
+      em63: (json['em6_3'] as num?)?.toInt() ?? 0,
+      em64: (json['em6_4'] as num?)?.toInt() ?? 0,
+      em65: (json['em6_5'] as num?)?.toInt() ?? 0,
+      text70: json['text7_0']?.toString() ?? '',
+      text71: json['text7_1']?.toString() ?? '',
+      broadcastTextId7: (json['BroadcastTextID7'] as num?)?.toInt() ?? 0,
+      lang7: (json['lang7'] as num?)?.toInt() ?? 0,
+      probability7: (json['Probability7'] as num?)?.toDouble() ?? 0.0,
+      em70: (json['em7_0'] as num?)?.toInt() ?? 0,
+      em71: (json['em7_1'] as num?)?.toInt() ?? 0,
+      em72: (json['em7_2'] as num?)?.toInt() ?? 0,
+      em73: (json['em7_3'] as num?)?.toInt() ?? 0,
+      em74: (json['em7_4'] as num?)?.toInt() ?? 0,
+      em75: (json['em7_5'] as num?)?.toInt() ?? 0,
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefNpcTextEntity &&
-            id == other.id &&
-            text0 == other.text0 &&
-            text1 == other.text1;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, text0, text1]);
-
-  @override
-  String toString() {
-    return 'BriefNpcTextEntity('
-        'id: $id, '
-        'text0: $text0, '
-        'text1: $text1'
-        ')';
   }
 }

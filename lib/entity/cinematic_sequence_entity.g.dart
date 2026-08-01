@@ -2,20 +2,84 @@
 
 part of 'cinematic_sequence_entity.dart';
 
-mixin _CinematicSequenceEntityMixin {
-  static CinematicSequenceEntity fromJson(Map<String, dynamic> json) {
-    return CinematicSequenceEntity(
+final class BriefCinematicSequenceEntity {
+  final int id;
+  final int soundId;
+  final int camera0;
+
+  const BriefCinematicSequenceEntity({
+    this.id = 0,
+    this.soundId = 0,
+    this.camera0 = 0,
+  });
+
+  factory BriefCinematicSequenceEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCinematicSequenceEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
       camera0: (json['Camera0'] as num?)?.toInt() ?? 0,
-      camera1: (json['Camera1'] as num?)?.toInt() ?? 0,
-      camera2: (json['Camera2'] as num?)?.toInt() ?? 0,
-      camera3: (json['Camera3'] as num?)?.toInt() ?? 0,
-      camera4: (json['Camera4'] as num?)?.toInt() ?? 0,
-      camera5: (json['Camera5'] as num?)?.toInt() ?? 0,
-      camera6: (json['Camera6'] as num?)?.toInt() ?? 0,
-      camera7: (json['Camera7'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, soundId, camera0]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCinematicSequenceEntity &&
+            id == other.id &&
+            soundId == other.soundId &&
+            camera0 == other.camera0;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCinematicSequenceEntity('
+        'id: $id, '
+        'soundId: $soundId, '
+        'camera0: $camera0'
+        ')';
+  }
+}
+
+mixin _CinematicSequenceEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CinematicSequenceEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.soundId,
+      self.camera0,
+      self.camera1,
+      self.camera2,
+      self.camera3,
+      self.camera4,
+      self.camera5,
+      self.camera6,
+      self.camera7,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CinematicSequenceEntity;
+    return identical(self, other) ||
+        other is CinematicSequenceEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.soundId == other.soundId &&
+            self.camera0 == other.camera0 &&
+            self.camera1 == other.camera1 &&
+            self.camera2 == other.camera2 &&
+            self.camera3 == other.camera3 &&
+            self.camera4 == other.camera4 &&
+            self.camera5 == other.camera5 &&
+            self.camera6 == other.camera6 &&
+            self.camera7 == other.camera7;
   }
 
   CinematicSequenceEntity copyWith({
@@ -62,42 +126,6 @@ mixin _CinematicSequenceEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CinematicSequenceEntity;
-    return identical(self, other) ||
-        other is CinematicSequenceEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.soundId == other.soundId &&
-            self.camera0 == other.camera0 &&
-            self.camera1 == other.camera1 &&
-            self.camera2 == other.camera2 &&
-            self.camera3 == other.camera3 &&
-            self.camera4 == other.camera4 &&
-            self.camera5 == other.camera5 &&
-            self.camera6 == other.camera6 &&
-            self.camera7 == other.camera7;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CinematicSequenceEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.soundId,
-      self.camera0,
-      self.camera1,
-      self.camera2,
-      self.camera3,
-      self.camera4,
-      self.camera5,
-      self.camera6,
-      self.camera7,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CinematicSequenceEntity;
     return 'CinematicSequenceEntity('
@@ -113,47 +141,19 @@ mixin _CinematicSequenceEntityMixin {
         'camera7: ${self.camera7}'
         ')';
   }
-}
 
-final class BriefCinematicSequenceEntity {
-  final int id;
-  final int soundId;
-  final int camera0;
-
-  const BriefCinematicSequenceEntity({
-    this.id = 0,
-    this.soundId = 0,
-    this.camera0 = 0,
-  });
-
-  factory BriefCinematicSequenceEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCinematicSequenceEntity(
+  static CinematicSequenceEntity fromJson(Map<String, dynamic> json) {
+    return CinematicSequenceEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
       camera0: (json['Camera0'] as num?)?.toInt() ?? 0,
+      camera1: (json['Camera1'] as num?)?.toInt() ?? 0,
+      camera2: (json['Camera2'] as num?)?.toInt() ?? 0,
+      camera3: (json['Camera3'] as num?)?.toInt() ?? 0,
+      camera4: (json['Camera4'] as num?)?.toInt() ?? 0,
+      camera5: (json['Camera5'] as num?)?.toInt() ?? 0,
+      camera6: (json['Camera6'] as num?)?.toInt() ?? 0,
+      camera7: (json['Camera7'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCinematicSequenceEntity &&
-            id == other.id &&
-            soundId == other.soundId &&
-            camera0 == other.camera0;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, soundId, camera0]);
-
-  @override
-  String toString() {
-    return 'BriefCinematicSequenceEntity('
-        'id: $id, '
-        'soundId: $soundId, '
-        'camera0: $camera0'
-        ')';
   }
 }

@@ -6,12 +6,7 @@ mixin _SpellCustomAttrSingleEditorViewModelMixin on FieldControllerMixin {
   late final spellIdController = registerController(IntFieldController());
   late final attributesController = registerController(FlagFieldController());
 
-  SpellCustomAttrEntity _collectCandidate() {
-    return SpellCustomAttrEntity(
-      spellId: spellIdController.collect(),
-      attributes: attributesController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellCustomAttrEntity spellCustomAttr) {}
 
   void _applyCandidate(SpellCustomAttrEntity spellCustomAttr) {
     spellIdController.init(spellCustomAttr.spellId);
@@ -19,5 +14,10 @@ mixin _SpellCustomAttrSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellCustomAttr);
   }
 
-  void _afterApplyCandidate(SpellCustomAttrEntity spellCustomAttr) {}
+  SpellCustomAttrEntity _collectCandidate() {
+    return SpellCustomAttrEntity(
+      spellId: spellIdController.collect(),
+      attributes: attributesController.collect(),
+    );
+  }
 }

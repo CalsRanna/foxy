@@ -14,15 +14,7 @@ mixin _PlayerCreateInfoItemCollectionEditorViewModelMixin
   late final amountController = registerController(IntFieldController());
   late final noteController = registerController(StringFieldController());
 
-  PlayerCreateInfoItemEntity _collectCandidate() {
-    return PlayerCreateInfoItemEntity(
-      race: raceController.collect(),
-      class_: classController.collect(),
-      itemId: itemIdController.collect(),
-      amount: amountController.collect(),
-      note: noteController.collect(),
-    );
-  }
+  void _afterApplyCandidate(PlayerCreateInfoItemEntity playerCreateInfoItem) {}
 
   void _applyCandidate(PlayerCreateInfoItemEntity playerCreateInfoItem) {
     raceController.init(playerCreateInfoItem.race);
@@ -33,5 +25,13 @@ mixin _PlayerCreateInfoItemCollectionEditorViewModelMixin
     _afterApplyCandidate(playerCreateInfoItem);
   }
 
-  void _afterApplyCandidate(PlayerCreateInfoItemEntity playerCreateInfoItem) {}
+  PlayerCreateInfoItemEntity _collectCandidate() {
+    return PlayerCreateInfoItemEntity(
+      race: raceController.collect(),
+      class_: classController.collect(),
+      itemId: itemIdController.collect(),
+      amount: amountController.collect(),
+      note: noteController.collect(),
+    );
+  }
 }

@@ -2,19 +2,122 @@
 
 part of 'creature_spell_data_entity.dart';
 
-mixin _CreatureSpellDataEntityMixin {
-  static CreatureSpellDataEntity fromJson(Map<String, dynamic> json) {
-    return CreatureSpellDataEntity(
+final class BriefCreatureSpellDataEntity {
+  final int id;
+  final int spells0;
+  final int spells1;
+  final int spells2;
+  final int spells3;
+  final String spellName1;
+  final String spellName2;
+  final String spellName3;
+  final String spellName4;
+
+  const BriefCreatureSpellDataEntity({
+    this.id = 0,
+    this.spells0 = 0,
+    this.spells1 = 0,
+    this.spells2 = 0,
+    this.spells3 = 0,
+    this.spellName1 = '',
+    this.spellName2 = '',
+    this.spellName3 = '',
+    this.spellName4 = '',
+  });
+
+  factory BriefCreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureSpellDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       spells0: (json['Spells0'] as num?)?.toInt() ?? 0,
       spells1: (json['Spells1'] as num?)?.toInt() ?? 0,
       spells2: (json['Spells2'] as num?)?.toInt() ?? 0,
       spells3: (json['Spells3'] as num?)?.toInt() ?? 0,
-      availability0: (json['Availability0'] as num?)?.toInt() ?? 0,
-      availability1: (json['Availability1'] as num?)?.toInt() ?? 0,
-      availability2: (json['Availability2'] as num?)?.toInt() ?? 0,
-      availability3: (json['Availability3'] as num?)?.toInt() ?? 0,
+      spellName1: json['spellName1']?.toString() ?? '',
+      spellName2: json['spellName2']?.toString() ?? '',
+      spellName3: json['spellName3']?.toString() ?? '',
+      spellName4: json['spellName4']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    spells0,
+    spells1,
+    spells2,
+    spells3,
+    spellName1,
+    spellName2,
+    spellName3,
+    spellName4,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureSpellDataEntity &&
+            id == other.id &&
+            spells0 == other.spells0 &&
+            spells1 == other.spells1 &&
+            spells2 == other.spells2 &&
+            spells3 == other.spells3 &&
+            spellName1 == other.spellName1 &&
+            spellName2 == other.spellName2 &&
+            spellName3 == other.spellName3 &&
+            spellName4 == other.spellName4;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureSpellDataEntity('
+        'id: $id, '
+        'spells0: $spells0, '
+        'spells1: $spells1, '
+        'spells2: $spells2, '
+        'spells3: $spells3, '
+        'spellName1: $spellName1, '
+        'spellName2: $spellName2, '
+        'spellName3: $spellName3, '
+        'spellName4: $spellName4'
+        ')';
+  }
+}
+
+mixin _CreatureSpellDataEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureSpellDataEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.spells0,
+      self.spells1,
+      self.spells2,
+      self.spells3,
+      self.availability0,
+      self.availability1,
+      self.availability2,
+      self.availability3,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureSpellDataEntity;
+    return identical(self, other) ||
+        other is CreatureSpellDataEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.spells0 == other.spells0 &&
+            self.spells1 == other.spells1 &&
+            self.spells2 == other.spells2 &&
+            self.spells3 == other.spells3 &&
+            self.availability0 == other.availability0 &&
+            self.availability1 == other.availability1 &&
+            self.availability2 == other.availability2 &&
+            self.availability3 == other.availability3;
   }
 
   CreatureSpellDataEntity copyWith({
@@ -58,40 +161,6 @@ mixin _CreatureSpellDataEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureSpellDataEntity;
-    return identical(self, other) ||
-        other is CreatureSpellDataEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.spells0 == other.spells0 &&
-            self.spells1 == other.spells1 &&
-            self.spells2 == other.spells2 &&
-            self.spells3 == other.spells3 &&
-            self.availability0 == other.availability0 &&
-            self.availability1 == other.availability1 &&
-            self.availability2 == other.availability2 &&
-            self.availability3 == other.availability3;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureSpellDataEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.spells0,
-      self.spells1,
-      self.spells2,
-      self.spells3,
-      self.availability0,
-      self.availability1,
-      self.availability2,
-      self.availability3,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureSpellDataEntity;
     return 'CreatureSpellDataEntity('
@@ -106,87 +175,18 @@ mixin _CreatureSpellDataEntityMixin {
         'availability3: ${self.availability3}'
         ')';
   }
-}
 
-final class BriefCreatureSpellDataEntity {
-  final int id;
-  final int spells0;
-  final int spells1;
-  final int spells2;
-  final int spells3;
-  final String spellName1;
-  final String spellName2;
-  final String spellName3;
-  final String spellName4;
-
-  const BriefCreatureSpellDataEntity({
-    this.id = 0,
-    this.spells0 = 0,
-    this.spells1 = 0,
-    this.spells2 = 0,
-    this.spells3 = 0,
-    this.spellName1 = '',
-    this.spellName2 = '',
-    this.spellName3 = '',
-    this.spellName4 = '',
-  });
-
-  factory BriefCreatureSpellDataEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureSpellDataEntity(
+  static CreatureSpellDataEntity fromJson(Map<String, dynamic> json) {
+    return CreatureSpellDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       spells0: (json['Spells0'] as num?)?.toInt() ?? 0,
       spells1: (json['Spells1'] as num?)?.toInt() ?? 0,
       spells2: (json['Spells2'] as num?)?.toInt() ?? 0,
       spells3: (json['Spells3'] as num?)?.toInt() ?? 0,
-      spellName1: json['spellName1']?.toString() ?? '',
-      spellName2: json['spellName2']?.toString() ?? '',
-      spellName3: json['spellName3']?.toString() ?? '',
-      spellName4: json['spellName4']?.toString() ?? '',
+      availability0: (json['Availability0'] as num?)?.toInt() ?? 0,
+      availability1: (json['Availability1'] as num?)?.toInt() ?? 0,
+      availability2: (json['Availability2'] as num?)?.toInt() ?? 0,
+      availability3: (json['Availability3'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureSpellDataEntity &&
-            id == other.id &&
-            spells0 == other.spells0 &&
-            spells1 == other.spells1 &&
-            spells2 == other.spells2 &&
-            spells3 == other.spells3 &&
-            spellName1 == other.spellName1 &&
-            spellName2 == other.spellName2 &&
-            spellName3 == other.spellName3 &&
-            spellName4 == other.spellName4;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    spells0,
-    spells1,
-    spells2,
-    spells3,
-    spellName1,
-    spellName2,
-    spellName3,
-    spellName4,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureSpellDataEntity('
-        'id: $id, '
-        'spells0: $spells0, '
-        'spells1: $spells1, '
-        'spells2: $spells2, '
-        'spells3: $spells3, '
-        'spellName1: $spellName1, '
-        'spellName2: $spellName2, '
-        'spellName3: $spellName3, '
-        'spellName4: $spellName4'
-        ')';
   }
 }

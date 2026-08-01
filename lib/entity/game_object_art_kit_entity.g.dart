@@ -2,18 +2,80 @@
 
 part of 'game_object_art_kit_entity.dart';
 
-mixin _GameObjectArtKitEntityMixin {
-  static GameObjectArtKitEntity fromJson(Map<String, dynamic> json) {
-    return GameObjectArtKitEntity(
+final class BriefGameObjectArtKitEntity {
+  final int id;
+  final String textureVariation0;
+  final String attachModel0;
+
+  const BriefGameObjectArtKitEntity({
+    this.id = 0,
+    this.textureVariation0 = '',
+    this.attachModel0 = '',
+  });
+
+  factory BriefGameObjectArtKitEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectArtKitEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       textureVariation0: json['TextureVariation0']?.toString() ?? '',
-      textureVariation1: json['TextureVariation1']?.toString() ?? '',
-      textureVariation2: json['TextureVariation2']?.toString() ?? '',
       attachModel0: json['AttachModel0']?.toString() ?? '',
-      attachModel1: json['AttachModel1']?.toString() ?? '',
-      attachModel2: json['AttachModel2']?.toString() ?? '',
-      attachModel3: json['AttachModel3']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, textureVariation0, attachModel0]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectArtKitEntity &&
+            id == other.id &&
+            textureVariation0 == other.textureVariation0 &&
+            attachModel0 == other.attachModel0;
+  }
+
+  @override
+  String toString() {
+    return 'BriefGameObjectArtKitEntity('
+        'id: $id, '
+        'textureVariation0: $textureVariation0, '
+        'attachModel0: $attachModel0'
+        ')';
+  }
+}
+
+mixin _GameObjectArtKitEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GameObjectArtKitEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.textureVariation0,
+      self.textureVariation1,
+      self.textureVariation2,
+      self.attachModel0,
+      self.attachModel1,
+      self.attachModel2,
+      self.attachModel3,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GameObjectArtKitEntity;
+    return identical(self, other) ||
+        other is GameObjectArtKitEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.textureVariation0 == other.textureVariation0 &&
+            self.textureVariation1 == other.textureVariation1 &&
+            self.textureVariation2 == other.textureVariation2 &&
+            self.attachModel0 == other.attachModel0 &&
+            self.attachModel1 == other.attachModel1 &&
+            self.attachModel2 == other.attachModel2 &&
+            self.attachModel3 == other.attachModel3;
   }
 
   GameObjectArtKitEntity copyWith({
@@ -54,38 +116,6 @@ mixin _GameObjectArtKitEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as GameObjectArtKitEntity;
-    return identical(self, other) ||
-        other is GameObjectArtKitEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.textureVariation0 == other.textureVariation0 &&
-            self.textureVariation1 == other.textureVariation1 &&
-            self.textureVariation2 == other.textureVariation2 &&
-            self.attachModel0 == other.attachModel0 &&
-            self.attachModel1 == other.attachModel1 &&
-            self.attachModel2 == other.attachModel2 &&
-            self.attachModel3 == other.attachModel3;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GameObjectArtKitEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.textureVariation0,
-      self.textureVariation1,
-      self.textureVariation2,
-      self.attachModel0,
-      self.attachModel1,
-      self.attachModel2,
-      self.attachModel3,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as GameObjectArtKitEntity;
     return 'GameObjectArtKitEntity('
@@ -99,47 +129,17 @@ mixin _GameObjectArtKitEntityMixin {
         'attachModel3: ${self.attachModel3}'
         ')';
   }
-}
 
-final class BriefGameObjectArtKitEntity {
-  final int id;
-  final String textureVariation0;
-  final String attachModel0;
-
-  const BriefGameObjectArtKitEntity({
-    this.id = 0,
-    this.textureVariation0 = '',
-    this.attachModel0 = '',
-  });
-
-  factory BriefGameObjectArtKitEntity.fromJson(Map<String, dynamic> json) {
-    return BriefGameObjectArtKitEntity(
+  static GameObjectArtKitEntity fromJson(Map<String, dynamic> json) {
+    return GameObjectArtKitEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       textureVariation0: json['TextureVariation0']?.toString() ?? '',
+      textureVariation1: json['TextureVariation1']?.toString() ?? '',
+      textureVariation2: json['TextureVariation2']?.toString() ?? '',
       attachModel0: json['AttachModel0']?.toString() ?? '',
+      attachModel1: json['AttachModel1']?.toString() ?? '',
+      attachModel2: json['AttachModel2']?.toString() ?? '',
+      attachModel3: json['AttachModel3']?.toString() ?? '',
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefGameObjectArtKitEntity &&
-            id == other.id &&
-            textureVariation0 == other.textureVariation0 &&
-            attachModel0 == other.attachModel0;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, textureVariation0, attachModel0]);
-
-  @override
-  String toString() {
-    return 'BriefGameObjectArtKitEntity('
-        'id: $id, '
-        'textureVariation0: $textureVariation0, '
-        'attachModel0: $attachModel0'
-        ')';
   }
 }

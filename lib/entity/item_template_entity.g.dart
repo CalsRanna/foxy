@@ -2,159 +2,386 @@
 
 part of 'item_template_entity.dart';
 
-mixin _ItemTemplateEntityMixin {
-  static ItemTemplateEntity fromJson(Map<String, dynamic> json) {
-    return ItemTemplateEntity(
+final class BriefItemTemplateEntity {
+  final int entry;
+  final String name;
+  final int quality;
+  final int subclass;
+  final int inventoryType;
+  final int itemLevel;
+  final int requiredLevel;
+  final String localeName;
+  final int classId;
+  final String inventoryIcon;
+
+  const BriefItemTemplateEntity({
+    this.entry = 0,
+    this.name = '',
+    this.quality = 0,
+    this.subclass = 0,
+    this.inventoryType = 0,
+    this.itemLevel = 0,
+    this.requiredLevel = 0,
+    this.localeName = '',
+    this.classId = 0,
+    this.inventoryIcon = '',
+  });
+
+  factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
-      description: json['description']?.toString() ?? '',
       quality: (json['Quality'] as num?)?.toInt() ?? 0,
-      className: (json['class'] as num?)?.toInt() ?? 0,
       subclass: (json['subclass'] as num?)?.toInt() ?? 0,
-      soundOverrideSubclass:
-          (json['SoundOverrideSubclass'] as num?)?.toInt() ?? -1,
-      material: (json['Material'] as num?)?.toInt() ?? 0,
-      displayId: (json['displayid'] as num?)?.toInt() ?? 0,
       inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
-      sheath: (json['sheath'] as num?)?.toInt() ?? 0,
-      bonding: (json['bonding'] as num?)?.toInt() ?? 0,
-      itemset: (json['itemset'] as num?)?.toInt() ?? 0,
-      randomProperty: (json['RandomProperty'] as num?)?.toInt() ?? 0,
-      randomSuffix: (json['RandomSuffix'] as num?)?.toInt() ?? 0,
-      maxDurability: (json['MaxDurability'] as num?)?.toInt() ?? 0,
-      buyPrice: (json['BuyPrice'] as num?)?.toInt() ?? 0,
-      sellPrice: (json['SellPrice'] as num?)?.toInt() ?? 0,
-      buyCount: (json['BuyCount'] as num?)?.toInt() ?? 1,
-      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
-      stackable: (json['stackable'] as num?)?.toInt() ?? 1,
-      totemCategory: (json['TotemCategory'] as num?)?.toInt() ?? 0,
-      foodType: (json['FoodType'] as num?)?.toInt() ?? 0,
-      bagFamily: (json['BagFamily'] as num?)?.toInt() ?? 0,
-      containerSlots: (json['ContainerSlots'] as num?)?.toInt() ?? 0,
-      itemLimitCategory: (json['ItemLimitCategory'] as num?)?.toInt() ?? 0,
-      startquest: (json['startquest'] as num?)?.toInt() ?? 0,
-      duration: (json['duration'] as num?)?.toInt() ?? 0,
-      disenchantId: (json['DisenchantID'] as num?)?.toInt() ?? 0,
-      minMoneyLoot: (json['minMoneyLoot'] as num?)?.toInt() ?? 0,
-      maxMoneyLoot: (json['maxMoneyLoot'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      flagsExtra: (json['FlagsExtra'] as num?)?.toInt() ?? 0,
-      flagsCustom: (json['flagsCustom'] as num?)?.toInt() ?? 0,
-      delay: (json['delay'] as num?)?.toInt() ?? 1000,
-      rangedModRange: (json['RangedModRange'] as num?)?.toDouble() ?? 0.0,
-      armorDamageModifier:
-          (json['ArmorDamageModifier'] as num?)?.toDouble() ?? 0.0,
-      dmgType1: (json['dmg_type1'] as num?)?.toInt() ?? 0,
-      dmgMin1: (json['dmg_min1'] as num?)?.toDouble() ?? 0.0,
-      dmgMax1: (json['dmg_max1'] as num?)?.toDouble() ?? 0.0,
-      dmgType2: (json['dmg_type2'] as num?)?.toInt() ?? 0,
-      dmgMin2: (json['dmg_min2'] as num?)?.toDouble() ?? 0.0,
-      dmgMax2: (json['dmg_max2'] as num?)?.toDouble() ?? 0.0,
-      ammoType: (json['ammo_type'] as num?)?.toInt() ?? 0,
-      armor: (json['armor'] as num?)?.toInt() ?? 0,
-      block: (json['block'] as num?)?.toInt() ?? 0,
-      scalingStatDistribution:
-          (json['ScalingStatDistribution'] as num?)?.toInt() ?? 0,
-      scalingStatValue: (json['ScalingStatValue'] as num?)?.toInt() ?? 0,
-      statType1: (json['stat_type1'] as num?)?.toInt() ?? 0,
-      statValue1: (json['stat_value1'] as num?)?.toInt() ?? 0,
-      statType2: (json['stat_type2'] as num?)?.toInt() ?? 0,
-      statValue2: (json['stat_value2'] as num?)?.toInt() ?? 0,
-      statType3: (json['stat_type3'] as num?)?.toInt() ?? 0,
-      statValue3: (json['stat_value3'] as num?)?.toInt() ?? 0,
-      statType4: (json['stat_type4'] as num?)?.toInt() ?? 0,
-      statValue4: (json['stat_value4'] as num?)?.toInt() ?? 0,
-      statType5: (json['stat_type5'] as num?)?.toInt() ?? 0,
-      statValue5: (json['stat_value5'] as num?)?.toInt() ?? 0,
-      statType6: (json['stat_type6'] as num?)?.toInt() ?? 0,
-      statValue6: (json['stat_value6'] as num?)?.toInt() ?? 0,
-      statType7: (json['stat_type7'] as num?)?.toInt() ?? 0,
-      statValue7: (json['stat_value7'] as num?)?.toInt() ?? 0,
-      statType8: (json['stat_type8'] as num?)?.toInt() ?? 0,
-      statValue8: (json['stat_value8'] as num?)?.toInt() ?? 0,
-      statType9: (json['stat_type9'] as num?)?.toInt() ?? 0,
-      statValue9: (json['stat_value9'] as num?)?.toInt() ?? 0,
-      statType10: (json['stat_type10'] as num?)?.toInt() ?? 0,
-      statValue10: (json['stat_value10'] as num?)?.toInt() ?? 0,
-      holyRes: (json['holy_res'] as num?)?.toInt() ?? 0,
-      fireRes: (json['fire_res'] as num?)?.toInt() ?? 0,
-      natureRes: (json['nature_res'] as num?)?.toInt() ?? 0,
-      shadowRes: (json['shadow_res'] as num?)?.toInt() ?? 0,
-      frostRes: (json['frost_res'] as num?)?.toInt() ?? 0,
-      arcaneRes: (json['arcane_res'] as num?)?.toInt() ?? 0,
-      spellId1: (json['spellid_1'] as num?)?.toInt() ?? 0,
-      spellTrigger1: (json['spelltrigger_1'] as num?)?.toInt() ?? 0,
-      spellCharges1: (json['spellcharges_1'] as num?)?.toInt() ?? 0,
-      spellPpmRate1: (json['spellppmRate_1'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown1: (json['spellcooldown_1'] as num?)?.toInt() ?? -1,
-      spellCategory1: (json['spellcategory_1'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown1:
-          (json['spellcategorycooldown_1'] as num?)?.toInt() ?? -1,
-      spellId2: (json['spellid_2'] as num?)?.toInt() ?? 0,
-      spellTrigger2: (json['spelltrigger_2'] as num?)?.toInt() ?? 0,
-      spellCharges2: (json['spellcharges_2'] as num?)?.toInt() ?? 0,
-      spellPpmRate2: (json['spellppmRate_2'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown2: (json['spellcooldown_2'] as num?)?.toInt() ?? -1,
-      spellCategory2: (json['spellcategory_2'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown2:
-          (json['spellcategorycooldown_2'] as num?)?.toInt() ?? -1,
-      spellId3: (json['spellid_3'] as num?)?.toInt() ?? 0,
-      spellTrigger3: (json['spelltrigger_3'] as num?)?.toInt() ?? 0,
-      spellCharges3: (json['spellcharges_3'] as num?)?.toInt() ?? 0,
-      spellPpmRate3: (json['spellppmRate_3'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown3: (json['spellcooldown_3'] as num?)?.toInt() ?? -1,
-      spellCategory3: (json['spellcategory_3'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown3:
-          (json['spellcategorycooldown_3'] as num?)?.toInt() ?? -1,
-      spellId4: (json['spellid_4'] as num?)?.toInt() ?? 0,
-      spellTrigger4: (json['spelltrigger_4'] as num?)?.toInt() ?? 0,
-      spellCharges4: (json['spellcharges_4'] as num?)?.toInt() ?? 0,
-      spellPpmRate4: (json['spellppmRate_4'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown4: (json['spellcooldown_4'] as num?)?.toInt() ?? -1,
-      spellCategory4: (json['spellcategory_4'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown4:
-          (json['spellcategorycooldown_4'] as num?)?.toInt() ?? -1,
-      spellId5: (json['spellid_5'] as num?)?.toInt() ?? 0,
-      spellTrigger5: (json['spelltrigger_5'] as num?)?.toInt() ?? 0,
-      spellCharges5: (json['spellcharges_5'] as num?)?.toInt() ?? 0,
-      spellPpmRate5: (json['spellppmRate_5'] as num?)?.toDouble() ?? 0.0,
-      spellCooldown5: (json['spellcooldown_5'] as num?)?.toInt() ?? -1,
-      spellCategory5: (json['spellcategory_5'] as num?)?.toInt() ?? 0,
-      spellCategoryCooldown5:
-          (json['spellcategorycooldown_5'] as num?)?.toInt() ?? -1,
-      allowableClass: (json['AllowableClass'] as num?)?.toInt() ?? -1,
-      allowableRace: (json['AllowableRace'] as num?)?.toInt() ?? -1,
       itemLevel: (json['ItemLevel'] as num?)?.toInt() ?? 0,
       requiredLevel: (json['RequiredLevel'] as num?)?.toInt() ?? 0,
-      requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
-      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
-      requiredSpell: (json['requiredspell'] as num?)?.toInt() ?? 0,
-      requiredHonorRank: (json['requiredhonorrank'] as num?)?.toInt() ?? 0,
-      requiredCityRank: (json['RequiredCityRank'] as num?)?.toInt() ?? 0,
-      requiredReputationFaction:
-          (json['RequiredReputationFaction'] as num?)?.toInt() ?? 0,
-      requiredReputationRank:
-          (json['RequiredReputationRank'] as num?)?.toInt() ?? 0,
-      requiredDisenchantSkill:
-          (json['RequiredDisenchantSkill'] as num?)?.toInt() ?? -1,
-      mapId: (json['Map'] as num?)?.toInt() ?? 0,
-      area: (json['area'] as num?)?.toInt() ?? 0,
-      holidayId: (json['HolidayId'] as num?)?.toInt() ?? 0,
-      lockid: (json['lockid'] as num?)?.toInt() ?? 0,
-      gemProperties: (json['GemProperties'] as num?)?.toInt() ?? 0,
-      socketBonus: (json['socketBonus'] as num?)?.toInt() ?? 0,
-      socketColor1: (json['socketColor_1'] as num?)?.toInt() ?? 0,
-      socketContent1: (json['socketContent_1'] as num?)?.toInt() ?? 0,
-      socketColor2: (json['socketColor_2'] as num?)?.toInt() ?? 0,
-      socketContent2: (json['socketContent_2'] as num?)?.toInt() ?? 0,
-      socketColor3: (json['socketColor_3'] as num?)?.toInt() ?? 0,
-      socketContent3: (json['socketContent_3'] as num?)?.toInt() ?? 0,
-      pageText: (json['PageText'] as num?)?.toInt() ?? 0,
-      pageMaterial: (json['PageMaterial'] as num?)?.toInt() ?? 0,
-      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
-      scriptName: json['ScriptName']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      localeName: json['localeName']?.toString() ?? '',
+      classId: (json['classId'] as num?)?.toInt() ?? 0,
+      inventoryIcon: json['inventoryIcon']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    name,
+    quality,
+    subclass,
+    inventoryType,
+    itemLevel,
+    requiredLevel,
+    localeName,
+    classId,
+    inventoryIcon,
+  ]);
+
+  int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemTemplateEntity &&
+            entry == other.entry &&
+            name == other.name &&
+            quality == other.quality &&
+            subclass == other.subclass &&
+            inventoryType == other.inventoryType &&
+            itemLevel == other.itemLevel &&
+            requiredLevel == other.requiredLevel &&
+            localeName == other.localeName &&
+            classId == other.classId &&
+            inventoryIcon == other.inventoryIcon;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemTemplateEntity('
+        'entry: $entry, '
+        'name: $name, '
+        'quality: $quality, '
+        'subclass: $subclass, '
+        'inventoryType: $inventoryType, '
+        'itemLevel: $itemLevel, '
+        'requiredLevel: $requiredLevel, '
+        'localeName: $localeName, '
+        'classId: $classId, '
+        'inventoryIcon: $inventoryIcon'
+        ')';
+  }
+}
+
+mixin _ItemTemplateEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemTemplateEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.entry,
+      self.name,
+      self.description,
+      self.quality,
+      self.className,
+      self.subclass,
+      self.soundOverrideSubclass,
+      self.material,
+      self.displayId,
+      self.inventoryType,
+      self.sheath,
+      self.bonding,
+      self.itemset,
+      self.randomProperty,
+      self.randomSuffix,
+      self.maxDurability,
+      self.buyPrice,
+      self.sellPrice,
+      self.buyCount,
+      self.maxcount,
+      self.stackable,
+      self.totemCategory,
+      self.foodType,
+      self.bagFamily,
+      self.containerSlots,
+      self.itemLimitCategory,
+      self.startquest,
+      self.duration,
+      self.disenchantId,
+      self.minMoneyLoot,
+      self.maxMoneyLoot,
+      self.flags,
+      self.flagsExtra,
+      self.flagsCustom,
+      self.delay,
+      self.rangedModRange,
+      self.armorDamageModifier,
+      self.dmgType1,
+      self.dmgMin1,
+      self.dmgMax1,
+      self.dmgType2,
+      self.dmgMin2,
+      self.dmgMax2,
+      self.ammoType,
+      self.armor,
+      self.block,
+      self.scalingStatDistribution,
+      self.scalingStatValue,
+      self.statType1,
+      self.statValue1,
+      self.statType2,
+      self.statValue2,
+      self.statType3,
+      self.statValue3,
+      self.statType4,
+      self.statValue4,
+      self.statType5,
+      self.statValue5,
+      self.statType6,
+      self.statValue6,
+      self.statType7,
+      self.statValue7,
+      self.statType8,
+      self.statValue8,
+      self.statType9,
+      self.statValue9,
+      self.statType10,
+      self.statValue10,
+      self.holyRes,
+      self.fireRes,
+      self.natureRes,
+      self.shadowRes,
+      self.frostRes,
+      self.arcaneRes,
+      self.spellId1,
+      self.spellTrigger1,
+      self.spellCharges1,
+      self.spellPpmRate1,
+      self.spellCooldown1,
+      self.spellCategory1,
+      self.spellCategoryCooldown1,
+      self.spellId2,
+      self.spellTrigger2,
+      self.spellCharges2,
+      self.spellPpmRate2,
+      self.spellCooldown2,
+      self.spellCategory2,
+      self.spellCategoryCooldown2,
+      self.spellId3,
+      self.spellTrigger3,
+      self.spellCharges3,
+      self.spellPpmRate3,
+      self.spellCooldown3,
+      self.spellCategory3,
+      self.spellCategoryCooldown3,
+      self.spellId4,
+      self.spellTrigger4,
+      self.spellCharges4,
+      self.spellPpmRate4,
+      self.spellCooldown4,
+      self.spellCategory4,
+      self.spellCategoryCooldown4,
+      self.spellId5,
+      self.spellTrigger5,
+      self.spellCharges5,
+      self.spellPpmRate5,
+      self.spellCooldown5,
+      self.spellCategory5,
+      self.spellCategoryCooldown5,
+      self.allowableClass,
+      self.allowableRace,
+      self.itemLevel,
+      self.requiredLevel,
+      self.requiredSkill,
+      self.requiredSkillRank,
+      self.requiredSpell,
+      self.requiredHonorRank,
+      self.requiredCityRank,
+      self.requiredReputationFaction,
+      self.requiredReputationRank,
+      self.requiredDisenchantSkill,
+      self.mapId,
+      self.area,
+      self.holidayId,
+      self.lockid,
+      self.gemProperties,
+      self.socketBonus,
+      self.socketColor1,
+      self.socketContent1,
+      self.socketColor2,
+      self.socketContent2,
+      self.socketColor3,
+      self.socketContent3,
+      self.pageText,
+      self.pageMaterial,
+      self.languageId,
+      self.scriptName,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemTemplateEntity;
+    return identical(self, other) ||
+        other is ItemTemplateEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.name == other.name &&
+            self.description == other.description &&
+            self.quality == other.quality &&
+            self.className == other.className &&
+            self.subclass == other.subclass &&
+            self.soundOverrideSubclass == other.soundOverrideSubclass &&
+            self.material == other.material &&
+            self.displayId == other.displayId &&
+            self.inventoryType == other.inventoryType &&
+            self.sheath == other.sheath &&
+            self.bonding == other.bonding &&
+            self.itemset == other.itemset &&
+            self.randomProperty == other.randomProperty &&
+            self.randomSuffix == other.randomSuffix &&
+            self.maxDurability == other.maxDurability &&
+            self.buyPrice == other.buyPrice &&
+            self.sellPrice == other.sellPrice &&
+            self.buyCount == other.buyCount &&
+            self.maxcount == other.maxcount &&
+            self.stackable == other.stackable &&
+            self.totemCategory == other.totemCategory &&
+            self.foodType == other.foodType &&
+            self.bagFamily == other.bagFamily &&
+            self.containerSlots == other.containerSlots &&
+            self.itemLimitCategory == other.itemLimitCategory &&
+            self.startquest == other.startquest &&
+            self.duration == other.duration &&
+            self.disenchantId == other.disenchantId &&
+            self.minMoneyLoot == other.minMoneyLoot &&
+            self.maxMoneyLoot == other.maxMoneyLoot &&
+            self.flags == other.flags &&
+            self.flagsExtra == other.flagsExtra &&
+            self.flagsCustom == other.flagsCustom &&
+            self.delay == other.delay &&
+            self.rangedModRange == other.rangedModRange &&
+            self.armorDamageModifier == other.armorDamageModifier &&
+            self.dmgType1 == other.dmgType1 &&
+            self.dmgMin1 == other.dmgMin1 &&
+            self.dmgMax1 == other.dmgMax1 &&
+            self.dmgType2 == other.dmgType2 &&
+            self.dmgMin2 == other.dmgMin2 &&
+            self.dmgMax2 == other.dmgMax2 &&
+            self.ammoType == other.ammoType &&
+            self.armor == other.armor &&
+            self.block == other.block &&
+            self.scalingStatDistribution == other.scalingStatDistribution &&
+            self.scalingStatValue == other.scalingStatValue &&
+            self.statType1 == other.statType1 &&
+            self.statValue1 == other.statValue1 &&
+            self.statType2 == other.statType2 &&
+            self.statValue2 == other.statValue2 &&
+            self.statType3 == other.statType3 &&
+            self.statValue3 == other.statValue3 &&
+            self.statType4 == other.statType4 &&
+            self.statValue4 == other.statValue4 &&
+            self.statType5 == other.statType5 &&
+            self.statValue5 == other.statValue5 &&
+            self.statType6 == other.statType6 &&
+            self.statValue6 == other.statValue6 &&
+            self.statType7 == other.statType7 &&
+            self.statValue7 == other.statValue7 &&
+            self.statType8 == other.statType8 &&
+            self.statValue8 == other.statValue8 &&
+            self.statType9 == other.statType9 &&
+            self.statValue9 == other.statValue9 &&
+            self.statType10 == other.statType10 &&
+            self.statValue10 == other.statValue10 &&
+            self.holyRes == other.holyRes &&
+            self.fireRes == other.fireRes &&
+            self.natureRes == other.natureRes &&
+            self.shadowRes == other.shadowRes &&
+            self.frostRes == other.frostRes &&
+            self.arcaneRes == other.arcaneRes &&
+            self.spellId1 == other.spellId1 &&
+            self.spellTrigger1 == other.spellTrigger1 &&
+            self.spellCharges1 == other.spellCharges1 &&
+            self.spellPpmRate1 == other.spellPpmRate1 &&
+            self.spellCooldown1 == other.spellCooldown1 &&
+            self.spellCategory1 == other.spellCategory1 &&
+            self.spellCategoryCooldown1 == other.spellCategoryCooldown1 &&
+            self.spellId2 == other.spellId2 &&
+            self.spellTrigger2 == other.spellTrigger2 &&
+            self.spellCharges2 == other.spellCharges2 &&
+            self.spellPpmRate2 == other.spellPpmRate2 &&
+            self.spellCooldown2 == other.spellCooldown2 &&
+            self.spellCategory2 == other.spellCategory2 &&
+            self.spellCategoryCooldown2 == other.spellCategoryCooldown2 &&
+            self.spellId3 == other.spellId3 &&
+            self.spellTrigger3 == other.spellTrigger3 &&
+            self.spellCharges3 == other.spellCharges3 &&
+            self.spellPpmRate3 == other.spellPpmRate3 &&
+            self.spellCooldown3 == other.spellCooldown3 &&
+            self.spellCategory3 == other.spellCategory3 &&
+            self.spellCategoryCooldown3 == other.spellCategoryCooldown3 &&
+            self.spellId4 == other.spellId4 &&
+            self.spellTrigger4 == other.spellTrigger4 &&
+            self.spellCharges4 == other.spellCharges4 &&
+            self.spellPpmRate4 == other.spellPpmRate4 &&
+            self.spellCooldown4 == other.spellCooldown4 &&
+            self.spellCategory4 == other.spellCategory4 &&
+            self.spellCategoryCooldown4 == other.spellCategoryCooldown4 &&
+            self.spellId5 == other.spellId5 &&
+            self.spellTrigger5 == other.spellTrigger5 &&
+            self.spellCharges5 == other.spellCharges5 &&
+            self.spellPpmRate5 == other.spellPpmRate5 &&
+            self.spellCooldown5 == other.spellCooldown5 &&
+            self.spellCategory5 == other.spellCategory5 &&
+            self.spellCategoryCooldown5 == other.spellCategoryCooldown5 &&
+            self.allowableClass == other.allowableClass &&
+            self.allowableRace == other.allowableRace &&
+            self.itemLevel == other.itemLevel &&
+            self.requiredLevel == other.requiredLevel &&
+            self.requiredSkill == other.requiredSkill &&
+            self.requiredSkillRank == other.requiredSkillRank &&
+            self.requiredSpell == other.requiredSpell &&
+            self.requiredHonorRank == other.requiredHonorRank &&
+            self.requiredCityRank == other.requiredCityRank &&
+            self.requiredReputationFaction == other.requiredReputationFaction &&
+            self.requiredReputationRank == other.requiredReputationRank &&
+            self.requiredDisenchantSkill == other.requiredDisenchantSkill &&
+            self.mapId == other.mapId &&
+            self.area == other.area &&
+            self.holidayId == other.holidayId &&
+            self.lockid == other.lockid &&
+            self.gemProperties == other.gemProperties &&
+            self.socketBonus == other.socketBonus &&
+            self.socketColor1 == other.socketColor1 &&
+            self.socketContent1 == other.socketContent1 &&
+            self.socketColor2 == other.socketColor2 &&
+            self.socketContent2 == other.socketContent2 &&
+            self.socketColor3 == other.socketColor3 &&
+            self.socketContent3 == other.socketContent3 &&
+            self.pageText == other.pageText &&
+            self.pageMaterial == other.pageMaterial &&
+            self.languageId == other.languageId &&
+            self.scriptName == other.scriptName &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   ItemTemplateEntity copyWith({
@@ -595,298 +822,6 @@ mixin _ItemTemplateEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemTemplateEntity;
-    return identical(self, other) ||
-        other is ItemTemplateEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.entry == other.entry &&
-            self.name == other.name &&
-            self.description == other.description &&
-            self.quality == other.quality &&
-            self.className == other.className &&
-            self.subclass == other.subclass &&
-            self.soundOverrideSubclass == other.soundOverrideSubclass &&
-            self.material == other.material &&
-            self.displayId == other.displayId &&
-            self.inventoryType == other.inventoryType &&
-            self.sheath == other.sheath &&
-            self.bonding == other.bonding &&
-            self.itemset == other.itemset &&
-            self.randomProperty == other.randomProperty &&
-            self.randomSuffix == other.randomSuffix &&
-            self.maxDurability == other.maxDurability &&
-            self.buyPrice == other.buyPrice &&
-            self.sellPrice == other.sellPrice &&
-            self.buyCount == other.buyCount &&
-            self.maxcount == other.maxcount &&
-            self.stackable == other.stackable &&
-            self.totemCategory == other.totemCategory &&
-            self.foodType == other.foodType &&
-            self.bagFamily == other.bagFamily &&
-            self.containerSlots == other.containerSlots &&
-            self.itemLimitCategory == other.itemLimitCategory &&
-            self.startquest == other.startquest &&
-            self.duration == other.duration &&
-            self.disenchantId == other.disenchantId &&
-            self.minMoneyLoot == other.minMoneyLoot &&
-            self.maxMoneyLoot == other.maxMoneyLoot &&
-            self.flags == other.flags &&
-            self.flagsExtra == other.flagsExtra &&
-            self.flagsCustom == other.flagsCustom &&
-            self.delay == other.delay &&
-            self.rangedModRange == other.rangedModRange &&
-            self.armorDamageModifier == other.armorDamageModifier &&
-            self.dmgType1 == other.dmgType1 &&
-            self.dmgMin1 == other.dmgMin1 &&
-            self.dmgMax1 == other.dmgMax1 &&
-            self.dmgType2 == other.dmgType2 &&
-            self.dmgMin2 == other.dmgMin2 &&
-            self.dmgMax2 == other.dmgMax2 &&
-            self.ammoType == other.ammoType &&
-            self.armor == other.armor &&
-            self.block == other.block &&
-            self.scalingStatDistribution == other.scalingStatDistribution &&
-            self.scalingStatValue == other.scalingStatValue &&
-            self.statType1 == other.statType1 &&
-            self.statValue1 == other.statValue1 &&
-            self.statType2 == other.statType2 &&
-            self.statValue2 == other.statValue2 &&
-            self.statType3 == other.statType3 &&
-            self.statValue3 == other.statValue3 &&
-            self.statType4 == other.statType4 &&
-            self.statValue4 == other.statValue4 &&
-            self.statType5 == other.statType5 &&
-            self.statValue5 == other.statValue5 &&
-            self.statType6 == other.statType6 &&
-            self.statValue6 == other.statValue6 &&
-            self.statType7 == other.statType7 &&
-            self.statValue7 == other.statValue7 &&
-            self.statType8 == other.statType8 &&
-            self.statValue8 == other.statValue8 &&
-            self.statType9 == other.statType9 &&
-            self.statValue9 == other.statValue9 &&
-            self.statType10 == other.statType10 &&
-            self.statValue10 == other.statValue10 &&
-            self.holyRes == other.holyRes &&
-            self.fireRes == other.fireRes &&
-            self.natureRes == other.natureRes &&
-            self.shadowRes == other.shadowRes &&
-            self.frostRes == other.frostRes &&
-            self.arcaneRes == other.arcaneRes &&
-            self.spellId1 == other.spellId1 &&
-            self.spellTrigger1 == other.spellTrigger1 &&
-            self.spellCharges1 == other.spellCharges1 &&
-            self.spellPpmRate1 == other.spellPpmRate1 &&
-            self.spellCooldown1 == other.spellCooldown1 &&
-            self.spellCategory1 == other.spellCategory1 &&
-            self.spellCategoryCooldown1 == other.spellCategoryCooldown1 &&
-            self.spellId2 == other.spellId2 &&
-            self.spellTrigger2 == other.spellTrigger2 &&
-            self.spellCharges2 == other.spellCharges2 &&
-            self.spellPpmRate2 == other.spellPpmRate2 &&
-            self.spellCooldown2 == other.spellCooldown2 &&
-            self.spellCategory2 == other.spellCategory2 &&
-            self.spellCategoryCooldown2 == other.spellCategoryCooldown2 &&
-            self.spellId3 == other.spellId3 &&
-            self.spellTrigger3 == other.spellTrigger3 &&
-            self.spellCharges3 == other.spellCharges3 &&
-            self.spellPpmRate3 == other.spellPpmRate3 &&
-            self.spellCooldown3 == other.spellCooldown3 &&
-            self.spellCategory3 == other.spellCategory3 &&
-            self.spellCategoryCooldown3 == other.spellCategoryCooldown3 &&
-            self.spellId4 == other.spellId4 &&
-            self.spellTrigger4 == other.spellTrigger4 &&
-            self.spellCharges4 == other.spellCharges4 &&
-            self.spellPpmRate4 == other.spellPpmRate4 &&
-            self.spellCooldown4 == other.spellCooldown4 &&
-            self.spellCategory4 == other.spellCategory4 &&
-            self.spellCategoryCooldown4 == other.spellCategoryCooldown4 &&
-            self.spellId5 == other.spellId5 &&
-            self.spellTrigger5 == other.spellTrigger5 &&
-            self.spellCharges5 == other.spellCharges5 &&
-            self.spellPpmRate5 == other.spellPpmRate5 &&
-            self.spellCooldown5 == other.spellCooldown5 &&
-            self.spellCategory5 == other.spellCategory5 &&
-            self.spellCategoryCooldown5 == other.spellCategoryCooldown5 &&
-            self.allowableClass == other.allowableClass &&
-            self.allowableRace == other.allowableRace &&
-            self.itemLevel == other.itemLevel &&
-            self.requiredLevel == other.requiredLevel &&
-            self.requiredSkill == other.requiredSkill &&
-            self.requiredSkillRank == other.requiredSkillRank &&
-            self.requiredSpell == other.requiredSpell &&
-            self.requiredHonorRank == other.requiredHonorRank &&
-            self.requiredCityRank == other.requiredCityRank &&
-            self.requiredReputationFaction == other.requiredReputationFaction &&
-            self.requiredReputationRank == other.requiredReputationRank &&
-            self.requiredDisenchantSkill == other.requiredDisenchantSkill &&
-            self.mapId == other.mapId &&
-            self.area == other.area &&
-            self.holidayId == other.holidayId &&
-            self.lockid == other.lockid &&
-            self.gemProperties == other.gemProperties &&
-            self.socketBonus == other.socketBonus &&
-            self.socketColor1 == other.socketColor1 &&
-            self.socketContent1 == other.socketContent1 &&
-            self.socketColor2 == other.socketColor2 &&
-            self.socketContent2 == other.socketContent2 &&
-            self.socketColor3 == other.socketColor3 &&
-            self.socketContent3 == other.socketContent3 &&
-            self.pageText == other.pageText &&
-            self.pageMaterial == other.pageMaterial &&
-            self.languageId == other.languageId &&
-            self.scriptName == other.scriptName &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemTemplateEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.entry,
-      self.name,
-      self.description,
-      self.quality,
-      self.className,
-      self.subclass,
-      self.soundOverrideSubclass,
-      self.material,
-      self.displayId,
-      self.inventoryType,
-      self.sheath,
-      self.bonding,
-      self.itemset,
-      self.randomProperty,
-      self.randomSuffix,
-      self.maxDurability,
-      self.buyPrice,
-      self.sellPrice,
-      self.buyCount,
-      self.maxcount,
-      self.stackable,
-      self.totemCategory,
-      self.foodType,
-      self.bagFamily,
-      self.containerSlots,
-      self.itemLimitCategory,
-      self.startquest,
-      self.duration,
-      self.disenchantId,
-      self.minMoneyLoot,
-      self.maxMoneyLoot,
-      self.flags,
-      self.flagsExtra,
-      self.flagsCustom,
-      self.delay,
-      self.rangedModRange,
-      self.armorDamageModifier,
-      self.dmgType1,
-      self.dmgMin1,
-      self.dmgMax1,
-      self.dmgType2,
-      self.dmgMin2,
-      self.dmgMax2,
-      self.ammoType,
-      self.armor,
-      self.block,
-      self.scalingStatDistribution,
-      self.scalingStatValue,
-      self.statType1,
-      self.statValue1,
-      self.statType2,
-      self.statValue2,
-      self.statType3,
-      self.statValue3,
-      self.statType4,
-      self.statValue4,
-      self.statType5,
-      self.statValue5,
-      self.statType6,
-      self.statValue6,
-      self.statType7,
-      self.statValue7,
-      self.statType8,
-      self.statValue8,
-      self.statType9,
-      self.statValue9,
-      self.statType10,
-      self.statValue10,
-      self.holyRes,
-      self.fireRes,
-      self.natureRes,
-      self.shadowRes,
-      self.frostRes,
-      self.arcaneRes,
-      self.spellId1,
-      self.spellTrigger1,
-      self.spellCharges1,
-      self.spellPpmRate1,
-      self.spellCooldown1,
-      self.spellCategory1,
-      self.spellCategoryCooldown1,
-      self.spellId2,
-      self.spellTrigger2,
-      self.spellCharges2,
-      self.spellPpmRate2,
-      self.spellCooldown2,
-      self.spellCategory2,
-      self.spellCategoryCooldown2,
-      self.spellId3,
-      self.spellTrigger3,
-      self.spellCharges3,
-      self.spellPpmRate3,
-      self.spellCooldown3,
-      self.spellCategory3,
-      self.spellCategoryCooldown3,
-      self.spellId4,
-      self.spellTrigger4,
-      self.spellCharges4,
-      self.spellPpmRate4,
-      self.spellCooldown4,
-      self.spellCategory4,
-      self.spellCategoryCooldown4,
-      self.spellId5,
-      self.spellTrigger5,
-      self.spellCharges5,
-      self.spellPpmRate5,
-      self.spellCooldown5,
-      self.spellCategory5,
-      self.spellCategoryCooldown5,
-      self.allowableClass,
-      self.allowableRace,
-      self.itemLevel,
-      self.requiredLevel,
-      self.requiredSkill,
-      self.requiredSkillRank,
-      self.requiredSpell,
-      self.requiredHonorRank,
-      self.requiredCityRank,
-      self.requiredReputationFaction,
-      self.requiredReputationRank,
-      self.requiredDisenchantSkill,
-      self.mapId,
-      self.area,
-      self.holidayId,
-      self.lockid,
-      self.gemProperties,
-      self.socketBonus,
-      self.socketColor1,
-      self.socketContent1,
-      self.socketColor2,
-      self.socketContent2,
-      self.socketColor3,
-      self.socketContent3,
-      self.pageText,
-      self.pageMaterial,
-      self.languageId,
-      self.scriptName,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemTemplateEntity;
     return 'ItemTemplateEntity('
@@ -1030,93 +965,158 @@ mixin _ItemTemplateEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class BriefItemTemplateEntity {
-  final int entry;
-  final String name;
-  final int quality;
-  final int subclass;
-  final int inventoryType;
-  final int itemLevel;
-  final int requiredLevel;
-  final String localeName;
-  final int classId;
-  final String inventoryIcon;
-
-  const BriefItemTemplateEntity({
-    this.entry = 0,
-    this.name = '',
-    this.quality = 0,
-    this.subclass = 0,
-    this.inventoryType = 0,
-    this.itemLevel = 0,
-    this.requiredLevel = 0,
-    this.localeName = '',
-    this.classId = 0,
-    this.inventoryIcon = '',
-  });
-
-  factory BriefItemTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemTemplateEntity(
+  static ItemTemplateEntity fromJson(Map<String, dynamic> json) {
+    return ItemTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
       quality: (json['Quality'] as num?)?.toInt() ?? 0,
+      className: (json['class'] as num?)?.toInt() ?? 0,
       subclass: (json['subclass'] as num?)?.toInt() ?? 0,
+      soundOverrideSubclass:
+          (json['SoundOverrideSubclass'] as num?)?.toInt() ?? -1,
+      material: (json['Material'] as num?)?.toInt() ?? 0,
+      displayId: (json['displayid'] as num?)?.toInt() ?? 0,
       inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
+      sheath: (json['sheath'] as num?)?.toInt() ?? 0,
+      bonding: (json['bonding'] as num?)?.toInt() ?? 0,
+      itemset: (json['itemset'] as num?)?.toInt() ?? 0,
+      randomProperty: (json['RandomProperty'] as num?)?.toInt() ?? 0,
+      randomSuffix: (json['RandomSuffix'] as num?)?.toInt() ?? 0,
+      maxDurability: (json['MaxDurability'] as num?)?.toInt() ?? 0,
+      buyPrice: (json['BuyPrice'] as num?)?.toInt() ?? 0,
+      sellPrice: (json['SellPrice'] as num?)?.toInt() ?? 0,
+      buyCount: (json['BuyCount'] as num?)?.toInt() ?? 1,
+      maxcount: (json['maxcount'] as num?)?.toInt() ?? 0,
+      stackable: (json['stackable'] as num?)?.toInt() ?? 1,
+      totemCategory: (json['TotemCategory'] as num?)?.toInt() ?? 0,
+      foodType: (json['FoodType'] as num?)?.toInt() ?? 0,
+      bagFamily: (json['BagFamily'] as num?)?.toInt() ?? 0,
+      containerSlots: (json['ContainerSlots'] as num?)?.toInt() ?? 0,
+      itemLimitCategory: (json['ItemLimitCategory'] as num?)?.toInt() ?? 0,
+      startquest: (json['startquest'] as num?)?.toInt() ?? 0,
+      duration: (json['duration'] as num?)?.toInt() ?? 0,
+      disenchantId: (json['DisenchantID'] as num?)?.toInt() ?? 0,
+      minMoneyLoot: (json['minMoneyLoot'] as num?)?.toInt() ?? 0,
+      maxMoneyLoot: (json['maxMoneyLoot'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      flagsExtra: (json['FlagsExtra'] as num?)?.toInt() ?? 0,
+      flagsCustom: (json['flagsCustom'] as num?)?.toInt() ?? 0,
+      delay: (json['delay'] as num?)?.toInt() ?? 1000,
+      rangedModRange: (json['RangedModRange'] as num?)?.toDouble() ?? 0.0,
+      armorDamageModifier:
+          (json['ArmorDamageModifier'] as num?)?.toDouble() ?? 0.0,
+      dmgType1: (json['dmg_type1'] as num?)?.toInt() ?? 0,
+      dmgMin1: (json['dmg_min1'] as num?)?.toDouble() ?? 0.0,
+      dmgMax1: (json['dmg_max1'] as num?)?.toDouble() ?? 0.0,
+      dmgType2: (json['dmg_type2'] as num?)?.toInt() ?? 0,
+      dmgMin2: (json['dmg_min2'] as num?)?.toDouble() ?? 0.0,
+      dmgMax2: (json['dmg_max2'] as num?)?.toDouble() ?? 0.0,
+      ammoType: (json['ammo_type'] as num?)?.toInt() ?? 0,
+      armor: (json['armor'] as num?)?.toInt() ?? 0,
+      block: (json['block'] as num?)?.toInt() ?? 0,
+      scalingStatDistribution:
+          (json['ScalingStatDistribution'] as num?)?.toInt() ?? 0,
+      scalingStatValue: (json['ScalingStatValue'] as num?)?.toInt() ?? 0,
+      statType1: (json['stat_type1'] as num?)?.toInt() ?? 0,
+      statValue1: (json['stat_value1'] as num?)?.toInt() ?? 0,
+      statType2: (json['stat_type2'] as num?)?.toInt() ?? 0,
+      statValue2: (json['stat_value2'] as num?)?.toInt() ?? 0,
+      statType3: (json['stat_type3'] as num?)?.toInt() ?? 0,
+      statValue3: (json['stat_value3'] as num?)?.toInt() ?? 0,
+      statType4: (json['stat_type4'] as num?)?.toInt() ?? 0,
+      statValue4: (json['stat_value4'] as num?)?.toInt() ?? 0,
+      statType5: (json['stat_type5'] as num?)?.toInt() ?? 0,
+      statValue5: (json['stat_value5'] as num?)?.toInt() ?? 0,
+      statType6: (json['stat_type6'] as num?)?.toInt() ?? 0,
+      statValue6: (json['stat_value6'] as num?)?.toInt() ?? 0,
+      statType7: (json['stat_type7'] as num?)?.toInt() ?? 0,
+      statValue7: (json['stat_value7'] as num?)?.toInt() ?? 0,
+      statType8: (json['stat_type8'] as num?)?.toInt() ?? 0,
+      statValue8: (json['stat_value8'] as num?)?.toInt() ?? 0,
+      statType9: (json['stat_type9'] as num?)?.toInt() ?? 0,
+      statValue9: (json['stat_value9'] as num?)?.toInt() ?? 0,
+      statType10: (json['stat_type10'] as num?)?.toInt() ?? 0,
+      statValue10: (json['stat_value10'] as num?)?.toInt() ?? 0,
+      holyRes: (json['holy_res'] as num?)?.toInt() ?? 0,
+      fireRes: (json['fire_res'] as num?)?.toInt() ?? 0,
+      natureRes: (json['nature_res'] as num?)?.toInt() ?? 0,
+      shadowRes: (json['shadow_res'] as num?)?.toInt() ?? 0,
+      frostRes: (json['frost_res'] as num?)?.toInt() ?? 0,
+      arcaneRes: (json['arcane_res'] as num?)?.toInt() ?? 0,
+      spellId1: (json['spellid_1'] as num?)?.toInt() ?? 0,
+      spellTrigger1: (json['spelltrigger_1'] as num?)?.toInt() ?? 0,
+      spellCharges1: (json['spellcharges_1'] as num?)?.toInt() ?? 0,
+      spellPpmRate1: (json['spellppmRate_1'] as num?)?.toDouble() ?? 0.0,
+      spellCooldown1: (json['spellcooldown_1'] as num?)?.toInt() ?? -1,
+      spellCategory1: (json['spellcategory_1'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown1:
+          (json['spellcategorycooldown_1'] as num?)?.toInt() ?? -1,
+      spellId2: (json['spellid_2'] as num?)?.toInt() ?? 0,
+      spellTrigger2: (json['spelltrigger_2'] as num?)?.toInt() ?? 0,
+      spellCharges2: (json['spellcharges_2'] as num?)?.toInt() ?? 0,
+      spellPpmRate2: (json['spellppmRate_2'] as num?)?.toDouble() ?? 0.0,
+      spellCooldown2: (json['spellcooldown_2'] as num?)?.toInt() ?? -1,
+      spellCategory2: (json['spellcategory_2'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown2:
+          (json['spellcategorycooldown_2'] as num?)?.toInt() ?? -1,
+      spellId3: (json['spellid_3'] as num?)?.toInt() ?? 0,
+      spellTrigger3: (json['spelltrigger_3'] as num?)?.toInt() ?? 0,
+      spellCharges3: (json['spellcharges_3'] as num?)?.toInt() ?? 0,
+      spellPpmRate3: (json['spellppmRate_3'] as num?)?.toDouble() ?? 0.0,
+      spellCooldown3: (json['spellcooldown_3'] as num?)?.toInt() ?? -1,
+      spellCategory3: (json['spellcategory_3'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown3:
+          (json['spellcategorycooldown_3'] as num?)?.toInt() ?? -1,
+      spellId4: (json['spellid_4'] as num?)?.toInt() ?? 0,
+      spellTrigger4: (json['spelltrigger_4'] as num?)?.toInt() ?? 0,
+      spellCharges4: (json['spellcharges_4'] as num?)?.toInt() ?? 0,
+      spellPpmRate4: (json['spellppmRate_4'] as num?)?.toDouble() ?? 0.0,
+      spellCooldown4: (json['spellcooldown_4'] as num?)?.toInt() ?? -1,
+      spellCategory4: (json['spellcategory_4'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown4:
+          (json['spellcategorycooldown_4'] as num?)?.toInt() ?? -1,
+      spellId5: (json['spellid_5'] as num?)?.toInt() ?? 0,
+      spellTrigger5: (json['spelltrigger_5'] as num?)?.toInt() ?? 0,
+      spellCharges5: (json['spellcharges_5'] as num?)?.toInt() ?? 0,
+      spellPpmRate5: (json['spellppmRate_5'] as num?)?.toDouble() ?? 0.0,
+      spellCooldown5: (json['spellcooldown_5'] as num?)?.toInt() ?? -1,
+      spellCategory5: (json['spellcategory_5'] as num?)?.toInt() ?? 0,
+      spellCategoryCooldown5:
+          (json['spellcategorycooldown_5'] as num?)?.toInt() ?? -1,
+      allowableClass: (json['AllowableClass'] as num?)?.toInt() ?? -1,
+      allowableRace: (json['AllowableRace'] as num?)?.toInt() ?? -1,
       itemLevel: (json['ItemLevel'] as num?)?.toInt() ?? 0,
       requiredLevel: (json['RequiredLevel'] as num?)?.toInt() ?? 0,
-      localeName: json['localeName']?.toString() ?? '',
-      classId: (json['classId'] as num?)?.toInt() ?? 0,
-      inventoryIcon: json['inventoryIcon']?.toString() ?? '',
+      requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
+      requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
+      requiredSpell: (json['requiredspell'] as num?)?.toInt() ?? 0,
+      requiredHonorRank: (json['requiredhonorrank'] as num?)?.toInt() ?? 0,
+      requiredCityRank: (json['RequiredCityRank'] as num?)?.toInt() ?? 0,
+      requiredReputationFaction:
+          (json['RequiredReputationFaction'] as num?)?.toInt() ?? 0,
+      requiredReputationRank:
+          (json['RequiredReputationRank'] as num?)?.toInt() ?? 0,
+      requiredDisenchantSkill:
+          (json['RequiredDisenchantSkill'] as num?)?.toInt() ?? -1,
+      mapId: (json['Map'] as num?)?.toInt() ?? 0,
+      area: (json['area'] as num?)?.toInt() ?? 0,
+      holidayId: (json['HolidayId'] as num?)?.toInt() ?? 0,
+      lockid: (json['lockid'] as num?)?.toInt() ?? 0,
+      gemProperties: (json['GemProperties'] as num?)?.toInt() ?? 0,
+      socketBonus: (json['socketBonus'] as num?)?.toInt() ?? 0,
+      socketColor1: (json['socketColor_1'] as num?)?.toInt() ?? 0,
+      socketContent1: (json['socketContent_1'] as num?)?.toInt() ?? 0,
+      socketColor2: (json['socketColor_2'] as num?)?.toInt() ?? 0,
+      socketContent2: (json['socketContent_2'] as num?)?.toInt() ?? 0,
+      socketColor3: (json['socketColor_3'] as num?)?.toInt() ?? 0,
+      socketContent3: (json['socketContent_3'] as num?)?.toInt() ?? 0,
+      pageText: (json['PageText'] as num?)?.toInt() ?? 0,
+      pageMaterial: (json['PageMaterial'] as num?)?.toInt() ?? 0,
+      languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
+      scriptName: json['ScriptName']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => entry;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemTemplateEntity &&
-            entry == other.entry &&
-            name == other.name &&
-            quality == other.quality &&
-            subclass == other.subclass &&
-            inventoryType == other.inventoryType &&
-            itemLevel == other.itemLevel &&
-            requiredLevel == other.requiredLevel &&
-            localeName == other.localeName &&
-            classId == other.classId &&
-            inventoryIcon == other.inventoryIcon;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    entry,
-    name,
-    quality,
-    subclass,
-    inventoryType,
-    itemLevel,
-    requiredLevel,
-    localeName,
-    classId,
-    inventoryIcon,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefItemTemplateEntity('
-        'entry: $entry, '
-        'name: $name, '
-        'quality: $quality, '
-        'subclass: $subclass, '
-        'inventoryType: $inventoryType, '
-        'itemLevel: $itemLevel, '
-        'requiredLevel: $requiredLevel, '
-        'localeName: $localeName, '
-        'classId: $classId, '
-        'inventoryIcon: $inventoryIcon'
-        ')';
   }
 }

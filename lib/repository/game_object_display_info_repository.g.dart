@@ -2,6 +2,31 @@
 
 part of 'game_object_display_info_repository.dart';
 
+final class GameObjectDisplayInfoFilter {
+  final String id;
+  final String modelName;
+
+  const GameObjectDisplayInfoFilter({this.id = '', this.modelName = ''});
+
+  factory GameObjectDisplayInfoFilter.fromJson(Map<String, dynamic> json) {
+    return GameObjectDisplayInfoFilter(
+      id: json['id']?.toString() ?? '',
+      modelName: json['modelName']?.toString() ?? '',
+    );
+  }
+
+  GameObjectDisplayInfoFilter copyWith({String? id, String? modelName}) {
+    return GameObjectDisplayInfoFilter(
+      id: id ?? this.id,
+      modelName: modelName ?? this.modelName,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'modelName': modelName};
+  }
+}
+
 mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectDisplayInfo(int key) async {
     await _beforeDestroy(key);
@@ -77,30 +102,5 @@ mixin _GameObjectDisplayInfoRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class GameObjectDisplayInfoFilter {
-  final String id;
-  final String modelName;
-
-  const GameObjectDisplayInfoFilter({this.id = '', this.modelName = ''});
-
-  factory GameObjectDisplayInfoFilter.fromJson(Map<String, dynamic> json) {
-    return GameObjectDisplayInfoFilter(
-      id: json['id']?.toString() ?? '',
-      modelName: json['modelName']?.toString() ?? '',
-    );
-  }
-
-  GameObjectDisplayInfoFilter copyWith({String? id, String? modelName}) {
-    return GameObjectDisplayInfoFilter(
-      id: id ?? this.id,
-      modelName: modelName ?? this.modelName,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'modelName': modelName};
   }
 }

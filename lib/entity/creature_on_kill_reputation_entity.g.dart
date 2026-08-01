@@ -2,28 +2,112 @@
 
 part of 'creature_on_kill_reputation_entity.dart';
 
-mixin _CreatureOnKillReputationEntityMixin {
-  static CreatureOnKillReputationEntity fromJson(Map<String, dynamic> json) {
-    return CreatureOnKillReputationEntity(
+final class BriefCreatureOnKillReputationEntity {
+  final int creatureID;
+  final int rewOnKillRepFaction1;
+  final int rewOnKillRepFaction2;
+  final double rewOnKillRepValue1;
+  final double rewOnKillRepValue2;
+  final int teamDependent;
+
+  const BriefCreatureOnKillReputationEntity({
+    this.creatureID = 0,
+    this.rewOnKillRepFaction1 = 0,
+    this.rewOnKillRepFaction2 = 0,
+    this.rewOnKillRepValue1 = 0.0,
+    this.rewOnKillRepValue2 = 0.0,
+    this.teamDependent = 0,
+  });
+
+  factory BriefCreatureOnKillReputationEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefCreatureOnKillReputationEntity(
       creatureID: (json['creature_id'] as num?)?.toInt() ?? 0,
       rewOnKillRepFaction1:
           (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
       rewOnKillRepFaction2:
           (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
-      maxStanding1: (json['MaxStanding1'] as num?)?.toInt() ?? 0,
-      maxStanding2: (json['MaxStanding2'] as num?)?.toInt() ?? 0,
-      isTeamAward1: json['IsTeamAward1'] == null
-          ? false
-          : (json['IsTeamAward1'] as num).toInt() == 1,
-      isTeamAward2: json['IsTeamAward2'] == null
-          ? false
-          : (json['IsTeamAward2'] as num).toInt() == 1,
       rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] as num?)?.toDouble() ?? 0.0,
       rewOnKillRepValue2:
           (json['RewOnKillRepValue2'] as num?)?.toDouble() ?? 0.0,
       teamDependent: (json['TeamDependent'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    creatureID,
+    rewOnKillRepFaction1,
+    rewOnKillRepFaction2,
+    rewOnKillRepValue1,
+    rewOnKillRepValue2,
+    teamDependent,
+  ]);
+
+  int get key => creatureID;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureOnKillReputationEntity &&
+            creatureID == other.creatureID &&
+            rewOnKillRepFaction1 == other.rewOnKillRepFaction1 &&
+            rewOnKillRepFaction2 == other.rewOnKillRepFaction2 &&
+            rewOnKillRepValue1 == other.rewOnKillRepValue1 &&
+            rewOnKillRepValue2 == other.rewOnKillRepValue2 &&
+            teamDependent == other.teamDependent;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureOnKillReputationEntity('
+        'creatureID: $creatureID, '
+        'rewOnKillRepFaction1: $rewOnKillRepFaction1, '
+        'rewOnKillRepFaction2: $rewOnKillRepFaction2, '
+        'rewOnKillRepValue1: $rewOnKillRepValue1, '
+        'rewOnKillRepValue2: $rewOnKillRepValue2, '
+        'teamDependent: $teamDependent'
+        ')';
+  }
+}
+
+mixin _CreatureOnKillReputationEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureOnKillReputationEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.creatureID,
+      self.rewOnKillRepFaction1,
+      self.rewOnKillRepFaction2,
+      self.maxStanding1,
+      self.maxStanding2,
+      self.isTeamAward1,
+      self.isTeamAward2,
+      self.rewOnKillRepValue1,
+      self.rewOnKillRepValue2,
+      self.teamDependent,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureOnKillReputationEntity;
+    return identical(self, other) ||
+        other is CreatureOnKillReputationEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.creatureID == other.creatureID &&
+            self.rewOnKillRepFaction1 == other.rewOnKillRepFaction1 &&
+            self.rewOnKillRepFaction2 == other.rewOnKillRepFaction2 &&
+            self.maxStanding1 == other.maxStanding1 &&
+            self.maxStanding2 == other.maxStanding2 &&
+            self.isTeamAward1 == other.isTeamAward1 &&
+            self.isTeamAward2 == other.isTeamAward2 &&
+            self.rewOnKillRepValue1 == other.rewOnKillRepValue1 &&
+            self.rewOnKillRepValue2 == other.rewOnKillRepValue2 &&
+            self.teamDependent == other.teamDependent;
   }
 
   CreatureOnKillReputationEntity copyWith({
@@ -70,42 +154,6 @@ mixin _CreatureOnKillReputationEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureOnKillReputationEntity;
-    return identical(self, other) ||
-        other is CreatureOnKillReputationEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.creatureID == other.creatureID &&
-            self.rewOnKillRepFaction1 == other.rewOnKillRepFaction1 &&
-            self.rewOnKillRepFaction2 == other.rewOnKillRepFaction2 &&
-            self.maxStanding1 == other.maxStanding1 &&
-            self.maxStanding2 == other.maxStanding2 &&
-            self.isTeamAward1 == other.isTeamAward1 &&
-            self.isTeamAward2 == other.isTeamAward2 &&
-            self.rewOnKillRepValue1 == other.rewOnKillRepValue1 &&
-            self.rewOnKillRepValue2 == other.rewOnKillRepValue2 &&
-            self.teamDependent == other.teamDependent;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureOnKillReputationEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.creatureID,
-      self.rewOnKillRepFaction1,
-      self.rewOnKillRepFaction2,
-      self.maxStanding1,
-      self.maxStanding2,
-      self.isTeamAward1,
-      self.isTeamAward2,
-      self.rewOnKillRepValue1,
-      self.rewOnKillRepValue2,
-      self.teamDependent,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureOnKillReputationEntity;
     return 'CreatureOnKillReputationEntity('
@@ -121,75 +169,27 @@ mixin _CreatureOnKillReputationEntityMixin {
         'teamDependent: ${self.teamDependent}'
         ')';
   }
-}
 
-final class BriefCreatureOnKillReputationEntity {
-  final int creatureID;
-  final int rewOnKillRepFaction1;
-  final int rewOnKillRepFaction2;
-  final double rewOnKillRepValue1;
-  final double rewOnKillRepValue2;
-  final int teamDependent;
-
-  const BriefCreatureOnKillReputationEntity({
-    this.creatureID = 0,
-    this.rewOnKillRepFaction1 = 0,
-    this.rewOnKillRepFaction2 = 0,
-    this.rewOnKillRepValue1 = 0.0,
-    this.rewOnKillRepValue2 = 0.0,
-    this.teamDependent = 0,
-  });
-
-  factory BriefCreatureOnKillReputationEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefCreatureOnKillReputationEntity(
+  static CreatureOnKillReputationEntity fromJson(Map<String, dynamic> json) {
+    return CreatureOnKillReputationEntity(
       creatureID: (json['creature_id'] as num?)?.toInt() ?? 0,
       rewOnKillRepFaction1:
           (json['RewOnKillRepFaction1'] as num?)?.toInt() ?? 0,
       rewOnKillRepFaction2:
           (json['RewOnKillRepFaction2'] as num?)?.toInt() ?? 0,
+      maxStanding1: (json['MaxStanding1'] as num?)?.toInt() ?? 0,
+      maxStanding2: (json['MaxStanding2'] as num?)?.toInt() ?? 0,
+      isTeamAward1: json['IsTeamAward1'] == null
+          ? false
+          : (json['IsTeamAward1'] as num).toInt() == 1,
+      isTeamAward2: json['IsTeamAward2'] == null
+          ? false
+          : (json['IsTeamAward2'] as num).toInt() == 1,
       rewOnKillRepValue1:
           (json['RewOnKillRepValue1'] as num?)?.toDouble() ?? 0.0,
       rewOnKillRepValue2:
           (json['RewOnKillRepValue2'] as num?)?.toDouble() ?? 0.0,
       teamDependent: (json['TeamDependent'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => creatureID;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureOnKillReputationEntity &&
-            creatureID == other.creatureID &&
-            rewOnKillRepFaction1 == other.rewOnKillRepFaction1 &&
-            rewOnKillRepFaction2 == other.rewOnKillRepFaction2 &&
-            rewOnKillRepValue1 == other.rewOnKillRepValue1 &&
-            rewOnKillRepValue2 == other.rewOnKillRepValue2 &&
-            teamDependent == other.teamDependent;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    creatureID,
-    rewOnKillRepFaction1,
-    rewOnKillRepFaction2,
-    rewOnKillRepValue1,
-    rewOnKillRepValue2,
-    teamDependent,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureOnKillReputationEntity('
-        'creatureID: $creatureID, '
-        'rewOnKillRepFaction1: $rewOnKillRepFaction1, '
-        'rewOnKillRepFaction2: $rewOnKillRepFaction2, '
-        'rewOnKillRepValue1: $rewOnKillRepValue1, '
-        'rewOnKillRepValue2: $rewOnKillRepValue2, '
-        'teamDependent: $teamDependent'
-        ')';
   }
 }

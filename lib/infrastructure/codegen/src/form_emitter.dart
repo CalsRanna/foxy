@@ -4,6 +4,9 @@ import 'form_model.dart';
 final class FormEmitter {
   const FormEmitter();
 
+  /// 成员顺序遵循 "Sort Members" 规则:字段(controller,保持原序)
+  /// 在前,私有方法按名(_afterApplyCandidate → _applyCandidate
+  /// → _collectCandidate)。
   String emit(FormGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on FieldControllerMixin {');
@@ -11,9 +14,11 @@ final class FormEmitter {
       buffer.writeln(_controllerDeclaration(field));
     }
     buffer.writeln();
-    _emitCollect(buffer, model);
+    _emitAfterApply(buffer, model);
     buffer.writeln();
     _emitApply(buffer, model);
+    buffer.writeln();
+    _emitCollect(buffer, model);
     buffer.writeln('}');
     return buffer.toString();
   }
@@ -78,6 +83,13 @@ final class FormEmitter {
       ..writeln('  }');
   }
 
+  void _emitAfterApply(StringBuffer buffer, FormGenerationModel model) {
+    final parameter = _entityParameterName(model.entityClassName);
+    buffer.writeln(
+      '  void _afterApplyCandidate(${model.entityClassName} $parameter) {}',
+    );
+  }
+
   void _emitApply(StringBuffer buffer, FormGenerationModel model) {
     final parameter = _entityParameterName(model.entityClassName);
     buffer.writeln(
@@ -93,12 +105,7 @@ final class FormEmitter {
     // 加载实体后的语义钩子(如联动刷新编辑规格),手写侧覆写。
     buffer
       ..writeln('    _afterApplyCandidate($parameter);')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln(
-        '  void _afterApplyCandidate(${model.entityClassName} $parameter) {}',
-      )
-      ..writeln();
+      ..writeln('  }');
   }
 
   /// `TalentEntity` → `talent`(与 Repository 的实体参数命名一致)。

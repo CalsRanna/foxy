@@ -8,14 +8,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
   late final itemIdController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  CreatureQuestItemEntity _collectCandidate() {
-    return CreatureQuestItemEntity(
-      creatureEntry: creatureEntryController.collect(),
-      idx: idxController.collect(),
-      itemId: itemIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(CreatureQuestItemEntity creatureQuestItem) {}
 
   void _applyCandidate(CreatureQuestItemEntity creatureQuestItem) {
     creatureEntryController.init(creatureQuestItem.creatureEntry);
@@ -25,5 +18,12 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(creatureQuestItem);
   }
 
-  void _afterApplyCandidate(CreatureQuestItemEntity creatureQuestItem) {}
+  CreatureQuestItemEntity _collectCandidate() {
+    return CreatureQuestItemEntity(
+      creatureEntry: creatureEntryController.collect(),
+      idx: idxController.collect(),
+      itemId: itemIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

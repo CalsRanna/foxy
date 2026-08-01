@@ -2,6 +2,31 @@
 
 part of 'mail_template_repository.dart';
 
+final class MailTemplateFilter {
+  final String id;
+  final String subject;
+
+  const MailTemplateFilter({this.id = '', this.subject = ''});
+
+  factory MailTemplateFilter.fromJson(Map<String, dynamic> json) {
+    return MailTemplateFilter(
+      id: json['id']?.toString() ?? '',
+      subject: json['subject']?.toString() ?? '',
+    );
+  }
+
+  MailTemplateFilter copyWith({String? id, String? subject}) {
+    return MailTemplateFilter(
+      id: id ?? this.id,
+      subject: subject ?? this.subject,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'subject': subject};
+  }
+}
+
 mixin _MailTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyMailTemplate(int key) async {
     await _beforeDestroy(key);
@@ -73,30 +98,5 @@ mixin _MailTemplateRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class MailTemplateFilter {
-  final String id;
-  final String subject;
-
-  const MailTemplateFilter({this.id = '', this.subject = ''});
-
-  factory MailTemplateFilter.fromJson(Map<String, dynamic> json) {
-    return MailTemplateFilter(
-      id: json['id']?.toString() ?? '',
-      subject: json['subject']?.toString() ?? '',
-    );
-  }
-
-  MailTemplateFilter copyWith({String? id, String? subject}) {
-    return MailTemplateFilter(
-      id: id ?? this.id,
-      subject: subject ?? this.subject,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'subject': subject};
   }
 }

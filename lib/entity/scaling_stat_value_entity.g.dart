@@ -2,35 +2,146 @@
 
 part of 'scaling_stat_value_entity.dart';
 
-mixin _ScalingStatValueEntityMixin {
-  static ScalingStatValueEntity fromJson(Map<String, dynamic> json) {
-    return ScalingStatValueEntity(
+final class BriefScalingStatValueEntity {
+  final int id;
+  final int charlevel;
+  final int shoulderBudget;
+  final int trinketBudget;
+  final int weaponBudget1H;
+  final int rangedBudget;
+  final int primaryBudget;
+  final int tertiaryBudget;
+
+  const BriefScalingStatValueEntity({
+    this.id = 0,
+    this.charlevel = 0,
+    this.shoulderBudget = 0,
+    this.trinketBudget = 0,
+    this.weaponBudget1H = 0,
+    this.rangedBudget = 0,
+    this.primaryBudget = 0,
+    this.tertiaryBudget = 0,
+  });
+
+  factory BriefScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
+    return BriefScalingStatValueEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       charlevel: (json['Charlevel'] as num?)?.toInt() ?? 0,
       shoulderBudget: (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
       trinketBudget: (json['TrinketBudget'] as num?)?.toInt() ?? 0,
       weaponBudget1H: (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
       rangedBudget: (json['RangedBudget'] as num?)?.toInt() ?? 0,
-      clothShoulderArmor: (json['ClothShoulderArmor'] as num?)?.toInt() ?? 0,
-      leatherShoulderArmor:
-          (json['LeatherShoulderArmor'] as num?)?.toInt() ?? 0,
-      mailShoulderArmor: (json['MailShoulderArmor'] as num?)?.toInt() ?? 0,
-      plateShoulderArmor: (json['PlateShoulderArmor'] as num?)?.toInt() ?? 0,
-      weaponDPS1H: (json['WeaponDPS1H'] as num?)?.toInt() ?? 0,
-      weaponDPS2H: (json['WeaponDPS2H'] as num?)?.toInt() ?? 0,
-      spellcasterDPS1H: (json['SpellcasterDPS1H'] as num?)?.toInt() ?? 0,
-      spellcasterDPS2H: (json['SpellcasterDPS2H'] as num?)?.toInt() ?? 0,
-      rangedDPS: (json['RangedDPS'] as num?)?.toInt() ?? 0,
-      wandDPS: (json['WandDPS'] as num?)?.toInt() ?? 0,
-      spellPower: (json['SpellPower'] as num?)?.toInt() ?? 0,
       primaryBudget: (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
       tertiaryBudget: (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
-      clothCloakArmor: (json['ClothCloakArmor'] as num?)?.toInt() ?? 0,
-      clothChestArmor: (json['ClothChestArmor'] as num?)?.toInt() ?? 0,
-      leatherChestArmor: (json['LeatherChestArmor'] as num?)?.toInt() ?? 0,
-      mailChestArmor: (json['MailChestArmor'] as num?)?.toInt() ?? 0,
-      plateChestArmor: (json['PlateChestArmor'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    charlevel,
+    shoulderBudget,
+    trinketBudget,
+    weaponBudget1H,
+    rangedBudget,
+    primaryBudget,
+    tertiaryBudget,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefScalingStatValueEntity &&
+            id == other.id &&
+            charlevel == other.charlevel &&
+            shoulderBudget == other.shoulderBudget &&
+            trinketBudget == other.trinketBudget &&
+            weaponBudget1H == other.weaponBudget1H &&
+            rangedBudget == other.rangedBudget &&
+            primaryBudget == other.primaryBudget &&
+            tertiaryBudget == other.tertiaryBudget;
+  }
+
+  @override
+  String toString() {
+    return 'BriefScalingStatValueEntity('
+        'id: $id, '
+        'charlevel: $charlevel, '
+        'shoulderBudget: $shoulderBudget, '
+        'trinketBudget: $trinketBudget, '
+        'weaponBudget1H: $weaponBudget1H, '
+        'rangedBudget: $rangedBudget, '
+        'primaryBudget: $primaryBudget, '
+        'tertiaryBudget: $tertiaryBudget'
+        ')';
+  }
+}
+
+mixin _ScalingStatValueEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ScalingStatValueEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.charlevel,
+      self.shoulderBudget,
+      self.trinketBudget,
+      self.weaponBudget1H,
+      self.rangedBudget,
+      self.clothShoulderArmor,
+      self.leatherShoulderArmor,
+      self.mailShoulderArmor,
+      self.plateShoulderArmor,
+      self.weaponDPS1H,
+      self.weaponDPS2H,
+      self.spellcasterDPS1H,
+      self.spellcasterDPS2H,
+      self.rangedDPS,
+      self.wandDPS,
+      self.spellPower,
+      self.primaryBudget,
+      self.tertiaryBudget,
+      self.clothCloakArmor,
+      self.clothChestArmor,
+      self.leatherChestArmor,
+      self.mailChestArmor,
+      self.plateChestArmor,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ScalingStatValueEntity;
+    return identical(self, other) ||
+        other is ScalingStatValueEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.charlevel == other.charlevel &&
+            self.shoulderBudget == other.shoulderBudget &&
+            self.trinketBudget == other.trinketBudget &&
+            self.weaponBudget1H == other.weaponBudget1H &&
+            self.rangedBudget == other.rangedBudget &&
+            self.clothShoulderArmor == other.clothShoulderArmor &&
+            self.leatherShoulderArmor == other.leatherShoulderArmor &&
+            self.mailShoulderArmor == other.mailShoulderArmor &&
+            self.plateShoulderArmor == other.plateShoulderArmor &&
+            self.weaponDPS1H == other.weaponDPS1H &&
+            self.weaponDPS2H == other.weaponDPS2H &&
+            self.spellcasterDPS1H == other.spellcasterDPS1H &&
+            self.spellcasterDPS2H == other.spellcasterDPS2H &&
+            self.rangedDPS == other.rangedDPS &&
+            self.wandDPS == other.wandDPS &&
+            self.spellPower == other.spellPower &&
+            self.primaryBudget == other.primaryBudget &&
+            self.tertiaryBudget == other.tertiaryBudget &&
+            self.clothCloakArmor == other.clothCloakArmor &&
+            self.clothChestArmor == other.clothChestArmor &&
+            self.leatherChestArmor == other.leatherChestArmor &&
+            self.mailChestArmor == other.mailChestArmor &&
+            self.plateChestArmor == other.plateChestArmor;
   }
 
   ScalingStatValueEntity copyWith({
@@ -119,70 +230,6 @@ mixin _ScalingStatValueEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ScalingStatValueEntity;
-    return identical(self, other) ||
-        other is ScalingStatValueEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.charlevel == other.charlevel &&
-            self.shoulderBudget == other.shoulderBudget &&
-            self.trinketBudget == other.trinketBudget &&
-            self.weaponBudget1H == other.weaponBudget1H &&
-            self.rangedBudget == other.rangedBudget &&
-            self.clothShoulderArmor == other.clothShoulderArmor &&
-            self.leatherShoulderArmor == other.leatherShoulderArmor &&
-            self.mailShoulderArmor == other.mailShoulderArmor &&
-            self.plateShoulderArmor == other.plateShoulderArmor &&
-            self.weaponDPS1H == other.weaponDPS1H &&
-            self.weaponDPS2H == other.weaponDPS2H &&
-            self.spellcasterDPS1H == other.spellcasterDPS1H &&
-            self.spellcasterDPS2H == other.spellcasterDPS2H &&
-            self.rangedDPS == other.rangedDPS &&
-            self.wandDPS == other.wandDPS &&
-            self.spellPower == other.spellPower &&
-            self.primaryBudget == other.primaryBudget &&
-            self.tertiaryBudget == other.tertiaryBudget &&
-            self.clothCloakArmor == other.clothCloakArmor &&
-            self.clothChestArmor == other.clothChestArmor &&
-            self.leatherChestArmor == other.leatherChestArmor &&
-            self.mailChestArmor == other.mailChestArmor &&
-            self.plateChestArmor == other.plateChestArmor;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ScalingStatValueEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.charlevel,
-      self.shoulderBudget,
-      self.trinketBudget,
-      self.weaponBudget1H,
-      self.rangedBudget,
-      self.clothShoulderArmor,
-      self.leatherShoulderArmor,
-      self.mailShoulderArmor,
-      self.plateShoulderArmor,
-      self.weaponDPS1H,
-      self.weaponDPS2H,
-      self.spellcasterDPS1H,
-      self.spellcasterDPS2H,
-      self.rangedDPS,
-      self.wandDPS,
-      self.spellPower,
-      self.primaryBudget,
-      self.tertiaryBudget,
-      self.clothCloakArmor,
-      self.clothChestArmor,
-      self.leatherChestArmor,
-      self.mailChestArmor,
-      self.plateChestArmor,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ScalingStatValueEntity;
     return 'ScalingStatValueEntity('
@@ -212,81 +259,34 @@ mixin _ScalingStatValueEntityMixin {
         'plateChestArmor: ${self.plateChestArmor}'
         ')';
   }
-}
 
-final class BriefScalingStatValueEntity {
-  final int id;
-  final int charlevel;
-  final int shoulderBudget;
-  final int trinketBudget;
-  final int weaponBudget1H;
-  final int rangedBudget;
-  final int primaryBudget;
-  final int tertiaryBudget;
-
-  const BriefScalingStatValueEntity({
-    this.id = 0,
-    this.charlevel = 0,
-    this.shoulderBudget = 0,
-    this.trinketBudget = 0,
-    this.weaponBudget1H = 0,
-    this.rangedBudget = 0,
-    this.primaryBudget = 0,
-    this.tertiaryBudget = 0,
-  });
-
-  factory BriefScalingStatValueEntity.fromJson(Map<String, dynamic> json) {
-    return BriefScalingStatValueEntity(
+  static ScalingStatValueEntity fromJson(Map<String, dynamic> json) {
+    return ScalingStatValueEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       charlevel: (json['Charlevel'] as num?)?.toInt() ?? 0,
       shoulderBudget: (json['ShoulderBudget'] as num?)?.toInt() ?? 0,
       trinketBudget: (json['TrinketBudget'] as num?)?.toInt() ?? 0,
       weaponBudget1H: (json['WeaponBudget1H'] as num?)?.toInt() ?? 0,
       rangedBudget: (json['RangedBudget'] as num?)?.toInt() ?? 0,
+      clothShoulderArmor: (json['ClothShoulderArmor'] as num?)?.toInt() ?? 0,
+      leatherShoulderArmor:
+          (json['LeatherShoulderArmor'] as num?)?.toInt() ?? 0,
+      mailShoulderArmor: (json['MailShoulderArmor'] as num?)?.toInt() ?? 0,
+      plateShoulderArmor: (json['PlateShoulderArmor'] as num?)?.toInt() ?? 0,
+      weaponDPS1H: (json['WeaponDPS1H'] as num?)?.toInt() ?? 0,
+      weaponDPS2H: (json['WeaponDPS2H'] as num?)?.toInt() ?? 0,
+      spellcasterDPS1H: (json['SpellcasterDPS1H'] as num?)?.toInt() ?? 0,
+      spellcasterDPS2H: (json['SpellcasterDPS2H'] as num?)?.toInt() ?? 0,
+      rangedDPS: (json['RangedDPS'] as num?)?.toInt() ?? 0,
+      wandDPS: (json['WandDPS'] as num?)?.toInt() ?? 0,
+      spellPower: (json['SpellPower'] as num?)?.toInt() ?? 0,
       primaryBudget: (json['PrimaryBudget'] as num?)?.toInt() ?? 0,
       tertiaryBudget: (json['TertiaryBudget'] as num?)?.toInt() ?? 0,
+      clothCloakArmor: (json['ClothCloakArmor'] as num?)?.toInt() ?? 0,
+      clothChestArmor: (json['ClothChestArmor'] as num?)?.toInt() ?? 0,
+      leatherChestArmor: (json['LeatherChestArmor'] as num?)?.toInt() ?? 0,
+      mailChestArmor: (json['MailChestArmor'] as num?)?.toInt() ?? 0,
+      plateChestArmor: (json['PlateChestArmor'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefScalingStatValueEntity &&
-            id == other.id &&
-            charlevel == other.charlevel &&
-            shoulderBudget == other.shoulderBudget &&
-            trinketBudget == other.trinketBudget &&
-            weaponBudget1H == other.weaponBudget1H &&
-            rangedBudget == other.rangedBudget &&
-            primaryBudget == other.primaryBudget &&
-            tertiaryBudget == other.tertiaryBudget;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    charlevel,
-    shoulderBudget,
-    trinketBudget,
-    weaponBudget1H,
-    rangedBudget,
-    primaryBudget,
-    tertiaryBudget,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefScalingStatValueEntity('
-        'id: $id, '
-        'charlevel: $charlevel, '
-        'shoulderBudget: $shoulderBudget, '
-        'trinketBudget: $trinketBudget, '
-        'weaponBudget1H: $weaponBudget1H, '
-        'rangedBudget: $rangedBudget, '
-        'primaryBudget: $primaryBudget, '
-        'tertiaryBudget: $tertiaryBudget'
-        ')';
   }
 }

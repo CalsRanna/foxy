@@ -2,28 +2,92 @@
 
 part of 'quest_info_entity.dart';
 
-mixin _QuestInfoEntityMixin {
-  static QuestInfoEntity fromJson(Map<String, dynamic> json) {
-    return QuestInfoEntity(
+final class BriefQuestInfoEntity {
+  final int id;
+  final String infoNameLangZhCN;
+
+  const BriefQuestInfoEntity({this.id = 0, this.infoNameLangZhCN = ''});
+
+  factory BriefQuestInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      infoNameLangEnUS: json['InfoName_lang_enUS']?.toString() ?? '',
-      infoNameLangKoKR: json['InfoName_lang_koKR']?.toString() ?? '',
-      infoNameLangFrFR: json['InfoName_lang_frFR']?.toString() ?? '',
-      infoNameLangDeDE: json['InfoName_lang_deDE']?.toString() ?? '',
       infoNameLangZhCN: json['InfoName_lang_zhCN']?.toString() ?? '',
-      infoNameLangZhTW: json['InfoName_lang_zhTW']?.toString() ?? '',
-      infoNameLangEsES: json['InfoName_lang_esES']?.toString() ?? '',
-      infoNameLangEsMX: json['InfoName_lang_esMX']?.toString() ?? '',
-      infoNameLangRuRU: json['InfoName_lang_ruRU']?.toString() ?? '',
-      infoNameLangJaJP: json['InfoName_lang_jaJP']?.toString() ?? '',
-      infoNameLangPtPT: json['InfoName_lang_ptPT']?.toString() ?? '',
-      infoNameLangPtBR: json['InfoName_lang_ptBR']?.toString() ?? '',
-      infoNameLangItIT: json['InfoName_lang_itIT']?.toString() ?? '',
-      infoNameLangUnk1: json['InfoName_lang_unk1']?.toString() ?? '',
-      infoNameLangUnk2: json['InfoName_lang_unk2']?.toString() ?? '',
-      infoNameLangUnk3: json['InfoName_lang_unk3']?.toString() ?? '',
-      infoNameLangFlags: (json['InfoName_lang_Flags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, infoNameLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestInfoEntity &&
+            id == other.id &&
+            infoNameLangZhCN == other.infoNameLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestInfoEntity('
+        'id: $id, '
+        'infoNameLangZhCN: $infoNameLangZhCN'
+        ')';
+  }
+}
+
+mixin _QuestInfoEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestInfoEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.infoNameLangEnUS,
+      self.infoNameLangKoKR,
+      self.infoNameLangFrFR,
+      self.infoNameLangDeDE,
+      self.infoNameLangZhCN,
+      self.infoNameLangZhTW,
+      self.infoNameLangEsES,
+      self.infoNameLangEsMX,
+      self.infoNameLangRuRU,
+      self.infoNameLangJaJP,
+      self.infoNameLangPtPT,
+      self.infoNameLangPtBR,
+      self.infoNameLangItIT,
+      self.infoNameLangUnk1,
+      self.infoNameLangUnk2,
+      self.infoNameLangUnk3,
+      self.infoNameLangFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestInfoEntity;
+    return identical(self, other) ||
+        other is QuestInfoEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.infoNameLangEnUS == other.infoNameLangEnUS &&
+            self.infoNameLangKoKR == other.infoNameLangKoKR &&
+            self.infoNameLangFrFR == other.infoNameLangFrFR &&
+            self.infoNameLangDeDE == other.infoNameLangDeDE &&
+            self.infoNameLangZhCN == other.infoNameLangZhCN &&
+            self.infoNameLangZhTW == other.infoNameLangZhTW &&
+            self.infoNameLangEsES == other.infoNameLangEsES &&
+            self.infoNameLangEsMX == other.infoNameLangEsMX &&
+            self.infoNameLangRuRU == other.infoNameLangRuRU &&
+            self.infoNameLangJaJP == other.infoNameLangJaJP &&
+            self.infoNameLangPtPT == other.infoNameLangPtPT &&
+            self.infoNameLangPtBR == other.infoNameLangPtBR &&
+            self.infoNameLangItIT == other.infoNameLangItIT &&
+            self.infoNameLangUnk1 == other.infoNameLangUnk1 &&
+            self.infoNameLangUnk2 == other.infoNameLangUnk2 &&
+            self.infoNameLangUnk3 == other.infoNameLangUnk3 &&
+            self.infoNameLangFlags == other.infoNameLangFlags;
   }
 
   QuestInfoEntity copyWith({
@@ -94,58 +158,6 @@ mixin _QuestInfoEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestInfoEntity;
-    return identical(self, other) ||
-        other is QuestInfoEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.infoNameLangEnUS == other.infoNameLangEnUS &&
-            self.infoNameLangKoKR == other.infoNameLangKoKR &&
-            self.infoNameLangFrFR == other.infoNameLangFrFR &&
-            self.infoNameLangDeDE == other.infoNameLangDeDE &&
-            self.infoNameLangZhCN == other.infoNameLangZhCN &&
-            self.infoNameLangZhTW == other.infoNameLangZhTW &&
-            self.infoNameLangEsES == other.infoNameLangEsES &&
-            self.infoNameLangEsMX == other.infoNameLangEsMX &&
-            self.infoNameLangRuRU == other.infoNameLangRuRU &&
-            self.infoNameLangJaJP == other.infoNameLangJaJP &&
-            self.infoNameLangPtPT == other.infoNameLangPtPT &&
-            self.infoNameLangPtBR == other.infoNameLangPtBR &&
-            self.infoNameLangItIT == other.infoNameLangItIT &&
-            self.infoNameLangUnk1 == other.infoNameLangUnk1 &&
-            self.infoNameLangUnk2 == other.infoNameLangUnk2 &&
-            self.infoNameLangUnk3 == other.infoNameLangUnk3 &&
-            self.infoNameLangFlags == other.infoNameLangFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestInfoEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.infoNameLangEnUS,
-      self.infoNameLangKoKR,
-      self.infoNameLangFrFR,
-      self.infoNameLangDeDE,
-      self.infoNameLangZhCN,
-      self.infoNameLangZhTW,
-      self.infoNameLangEsES,
-      self.infoNameLangEsMX,
-      self.infoNameLangRuRU,
-      self.infoNameLangJaJP,
-      self.infoNameLangPtPT,
-      self.infoNameLangPtBR,
-      self.infoNameLangItIT,
-      self.infoNameLangUnk1,
-      self.infoNameLangUnk2,
-      self.infoNameLangUnk3,
-      self.infoNameLangFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestInfoEntity;
     return 'QuestInfoEntity('
@@ -169,39 +181,27 @@ mixin _QuestInfoEntityMixin {
         'infoNameLangFlags: ${self.infoNameLangFlags}'
         ')';
   }
-}
 
-final class BriefQuestInfoEntity {
-  final int id;
-  final String infoNameLangZhCN;
-
-  const BriefQuestInfoEntity({this.id = 0, this.infoNameLangZhCN = ''});
-
-  factory BriefQuestInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestInfoEntity(
+  static QuestInfoEntity fromJson(Map<String, dynamic> json) {
+    return QuestInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      infoNameLangEnUS: json['InfoName_lang_enUS']?.toString() ?? '',
+      infoNameLangKoKR: json['InfoName_lang_koKR']?.toString() ?? '',
+      infoNameLangFrFR: json['InfoName_lang_frFR']?.toString() ?? '',
+      infoNameLangDeDE: json['InfoName_lang_deDE']?.toString() ?? '',
       infoNameLangZhCN: json['InfoName_lang_zhCN']?.toString() ?? '',
+      infoNameLangZhTW: json['InfoName_lang_zhTW']?.toString() ?? '',
+      infoNameLangEsES: json['InfoName_lang_esES']?.toString() ?? '',
+      infoNameLangEsMX: json['InfoName_lang_esMX']?.toString() ?? '',
+      infoNameLangRuRU: json['InfoName_lang_ruRU']?.toString() ?? '',
+      infoNameLangJaJP: json['InfoName_lang_jaJP']?.toString() ?? '',
+      infoNameLangPtPT: json['InfoName_lang_ptPT']?.toString() ?? '',
+      infoNameLangPtBR: json['InfoName_lang_ptBR']?.toString() ?? '',
+      infoNameLangItIT: json['InfoName_lang_itIT']?.toString() ?? '',
+      infoNameLangUnk1: json['InfoName_lang_unk1']?.toString() ?? '',
+      infoNameLangUnk2: json['InfoName_lang_unk2']?.toString() ?? '',
+      infoNameLangUnk3: json['InfoName_lang_unk3']?.toString() ?? '',
+      infoNameLangFlags: (json['InfoName_lang_Flags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestInfoEntity &&
-            id == other.id &&
-            infoNameLangZhCN == other.infoNameLangZhCN;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, infoNameLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefQuestInfoEntity('
-        'id: $id, '
-        'infoNameLangZhCN: $infoNameLangZhCN'
-        ')';
   }
 }

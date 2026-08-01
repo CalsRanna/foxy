@@ -10,15 +10,9 @@ mixin _PlayerCreateInfoSkillCollectionEditorViewModelMixin
   late final rankController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  PlayerCreateInfoSkillEntity _collectCandidate() {
-    return PlayerCreateInfoSkillEntity(
-      raceMask: raceMaskController.collect(),
-      classMask: classMaskController.collect(),
-      skill: skillController.collect(),
-      rank: rankController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    PlayerCreateInfoSkillEntity playerCreateInfoSkill,
+  ) {}
 
   void _applyCandidate(PlayerCreateInfoSkillEntity playerCreateInfoSkill) {
     raceMaskController.init(playerCreateInfoSkill.raceMask);
@@ -29,7 +23,13 @@ mixin _PlayerCreateInfoSkillCollectionEditorViewModelMixin
     _afterApplyCandidate(playerCreateInfoSkill);
   }
 
-  void _afterApplyCandidate(
-    PlayerCreateInfoSkillEntity playerCreateInfoSkill,
-  ) {}
+  PlayerCreateInfoSkillEntity _collectCandidate() {
+    return PlayerCreateInfoSkillEntity(
+      raceMask: raceMaskController.collect(),
+      classMask: classMaskController.collect(),
+      skill: skillController.collect(),
+      rank: rankController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

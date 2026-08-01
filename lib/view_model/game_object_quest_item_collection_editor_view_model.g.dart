@@ -11,14 +11,7 @@ mixin _GameObjectQuestItemCollectionEditorViewModelMixin
   late final itemIdController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  GameObjectQuestItemEntity _collectCandidate() {
-    return GameObjectQuestItemEntity(
-      gameObjectEntry: gameObjectEntryController.collect(),
-      idx: idxController.collect(),
-      itemId: itemIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(GameObjectQuestItemEntity gameObjectQuestItem) {}
 
   void _applyCandidate(GameObjectQuestItemEntity gameObjectQuestItem) {
     gameObjectEntryController.init(gameObjectQuestItem.gameObjectEntry);
@@ -28,5 +21,12 @@ mixin _GameObjectQuestItemCollectionEditorViewModelMixin
     _afterApplyCandidate(gameObjectQuestItem);
   }
 
-  void _afterApplyCandidate(GameObjectQuestItemEntity gameObjectQuestItem) {}
+  GameObjectQuestItemEntity _collectCandidate() {
+    return GameObjectQuestItemEntity(
+      gameObjectEntry: gameObjectEntryController.collect(),
+      idx: idxController.collect(),
+      itemId: itemIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

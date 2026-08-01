@@ -3,11 +3,20 @@
 part of 'creature_default_trainer_entity.dart';
 
 mixin _CreatureDefaultTrainerEntityMixin {
-  static CreatureDefaultTrainerEntity fromJson(Map<String, dynamic> json) {
-    return CreatureDefaultTrainerEntity(
-      creatureId: (json['CreatureId'] as num?)?.toInt() ?? 0,
-      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
-    );
+  @override
+  int get hashCode {
+    final self = this as CreatureDefaultTrainerEntity;
+    return Object.hashAll([self.runtimeType, self.creatureId, self.trainerId]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureDefaultTrainerEntity;
+    return identical(self, other) ||
+        other is CreatureDefaultTrainerEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.creatureId == other.creatureId &&
+            self.trainerId == other.trainerId;
   }
 
   CreatureDefaultTrainerEntity copyWith({int? creatureId, int? trainerId}) {
@@ -24,27 +33,18 @@ mixin _CreatureDefaultTrainerEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureDefaultTrainerEntity;
-    return identical(self, other) ||
-        other is CreatureDefaultTrainerEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.creatureId == other.creatureId &&
-            self.trainerId == other.trainerId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureDefaultTrainerEntity;
-    return Object.hashAll([self.runtimeType, self.creatureId, self.trainerId]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureDefaultTrainerEntity;
     return 'CreatureDefaultTrainerEntity('
         'creatureId: ${self.creatureId}, '
         'trainerId: ${self.trainerId}'
         ')';
+  }
+
+  static CreatureDefaultTrainerEntity fromJson(Map<String, dynamic> json) {
+    return CreatureDefaultTrainerEntity(
+      creatureId: (json['CreatureId'] as num?)?.toInt() ?? 0,
+      trainerId: (json['TrainerId'] as num?)?.toInt() ?? 0,
+    );
   }
 }

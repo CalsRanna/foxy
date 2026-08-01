@@ -56,34 +56,7 @@ mixin _ScalingStatValueDetailViewModelMixin on FieldControllerMixin {
     IntFieldController(),
   );
 
-  ScalingStatValueEntity _collectCandidate() {
-    return ScalingStatValueEntity(
-      id: idController.collect(),
-      charlevel: charlevelController.collect(),
-      shoulderBudget: shoulderBudgetController.collect(),
-      trinketBudget: trinketBudgetController.collect(),
-      weaponBudget1H: weaponBudget1HController.collect(),
-      rangedBudget: rangedBudgetController.collect(),
-      clothShoulderArmor: clothShoulderArmorController.collect(),
-      leatherShoulderArmor: leatherShoulderArmorController.collect(),
-      mailShoulderArmor: mailShoulderArmorController.collect(),
-      plateShoulderArmor: plateShoulderArmorController.collect(),
-      weaponDPS1H: weaponDPS1HController.collect(),
-      weaponDPS2H: weaponDPS2HController.collect(),
-      spellcasterDPS1H: spellcasterDPS1HController.collect(),
-      spellcasterDPS2H: spellcasterDPS2HController.collect(),
-      rangedDPS: rangedDPSController.collect(),
-      wandDPS: wandDPSController.collect(),
-      spellPower: spellPowerController.collect(),
-      primaryBudget: primaryBudgetController.collect(),
-      tertiaryBudget: tertiaryBudgetController.collect(),
-      clothCloakArmor: clothCloakArmorController.collect(),
-      clothChestArmor: clothChestArmorController.collect(),
-      leatherChestArmor: leatherChestArmorController.collect(),
-      mailChestArmor: mailChestArmorController.collect(),
-      plateChestArmor: plateChestArmorController.collect(),
-    );
-  }
+  void _afterApplyCandidate(ScalingStatValueEntity scalingStatValue) {}
 
   void _applyCandidate(ScalingStatValueEntity scalingStatValue) {
     idController.init(scalingStatValue.id);
@@ -113,5 +86,32 @@ mixin _ScalingStatValueDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(scalingStatValue);
   }
 
-  void _afterApplyCandidate(ScalingStatValueEntity scalingStatValue) {}
+  ScalingStatValueEntity _collectCandidate() {
+    return ScalingStatValueEntity(
+      id: idController.collect(),
+      charlevel: charlevelController.collect(),
+      shoulderBudget: shoulderBudgetController.collect(),
+      trinketBudget: trinketBudgetController.collect(),
+      weaponBudget1H: weaponBudget1HController.collect(),
+      rangedBudget: rangedBudgetController.collect(),
+      clothShoulderArmor: clothShoulderArmorController.collect(),
+      leatherShoulderArmor: leatherShoulderArmorController.collect(),
+      mailShoulderArmor: mailShoulderArmorController.collect(),
+      plateShoulderArmor: plateShoulderArmorController.collect(),
+      weaponDPS1H: weaponDPS1HController.collect(),
+      weaponDPS2H: weaponDPS2HController.collect(),
+      spellcasterDPS1H: spellcasterDPS1HController.collect(),
+      spellcasterDPS2H: spellcasterDPS2HController.collect(),
+      rangedDPS: rangedDPSController.collect(),
+      wandDPS: wandDPSController.collect(),
+      spellPower: spellPowerController.collect(),
+      primaryBudget: primaryBudgetController.collect(),
+      tertiaryBudget: tertiaryBudgetController.collect(),
+      clothCloakArmor: clothCloakArmorController.collect(),
+      clothChestArmor: clothChestArmorController.collect(),
+      leatherChestArmor: leatherChestArmorController.collect(),
+      mailChestArmor: mailChestArmorController.collect(),
+      plateChestArmor: plateChestArmorController.collect(),
+    );
+  }
 }

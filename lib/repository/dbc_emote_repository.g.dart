@@ -2,6 +2,28 @@
 
 part of 'dbc_emote_repository.dart';
 
+final class DbcEmoteFilter {
+  final String id;
+  final String command;
+
+  const DbcEmoteFilter({this.id = '', this.command = ''});
+
+  factory DbcEmoteFilter.fromJson(Map<String, dynamic> json) {
+    return DbcEmoteFilter(
+      id: json['id']?.toString() ?? '',
+      command: json['command']?.toString() ?? '',
+    );
+  }
+
+  DbcEmoteFilter copyWith({String? id, String? command}) {
+    return DbcEmoteFilter(id: id ?? this.id, command: command ?? this.command);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'command': command};
+  }
+}
+
 mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
   Future<void> destroyDbcEmote(int key) async {
     await _beforeDestroy(key);
@@ -67,27 +89,5 @@ mixin _DbcEmoteRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class DbcEmoteFilter {
-  final String id;
-  final String command;
-
-  const DbcEmoteFilter({this.id = '', this.command = ''});
-
-  factory DbcEmoteFilter.fromJson(Map<String, dynamic> json) {
-    return DbcEmoteFilter(
-      id: json['id']?.toString() ?? '',
-      command: json['command']?.toString() ?? '',
-    );
-  }
-
-  DbcEmoteFilter copyWith({String? id, String? command}) {
-    return DbcEmoteFilter(id: id ?? this.id, command: command ?? this.command);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'command': command};
   }
 }

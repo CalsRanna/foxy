@@ -2,6 +2,31 @@
 
 part of 'light_repository.dart';
 
+final class LightFilter {
+  final String id;
+  final String continentId;
+
+  const LightFilter({this.id = '', this.continentId = ''});
+
+  factory LightFilter.fromJson(Map<String, dynamic> json) {
+    return LightFilter(
+      id: json['id']?.toString() ?? '',
+      continentId: json['continentId']?.toString() ?? '',
+    );
+  }
+
+  LightFilter copyWith({String? id, String? continentId}) {
+    return LightFilter(
+      id: id ?? this.id,
+      continentId: continentId ?? this.continentId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'continentId': continentId};
+  }
+}
+
 mixin _LightRepositoryMixin on RepositoryMixin {
   Future<void> destroyLight(int key) async {
     await _beforeDestroy(key);
@@ -67,30 +92,5 @@ mixin _LightRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class LightFilter {
-  final String id;
-  final String continentId;
-
-  const LightFilter({this.id = '', this.continentId = ''});
-
-  factory LightFilter.fromJson(Map<String, dynamic> json) {
-    return LightFilter(
-      id: json['id']?.toString() ?? '',
-      continentId: json['continentId']?.toString() ?? '',
-    );
-  }
-
-  LightFilter copyWith({String? id, String? continentId}) {
-    return LightFilter(
-      id: id ?? this.id,
-      continentId: continentId ?? this.continentId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'continentId': continentId};
   }
 }

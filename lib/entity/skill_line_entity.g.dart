@@ -2,69 +2,176 @@
 
 part of 'skill_line_entity.dart';
 
-mixin _SkillLineEntityMixin {
-  static SkillLineEntity fromJson(Map<String, dynamic> json) {
-    return SkillLineEntity(
+final class BriefSkillLineEntity {
+  final int id;
+  final int categoryId;
+  final String displayNameZhCN;
+
+  const BriefSkillLineEntity({
+    this.id = 0,
+    this.categoryId = 0,
+    this.displayNameZhCN = '',
+  });
+
+  factory BriefSkillLineEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSkillLineEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
-      skillCostsId: (json['SkillCostsID'] as num?)?.toInt() ?? 0,
-      displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
-      displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
-      displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
-      displayNameLangDeDE: json['DisplayName_lang_deDE']?.toString() ?? '',
-      displayNameLangZhCN: json['DisplayName_lang_zhCN']?.toString() ?? '',
-      displayNameLangZhTW: json['DisplayName_lang_zhTW']?.toString() ?? '',
-      displayNameLangEsES: json['DisplayName_lang_esES']?.toString() ?? '',
-      displayNameLangEsMX: json['DisplayName_lang_esMX']?.toString() ?? '',
-      displayNameLangRuRU: json['DisplayName_lang_ruRU']?.toString() ?? '',
-      displayNameLangJaJP: json['DisplayName_lang_jaJP']?.toString() ?? '',
-      displayNameLangPtPT: json['DisplayName_lang_ptPT']?.toString() ?? '',
-      displayNameLangPtBR: json['DisplayName_lang_ptBR']?.toString() ?? '',
-      displayNameLangItIT: json['DisplayName_lang_itIT']?.toString() ?? '',
-      displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
-      displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
-      displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
-      displayNameLangFlags:
-          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
-      descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
-      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
-      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
-      alternateVerbLangEnUS: json['AlternateVerb_lang_enUS']?.toString() ?? '',
-      alternateVerbLangKoKR: json['AlternateVerb_lang_koKR']?.toString() ?? '',
-      alternateVerbLangFrFR: json['AlternateVerb_lang_frFR']?.toString() ?? '',
-      alternateVerbLangDeDE: json['AlternateVerb_lang_deDE']?.toString() ?? '',
-      alternateVerbLangZhCN: json['AlternateVerb_lang_zhCN']?.toString() ?? '',
-      alternateVerbLangZhTW: json['AlternateVerb_lang_zhTW']?.toString() ?? '',
-      alternateVerbLangEsES: json['AlternateVerb_lang_esES']?.toString() ?? '',
-      alternateVerbLangEsMX: json['AlternateVerb_lang_esMX']?.toString() ?? '',
-      alternateVerbLangRuRU: json['AlternateVerb_lang_ruRU']?.toString() ?? '',
-      alternateVerbLangJaJP: json['AlternateVerb_lang_jaJP']?.toString() ?? '',
-      alternateVerbLangPtPT: json['AlternateVerb_lang_ptPT']?.toString() ?? '',
-      alternateVerbLangPtBR: json['AlternateVerb_lang_ptBR']?.toString() ?? '',
-      alternateVerbLangItIT: json['AlternateVerb_lang_itIT']?.toString() ?? '',
-      alternateVerbLangUnk1: json['AlternateVerb_lang_unk1']?.toString() ?? '',
-      alternateVerbLangUnk2: json['AlternateVerb_lang_unk2']?.toString() ?? '',
-      alternateVerbLangUnk3: json['AlternateVerb_lang_unk3']?.toString() ?? '',
-      alternateVerbLangFlags:
-          (json['AlternateVerb_lang_Flags'] as num?)?.toInt() ?? 0,
-      canLink: (json['CanLink'] as num?)?.toInt() ?? 0,
+      displayNameZhCN: json['displayNameZhCN']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, categoryId, displayNameZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSkillLineEntity &&
+            id == other.id &&
+            categoryId == other.categoryId &&
+            displayNameZhCN == other.displayNameZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefSkillLineEntity('
+        'id: $id, '
+        'categoryId: $categoryId, '
+        'displayNameZhCN: $displayNameZhCN'
+        ')';
+  }
+}
+
+mixin _SkillLineEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as SkillLineEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.categoryId,
+      self.skillCostsId,
+      self.displayNameLangEnUS,
+      self.displayNameLangKoKR,
+      self.displayNameLangFrFR,
+      self.displayNameLangDeDE,
+      self.displayNameLangZhCN,
+      self.displayNameLangZhTW,
+      self.displayNameLangEsES,
+      self.displayNameLangEsMX,
+      self.displayNameLangRuRU,
+      self.displayNameLangJaJP,
+      self.displayNameLangPtPT,
+      self.displayNameLangPtBR,
+      self.displayNameLangItIT,
+      self.displayNameLangUnk1,
+      self.displayNameLangUnk2,
+      self.displayNameLangUnk3,
+      self.displayNameLangFlags,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+      self.spellIconId,
+      self.alternateVerbLangEnUS,
+      self.alternateVerbLangKoKR,
+      self.alternateVerbLangFrFR,
+      self.alternateVerbLangDeDE,
+      self.alternateVerbLangZhCN,
+      self.alternateVerbLangZhTW,
+      self.alternateVerbLangEsES,
+      self.alternateVerbLangEsMX,
+      self.alternateVerbLangRuRU,
+      self.alternateVerbLangJaJP,
+      self.alternateVerbLangPtPT,
+      self.alternateVerbLangPtBR,
+      self.alternateVerbLangItIT,
+      self.alternateVerbLangUnk1,
+      self.alternateVerbLangUnk2,
+      self.alternateVerbLangUnk3,
+      self.alternateVerbLangFlags,
+      self.canLink,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as SkillLineEntity;
+    return identical(self, other) ||
+        other is SkillLineEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.categoryId == other.categoryId &&
+            self.skillCostsId == other.skillCostsId &&
+            self.displayNameLangEnUS == other.displayNameLangEnUS &&
+            self.displayNameLangKoKR == other.displayNameLangKoKR &&
+            self.displayNameLangFrFR == other.displayNameLangFrFR &&
+            self.displayNameLangDeDE == other.displayNameLangDeDE &&
+            self.displayNameLangZhCN == other.displayNameLangZhCN &&
+            self.displayNameLangZhTW == other.displayNameLangZhTW &&
+            self.displayNameLangEsES == other.displayNameLangEsES &&
+            self.displayNameLangEsMX == other.displayNameLangEsMX &&
+            self.displayNameLangRuRU == other.displayNameLangRuRU &&
+            self.displayNameLangJaJP == other.displayNameLangJaJP &&
+            self.displayNameLangPtPT == other.displayNameLangPtPT &&
+            self.displayNameLangPtBR == other.displayNameLangPtBR &&
+            self.displayNameLangItIT == other.displayNameLangItIT &&
+            self.displayNameLangUnk1 == other.displayNameLangUnk1 &&
+            self.displayNameLangUnk2 == other.displayNameLangUnk2 &&
+            self.displayNameLangUnk3 == other.displayNameLangUnk3 &&
+            self.displayNameLangFlags == other.displayNameLangFlags &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags &&
+            self.spellIconId == other.spellIconId &&
+            self.alternateVerbLangEnUS == other.alternateVerbLangEnUS &&
+            self.alternateVerbLangKoKR == other.alternateVerbLangKoKR &&
+            self.alternateVerbLangFrFR == other.alternateVerbLangFrFR &&
+            self.alternateVerbLangDeDE == other.alternateVerbLangDeDE &&
+            self.alternateVerbLangZhCN == other.alternateVerbLangZhCN &&
+            self.alternateVerbLangZhTW == other.alternateVerbLangZhTW &&
+            self.alternateVerbLangEsES == other.alternateVerbLangEsES &&
+            self.alternateVerbLangEsMX == other.alternateVerbLangEsMX &&
+            self.alternateVerbLangRuRU == other.alternateVerbLangRuRU &&
+            self.alternateVerbLangJaJP == other.alternateVerbLangJaJP &&
+            self.alternateVerbLangPtPT == other.alternateVerbLangPtPT &&
+            self.alternateVerbLangPtBR == other.alternateVerbLangPtBR &&
+            self.alternateVerbLangItIT == other.alternateVerbLangItIT &&
+            self.alternateVerbLangUnk1 == other.alternateVerbLangUnk1 &&
+            self.alternateVerbLangUnk2 == other.alternateVerbLangUnk2 &&
+            self.alternateVerbLangUnk3 == other.alternateVerbLangUnk3 &&
+            self.alternateVerbLangFlags == other.alternateVerbLangFlags &&
+            self.canLink == other.canLink;
   }
 
   SkillLineEntity copyWith({
@@ -266,134 +373,6 @@ mixin _SkillLineEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as SkillLineEntity;
-    return identical(self, other) ||
-        other is SkillLineEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.categoryId == other.categoryId &&
-            self.skillCostsId == other.skillCostsId &&
-            self.displayNameLangEnUS == other.displayNameLangEnUS &&
-            self.displayNameLangKoKR == other.displayNameLangKoKR &&
-            self.displayNameLangFrFR == other.displayNameLangFrFR &&
-            self.displayNameLangDeDE == other.displayNameLangDeDE &&
-            self.displayNameLangZhCN == other.displayNameLangZhCN &&
-            self.displayNameLangZhTW == other.displayNameLangZhTW &&
-            self.displayNameLangEsES == other.displayNameLangEsES &&
-            self.displayNameLangEsMX == other.displayNameLangEsMX &&
-            self.displayNameLangRuRU == other.displayNameLangRuRU &&
-            self.displayNameLangJaJP == other.displayNameLangJaJP &&
-            self.displayNameLangPtPT == other.displayNameLangPtPT &&
-            self.displayNameLangPtBR == other.displayNameLangPtBR &&
-            self.displayNameLangItIT == other.displayNameLangItIT &&
-            self.displayNameLangUnk1 == other.displayNameLangUnk1 &&
-            self.displayNameLangUnk2 == other.displayNameLangUnk2 &&
-            self.displayNameLangUnk3 == other.displayNameLangUnk3 &&
-            self.displayNameLangFlags == other.displayNameLangFlags &&
-            self.descriptionLangEnUS == other.descriptionLangEnUS &&
-            self.descriptionLangKoKR == other.descriptionLangKoKR &&
-            self.descriptionLangFrFR == other.descriptionLangFrFR &&
-            self.descriptionLangDeDE == other.descriptionLangDeDE &&
-            self.descriptionLangZhCN == other.descriptionLangZhCN &&
-            self.descriptionLangZhTW == other.descriptionLangZhTW &&
-            self.descriptionLangEsES == other.descriptionLangEsES &&
-            self.descriptionLangEsMX == other.descriptionLangEsMX &&
-            self.descriptionLangRuRU == other.descriptionLangRuRU &&
-            self.descriptionLangJaJP == other.descriptionLangJaJP &&
-            self.descriptionLangPtPT == other.descriptionLangPtPT &&
-            self.descriptionLangPtBR == other.descriptionLangPtBR &&
-            self.descriptionLangItIT == other.descriptionLangItIT &&
-            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            self.descriptionLangFlags == other.descriptionLangFlags &&
-            self.spellIconId == other.spellIconId &&
-            self.alternateVerbLangEnUS == other.alternateVerbLangEnUS &&
-            self.alternateVerbLangKoKR == other.alternateVerbLangKoKR &&
-            self.alternateVerbLangFrFR == other.alternateVerbLangFrFR &&
-            self.alternateVerbLangDeDE == other.alternateVerbLangDeDE &&
-            self.alternateVerbLangZhCN == other.alternateVerbLangZhCN &&
-            self.alternateVerbLangZhTW == other.alternateVerbLangZhTW &&
-            self.alternateVerbLangEsES == other.alternateVerbLangEsES &&
-            self.alternateVerbLangEsMX == other.alternateVerbLangEsMX &&
-            self.alternateVerbLangRuRU == other.alternateVerbLangRuRU &&
-            self.alternateVerbLangJaJP == other.alternateVerbLangJaJP &&
-            self.alternateVerbLangPtPT == other.alternateVerbLangPtPT &&
-            self.alternateVerbLangPtBR == other.alternateVerbLangPtBR &&
-            self.alternateVerbLangItIT == other.alternateVerbLangItIT &&
-            self.alternateVerbLangUnk1 == other.alternateVerbLangUnk1 &&
-            self.alternateVerbLangUnk2 == other.alternateVerbLangUnk2 &&
-            self.alternateVerbLangUnk3 == other.alternateVerbLangUnk3 &&
-            self.alternateVerbLangFlags == other.alternateVerbLangFlags &&
-            self.canLink == other.canLink;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as SkillLineEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.categoryId,
-      self.skillCostsId,
-      self.displayNameLangEnUS,
-      self.displayNameLangKoKR,
-      self.displayNameLangFrFR,
-      self.displayNameLangDeDE,
-      self.displayNameLangZhCN,
-      self.displayNameLangZhTW,
-      self.displayNameLangEsES,
-      self.displayNameLangEsMX,
-      self.displayNameLangRuRU,
-      self.displayNameLangJaJP,
-      self.displayNameLangPtPT,
-      self.displayNameLangPtBR,
-      self.displayNameLangItIT,
-      self.displayNameLangUnk1,
-      self.displayNameLangUnk2,
-      self.displayNameLangUnk3,
-      self.displayNameLangFlags,
-      self.descriptionLangEnUS,
-      self.descriptionLangKoKR,
-      self.descriptionLangFrFR,
-      self.descriptionLangDeDE,
-      self.descriptionLangZhCN,
-      self.descriptionLangZhTW,
-      self.descriptionLangEsES,
-      self.descriptionLangEsMX,
-      self.descriptionLangRuRU,
-      self.descriptionLangJaJP,
-      self.descriptionLangPtPT,
-      self.descriptionLangPtBR,
-      self.descriptionLangItIT,
-      self.descriptionLangUnk1,
-      self.descriptionLangUnk2,
-      self.descriptionLangUnk3,
-      self.descriptionLangFlags,
-      self.spellIconId,
-      self.alternateVerbLangEnUS,
-      self.alternateVerbLangKoKR,
-      self.alternateVerbLangFrFR,
-      self.alternateVerbLangDeDE,
-      self.alternateVerbLangZhCN,
-      self.alternateVerbLangZhTW,
-      self.alternateVerbLangEsES,
-      self.alternateVerbLangEsMX,
-      self.alternateVerbLangRuRU,
-      self.alternateVerbLangJaJP,
-      self.alternateVerbLangPtPT,
-      self.alternateVerbLangPtBR,
-      self.alternateVerbLangItIT,
-      self.alternateVerbLangUnk1,
-      self.alternateVerbLangUnk2,
-      self.alternateVerbLangUnk3,
-      self.alternateVerbLangFlags,
-      self.canLink,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as SkillLineEntity;
     return 'SkillLineEntity('
@@ -455,47 +434,68 @@ mixin _SkillLineEntityMixin {
         'canLink: ${self.canLink}'
         ')';
   }
-}
 
-final class BriefSkillLineEntity {
-  final int id;
-  final int categoryId;
-  final String displayNameZhCN;
-
-  const BriefSkillLineEntity({
-    this.id = 0,
-    this.categoryId = 0,
-    this.displayNameZhCN = '',
-  });
-
-  factory BriefSkillLineEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSkillLineEntity(
+  static SkillLineEntity fromJson(Map<String, dynamic> json) {
+    return SkillLineEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       categoryId: (json['CategoryID'] as num?)?.toInt() ?? 0,
-      displayNameZhCN: json['displayNameZhCN']?.toString() ?? '',
+      skillCostsId: (json['SkillCostsID'] as num?)?.toInt() ?? 0,
+      displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
+      displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
+      displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
+      displayNameLangDeDE: json['DisplayName_lang_deDE']?.toString() ?? '',
+      displayNameLangZhCN: json['DisplayName_lang_zhCN']?.toString() ?? '',
+      displayNameLangZhTW: json['DisplayName_lang_zhTW']?.toString() ?? '',
+      displayNameLangEsES: json['DisplayName_lang_esES']?.toString() ?? '',
+      displayNameLangEsMX: json['DisplayName_lang_esMX']?.toString() ?? '',
+      displayNameLangRuRU: json['DisplayName_lang_ruRU']?.toString() ?? '',
+      displayNameLangJaJP: json['DisplayName_lang_jaJP']?.toString() ?? '',
+      displayNameLangPtPT: json['DisplayName_lang_ptPT']?.toString() ?? '',
+      displayNameLangPtBR: json['DisplayName_lang_ptBR']?.toString() ?? '',
+      displayNameLangItIT: json['DisplayName_lang_itIT']?.toString() ?? '',
+      displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
+      displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
+      displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
+      displayNameLangFlags:
+          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
+      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
+      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
+      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
+      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
+      descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
+      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
+      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
+      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
+      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
+      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
+      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
+      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
+      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
+      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
+      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
+      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
+      descriptionLangFlags:
+          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      alternateVerbLangEnUS: json['AlternateVerb_lang_enUS']?.toString() ?? '',
+      alternateVerbLangKoKR: json['AlternateVerb_lang_koKR']?.toString() ?? '',
+      alternateVerbLangFrFR: json['AlternateVerb_lang_frFR']?.toString() ?? '',
+      alternateVerbLangDeDE: json['AlternateVerb_lang_deDE']?.toString() ?? '',
+      alternateVerbLangZhCN: json['AlternateVerb_lang_zhCN']?.toString() ?? '',
+      alternateVerbLangZhTW: json['AlternateVerb_lang_zhTW']?.toString() ?? '',
+      alternateVerbLangEsES: json['AlternateVerb_lang_esES']?.toString() ?? '',
+      alternateVerbLangEsMX: json['AlternateVerb_lang_esMX']?.toString() ?? '',
+      alternateVerbLangRuRU: json['AlternateVerb_lang_ruRU']?.toString() ?? '',
+      alternateVerbLangJaJP: json['AlternateVerb_lang_jaJP']?.toString() ?? '',
+      alternateVerbLangPtPT: json['AlternateVerb_lang_ptPT']?.toString() ?? '',
+      alternateVerbLangPtBR: json['AlternateVerb_lang_ptBR']?.toString() ?? '',
+      alternateVerbLangItIT: json['AlternateVerb_lang_itIT']?.toString() ?? '',
+      alternateVerbLangUnk1: json['AlternateVerb_lang_unk1']?.toString() ?? '',
+      alternateVerbLangUnk2: json['AlternateVerb_lang_unk2']?.toString() ?? '',
+      alternateVerbLangUnk3: json['AlternateVerb_lang_unk3']?.toString() ?? '',
+      alternateVerbLangFlags:
+          (json['AlternateVerb_lang_Flags'] as num?)?.toInt() ?? 0,
+      canLink: (json['CanLink'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefSkillLineEntity &&
-            id == other.id &&
-            categoryId == other.categoryId &&
-            displayNameZhCN == other.displayNameZhCN;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, categoryId, displayNameZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefSkillLineEntity('
-        'id: $id, '
-        'categoryId: $categoryId, '
-        'displayNameZhCN: $displayNameZhCN'
-        ')';
   }
 }

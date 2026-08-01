@@ -2,6 +2,28 @@
 
 part of 'liquid_type_repository.dart';
 
+final class LiquidTypeFilter {
+  final String id;
+  final String name;
+
+  const LiquidTypeFilter({this.id = '', this.name = ''});
+
+  factory LiquidTypeFilter.fromJson(Map<String, dynamic> json) {
+    return LiquidTypeFilter(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  LiquidTypeFilter copyWith({String? id, String? name}) {
+    return LiquidTypeFilter(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
+}
+
 mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
   Future<void> destroyLiquidType(int key) async {
     await _beforeDestroy(key);
@@ -73,27 +95,5 @@ mixin _LiquidTypeRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class LiquidTypeFilter {
-  final String id;
-  final String name;
-
-  const LiquidTypeFilter({this.id = '', this.name = ''});
-
-  factory LiquidTypeFilter.fromJson(Map<String, dynamic> json) {
-    return LiquidTypeFilter(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  LiquidTypeFilter copyWith({String? id, String? name}) {
-    return LiquidTypeFilter(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
   }
 }

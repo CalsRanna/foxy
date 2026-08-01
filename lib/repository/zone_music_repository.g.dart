@@ -2,6 +2,28 @@
 
 part of 'zone_music_repository.dart';
 
+final class ZoneMusicFilter {
+  final String id;
+  final String name;
+
+  const ZoneMusicFilter({this.id = '', this.name = ''});
+
+  factory ZoneMusicFilter.fromJson(Map<String, dynamic> json) {
+    return ZoneMusicFilter(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  ZoneMusicFilter copyWith({String? id, String? name}) {
+    return ZoneMusicFilter(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
+}
+
 mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
   Future<void> destroyZoneMusic(int key) async {
     await _beforeDestroy(key);
@@ -73,27 +95,5 @@ mixin _ZoneMusicRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class ZoneMusicFilter {
-  final String id;
-  final String name;
-
-  const ZoneMusicFilter({this.id = '', this.name = ''});
-
-  factory ZoneMusicFilter.fromJson(Map<String, dynamic> json) {
-    return ZoneMusicFilter(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  ZoneMusicFilter copyWith({String? id, String? name}) {
-    return ZoneMusicFilter(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
   }
 }

@@ -2,32 +2,111 @@
 
 part of 'quest_template_addon_entity.dart';
 
-mixin _QuestTemplateAddonEntityMixin {
-  static QuestTemplateAddonEntity fromJson(Map<String, dynamic> json) {
-    return QuestTemplateAddonEntity(
+final class BriefQuestTemplateAddonEntity {
+  final int id;
+  final int maxLevel;
+  final int prevQuestId;
+  final int nextQuestId;
+  final int specialFlags;
+
+  const BriefQuestTemplateAddonEntity({
+    this.id = 0,
+    this.maxLevel = 0,
+    this.prevQuestId = 0,
+    this.nextQuestId = 0,
+    this.specialFlags = 0,
+  });
+
+  factory BriefQuestTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestTemplateAddonEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       maxLevel: (json['MaxLevel'] as num?)?.toInt() ?? 0,
-      allowableClasses: (json['AllowableClasses'] as num?)?.toInt() ?? 0,
-      sourceSpellId: (json['SourceSpellID'] as num?)?.toInt() ?? 0,
       prevQuestId: (json['PrevQuestID'] as num?)?.toInt() ?? 0,
       nextQuestId: (json['NextQuestID'] as num?)?.toInt() ?? 0,
-      exclusiveGroup: (json['ExclusiveGroup'] as num?)?.toInt() ?? 0,
-      breadcrumbForQuestId:
-          (json['BreadcrumbForQuestId'] as num?)?.toInt() ?? 0,
-      rewardMailTemplateId:
-          (json['RewardMailTemplateID'] as num?)?.toInt() ?? 0,
-      rewardMailDelay: (json['RewardMailDelay'] as num?)?.toInt() ?? 0,
-      requiredSkillId: (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
-      requiredSkillPoints: (json['RequiredSkillPoints'] as num?)?.toInt() ?? 0,
-      requiredMinRepFaction:
-          (json['RequiredMinRepFaction'] as num?)?.toInt() ?? 0,
-      requiredMaxRepFaction:
-          (json['RequiredMaxRepFaction'] as num?)?.toInt() ?? 0,
-      requiredMinRepValue: (json['RequiredMinRepValue'] as num?)?.toInt() ?? 0,
-      requiredMaxRepValue: (json['RequiredMaxRepValue'] as num?)?.toInt() ?? 0,
-      providedItemCount: (json['ProvidedItemCount'] as num?)?.toInt() ?? 0,
       specialFlags: (json['SpecialFlags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, maxLevel, prevQuestId, nextQuestId, specialFlags]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateAddonEntity &&
+            id == other.id &&
+            maxLevel == other.maxLevel &&
+            prevQuestId == other.prevQuestId &&
+            nextQuestId == other.nextQuestId &&
+            specialFlags == other.specialFlags;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateAddonEntity('
+        'id: $id, '
+        'maxLevel: $maxLevel, '
+        'prevQuestId: $prevQuestId, '
+        'nextQuestId: $nextQuestId, '
+        'specialFlags: $specialFlags'
+        ')';
+  }
+}
+
+mixin _QuestTemplateAddonEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestTemplateAddonEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.maxLevel,
+      self.allowableClasses,
+      self.sourceSpellId,
+      self.prevQuestId,
+      self.nextQuestId,
+      self.exclusiveGroup,
+      self.breadcrumbForQuestId,
+      self.rewardMailTemplateId,
+      self.rewardMailDelay,
+      self.requiredSkillId,
+      self.requiredSkillPoints,
+      self.requiredMinRepFaction,
+      self.requiredMaxRepFaction,
+      self.requiredMinRepValue,
+      self.requiredMaxRepValue,
+      self.providedItemCount,
+      self.specialFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestTemplateAddonEntity;
+    return identical(self, other) ||
+        other is QuestTemplateAddonEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.maxLevel == other.maxLevel &&
+            self.allowableClasses == other.allowableClasses &&
+            self.sourceSpellId == other.sourceSpellId &&
+            self.prevQuestId == other.prevQuestId &&
+            self.nextQuestId == other.nextQuestId &&
+            self.exclusiveGroup == other.exclusiveGroup &&
+            self.breadcrumbForQuestId == other.breadcrumbForQuestId &&
+            self.rewardMailTemplateId == other.rewardMailTemplateId &&
+            self.rewardMailDelay == other.rewardMailDelay &&
+            self.requiredSkillId == other.requiredSkillId &&
+            self.requiredSkillPoints == other.requiredSkillPoints &&
+            self.requiredMinRepFaction == other.requiredMinRepFaction &&
+            self.requiredMaxRepFaction == other.requiredMaxRepFaction &&
+            self.requiredMinRepValue == other.requiredMinRepValue &&
+            self.requiredMaxRepValue == other.requiredMaxRepValue &&
+            self.providedItemCount == other.providedItemCount &&
+            self.specialFlags == other.specialFlags;
   }
 
   QuestTemplateAddonEntity copyWith({
@@ -100,58 +179,6 @@ mixin _QuestTemplateAddonEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestTemplateAddonEntity;
-    return identical(self, other) ||
-        other is QuestTemplateAddonEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.maxLevel == other.maxLevel &&
-            self.allowableClasses == other.allowableClasses &&
-            self.sourceSpellId == other.sourceSpellId &&
-            self.prevQuestId == other.prevQuestId &&
-            self.nextQuestId == other.nextQuestId &&
-            self.exclusiveGroup == other.exclusiveGroup &&
-            self.breadcrumbForQuestId == other.breadcrumbForQuestId &&
-            self.rewardMailTemplateId == other.rewardMailTemplateId &&
-            self.rewardMailDelay == other.rewardMailDelay &&
-            self.requiredSkillId == other.requiredSkillId &&
-            self.requiredSkillPoints == other.requiredSkillPoints &&
-            self.requiredMinRepFaction == other.requiredMinRepFaction &&
-            self.requiredMaxRepFaction == other.requiredMaxRepFaction &&
-            self.requiredMinRepValue == other.requiredMinRepValue &&
-            self.requiredMaxRepValue == other.requiredMaxRepValue &&
-            self.providedItemCount == other.providedItemCount &&
-            self.specialFlags == other.specialFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestTemplateAddonEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.maxLevel,
-      self.allowableClasses,
-      self.sourceSpellId,
-      self.prevQuestId,
-      self.nextQuestId,
-      self.exclusiveGroup,
-      self.breadcrumbForQuestId,
-      self.rewardMailTemplateId,
-      self.rewardMailDelay,
-      self.requiredSkillId,
-      self.requiredSkillPoints,
-      self.requiredMinRepFaction,
-      self.requiredMaxRepFaction,
-      self.requiredMinRepValue,
-      self.requiredMaxRepValue,
-      self.providedItemCount,
-      self.specialFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestTemplateAddonEntity;
     return 'QuestTemplateAddonEntity('
@@ -175,58 +202,31 @@ mixin _QuestTemplateAddonEntityMixin {
         'specialFlags: ${self.specialFlags}'
         ')';
   }
-}
 
-final class BriefQuestTemplateAddonEntity {
-  final int id;
-  final int maxLevel;
-  final int prevQuestId;
-  final int nextQuestId;
-  final int specialFlags;
-
-  const BriefQuestTemplateAddonEntity({
-    this.id = 0,
-    this.maxLevel = 0,
-    this.prevQuestId = 0,
-    this.nextQuestId = 0,
-    this.specialFlags = 0,
-  });
-
-  factory BriefQuestTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestTemplateAddonEntity(
+  static QuestTemplateAddonEntity fromJson(Map<String, dynamic> json) {
+    return QuestTemplateAddonEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       maxLevel: (json['MaxLevel'] as num?)?.toInt() ?? 0,
+      allowableClasses: (json['AllowableClasses'] as num?)?.toInt() ?? 0,
+      sourceSpellId: (json['SourceSpellID'] as num?)?.toInt() ?? 0,
       prevQuestId: (json['PrevQuestID'] as num?)?.toInt() ?? 0,
       nextQuestId: (json['NextQuestID'] as num?)?.toInt() ?? 0,
+      exclusiveGroup: (json['ExclusiveGroup'] as num?)?.toInt() ?? 0,
+      breadcrumbForQuestId:
+          (json['BreadcrumbForQuestId'] as num?)?.toInt() ?? 0,
+      rewardMailTemplateId:
+          (json['RewardMailTemplateID'] as num?)?.toInt() ?? 0,
+      rewardMailDelay: (json['RewardMailDelay'] as num?)?.toInt() ?? 0,
+      requiredSkillId: (json['RequiredSkillID'] as num?)?.toInt() ?? 0,
+      requiredSkillPoints: (json['RequiredSkillPoints'] as num?)?.toInt() ?? 0,
+      requiredMinRepFaction:
+          (json['RequiredMinRepFaction'] as num?)?.toInt() ?? 0,
+      requiredMaxRepFaction:
+          (json['RequiredMaxRepFaction'] as num?)?.toInt() ?? 0,
+      requiredMinRepValue: (json['RequiredMinRepValue'] as num?)?.toInt() ?? 0,
+      requiredMaxRepValue: (json['RequiredMaxRepValue'] as num?)?.toInt() ?? 0,
+      providedItemCount: (json['ProvidedItemCount'] as num?)?.toInt() ?? 0,
       specialFlags: (json['SpecialFlags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestTemplateAddonEntity &&
-            id == other.id &&
-            maxLevel == other.maxLevel &&
-            prevQuestId == other.prevQuestId &&
-            nextQuestId == other.nextQuestId &&
-            specialFlags == other.specialFlags;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, maxLevel, prevQuestId, nextQuestId, specialFlags]);
-
-  @override
-  String toString() {
-    return 'BriefQuestTemplateAddonEntity('
-        'id: $id, '
-        'maxLevel: $maxLevel, '
-        'prevQuestId: $prevQuestId, '
-        'nextQuestId: $nextQuestId, '
-        'specialFlags: $specialFlags'
-        ')';
   }
 }

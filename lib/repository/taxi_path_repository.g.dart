@@ -2,6 +2,24 @@
 
 part of 'taxi_path_repository.dart';
 
+final class TaxiPathFilter {
+  final String id;
+
+  const TaxiPathFilter({this.id = ''});
+
+  factory TaxiPathFilter.fromJson(Map<String, dynamic> json) {
+    return TaxiPathFilter(id: json['id']?.toString() ?? '');
+  }
+
+  TaxiPathFilter copyWith({String? id}) {
+    return TaxiPathFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _TaxiPathRepositoryMixin on RepositoryMixin {
   Future<void> destroyTaxiPath(int key) async {
     await _beforeDestroy(key);
@@ -67,23 +85,5 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class TaxiPathFilter {
-  final String id;
-
-  const TaxiPathFilter({this.id = ''});
-
-  factory TaxiPathFilter.fromJson(Map<String, dynamic> json) {
-    return TaxiPathFilter(id: json['id']?.toString() ?? '');
-  }
-
-  TaxiPathFilter copyWith({String? id}) {
-    return TaxiPathFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

@@ -2,43 +2,135 @@
 
 part of 'lock_entity.dart';
 
-mixin _LockEntityMixin {
-  static LockEntity fromJson(Map<String, dynamic> json) {
-    return LockEntity(
+final class BriefLockEntity {
+  final int id;
+  final int type0;
+  final int index0;
+  final int skill0;
+
+  const BriefLockEntity({
+    this.id = 0,
+    this.type0 = 0,
+    this.index0 = 0,
+    this.skill0 = 0,
+  });
+
+  factory BriefLockEntity.fromJson(Map<String, dynamic> json) {
+    return BriefLockEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       type0: (json['Type0'] as num?)?.toInt() ?? 0,
-      type1: (json['Type1'] as num?)?.toInt() ?? 0,
-      type2: (json['Type2'] as num?)?.toInt() ?? 0,
-      type3: (json['Type3'] as num?)?.toInt() ?? 0,
-      type4: (json['Type4'] as num?)?.toInt() ?? 0,
-      type5: (json['Type5'] as num?)?.toInt() ?? 0,
-      type6: (json['Type6'] as num?)?.toInt() ?? 0,
-      type7: (json['Type7'] as num?)?.toInt() ?? 0,
       index0: (json['Index0'] as num?)?.toInt() ?? 0,
-      index1: (json['Index1'] as num?)?.toInt() ?? 0,
-      index2: (json['Index2'] as num?)?.toInt() ?? 0,
-      index3: (json['Index3'] as num?)?.toInt() ?? 0,
-      index4: (json['Index4'] as num?)?.toInt() ?? 0,
-      index5: (json['Index5'] as num?)?.toInt() ?? 0,
-      index6: (json['Index6'] as num?)?.toInt() ?? 0,
-      index7: (json['Index7'] as num?)?.toInt() ?? 0,
       skill0: (json['Skill0'] as num?)?.toInt() ?? 0,
-      skill1: (json['Skill1'] as num?)?.toInt() ?? 0,
-      skill2: (json['Skill2'] as num?)?.toInt() ?? 0,
-      skill3: (json['Skill3'] as num?)?.toInt() ?? 0,
-      skill4: (json['Skill4'] as num?)?.toInt() ?? 0,
-      skill5: (json['Skill5'] as num?)?.toInt() ?? 0,
-      skill6: (json['Skill6'] as num?)?.toInt() ?? 0,
-      skill7: (json['Skill7'] as num?)?.toInt() ?? 0,
-      action0: (json['Action0'] as num?)?.toInt() ?? 0,
-      action1: (json['Action1'] as num?)?.toInt() ?? 0,
-      action2: (json['Action2'] as num?)?.toInt() ?? 0,
-      action3: (json['Action3'] as num?)?.toInt() ?? 0,
-      action4: (json['Action4'] as num?)?.toInt() ?? 0,
-      action5: (json['Action5'] as num?)?.toInt() ?? 0,
-      action6: (json['Action6'] as num?)?.toInt() ?? 0,
-      action7: (json['Action7'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, type0, index0, skill0]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLockEntity &&
+            id == other.id &&
+            type0 == other.type0 &&
+            index0 == other.index0 &&
+            skill0 == other.skill0;
+  }
+
+  @override
+  String toString() {
+    return 'BriefLockEntity('
+        'id: $id, '
+        'type0: $type0, '
+        'index0: $index0, '
+        'skill0: $skill0'
+        ')';
+  }
+}
+
+mixin _LockEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as LockEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.type0,
+      self.type1,
+      self.type2,
+      self.type3,
+      self.type4,
+      self.type5,
+      self.type6,
+      self.type7,
+      self.index0,
+      self.index1,
+      self.index2,
+      self.index3,
+      self.index4,
+      self.index5,
+      self.index6,
+      self.index7,
+      self.skill0,
+      self.skill1,
+      self.skill2,
+      self.skill3,
+      self.skill4,
+      self.skill5,
+      self.skill6,
+      self.skill7,
+      self.action0,
+      self.action1,
+      self.action2,
+      self.action3,
+      self.action4,
+      self.action5,
+      self.action6,
+      self.action7,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as LockEntity;
+    return identical(self, other) ||
+        other is LockEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.type0 == other.type0 &&
+            self.type1 == other.type1 &&
+            self.type2 == other.type2 &&
+            self.type3 == other.type3 &&
+            self.type4 == other.type4 &&
+            self.type5 == other.type5 &&
+            self.type6 == other.type6 &&
+            self.type7 == other.type7 &&
+            self.index0 == other.index0 &&
+            self.index1 == other.index1 &&
+            self.index2 == other.index2 &&
+            self.index3 == other.index3 &&
+            self.index4 == other.index4 &&
+            self.index5 == other.index5 &&
+            self.index6 == other.index6 &&
+            self.index7 == other.index7 &&
+            self.skill0 == other.skill0 &&
+            self.skill1 == other.skill1 &&
+            self.skill2 == other.skill2 &&
+            self.skill3 == other.skill3 &&
+            self.skill4 == other.skill4 &&
+            self.skill5 == other.skill5 &&
+            self.skill6 == other.skill6 &&
+            self.skill7 == other.skill7 &&
+            self.action0 == other.action0 &&
+            self.action1 == other.action1 &&
+            self.action2 == other.action2 &&
+            self.action3 == other.action3 &&
+            self.action4 == other.action4 &&
+            self.action5 == other.action5 &&
+            self.action6 == other.action6 &&
+            self.action7 == other.action7;
   }
 
   LockEntity copyWith({
@@ -154,88 +246,6 @@ mixin _LockEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as LockEntity;
-    return identical(self, other) ||
-        other is LockEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.type0 == other.type0 &&
-            self.type1 == other.type1 &&
-            self.type2 == other.type2 &&
-            self.type3 == other.type3 &&
-            self.type4 == other.type4 &&
-            self.type5 == other.type5 &&
-            self.type6 == other.type6 &&
-            self.type7 == other.type7 &&
-            self.index0 == other.index0 &&
-            self.index1 == other.index1 &&
-            self.index2 == other.index2 &&
-            self.index3 == other.index3 &&
-            self.index4 == other.index4 &&
-            self.index5 == other.index5 &&
-            self.index6 == other.index6 &&
-            self.index7 == other.index7 &&
-            self.skill0 == other.skill0 &&
-            self.skill1 == other.skill1 &&
-            self.skill2 == other.skill2 &&
-            self.skill3 == other.skill3 &&
-            self.skill4 == other.skill4 &&
-            self.skill5 == other.skill5 &&
-            self.skill6 == other.skill6 &&
-            self.skill7 == other.skill7 &&
-            self.action0 == other.action0 &&
-            self.action1 == other.action1 &&
-            self.action2 == other.action2 &&
-            self.action3 == other.action3 &&
-            self.action4 == other.action4 &&
-            self.action5 == other.action5 &&
-            self.action6 == other.action6 &&
-            self.action7 == other.action7;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as LockEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.type0,
-      self.type1,
-      self.type2,
-      self.type3,
-      self.type4,
-      self.type5,
-      self.type6,
-      self.type7,
-      self.index0,
-      self.index1,
-      self.index2,
-      self.index3,
-      self.index4,
-      self.index5,
-      self.index6,
-      self.index7,
-      self.skill0,
-      self.skill1,
-      self.skill2,
-      self.skill3,
-      self.skill4,
-      self.skill5,
-      self.skill6,
-      self.skill7,
-      self.action0,
-      self.action1,
-      self.action2,
-      self.action3,
-      self.action4,
-      self.action5,
-      self.action6,
-      self.action7,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as LockEntity;
     return 'LockEntity('
@@ -274,52 +284,42 @@ mixin _LockEntityMixin {
         'action7: ${self.action7}'
         ')';
   }
-}
 
-final class BriefLockEntity {
-  final int id;
-  final int type0;
-  final int index0;
-  final int skill0;
-
-  const BriefLockEntity({
-    this.id = 0,
-    this.type0 = 0,
-    this.index0 = 0,
-    this.skill0 = 0,
-  });
-
-  factory BriefLockEntity.fromJson(Map<String, dynamic> json) {
-    return BriefLockEntity(
+  static LockEntity fromJson(Map<String, dynamic> json) {
+    return LockEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       type0: (json['Type0'] as num?)?.toInt() ?? 0,
+      type1: (json['Type1'] as num?)?.toInt() ?? 0,
+      type2: (json['Type2'] as num?)?.toInt() ?? 0,
+      type3: (json['Type3'] as num?)?.toInt() ?? 0,
+      type4: (json['Type4'] as num?)?.toInt() ?? 0,
+      type5: (json['Type5'] as num?)?.toInt() ?? 0,
+      type6: (json['Type6'] as num?)?.toInt() ?? 0,
+      type7: (json['Type7'] as num?)?.toInt() ?? 0,
       index0: (json['Index0'] as num?)?.toInt() ?? 0,
+      index1: (json['Index1'] as num?)?.toInt() ?? 0,
+      index2: (json['Index2'] as num?)?.toInt() ?? 0,
+      index3: (json['Index3'] as num?)?.toInt() ?? 0,
+      index4: (json['Index4'] as num?)?.toInt() ?? 0,
+      index5: (json['Index5'] as num?)?.toInt() ?? 0,
+      index6: (json['Index6'] as num?)?.toInt() ?? 0,
+      index7: (json['Index7'] as num?)?.toInt() ?? 0,
       skill0: (json['Skill0'] as num?)?.toInt() ?? 0,
+      skill1: (json['Skill1'] as num?)?.toInt() ?? 0,
+      skill2: (json['Skill2'] as num?)?.toInt() ?? 0,
+      skill3: (json['Skill3'] as num?)?.toInt() ?? 0,
+      skill4: (json['Skill4'] as num?)?.toInt() ?? 0,
+      skill5: (json['Skill5'] as num?)?.toInt() ?? 0,
+      skill6: (json['Skill6'] as num?)?.toInt() ?? 0,
+      skill7: (json['Skill7'] as num?)?.toInt() ?? 0,
+      action0: (json['Action0'] as num?)?.toInt() ?? 0,
+      action1: (json['Action1'] as num?)?.toInt() ?? 0,
+      action2: (json['Action2'] as num?)?.toInt() ?? 0,
+      action3: (json['Action3'] as num?)?.toInt() ?? 0,
+      action4: (json['Action4'] as num?)?.toInt() ?? 0,
+      action5: (json['Action5'] as num?)?.toInt() ?? 0,
+      action6: (json['Action6'] as num?)?.toInt() ?? 0,
+      action7: (json['Action7'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefLockEntity &&
-            id == other.id &&
-            type0 == other.type0 &&
-            index0 == other.index0 &&
-            skill0 == other.skill0;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, type0, index0, skill0]);
-
-  @override
-  String toString() {
-    return 'BriefLockEntity('
-        'id: $id, '
-        'type0: $type0, '
-        'index0: $index0, '
-        'skill0: $skill0'
-        ')';
   }
 }

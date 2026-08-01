@@ -2,133 +2,308 @@
 
 part of 'quest_template_entity.dart';
 
-mixin _QuestTemplateEntityMixin {
-  static QuestTemplateEntity fromJson(Map<String, dynamic> json) {
-    return QuestTemplateEntity(
+final class BriefQuestTemplateEntity {
+  final int id;
+  final int questType;
+  final int questLevel;
+  final int minLevel;
+  final String logTitle;
+  final String questDescription;
+  final String localeTitle;
+  final String localeDetails;
+
+  const BriefQuestTemplateEntity({
+    this.id = 0,
+    this.questType = 2,
+    this.questLevel = 1,
+    this.minLevel = 0,
+    this.logTitle = '',
+    this.questDescription = '',
+    this.localeTitle = '',
+    this.localeDetails = '',
+  });
+
+  factory BriefQuestTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       questType: (json['QuestType'] as num?)?.toInt() ?? 2,
       questLevel: (json['QuestLevel'] as num?)?.toInt() ?? 1,
       minLevel: (json['MinLevel'] as num?)?.toInt() ?? 0,
-      questSortId: (json['QuestSortID'] as num?)?.toInt() ?? 0,
-      questInfoId: (json['QuestInfoID'] as num?)?.toInt() ?? 0,
-      suggestedGroupNum: (json['SuggestedGroupNum'] as num?)?.toInt() ?? 0,
-      requiredFactionId1: (json['RequiredFactionId1'] as num?)?.toInt() ?? 0,
-      requiredFactionId2: (json['RequiredFactionId2'] as num?)?.toInt() ?? 0,
-      requiredFactionValue1:
-          (json['RequiredFactionValue1'] as num?)?.toInt() ?? 0,
-      requiredFactionValue2:
-          (json['RequiredFactionValue2'] as num?)?.toInt() ?? 0,
-      rewardNextQuest: (json['RewardNextQuest'] as num?)?.toInt() ?? 0,
-      rewardXpDifficulty: (json['RewardXPDifficulty'] as num?)?.toInt() ?? 0,
-      rewardMoney: (json['RewardMoney'] as num?)?.toInt() ?? 0,
-      rewardMoneyDifficulty:
-          (json['RewardMoneyDifficulty'] as num?)?.toInt() ?? 0,
-      rewardDisplaySpell: (json['RewardDisplaySpell'] as num?)?.toInt() ?? 0,
-      rewardSpell: (json['RewardSpell'] as num?)?.toInt() ?? 0,
-      rewardHonor: (json['RewardHonor'] as num?)?.toInt() ?? 0,
-      rewardKillHonor: (json['RewardKillHonor'] as num?)?.toDouble() ?? 0.0,
-      startItem: (json['StartItem'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      requiredPlayerKills: (json['RequiredPlayerKills'] as num?)?.toInt() ?? 0,
-      rewardItem1: (json['RewardItem1'] as num?)?.toInt() ?? 0,
-      rewardAmount1: (json['RewardAmount1'] as num?)?.toInt() ?? 0,
-      rewardItem2: (json['RewardItem2'] as num?)?.toInt() ?? 0,
-      rewardAmount2: (json['RewardAmount2'] as num?)?.toInt() ?? 0,
-      rewardItem3: (json['RewardItem3'] as num?)?.toInt() ?? 0,
-      rewardAmount3: (json['RewardAmount3'] as num?)?.toInt() ?? 0,
-      rewardItem4: (json['RewardItem4'] as num?)?.toInt() ?? 0,
-      rewardAmount4: (json['RewardAmount4'] as num?)?.toInt() ?? 0,
-      itemDrop1: (json['ItemDrop1'] as num?)?.toInt() ?? 0,
-      itemDropQuantity1: (json['ItemDropQuantity1'] as num?)?.toInt() ?? 0,
-      itemDrop2: (json['ItemDrop2'] as num?)?.toInt() ?? 0,
-      itemDropQuantity2: (json['ItemDropQuantity2'] as num?)?.toInt() ?? 0,
-      itemDrop3: (json['ItemDrop3'] as num?)?.toInt() ?? 0,
-      itemDropQuantity3: (json['ItemDropQuantity3'] as num?)?.toInt() ?? 0,
-      itemDrop4: (json['ItemDrop4'] as num?)?.toInt() ?? 0,
-      itemDropQuantity4: (json['ItemDropQuantity4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId1: (json['RewardChoiceItemID1'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity1:
-          (json['RewardChoiceItemQuantity1'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId2: (json['RewardChoiceItemID2'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity2:
-          (json['RewardChoiceItemQuantity2'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId3: (json['RewardChoiceItemID3'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity3:
-          (json['RewardChoiceItemQuantity3'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId4: (json['RewardChoiceItemID4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity4:
-          (json['RewardChoiceItemQuantity4'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId5: (json['RewardChoiceItemID5'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity5:
-          (json['RewardChoiceItemQuantity5'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemId6: (json['RewardChoiceItemID6'] as num?)?.toInt() ?? 0,
-      rewardChoiceItemQuantity6:
-          (json['RewardChoiceItemQuantity6'] as num?)?.toInt() ?? 0,
-      poiContinent: (json['POIContinent'] as num?)?.toInt() ?? 0,
-      poiX: (json['POIx'] as num?)?.toDouble() ?? 0.0,
-      poiY: (json['POIy'] as num?)?.toDouble() ?? 0.0,
-      poiPriority: (json['POIPriority'] as num?)?.toInt() ?? 0,
-      rewardTitle: (json['RewardTitle'] as num?)?.toInt() ?? 0,
-      rewardTalents: (json['RewardTalents'] as num?)?.toInt() ?? 0,
-      rewardArenaPoints: (json['RewardArenaPoints'] as num?)?.toInt() ?? 0,
-      rewardFactionId1: (json['RewardFactionID1'] as num?)?.toInt() ?? 0,
-      rewardFactionValue1: (json['RewardFactionValue1'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride1:
-          (json['RewardFactionOverride1'] as num?)?.toInt() ?? 0,
-      rewardFactionId2: (json['RewardFactionID2'] as num?)?.toInt() ?? 0,
-      rewardFactionValue2: (json['RewardFactionValue2'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride2:
-          (json['RewardFactionOverride2'] as num?)?.toInt() ?? 0,
-      rewardFactionId3: (json['RewardFactionID3'] as num?)?.toInt() ?? 0,
-      rewardFactionValue3: (json['RewardFactionValue3'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride3:
-          (json['RewardFactionOverride3'] as num?)?.toInt() ?? 0,
-      rewardFactionId4: (json['RewardFactionID4'] as num?)?.toInt() ?? 0,
-      rewardFactionValue4: (json['RewardFactionValue4'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride4:
-          (json['RewardFactionOverride4'] as num?)?.toInt() ?? 0,
-      rewardFactionId5: (json['RewardFactionID5'] as num?)?.toInt() ?? 0,
-      rewardFactionValue5: (json['RewardFactionValue5'] as num?)?.toInt() ?? 0,
-      rewardFactionOverride5:
-          (json['RewardFactionOverride5'] as num?)?.toInt() ?? 0,
-      timeAllowed: (json['TimeAllowed'] as num?)?.toInt() ?? 0,
-      allowableRaces: (json['AllowableRaces'] as num?)?.toInt() ?? 0,
       logTitle: json['LogTitle']?.toString() ?? '',
-      logDescription: json['LogDescription']?.toString() ?? '',
       questDescription: json['QuestDescription']?.toString() ?? '',
-      areaDescription: json['AreaDescription']?.toString() ?? '',
-      questCompletionLog: json['QuestCompletionLog']?.toString() ?? '',
-      requiredNpcOrGo1: (json['RequiredNpcOrGo1'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo2: (json['RequiredNpcOrGo2'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo3: (json['RequiredNpcOrGo3'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGo4: (json['RequiredNpcOrGo4'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount1:
-          (json['RequiredNpcOrGoCount1'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount2:
-          (json['RequiredNpcOrGoCount2'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount3:
-          (json['RequiredNpcOrGoCount3'] as num?)?.toInt() ?? 0,
-      requiredNpcOrGoCount4:
-          (json['RequiredNpcOrGoCount4'] as num?)?.toInt() ?? 0,
-      requiredItemId1: (json['RequiredItemId1'] as num?)?.toInt() ?? 0,
-      requiredItemId2: (json['RequiredItemId2'] as num?)?.toInt() ?? 0,
-      requiredItemId3: (json['RequiredItemId3'] as num?)?.toInt() ?? 0,
-      requiredItemId4: (json['RequiredItemId4'] as num?)?.toInt() ?? 0,
-      requiredItemId5: (json['RequiredItemId5'] as num?)?.toInt() ?? 0,
-      requiredItemId6: (json['RequiredItemId6'] as num?)?.toInt() ?? 0,
-      requiredItemCount1: (json['RequiredItemCount1'] as num?)?.toInt() ?? 0,
-      requiredItemCount2: (json['RequiredItemCount2'] as num?)?.toInt() ?? 0,
-      requiredItemCount3: (json['RequiredItemCount3'] as num?)?.toInt() ?? 0,
-      requiredItemCount4: (json['RequiredItemCount4'] as num?)?.toInt() ?? 0,
-      requiredItemCount5: (json['RequiredItemCount5'] as num?)?.toInt() ?? 0,
-      requiredItemCount6: (json['RequiredItemCount6'] as num?)?.toInt() ?? 0,
-      unknown0: (json['Unknown0'] as num?)?.toInt() ?? 0,
-      objectiveText1: json['ObjectiveText1']?.toString() ?? '',
-      objectiveText2: json['ObjectiveText2']?.toString() ?? '',
-      objectiveText3: json['ObjectiveText3']?.toString() ?? '',
-      objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      localeTitle: json['localeTitle']?.toString() ?? '',
+      localeDetails: json['localeDetails']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    questType,
+    questLevel,
+    minLevel,
+    logTitle,
+    questDescription,
+    localeTitle,
+    localeDetails,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateEntity &&
+            id == other.id &&
+            questType == other.questType &&
+            questLevel == other.questLevel &&
+            minLevel == other.minLevel &&
+            logTitle == other.logTitle &&
+            questDescription == other.questDescription &&
+            localeTitle == other.localeTitle &&
+            localeDetails == other.localeDetails;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateEntity('
+        'id: $id, '
+        'questType: $questType, '
+        'questLevel: $questLevel, '
+        'minLevel: $minLevel, '
+        'logTitle: $logTitle, '
+        'questDescription: $questDescription, '
+        'localeTitle: $localeTitle, '
+        'localeDetails: $localeDetails'
+        ')';
+  }
+}
+
+mixin _QuestTemplateEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestTemplateEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.questType,
+      self.questLevel,
+      self.minLevel,
+      self.questSortId,
+      self.questInfoId,
+      self.suggestedGroupNum,
+      self.requiredFactionId1,
+      self.requiredFactionId2,
+      self.requiredFactionValue1,
+      self.requiredFactionValue2,
+      self.rewardNextQuest,
+      self.rewardXpDifficulty,
+      self.rewardMoney,
+      self.rewardMoneyDifficulty,
+      self.rewardDisplaySpell,
+      self.rewardSpell,
+      self.rewardHonor,
+      self.rewardKillHonor,
+      self.startItem,
+      self.flags,
+      self.requiredPlayerKills,
+      self.rewardItem1,
+      self.rewardAmount1,
+      self.rewardItem2,
+      self.rewardAmount2,
+      self.rewardItem3,
+      self.rewardAmount3,
+      self.rewardItem4,
+      self.rewardAmount4,
+      self.itemDrop1,
+      self.itemDropQuantity1,
+      self.itemDrop2,
+      self.itemDropQuantity2,
+      self.itemDrop3,
+      self.itemDropQuantity3,
+      self.itemDrop4,
+      self.itemDropQuantity4,
+      self.rewardChoiceItemId1,
+      self.rewardChoiceItemQuantity1,
+      self.rewardChoiceItemId2,
+      self.rewardChoiceItemQuantity2,
+      self.rewardChoiceItemId3,
+      self.rewardChoiceItemQuantity3,
+      self.rewardChoiceItemId4,
+      self.rewardChoiceItemQuantity4,
+      self.rewardChoiceItemId5,
+      self.rewardChoiceItemQuantity5,
+      self.rewardChoiceItemId6,
+      self.rewardChoiceItemQuantity6,
+      self.poiContinent,
+      self.poiX,
+      self.poiY,
+      self.poiPriority,
+      self.rewardTitle,
+      self.rewardTalents,
+      self.rewardArenaPoints,
+      self.rewardFactionId1,
+      self.rewardFactionValue1,
+      self.rewardFactionOverride1,
+      self.rewardFactionId2,
+      self.rewardFactionValue2,
+      self.rewardFactionOverride2,
+      self.rewardFactionId3,
+      self.rewardFactionValue3,
+      self.rewardFactionOverride3,
+      self.rewardFactionId4,
+      self.rewardFactionValue4,
+      self.rewardFactionOverride4,
+      self.rewardFactionId5,
+      self.rewardFactionValue5,
+      self.rewardFactionOverride5,
+      self.timeAllowed,
+      self.allowableRaces,
+      self.logTitle,
+      self.logDescription,
+      self.questDescription,
+      self.areaDescription,
+      self.questCompletionLog,
+      self.requiredNpcOrGo1,
+      self.requiredNpcOrGo2,
+      self.requiredNpcOrGo3,
+      self.requiredNpcOrGo4,
+      self.requiredNpcOrGoCount1,
+      self.requiredNpcOrGoCount2,
+      self.requiredNpcOrGoCount3,
+      self.requiredNpcOrGoCount4,
+      self.requiredItemId1,
+      self.requiredItemId2,
+      self.requiredItemId3,
+      self.requiredItemId4,
+      self.requiredItemId5,
+      self.requiredItemId6,
+      self.requiredItemCount1,
+      self.requiredItemCount2,
+      self.requiredItemCount3,
+      self.requiredItemCount4,
+      self.requiredItemCount5,
+      self.requiredItemCount6,
+      self.unknown0,
+      self.objectiveText1,
+      self.objectiveText2,
+      self.objectiveText3,
+      self.objectiveText4,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestTemplateEntity;
+    return identical(self, other) ||
+        other is QuestTemplateEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.questType == other.questType &&
+            self.questLevel == other.questLevel &&
+            self.minLevel == other.minLevel &&
+            self.questSortId == other.questSortId &&
+            self.questInfoId == other.questInfoId &&
+            self.suggestedGroupNum == other.suggestedGroupNum &&
+            self.requiredFactionId1 == other.requiredFactionId1 &&
+            self.requiredFactionId2 == other.requiredFactionId2 &&
+            self.requiredFactionValue1 == other.requiredFactionValue1 &&
+            self.requiredFactionValue2 == other.requiredFactionValue2 &&
+            self.rewardNextQuest == other.rewardNextQuest &&
+            self.rewardXpDifficulty == other.rewardXpDifficulty &&
+            self.rewardMoney == other.rewardMoney &&
+            self.rewardMoneyDifficulty == other.rewardMoneyDifficulty &&
+            self.rewardDisplaySpell == other.rewardDisplaySpell &&
+            self.rewardSpell == other.rewardSpell &&
+            self.rewardHonor == other.rewardHonor &&
+            self.rewardKillHonor == other.rewardKillHonor &&
+            self.startItem == other.startItem &&
+            self.flags == other.flags &&
+            self.requiredPlayerKills == other.requiredPlayerKills &&
+            self.rewardItem1 == other.rewardItem1 &&
+            self.rewardAmount1 == other.rewardAmount1 &&
+            self.rewardItem2 == other.rewardItem2 &&
+            self.rewardAmount2 == other.rewardAmount2 &&
+            self.rewardItem3 == other.rewardItem3 &&
+            self.rewardAmount3 == other.rewardAmount3 &&
+            self.rewardItem4 == other.rewardItem4 &&
+            self.rewardAmount4 == other.rewardAmount4 &&
+            self.itemDrop1 == other.itemDrop1 &&
+            self.itemDropQuantity1 == other.itemDropQuantity1 &&
+            self.itemDrop2 == other.itemDrop2 &&
+            self.itemDropQuantity2 == other.itemDropQuantity2 &&
+            self.itemDrop3 == other.itemDrop3 &&
+            self.itemDropQuantity3 == other.itemDropQuantity3 &&
+            self.itemDrop4 == other.itemDrop4 &&
+            self.itemDropQuantity4 == other.itemDropQuantity4 &&
+            self.rewardChoiceItemId1 == other.rewardChoiceItemId1 &&
+            self.rewardChoiceItemQuantity1 == other.rewardChoiceItemQuantity1 &&
+            self.rewardChoiceItemId2 == other.rewardChoiceItemId2 &&
+            self.rewardChoiceItemQuantity2 == other.rewardChoiceItemQuantity2 &&
+            self.rewardChoiceItemId3 == other.rewardChoiceItemId3 &&
+            self.rewardChoiceItemQuantity3 == other.rewardChoiceItemQuantity3 &&
+            self.rewardChoiceItemId4 == other.rewardChoiceItemId4 &&
+            self.rewardChoiceItemQuantity4 == other.rewardChoiceItemQuantity4 &&
+            self.rewardChoiceItemId5 == other.rewardChoiceItemId5 &&
+            self.rewardChoiceItemQuantity5 == other.rewardChoiceItemQuantity5 &&
+            self.rewardChoiceItemId6 == other.rewardChoiceItemId6 &&
+            self.rewardChoiceItemQuantity6 == other.rewardChoiceItemQuantity6 &&
+            self.poiContinent == other.poiContinent &&
+            self.poiX == other.poiX &&
+            self.poiY == other.poiY &&
+            self.poiPriority == other.poiPriority &&
+            self.rewardTitle == other.rewardTitle &&
+            self.rewardTalents == other.rewardTalents &&
+            self.rewardArenaPoints == other.rewardArenaPoints &&
+            self.rewardFactionId1 == other.rewardFactionId1 &&
+            self.rewardFactionValue1 == other.rewardFactionValue1 &&
+            self.rewardFactionOverride1 == other.rewardFactionOverride1 &&
+            self.rewardFactionId2 == other.rewardFactionId2 &&
+            self.rewardFactionValue2 == other.rewardFactionValue2 &&
+            self.rewardFactionOverride2 == other.rewardFactionOverride2 &&
+            self.rewardFactionId3 == other.rewardFactionId3 &&
+            self.rewardFactionValue3 == other.rewardFactionValue3 &&
+            self.rewardFactionOverride3 == other.rewardFactionOverride3 &&
+            self.rewardFactionId4 == other.rewardFactionId4 &&
+            self.rewardFactionValue4 == other.rewardFactionValue4 &&
+            self.rewardFactionOverride4 == other.rewardFactionOverride4 &&
+            self.rewardFactionId5 == other.rewardFactionId5 &&
+            self.rewardFactionValue5 == other.rewardFactionValue5 &&
+            self.rewardFactionOverride5 == other.rewardFactionOverride5 &&
+            self.timeAllowed == other.timeAllowed &&
+            self.allowableRaces == other.allowableRaces &&
+            self.logTitle == other.logTitle &&
+            self.logDescription == other.logDescription &&
+            self.questDescription == other.questDescription &&
+            self.areaDescription == other.areaDescription &&
+            self.questCompletionLog == other.questCompletionLog &&
+            self.requiredNpcOrGo1 == other.requiredNpcOrGo1 &&
+            self.requiredNpcOrGo2 == other.requiredNpcOrGo2 &&
+            self.requiredNpcOrGo3 == other.requiredNpcOrGo3 &&
+            self.requiredNpcOrGo4 == other.requiredNpcOrGo4 &&
+            self.requiredNpcOrGoCount1 == other.requiredNpcOrGoCount1 &&
+            self.requiredNpcOrGoCount2 == other.requiredNpcOrGoCount2 &&
+            self.requiredNpcOrGoCount3 == other.requiredNpcOrGoCount3 &&
+            self.requiredNpcOrGoCount4 == other.requiredNpcOrGoCount4 &&
+            self.requiredItemId1 == other.requiredItemId1 &&
+            self.requiredItemId2 == other.requiredItemId2 &&
+            self.requiredItemId3 == other.requiredItemId3 &&
+            self.requiredItemId4 == other.requiredItemId4 &&
+            self.requiredItemId5 == other.requiredItemId5 &&
+            self.requiredItemId6 == other.requiredItemId6 &&
+            self.requiredItemCount1 == other.requiredItemCount1 &&
+            self.requiredItemCount2 == other.requiredItemCount2 &&
+            self.requiredItemCount3 == other.requiredItemCount3 &&
+            self.requiredItemCount4 == other.requiredItemCount4 &&
+            self.requiredItemCount5 == other.requiredItemCount5 &&
+            self.requiredItemCount6 == other.requiredItemCount6 &&
+            self.unknown0 == other.unknown0 &&
+            self.objectiveText1 == other.objectiveText1 &&
+            self.objectiveText2 == other.objectiveText2 &&
+            self.objectiveText3 == other.objectiveText3 &&
+            self.objectiveText4 == other.objectiveText4 &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   QuestTemplateEntity copyWith({
@@ -478,232 +653,6 @@ mixin _QuestTemplateEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestTemplateEntity;
-    return identical(self, other) ||
-        other is QuestTemplateEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.questType == other.questType &&
-            self.questLevel == other.questLevel &&
-            self.minLevel == other.minLevel &&
-            self.questSortId == other.questSortId &&
-            self.questInfoId == other.questInfoId &&
-            self.suggestedGroupNum == other.suggestedGroupNum &&
-            self.requiredFactionId1 == other.requiredFactionId1 &&
-            self.requiredFactionId2 == other.requiredFactionId2 &&
-            self.requiredFactionValue1 == other.requiredFactionValue1 &&
-            self.requiredFactionValue2 == other.requiredFactionValue2 &&
-            self.rewardNextQuest == other.rewardNextQuest &&
-            self.rewardXpDifficulty == other.rewardXpDifficulty &&
-            self.rewardMoney == other.rewardMoney &&
-            self.rewardMoneyDifficulty == other.rewardMoneyDifficulty &&
-            self.rewardDisplaySpell == other.rewardDisplaySpell &&
-            self.rewardSpell == other.rewardSpell &&
-            self.rewardHonor == other.rewardHonor &&
-            self.rewardKillHonor == other.rewardKillHonor &&
-            self.startItem == other.startItem &&
-            self.flags == other.flags &&
-            self.requiredPlayerKills == other.requiredPlayerKills &&
-            self.rewardItem1 == other.rewardItem1 &&
-            self.rewardAmount1 == other.rewardAmount1 &&
-            self.rewardItem2 == other.rewardItem2 &&
-            self.rewardAmount2 == other.rewardAmount2 &&
-            self.rewardItem3 == other.rewardItem3 &&
-            self.rewardAmount3 == other.rewardAmount3 &&
-            self.rewardItem4 == other.rewardItem4 &&
-            self.rewardAmount4 == other.rewardAmount4 &&
-            self.itemDrop1 == other.itemDrop1 &&
-            self.itemDropQuantity1 == other.itemDropQuantity1 &&
-            self.itemDrop2 == other.itemDrop2 &&
-            self.itemDropQuantity2 == other.itemDropQuantity2 &&
-            self.itemDrop3 == other.itemDrop3 &&
-            self.itemDropQuantity3 == other.itemDropQuantity3 &&
-            self.itemDrop4 == other.itemDrop4 &&
-            self.itemDropQuantity4 == other.itemDropQuantity4 &&
-            self.rewardChoiceItemId1 == other.rewardChoiceItemId1 &&
-            self.rewardChoiceItemQuantity1 == other.rewardChoiceItemQuantity1 &&
-            self.rewardChoiceItemId2 == other.rewardChoiceItemId2 &&
-            self.rewardChoiceItemQuantity2 == other.rewardChoiceItemQuantity2 &&
-            self.rewardChoiceItemId3 == other.rewardChoiceItemId3 &&
-            self.rewardChoiceItemQuantity3 == other.rewardChoiceItemQuantity3 &&
-            self.rewardChoiceItemId4 == other.rewardChoiceItemId4 &&
-            self.rewardChoiceItemQuantity4 == other.rewardChoiceItemQuantity4 &&
-            self.rewardChoiceItemId5 == other.rewardChoiceItemId5 &&
-            self.rewardChoiceItemQuantity5 == other.rewardChoiceItemQuantity5 &&
-            self.rewardChoiceItemId6 == other.rewardChoiceItemId6 &&
-            self.rewardChoiceItemQuantity6 == other.rewardChoiceItemQuantity6 &&
-            self.poiContinent == other.poiContinent &&
-            self.poiX == other.poiX &&
-            self.poiY == other.poiY &&
-            self.poiPriority == other.poiPriority &&
-            self.rewardTitle == other.rewardTitle &&
-            self.rewardTalents == other.rewardTalents &&
-            self.rewardArenaPoints == other.rewardArenaPoints &&
-            self.rewardFactionId1 == other.rewardFactionId1 &&
-            self.rewardFactionValue1 == other.rewardFactionValue1 &&
-            self.rewardFactionOverride1 == other.rewardFactionOverride1 &&
-            self.rewardFactionId2 == other.rewardFactionId2 &&
-            self.rewardFactionValue2 == other.rewardFactionValue2 &&
-            self.rewardFactionOverride2 == other.rewardFactionOverride2 &&
-            self.rewardFactionId3 == other.rewardFactionId3 &&
-            self.rewardFactionValue3 == other.rewardFactionValue3 &&
-            self.rewardFactionOverride3 == other.rewardFactionOverride3 &&
-            self.rewardFactionId4 == other.rewardFactionId4 &&
-            self.rewardFactionValue4 == other.rewardFactionValue4 &&
-            self.rewardFactionOverride4 == other.rewardFactionOverride4 &&
-            self.rewardFactionId5 == other.rewardFactionId5 &&
-            self.rewardFactionValue5 == other.rewardFactionValue5 &&
-            self.rewardFactionOverride5 == other.rewardFactionOverride5 &&
-            self.timeAllowed == other.timeAllowed &&
-            self.allowableRaces == other.allowableRaces &&
-            self.logTitle == other.logTitle &&
-            self.logDescription == other.logDescription &&
-            self.questDescription == other.questDescription &&
-            self.areaDescription == other.areaDescription &&
-            self.questCompletionLog == other.questCompletionLog &&
-            self.requiredNpcOrGo1 == other.requiredNpcOrGo1 &&
-            self.requiredNpcOrGo2 == other.requiredNpcOrGo2 &&
-            self.requiredNpcOrGo3 == other.requiredNpcOrGo3 &&
-            self.requiredNpcOrGo4 == other.requiredNpcOrGo4 &&
-            self.requiredNpcOrGoCount1 == other.requiredNpcOrGoCount1 &&
-            self.requiredNpcOrGoCount2 == other.requiredNpcOrGoCount2 &&
-            self.requiredNpcOrGoCount3 == other.requiredNpcOrGoCount3 &&
-            self.requiredNpcOrGoCount4 == other.requiredNpcOrGoCount4 &&
-            self.requiredItemId1 == other.requiredItemId1 &&
-            self.requiredItemId2 == other.requiredItemId2 &&
-            self.requiredItemId3 == other.requiredItemId3 &&
-            self.requiredItemId4 == other.requiredItemId4 &&
-            self.requiredItemId5 == other.requiredItemId5 &&
-            self.requiredItemId6 == other.requiredItemId6 &&
-            self.requiredItemCount1 == other.requiredItemCount1 &&
-            self.requiredItemCount2 == other.requiredItemCount2 &&
-            self.requiredItemCount3 == other.requiredItemCount3 &&
-            self.requiredItemCount4 == other.requiredItemCount4 &&
-            self.requiredItemCount5 == other.requiredItemCount5 &&
-            self.requiredItemCount6 == other.requiredItemCount6 &&
-            self.unknown0 == other.unknown0 &&
-            self.objectiveText1 == other.objectiveText1 &&
-            self.objectiveText2 == other.objectiveText2 &&
-            self.objectiveText3 == other.objectiveText3 &&
-            self.objectiveText4 == other.objectiveText4 &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestTemplateEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.questType,
-      self.questLevel,
-      self.minLevel,
-      self.questSortId,
-      self.questInfoId,
-      self.suggestedGroupNum,
-      self.requiredFactionId1,
-      self.requiredFactionId2,
-      self.requiredFactionValue1,
-      self.requiredFactionValue2,
-      self.rewardNextQuest,
-      self.rewardXpDifficulty,
-      self.rewardMoney,
-      self.rewardMoneyDifficulty,
-      self.rewardDisplaySpell,
-      self.rewardSpell,
-      self.rewardHonor,
-      self.rewardKillHonor,
-      self.startItem,
-      self.flags,
-      self.requiredPlayerKills,
-      self.rewardItem1,
-      self.rewardAmount1,
-      self.rewardItem2,
-      self.rewardAmount2,
-      self.rewardItem3,
-      self.rewardAmount3,
-      self.rewardItem4,
-      self.rewardAmount4,
-      self.itemDrop1,
-      self.itemDropQuantity1,
-      self.itemDrop2,
-      self.itemDropQuantity2,
-      self.itemDrop3,
-      self.itemDropQuantity3,
-      self.itemDrop4,
-      self.itemDropQuantity4,
-      self.rewardChoiceItemId1,
-      self.rewardChoiceItemQuantity1,
-      self.rewardChoiceItemId2,
-      self.rewardChoiceItemQuantity2,
-      self.rewardChoiceItemId3,
-      self.rewardChoiceItemQuantity3,
-      self.rewardChoiceItemId4,
-      self.rewardChoiceItemQuantity4,
-      self.rewardChoiceItemId5,
-      self.rewardChoiceItemQuantity5,
-      self.rewardChoiceItemId6,
-      self.rewardChoiceItemQuantity6,
-      self.poiContinent,
-      self.poiX,
-      self.poiY,
-      self.poiPriority,
-      self.rewardTitle,
-      self.rewardTalents,
-      self.rewardArenaPoints,
-      self.rewardFactionId1,
-      self.rewardFactionValue1,
-      self.rewardFactionOverride1,
-      self.rewardFactionId2,
-      self.rewardFactionValue2,
-      self.rewardFactionOverride2,
-      self.rewardFactionId3,
-      self.rewardFactionValue3,
-      self.rewardFactionOverride3,
-      self.rewardFactionId4,
-      self.rewardFactionValue4,
-      self.rewardFactionOverride4,
-      self.rewardFactionId5,
-      self.rewardFactionValue5,
-      self.rewardFactionOverride5,
-      self.timeAllowed,
-      self.allowableRaces,
-      self.logTitle,
-      self.logDescription,
-      self.questDescription,
-      self.areaDescription,
-      self.questCompletionLog,
-      self.requiredNpcOrGo1,
-      self.requiredNpcOrGo2,
-      self.requiredNpcOrGo3,
-      self.requiredNpcOrGo4,
-      self.requiredNpcOrGoCount1,
-      self.requiredNpcOrGoCount2,
-      self.requiredNpcOrGoCount3,
-      self.requiredNpcOrGoCount4,
-      self.requiredItemId1,
-      self.requiredItemId2,
-      self.requiredItemId3,
-      self.requiredItemId4,
-      self.requiredItemId5,
-      self.requiredItemId6,
-      self.requiredItemCount1,
-      self.requiredItemCount2,
-      self.requiredItemCount3,
-      self.requiredItemCount4,
-      self.requiredItemCount5,
-      self.requiredItemCount6,
-      self.unknown0,
-      self.objectiveText1,
-      self.objectiveText2,
-      self.objectiveText3,
-      self.objectiveText4,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestTemplateEntity;
     return 'QuestTemplateEntity('
@@ -814,81 +763,132 @@ mixin _QuestTemplateEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class BriefQuestTemplateEntity {
-  final int id;
-  final int questType;
-  final int questLevel;
-  final int minLevel;
-  final String logTitle;
-  final String questDescription;
-  final String localeTitle;
-  final String localeDetails;
-
-  const BriefQuestTemplateEntity({
-    this.id = 0,
-    this.questType = 2,
-    this.questLevel = 1,
-    this.minLevel = 0,
-    this.logTitle = '',
-    this.questDescription = '',
-    this.localeTitle = '',
-    this.localeDetails = '',
-  });
-
-  factory BriefQuestTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestTemplateEntity(
+  static QuestTemplateEntity fromJson(Map<String, dynamic> json) {
+    return QuestTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       questType: (json['QuestType'] as num?)?.toInt() ?? 2,
       questLevel: (json['QuestLevel'] as num?)?.toInt() ?? 1,
       minLevel: (json['MinLevel'] as num?)?.toInt() ?? 0,
+      questSortId: (json['QuestSortID'] as num?)?.toInt() ?? 0,
+      questInfoId: (json['QuestInfoID'] as num?)?.toInt() ?? 0,
+      suggestedGroupNum: (json['SuggestedGroupNum'] as num?)?.toInt() ?? 0,
+      requiredFactionId1: (json['RequiredFactionId1'] as num?)?.toInt() ?? 0,
+      requiredFactionId2: (json['RequiredFactionId2'] as num?)?.toInt() ?? 0,
+      requiredFactionValue1:
+          (json['RequiredFactionValue1'] as num?)?.toInt() ?? 0,
+      requiredFactionValue2:
+          (json['RequiredFactionValue2'] as num?)?.toInt() ?? 0,
+      rewardNextQuest: (json['RewardNextQuest'] as num?)?.toInt() ?? 0,
+      rewardXpDifficulty: (json['RewardXPDifficulty'] as num?)?.toInt() ?? 0,
+      rewardMoney: (json['RewardMoney'] as num?)?.toInt() ?? 0,
+      rewardMoneyDifficulty:
+          (json['RewardMoneyDifficulty'] as num?)?.toInt() ?? 0,
+      rewardDisplaySpell: (json['RewardDisplaySpell'] as num?)?.toInt() ?? 0,
+      rewardSpell: (json['RewardSpell'] as num?)?.toInt() ?? 0,
+      rewardHonor: (json['RewardHonor'] as num?)?.toInt() ?? 0,
+      rewardKillHonor: (json['RewardKillHonor'] as num?)?.toDouble() ?? 0.0,
+      startItem: (json['StartItem'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      requiredPlayerKills: (json['RequiredPlayerKills'] as num?)?.toInt() ?? 0,
+      rewardItem1: (json['RewardItem1'] as num?)?.toInt() ?? 0,
+      rewardAmount1: (json['RewardAmount1'] as num?)?.toInt() ?? 0,
+      rewardItem2: (json['RewardItem2'] as num?)?.toInt() ?? 0,
+      rewardAmount2: (json['RewardAmount2'] as num?)?.toInt() ?? 0,
+      rewardItem3: (json['RewardItem3'] as num?)?.toInt() ?? 0,
+      rewardAmount3: (json['RewardAmount3'] as num?)?.toInt() ?? 0,
+      rewardItem4: (json['RewardItem4'] as num?)?.toInt() ?? 0,
+      rewardAmount4: (json['RewardAmount4'] as num?)?.toInt() ?? 0,
+      itemDrop1: (json['ItemDrop1'] as num?)?.toInt() ?? 0,
+      itemDropQuantity1: (json['ItemDropQuantity1'] as num?)?.toInt() ?? 0,
+      itemDrop2: (json['ItemDrop2'] as num?)?.toInt() ?? 0,
+      itemDropQuantity2: (json['ItemDropQuantity2'] as num?)?.toInt() ?? 0,
+      itemDrop3: (json['ItemDrop3'] as num?)?.toInt() ?? 0,
+      itemDropQuantity3: (json['ItemDropQuantity3'] as num?)?.toInt() ?? 0,
+      itemDrop4: (json['ItemDrop4'] as num?)?.toInt() ?? 0,
+      itemDropQuantity4: (json['ItemDropQuantity4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId1: (json['RewardChoiceItemID1'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity1:
+          (json['RewardChoiceItemQuantity1'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId2: (json['RewardChoiceItemID2'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity2:
+          (json['RewardChoiceItemQuantity2'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId3: (json['RewardChoiceItemID3'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity3:
+          (json['RewardChoiceItemQuantity3'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId4: (json['RewardChoiceItemID4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity4:
+          (json['RewardChoiceItemQuantity4'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId5: (json['RewardChoiceItemID5'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity5:
+          (json['RewardChoiceItemQuantity5'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemId6: (json['RewardChoiceItemID6'] as num?)?.toInt() ?? 0,
+      rewardChoiceItemQuantity6:
+          (json['RewardChoiceItemQuantity6'] as num?)?.toInt() ?? 0,
+      poiContinent: (json['POIContinent'] as num?)?.toInt() ?? 0,
+      poiX: (json['POIx'] as num?)?.toDouble() ?? 0.0,
+      poiY: (json['POIy'] as num?)?.toDouble() ?? 0.0,
+      poiPriority: (json['POIPriority'] as num?)?.toInt() ?? 0,
+      rewardTitle: (json['RewardTitle'] as num?)?.toInt() ?? 0,
+      rewardTalents: (json['RewardTalents'] as num?)?.toInt() ?? 0,
+      rewardArenaPoints: (json['RewardArenaPoints'] as num?)?.toInt() ?? 0,
+      rewardFactionId1: (json['RewardFactionID1'] as num?)?.toInt() ?? 0,
+      rewardFactionValue1: (json['RewardFactionValue1'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride1:
+          (json['RewardFactionOverride1'] as num?)?.toInt() ?? 0,
+      rewardFactionId2: (json['RewardFactionID2'] as num?)?.toInt() ?? 0,
+      rewardFactionValue2: (json['RewardFactionValue2'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride2:
+          (json['RewardFactionOverride2'] as num?)?.toInt() ?? 0,
+      rewardFactionId3: (json['RewardFactionID3'] as num?)?.toInt() ?? 0,
+      rewardFactionValue3: (json['RewardFactionValue3'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride3:
+          (json['RewardFactionOverride3'] as num?)?.toInt() ?? 0,
+      rewardFactionId4: (json['RewardFactionID4'] as num?)?.toInt() ?? 0,
+      rewardFactionValue4: (json['RewardFactionValue4'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride4:
+          (json['RewardFactionOverride4'] as num?)?.toInt() ?? 0,
+      rewardFactionId5: (json['RewardFactionID5'] as num?)?.toInt() ?? 0,
+      rewardFactionValue5: (json['RewardFactionValue5'] as num?)?.toInt() ?? 0,
+      rewardFactionOverride5:
+          (json['RewardFactionOverride5'] as num?)?.toInt() ?? 0,
+      timeAllowed: (json['TimeAllowed'] as num?)?.toInt() ?? 0,
+      allowableRaces: (json['AllowableRaces'] as num?)?.toInt() ?? 0,
       logTitle: json['LogTitle']?.toString() ?? '',
+      logDescription: json['LogDescription']?.toString() ?? '',
       questDescription: json['QuestDescription']?.toString() ?? '',
-      localeTitle: json['localeTitle']?.toString() ?? '',
-      localeDetails: json['localeDetails']?.toString() ?? '',
+      areaDescription: json['AreaDescription']?.toString() ?? '',
+      questCompletionLog: json['QuestCompletionLog']?.toString() ?? '',
+      requiredNpcOrGo1: (json['RequiredNpcOrGo1'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo2: (json['RequiredNpcOrGo2'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo3: (json['RequiredNpcOrGo3'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGo4: (json['RequiredNpcOrGo4'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount1:
+          (json['RequiredNpcOrGoCount1'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount2:
+          (json['RequiredNpcOrGoCount2'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount3:
+          (json['RequiredNpcOrGoCount3'] as num?)?.toInt() ?? 0,
+      requiredNpcOrGoCount4:
+          (json['RequiredNpcOrGoCount4'] as num?)?.toInt() ?? 0,
+      requiredItemId1: (json['RequiredItemId1'] as num?)?.toInt() ?? 0,
+      requiredItemId2: (json['RequiredItemId2'] as num?)?.toInt() ?? 0,
+      requiredItemId3: (json['RequiredItemId3'] as num?)?.toInt() ?? 0,
+      requiredItemId4: (json['RequiredItemId4'] as num?)?.toInt() ?? 0,
+      requiredItemId5: (json['RequiredItemId5'] as num?)?.toInt() ?? 0,
+      requiredItemId6: (json['RequiredItemId6'] as num?)?.toInt() ?? 0,
+      requiredItemCount1: (json['RequiredItemCount1'] as num?)?.toInt() ?? 0,
+      requiredItemCount2: (json['RequiredItemCount2'] as num?)?.toInt() ?? 0,
+      requiredItemCount3: (json['RequiredItemCount3'] as num?)?.toInt() ?? 0,
+      requiredItemCount4: (json['RequiredItemCount4'] as num?)?.toInt() ?? 0,
+      requiredItemCount5: (json['RequiredItemCount5'] as num?)?.toInt() ?? 0,
+      requiredItemCount6: (json['RequiredItemCount6'] as num?)?.toInt() ?? 0,
+      unknown0: (json['Unknown0'] as num?)?.toInt() ?? 0,
+      objectiveText1: json['ObjectiveText1']?.toString() ?? '',
+      objectiveText2: json['ObjectiveText2']?.toString() ?? '',
+      objectiveText3: json['ObjectiveText3']?.toString() ?? '',
+      objectiveText4: json['ObjectiveText4']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestTemplateEntity &&
-            id == other.id &&
-            questType == other.questType &&
-            questLevel == other.questLevel &&
-            minLevel == other.minLevel &&
-            logTitle == other.logTitle &&
-            questDescription == other.questDescription &&
-            localeTitle == other.localeTitle &&
-            localeDetails == other.localeDetails;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    questType,
-    questLevel,
-    minLevel,
-    logTitle,
-    questDescription,
-    localeTitle,
-    localeDetails,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefQuestTemplateEntity('
-        'id: $id, '
-        'questType: $questType, '
-        'questLevel: $questLevel, '
-        'minLevel: $minLevel, '
-        'logTitle: $logTitle, '
-        'questDescription: $questDescription, '
-        'localeTitle: $localeTitle, '
-        'localeDetails: $localeDetails'
-        ')';
   }
 }

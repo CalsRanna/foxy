@@ -2,19 +2,90 @@
 
 part of 'creature_template_addon_entity.dart';
 
-mixin _CreatureTemplateAddonEntityMixin {
-  static CreatureTemplateAddonEntity fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateAddonEntity(
+final class BriefCreatureTemplateAddonEntity {
+  final int entry;
+  final int pathId;
+  final int mount;
+  final int emote;
+  final String auras;
+
+  const BriefCreatureTemplateAddonEntity({
+    this.entry = 0,
+    this.pathId = 0,
+    this.mount = 0,
+    this.emote = 0,
+    this.auras = '',
+  });
+
+  factory BriefCreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureTemplateAddonEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       pathId: (json['path_id'] as num?)?.toInt() ?? 0,
       mount: (json['mount'] as num?)?.toInt() ?? 0,
       emote: (json['emote'] as num?)?.toInt() ?? 0,
-      bytes1: (json['bytes1'] as num?)?.toInt() ?? 0,
-      bytes2: (json['bytes2'] as num?)?.toInt() ?? 0,
-      visibilityDistanceType:
-          (json['visibilityDistanceType'] as num?)?.toInt() ?? 0,
       auras: json['auras']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, pathId, mount, emote, auras]);
+
+  int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateAddonEntity &&
+            entry == other.entry &&
+            pathId == other.pathId &&
+            mount == other.mount &&
+            emote == other.emote &&
+            auras == other.auras;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateAddonEntity('
+        'entry: $entry, '
+        'pathId: $pathId, '
+        'mount: $mount, '
+        'emote: $emote, '
+        'auras: $auras'
+        ')';
+  }
+}
+
+mixin _CreatureTemplateAddonEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureTemplateAddonEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.entry,
+      self.pathId,
+      self.mount,
+      self.emote,
+      self.bytes1,
+      self.bytes2,
+      self.visibilityDistanceType,
+      self.auras,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureTemplateAddonEntity;
+    return identical(self, other) ||
+        other is CreatureTemplateAddonEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.pathId == other.pathId &&
+            self.mount == other.mount &&
+            self.emote == other.emote &&
+            self.bytes1 == other.bytes1 &&
+            self.bytes2 == other.bytes2 &&
+            self.visibilityDistanceType == other.visibilityDistanceType &&
+            self.auras == other.auras;
   }
 
   CreatureTemplateAddonEntity copyWith({
@@ -56,38 +127,6 @@ mixin _CreatureTemplateAddonEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureTemplateAddonEntity;
-    return identical(self, other) ||
-        other is CreatureTemplateAddonEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.entry == other.entry &&
-            self.pathId == other.pathId &&
-            self.mount == other.mount &&
-            self.emote == other.emote &&
-            self.bytes1 == other.bytes1 &&
-            self.bytes2 == other.bytes2 &&
-            self.visibilityDistanceType == other.visibilityDistanceType &&
-            self.auras == other.auras;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureTemplateAddonEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.entry,
-      self.pathId,
-      self.mount,
-      self.emote,
-      self.bytes1,
-      self.bytes2,
-      self.visibilityDistanceType,
-      self.auras,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureTemplateAddonEntity;
     return 'CreatureTemplateAddonEntity('
@@ -101,57 +140,18 @@ mixin _CreatureTemplateAddonEntityMixin {
         'auras: ${self.auras}'
         ')';
   }
-}
 
-final class BriefCreatureTemplateAddonEntity {
-  final int entry;
-  final int pathId;
-  final int mount;
-  final int emote;
-  final String auras;
-
-  const BriefCreatureTemplateAddonEntity({
-    this.entry = 0,
-    this.pathId = 0,
-    this.mount = 0,
-    this.emote = 0,
-    this.auras = '',
-  });
-
-  factory BriefCreatureTemplateAddonEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureTemplateAddonEntity(
+  static CreatureTemplateAddonEntity fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateAddonEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       pathId: (json['path_id'] as num?)?.toInt() ?? 0,
       mount: (json['mount'] as num?)?.toInt() ?? 0,
       emote: (json['emote'] as num?)?.toInt() ?? 0,
+      bytes1: (json['bytes1'] as num?)?.toInt() ?? 0,
+      bytes2: (json['bytes2'] as num?)?.toInt() ?? 0,
+      visibilityDistanceType:
+          (json['visibilityDistanceType'] as num?)?.toInt() ?? 0,
       auras: json['auras']?.toString() ?? '',
     );
-  }
-
-  int get key => entry;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureTemplateAddonEntity &&
-            entry == other.entry &&
-            pathId == other.pathId &&
-            mount == other.mount &&
-            emote == other.emote &&
-            auras == other.auras;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([entry, pathId, mount, emote, auras]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureTemplateAddonEntity('
-        'entry: $entry, '
-        'pathId: $pathId, '
-        'mount: $mount, '
-        'emote: $emote, '
-        'auras: $auras'
-        ')';
   }
 }

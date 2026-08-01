@@ -17,20 +17,9 @@ mixin _GameObjectLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  GameObjectLootTemplateEntity _collectCandidate() {
-    return GameObjectLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    GameObjectLootTemplateEntity gameObjectLootTemplate,
+  ) {}
 
   void _applyCandidate(GameObjectLootTemplateEntity gameObjectLootTemplate) {
     entryController.init(gameObjectLootTemplate.entry);
@@ -46,7 +35,18 @@ mixin _GameObjectLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(gameObjectLootTemplate);
   }
 
-  void _afterApplyCandidate(
-    GameObjectLootTemplateEntity gameObjectLootTemplate,
-  ) {}
+  GameObjectLootTemplateEntity _collectCandidate() {
+    return GameObjectLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

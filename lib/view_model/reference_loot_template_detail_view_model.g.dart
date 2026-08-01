@@ -16,20 +16,9 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  ReferenceLootTemplateEntity _collectCandidate() {
-    return ReferenceLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    ReferenceLootTemplateEntity referenceLootTemplate,
+  ) {}
 
   void _applyCandidate(ReferenceLootTemplateEntity referenceLootTemplate) {
     entryController.init(referenceLootTemplate.entry);
@@ -45,7 +34,18 @@ mixin _ReferenceLootTemplateDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(referenceLootTemplate);
   }
 
-  void _afterApplyCandidate(
-    ReferenceLootTemplateEntity referenceLootTemplate,
-  ) {}
+  ReferenceLootTemplateEntity _collectCandidate() {
+    return ReferenceLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

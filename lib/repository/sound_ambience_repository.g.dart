@@ -2,6 +2,24 @@
 
 part of 'sound_ambience_repository.dart';
 
+final class SoundAmbienceFilter {
+  final String id;
+
+  const SoundAmbienceFilter({this.id = ''});
+
+  factory SoundAmbienceFilter.fromJson(Map<String, dynamic> json) {
+    return SoundAmbienceFilter(id: json['id']?.toString() ?? '');
+  }
+
+  SoundAmbienceFilter copyWith({String? id}) {
+    return SoundAmbienceFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
   Future<void> destroySoundAmbience(int key) async {
     await _beforeDestroy(key);
@@ -73,23 +91,5 @@ mixin _SoundAmbienceRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class SoundAmbienceFilter {
-  final String id;
-
-  const SoundAmbienceFilter({this.id = ''});
-
-  factory SoundAmbienceFilter.fromJson(Map<String, dynamic> json) {
-    return SoundAmbienceFilter(id: json['id']?.toString() ?? '');
-  }
-
-  SoundAmbienceFilter copyWith({String? id}) {
-    return SoundAmbienceFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

@@ -2,6 +2,42 @@
 
 part of 'condition_repository.dart';
 
+final class ConditionFilter {
+  final String sourceTypeOrReferenceId;
+  final String sourceEntry;
+
+  const ConditionFilter({
+    this.sourceTypeOrReferenceId = '',
+    this.sourceEntry = '',
+  });
+
+  factory ConditionFilter.fromJson(Map<String, dynamic> json) {
+    return ConditionFilter(
+      sourceTypeOrReferenceId:
+          json['sourceTypeOrReferenceId']?.toString() ?? '',
+      sourceEntry: json['sourceEntry']?.toString() ?? '',
+    );
+  }
+
+  ConditionFilter copyWith({
+    String? sourceTypeOrReferenceId,
+    String? sourceEntry,
+  }) {
+    return ConditionFilter(
+      sourceTypeOrReferenceId:
+          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
+      sourceEntry: sourceEntry ?? this.sourceEntry,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'sourceTypeOrReferenceId': sourceTypeOrReferenceId,
+      'sourceEntry': sourceEntry,
+    };
+  }
+}
+
 mixin _ConditionRepositoryMixin on RepositoryMixin {
   Future<void> destroyCondition(ConditionKey key) async {
     await _beforeDestroy(key);
@@ -87,41 +123,5 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
     query = query.where('`ConditionValue2`', key.conditionValue2);
     query = query.where('`ConditionValue3`', key.conditionValue3);
     return query;
-  }
-}
-
-final class ConditionFilter {
-  final String sourceTypeOrReferenceId;
-  final String sourceEntry;
-
-  const ConditionFilter({
-    this.sourceTypeOrReferenceId = '',
-    this.sourceEntry = '',
-  });
-
-  factory ConditionFilter.fromJson(Map<String, dynamic> json) {
-    return ConditionFilter(
-      sourceTypeOrReferenceId:
-          json['sourceTypeOrReferenceId']?.toString() ?? '',
-      sourceEntry: json['sourceEntry']?.toString() ?? '',
-    );
-  }
-
-  ConditionFilter copyWith({
-    String? sourceTypeOrReferenceId,
-    String? sourceEntry,
-  }) {
-    return ConditionFilter(
-      sourceTypeOrReferenceId:
-          sourceTypeOrReferenceId ?? this.sourceTypeOrReferenceId,
-      sourceEntry: sourceEntry ?? this.sourceEntry,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'sourceTypeOrReferenceId': sourceTypeOrReferenceId,
-      'sourceEntry': sourceEntry,
-    };
   }
 }

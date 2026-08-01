@@ -2,14 +2,107 @@
 
 part of 'page_text_locale_entity.dart';
 
-mixin _PageTextLocaleEntityMixin {
-  static PageTextLocaleEntity fromJson(Map<String, dynamic> json) {
-    return PageTextLocaleEntity(
+final class BriefPageTextLocaleEntity {
+  final int id;
+  final String locale;
+  final String text;
+  final int verifiedBuild;
+
+  const BriefPageTextLocaleEntity({
+    this.id = 0,
+    this.locale = '',
+    this.text = '',
+    this.verifiedBuild = 0,
+  });
+
+  factory BriefPageTextLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefPageTextLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       text: json['Text']?.toString() ?? '',
       verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, text, verifiedBuild]);
+
+  PageTextLocaleKey get key {
+    return PageTextLocaleKey(id: id, locale: locale);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPageTextLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            text == other.text &&
+            verifiedBuild == other.verifiedBuild;
+  }
+
+  @override
+  String toString() {
+    return 'BriefPageTextLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'text: $text, '
+        'verifiedBuild: $verifiedBuild'
+        ')';
+  }
+}
+
+final class PageTextLocaleKey {
+  final int id;
+  final String locale;
+
+  const PageTextLocaleKey({required this.id, required this.locale});
+
+  factory PageTextLocaleKey.fromEntity(PageTextLocaleEntity entity) {
+    return PageTextLocaleKey(id: entity.id, locale: entity.locale);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is PageTextLocaleKey && id == other.id && locale == other.locale;
+  }
+
+  @override
+  String toString() {
+    return 'PageTextLocaleKey('
+        'id: $id, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+mixin _PageTextLocaleEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as PageTextLocaleEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.locale,
+      self.text,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as PageTextLocaleEntity;
+    return identical(self, other) ||
+        other is PageTextLocaleEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.locale == other.locale &&
+            self.text == other.text &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   PageTextLocaleEntity copyWith({
@@ -38,30 +131,6 @@ mixin _PageTextLocaleEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as PageTextLocaleEntity;
-    return identical(self, other) ||
-        other is PageTextLocaleEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.locale == other.locale &&
-            self.text == other.text &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as PageTextLocaleEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.locale,
-      self.text,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as PageTextLocaleEntity;
     return 'PageTextLocaleEntity('
@@ -71,82 +140,13 @@ mixin _PageTextLocaleEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class PageTextLocaleKey {
-  final int id;
-  final String locale;
-
-  const PageTextLocaleKey({required this.id, required this.locale});
-
-  factory PageTextLocaleKey.fromEntity(PageTextLocaleEntity entity) {
-    return PageTextLocaleKey(id: entity.id, locale: entity.locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is PageTextLocaleKey && id == other.id && locale == other.locale;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale]);
-
-  @override
-  String toString() {
-    return 'PageTextLocaleKey('
-        'id: $id, '
-        'locale: $locale'
-        ')';
-  }
-}
-
-final class BriefPageTextLocaleEntity {
-  final int id;
-  final String locale;
-  final String text;
-  final int verifiedBuild;
-
-  const BriefPageTextLocaleEntity({
-    this.id = 0,
-    this.locale = '',
-    this.text = '',
-    this.verifiedBuild = 0,
-  });
-
-  factory BriefPageTextLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefPageTextLocaleEntity(
+  static PageTextLocaleEntity fromJson(Map<String, dynamic> json) {
+    return PageTextLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? '',
       text: json['Text']?.toString() ?? '',
       verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  PageTextLocaleKey get key {
-    return PageTextLocaleKey(id: id, locale: locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefPageTextLocaleEntity &&
-            id == other.id &&
-            locale == other.locale &&
-            text == other.text &&
-            verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale, text, verifiedBuild]);
-
-  @override
-  String toString() {
-    return 'BriefPageTextLocaleEntity('
-        'id: $id, '
-        'locale: $locale, '
-        'text: $text, '
-        'verifiedBuild: $verifiedBuild'
-        ')';
   }
 }

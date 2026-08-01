@@ -16,15 +16,9 @@ mixin _PlayerCreateInfoActionCollectionEditorViewModelMixin
     SelectFieldController<int>(fallback: 0),
   );
 
-  PlayerCreateInfoActionEntity _collectCandidate() {
-    return PlayerCreateInfoActionEntity(
-      race: raceController.collect(),
-      class_: classController.collect(),
-      button: buttonController.collect(),
-      action: actionController.collect(),
-      type: typeController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    PlayerCreateInfoActionEntity playerCreateInfoAction,
+  ) {}
 
   void _applyCandidate(PlayerCreateInfoActionEntity playerCreateInfoAction) {
     raceController.init(playerCreateInfoAction.race);
@@ -35,7 +29,13 @@ mixin _PlayerCreateInfoActionCollectionEditorViewModelMixin
     _afterApplyCandidate(playerCreateInfoAction);
   }
 
-  void _afterApplyCandidate(
-    PlayerCreateInfoActionEntity playerCreateInfoAction,
-  ) {}
+  PlayerCreateInfoActionEntity _collectCandidate() {
+    return PlayerCreateInfoActionEntity(
+      race: raceController.collect(),
+      class_: classController.collect(),
+      button: buttonController.collect(),
+      action: actionController.collect(),
+      type: typeController.collect(),
+    );
+  }
 }

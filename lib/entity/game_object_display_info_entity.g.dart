@@ -2,30 +2,94 @@
 
 part of 'game_object_display_info_entity.dart';
 
-mixin _GameObjectDisplayInfoEntityMixin {
-  static GameObjectDisplayInfoEntity fromJson(Map<String, dynamic> json) {
-    return GameObjectDisplayInfoEntity(
+final class BriefGameObjectDisplayInfoEntity {
+  final int id;
+  final String modelName;
+
+  const BriefGameObjectDisplayInfoEntity({this.id = 0, this.modelName = ''});
+
+  factory BriefGameObjectDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGameObjectDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
-      sound0: (json['Sound0'] as num?)?.toInt() ?? 0,
-      sound1: (json['Sound1'] as num?)?.toInt() ?? 0,
-      sound2: (json['Sound2'] as num?)?.toInt() ?? 0,
-      sound3: (json['Sound3'] as num?)?.toInt() ?? 0,
-      sound4: (json['Sound4'] as num?)?.toInt() ?? 0,
-      sound5: (json['Sound5'] as num?)?.toInt() ?? 0,
-      sound6: (json['Sound6'] as num?)?.toInt() ?? 0,
-      sound7: (json['Sound7'] as num?)?.toInt() ?? 0,
-      sound8: (json['Sound8'] as num?)?.toInt() ?? 0,
-      sound9: (json['Sound9'] as num?)?.toInt() ?? 0,
-      geoBoxMin0: (json['GeoBoxMin0'] as num?)?.toDouble() ?? 0.0,
-      geoBoxMin1: (json['GeoBoxMin1'] as num?)?.toDouble() ?? 0.0,
-      geoBoxMin2: (json['GeoBoxMin2'] as num?)?.toDouble() ?? 0.0,
-      geoBoxMax0: (json['GeoBoxMax0'] as num?)?.toDouble() ?? 0.0,
-      geoBoxMax1: (json['GeoBoxMax1'] as num?)?.toDouble() ?? 0.0,
-      geoBoxMax2: (json['GeoBoxMax2'] as num?)?.toDouble() ?? 0.0,
-      objectEffectPackageId:
-          (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, modelName]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectDisplayInfoEntity &&
+            id == other.id &&
+            modelName == other.modelName;
+  }
+
+  @override
+  String toString() {
+    return 'BriefGameObjectDisplayInfoEntity('
+        'id: $id, '
+        'modelName: $modelName'
+        ')';
+  }
+}
+
+mixin _GameObjectDisplayInfoEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GameObjectDisplayInfoEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.modelName,
+      self.sound0,
+      self.sound1,
+      self.sound2,
+      self.sound3,
+      self.sound4,
+      self.sound5,
+      self.sound6,
+      self.sound7,
+      self.sound8,
+      self.sound9,
+      self.geoBoxMin0,
+      self.geoBoxMin1,
+      self.geoBoxMin2,
+      self.geoBoxMax0,
+      self.geoBoxMax1,
+      self.geoBoxMax2,
+      self.objectEffectPackageId,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GameObjectDisplayInfoEntity;
+    return identical(self, other) ||
+        other is GameObjectDisplayInfoEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.modelName == other.modelName &&
+            self.sound0 == other.sound0 &&
+            self.sound1 == other.sound1 &&
+            self.sound2 == other.sound2 &&
+            self.sound3 == other.sound3 &&
+            self.sound4 == other.sound4 &&
+            self.sound5 == other.sound5 &&
+            self.sound6 == other.sound6 &&
+            self.sound7 == other.sound7 &&
+            self.sound8 == other.sound8 &&
+            self.sound9 == other.sound9 &&
+            self.geoBoxMin0 == other.geoBoxMin0 &&
+            self.geoBoxMin1 == other.geoBoxMin1 &&
+            self.geoBoxMin2 == other.geoBoxMin2 &&
+            self.geoBoxMax0 == other.geoBoxMax0 &&
+            self.geoBoxMax1 == other.geoBoxMax1 &&
+            self.geoBoxMax2 == other.geoBoxMax2 &&
+            self.objectEffectPackageId == other.objectEffectPackageId;
   }
 
   GameObjectDisplayInfoEntity copyWith({
@@ -100,60 +164,6 @@ mixin _GameObjectDisplayInfoEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as GameObjectDisplayInfoEntity;
-    return identical(self, other) ||
-        other is GameObjectDisplayInfoEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.modelName == other.modelName &&
-            self.sound0 == other.sound0 &&
-            self.sound1 == other.sound1 &&
-            self.sound2 == other.sound2 &&
-            self.sound3 == other.sound3 &&
-            self.sound4 == other.sound4 &&
-            self.sound5 == other.sound5 &&
-            self.sound6 == other.sound6 &&
-            self.sound7 == other.sound7 &&
-            self.sound8 == other.sound8 &&
-            self.sound9 == other.sound9 &&
-            self.geoBoxMin0 == other.geoBoxMin0 &&
-            self.geoBoxMin1 == other.geoBoxMin1 &&
-            self.geoBoxMin2 == other.geoBoxMin2 &&
-            self.geoBoxMax0 == other.geoBoxMax0 &&
-            self.geoBoxMax1 == other.geoBoxMax1 &&
-            self.geoBoxMax2 == other.geoBoxMax2 &&
-            self.objectEffectPackageId == other.objectEffectPackageId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GameObjectDisplayInfoEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.modelName,
-      self.sound0,
-      self.sound1,
-      self.sound2,
-      self.sound3,
-      self.sound4,
-      self.sound5,
-      self.sound6,
-      self.sound7,
-      self.sound8,
-      self.sound9,
-      self.geoBoxMin0,
-      self.geoBoxMin1,
-      self.geoBoxMin2,
-      self.geoBoxMax0,
-      self.geoBoxMax1,
-      self.geoBoxMax2,
-      self.objectEffectPackageId,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as GameObjectDisplayInfoEntity;
     return 'GameObjectDisplayInfoEntity('
@@ -178,39 +188,29 @@ mixin _GameObjectDisplayInfoEntityMixin {
         'objectEffectPackageId: ${self.objectEffectPackageId}'
         ')';
   }
-}
 
-final class BriefGameObjectDisplayInfoEntity {
-  final int id;
-  final String modelName;
-
-  const BriefGameObjectDisplayInfoEntity({this.id = 0, this.modelName = ''});
-
-  factory BriefGameObjectDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefGameObjectDisplayInfoEntity(
+  static GameObjectDisplayInfoEntity fromJson(Map<String, dynamic> json) {
+    return GameObjectDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       modelName: json['ModelName']?.toString() ?? '',
+      sound0: (json['Sound0'] as num?)?.toInt() ?? 0,
+      sound1: (json['Sound1'] as num?)?.toInt() ?? 0,
+      sound2: (json['Sound2'] as num?)?.toInt() ?? 0,
+      sound3: (json['Sound3'] as num?)?.toInt() ?? 0,
+      sound4: (json['Sound4'] as num?)?.toInt() ?? 0,
+      sound5: (json['Sound5'] as num?)?.toInt() ?? 0,
+      sound6: (json['Sound6'] as num?)?.toInt() ?? 0,
+      sound7: (json['Sound7'] as num?)?.toInt() ?? 0,
+      sound8: (json['Sound8'] as num?)?.toInt() ?? 0,
+      sound9: (json['Sound9'] as num?)?.toInt() ?? 0,
+      geoBoxMin0: (json['GeoBoxMin0'] as num?)?.toDouble() ?? 0.0,
+      geoBoxMin1: (json['GeoBoxMin1'] as num?)?.toDouble() ?? 0.0,
+      geoBoxMin2: (json['GeoBoxMin2'] as num?)?.toDouble() ?? 0.0,
+      geoBoxMax0: (json['GeoBoxMax0'] as num?)?.toDouble() ?? 0.0,
+      geoBoxMax1: (json['GeoBoxMax1'] as num?)?.toDouble() ?? 0.0,
+      geoBoxMax2: (json['GeoBoxMax2'] as num?)?.toDouble() ?? 0.0,
+      objectEffectPackageId:
+          (json['ObjectEffectPackageID'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefGameObjectDisplayInfoEntity &&
-            id == other.id &&
-            modelName == other.modelName;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, modelName]);
-
-  @override
-  String toString() {
-    return 'BriefGameObjectDisplayInfoEntity('
-        'id: $id, '
-        'modelName: $modelName'
-        ')';
   }
 }

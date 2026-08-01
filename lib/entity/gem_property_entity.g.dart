@@ -2,15 +2,85 @@
 
 part of 'gem_property_entity.dart';
 
-mixin _GemPropertyEntityMixin {
-  static GemPropertyEntity fromJson(Map<String, dynamic> json) {
-    return GemPropertyEntity(
+final class BriefGemPropertyEntity {
+  final int id;
+  final int enchantId;
+  final int maxCountInv;
+  final int maxCountItem;
+  final int type;
+
+  const BriefGemPropertyEntity({
+    this.id = 0,
+    this.enchantId = 0,
+    this.maxCountInv = 0,
+    this.maxCountItem = 0,
+    this.type = 0,
+  });
+
+  factory BriefGemPropertyEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGemPropertyEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       enchantId: (json['Enchant_ID'] as num?)?.toInt() ?? 0,
       maxCountInv: (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
       maxCountItem: (json['Maxcount_item'] as num?)?.toInt() ?? 0,
       type: (json['Type'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, enchantId, maxCountInv, maxCountItem, type]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGemPropertyEntity &&
+            id == other.id &&
+            enchantId == other.enchantId &&
+            maxCountInv == other.maxCountInv &&
+            maxCountItem == other.maxCountItem &&
+            type == other.type;
+  }
+
+  @override
+  String toString() {
+    return 'BriefGemPropertyEntity('
+        'id: $id, '
+        'enchantId: $enchantId, '
+        'maxCountInv: $maxCountInv, '
+        'maxCountItem: $maxCountItem, '
+        'type: $type'
+        ')';
+  }
+}
+
+mixin _GemPropertyEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GemPropertyEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.enchantId,
+      self.maxCountInv,
+      self.maxCountItem,
+      self.type,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GemPropertyEntity;
+    return identical(self, other) ||
+        other is GemPropertyEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.enchantId == other.enchantId &&
+            self.maxCountInv == other.maxCountInv &&
+            self.maxCountItem == other.maxCountItem &&
+            self.type == other.type;
   }
 
   GemPropertyEntity copyWith({
@@ -42,32 +112,6 @@ mixin _GemPropertyEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as GemPropertyEntity;
-    return identical(self, other) ||
-        other is GemPropertyEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.enchantId == other.enchantId &&
-            self.maxCountInv == other.maxCountInv &&
-            self.maxCountItem == other.maxCountItem &&
-            self.type == other.type;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GemPropertyEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.enchantId,
-      self.maxCountInv,
-      self.maxCountItem,
-      self.type,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as GemPropertyEntity;
     return 'GemPropertyEntity('
@@ -78,58 +122,14 @@ mixin _GemPropertyEntityMixin {
         'type: ${self.type}'
         ')';
   }
-}
 
-final class BriefGemPropertyEntity {
-  final int id;
-  final int enchantId;
-  final int maxCountInv;
-  final int maxCountItem;
-  final int type;
-
-  const BriefGemPropertyEntity({
-    this.id = 0,
-    this.enchantId = 0,
-    this.maxCountInv = 0,
-    this.maxCountItem = 0,
-    this.type = 0,
-  });
-
-  factory BriefGemPropertyEntity.fromJson(Map<String, dynamic> json) {
-    return BriefGemPropertyEntity(
+  static GemPropertyEntity fromJson(Map<String, dynamic> json) {
+    return GemPropertyEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       enchantId: (json['Enchant_ID'] as num?)?.toInt() ?? 0,
       maxCountInv: (json['Maxcount_inv'] as num?)?.toInt() ?? 0,
       maxCountItem: (json['Maxcount_item'] as num?)?.toInt() ?? 0,
       type: (json['Type'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefGemPropertyEntity &&
-            id == other.id &&
-            enchantId == other.enchantId &&
-            maxCountInv == other.maxCountInv &&
-            maxCountItem == other.maxCountItem &&
-            type == other.type;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, enchantId, maxCountInv, maxCountItem, type]);
-
-  @override
-  String toString() {
-    return 'BriefGemPropertyEntity('
-        'id: $id, '
-        'enchantId: $enchantId, '
-        'maxCountInv: $maxCountInv, '
-        'maxCountItem: $maxCountItem, '
-        'type: $type'
-        ')';
   }
 }

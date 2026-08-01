@@ -2,19 +2,104 @@
 
 part of 'creature_immunity_entity.dart';
 
-mixin _CreatureImmunityEntityMixin {
-  static CreatureImmunityEntity fromJson(Map<String, dynamic> json) {
-    return CreatureImmunityEntity(
+final class BriefCreatureImmunityEntity {
+  final int id;
+  final int schoolMask;
+  final int mechanicsMask;
+  final int immuneAoE;
+  final int immuneChain;
+  final String comment;
+
+  const BriefCreatureImmunityEntity({
+    this.id = 0,
+    this.schoolMask = 0,
+    this.mechanicsMask = 0,
+    this.immuneAoE = 0,
+    this.immuneChain = 0,
+    this.comment = '',
+  });
+
+  factory BriefCreatureImmunityEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureImmunityEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       schoolMask: (json['SchoolMask'] as num?)?.toInt() ?? 0,
-      dispelTypeMask: (json['DispelTypeMask'] as num?)?.toInt() ?? 0,
       mechanicsMask: (json['MechanicsMask'] as num?)?.toInt() ?? 0,
-      effects: json['Effects']?.toString() ?? '',
-      auras: json['Auras']?.toString() ?? '',
       immuneAoE: (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
       immuneChain: (json['ImmuneChain'] as num?)?.toInt() ?? 0,
       comment: json['Comment']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    schoolMask,
+    mechanicsMask,
+    immuneAoE,
+    immuneChain,
+    comment,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureImmunityEntity &&
+            id == other.id &&
+            schoolMask == other.schoolMask &&
+            mechanicsMask == other.mechanicsMask &&
+            immuneAoE == other.immuneAoE &&
+            immuneChain == other.immuneChain &&
+            comment == other.comment;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureImmunityEntity('
+        'id: $id, '
+        'schoolMask: $schoolMask, '
+        'mechanicsMask: $mechanicsMask, '
+        'immuneAoE: $immuneAoE, '
+        'immuneChain: $immuneChain, '
+        'comment: $comment'
+        ')';
+  }
+}
+
+mixin _CreatureImmunityEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureImmunityEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.schoolMask,
+      self.dispelTypeMask,
+      self.mechanicsMask,
+      self.effects,
+      self.auras,
+      self.immuneAoE,
+      self.immuneChain,
+      self.comment,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureImmunityEntity;
+    return identical(self, other) ||
+        other is CreatureImmunityEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.schoolMask == other.schoolMask &&
+            self.dispelTypeMask == other.dispelTypeMask &&
+            self.mechanicsMask == other.mechanicsMask &&
+            self.effects == other.effects &&
+            self.auras == other.auras &&
+            self.immuneAoE == other.immuneAoE &&
+            self.immuneChain == other.immuneChain &&
+            self.comment == other.comment;
   }
 
   CreatureImmunityEntity copyWith({
@@ -58,40 +143,6 @@ mixin _CreatureImmunityEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureImmunityEntity;
-    return identical(self, other) ||
-        other is CreatureImmunityEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.schoolMask == other.schoolMask &&
-            self.dispelTypeMask == other.dispelTypeMask &&
-            self.mechanicsMask == other.mechanicsMask &&
-            self.effects == other.effects &&
-            self.auras == other.auras &&
-            self.immuneAoE == other.immuneAoE &&
-            self.immuneChain == other.immuneChain &&
-            self.comment == other.comment;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureImmunityEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.schoolMask,
-      self.dispelTypeMask,
-      self.mechanicsMask,
-      self.effects,
-      self.auras,
-      self.immuneAoE,
-      self.immuneChain,
-      self.comment,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureImmunityEntity;
     return 'CreatureImmunityEntity('
@@ -106,69 +157,18 @@ mixin _CreatureImmunityEntityMixin {
         'comment: ${self.comment}'
         ')';
   }
-}
 
-final class BriefCreatureImmunityEntity {
-  final int id;
-  final int schoolMask;
-  final int mechanicsMask;
-  final int immuneAoE;
-  final int immuneChain;
-  final String comment;
-
-  const BriefCreatureImmunityEntity({
-    this.id = 0,
-    this.schoolMask = 0,
-    this.mechanicsMask = 0,
-    this.immuneAoE = 0,
-    this.immuneChain = 0,
-    this.comment = '',
-  });
-
-  factory BriefCreatureImmunityEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureImmunityEntity(
+  static CreatureImmunityEntity fromJson(Map<String, dynamic> json) {
+    return CreatureImmunityEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       schoolMask: (json['SchoolMask'] as num?)?.toInt() ?? 0,
+      dispelTypeMask: (json['DispelTypeMask'] as num?)?.toInt() ?? 0,
       mechanicsMask: (json['MechanicsMask'] as num?)?.toInt() ?? 0,
+      effects: json['Effects']?.toString() ?? '',
+      auras: json['Auras']?.toString() ?? '',
       immuneAoE: (json['ImmuneAoE'] as num?)?.toInt() ?? 0,
       immuneChain: (json['ImmuneChain'] as num?)?.toInt() ?? 0,
       comment: json['Comment']?.toString() ?? '',
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureImmunityEntity &&
-            id == other.id &&
-            schoolMask == other.schoolMask &&
-            mechanicsMask == other.mechanicsMask &&
-            immuneAoE == other.immuneAoE &&
-            immuneChain == other.immuneChain &&
-            comment == other.comment;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    schoolMask,
-    mechanicsMask,
-    immuneAoE,
-    immuneChain,
-    comment,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureImmunityEntity('
-        'id: $id, '
-        'schoolMask: $schoolMask, '
-        'mechanicsMask: $mechanicsMask, '
-        'immuneAoE: $immuneAoE, '
-        'immuneChain: $immuneChain, '
-        'comment: $comment'
-        ')';
   }
 }

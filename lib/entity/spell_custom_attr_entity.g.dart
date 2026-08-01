@@ -2,12 +2,56 @@
 
 part of 'spell_custom_attr_entity.dart';
 
-mixin _SpellCustomAttrEntityMixin {
-  static SpellCustomAttrEntity fromJson(Map<String, dynamic> json) {
-    return SpellCustomAttrEntity(
+final class BriefSpellCustomAttrEntity {
+  final int spellId;
+  final int attributes;
+
+  const BriefSpellCustomAttrEntity({this.spellId = 0, this.attributes = 0});
+
+  factory BriefSpellCustomAttrEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellCustomAttrEntity(
       spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
       attributes: (json['attributes'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([spellId, attributes]);
+
+  int get key => spellId;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellCustomAttrEntity &&
+            spellId == other.spellId &&
+            attributes == other.attributes;
+  }
+
+  @override
+  String toString() {
+    return 'BriefSpellCustomAttrEntity('
+        'spellId: $spellId, '
+        'attributes: $attributes'
+        ')';
+  }
+}
+
+mixin _SpellCustomAttrEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as SpellCustomAttrEntity;
+    return Object.hashAll([self.runtimeType, self.spellId, self.attributes]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as SpellCustomAttrEntity;
+    return identical(self, other) ||
+        other is SpellCustomAttrEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.spellId == other.spellId &&
+            self.attributes == other.attributes;
   }
 
   SpellCustomAttrEntity copyWith({int? spellId, int? attributes}) {
@@ -24,22 +68,6 @@ mixin _SpellCustomAttrEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as SpellCustomAttrEntity;
-    return identical(self, other) ||
-        other is SpellCustomAttrEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.spellId == other.spellId &&
-            self.attributes == other.attributes;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as SpellCustomAttrEntity;
-    return Object.hashAll([self.runtimeType, self.spellId, self.attributes]);
-  }
-
-  @override
   String toString() {
     final self = this as SpellCustomAttrEntity;
     return 'SpellCustomAttrEntity('
@@ -47,39 +75,11 @@ mixin _SpellCustomAttrEntityMixin {
         'attributes: ${self.attributes}'
         ')';
   }
-}
 
-final class BriefSpellCustomAttrEntity {
-  final int spellId;
-  final int attributes;
-
-  const BriefSpellCustomAttrEntity({this.spellId = 0, this.attributes = 0});
-
-  factory BriefSpellCustomAttrEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSpellCustomAttrEntity(
+  static SpellCustomAttrEntity fromJson(Map<String, dynamic> json) {
+    return SpellCustomAttrEntity(
       spellId: (json['spell_id'] as num?)?.toInt() ?? 0,
       attributes: (json['attributes'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => spellId;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefSpellCustomAttrEntity &&
-            spellId == other.spellId &&
-            attributes == other.attributes;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([spellId, attributes]);
-
-  @override
-  String toString() {
-    return 'BriefSpellCustomAttrEntity('
-        'spellId: $spellId, '
-        'attributes: $attributes'
-        ')';
   }
 }

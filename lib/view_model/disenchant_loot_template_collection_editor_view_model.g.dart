@@ -17,20 +17,9 @@ mixin _DisenchantLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  DisenchantLootTemplateEntity _collectCandidate() {
-    return DisenchantLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    DisenchantLootTemplateEntity disenchantLootTemplate,
+  ) {}
 
   void _applyCandidate(DisenchantLootTemplateEntity disenchantLootTemplate) {
     entryController.init(disenchantLootTemplate.entry);
@@ -46,7 +35,18 @@ mixin _DisenchantLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(disenchantLootTemplate);
   }
 
-  void _afterApplyCandidate(
-    DisenchantLootTemplateEntity disenchantLootTemplate,
-  ) {}
+  DisenchantLootTemplateEntity _collectCandidate() {
+    return DisenchantLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

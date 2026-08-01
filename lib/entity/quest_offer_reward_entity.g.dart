@@ -2,21 +2,86 @@
 
 part of 'quest_offer_reward_entity.dart';
 
-mixin _QuestOfferRewardEntityMixin {
-  static QuestOfferRewardEntity fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardEntity(
+final class BriefQuestOfferRewardEntity {
+  final int id;
+  final int emote1;
+  final String rewardText;
+
+  const BriefQuestOfferRewardEntity({
+    this.id = 0,
+    this.emote1 = 0,
+    this.rewardText = '',
+  });
+
+  factory BriefQuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestOfferRewardEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       emote1: (json['Emote1'] as num?)?.toInt() ?? 0,
-      emote2: (json['Emote2'] as num?)?.toInt() ?? 0,
-      emote3: (json['Emote3'] as num?)?.toInt() ?? 0,
-      emote4: (json['Emote4'] as num?)?.toInt() ?? 0,
-      emoteDelay1: (json['EmoteDelay1'] as num?)?.toInt() ?? 0,
-      emoteDelay2: (json['EmoteDelay2'] as num?)?.toInt() ?? 0,
-      emoteDelay3: (json['EmoteDelay3'] as num?)?.toInt() ?? 0,
-      emoteDelay4: (json['EmoteDelay4'] as num?)?.toInt() ?? 0,
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, emote1, rewardText]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestOfferRewardEntity &&
+            id == other.id &&
+            emote1 == other.emote1 &&
+            rewardText == other.rewardText;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestOfferRewardEntity('
+        'id: $id, '
+        'emote1: $emote1, '
+        'rewardText: $rewardText'
+        ')';
+  }
+}
+
+mixin _QuestOfferRewardEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestOfferRewardEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.emote1,
+      self.emote2,
+      self.emote3,
+      self.emote4,
+      self.emoteDelay1,
+      self.emoteDelay2,
+      self.emoteDelay3,
+      self.emoteDelay4,
+      self.rewardText,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestOfferRewardEntity;
+    return identical(self, other) ||
+        other is QuestOfferRewardEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.emote1 == other.emote1 &&
+            self.emote2 == other.emote2 &&
+            self.emote3 == other.emote3 &&
+            self.emote4 == other.emote4 &&
+            self.emoteDelay1 == other.emoteDelay1 &&
+            self.emoteDelay2 == other.emoteDelay2 &&
+            self.emoteDelay3 == other.emoteDelay3 &&
+            self.emoteDelay4 == other.emoteDelay4 &&
+            self.rewardText == other.rewardText &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   QuestOfferRewardEntity copyWith({
@@ -66,44 +131,6 @@ mixin _QuestOfferRewardEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestOfferRewardEntity;
-    return identical(self, other) ||
-        other is QuestOfferRewardEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.emote1 == other.emote1 &&
-            self.emote2 == other.emote2 &&
-            self.emote3 == other.emote3 &&
-            self.emote4 == other.emote4 &&
-            self.emoteDelay1 == other.emoteDelay1 &&
-            self.emoteDelay2 == other.emoteDelay2 &&
-            self.emoteDelay3 == other.emoteDelay3 &&
-            self.emoteDelay4 == other.emoteDelay4 &&
-            self.rewardText == other.rewardText &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestOfferRewardEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.emote1,
-      self.emote2,
-      self.emote3,
-      self.emote4,
-      self.emoteDelay1,
-      self.emoteDelay2,
-      self.emoteDelay3,
-      self.emoteDelay4,
-      self.rewardText,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestOfferRewardEntity;
     return 'QuestOfferRewardEntity('
@@ -120,47 +147,20 @@ mixin _QuestOfferRewardEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class BriefQuestOfferRewardEntity {
-  final int id;
-  final int emote1;
-  final String rewardText;
-
-  const BriefQuestOfferRewardEntity({
-    this.id = 0,
-    this.emote1 = 0,
-    this.rewardText = '',
-  });
-
-  factory BriefQuestOfferRewardEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestOfferRewardEntity(
+  static QuestOfferRewardEntity fromJson(Map<String, dynamic> json) {
+    return QuestOfferRewardEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       emote1: (json['Emote1'] as num?)?.toInt() ?? 0,
+      emote2: (json['Emote2'] as num?)?.toInt() ?? 0,
+      emote3: (json['Emote3'] as num?)?.toInt() ?? 0,
+      emote4: (json['Emote4'] as num?)?.toInt() ?? 0,
+      emoteDelay1: (json['EmoteDelay1'] as num?)?.toInt() ?? 0,
+      emoteDelay2: (json['EmoteDelay2'] as num?)?.toInt() ?? 0,
+      emoteDelay3: (json['EmoteDelay3'] as num?)?.toInt() ?? 0,
+      emoteDelay4: (json['EmoteDelay4'] as num?)?.toInt() ?? 0,
       rewardText: json['RewardText']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestOfferRewardEntity &&
-            id == other.id &&
-            emote1 == other.emote1 &&
-            rewardText == other.rewardText;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, emote1, rewardText]);
-
-  @override
-  String toString() {
-    return 'BriefQuestOfferRewardEntity('
-        'id: $id, '
-        'emote1: $emote1, '
-        'rewardText: $rewardText'
-        ')';
   }
 }

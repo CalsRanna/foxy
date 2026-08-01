@@ -2,9 +2,59 @@
 
 part of 'scaling_stat_distribution_entity.dart';
 
-mixin _ScalingStatDistributionEntityMixin {
-  static ScalingStatDistributionEntity fromJson(Map<String, dynamic> json) {
-    return ScalingStatDistributionEntity(
+final class BriefScalingStatDistributionEntity {
+  final int id;
+  final int statId0;
+  final int statId1;
+  final int statId2;
+  final int statId3;
+  final int statId4;
+  final int statId5;
+  final int statId6;
+  final int statId7;
+  final int statId8;
+  final int statId9;
+  final int bonus0;
+  final int bonus1;
+  final int bonus2;
+  final int bonus3;
+  final int bonus4;
+  final int bonus5;
+  final int bonus6;
+  final int bonus7;
+  final int bonus8;
+  final int bonus9;
+  final int maxlevel;
+
+  const BriefScalingStatDistributionEntity({
+    this.id = 0,
+    this.statId0 = -1,
+    this.statId1 = -1,
+    this.statId2 = -1,
+    this.statId3 = -1,
+    this.statId4 = -1,
+    this.statId5 = -1,
+    this.statId6 = -1,
+    this.statId7 = -1,
+    this.statId8 = -1,
+    this.statId9 = -1,
+    this.bonus0 = 0,
+    this.bonus1 = 0,
+    this.bonus2 = 0,
+    this.bonus3 = 0,
+    this.bonus4 = 0,
+    this.bonus5 = 0,
+    this.bonus6 = 0,
+    this.bonus7 = 0,
+    this.bonus8 = 0,
+    this.bonus9 = 0,
+    this.maxlevel = 80,
+  });
+
+  factory BriefScalingStatDistributionEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefScalingStatDistributionEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       statId0: (json['StatID0'] as num?)?.toInt() ?? -1,
       statId1: (json['StatID1'] as num?)?.toInt() ?? -1,
@@ -28,6 +78,152 @@ mixin _ScalingStatDistributionEntityMixin {
       bonus9: (json['Bonus9'] as num?)?.toInt() ?? 0,
       maxlevel: (json['Maxlevel'] as num?)?.toInt() ?? 80,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    statId0,
+    statId1,
+    statId2,
+    statId3,
+    statId4,
+    statId5,
+    statId6,
+    statId7,
+    statId8,
+    statId9,
+    bonus0,
+    bonus1,
+    bonus2,
+    bonus3,
+    bonus4,
+    bonus5,
+    bonus6,
+    bonus7,
+    bonus8,
+    bonus9,
+    maxlevel,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefScalingStatDistributionEntity &&
+            id == other.id &&
+            statId0 == other.statId0 &&
+            statId1 == other.statId1 &&
+            statId2 == other.statId2 &&
+            statId3 == other.statId3 &&
+            statId4 == other.statId4 &&
+            statId5 == other.statId5 &&
+            statId6 == other.statId6 &&
+            statId7 == other.statId7 &&
+            statId8 == other.statId8 &&
+            statId9 == other.statId9 &&
+            bonus0 == other.bonus0 &&
+            bonus1 == other.bonus1 &&
+            bonus2 == other.bonus2 &&
+            bonus3 == other.bonus3 &&
+            bonus4 == other.bonus4 &&
+            bonus5 == other.bonus5 &&
+            bonus6 == other.bonus6 &&
+            bonus7 == other.bonus7 &&
+            bonus8 == other.bonus8 &&
+            bonus9 == other.bonus9 &&
+            maxlevel == other.maxlevel;
+  }
+
+  @override
+  String toString() {
+    return 'BriefScalingStatDistributionEntity('
+        'id: $id, '
+        'statId0: $statId0, '
+        'statId1: $statId1, '
+        'statId2: $statId2, '
+        'statId3: $statId3, '
+        'statId4: $statId4, '
+        'statId5: $statId5, '
+        'statId6: $statId6, '
+        'statId7: $statId7, '
+        'statId8: $statId8, '
+        'statId9: $statId9, '
+        'bonus0: $bonus0, '
+        'bonus1: $bonus1, '
+        'bonus2: $bonus2, '
+        'bonus3: $bonus3, '
+        'bonus4: $bonus4, '
+        'bonus5: $bonus5, '
+        'bonus6: $bonus6, '
+        'bonus7: $bonus7, '
+        'bonus8: $bonus8, '
+        'bonus9: $bonus9, '
+        'maxlevel: $maxlevel'
+        ')';
+  }
+}
+
+mixin _ScalingStatDistributionEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ScalingStatDistributionEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.statId0,
+      self.statId1,
+      self.statId2,
+      self.statId3,
+      self.statId4,
+      self.statId5,
+      self.statId6,
+      self.statId7,
+      self.statId8,
+      self.statId9,
+      self.bonus0,
+      self.bonus1,
+      self.bonus2,
+      self.bonus3,
+      self.bonus4,
+      self.bonus5,
+      self.bonus6,
+      self.bonus7,
+      self.bonus8,
+      self.bonus9,
+      self.maxlevel,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ScalingStatDistributionEntity;
+    return identical(self, other) ||
+        other is ScalingStatDistributionEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.statId0 == other.statId0 &&
+            self.statId1 == other.statId1 &&
+            self.statId2 == other.statId2 &&
+            self.statId3 == other.statId3 &&
+            self.statId4 == other.statId4 &&
+            self.statId5 == other.statId5 &&
+            self.statId6 == other.statId6 &&
+            self.statId7 == other.statId7 &&
+            self.statId8 == other.statId8 &&
+            self.statId9 == other.statId9 &&
+            self.bonus0 == other.bonus0 &&
+            self.bonus1 == other.bonus1 &&
+            self.bonus2 == other.bonus2 &&
+            self.bonus3 == other.bonus3 &&
+            self.bonus4 == other.bonus4 &&
+            self.bonus5 == other.bonus5 &&
+            self.bonus6 == other.bonus6 &&
+            self.bonus7 == other.bonus7 &&
+            self.bonus8 == other.bonus8 &&
+            self.bonus9 == other.bonus9 &&
+            self.maxlevel == other.maxlevel;
   }
 
   ScalingStatDistributionEntity copyWith({
@@ -110,66 +306,6 @@ mixin _ScalingStatDistributionEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ScalingStatDistributionEntity;
-    return identical(self, other) ||
-        other is ScalingStatDistributionEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.statId0 == other.statId0 &&
-            self.statId1 == other.statId1 &&
-            self.statId2 == other.statId2 &&
-            self.statId3 == other.statId3 &&
-            self.statId4 == other.statId4 &&
-            self.statId5 == other.statId5 &&
-            self.statId6 == other.statId6 &&
-            self.statId7 == other.statId7 &&
-            self.statId8 == other.statId8 &&
-            self.statId9 == other.statId9 &&
-            self.bonus0 == other.bonus0 &&
-            self.bonus1 == other.bonus1 &&
-            self.bonus2 == other.bonus2 &&
-            self.bonus3 == other.bonus3 &&
-            self.bonus4 == other.bonus4 &&
-            self.bonus5 == other.bonus5 &&
-            self.bonus6 == other.bonus6 &&
-            self.bonus7 == other.bonus7 &&
-            self.bonus8 == other.bonus8 &&
-            self.bonus9 == other.bonus9 &&
-            self.maxlevel == other.maxlevel;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ScalingStatDistributionEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.statId0,
-      self.statId1,
-      self.statId2,
-      self.statId3,
-      self.statId4,
-      self.statId5,
-      self.statId6,
-      self.statId7,
-      self.statId8,
-      self.statId9,
-      self.bonus0,
-      self.bonus1,
-      self.bonus2,
-      self.bonus3,
-      self.bonus4,
-      self.bonus5,
-      self.bonus6,
-      self.bonus7,
-      self.bonus8,
-      self.bonus9,
-      self.maxlevel,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ScalingStatDistributionEntity;
     return 'ScalingStatDistributionEntity('
@@ -197,61 +333,9 @@ mixin _ScalingStatDistributionEntityMixin {
         'maxlevel: ${self.maxlevel}'
         ')';
   }
-}
 
-final class BriefScalingStatDistributionEntity {
-  final int id;
-  final int statId0;
-  final int statId1;
-  final int statId2;
-  final int statId3;
-  final int statId4;
-  final int statId5;
-  final int statId6;
-  final int statId7;
-  final int statId8;
-  final int statId9;
-  final int bonus0;
-  final int bonus1;
-  final int bonus2;
-  final int bonus3;
-  final int bonus4;
-  final int bonus5;
-  final int bonus6;
-  final int bonus7;
-  final int bonus8;
-  final int bonus9;
-  final int maxlevel;
-
-  const BriefScalingStatDistributionEntity({
-    this.id = 0,
-    this.statId0 = -1,
-    this.statId1 = -1,
-    this.statId2 = -1,
-    this.statId3 = -1,
-    this.statId4 = -1,
-    this.statId5 = -1,
-    this.statId6 = -1,
-    this.statId7 = -1,
-    this.statId8 = -1,
-    this.statId9 = -1,
-    this.bonus0 = 0,
-    this.bonus1 = 0,
-    this.bonus2 = 0,
-    this.bonus3 = 0,
-    this.bonus4 = 0,
-    this.bonus5 = 0,
-    this.bonus6 = 0,
-    this.bonus7 = 0,
-    this.bonus8 = 0,
-    this.bonus9 = 0,
-    this.maxlevel = 80,
-  });
-
-  factory BriefScalingStatDistributionEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefScalingStatDistributionEntity(
+  static ScalingStatDistributionEntity fromJson(Map<String, dynamic> json) {
+    return ScalingStatDistributionEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       statId0: (json['StatID0'] as num?)?.toInt() ?? -1,
       statId1: (json['StatID1'] as num?)?.toInt() ?? -1,
@@ -275,89 +359,5 @@ final class BriefScalingStatDistributionEntity {
       bonus9: (json['Bonus9'] as num?)?.toInt() ?? 0,
       maxlevel: (json['Maxlevel'] as num?)?.toInt() ?? 80,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefScalingStatDistributionEntity &&
-            id == other.id &&
-            statId0 == other.statId0 &&
-            statId1 == other.statId1 &&
-            statId2 == other.statId2 &&
-            statId3 == other.statId3 &&
-            statId4 == other.statId4 &&
-            statId5 == other.statId5 &&
-            statId6 == other.statId6 &&
-            statId7 == other.statId7 &&
-            statId8 == other.statId8 &&
-            statId9 == other.statId9 &&
-            bonus0 == other.bonus0 &&
-            bonus1 == other.bonus1 &&
-            bonus2 == other.bonus2 &&
-            bonus3 == other.bonus3 &&
-            bonus4 == other.bonus4 &&
-            bonus5 == other.bonus5 &&
-            bonus6 == other.bonus6 &&
-            bonus7 == other.bonus7 &&
-            bonus8 == other.bonus8 &&
-            bonus9 == other.bonus9 &&
-            maxlevel == other.maxlevel;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    statId0,
-    statId1,
-    statId2,
-    statId3,
-    statId4,
-    statId5,
-    statId6,
-    statId7,
-    statId8,
-    statId9,
-    bonus0,
-    bonus1,
-    bonus2,
-    bonus3,
-    bonus4,
-    bonus5,
-    bonus6,
-    bonus7,
-    bonus8,
-    bonus9,
-    maxlevel,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefScalingStatDistributionEntity('
-        'id: $id, '
-        'statId0: $statId0, '
-        'statId1: $statId1, '
-        'statId2: $statId2, '
-        'statId3: $statId3, '
-        'statId4: $statId4, '
-        'statId5: $statId5, '
-        'statId6: $statId6, '
-        'statId7: $statId7, '
-        'statId8: $statId8, '
-        'statId9: $statId9, '
-        'bonus0: $bonus0, '
-        'bonus1: $bonus1, '
-        'bonus2: $bonus2, '
-        'bonus3: $bonus3, '
-        'bonus4: $bonus4, '
-        'bonus5: $bonus5, '
-        'bonus6: $bonus6, '
-        'bonus7: $bonus7, '
-        'bonus8: $bonus8, '
-        'bonus9: $bonus9, '
-        'maxlevel: $maxlevel'
-        ')';
   }
 }

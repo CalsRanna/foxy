@@ -2,6 +2,31 @@
 
 part of 'creature_spell_data_repository.dart';
 
+final class CreatureSpellDataFilter {
+  final String id;
+  final String spell;
+
+  const CreatureSpellDataFilter({this.id = '', this.spell = ''});
+
+  factory CreatureSpellDataFilter.fromJson(Map<String, dynamic> json) {
+    return CreatureSpellDataFilter(
+      id: json['id']?.toString() ?? '',
+      spell: json['spell']?.toString() ?? '',
+    );
+  }
+
+  CreatureSpellDataFilter copyWith({String? id, String? spell}) {
+    return CreatureSpellDataFilter(
+      id: id ?? this.id,
+      spell: spell ?? this.spell,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'spell': spell};
+  }
+}
+
 mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureSpellData(int key) async {
     await _beforeDestroy(key);
@@ -75,30 +100,5 @@ mixin _CreatureSpellDataRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class CreatureSpellDataFilter {
-  final String id;
-  final String spell;
-
-  const CreatureSpellDataFilter({this.id = '', this.spell = ''});
-
-  factory CreatureSpellDataFilter.fromJson(Map<String, dynamic> json) {
-    return CreatureSpellDataFilter(
-      id: json['id']?.toString() ?? '',
-      spell: json['spell']?.toString() ?? '',
-    );
-  }
-
-  CreatureSpellDataFilter copyWith({String? id, String? spell}) {
-    return CreatureSpellDataFilter(
-      id: id ?? this.id,
-      spell: spell ?? this.spell,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'spell': spell};
   }
 }

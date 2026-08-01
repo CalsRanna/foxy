@@ -2,6 +2,31 @@
 
 part of 'scaling_stat_value_repository.dart';
 
+final class ScalingStatValueFilter {
+  final String id;
+  final String charlevel;
+
+  const ScalingStatValueFilter({this.id = '', this.charlevel = ''});
+
+  factory ScalingStatValueFilter.fromJson(Map<String, dynamic> json) {
+    return ScalingStatValueFilter(
+      id: json['id']?.toString() ?? '',
+      charlevel: json['charlevel']?.toString() ?? '',
+    );
+  }
+
+  ScalingStatValueFilter copyWith({String? id, String? charlevel}) {
+    return ScalingStatValueFilter(
+      id: id ?? this.id,
+      charlevel: charlevel ?? this.charlevel,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'charlevel': charlevel};
+  }
+}
+
 mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
   Future<void> destroyScalingStatValue(int key) async {
     await _beforeDestroy(key);
@@ -75,30 +100,5 @@ mixin _ScalingStatValueRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class ScalingStatValueFilter {
-  final String id;
-  final String charlevel;
-
-  const ScalingStatValueFilter({this.id = '', this.charlevel = ''});
-
-  factory ScalingStatValueFilter.fromJson(Map<String, dynamic> json) {
-    return ScalingStatValueFilter(
-      id: json['id']?.toString() ?? '',
-      charlevel: json['charlevel']?.toString() ?? '',
-    );
-  }
-
-  ScalingStatValueFilter copyWith({String? id, String? charlevel}) {
-    return ScalingStatValueFilter(
-      id: id ?? this.id,
-      charlevel: charlevel ?? this.charlevel,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'charlevel': charlevel};
   }
 }

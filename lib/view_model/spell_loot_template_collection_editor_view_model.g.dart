@@ -16,20 +16,7 @@ mixin _SpellLootTemplateCollectionEditorViewModelMixin on FieldControllerMixin {
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  SpellLootTemplateEntity _collectCandidate() {
-    return SpellLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect(),
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellLootTemplateEntity spellLootTemplate) {}
 
   void _applyCandidate(SpellLootTemplateEntity spellLootTemplate) {
     entryController.init(spellLootTemplate.entry);
@@ -45,5 +32,18 @@ mixin _SpellLootTemplateCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellLootTemplate);
   }
 
-  void _afterApplyCandidate(SpellLootTemplateEntity spellLootTemplate) {}
+  SpellLootTemplateEntity _collectCandidate() {
+    return SpellLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect(),
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

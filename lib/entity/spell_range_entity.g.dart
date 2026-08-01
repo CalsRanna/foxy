@@ -2,68 +2,150 @@
 
 part of 'spell_range_entity.dart';
 
-mixin _SpellRangeEntityMixin {
-  static SpellRangeEntity fromJson(Map<String, dynamic> json) {
-    return SpellRangeEntity(
+final class BriefSpellRangeEntity {
+  final int id;
+  final double rangeMin0;
+  final double rangeMax0;
+  final String displayNameLangZhCN;
+
+  const BriefSpellRangeEntity({
+    this.id = 0,
+    this.rangeMin0 = 0.0,
+    this.rangeMax0 = 0.0,
+    this.displayNameLangZhCN = '',
+  });
+
+  factory BriefSpellRangeEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellRangeEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       rangeMin0: (json['RangeMin0'] as num?)?.toDouble() ?? 0.0,
-      rangeMin1: (json['RangeMin1'] as num?)?.toDouble() ?? 0.0,
       rangeMax0: (json['RangeMax0'] as num?)?.toDouble() ?? 0.0,
-      rangeMax1: (json['RangeMax1'] as num?)?.toDouble() ?? 0.0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
-      displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
-      displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
-      displayNameLangDeDE: json['DisplayName_lang_deDE']?.toString() ?? '',
       displayNameLangZhCN: json['DisplayName_lang_zhCN']?.toString() ?? '',
-      displayNameLangZhTW: json['DisplayName_lang_zhTW']?.toString() ?? '',
-      displayNameLangEsES: json['DisplayName_lang_esES']?.toString() ?? '',
-      displayNameLangEsMX: json['DisplayName_lang_esMX']?.toString() ?? '',
-      displayNameLangRuRU: json['DisplayName_lang_ruRU']?.toString() ?? '',
-      displayNameLangJaJP: json['DisplayName_lang_jaJP']?.toString() ?? '',
-      displayNameLangPtPT: json['DisplayName_lang_ptPT']?.toString() ?? '',
-      displayNameLangPtBR: json['DisplayName_lang_ptBR']?.toString() ?? '',
-      displayNameLangItIT: json['DisplayName_lang_itIT']?.toString() ?? '',
-      displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
-      displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
-      displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
-      displayNameLangFlags:
-          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
-      displayNameShortLangEnUS:
-          json['DisplayNameShort_lang_enUS']?.toString() ?? '',
-      displayNameShortLangKoKR:
-          json['DisplayNameShort_lang_koKR']?.toString() ?? '',
-      displayNameShortLangFrFR:
-          json['DisplayNameShort_lang_frFR']?.toString() ?? '',
-      displayNameShortLangDeDE:
-          json['DisplayNameShort_lang_deDE']?.toString() ?? '',
-      displayNameShortLangZhCN:
-          json['DisplayNameShort_lang_zhCN']?.toString() ?? '',
-      displayNameShortLangZhTW:
-          json['DisplayNameShort_lang_zhTW']?.toString() ?? '',
-      displayNameShortLangEsES:
-          json['DisplayNameShort_lang_esES']?.toString() ?? '',
-      displayNameShortLangEsMX:
-          json['DisplayNameShort_lang_esMX']?.toString() ?? '',
-      displayNameShortLangRuRU:
-          json['DisplayNameShort_lang_ruRU']?.toString() ?? '',
-      displayNameShortLangJaJP:
-          json['DisplayNameShort_lang_jaJP']?.toString() ?? '',
-      displayNameShortLangPtPT:
-          json['DisplayNameShort_lang_ptPT']?.toString() ?? '',
-      displayNameShortLangPtBR:
-          json['DisplayNameShort_lang_ptBR']?.toString() ?? '',
-      displayNameShortLangItIT:
-          json['DisplayNameShort_lang_itIT']?.toString() ?? '',
-      displayNameShortLangUnk1:
-          json['DisplayNameShort_lang_unk1']?.toString() ?? '',
-      displayNameShortLangUnk2:
-          json['DisplayNameShort_lang_unk2']?.toString() ?? '',
-      displayNameShortLangUnk3:
-          json['DisplayNameShort_lang_unk3']?.toString() ?? '',
-      displayNameShortLangFlags:
-          (json['DisplayNameShort_lang_Flags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, rangeMin0, rangeMax0, displayNameLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellRangeEntity &&
+            id == other.id &&
+            rangeMin0 == other.rangeMin0 &&
+            rangeMax0 == other.rangeMax0 &&
+            displayNameLangZhCN == other.displayNameLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefSpellRangeEntity('
+        'id: $id, '
+        'rangeMin0: $rangeMin0, '
+        'rangeMax0: $rangeMax0, '
+        'displayNameLangZhCN: $displayNameLangZhCN'
+        ')';
+  }
+}
+
+mixin _SpellRangeEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as SpellRangeEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.rangeMin0,
+      self.rangeMin1,
+      self.rangeMax0,
+      self.rangeMax1,
+      self.flags,
+      self.displayNameLangEnUS,
+      self.displayNameLangKoKR,
+      self.displayNameLangFrFR,
+      self.displayNameLangDeDE,
+      self.displayNameLangZhCN,
+      self.displayNameLangZhTW,
+      self.displayNameLangEsES,
+      self.displayNameLangEsMX,
+      self.displayNameLangRuRU,
+      self.displayNameLangJaJP,
+      self.displayNameLangPtPT,
+      self.displayNameLangPtBR,
+      self.displayNameLangItIT,
+      self.displayNameLangUnk1,
+      self.displayNameLangUnk2,
+      self.displayNameLangUnk3,
+      self.displayNameLangFlags,
+      self.displayNameShortLangEnUS,
+      self.displayNameShortLangKoKR,
+      self.displayNameShortLangFrFR,
+      self.displayNameShortLangDeDE,
+      self.displayNameShortLangZhCN,
+      self.displayNameShortLangZhTW,
+      self.displayNameShortLangEsES,
+      self.displayNameShortLangEsMX,
+      self.displayNameShortLangRuRU,
+      self.displayNameShortLangJaJP,
+      self.displayNameShortLangPtPT,
+      self.displayNameShortLangPtBR,
+      self.displayNameShortLangItIT,
+      self.displayNameShortLangUnk1,
+      self.displayNameShortLangUnk2,
+      self.displayNameShortLangUnk3,
+      self.displayNameShortLangFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as SpellRangeEntity;
+    return identical(self, other) ||
+        other is SpellRangeEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.rangeMin0 == other.rangeMin0 &&
+            self.rangeMin1 == other.rangeMin1 &&
+            self.rangeMax0 == other.rangeMax0 &&
+            self.rangeMax1 == other.rangeMax1 &&
+            self.flags == other.flags &&
+            self.displayNameLangEnUS == other.displayNameLangEnUS &&
+            self.displayNameLangKoKR == other.displayNameLangKoKR &&
+            self.displayNameLangFrFR == other.displayNameLangFrFR &&
+            self.displayNameLangDeDE == other.displayNameLangDeDE &&
+            self.displayNameLangZhCN == other.displayNameLangZhCN &&
+            self.displayNameLangZhTW == other.displayNameLangZhTW &&
+            self.displayNameLangEsES == other.displayNameLangEsES &&
+            self.displayNameLangEsMX == other.displayNameLangEsMX &&
+            self.displayNameLangRuRU == other.displayNameLangRuRU &&
+            self.displayNameLangJaJP == other.displayNameLangJaJP &&
+            self.displayNameLangPtPT == other.displayNameLangPtPT &&
+            self.displayNameLangPtBR == other.displayNameLangPtBR &&
+            self.displayNameLangItIT == other.displayNameLangItIT &&
+            self.displayNameLangUnk1 == other.displayNameLangUnk1 &&
+            self.displayNameLangUnk2 == other.displayNameLangUnk2 &&
+            self.displayNameLangUnk3 == other.displayNameLangUnk3 &&
+            self.displayNameLangFlags == other.displayNameLangFlags &&
+            self.displayNameShortLangEnUS == other.displayNameShortLangEnUS &&
+            self.displayNameShortLangKoKR == other.displayNameShortLangKoKR &&
+            self.displayNameShortLangFrFR == other.displayNameShortLangFrFR &&
+            self.displayNameShortLangDeDE == other.displayNameShortLangDeDE &&
+            self.displayNameShortLangZhCN == other.displayNameShortLangZhCN &&
+            self.displayNameShortLangZhTW == other.displayNameShortLangZhTW &&
+            self.displayNameShortLangEsES == other.displayNameShortLangEsES &&
+            self.displayNameShortLangEsMX == other.displayNameShortLangEsMX &&
+            self.displayNameShortLangRuRU == other.displayNameShortLangRuRU &&
+            self.displayNameShortLangJaJP == other.displayNameShortLangJaJP &&
+            self.displayNameShortLangPtPT == other.displayNameShortLangPtPT &&
+            self.displayNameShortLangPtBR == other.displayNameShortLangPtBR &&
+            self.displayNameShortLangItIT == other.displayNameShortLangItIT &&
+            self.displayNameShortLangUnk1 == other.displayNameShortLangUnk1 &&
+            self.displayNameShortLangUnk2 == other.displayNameShortLangUnk2 &&
+            self.displayNameShortLangUnk3 == other.displayNameShortLangUnk3 &&
+            self.displayNameShortLangFlags == other.displayNameShortLangFlags;
   }
 
   SpellRangeEntity copyWith({
@@ -217,102 +299,6 @@ mixin _SpellRangeEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as SpellRangeEntity;
-    return identical(self, other) ||
-        other is SpellRangeEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.rangeMin0 == other.rangeMin0 &&
-            self.rangeMin1 == other.rangeMin1 &&
-            self.rangeMax0 == other.rangeMax0 &&
-            self.rangeMax1 == other.rangeMax1 &&
-            self.flags == other.flags &&
-            self.displayNameLangEnUS == other.displayNameLangEnUS &&
-            self.displayNameLangKoKR == other.displayNameLangKoKR &&
-            self.displayNameLangFrFR == other.displayNameLangFrFR &&
-            self.displayNameLangDeDE == other.displayNameLangDeDE &&
-            self.displayNameLangZhCN == other.displayNameLangZhCN &&
-            self.displayNameLangZhTW == other.displayNameLangZhTW &&
-            self.displayNameLangEsES == other.displayNameLangEsES &&
-            self.displayNameLangEsMX == other.displayNameLangEsMX &&
-            self.displayNameLangRuRU == other.displayNameLangRuRU &&
-            self.displayNameLangJaJP == other.displayNameLangJaJP &&
-            self.displayNameLangPtPT == other.displayNameLangPtPT &&
-            self.displayNameLangPtBR == other.displayNameLangPtBR &&
-            self.displayNameLangItIT == other.displayNameLangItIT &&
-            self.displayNameLangUnk1 == other.displayNameLangUnk1 &&
-            self.displayNameLangUnk2 == other.displayNameLangUnk2 &&
-            self.displayNameLangUnk3 == other.displayNameLangUnk3 &&
-            self.displayNameLangFlags == other.displayNameLangFlags &&
-            self.displayNameShortLangEnUS == other.displayNameShortLangEnUS &&
-            self.displayNameShortLangKoKR == other.displayNameShortLangKoKR &&
-            self.displayNameShortLangFrFR == other.displayNameShortLangFrFR &&
-            self.displayNameShortLangDeDE == other.displayNameShortLangDeDE &&
-            self.displayNameShortLangZhCN == other.displayNameShortLangZhCN &&
-            self.displayNameShortLangZhTW == other.displayNameShortLangZhTW &&
-            self.displayNameShortLangEsES == other.displayNameShortLangEsES &&
-            self.displayNameShortLangEsMX == other.displayNameShortLangEsMX &&
-            self.displayNameShortLangRuRU == other.displayNameShortLangRuRU &&
-            self.displayNameShortLangJaJP == other.displayNameShortLangJaJP &&
-            self.displayNameShortLangPtPT == other.displayNameShortLangPtPT &&
-            self.displayNameShortLangPtBR == other.displayNameShortLangPtBR &&
-            self.displayNameShortLangItIT == other.displayNameShortLangItIT &&
-            self.displayNameShortLangUnk1 == other.displayNameShortLangUnk1 &&
-            self.displayNameShortLangUnk2 == other.displayNameShortLangUnk2 &&
-            self.displayNameShortLangUnk3 == other.displayNameShortLangUnk3 &&
-            self.displayNameShortLangFlags == other.displayNameShortLangFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as SpellRangeEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.rangeMin0,
-      self.rangeMin1,
-      self.rangeMax0,
-      self.rangeMax1,
-      self.flags,
-      self.displayNameLangEnUS,
-      self.displayNameLangKoKR,
-      self.displayNameLangFrFR,
-      self.displayNameLangDeDE,
-      self.displayNameLangZhCN,
-      self.displayNameLangZhTW,
-      self.displayNameLangEsES,
-      self.displayNameLangEsMX,
-      self.displayNameLangRuRU,
-      self.displayNameLangJaJP,
-      self.displayNameLangPtPT,
-      self.displayNameLangPtBR,
-      self.displayNameLangItIT,
-      self.displayNameLangUnk1,
-      self.displayNameLangUnk2,
-      self.displayNameLangUnk3,
-      self.displayNameLangFlags,
-      self.displayNameShortLangEnUS,
-      self.displayNameShortLangKoKR,
-      self.displayNameShortLangFrFR,
-      self.displayNameShortLangDeDE,
-      self.displayNameShortLangZhCN,
-      self.displayNameShortLangZhTW,
-      self.displayNameShortLangEsES,
-      self.displayNameShortLangEsMX,
-      self.displayNameShortLangRuRU,
-      self.displayNameShortLangJaJP,
-      self.displayNameShortLangPtPT,
-      self.displayNameShortLangPtBR,
-      self.displayNameShortLangItIT,
-      self.displayNameShortLangUnk1,
-      self.displayNameShortLangUnk2,
-      self.displayNameShortLangUnk3,
-      self.displayNameShortLangFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as SpellRangeEntity;
     return 'SpellRangeEntity('
@@ -358,53 +344,67 @@ mixin _SpellRangeEntityMixin {
         'displayNameShortLangFlags: ${self.displayNameShortLangFlags}'
         ')';
   }
-}
 
-final class BriefSpellRangeEntity {
-  final int id;
-  final double rangeMin0;
-  final double rangeMax0;
-  final String displayNameLangZhCN;
-
-  const BriefSpellRangeEntity({
-    this.id = 0,
-    this.rangeMin0 = 0.0,
-    this.rangeMax0 = 0.0,
-    this.displayNameLangZhCN = '',
-  });
-
-  factory BriefSpellRangeEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSpellRangeEntity(
+  static SpellRangeEntity fromJson(Map<String, dynamic> json) {
+    return SpellRangeEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       rangeMin0: (json['RangeMin0'] as num?)?.toDouble() ?? 0.0,
+      rangeMin1: (json['RangeMin1'] as num?)?.toDouble() ?? 0.0,
       rangeMax0: (json['RangeMax0'] as num?)?.toDouble() ?? 0.0,
+      rangeMax1: (json['RangeMax1'] as num?)?.toDouble() ?? 0.0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      displayNameLangEnUS: json['DisplayName_lang_enUS']?.toString() ?? '',
+      displayNameLangKoKR: json['DisplayName_lang_koKR']?.toString() ?? '',
+      displayNameLangFrFR: json['DisplayName_lang_frFR']?.toString() ?? '',
+      displayNameLangDeDE: json['DisplayName_lang_deDE']?.toString() ?? '',
       displayNameLangZhCN: json['DisplayName_lang_zhCN']?.toString() ?? '',
+      displayNameLangZhTW: json['DisplayName_lang_zhTW']?.toString() ?? '',
+      displayNameLangEsES: json['DisplayName_lang_esES']?.toString() ?? '',
+      displayNameLangEsMX: json['DisplayName_lang_esMX']?.toString() ?? '',
+      displayNameLangRuRU: json['DisplayName_lang_ruRU']?.toString() ?? '',
+      displayNameLangJaJP: json['DisplayName_lang_jaJP']?.toString() ?? '',
+      displayNameLangPtPT: json['DisplayName_lang_ptPT']?.toString() ?? '',
+      displayNameLangPtBR: json['DisplayName_lang_ptBR']?.toString() ?? '',
+      displayNameLangItIT: json['DisplayName_lang_itIT']?.toString() ?? '',
+      displayNameLangUnk1: json['DisplayName_lang_unk1']?.toString() ?? '',
+      displayNameLangUnk2: json['DisplayName_lang_unk2']?.toString() ?? '',
+      displayNameLangUnk3: json['DisplayName_lang_unk3']?.toString() ?? '',
+      displayNameLangFlags:
+          (json['DisplayName_lang_Flags'] as num?)?.toInt() ?? 0,
+      displayNameShortLangEnUS:
+          json['DisplayNameShort_lang_enUS']?.toString() ?? '',
+      displayNameShortLangKoKR:
+          json['DisplayNameShort_lang_koKR']?.toString() ?? '',
+      displayNameShortLangFrFR:
+          json['DisplayNameShort_lang_frFR']?.toString() ?? '',
+      displayNameShortLangDeDE:
+          json['DisplayNameShort_lang_deDE']?.toString() ?? '',
+      displayNameShortLangZhCN:
+          json['DisplayNameShort_lang_zhCN']?.toString() ?? '',
+      displayNameShortLangZhTW:
+          json['DisplayNameShort_lang_zhTW']?.toString() ?? '',
+      displayNameShortLangEsES:
+          json['DisplayNameShort_lang_esES']?.toString() ?? '',
+      displayNameShortLangEsMX:
+          json['DisplayNameShort_lang_esMX']?.toString() ?? '',
+      displayNameShortLangRuRU:
+          json['DisplayNameShort_lang_ruRU']?.toString() ?? '',
+      displayNameShortLangJaJP:
+          json['DisplayNameShort_lang_jaJP']?.toString() ?? '',
+      displayNameShortLangPtPT:
+          json['DisplayNameShort_lang_ptPT']?.toString() ?? '',
+      displayNameShortLangPtBR:
+          json['DisplayNameShort_lang_ptBR']?.toString() ?? '',
+      displayNameShortLangItIT:
+          json['DisplayNameShort_lang_itIT']?.toString() ?? '',
+      displayNameShortLangUnk1:
+          json['DisplayNameShort_lang_unk1']?.toString() ?? '',
+      displayNameShortLangUnk2:
+          json['DisplayNameShort_lang_unk2']?.toString() ?? '',
+      displayNameShortLangUnk3:
+          json['DisplayNameShort_lang_unk3']?.toString() ?? '',
+      displayNameShortLangFlags:
+          (json['DisplayNameShort_lang_Flags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefSpellRangeEntity &&
-            id == other.id &&
-            rangeMin0 == other.rangeMin0 &&
-            rangeMax0 == other.rangeMax0 &&
-            displayNameLangZhCN == other.displayNameLangZhCN;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, rangeMin0, rangeMax0, displayNameLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefSpellRangeEntity('
-        'id: $id, '
-        'rangeMin0: $rangeMin0, '
-        'rangeMax0: $rangeMax0, '
-        'displayNameLangZhCN: $displayNameLangZhCN'
-        ')';
   }
 }

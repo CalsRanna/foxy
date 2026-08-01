@@ -7,12 +7,7 @@ mixin _GameObjectQuestEnderCollectionEditorViewModelMixin
   late final idController = registerController(IntFieldController());
   late final questController = registerController(IntFieldController());
 
-  GameObjectQuestEnderEntity _collectCandidate() {
-    return GameObjectQuestEnderEntity(
-      id: idController.collect(),
-      quest: questController.collect(),
-    );
-  }
+  void _afterApplyCandidate(GameObjectQuestEnderEntity gameObjectQuestEnder) {}
 
   void _applyCandidate(GameObjectQuestEnderEntity gameObjectQuestEnder) {
     idController.init(gameObjectQuestEnder.id);
@@ -20,5 +15,10 @@ mixin _GameObjectQuestEnderCollectionEditorViewModelMixin
     _afterApplyCandidate(gameObjectQuestEnder);
   }
 
-  void _afterApplyCandidate(GameObjectQuestEnderEntity gameObjectQuestEnder) {}
+  GameObjectQuestEnderEntity _collectCandidate() {
+    return GameObjectQuestEnderEntity(
+      id: idController.collect(),
+      quest: questController.collect(),
+    );
+  }
 }

@@ -2,24 +2,126 @@
 
 part of 'dbc_faction_template_entity.dart';
 
-mixin _DbcFactionTemplateEntityMixin {
-  static DbcFactionTemplateEntity fromJson(Map<String, dynamic> json) {
-    return DbcFactionTemplateEntity(
+final class BriefDbcFactionTemplateEntity {
+  final int id;
+  final int faction;
+  final int flags;
+  final int factionGroup;
+  final int friendGroup;
+  final int enemyGroup;
+  final String factionNameZhCN;
+  final String factionNameEnUS;
+
+  const BriefDbcFactionTemplateEntity({
+    this.id = 0,
+    this.faction = 0,
+    this.flags = 0,
+    this.factionGroup = 0,
+    this.friendGroup = 0,
+    this.enemyGroup = 0,
+    this.factionNameZhCN = '',
+    this.factionNameEnUS = '',
+  });
+
+  factory BriefDbcFactionTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcFactionTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       faction: (json['Faction'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       factionGroup: (json['FactionGroup'] as num?)?.toInt() ?? 0,
       friendGroup: (json['FriendGroup'] as num?)?.toInt() ?? 0,
       enemyGroup: (json['EnemyGroup'] as num?)?.toInt() ?? 0,
-      enemies0: (json['Enemies0'] as num?)?.toInt() ?? 0,
-      enemies1: (json['Enemies1'] as num?)?.toInt() ?? 0,
-      enemies2: (json['Enemies2'] as num?)?.toInt() ?? 0,
-      enemies3: (json['Enemies3'] as num?)?.toInt() ?? 0,
-      friend0: (json['Friend0'] as num?)?.toInt() ?? 0,
-      friend1: (json['Friend1'] as num?)?.toInt() ?? 0,
-      friend2: (json['Friend2'] as num?)?.toInt() ?? 0,
-      friend3: (json['Friend3'] as num?)?.toInt() ?? 0,
+      factionNameZhCN: json['factionNameZhCN']?.toString() ?? '',
+      factionNameEnUS: json['factionNameEnUS']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    faction,
+    flags,
+    factionGroup,
+    friendGroup,
+    enemyGroup,
+    factionNameZhCN,
+    factionNameEnUS,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcFactionTemplateEntity &&
+            id == other.id &&
+            faction == other.faction &&
+            flags == other.flags &&
+            factionGroup == other.factionGroup &&
+            friendGroup == other.friendGroup &&
+            enemyGroup == other.enemyGroup &&
+            factionNameZhCN == other.factionNameZhCN &&
+            factionNameEnUS == other.factionNameEnUS;
+  }
+
+  @override
+  String toString() {
+    return 'BriefDbcFactionTemplateEntity('
+        'id: $id, '
+        'faction: $faction, '
+        'flags: $flags, '
+        'factionGroup: $factionGroup, '
+        'friendGroup: $friendGroup, '
+        'enemyGroup: $enemyGroup, '
+        'factionNameZhCN: $factionNameZhCN, '
+        'factionNameEnUS: $factionNameEnUS'
+        ')';
+  }
+}
+
+mixin _DbcFactionTemplateEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as DbcFactionTemplateEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.faction,
+      self.flags,
+      self.factionGroup,
+      self.friendGroup,
+      self.enemyGroup,
+      self.enemies0,
+      self.enemies1,
+      self.enemies2,
+      self.enemies3,
+      self.friend0,
+      self.friend1,
+      self.friend2,
+      self.friend3,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as DbcFactionTemplateEntity;
+    return identical(self, other) ||
+        other is DbcFactionTemplateEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.faction == other.faction &&
+            self.flags == other.flags &&
+            self.factionGroup == other.factionGroup &&
+            self.friendGroup == other.friendGroup &&
+            self.enemyGroup == other.enemyGroup &&
+            self.enemies0 == other.enemies0 &&
+            self.enemies1 == other.enemies1 &&
+            self.enemies2 == other.enemies2 &&
+            self.enemies3 == other.enemies3 &&
+            self.friend0 == other.friend0 &&
+            self.friend1 == other.friend1 &&
+            self.friend2 == other.friend2 &&
+            self.friend3 == other.friend3;
   }
 
   DbcFactionTemplateEntity copyWith({
@@ -78,50 +180,6 @@ mixin _DbcFactionTemplateEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as DbcFactionTemplateEntity;
-    return identical(self, other) ||
-        other is DbcFactionTemplateEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.faction == other.faction &&
-            self.flags == other.flags &&
-            self.factionGroup == other.factionGroup &&
-            self.friendGroup == other.friendGroup &&
-            self.enemyGroup == other.enemyGroup &&
-            self.enemies0 == other.enemies0 &&
-            self.enemies1 == other.enemies1 &&
-            self.enemies2 == other.enemies2 &&
-            self.enemies3 == other.enemies3 &&
-            self.friend0 == other.friend0 &&
-            self.friend1 == other.friend1 &&
-            self.friend2 == other.friend2 &&
-            self.friend3 == other.friend3;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as DbcFactionTemplateEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.faction,
-      self.flags,
-      self.factionGroup,
-      self.friendGroup,
-      self.enemyGroup,
-      self.enemies0,
-      self.enemies1,
-      self.enemies2,
-      self.enemies3,
-      self.friend0,
-      self.friend1,
-      self.friend2,
-      self.friend3,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as DbcFactionTemplateEntity;
     return 'DbcFactionTemplateEntity('
@@ -141,81 +199,23 @@ mixin _DbcFactionTemplateEntityMixin {
         'friend3: ${self.friend3}'
         ')';
   }
-}
 
-final class BriefDbcFactionTemplateEntity {
-  final int id;
-  final int faction;
-  final int flags;
-  final int factionGroup;
-  final int friendGroup;
-  final int enemyGroup;
-  final String factionNameZhCN;
-  final String factionNameEnUS;
-
-  const BriefDbcFactionTemplateEntity({
-    this.id = 0,
-    this.faction = 0,
-    this.flags = 0,
-    this.factionGroup = 0,
-    this.friendGroup = 0,
-    this.enemyGroup = 0,
-    this.factionNameZhCN = '',
-    this.factionNameEnUS = '',
-  });
-
-  factory BriefDbcFactionTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDbcFactionTemplateEntity(
+  static DbcFactionTemplateEntity fromJson(Map<String, dynamic> json) {
+    return DbcFactionTemplateEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       faction: (json['Faction'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       factionGroup: (json['FactionGroup'] as num?)?.toInt() ?? 0,
       friendGroup: (json['FriendGroup'] as num?)?.toInt() ?? 0,
       enemyGroup: (json['EnemyGroup'] as num?)?.toInt() ?? 0,
-      factionNameZhCN: json['factionNameZhCN']?.toString() ?? '',
-      factionNameEnUS: json['factionNameEnUS']?.toString() ?? '',
+      enemies0: (json['Enemies0'] as num?)?.toInt() ?? 0,
+      enemies1: (json['Enemies1'] as num?)?.toInt() ?? 0,
+      enemies2: (json['Enemies2'] as num?)?.toInt() ?? 0,
+      enemies3: (json['Enemies3'] as num?)?.toInt() ?? 0,
+      friend0: (json['Friend0'] as num?)?.toInt() ?? 0,
+      friend1: (json['Friend1'] as num?)?.toInt() ?? 0,
+      friend2: (json['Friend2'] as num?)?.toInt() ?? 0,
+      friend3: (json['Friend3'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefDbcFactionTemplateEntity &&
-            id == other.id &&
-            faction == other.faction &&
-            flags == other.flags &&
-            factionGroup == other.factionGroup &&
-            friendGroup == other.friendGroup &&
-            enemyGroup == other.enemyGroup &&
-            factionNameZhCN == other.factionNameZhCN &&
-            factionNameEnUS == other.factionNameEnUS;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    faction,
-    flags,
-    factionGroup,
-    friendGroup,
-    enemyGroup,
-    factionNameZhCN,
-    factionNameEnUS,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefDbcFactionTemplateEntity('
-        'id: $id, '
-        'faction: $faction, '
-        'flags: $flags, '
-        'factionGroup: $factionGroup, '
-        'friendGroup: $friendGroup, '
-        'enemyGroup: $enemyGroup, '
-        'factionNameZhCN: $factionNameZhCN, '
-        'factionNameEnUS: $factionNameEnUS'
-        ')';
   }
 }

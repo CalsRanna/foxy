@@ -2,6 +2,31 @@
 
 part of 'game_object_template_repository.dart';
 
+final class GameObjectTemplateFilter {
+  final String entry;
+  final String name;
+
+  const GameObjectTemplateFilter({this.entry = '', this.name = ''});
+
+  factory GameObjectTemplateFilter.fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateFilter(
+      entry: json['entry']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  GameObjectTemplateFilter copyWith({String? entry, String? name}) {
+    return GameObjectTemplateFilter(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'name': name};
+  }
+}
+
 mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectTemplate(int key) async {
     await _beforeDestroy(key);
@@ -77,30 +102,5 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`entry`', key);
-  }
-}
-
-final class GameObjectTemplateFilter {
-  final String entry;
-  final String name;
-
-  const GameObjectTemplateFilter({this.entry = '', this.name = ''});
-
-  factory GameObjectTemplateFilter.fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateFilter(
-      entry: json['entry']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  GameObjectTemplateFilter copyWith({String? entry, String? name}) {
-    return GameObjectTemplateFilter(
-      entry: entry ?? this.entry,
-      name: name ?? this.name,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name};
   }
 }

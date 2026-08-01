@@ -17,20 +17,7 @@ mixin _MillingLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  MillingLootTemplateEntity _collectCandidate() {
-    return MillingLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(MillingLootTemplateEntity millingLootTemplate) {}
 
   void _applyCandidate(MillingLootTemplateEntity millingLootTemplate) {
     entryController.init(millingLootTemplate.entry);
@@ -46,5 +33,18 @@ mixin _MillingLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(millingLootTemplate);
   }
 
-  void _afterApplyCandidate(MillingLootTemplateEntity millingLootTemplate) {}
+  MillingLootTemplateEntity _collectCandidate() {
+    return MillingLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

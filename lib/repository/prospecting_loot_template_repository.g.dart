@@ -2,6 +2,31 @@
 
 part of 'prospecting_loot_template_repository.dart';
 
+final class ProspectingLootTemplateFilter {
+  final String entry;
+  final String name;
+
+  const ProspectingLootTemplateFilter({this.entry = '', this.name = ''});
+
+  factory ProspectingLootTemplateFilter.fromJson(Map<String, dynamic> json) {
+    return ProspectingLootTemplateFilter(
+      entry: json['entry']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  ProspectingLootTemplateFilter copyWith({String? entry, String? name}) {
+    return ProspectingLootTemplateFilter(
+      entry: entry ?? this.entry,
+      name: name ?? this.name,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'entry': entry, 'name': name};
+  }
+}
+
 mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   Future<void> destroyProspectingLootTemplate(
     ProspectingLootTemplateKey key,
@@ -81,30 +106,5 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
     query = query.where('`Entry`', key.entry);
     query = query.where('`Item`', key.item);
     return query;
-  }
-}
-
-final class ProspectingLootTemplateFilter {
-  final String entry;
-  final String name;
-
-  const ProspectingLootTemplateFilter({this.entry = '', this.name = ''});
-
-  factory ProspectingLootTemplateFilter.fromJson(Map<String, dynamic> json) {
-    return ProspectingLootTemplateFilter(
-      entry: json['entry']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  ProspectingLootTemplateFilter copyWith({String? entry, String? name}) {
-    return ProspectingLootTemplateFilter(
-      entry: entry ?? this.entry,
-      name: name ?? this.name,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'entry': entry, 'name': name};
   }
 }

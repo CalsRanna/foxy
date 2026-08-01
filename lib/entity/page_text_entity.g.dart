@@ -2,14 +2,77 @@
 
 part of 'page_text_entity.dart';
 
-mixin _PageTextEntityMixin {
-  static PageTextEntity fromJson(Map<String, dynamic> json) {
-    return PageTextEntity(
+final class BriefPageTextEntity {
+  final int id;
+  final String text;
+  final int nextPageId;
+  final String localeText;
+
+  const BriefPageTextEntity({
+    this.id = 0,
+    this.text = '',
+    this.nextPageId = 0,
+    this.localeText = '',
+  });
+
+  factory BriefPageTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefPageTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       text: json['Text']?.toString() ?? '',
       nextPageId: (json['NextPageID'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      localeText: json['localeText']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, text, nextPageId, localeText]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefPageTextEntity &&
+            id == other.id &&
+            text == other.text &&
+            nextPageId == other.nextPageId &&
+            localeText == other.localeText;
+  }
+
+  @override
+  String toString() {
+    return 'BriefPageTextEntity('
+        'id: $id, '
+        'text: $text, '
+        'nextPageId: $nextPageId, '
+        'localeText: $localeText'
+        ')';
+  }
+}
+
+mixin _PageTextEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as PageTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.text,
+      self.nextPageId,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as PageTextEntity;
+    return identical(self, other) ||
+        other is PageTextEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.text == other.text &&
+            self.nextPageId == other.nextPageId &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   PageTextEntity copyWith({
@@ -38,30 +101,6 @@ mixin _PageTextEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as PageTextEntity;
-    return identical(self, other) ||
-        other is PageTextEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.text == other.text &&
-            self.nextPageId == other.nextPageId &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as PageTextEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.text,
-      self.nextPageId,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as PageTextEntity;
     return 'PageTextEntity('
@@ -71,52 +110,13 @@ mixin _PageTextEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class BriefPageTextEntity {
-  final int id;
-  final String text;
-  final int nextPageId;
-  final String localeText;
-
-  const BriefPageTextEntity({
-    this.id = 0,
-    this.text = '',
-    this.nextPageId = 0,
-    this.localeText = '',
-  });
-
-  factory BriefPageTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefPageTextEntity(
+  static PageTextEntity fromJson(Map<String, dynamic> json) {
+    return PageTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       text: json['Text']?.toString() ?? '',
       nextPageId: (json['NextPageID'] as num?)?.toInt() ?? 0,
-      localeText: json['localeText']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefPageTextEntity &&
-            id == other.id &&
-            text == other.text &&
-            nextPageId == other.nextPageId &&
-            localeText == other.localeText;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, text, nextPageId, localeText]);
-
-  @override
-  String toString() {
-    return 'BriefPageTextEntity('
-        'id: $id, '
-        'text: $text, '
-        'nextPageId: $nextPageId, '
-        'localeText: $localeText'
-        ')';
   }
 }

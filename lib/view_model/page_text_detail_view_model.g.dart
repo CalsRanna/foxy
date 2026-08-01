@@ -8,14 +8,7 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
   late final nextPageIdController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  PageTextEntity _collectCandidate() {
-    return PageTextEntity(
-      id: idController.collect(),
-      text: textController.collect(),
-      nextPageId: nextPageIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(PageTextEntity pageText) {}
 
   void _applyCandidate(PageTextEntity pageText) {
     idController.init(pageText.id);
@@ -25,5 +18,12 @@ mixin _PageTextDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(pageText);
   }
 
-  void _afterApplyCandidate(PageTextEntity pageText) {}
+  PageTextEntity _collectCandidate() {
+    return PageTextEntity(
+      id: idController.collect(),
+      text: textController.collect(),
+      nextPageId: nextPageIdController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

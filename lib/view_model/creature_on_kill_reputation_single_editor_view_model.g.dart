@@ -33,20 +33,9 @@ mixin _CreatureOnKillReputationSingleEditorViewModelMixin
     SelectFieldController<int>(fallback: 0),
   );
 
-  CreatureOnKillReputationEntity _collectCandidate() {
-    return CreatureOnKillReputationEntity(
-      creatureID: creatureIDController.collect(),
-      rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
-      rewOnKillRepFaction2: rewOnKillRepFaction2Controller.collect(),
-      maxStanding1: maxStanding1Controller.collect(),
-      maxStanding2: maxStanding2Controller.collect(),
-      isTeamAward1: isTeamAward1Controller.collect() == 1,
-      isTeamAward2: isTeamAward2Controller.collect() == 1,
-      rewOnKillRepValue1: rewOnKillRepValue1Controller.collect(),
-      rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
-      teamDependent: teamDependentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    CreatureOnKillReputationEntity creatureOnKillReputation,
+  ) {}
 
   void _applyCandidate(
     CreatureOnKillReputationEntity creatureOnKillReputation,
@@ -72,7 +61,18 @@ mixin _CreatureOnKillReputationSingleEditorViewModelMixin
     _afterApplyCandidate(creatureOnKillReputation);
   }
 
-  void _afterApplyCandidate(
-    CreatureOnKillReputationEntity creatureOnKillReputation,
-  ) {}
+  CreatureOnKillReputationEntity _collectCandidate() {
+    return CreatureOnKillReputationEntity(
+      creatureID: creatureIDController.collect(),
+      rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
+      rewOnKillRepFaction2: rewOnKillRepFaction2Controller.collect(),
+      maxStanding1: maxStanding1Controller.collect(),
+      maxStanding2: maxStanding2Controller.collect(),
+      isTeamAward1: isTeamAward1Controller.collect() == 1,
+      isTeamAward2: isTeamAward2Controller.collect() == 1,
+      rewOnKillRepValue1: rewOnKillRepValue1Controller.collect(),
+      rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
+      teamDependent: teamDependentController.collect(),
+    );
+  }
 }

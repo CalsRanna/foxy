@@ -9,14 +9,9 @@ mixin _PlayerCreateInfoSpellCustomCollectionEditorViewModelMixin
   late final spellController = registerController(IntFieldController());
   late final noteController = registerController(StringFieldController());
 
-  PlayerCreateInfoSpellCustomEntity _collectCandidate() {
-    return PlayerCreateInfoSpellCustomEntity(
-      raceMask: raceMaskController.collect(),
-      classMask: classMaskController.collect(),
-      spell: spellController.collect(),
-      note: noteController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
+  ) {}
 
   void _applyCandidate(
     PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
@@ -28,7 +23,12 @@ mixin _PlayerCreateInfoSpellCustomCollectionEditorViewModelMixin
     _afterApplyCandidate(playerCreateInfoSpellCustom);
   }
 
-  void _afterApplyCandidate(
-    PlayerCreateInfoSpellCustomEntity playerCreateInfoSpellCustom,
-  ) {}
+  PlayerCreateInfoSpellCustomEntity _collectCandidate() {
+    return PlayerCreateInfoSpellCustomEntity(
+      raceMask: raceMaskController.collect(),
+      classMask: classMaskController.collect(),
+      spell: spellController.collect(),
+      note: noteController.collect(),
+    );
+  }
 }

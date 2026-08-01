@@ -2,9 +2,25 @@
 
 part of 'item_visuals_entity.dart';
 
-mixin _ItemVisualsEntityMixin {
-  static ItemVisualsEntity fromJson(Map<String, dynamic> json) {
-    return ItemVisualsEntity(
+final class BriefItemVisualsEntity {
+  final int id;
+  final int slot0;
+  final int slot1;
+  final int slot2;
+  final int slot3;
+  final int slot4;
+
+  const BriefItemVisualsEntity({
+    this.id = 0,
+    this.slot0 = 0,
+    this.slot1 = 0,
+    this.slot2 = 0,
+    this.slot3 = 0,
+    this.slot4 = 0,
+  });
+
+  factory BriefItemVisualsEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemVisualsEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       slot0: (json['Slot0'] as num?)?.toInt() ?? 0,
       slot1: (json['Slot1'] as num?)?.toInt() ?? 0,
@@ -12,6 +28,65 @@ mixin _ItemVisualsEntityMixin {
       slot3: (json['Slot3'] as num?)?.toInt() ?? 0,
       slot4: (json['Slot4'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, slot0, slot1, slot2, slot3, slot4]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemVisualsEntity &&
+            id == other.id &&
+            slot0 == other.slot0 &&
+            slot1 == other.slot1 &&
+            slot2 == other.slot2 &&
+            slot3 == other.slot3 &&
+            slot4 == other.slot4;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemVisualsEntity('
+        'id: $id, '
+        'slot0: $slot0, '
+        'slot1: $slot1, '
+        'slot2: $slot2, '
+        'slot3: $slot3, '
+        'slot4: $slot4'
+        ')';
+  }
+}
+
+mixin _ItemVisualsEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemVisualsEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.slot0,
+      self.slot1,
+      self.slot2,
+      self.slot3,
+      self.slot4,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemVisualsEntity;
+    return identical(self, other) ||
+        other is ItemVisualsEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.slot0 == other.slot0 &&
+            self.slot1 == other.slot1 &&
+            self.slot2 == other.slot2 &&
+            self.slot3 == other.slot3 &&
+            self.slot4 == other.slot4;
   }
 
   ItemVisualsEntity copyWith({
@@ -46,34 +121,6 @@ mixin _ItemVisualsEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemVisualsEntity;
-    return identical(self, other) ||
-        other is ItemVisualsEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.slot0 == other.slot0 &&
-            self.slot1 == other.slot1 &&
-            self.slot2 == other.slot2 &&
-            self.slot3 == other.slot3 &&
-            self.slot4 == other.slot4;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemVisualsEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.slot0,
-      self.slot1,
-      self.slot2,
-      self.slot3,
-      self.slot4,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemVisualsEntity;
     return 'ItemVisualsEntity('
@@ -85,27 +132,9 @@ mixin _ItemVisualsEntityMixin {
         'slot4: ${self.slot4}'
         ')';
   }
-}
 
-final class BriefItemVisualsEntity {
-  final int id;
-  final int slot0;
-  final int slot1;
-  final int slot2;
-  final int slot3;
-  final int slot4;
-
-  const BriefItemVisualsEntity({
-    this.id = 0,
-    this.slot0 = 0,
-    this.slot1 = 0,
-    this.slot2 = 0,
-    this.slot3 = 0,
-    this.slot4 = 0,
-  });
-
-  factory BriefItemVisualsEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemVisualsEntity(
+  static ItemVisualsEntity fromJson(Map<String, dynamic> json) {
+    return ItemVisualsEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       slot0: (json['Slot0'] as num?)?.toInt() ?? 0,
       slot1: (json['Slot1'] as num?)?.toInt() ?? 0,
@@ -113,34 +142,5 @@ final class BriefItemVisualsEntity {
       slot3: (json['Slot3'] as num?)?.toInt() ?? 0,
       slot4: (json['Slot4'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemVisualsEntity &&
-            id == other.id &&
-            slot0 == other.slot0 &&
-            slot1 == other.slot1 &&
-            slot2 == other.slot2 &&
-            slot3 == other.slot3 &&
-            slot4 == other.slot4;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, slot0, slot1, slot2, slot3, slot4]);
-
-  @override
-  String toString() {
-    return 'BriefItemVisualsEntity('
-        'id: $id, '
-        'slot0: $slot0, '
-        'slot1: $slot1, '
-        'slot2: $slot2, '
-        'slot3: $slot3, '
-        'slot4: $slot4'
-        ')';
   }
 }

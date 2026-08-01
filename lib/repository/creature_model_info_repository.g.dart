@@ -2,6 +2,24 @@
 
 part of 'creature_model_info_repository.dart';
 
+final class CreatureModelInfoFilter {
+  final String id;
+
+  const CreatureModelInfoFilter({this.id = ''});
+
+  factory CreatureModelInfoFilter.fromJson(Map<String, dynamic> json) {
+    return CreatureModelInfoFilter(id: json['id']?.toString() ?? '');
+  }
+
+  CreatureModelInfoFilter copyWith({String? id}) {
+    return CreatureModelInfoFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
   Future<void> destroyCreatureModelInfo(int key) async {
     await _beforeDestroy(key);
@@ -75,23 +93,5 @@ mixin _CreatureModelInfoRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`DisplayID`', key);
-  }
-}
-
-final class CreatureModelInfoFilter {
-  final String id;
-
-  const CreatureModelInfoFilter({this.id = ''});
-
-  factory CreatureModelInfoFilter.fromJson(Map<String, dynamic> json) {
-    return CreatureModelInfoFilter(id: json['id']?.toString() ?? '');
-  }
-
-  CreatureModelInfoFilter copyWith({String? id}) {
-    return CreatureModelInfoFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

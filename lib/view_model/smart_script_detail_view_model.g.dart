@@ -77,41 +77,7 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
   late final targetOController = registerController(DoubleFieldController());
   late final commentController = registerController(StringFieldController());
 
-  SmartScriptEntity _collectCandidate() {
-    return SmartScriptEntity(
-      entryOrGuid: entryOrGuidController.collect(),
-      sourceType: sourceTypeController.collect(),
-      id: idController.collect(),
-      link: linkController.collect(),
-      eventType: eventTypeController.collect(),
-      eventPhaseMask: eventPhaseMaskController.collect(),
-      eventChance: eventChanceController.collect(),
-      eventFlags: eventFlagsController.collect(),
-      eventParam1: eventParam1Controller.collect(),
-      eventParam2: eventParam2Controller.collect(),
-      eventParam3: eventParam3Controller.collect(),
-      eventParam4: eventParam4Controller.collect(),
-      eventParam5: eventParam5Controller.collect(),
-      eventParam6: eventParam6Controller.collect(),
-      actionType: actionTypeController.collect(),
-      actionParam1: actionParam1Controller.collect(),
-      actionParam2: actionParam2Controller.collect(),
-      actionParam3: actionParam3Controller.collect(),
-      actionParam4: actionParam4Controller.collect(),
-      actionParam5: actionParam5Controller.collect(),
-      actionParam6: actionParam6Controller.collect(),
-      targetType: targetTypeController.collect(),
-      targetParam1: targetParam1Controller.collect(),
-      targetParam2: targetParam2Controller.collect(),
-      targetParam3: targetParam3Controller.collect(),
-      targetParam4: targetParam4Controller.collect(),
-      targetX: targetXController.collect(),
-      targetY: targetYController.collect(),
-      targetZ: targetZController.collect(),
-      targetO: targetOController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SmartScriptEntity smartScript) {}
 
   void _applyCandidate(SmartScriptEntity smartScript) {
     entryOrGuidController.init(smartScript.entryOrGuid);
@@ -148,5 +114,39 @@ mixin _SmartScriptDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(smartScript);
   }
 
-  void _afterApplyCandidate(SmartScriptEntity smartScript) {}
+  SmartScriptEntity _collectCandidate() {
+    return SmartScriptEntity(
+      entryOrGuid: entryOrGuidController.collect(),
+      sourceType: sourceTypeController.collect(),
+      id: idController.collect(),
+      link: linkController.collect(),
+      eventType: eventTypeController.collect(),
+      eventPhaseMask: eventPhaseMaskController.collect(),
+      eventChance: eventChanceController.collect(),
+      eventFlags: eventFlagsController.collect(),
+      eventParam1: eventParam1Controller.collect(),
+      eventParam2: eventParam2Controller.collect(),
+      eventParam3: eventParam3Controller.collect(),
+      eventParam4: eventParam4Controller.collect(),
+      eventParam5: eventParam5Controller.collect(),
+      eventParam6: eventParam6Controller.collect(),
+      actionType: actionTypeController.collect(),
+      actionParam1: actionParam1Controller.collect(),
+      actionParam2: actionParam2Controller.collect(),
+      actionParam3: actionParam3Controller.collect(),
+      actionParam4: actionParam4Controller.collect(),
+      actionParam5: actionParam5Controller.collect(),
+      actionParam6: actionParam6Controller.collect(),
+      targetType: targetTypeController.collect(),
+      targetParam1: targetParam1Controller.collect(),
+      targetParam2: targetParam2Controller.collect(),
+      targetParam3: targetParam3Controller.collect(),
+      targetParam4: targetParam4Controller.collect(),
+      targetX: targetXController.collect(),
+      targetY: targetYController.collect(),
+      targetZ: targetZController.collect(),
+      targetO: targetOController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

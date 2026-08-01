@@ -2,6 +2,28 @@
 
 part of 'npc_text_repository.dart';
 
+final class NpcTextFilter {
+  final String id;
+  final String text;
+
+  const NpcTextFilter({this.id = '', this.text = ''});
+
+  factory NpcTextFilter.fromJson(Map<String, dynamic> json) {
+    return NpcTextFilter(
+      id: json['id']?.toString() ?? '',
+      text: json['text']?.toString() ?? '',
+    );
+  }
+
+  NpcTextFilter copyWith({String? id, String? text}) {
+    return NpcTextFilter(id: id ?? this.id, text: text ?? this.text);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'text': text};
+  }
+}
+
 mixin _NpcTextRepositoryMixin on RepositoryMixin {
   Future<void> destroyNpcText(int key) async {
     await _beforeDestroy(key);
@@ -67,27 +89,5 @@ mixin _NpcTextRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class NpcTextFilter {
-  final String id;
-  final String text;
-
-  const NpcTextFilter({this.id = '', this.text = ''});
-
-  factory NpcTextFilter.fromJson(Map<String, dynamic> json) {
-    return NpcTextFilter(
-      id: json['id']?.toString() ?? '',
-      text: json['text']?.toString() ?? '',
-    );
-  }
-
-  NpcTextFilter copyWith({String? id, String? text}) {
-    return NpcTextFilter(id: id ?? this.id, text: text ?? this.text);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'text': text};
   }
 }

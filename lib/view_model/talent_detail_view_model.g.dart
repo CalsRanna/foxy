@@ -31,33 +31,7 @@ mixin _TalentDetailViewModelMixin on FieldControllerMixin {
   late final categoryMask0Controller = registerController(IntFieldController());
   late final categoryMask1Controller = registerController(IntFieldController());
 
-  TalentEntity _collectCandidate() {
-    return TalentEntity(
-      id: idController.collect(),
-      tabId: tabIdController.collect(),
-      tierId: tierIdController.collect(),
-      columnIndex: columnIndexController.collect(),
-      spellRank0: spellRank0Controller.collect(),
-      spellRank1: spellRank1Controller.collect(),
-      spellRank2: spellRank2Controller.collect(),
-      spellRank3: spellRank3Controller.collect(),
-      spellRank4: spellRank4Controller.collect(),
-      spellRank5: spellRank5Controller.collect(),
-      spellRank6: spellRank6Controller.collect(),
-      spellRank7: spellRank7Controller.collect(),
-      spellRank8: spellRank8Controller.collect(),
-      prereqTalent0: prereqTalent0Controller.collect(),
-      prereqTalent1: prereqTalent1Controller.collect(),
-      prereqTalent2: prereqTalent2Controller.collect(),
-      prereqRank0: prereqRank0Controller.collect(),
-      prereqRank1: prereqRank1Controller.collect(),
-      prereqRank2: prereqRank2Controller.collect(),
-      flags: flagsController.collect(),
-      requiredSpellId: requiredSpellIdController.collect(),
-      categoryMask0: categoryMask0Controller.collect(),
-      categoryMask1: categoryMask1Controller.collect(),
-    );
-  }
+  void _afterApplyCandidate(TalentEntity talent) {}
 
   void _applyCandidate(TalentEntity talent) {
     idController.init(talent.id);
@@ -86,5 +60,31 @@ mixin _TalentDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(talent);
   }
 
-  void _afterApplyCandidate(TalentEntity talent) {}
+  TalentEntity _collectCandidate() {
+    return TalentEntity(
+      id: idController.collect(),
+      tabId: tabIdController.collect(),
+      tierId: tierIdController.collect(),
+      columnIndex: columnIndexController.collect(),
+      spellRank0: spellRank0Controller.collect(),
+      spellRank1: spellRank1Controller.collect(),
+      spellRank2: spellRank2Controller.collect(),
+      spellRank3: spellRank3Controller.collect(),
+      spellRank4: spellRank4Controller.collect(),
+      spellRank5: spellRank5Controller.collect(),
+      spellRank6: spellRank6Controller.collect(),
+      spellRank7: spellRank7Controller.collect(),
+      spellRank8: spellRank8Controller.collect(),
+      prereqTalent0: prereqTalent0Controller.collect(),
+      prereqTalent1: prereqTalent1Controller.collect(),
+      prereqTalent2: prereqTalent2Controller.collect(),
+      prereqRank0: prereqRank0Controller.collect(),
+      prereqRank1: prereqRank1Controller.collect(),
+      prereqRank2: prereqRank2Controller.collect(),
+      flags: flagsController.collect(),
+      requiredSpellId: requiredSpellIdController.collect(),
+      categoryMask0: categoryMask0Controller.collect(),
+      categoryMask1: categoryMask1Controller.collect(),
+    );
+  }
 }

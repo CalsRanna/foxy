@@ -2,35 +2,114 @@
 
 part of 'item_display_info_entity.dart';
 
-mixin _ItemDisplayInfoEntityMixin {
-  static ItemDisplayInfoEntity fromJson(Map<String, dynamic> json) {
-    return ItemDisplayInfoEntity(
+final class BriefItemDisplayInfoEntity {
+  final int id;
+  final String modelName0;
+  final String inventoryIcon0;
+
+  const BriefItemDisplayInfoEntity({
+    this.id = 0,
+    this.modelName0 = '',
+    this.inventoryIcon0 = '',
+  });
+
+  factory BriefItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       modelName0: json['ModelName0']?.toString() ?? '',
-      modelName1: json['ModelName1']?.toString() ?? '',
-      modelTexture0: json['ModelTexture0']?.toString() ?? '',
-      modelTexture1: json['ModelTexture1']?.toString() ?? '',
       inventoryIcon0: json['InventoryIcon0']?.toString() ?? '',
-      inventoryIcon1: json['InventoryIcon1']?.toString() ?? '',
-      geosetGroup0: (json['GeosetGroup0'] as num?)?.toInt() ?? 0,
-      geosetGroup1: (json['GeosetGroup1'] as num?)?.toInt() ?? 0,
-      geosetGroup2: (json['GeosetGroup2'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      spellVisualId: (json['SpellVisualID'] as num?)?.toInt() ?? 0,
-      groupSoundIndex: (json['GroupSoundIndex'] as num?)?.toInt() ?? 0,
-      helmetGeosetVisId0: (json['HelmetGeosetVisID0'] as num?)?.toInt() ?? 0,
-      helmetGeosetVisId1: (json['HelmetGeosetVisID1'] as num?)?.toInt() ?? 0,
-      texture0: json['Texture0']?.toString() ?? '',
-      texture1: json['Texture1']?.toString() ?? '',
-      texture2: json['Texture2']?.toString() ?? '',
-      texture3: json['Texture3']?.toString() ?? '',
-      texture4: json['Texture4']?.toString() ?? '',
-      texture5: json['Texture5']?.toString() ?? '',
-      texture6: json['Texture6']?.toString() ?? '',
-      texture7: json['Texture7']?.toString() ?? '',
-      itemVisual: (json['ItemVisual'] as num?)?.toInt() ?? 0,
-      particleColorId: (json['ParticleColorID'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, modelName0, inventoryIcon0]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemDisplayInfoEntity &&
+            id == other.id &&
+            modelName0 == other.modelName0 &&
+            inventoryIcon0 == other.inventoryIcon0;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemDisplayInfoEntity('
+        'id: $id, '
+        'modelName0: $modelName0, '
+        'inventoryIcon0: $inventoryIcon0'
+        ')';
+  }
+}
+
+mixin _ItemDisplayInfoEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemDisplayInfoEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.modelName0,
+      self.modelName1,
+      self.modelTexture0,
+      self.modelTexture1,
+      self.inventoryIcon0,
+      self.inventoryIcon1,
+      self.geosetGroup0,
+      self.geosetGroup1,
+      self.geosetGroup2,
+      self.flags,
+      self.spellVisualId,
+      self.groupSoundIndex,
+      self.helmetGeosetVisId0,
+      self.helmetGeosetVisId1,
+      self.texture0,
+      self.texture1,
+      self.texture2,
+      self.texture3,
+      self.texture4,
+      self.texture5,
+      self.texture6,
+      self.texture7,
+      self.itemVisual,
+      self.particleColorId,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemDisplayInfoEntity;
+    return identical(self, other) ||
+        other is ItemDisplayInfoEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.modelName0 == other.modelName0 &&
+            self.modelName1 == other.modelName1 &&
+            self.modelTexture0 == other.modelTexture0 &&
+            self.modelTexture1 == other.modelTexture1 &&
+            self.inventoryIcon0 == other.inventoryIcon0 &&
+            self.inventoryIcon1 == other.inventoryIcon1 &&
+            self.geosetGroup0 == other.geosetGroup0 &&
+            self.geosetGroup1 == other.geosetGroup1 &&
+            self.geosetGroup2 == other.geosetGroup2 &&
+            self.flags == other.flags &&
+            self.spellVisualId == other.spellVisualId &&
+            self.groupSoundIndex == other.groupSoundIndex &&
+            self.helmetGeosetVisId0 == other.helmetGeosetVisId0 &&
+            self.helmetGeosetVisId1 == other.helmetGeosetVisId1 &&
+            self.texture0 == other.texture0 &&
+            self.texture1 == other.texture1 &&
+            self.texture2 == other.texture2 &&
+            self.texture3 == other.texture3 &&
+            self.texture4 == other.texture4 &&
+            self.texture5 == other.texture5 &&
+            self.texture6 == other.texture6 &&
+            self.texture7 == other.texture7 &&
+            self.itemVisual == other.itemVisual &&
+            self.particleColorId == other.particleColorId;
   }
 
   ItemDisplayInfoEntity copyWith({
@@ -122,72 +201,6 @@ mixin _ItemDisplayInfoEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemDisplayInfoEntity;
-    return identical(self, other) ||
-        other is ItemDisplayInfoEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.modelName0 == other.modelName0 &&
-            self.modelName1 == other.modelName1 &&
-            self.modelTexture0 == other.modelTexture0 &&
-            self.modelTexture1 == other.modelTexture1 &&
-            self.inventoryIcon0 == other.inventoryIcon0 &&
-            self.inventoryIcon1 == other.inventoryIcon1 &&
-            self.geosetGroup0 == other.geosetGroup0 &&
-            self.geosetGroup1 == other.geosetGroup1 &&
-            self.geosetGroup2 == other.geosetGroup2 &&
-            self.flags == other.flags &&
-            self.spellVisualId == other.spellVisualId &&
-            self.groupSoundIndex == other.groupSoundIndex &&
-            self.helmetGeosetVisId0 == other.helmetGeosetVisId0 &&
-            self.helmetGeosetVisId1 == other.helmetGeosetVisId1 &&
-            self.texture0 == other.texture0 &&
-            self.texture1 == other.texture1 &&
-            self.texture2 == other.texture2 &&
-            self.texture3 == other.texture3 &&
-            self.texture4 == other.texture4 &&
-            self.texture5 == other.texture5 &&
-            self.texture6 == other.texture6 &&
-            self.texture7 == other.texture7 &&
-            self.itemVisual == other.itemVisual &&
-            self.particleColorId == other.particleColorId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemDisplayInfoEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.modelName0,
-      self.modelName1,
-      self.modelTexture0,
-      self.modelTexture1,
-      self.inventoryIcon0,
-      self.inventoryIcon1,
-      self.geosetGroup0,
-      self.geosetGroup1,
-      self.geosetGroup2,
-      self.flags,
-      self.spellVisualId,
-      self.groupSoundIndex,
-      self.helmetGeosetVisId0,
-      self.helmetGeosetVisId1,
-      self.texture0,
-      self.texture1,
-      self.texture2,
-      self.texture3,
-      self.texture4,
-      self.texture5,
-      self.texture6,
-      self.texture7,
-      self.itemVisual,
-      self.particleColorId,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemDisplayInfoEntity;
     return 'ItemDisplayInfoEntity('
@@ -218,47 +231,34 @@ mixin _ItemDisplayInfoEntityMixin {
         'particleColorId: ${self.particleColorId}'
         ')';
   }
-}
 
-final class BriefItemDisplayInfoEntity {
-  final int id;
-  final String modelName0;
-  final String inventoryIcon0;
-
-  const BriefItemDisplayInfoEntity({
-    this.id = 0,
-    this.modelName0 = '',
-    this.inventoryIcon0 = '',
-  });
-
-  factory BriefItemDisplayInfoEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemDisplayInfoEntity(
+  static ItemDisplayInfoEntity fromJson(Map<String, dynamic> json) {
+    return ItemDisplayInfoEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       modelName0: json['ModelName0']?.toString() ?? '',
+      modelName1: json['ModelName1']?.toString() ?? '',
+      modelTexture0: json['ModelTexture0']?.toString() ?? '',
+      modelTexture1: json['ModelTexture1']?.toString() ?? '',
       inventoryIcon0: json['InventoryIcon0']?.toString() ?? '',
+      inventoryIcon1: json['InventoryIcon1']?.toString() ?? '',
+      geosetGroup0: (json['GeosetGroup0'] as num?)?.toInt() ?? 0,
+      geosetGroup1: (json['GeosetGroup1'] as num?)?.toInt() ?? 0,
+      geosetGroup2: (json['GeosetGroup2'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      spellVisualId: (json['SpellVisualID'] as num?)?.toInt() ?? 0,
+      groupSoundIndex: (json['GroupSoundIndex'] as num?)?.toInt() ?? 0,
+      helmetGeosetVisId0: (json['HelmetGeosetVisID0'] as num?)?.toInt() ?? 0,
+      helmetGeosetVisId1: (json['HelmetGeosetVisID1'] as num?)?.toInt() ?? 0,
+      texture0: json['Texture0']?.toString() ?? '',
+      texture1: json['Texture1']?.toString() ?? '',
+      texture2: json['Texture2']?.toString() ?? '',
+      texture3: json['Texture3']?.toString() ?? '',
+      texture4: json['Texture4']?.toString() ?? '',
+      texture5: json['Texture5']?.toString() ?? '',
+      texture6: json['Texture6']?.toString() ?? '',
+      texture7: json['Texture7']?.toString() ?? '',
+      itemVisual: (json['ItemVisual'] as num?)?.toInt() ?? 0,
+      particleColorId: (json['ParticleColorID'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemDisplayInfoEntity &&
-            id == other.id &&
-            modelName0 == other.modelName0 &&
-            inventoryIcon0 == other.inventoryIcon0;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, modelName0, inventoryIcon0]);
-
-  @override
-  String toString() {
-    return 'BriefItemDisplayInfoEntity('
-        'id: $id, '
-        'modelName0: $modelName0, '
-        'inventoryIcon0: $inventoryIcon0'
-        ')';
   }
 }

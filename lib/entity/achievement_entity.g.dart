@@ -2,73 +2,194 @@
 
 part of 'achievement_entity.dart';
 
-mixin _AchievementEntityMixin {
-  static AchievementEntity fromJson(Map<String, dynamic> json) {
-    return AchievementEntity(
+final class BriefAchievementEntity {
+  final int id;
+  final String titleLangZhCN;
+  final String descriptionLangZhCN;
+  final String rewardLangZhCN;
+
+  const BriefAchievementEntity({
+    this.id = 0,
+    this.titleLangZhCN = '',
+    this.descriptionLangZhCN = '',
+    this.rewardLangZhCN = '',
+  });
+
+  factory BriefAchievementEntity.fromJson(Map<String, dynamic> json) {
+    return BriefAchievementEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      faction: (json['Faction'] as num?)?.toInt() ?? -1,
-      instanceId: (json['Instance_ID'] as num?)?.toInt() ?? -1,
-      supercedes: (json['Supercedes'] as num?)?.toInt() ?? 0,
-      titleLangEnUS: json['Title_lang_enUS']?.toString() ?? '',
-      titleLangKoKR: json['Title_lang_koKR']?.toString() ?? '',
-      titleLangFrFR: json['Title_lang_frFR']?.toString() ?? '',
-      titleLangDeDE: json['Title_lang_deDE']?.toString() ?? '',
       titleLangZhCN: json['Title_lang_zhCN']?.toString() ?? '',
-      titleLangZhTW: json['Title_lang_zhTW']?.toString() ?? '',
-      titleLangEsES: json['Title_lang_esES']?.toString() ?? '',
-      titleLangEsMX: json['Title_lang_esMX']?.toString() ?? '',
-      titleLangRuRU: json['Title_lang_ruRU']?.toString() ?? '',
-      titleLangJaJP: json['Title_lang_jaJP']?.toString() ?? '',
-      titleLangPtPT: json['Title_lang_ptPT']?.toString() ?? '',
-      titleLangPtBR: json['Title_lang_ptBR']?.toString() ?? '',
-      titleLangItIT: json['Title_lang_itIT']?.toString() ?? '',
-      titleLangUnk1: json['Title_lang_unk1']?.toString() ?? '',
-      titleLangUnk2: json['Title_lang_unk2']?.toString() ?? '',
-      titleLangUnk3: json['Title_lang_unk3']?.toString() ?? '',
-      titleLangFlags: (json['Title_lang_Flags'] as num?)?.toInt() ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
-      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
-      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      category: (json['Category'] as num?)?.toInt() ?? 0,
-      points: (json['Points'] as num?)?.toInt() ?? 0,
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      iconId: (json['IconID'] as num?)?.toInt() ?? 0,
-      rewardLangEnUS: json['Reward_lang_enUS']?.toString() ?? '',
-      rewardLangKoKR: json['Reward_lang_koKR']?.toString() ?? '',
-      rewardLangFrFR: json['Reward_lang_frFR']?.toString() ?? '',
-      rewardLangDeDE: json['Reward_lang_deDE']?.toString() ?? '',
       rewardLangZhCN: json['Reward_lang_zhCN']?.toString() ?? '',
-      rewardLangZhTW: json['Reward_lang_zhTW']?.toString() ?? '',
-      rewardLangEsES: json['Reward_lang_esES']?.toString() ?? '',
-      rewardLangEsMX: json['Reward_lang_esMX']?.toString() ?? '',
-      rewardLangRuRU: json['Reward_lang_ruRU']?.toString() ?? '',
-      rewardLangJaJP: json['Reward_lang_jaJP']?.toString() ?? '',
-      rewardLangPtPT: json['Reward_lang_ptPT']?.toString() ?? '',
-      rewardLangPtBR: json['Reward_lang_ptBR']?.toString() ?? '',
-      rewardLangItIT: json['Reward_lang_itIT']?.toString() ?? '',
-      rewardLangUnk1: json['Reward_lang_unk1']?.toString() ?? '',
-      rewardLangUnk2: json['Reward_lang_unk2']?.toString() ?? '',
-      rewardLangUnk3: json['Reward_lang_unk3']?.toString() ?? '',
-      rewardLangFlags: (json['Reward_lang_Flags'] as num?)?.toInt() ?? 0,
-      minimumCriteria: (json['Minimum_criteria'] as num?)?.toInt() ?? 0,
-      sharesCriteria: (json['Shares_criteria'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, titleLangZhCN, descriptionLangZhCN, rewardLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAchievementEntity &&
+            id == other.id &&
+            titleLangZhCN == other.titleLangZhCN &&
+            descriptionLangZhCN == other.descriptionLangZhCN &&
+            rewardLangZhCN == other.rewardLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefAchievementEntity('
+        'id: $id, '
+        'titleLangZhCN: $titleLangZhCN, '
+        'descriptionLangZhCN: $descriptionLangZhCN, '
+        'rewardLangZhCN: $rewardLangZhCN'
+        ')';
+  }
+}
+
+mixin _AchievementEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as AchievementEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.faction,
+      self.instanceId,
+      self.supercedes,
+      self.titleLangEnUS,
+      self.titleLangKoKR,
+      self.titleLangFrFR,
+      self.titleLangDeDE,
+      self.titleLangZhCN,
+      self.titleLangZhTW,
+      self.titleLangEsES,
+      self.titleLangEsMX,
+      self.titleLangRuRU,
+      self.titleLangJaJP,
+      self.titleLangPtPT,
+      self.titleLangPtBR,
+      self.titleLangItIT,
+      self.titleLangUnk1,
+      self.titleLangUnk2,
+      self.titleLangUnk3,
+      self.titleLangFlags,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+      self.category,
+      self.points,
+      self.uiOrder,
+      self.flags,
+      self.iconId,
+      self.rewardLangEnUS,
+      self.rewardLangKoKR,
+      self.rewardLangFrFR,
+      self.rewardLangDeDE,
+      self.rewardLangZhCN,
+      self.rewardLangZhTW,
+      self.rewardLangEsES,
+      self.rewardLangEsMX,
+      self.rewardLangRuRU,
+      self.rewardLangJaJP,
+      self.rewardLangPtPT,
+      self.rewardLangPtBR,
+      self.rewardLangItIT,
+      self.rewardLangUnk1,
+      self.rewardLangUnk2,
+      self.rewardLangUnk3,
+      self.rewardLangFlags,
+      self.minimumCriteria,
+      self.sharesCriteria,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AchievementEntity;
+    return identical(self, other) ||
+        other is AchievementEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.faction == other.faction &&
+            self.instanceId == other.instanceId &&
+            self.supercedes == other.supercedes &&
+            self.titleLangEnUS == other.titleLangEnUS &&
+            self.titleLangKoKR == other.titleLangKoKR &&
+            self.titleLangFrFR == other.titleLangFrFR &&
+            self.titleLangDeDE == other.titleLangDeDE &&
+            self.titleLangZhCN == other.titleLangZhCN &&
+            self.titleLangZhTW == other.titleLangZhTW &&
+            self.titleLangEsES == other.titleLangEsES &&
+            self.titleLangEsMX == other.titleLangEsMX &&
+            self.titleLangRuRU == other.titleLangRuRU &&
+            self.titleLangJaJP == other.titleLangJaJP &&
+            self.titleLangPtPT == other.titleLangPtPT &&
+            self.titleLangPtBR == other.titleLangPtBR &&
+            self.titleLangItIT == other.titleLangItIT &&
+            self.titleLangUnk1 == other.titleLangUnk1 &&
+            self.titleLangUnk2 == other.titleLangUnk2 &&
+            self.titleLangUnk3 == other.titleLangUnk3 &&
+            self.titleLangFlags == other.titleLangFlags &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags &&
+            self.category == other.category &&
+            self.points == other.points &&
+            self.uiOrder == other.uiOrder &&
+            self.flags == other.flags &&
+            self.iconId == other.iconId &&
+            self.rewardLangEnUS == other.rewardLangEnUS &&
+            self.rewardLangKoKR == other.rewardLangKoKR &&
+            self.rewardLangFrFR == other.rewardLangFrFR &&
+            self.rewardLangDeDE == other.rewardLangDeDE &&
+            self.rewardLangZhCN == other.rewardLangZhCN &&
+            self.rewardLangZhTW == other.rewardLangZhTW &&
+            self.rewardLangEsES == other.rewardLangEsES &&
+            self.rewardLangEsMX == other.rewardLangEsMX &&
+            self.rewardLangRuRU == other.rewardLangRuRU &&
+            self.rewardLangJaJP == other.rewardLangJaJP &&
+            self.rewardLangPtPT == other.rewardLangPtPT &&
+            self.rewardLangPtBR == other.rewardLangPtBR &&
+            self.rewardLangItIT == other.rewardLangItIT &&
+            self.rewardLangUnk1 == other.rewardLangUnk1 &&
+            self.rewardLangUnk2 == other.rewardLangUnk2 &&
+            self.rewardLangUnk3 == other.rewardLangUnk3 &&
+            self.rewardLangFlags == other.rewardLangFlags &&
+            self.minimumCriteria == other.minimumCriteria &&
+            self.sharesCriteria == other.sharesCriteria;
   }
 
   AchievementEntity copyWith({
@@ -271,146 +392,6 @@ mixin _AchievementEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as AchievementEntity;
-    return identical(self, other) ||
-        other is AchievementEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.faction == other.faction &&
-            self.instanceId == other.instanceId &&
-            self.supercedes == other.supercedes &&
-            self.titleLangEnUS == other.titleLangEnUS &&
-            self.titleLangKoKR == other.titleLangKoKR &&
-            self.titleLangFrFR == other.titleLangFrFR &&
-            self.titleLangDeDE == other.titleLangDeDE &&
-            self.titleLangZhCN == other.titleLangZhCN &&
-            self.titleLangZhTW == other.titleLangZhTW &&
-            self.titleLangEsES == other.titleLangEsES &&
-            self.titleLangEsMX == other.titleLangEsMX &&
-            self.titleLangRuRU == other.titleLangRuRU &&
-            self.titleLangJaJP == other.titleLangJaJP &&
-            self.titleLangPtPT == other.titleLangPtPT &&
-            self.titleLangPtBR == other.titleLangPtBR &&
-            self.titleLangItIT == other.titleLangItIT &&
-            self.titleLangUnk1 == other.titleLangUnk1 &&
-            self.titleLangUnk2 == other.titleLangUnk2 &&
-            self.titleLangUnk3 == other.titleLangUnk3 &&
-            self.titleLangFlags == other.titleLangFlags &&
-            self.descriptionLangEnUS == other.descriptionLangEnUS &&
-            self.descriptionLangKoKR == other.descriptionLangKoKR &&
-            self.descriptionLangFrFR == other.descriptionLangFrFR &&
-            self.descriptionLangDeDE == other.descriptionLangDeDE &&
-            self.descriptionLangZhCN == other.descriptionLangZhCN &&
-            self.descriptionLangZhTW == other.descriptionLangZhTW &&
-            self.descriptionLangEsES == other.descriptionLangEsES &&
-            self.descriptionLangEsMX == other.descriptionLangEsMX &&
-            self.descriptionLangRuRU == other.descriptionLangRuRU &&
-            self.descriptionLangJaJP == other.descriptionLangJaJP &&
-            self.descriptionLangPtPT == other.descriptionLangPtPT &&
-            self.descriptionLangPtBR == other.descriptionLangPtBR &&
-            self.descriptionLangItIT == other.descriptionLangItIT &&
-            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            self.descriptionLangFlags == other.descriptionLangFlags &&
-            self.category == other.category &&
-            self.points == other.points &&
-            self.uiOrder == other.uiOrder &&
-            self.flags == other.flags &&
-            self.iconId == other.iconId &&
-            self.rewardLangEnUS == other.rewardLangEnUS &&
-            self.rewardLangKoKR == other.rewardLangKoKR &&
-            self.rewardLangFrFR == other.rewardLangFrFR &&
-            self.rewardLangDeDE == other.rewardLangDeDE &&
-            self.rewardLangZhCN == other.rewardLangZhCN &&
-            self.rewardLangZhTW == other.rewardLangZhTW &&
-            self.rewardLangEsES == other.rewardLangEsES &&
-            self.rewardLangEsMX == other.rewardLangEsMX &&
-            self.rewardLangRuRU == other.rewardLangRuRU &&
-            self.rewardLangJaJP == other.rewardLangJaJP &&
-            self.rewardLangPtPT == other.rewardLangPtPT &&
-            self.rewardLangPtBR == other.rewardLangPtBR &&
-            self.rewardLangItIT == other.rewardLangItIT &&
-            self.rewardLangUnk1 == other.rewardLangUnk1 &&
-            self.rewardLangUnk2 == other.rewardLangUnk2 &&
-            self.rewardLangUnk3 == other.rewardLangUnk3 &&
-            self.rewardLangFlags == other.rewardLangFlags &&
-            self.minimumCriteria == other.minimumCriteria &&
-            self.sharesCriteria == other.sharesCriteria;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AchievementEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.faction,
-      self.instanceId,
-      self.supercedes,
-      self.titleLangEnUS,
-      self.titleLangKoKR,
-      self.titleLangFrFR,
-      self.titleLangDeDE,
-      self.titleLangZhCN,
-      self.titleLangZhTW,
-      self.titleLangEsES,
-      self.titleLangEsMX,
-      self.titleLangRuRU,
-      self.titleLangJaJP,
-      self.titleLangPtPT,
-      self.titleLangPtBR,
-      self.titleLangItIT,
-      self.titleLangUnk1,
-      self.titleLangUnk2,
-      self.titleLangUnk3,
-      self.titleLangFlags,
-      self.descriptionLangEnUS,
-      self.descriptionLangKoKR,
-      self.descriptionLangFrFR,
-      self.descriptionLangDeDE,
-      self.descriptionLangZhCN,
-      self.descriptionLangZhTW,
-      self.descriptionLangEsES,
-      self.descriptionLangEsMX,
-      self.descriptionLangRuRU,
-      self.descriptionLangJaJP,
-      self.descriptionLangPtPT,
-      self.descriptionLangPtBR,
-      self.descriptionLangItIT,
-      self.descriptionLangUnk1,
-      self.descriptionLangUnk2,
-      self.descriptionLangUnk3,
-      self.descriptionLangFlags,
-      self.category,
-      self.points,
-      self.uiOrder,
-      self.flags,
-      self.iconId,
-      self.rewardLangEnUS,
-      self.rewardLangKoKR,
-      self.rewardLangFrFR,
-      self.rewardLangDeDE,
-      self.rewardLangZhCN,
-      self.rewardLangZhTW,
-      self.rewardLangEsES,
-      self.rewardLangEsMX,
-      self.rewardLangRuRU,
-      self.rewardLangJaJP,
-      self.rewardLangPtPT,
-      self.rewardLangPtBR,
-      self.rewardLangItIT,
-      self.rewardLangUnk1,
-      self.rewardLangUnk2,
-      self.rewardLangUnk3,
-      self.rewardLangFlags,
-      self.minimumCriteria,
-      self.sharesCriteria,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as AchievementEntity;
     return 'AchievementEntity('
@@ -478,53 +459,72 @@ mixin _AchievementEntityMixin {
         'sharesCriteria: ${self.sharesCriteria}'
         ')';
   }
-}
 
-final class BriefAchievementEntity {
-  final int id;
-  final String titleLangZhCN;
-  final String descriptionLangZhCN;
-  final String rewardLangZhCN;
-
-  const BriefAchievementEntity({
-    this.id = 0,
-    this.titleLangZhCN = '',
-    this.descriptionLangZhCN = '',
-    this.rewardLangZhCN = '',
-  });
-
-  factory BriefAchievementEntity.fromJson(Map<String, dynamic> json) {
-    return BriefAchievementEntity(
+  static AchievementEntity fromJson(Map<String, dynamic> json) {
+    return AchievementEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      faction: (json['Faction'] as num?)?.toInt() ?? -1,
+      instanceId: (json['Instance_ID'] as num?)?.toInt() ?? -1,
+      supercedes: (json['Supercedes'] as num?)?.toInt() ?? 0,
+      titleLangEnUS: json['Title_lang_enUS']?.toString() ?? '',
+      titleLangKoKR: json['Title_lang_koKR']?.toString() ?? '',
+      titleLangFrFR: json['Title_lang_frFR']?.toString() ?? '',
+      titleLangDeDE: json['Title_lang_deDE']?.toString() ?? '',
       titleLangZhCN: json['Title_lang_zhCN']?.toString() ?? '',
+      titleLangZhTW: json['Title_lang_zhTW']?.toString() ?? '',
+      titleLangEsES: json['Title_lang_esES']?.toString() ?? '',
+      titleLangEsMX: json['Title_lang_esMX']?.toString() ?? '',
+      titleLangRuRU: json['Title_lang_ruRU']?.toString() ?? '',
+      titleLangJaJP: json['Title_lang_jaJP']?.toString() ?? '',
+      titleLangPtPT: json['Title_lang_ptPT']?.toString() ?? '',
+      titleLangPtBR: json['Title_lang_ptBR']?.toString() ?? '',
+      titleLangItIT: json['Title_lang_itIT']?.toString() ?? '',
+      titleLangUnk1: json['Title_lang_unk1']?.toString() ?? '',
+      titleLangUnk2: json['Title_lang_unk2']?.toString() ?? '',
+      titleLangUnk3: json['Title_lang_unk3']?.toString() ?? '',
+      titleLangFlags: (json['Title_lang_Flags'] as num?)?.toInt() ?? 0,
+      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
+      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
+      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
+      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
+      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
+      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
+      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
+      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
+      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
+      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
+      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
+      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
+      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
+      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
+      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
+      descriptionLangFlags:
+          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      category: (json['Category'] as num?)?.toInt() ?? 0,
+      points: (json['Points'] as num?)?.toInt() ?? 0,
+      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      iconId: (json['IconID'] as num?)?.toInt() ?? 0,
+      rewardLangEnUS: json['Reward_lang_enUS']?.toString() ?? '',
+      rewardLangKoKR: json['Reward_lang_koKR']?.toString() ?? '',
+      rewardLangFrFR: json['Reward_lang_frFR']?.toString() ?? '',
+      rewardLangDeDE: json['Reward_lang_deDE']?.toString() ?? '',
       rewardLangZhCN: json['Reward_lang_zhCN']?.toString() ?? '',
+      rewardLangZhTW: json['Reward_lang_zhTW']?.toString() ?? '',
+      rewardLangEsES: json['Reward_lang_esES']?.toString() ?? '',
+      rewardLangEsMX: json['Reward_lang_esMX']?.toString() ?? '',
+      rewardLangRuRU: json['Reward_lang_ruRU']?.toString() ?? '',
+      rewardLangJaJP: json['Reward_lang_jaJP']?.toString() ?? '',
+      rewardLangPtPT: json['Reward_lang_ptPT']?.toString() ?? '',
+      rewardLangPtBR: json['Reward_lang_ptBR']?.toString() ?? '',
+      rewardLangItIT: json['Reward_lang_itIT']?.toString() ?? '',
+      rewardLangUnk1: json['Reward_lang_unk1']?.toString() ?? '',
+      rewardLangUnk2: json['Reward_lang_unk2']?.toString() ?? '',
+      rewardLangUnk3: json['Reward_lang_unk3']?.toString() ?? '',
+      rewardLangFlags: (json['Reward_lang_Flags'] as num?)?.toInt() ?? 0,
+      minimumCriteria: (json['Minimum_criteria'] as num?)?.toInt() ?? 0,
+      sharesCriteria: (json['Shares_criteria'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefAchievementEntity &&
-            id == other.id &&
-            titleLangZhCN == other.titleLangZhCN &&
-            descriptionLangZhCN == other.descriptionLangZhCN &&
-            rewardLangZhCN == other.rewardLangZhCN;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, titleLangZhCN, descriptionLangZhCN, rewardLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefAchievementEntity('
-        'id: $id, '
-        'titleLangZhCN: $titleLangZhCN, '
-        'descriptionLangZhCN: $descriptionLangZhCN, '
-        'rewardLangZhCN: $rewardLangZhCN'
-        ')';
   }
 }

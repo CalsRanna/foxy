@@ -2,19 +2,94 @@
 
 part of 'game_object_template_addon_entity.dart';
 
-mixin _GameObjectTemplateAddonEntityMixin {
-  static GameObjectTemplateAddonEntity fromJson(Map<String, dynamic> json) {
-    return GameObjectTemplateAddonEntity(
+final class BriefGameObjectTemplateAddonEntity {
+  final int entry;
+  final int faction;
+  final int flags;
+  final int minGold;
+  final int maxGold;
+
+  const BriefGameObjectTemplateAddonEntity({
+    this.entry = 0,
+    this.faction = 0,
+    this.flags = 0,
+    this.minGold = 0,
+    this.maxGold = 0,
+  });
+
+  factory BriefGameObjectTemplateAddonEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefGameObjectTemplateAddonEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       faction: (json['faction'] as num?)?.toInt() ?? 0,
       flags: (json['flags'] as num?)?.toInt() ?? 0,
       minGold: (json['mingold'] as num?)?.toInt() ?? 0,
       maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
-      artkit0: (json['artkit0'] as num?)?.toInt() ?? 0,
-      artkit1: (json['artkit1'] as num?)?.toInt() ?? 0,
-      artkit2: (json['artkit2'] as num?)?.toInt() ?? 0,
-      artkit3: (json['artkit3'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([entry, faction, flags, minGold, maxGold]);
+
+  int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGameObjectTemplateAddonEntity &&
+            entry == other.entry &&
+            faction == other.faction &&
+            flags == other.flags &&
+            minGold == other.minGold &&
+            maxGold == other.maxGold;
+  }
+
+  @override
+  String toString() {
+    return 'BriefGameObjectTemplateAddonEntity('
+        'entry: $entry, '
+        'faction: $faction, '
+        'flags: $flags, '
+        'minGold: $minGold, '
+        'maxGold: $maxGold'
+        ')';
+  }
+}
+
+mixin _GameObjectTemplateAddonEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GameObjectTemplateAddonEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.entry,
+      self.faction,
+      self.flags,
+      self.minGold,
+      self.maxGold,
+      self.artkit0,
+      self.artkit1,
+      self.artkit2,
+      self.artkit3,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GameObjectTemplateAddonEntity;
+    return identical(self, other) ||
+        other is GameObjectTemplateAddonEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.faction == other.faction &&
+            self.flags == other.flags &&
+            self.minGold == other.minGold &&
+            self.maxGold == other.maxGold &&
+            self.artkit0 == other.artkit0 &&
+            self.artkit1 == other.artkit1 &&
+            self.artkit2 == other.artkit2 &&
+            self.artkit3 == other.artkit3;
   }
 
   GameObjectTemplateAddonEntity copyWith({
@@ -58,40 +133,6 @@ mixin _GameObjectTemplateAddonEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as GameObjectTemplateAddonEntity;
-    return identical(self, other) ||
-        other is GameObjectTemplateAddonEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.entry == other.entry &&
-            self.faction == other.faction &&
-            self.flags == other.flags &&
-            self.minGold == other.minGold &&
-            self.maxGold == other.maxGold &&
-            self.artkit0 == other.artkit0 &&
-            self.artkit1 == other.artkit1 &&
-            self.artkit2 == other.artkit2 &&
-            self.artkit3 == other.artkit3;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GameObjectTemplateAddonEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.entry,
-      self.faction,
-      self.flags,
-      self.minGold,
-      self.maxGold,
-      self.artkit0,
-      self.artkit1,
-      self.artkit2,
-      self.artkit3,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as GameObjectTemplateAddonEntity;
     return 'GameObjectTemplateAddonEntity('
@@ -106,59 +147,18 @@ mixin _GameObjectTemplateAddonEntityMixin {
         'artkit3: ${self.artkit3}'
         ')';
   }
-}
 
-final class BriefGameObjectTemplateAddonEntity {
-  final int entry;
-  final int faction;
-  final int flags;
-  final int minGold;
-  final int maxGold;
-
-  const BriefGameObjectTemplateAddonEntity({
-    this.entry = 0,
-    this.faction = 0,
-    this.flags = 0,
-    this.minGold = 0,
-    this.maxGold = 0,
-  });
-
-  factory BriefGameObjectTemplateAddonEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefGameObjectTemplateAddonEntity(
+  static GameObjectTemplateAddonEntity fromJson(Map<String, dynamic> json) {
+    return GameObjectTemplateAddonEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       faction: (json['faction'] as num?)?.toInt() ?? 0,
       flags: (json['flags'] as num?)?.toInt() ?? 0,
       minGold: (json['mingold'] as num?)?.toInt() ?? 0,
       maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
+      artkit0: (json['artkit0'] as num?)?.toInt() ?? 0,
+      artkit1: (json['artkit1'] as num?)?.toInt() ?? 0,
+      artkit2: (json['artkit2'] as num?)?.toInt() ?? 0,
+      artkit3: (json['artkit3'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => entry;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefGameObjectTemplateAddonEntity &&
-            entry == other.entry &&
-            faction == other.faction &&
-            flags == other.flags &&
-            minGold == other.minGold &&
-            maxGold == other.maxGold;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([entry, faction, flags, minGold, maxGold]);
-
-  @override
-  String toString() {
-    return 'BriefGameObjectTemplateAddonEntity('
-        'entry: $entry, '
-        'faction: $faction, '
-        'flags: $flags, '
-        'minGold: $minGold, '
-        'maxGold: $maxGold'
-        ')';
   }
 }

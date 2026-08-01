@@ -2,33 +2,121 @@
 
 part of 'talent_entity.dart';
 
-mixin _TalentEntityMixin {
-  static TalentEntity fromJson(Map<String, dynamic> json) {
-    return TalentEntity(
+final class BriefTalentEntity {
+  final int id;
+  final int tabId;
+  final int tierId;
+  final int columnIndex;
+  final int spellRank0;
+
+  const BriefTalentEntity({
+    this.id = 0,
+    this.tabId = 0,
+    this.tierId = 0,
+    this.columnIndex = 0,
+    this.spellRank0 = 0,
+  });
+
+  factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
+    return BriefTalentEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       tabId: (json['TabID'] as num?)?.toInt() ?? 0,
       tierId: (json['TierID'] as num?)?.toInt() ?? 0,
       columnIndex: (json['ColumnIndex'] as num?)?.toInt() ?? 0,
       spellRank0: (json['SpellRank0'] as num?)?.toInt() ?? 0,
-      spellRank1: (json['SpellRank1'] as num?)?.toInt() ?? 0,
-      spellRank2: (json['SpellRank2'] as num?)?.toInt() ?? 0,
-      spellRank3: (json['SpellRank3'] as num?)?.toInt() ?? 0,
-      spellRank4: (json['SpellRank4'] as num?)?.toInt() ?? 0,
-      spellRank5: (json['SpellRank5'] as num?)?.toInt() ?? 0,
-      spellRank6: (json['SpellRank6'] as num?)?.toInt() ?? 0,
-      spellRank7: (json['SpellRank7'] as num?)?.toInt() ?? 0,
-      spellRank8: (json['SpellRank8'] as num?)?.toInt() ?? 0,
-      prereqTalent0: (json['PrereqTalent0'] as num?)?.toInt() ?? 0,
-      prereqTalent1: (json['PrereqTalent1'] as num?)?.toInt() ?? 0,
-      prereqTalent2: (json['PrereqTalent2'] as num?)?.toInt() ?? 0,
-      prereqRank0: (json['PrereqRank0'] as num?)?.toInt() ?? 0,
-      prereqRank1: (json['PrereqRank1'] as num?)?.toInt() ?? 0,
-      prereqRank2: (json['PrereqRank2'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      requiredSpellId: (json['RequiredSpellID'] as num?)?.toInt() ?? 0,
-      categoryMask0: (json['CategoryMask0'] as num?)?.toInt() ?? 0,
-      categoryMask1: (json['CategoryMask1'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, tabId, tierId, columnIndex, spellRank0]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTalentEntity &&
+            id == other.id &&
+            tabId == other.tabId &&
+            tierId == other.tierId &&
+            columnIndex == other.columnIndex &&
+            spellRank0 == other.spellRank0;
+  }
+
+  @override
+  String toString() {
+    return 'BriefTalentEntity('
+        'id: $id, '
+        'tabId: $tabId, '
+        'tierId: $tierId, '
+        'columnIndex: $columnIndex, '
+        'spellRank0: $spellRank0'
+        ')';
+  }
+}
+
+mixin _TalentEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as TalentEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.tabId,
+      self.tierId,
+      self.columnIndex,
+      self.spellRank0,
+      self.spellRank1,
+      self.spellRank2,
+      self.spellRank3,
+      self.spellRank4,
+      self.spellRank5,
+      self.spellRank6,
+      self.spellRank7,
+      self.spellRank8,
+      self.prereqTalent0,
+      self.prereqTalent1,
+      self.prereqTalent2,
+      self.prereqRank0,
+      self.prereqRank1,
+      self.prereqRank2,
+      self.flags,
+      self.requiredSpellId,
+      self.categoryMask0,
+      self.categoryMask1,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as TalentEntity;
+    return identical(self, other) ||
+        other is TalentEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.tabId == other.tabId &&
+            self.tierId == other.tierId &&
+            self.columnIndex == other.columnIndex &&
+            self.spellRank0 == other.spellRank0 &&
+            self.spellRank1 == other.spellRank1 &&
+            self.spellRank2 == other.spellRank2 &&
+            self.spellRank3 == other.spellRank3 &&
+            self.spellRank4 == other.spellRank4 &&
+            self.spellRank5 == other.spellRank5 &&
+            self.spellRank6 == other.spellRank6 &&
+            self.spellRank7 == other.spellRank7 &&
+            self.spellRank8 == other.spellRank8 &&
+            self.prereqTalent0 == other.prereqTalent0 &&
+            self.prereqTalent1 == other.prereqTalent1 &&
+            self.prereqTalent2 == other.prereqTalent2 &&
+            self.prereqRank0 == other.prereqRank0 &&
+            self.prereqRank1 == other.prereqRank1 &&
+            self.prereqRank2 == other.prereqRank2 &&
+            self.flags == other.flags &&
+            self.requiredSpellId == other.requiredSpellId &&
+            self.categoryMask0 == other.categoryMask0 &&
+            self.categoryMask1 == other.categoryMask1;
   }
 
   TalentEntity copyWith({
@@ -114,68 +202,6 @@ mixin _TalentEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as TalentEntity;
-    return identical(self, other) ||
-        other is TalentEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.tabId == other.tabId &&
-            self.tierId == other.tierId &&
-            self.columnIndex == other.columnIndex &&
-            self.spellRank0 == other.spellRank0 &&
-            self.spellRank1 == other.spellRank1 &&
-            self.spellRank2 == other.spellRank2 &&
-            self.spellRank3 == other.spellRank3 &&
-            self.spellRank4 == other.spellRank4 &&
-            self.spellRank5 == other.spellRank5 &&
-            self.spellRank6 == other.spellRank6 &&
-            self.spellRank7 == other.spellRank7 &&
-            self.spellRank8 == other.spellRank8 &&
-            self.prereqTalent0 == other.prereqTalent0 &&
-            self.prereqTalent1 == other.prereqTalent1 &&
-            self.prereqTalent2 == other.prereqTalent2 &&
-            self.prereqRank0 == other.prereqRank0 &&
-            self.prereqRank1 == other.prereqRank1 &&
-            self.prereqRank2 == other.prereqRank2 &&
-            self.flags == other.flags &&
-            self.requiredSpellId == other.requiredSpellId &&
-            self.categoryMask0 == other.categoryMask0 &&
-            self.categoryMask1 == other.categoryMask1;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as TalentEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.tabId,
-      self.tierId,
-      self.columnIndex,
-      self.spellRank0,
-      self.spellRank1,
-      self.spellRank2,
-      self.spellRank3,
-      self.spellRank4,
-      self.spellRank5,
-      self.spellRank6,
-      self.spellRank7,
-      self.spellRank8,
-      self.prereqTalent0,
-      self.prereqTalent1,
-      self.prereqTalent2,
-      self.prereqRank0,
-      self.prereqRank1,
-      self.prereqRank2,
-      self.flags,
-      self.requiredSpellId,
-      self.categoryMask0,
-      self.categoryMask1,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as TalentEntity;
     return 'TalentEntity('
@@ -204,58 +230,32 @@ mixin _TalentEntityMixin {
         'categoryMask1: ${self.categoryMask1}'
         ')';
   }
-}
 
-final class BriefTalentEntity {
-  final int id;
-  final int tabId;
-  final int tierId;
-  final int columnIndex;
-  final int spellRank0;
-
-  const BriefTalentEntity({
-    this.id = 0,
-    this.tabId = 0,
-    this.tierId = 0,
-    this.columnIndex = 0,
-    this.spellRank0 = 0,
-  });
-
-  factory BriefTalentEntity.fromJson(Map<String, dynamic> json) {
-    return BriefTalentEntity(
+  static TalentEntity fromJson(Map<String, dynamic> json) {
+    return TalentEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       tabId: (json['TabID'] as num?)?.toInt() ?? 0,
       tierId: (json['TierID'] as num?)?.toInt() ?? 0,
       columnIndex: (json['ColumnIndex'] as num?)?.toInt() ?? 0,
       spellRank0: (json['SpellRank0'] as num?)?.toInt() ?? 0,
+      spellRank1: (json['SpellRank1'] as num?)?.toInt() ?? 0,
+      spellRank2: (json['SpellRank2'] as num?)?.toInt() ?? 0,
+      spellRank3: (json['SpellRank3'] as num?)?.toInt() ?? 0,
+      spellRank4: (json['SpellRank4'] as num?)?.toInt() ?? 0,
+      spellRank5: (json['SpellRank5'] as num?)?.toInt() ?? 0,
+      spellRank6: (json['SpellRank6'] as num?)?.toInt() ?? 0,
+      spellRank7: (json['SpellRank7'] as num?)?.toInt() ?? 0,
+      spellRank8: (json['SpellRank8'] as num?)?.toInt() ?? 0,
+      prereqTalent0: (json['PrereqTalent0'] as num?)?.toInt() ?? 0,
+      prereqTalent1: (json['PrereqTalent1'] as num?)?.toInt() ?? 0,
+      prereqTalent2: (json['PrereqTalent2'] as num?)?.toInt() ?? 0,
+      prereqRank0: (json['PrereqRank0'] as num?)?.toInt() ?? 0,
+      prereqRank1: (json['PrereqRank1'] as num?)?.toInt() ?? 0,
+      prereqRank2: (json['PrereqRank2'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      requiredSpellId: (json['RequiredSpellID'] as num?)?.toInt() ?? 0,
+      categoryMask0: (json['CategoryMask0'] as num?)?.toInt() ?? 0,
+      categoryMask1: (json['CategoryMask1'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefTalentEntity &&
-            id == other.id &&
-            tabId == other.tabId &&
-            tierId == other.tierId &&
-            columnIndex == other.columnIndex &&
-            spellRank0 == other.spellRank0;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, tabId, tierId, columnIndex, spellRank0]);
-
-  @override
-  String toString() {
-    return 'BriefTalentEntity('
-        'id: $id, '
-        'tabId: $tabId, '
-        'tierId: $tierId, '
-        'columnIndex: $columnIndex, '
-        'spellRank0: $spellRank0'
-        ')';
   }
 }

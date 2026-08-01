@@ -22,20 +22,7 @@ mixin _SpellAreaCollectionEditorViewModelMixin on FieldControllerMixin {
     FlagFieldController(),
   );
 
-  SpellAreaEntity _collectCandidate() {
-    return SpellAreaEntity(
-      spell: spellController.collect(),
-      area: areaController.collect(),
-      questStart: questStartController.collect(),
-      questEnd: questEndController.collect(),
-      auraSpell: auraSpellController.collect(),
-      racemask: racemaskController.collect(),
-      gender: genderController.collect(),
-      autocast: autocastController.collect(),
-      questStartStatus: questStartStatusController.collect(),
-      questEndStatus: questEndStatusController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellAreaEntity spellArea) {}
 
   void _applyCandidate(SpellAreaEntity spellArea) {
     spellController.init(spellArea.spell);
@@ -51,5 +38,18 @@ mixin _SpellAreaCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellArea);
   }
 
-  void _afterApplyCandidate(SpellAreaEntity spellArea) {}
+  SpellAreaEntity _collectCandidate() {
+    return SpellAreaEntity(
+      spell: spellController.collect(),
+      area: areaController.collect(),
+      questStart: questStartController.collect(),
+      questEnd: questEndController.collect(),
+      auraSpell: auraSpellController.collect(),
+      racemask: racemaskController.collect(),
+      gender: genderController.collect(),
+      autocast: autocastController.collect(),
+      questStartStatus: questStartStatusController.collect(),
+      questEndStatus: questEndStatusController.collect(),
+    );
+  }
 }

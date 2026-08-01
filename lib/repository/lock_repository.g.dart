@@ -2,6 +2,24 @@
 
 part of 'lock_repository.dart';
 
+final class LockFilter {
+  final String id;
+
+  const LockFilter({this.id = ''});
+
+  factory LockFilter.fromJson(Map<String, dynamic> json) {
+    return LockFilter(id: json['id']?.toString() ?? '');
+  }
+
+  LockFilter copyWith({String? id}) {
+    return LockFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _LockRepositoryMixin on RepositoryMixin {
   Future<void> destroyLock(int key) async {
     await _beforeDestroy(key);
@@ -67,23 +85,5 @@ mixin _LockRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class LockFilter {
-  final String id;
-
-  const LockFilter({this.id = ''});
-
-  factory LockFilter.fromJson(Map<String, dynamic> json) {
-    return LockFilter(id: json['id']?.toString() ?? '');
-  }
-
-  LockFilter copyWith({String? id}) {
-    return LockFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

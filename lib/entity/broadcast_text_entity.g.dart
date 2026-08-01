@@ -2,14 +2,72 @@
 
 part of 'broadcast_text_entity.dart';
 
-mixin _BroadcastTextEntityMixin {
-  static BroadcastTextEntity fromJson(Map<String, dynamic> json) {
-    return BroadcastTextEntity(
+final class BriefBroadcastTextEntity {
+  final int id;
+  final int languageId;
+  final String maleText;
+
+  const BriefBroadcastTextEntity({
+    this.id = 0,
+    this.languageId = 0,
+    this.maleText = '',
+  });
+
+  factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
+    return BriefBroadcastTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
       maleText: json['MaleText']?.toString() ?? '',
-      femaleText: json['FemaleText']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, languageId, maleText]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefBroadcastTextEntity &&
+            id == other.id &&
+            languageId == other.languageId &&
+            maleText == other.maleText;
+  }
+
+  @override
+  String toString() {
+    return 'BriefBroadcastTextEntity('
+        'id: $id, '
+        'languageId: $languageId, '
+        'maleText: $maleText'
+        ')';
+  }
+}
+
+mixin _BroadcastTextEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as BroadcastTextEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.languageId,
+      self.maleText,
+      self.femaleText,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as BroadcastTextEntity;
+    return identical(self, other) ||
+        other is BroadcastTextEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.languageId == other.languageId &&
+            self.maleText == other.maleText &&
+            self.femaleText == other.femaleText;
   }
 
   BroadcastTextEntity copyWith({
@@ -38,30 +96,6 @@ mixin _BroadcastTextEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as BroadcastTextEntity;
-    return identical(self, other) ||
-        other is BroadcastTextEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.languageId == other.languageId &&
-            self.maleText == other.maleText &&
-            self.femaleText == other.femaleText;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as BroadcastTextEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.languageId,
-      self.maleText,
-      self.femaleText,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as BroadcastTextEntity;
     return 'BroadcastTextEntity('
@@ -71,47 +105,13 @@ mixin _BroadcastTextEntityMixin {
         'femaleText: ${self.femaleText}'
         ')';
   }
-}
 
-final class BriefBroadcastTextEntity {
-  final int id;
-  final int languageId;
-  final String maleText;
-
-  const BriefBroadcastTextEntity({
-    this.id = 0,
-    this.languageId = 0,
-    this.maleText = '',
-  });
-
-  factory BriefBroadcastTextEntity.fromJson(Map<String, dynamic> json) {
-    return BriefBroadcastTextEntity(
+  static BroadcastTextEntity fromJson(Map<String, dynamic> json) {
+    return BroadcastTextEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       languageId: (json['LanguageID'] as num?)?.toInt() ?? 0,
       maleText: json['MaleText']?.toString() ?? '',
+      femaleText: json['FemaleText']?.toString() ?? '',
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefBroadcastTextEntity &&
-            id == other.id &&
-            languageId == other.languageId &&
-            maleText == other.maleText;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, languageId, maleText]);
-
-  @override
-  String toString() {
-    return 'BriefBroadcastTextEntity('
-        'id: $id, '
-        'languageId: $languageId, '
-        'maleText: $maleText'
-        ')';
   }
 }

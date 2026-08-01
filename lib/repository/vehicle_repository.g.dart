@@ -2,6 +2,24 @@
 
 part of 'vehicle_repository.dart';
 
+final class VehicleFilter {
+  final String id;
+
+  const VehicleFilter({this.id = ''});
+
+  factory VehicleFilter.fromJson(Map<String, dynamic> json) {
+    return VehicleFilter(id: json['id']?.toString() ?? '');
+  }
+
+  VehicleFilter copyWith({String? id}) {
+    return VehicleFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _VehicleRepositoryMixin on RepositoryMixin {
   Future<void> destroyVehicle(int key) async {
     await _beforeDestroy(key);
@@ -67,23 +85,5 @@ mixin _VehicleRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class VehicleFilter {
-  final String id;
-
-  const VehicleFilter({this.id = ''});
-
-  factory VehicleFilter.fromJson(Map<String, dynamic> json) {
-    return VehicleFilter(id: json['id']?.toString() ?? '');
-  }
-
-  VehicleFilter copyWith({String? id}) {
-    return VehicleFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

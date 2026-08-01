@@ -10,14 +10,7 @@ mixin _PageTextLocaleCollectionEditorViewModelMixin on FieldControllerMixin {
   late final textController = registerController(StringFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  PageTextLocaleEntity _collectCandidate() {
-    return PageTextLocaleEntity(
-      id: idController.collect(),
-      locale: localeController.collect(),
-      text: textController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(PageTextLocaleEntity pageTextLocale) {}
 
   void _applyCandidate(PageTextLocaleEntity pageTextLocale) {
     idController.init(pageTextLocale.id);
@@ -27,5 +20,12 @@ mixin _PageTextLocaleCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(pageTextLocale);
   }
 
-  void _afterApplyCandidate(PageTextLocaleEntity pageTextLocale) {}
+  PageTextLocaleEntity _collectCandidate() {
+    return PageTextLocaleEntity(
+      id: idController.collect(),
+      locale: localeController.collect(),
+      text: textController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

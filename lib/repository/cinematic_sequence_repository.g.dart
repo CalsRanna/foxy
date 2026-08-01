@@ -2,6 +2,24 @@
 
 part of 'cinematic_sequence_repository.dart';
 
+final class CinematicSequenceFilter {
+  final String id;
+
+  const CinematicSequenceFilter({this.id = ''});
+
+  factory CinematicSequenceFilter.fromJson(Map<String, dynamic> json) {
+    return CinematicSequenceFilter(id: json['id']?.toString() ?? '');
+  }
+
+  CinematicSequenceFilter copyWith({String? id}) {
+    return CinematicSequenceFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
   Future<void> destroyCinematicSequence(int key) async {
     await _beforeDestroy(key);
@@ -75,23 +93,5 @@ mixin _CinematicSequenceRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class CinematicSequenceFilter {
-  final String id;
-
-  const CinematicSequenceFilter({this.id = ''});
-
-  factory CinematicSequenceFilter.fromJson(Map<String, dynamic> json) {
-    return CinematicSequenceFilter(id: json['id']?.toString() ?? '');
-  }
-
-  CinematicSequenceFilter copyWith({String? id}) {
-    return CinematicSequenceFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

@@ -2,30 +2,109 @@
 
 part of 'item_limit_category_entity.dart';
 
-mixin _ItemLimitCategoryEntityMixin {
-  static ItemLimitCategoryEntity fromJson(Map<String, dynamic> json) {
-    return ItemLimitCategoryEntity(
+final class BriefItemLimitCategoryEntity {
+  final int id;
+  final int quantity;
+  final int flags;
+  final String name;
+
+  const BriefItemLimitCategoryEntity({
+    this.id = 0,
+    this.quantity = 0,
+    this.flags = 0,
+    this.name = '',
+  });
+
+  factory BriefItemLimitCategoryEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemLimitCategoryEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
-      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
-      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
-      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
-      nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
-      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
-      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
-      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
-      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
-      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
-      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
-      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
-      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
-      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
-      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      name: json['name']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, quantity, flags, name]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemLimitCategoryEntity &&
+            id == other.id &&
+            quantity == other.quantity &&
+            flags == other.flags &&
+            name == other.name;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemLimitCategoryEntity('
+        'id: $id, '
+        'quantity: $quantity, '
+        'flags: $flags, '
+        'name: $name'
+        ')';
+  }
+}
+
+mixin _ItemLimitCategoryEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemLimitCategoryEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.quantity,
+      self.flags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemLimitCategoryEntity;
+    return identical(self, other) ||
+        other is ItemLimitCategoryEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.quantity == other.quantity &&
+            self.flags == other.flags;
   }
 
   ItemLimitCategoryEntity copyWith({
@@ -102,62 +181,6 @@ mixin _ItemLimitCategoryEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemLimitCategoryEntity;
-    return identical(self, other) ||
-        other is ItemLimitCategoryEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.nameLangEnUS == other.nameLangEnUS &&
-            self.nameLangKoKR == other.nameLangKoKR &&
-            self.nameLangFrFR == other.nameLangFrFR &&
-            self.nameLangDeDE == other.nameLangDeDE &&
-            self.nameLangZhCN == other.nameLangZhCN &&
-            self.nameLangZhTW == other.nameLangZhTW &&
-            self.nameLangEsES == other.nameLangEsES &&
-            self.nameLangEsMX == other.nameLangEsMX &&
-            self.nameLangRuRU == other.nameLangRuRU &&
-            self.nameLangJaJP == other.nameLangJaJP &&
-            self.nameLangPtPT == other.nameLangPtPT &&
-            self.nameLangPtBR == other.nameLangPtBR &&
-            self.nameLangItIT == other.nameLangItIT &&
-            self.nameLangUnk1 == other.nameLangUnk1 &&
-            self.nameLangUnk2 == other.nameLangUnk2 &&
-            self.nameLangUnk3 == other.nameLangUnk3 &&
-            self.nameLangFlags == other.nameLangFlags &&
-            self.quantity == other.quantity &&
-            self.flags == other.flags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemLimitCategoryEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.nameLangEnUS,
-      self.nameLangKoKR,
-      self.nameLangFrFR,
-      self.nameLangDeDE,
-      self.nameLangZhCN,
-      self.nameLangZhTW,
-      self.nameLangEsES,
-      self.nameLangEsMX,
-      self.nameLangRuRU,
-      self.nameLangJaJP,
-      self.nameLangPtPT,
-      self.nameLangPtBR,
-      self.nameLangItIT,
-      self.nameLangUnk1,
-      self.nameLangUnk2,
-      self.nameLangUnk3,
-      self.nameLangFlags,
-      self.quantity,
-      self.flags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemLimitCategoryEntity;
     return 'ItemLimitCategoryEntity('
@@ -183,52 +206,29 @@ mixin _ItemLimitCategoryEntityMixin {
         'flags: ${self.flags}'
         ')';
   }
-}
 
-final class BriefItemLimitCategoryEntity {
-  final int id;
-  final int quantity;
-  final int flags;
-  final String name;
-
-  const BriefItemLimitCategoryEntity({
-    this.id = 0,
-    this.quantity = 0,
-    this.flags = 0,
-    this.name = '',
-  });
-
-  factory BriefItemLimitCategoryEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemLimitCategoryEntity(
+  static ItemLimitCategoryEntity fromJson(Map<String, dynamic> json) {
+    return ItemLimitCategoryEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
+      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
+      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
+      nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
+      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
+      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
+      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
+      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
+      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
+      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
+      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
+      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
+      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
+      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
+      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
       quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      name: json['name']?.toString() ?? '',
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemLimitCategoryEntity &&
-            id == other.id &&
-            quantity == other.quantity &&
-            flags == other.flags &&
-            name == other.name;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, quantity, flags, name]);
-
-  @override
-  String toString() {
-    return 'BriefItemLimitCategoryEntity('
-        'id: $id, '
-        'quantity: $quantity, '
-        'flags: $flags, '
-        'name: $name'
-        ')';
   }
 }

@@ -2,6 +2,28 @@
 
 part of 'currency_category_repository.dart';
 
+final class CurrencyCategoryFilter {
+  final String id;
+  final String name;
+
+  const CurrencyCategoryFilter({this.id = '', this.name = ''});
+
+  factory CurrencyCategoryFilter.fromJson(Map<String, dynamic> json) {
+    return CurrencyCategoryFilter(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  CurrencyCategoryFilter copyWith({String? id, String? name}) {
+    return CurrencyCategoryFilter(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
+}
+
 mixin _CurrencyCategoryRepositoryMixin on RepositoryMixin {
   Future<void> destroyCurrencyCategory(int key) async {
     await _beforeDestroy(key);
@@ -75,27 +97,5 @@ mixin _CurrencyCategoryRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class CurrencyCategoryFilter {
-  final String id;
-  final String name;
-
-  const CurrencyCategoryFilter({this.id = '', this.name = ''});
-
-  factory CurrencyCategoryFilter.fromJson(Map<String, dynamic> json) {
-    return CurrencyCategoryFilter(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  CurrencyCategoryFilter copyWith({String? id, String? name}) {
-    return CurrencyCategoryFilter(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
   }
 }

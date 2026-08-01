@@ -2,25 +2,105 @@
 
 part of 'light_entity.dart';
 
-mixin _LightEntityMixin {
-  static LightEntity fromJson(Map<String, dynamic> json) {
-    return LightEntity(
+final class BriefLightEntity {
+  final int id;
+  final int continentId;
+  final double gameCoords0;
+  final double gameCoords1;
+  final double gameCoords2;
+
+  const BriefLightEntity({
+    this.id = 0,
+    this.continentId = 0,
+    this.gameCoords0 = 0.0,
+    this.gameCoords1 = 0.0,
+    this.gameCoords2 = 0.0,
+  });
+
+  factory BriefLightEntity.fromJson(Map<String, dynamic> json) {
+    return BriefLightEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
       gameCoords0: (json['GameCoords0'] as num?)?.toDouble() ?? 0.0,
       gameCoords1: (json['GameCoords1'] as num?)?.toDouble() ?? 0.0,
       gameCoords2: (json['GameCoords2'] as num?)?.toDouble() ?? 0.0,
-      gameFalloffStart: (json['GameFalloffStart'] as num?)?.toDouble() ?? 0.0,
-      gameFalloffEnd: (json['GameFalloffEnd'] as num?)?.toDouble() ?? 0.0,
-      lightParamsId0: (json['LightParamsID0'] as num?)?.toInt() ?? 0,
-      lightParamsId1: (json['LightParamsID1'] as num?)?.toInt() ?? 0,
-      lightParamsId2: (json['LightParamsID2'] as num?)?.toInt() ?? 0,
-      lightParamsId3: (json['LightParamsID3'] as num?)?.toInt() ?? 0,
-      lightParamsId4: (json['LightParamsID4'] as num?)?.toInt() ?? 0,
-      lightParamsId5: (json['LightParamsID5'] as num?)?.toInt() ?? 0,
-      lightParamsId6: (json['LightParamsID6'] as num?)?.toInt() ?? 0,
-      lightParamsId7: (json['LightParamsID7'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, continentId, gameCoords0, gameCoords1, gameCoords2]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLightEntity &&
+            id == other.id &&
+            continentId == other.continentId &&
+            gameCoords0 == other.gameCoords0 &&
+            gameCoords1 == other.gameCoords1 &&
+            gameCoords2 == other.gameCoords2;
+  }
+
+  @override
+  String toString() {
+    return 'BriefLightEntity('
+        'id: $id, '
+        'continentId: $continentId, '
+        'gameCoords0: $gameCoords0, '
+        'gameCoords1: $gameCoords1, '
+        'gameCoords2: $gameCoords2'
+        ')';
+  }
+}
+
+mixin _LightEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as LightEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.continentId,
+      self.gameCoords0,
+      self.gameCoords1,
+      self.gameCoords2,
+      self.gameFalloffStart,
+      self.gameFalloffEnd,
+      self.lightParamsId0,
+      self.lightParamsId1,
+      self.lightParamsId2,
+      self.lightParamsId3,
+      self.lightParamsId4,
+      self.lightParamsId5,
+      self.lightParamsId6,
+      self.lightParamsId7,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as LightEntity;
+    return identical(self, other) ||
+        other is LightEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.continentId == other.continentId &&
+            self.gameCoords0 == other.gameCoords0 &&
+            self.gameCoords1 == other.gameCoords1 &&
+            self.gameCoords2 == other.gameCoords2 &&
+            self.gameFalloffStart == other.gameFalloffStart &&
+            self.gameFalloffEnd == other.gameFalloffEnd &&
+            self.lightParamsId0 == other.lightParamsId0 &&
+            self.lightParamsId1 == other.lightParamsId1 &&
+            self.lightParamsId2 == other.lightParamsId2 &&
+            self.lightParamsId3 == other.lightParamsId3 &&
+            self.lightParamsId4 == other.lightParamsId4 &&
+            self.lightParamsId5 == other.lightParamsId5 &&
+            self.lightParamsId6 == other.lightParamsId6 &&
+            self.lightParamsId7 == other.lightParamsId7;
   }
 
   LightEntity copyWith({
@@ -82,52 +162,6 @@ mixin _LightEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as LightEntity;
-    return identical(self, other) ||
-        other is LightEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.continentId == other.continentId &&
-            self.gameCoords0 == other.gameCoords0 &&
-            self.gameCoords1 == other.gameCoords1 &&
-            self.gameCoords2 == other.gameCoords2 &&
-            self.gameFalloffStart == other.gameFalloffStart &&
-            self.gameFalloffEnd == other.gameFalloffEnd &&
-            self.lightParamsId0 == other.lightParamsId0 &&
-            self.lightParamsId1 == other.lightParamsId1 &&
-            self.lightParamsId2 == other.lightParamsId2 &&
-            self.lightParamsId3 == other.lightParamsId3 &&
-            self.lightParamsId4 == other.lightParamsId4 &&
-            self.lightParamsId5 == other.lightParamsId5 &&
-            self.lightParamsId6 == other.lightParamsId6 &&
-            self.lightParamsId7 == other.lightParamsId7;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as LightEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.continentId,
-      self.gameCoords0,
-      self.gameCoords1,
-      self.gameCoords2,
-      self.gameFalloffStart,
-      self.gameFalloffEnd,
-      self.lightParamsId0,
-      self.lightParamsId1,
-      self.lightParamsId2,
-      self.lightParamsId3,
-      self.lightParamsId4,
-      self.lightParamsId5,
-      self.lightParamsId6,
-      self.lightParamsId7,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as LightEntity;
     return 'LightEntity('
@@ -148,58 +182,24 @@ mixin _LightEntityMixin {
         'lightParamsId7: ${self.lightParamsId7}'
         ')';
   }
-}
 
-final class BriefLightEntity {
-  final int id;
-  final int continentId;
-  final double gameCoords0;
-  final double gameCoords1;
-  final double gameCoords2;
-
-  const BriefLightEntity({
-    this.id = 0,
-    this.continentId = 0,
-    this.gameCoords0 = 0.0,
-    this.gameCoords1 = 0.0,
-    this.gameCoords2 = 0.0,
-  });
-
-  factory BriefLightEntity.fromJson(Map<String, dynamic> json) {
-    return BriefLightEntity(
+  static LightEntity fromJson(Map<String, dynamic> json) {
+    return LightEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
       gameCoords0: (json['GameCoords0'] as num?)?.toDouble() ?? 0.0,
       gameCoords1: (json['GameCoords1'] as num?)?.toDouble() ?? 0.0,
       gameCoords2: (json['GameCoords2'] as num?)?.toDouble() ?? 0.0,
+      gameFalloffStart: (json['GameFalloffStart'] as num?)?.toDouble() ?? 0.0,
+      gameFalloffEnd: (json['GameFalloffEnd'] as num?)?.toDouble() ?? 0.0,
+      lightParamsId0: (json['LightParamsID0'] as num?)?.toInt() ?? 0,
+      lightParamsId1: (json['LightParamsID1'] as num?)?.toInt() ?? 0,
+      lightParamsId2: (json['LightParamsID2'] as num?)?.toInt() ?? 0,
+      lightParamsId3: (json['LightParamsID3'] as num?)?.toInt() ?? 0,
+      lightParamsId4: (json['LightParamsID4'] as num?)?.toInt() ?? 0,
+      lightParamsId5: (json['LightParamsID5'] as num?)?.toInt() ?? 0,
+      lightParamsId6: (json['LightParamsID6'] as num?)?.toInt() ?? 0,
+      lightParamsId7: (json['LightParamsID7'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefLightEntity &&
-            id == other.id &&
-            continentId == other.continentId &&
-            gameCoords0 == other.gameCoords0 &&
-            gameCoords1 == other.gameCoords1 &&
-            gameCoords2 == other.gameCoords2;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, continentId, gameCoords0, gameCoords1, gameCoords2]);
-
-  @override
-  String toString() {
-    return 'BriefLightEntity('
-        'id: $id, '
-        'continentId: $continentId, '
-        'gameCoords0: $gameCoords0, '
-        'gameCoords1: $gameCoords1, '
-        'gameCoords2: $gameCoords2'
-        ')';
   }
 }

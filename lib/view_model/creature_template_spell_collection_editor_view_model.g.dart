@@ -9,14 +9,9 @@ mixin _CreatureTemplateSpellCollectionEditorViewModelMixin
   late final spellController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  CreatureTemplateSpellEntity _collectCandidate() {
-    return CreatureTemplateSpellEntity(
-      creatureID: creatureIDController.collect(),
-      index: indexController.collect(),
-      spell: spellController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    CreatureTemplateSpellEntity creatureTemplateSpell,
+  ) {}
 
   void _applyCandidate(CreatureTemplateSpellEntity creatureTemplateSpell) {
     creatureIDController.init(creatureTemplateSpell.creatureID);
@@ -26,7 +21,12 @@ mixin _CreatureTemplateSpellCollectionEditorViewModelMixin
     _afterApplyCandidate(creatureTemplateSpell);
   }
 
-  void _afterApplyCandidate(
-    CreatureTemplateSpellEntity creatureTemplateSpell,
-  ) {}
+  CreatureTemplateSpellEntity _collectCandidate() {
+    return CreatureTemplateSpellEntity(
+      creatureID: creatureIDController.collect(),
+      index: indexController.collect(),
+      spell: spellController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

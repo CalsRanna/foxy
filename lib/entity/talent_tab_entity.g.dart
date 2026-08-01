@@ -2,34 +2,123 @@
 
 part of 'talent_tab_entity.dart';
 
-mixin _TalentTabEntityMixin {
-  static TalentTabEntity fromJson(Map<String, dynamic> json) {
-    return TalentTabEntity(
+final class BriefTalentTabEntity {
+  final int id;
+  final String nameLangZhCN;
+  final int classMask;
+  final int categoryEnumId;
+  final int orderIndex;
+
+  const BriefTalentTabEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.classMask = 0,
+    this.categoryEnumId = 0,
+    this.orderIndex = 0,
+  });
+
+  factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
+    return BriefTalentTabEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
-      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
-      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
-      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
-      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
-      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
-      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
-      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
-      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
-      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
-      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
-      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
-      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
-      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
-      raceMask: (json['RaceMask'] as num?)?.toInt() ?? 0,
       classMask: (json['ClassMask'] as num?)?.toInt() ?? 0,
       categoryEnumId: (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
       orderIndex: (json['OrderIndex'] as num?)?.toInt() ?? 0,
-      backgroundFile: json['BackgroundFile']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, nameLangZhCN, classMask, categoryEnumId, orderIndex]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefTalentTabEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            classMask == other.classMask &&
+            categoryEnumId == other.categoryEnumId &&
+            orderIndex == other.orderIndex;
+  }
+
+  @override
+  String toString() {
+    return 'BriefTalentTabEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'classMask: $classMask, '
+        'categoryEnumId: $categoryEnumId, '
+        'orderIndex: $orderIndex'
+        ')';
+  }
+}
+
+mixin _TalentTabEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as TalentTabEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.spellIconId,
+      self.raceMask,
+      self.classMask,
+      self.categoryEnumId,
+      self.orderIndex,
+      self.backgroundFile,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as TalentTabEntity;
+    return identical(self, other) ||
+        other is TalentTabEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.spellIconId == other.spellIconId &&
+            self.raceMask == other.raceMask &&
+            self.classMask == other.classMask &&
+            self.categoryEnumId == other.categoryEnumId &&
+            self.orderIndex == other.orderIndex &&
+            self.backgroundFile == other.backgroundFile;
   }
 
   TalentTabEntity copyWith({
@@ -118,70 +207,6 @@ mixin _TalentTabEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as TalentTabEntity;
-    return identical(self, other) ||
-        other is TalentTabEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.nameLangEnUS == other.nameLangEnUS &&
-            self.nameLangKoKR == other.nameLangKoKR &&
-            self.nameLangFrFR == other.nameLangFrFR &&
-            self.nameLangDeDE == other.nameLangDeDE &&
-            self.nameLangZhCN == other.nameLangZhCN &&
-            self.nameLangZhTW == other.nameLangZhTW &&
-            self.nameLangEsES == other.nameLangEsES &&
-            self.nameLangEsMX == other.nameLangEsMX &&
-            self.nameLangRuRU == other.nameLangRuRU &&
-            self.nameLangJaJP == other.nameLangJaJP &&
-            self.nameLangPtPT == other.nameLangPtPT &&
-            self.nameLangPtBR == other.nameLangPtBR &&
-            self.nameLangItIT == other.nameLangItIT &&
-            self.nameLangUnk1 == other.nameLangUnk1 &&
-            self.nameLangUnk2 == other.nameLangUnk2 &&
-            self.nameLangUnk3 == other.nameLangUnk3 &&
-            self.nameLangFlags == other.nameLangFlags &&
-            self.spellIconId == other.spellIconId &&
-            self.raceMask == other.raceMask &&
-            self.classMask == other.classMask &&
-            self.categoryEnumId == other.categoryEnumId &&
-            self.orderIndex == other.orderIndex &&
-            self.backgroundFile == other.backgroundFile;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as TalentTabEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.nameLangEnUS,
-      self.nameLangKoKR,
-      self.nameLangFrFR,
-      self.nameLangDeDE,
-      self.nameLangZhCN,
-      self.nameLangZhTW,
-      self.nameLangEsES,
-      self.nameLangEsMX,
-      self.nameLangRuRU,
-      self.nameLangJaJP,
-      self.nameLangPtPT,
-      self.nameLangPtBR,
-      self.nameLangItIT,
-      self.nameLangUnk1,
-      self.nameLangUnk2,
-      self.nameLangUnk3,
-      self.nameLangFlags,
-      self.spellIconId,
-      self.raceMask,
-      self.classMask,
-      self.categoryEnumId,
-      self.orderIndex,
-      self.backgroundFile,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as TalentTabEntity;
     return 'TalentTabEntity('
@@ -211,58 +236,33 @@ mixin _TalentTabEntityMixin {
         'backgroundFile: ${self.backgroundFile}'
         ')';
   }
-}
 
-final class BriefTalentTabEntity {
-  final int id;
-  final String nameLangZhCN;
-  final int classMask;
-  final int categoryEnumId;
-  final int orderIndex;
-
-  const BriefTalentTabEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.classMask = 0,
-    this.categoryEnumId = 0,
-    this.orderIndex = 0,
-  });
-
-  factory BriefTalentTabEntity.fromJson(Map<String, dynamic> json) {
-    return BriefTalentTabEntity(
+  static TalentTabEntity fromJson(Map<String, dynamic> json) {
+    return TalentTabEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
+      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
+      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
+      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
+      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
+      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
+      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
+      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
+      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
+      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
+      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
+      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
+      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
+      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      spellIconId: (json['SpellIconID'] as num?)?.toInt() ?? 0,
+      raceMask: (json['RaceMask'] as num?)?.toInt() ?? 0,
       classMask: (json['ClassMask'] as num?)?.toInt() ?? 0,
       categoryEnumId: (json['CategoryEnumID'] as num?)?.toInt() ?? 0,
       orderIndex: (json['OrderIndex'] as num?)?.toInt() ?? 0,
+      backgroundFile: json['BackgroundFile']?.toString() ?? '',
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefTalentTabEntity &&
-            id == other.id &&
-            nameLangZhCN == other.nameLangZhCN &&
-            classMask == other.classMask &&
-            categoryEnumId == other.categoryEnumId &&
-            orderIndex == other.orderIndex;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, nameLangZhCN, classMask, categoryEnumId, orderIndex]);
-
-  @override
-  String toString() {
-    return 'BriefTalentTabEntity('
-        'id: $id, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'classMask: $classMask, '
-        'categoryEnumId: $categoryEnumId, '
-        'orderIndex: $orderIndex'
-        ')';
   }
 }

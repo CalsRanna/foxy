@@ -2,58 +2,164 @@
 
 part of 'liquid_type_entity.dart';
 
-mixin _LiquidTypeEntityMixin {
-  static LiquidTypeEntity fromJson(Map<String, dynamic> json) {
-    return LiquidTypeEntity(
+final class BriefLiquidTypeEntity {
+  final int id;
+  final String name;
+  final int flags;
+  final int soundBank;
+  final int spellId;
+
+  const BriefLiquidTypeEntity({
+    this.id = 0,
+    this.name = '',
+    this.flags = 0,
+    this.soundBank = 0,
+    this.spellId = 0,
+  });
+
+  factory BriefLiquidTypeEntity.fromJson(Map<String, dynamic> json) {
+    return BriefLiquidTypeEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       soundBank: (json['SoundBank'] as num?)?.toInt() ?? 0,
-      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
       spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
-      maxDarkenDepth: (json['MaxDarkenDepth'] as num?)?.toDouble() ?? 0.0,
-      fogDarkenIntensity:
-          (json['FogDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
-      ambDarkenIntensity:
-          (json['AmbDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
-      dirDarkenIntensity:
-          (json['DirDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
-      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
-      particleScale: (json['ParticleScale'] as num?)?.toDouble() ?? 0.0,
-      particleMovement: (json['ParticleMovement'] as num?)?.toInt() ?? 0,
-      particleTexSlots: (json['ParticleTexSlots'] as num?)?.toInt() ?? 0,
-      materialId: (json['MaterialID'] as num?)?.toInt() ?? 0,
-      texture0: json['Texture0']?.toString() ?? '',
-      texture1: json['Texture1']?.toString() ?? '',
-      texture2: json['Texture2']?.toString() ?? '',
-      texture3: json['Texture3']?.toString() ?? '',
-      texture4: json['Texture4']?.toString() ?? '',
-      texture5: json['Texture5']?.toString() ?? '',
-      color0: (json['Color0'] as num?)?.toInt() ?? 0,
-      color1: (json['Color1'] as num?)?.toInt() ?? 0,
-      float0: (json['Float0'] as num?)?.toDouble() ?? 0.0,
-      float1: (json['Float1'] as num?)?.toDouble() ?? 0.0,
-      float2: (json['Float2'] as num?)?.toDouble() ?? 0.0,
-      float3: (json['Float3'] as num?)?.toDouble() ?? 0.0,
-      float4: (json['Float4'] as num?)?.toDouble() ?? 0.0,
-      float5: (json['Float5'] as num?)?.toDouble() ?? 0.0,
-      float6: (json['Float6'] as num?)?.toDouble() ?? 0.0,
-      float7: (json['Float7'] as num?)?.toDouble() ?? 0.0,
-      float8: (json['Float8'] as num?)?.toDouble() ?? 0.0,
-      float9: (json['Float9'] as num?)?.toDouble() ?? 0.0,
-      float10: (json['Float10'] as num?)?.toDouble() ?? 0.0,
-      float11: (json['Float11'] as num?)?.toDouble() ?? 0.0,
-      float12: (json['Float12'] as num?)?.toDouble() ?? 0.0,
-      float13: (json['Float13'] as num?)?.toDouble() ?? 0.0,
-      float14: (json['Float14'] as num?)?.toDouble() ?? 0.0,
-      float15: (json['Float15'] as num?)?.toDouble() ?? 0.0,
-      float16: (json['Float16'] as num?)?.toDouble() ?? 0.0,
-      float17: (json['Float17'] as num?)?.toDouble() ?? 0.0,
-      int0: (json['Int0'] as num?)?.toInt() ?? 0,
-      int1: (json['Int1'] as num?)?.toInt() ?? 0,
-      int2: (json['Int2'] as num?)?.toInt() ?? 0,
-      int3: (json['Int3'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, name, flags, soundBank, spellId]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefLiquidTypeEntity &&
+            id == other.id &&
+            name == other.name &&
+            flags == other.flags &&
+            soundBank == other.soundBank &&
+            spellId == other.spellId;
+  }
+
+  @override
+  String toString() {
+    return 'BriefLiquidTypeEntity('
+        'id: $id, '
+        'name: $name, '
+        'flags: $flags, '
+        'soundBank: $soundBank, '
+        'spellId: $spellId'
+        ')';
+  }
+}
+
+mixin _LiquidTypeEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as LiquidTypeEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.name,
+      self.flags,
+      self.soundBank,
+      self.soundId,
+      self.spellId,
+      self.maxDarkenDepth,
+      self.fogDarkenIntensity,
+      self.ambDarkenIntensity,
+      self.dirDarkenIntensity,
+      self.lightId,
+      self.particleScale,
+      self.particleMovement,
+      self.particleTexSlots,
+      self.materialId,
+      self.texture0,
+      self.texture1,
+      self.texture2,
+      self.texture3,
+      self.texture4,
+      self.texture5,
+      self.color0,
+      self.color1,
+      self.float0,
+      self.float1,
+      self.float2,
+      self.float3,
+      self.float4,
+      self.float5,
+      self.float6,
+      self.float7,
+      self.float8,
+      self.float9,
+      self.float10,
+      self.float11,
+      self.float12,
+      self.float13,
+      self.float14,
+      self.float15,
+      self.float16,
+      self.float17,
+      self.int0,
+      self.int1,
+      self.int2,
+      self.int3,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as LiquidTypeEntity;
+    return identical(self, other) ||
+        other is LiquidTypeEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.name == other.name &&
+            self.flags == other.flags &&
+            self.soundBank == other.soundBank &&
+            self.soundId == other.soundId &&
+            self.spellId == other.spellId &&
+            self.maxDarkenDepth == other.maxDarkenDepth &&
+            self.fogDarkenIntensity == other.fogDarkenIntensity &&
+            self.ambDarkenIntensity == other.ambDarkenIntensity &&
+            self.dirDarkenIntensity == other.dirDarkenIntensity &&
+            self.lightId == other.lightId &&
+            self.particleScale == other.particleScale &&
+            self.particleMovement == other.particleMovement &&
+            self.particleTexSlots == other.particleTexSlots &&
+            self.materialId == other.materialId &&
+            self.texture0 == other.texture0 &&
+            self.texture1 == other.texture1 &&
+            self.texture2 == other.texture2 &&
+            self.texture3 == other.texture3 &&
+            self.texture4 == other.texture4 &&
+            self.texture5 == other.texture5 &&
+            self.color0 == other.color0 &&
+            self.color1 == other.color1 &&
+            self.float0 == other.float0 &&
+            self.float1 == other.float1 &&
+            self.float2 == other.float2 &&
+            self.float3 == other.float3 &&
+            self.float4 == other.float4 &&
+            self.float5 == other.float5 &&
+            self.float6 == other.float6 &&
+            self.float7 == other.float7 &&
+            self.float8 == other.float8 &&
+            self.float9 == other.float9 &&
+            self.float10 == other.float10 &&
+            self.float11 == other.float11 &&
+            self.float12 == other.float12 &&
+            self.float13 == other.float13 &&
+            self.float14 == other.float14 &&
+            self.float15 == other.float15 &&
+            self.float16 == other.float16 &&
+            self.float17 == other.float17 &&
+            self.int0 == other.int0 &&
+            self.int1 == other.int1 &&
+            self.int2 == other.int2 &&
+            self.int3 == other.int3;
   }
 
   LiquidTypeEntity copyWith({
@@ -205,112 +311,6 @@ mixin _LiquidTypeEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as LiquidTypeEntity;
-    return identical(self, other) ||
-        other is LiquidTypeEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.name == other.name &&
-            self.flags == other.flags &&
-            self.soundBank == other.soundBank &&
-            self.soundId == other.soundId &&
-            self.spellId == other.spellId &&
-            self.maxDarkenDepth == other.maxDarkenDepth &&
-            self.fogDarkenIntensity == other.fogDarkenIntensity &&
-            self.ambDarkenIntensity == other.ambDarkenIntensity &&
-            self.dirDarkenIntensity == other.dirDarkenIntensity &&
-            self.lightId == other.lightId &&
-            self.particleScale == other.particleScale &&
-            self.particleMovement == other.particleMovement &&
-            self.particleTexSlots == other.particleTexSlots &&
-            self.materialId == other.materialId &&
-            self.texture0 == other.texture0 &&
-            self.texture1 == other.texture1 &&
-            self.texture2 == other.texture2 &&
-            self.texture3 == other.texture3 &&
-            self.texture4 == other.texture4 &&
-            self.texture5 == other.texture5 &&
-            self.color0 == other.color0 &&
-            self.color1 == other.color1 &&
-            self.float0 == other.float0 &&
-            self.float1 == other.float1 &&
-            self.float2 == other.float2 &&
-            self.float3 == other.float3 &&
-            self.float4 == other.float4 &&
-            self.float5 == other.float5 &&
-            self.float6 == other.float6 &&
-            self.float7 == other.float7 &&
-            self.float8 == other.float8 &&
-            self.float9 == other.float9 &&
-            self.float10 == other.float10 &&
-            self.float11 == other.float11 &&
-            self.float12 == other.float12 &&
-            self.float13 == other.float13 &&
-            self.float14 == other.float14 &&
-            self.float15 == other.float15 &&
-            self.float16 == other.float16 &&
-            self.float17 == other.float17 &&
-            self.int0 == other.int0 &&
-            self.int1 == other.int1 &&
-            self.int2 == other.int2 &&
-            self.int3 == other.int3;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as LiquidTypeEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.name,
-      self.flags,
-      self.soundBank,
-      self.soundId,
-      self.spellId,
-      self.maxDarkenDepth,
-      self.fogDarkenIntensity,
-      self.ambDarkenIntensity,
-      self.dirDarkenIntensity,
-      self.lightId,
-      self.particleScale,
-      self.particleMovement,
-      self.particleTexSlots,
-      self.materialId,
-      self.texture0,
-      self.texture1,
-      self.texture2,
-      self.texture3,
-      self.texture4,
-      self.texture5,
-      self.color0,
-      self.color1,
-      self.float0,
-      self.float1,
-      self.float2,
-      self.float3,
-      self.float4,
-      self.float5,
-      self.float6,
-      self.float7,
-      self.float8,
-      self.float9,
-      self.float10,
-      self.float11,
-      self.float12,
-      self.float13,
-      self.float14,
-      self.float15,
-      self.float16,
-      self.float17,
-      self.int0,
-      self.int1,
-      self.int2,
-      self.int3,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as LiquidTypeEntity;
     return 'LiquidTypeEntity('
@@ -361,57 +361,57 @@ mixin _LiquidTypeEntityMixin {
         'int3: ${self.int3}'
         ')';
   }
-}
 
-final class BriefLiquidTypeEntity {
-  final int id;
-  final String name;
-  final int flags;
-  final int soundBank;
-  final int spellId;
-
-  const BriefLiquidTypeEntity({
-    this.id = 0,
-    this.name = '',
-    this.flags = 0,
-    this.soundBank = 0,
-    this.spellId = 0,
-  });
-
-  factory BriefLiquidTypeEntity.fromJson(Map<String, dynamic> json) {
-    return BriefLiquidTypeEntity(
+  static LiquidTypeEntity fromJson(Map<String, dynamic> json) {
+    return LiquidTypeEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       name: json['Name']?.toString() ?? '',
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       soundBank: (json['SoundBank'] as num?)?.toInt() ?? 0,
+      soundId: (json['SoundID'] as num?)?.toInt() ?? 0,
       spellId: (json['SpellID'] as num?)?.toInt() ?? 0,
+      maxDarkenDepth: (json['MaxDarkenDepth'] as num?)?.toDouble() ?? 0.0,
+      fogDarkenIntensity:
+          (json['FogDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
+      ambDarkenIntensity:
+          (json['AmbDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
+      dirDarkenIntensity:
+          (json['DirDarkenIntensity'] as num?)?.toDouble() ?? 0.0,
+      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
+      particleScale: (json['ParticleScale'] as num?)?.toDouble() ?? 0.0,
+      particleMovement: (json['ParticleMovement'] as num?)?.toInt() ?? 0,
+      particleTexSlots: (json['ParticleTexSlots'] as num?)?.toInt() ?? 0,
+      materialId: (json['MaterialID'] as num?)?.toInt() ?? 0,
+      texture0: json['Texture0']?.toString() ?? '',
+      texture1: json['Texture1']?.toString() ?? '',
+      texture2: json['Texture2']?.toString() ?? '',
+      texture3: json['Texture3']?.toString() ?? '',
+      texture4: json['Texture4']?.toString() ?? '',
+      texture5: json['Texture5']?.toString() ?? '',
+      color0: (json['Color0'] as num?)?.toInt() ?? 0,
+      color1: (json['Color1'] as num?)?.toInt() ?? 0,
+      float0: (json['Float0'] as num?)?.toDouble() ?? 0.0,
+      float1: (json['Float1'] as num?)?.toDouble() ?? 0.0,
+      float2: (json['Float2'] as num?)?.toDouble() ?? 0.0,
+      float3: (json['Float3'] as num?)?.toDouble() ?? 0.0,
+      float4: (json['Float4'] as num?)?.toDouble() ?? 0.0,
+      float5: (json['Float5'] as num?)?.toDouble() ?? 0.0,
+      float6: (json['Float6'] as num?)?.toDouble() ?? 0.0,
+      float7: (json['Float7'] as num?)?.toDouble() ?? 0.0,
+      float8: (json['Float8'] as num?)?.toDouble() ?? 0.0,
+      float9: (json['Float9'] as num?)?.toDouble() ?? 0.0,
+      float10: (json['Float10'] as num?)?.toDouble() ?? 0.0,
+      float11: (json['Float11'] as num?)?.toDouble() ?? 0.0,
+      float12: (json['Float12'] as num?)?.toDouble() ?? 0.0,
+      float13: (json['Float13'] as num?)?.toDouble() ?? 0.0,
+      float14: (json['Float14'] as num?)?.toDouble() ?? 0.0,
+      float15: (json['Float15'] as num?)?.toDouble() ?? 0.0,
+      float16: (json['Float16'] as num?)?.toDouble() ?? 0.0,
+      float17: (json['Float17'] as num?)?.toDouble() ?? 0.0,
+      int0: (json['Int0'] as num?)?.toInt() ?? 0,
+      int1: (json['Int1'] as num?)?.toInt() ?? 0,
+      int2: (json['Int2'] as num?)?.toInt() ?? 0,
+      int3: (json['Int3'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefLiquidTypeEntity &&
-            id == other.id &&
-            name == other.name &&
-            flags == other.flags &&
-            soundBank == other.soundBank &&
-            spellId == other.spellId;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, name, flags, soundBank, spellId]);
-
-  @override
-  String toString() {
-    return 'BriefLiquidTypeEntity('
-        'id: $id, '
-        'name: $name, '
-        'flags: $flags, '
-        'soundBank: $soundBank, '
-        'spellId: $spellId'
-        ')';
   }
 }

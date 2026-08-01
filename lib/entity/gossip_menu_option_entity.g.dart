@@ -2,25 +2,161 @@
 
 part of 'gossip_menu_option_entity.dart';
 
-mixin _GossipMenuOptionEntityMixin {
-  static GossipMenuOptionEntity fromJson(Map<String, dynamic> json) {
-    return GossipMenuOptionEntity(
+final class BriefGossipMenuOptionEntity {
+  final int menuId;
+  final int optionId;
+  final int optionIcon;
+  final String optionText;
+  final int optionType;
+  final int optionNpcFlag;
+  final int actionMenuId;
+  final String localeOptionText;
+
+  const BriefGossipMenuOptionEntity({
+    this.menuId = 0,
+    this.optionId = 0,
+    this.optionIcon = 0,
+    this.optionText = '',
+    this.optionType = 0,
+    this.optionNpcFlag = 0,
+    this.actionMenuId = 0,
+    this.localeOptionText = '',
+  });
+
+  factory BriefGossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefGossipMenuOptionEntity(
       menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
       optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
       optionIcon: (json['OptionIcon'] as num?)?.toInt() ?? 0,
       optionText: json['OptionText']?.toString() ?? '',
-      optionBroadcastTextId:
-          (json['OptionBroadcastTextID'] as num?)?.toInt() ?? 0,
       optionType: (json['OptionType'] as num?)?.toInt() ?? 0,
       optionNpcFlag: (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
-      boxCoded: (json['BoxCoded'] as num?)?.toInt() ?? 0,
-      boxMoney: (json['BoxMoney'] as num?)?.toInt() ?? 0,
-      boxText: json['BoxText']?.toString() ?? '',
-      boxBroadcastTextId: (json['BoxBroadcastTextID'] as num?)?.toInt() ?? 0,
       actionMenuId: (json['ActionMenuID'] as num?)?.toInt() ?? 0,
-      actionPoiId: (json['ActionPoiID'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      localeOptionText: json['localeOptionText']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    menuId,
+    optionId,
+    optionIcon,
+    optionText,
+    optionType,
+    optionNpcFlag,
+    actionMenuId,
+    localeOptionText,
+  ]);
+
+  GossipMenuOptionKey get key {
+    return GossipMenuOptionKey(menuId: menuId, optionId: optionId);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefGossipMenuOptionEntity &&
+            menuId == other.menuId &&
+            optionId == other.optionId &&
+            optionIcon == other.optionIcon &&
+            optionText == other.optionText &&
+            optionType == other.optionType &&
+            optionNpcFlag == other.optionNpcFlag &&
+            actionMenuId == other.actionMenuId &&
+            localeOptionText == other.localeOptionText;
+  }
+
+  @override
+  String toString() {
+    return 'BriefGossipMenuOptionEntity('
+        'menuId: $menuId, '
+        'optionId: $optionId, '
+        'optionIcon: $optionIcon, '
+        'optionText: $optionText, '
+        'optionType: $optionType, '
+        'optionNpcFlag: $optionNpcFlag, '
+        'actionMenuId: $actionMenuId, '
+        'localeOptionText: $localeOptionText'
+        ')';
+  }
+}
+
+final class GossipMenuOptionKey {
+  final int menuId;
+  final int optionId;
+
+  const GossipMenuOptionKey({required this.menuId, required this.optionId});
+
+  factory GossipMenuOptionKey.fromEntity(GossipMenuOptionEntity entity) {
+    return GossipMenuOptionKey(
+      menuId: entity.menuId,
+      optionId: entity.optionId,
+    );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([menuId, optionId]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is GossipMenuOptionKey &&
+            menuId == other.menuId &&
+            optionId == other.optionId;
+  }
+
+  @override
+  String toString() {
+    return 'GossipMenuOptionKey('
+        'menuId: $menuId, '
+        'optionId: $optionId'
+        ')';
+  }
+}
+
+mixin _GossipMenuOptionEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GossipMenuOptionEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.menuId,
+      self.optionId,
+      self.optionIcon,
+      self.optionText,
+      self.optionBroadcastTextId,
+      self.optionType,
+      self.optionNpcFlag,
+      self.boxCoded,
+      self.boxMoney,
+      self.boxText,
+      self.boxBroadcastTextId,
+      self.actionMenuId,
+      self.actionPoiId,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GossipMenuOptionEntity;
+    return identical(self, other) ||
+        other is GossipMenuOptionEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.menuId == other.menuId &&
+            self.optionId == other.optionId &&
+            self.optionIcon == other.optionIcon &&
+            self.optionText == other.optionText &&
+            self.optionBroadcastTextId == other.optionBroadcastTextId &&
+            self.optionType == other.optionType &&
+            self.optionNpcFlag == other.optionNpcFlag &&
+            self.boxCoded == other.boxCoded &&
+            self.boxMoney == other.boxMoney &&
+            self.boxText == other.boxText &&
+            self.boxBroadcastTextId == other.boxBroadcastTextId &&
+            self.actionMenuId == other.actionMenuId &&
+            self.actionPoiId == other.actionPoiId &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   GossipMenuOptionEntity copyWith({
@@ -80,50 +216,6 @@ mixin _GossipMenuOptionEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as GossipMenuOptionEntity;
-    return identical(self, other) ||
-        other is GossipMenuOptionEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.menuId == other.menuId &&
-            self.optionId == other.optionId &&
-            self.optionIcon == other.optionIcon &&
-            self.optionText == other.optionText &&
-            self.optionBroadcastTextId == other.optionBroadcastTextId &&
-            self.optionType == other.optionType &&
-            self.optionNpcFlag == other.optionNpcFlag &&
-            self.boxCoded == other.boxCoded &&
-            self.boxMoney == other.boxMoney &&
-            self.boxText == other.boxText &&
-            self.boxBroadcastTextId == other.boxBroadcastTextId &&
-            self.actionMenuId == other.actionMenuId &&
-            self.actionPoiId == other.actionPoiId &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GossipMenuOptionEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.menuId,
-      self.optionId,
-      self.optionIcon,
-      self.optionText,
-      self.optionBroadcastTextId,
-      self.optionType,
-      self.optionNpcFlag,
-      self.boxCoded,
-      self.boxMoney,
-      self.boxText,
-      self.boxBroadcastTextId,
-      self.actionMenuId,
-      self.actionPoiId,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as GossipMenuOptionEntity;
     return 'GossipMenuOptionEntity('
@@ -143,116 +235,24 @@ mixin _GossipMenuOptionEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class GossipMenuOptionKey {
-  final int menuId;
-  final int optionId;
-
-  const GossipMenuOptionKey({required this.menuId, required this.optionId});
-
-  factory GossipMenuOptionKey.fromEntity(GossipMenuOptionEntity entity) {
-    return GossipMenuOptionKey(
-      menuId: entity.menuId,
-      optionId: entity.optionId,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is GossipMenuOptionKey &&
-            menuId == other.menuId &&
-            optionId == other.optionId;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([menuId, optionId]);
-
-  @override
-  String toString() {
-    return 'GossipMenuOptionKey('
-        'menuId: $menuId, '
-        'optionId: $optionId'
-        ')';
-  }
-}
-
-final class BriefGossipMenuOptionEntity {
-  final int menuId;
-  final int optionId;
-  final int optionIcon;
-  final String optionText;
-  final int optionType;
-  final int optionNpcFlag;
-  final int actionMenuId;
-  final String localeOptionText;
-
-  const BriefGossipMenuOptionEntity({
-    this.menuId = 0,
-    this.optionId = 0,
-    this.optionIcon = 0,
-    this.optionText = '',
-    this.optionType = 0,
-    this.optionNpcFlag = 0,
-    this.actionMenuId = 0,
-    this.localeOptionText = '',
-  });
-
-  factory BriefGossipMenuOptionEntity.fromJson(Map<String, dynamic> json) {
-    return BriefGossipMenuOptionEntity(
+  static GossipMenuOptionEntity fromJson(Map<String, dynamic> json) {
+    return GossipMenuOptionEntity(
       menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
       optionId: (json['OptionID'] as num?)?.toInt() ?? 0,
       optionIcon: (json['OptionIcon'] as num?)?.toInt() ?? 0,
       optionText: json['OptionText']?.toString() ?? '',
+      optionBroadcastTextId:
+          (json['OptionBroadcastTextID'] as num?)?.toInt() ?? 0,
       optionType: (json['OptionType'] as num?)?.toInt() ?? 0,
       optionNpcFlag: (json['OptionNpcFlag'] as num?)?.toInt() ?? 0,
+      boxCoded: (json['BoxCoded'] as num?)?.toInt() ?? 0,
+      boxMoney: (json['BoxMoney'] as num?)?.toInt() ?? 0,
+      boxText: json['BoxText']?.toString() ?? '',
+      boxBroadcastTextId: (json['BoxBroadcastTextID'] as num?)?.toInt() ?? 0,
       actionMenuId: (json['ActionMenuID'] as num?)?.toInt() ?? 0,
-      localeOptionText: json['localeOptionText']?.toString() ?? '',
+      actionPoiId: (json['ActionPoiID'] as num?)?.toInt() ?? 0,
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  GossipMenuOptionKey get key {
-    return GossipMenuOptionKey(menuId: menuId, optionId: optionId);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefGossipMenuOptionEntity &&
-            menuId == other.menuId &&
-            optionId == other.optionId &&
-            optionIcon == other.optionIcon &&
-            optionText == other.optionText &&
-            optionType == other.optionType &&
-            optionNpcFlag == other.optionNpcFlag &&
-            actionMenuId == other.actionMenuId &&
-            localeOptionText == other.localeOptionText;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    menuId,
-    optionId,
-    optionIcon,
-    optionText,
-    optionType,
-    optionNpcFlag,
-    actionMenuId,
-    localeOptionText,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefGossipMenuOptionEntity('
-        'menuId: $menuId, '
-        'optionId: $optionId, '
-        'optionIcon: $optionIcon, '
-        'optionText: $optionText, '
-        'optionType: $optionType, '
-        'optionNpcFlag: $optionNpcFlag, '
-        'actionMenuId: $actionMenuId, '
-        'localeOptionText: $localeOptionText'
-        ')';
   }
 }

@@ -7,12 +7,9 @@ mixin _GameObjectQuestStarterCollectionEditorViewModelMixin
   late final idController = registerController(IntFieldController());
   late final questController = registerController(IntFieldController());
 
-  GameObjectQuestStarterEntity _collectCandidate() {
-    return GameObjectQuestStarterEntity(
-      id: idController.collect(),
-      quest: questController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    GameObjectQuestStarterEntity gameObjectQuestStarter,
+  ) {}
 
   void _applyCandidate(GameObjectQuestStarterEntity gameObjectQuestStarter) {
     idController.init(gameObjectQuestStarter.id);
@@ -20,7 +17,10 @@ mixin _GameObjectQuestStarterCollectionEditorViewModelMixin
     _afterApplyCandidate(gameObjectQuestStarter);
   }
 
-  void _afterApplyCandidate(
-    GameObjectQuestStarterEntity gameObjectQuestStarter,
-  ) {}
+  GameObjectQuestStarterEntity _collectCandidate() {
+    return GameObjectQuestStarterEntity(
+      id: idController.collect(),
+      quest: questController.collect(),
+    );
+  }
 }

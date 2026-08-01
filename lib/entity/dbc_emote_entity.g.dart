@@ -2,17 +2,78 @@
 
 part of 'dbc_emote_entity.dart';
 
-mixin _DbcEmoteEntityMixin {
-  static DbcEmoteEntity fromJson(Map<String, dynamic> json) {
-    return DbcEmoteEntity(
+final class BriefDbcEmoteEntity {
+  final int id;
+  final String slashCommand;
+  final int animId;
+
+  const BriefDbcEmoteEntity({
+    this.id = 0,
+    this.slashCommand = '',
+    this.animId = 0,
+  });
+
+  factory BriefDbcEmoteEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcEmoteEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       slashCommand: json['EmoteSlashCommand']?.toString() ?? '',
       animId: (json['AnimID'] as num?)?.toInt() ?? 0,
-      flags: (json['EmoteFlags'] as num?)?.toInt() ?? 0,
-      specProc: (json['EmoteSpecProc'] as num?)?.toInt() ?? 0,
-      specProcParam: (json['EmoteSpecProcParam'] as num?)?.toInt() ?? 0,
-      eventSoundId: (json['EventSoundID'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, slashCommand, animId]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcEmoteEntity &&
+            id == other.id &&
+            slashCommand == other.slashCommand &&
+            animId == other.animId;
+  }
+
+  @override
+  String toString() {
+    return 'BriefDbcEmoteEntity('
+        'id: $id, '
+        'slashCommand: $slashCommand, '
+        'animId: $animId'
+        ')';
+  }
+}
+
+mixin _DbcEmoteEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as DbcEmoteEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.slashCommand,
+      self.animId,
+      self.flags,
+      self.specProc,
+      self.specProcParam,
+      self.eventSoundId,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as DbcEmoteEntity;
+    return identical(self, other) ||
+        other is DbcEmoteEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.slashCommand == other.slashCommand &&
+            self.animId == other.animId &&
+            self.flags == other.flags &&
+            self.specProc == other.specProc &&
+            self.specProcParam == other.specProcParam &&
+            self.eventSoundId == other.eventSoundId;
   }
 
   DbcEmoteEntity copyWith({
@@ -50,36 +111,6 @@ mixin _DbcEmoteEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as DbcEmoteEntity;
-    return identical(self, other) ||
-        other is DbcEmoteEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.slashCommand == other.slashCommand &&
-            self.animId == other.animId &&
-            self.flags == other.flags &&
-            self.specProc == other.specProc &&
-            self.specProcParam == other.specProcParam &&
-            self.eventSoundId == other.eventSoundId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as DbcEmoteEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.slashCommand,
-      self.animId,
-      self.flags,
-      self.specProc,
-      self.specProcParam,
-      self.eventSoundId,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as DbcEmoteEntity;
     return 'DbcEmoteEntity('
@@ -92,47 +123,16 @@ mixin _DbcEmoteEntityMixin {
         'eventSoundId: ${self.eventSoundId}'
         ')';
   }
-}
 
-final class BriefDbcEmoteEntity {
-  final int id;
-  final String slashCommand;
-  final int animId;
-
-  const BriefDbcEmoteEntity({
-    this.id = 0,
-    this.slashCommand = '',
-    this.animId = 0,
-  });
-
-  factory BriefDbcEmoteEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDbcEmoteEntity(
+  static DbcEmoteEntity fromJson(Map<String, dynamic> json) {
+    return DbcEmoteEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       slashCommand: json['EmoteSlashCommand']?.toString() ?? '',
       animId: (json['AnimID'] as num?)?.toInt() ?? 0,
+      flags: (json['EmoteFlags'] as num?)?.toInt() ?? 0,
+      specProc: (json['EmoteSpecProc'] as num?)?.toInt() ?? 0,
+      specProcParam: (json['EmoteSpecProcParam'] as num?)?.toInt() ?? 0,
+      eventSoundId: (json['EventSoundID'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefDbcEmoteEntity &&
-            id == other.id &&
-            slashCommand == other.slashCommand &&
-            animId == other.animId;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, slashCommand, animId]);
-
-  @override
-  String toString() {
-    return 'BriefDbcEmoteEntity('
-        'id: $id, '
-        'slashCommand: $slashCommand, '
-        'animId: $animId'
-        ')';
   }
 }

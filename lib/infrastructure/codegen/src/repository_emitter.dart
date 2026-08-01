@@ -4,6 +4,8 @@ import 'repository_model.dart';
 final class RepositoryEmitter {
   const RepositoryEmitter();
 
+  /// 成员顺序遵循 "Sort Members" 规则:公开方法按名(destroy → get
+  /// → store → update),私有方法按名(_before* → _whereKey)。
   String emit(RepositoryGenerationModel model) {
     final buffer = StringBuffer()
       ..writeln('mixin ${model.mixinName} on RepositoryMixin {');
@@ -12,27 +14,8 @@ final class RepositoryEmitter {
     _emitStore(buffer, model);
     _emitUpdate(buffer, model);
     _emitWriteHooks(buffer, model);
-    buffer.writeln(
-      '  QueryBuilder _whereKey(QueryBuilder builder, ${model.keyType} key) {',
-    );
-    if (model.keyFields.length == 1) {
-      buffer.writeln(
-        '    return builder.where('
-        '${_column(model.keyFields.single.columnName)}, key);',
-      );
-    } else {
-      buffer.writeln('    var query = builder;');
-      for (final field in model.keyFields) {
-        buffer.writeln(
-          '    query = query.where(${_column(field.columnName)}, '
-          'key.${field.dartName});',
-        );
-      }
-      buffer.writeln('    return query;');
-    }
-    buffer
-      ..writeln('  }')
-      ..writeln('}');
+    _emitWhereKey(buffer, model);
+    buffer.writeln('}');
     return buffer.toString();
   }
 
@@ -155,5 +138,27 @@ final class RepositoryEmitter {
         '${model.entityClassName} $parameter) async {}',
       )
       ..writeln();
+  }
+
+  void _emitWhereKey(StringBuffer buffer, RepositoryGenerationModel model) {
+    buffer.writeln(
+      '  QueryBuilder _whereKey(QueryBuilder builder, ${model.keyType} key) {',
+    );
+    if (model.keyFields.length == 1) {
+      buffer.writeln(
+        '    return builder.where('
+        '${_column(model.keyFields.single.columnName)}, key);',
+      );
+    } else {
+      buffer.writeln('    var query = builder;');
+      for (final field in model.keyFields) {
+        buffer.writeln(
+          '    query = query.where(${_column(field.columnName)}, '
+          'key.${field.dartName});',
+        );
+      }
+      buffer.writeln('    return query;');
+    }
+    buffer.writeln('  }');
   }
 }

@@ -2,6 +2,24 @@
 
 part of 'scaling_stat_distribution_repository.dart';
 
+final class ScalingStatDistributionFilter {
+  final String id;
+
+  const ScalingStatDistributionFilter({this.id = ''});
+
+  factory ScalingStatDistributionFilter.fromJson(Map<String, dynamic> json) {
+    return ScalingStatDistributionFilter(id: json['id']?.toString() ?? '');
+  }
+
+  ScalingStatDistributionFilter copyWith({String? id}) {
+    return ScalingStatDistributionFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
   Future<void> destroyScalingStatDistribution(int key) async {
     await _beforeDestroy(key);
@@ -79,23 +97,5 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class ScalingStatDistributionFilter {
-  final String id;
-
-  const ScalingStatDistributionFilter({this.id = ''});
-
-  factory ScalingStatDistributionFilter.fromJson(Map<String, dynamic> json) {
-    return ScalingStatDistributionFilter(id: json['id']?.toString() ?? '');
-  }
-
-  ScalingStatDistributionFilter copyWith({String? id}) {
-    return ScalingStatDistributionFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

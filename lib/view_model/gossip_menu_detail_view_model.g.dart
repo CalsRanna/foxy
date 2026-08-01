@@ -6,12 +6,7 @@ mixin _GossipMenuDetailViewModelMixin on FieldControllerMixin {
   late final menuIdController = registerController(IntFieldController());
   late final textIdController = registerController(IntFieldController());
 
-  GossipMenuEntity _collectCandidate() {
-    return GossipMenuEntity(
-      menuId: menuIdController.collect(),
-      textId: textIdController.collect(),
-    );
-  }
+  void _afterApplyCandidate(GossipMenuEntity gossipMenu) {}
 
   void _applyCandidate(GossipMenuEntity gossipMenu) {
     menuIdController.init(gossipMenu.menuId);
@@ -19,5 +14,10 @@ mixin _GossipMenuDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(gossipMenu);
   }
 
-  void _afterApplyCandidate(GossipMenuEntity gossipMenu) {}
+  GossipMenuEntity _collectCandidate() {
+    return GossipMenuEntity(
+      menuId: menuIdController.collect(),
+      textId: textIdController.collect(),
+    );
+  }
 }

@@ -14,18 +14,9 @@ mixin _CreatureTemplateAddonSingleEditorViewModelMixin on FieldControllerMixin {
   );
   late final aurasController = registerController(StringFieldController());
 
-  CreatureTemplateAddonEntity _collectCandidate() {
-    return CreatureTemplateAddonEntity(
-      entry: entryController.collect(),
-      pathId: pathIdController.collect(),
-      mount: mountController.collect(),
-      emote: emoteController.collect(),
-      bytes1: bytes1Controller.collect(),
-      bytes2: bytes2Controller.collect(),
-      visibilityDistanceType: visibilityDistanceTypeController.collect(),
-      auras: aurasController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    CreatureTemplateAddonEntity creatureTemplateAddon,
+  ) {}
 
   void _applyCandidate(CreatureTemplateAddonEntity creatureTemplateAddon) {
     entryController.init(creatureTemplateAddon.entry);
@@ -41,7 +32,16 @@ mixin _CreatureTemplateAddonSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(creatureTemplateAddon);
   }
 
-  void _afterApplyCandidate(
-    CreatureTemplateAddonEntity creatureTemplateAddon,
-  ) {}
+  CreatureTemplateAddonEntity _collectCandidate() {
+    return CreatureTemplateAddonEntity(
+      entry: entryController.collect(),
+      pathId: pathIdController.collect(),
+      mount: mountController.collect(),
+      emote: emoteController.collect(),
+      bytes1: bytes1Controller.collect(),
+      bytes2: bytes2Controller.collect(),
+      visibilityDistanceType: visibilityDistanceTypeController.collect(),
+      auras: aurasController.collect(),
+    );
+  }
 }

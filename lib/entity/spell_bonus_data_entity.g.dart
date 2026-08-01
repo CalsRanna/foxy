@@ -2,9 +2,25 @@
 
 part of 'spell_bonus_data_entity.dart';
 
-mixin _SpellBonusDataEntityMixin {
-  static SpellBonusDataEntity fromJson(Map<String, dynamic> json) {
-    return SpellBonusDataEntity(
+final class BriefSpellBonusDataEntity {
+  final int entry;
+  final double directBonus;
+  final double dotBonus;
+  final double apBonus;
+  final double apDotBonus;
+  final String comments;
+
+  const BriefSpellBonusDataEntity({
+    this.entry = 0,
+    this.directBonus = 0.0,
+    this.dotBonus = 0.0,
+    this.apBonus = 0.0,
+    this.apDotBonus = 0.0,
+    this.comments = '',
+  });
+
+  factory BriefSpellBonusDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefSpellBonusDataEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       directBonus: (json['direct_bonus'] as num?)?.toDouble() ?? 0.0,
       dotBonus: (json['dot_bonus'] as num?)?.toDouble() ?? 0.0,
@@ -12,6 +28,72 @@ mixin _SpellBonusDataEntityMixin {
       apDotBonus: (json['ap_dot_bonus'] as num?)?.toDouble() ?? 0.0,
       comments: json['comments']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    directBonus,
+    dotBonus,
+    apBonus,
+    apDotBonus,
+    comments,
+  ]);
+
+  int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefSpellBonusDataEntity &&
+            entry == other.entry &&
+            directBonus == other.directBonus &&
+            dotBonus == other.dotBonus &&
+            apBonus == other.apBonus &&
+            apDotBonus == other.apDotBonus &&
+            comments == other.comments;
+  }
+
+  @override
+  String toString() {
+    return 'BriefSpellBonusDataEntity('
+        'entry: $entry, '
+        'directBonus: $directBonus, '
+        'dotBonus: $dotBonus, '
+        'apBonus: $apBonus, '
+        'apDotBonus: $apDotBonus, '
+        'comments: $comments'
+        ')';
+  }
+}
+
+mixin _SpellBonusDataEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as SpellBonusDataEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.entry,
+      self.directBonus,
+      self.dotBonus,
+      self.apBonus,
+      self.apDotBonus,
+      self.comments,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as SpellBonusDataEntity;
+    return identical(self, other) ||
+        other is SpellBonusDataEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.entry == other.entry &&
+            self.directBonus == other.directBonus &&
+            self.dotBonus == other.dotBonus &&
+            self.apBonus == other.apBonus &&
+            self.apDotBonus == other.apDotBonus &&
+            self.comments == other.comments;
   }
 
   SpellBonusDataEntity copyWith({
@@ -46,34 +128,6 @@ mixin _SpellBonusDataEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as SpellBonusDataEntity;
-    return identical(self, other) ||
-        other is SpellBonusDataEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.entry == other.entry &&
-            self.directBonus == other.directBonus &&
-            self.dotBonus == other.dotBonus &&
-            self.apBonus == other.apBonus &&
-            self.apDotBonus == other.apDotBonus &&
-            self.comments == other.comments;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as SpellBonusDataEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.entry,
-      self.directBonus,
-      self.dotBonus,
-      self.apBonus,
-      self.apDotBonus,
-      self.comments,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as SpellBonusDataEntity;
     return 'SpellBonusDataEntity('
@@ -85,27 +139,9 @@ mixin _SpellBonusDataEntityMixin {
         'comments: ${self.comments}'
         ')';
   }
-}
 
-final class BriefSpellBonusDataEntity {
-  final int entry;
-  final double directBonus;
-  final double dotBonus;
-  final double apBonus;
-  final double apDotBonus;
-  final String comments;
-
-  const BriefSpellBonusDataEntity({
-    this.entry = 0,
-    this.directBonus = 0.0,
-    this.dotBonus = 0.0,
-    this.apBonus = 0.0,
-    this.apDotBonus = 0.0,
-    this.comments = '',
-  });
-
-  factory BriefSpellBonusDataEntity.fromJson(Map<String, dynamic> json) {
-    return BriefSpellBonusDataEntity(
+  static SpellBonusDataEntity fromJson(Map<String, dynamic> json) {
+    return SpellBonusDataEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
       directBonus: (json['direct_bonus'] as num?)?.toDouble() ?? 0.0,
       dotBonus: (json['dot_bonus'] as num?)?.toDouble() ?? 0.0,
@@ -113,41 +149,5 @@ final class BriefSpellBonusDataEntity {
       apDotBonus: (json['ap_dot_bonus'] as num?)?.toDouble() ?? 0.0,
       comments: json['comments']?.toString() ?? '',
     );
-  }
-
-  int get key => entry;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefSpellBonusDataEntity &&
-            entry == other.entry &&
-            directBonus == other.directBonus &&
-            dotBonus == other.dotBonus &&
-            apBonus == other.apBonus &&
-            apDotBonus == other.apDotBonus &&
-            comments == other.comments;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    entry,
-    directBonus,
-    dotBonus,
-    apBonus,
-    apDotBonus,
-    comments,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefSpellBonusDataEntity('
-        'entry: $entry, '
-        'directBonus: $directBonus, '
-        'dotBonus: $dotBonus, '
-        'apBonus: $apBonus, '
-        'apDotBonus: $apDotBonus, '
-        'comments: $comments'
-        ')';
   }
 }

@@ -2,14 +2,108 @@
 
 part of 'quest_offer_reward_locale_entity.dart';
 
-mixin _QuestOfferRewardLocaleEntityMixin {
-  static QuestOfferRewardLocaleEntity fromJson(Map<String, dynamic> json) {
-    return QuestOfferRewardLocaleEntity(
+final class BriefQuestOfferRewardLocaleEntity {
+  final int id;
+  final String locale;
+  final String rewardText;
+
+  const BriefQuestOfferRewardLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.rewardText = '',
+  });
+
+  factory BriefQuestOfferRewardLocaleEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefQuestOfferRewardLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, rewardText]);
+
+  QuestOfferRewardLocaleKey get key {
+    return QuestOfferRewardLocaleKey(id: id, locale: locale);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestOfferRewardLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            rewardText == other.rewardText;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestOfferRewardLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'rewardText: $rewardText'
+        ')';
+  }
+}
+
+final class QuestOfferRewardLocaleKey {
+  final int id;
+  final String locale;
+
+  const QuestOfferRewardLocaleKey({required this.id, required this.locale});
+
+  factory QuestOfferRewardLocaleKey.fromEntity(
+    QuestOfferRewardLocaleEntity entity,
+  ) {
+    return QuestOfferRewardLocaleKey(id: entity.id, locale: entity.locale);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is QuestOfferRewardLocaleKey &&
+            id == other.id &&
+            locale == other.locale;
+  }
+
+  @override
+  String toString() {
+    return 'QuestOfferRewardLocaleKey('
+        'id: $id, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+mixin _QuestOfferRewardLocaleEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestOfferRewardLocaleEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.locale,
+      self.rewardText,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestOfferRewardLocaleEntity;
+    return identical(self, other) ||
+        other is QuestOfferRewardLocaleEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.locale == other.locale &&
+            self.rewardText == other.rewardText &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   QuestOfferRewardLocaleEntity copyWith({
@@ -38,30 +132,6 @@ mixin _QuestOfferRewardLocaleEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestOfferRewardLocaleEntity;
-    return identical(self, other) ||
-        other is QuestOfferRewardLocaleEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.locale == other.locale &&
-            self.rewardText == other.rewardText &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestOfferRewardLocaleEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.locale,
-      self.rewardText,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestOfferRewardLocaleEntity;
     return 'QuestOfferRewardLocaleEntity('
@@ -71,83 +141,13 @@ mixin _QuestOfferRewardLocaleEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class QuestOfferRewardLocaleKey {
-  final int id;
-  final String locale;
-
-  const QuestOfferRewardLocaleKey({required this.id, required this.locale});
-
-  factory QuestOfferRewardLocaleKey.fromEntity(
-    QuestOfferRewardLocaleEntity entity,
-  ) {
-    return QuestOfferRewardLocaleKey(id: entity.id, locale: entity.locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is QuestOfferRewardLocaleKey &&
-            id == other.id &&
-            locale == other.locale;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale]);
-
-  @override
-  String toString() {
-    return 'QuestOfferRewardLocaleKey('
-        'id: $id, '
-        'locale: $locale'
-        ')';
-  }
-}
-
-final class BriefQuestOfferRewardLocaleEntity {
-  final int id;
-  final String locale;
-  final String rewardText;
-
-  const BriefQuestOfferRewardLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.rewardText = '',
-  });
-
-  factory BriefQuestOfferRewardLocaleEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefQuestOfferRewardLocaleEntity(
+  static QuestOfferRewardLocaleEntity fromJson(Map<String, dynamic> json) {
+    return QuestOfferRewardLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       rewardText: json['RewardText']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  QuestOfferRewardLocaleKey get key {
-    return QuestOfferRewardLocaleKey(id: id, locale: locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestOfferRewardLocaleEntity &&
-            id == other.id &&
-            locale == other.locale &&
-            rewardText == other.rewardText;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale, rewardText]);
-
-  @override
-  String toString() {
-    return 'BriefQuestOfferRewardLocaleEntity('
-        'id: $id, '
-        'locale: $locale, '
-        'rewardText: $rewardText'
-        ')';
   }
 }

@@ -14,20 +14,7 @@ mixin _NpcTrainerCollectionEditorViewModelMixin on FieldControllerMixin {
   late final reqLevelController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  NpcTrainerEntity _collectCandidate() {
-    return NpcTrainerEntity(
-      trainerId: trainerIdController.collect(),
-      spellId: spellIdController.collect(),
-      moneyCost: moneyCostController.collect(),
-      reqSkillLine: reqSkillLineController.collect(),
-      reqSkillRank: reqSkillRankController.collect(),
-      reqAbility1: reqAbility1Controller.collect(),
-      reqAbility2: reqAbility2Controller.collect(),
-      reqAbility3: reqAbility3Controller.collect(),
-      reqLevel: reqLevelController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(NpcTrainerEntity npcTrainer) {}
 
   void _applyCandidate(NpcTrainerEntity npcTrainer) {
     trainerIdController.init(npcTrainer.trainerId);
@@ -43,5 +30,18 @@ mixin _NpcTrainerCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(npcTrainer);
   }
 
-  void _afterApplyCandidate(NpcTrainerEntity npcTrainer) {}
+  NpcTrainerEntity _collectCandidate() {
+    return NpcTrainerEntity(
+      trainerId: trainerIdController.collect(),
+      spellId: spellIdController.collect(),
+      moneyCost: moneyCostController.collect(),
+      reqSkillLine: reqSkillLineController.collect(),
+      reqSkillRank: reqSkillRankController.collect(),
+      reqAbility1: reqAbility1Controller.collect(),
+      reqAbility2: reqAbility2Controller.collect(),
+      reqAbility3: reqAbility3Controller.collect(),
+      reqLevel: reqLevelController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

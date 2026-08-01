@@ -8,13 +8,9 @@ mixin _ItemEnchantmentTemplateCollectionEditorViewModelMixin
   late final enchController = registerController(IntFieldController());
   late final chanceController = registerController(DoubleFieldController());
 
-  ItemEnchantmentTemplateEntity _collectCandidate() {
-    return ItemEnchantmentTemplateEntity(
-      entry: entryController.collect(),
-      ench: enchController.collect(),
-      chance: chanceController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
+  ) {}
 
   void _applyCandidate(ItemEnchantmentTemplateEntity itemEnchantmentTemplate) {
     entryController.init(itemEnchantmentTemplate.entry);
@@ -23,7 +19,11 @@ mixin _ItemEnchantmentTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(itemEnchantmentTemplate);
   }
 
-  void _afterApplyCandidate(
-    ItemEnchantmentTemplateEntity itemEnchantmentTemplate,
-  ) {}
+  ItemEnchantmentTemplateEntity _collectCandidate() {
+    return ItemEnchantmentTemplateEntity(
+      entry: entryController.collect(),
+      ench: enchController.collect(),
+      chance: chanceController.collect(),
+    );
+  }
 }

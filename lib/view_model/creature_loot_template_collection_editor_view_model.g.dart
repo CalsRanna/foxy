@@ -17,20 +17,7 @@ mixin _CreatureLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  CreatureLootTemplateEntity _collectCandidate() {
-    return CreatureLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(CreatureLootTemplateEntity creatureLootTemplate) {}
 
   void _applyCandidate(CreatureLootTemplateEntity creatureLootTemplate) {
     entryController.init(creatureLootTemplate.entry);
@@ -46,5 +33,18 @@ mixin _CreatureLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(creatureLootTemplate);
   }
 
-  void _afterApplyCandidate(CreatureLootTemplateEntity creatureLootTemplate) {}
+  CreatureLootTemplateEntity _collectCandidate() {
+    return CreatureLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

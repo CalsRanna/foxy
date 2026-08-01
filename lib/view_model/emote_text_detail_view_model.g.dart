@@ -23,29 +23,7 @@ mixin _EmoteTextDetailViewModelMixin on FieldControllerMixin {
   late final emoteText14Controller = registerController(IntFieldController());
   late final emoteText15Controller = registerController(IntFieldController());
 
-  EmoteTextEntity _collectCandidate() {
-    return EmoteTextEntity(
-      id: idController.collect(),
-      name: nameController.collect(),
-      emoteId: emoteIdController.collect(),
-      emoteText0: emoteText0Controller.collect(),
-      emoteText1: emoteText1Controller.collect(),
-      emoteText2: emoteText2Controller.collect(),
-      emoteText3: emoteText3Controller.collect(),
-      emoteText4: emoteText4Controller.collect(),
-      emoteText5: emoteText5Controller.collect(),
-      emoteText6: emoteText6Controller.collect(),
-      emoteText7: emoteText7Controller.collect(),
-      emoteText8: emoteText8Controller.collect(),
-      emoteText9: emoteText9Controller.collect(),
-      emoteText10: emoteText10Controller.collect(),
-      emoteText11: emoteText11Controller.collect(),
-      emoteText12: emoteText12Controller.collect(),
-      emoteText13: emoteText13Controller.collect(),
-      emoteText14: emoteText14Controller.collect(),
-      emoteText15: emoteText15Controller.collect(),
-    );
-  }
+  void _afterApplyCandidate(EmoteTextEntity emoteText) {}
 
   void _applyCandidate(EmoteTextEntity emoteText) {
     idController.init(emoteText.id);
@@ -70,5 +48,27 @@ mixin _EmoteTextDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(emoteText);
   }
 
-  void _afterApplyCandidate(EmoteTextEntity emoteText) {}
+  EmoteTextEntity _collectCandidate() {
+    return EmoteTextEntity(
+      id: idController.collect(),
+      name: nameController.collect(),
+      emoteId: emoteIdController.collect(),
+      emoteText0: emoteText0Controller.collect(),
+      emoteText1: emoteText1Controller.collect(),
+      emoteText2: emoteText2Controller.collect(),
+      emoteText3: emoteText3Controller.collect(),
+      emoteText4: emoteText4Controller.collect(),
+      emoteText5: emoteText5Controller.collect(),
+      emoteText6: emoteText6Controller.collect(),
+      emoteText7: emoteText7Controller.collect(),
+      emoteText8: emoteText8Controller.collect(),
+      emoteText9: emoteText9Controller.collect(),
+      emoteText10: emoteText10Controller.collect(),
+      emoteText11: emoteText11Controller.collect(),
+      emoteText12: emoteText12Controller.collect(),
+      emoteText13: emoteText13Controller.collect(),
+      emoteText14: emoteText14Controller.collect(),
+      emoteText15: emoteText15Controller.collect(),
+    );
+  }
 }

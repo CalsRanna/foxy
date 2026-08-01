@@ -2,63 +2,176 @@
 
 part of 'item_set_entity.dart';
 
-mixin _ItemSetEntityMixin {
-  static ItemSetEntity fromJson(Map<String, dynamic> json) {
-    return ItemSetEntity(
+final class BriefItemSetEntity {
+  final int id;
+  final String nameLangZhCN;
+  final int requiredSkill;
+  final int requiredSkillRank;
+
+  const BriefItemSetEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.requiredSkill = 0,
+    this.requiredSkillRank = 0,
+  });
+
+  factory BriefItemSetEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemSetEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
-      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
-      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
-      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
-      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
-      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
-      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
-      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
-      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
-      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
-      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
-      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
-      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
-      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      itemId0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemId1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemId2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemId3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemId4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemId5: (json['ItemID5'] as num?)?.toInt() ?? 0,
-      itemId6: (json['ItemID6'] as num?)?.toInt() ?? 0,
-      itemId7: (json['ItemID7'] as num?)?.toInt() ?? 0,
-      itemId8: (json['ItemID8'] as num?)?.toInt() ?? 0,
-      itemId9: (json['ItemID9'] as num?)?.toInt() ?? 0,
-      itemId10: (json['ItemID10'] as num?)?.toInt() ?? 0,
-      itemId11: (json['ItemID11'] as num?)?.toInt() ?? 0,
-      itemId12: (json['ItemID12'] as num?)?.toInt() ?? 0,
-      itemId13: (json['ItemID13'] as num?)?.toInt() ?? 0,
-      itemId14: (json['ItemID14'] as num?)?.toInt() ?? 0,
-      itemId15: (json['ItemID15'] as num?)?.toInt() ?? 0,
-      itemId16: (json['ItemID16'] as num?)?.toInt() ?? 0,
-      setSpellId0: (json['SetSpellID0'] as num?)?.toInt() ?? 0,
-      setSpellId1: (json['SetSpellID1'] as num?)?.toInt() ?? 0,
-      setSpellId2: (json['SetSpellID2'] as num?)?.toInt() ?? 0,
-      setSpellId3: (json['SetSpellID3'] as num?)?.toInt() ?? 0,
-      setSpellId4: (json['SetSpellID4'] as num?)?.toInt() ?? 0,
-      setSpellId5: (json['SetSpellID5'] as num?)?.toInt() ?? 0,
-      setSpellId6: (json['SetSpellID6'] as num?)?.toInt() ?? 0,
-      setSpellId7: (json['SetSpellID7'] as num?)?.toInt() ?? 0,
-      setThreshold0: (json['SetThreshold0'] as num?)?.toInt() ?? 0,
-      setThreshold1: (json['SetThreshold1'] as num?)?.toInt() ?? 0,
-      setThreshold2: (json['SetThreshold2'] as num?)?.toInt() ?? 0,
-      setThreshold3: (json['SetThreshold3'] as num?)?.toInt() ?? 0,
-      setThreshold4: (json['SetThreshold4'] as num?)?.toInt() ?? 0,
-      setThreshold5: (json['SetThreshold5'] as num?)?.toInt() ?? 0,
-      setThreshold6: (json['SetThreshold6'] as num?)?.toInt() ?? 0,
-      setThreshold7: (json['SetThreshold7'] as num?)?.toInt() ?? 0,
       requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
       requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, nameLangZhCN, requiredSkill, requiredSkillRank]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemSetEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            requiredSkill == other.requiredSkill &&
+            requiredSkillRank == other.requiredSkillRank;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemSetEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'requiredSkill: $requiredSkill, '
+        'requiredSkillRank: $requiredSkillRank'
+        ')';
+  }
+}
+
+mixin _ItemSetEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemSetEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.itemId0,
+      self.itemId1,
+      self.itemId2,
+      self.itemId3,
+      self.itemId4,
+      self.itemId5,
+      self.itemId6,
+      self.itemId7,
+      self.itemId8,
+      self.itemId9,
+      self.itemId10,
+      self.itemId11,
+      self.itemId12,
+      self.itemId13,
+      self.itemId14,
+      self.itemId15,
+      self.itemId16,
+      self.setSpellId0,
+      self.setSpellId1,
+      self.setSpellId2,
+      self.setSpellId3,
+      self.setSpellId4,
+      self.setSpellId5,
+      self.setSpellId6,
+      self.setSpellId7,
+      self.setThreshold0,
+      self.setThreshold1,
+      self.setThreshold2,
+      self.setThreshold3,
+      self.setThreshold4,
+      self.setThreshold5,
+      self.setThreshold6,
+      self.setThreshold7,
+      self.requiredSkill,
+      self.requiredSkillRank,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemSetEntity;
+    return identical(self, other) ||
+        other is ItemSetEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.itemId0 == other.itemId0 &&
+            self.itemId1 == other.itemId1 &&
+            self.itemId2 == other.itemId2 &&
+            self.itemId3 == other.itemId3 &&
+            self.itemId4 == other.itemId4 &&
+            self.itemId5 == other.itemId5 &&
+            self.itemId6 == other.itemId6 &&
+            self.itemId7 == other.itemId7 &&
+            self.itemId8 == other.itemId8 &&
+            self.itemId9 == other.itemId9 &&
+            self.itemId10 == other.itemId10 &&
+            self.itemId11 == other.itemId11 &&
+            self.itemId12 == other.itemId12 &&
+            self.itemId13 == other.itemId13 &&
+            self.itemId14 == other.itemId14 &&
+            self.itemId15 == other.itemId15 &&
+            self.itemId16 == other.itemId16 &&
+            self.setSpellId0 == other.setSpellId0 &&
+            self.setSpellId1 == other.setSpellId1 &&
+            self.setSpellId2 == other.setSpellId2 &&
+            self.setSpellId3 == other.setSpellId3 &&
+            self.setSpellId4 == other.setSpellId4 &&
+            self.setSpellId5 == other.setSpellId5 &&
+            self.setSpellId6 == other.setSpellId6 &&
+            self.setSpellId7 == other.setSpellId7 &&
+            self.setThreshold0 == other.setThreshold0 &&
+            self.setThreshold1 == other.setThreshold1 &&
+            self.setThreshold2 == other.setThreshold2 &&
+            self.setThreshold3 == other.setThreshold3 &&
+            self.setThreshold4 == other.setThreshold4 &&
+            self.setThreshold5 == other.setThreshold5 &&
+            self.setThreshold6 == other.setThreshold6 &&
+            self.setThreshold7 == other.setThreshold7 &&
+            self.requiredSkill == other.requiredSkill &&
+            self.requiredSkillRank == other.requiredSkillRank;
   }
 
   ItemSetEntity copyWith({
@@ -234,128 +347,6 @@ mixin _ItemSetEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemSetEntity;
-    return identical(self, other) ||
-        other is ItemSetEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.nameLangEnUS == other.nameLangEnUS &&
-            self.nameLangKoKR == other.nameLangKoKR &&
-            self.nameLangFrFR == other.nameLangFrFR &&
-            self.nameLangDeDE == other.nameLangDeDE &&
-            self.nameLangZhCN == other.nameLangZhCN &&
-            self.nameLangZhTW == other.nameLangZhTW &&
-            self.nameLangEsES == other.nameLangEsES &&
-            self.nameLangEsMX == other.nameLangEsMX &&
-            self.nameLangRuRU == other.nameLangRuRU &&
-            self.nameLangJaJP == other.nameLangJaJP &&
-            self.nameLangPtPT == other.nameLangPtPT &&
-            self.nameLangPtBR == other.nameLangPtBR &&
-            self.nameLangItIT == other.nameLangItIT &&
-            self.nameLangUnk1 == other.nameLangUnk1 &&
-            self.nameLangUnk2 == other.nameLangUnk2 &&
-            self.nameLangUnk3 == other.nameLangUnk3 &&
-            self.nameLangFlags == other.nameLangFlags &&
-            self.itemId0 == other.itemId0 &&
-            self.itemId1 == other.itemId1 &&
-            self.itemId2 == other.itemId2 &&
-            self.itemId3 == other.itemId3 &&
-            self.itemId4 == other.itemId4 &&
-            self.itemId5 == other.itemId5 &&
-            self.itemId6 == other.itemId6 &&
-            self.itemId7 == other.itemId7 &&
-            self.itemId8 == other.itemId8 &&
-            self.itemId9 == other.itemId9 &&
-            self.itemId10 == other.itemId10 &&
-            self.itemId11 == other.itemId11 &&
-            self.itemId12 == other.itemId12 &&
-            self.itemId13 == other.itemId13 &&
-            self.itemId14 == other.itemId14 &&
-            self.itemId15 == other.itemId15 &&
-            self.itemId16 == other.itemId16 &&
-            self.setSpellId0 == other.setSpellId0 &&
-            self.setSpellId1 == other.setSpellId1 &&
-            self.setSpellId2 == other.setSpellId2 &&
-            self.setSpellId3 == other.setSpellId3 &&
-            self.setSpellId4 == other.setSpellId4 &&
-            self.setSpellId5 == other.setSpellId5 &&
-            self.setSpellId6 == other.setSpellId6 &&
-            self.setSpellId7 == other.setSpellId7 &&
-            self.setThreshold0 == other.setThreshold0 &&
-            self.setThreshold1 == other.setThreshold1 &&
-            self.setThreshold2 == other.setThreshold2 &&
-            self.setThreshold3 == other.setThreshold3 &&
-            self.setThreshold4 == other.setThreshold4 &&
-            self.setThreshold5 == other.setThreshold5 &&
-            self.setThreshold6 == other.setThreshold6 &&
-            self.setThreshold7 == other.setThreshold7 &&
-            self.requiredSkill == other.requiredSkill &&
-            self.requiredSkillRank == other.requiredSkillRank;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemSetEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.nameLangEnUS,
-      self.nameLangKoKR,
-      self.nameLangFrFR,
-      self.nameLangDeDE,
-      self.nameLangZhCN,
-      self.nameLangZhTW,
-      self.nameLangEsES,
-      self.nameLangEsMX,
-      self.nameLangRuRU,
-      self.nameLangJaJP,
-      self.nameLangPtPT,
-      self.nameLangPtBR,
-      self.nameLangItIT,
-      self.nameLangUnk1,
-      self.nameLangUnk2,
-      self.nameLangUnk3,
-      self.nameLangFlags,
-      self.itemId0,
-      self.itemId1,
-      self.itemId2,
-      self.itemId3,
-      self.itemId4,
-      self.itemId5,
-      self.itemId6,
-      self.itemId7,
-      self.itemId8,
-      self.itemId9,
-      self.itemId10,
-      self.itemId11,
-      self.itemId12,
-      self.itemId13,
-      self.itemId14,
-      self.itemId15,
-      self.itemId16,
-      self.setSpellId0,
-      self.setSpellId1,
-      self.setSpellId2,
-      self.setSpellId3,
-      self.setSpellId4,
-      self.setSpellId5,
-      self.setSpellId6,
-      self.setSpellId7,
-      self.setThreshold0,
-      self.setThreshold1,
-      self.setThreshold2,
-      self.setThreshold3,
-      self.setThreshold4,
-      self.setThreshold5,
-      self.setThreshold6,
-      self.setThreshold7,
-      self.requiredSkill,
-      self.requiredSkillRank,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemSetEntity;
     return 'ItemSetEntity('
@@ -414,53 +405,62 @@ mixin _ItemSetEntityMixin {
         'requiredSkillRank: ${self.requiredSkillRank}'
         ')';
   }
-}
 
-final class BriefItemSetEntity {
-  final int id;
-  final String nameLangZhCN;
-  final int requiredSkill;
-  final int requiredSkillRank;
-
-  const BriefItemSetEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.requiredSkill = 0,
-    this.requiredSkillRank = 0,
-  });
-
-  factory BriefItemSetEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemSetEntity(
+  static ItemSetEntity fromJson(Map<String, dynamic> json) {
+    return ItemSetEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
+      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
+      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
+      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
+      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
+      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
+      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
+      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
+      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
+      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
+      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
+      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
+      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
+      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      itemId0: (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemId1: (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemId2: (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemId3: (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemId4: (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemId5: (json['ItemID5'] as num?)?.toInt() ?? 0,
+      itemId6: (json['ItemID6'] as num?)?.toInt() ?? 0,
+      itemId7: (json['ItemID7'] as num?)?.toInt() ?? 0,
+      itemId8: (json['ItemID8'] as num?)?.toInt() ?? 0,
+      itemId9: (json['ItemID9'] as num?)?.toInt() ?? 0,
+      itemId10: (json['ItemID10'] as num?)?.toInt() ?? 0,
+      itemId11: (json['ItemID11'] as num?)?.toInt() ?? 0,
+      itemId12: (json['ItemID12'] as num?)?.toInt() ?? 0,
+      itemId13: (json['ItemID13'] as num?)?.toInt() ?? 0,
+      itemId14: (json['ItemID14'] as num?)?.toInt() ?? 0,
+      itemId15: (json['ItemID15'] as num?)?.toInt() ?? 0,
+      itemId16: (json['ItemID16'] as num?)?.toInt() ?? 0,
+      setSpellId0: (json['SetSpellID0'] as num?)?.toInt() ?? 0,
+      setSpellId1: (json['SetSpellID1'] as num?)?.toInt() ?? 0,
+      setSpellId2: (json['SetSpellID2'] as num?)?.toInt() ?? 0,
+      setSpellId3: (json['SetSpellID3'] as num?)?.toInt() ?? 0,
+      setSpellId4: (json['SetSpellID4'] as num?)?.toInt() ?? 0,
+      setSpellId5: (json['SetSpellID5'] as num?)?.toInt() ?? 0,
+      setSpellId6: (json['SetSpellID6'] as num?)?.toInt() ?? 0,
+      setSpellId7: (json['SetSpellID7'] as num?)?.toInt() ?? 0,
+      setThreshold0: (json['SetThreshold0'] as num?)?.toInt() ?? 0,
+      setThreshold1: (json['SetThreshold1'] as num?)?.toInt() ?? 0,
+      setThreshold2: (json['SetThreshold2'] as num?)?.toInt() ?? 0,
+      setThreshold3: (json['SetThreshold3'] as num?)?.toInt() ?? 0,
+      setThreshold4: (json['SetThreshold4'] as num?)?.toInt() ?? 0,
+      setThreshold5: (json['SetThreshold5'] as num?)?.toInt() ?? 0,
+      setThreshold6: (json['SetThreshold6'] as num?)?.toInt() ?? 0,
+      setThreshold7: (json['SetThreshold7'] as num?)?.toInt() ?? 0,
       requiredSkill: (json['RequiredSkill'] as num?)?.toInt() ?? 0,
       requiredSkillRank: (json['RequiredSkillRank'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemSetEntity &&
-            id == other.id &&
-            nameLangZhCN == other.nameLangZhCN &&
-            requiredSkill == other.requiredSkill &&
-            requiredSkillRank == other.requiredSkillRank;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, nameLangZhCN, requiredSkill, requiredSkillRank]);
-
-  @override
-  String toString() {
-    return 'BriefItemSetEntity('
-        'id: $id, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'requiredSkill: $requiredSkill, '
-        'requiredSkillRank: $requiredSkillRank'
-        ')';
   }
 }

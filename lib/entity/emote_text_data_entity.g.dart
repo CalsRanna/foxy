@@ -2,28 +2,92 @@
 
 part of 'emote_text_data_entity.dart';
 
-mixin _EmoteTextDataEntityMixin {
-  static EmoteTextDataEntity fromJson(Map<String, dynamic> json) {
-    return EmoteTextDataEntity(
+final class BriefEmoteTextDataEntity {
+  final int id;
+  final String textLangZhCN;
+
+  const BriefEmoteTextDataEntity({this.id = 0, this.textLangZhCN = ''});
+
+  factory BriefEmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefEmoteTextDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      textLangEnUS: json['Text_lang_enUS']?.toString() ?? '',
-      textLangKoKR: json['Text_lang_koKR']?.toString() ?? '',
-      textLangFrFR: json['Text_lang_frFR']?.toString() ?? '',
-      textLangDeDE: json['Text_lang_deDE']?.toString() ?? '',
       textLangZhCN: json['Text_lang_zhCN']?.toString() ?? '',
-      textLangZhTW: json['Text_lang_zhTW']?.toString() ?? '',
-      textLangEsES: json['Text_lang_esES']?.toString() ?? '',
-      textLangEsMX: json['Text_lang_esMX']?.toString() ?? '',
-      textLangRuRU: json['Text_lang_ruRU']?.toString() ?? '',
-      textLangJaJP: json['Text_lang_jaJP']?.toString() ?? '',
-      textLangPtPT: json['Text_lang_ptPT']?.toString() ?? '',
-      textLangPtBR: json['Text_lang_ptBR']?.toString() ?? '',
-      textLangItIT: json['Text_lang_itIT']?.toString() ?? '',
-      textLangUnk1: json['Text_lang_unk1']?.toString() ?? '',
-      textLangUnk2: json['Text_lang_unk2']?.toString() ?? '',
-      textLangUnk3: json['Text_lang_unk3']?.toString() ?? '',
-      textLangFlags: (json['Text_lang_Flags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, textLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefEmoteTextDataEntity &&
+            id == other.id &&
+            textLangZhCN == other.textLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefEmoteTextDataEntity('
+        'id: $id, '
+        'textLangZhCN: $textLangZhCN'
+        ')';
+  }
+}
+
+mixin _EmoteTextDataEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as EmoteTextDataEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.textLangEnUS,
+      self.textLangKoKR,
+      self.textLangFrFR,
+      self.textLangDeDE,
+      self.textLangZhCN,
+      self.textLangZhTW,
+      self.textLangEsES,
+      self.textLangEsMX,
+      self.textLangRuRU,
+      self.textLangJaJP,
+      self.textLangPtPT,
+      self.textLangPtBR,
+      self.textLangItIT,
+      self.textLangUnk1,
+      self.textLangUnk2,
+      self.textLangUnk3,
+      self.textLangFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as EmoteTextDataEntity;
+    return identical(self, other) ||
+        other is EmoteTextDataEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.textLangEnUS == other.textLangEnUS &&
+            self.textLangKoKR == other.textLangKoKR &&
+            self.textLangFrFR == other.textLangFrFR &&
+            self.textLangDeDE == other.textLangDeDE &&
+            self.textLangZhCN == other.textLangZhCN &&
+            self.textLangZhTW == other.textLangZhTW &&
+            self.textLangEsES == other.textLangEsES &&
+            self.textLangEsMX == other.textLangEsMX &&
+            self.textLangRuRU == other.textLangRuRU &&
+            self.textLangJaJP == other.textLangJaJP &&
+            self.textLangPtPT == other.textLangPtPT &&
+            self.textLangPtBR == other.textLangPtBR &&
+            self.textLangItIT == other.textLangItIT &&
+            self.textLangUnk1 == other.textLangUnk1 &&
+            self.textLangUnk2 == other.textLangUnk2 &&
+            self.textLangUnk3 == other.textLangUnk3 &&
+            self.textLangFlags == other.textLangFlags;
   }
 
   EmoteTextDataEntity copyWith({
@@ -94,58 +158,6 @@ mixin _EmoteTextDataEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as EmoteTextDataEntity;
-    return identical(self, other) ||
-        other is EmoteTextDataEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.textLangEnUS == other.textLangEnUS &&
-            self.textLangKoKR == other.textLangKoKR &&
-            self.textLangFrFR == other.textLangFrFR &&
-            self.textLangDeDE == other.textLangDeDE &&
-            self.textLangZhCN == other.textLangZhCN &&
-            self.textLangZhTW == other.textLangZhTW &&
-            self.textLangEsES == other.textLangEsES &&
-            self.textLangEsMX == other.textLangEsMX &&
-            self.textLangRuRU == other.textLangRuRU &&
-            self.textLangJaJP == other.textLangJaJP &&
-            self.textLangPtPT == other.textLangPtPT &&
-            self.textLangPtBR == other.textLangPtBR &&
-            self.textLangItIT == other.textLangItIT &&
-            self.textLangUnk1 == other.textLangUnk1 &&
-            self.textLangUnk2 == other.textLangUnk2 &&
-            self.textLangUnk3 == other.textLangUnk3 &&
-            self.textLangFlags == other.textLangFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as EmoteTextDataEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.textLangEnUS,
-      self.textLangKoKR,
-      self.textLangFrFR,
-      self.textLangDeDE,
-      self.textLangZhCN,
-      self.textLangZhTW,
-      self.textLangEsES,
-      self.textLangEsMX,
-      self.textLangRuRU,
-      self.textLangJaJP,
-      self.textLangPtPT,
-      self.textLangPtBR,
-      self.textLangItIT,
-      self.textLangUnk1,
-      self.textLangUnk2,
-      self.textLangUnk3,
-      self.textLangFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as EmoteTextDataEntity;
     return 'EmoteTextDataEntity('
@@ -169,39 +181,27 @@ mixin _EmoteTextDataEntityMixin {
         'textLangFlags: ${self.textLangFlags}'
         ')';
   }
-}
 
-final class BriefEmoteTextDataEntity {
-  final int id;
-  final String textLangZhCN;
-
-  const BriefEmoteTextDataEntity({this.id = 0, this.textLangZhCN = ''});
-
-  factory BriefEmoteTextDataEntity.fromJson(Map<String, dynamic> json) {
-    return BriefEmoteTextDataEntity(
+  static EmoteTextDataEntity fromJson(Map<String, dynamic> json) {
+    return EmoteTextDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      textLangEnUS: json['Text_lang_enUS']?.toString() ?? '',
+      textLangKoKR: json['Text_lang_koKR']?.toString() ?? '',
+      textLangFrFR: json['Text_lang_frFR']?.toString() ?? '',
+      textLangDeDE: json['Text_lang_deDE']?.toString() ?? '',
       textLangZhCN: json['Text_lang_zhCN']?.toString() ?? '',
+      textLangZhTW: json['Text_lang_zhTW']?.toString() ?? '',
+      textLangEsES: json['Text_lang_esES']?.toString() ?? '',
+      textLangEsMX: json['Text_lang_esMX']?.toString() ?? '',
+      textLangRuRU: json['Text_lang_ruRU']?.toString() ?? '',
+      textLangJaJP: json['Text_lang_jaJP']?.toString() ?? '',
+      textLangPtPT: json['Text_lang_ptPT']?.toString() ?? '',
+      textLangPtBR: json['Text_lang_ptBR']?.toString() ?? '',
+      textLangItIT: json['Text_lang_itIT']?.toString() ?? '',
+      textLangUnk1: json['Text_lang_unk1']?.toString() ?? '',
+      textLangUnk2: json['Text_lang_unk2']?.toString() ?? '',
+      textLangUnk3: json['Text_lang_unk3']?.toString() ?? '',
+      textLangFlags: (json['Text_lang_Flags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefEmoteTextDataEntity &&
-            id == other.id &&
-            textLangZhCN == other.textLangZhCN;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, textLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefEmoteTextDataEntity('
-        'id: $id, '
-        'textLangZhCN: $textLangZhCN'
-        ')';
   }
 }

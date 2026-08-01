@@ -2,72 +2,178 @@
 
 part of 'dbc_faction_entity.dart';
 
-mixin _DbcFactionEntityMixin {
-  static DbcFactionEntity fromJson(Map<String, dynamic> json) {
-    return DbcFactionEntity(
+final class BriefDbcFactionEntity {
+  final int id;
+  final String nameLangZhCN;
+  final String descriptionLangZhCN;
+
+  const BriefDbcFactionEntity({
+    this.id = 0,
+    this.nameLangZhCN = '',
+    this.descriptionLangZhCN = '',
+  });
+
+  factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcFactionEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      reputationIndex: (json['ReputationIndex'] as num?)?.toInt() ?? 0,
-      reputationRaceMask0: (json['ReputationRaceMask0'] as num?)?.toInt() ?? 0,
-      reputationRaceMask1: (json['ReputationRaceMask1'] as num?)?.toInt() ?? 0,
-      reputationRaceMask2: (json['ReputationRaceMask2'] as num?)?.toInt() ?? 0,
-      reputationRaceMask3: (json['ReputationRaceMask3'] as num?)?.toInt() ?? 0,
-      reputationClassMask0:
-          (json['ReputationClassMask0'] as num?)?.toInt() ?? 0,
-      reputationClassMask1:
-          (json['ReputationClassMask1'] as num?)?.toInt() ?? 0,
-      reputationClassMask2:
-          (json['ReputationClassMask2'] as num?)?.toInt() ?? 0,
-      reputationClassMask3:
-          (json['ReputationClassMask3'] as num?)?.toInt() ?? 0,
-      reputationBase0: (json['ReputationBase0'] as num?)?.toInt() ?? 0,
-      reputationBase1: (json['ReputationBase1'] as num?)?.toInt() ?? 0,
-      reputationBase2: (json['ReputationBase2'] as num?)?.toInt() ?? 0,
-      reputationBase3: (json['ReputationBase3'] as num?)?.toInt() ?? 0,
-      reputationFlags0: (json['ReputationFlags0'] as num?)?.toInt() ?? 0,
-      reputationFlags1: (json['ReputationFlags1'] as num?)?.toInt() ?? 0,
-      reputationFlags2: (json['ReputationFlags2'] as num?)?.toInt() ?? 0,
-      reputationFlags3: (json['ReputationFlags3'] as num?)?.toInt() ?? 0,
-      parentFactionId: (json['ParentFactionID'] as num?)?.toInt() ?? 0,
-      parentFactionMod0: (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
-      parentFactionMod1: (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
-      parentFactionCap0: (json['ParentFactionCap0'] as num?)?.toInt() ?? 0,
-      parentFactionCap1: (json['ParentFactionCap1'] as num?)?.toInt() ?? 0,
-      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
-      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
-      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
-      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
-      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
-      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
-      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
-      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
-      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
-      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
-      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
-      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
-      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
-      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
-      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
-      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN, descriptionLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcFactionEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN &&
+            descriptionLangZhCN == other.descriptionLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefDbcFactionEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN, '
+        'descriptionLangZhCN: $descriptionLangZhCN'
+        ')';
+  }
+}
+
+mixin _DbcFactionEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as DbcFactionEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.reputationIndex,
+      self.reputationRaceMask0,
+      self.reputationRaceMask1,
+      self.reputationRaceMask2,
+      self.reputationRaceMask3,
+      self.reputationClassMask0,
+      self.reputationClassMask1,
+      self.reputationClassMask2,
+      self.reputationClassMask3,
+      self.reputationBase0,
+      self.reputationBase1,
+      self.reputationBase2,
+      self.reputationBase3,
+      self.reputationFlags0,
+      self.reputationFlags1,
+      self.reputationFlags2,
+      self.reputationFlags3,
+      self.parentFactionId,
+      self.parentFactionMod0,
+      self.parentFactionMod1,
+      self.parentFactionCap0,
+      self.parentFactionCap1,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as DbcFactionEntity;
+    return identical(self, other) ||
+        other is DbcFactionEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.reputationIndex == other.reputationIndex &&
+            self.reputationRaceMask0 == other.reputationRaceMask0 &&
+            self.reputationRaceMask1 == other.reputationRaceMask1 &&
+            self.reputationRaceMask2 == other.reputationRaceMask2 &&
+            self.reputationRaceMask3 == other.reputationRaceMask3 &&
+            self.reputationClassMask0 == other.reputationClassMask0 &&
+            self.reputationClassMask1 == other.reputationClassMask1 &&
+            self.reputationClassMask2 == other.reputationClassMask2 &&
+            self.reputationClassMask3 == other.reputationClassMask3 &&
+            self.reputationBase0 == other.reputationBase0 &&
+            self.reputationBase1 == other.reputationBase1 &&
+            self.reputationBase2 == other.reputationBase2 &&
+            self.reputationBase3 == other.reputationBase3 &&
+            self.reputationFlags0 == other.reputationFlags0 &&
+            self.reputationFlags1 == other.reputationFlags1 &&
+            self.reputationFlags2 == other.reputationFlags2 &&
+            self.reputationFlags3 == other.reputationFlags3 &&
+            self.parentFactionId == other.parentFactionId &&
+            self.parentFactionMod0 == other.parentFactionMod0 &&
+            self.parentFactionMod1 == other.parentFactionMod1 &&
+            self.parentFactionCap0 == other.parentFactionCap0 &&
+            self.parentFactionCap1 == other.parentFactionCap1 &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags;
   }
 
   DbcFactionEntity copyWith({
@@ -255,136 +361,6 @@ mixin _DbcFactionEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as DbcFactionEntity;
-    return identical(self, other) ||
-        other is DbcFactionEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.reputationIndex == other.reputationIndex &&
-            self.reputationRaceMask0 == other.reputationRaceMask0 &&
-            self.reputationRaceMask1 == other.reputationRaceMask1 &&
-            self.reputationRaceMask2 == other.reputationRaceMask2 &&
-            self.reputationRaceMask3 == other.reputationRaceMask3 &&
-            self.reputationClassMask0 == other.reputationClassMask0 &&
-            self.reputationClassMask1 == other.reputationClassMask1 &&
-            self.reputationClassMask2 == other.reputationClassMask2 &&
-            self.reputationClassMask3 == other.reputationClassMask3 &&
-            self.reputationBase0 == other.reputationBase0 &&
-            self.reputationBase1 == other.reputationBase1 &&
-            self.reputationBase2 == other.reputationBase2 &&
-            self.reputationBase3 == other.reputationBase3 &&
-            self.reputationFlags0 == other.reputationFlags0 &&
-            self.reputationFlags1 == other.reputationFlags1 &&
-            self.reputationFlags2 == other.reputationFlags2 &&
-            self.reputationFlags3 == other.reputationFlags3 &&
-            self.parentFactionId == other.parentFactionId &&
-            self.parentFactionMod0 == other.parentFactionMod0 &&
-            self.parentFactionMod1 == other.parentFactionMod1 &&
-            self.parentFactionCap0 == other.parentFactionCap0 &&
-            self.parentFactionCap1 == other.parentFactionCap1 &&
-            self.nameLangEnUS == other.nameLangEnUS &&
-            self.nameLangKoKR == other.nameLangKoKR &&
-            self.nameLangFrFR == other.nameLangFrFR &&
-            self.nameLangDeDE == other.nameLangDeDE &&
-            self.nameLangZhCN == other.nameLangZhCN &&
-            self.nameLangZhTW == other.nameLangZhTW &&
-            self.nameLangEsES == other.nameLangEsES &&
-            self.nameLangEsMX == other.nameLangEsMX &&
-            self.nameLangRuRU == other.nameLangRuRU &&
-            self.nameLangJaJP == other.nameLangJaJP &&
-            self.nameLangPtPT == other.nameLangPtPT &&
-            self.nameLangPtBR == other.nameLangPtBR &&
-            self.nameLangItIT == other.nameLangItIT &&
-            self.nameLangUnk1 == other.nameLangUnk1 &&
-            self.nameLangUnk2 == other.nameLangUnk2 &&
-            self.nameLangUnk3 == other.nameLangUnk3 &&
-            self.nameLangFlags == other.nameLangFlags &&
-            self.descriptionLangEnUS == other.descriptionLangEnUS &&
-            self.descriptionLangKoKR == other.descriptionLangKoKR &&
-            self.descriptionLangFrFR == other.descriptionLangFrFR &&
-            self.descriptionLangDeDE == other.descriptionLangDeDE &&
-            self.descriptionLangZhCN == other.descriptionLangZhCN &&
-            self.descriptionLangZhTW == other.descriptionLangZhTW &&
-            self.descriptionLangEsES == other.descriptionLangEsES &&
-            self.descriptionLangEsMX == other.descriptionLangEsMX &&
-            self.descriptionLangRuRU == other.descriptionLangRuRU &&
-            self.descriptionLangJaJP == other.descriptionLangJaJP &&
-            self.descriptionLangPtPT == other.descriptionLangPtPT &&
-            self.descriptionLangPtBR == other.descriptionLangPtBR &&
-            self.descriptionLangItIT == other.descriptionLangItIT &&
-            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            self.descriptionLangFlags == other.descriptionLangFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as DbcFactionEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.reputationIndex,
-      self.reputationRaceMask0,
-      self.reputationRaceMask1,
-      self.reputationRaceMask2,
-      self.reputationRaceMask3,
-      self.reputationClassMask0,
-      self.reputationClassMask1,
-      self.reputationClassMask2,
-      self.reputationClassMask3,
-      self.reputationBase0,
-      self.reputationBase1,
-      self.reputationBase2,
-      self.reputationBase3,
-      self.reputationFlags0,
-      self.reputationFlags1,
-      self.reputationFlags2,
-      self.reputationFlags3,
-      self.parentFactionId,
-      self.parentFactionMod0,
-      self.parentFactionMod1,
-      self.parentFactionCap0,
-      self.parentFactionCap1,
-      self.nameLangEnUS,
-      self.nameLangKoKR,
-      self.nameLangFrFR,
-      self.nameLangDeDE,
-      self.nameLangZhCN,
-      self.nameLangZhTW,
-      self.nameLangEsES,
-      self.nameLangEsMX,
-      self.nameLangRuRU,
-      self.nameLangJaJP,
-      self.nameLangPtPT,
-      self.nameLangPtBR,
-      self.nameLangItIT,
-      self.nameLangUnk1,
-      self.nameLangUnk2,
-      self.nameLangUnk3,
-      self.nameLangFlags,
-      self.descriptionLangEnUS,
-      self.descriptionLangKoKR,
-      self.descriptionLangFrFR,
-      self.descriptionLangDeDE,
-      self.descriptionLangZhCN,
-      self.descriptionLangZhTW,
-      self.descriptionLangEsES,
-      self.descriptionLangEsMX,
-      self.descriptionLangRuRU,
-      self.descriptionLangJaJP,
-      self.descriptionLangPtPT,
-      self.descriptionLangPtBR,
-      self.descriptionLangItIT,
-      self.descriptionLangUnk1,
-      self.descriptionLangUnk2,
-      self.descriptionLangUnk3,
-      self.descriptionLangFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as DbcFactionEntity;
     return 'DbcFactionEntity('
@@ -447,47 +423,71 @@ mixin _DbcFactionEntityMixin {
         'descriptionLangFlags: ${self.descriptionLangFlags}'
         ')';
   }
-}
 
-final class BriefDbcFactionEntity {
-  final int id;
-  final String nameLangZhCN;
-  final String descriptionLangZhCN;
-
-  const BriefDbcFactionEntity({
-    this.id = 0,
-    this.nameLangZhCN = '',
-    this.descriptionLangZhCN = '',
-  });
-
-  factory BriefDbcFactionEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDbcFactionEntity(
+  static DbcFactionEntity fromJson(Map<String, dynamic> json) {
+    return DbcFactionEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      reputationIndex: (json['ReputationIndex'] as num?)?.toInt() ?? 0,
+      reputationRaceMask0: (json['ReputationRaceMask0'] as num?)?.toInt() ?? 0,
+      reputationRaceMask1: (json['ReputationRaceMask1'] as num?)?.toInt() ?? 0,
+      reputationRaceMask2: (json['ReputationRaceMask2'] as num?)?.toInt() ?? 0,
+      reputationRaceMask3: (json['ReputationRaceMask3'] as num?)?.toInt() ?? 0,
+      reputationClassMask0:
+          (json['ReputationClassMask0'] as num?)?.toInt() ?? 0,
+      reputationClassMask1:
+          (json['ReputationClassMask1'] as num?)?.toInt() ?? 0,
+      reputationClassMask2:
+          (json['ReputationClassMask2'] as num?)?.toInt() ?? 0,
+      reputationClassMask3:
+          (json['ReputationClassMask3'] as num?)?.toInt() ?? 0,
+      reputationBase0: (json['ReputationBase0'] as num?)?.toInt() ?? 0,
+      reputationBase1: (json['ReputationBase1'] as num?)?.toInt() ?? 0,
+      reputationBase2: (json['ReputationBase2'] as num?)?.toInt() ?? 0,
+      reputationBase3: (json['ReputationBase3'] as num?)?.toInt() ?? 0,
+      reputationFlags0: (json['ReputationFlags0'] as num?)?.toInt() ?? 0,
+      reputationFlags1: (json['ReputationFlags1'] as num?)?.toInt() ?? 0,
+      reputationFlags2: (json['ReputationFlags2'] as num?)?.toInt() ?? 0,
+      reputationFlags3: (json['ReputationFlags3'] as num?)?.toInt() ?? 0,
+      parentFactionId: (json['ParentFactionID'] as num?)?.toInt() ?? 0,
+      parentFactionMod0: (json['ParentFactionMod0'] as num?)?.toDouble() ?? 0.0,
+      parentFactionMod1: (json['ParentFactionMod1'] as num?)?.toDouble() ?? 0.0,
+      parentFactionCap0: (json['ParentFactionCap0'] as num?)?.toInt() ?? 0,
+      parentFactionCap1: (json['ParentFactionCap1'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
+      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
+      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
+      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
+      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
+      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
+      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
+      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
+      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
+      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
+      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
+      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
+      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
+      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
+      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
+      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
+      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
+      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
+      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
+      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
+      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
+      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
+      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
+      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
+      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
+      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
+      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
+      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
+      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
+      descriptionLangFlags:
+          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefDbcFactionEntity &&
-            id == other.id &&
-            nameLangZhCN == other.nameLangZhCN &&
-            descriptionLangZhCN == other.descriptionLangZhCN;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, nameLangZhCN, descriptionLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefDbcFactionEntity('
-        'id: $id, '
-        'nameLangZhCN: $nameLangZhCN, '
-        'descriptionLangZhCN: $descriptionLangZhCN'
-        ')';
   }
 }

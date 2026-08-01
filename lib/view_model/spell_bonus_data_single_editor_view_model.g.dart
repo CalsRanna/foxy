@@ -12,16 +12,7 @@ mixin _SpellBonusDataSingleEditorViewModelMixin on FieldControllerMixin {
   late final apDotBonusController = registerController(DoubleFieldController());
   late final commentsController = registerController(StringFieldController());
 
-  SpellBonusDataEntity _collectCandidate() {
-    return SpellBonusDataEntity(
-      entry: entryController.collect(),
-      directBonus: directBonusController.collect(),
-      dotBonus: dotBonusController.collect(),
-      apBonus: apBonusController.collect(),
-      apDotBonus: apDotBonusController.collect(),
-      comments: commentsController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellBonusDataEntity spellBonusData) {}
 
   void _applyCandidate(SpellBonusDataEntity spellBonusData) {
     entryController.init(spellBonusData.entry);
@@ -33,5 +24,14 @@ mixin _SpellBonusDataSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellBonusData);
   }
 
-  void _afterApplyCandidate(SpellBonusDataEntity spellBonusData) {}
+  SpellBonusDataEntity _collectCandidate() {
+    return SpellBonusDataEntity(
+      entry: entryController.collect(),
+      directBonus: directBonusController.collect(),
+      dotBonus: dotBonusController.collect(),
+      apBonus: apBonusController.collect(),
+      apDotBonus: apDotBonusController.collect(),
+      comments: commentsController.collect(),
+    );
+  }
 }

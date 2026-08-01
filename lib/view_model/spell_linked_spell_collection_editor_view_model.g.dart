@@ -10,14 +10,7 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
   );
   late final commentController = registerController(StringFieldController());
 
-  SpellLinkedSpellEntity _collectCandidate() {
-    return SpellLinkedSpellEntity(
-      spellTrigger: spellTriggerController.collect(),
-      spellEffect: spellEffectController.collect(),
-      type: typeController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellLinkedSpellEntity spellLinkedSpell) {}
 
   void _applyCandidate(SpellLinkedSpellEntity spellLinkedSpell) {
     spellTriggerController.init(spellLinkedSpell.spellTrigger);
@@ -27,5 +20,12 @@ mixin _SpellLinkedSpellCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellLinkedSpell);
   }
 
-  void _afterApplyCandidate(SpellLinkedSpellEntity spellLinkedSpell) {}
+  SpellLinkedSpellEntity _collectCandidate() {
+    return SpellLinkedSpellEntity(
+      spellTrigger: spellTriggerController.collect(),
+      spellEffect: spellEffectController.collect(),
+      type: typeController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

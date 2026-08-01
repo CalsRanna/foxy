@@ -2,6 +2,28 @@
 
 part of 'emote_text_repository.dart';
 
+final class EmoteTextFilter {
+  final String id;
+  final String name;
+
+  const EmoteTextFilter({this.id = '', this.name = ''});
+
+  factory EmoteTextFilter.fromJson(Map<String, dynamic> json) {
+    return EmoteTextFilter(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+
+  EmoteTextFilter copyWith({String? id, String? name}) {
+    return EmoteTextFilter(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
+}
+
 mixin _EmoteTextRepositoryMixin on RepositoryMixin {
   Future<void> destroyEmoteText(int key) async {
     await _beforeDestroy(key);
@@ -73,27 +95,5 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class EmoteTextFilter {
-  final String id;
-  final String name;
-
-  const EmoteTextFilter({this.id = '', this.name = ''});
-
-  factory EmoteTextFilter.fromJson(Map<String, dynamic> json) {
-    return EmoteTextFilter(
-      id: json['id']?.toString() ?? '',
-      name: json['name']?.toString() ?? '',
-    );
-  }
-
-  EmoteTextFilter copyWith({String? id, String? name}) {
-    return EmoteTextFilter(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name};
   }
 }

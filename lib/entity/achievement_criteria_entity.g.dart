@@ -2,42 +2,132 @@
 
 part of 'achievement_criteria_entity.dart';
 
-mixin _AchievementCriteriaEntityMixin {
-  static AchievementCriteriaEntity fromJson(Map<String, dynamic> json) {
-    return AchievementCriteriaEntity(
+final class BriefAchievementCriteriaEntity {
+  final int id;
+  final int achievementId;
+  final int type;
+  final String descriptionLangZhCN;
+
+  const BriefAchievementCriteriaEntity({
+    this.id = 0,
+    this.achievementId = 0,
+    this.type = 0,
+    this.descriptionLangZhCN = '',
+  });
+
+  factory BriefAchievementCriteriaEntity.fromJson(Map<String, dynamic> json) {
+    return BriefAchievementCriteriaEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       achievementId: (json['Achievement_ID'] as num?)?.toInt() ?? 0,
       type: (json['Type'] as num?)?.toInt() ?? 0,
-      assetId: (json['Asset_ID'] as num?)?.toInt() ?? 0,
-      quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
-      startEvent: (json['Start_event'] as num?)?.toInt() ?? 0,
-      startAsset: (json['Start_asset'] as num?)?.toInt() ?? 0,
-      failEvent: (json['Fail_event'] as num?)?.toInt() ?? 0,
-      failAsset: (json['Fail_asset'] as num?)?.toInt() ?? 0,
-      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
-      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
-      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
-      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
-      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
-      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
-      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
-      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
-      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
-      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
-      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
-      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
-      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
-      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
-      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
-      descriptionLangFlags:
-          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      timerStartEvent: (json['Timer_start_event'] as num?)?.toInt() ?? 0,
-      timerAssetId: (json['Timer_asset_ID'] as num?)?.toInt() ?? 0,
-      timerTime: (json['Timer_time'] as num?)?.toInt() ?? 0,
-      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, achievementId, type, descriptionLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAchievementCriteriaEntity &&
+            id == other.id &&
+            achievementId == other.achievementId &&
+            type == other.type &&
+            descriptionLangZhCN == other.descriptionLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefAchievementCriteriaEntity('
+        'id: $id, '
+        'achievementId: $achievementId, '
+        'type: $type, '
+        'descriptionLangZhCN: $descriptionLangZhCN'
+        ')';
+  }
+}
+
+mixin _AchievementCriteriaEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as AchievementCriteriaEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.achievementId,
+      self.type,
+      self.assetId,
+      self.quantity,
+      self.startEvent,
+      self.startAsset,
+      self.failEvent,
+      self.failAsset,
+      self.descriptionLangEnUS,
+      self.descriptionLangKoKR,
+      self.descriptionLangFrFR,
+      self.descriptionLangDeDE,
+      self.descriptionLangZhCN,
+      self.descriptionLangZhTW,
+      self.descriptionLangEsES,
+      self.descriptionLangEsMX,
+      self.descriptionLangRuRU,
+      self.descriptionLangJaJP,
+      self.descriptionLangPtPT,
+      self.descriptionLangPtBR,
+      self.descriptionLangItIT,
+      self.descriptionLangUnk1,
+      self.descriptionLangUnk2,
+      self.descriptionLangUnk3,
+      self.descriptionLangFlags,
+      self.flags,
+      self.timerStartEvent,
+      self.timerAssetId,
+      self.timerTime,
+      self.uiOrder,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AchievementCriteriaEntity;
+    return identical(self, other) ||
+        other is AchievementCriteriaEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.achievementId == other.achievementId &&
+            self.type == other.type &&
+            self.assetId == other.assetId &&
+            self.quantity == other.quantity &&
+            self.startEvent == other.startEvent &&
+            self.startAsset == other.startAsset &&
+            self.failEvent == other.failEvent &&
+            self.failAsset == other.failAsset &&
+            self.descriptionLangEnUS == other.descriptionLangEnUS &&
+            self.descriptionLangKoKR == other.descriptionLangKoKR &&
+            self.descriptionLangFrFR == other.descriptionLangFrFR &&
+            self.descriptionLangDeDE == other.descriptionLangDeDE &&
+            self.descriptionLangZhCN == other.descriptionLangZhCN &&
+            self.descriptionLangZhTW == other.descriptionLangZhTW &&
+            self.descriptionLangEsES == other.descriptionLangEsES &&
+            self.descriptionLangEsMX == other.descriptionLangEsMX &&
+            self.descriptionLangRuRU == other.descriptionLangRuRU &&
+            self.descriptionLangJaJP == other.descriptionLangJaJP &&
+            self.descriptionLangPtPT == other.descriptionLangPtPT &&
+            self.descriptionLangPtBR == other.descriptionLangPtBR &&
+            self.descriptionLangItIT == other.descriptionLangItIT &&
+            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
+            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
+            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
+            self.descriptionLangFlags == other.descriptionLangFlags &&
+            self.flags == other.flags &&
+            self.timerStartEvent == other.timerStartEvent &&
+            self.timerAssetId == other.timerAssetId &&
+            self.timerTime == other.timerTime &&
+            self.uiOrder == other.uiOrder;
   }
 
   AchievementCriteriaEntity copyWith({
@@ -147,84 +237,6 @@ mixin _AchievementCriteriaEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as AchievementCriteriaEntity;
-    return identical(self, other) ||
-        other is AchievementCriteriaEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.achievementId == other.achievementId &&
-            self.type == other.type &&
-            self.assetId == other.assetId &&
-            self.quantity == other.quantity &&
-            self.startEvent == other.startEvent &&
-            self.startAsset == other.startAsset &&
-            self.failEvent == other.failEvent &&
-            self.failAsset == other.failAsset &&
-            self.descriptionLangEnUS == other.descriptionLangEnUS &&
-            self.descriptionLangKoKR == other.descriptionLangKoKR &&
-            self.descriptionLangFrFR == other.descriptionLangFrFR &&
-            self.descriptionLangDeDE == other.descriptionLangDeDE &&
-            self.descriptionLangZhCN == other.descriptionLangZhCN &&
-            self.descriptionLangZhTW == other.descriptionLangZhTW &&
-            self.descriptionLangEsES == other.descriptionLangEsES &&
-            self.descriptionLangEsMX == other.descriptionLangEsMX &&
-            self.descriptionLangRuRU == other.descriptionLangRuRU &&
-            self.descriptionLangJaJP == other.descriptionLangJaJP &&
-            self.descriptionLangPtPT == other.descriptionLangPtPT &&
-            self.descriptionLangPtBR == other.descriptionLangPtBR &&
-            self.descriptionLangItIT == other.descriptionLangItIT &&
-            self.descriptionLangUnk1 == other.descriptionLangUnk1 &&
-            self.descriptionLangUnk2 == other.descriptionLangUnk2 &&
-            self.descriptionLangUnk3 == other.descriptionLangUnk3 &&
-            self.descriptionLangFlags == other.descriptionLangFlags &&
-            self.flags == other.flags &&
-            self.timerStartEvent == other.timerStartEvent &&
-            self.timerAssetId == other.timerAssetId &&
-            self.timerTime == other.timerTime &&
-            self.uiOrder == other.uiOrder;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AchievementCriteriaEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.achievementId,
-      self.type,
-      self.assetId,
-      self.quantity,
-      self.startEvent,
-      self.startAsset,
-      self.failEvent,
-      self.failAsset,
-      self.descriptionLangEnUS,
-      self.descriptionLangKoKR,
-      self.descriptionLangFrFR,
-      self.descriptionLangDeDE,
-      self.descriptionLangZhCN,
-      self.descriptionLangZhTW,
-      self.descriptionLangEsES,
-      self.descriptionLangEsMX,
-      self.descriptionLangRuRU,
-      self.descriptionLangJaJP,
-      self.descriptionLangPtPT,
-      self.descriptionLangPtBR,
-      self.descriptionLangItIT,
-      self.descriptionLangUnk1,
-      self.descriptionLangUnk2,
-      self.descriptionLangUnk3,
-      self.descriptionLangFlags,
-      self.flags,
-      self.timerStartEvent,
-      self.timerAssetId,
-      self.timerTime,
-      self.uiOrder,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as AchievementCriteriaEntity;
     return 'AchievementCriteriaEntity('
@@ -261,53 +273,41 @@ mixin _AchievementCriteriaEntityMixin {
         'uiOrder: ${self.uiOrder}'
         ')';
   }
-}
 
-final class BriefAchievementCriteriaEntity {
-  final int id;
-  final int achievementId;
-  final int type;
-  final String descriptionLangZhCN;
-
-  const BriefAchievementCriteriaEntity({
-    this.id = 0,
-    this.achievementId = 0,
-    this.type = 0,
-    this.descriptionLangZhCN = '',
-  });
-
-  factory BriefAchievementCriteriaEntity.fromJson(Map<String, dynamic> json) {
-    return BriefAchievementCriteriaEntity(
+  static AchievementCriteriaEntity fromJson(Map<String, dynamic> json) {
+    return AchievementCriteriaEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       achievementId: (json['Achievement_ID'] as num?)?.toInt() ?? 0,
       type: (json['Type'] as num?)?.toInt() ?? 0,
+      assetId: (json['Asset_ID'] as num?)?.toInt() ?? 0,
+      quantity: (json['Quantity'] as num?)?.toInt() ?? 0,
+      startEvent: (json['Start_event'] as num?)?.toInt() ?? 0,
+      startAsset: (json['Start_asset'] as num?)?.toInt() ?? 0,
+      failEvent: (json['Fail_event'] as num?)?.toInt() ?? 0,
+      failAsset: (json['Fail_asset'] as num?)?.toInt() ?? 0,
+      descriptionLangEnUS: json['Description_lang_enUS']?.toString() ?? '',
+      descriptionLangKoKR: json['Description_lang_koKR']?.toString() ?? '',
+      descriptionLangFrFR: json['Description_lang_frFR']?.toString() ?? '',
+      descriptionLangDeDE: json['Description_lang_deDE']?.toString() ?? '',
       descriptionLangZhCN: json['Description_lang_zhCN']?.toString() ?? '',
+      descriptionLangZhTW: json['Description_lang_zhTW']?.toString() ?? '',
+      descriptionLangEsES: json['Description_lang_esES']?.toString() ?? '',
+      descriptionLangEsMX: json['Description_lang_esMX']?.toString() ?? '',
+      descriptionLangRuRU: json['Description_lang_ruRU']?.toString() ?? '',
+      descriptionLangJaJP: json['Description_lang_jaJP']?.toString() ?? '',
+      descriptionLangPtPT: json['Description_lang_ptPT']?.toString() ?? '',
+      descriptionLangPtBR: json['Description_lang_ptBR']?.toString() ?? '',
+      descriptionLangItIT: json['Description_lang_itIT']?.toString() ?? '',
+      descriptionLangUnk1: json['Description_lang_unk1']?.toString() ?? '',
+      descriptionLangUnk2: json['Description_lang_unk2']?.toString() ?? '',
+      descriptionLangUnk3: json['Description_lang_unk3']?.toString() ?? '',
+      descriptionLangFlags:
+          (json['Description_lang_Flags'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      timerStartEvent: (json['Timer_start_event'] as num?)?.toInt() ?? 0,
+      timerAssetId: (json['Timer_asset_ID'] as num?)?.toInt() ?? 0,
+      timerTime: (json['Timer_time'] as num?)?.toInt() ?? 0,
+      uiOrder: (json['Ui_order'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefAchievementCriteriaEntity &&
-            id == other.id &&
-            achievementId == other.achievementId &&
-            type == other.type &&
-            descriptionLangZhCN == other.descriptionLangZhCN;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, achievementId, type, descriptionLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefAchievementCriteriaEntity('
-        'id: $id, '
-        'achievementId: $achievementId, '
-        'type: $type, '
-        'descriptionLangZhCN: $descriptionLangZhCN'
-        ')';
   }
 }

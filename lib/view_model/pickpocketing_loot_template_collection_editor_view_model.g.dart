@@ -17,20 +17,9 @@ mixin _PickpocketingLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  PickpocketingLootTemplateEntity _collectCandidate() {
-    return PickpocketingLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    PickpocketingLootTemplateEntity pickpocketingLootTemplate,
+  ) {}
 
   void _applyCandidate(
     PickpocketingLootTemplateEntity pickpocketingLootTemplate,
@@ -50,7 +39,18 @@ mixin _PickpocketingLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(pickpocketingLootTemplate);
   }
 
-  void _afterApplyCandidate(
-    PickpocketingLootTemplateEntity pickpocketingLootTemplate,
-  ) {}
+  PickpocketingLootTemplateEntity _collectCandidate() {
+    return PickpocketingLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }

@@ -43,45 +43,7 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
   late final scriptNameController = registerController(StringFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  GameObjectTemplateEntity _collectCandidate() {
-    return GameObjectTemplateEntity(
-      entry: entryController.collect(),
-      type: typeController.collect(),
-      displayId: displayIdController.collect(),
-      name: nameController.collect(),
-      iconName: iconNameController.collect(),
-      castBarCaption: castBarCaptionController.collect(),
-      unk1: unk1Controller.collect(),
-      size: sizeController.collect(),
-      data0: data0Controller.collect(),
-      data1: data1Controller.collect(),
-      data2: data2Controller.collect(),
-      data3: data3Controller.collect(),
-      data4: data4Controller.collect(),
-      data5: data5Controller.collect(),
-      data6: data6Controller.collect(),
-      data7: data7Controller.collect(),
-      data8: data8Controller.collect(),
-      data9: data9Controller.collect(),
-      data10: data10Controller.collect(),
-      data11: data11Controller.collect(),
-      data12: data12Controller.collect(),
-      data13: data13Controller.collect(),
-      data14: data14Controller.collect(),
-      data15: data15Controller.collect(),
-      data16: data16Controller.collect(),
-      data17: data17Controller.collect(),
-      data18: data18Controller.collect(),
-      data19: data19Controller.collect(),
-      data20: data20Controller.collect(),
-      data21: data21Controller.collect(),
-      data22: data22Controller.collect(),
-      data23: data23Controller.collect(),
-      aiName: aiNameController.collect(),
-      scriptName: scriptNameController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(GameObjectTemplateEntity gameObjectTemplate) {}
 
   void _applyCandidate(GameObjectTemplateEntity gameObjectTemplate) {
     entryController.init(gameObjectTemplate.entry);
@@ -122,5 +84,43 @@ mixin _GameObjectTemplateDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(gameObjectTemplate);
   }
 
-  void _afterApplyCandidate(GameObjectTemplateEntity gameObjectTemplate) {}
+  GameObjectTemplateEntity _collectCandidate() {
+    return GameObjectTemplateEntity(
+      entry: entryController.collect(),
+      type: typeController.collect(),
+      displayId: displayIdController.collect(),
+      name: nameController.collect(),
+      iconName: iconNameController.collect(),
+      castBarCaption: castBarCaptionController.collect(),
+      unk1: unk1Controller.collect(),
+      size: sizeController.collect(),
+      data0: data0Controller.collect(),
+      data1: data1Controller.collect(),
+      data2: data2Controller.collect(),
+      data3: data3Controller.collect(),
+      data4: data4Controller.collect(),
+      data5: data5Controller.collect(),
+      data6: data6Controller.collect(),
+      data7: data7Controller.collect(),
+      data8: data8Controller.collect(),
+      data9: data9Controller.collect(),
+      data10: data10Controller.collect(),
+      data11: data11Controller.collect(),
+      data12: data12Controller.collect(),
+      data13: data13Controller.collect(),
+      data14: data14Controller.collect(),
+      data15: data15Controller.collect(),
+      data16: data16Controller.collect(),
+      data17: data17Controller.collect(),
+      data18: data18Controller.collect(),
+      data19: data19Controller.collect(),
+      data20: data20Controller.collect(),
+      data21: data21Controller.collect(),
+      data22: data22Controller.collect(),
+      data23: data23Controller.collect(),
+      aiName: aiNameController.collect(),
+      scriptName: scriptNameController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

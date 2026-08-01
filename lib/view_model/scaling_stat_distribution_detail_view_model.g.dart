@@ -46,32 +46,9 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
   late final bonus9Controller = registerController(IntFieldController());
   late final maxlevelController = registerController(IntFieldController());
 
-  ScalingStatDistributionEntity _collectCandidate() {
-    return ScalingStatDistributionEntity(
-      id: idController.collect(),
-      statId0: statId0Controller.collect(),
-      statId1: statId1Controller.collect(),
-      statId2: statId2Controller.collect(),
-      statId3: statId3Controller.collect(),
-      statId4: statId4Controller.collect(),
-      statId5: statId5Controller.collect(),
-      statId6: statId6Controller.collect(),
-      statId7: statId7Controller.collect(),
-      statId8: statId8Controller.collect(),
-      statId9: statId9Controller.collect(),
-      bonus0: bonus0Controller.collect(),
-      bonus1: bonus1Controller.collect(),
-      bonus2: bonus2Controller.collect(),
-      bonus3: bonus3Controller.collect(),
-      bonus4: bonus4Controller.collect(),
-      bonus5: bonus5Controller.collect(),
-      bonus6: bonus6Controller.collect(),
-      bonus7: bonus7Controller.collect(),
-      bonus8: bonus8Controller.collect(),
-      bonus9: bonus9Controller.collect(),
-      maxlevel: maxlevelController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    ScalingStatDistributionEntity scalingStatDistribution,
+  ) {}
 
   void _applyCandidate(ScalingStatDistributionEntity scalingStatDistribution) {
     idController.init(scalingStatDistribution.id);
@@ -99,7 +76,30 @@ mixin _ScalingStatDistributionDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(scalingStatDistribution);
   }
 
-  void _afterApplyCandidate(
-    ScalingStatDistributionEntity scalingStatDistribution,
-  ) {}
+  ScalingStatDistributionEntity _collectCandidate() {
+    return ScalingStatDistributionEntity(
+      id: idController.collect(),
+      statId0: statId0Controller.collect(),
+      statId1: statId1Controller.collect(),
+      statId2: statId2Controller.collect(),
+      statId3: statId3Controller.collect(),
+      statId4: statId4Controller.collect(),
+      statId5: statId5Controller.collect(),
+      statId6: statId6Controller.collect(),
+      statId7: statId7Controller.collect(),
+      statId8: statId8Controller.collect(),
+      statId9: statId9Controller.collect(),
+      bonus0: bonus0Controller.collect(),
+      bonus1: bonus1Controller.collect(),
+      bonus2: bonus2Controller.collect(),
+      bonus3: bonus3Controller.collect(),
+      bonus4: bonus4Controller.collect(),
+      bonus5: bonus5Controller.collect(),
+      bonus6: bonus6Controller.collect(),
+      bonus7: bonus7Controller.collect(),
+      bonus8: bonus8Controller.collect(),
+      bonus9: bonus9Controller.collect(),
+      maxlevel: maxlevelController.collect(),
+    );
+  }
 }

@@ -2,83 +2,6 @@
 
 part of 'gossip_menu_entity.dart';
 
-mixin _GossipMenuEntityMixin {
-  static GossipMenuEntity fromJson(Map<String, dynamic> json) {
-    return GossipMenuEntity(
-      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
-      textId: (json['TextID'] as num?)?.toInt() ?? 0,
-    );
-  }
-
-  GossipMenuEntity copyWith({int? menuId, int? textId}) {
-    final self = this as GossipMenuEntity;
-    return GossipMenuEntity(
-      menuId: menuId ?? self.menuId,
-      textId: textId ?? self.textId,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    final self = this as GossipMenuEntity;
-    return {'MenuID': self.menuId, 'TextID': self.textId};
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as GossipMenuEntity;
-    return identical(self, other) ||
-        other is GossipMenuEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.menuId == other.menuId &&
-            self.textId == other.textId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as GossipMenuEntity;
-    return Object.hashAll([self.runtimeType, self.menuId, self.textId]);
-  }
-
-  @override
-  String toString() {
-    final self = this as GossipMenuEntity;
-    return 'GossipMenuEntity('
-        'menuId: ${self.menuId}, '
-        'textId: ${self.textId}'
-        ')';
-  }
-}
-
-final class GossipMenuKey {
-  final int menuId;
-  final int textId;
-
-  const GossipMenuKey({required this.menuId, required this.textId});
-
-  factory GossipMenuKey.fromEntity(GossipMenuEntity entity) {
-    return GossipMenuKey(menuId: entity.menuId, textId: entity.textId);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is GossipMenuKey &&
-            menuId == other.menuId &&
-            textId == other.textId;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([menuId, textId]);
-
-  @override
-  String toString() {
-    return 'GossipMenuKey('
-        'menuId: $menuId, '
-        'textId: $textId'
-        ')';
-  }
-}
-
 final class BriefGossipMenuEntity {
   final int menuId;
   final int textId;
@@ -107,6 +30,16 @@ final class BriefGossipMenuEntity {
     );
   }
 
+  @override
+  int get hashCode => Object.hashAll([
+    menuId,
+    textId,
+    text00,
+    text01,
+    textLocale00,
+    textLocale01,
+  ]);
+
   GossipMenuKey get key {
     return GossipMenuKey(menuId: menuId, textId: textId);
   }
@@ -124,16 +57,6 @@ final class BriefGossipMenuEntity {
   }
 
   @override
-  int get hashCode => Object.hashAll([
-    menuId,
-    textId,
-    text00,
-    text01,
-    textLocale00,
-    textLocale01,
-  ]);
-
-  @override
   String toString() {
     return 'BriefGossipMenuEntity('
         'menuId: $menuId, '
@@ -143,5 +66,82 @@ final class BriefGossipMenuEntity {
         'textLocale00: $textLocale00, '
         'textLocale01: $textLocale01'
         ')';
+  }
+}
+
+final class GossipMenuKey {
+  final int menuId;
+  final int textId;
+
+  const GossipMenuKey({required this.menuId, required this.textId});
+
+  factory GossipMenuKey.fromEntity(GossipMenuEntity entity) {
+    return GossipMenuKey(menuId: entity.menuId, textId: entity.textId);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([menuId, textId]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is GossipMenuKey &&
+            menuId == other.menuId &&
+            textId == other.textId;
+  }
+
+  @override
+  String toString() {
+    return 'GossipMenuKey('
+        'menuId: $menuId, '
+        'textId: $textId'
+        ')';
+  }
+}
+
+mixin _GossipMenuEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as GossipMenuEntity;
+    return Object.hashAll([self.runtimeType, self.menuId, self.textId]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as GossipMenuEntity;
+    return identical(self, other) ||
+        other is GossipMenuEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.menuId == other.menuId &&
+            self.textId == other.textId;
+  }
+
+  GossipMenuEntity copyWith({int? menuId, int? textId}) {
+    final self = this as GossipMenuEntity;
+    return GossipMenuEntity(
+      menuId: menuId ?? self.menuId,
+      textId: textId ?? self.textId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final self = this as GossipMenuEntity;
+    return {'MenuID': self.menuId, 'TextID': self.textId};
+  }
+
+  @override
+  String toString() {
+    final self = this as GossipMenuEntity;
+    return 'GossipMenuEntity('
+        'menuId: ${self.menuId}, '
+        'textId: ${self.textId}'
+        ')';
+  }
+
+  static GossipMenuEntity fromJson(Map<String, dynamic> json) {
+    return GossipMenuEntity(
+      menuId: (json['MenuID'] as num?)?.toInt() ?? 0,
+      textId: (json['TextID'] as num?)?.toInt() ?? 0,
+    );
   }
 }

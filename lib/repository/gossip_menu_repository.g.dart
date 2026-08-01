@@ -2,6 +2,31 @@
 
 part of 'gossip_menu_repository.dart';
 
+final class GossipMenuFilter {
+  final String menuId;
+  final String text;
+
+  const GossipMenuFilter({this.menuId = '', this.text = ''});
+
+  factory GossipMenuFilter.fromJson(Map<String, dynamic> json) {
+    return GossipMenuFilter(
+      menuId: json['menuId']?.toString() ?? '',
+      text: json['text']?.toString() ?? '',
+    );
+  }
+
+  GossipMenuFilter copyWith({String? menuId, String? text}) {
+    return GossipMenuFilter(
+      menuId: menuId ?? this.menuId,
+      text: text ?? this.text,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'menuId': menuId, 'text': text};
+  }
+}
+
 mixin _GossipMenuRepositoryMixin on RepositoryMixin {
   Future<void> destroyGossipMenu(GossipMenuKey key) async {
     await _beforeDestroy(key);
@@ -73,30 +98,5 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
     query = query.where('`MenuID`', key.menuId);
     query = query.where('`TextID`', key.textId);
     return query;
-  }
-}
-
-final class GossipMenuFilter {
-  final String menuId;
-  final String text;
-
-  const GossipMenuFilter({this.menuId = '', this.text = ''});
-
-  factory GossipMenuFilter.fromJson(Map<String, dynamic> json) {
-    return GossipMenuFilter(
-      menuId: json['menuId']?.toString() ?? '',
-      text: json['text']?.toString() ?? '',
-    );
-  }
-
-  GossipMenuFilter copyWith({String? menuId, String? text}) {
-    return GossipMenuFilter(
-      menuId: menuId ?? this.menuId,
-      text: text ?? this.text,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'menuId': menuId, 'text': text};
   }
 }

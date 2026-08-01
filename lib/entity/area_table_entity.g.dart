@@ -2,48 +2,159 @@
 
 part of 'area_table_entity.dart';
 
-mixin _AreaTableEntityMixin {
-  static AreaTableEntity fromJson(Map<String, dynamic> json) {
-    return AreaTableEntity(
+final class BriefAreaTableEntity {
+  final int id;
+  final int continentId;
+  final int zoneMusic;
+  final int explorationLevel;
+  final String areaNameLangZhCN;
+  final double minElevation;
+
+  const BriefAreaTableEntity({
+    this.id = 0,
+    this.continentId = 0,
+    this.zoneMusic = 0,
+    this.explorationLevel = 0,
+    this.areaNameLangZhCN = '',
+    this.minElevation = 0.0,
+  });
+
+  factory BriefAreaTableEntity.fromJson(Map<String, dynamic> json) {
+    return BriefAreaTableEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
-      parentAreaId: (json['ParentAreaID'] as num?)?.toInt() ?? 0,
-      areaBit: (json['AreaBit'] as num?)?.toInt() ?? 0,
-      flags: (json['Flags'] as num?)?.toInt() ?? 0,
-      soundProviderPref: (json['SoundProviderPref'] as num?)?.toInt() ?? 0,
-      soundProviderPrefUnderwater:
-          (json['SoundProviderPrefUnderwater'] as num?)?.toInt() ?? 0,
-      ambienceId: (json['AmbienceID'] as num?)?.toInt() ?? 0,
       zoneMusic: (json['ZoneMusic'] as num?)?.toInt() ?? 0,
-      introSound: (json['IntroSound'] as num?)?.toInt() ?? 0,
       explorationLevel: (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
-      areaNameLangEnUS: json['AreaName_lang_enUS']?.toString() ?? '',
-      areaNameLangKoKR: json['AreaName_lang_koKR']?.toString() ?? '',
-      areaNameLangFrFR: json['AreaName_lang_frFR']?.toString() ?? '',
-      areaNameLangDeDE: json['AreaName_lang_deDE']?.toString() ?? '',
       areaNameLangZhCN: json['AreaName_lang_zhCN']?.toString() ?? '',
-      areaNameLangZhTW: json['AreaName_lang_zhTW']?.toString() ?? '',
-      areaNameLangEsES: json['AreaName_lang_esES']?.toString() ?? '',
-      areaNameLangEsMX: json['AreaName_lang_esMX']?.toString() ?? '',
-      areaNameLangRuRU: json['AreaName_lang_ruRU']?.toString() ?? '',
-      areaNameLangJaJP: json['AreaName_lang_jaJP']?.toString() ?? '',
-      areaNameLangPtPT: json['AreaName_lang_ptPT']?.toString() ?? '',
-      areaNameLangPtBR: json['AreaName_lang_ptBR']?.toString() ?? '',
-      areaNameLangItIT: json['AreaName_lang_itIT']?.toString() ?? '',
-      areaNameLangUnk1: json['AreaName_lang_unk1']?.toString() ?? '',
-      areaNameLangUnk2: json['AreaName_lang_unk2']?.toString() ?? '',
-      areaNameLangUnk3: json['AreaName_lang_unk3']?.toString() ?? '',
-      areaNameLangFlags: (json['AreaName_lang_Flags'] as num?)?.toInt() ?? 0,
-      factionGroupMask: (json['FactionGroupMask'] as num?)?.toInt() ?? 0,
-      liquidTypeId0: (json['LiquidTypeID0'] as num?)?.toInt() ?? 0,
-      liquidTypeId1: (json['LiquidTypeID1'] as num?)?.toInt() ?? 0,
-      liquidTypeId2: (json['LiquidTypeID2'] as num?)?.toInt() ?? 0,
-      liquidTypeId3: (json['LiquidTypeID3'] as num?)?.toInt() ?? 0,
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
-      ambientMultiplier:
-          (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
-      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    continentId,
+    zoneMusic,
+    explorationLevel,
+    areaNameLangZhCN,
+    minElevation,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefAreaTableEntity &&
+            id == other.id &&
+            continentId == other.continentId &&
+            zoneMusic == other.zoneMusic &&
+            explorationLevel == other.explorationLevel &&
+            areaNameLangZhCN == other.areaNameLangZhCN &&
+            minElevation == other.minElevation;
+  }
+
+  @override
+  String toString() {
+    return 'BriefAreaTableEntity('
+        'id: $id, '
+        'continentId: $continentId, '
+        'zoneMusic: $zoneMusic, '
+        'explorationLevel: $explorationLevel, '
+        'areaNameLangZhCN: $areaNameLangZhCN, '
+        'minElevation: $minElevation'
+        ')';
+  }
+}
+
+mixin _AreaTableEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as AreaTableEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.continentId,
+      self.parentAreaId,
+      self.areaBit,
+      self.flags,
+      self.soundProviderPref,
+      self.soundProviderPrefUnderwater,
+      self.ambienceId,
+      self.zoneMusic,
+      self.introSound,
+      self.explorationLevel,
+      self.areaNameLangEnUS,
+      self.areaNameLangKoKR,
+      self.areaNameLangFrFR,
+      self.areaNameLangDeDE,
+      self.areaNameLangZhCN,
+      self.areaNameLangZhTW,
+      self.areaNameLangEsES,
+      self.areaNameLangEsMX,
+      self.areaNameLangRuRU,
+      self.areaNameLangJaJP,
+      self.areaNameLangPtPT,
+      self.areaNameLangPtBR,
+      self.areaNameLangItIT,
+      self.areaNameLangUnk1,
+      self.areaNameLangUnk2,
+      self.areaNameLangUnk3,
+      self.areaNameLangFlags,
+      self.factionGroupMask,
+      self.liquidTypeId0,
+      self.liquidTypeId1,
+      self.liquidTypeId2,
+      self.liquidTypeId3,
+      self.minElevation,
+      self.ambientMultiplier,
+      self.lightId,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AreaTableEntity;
+    return identical(self, other) ||
+        other is AreaTableEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.continentId == other.continentId &&
+            self.parentAreaId == other.parentAreaId &&
+            self.areaBit == other.areaBit &&
+            self.flags == other.flags &&
+            self.soundProviderPref == other.soundProviderPref &&
+            self.soundProviderPrefUnderwater ==
+                other.soundProviderPrefUnderwater &&
+            self.ambienceId == other.ambienceId &&
+            self.zoneMusic == other.zoneMusic &&
+            self.introSound == other.introSound &&
+            self.explorationLevel == other.explorationLevel &&
+            self.areaNameLangEnUS == other.areaNameLangEnUS &&
+            self.areaNameLangKoKR == other.areaNameLangKoKR &&
+            self.areaNameLangFrFR == other.areaNameLangFrFR &&
+            self.areaNameLangDeDE == other.areaNameLangDeDE &&
+            self.areaNameLangZhCN == other.areaNameLangZhCN &&
+            self.areaNameLangZhTW == other.areaNameLangZhTW &&
+            self.areaNameLangEsES == other.areaNameLangEsES &&
+            self.areaNameLangEsMX == other.areaNameLangEsMX &&
+            self.areaNameLangRuRU == other.areaNameLangRuRU &&
+            self.areaNameLangJaJP == other.areaNameLangJaJP &&
+            self.areaNameLangPtPT == other.areaNameLangPtPT &&
+            self.areaNameLangPtBR == other.areaNameLangPtBR &&
+            self.areaNameLangItIT == other.areaNameLangItIT &&
+            self.areaNameLangUnk1 == other.areaNameLangUnk1 &&
+            self.areaNameLangUnk2 == other.areaNameLangUnk2 &&
+            self.areaNameLangUnk3 == other.areaNameLangUnk3 &&
+            self.areaNameLangFlags == other.areaNameLangFlags &&
+            self.factionGroupMask == other.factionGroupMask &&
+            self.liquidTypeId0 == other.liquidTypeId0 &&
+            self.liquidTypeId1 == other.liquidTypeId1 &&
+            self.liquidTypeId2 == other.liquidTypeId2 &&
+            self.liquidTypeId3 == other.liquidTypeId3 &&
+            self.minElevation == other.minElevation &&
+            self.ambientMultiplier == other.ambientMultiplier &&
+            self.lightId == other.lightId;
   }
 
   AreaTableEntity copyWith({
@@ -169,95 +280,6 @@ mixin _AreaTableEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as AreaTableEntity;
-    return identical(self, other) ||
-        other is AreaTableEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.continentId == other.continentId &&
-            self.parentAreaId == other.parentAreaId &&
-            self.areaBit == other.areaBit &&
-            self.flags == other.flags &&
-            self.soundProviderPref == other.soundProviderPref &&
-            self.soundProviderPrefUnderwater ==
-                other.soundProviderPrefUnderwater &&
-            self.ambienceId == other.ambienceId &&
-            self.zoneMusic == other.zoneMusic &&
-            self.introSound == other.introSound &&
-            self.explorationLevel == other.explorationLevel &&
-            self.areaNameLangEnUS == other.areaNameLangEnUS &&
-            self.areaNameLangKoKR == other.areaNameLangKoKR &&
-            self.areaNameLangFrFR == other.areaNameLangFrFR &&
-            self.areaNameLangDeDE == other.areaNameLangDeDE &&
-            self.areaNameLangZhCN == other.areaNameLangZhCN &&
-            self.areaNameLangZhTW == other.areaNameLangZhTW &&
-            self.areaNameLangEsES == other.areaNameLangEsES &&
-            self.areaNameLangEsMX == other.areaNameLangEsMX &&
-            self.areaNameLangRuRU == other.areaNameLangRuRU &&
-            self.areaNameLangJaJP == other.areaNameLangJaJP &&
-            self.areaNameLangPtPT == other.areaNameLangPtPT &&
-            self.areaNameLangPtBR == other.areaNameLangPtBR &&
-            self.areaNameLangItIT == other.areaNameLangItIT &&
-            self.areaNameLangUnk1 == other.areaNameLangUnk1 &&
-            self.areaNameLangUnk2 == other.areaNameLangUnk2 &&
-            self.areaNameLangUnk3 == other.areaNameLangUnk3 &&
-            self.areaNameLangFlags == other.areaNameLangFlags &&
-            self.factionGroupMask == other.factionGroupMask &&
-            self.liquidTypeId0 == other.liquidTypeId0 &&
-            self.liquidTypeId1 == other.liquidTypeId1 &&
-            self.liquidTypeId2 == other.liquidTypeId2 &&
-            self.liquidTypeId3 == other.liquidTypeId3 &&
-            self.minElevation == other.minElevation &&
-            self.ambientMultiplier == other.ambientMultiplier &&
-            self.lightId == other.lightId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AreaTableEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.continentId,
-      self.parentAreaId,
-      self.areaBit,
-      self.flags,
-      self.soundProviderPref,
-      self.soundProviderPrefUnderwater,
-      self.ambienceId,
-      self.zoneMusic,
-      self.introSound,
-      self.explorationLevel,
-      self.areaNameLangEnUS,
-      self.areaNameLangKoKR,
-      self.areaNameLangFrFR,
-      self.areaNameLangDeDE,
-      self.areaNameLangZhCN,
-      self.areaNameLangZhTW,
-      self.areaNameLangEsES,
-      self.areaNameLangEsMX,
-      self.areaNameLangRuRU,
-      self.areaNameLangJaJP,
-      self.areaNameLangPtPT,
-      self.areaNameLangPtBR,
-      self.areaNameLangItIT,
-      self.areaNameLangUnk1,
-      self.areaNameLangUnk2,
-      self.areaNameLangUnk3,
-      self.areaNameLangFlags,
-      self.factionGroupMask,
-      self.liquidTypeId0,
-      self.liquidTypeId1,
-      self.liquidTypeId2,
-      self.liquidTypeId3,
-      self.minElevation,
-      self.ambientMultiplier,
-      self.lightId,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as AreaTableEntity;
     return 'AreaTableEntity('
@@ -299,69 +321,47 @@ mixin _AreaTableEntityMixin {
         'lightId: ${self.lightId}'
         ')';
   }
-}
 
-final class BriefAreaTableEntity {
-  final int id;
-  final int continentId;
-  final int zoneMusic;
-  final int explorationLevel;
-  final String areaNameLangZhCN;
-  final double minElevation;
-
-  const BriefAreaTableEntity({
-    this.id = 0,
-    this.continentId = 0,
-    this.zoneMusic = 0,
-    this.explorationLevel = 0,
-    this.areaNameLangZhCN = '',
-    this.minElevation = 0.0,
-  });
-
-  factory BriefAreaTableEntity.fromJson(Map<String, dynamic> json) {
-    return BriefAreaTableEntity(
+  static AreaTableEntity fromJson(Map<String, dynamic> json) {
+    return AreaTableEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       continentId: (json['ContinentID'] as num?)?.toInt() ?? 0,
+      parentAreaId: (json['ParentAreaID'] as num?)?.toInt() ?? 0,
+      areaBit: (json['AreaBit'] as num?)?.toInt() ?? 0,
+      flags: (json['Flags'] as num?)?.toInt() ?? 0,
+      soundProviderPref: (json['SoundProviderPref'] as num?)?.toInt() ?? 0,
+      soundProviderPrefUnderwater:
+          (json['SoundProviderPrefUnderwater'] as num?)?.toInt() ?? 0,
+      ambienceId: (json['AmbienceID'] as num?)?.toInt() ?? 0,
       zoneMusic: (json['ZoneMusic'] as num?)?.toInt() ?? 0,
+      introSound: (json['IntroSound'] as num?)?.toInt() ?? 0,
       explorationLevel: (json['ExplorationLevel'] as num?)?.toInt() ?? 0,
+      areaNameLangEnUS: json['AreaName_lang_enUS']?.toString() ?? '',
+      areaNameLangKoKR: json['AreaName_lang_koKR']?.toString() ?? '',
+      areaNameLangFrFR: json['AreaName_lang_frFR']?.toString() ?? '',
+      areaNameLangDeDE: json['AreaName_lang_deDE']?.toString() ?? '',
       areaNameLangZhCN: json['AreaName_lang_zhCN']?.toString() ?? '',
+      areaNameLangZhTW: json['AreaName_lang_zhTW']?.toString() ?? '',
+      areaNameLangEsES: json['AreaName_lang_esES']?.toString() ?? '',
+      areaNameLangEsMX: json['AreaName_lang_esMX']?.toString() ?? '',
+      areaNameLangRuRU: json['AreaName_lang_ruRU']?.toString() ?? '',
+      areaNameLangJaJP: json['AreaName_lang_jaJP']?.toString() ?? '',
+      areaNameLangPtPT: json['AreaName_lang_ptPT']?.toString() ?? '',
+      areaNameLangPtBR: json['AreaName_lang_ptBR']?.toString() ?? '',
+      areaNameLangItIT: json['AreaName_lang_itIT']?.toString() ?? '',
+      areaNameLangUnk1: json['AreaName_lang_unk1']?.toString() ?? '',
+      areaNameLangUnk2: json['AreaName_lang_unk2']?.toString() ?? '',
+      areaNameLangUnk3: json['AreaName_lang_unk3']?.toString() ?? '',
+      areaNameLangFlags: (json['AreaName_lang_Flags'] as num?)?.toInt() ?? 0,
+      factionGroupMask: (json['FactionGroupMask'] as num?)?.toInt() ?? 0,
+      liquidTypeId0: (json['LiquidTypeID0'] as num?)?.toInt() ?? 0,
+      liquidTypeId1: (json['LiquidTypeID1'] as num?)?.toInt() ?? 0,
+      liquidTypeId2: (json['LiquidTypeID2'] as num?)?.toInt() ?? 0,
+      liquidTypeId3: (json['LiquidTypeID3'] as num?)?.toInt() ?? 0,
       minElevation: (json['MinElevation'] as num?)?.toDouble() ?? 0.0,
+      ambientMultiplier:
+          (json['Ambient_multiplier'] as num?)?.toDouble() ?? 0.0,
+      lightId: (json['LightID'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefAreaTableEntity &&
-            id == other.id &&
-            continentId == other.continentId &&
-            zoneMusic == other.zoneMusic &&
-            explorationLevel == other.explorationLevel &&
-            areaNameLangZhCN == other.areaNameLangZhCN &&
-            minElevation == other.minElevation;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    continentId,
-    zoneMusic,
-    explorationLevel,
-    areaNameLangZhCN,
-    minElevation,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefAreaTableEntity('
-        'id: $id, '
-        'continentId: $continentId, '
-        'zoneMusic: $zoneMusic, '
-        'explorationLevel: $explorationLevel, '
-        'areaNameLangZhCN: $areaNameLangZhCN, '
-        'minElevation: $minElevation'
-        ')';
   }
 }

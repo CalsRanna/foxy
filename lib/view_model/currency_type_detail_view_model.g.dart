@@ -8,14 +8,7 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
   late final categoryIdController = registerController(IntFieldController());
   late final bitIndexController = registerController(IntFieldController());
 
-  CurrencyTypeEntity _collectCandidate() {
-    return CurrencyTypeEntity(
-      id: idController.collect(),
-      itemId: itemIdController.collect(),
-      categoryId: categoryIdController.collect(),
-      bitIndex: bitIndexController.collect(),
-    );
-  }
+  void _afterApplyCandidate(CurrencyTypeEntity currencyType) {}
 
   void _applyCandidate(CurrencyTypeEntity currencyType) {
     idController.init(currencyType.id);
@@ -25,5 +18,12 @@ mixin _CurrencyTypeDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(currencyType);
   }
 
-  void _afterApplyCandidate(CurrencyTypeEntity currencyType) {}
+  CurrencyTypeEntity _collectCandidate() {
+    return CurrencyTypeEntity(
+      id: idController.collect(),
+      itemId: itemIdController.collect(),
+      categoryId: categoryIdController.collect(),
+      bitIndex: bitIndexController.collect(),
+    );
+  }
 }

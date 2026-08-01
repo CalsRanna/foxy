@@ -2,38 +2,112 @@
 
 part of 'destructible_model_data_entity.dart';
 
-mixin _DestructibleModelDataEntityMixin {
-  static DestructibleModelDataEntity fromJson(Map<String, dynamic> json) {
-    return DestructibleModelDataEntity(
+final class BriefDestructibleModelDataEntity {
+  final int id;
+  final int state1Wmo;
+  final int state2Wmo;
+  final int state3Wmo;
+
+  const BriefDestructibleModelDataEntity({
+    this.id = 0,
+    this.state1Wmo = 0,
+    this.state2Wmo = 0,
+    this.state3Wmo = 0,
+  });
+
+  factory BriefDestructibleModelDataEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDestructibleModelDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      state0ImpactEffectDoodadSet:
-          (json['State0ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state0AmbientDoodadSet:
-          (json['State0AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state1Wmo: (json['State1WMO'] as num?)?.toInt() ?? 0,
-      state1DestructionDoodadSet:
-          (json['State1DestructionDoodadSet'] as num?)?.toInt() ?? 0,
-      state1ImpactEffectDoodadSet:
-          (json['State1ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state1AmbientDoodadSet:
-          (json['State1AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state2Wmo: (json['State2WMO'] as num?)?.toInt() ?? 0,
-      state2DestructionDoodadSet:
-          (json['State2DestructionDoodadSet'] as num?)?.toInt() ?? 0,
-      state2ImpactEffectDoodadSet:
-          (json['State2ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
-      state2AmbientDoodadSet:
-          (json['State2AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state3Wmo: (json['State3WMO'] as num?)?.toInt() ?? 0,
-      state3InitDoodadSet: (json['State3InitDoodadSet'] as num?)?.toInt() ?? 0,
-      state3AmbientDoodadSet:
-          (json['State3AmbientDoodadSet'] as num?)?.toInt() ?? 0,
-      ejectDirection: (json['EjectDirection'] as num?)?.toInt() ?? 0,
-      repairGroundFx: (json['RepairGroundFx'] as num?)?.toInt() ?? 0,
-      doNotHighlight: (json['DoNotHighlight'] as num?)?.toInt() ?? 0,
-      healEffect: (json['HealEffect'] as num?)?.toInt() ?? 0,
-      healEffectSpeed: (json['HealEffectSpeed'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, state1Wmo, state2Wmo, state3Wmo]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDestructibleModelDataEntity &&
+            id == other.id &&
+            state1Wmo == other.state1Wmo &&
+            state2Wmo == other.state2Wmo &&
+            state3Wmo == other.state3Wmo;
+  }
+
+  @override
+  String toString() {
+    return 'BriefDestructibleModelDataEntity('
+        'id: $id, '
+        'state1Wmo: $state1Wmo, '
+        'state2Wmo: $state2Wmo, '
+        'state3Wmo: $state3Wmo'
+        ')';
+  }
+}
+
+mixin _DestructibleModelDataEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as DestructibleModelDataEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.state0ImpactEffectDoodadSet,
+      self.state0AmbientDoodadSet,
+      self.state1Wmo,
+      self.state1DestructionDoodadSet,
+      self.state1ImpactEffectDoodadSet,
+      self.state1AmbientDoodadSet,
+      self.state2Wmo,
+      self.state2DestructionDoodadSet,
+      self.state2ImpactEffectDoodadSet,
+      self.state2AmbientDoodadSet,
+      self.state3Wmo,
+      self.state3InitDoodadSet,
+      self.state3AmbientDoodadSet,
+      self.ejectDirection,
+      self.repairGroundFx,
+      self.doNotHighlight,
+      self.healEffect,
+      self.healEffectSpeed,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as DestructibleModelDataEntity;
+    return identical(self, other) ||
+        other is DestructibleModelDataEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.state0ImpactEffectDoodadSet ==
+                other.state0ImpactEffectDoodadSet &&
+            self.state0AmbientDoodadSet == other.state0AmbientDoodadSet &&
+            self.state1Wmo == other.state1Wmo &&
+            self.state1DestructionDoodadSet ==
+                other.state1DestructionDoodadSet &&
+            self.state1ImpactEffectDoodadSet ==
+                other.state1ImpactEffectDoodadSet &&
+            self.state1AmbientDoodadSet == other.state1AmbientDoodadSet &&
+            self.state2Wmo == other.state2Wmo &&
+            self.state2DestructionDoodadSet ==
+                other.state2DestructionDoodadSet &&
+            self.state2ImpactEffectDoodadSet ==
+                other.state2ImpactEffectDoodadSet &&
+            self.state2AmbientDoodadSet == other.state2AmbientDoodadSet &&
+            self.state3Wmo == other.state3Wmo &&
+            self.state3InitDoodadSet == other.state3InitDoodadSet &&
+            self.state3AmbientDoodadSet == other.state3AmbientDoodadSet &&
+            self.ejectDirection == other.ejectDirection &&
+            self.repairGroundFx == other.repairGroundFx &&
+            self.doNotHighlight == other.doNotHighlight &&
+            self.healEffect == other.healEffect &&
+            self.healEffectSpeed == other.healEffectSpeed;
   }
 
   DestructibleModelDataEntity copyWith({
@@ -116,65 +190,6 @@ mixin _DestructibleModelDataEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as DestructibleModelDataEntity;
-    return identical(self, other) ||
-        other is DestructibleModelDataEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.state0ImpactEffectDoodadSet ==
-                other.state0ImpactEffectDoodadSet &&
-            self.state0AmbientDoodadSet == other.state0AmbientDoodadSet &&
-            self.state1Wmo == other.state1Wmo &&
-            self.state1DestructionDoodadSet ==
-                other.state1DestructionDoodadSet &&
-            self.state1ImpactEffectDoodadSet ==
-                other.state1ImpactEffectDoodadSet &&
-            self.state1AmbientDoodadSet == other.state1AmbientDoodadSet &&
-            self.state2Wmo == other.state2Wmo &&
-            self.state2DestructionDoodadSet ==
-                other.state2DestructionDoodadSet &&
-            self.state2ImpactEffectDoodadSet ==
-                other.state2ImpactEffectDoodadSet &&
-            self.state2AmbientDoodadSet == other.state2AmbientDoodadSet &&
-            self.state3Wmo == other.state3Wmo &&
-            self.state3InitDoodadSet == other.state3InitDoodadSet &&
-            self.state3AmbientDoodadSet == other.state3AmbientDoodadSet &&
-            self.ejectDirection == other.ejectDirection &&
-            self.repairGroundFx == other.repairGroundFx &&
-            self.doNotHighlight == other.doNotHighlight &&
-            self.healEffect == other.healEffect &&
-            self.healEffectSpeed == other.healEffectSpeed;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as DestructibleModelDataEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.state0ImpactEffectDoodadSet,
-      self.state0AmbientDoodadSet,
-      self.state1Wmo,
-      self.state1DestructionDoodadSet,
-      self.state1ImpactEffectDoodadSet,
-      self.state1AmbientDoodadSet,
-      self.state2Wmo,
-      self.state2DestructionDoodadSet,
-      self.state2ImpactEffectDoodadSet,
-      self.state2AmbientDoodadSet,
-      self.state3Wmo,
-      self.state3InitDoodadSet,
-      self.state3AmbientDoodadSet,
-      self.ejectDirection,
-      self.repairGroundFx,
-      self.doNotHighlight,
-      self.healEffect,
-      self.healEffectSpeed,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as DestructibleModelDataEntity;
     return 'DestructibleModelDataEntity('
@@ -199,52 +214,37 @@ mixin _DestructibleModelDataEntityMixin {
         'healEffectSpeed: ${self.healEffectSpeed}'
         ')';
   }
-}
 
-final class BriefDestructibleModelDataEntity {
-  final int id;
-  final int state1Wmo;
-  final int state2Wmo;
-  final int state3Wmo;
-
-  const BriefDestructibleModelDataEntity({
-    this.id = 0,
-    this.state1Wmo = 0,
-    this.state2Wmo = 0,
-    this.state3Wmo = 0,
-  });
-
-  factory BriefDestructibleModelDataEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDestructibleModelDataEntity(
+  static DestructibleModelDataEntity fromJson(Map<String, dynamic> json) {
+    return DestructibleModelDataEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      state0ImpactEffectDoodadSet:
+          (json['State0ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state0AmbientDoodadSet:
+          (json['State0AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state1Wmo: (json['State1WMO'] as num?)?.toInt() ?? 0,
+      state1DestructionDoodadSet:
+          (json['State1DestructionDoodadSet'] as num?)?.toInt() ?? 0,
+      state1ImpactEffectDoodadSet:
+          (json['State1ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state1AmbientDoodadSet:
+          (json['State1AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state2Wmo: (json['State2WMO'] as num?)?.toInt() ?? 0,
+      state2DestructionDoodadSet:
+          (json['State2DestructionDoodadSet'] as num?)?.toInt() ?? 0,
+      state2ImpactEffectDoodadSet:
+          (json['State2ImpactEffectDoodadSet'] as num?)?.toInt() ?? 0,
+      state2AmbientDoodadSet:
+          (json['State2AmbientDoodadSet'] as num?)?.toInt() ?? 0,
       state3Wmo: (json['State3WMO'] as num?)?.toInt() ?? 0,
+      state3InitDoodadSet: (json['State3InitDoodadSet'] as num?)?.toInt() ?? 0,
+      state3AmbientDoodadSet:
+          (json['State3AmbientDoodadSet'] as num?)?.toInt() ?? 0,
+      ejectDirection: (json['EjectDirection'] as num?)?.toInt() ?? 0,
+      repairGroundFx: (json['RepairGroundFx'] as num?)?.toInt() ?? 0,
+      doNotHighlight: (json['DoNotHighlight'] as num?)?.toInt() ?? 0,
+      healEffect: (json['HealEffect'] as num?)?.toInt() ?? 0,
+      healEffectSpeed: (json['HealEffectSpeed'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefDestructibleModelDataEntity &&
-            id == other.id &&
-            state1Wmo == other.state1Wmo &&
-            state2Wmo == other.state2Wmo &&
-            state3Wmo == other.state3Wmo;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, state1Wmo, state2Wmo, state3Wmo]);
-
-  @override
-  String toString() {
-    return 'BriefDestructibleModelDataEntity('
-        'id: $id, '
-        'state1Wmo: $state1Wmo, '
-        'state2Wmo: $state2Wmo, '
-        'state3Wmo: $state3Wmo'
-        ')';
   }
 }

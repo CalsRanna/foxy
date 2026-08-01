@@ -2,6 +2,24 @@
 
 part of 'gem_property_repository.dart';
 
+final class GemPropertyFilter {
+  final String id;
+
+  const GemPropertyFilter({this.id = ''});
+
+  factory GemPropertyFilter.fromJson(Map<String, dynamic> json) {
+    return GemPropertyFilter(id: json['id']?.toString() ?? '');
+  }
+
+  GemPropertyFilter copyWith({String? id}) {
+    return GemPropertyFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _GemPropertyRepositoryMixin on RepositoryMixin {
   Future<void> destroyGemProperty(int key) async {
     await _beforeDestroy(key);
@@ -73,23 +91,5 @@ mixin _GemPropertyRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class GemPropertyFilter {
-  final String id;
-
-  const GemPropertyFilter({this.id = ''});
-
-  factory GemPropertyFilter.fromJson(Map<String, dynamic> json) {
-    return GemPropertyFilter(id: json['id']?.toString() ?? '');
-  }
-
-  GemPropertyFilter copyWith({String? id}) {
-    return GemPropertyFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

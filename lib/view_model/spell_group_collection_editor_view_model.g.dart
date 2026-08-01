@@ -6,12 +6,7 @@ mixin _SpellGroupCollectionEditorViewModelMixin on FieldControllerMixin {
   late final idController = registerController(IntFieldController());
   late final spellIdController = registerController(IntFieldController());
 
-  SpellGroupEntity _collectCandidate() {
-    return SpellGroupEntity(
-      id: idController.collect(),
-      spellId: spellIdController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellGroupEntity spellGroup) {}
 
   void _applyCandidate(SpellGroupEntity spellGroup) {
     idController.init(spellGroup.id);
@@ -19,5 +14,10 @@ mixin _SpellGroupCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellGroup);
   }
 
-  void _afterApplyCandidate(SpellGroupEntity spellGroup) {}
+  SpellGroupEntity _collectCandidate() {
+    return SpellGroupEntity(
+      id: idController.collect(),
+      spellId: spellIdController.collect(),
+    );
+  }
 }

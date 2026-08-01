@@ -15,21 +15,7 @@ mixin _QuestOfferRewardSingleEditorViewModelMixin on FieldControllerMixin {
   late final rewardTextController = registerController(StringFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  QuestOfferRewardEntity _collectCandidate() {
-    return QuestOfferRewardEntity(
-      id: idController.collect(),
-      emote1: emote1Controller.collect(),
-      emote2: emote2Controller.collect(),
-      emote3: emote3Controller.collect(),
-      emote4: emote4Controller.collect(),
-      emoteDelay1: emoteDelay1Controller.collect(),
-      emoteDelay2: emoteDelay2Controller.collect(),
-      emoteDelay3: emoteDelay3Controller.collect(),
-      emoteDelay4: emoteDelay4Controller.collect(),
-      rewardText: rewardTextController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(QuestOfferRewardEntity questOfferReward) {}
 
   void _applyCandidate(QuestOfferRewardEntity questOfferReward) {
     idController.init(questOfferReward.id);
@@ -46,5 +32,19 @@ mixin _QuestOfferRewardSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(questOfferReward);
   }
 
-  void _afterApplyCandidate(QuestOfferRewardEntity questOfferReward) {}
+  QuestOfferRewardEntity _collectCandidate() {
+    return QuestOfferRewardEntity(
+      id: idController.collect(),
+      emote1: emote1Controller.collect(),
+      emote2: emote2Controller.collect(),
+      emote3: emote3Controller.collect(),
+      emote4: emote4Controller.collect(),
+      emoteDelay1: emoteDelay1Controller.collect(),
+      emoteDelay2: emoteDelay2Controller.collect(),
+      emoteDelay3: emoteDelay3Controller.collect(),
+      emoteDelay4: emoteDelay4Controller.collect(),
+      rewardText: rewardTextController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

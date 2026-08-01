@@ -7,12 +7,7 @@ mixin _CreatureQuestEnderCollectionEditorViewModelMixin
   late final idController = registerController(IntFieldController());
   late final questController = registerController(IntFieldController());
 
-  CreatureQuestEnderEntity _collectCandidate() {
-    return CreatureQuestEnderEntity(
-      id: idController.collect(),
-      quest: questController.collect(),
-    );
-  }
+  void _afterApplyCandidate(CreatureQuestEnderEntity creatureQuestEnder) {}
 
   void _applyCandidate(CreatureQuestEnderEntity creatureQuestEnder) {
     idController.init(creatureQuestEnder.id);
@@ -20,5 +15,10 @@ mixin _CreatureQuestEnderCollectionEditorViewModelMixin
     _afterApplyCandidate(creatureQuestEnder);
   }
 
-  void _afterApplyCandidate(CreatureQuestEnderEntity creatureQuestEnder) {}
+  CreatureQuestEnderEntity _collectCandidate() {
+    return CreatureQuestEnderEntity(
+      id: idController.collect(),
+      quest: questController.collect(),
+    );
+  }
 }

@@ -46,28 +46,7 @@ mixin _QuestTemplateAddonSingleEditorViewModelMixin on FieldControllerMixin {
   );
   late final specialFlagsController = registerController(FlagFieldController());
 
-  QuestTemplateAddonEntity _collectCandidate() {
-    return QuestTemplateAddonEntity(
-      id: idController.collect(),
-      maxLevel: maxLevelController.collect(),
-      allowableClasses: allowableClassesController.collect(),
-      sourceSpellId: sourceSpellIdController.collect(),
-      prevQuestId: prevQuestIdController.collect(),
-      nextQuestId: nextQuestIdController.collect(),
-      exclusiveGroup: exclusiveGroupController.collect(),
-      breadcrumbForQuestId: breadcrumbForQuestIdController.collect(),
-      rewardMailTemplateId: rewardMailTemplateIdController.collect(),
-      rewardMailDelay: rewardMailDelayController.collect(),
-      requiredSkillId: requiredSkillIdController.collect(),
-      requiredSkillPoints: requiredSkillPointsController.collect(),
-      requiredMinRepFaction: requiredMinRepFactionController.collect(),
-      requiredMaxRepFaction: requiredMaxRepFactionController.collect(),
-      requiredMinRepValue: requiredMinRepValueController.collect(),
-      requiredMaxRepValue: requiredMaxRepValueController.collect(),
-      providedItemCount: providedItemCountController.collect(),
-      specialFlags: specialFlagsController.collect(),
-    );
-  }
+  void _afterApplyCandidate(QuestTemplateAddonEntity questTemplateAddon) {}
 
   void _applyCandidate(QuestTemplateAddonEntity questTemplateAddon) {
     idController.init(questTemplateAddon.id);
@@ -99,5 +78,26 @@ mixin _QuestTemplateAddonSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(questTemplateAddon);
   }
 
-  void _afterApplyCandidate(QuestTemplateAddonEntity questTemplateAddon) {}
+  QuestTemplateAddonEntity _collectCandidate() {
+    return QuestTemplateAddonEntity(
+      id: idController.collect(),
+      maxLevel: maxLevelController.collect(),
+      allowableClasses: allowableClassesController.collect(),
+      sourceSpellId: sourceSpellIdController.collect(),
+      prevQuestId: prevQuestIdController.collect(),
+      nextQuestId: nextQuestIdController.collect(),
+      exclusiveGroup: exclusiveGroupController.collect(),
+      breadcrumbForQuestId: breadcrumbForQuestIdController.collect(),
+      rewardMailTemplateId: rewardMailTemplateIdController.collect(),
+      rewardMailDelay: rewardMailDelayController.collect(),
+      requiredSkillId: requiredSkillIdController.collect(),
+      requiredSkillPoints: requiredSkillPointsController.collect(),
+      requiredMinRepFaction: requiredMinRepFactionController.collect(),
+      requiredMaxRepFaction: requiredMaxRepFactionController.collect(),
+      requiredMinRepValue: requiredMinRepValueController.collect(),
+      requiredMaxRepValue: requiredMaxRepValueController.collect(),
+      providedItemCount: providedItemCountController.collect(),
+      specialFlags: specialFlagsController.collect(),
+    );
+  }
 }

@@ -11,14 +11,9 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
   late final resistanceController = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  CreatureTemplateResistanceEntity _collectCandidate() {
-    return CreatureTemplateResistanceEntity(
-      creatureID: creatureIDController.collect(),
-      school: schoolController.collect(),
-      resistance: resistanceController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    CreatureTemplateResistanceEntity creatureTemplateResistance,
+  ) {}
 
   void _applyCandidate(
     CreatureTemplateResistanceEntity creatureTemplateResistance,
@@ -30,7 +25,12 @@ mixin _CreatureTemplateResistanceCollectionEditorViewModelMixin
     _afterApplyCandidate(creatureTemplateResistance);
   }
 
-  void _afterApplyCandidate(
-    CreatureTemplateResistanceEntity creatureTemplateResistance,
-  ) {}
+  CreatureTemplateResistanceEntity _collectCandidate() {
+    return CreatureTemplateResistanceEntity(
+      creatureID: creatureIDController.collect(),
+      school: schoolController.collect(),
+      resistance: resistanceController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

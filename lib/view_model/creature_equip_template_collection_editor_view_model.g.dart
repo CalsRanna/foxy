@@ -11,16 +11,9 @@ mixin _CreatureEquipTemplateCollectionEditorViewModelMixin
   late final itemID3Controller = registerController(IntFieldController());
   late final verifiedBuildController = registerController(IntFieldController());
 
-  CreatureEquipTemplateEntity _collectCandidate() {
-    return CreatureEquipTemplateEntity(
-      creatureID: creatureIDController.collect(),
-      id: idController.collect(),
-      itemID1: itemID1Controller.collect(),
-      itemID2: itemID2Controller.collect(),
-      itemID3: itemID3Controller.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    CreatureEquipTemplateEntity creatureEquipTemplate,
+  ) {}
 
   void _applyCandidate(CreatureEquipTemplateEntity creatureEquipTemplate) {
     creatureIDController.init(creatureEquipTemplate.creatureID);
@@ -32,7 +25,14 @@ mixin _CreatureEquipTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(creatureEquipTemplate);
   }
 
-  void _afterApplyCandidate(
-    CreatureEquipTemplateEntity creatureEquipTemplate,
-  ) {}
+  CreatureEquipTemplateEntity _collectCandidate() {
+    return CreatureEquipTemplateEntity(
+      creatureID: creatureIDController.collect(),
+      id: idController.collect(),
+      itemID1: itemID1Controller.collect(),
+      itemID2: itemID2Controller.collect(),
+      itemID3: itemID3Controller.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

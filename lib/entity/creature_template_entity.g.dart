@@ -2,67 +2,202 @@
 
 part of 'creature_template_entity.dart';
 
-mixin _CreatureTemplateEntityMixin {
-  static CreatureTemplateEntity fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateEntity(
-      aiName: json['AIName']?.toString() ?? '',
-      armorModifier: (json['ArmorModifier'] as num?)?.toDouble() ?? 1.0,
-      baseAttackTime: (json['BaseAttackTime'] as num?)?.toInt() ?? 0,
-      baseVariance: (json['BaseVariance'] as num?)?.toDouble() ?? 1.0,
-      damageModifier: (json['DamageModifier'] as num?)?.toDouble() ?? 1.0,
-      difficultyEntry1: (json['difficulty_entry_1'] as num?)?.toInt() ?? 0,
-      difficultyEntry2: (json['difficulty_entry_2'] as num?)?.toInt() ?? 0,
-      difficultyEntry3: (json['difficulty_entry_3'] as num?)?.toInt() ?? 0,
-      damageSchool: (json['dmgschool'] as num?)?.toInt() ?? 0,
-      detectionRange: (json['detection_range'] as num?)?.toDouble() ?? 20.0,
-      dynamicFlags: (json['dynamicflags'] as num?)?.toInt() ?? 0,
+final class BriefCreatureTemplateEntity {
+  final int entry;
+  final int maxLevel;
+  final int minLevel;
+  final String name;
+  final String subName;
+  final String localeName;
+  final String localeSubName;
+
+  const BriefCreatureTemplateEntity({
+    this.entry = 0,
+    this.maxLevel = 1,
+    this.minLevel = 1,
+    this.name = '',
+    this.subName = '',
+    this.localeName = '',
+    this.localeSubName = '',
+  });
+
+  factory BriefCreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
+    return BriefCreatureTemplateEntity(
       entry: (json['entry'] as num?)?.toInt() ?? 0,
-      exp: (json['exp'] as num?)?.toInt() ?? 0,
-      experienceModifier:
-          (json['ExperienceModifier'] as num?)?.toDouble() ?? 1.0,
-      faction: (json['faction'] as num?)?.toInt() ?? 0,
-      family: (json['family'] as num?)?.toInt() ?? 0,
-      flagsExtra: (json['flags_extra'] as num?)?.toInt() ?? 0,
-      gossipMenuId: (json['gossip_menu_id'] as num?)?.toInt() ?? 0,
-      healthModifier: (json['HealthModifier'] as num?)?.toDouble() ?? 1.0,
-      hoverHeight: (json['HoverHeight'] as num?)?.toDouble() ?? 1.0,
-      iconName: json['IconName']?.toString() ?? '',
-      killCredit1: (json['KillCredit1'] as num?)?.toInt() ?? 0,
-      killCredit2: (json['KillCredit2'] as num?)?.toInt() ?? 0,
-      lootId: (json['lootid'] as num?)?.toInt() ?? 0,
-      maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
       maxLevel: (json['maxlevel'] as num?)?.toInt() ?? 1,
-      manaModifier: (json['ManaModifier'] as num?)?.toDouble() ?? 1.0,
       minLevel: (json['minlevel'] as num?)?.toInt() ?? 1,
-      minGold: (json['mingold'] as num?)?.toInt() ?? 0,
-      movementId: (json['movementId'] as num?)?.toInt() ?? 0,
-      movementType: (json['MovementType'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
-      npcFlag: (json['npcflag'] as num?)?.toInt() ?? 0,
-      petSpellDataId: (json['PetSpellDataId'] as num?)?.toInt() ?? 0,
-      pickpocketLoot: (json['pickpocketloot'] as num?)?.toInt() ?? 0,
-      racialLeader: (json['RacialLeader'] as num?)?.toInt() ?? 0,
-      rangeAttackTime: (json['RangeAttackTime'] as num?)?.toInt() ?? 0,
-      rangeVariance: (json['RangeVariance'] as num?)?.toDouble() ?? 1.0,
-      rank: (json['rank'] as num?)?.toInt() ?? 0,
-      regenHealth: (json['RegenHealth'] as num?)?.toInt() ?? 1,
-      scriptName: json['ScriptName']?.toString() ?? '',
-      skinLoot: (json['skinloot'] as num?)?.toInt() ?? 0,
-      speedFlight: (json['speed_flight'] as num?)?.toDouble() ?? 1.0,
-      speedRun: (json['speed_run'] as num?)?.toDouble() ?? 1.14286,
-      speedSwim: (json['speed_swim'] as num?)?.toDouble() ?? 1.0,
-      speedWalk: (json['speed_walk'] as num?)?.toDouble() ?? 1.0,
       subName: json['subname']?.toString() ?? '',
-      type: (json['type'] as num?)?.toInt() ?? 0,
-      typeFlags: (json['type_flags'] as num?)?.toInt() ?? 0,
-      unitClass: (json['unit_class'] as num?)?.toInt() ?? 1,
-      unitFlags: (json['unit_flags'] as num?)?.toInt() ?? 0,
-      unitFlags2: (json['unit_flags2'] as num?)?.toInt() ?? 0,
-      vehicleId: (json['VehicleId'] as num?)?.toInt() ?? 0,
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
-      creatureImmunitiesId:
-          (json['CreatureImmunitiesId'] as num?)?.toInt() ?? 0,
+      localeName: json['localeName']?.toString() ?? '',
+      localeSubName: json['localeSubName']?.toString() ?? '',
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    entry,
+    maxLevel,
+    minLevel,
+    name,
+    subName,
+    localeName,
+    localeSubName,
+  ]);
+
+  int get key => entry;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateEntity &&
+            entry == other.entry &&
+            maxLevel == other.maxLevel &&
+            minLevel == other.minLevel &&
+            name == other.name &&
+            subName == other.subName &&
+            localeName == other.localeName &&
+            localeSubName == other.localeSubName;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateEntity('
+        'entry: $entry, '
+        'maxLevel: $maxLevel, '
+        'minLevel: $minLevel, '
+        'name: $name, '
+        'subName: $subName, '
+        'localeName: $localeName, '
+        'localeSubName: $localeSubName'
+        ')';
+  }
+}
+
+mixin _CreatureTemplateEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureTemplateEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.aiName,
+      self.armorModifier,
+      self.baseAttackTime,
+      self.baseVariance,
+      self.damageModifier,
+      self.difficultyEntry1,
+      self.difficultyEntry2,
+      self.difficultyEntry3,
+      self.damageSchool,
+      self.detectionRange,
+      self.dynamicFlags,
+      self.entry,
+      self.exp,
+      self.experienceModifier,
+      self.faction,
+      self.family,
+      self.flagsExtra,
+      self.gossipMenuId,
+      self.healthModifier,
+      self.hoverHeight,
+      self.iconName,
+      self.killCredit1,
+      self.killCredit2,
+      self.lootId,
+      self.maxGold,
+      self.maxLevel,
+      self.manaModifier,
+      self.minLevel,
+      self.minGold,
+      self.movementId,
+      self.movementType,
+      self.name,
+      self.npcFlag,
+      self.petSpellDataId,
+      self.pickpocketLoot,
+      self.racialLeader,
+      self.rangeAttackTime,
+      self.rangeVariance,
+      self.rank,
+      self.regenHealth,
+      self.scriptName,
+      self.skinLoot,
+      self.speedFlight,
+      self.speedRun,
+      self.speedSwim,
+      self.speedWalk,
+      self.subName,
+      self.type,
+      self.typeFlags,
+      self.unitClass,
+      self.unitFlags,
+      self.unitFlags2,
+      self.vehicleId,
+      self.verifiedBuild,
+      self.creatureImmunitiesId,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureTemplateEntity;
+    return identical(self, other) ||
+        other is CreatureTemplateEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.aiName == other.aiName &&
+            self.armorModifier == other.armorModifier &&
+            self.baseAttackTime == other.baseAttackTime &&
+            self.baseVariance == other.baseVariance &&
+            self.damageModifier == other.damageModifier &&
+            self.difficultyEntry1 == other.difficultyEntry1 &&
+            self.difficultyEntry2 == other.difficultyEntry2 &&
+            self.difficultyEntry3 == other.difficultyEntry3 &&
+            self.damageSchool == other.damageSchool &&
+            self.detectionRange == other.detectionRange &&
+            self.dynamicFlags == other.dynamicFlags &&
+            self.entry == other.entry &&
+            self.exp == other.exp &&
+            self.experienceModifier == other.experienceModifier &&
+            self.faction == other.faction &&
+            self.family == other.family &&
+            self.flagsExtra == other.flagsExtra &&
+            self.gossipMenuId == other.gossipMenuId &&
+            self.healthModifier == other.healthModifier &&
+            self.hoverHeight == other.hoverHeight &&
+            self.iconName == other.iconName &&
+            self.killCredit1 == other.killCredit1 &&
+            self.killCredit2 == other.killCredit2 &&
+            self.lootId == other.lootId &&
+            self.maxGold == other.maxGold &&
+            self.maxLevel == other.maxLevel &&
+            self.manaModifier == other.manaModifier &&
+            self.minLevel == other.minLevel &&
+            self.minGold == other.minGold &&
+            self.movementId == other.movementId &&
+            self.movementType == other.movementType &&
+            self.name == other.name &&
+            self.npcFlag == other.npcFlag &&
+            self.petSpellDataId == other.petSpellDataId &&
+            self.pickpocketLoot == other.pickpocketLoot &&
+            self.racialLeader == other.racialLeader &&
+            self.rangeAttackTime == other.rangeAttackTime &&
+            self.rangeVariance == other.rangeVariance &&
+            self.rank == other.rank &&
+            self.regenHealth == other.regenHealth &&
+            self.scriptName == other.scriptName &&
+            self.skinLoot == other.skinLoot &&
+            self.speedFlight == other.speedFlight &&
+            self.speedRun == other.speedRun &&
+            self.speedSwim == other.speedSwim &&
+            self.speedWalk == other.speedWalk &&
+            self.subName == other.subName &&
+            self.type == other.type &&
+            self.typeFlags == other.typeFlags &&
+            self.unitClass == other.unitClass &&
+            self.unitFlags == other.unitFlags &&
+            self.unitFlags2 == other.unitFlags2 &&
+            self.vehicleId == other.vehicleId &&
+            self.verifiedBuild == other.verifiedBuild &&
+            self.creatureImmunitiesId == other.creatureImmunitiesId;
   }
 
   CreatureTemplateEntity copyWith({
@@ -244,132 +379,6 @@ mixin _CreatureTemplateEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureTemplateEntity;
-    return identical(self, other) ||
-        other is CreatureTemplateEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.aiName == other.aiName &&
-            self.armorModifier == other.armorModifier &&
-            self.baseAttackTime == other.baseAttackTime &&
-            self.baseVariance == other.baseVariance &&
-            self.damageModifier == other.damageModifier &&
-            self.difficultyEntry1 == other.difficultyEntry1 &&
-            self.difficultyEntry2 == other.difficultyEntry2 &&
-            self.difficultyEntry3 == other.difficultyEntry3 &&
-            self.damageSchool == other.damageSchool &&
-            self.detectionRange == other.detectionRange &&
-            self.dynamicFlags == other.dynamicFlags &&
-            self.entry == other.entry &&
-            self.exp == other.exp &&
-            self.experienceModifier == other.experienceModifier &&
-            self.faction == other.faction &&
-            self.family == other.family &&
-            self.flagsExtra == other.flagsExtra &&
-            self.gossipMenuId == other.gossipMenuId &&
-            self.healthModifier == other.healthModifier &&
-            self.hoverHeight == other.hoverHeight &&
-            self.iconName == other.iconName &&
-            self.killCredit1 == other.killCredit1 &&
-            self.killCredit2 == other.killCredit2 &&
-            self.lootId == other.lootId &&
-            self.maxGold == other.maxGold &&
-            self.maxLevel == other.maxLevel &&
-            self.manaModifier == other.manaModifier &&
-            self.minLevel == other.minLevel &&
-            self.minGold == other.minGold &&
-            self.movementId == other.movementId &&
-            self.movementType == other.movementType &&
-            self.name == other.name &&
-            self.npcFlag == other.npcFlag &&
-            self.petSpellDataId == other.petSpellDataId &&
-            self.pickpocketLoot == other.pickpocketLoot &&
-            self.racialLeader == other.racialLeader &&
-            self.rangeAttackTime == other.rangeAttackTime &&
-            self.rangeVariance == other.rangeVariance &&
-            self.rank == other.rank &&
-            self.regenHealth == other.regenHealth &&
-            self.scriptName == other.scriptName &&
-            self.skinLoot == other.skinLoot &&
-            self.speedFlight == other.speedFlight &&
-            self.speedRun == other.speedRun &&
-            self.speedSwim == other.speedSwim &&
-            self.speedWalk == other.speedWalk &&
-            self.subName == other.subName &&
-            self.type == other.type &&
-            self.typeFlags == other.typeFlags &&
-            self.unitClass == other.unitClass &&
-            self.unitFlags == other.unitFlags &&
-            self.unitFlags2 == other.unitFlags2 &&
-            self.vehicleId == other.vehicleId &&
-            self.verifiedBuild == other.verifiedBuild &&
-            self.creatureImmunitiesId == other.creatureImmunitiesId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureTemplateEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.aiName,
-      self.armorModifier,
-      self.baseAttackTime,
-      self.baseVariance,
-      self.damageModifier,
-      self.difficultyEntry1,
-      self.difficultyEntry2,
-      self.difficultyEntry3,
-      self.damageSchool,
-      self.detectionRange,
-      self.dynamicFlags,
-      self.entry,
-      self.exp,
-      self.experienceModifier,
-      self.faction,
-      self.family,
-      self.flagsExtra,
-      self.gossipMenuId,
-      self.healthModifier,
-      self.hoverHeight,
-      self.iconName,
-      self.killCredit1,
-      self.killCredit2,
-      self.lootId,
-      self.maxGold,
-      self.maxLevel,
-      self.manaModifier,
-      self.minLevel,
-      self.minGold,
-      self.movementId,
-      self.movementType,
-      self.name,
-      self.npcFlag,
-      self.petSpellDataId,
-      self.pickpocketLoot,
-      self.racialLeader,
-      self.rangeAttackTime,
-      self.rangeVariance,
-      self.rank,
-      self.regenHealth,
-      self.scriptName,
-      self.skinLoot,
-      self.speedFlight,
-      self.speedRun,
-      self.speedSwim,
-      self.speedWalk,
-      self.subName,
-      self.type,
-      self.typeFlags,
-      self.unitClass,
-      self.unitFlags,
-      self.unitFlags2,
-      self.vehicleId,
-      self.verifiedBuild,
-      self.creatureImmunitiesId,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureTemplateEntity;
     return 'CreatureTemplateEntity('
@@ -430,75 +439,66 @@ mixin _CreatureTemplateEntityMixin {
         'creatureImmunitiesId: ${self.creatureImmunitiesId}'
         ')';
   }
-}
 
-final class BriefCreatureTemplateEntity {
-  final int entry;
-  final int maxLevel;
-  final int minLevel;
-  final String name;
-  final String subName;
-  final String localeName;
-  final String localeSubName;
-
-  const BriefCreatureTemplateEntity({
-    this.entry = 0,
-    this.maxLevel = 1,
-    this.minLevel = 1,
-    this.name = '',
-    this.subName = '',
-    this.localeName = '',
-    this.localeSubName = '',
-  });
-
-  factory BriefCreatureTemplateEntity.fromJson(Map<String, dynamic> json) {
-    return BriefCreatureTemplateEntity(
+  static CreatureTemplateEntity fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateEntity(
+      aiName: json['AIName']?.toString() ?? '',
+      armorModifier: (json['ArmorModifier'] as num?)?.toDouble() ?? 1.0,
+      baseAttackTime: (json['BaseAttackTime'] as num?)?.toInt() ?? 0,
+      baseVariance: (json['BaseVariance'] as num?)?.toDouble() ?? 1.0,
+      damageModifier: (json['DamageModifier'] as num?)?.toDouble() ?? 1.0,
+      difficultyEntry1: (json['difficulty_entry_1'] as num?)?.toInt() ?? 0,
+      difficultyEntry2: (json['difficulty_entry_2'] as num?)?.toInt() ?? 0,
+      difficultyEntry3: (json['difficulty_entry_3'] as num?)?.toInt() ?? 0,
+      damageSchool: (json['dmgschool'] as num?)?.toInt() ?? 0,
+      detectionRange: (json['detection_range'] as num?)?.toDouble() ?? 20.0,
+      dynamicFlags: (json['dynamicflags'] as num?)?.toInt() ?? 0,
       entry: (json['entry'] as num?)?.toInt() ?? 0,
+      exp: (json['exp'] as num?)?.toInt() ?? 0,
+      experienceModifier:
+          (json['ExperienceModifier'] as num?)?.toDouble() ?? 1.0,
+      faction: (json['faction'] as num?)?.toInt() ?? 0,
+      family: (json['family'] as num?)?.toInt() ?? 0,
+      flagsExtra: (json['flags_extra'] as num?)?.toInt() ?? 0,
+      gossipMenuId: (json['gossip_menu_id'] as num?)?.toInt() ?? 0,
+      healthModifier: (json['HealthModifier'] as num?)?.toDouble() ?? 1.0,
+      hoverHeight: (json['HoverHeight'] as num?)?.toDouble() ?? 1.0,
+      iconName: json['IconName']?.toString() ?? '',
+      killCredit1: (json['KillCredit1'] as num?)?.toInt() ?? 0,
+      killCredit2: (json['KillCredit2'] as num?)?.toInt() ?? 0,
+      lootId: (json['lootid'] as num?)?.toInt() ?? 0,
+      maxGold: (json['maxgold'] as num?)?.toInt() ?? 0,
       maxLevel: (json['maxlevel'] as num?)?.toInt() ?? 1,
+      manaModifier: (json['ManaModifier'] as num?)?.toDouble() ?? 1.0,
       minLevel: (json['minlevel'] as num?)?.toInt() ?? 1,
+      minGold: (json['mingold'] as num?)?.toInt() ?? 0,
+      movementId: (json['movementId'] as num?)?.toInt() ?? 0,
+      movementType: (json['MovementType'] as num?)?.toInt() ?? 0,
       name: json['name']?.toString() ?? '',
+      npcFlag: (json['npcflag'] as num?)?.toInt() ?? 0,
+      petSpellDataId: (json['PetSpellDataId'] as num?)?.toInt() ?? 0,
+      pickpocketLoot: (json['pickpocketloot'] as num?)?.toInt() ?? 0,
+      racialLeader: (json['RacialLeader'] as num?)?.toInt() ?? 0,
+      rangeAttackTime: (json['RangeAttackTime'] as num?)?.toInt() ?? 0,
+      rangeVariance: (json['RangeVariance'] as num?)?.toDouble() ?? 1.0,
+      rank: (json['rank'] as num?)?.toInt() ?? 0,
+      regenHealth: (json['RegenHealth'] as num?)?.toInt() ?? 1,
+      scriptName: json['ScriptName']?.toString() ?? '',
+      skinLoot: (json['skinloot'] as num?)?.toInt() ?? 0,
+      speedFlight: (json['speed_flight'] as num?)?.toDouble() ?? 1.0,
+      speedRun: (json['speed_run'] as num?)?.toDouble() ?? 1.14286,
+      speedSwim: (json['speed_swim'] as num?)?.toDouble() ?? 1.0,
+      speedWalk: (json['speed_walk'] as num?)?.toDouble() ?? 1.0,
       subName: json['subname']?.toString() ?? '',
-      localeName: json['localeName']?.toString() ?? '',
-      localeSubName: json['localeSubName']?.toString() ?? '',
+      type: (json['type'] as num?)?.toInt() ?? 0,
+      typeFlags: (json['type_flags'] as num?)?.toInt() ?? 0,
+      unitClass: (json['unit_class'] as num?)?.toInt() ?? 1,
+      unitFlags: (json['unit_flags'] as num?)?.toInt() ?? 0,
+      unitFlags2: (json['unit_flags2'] as num?)?.toInt() ?? 0,
+      vehicleId: (json['VehicleId'] as num?)?.toInt() ?? 0,
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
+      creatureImmunitiesId:
+          (json['CreatureImmunitiesId'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => entry;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureTemplateEntity &&
-            entry == other.entry &&
-            maxLevel == other.maxLevel &&
-            minLevel == other.minLevel &&
-            name == other.name &&
-            subName == other.subName &&
-            localeName == other.localeName &&
-            localeSubName == other.localeSubName;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    entry,
-    maxLevel,
-    minLevel,
-    name,
-    subName,
-    localeName,
-    localeSubName,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureTemplateEntity('
-        'entry: $entry, '
-        'maxLevel: $maxLevel, '
-        'minLevel: $minLevel, '
-        'name: $name, '
-        'subName: $subName, '
-        'localeName: $localeName, '
-        'localeSubName: $localeSubName'
-        ')';
   }
 }

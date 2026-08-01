@@ -2,22 +2,120 @@
 
 part of 'quest_template_locale_entity.dart';
 
-mixin _QuestTemplateLocaleEntityMixin {
-  static QuestTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
-    return QuestTemplateLocaleEntity(
+final class BriefQuestTemplateLocaleEntity {
+  final int id;
+  final String locale;
+  final String title;
+
+  const BriefQuestTemplateLocaleEntity({
+    this.id = 0,
+    this.locale = 'zhCN',
+    this.title = '',
+  });
+
+  factory BriefQuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefQuestTemplateLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       title: json['Title']?.toString() ?? '',
-      details: json['Details']?.toString() ?? '',
-      objectives: json['Objectives']?.toString() ?? '',
-      endText: json['EndText']?.toString() ?? '',
-      completedText: json['CompletedText']?.toString() ?? '',
-      objectiveText1: json['ObjectiveText1']?.toString() ?? '',
-      objectiveText2: json['ObjectiveText2']?.toString() ?? '',
-      objectiveText3: json['ObjectiveText3']?.toString() ?? '',
-      objectiveText4: json['ObjectiveText4']?.toString() ?? '',
-      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale, title]);
+
+  QuestTemplateLocaleKey get key {
+    return QuestTemplateLocaleKey(id: id, locale: locale);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefQuestTemplateLocaleEntity &&
+            id == other.id &&
+            locale == other.locale &&
+            title == other.title;
+  }
+
+  @override
+  String toString() {
+    return 'BriefQuestTemplateLocaleEntity('
+        'id: $id, '
+        'locale: $locale, '
+        'title: $title'
+        ')';
+  }
+}
+
+final class QuestTemplateLocaleKey {
+  final int id;
+  final String locale;
+
+  const QuestTemplateLocaleKey({required this.id, required this.locale});
+
+  factory QuestTemplateLocaleKey.fromEntity(QuestTemplateLocaleEntity entity) {
+    return QuestTemplateLocaleKey(id: entity.id, locale: entity.locale);
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, locale]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is QuestTemplateLocaleKey &&
+            id == other.id &&
+            locale == other.locale;
+  }
+
+  @override
+  String toString() {
+    return 'QuestTemplateLocaleKey('
+        'id: $id, '
+        'locale: $locale'
+        ')';
+  }
+}
+
+mixin _QuestTemplateLocaleEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as QuestTemplateLocaleEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.locale,
+      self.title,
+      self.details,
+      self.objectives,
+      self.endText,
+      self.completedText,
+      self.objectiveText1,
+      self.objectiveText2,
+      self.objectiveText3,
+      self.objectiveText4,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as QuestTemplateLocaleEntity;
+    return identical(self, other) ||
+        other is QuestTemplateLocaleEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.locale == other.locale &&
+            self.title == other.title &&
+            self.details == other.details &&
+            self.objectives == other.objectives &&
+            self.endText == other.endText &&
+            self.completedText == other.completedText &&
+            self.objectiveText1 == other.objectiveText1 &&
+            self.objectiveText2 == other.objectiveText2 &&
+            self.objectiveText3 == other.objectiveText3 &&
+            self.objectiveText4 == other.objectiveText4 &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   QuestTemplateLocaleEntity copyWith({
@@ -70,46 +168,6 @@ mixin _QuestTemplateLocaleEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as QuestTemplateLocaleEntity;
-    return identical(self, other) ||
-        other is QuestTemplateLocaleEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.locale == other.locale &&
-            self.title == other.title &&
-            self.details == other.details &&
-            self.objectives == other.objectives &&
-            self.endText == other.endText &&
-            self.completedText == other.completedText &&
-            self.objectiveText1 == other.objectiveText1 &&
-            self.objectiveText2 == other.objectiveText2 &&
-            self.objectiveText3 == other.objectiveText3 &&
-            self.objectiveText4 == other.objectiveText4 &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as QuestTemplateLocaleEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.locale,
-      self.title,
-      self.details,
-      self.objectives,
-      self.endText,
-      self.completedText,
-      self.objectiveText1,
-      self.objectiveText2,
-      self.objectiveText3,
-      self.objectiveText4,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as QuestTemplateLocaleEntity;
     return 'QuestTemplateLocaleEntity('
@@ -127,79 +185,21 @@ mixin _QuestTemplateLocaleEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class QuestTemplateLocaleKey {
-  final int id;
-  final String locale;
-
-  const QuestTemplateLocaleKey({required this.id, required this.locale});
-
-  factory QuestTemplateLocaleKey.fromEntity(QuestTemplateLocaleEntity entity) {
-    return QuestTemplateLocaleKey(id: entity.id, locale: entity.locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is QuestTemplateLocaleKey &&
-            id == other.id &&
-            locale == other.locale;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale]);
-
-  @override
-  String toString() {
-    return 'QuestTemplateLocaleKey('
-        'id: $id, '
-        'locale: $locale'
-        ')';
-  }
-}
-
-final class BriefQuestTemplateLocaleEntity {
-  final int id;
-  final String locale;
-  final String title;
-
-  const BriefQuestTemplateLocaleEntity({
-    this.id = 0,
-    this.locale = 'zhCN',
-    this.title = '',
-  });
-
-  factory BriefQuestTemplateLocaleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefQuestTemplateLocaleEntity(
+  static QuestTemplateLocaleEntity fromJson(Map<String, dynamic> json) {
+    return QuestTemplateLocaleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       locale: json['locale']?.toString() ?? 'zhCN',
       title: json['Title']?.toString() ?? '',
+      details: json['Details']?.toString() ?? '',
+      objectives: json['Objectives']?.toString() ?? '',
+      endText: json['EndText']?.toString() ?? '',
+      completedText: json['CompletedText']?.toString() ?? '',
+      objectiveText1: json['ObjectiveText1']?.toString() ?? '',
+      objectiveText2: json['ObjectiveText2']?.toString() ?? '',
+      objectiveText3: json['ObjectiveText3']?.toString() ?? '',
+      objectiveText4: json['ObjectiveText4']?.toString() ?? '',
+      verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  QuestTemplateLocaleKey get key {
-    return QuestTemplateLocaleKey(id: id, locale: locale);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefQuestTemplateLocaleEntity &&
-            id == other.id &&
-            locale == other.locale &&
-            title == other.title;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, locale, title]);
-
-  @override
-  String toString() {
-    return 'BriefQuestTemplateLocaleEntity('
-        'id: $id, '
-        'locale: $locale, '
-        'title: $title'
-        ')';
   }
 }

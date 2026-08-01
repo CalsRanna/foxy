@@ -2,14 +2,123 @@
 
 part of 'creature_template_resistance_entity.dart';
 
-mixin _CreatureTemplateResistanceEntityMixin {
-  static CreatureTemplateResistanceEntity fromJson(Map<String, dynamic> json) {
-    return CreatureTemplateResistanceEntity(
+final class BriefCreatureTemplateResistanceEntity {
+  final int creatureID;
+  final int school;
+  final int resistance;
+  final int verifiedBuild;
+
+  const BriefCreatureTemplateResistanceEntity({
+    this.creatureID = 0,
+    this.school = 0,
+    this.resistance = 0,
+    this.verifiedBuild = 0,
+  });
+
+  factory BriefCreatureTemplateResistanceEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BriefCreatureTemplateResistanceEntity(
       creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
       school: (json['School'] as num?)?.toInt() ?? 0,
       resistance: (json['Resistance'] as num?)?.toInt() ?? 0,
       verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([creatureID, school, resistance, verifiedBuild]);
+
+  CreatureTemplateResistanceKey get key {
+    return CreatureTemplateResistanceKey(
+      creatureID: creatureID,
+      school: school,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefCreatureTemplateResistanceEntity &&
+            creatureID == other.creatureID &&
+            school == other.school &&
+            resistance == other.resistance &&
+            verifiedBuild == other.verifiedBuild;
+  }
+
+  @override
+  String toString() {
+    return 'BriefCreatureTemplateResistanceEntity('
+        'creatureID: $creatureID, '
+        'school: $school, '
+        'resistance: $resistance, '
+        'verifiedBuild: $verifiedBuild'
+        ')';
+  }
+}
+
+final class CreatureTemplateResistanceKey {
+  final int creatureID;
+  final int school;
+
+  const CreatureTemplateResistanceKey({
+    required this.creatureID,
+    required this.school,
+  });
+
+  factory CreatureTemplateResistanceKey.fromEntity(
+    CreatureTemplateResistanceEntity entity,
+  ) {
+    return CreatureTemplateResistanceKey(
+      creatureID: entity.creatureID,
+      school: entity.school,
+    );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([creatureID, school]);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is CreatureTemplateResistanceKey &&
+            creatureID == other.creatureID &&
+            school == other.school;
+  }
+
+  @override
+  String toString() {
+    return 'CreatureTemplateResistanceKey('
+        'creatureID: $creatureID, '
+        'school: $school'
+        ')';
+  }
+}
+
+mixin _CreatureTemplateResistanceEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as CreatureTemplateResistanceEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.creatureID,
+      self.school,
+      self.resistance,
+      self.verifiedBuild,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CreatureTemplateResistanceEntity;
+    return identical(self, other) ||
+        other is CreatureTemplateResistanceEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.creatureID == other.creatureID &&
+            self.school == other.school &&
+            self.resistance == other.resistance &&
+            self.verifiedBuild == other.verifiedBuild;
   }
 
   CreatureTemplateResistanceEntity copyWith({
@@ -38,30 +147,6 @@ mixin _CreatureTemplateResistanceEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as CreatureTemplateResistanceEntity;
-    return identical(self, other) ||
-        other is CreatureTemplateResistanceEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.creatureID == other.creatureID &&
-            self.school == other.school &&
-            self.resistance == other.resistance &&
-            self.verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CreatureTemplateResistanceEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.creatureID,
-      self.school,
-      self.resistance,
-      self.verifiedBuild,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as CreatureTemplateResistanceEntity;
     return 'CreatureTemplateResistanceEntity('
@@ -71,98 +156,13 @@ mixin _CreatureTemplateResistanceEntityMixin {
         'verifiedBuild: ${self.verifiedBuild}'
         ')';
   }
-}
 
-final class CreatureTemplateResistanceKey {
-  final int creatureID;
-  final int school;
-
-  const CreatureTemplateResistanceKey({
-    required this.creatureID,
-    required this.school,
-  });
-
-  factory CreatureTemplateResistanceKey.fromEntity(
-    CreatureTemplateResistanceEntity entity,
-  ) {
-    return CreatureTemplateResistanceKey(
-      creatureID: entity.creatureID,
-      school: entity.school,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is CreatureTemplateResistanceKey &&
-            creatureID == other.creatureID &&
-            school == other.school;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([creatureID, school]);
-
-  @override
-  String toString() {
-    return 'CreatureTemplateResistanceKey('
-        'creatureID: $creatureID, '
-        'school: $school'
-        ')';
-  }
-}
-
-final class BriefCreatureTemplateResistanceEntity {
-  final int creatureID;
-  final int school;
-  final int resistance;
-  final int verifiedBuild;
-
-  const BriefCreatureTemplateResistanceEntity({
-    this.creatureID = 0,
-    this.school = 0,
-    this.resistance = 0,
-    this.verifiedBuild = 0,
-  });
-
-  factory BriefCreatureTemplateResistanceEntity.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return BriefCreatureTemplateResistanceEntity(
+  static CreatureTemplateResistanceEntity fromJson(Map<String, dynamic> json) {
+    return CreatureTemplateResistanceEntity(
       creatureID: (json['CreatureID'] as num?)?.toInt() ?? 0,
       school: (json['School'] as num?)?.toInt() ?? 0,
       resistance: (json['Resistance'] as num?)?.toInt() ?? 0,
       verifiedBuild: (json['VerifiedBuild'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  CreatureTemplateResistanceKey get key {
-    return CreatureTemplateResistanceKey(
-      creatureID: creatureID,
-      school: school,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefCreatureTemplateResistanceEntity &&
-            creatureID == other.creatureID &&
-            school == other.school &&
-            resistance == other.resistance &&
-            verifiedBuild == other.verifiedBuild;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([creatureID, school, resistance, verifiedBuild]);
-
-  @override
-  String toString() {
-    return 'BriefCreatureTemplateResistanceEntity('
-        'creatureID: $creatureID, '
-        'school: $school, '
-        'resistance: $resistance, '
-        'verifiedBuild: $verifiedBuild'
-        ')';
   }
 }

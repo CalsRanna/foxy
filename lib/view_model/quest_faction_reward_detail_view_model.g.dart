@@ -15,21 +15,7 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
   late final difficulty8Controller = registerController(IntFieldController());
   late final difficulty9Controller = registerController(IntFieldController());
 
-  QuestFactionRewardEntity _collectCandidate() {
-    return QuestFactionRewardEntity(
-      id: idController.collect(),
-      difficulty0: difficulty0Controller.collect(),
-      difficulty1: difficulty1Controller.collect(),
-      difficulty2: difficulty2Controller.collect(),
-      difficulty3: difficulty3Controller.collect(),
-      difficulty4: difficulty4Controller.collect(),
-      difficulty5: difficulty5Controller.collect(),
-      difficulty6: difficulty6Controller.collect(),
-      difficulty7: difficulty7Controller.collect(),
-      difficulty8: difficulty8Controller.collect(),
-      difficulty9: difficulty9Controller.collect(),
-    );
-  }
+  void _afterApplyCandidate(QuestFactionRewardEntity questFactionReward) {}
 
   void _applyCandidate(QuestFactionRewardEntity questFactionReward) {
     idController.init(questFactionReward.id);
@@ -46,5 +32,19 @@ mixin _QuestFactionRewardDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(questFactionReward);
   }
 
-  void _afterApplyCandidate(QuestFactionRewardEntity questFactionReward) {}
+  QuestFactionRewardEntity _collectCandidate() {
+    return QuestFactionRewardEntity(
+      id: idController.collect(),
+      difficulty0: difficulty0Controller.collect(),
+      difficulty1: difficulty1Controller.collect(),
+      difficulty2: difficulty2Controller.collect(),
+      difficulty3: difficulty3Controller.collect(),
+      difficulty4: difficulty4Controller.collect(),
+      difficulty5: difficulty5Controller.collect(),
+      difficulty6: difficulty6Controller.collect(),
+      difficulty7: difficulty7Controller.collect(),
+      difficulty8: difficulty8Controller.collect(),
+      difficulty9: difficulty9Controller.collect(),
+    );
+  }
 }

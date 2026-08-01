@@ -18,18 +18,7 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
     DoubleFieldController(),
   );
 
-  PlayerCreateInfoEntity _collectCandidate() {
-    return PlayerCreateInfoEntity(
-      race: raceController.collect(),
-      class_: classController.collect(),
-      map: mapController.collect(),
-      zone: zoneController.collect(),
-      positionX: positionXController.collect(),
-      positionY: positionYController.collect(),
-      positionZ: positionZController.collect(),
-      orientation: orientationController.collect(),
-    );
-  }
+  void _afterApplyCandidate(PlayerCreateInfoEntity playerCreateInfo) {}
 
   void _applyCandidate(PlayerCreateInfoEntity playerCreateInfo) {
     raceController.init(playerCreateInfo.race);
@@ -43,5 +32,16 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(playerCreateInfo);
   }
 
-  void _afterApplyCandidate(PlayerCreateInfoEntity playerCreateInfo) {}
+  PlayerCreateInfoEntity _collectCandidate() {
+    return PlayerCreateInfoEntity(
+      race: raceController.collect(),
+      class_: classController.collect(),
+      map: mapController.collect(),
+      zone: zoneController.collect(),
+      positionX: positionXController.collect(),
+      positionY: positionYController.collect(),
+      positionZ: positionZController.collect(),
+      orientation: orientationController.collect(),
+    );
+  }
 }

@@ -11,15 +11,7 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
     SelectFieldController<int>(fallback: 0),
   );
 
-  GemPropertyEntity _collectCandidate() {
-    return GemPropertyEntity(
-      id: idController.collect(),
-      enchantId: enchantIdController.collect(),
-      maxCountInv: maxCountInvController.collect(),
-      maxCountItem: maxCountItemController.collect(),
-      type: typeController.collect(),
-    );
-  }
+  void _afterApplyCandidate(GemPropertyEntity gemProperty) {}
 
   void _applyCandidate(GemPropertyEntity gemProperty) {
     idController.init(gemProperty.id);
@@ -30,5 +22,13 @@ mixin _GemPropertyDetailViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(gemProperty);
   }
 
-  void _afterApplyCandidate(GemPropertyEntity gemProperty) {}
+  GemPropertyEntity _collectCandidate() {
+    return GemPropertyEntity(
+      id: idController.collect(),
+      enchantId: enchantIdController.collect(),
+      maxCountInv: maxCountInvController.collect(),
+      maxCountItem: maxCountItemController.collect(),
+      type: typeController.collect(),
+    );
+  }
 }

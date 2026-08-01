@@ -15,15 +15,7 @@ mixin _QuestRequestItemsSingleEditorViewModelMixin on FieldControllerMixin {
   );
   late final verifiedBuildController = registerController(IntFieldController());
 
-  QuestRequestItemsEntity _collectCandidate() {
-    return QuestRequestItemsEntity(
-      id: idController.collect(),
-      emoteOnComplete: emoteOnCompleteController.collect(),
-      emoteOnIncomplete: emoteOnIncompleteController.collect(),
-      completionText: completionTextController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
+  void _afterApplyCandidate(QuestRequestItemsEntity questRequestItems) {}
 
   void _applyCandidate(QuestRequestItemsEntity questRequestItems) {
     idController.init(questRequestItems.id);
@@ -34,5 +26,13 @@ mixin _QuestRequestItemsSingleEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(questRequestItems);
   }
 
-  void _afterApplyCandidate(QuestRequestItemsEntity questRequestItems) {}
+  QuestRequestItemsEntity _collectCandidate() {
+    return QuestRequestItemsEntity(
+      id: idController.collect(),
+      emoteOnComplete: emoteOnCompleteController.collect(),
+      emoteOnIncomplete: emoteOnIncompleteController.collect(),
+      completionText: completionTextController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
 }

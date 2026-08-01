@@ -4,115 +4,43 @@ import 'entity_model.dart';
 final class EntityEmitter {
   const EntityEmitter();
 
+  /// 顶层成员顺序遵循 Dart "Sort Members" 规则:公开 class 按名称
+  /// (Brief 在前),私有 mixin 最后。
   String emitEntityPart(EntityGenerationModel model) {
     final sections = <String>[
-      emitFullMixin(model),
-      if (model.keyFields.length > 1) emitKey(model),
       if (model.generateBrief) emitBrief(model),
+      if (model.keyFields.length > 1) emitKey(model),
+      emitFullMixin(model),
     ];
     return sections.join('\n\n');
   }
 
+  /// mixin 成员顺序遵循 "Sort Members" 规则:
+  /// 实例 getter(hashCode)→ 实例方法(== → copyWith → toJson → toString)
+  /// → 静态方法(fromJson)。
   String emitFullMixin(EntityGenerationModel model) {
-    final buffer = StringBuffer()
-      ..writeln('mixin ${model.mixinName} {')
-      ..writeln()
-      ..writeln(
-        '  static ${model.className} fromJson(Map<String, dynamic> json) {',
-      )
-      ..writeln('    return ${model.className}(');
-    for (final field in model.fields) {
-      buffer.writeln('      ${field.dartName}: ${_fullFromJson(field)},');
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  ${model.className} copyWith({');
-    for (final field in model.fields) {
-      buffer.writeln(
-        '    ${_copyParameterType(field.dartType)} '
-        '${field.dartName},',
-      );
-    }
-    buffer
-      ..writeln('  }) {')
-      ..writeln('    final self = this as ${model.className};')
-      ..writeln('    return ${model.className}(');
-    for (final field in model.fields) {
-      buffer.writeln(
-        '      ${field.dartName}: ${field.dartName} ?? self.${field.dartName},',
-      );
-    }
-    buffer
-      ..writeln('    );')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  Map<String, dynamic> toJson() {')
-      ..writeln('    final self = this as ${model.className};')
-      ..writeln('    return {');
-    for (final field in model.fields) {
-      buffer.writeln(
-        '      ${dartLiteral(field.columnName)}: '
-        '${_fullToJson(field, receiver: 'self')},',
-      );
-    }
-    buffer
-      ..writeln('    };')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  bool operator ==(Object other) {')
-      ..writeln('    final self = this as ${model.className};')
-      ..writeln('    return identical(self, other) ||')
-      ..writeln('        other is ${model.className} &&')
-      ..writeln('            self.runtimeType == other.runtimeType &&');
-    for (var index = 0; index < model.fields.length; index++) {
-      final field = model.fields[index];
-      final suffix = index == model.fields.length - 1 ? ';' : ' &&';
-      buffer.writeln(
-        '            self.${field.dartName} == '
-        'other.${field.dartName}$suffix',
-      );
-    }
-    buffer
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  int get hashCode {')
-      ..writeln('    final self = this as ${model.className};')
-      ..writeln('    return Object.hashAll([')
-      ..writeln('      self.runtimeType,');
-    for (final field in model.fields) {
-      buffer.writeln('      self.${field.dartName},');
-    }
-    buffer
-      ..writeln('    ]);')
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  String toString() {')
-      ..writeln('    final self = this as ${model.className};')
-      ..writeln("    return '${model.className}('");
-    for (var index = 0; index < model.fields.length; index++) {
-      final field = model.fields[index];
-      final suffix = index == model.fields.length - 1 ? "'" : ", '";
-      buffer.writeln(
-        "        '${field.dartName}: "
-        "\${self.${field.dartName}}$suffix",
-      );
-    }
-    buffer
-      ..writeln("        ')';")
-      ..writeln('  }')
-      ..writeln('}');
+    final buffer = StringBuffer()..writeln('mixin ${model.mixinName} {');
+    _emitMixinHashCode(buffer, model);
+    buffer.writeln();
+    _emitMixinEquals(buffer, model);
+    buffer.writeln();
+    _emitMixinCopyWith(buffer, model);
+    buffer.writeln();
+    _emitMixinToJson(buffer, model);
+    buffer.writeln();
+    _emitMixinToString(buffer, model);
+    buffer.writeln();
+    _emitMixinFromJson(buffer, model);
+    buffer.writeln('}');
     return buffer.toString();
   }
 
+  /// Key 类成员顺序遵循 "Sort Members" 规则:
+  /// 字段(保持原序)→ 构造函数(无名 → fromEntity)→ hashCode getter
+  /// → == → toString。
   String emitKey(EntityGenerationModel model) {
     final fields = model.keyFields;
-    final buffer = StringBuffer()
-      ..writeln('final class ${model.keyClassName} {');
+    final buffer = StringBuffer()..writeln('final class ${model.keyClassName} {');
     for (final field in fields) {
       buffer.writeln('  final ${field.dartType} ${field.dartName};');
     }
@@ -136,49 +64,24 @@ final class EntityEmitter {
     buffer
       ..writeln('    );')
       ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  bool operator ==(Object other) {')
-      ..writeln('    return identical(this, other) ||')
-      ..writeln('        other is ${model.keyClassName} &&');
-    for (var index = 0; index < fields.length; index++) {
-      final field = fields[index];
-      final suffix = index == fields.length - 1 ? ';' : ' &&';
-      buffer.writeln(
-        '            ${field.dartName} == other.${field.dartName}$suffix',
-      );
-    }
-    buffer
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  int get hashCode => Object.hashAll([');
-    for (final field in fields) {
-      buffer.writeln('    ${field.dartName},');
-    }
-    buffer
-      ..writeln('  ]);')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  String toString() {')
-      ..writeln("    return '${model.keyClassName}('");
-    for (var index = 0; index < fields.length; index++) {
-      final field = fields[index];
-      final suffix = index == fields.length - 1 ? "'" : ", '";
-      buffer.writeln("        '${field.dartName}: \$${field.dartName}$suffix");
-    }
-    buffer
-      ..writeln("        ')';")
-      ..writeln('  }')
-      ..writeln('}');
+      ..writeln();
+    _emitValueHashCode(buffer, model.keyClassName, fields);
+    buffer.writeln();
+    _emitValueEquals(buffer, model.keyClassName, fields);
+    buffer.writeln();
+    _emitValueToString(buffer, model.keyClassName, fields);
+    buffer.writeln('}');
     return buffer.toString();
   }
 
+  /// Brief 类成员顺序遵循 "Sort Members" 规则:
+  /// 字段(保持原序)→ 构造函数(无名 → fromJson)→ hashCode getter
+  /// → key getter → == → toString。
   String emitBrief(EntityGenerationModel model) {
     final fields = model.briefFields;
     final keyFields = model.keyFields;
-    final buffer = StringBuffer();
-    buffer.writeln('final class ${model.briefClassName} {');
+    final buffer = StringBuffer()
+      ..writeln('final class ${model.briefClassName} {');
     for (final field in fields) {
       buffer.writeln('  final ${field.dartType} ${field.dartName};');
     }
@@ -208,6 +111,8 @@ final class EntityEmitter {
       ..writeln('    );')
       ..writeln('  }')
       ..writeln();
+    _emitValueHashCode(buffer, model.briefClassName, fields);
+    buffer.writeln();
     if (keyFields.length == 1) {
       final key = keyFields.single;
       buffer.writeln('  ${key.dartType} get key => ${key.dartName};');
@@ -222,22 +127,139 @@ final class EntityEmitter {
         ..writeln('    );')
         ..writeln('  }');
     }
-    _emitValueSemantics(buffer, model.briefClassName, fields);
+    buffer.writeln();
+    _emitValueEquals(buffer, model.briefClassName, fields);
+    buffer.writeln();
+    _emitValueToString(buffer, model.briefClassName, fields);
     buffer.writeln('}');
     return buffer.toString();
   }
 
-  /// 为 Brief 这类无继承的 `final class` 生成 `==` / `hashCode` / `toString`。
-  ///
-  /// Full Entity 的版本要额外做 `this as` 转型和 `runtimeType` 比较，
-  /// 所以不复用这里的实现。
-  void _emitValueSemantics(
+  void _emitMixinHashCode(StringBuffer buffer, EntityGenerationModel model) {
+    buffer
+      ..writeln('  @override')
+      ..writeln('  int get hashCode {')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln('    return Object.hashAll([')
+      ..writeln('      self.runtimeType,');
+    for (final field in model.fields) {
+      buffer.writeln('      self.${field.dartName},');
+    }
+    buffer
+      ..writeln('    ]);')
+      ..writeln('  }');
+  }
+
+  void _emitMixinEquals(StringBuffer buffer, EntityGenerationModel model) {
+    buffer
+      ..writeln('  @override')
+      ..writeln('  bool operator ==(Object other) {')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln('    return identical(self, other) ||')
+      ..writeln('        other is ${model.className} &&')
+      ..writeln('            self.runtimeType == other.runtimeType &&');
+    for (var index = 0; index < model.fields.length; index++) {
+      final field = model.fields[index];
+      final suffix = index == model.fields.length - 1 ? ';' : ' &&';
+      buffer.writeln(
+        '            self.${field.dartName} == '
+        'other.${field.dartName}$suffix',
+      );
+    }
+    buffer.writeln('  }');
+  }
+
+  void _emitMixinCopyWith(StringBuffer buffer, EntityGenerationModel model) {
+    buffer.writeln('  ${model.className} copyWith({');
+    for (final field in model.fields) {
+      buffer.writeln(
+        '    ${_copyParameterType(field.dartType)} '
+        '${field.dartName},',
+      );
+    }
+    buffer
+      ..writeln('  }) {')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln('    return ${model.className}(');
+    for (final field in model.fields) {
+      buffer.writeln(
+        '      ${field.dartName}: ${field.dartName} ?? self.${field.dartName},',
+      );
+    }
+    buffer
+      ..writeln('    );')
+      ..writeln('  }');
+  }
+
+  void _emitMixinToJson(StringBuffer buffer, EntityGenerationModel model) {
+    buffer
+      ..writeln('  Map<String, dynamic> toJson() {')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln('    return {');
+    for (final field in model.fields) {
+      buffer.writeln(
+        '      ${dartLiteral(field.columnName)}: '
+        '${_fullToJson(field, receiver: 'self')},',
+      );
+    }
+    buffer
+      ..writeln('    };')
+      ..writeln('  }');
+  }
+
+  void _emitMixinToString(StringBuffer buffer, EntityGenerationModel model) {
+    buffer
+      ..writeln('  @override')
+      ..writeln('  String toString() {')
+      ..writeln('    final self = this as ${model.className};')
+      ..writeln("    return '${model.className}('");
+    for (var index = 0; index < model.fields.length; index++) {
+      final field = model.fields[index];
+      final suffix = index == model.fields.length - 1 ? "'" : ", '";
+      buffer.writeln(
+        "        '${field.dartName}: "
+        "\${self.${field.dartName}}$suffix",
+      );
+    }
+    buffer
+      ..writeln("        ')';")
+      ..writeln('  }');
+  }
+
+  void _emitMixinFromJson(StringBuffer buffer, EntityGenerationModel model) {
+    buffer.writeln(
+      '  static ${model.className} fromJson(Map<String, dynamic> json) {',
+    );
+    buffer.writeln('    return ${model.className}(');
+    for (final field in model.fields) {
+      buffer.writeln('      ${field.dartName}: ${_fullFromJson(field)},');
+    }
+    buffer
+      ..writeln('    );')
+      ..writeln('  }');
+  }
+
+  /// 无继承 `final class`(Key / Brief)共用的值语义成员。
+  void _emitValueHashCode(
     StringBuffer buffer,
     String className,
     List<EntityFieldModel> fields,
   ) {
     buffer
-      ..writeln()
+      ..writeln('  @override')
+      ..writeln('  int get hashCode => Object.hashAll([');
+    for (final field in fields) {
+      buffer.writeln('    ${field.dartName},');
+    }
+    buffer.writeln('  ]);');
+  }
+
+  void _emitValueEquals(
+    StringBuffer buffer,
+    String className,
+    List<EntityFieldModel> fields,
+  ) {
+    buffer
       ..writeln('  @override')
       ..writeln('  bool operator ==(Object other) {')
       ..writeln('    return identical(this, other) ||')
@@ -249,17 +271,15 @@ final class EntityEmitter {
         '            ${field.dartName} == other.${field.dartName}$suffix',
       );
     }
+    buffer.writeln('  }');
+  }
+
+  void _emitValueToString(
+    StringBuffer buffer,
+    String className,
+    List<EntityFieldModel> fields,
+  ) {
     buffer
-      ..writeln('  }')
-      ..writeln()
-      ..writeln('  @override')
-      ..writeln('  int get hashCode => Object.hashAll([');
-    for (final field in fields) {
-      buffer.writeln('    ${field.dartName},');
-    }
-    buffer
-      ..writeln('  ]);')
-      ..writeln()
       ..writeln('  @override')
       ..writeln('  String toString() {')
       ..writeln("    return '$className('");

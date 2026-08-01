@@ -2,61 +2,140 @@
 
 part of 'vehicle_entity.dart';
 
-mixin _VehicleEntityMixin {
-  static VehicleEntity fromJson(Map<String, dynamic> json) {
-    return VehicleEntity(
+final class BriefVehicleEntity {
+  final int id;
+  final int flags;
+  final double turnSpeed;
+
+  const BriefVehicleEntity({this.id = 0, this.flags = 0, this.turnSpeed = 0.0});
+
+  factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
+    return BriefVehicleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       turnSpeed: (json['TurnSpeed'] as num?)?.toDouble() ?? 0.0,
-      pitchSpeed: (json['PitchSpeed'] as num?)?.toDouble() ?? 0.0,
-      pitchMin: (json['PitchMin'] as num?)?.toDouble() ?? 0.0,
-      pitchMax: (json['PitchMax'] as num?)?.toDouble() ?? 0.0,
-      seatID0: (json['SeatID0'] as num?)?.toInt() ?? 0,
-      seatID1: (json['SeatID1'] as num?)?.toInt() ?? 0,
-      seatID2: (json['SeatID2'] as num?)?.toInt() ?? 0,
-      seatID3: (json['SeatID3'] as num?)?.toInt() ?? 0,
-      seatID4: (json['SeatID4'] as num?)?.toInt() ?? 0,
-      seatID5: (json['SeatID5'] as num?)?.toInt() ?? 0,
-      seatID6: (json['SeatID6'] as num?)?.toInt() ?? 0,
-      seatID7: (json['SeatID7'] as num?)?.toInt() ?? 0,
-      mouseLookOffsetPitch:
-          (json['MouseLookOffsetPitch'] as num?)?.toDouble() ?? 0.0,
-      cameraFadeDistScalarMin:
-          (json['CameraFadeDistScalarMin'] as num?)?.toDouble() ?? 0.0,
-      cameraFadeDistScalarMax:
-          (json['CameraFadeDistScalarMax'] as num?)?.toDouble() ?? 0.0,
-      cameraPitchOffset: (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0.0,
-      facingLimitRight: (json['FacingLimitRight'] as num?)?.toDouble() ?? 0.0,
-      facingLimitLeft: (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtTurnLingering:
-          (json['MsslTrgtTurnLingering'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtPitchLingering:
-          (json['MsslTrgtPitchLingering'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtMouseLingering:
-          (json['MsslTrgtMouseLingering'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtEndOpacity:
-          (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtArcSpeed: (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtArcRepeat: (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtArcWidth: (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtImpactRadius0:
-          (json['MsslTrgtImpactRadius0'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtImpactRadius1:
-          (json['MsslTrgtImpactRadius1'] as num?)?.toDouble() ?? 0.0,
-      msslTrgtArcTexture: json['MsslTrgtArcTexture']?.toString() ?? '',
-      msslTrgtImpactTexture: json['MsslTrgtImpactTexture']?.toString() ?? '',
-      msslTrgtImpactModel0: json['MsslTrgtImpactModel0']?.toString() ?? '',
-      msslTrgtImpactModel1: json['MsslTrgtImpactModel1']?.toString() ?? '',
-      cameraYawOffset: (json['CameraYawOffset'] as num?)?.toDouble() ?? 0.0,
-      uiLocomotionType: (json['UiLocomotionType'] as num?)?.toInt() ?? 0,
-      msslTrgtImpactTexRadius:
-          (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0.0,
-      vehicleUIIndicatorID:
-          (json['VehicleUIIndicatorID'] as num?)?.toInt() ?? 0,
-      powerDisplayID0: (json['PowerDisplayID0'] as num?)?.toInt() ?? 0,
-      powerDisplayID1: (json['PowerDisplayID1'] as num?)?.toInt() ?? 0,
-      powerDisplayID2: (json['PowerDisplayID2'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, flags, turnSpeed]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefVehicleEntity &&
+            id == other.id &&
+            flags == other.flags &&
+            turnSpeed == other.turnSpeed;
+  }
+
+  @override
+  String toString() {
+    return 'BriefVehicleEntity('
+        'id: $id, '
+        'flags: $flags, '
+        'turnSpeed: $turnSpeed'
+        ')';
+  }
+}
+
+mixin _VehicleEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as VehicleEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.flags,
+      self.turnSpeed,
+      self.pitchSpeed,
+      self.pitchMin,
+      self.pitchMax,
+      self.seatID0,
+      self.seatID1,
+      self.seatID2,
+      self.seatID3,
+      self.seatID4,
+      self.seatID5,
+      self.seatID6,
+      self.seatID7,
+      self.mouseLookOffsetPitch,
+      self.cameraFadeDistScalarMin,
+      self.cameraFadeDistScalarMax,
+      self.cameraPitchOffset,
+      self.facingLimitRight,
+      self.facingLimitLeft,
+      self.msslTrgtTurnLingering,
+      self.msslTrgtPitchLingering,
+      self.msslTrgtMouseLingering,
+      self.msslTrgtEndOpacity,
+      self.msslTrgtArcSpeed,
+      self.msslTrgtArcRepeat,
+      self.msslTrgtArcWidth,
+      self.msslTrgtImpactRadius0,
+      self.msslTrgtImpactRadius1,
+      self.msslTrgtArcTexture,
+      self.msslTrgtImpactTexture,
+      self.msslTrgtImpactModel0,
+      self.msslTrgtImpactModel1,
+      self.cameraYawOffset,
+      self.uiLocomotionType,
+      self.msslTrgtImpactTexRadius,
+      self.vehicleUIIndicatorID,
+      self.powerDisplayID0,
+      self.powerDisplayID1,
+      self.powerDisplayID2,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as VehicleEntity;
+    return identical(self, other) ||
+        other is VehicleEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.flags == other.flags &&
+            self.turnSpeed == other.turnSpeed &&
+            self.pitchSpeed == other.pitchSpeed &&
+            self.pitchMin == other.pitchMin &&
+            self.pitchMax == other.pitchMax &&
+            self.seatID0 == other.seatID0 &&
+            self.seatID1 == other.seatID1 &&
+            self.seatID2 == other.seatID2 &&
+            self.seatID3 == other.seatID3 &&
+            self.seatID4 == other.seatID4 &&
+            self.seatID5 == other.seatID5 &&
+            self.seatID6 == other.seatID6 &&
+            self.seatID7 == other.seatID7 &&
+            self.mouseLookOffsetPitch == other.mouseLookOffsetPitch &&
+            self.cameraFadeDistScalarMin == other.cameraFadeDistScalarMin &&
+            self.cameraFadeDistScalarMax == other.cameraFadeDistScalarMax &&
+            self.cameraPitchOffset == other.cameraPitchOffset &&
+            self.facingLimitRight == other.facingLimitRight &&
+            self.facingLimitLeft == other.facingLimitLeft &&
+            self.msslTrgtTurnLingering == other.msslTrgtTurnLingering &&
+            self.msslTrgtPitchLingering == other.msslTrgtPitchLingering &&
+            self.msslTrgtMouseLingering == other.msslTrgtMouseLingering &&
+            self.msslTrgtEndOpacity == other.msslTrgtEndOpacity &&
+            self.msslTrgtArcSpeed == other.msslTrgtArcSpeed &&
+            self.msslTrgtArcRepeat == other.msslTrgtArcRepeat &&
+            self.msslTrgtArcWidth == other.msslTrgtArcWidth &&
+            self.msslTrgtImpactRadius0 == other.msslTrgtImpactRadius0 &&
+            self.msslTrgtImpactRadius1 == other.msslTrgtImpactRadius1 &&
+            self.msslTrgtArcTexture == other.msslTrgtArcTexture &&
+            self.msslTrgtImpactTexture == other.msslTrgtImpactTexture &&
+            self.msslTrgtImpactModel0 == other.msslTrgtImpactModel0 &&
+            self.msslTrgtImpactModel1 == other.msslTrgtImpactModel1 &&
+            self.cameraYawOffset == other.cameraYawOffset &&
+            self.uiLocomotionType == other.uiLocomotionType &&
+            self.msslTrgtImpactTexRadius == other.msslTrgtImpactTexRadius &&
+            self.vehicleUIIndicatorID == other.vehicleUIIndicatorID &&
+            self.powerDisplayID0 == other.powerDisplayID0 &&
+            self.powerDisplayID1 == other.powerDisplayID1 &&
+            self.powerDisplayID2 == other.powerDisplayID2;
   }
 
   VehicleEntity copyWith({
@@ -202,102 +281,6 @@ mixin _VehicleEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as VehicleEntity;
-    return identical(self, other) ||
-        other is VehicleEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.flags == other.flags &&
-            self.turnSpeed == other.turnSpeed &&
-            self.pitchSpeed == other.pitchSpeed &&
-            self.pitchMin == other.pitchMin &&
-            self.pitchMax == other.pitchMax &&
-            self.seatID0 == other.seatID0 &&
-            self.seatID1 == other.seatID1 &&
-            self.seatID2 == other.seatID2 &&
-            self.seatID3 == other.seatID3 &&
-            self.seatID4 == other.seatID4 &&
-            self.seatID5 == other.seatID5 &&
-            self.seatID6 == other.seatID6 &&
-            self.seatID7 == other.seatID7 &&
-            self.mouseLookOffsetPitch == other.mouseLookOffsetPitch &&
-            self.cameraFadeDistScalarMin == other.cameraFadeDistScalarMin &&
-            self.cameraFadeDistScalarMax == other.cameraFadeDistScalarMax &&
-            self.cameraPitchOffset == other.cameraPitchOffset &&
-            self.facingLimitRight == other.facingLimitRight &&
-            self.facingLimitLeft == other.facingLimitLeft &&
-            self.msslTrgtTurnLingering == other.msslTrgtTurnLingering &&
-            self.msslTrgtPitchLingering == other.msslTrgtPitchLingering &&
-            self.msslTrgtMouseLingering == other.msslTrgtMouseLingering &&
-            self.msslTrgtEndOpacity == other.msslTrgtEndOpacity &&
-            self.msslTrgtArcSpeed == other.msslTrgtArcSpeed &&
-            self.msslTrgtArcRepeat == other.msslTrgtArcRepeat &&
-            self.msslTrgtArcWidth == other.msslTrgtArcWidth &&
-            self.msslTrgtImpactRadius0 == other.msslTrgtImpactRadius0 &&
-            self.msslTrgtImpactRadius1 == other.msslTrgtImpactRadius1 &&
-            self.msslTrgtArcTexture == other.msslTrgtArcTexture &&
-            self.msslTrgtImpactTexture == other.msslTrgtImpactTexture &&
-            self.msslTrgtImpactModel0 == other.msslTrgtImpactModel0 &&
-            self.msslTrgtImpactModel1 == other.msslTrgtImpactModel1 &&
-            self.cameraYawOffset == other.cameraYawOffset &&
-            self.uiLocomotionType == other.uiLocomotionType &&
-            self.msslTrgtImpactTexRadius == other.msslTrgtImpactTexRadius &&
-            self.vehicleUIIndicatorID == other.vehicleUIIndicatorID &&
-            self.powerDisplayID0 == other.powerDisplayID0 &&
-            self.powerDisplayID1 == other.powerDisplayID1 &&
-            self.powerDisplayID2 == other.powerDisplayID2;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as VehicleEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.flags,
-      self.turnSpeed,
-      self.pitchSpeed,
-      self.pitchMin,
-      self.pitchMax,
-      self.seatID0,
-      self.seatID1,
-      self.seatID2,
-      self.seatID3,
-      self.seatID4,
-      self.seatID5,
-      self.seatID6,
-      self.seatID7,
-      self.mouseLookOffsetPitch,
-      self.cameraFadeDistScalarMin,
-      self.cameraFadeDistScalarMax,
-      self.cameraPitchOffset,
-      self.facingLimitRight,
-      self.facingLimitLeft,
-      self.msslTrgtTurnLingering,
-      self.msslTrgtPitchLingering,
-      self.msslTrgtMouseLingering,
-      self.msslTrgtEndOpacity,
-      self.msslTrgtArcSpeed,
-      self.msslTrgtArcRepeat,
-      self.msslTrgtArcWidth,
-      self.msslTrgtImpactRadius0,
-      self.msslTrgtImpactRadius1,
-      self.msslTrgtArcTexture,
-      self.msslTrgtImpactTexture,
-      self.msslTrgtImpactModel0,
-      self.msslTrgtImpactModel1,
-      self.cameraYawOffset,
-      self.uiLocomotionType,
-      self.msslTrgtImpactTexRadius,
-      self.vehicleUIIndicatorID,
-      self.powerDisplayID0,
-      self.powerDisplayID1,
-      self.powerDisplayID2,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as VehicleEntity;
     return 'VehicleEntity('
@@ -343,43 +326,60 @@ mixin _VehicleEntityMixin {
         'powerDisplayID2: ${self.powerDisplayID2}'
         ')';
   }
-}
 
-final class BriefVehicleEntity {
-  final int id;
-  final int flags;
-  final double turnSpeed;
-
-  const BriefVehicleEntity({this.id = 0, this.flags = 0, this.turnSpeed = 0.0});
-
-  factory BriefVehicleEntity.fromJson(Map<String, dynamic> json) {
-    return BriefVehicleEntity(
+  static VehicleEntity fromJson(Map<String, dynamic> json) {
+    return VehicleEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       flags: (json['Flags'] as num?)?.toInt() ?? 0,
       turnSpeed: (json['TurnSpeed'] as num?)?.toDouble() ?? 0.0,
+      pitchSpeed: (json['PitchSpeed'] as num?)?.toDouble() ?? 0.0,
+      pitchMin: (json['PitchMin'] as num?)?.toDouble() ?? 0.0,
+      pitchMax: (json['PitchMax'] as num?)?.toDouble() ?? 0.0,
+      seatID0: (json['SeatID0'] as num?)?.toInt() ?? 0,
+      seatID1: (json['SeatID1'] as num?)?.toInt() ?? 0,
+      seatID2: (json['SeatID2'] as num?)?.toInt() ?? 0,
+      seatID3: (json['SeatID3'] as num?)?.toInt() ?? 0,
+      seatID4: (json['SeatID4'] as num?)?.toInt() ?? 0,
+      seatID5: (json['SeatID5'] as num?)?.toInt() ?? 0,
+      seatID6: (json['SeatID6'] as num?)?.toInt() ?? 0,
+      seatID7: (json['SeatID7'] as num?)?.toInt() ?? 0,
+      mouseLookOffsetPitch:
+          (json['MouseLookOffsetPitch'] as num?)?.toDouble() ?? 0.0,
+      cameraFadeDistScalarMin:
+          (json['CameraFadeDistScalarMin'] as num?)?.toDouble() ?? 0.0,
+      cameraFadeDistScalarMax:
+          (json['CameraFadeDistScalarMax'] as num?)?.toDouble() ?? 0.0,
+      cameraPitchOffset: (json['CameraPitchOffset'] as num?)?.toDouble() ?? 0.0,
+      facingLimitRight: (json['FacingLimitRight'] as num?)?.toDouble() ?? 0.0,
+      facingLimitLeft: (json['FacingLimitLeft'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtTurnLingering:
+          (json['MsslTrgtTurnLingering'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtPitchLingering:
+          (json['MsslTrgtPitchLingering'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtMouseLingering:
+          (json['MsslTrgtMouseLingering'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtEndOpacity:
+          (json['MsslTrgtEndOpacity'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtArcSpeed: (json['MsslTrgtArcSpeed'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtArcRepeat: (json['MsslTrgtArcRepeat'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtArcWidth: (json['MsslTrgtArcWidth'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtImpactRadius0:
+          (json['MsslTrgtImpactRadius0'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtImpactRadius1:
+          (json['MsslTrgtImpactRadius1'] as num?)?.toDouble() ?? 0.0,
+      msslTrgtArcTexture: json['MsslTrgtArcTexture']?.toString() ?? '',
+      msslTrgtImpactTexture: json['MsslTrgtImpactTexture']?.toString() ?? '',
+      msslTrgtImpactModel0: json['MsslTrgtImpactModel0']?.toString() ?? '',
+      msslTrgtImpactModel1: json['MsslTrgtImpactModel1']?.toString() ?? '',
+      cameraYawOffset: (json['CameraYawOffset'] as num?)?.toDouble() ?? 0.0,
+      uiLocomotionType: (json['UiLocomotionType'] as num?)?.toInt() ?? 0,
+      msslTrgtImpactTexRadius:
+          (json['MsslTrgtImpactTexRadius'] as num?)?.toDouble() ?? 0.0,
+      vehicleUIIndicatorID:
+          (json['VehicleUIIndicatorID'] as num?)?.toInt() ?? 0,
+      powerDisplayID0: (json['PowerDisplayID0'] as num?)?.toInt() ?? 0,
+      powerDisplayID1: (json['PowerDisplayID1'] as num?)?.toInt() ?? 0,
+      powerDisplayID2: (json['PowerDisplayID2'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefVehicleEntity &&
-            id == other.id &&
-            flags == other.flags &&
-            turnSpeed == other.turnSpeed;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, flags, turnSpeed]);
-
-  @override
-  String toString() {
-    return 'BriefVehicleEntity('
-        'id: $id, '
-        'flags: $flags, '
-        'turnSpeed: $turnSpeed'
-        ')';
   }
 }

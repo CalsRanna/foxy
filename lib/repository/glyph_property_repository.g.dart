@@ -2,6 +2,24 @@
 
 part of 'glyph_property_repository.dart';
 
+final class GlyphPropertyFilter {
+  final String id;
+
+  const GlyphPropertyFilter({this.id = ''});
+
+  factory GlyphPropertyFilter.fromJson(Map<String, dynamic> json) {
+    return GlyphPropertyFilter(id: json['id']?.toString() ?? '');
+  }
+
+  GlyphPropertyFilter copyWith({String? id}) {
+    return GlyphPropertyFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
   Future<void> destroyGlyphProperty(int key) async {
     await _beforeDestroy(key);
@@ -73,23 +91,5 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class GlyphPropertyFilter {
-  final String id;
-
-  const GlyphPropertyFilter({this.id = ''});
-
-  factory GlyphPropertyFilter.fromJson(Map<String, dynamic> json) {
-    return GlyphPropertyFilter(id: json['id']?.toString() ?? '');
-  }
-
-  GlyphPropertyFilter copyWith({String? id}) {
-    return GlyphPropertyFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

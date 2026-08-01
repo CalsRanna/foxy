@@ -2,6 +2,28 @@
 
 part of 'spell_item_enchantment_condition_repository.dart';
 
+final class SpellItemEnchantmentConditionFilter {
+  final String id;
+
+  const SpellItemEnchantmentConditionFilter({this.id = ''});
+
+  factory SpellItemEnchantmentConditionFilter.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return SpellItemEnchantmentConditionFilter(
+      id: json['id']?.toString() ?? '',
+    );
+  }
+
+  SpellItemEnchantmentConditionFilter copyWith({String? id}) {
+    return SpellItemEnchantmentConditionFilter(id: id ?? this.id);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id};
+  }
+}
+
 mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
   Future<void> destroySpellItemEnchantmentCondition(int key) async {
     await _beforeDestroy(key);
@@ -81,27 +103,5 @@ mixin _SpellItemEnchantmentConditionRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class SpellItemEnchantmentConditionFilter {
-  final String id;
-
-  const SpellItemEnchantmentConditionFilter({this.id = ''});
-
-  factory SpellItemEnchantmentConditionFilter.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    return SpellItemEnchantmentConditionFilter(
-      id: json['id']?.toString() ?? '',
-    );
-  }
-
-  SpellItemEnchantmentConditionFilter copyWith({String? id}) {
-    return SpellItemEnchantmentConditionFilter(id: id ?? this.id);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id};
   }
 }

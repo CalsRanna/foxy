@@ -2,19 +2,91 @@
 
 part of 'dbc_item_entity.dart';
 
-mixin _DbcItemEntityMixin {
-  static DbcItemEntity fromJson(Map<String, dynamic> json) {
-    return DbcItemEntity(
+final class BriefDbcItemEntity {
+  final int id;
+  final int classId;
+  final int subclassId;
+  final int displayInfoId;
+  final int inventoryType;
+
+  const BriefDbcItemEntity({
+    this.id = 0,
+    this.classId = 0,
+    this.subclassId = 0,
+    this.displayInfoId = 0,
+    this.inventoryType = 0,
+  });
+
+  factory BriefDbcItemEntity.fromJson(Map<String, dynamic> json) {
+    return BriefDbcItemEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       classId: (json['ClassID'] as num?)?.toInt() ?? 0,
       subclassId: (json['SubclassID'] as num?)?.toInt() ?? 0,
-      soundOverrideSubclassId:
-          (json['Sound_override_subclassID'] as num?)?.toInt() ?? 0,
-      material: (json['Material'] as num?)?.toInt() ?? 0,
       displayInfoId: (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
       inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
-      sheatheType: (json['SheatheType'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([id, classId, subclassId, displayInfoId, inventoryType]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefDbcItemEntity &&
+            id == other.id &&
+            classId == other.classId &&
+            subclassId == other.subclassId &&
+            displayInfoId == other.displayInfoId &&
+            inventoryType == other.inventoryType;
+  }
+
+  @override
+  String toString() {
+    return 'BriefDbcItemEntity('
+        'id: $id, '
+        'classId: $classId, '
+        'subclassId: $subclassId, '
+        'displayInfoId: $displayInfoId, '
+        'inventoryType: $inventoryType'
+        ')';
+  }
+}
+
+mixin _DbcItemEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as DbcItemEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.classId,
+      self.subclassId,
+      self.soundOverrideSubclassId,
+      self.material,
+      self.displayInfoId,
+      self.inventoryType,
+      self.sheatheType,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as DbcItemEntity;
+    return identical(self, other) ||
+        other is DbcItemEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.classId == other.classId &&
+            self.subclassId == other.subclassId &&
+            self.soundOverrideSubclassId == other.soundOverrideSubclassId &&
+            self.material == other.material &&
+            self.displayInfoId == other.displayInfoId &&
+            self.inventoryType == other.inventoryType &&
+            self.sheatheType == other.sheatheType;
   }
 
   DbcItemEntity copyWith({
@@ -56,38 +128,6 @@ mixin _DbcItemEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as DbcItemEntity;
-    return identical(self, other) ||
-        other is DbcItemEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.classId == other.classId &&
-            self.subclassId == other.subclassId &&
-            self.soundOverrideSubclassId == other.soundOverrideSubclassId &&
-            self.material == other.material &&
-            self.displayInfoId == other.displayInfoId &&
-            self.inventoryType == other.inventoryType &&
-            self.sheatheType == other.sheatheType;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as DbcItemEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.classId,
-      self.subclassId,
-      self.soundOverrideSubclassId,
-      self.material,
-      self.displayInfoId,
-      self.inventoryType,
-      self.sheatheType,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as DbcItemEntity;
     return 'DbcItemEntity('
@@ -101,58 +141,18 @@ mixin _DbcItemEntityMixin {
         'sheatheType: ${self.sheatheType}'
         ')';
   }
-}
 
-final class BriefDbcItemEntity {
-  final int id;
-  final int classId;
-  final int subclassId;
-  final int displayInfoId;
-  final int inventoryType;
-
-  const BriefDbcItemEntity({
-    this.id = 0,
-    this.classId = 0,
-    this.subclassId = 0,
-    this.displayInfoId = 0,
-    this.inventoryType = 0,
-  });
-
-  factory BriefDbcItemEntity.fromJson(Map<String, dynamic> json) {
-    return BriefDbcItemEntity(
+  static DbcItemEntity fromJson(Map<String, dynamic> json) {
+    return DbcItemEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       classId: (json['ClassID'] as num?)?.toInt() ?? 0,
       subclassId: (json['SubclassID'] as num?)?.toInt() ?? 0,
+      soundOverrideSubclassId:
+          (json['Sound_override_subclassID'] as num?)?.toInt() ?? 0,
+      material: (json['Material'] as num?)?.toInt() ?? 0,
       displayInfoId: (json['DisplayInfoID'] as num?)?.toInt() ?? 0,
       inventoryType: (json['InventoryType'] as num?)?.toInt() ?? 0,
+      sheatheType: (json['SheatheType'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefDbcItemEntity &&
-            id == other.id &&
-            classId == other.classId &&
-            subclassId == other.subclassId &&
-            displayInfoId == other.displayInfoId &&
-            inventoryType == other.inventoryType;
-  }
-
-  @override
-  int get hashCode =>
-      Object.hashAll([id, classId, subclassId, displayInfoId, inventoryType]);
-
-  @override
-  String toString() {
-    return 'BriefDbcItemEntity('
-        'id: $id, '
-        'classId: $classId, '
-        'subclassId: $subclassId, '
-        'displayInfoId: $displayInfoId, '
-        'inventoryType: $inventoryType'
-        ')';
   }
 }

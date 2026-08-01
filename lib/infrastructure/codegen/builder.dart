@@ -16,9 +16,11 @@ Builder foxyEntityBuilder(BuilderOptions options) {
   );
 }
 
+// part 顶层遵循 "Sort Members" 规则:公开 class(Filter)在前,
+// 私有 mixin(Repository)在后,所以 Filter 生成器排在前面。
 Builder foxyRepositoryBuilder(BuilderOptions options) {
   return SharedPartBuilder(
-    [const FoxyRepositoryGenerator(), const FoxyFilterGenerator()],
+    [const FoxyFilterGenerator(), const FoxyRepositoryGenerator()],
     'foxy_repository',
     writeDescriptions: false,
   );

@@ -14,19 +14,9 @@ mixin _GameObjectTemplateAddonSingleEditorViewModelMixin
   late final artkit2Controller = registerController(IntFieldController());
   late final artkit3Controller = registerController(IntFieldController());
 
-  GameObjectTemplateAddonEntity _collectCandidate() {
-    return GameObjectTemplateAddonEntity(
-      entry: entryController.collect(),
-      faction: factionController.collect(),
-      flags: flagsController.collect(),
-      minGold: minGoldController.collect(),
-      maxGold: maxGoldController.collect(),
-      artkit0: artkit0Controller.collect(),
-      artkit1: artkit1Controller.collect(),
-      artkit2: artkit2Controller.collect(),
-      artkit3: artkit3Controller.collect(),
-    );
-  }
+  void _afterApplyCandidate(
+    GameObjectTemplateAddonEntity gameObjectTemplateAddon,
+  ) {}
 
   void _applyCandidate(GameObjectTemplateAddonEntity gameObjectTemplateAddon) {
     entryController.init(gameObjectTemplateAddon.entry);
@@ -41,7 +31,17 @@ mixin _GameObjectTemplateAddonSingleEditorViewModelMixin
     _afterApplyCandidate(gameObjectTemplateAddon);
   }
 
-  void _afterApplyCandidate(
-    GameObjectTemplateAddonEntity gameObjectTemplateAddon,
-  ) {}
+  GameObjectTemplateAddonEntity _collectCandidate() {
+    return GameObjectTemplateAddonEntity(
+      entry: entryController.collect(),
+      faction: factionController.collect(),
+      flags: flagsController.collect(),
+      minGold: minGoldController.collect(),
+      maxGold: maxGoldController.collect(),
+      artkit0: artkit0Controller.collect(),
+      artkit1: artkit1Controller.collect(),
+      artkit2: artkit2Controller.collect(),
+      artkit3: artkit3Controller.collect(),
+    );
+  }
 }

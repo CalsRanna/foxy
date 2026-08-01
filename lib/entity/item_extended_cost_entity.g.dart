@@ -2,9 +2,41 @@
 
 part of 'item_extended_cost_entity.dart';
 
-mixin _ItemExtendedCostEntityMixin {
-  static ItemExtendedCostEntity fromJson(Map<String, dynamic> json) {
-    return ItemExtendedCostEntity(
+final class BriefItemExtendedCostEntity {
+  final int id;
+  final int honorPoints;
+  final int arenaPoints;
+  final int arenaBracket;
+  final int itemID0;
+  final int itemID1;
+  final int itemID2;
+  final int itemID3;
+  final int itemID4;
+  final int itemCount0;
+  final int itemCount1;
+  final int itemCount2;
+  final int itemCount3;
+  final int itemCount4;
+
+  const BriefItemExtendedCostEntity({
+    this.id = 0,
+    this.honorPoints = 0,
+    this.arenaPoints = 0,
+    this.arenaBracket = 0,
+    this.itemID0 = 0,
+    this.itemID1 = 0,
+    this.itemID2 = 0,
+    this.itemID3 = 0,
+    this.itemID4 = 0,
+    this.itemCount0 = 0,
+    this.itemCount1 = 0,
+    this.itemCount2 = 0,
+    this.itemCount3 = 0,
+    this.itemCount4 = 0,
+  });
+
+  factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemExtendedCostEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       honorPoints: (json['HonorPoints'] as num?)?.toInt() ?? 0,
       arenaPoints: (json['ArenaPoints'] as num?)?.toInt() ?? 0,
@@ -19,9 +51,117 @@ mixin _ItemExtendedCostEntityMixin {
       itemCount2: (json['ItemCount2'] as num?)?.toInt() ?? 0,
       itemCount3: (json['ItemCount3'] as num?)?.toInt() ?? 0,
       itemCount4: (json['ItemCount4'] as num?)?.toInt() ?? 0,
-      requiredArenaRating: (json['RequiredArenaRating'] as num?)?.toInt() ?? 0,
-      itemPurchaseGroup: (json['ItemPurchaseGroup'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    honorPoints,
+    arenaPoints,
+    arenaBracket,
+    itemID0,
+    itemID1,
+    itemID2,
+    itemID3,
+    itemID4,
+    itemCount0,
+    itemCount1,
+    itemCount2,
+    itemCount3,
+    itemCount4,
+  ]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemExtendedCostEntity &&
+            id == other.id &&
+            honorPoints == other.honorPoints &&
+            arenaPoints == other.arenaPoints &&
+            arenaBracket == other.arenaBracket &&
+            itemID0 == other.itemID0 &&
+            itemID1 == other.itemID1 &&
+            itemID2 == other.itemID2 &&
+            itemID3 == other.itemID3 &&
+            itemID4 == other.itemID4 &&
+            itemCount0 == other.itemCount0 &&
+            itemCount1 == other.itemCount1 &&
+            itemCount2 == other.itemCount2 &&
+            itemCount3 == other.itemCount3 &&
+            itemCount4 == other.itemCount4;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemExtendedCostEntity('
+        'id: $id, '
+        'honorPoints: $honorPoints, '
+        'arenaPoints: $arenaPoints, '
+        'arenaBracket: $arenaBracket, '
+        'itemID0: $itemID0, '
+        'itemID1: $itemID1, '
+        'itemID2: $itemID2, '
+        'itemID3: $itemID3, '
+        'itemID4: $itemID4, '
+        'itemCount0: $itemCount0, '
+        'itemCount1: $itemCount1, '
+        'itemCount2: $itemCount2, '
+        'itemCount3: $itemCount3, '
+        'itemCount4: $itemCount4'
+        ')';
+  }
+}
+
+mixin _ItemExtendedCostEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemExtendedCostEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.honorPoints,
+      self.arenaPoints,
+      self.arenaBracket,
+      self.itemID0,
+      self.itemID1,
+      self.itemID2,
+      self.itemID3,
+      self.itemID4,
+      self.itemCount0,
+      self.itemCount1,
+      self.itemCount2,
+      self.itemCount3,
+      self.itemCount4,
+      self.requiredArenaRating,
+      self.itemPurchaseGroup,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemExtendedCostEntity;
+    return identical(self, other) ||
+        other is ItemExtendedCostEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.honorPoints == other.honorPoints &&
+            self.arenaPoints == other.arenaPoints &&
+            self.arenaBracket == other.arenaBracket &&
+            self.itemID0 == other.itemID0 &&
+            self.itemID1 == other.itemID1 &&
+            self.itemID2 == other.itemID2 &&
+            self.itemID3 == other.itemID3 &&
+            self.itemID4 == other.itemID4 &&
+            self.itemCount0 == other.itemCount0 &&
+            self.itemCount1 == other.itemCount1 &&
+            self.itemCount2 == other.itemCount2 &&
+            self.itemCount3 == other.itemCount3 &&
+            self.itemCount4 == other.itemCount4 &&
+            self.requiredArenaRating == other.requiredArenaRating &&
+            self.itemPurchaseGroup == other.itemPurchaseGroup;
   }
 
   ItemExtendedCostEntity copyWith({
@@ -86,54 +226,6 @@ mixin _ItemExtendedCostEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemExtendedCostEntity;
-    return identical(self, other) ||
-        other is ItemExtendedCostEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.honorPoints == other.honorPoints &&
-            self.arenaPoints == other.arenaPoints &&
-            self.arenaBracket == other.arenaBracket &&
-            self.itemID0 == other.itemID0 &&
-            self.itemID1 == other.itemID1 &&
-            self.itemID2 == other.itemID2 &&
-            self.itemID3 == other.itemID3 &&
-            self.itemID4 == other.itemID4 &&
-            self.itemCount0 == other.itemCount0 &&
-            self.itemCount1 == other.itemCount1 &&
-            self.itemCount2 == other.itemCount2 &&
-            self.itemCount3 == other.itemCount3 &&
-            self.itemCount4 == other.itemCount4 &&
-            self.requiredArenaRating == other.requiredArenaRating &&
-            self.itemPurchaseGroup == other.itemPurchaseGroup;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemExtendedCostEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.honorPoints,
-      self.arenaPoints,
-      self.arenaBracket,
-      self.itemID0,
-      self.itemID1,
-      self.itemID2,
-      self.itemID3,
-      self.itemID4,
-      self.itemCount0,
-      self.itemCount1,
-      self.itemCount2,
-      self.itemCount3,
-      self.itemCount4,
-      self.requiredArenaRating,
-      self.itemPurchaseGroup,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemExtendedCostEntity;
     return 'ItemExtendedCostEntity('
@@ -155,43 +247,9 @@ mixin _ItemExtendedCostEntityMixin {
         'itemPurchaseGroup: ${self.itemPurchaseGroup}'
         ')';
   }
-}
 
-final class BriefItemExtendedCostEntity {
-  final int id;
-  final int honorPoints;
-  final int arenaPoints;
-  final int arenaBracket;
-  final int itemID0;
-  final int itemID1;
-  final int itemID2;
-  final int itemID3;
-  final int itemID4;
-  final int itemCount0;
-  final int itemCount1;
-  final int itemCount2;
-  final int itemCount3;
-  final int itemCount4;
-
-  const BriefItemExtendedCostEntity({
-    this.id = 0,
-    this.honorPoints = 0,
-    this.arenaPoints = 0,
-    this.arenaBracket = 0,
-    this.itemID0 = 0,
-    this.itemID1 = 0,
-    this.itemID2 = 0,
-    this.itemID3 = 0,
-    this.itemID4 = 0,
-    this.itemCount0 = 0,
-    this.itemCount1 = 0,
-    this.itemCount2 = 0,
-    this.itemCount3 = 0,
-    this.itemCount4 = 0,
-  });
-
-  factory BriefItemExtendedCostEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemExtendedCostEntity(
+  static ItemExtendedCostEntity fromJson(Map<String, dynamic> json) {
+    return ItemExtendedCostEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
       honorPoints: (json['HonorPoints'] as num?)?.toInt() ?? 0,
       arenaPoints: (json['ArenaPoints'] as num?)?.toInt() ?? 0,
@@ -206,66 +264,8 @@ final class BriefItemExtendedCostEntity {
       itemCount2: (json['ItemCount2'] as num?)?.toInt() ?? 0,
       itemCount3: (json['ItemCount3'] as num?)?.toInt() ?? 0,
       itemCount4: (json['ItemCount4'] as num?)?.toInt() ?? 0,
+      requiredArenaRating: (json['RequiredArenaRating'] as num?)?.toInt() ?? 0,
+      itemPurchaseGroup: (json['ItemPurchaseGroup'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemExtendedCostEntity &&
-            id == other.id &&
-            honorPoints == other.honorPoints &&
-            arenaPoints == other.arenaPoints &&
-            arenaBracket == other.arenaBracket &&
-            itemID0 == other.itemID0 &&
-            itemID1 == other.itemID1 &&
-            itemID2 == other.itemID2 &&
-            itemID3 == other.itemID3 &&
-            itemID4 == other.itemID4 &&
-            itemCount0 == other.itemCount0 &&
-            itemCount1 == other.itemCount1 &&
-            itemCount2 == other.itemCount2 &&
-            itemCount3 == other.itemCount3 &&
-            itemCount4 == other.itemCount4;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    honorPoints,
-    arenaPoints,
-    arenaBracket,
-    itemID0,
-    itemID1,
-    itemID2,
-    itemID3,
-    itemID4,
-    itemCount0,
-    itemCount1,
-    itemCount2,
-    itemCount3,
-    itemCount4,
-  ]);
-
-  @override
-  String toString() {
-    return 'BriefItemExtendedCostEntity('
-        'id: $id, '
-        'honorPoints: $honorPoints, '
-        'arenaPoints: $arenaPoints, '
-        'arenaBracket: $arenaBracket, '
-        'itemID0: $itemID0, '
-        'itemID1: $itemID1, '
-        'itemID2: $itemID2, '
-        'itemID3: $itemID3, '
-        'itemID4: $itemID4, '
-        'itemCount0: $itemCount0, '
-        'itemCount1: $itemCount1, '
-        'itemCount2: $itemCount2, '
-        'itemCount3: $itemCount3, '
-        'itemCount4: $itemCount4'
-        ')';
   }
 }

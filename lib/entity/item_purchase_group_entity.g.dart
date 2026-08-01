@@ -2,36 +2,108 @@
 
 part of 'item_purchase_group_entity.dart';
 
-mixin _ItemPurchaseGroupEntityMixin {
-  static ItemPurchaseGroupEntity fromJson(Map<String, dynamic> json) {
-    return ItemPurchaseGroupEntity(
+final class BriefItemPurchaseGroupEntity {
+  final int id;
+  final String nameLangZhCN;
+
+  const BriefItemPurchaseGroupEntity({this.id = 0, this.nameLangZhCN = ''});
+
+  factory BriefItemPurchaseGroupEntity.fromJson(Map<String, dynamic> json) {
+    return BriefItemPurchaseGroupEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
-      itemID0: (json['ItemID0'] as num?)?.toInt() ?? 0,
-      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
-      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
-      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
-      itemID4: (json['ItemID4'] as num?)?.toInt() ?? 0,
-      itemID5: (json['ItemID5'] as num?)?.toInt() ?? 0,
-      itemID6: (json['ItemID6'] as num?)?.toInt() ?? 0,
-      itemID7: (json['ItemID7'] as num?)?.toInt() ?? 0,
-      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
-      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
-      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
-      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
-      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
-      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
-      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
-      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
-      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
-      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
-      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
-      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
-      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
-      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
-      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
-      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
     );
+  }
+
+  @override
+  int get hashCode => Object.hashAll([id, nameLangZhCN]);
+
+  int get key => id;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BriefItemPurchaseGroupEntity &&
+            id == other.id &&
+            nameLangZhCN == other.nameLangZhCN;
+  }
+
+  @override
+  String toString() {
+    return 'BriefItemPurchaseGroupEntity('
+        'id: $id, '
+        'nameLangZhCN: $nameLangZhCN'
+        ')';
+  }
+}
+
+mixin _ItemPurchaseGroupEntityMixin {
+  @override
+  int get hashCode {
+    final self = this as ItemPurchaseGroupEntity;
+    return Object.hashAll([
+      self.runtimeType,
+      self.id,
+      self.itemID0,
+      self.itemID1,
+      self.itemID2,
+      self.itemID3,
+      self.itemID4,
+      self.itemID5,
+      self.itemID6,
+      self.itemID7,
+      self.nameLangEnUS,
+      self.nameLangKoKR,
+      self.nameLangFrFR,
+      self.nameLangDeDE,
+      self.nameLangZhCN,
+      self.nameLangZhTW,
+      self.nameLangEsES,
+      self.nameLangEsMX,
+      self.nameLangRuRU,
+      self.nameLangJaJP,
+      self.nameLangPtPT,
+      self.nameLangPtBR,
+      self.nameLangItIT,
+      self.nameLangUnk1,
+      self.nameLangUnk2,
+      self.nameLangUnk3,
+      self.nameLangFlags,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ItemPurchaseGroupEntity;
+    return identical(self, other) ||
+        other is ItemPurchaseGroupEntity &&
+            self.runtimeType == other.runtimeType &&
+            self.id == other.id &&
+            self.itemID0 == other.itemID0 &&
+            self.itemID1 == other.itemID1 &&
+            self.itemID2 == other.itemID2 &&
+            self.itemID3 == other.itemID3 &&
+            self.itemID4 == other.itemID4 &&
+            self.itemID5 == other.itemID5 &&
+            self.itemID6 == other.itemID6 &&
+            self.itemID7 == other.itemID7 &&
+            self.nameLangEnUS == other.nameLangEnUS &&
+            self.nameLangKoKR == other.nameLangKoKR &&
+            self.nameLangFrFR == other.nameLangFrFR &&
+            self.nameLangDeDE == other.nameLangDeDE &&
+            self.nameLangZhCN == other.nameLangZhCN &&
+            self.nameLangZhTW == other.nameLangZhTW &&
+            self.nameLangEsES == other.nameLangEsES &&
+            self.nameLangEsMX == other.nameLangEsMX &&
+            self.nameLangRuRU == other.nameLangRuRU &&
+            self.nameLangJaJP == other.nameLangJaJP &&
+            self.nameLangPtPT == other.nameLangPtPT &&
+            self.nameLangPtBR == other.nameLangPtBR &&
+            self.nameLangItIT == other.nameLangItIT &&
+            self.nameLangUnk1 == other.nameLangUnk1 &&
+            self.nameLangUnk2 == other.nameLangUnk2 &&
+            self.nameLangUnk3 == other.nameLangUnk3 &&
+            self.nameLangFlags == other.nameLangFlags;
   }
 
   ItemPurchaseGroupEntity copyWith({
@@ -126,74 +198,6 @@ mixin _ItemPurchaseGroupEntityMixin {
   }
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ItemPurchaseGroupEntity;
-    return identical(self, other) ||
-        other is ItemPurchaseGroupEntity &&
-            self.runtimeType == other.runtimeType &&
-            self.id == other.id &&
-            self.itemID0 == other.itemID0 &&
-            self.itemID1 == other.itemID1 &&
-            self.itemID2 == other.itemID2 &&
-            self.itemID3 == other.itemID3 &&
-            self.itemID4 == other.itemID4 &&
-            self.itemID5 == other.itemID5 &&
-            self.itemID6 == other.itemID6 &&
-            self.itemID7 == other.itemID7 &&
-            self.nameLangEnUS == other.nameLangEnUS &&
-            self.nameLangKoKR == other.nameLangKoKR &&
-            self.nameLangFrFR == other.nameLangFrFR &&
-            self.nameLangDeDE == other.nameLangDeDE &&
-            self.nameLangZhCN == other.nameLangZhCN &&
-            self.nameLangZhTW == other.nameLangZhTW &&
-            self.nameLangEsES == other.nameLangEsES &&
-            self.nameLangEsMX == other.nameLangEsMX &&
-            self.nameLangRuRU == other.nameLangRuRU &&
-            self.nameLangJaJP == other.nameLangJaJP &&
-            self.nameLangPtPT == other.nameLangPtPT &&
-            self.nameLangPtBR == other.nameLangPtBR &&
-            self.nameLangItIT == other.nameLangItIT &&
-            self.nameLangUnk1 == other.nameLangUnk1 &&
-            self.nameLangUnk2 == other.nameLangUnk2 &&
-            self.nameLangUnk3 == other.nameLangUnk3 &&
-            self.nameLangFlags == other.nameLangFlags;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ItemPurchaseGroupEntity;
-    return Object.hashAll([
-      self.runtimeType,
-      self.id,
-      self.itemID0,
-      self.itemID1,
-      self.itemID2,
-      self.itemID3,
-      self.itemID4,
-      self.itemID5,
-      self.itemID6,
-      self.itemID7,
-      self.nameLangEnUS,
-      self.nameLangKoKR,
-      self.nameLangFrFR,
-      self.nameLangDeDE,
-      self.nameLangZhCN,
-      self.nameLangZhTW,
-      self.nameLangEsES,
-      self.nameLangEsMX,
-      self.nameLangRuRU,
-      self.nameLangJaJP,
-      self.nameLangPtPT,
-      self.nameLangPtBR,
-      self.nameLangItIT,
-      self.nameLangUnk1,
-      self.nameLangUnk2,
-      self.nameLangUnk3,
-      self.nameLangFlags,
-    ]);
-  }
-
-  @override
   String toString() {
     final self = this as ItemPurchaseGroupEntity;
     return 'ItemPurchaseGroupEntity('
@@ -225,39 +229,35 @@ mixin _ItemPurchaseGroupEntityMixin {
         'nameLangFlags: ${self.nameLangFlags}'
         ')';
   }
-}
 
-final class BriefItemPurchaseGroupEntity {
-  final int id;
-  final String nameLangZhCN;
-
-  const BriefItemPurchaseGroupEntity({this.id = 0, this.nameLangZhCN = ''});
-
-  factory BriefItemPurchaseGroupEntity.fromJson(Map<String, dynamic> json) {
-    return BriefItemPurchaseGroupEntity(
+  static ItemPurchaseGroupEntity fromJson(Map<String, dynamic> json) {
+    return ItemPurchaseGroupEntity(
       id: (json['ID'] as num?)?.toInt() ?? 0,
+      itemID0: (json['ItemID0'] as num?)?.toInt() ?? 0,
+      itemID1: (json['ItemID1'] as num?)?.toInt() ?? 0,
+      itemID2: (json['ItemID2'] as num?)?.toInt() ?? 0,
+      itemID3: (json['ItemID3'] as num?)?.toInt() ?? 0,
+      itemID4: (json['ItemID4'] as num?)?.toInt() ?? 0,
+      itemID5: (json['ItemID5'] as num?)?.toInt() ?? 0,
+      itemID6: (json['ItemID6'] as num?)?.toInt() ?? 0,
+      itemID7: (json['ItemID7'] as num?)?.toInt() ?? 0,
+      nameLangEnUS: json['Name_lang_enUS']?.toString() ?? '',
+      nameLangKoKR: json['Name_lang_koKR']?.toString() ?? '',
+      nameLangFrFR: json['Name_lang_frFR']?.toString() ?? '',
+      nameLangDeDE: json['Name_lang_deDE']?.toString() ?? '',
       nameLangZhCN: json['Name_lang_zhCN']?.toString() ?? '',
+      nameLangZhTW: json['Name_lang_zhTW']?.toString() ?? '',
+      nameLangEsES: json['Name_lang_esES']?.toString() ?? '',
+      nameLangEsMX: json['Name_lang_esMX']?.toString() ?? '',
+      nameLangRuRU: json['Name_lang_ruRU']?.toString() ?? '',
+      nameLangJaJP: json['Name_lang_jaJP']?.toString() ?? '',
+      nameLangPtPT: json['Name_lang_ptPT']?.toString() ?? '',
+      nameLangPtBR: json['Name_lang_ptBR']?.toString() ?? '',
+      nameLangItIT: json['Name_lang_itIT']?.toString() ?? '',
+      nameLangUnk1: json['Name_lang_unk1']?.toString() ?? '',
+      nameLangUnk2: json['Name_lang_unk2']?.toString() ?? '',
+      nameLangUnk3: json['Name_lang_unk3']?.toString() ?? '',
+      nameLangFlags: (json['Name_lang_Flags'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  int get key => id;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is BriefItemPurchaseGroupEntity &&
-            id == other.id &&
-            nameLangZhCN == other.nameLangZhCN;
-  }
-
-  @override
-  int get hashCode => Object.hashAll([id, nameLangZhCN]);
-
-  @override
-  String toString() {
-    return 'BriefItemPurchaseGroupEntity('
-        'id: $id, '
-        'nameLangZhCN: $nameLangZhCN'
-        ')';
   }
 }

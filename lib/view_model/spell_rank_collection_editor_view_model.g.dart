@@ -7,13 +7,7 @@ mixin _SpellRankCollectionEditorViewModelMixin on FieldControllerMixin {
   late final spellIdController = registerController(IntFieldController());
   late final rankController = registerController(IntFieldController());
 
-  SpellRankEntity _collectCandidate() {
-    return SpellRankEntity(
-      firstSpellId: firstSpellIdController.collect(),
-      spellId: spellIdController.collect(),
-      rank: rankController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SpellRankEntity spellRank) {}
 
   void _applyCandidate(SpellRankEntity spellRank) {
     firstSpellIdController.init(spellRank.firstSpellId);
@@ -22,5 +16,11 @@ mixin _SpellRankCollectionEditorViewModelMixin on FieldControllerMixin {
     _afterApplyCandidate(spellRank);
   }
 
-  void _afterApplyCandidate(SpellRankEntity spellRank) {}
+  SpellRankEntity _collectCandidate() {
+    return SpellRankEntity(
+      firstSpellId: firstSpellIdController.collect(),
+      spellId: spellIdController.collect(),
+      rank: rankController.collect(),
+    );
+  }
 }

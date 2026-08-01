@@ -2,6 +2,28 @@
 
 part of 'game_object_art_kit_repository.dart';
 
+final class GameObjectArtKitFilter {
+  final String id;
+  final String path;
+
+  const GameObjectArtKitFilter({this.id = '', this.path = ''});
+
+  factory GameObjectArtKitFilter.fromJson(Map<String, dynamic> json) {
+    return GameObjectArtKitFilter(
+      id: json['id']?.toString() ?? '',
+      path: json['path']?.toString() ?? '',
+    );
+  }
+
+  GameObjectArtKitFilter copyWith({String? id, String? path}) {
+    return GameObjectArtKitFilter(id: id ?? this.id, path: path ?? this.path);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'path': path};
+  }
+}
+
 mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
   Future<void> destroyGameObjectArtKit(int key) async {
     await _beforeDestroy(key);
@@ -75,27 +97,5 @@ mixin _GameObjectArtKitRepositoryMixin on RepositoryMixin {
 
   QueryBuilder _whereKey(QueryBuilder builder, int key) {
     return builder.where('`ID`', key);
-  }
-}
-
-final class GameObjectArtKitFilter {
-  final String id;
-  final String path;
-
-  const GameObjectArtKitFilter({this.id = '', this.path = ''});
-
-  factory GameObjectArtKitFilter.fromJson(Map<String, dynamic> json) {
-    return GameObjectArtKitFilter(
-      id: json['id']?.toString() ?? '',
-      path: json['path']?.toString() ?? '',
-    );
-  }
-
-  GameObjectArtKitFilter copyWith({String? id, String? path}) {
-    return GameObjectArtKitFilter(id: id ?? this.id, path: path ?? this.path);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'path': path};
   }
 }

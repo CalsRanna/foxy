@@ -17,20 +17,7 @@ mixin _SkinningLootTemplateCollectionEditorViewModelMixin
   late final maxCountController = registerController(IntFieldController());
   late final commentController = registerController(StringFieldController());
 
-  SkinningLootTemplateEntity _collectCandidate() {
-    return SkinningLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
+  void _afterApplyCandidate(SkinningLootTemplateEntity skinningLootTemplate) {}
 
   void _applyCandidate(SkinningLootTemplateEntity skinningLootTemplate) {
     entryController.init(skinningLootTemplate.entry);
@@ -46,5 +33,18 @@ mixin _SkinningLootTemplateCollectionEditorViewModelMixin
     _afterApplyCandidate(skinningLootTemplate);
   }
 
-  void _afterApplyCandidate(SkinningLootTemplateEntity skinningLootTemplate) {}
+  SkinningLootTemplateEntity _collectCandidate() {
+    return SkinningLootTemplateEntity(
+      entry: entryController.collect(),
+      item: itemController.collect(),
+      reference: referenceController.collect(),
+      chance: chanceController.collect(),
+      questRequired: questRequiredController.collect() == 1,
+      lootMode: lootModeController.collect(),
+      groupId: groupIdController.collect(),
+      minCount: minCountController.collect(),
+      maxCount: maxCountController.collect(),
+      comment: commentController.collect(),
+    );
+  }
 }
