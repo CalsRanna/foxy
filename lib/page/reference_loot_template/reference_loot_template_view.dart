@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
-import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_view_model.dart';
+import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';

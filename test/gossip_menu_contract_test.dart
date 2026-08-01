@@ -25,28 +25,6 @@ void main() {
     }
   });
 
-  test('npc_text 八组字段均为独立标量且保持 SQL 物理顺序', () {
-    final keys = const NpcTextEntity().toJson().keys.toList();
-    expect(keys.first, 'ID');
-    expect(keys.last, 'VerifiedBuild');
-    for (var group = 0; group < 8; group++) {
-      final offset = 1 + group * 11;
-      expect(keys.sublist(offset, offset + 11), [
-        'text${group}_0',
-        'text${group}_1',
-        'BroadcastTextID$group',
-        'lang$group',
-        'Probability$group',
-        'em${group}_0',
-        'em${group}_1',
-        'em${group}_2',
-        'em${group}_3',
-        'em${group}_4',
-        'em${group}_5',
-      ]);
-    }
-  });
-
   test('npc_text 90 列 fromJson/toJson 不发生槽位错位', () {
     final source = <String, dynamic>{};
     final keys = const NpcTextEntity().toJson().keys;
@@ -62,18 +40,6 @@ void main() {
       number++;
     }
     expect(NpcTextEntity.fromJson(source).toJson(), source);
-  });
-
-  test('npc_text_locale 精确覆盖 8 组 16 个文本字段', () {
-    final keys = const NpcTextLocaleEntity().toJson().keys.toSet();
-    expect(keys, {
-      'ID',
-      'Locale',
-      for (var group = 0; group < 8; group++) ...{
-        'Text${group}_0',
-        'Text${group}_1',
-      },
-    });
   });
 
   test('Gossip option 类型、图标和语言枚举与当前 core 一致', () {

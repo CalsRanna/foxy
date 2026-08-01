@@ -4,7 +4,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
-import 'package:foxy/page/spell/spell_area_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_area_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

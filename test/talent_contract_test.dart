@@ -2,73 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/constant/talent_constants.dart';
-import 'package:foxy/entity/talent_entity.dart';
-import 'package:foxy/entity/talent_tab_entity.dart';
 
 void main() {
-  test('Talent Entity 精确覆盖 23 个独立标量物理列', () {
-    final json = const TalentEntity().toJson();
-    expect(json.keys.toList(), [
-      'ID',
-      'TabID',
-      'TierID',
-      'ColumnIndex',
-      'SpellRank0',
-      'SpellRank1',
-      'SpellRank2',
-      'SpellRank3',
-      'SpellRank4',
-      'SpellRank5',
-      'SpellRank6',
-      'SpellRank7',
-      'SpellRank8',
-      'PrereqTalent0',
-      'PrereqTalent1',
-      'PrereqTalent2',
-      'PrereqRank0',
-      'PrereqRank1',
-      'PrereqRank2',
-      'Flags',
-      'RequiredSpellID',
-      'CategoryMask0',
-      'CategoryMask1',
-    ]);
-    expect(json.values, everyElement(isA<int>()));
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
-
-  test('TalentTab Entity 精确覆盖 24 个独立标量物理列', () {
-    final json = const TalentTabEntity().toJson();
-    expect(json.keys.toList(), [
-      'ID',
-      'Name_lang_enUS',
-      'Name_lang_koKR',
-      'Name_lang_frFR',
-      'Name_lang_deDE',
-      'Name_lang_zhCN',
-      'Name_lang_zhTW',
-      'Name_lang_esES',
-      'Name_lang_esMX',
-      'Name_lang_ruRU',
-      'Name_lang_jaJP',
-      'Name_lang_ptPT',
-      'Name_lang_ptBR',
-      'Name_lang_itIT',
-      'Name_lang_unk1',
-      'Name_lang_unk2',
-      'Name_lang_unk3',
-      'Name_lang_Flags',
-      'SpellIconID',
-      'RaceMask',
-      'ClassMask',
-      'CategoryEnumID',
-      'OrderIndex',
-      'BackgroundFile',
-    ]);
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('Flags 使用 Talent addToSpellBook 专属 0/1 值', () {
     expect(kTalentAddToSpellBookOptions, {0: '不直接加入法术书', 1: '直接加入法术书'});

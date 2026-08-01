@@ -4,7 +4,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
-import 'package:foxy/page/spell/spell_detail_view_model.dart';
+import 'package:foxy/view_model/spell_detail_view_model.dart';
 import 'package:foxy/page/spell/spell_group_view.dart';
 import 'package:foxy/page/spell/spell_linked_spell_view.dart';
 import 'package:foxy/page/spell/spell_loot_template_view.dart';

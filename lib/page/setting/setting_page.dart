@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
-import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
-import 'package:foxy/page/setting/dbc_sync_dialogs.dart';
+import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/page/setting/setting_dialog_shell.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
-import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
-import 'package:foxy/page/setting/setup_status_view_model.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';

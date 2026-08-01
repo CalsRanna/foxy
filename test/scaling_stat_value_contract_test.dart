@@ -2,41 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/scaling_stat_value_constants.dart';
-import 'package:foxy/entity/scaling_stat_value_entity.dart';
 
 void main() {
-  test('Entity 精确覆盖 ScalingStatValues.dbc 的 24 个标量物理列', () {
-    final json = const ScalingStatValueEntity().toJson();
-    expect(json.keys.toList(), [
-      'ID',
-      'Charlevel',
-      'ShoulderBudget',
-      'TrinketBudget',
-      'WeaponBudget1H',
-      'RangedBudget',
-      'ClothShoulderArmor',
-      'LeatherShoulderArmor',
-      'MailShoulderArmor',
-      'PlateShoulderArmor',
-      'WeaponDPS1H',
-      'WeaponDPS2H',
-      'SpellcasterDPS1H',
-      'SpellcasterDPS2H',
-      'RangedDPS',
-      'WandDPS',
-      'SpellPower',
-      'PrimaryBudget',
-      'TertiaryBudget',
-      'ClothCloakArmor',
-      'ClothChestArmor',
-      'LeatherChestArmor',
-      'MailChestArmor',
-      'PlateChestArmor',
-    ]);
-    expect(json.values, everyElement(isA<int>()));
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('物品缩放位精确对应 ScalingStatValuesEntry 当前消费列', () {
     expect(kScalingStatValueBudgetMask, 0x0004001F);

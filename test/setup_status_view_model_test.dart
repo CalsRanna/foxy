@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/page/setting/setup_status_view_model.dart';
+import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 

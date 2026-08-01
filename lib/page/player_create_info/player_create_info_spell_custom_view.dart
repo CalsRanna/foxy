@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/page/player_create_info/player_create_info_spell_custom_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_spell_custom_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

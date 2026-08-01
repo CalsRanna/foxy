@@ -5,7 +5,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
-import 'package:foxy/page/item_extended_cost/item_extended_cost_list_view_model.dart';
+import 'package:foxy/view_model/item_extended_cost_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';

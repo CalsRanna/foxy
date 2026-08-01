@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
-import 'package:foxy/page/quest/creature_quest_starter_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -14,16 +14,16 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:signals/signals_flutter.dart';
 
-class CreatureQueststarterView extends StatefulWidget {
+class CreatureQuestStarterView extends StatefulWidget {
   final int questId;
-  const CreatureQueststarterView({super.key, required this.questId});
+  const CreatureQuestStarterView({super.key, required this.questId});
 
   @override
-  State<CreatureQueststarterView> createState() =>
-      _CreatureQueststarterViewState();
+  State<CreatureQuestStarterView> createState() =>
+      _CreatureQuestStarterViewState();
 }
 
-class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
+class _CreatureQuestStarterViewState extends State<CreatureQuestStarterView> {
   final viewModel = GetIt.instance
       .get<CreatureQuestStarterCollectionEditorViewModel>();
 
@@ -34,7 +34,7 @@ class _CreatureQueststarterViewState extends State<CreatureQueststarterView> {
   }
 
   @override
-  void didUpdateWidget(covariant CreatureQueststarterView oldWidget) {
+  void didUpdateWidget(covariant CreatureQuestStarterView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.questId != widget.questId) {
       viewModel.setParentKey(widget.questId);

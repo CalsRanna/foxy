@@ -5,7 +5,7 @@ import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/widget/item_quality_color.dart';
-import 'package:foxy/page/creature_template/pickpocketing_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/pickpocketing_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

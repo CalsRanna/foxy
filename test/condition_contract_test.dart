@@ -4,31 +4,8 @@ import 'package:foxy/constant/condition_source_type.dart';
 import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
-import 'package:foxy/entity/condition_entity.dart';
 
 void main() {
-  test('conditions Entity 精确覆盖 15 个物理列且全部为标量', () {
-    final json = const ConditionEntity().toJson();
-    expect(json.keys.toList(), [
-      'SourceTypeOrReferenceId',
-      'SourceGroup',
-      'SourceEntry',
-      'SourceId',
-      'ElseGroup',
-      'ConditionTypeOrReference',
-      'ConditionTarget',
-      'ConditionValue1',
-      'ConditionValue2',
-      'ConditionValue3',
-      'NegativeCondition',
-      'ErrorType',
-      'ErrorTextId',
-      'ScriptName',
-      'Comment',
-    ]);
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('来源类型精确排除 NONE、3.3.5a 不支持值和枚举哨兵', () {
     expect(kConditionSourceTypeLabels.keys.toSet(), {

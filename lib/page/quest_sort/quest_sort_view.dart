@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/page/quest_sort/quest_sort_detail_view_model.dart';
+import 'package:foxy/view_model/quest_sort_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';

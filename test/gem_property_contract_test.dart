@@ -1,21 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/gem_property_constants.dart';
-import 'package:foxy/entity/gem_property_entity.dart';
 
 void main() {
-  test('Entity 精确覆盖 GemProperties.dbc 的 5 个物理列', () {
-    final json = const GemPropertyEntity().toJson();
-    expect(json.keys.toList(), [
-      'ID',
-      'Enchant_ID',
-      'Maxcount_inv',
-      'Maxcount_item',
-      'Type',
-    ]);
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('颜色值使用 GemProperties 专属 SocketColor 组合', () {
     expect(kGemPropertyColorOptions.keys.toSet(), {

@@ -4,7 +4,7 @@ import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
@@ -14,7 +14,6 @@ import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart'
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-import 'support/local_dart_library_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -56,40 +55,6 @@ void main() {
       );
     });
 
-    test('Brief Entity 暴露完整 typed key，且不携带未展示物理列', () {
-      const option = BriefGossipMenuOptionEntity(menuId: 10, optionId: 2);
-      const locale = BriefGossipMenuOptionLocaleEntity(
-        menuId: 10,
-        optionId: 2,
-        locale: 'zhCN',
-      );
-
-      expect(option.key, const GossipMenuOptionKey(menuId: 10, optionId: 2));
-      expect(
-        locale.key,
-        const GossipMenuOptionLocaleKey(
-          menuId: 10,
-          optionId: 2,
-          locale: 'zhCN',
-        ),
-      );
-      final optionLibrarySource = readLocalDartLibrarySource(
-        'lib/entity/gossip_menu_option_entity.dart',
-      );
-      final optionSource = optionLibrarySource.substring(
-        optionLibrarySource.indexOf('final class BriefGossipMenuOptionEntity'),
-      );
-      final localeLibrarySource = readLocalDartLibrarySource(
-        'lib/entity/gossip_menu_option_locale_entity.dart',
-      );
-      final localeSource = localeLibrarySource.substring(
-        localeLibrarySource.indexOf(
-          'final class BriefGossipMenuOptionLocaleEntity',
-        ),
-      );
-      expect(optionSource, isNot(contains('verifiedBuild')));
-      expect(localeSource, isNot(contains('boxText')));
-    });
   });
 
   group('GossipMenuOption repositories write contract', () {

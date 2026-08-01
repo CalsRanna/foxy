@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
-import 'package:foxy/page/setting/icon_extract_workflow_view_model.dart';
+import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';

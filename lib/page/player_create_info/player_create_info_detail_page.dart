@@ -4,7 +4,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/page/player_create_info/player_create_info_action_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_cast_spell_view.dart';
-import 'package:foxy/page/player_create_info/player_create_info_detail_view_model.dart';
+import 'package:foxy/view_model/player_create_info_detail_view_model.dart';
 import 'package:foxy/page/player_create_info/player_create_info_item_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_skill_view.dart';
 import 'package:foxy/page/player_create_info/player_create_info_spell_custom_view.dart';

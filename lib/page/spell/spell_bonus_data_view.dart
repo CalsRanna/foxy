@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxy/page/spell/spell_bonus_data_single_editor_view_model.dart';
+import 'package:foxy/view_model/spell_bonus_data_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';

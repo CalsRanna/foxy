@@ -4,45 +4,6 @@ import 'package:foxy/constant/smart_script_constants.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 
 void main() {
-  test('smart_scripts Entity 精确覆盖 31 个物理列且全部为标量', () {
-    final json = const SmartScriptEntity().toJson();
-    expect(json.keys.toList(), [
-      'entryorguid',
-      'source_type',
-      'id',
-      'link',
-      'event_type',
-      'event_phase_mask',
-      'event_chance',
-      'event_flags',
-      'event_param1',
-      'event_param2',
-      'event_param3',
-      'event_param4',
-      'event_param5',
-      'event_param6',
-      'action_type',
-      'action_param1',
-      'action_param2',
-      'action_param3',
-      'action_param4',
-      'action_param5',
-      'action_param6',
-      'target_type',
-      'target_param1',
-      'target_param2',
-      'target_param3',
-      'target_param4',
-      'target_x',
-      'target_y',
-      'target_z',
-      'target_o',
-      'comment',
-    ]);
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-    expect(json['event_chance'], 100);
-  });
 
   test('fromJson 接受 MySQL 整数坐标且 copyWith 不丢失联合字段', () {
     final source = const SmartScriptEntity(

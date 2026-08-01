@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/creature_template/creature_template_resistance_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_resistance_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_select.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';

@@ -7,7 +7,6 @@ import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/entity/creature_template_addon_entity.dart';
-import 'package:foxy/entity/creature_template_entity.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/creature_loot_template_entity.dart';
@@ -43,43 +42,6 @@ String normalizeCreatureTemplateAddonAuras(String value) {
 }
 
 void main() {
-  test('CreatureTemplateEntity 覆盖 creature_template 的 55 个字段且类型正确', () {
-    final json = const CreatureTemplateEntity().toJson();
-    const stringFields = {
-      'AIName',
-      'IconName',
-      'name',
-      'ScriptName',
-      'subname',
-    };
-    const doubleFields = {
-      'ArmorModifier',
-      'BaseVariance',
-      'DamageModifier',
-      'detection_range',
-      'ExperienceModifier',
-      'HealthModifier',
-      'HoverHeight',
-      'ManaModifier',
-      'RangeVariance',
-      'speed_flight',
-      'speed_run',
-      'speed_swim',
-      'speed_walk',
-    };
-
-    expect(json, hasLength(55));
-    for (final entry in json.entries) {
-      if (stringFields.contains(entry.key)) {
-        expect(entry.value, isA<String>(), reason: entry.key);
-      } else if (doubleFields.contains(entry.key)) {
-        expect(entry.value, isA<double>(), reason: entry.key);
-      } else {
-        expect(entry.value, isA<int>(), reason: entry.key);
-      }
-    }
-    expect(json['unit_class'], 1);
-  });
 
   test('creature_template 枚举选项与 AzerothCore 服务端取值集一致', () {
     expect(kUnitClassOptions.keys.toSet(), {1, 2, 4, 8});

@@ -8,7 +8,7 @@ import 'package:foxy/page/quest/game_object_quest_starter_view.dart';
 import 'package:foxy/page/quest/quest_offer_reward_view.dart';
 import 'package:foxy/page/quest/quest_request_items_view.dart';
 import 'package:foxy/page/quest/quest_template_addon_view.dart';
-import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
+import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_template_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';
@@ -95,7 +95,7 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
                 key: ValueKey('reward-$questId'),
                 questId: questId,
               ),
-              CreatureQueststarterView(
+              CreatureQuestStarterView(
                 key: ValueKey('creature-start-$questId'),
                 questId: questId,
               ),

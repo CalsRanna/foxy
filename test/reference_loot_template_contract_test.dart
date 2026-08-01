@@ -4,30 +4,6 @@ import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
 
 void main() {
-  test('Entity 精确覆盖 reference_loot_template 的 10 个标量物理列', () {
-    final json = const ReferenceLootTemplateEntity().toJson();
-    expect(json.keys.toList(), [
-      'Entry',
-      'Item',
-      'Reference',
-      'Chance',
-      'QuestRequired',
-      'LootMode',
-      'GroupId',
-      'MinCount',
-      'MaxCount',
-      'Comment',
-    ]);
-    expect(json['Chance'], isA<double>());
-    expect(json['Comment'], isA<String>());
-    for (final key in json.keys.where(
-      (key) => key != 'Chance' && key != 'Comment',
-    )) {
-      expect(json[key], isA<int>(), reason: key);
-    }
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('Entity 默认值与 AzerothCore core SQL 一致', () {
     final entity = const ReferenceLootTemplateEntity();

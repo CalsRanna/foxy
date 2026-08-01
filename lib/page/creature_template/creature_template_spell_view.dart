@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/page/creature_template/creature_template_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_spell_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_form_item.dart';

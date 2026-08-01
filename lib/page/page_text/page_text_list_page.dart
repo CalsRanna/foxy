@@ -5,7 +5,7 @@ import 'package:foxy/router/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/page_text_entity.dart';
-import 'package:foxy/page/page_text/page_text_list_view_model.dart';
+import 'package:foxy/view_model/page_text_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_header.dart';
@@ -16,14 +16,14 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
 @RoutePage()
-class TextContentListPage extends StatefulWidget {
-  const TextContentListPage({super.key});
+class PageTextListPage extends StatefulWidget {
+  const PageTextListPage({super.key});
 
   @override
-  State<TextContentListPage> createState() => _TextContentListPageState();
+  State<PageTextListPage> createState() => _PageTextListPageState();
 }
 
-class _TextContentListPageState extends State<TextContentListPage> {
+class _PageTextListPageState extends State<PageTextListPage> {
   final viewModel = GetIt.instance.get<PageTextListViewModel>();
 
   @override
@@ -194,7 +194,7 @@ class _TextContentListPageState extends State<TextContentListPage> {
     final name = label?.isNotEmpty == true ? label! : '新建页面文本';
     GetIt.instance.get<RouterFacade>().navigateToDetail(
       label: name,
-      route: TextContentDetailRoute(pageTextKey: key),
+      route: RouteTextDetailRoute(pageTextKey: key),
       parentMenu: RouterMenu.more,
     );
   }

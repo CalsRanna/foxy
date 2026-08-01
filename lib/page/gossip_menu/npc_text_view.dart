@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/page/gossip_menu/npc_text_single_editor_view_model.dart';
+import 'package:foxy/view_model/npc_text_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

@@ -49,8 +49,8 @@ class FoxyRouter extends RootStackRouter {
       AutoRoute(page: ReferenceLootTemplateDetailRoute.page),
 
       /// Page Text
-      AutoRoute(page: TextContentListRoute.page),
-      AutoRoute(page: TextContentDetailRoute.page),
+      AutoRoute(page: RouteTextListRoute.page),
+      AutoRoute(page: RouteTextDetailRoute.page),
 
       /// Condition
       AutoRoute(page: ConditionListRoute.page),

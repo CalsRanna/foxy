@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/widget/item_quality_color.dart';
 import 'package:foxy/infrastructure/util/item_helpers.dart';
 import 'package:foxy/entity/item_template_entity.dart';
-import 'package:foxy/page/item/item_template_list_view_model.dart';
+import 'package:foxy/view_model/item_template_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_game_asset_icon.dart';

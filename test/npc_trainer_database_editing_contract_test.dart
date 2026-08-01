@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
-import 'package:foxy/page/creature_template/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:get_it/get_it.dart';

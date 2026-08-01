@@ -57,7 +57,7 @@ enum RouterMenu {
       RouterMenu.more => const MoreRoute(),
       RouterMenu.referenceLootTemplate =>
         const ReferenceLootTemplateListRoute(),
-      RouterMenu.pageText => const TextContentListRoute(),
+      RouterMenu.pageText => const RouteTextListRoute(),
       RouterMenu.condition => const ConditionListRoute(),
       RouterMenu.playerCreateInfo => const PlayerCreateInfoListRoute(),
       RouterMenu.areaTable => const AreaTableListRoute(),

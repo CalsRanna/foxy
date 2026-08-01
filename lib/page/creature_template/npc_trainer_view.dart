@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
-import 'package:foxy/page/creature_template/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';

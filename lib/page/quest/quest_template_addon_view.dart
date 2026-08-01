@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/quest_flags.dart';
-import 'package:foxy/page/quest/quest_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/quest_template_addon_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_form_section.dart';

@@ -6,7 +6,7 @@ import 'package:foxy/page/creature_template/creature_loot_template_view.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_view.dart';
 import 'package:foxy/page/creature_template/creature_quest_item_view.dart';
 import 'package:foxy/page/creature_template/creature_template_addon_view.dart';
-import 'package:foxy/page/creature_template/creature_template_detail_view_model.dart';
+import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_view.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_view.dart';
 import 'package:foxy/page/creature_template/creature_template_view.dart';

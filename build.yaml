@@ -9,7 +9,7 @@ targets:
           - lib/repository/**_repository.dart
       foxy:foxy_view_model:
         generate_for:
-          - lib/page/**/*_view_model.dart
+          - lib/view_model/**_view_model.dart
 
 builders:
   foxy_entity:

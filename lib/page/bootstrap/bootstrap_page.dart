@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
-import 'package:foxy/page/bootstrap/bootstrap_workflow_view_model.dart';
+import 'package:foxy/view_model/bootstrap_workflow_view_model.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
-import 'package:foxy/page/feature/feature_state_view_model.dart';
-import 'package:foxy/page/foxy_app/foxy_state_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/foxy_state_view_model.dart';
 import 'package:foxy/router/router.gr.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:get_it/get_it.dart';

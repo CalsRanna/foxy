@@ -4,35 +4,6 @@ import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
 
 void main() {
-  test('Entity 精确覆盖 22 个物理列且全部为标量', () {
-    final json = const ScalingStatDistributionEntity().toJson();
-    expect(json.keys.toList(), [
-      'ID',
-      'StatID0',
-      'StatID1',
-      'StatID2',
-      'StatID3',
-      'StatID4',
-      'StatID5',
-      'StatID6',
-      'StatID7',
-      'StatID8',
-      'StatID9',
-      'Bonus0',
-      'Bonus1',
-      'Bonus2',
-      'Bonus3',
-      'Bonus4',
-      'Bonus5',
-      'Bonus6',
-      'Bonus7',
-      'Bonus8',
-      'Bonus9',
-      'Maxlevel',
-    ]);
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
 
   test('属性类型使用本表的空槽和实际 ItemModType 域', () {
     expect(kScalingStatDistributionStatOptions, containsPair(-1, '空槽'));

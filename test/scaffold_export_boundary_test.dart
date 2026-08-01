@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/page/feature/feature_state_view_model.dart';
-import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
-import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 
 void main() {
   test('FeatureStateViewModel 源码不持有 DBC 状态', () async {
     final source = await File(
-      'lib/page/feature/feature_state_view_model.dart',
+      'lib/view_model/feature_state_view_model.dart',
     ).readAsString();
     // 导出状态应在独立 workflow，不在 Scaffold。
     expect(source.contains('dbcExport'), isFalse);

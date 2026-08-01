@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
-import 'package:foxy/page/quest/game_object_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/page/quest/game_object_quest_starter_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:get_it/get_it.dart';

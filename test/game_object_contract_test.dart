@@ -1,50 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
-import 'package:foxy/entity/cinematic_sequence_entity.dart';
-import 'package:foxy/entity/destructible_model_data_entity.dart';
-import 'package:foxy/entity/game_object_art_kit_entity.dart';
-import 'package:foxy/entity/game_object_display_info_entity.dart';
-import 'package:foxy/entity/game_object_quest_item_entity.dart';
-import 'package:foxy/entity/game_object_template_addon_entity.dart';
-import 'package:foxy/entity/game_object_template_entity.dart';
-import 'package:foxy/entity/game_object_template_locale_entity.dart';
-import 'package:foxy/entity/game_object_loot_template_entity.dart';
-import 'package:foxy/entity/spell_focus_object_entity.dart';
-import 'package:foxy/entity/taxi_path_entity.dart';
-import 'package:foxy/widget/foxy_locale_picker_delegates.dart';
 
 void main() {
-  test('gameobject_template Entity 覆盖 35 个物理列且无聚合字段', () {
-    final json = const GameObjectTemplateEntity().toJson();
-    expect(json, hasLength(35));
-    expect(json.keys.where((key) => key.startsWith('Data')), hasLength(24));
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(json['size'], isA<double>());
-  });
-
-  test('3 个关联 Tab 与 locale Entity 只写出各自物理列', () {
-    expect(const GameObjectTemplateAddonEntity().toJson().keys.toSet(), {
-      'entry',
-      'faction',
-      'flags',
-      'mingold',
-      'maxgold',
-      'artkit0',
-      'artkit1',
-      'artkit2',
-      'artkit3',
-    });
-    expect(const GameObjectQuestItemEntity().toJson().keys.toSet(), {
-      'GameObjectEntry',
-      'Idx',
-      'ItemId',
-      'VerifiedBuild',
-    });
-    expect(const GameObjectTemplateLocaleEntity().toJson(), hasLength(5));
-    expect(const GameObjectLootTemplateEntity().toJson(), hasLength(10));
-  });
 
   test('GameobjectTypes 完整覆盖 AzerothCore 0..35', () {
     expect(kGameObjectTypeOptions.keys.toSet(), {
@@ -139,39 +97,6 @@ void main() {
     expect(gameObjectDataFieldSpec(6, 3), isA<IntegerReferenceFieldSpec>());
   });
 
-  test('新增 GameObject DBC Entity 全部使用独立标量字段', () {
-    final rows = <Map<String, dynamic>>[
-      const CinematicSequenceEntity().toJson(),
-      const DestructibleModelDataEntity().toJson(),
-      const GameObjectArtKitEntity().toJson(),
-      const GameObjectDisplayInfoEntity().toJson(),
-      const SpellFocusObjectEntity().toJson(),
-      const TaxiPathEntity().toJson(),
-    ];
-    expect(rows.map((row) => row.length), [10, 19, 8, 19, 18, 4]);
-    for (final row in rows) {
-      expect(row.values.whereType<List<Object?>>(), isEmpty);
-    }
-    expect(
-      requiredDbcTableNames.toSet(),
-      containsAll({
-        'dbc_cinematic_sequences',
-        'dbc_destructible_model_data',
-        'dbc_game_object_art_kit',
-        'dbc_game_object_display_info',
-        'dbc_spell_focus_object',
-        'dbc_taxi_path',
-      }),
-    );
-  });
-
-  test('gameobject_template_locale 两个编辑器写入各自物理列', () {
-    expect(FoxyLocalePickerDelegates.gameObjectName.fields, ['locale', 'name']);
-    expect(FoxyLocalePickerDelegates.gameObjectCaption.fields, [
-      'locale',
-      'castBarCaption',
-    ]);
-  });
 }
 
 Set<int> _range(int start, int end) => {

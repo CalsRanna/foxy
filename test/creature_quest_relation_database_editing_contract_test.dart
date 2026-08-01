@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
-import 'package:foxy/page/quest/creature_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/page/quest/creature_quest_starter_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:get_it/get_it.dart';

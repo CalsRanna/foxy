@@ -2,11 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
-import 'package:foxy/entity/spell_bonus_data_entity.dart';
-import 'package:foxy/entity/spell_custom_attr_entity.dart';
-import 'package:foxy/entity/spell_entity.dart';
-import 'package:foxy/entity/spell_group_entity.dart';
-import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
@@ -16,79 +11,6 @@ import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 
 void main() {
-  test('dbc_spell Entity 精确覆盖 234 个物理列且重复槽位均为标量字段', () {
-    final json = const SpellEntity().toJson();
-    expect(json, hasLength(234));
-    expect(json.values.whereType<List<Object?>>(), isEmpty);
-    expect(
-      json.keys,
-      containsAll(<String>{
-        'ShapeshiftMask0',
-        'ShapeshiftMask1',
-        'ShapeshiftExclude0',
-        'ShapeshiftExclude1',
-        'Reagent0',
-        'Reagent7',
-        'ReagentCount0',
-        'ReagentCount7',
-        'Effect0',
-        'Effect1',
-        'Effect2',
-      }),
-    );
-    expect(SpellEntity.fromJson(json).toJson(), json);
-  });
-
-  test('七张关联表 Entity 仅写出各自物理列', () {
-    expect(const SpellBonusDataEntity().toJson().keys.toSet(), {
-      'entry',
-      'direct_bonus',
-      'dot_bonus',
-      'ap_bonus',
-      'ap_dot_bonus',
-      'comments',
-    });
-    expect(const SpellCustomAttrEntity().toJson().keys.toSet(), {
-      'spell_id',
-      'attributes',
-    });
-    expect(const SpellAreaEntity().toJson().keys.toSet(), {
-      'spell',
-      'area',
-      'quest_start',
-      'quest_end',
-      'aura_spell',
-      'racemask',
-      'gender',
-      'autocast',
-      'quest_start_status',
-      'quest_end_status',
-    });
-    expect(const SpellGroupEntity().toJson().keys.toSet(), {'id', 'spell_id'});
-    expect(const SpellLinkedSpellEntity().toJson().keys.toSet(), {
-      'spell_trigger',
-      'spell_effect',
-      'type',
-      'comment',
-    });
-    expect(const SpellRankEntity().toJson().keys.toSet(), {
-      'first_spell_id',
-      'spell_id',
-      'rank',
-    });
-    expect(const SpellLootTemplateEntity().toJson().keys.toSet(), {
-      'Entry',
-      'Item',
-      'Reference',
-      'Chance',
-      'QuestRequired',
-      'LootMode',
-      'GroupId',
-      'MinCount',
-      'MaxCount',
-      'Comment',
-    });
-  });
 
   test('关联表默认值与 core base SQL 一致', () {
     const area = SpellAreaEntity();

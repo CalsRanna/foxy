@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/constant/item_extended_cost_constants.dart';
-import 'package:foxy/page/item_extended_cost/item_extended_cost_detail_view_model.dart';
+import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';

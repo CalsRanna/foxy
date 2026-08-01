@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/page/emote_text/emote_text_detail_view_model.dart';
+import 'package:foxy/view_model/emote_text_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';

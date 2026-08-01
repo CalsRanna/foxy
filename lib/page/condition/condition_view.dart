@@ -6,7 +6,7 @@ import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/constant/smart_script_constants.dart';
-import 'package:foxy/page/condition/condition_detail_view_model.dart';
+import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

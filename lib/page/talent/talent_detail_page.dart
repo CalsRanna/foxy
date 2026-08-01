@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
-import 'package:foxy/page/talent/talent_detail_view_model.dart';
+import 'package:foxy/view_model/talent_detail_view_model.dart';
 import 'package:foxy/page/talent/talent_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';

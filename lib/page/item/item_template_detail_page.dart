@@ -6,7 +6,7 @@ import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
 import 'package:foxy/page/item/item_loot_template_view.dart';
-import 'package:foxy/page/item/item_template_detail_view_model.dart';
+import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/page/item/item_template_view.dart';
 import 'package:foxy/page/item/milling_loot_template_view.dart';
 import 'package:foxy/page/item/prospecting_loot_template_view.dart';

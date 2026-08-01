@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 
 void main() {

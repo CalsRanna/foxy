@@ -6,7 +6,7 @@ import 'package:foxy/constant/quest_enums.dart';
 import 'package:foxy/constant/quest_flags.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
-import 'package:foxy/page/quest/quest_template_detail_view_model.dart';
+import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/page/quest/quest_objective_target_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker_delegates.dart';

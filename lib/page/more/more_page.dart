@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/feature_entity.dart';
-import 'package:foxy/page/feature/feature_state_view_model.dart';
-import 'package:foxy/page/more/more_read_view_model.dart';
+import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/more_read_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/widget/context_menu.dart';

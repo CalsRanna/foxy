@@ -52,46 +52,46 @@ import 'package:foxy/page/item_extended_cost/item_extended_cost_list_page.dart'
 import 'package:foxy/page/item_set/item_set_detail_page.dart' as _i25;
 import 'package:foxy/page/item_set/item_set_list_page.dart' as _i26;
 import 'package:foxy/page/more/more_page.dart' as _i29;
-import 'package:foxy/page/page_text/page_text_detail_page.dart' as _i56;
-import 'package:foxy/page/page_text/page_text_list_page.dart' as _i57;
+import 'package:foxy/page/page_text/page_text_detail_page.dart' as _i30;
+import 'package:foxy/page/page_text/page_text_list_page.dart' as _i31;
 import 'package:foxy/page/player_create_info/player_create_info_detail_page.dart'
-    as _i30;
-import 'package:foxy/page/player_create_info/player_create_info_list_page.dart'
-    as _i31;
-import 'package:foxy/page/quest/quest_template_detail_page.dart' as _i38;
-import 'package:foxy/page/quest/quest_template_list_page.dart' as _i39;
-import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_page.dart'
     as _i32;
-import 'package:foxy/page/quest_faction_reward/quest_faction_reward_list_page.dart'
+import 'package:foxy/page/player_create_info/player_create_info_list_page.dart'
     as _i33;
-import 'package:foxy/page/quest_info/quest_info_detail_page.dart' as _i34;
-import 'package:foxy/page/quest_info/quest_info_list_page.dart' as _i35;
-import 'package:foxy/page/quest_sort/quest_sort_detail_page.dart' as _i36;
-import 'package:foxy/page/quest_sort/quest_sort_list_page.dart' as _i37;
+import 'package:foxy/page/quest/quest_template_detail_page.dart' as _i40;
+import 'package:foxy/page/quest/quest_template_list_page.dart' as _i41;
+import 'package:foxy/page/quest_faction_reward/quest_faction_reward_detail_page.dart'
+    as _i34;
+import 'package:foxy/page/quest_faction_reward/quest_faction_reward_list_page.dart'
+    as _i35;
+import 'package:foxy/page/quest_info/quest_info_detail_page.dart' as _i36;
+import 'package:foxy/page/quest_info/quest_info_list_page.dart' as _i37;
+import 'package:foxy/page/quest_sort/quest_sort_detail_page.dart' as _i38;
+import 'package:foxy/page/quest_sort/quest_sort_list_page.dart' as _i39;
 import 'package:foxy/page/reference_loot_template/reference_loot_template_detail_page.dart'
-    as _i40;
+    as _i42;
 import 'package:foxy/page/reference_loot_template/reference_loot_template_list_page.dart'
-    as _i41;
-import 'package:foxy/page/scaffold/scaffold_page.dart' as _i42;
-import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_page.dart'
     as _i43;
-import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_page.dart'
-    as _i44;
-import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_page.dart'
+import 'package:foxy/page/scaffold/scaffold_page.dart' as _i44;
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_detail_page.dart'
     as _i45;
-import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_page.dart'
+import 'package:foxy/page/scaling_stat_distribution/scaling_stat_distribution_list_page.dart'
     as _i46;
-import 'package:foxy/page/setting/setting_page.dart' as _i47;
-import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i48;
-import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i49;
-import 'package:foxy/page/spell/spell_detail_page.dart' as _i50;
-import 'package:foxy/page/spell/spell_list_page.dart' as _i53;
+import 'package:foxy/page/scaling_stat_value/scaling_stat_value_detail_page.dart'
+    as _i47;
+import 'package:foxy/page/scaling_stat_value/scaling_stat_value_list_page.dart'
+    as _i48;
+import 'package:foxy/page/setting/setting_page.dart' as _i49;
+import 'package:foxy/page/smart_script/smart_script_detail_page.dart' as _i50;
+import 'package:foxy/page/smart_script/smart_script_list_page.dart' as _i51;
+import 'package:foxy/page/spell/spell_detail_page.dart' as _i52;
+import 'package:foxy/page/spell/spell_list_page.dart' as _i55;
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_detail_page.dart'
-    as _i51;
+    as _i53;
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_list_page.dart'
-    as _i52;
-import 'package:foxy/page/talent/talent_detail_page.dart' as _i54;
-import 'package:foxy/page/talent/talent_list_page.dart' as _i55;
+    as _i54;
+import 'package:foxy/page/talent/talent_detail_page.dart' as _i56;
+import 'package:foxy/page/talent/talent_list_page.dart' as _i57;
 
 /// generated route for
 /// [_i1.AchievementDetailPage]
@@ -1066,7 +1066,76 @@ class MoreRoute extends _i58.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i30.PlayerCreateInfoDetailPage]
+/// [_i30.PageTextDetailPage]
+class RouteTextDetailRoute
+    extends _i58.PageRouteInfo<RouteTextDetailRouteArgs> {
+  RouteTextDetailRoute({
+    _i59.Key? key,
+    int? pageTextKey,
+    List<_i58.PageRouteInfo>? children,
+  }) : super(
+         RouteTextDetailRoute.name,
+         args: RouteTextDetailRouteArgs(key: key, pageTextKey: pageTextKey),
+         initialChildren: children,
+       );
+
+  static const String name = 'RouteTextDetailRoute';
+
+  static _i58.PageInfo page = _i58.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<RouteTextDetailRouteArgs>(
+        orElse: () => const RouteTextDetailRouteArgs(),
+      );
+      return _i30.PageTextDetailPage(
+        key: args.key,
+        pageTextKey: args.pageTextKey,
+      );
+    },
+  );
+}
+
+class RouteTextDetailRouteArgs {
+  const RouteTextDetailRouteArgs({this.key, this.pageTextKey});
+
+  final _i59.Key? key;
+
+  final int? pageTextKey;
+
+  @override
+  String toString() {
+    return 'RouteTextDetailRouteArgs{key: $key, pageTextKey: $pageTextKey}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! RouteTextDetailRouteArgs) return false;
+    return key == other.key && pageTextKey == other.pageTextKey;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ pageTextKey.hashCode;
+}
+
+/// generated route for
+/// [_i31.PageTextListPage]
+class RouteTextListRoute extends _i58.PageRouteInfo<void> {
+  const RouteTextListRoute({List<_i58.PageRouteInfo>? children})
+    : super(RouteTextListRoute.name, initialChildren: children);
+
+  static const String name = 'RouteTextListRoute';
+
+  static _i58.PageInfo page = _i58.PageInfo(
+    name,
+    builder: (data) {
+      return const _i31.PageTextListPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i32.PlayerCreateInfoDetailPage]
 class PlayerCreateInfoDetailRoute
     extends _i58.PageRouteInfo<PlayerCreateInfoDetailRouteArgs> {
   PlayerCreateInfoDetailRoute({
@@ -1090,7 +1159,7 @@ class PlayerCreateInfoDetailRoute
       final args = data.argsAs<PlayerCreateInfoDetailRouteArgs>(
         orElse: () => const PlayerCreateInfoDetailRouteArgs(),
       );
-      return _i30.PlayerCreateInfoDetailPage(
+      return _i32.PlayerCreateInfoDetailPage(
         key: args.key,
         playerCreateInfoKey: args.playerCreateInfoKey,
       );
@@ -1122,7 +1191,7 @@ class PlayerCreateInfoDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i31.PlayerCreateInfoListPage]
+/// [_i33.PlayerCreateInfoListPage]
 class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
   const PlayerCreateInfoListRoute({List<_i58.PageRouteInfo>? children})
     : super(PlayerCreateInfoListRoute.name, initialChildren: children);
@@ -1132,13 +1201,13 @@ class PlayerCreateInfoListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i31.PlayerCreateInfoListPage();
+      return const _i33.PlayerCreateInfoListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i32.QuestFactionRewardDetailPage]
+/// [_i34.QuestFactionRewardDetailPage]
 class QuestFactionRewardDetailRoute
     extends _i58.PageRouteInfo<QuestFactionRewardDetailRouteArgs> {
   QuestFactionRewardDetailRoute({
@@ -1162,7 +1231,7 @@ class QuestFactionRewardDetailRoute
       final args = data.argsAs<QuestFactionRewardDetailRouteArgs>(
         orElse: () => const QuestFactionRewardDetailRouteArgs(),
       );
-      return _i32.QuestFactionRewardDetailPage(
+      return _i34.QuestFactionRewardDetailPage(
         key: args.key,
         questFactionRewardKey: args.questFactionRewardKey,
       );
@@ -1198,7 +1267,7 @@ class QuestFactionRewardDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i33.QuestFactionRewardListPage]
+/// [_i35.QuestFactionRewardListPage]
 class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
   const QuestFactionRewardListRoute({List<_i58.PageRouteInfo>? children})
     : super(QuestFactionRewardListRoute.name, initialChildren: children);
@@ -1208,13 +1277,13 @@ class QuestFactionRewardListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i33.QuestFactionRewardListPage();
+      return const _i35.QuestFactionRewardListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i34.QuestInfoDetailPage]
+/// [_i36.QuestInfoDetailPage]
 class QuestInfoDetailRoute
     extends _i58.PageRouteInfo<QuestInfoDetailRouteArgs> {
   QuestInfoDetailRoute({
@@ -1235,7 +1304,7 @@ class QuestInfoDetailRoute
       final args = data.argsAs<QuestInfoDetailRouteArgs>(
         orElse: () => const QuestInfoDetailRouteArgs(),
       );
-      return _i34.QuestInfoDetailPage(
+      return _i36.QuestInfoDetailPage(
         key: args.key,
         questInfoKey: args.questInfoKey,
       );
@@ -1267,7 +1336,7 @@ class QuestInfoDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i35.QuestInfoListPage]
+/// [_i37.QuestInfoListPage]
 class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
   const QuestInfoListRoute({List<_i58.PageRouteInfo>? children})
     : super(QuestInfoListRoute.name, initialChildren: children);
@@ -1277,13 +1346,13 @@ class QuestInfoListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i35.QuestInfoListPage();
+      return const _i37.QuestInfoListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i36.QuestSortDetailPage]
+/// [_i38.QuestSortDetailPage]
 class QuestSortDetailRoute
     extends _i58.PageRouteInfo<QuestSortDetailRouteArgs> {
   QuestSortDetailRoute({
@@ -1304,7 +1373,7 @@ class QuestSortDetailRoute
       final args = data.argsAs<QuestSortDetailRouteArgs>(
         orElse: () => const QuestSortDetailRouteArgs(),
       );
-      return _i36.QuestSortDetailPage(
+      return _i38.QuestSortDetailPage(
         key: args.key,
         questSortKey: args.questSortKey,
       );
@@ -1336,7 +1405,7 @@ class QuestSortDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i37.QuestSortListPage]
+/// [_i39.QuestSortListPage]
 class QuestSortListRoute extends _i58.PageRouteInfo<void> {
   const QuestSortListRoute({List<_i58.PageRouteInfo>? children})
     : super(QuestSortListRoute.name, initialChildren: children);
@@ -1346,13 +1415,13 @@ class QuestSortListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i37.QuestSortListPage();
+      return const _i39.QuestSortListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i38.QuestTemplateDetailPage]
+/// [_i40.QuestTemplateDetailPage]
 class QuestTemplateDetailRoute
     extends _i58.PageRouteInfo<QuestTemplateDetailRouteArgs> {
   QuestTemplateDetailRoute({
@@ -1376,7 +1445,7 @@ class QuestTemplateDetailRoute
       final args = data.argsAs<QuestTemplateDetailRouteArgs>(
         orElse: () => const QuestTemplateDetailRouteArgs(),
       );
-      return _i38.QuestTemplateDetailPage(
+      return _i40.QuestTemplateDetailPage(
         key: args.key,
         questTemplateKey: args.questTemplateKey,
       );
@@ -1408,7 +1477,7 @@ class QuestTemplateDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i39.QuestTemplateListPage]
+/// [_i41.QuestTemplateListPage]
 class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
   const QuestTemplateListRoute({List<_i58.PageRouteInfo>? children})
     : super(QuestTemplateListRoute.name, initialChildren: children);
@@ -1418,13 +1487,13 @@ class QuestTemplateListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i39.QuestTemplateListPage();
+      return const _i41.QuestTemplateListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i40.ReferenceLootTemplateDetailPage]
+/// [_i42.ReferenceLootTemplateDetailPage]
 class ReferenceLootTemplateDetailRoute
     extends _i58.PageRouteInfo<ReferenceLootTemplateDetailRouteArgs> {
   ReferenceLootTemplateDetailRoute({
@@ -1448,7 +1517,7 @@ class ReferenceLootTemplateDetailRoute
       final args = data.argsAs<ReferenceLootTemplateDetailRouteArgs>(
         orElse: () => const ReferenceLootTemplateDetailRouteArgs(),
       );
-      return _i40.ReferenceLootTemplateDetailPage(
+      return _i42.ReferenceLootTemplateDetailPage(
         key: args.key,
         referenceLootTemplateKey: args.referenceLootTemplateKey,
       );
@@ -1484,7 +1553,7 @@ class ReferenceLootTemplateDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i41.ReferenceLootTemplateListPage]
+/// [_i43.ReferenceLootTemplateListPage]
 class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
   const ReferenceLootTemplateListRoute({List<_i58.PageRouteInfo>? children})
     : super(ReferenceLootTemplateListRoute.name, initialChildren: children);
@@ -1494,13 +1563,13 @@ class ReferenceLootTemplateListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i41.ReferenceLootTemplateListPage();
+      return const _i43.ReferenceLootTemplateListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i42.ScaffoldPage]
+/// [_i44.ScaffoldPage]
 class ScaffoldRoute extends _i58.PageRouteInfo<void> {
   const ScaffoldRoute({List<_i58.PageRouteInfo>? children})
     : super(ScaffoldRoute.name, initialChildren: children);
@@ -1510,13 +1579,13 @@ class ScaffoldRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i42.ScaffoldPage();
+      return const _i44.ScaffoldPage();
     },
   );
 }
 
 /// generated route for
-/// [_i43.ScalingStatDistributionDetailPage]
+/// [_i45.ScalingStatDistributionDetailPage]
 class ScalingStatDistributionDetailRoute
     extends _i58.PageRouteInfo<ScalingStatDistributionDetailRouteArgs> {
   ScalingStatDistributionDetailRoute({
@@ -1540,7 +1609,7 @@ class ScalingStatDistributionDetailRoute
       final args = data.argsAs<ScalingStatDistributionDetailRouteArgs>(
         orElse: () => const ScalingStatDistributionDetailRouteArgs(),
       );
-      return _i43.ScalingStatDistributionDetailPage(
+      return _i45.ScalingStatDistributionDetailPage(
         key: args.key,
         scalingStatDistributionKey: args.scalingStatDistributionKey,
       );
@@ -1576,7 +1645,7 @@ class ScalingStatDistributionDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i44.ScalingStatDistributionListPage]
+/// [_i46.ScalingStatDistributionListPage]
 class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
   const ScalingStatDistributionListRoute({List<_i58.PageRouteInfo>? children})
     : super(ScalingStatDistributionListRoute.name, initialChildren: children);
@@ -1586,13 +1655,13 @@ class ScalingStatDistributionListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i44.ScalingStatDistributionListPage();
+      return const _i46.ScalingStatDistributionListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i45.ScalingStatValueDetailPage]
+/// [_i47.ScalingStatValueDetailPage]
 class ScalingStatValueDetailRoute
     extends _i58.PageRouteInfo<ScalingStatValueDetailRouteArgs> {
   ScalingStatValueDetailRoute({
@@ -1616,7 +1685,7 @@ class ScalingStatValueDetailRoute
       final args = data.argsAs<ScalingStatValueDetailRouteArgs>(
         orElse: () => const ScalingStatValueDetailRouteArgs(),
       );
-      return _i45.ScalingStatValueDetailPage(
+      return _i47.ScalingStatValueDetailPage(
         key: args.key,
         scalingStatValueKey: args.scalingStatValueKey,
       );
@@ -1648,7 +1717,7 @@ class ScalingStatValueDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i46.ScalingStatValueListPage]
+/// [_i48.ScalingStatValueListPage]
 class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
   const ScalingStatValueListRoute({List<_i58.PageRouteInfo>? children})
     : super(ScalingStatValueListRoute.name, initialChildren: children);
@@ -1658,13 +1727,13 @@ class ScalingStatValueListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i46.ScalingStatValueListPage();
+      return const _i48.ScalingStatValueListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i47.SettingPage]
+/// [_i49.SettingPage]
 class SettingRoute extends _i58.PageRouteInfo<void> {
   const SettingRoute({List<_i58.PageRouteInfo>? children})
     : super(SettingRoute.name, initialChildren: children);
@@ -1674,13 +1743,13 @@ class SettingRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i47.SettingPage();
+      return const _i49.SettingPage();
     },
   );
 }
 
 /// generated route for
-/// [_i48.SmartScriptDetailPage]
+/// [_i50.SmartScriptDetailPage]
 class SmartScriptDetailRoute
     extends _i58.PageRouteInfo<SmartScriptDetailRouteArgs> {
   SmartScriptDetailRoute({
@@ -1701,7 +1770,7 @@ class SmartScriptDetailRoute
       final args = data.argsAs<SmartScriptDetailRouteArgs>(
         orElse: () => const SmartScriptDetailRouteArgs(),
       );
-      return _i48.SmartScriptDetailPage(
+      return _i50.SmartScriptDetailPage(
         key: args.key,
         scriptKey: args.scriptKey,
       );
@@ -1733,7 +1802,7 @@ class SmartScriptDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i49.SmartScriptListPage]
+/// [_i51.SmartScriptListPage]
 class SmartScriptListRoute extends _i58.PageRouteInfo<void> {
   const SmartScriptListRoute({List<_i58.PageRouteInfo>? children})
     : super(SmartScriptListRoute.name, initialChildren: children);
@@ -1743,13 +1812,13 @@ class SmartScriptListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i49.SmartScriptListPage();
+      return const _i51.SmartScriptListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i50.SpellDetailPage]
+/// [_i52.SpellDetailPage]
 class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
   SpellDetailRoute({
     _i59.Key? key,
@@ -1769,7 +1838,7 @@ class SpellDetailRoute extends _i58.PageRouteInfo<SpellDetailRouteArgs> {
       final args = data.argsAs<SpellDetailRouteArgs>(
         orElse: () => const SpellDetailRouteArgs(),
       );
-      return _i50.SpellDetailPage(key: args.key, spellKey: args.spellKey);
+      return _i52.SpellDetailPage(key: args.key, spellKey: args.spellKey);
     },
   );
 }
@@ -1798,7 +1867,7 @@ class SpellDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i51.SpellItemEnchantmentDetailPage]
+/// [_i53.SpellItemEnchantmentDetailPage]
 class SpellItemEnchantmentDetailRoute
     extends _i58.PageRouteInfo<SpellItemEnchantmentDetailRouteArgs> {
   SpellItemEnchantmentDetailRoute({
@@ -1822,7 +1891,7 @@ class SpellItemEnchantmentDetailRoute
       final args = data.argsAs<SpellItemEnchantmentDetailRouteArgs>(
         orElse: () => const SpellItemEnchantmentDetailRouteArgs(),
       );
-      return _i51.SpellItemEnchantmentDetailPage(
+      return _i53.SpellItemEnchantmentDetailPage(
         key: args.key,
         spellItemEnchantmentKey: args.spellItemEnchantmentKey,
       );
@@ -1858,7 +1927,7 @@ class SpellItemEnchantmentDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i52.SpellItemEnchantmentListPage]
+/// [_i54.SpellItemEnchantmentListPage]
 class SpellItemEnchantmentListRoute extends _i58.PageRouteInfo<void> {
   const SpellItemEnchantmentListRoute({List<_i58.PageRouteInfo>? children})
     : super(SpellItemEnchantmentListRoute.name, initialChildren: children);
@@ -1868,13 +1937,13 @@ class SpellItemEnchantmentListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i52.SpellItemEnchantmentListPage();
+      return const _i54.SpellItemEnchantmentListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i53.SpellListPage]
+/// [_i55.SpellListPage]
 class SpellListRoute extends _i58.PageRouteInfo<void> {
   const SpellListRoute({List<_i58.PageRouteInfo>? children})
     : super(SpellListRoute.name, initialChildren: children);
@@ -1884,13 +1953,13 @@ class SpellListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i53.SpellListPage();
+      return const _i55.SpellListPage();
     },
   );
 }
 
 /// generated route for
-/// [_i54.TalentDetailPage]
+/// [_i56.TalentDetailPage]
 class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
   TalentDetailRoute({
     _i59.Key? key,
@@ -1910,7 +1979,7 @@ class TalentDetailRoute extends _i58.PageRouteInfo<TalentDetailRouteArgs> {
       final args = data.argsAs<TalentDetailRouteArgs>(
         orElse: () => const TalentDetailRouteArgs(),
       );
-      return _i54.TalentDetailPage(key: args.key, talentKey: args.talentKey);
+      return _i56.TalentDetailPage(key: args.key, talentKey: args.talentKey);
     },
   );
 }
@@ -1939,7 +2008,7 @@ class TalentDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i55.TalentListPage]
+/// [_i57.TalentListPage]
 class TalentListRoute extends _i58.PageRouteInfo<void> {
   const TalentListRoute({List<_i58.PageRouteInfo>? children})
     : super(TalentListRoute.name, initialChildren: children);
@@ -1949,76 +2018,7 @@ class TalentListRoute extends _i58.PageRouteInfo<void> {
   static _i58.PageInfo page = _i58.PageInfo(
     name,
     builder: (data) {
-      return const _i55.TalentListPage();
-    },
-  );
-}
-
-/// generated route for
-/// [_i56.TextContentDetailPage]
-class TextContentDetailRoute
-    extends _i58.PageRouteInfo<TextContentDetailRouteArgs> {
-  TextContentDetailRoute({
-    _i59.Key? key,
-    int? pageTextKey,
-    List<_i58.PageRouteInfo>? children,
-  }) : super(
-         TextContentDetailRoute.name,
-         args: TextContentDetailRouteArgs(key: key, pageTextKey: pageTextKey),
-         initialChildren: children,
-       );
-
-  static const String name = 'TextContentDetailRoute';
-
-  static _i58.PageInfo page = _i58.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<TextContentDetailRouteArgs>(
-        orElse: () => const TextContentDetailRouteArgs(),
-      );
-      return _i56.TextContentDetailPage(
-        key: args.key,
-        pageTextKey: args.pageTextKey,
-      );
-    },
-  );
-}
-
-class TextContentDetailRouteArgs {
-  const TextContentDetailRouteArgs({this.key, this.pageTextKey});
-
-  final _i59.Key? key;
-
-  final int? pageTextKey;
-
-  @override
-  String toString() {
-    return 'TextContentDetailRouteArgs{key: $key, pageTextKey: $pageTextKey}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! TextContentDetailRouteArgs) return false;
-    return key == other.key && pageTextKey == other.pageTextKey;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ pageTextKey.hashCode;
-}
-
-/// generated route for
-/// [_i57.TextContentListPage]
-class TextContentListRoute extends _i58.PageRouteInfo<void> {
-  const TextContentListRoute({List<_i58.PageRouteInfo>? children})
-    : super(TextContentListRoute.name, initialChildren: children);
-
-  static const String name = 'TextContentListRoute';
-
-  static _i58.PageInfo page = _i58.PageInfo(
-    name,
-    builder: (data) {
-      return const _i57.TextContentListPage();
+      return const _i57.TalentListPage();
     },
   );
 }

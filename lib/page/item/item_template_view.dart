@@ -7,7 +7,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/item_constants.dart';
 import 'package:foxy/constant/item_enums.dart';
 import 'package:foxy/constant/item_flags.dart';
-import 'package:foxy/page/item/item_template_detail_view_model.dart';
+import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_locale_picker.dart';

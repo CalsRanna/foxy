@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
-import 'package:foxy/page/creature_template/creature_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_addon_single_editor_view_model.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';

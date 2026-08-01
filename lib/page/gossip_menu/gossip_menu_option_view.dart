@@ -4,7 +4,7 @@ import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
-import 'package:foxy/page/gossip_menu/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';

@@ -1,7 +1,7 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:foxy/page/setting/dbc_export_workflow_view_model.dart';
-import 'package:foxy/page/setting/dbc_import_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
+import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';

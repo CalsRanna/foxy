@@ -4,7 +4,7 @@ import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/page/game_object/game_object_loot_template_view.dart';
 import 'package:foxy/page/game_object/game_object_quest_item_view.dart';
 import 'package:foxy/page/game_object/game_object_template_addon_view.dart';
-import 'package:foxy/page/game_object/game_object_template_detail_view_model.dart';
+import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/page/game_object/game_object_template_view.dart';
 import 'package:foxy/widget/foxy_tab.dart';
 import 'package:get_it/get_it.dart';

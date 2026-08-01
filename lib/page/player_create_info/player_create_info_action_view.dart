@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/player_create_info_action_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
-import 'package:foxy/page/player_create_info/player_create_info_action_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_action_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/foxy_shad_table.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
