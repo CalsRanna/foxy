@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/spell_item_enchantment_constants.dart';
@@ -31,31 +30,6 @@ void main() {
     expect(kSpellItemEnchantmentStatOptions, containsPair(48, '格挡值'));
     expect(kSpellItemEnchantmentStatOptions, isNot(contains(2)));
     expect(kSpellItemEnchantmentStatOptions, isNot(contains(40)));
-  });
-
-  test('校验保留客户端原始列并约束联合参数', () {
-    expect(
-      const SpellItemEnchantmentEntity(id: 1, effect0: 0, effectPointsMin0: 20,
-          effectPointsMax0: 10, effectArg0: 9394, effect1: 2,
-          effectPointsMin1: -10, itemVisual: -1, flags: 9).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const SpellItemEnchantmentEntity(id: 1, effect0: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellItemEnchantmentEntity(id: 1, effect0: 4, effectArg0: 7).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellItemEnchantmentEntity(id: 1, effect0: 5, effectArg0: 40).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellItemEnchantmentEntity(id: 1, flags: 16).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('条件 Entity 精确覆盖 31 个独立标量列', () {

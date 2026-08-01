@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/currency_type_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/currency_type_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'currency_type_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CurrencyTypeEntity)
 class CurrencyTypeDetailViewModel
     with
-        ViewModelValidationMixin,
-        CurrencyTypeValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CurrencyTypeDetailViewModelMixin {
   final _repository = GetIt.instance.get<CurrencyTypeRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,11 +22,6 @@ class CurrencyTypeDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final itemIdController = registerController(IntFieldController());
-  late final categoryIdController = registerController(IntFieldController());
-  late final bitIndexController = registerController(IntFieldController());
 
   /// 从所有 Controller 收集数据构建 CurrencyType
 
@@ -64,7 +59,6 @@ class CurrencyTypeDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateCurrencyTypeFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -83,22 +77,6 @@ class CurrencyTypeDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  CurrencyTypeEntity _collectCandidate() {
-    return CurrencyTypeEntity(
-      id: idController.collect(),
-      itemId: itemIdController.collect(),
-      categoryId: categoryIdController.collect(),
-      bitIndex: bitIndexController.collect(),
-    );
-  }
-
-  void _applyCandidate(CurrencyTypeEntity currencyType) {
-    idController.init(currencyType.id);
-    itemIdController.init(currencyType.itemId);
-    categoryIdController.init(currencyType.categoryId);
-    bitIndexController.init(currencyType.bitIndex);
   }
 
   void _logActivity(ActivityActionType action, CurrencyTypeEntity t) {

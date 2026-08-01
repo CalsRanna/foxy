@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/page_text_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/page_text_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'page_text_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PageTextEntity)
 class PageTextDetailViewModel
     with
-        ViewModelValidationMixin,
-        PageTextValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PageTextDetailViewModelMixin {
   final _repository = GetIt.instance.get<PageTextRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,11 +22,6 @@ class PageTextDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final textController = registerController(StringFieldController());
-  late final nextPageIdController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -61,7 +56,6 @@ class PageTextDetailViewModel
     errorMessage.value = null;
     try {
       final data = _collectCandidate();
-      validatePageTextFields(data);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -81,22 +75,6 @@ class PageTextDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  PageTextEntity _collectCandidate() {
-    return PageTextEntity(
-      id: idController.collect(),
-      text: textController.collect(),
-      nextPageId: nextPageIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(PageTextEntity pt) {
-    idController.init(pt.id);
-    textController.init(pt.text);
-    nextPageIdController.init(pt.nextPageId);
-    verifiedBuildController.init(pt.verifiedBuild);
   }
 
   void _logActivity(ActivityActionType action, PageTextEntity t) {

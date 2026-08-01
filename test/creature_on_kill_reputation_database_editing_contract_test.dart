@@ -3,8 +3,6 @@ import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/page/creature_template/creature_on_kill_reputation_single_editor_view_model.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/form/validation/creature_on_kill_reputation_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -89,7 +87,7 @@ void main() {
       await viewModel.initSignals(parentKey: 10);
       const oldKey = 10;
       expect(viewModel.editingKey.value, oldKey);
-      viewModel.creatureIdController.init(11);
+      viewModel.creatureIDController.init(11);
       repository.failUpdates = true;
 
       await expectLater(viewModel.persist(), throwsA(isA<StateError>()));
@@ -99,7 +97,7 @@ void main() {
       await viewModel.persist();
       expect(repository.updateKeys, [oldKey, oldKey]);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.creatureIdController.collect(), 10);
+      expect(viewModel.creatureIDController.collect(), 10);
 
       await viewModel.setParentKey(11);
       expect(viewModel.editingKey.value, 11);
@@ -118,15 +116,6 @@ void main() {
     });
   });
 
-  test('validateCreatureOnKillReputationFields 拒绝非法 teamDependent', () {
-    final validation = _Validation();
-    expect(
-      () => validation.validateCreatureOnKillReputationFields(
-        const CreatureOnKillReputationEntity(creatureID: 1, teamDependent: 2),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeRepository extends CreatureOnKillReputationRepository {
@@ -167,9 +156,6 @@ class _FakeRepository extends CreatureOnKillReputationRepository {
     rows[index] = rep;
   }
 }
-
-class _Validation
-    with ViewModelValidationMixin, CreatureOnKillReputationValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override

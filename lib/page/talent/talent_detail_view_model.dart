@@ -5,8 +5,6 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/talent_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/talent_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -15,8 +13,6 @@ part 'talent_detail_view_model.g.dart';
 @FoxyDetailViewModel(entity: TalentEntity, selects: {'flags': 0})
 class TalentDetailViewModel
     with
-        ViewModelValidationMixin,
-        TalentValidationMixin,
         FieldControllerMixin,
         _TalentDetailViewModelMixin {
   final _repository = GetIt.instance.get<TalentRepository>();
@@ -64,7 +60,6 @@ class TalentDetailViewModel
     errorMessage.value = null;
     try {
       final t = _collectCandidate();
-      validateTalentFields(t);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create

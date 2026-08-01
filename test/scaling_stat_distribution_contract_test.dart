@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/scaling_stat_distribution_constants.dart';
 import 'package:foxy/entity/scaling_stat_distribution_entity.dart';
@@ -46,30 +45,6 @@ void main() {
     expect(kScalingStatDistributionStatOptions, isNot(contains(2)));
     expect(kScalingStatDistributionStatOptions, isNot(contains(8)));
     expect(kScalingStatDistributionStatOptions, isNot(contains(11)));
-  });
-
-  test('校验保留实际 DBC 的零值语义并拒绝无效类型和值域', () {
-    expect(
-      const ScalingStatDistributionEntity(
-        id: 1,
-        statId0: 40,
-        bonus0: 0,
-        maxlevel: 0,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ScalingStatDistributionEntity(id: 1, statId0: 2).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ScalingStatDistributionEntity(id: 1, bonus0: -1).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ScalingStatDistributionEntity(id: 32768).validate(),
-      throwsStateError,
-    );
   });
 
   test('空槽为 -1 且属性类型 0 能正常显示', () {

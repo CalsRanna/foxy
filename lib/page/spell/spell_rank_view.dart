@@ -202,7 +202,7 @@ class _SpellRankViewState extends State<SpellRankView> {
                   label: '技能',
                   child: FoxyEntityPicker(
                     delegate: FoxyEntityPickerDelegates.spell,
-                    controller: viewModel.rankSpellIdController,
+                    controller: viewModel.spellIdController,
                     placeholder: 'spell_id',
                   ),
                 ),

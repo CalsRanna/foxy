@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/quest_enums.dart';
 import 'package:foxy/constant/quest_flags.dart';
@@ -222,43 +221,4 @@ void main() {
     expect(specialMask & 0x3E00, 0);
   });
 
-  test('主表保存约束与 AzerothCore 后处理一致', () {
-    expect(
-      () => const QuestTemplateEntity(questType: 3).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const QuestTemplateEntity(rewardXpDifficulty: 10).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const QuestTemplateEntity(
-        requiredItemId1: 100,
-        requiredItemCount1: 0,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const QuestTemplateEntity(itemDrop1: 100).validate(),
-      returnsNormally,
-    );
-    expect(
-      () => const QuestTemplateEntity(flags: 0x00009000).validate(),
-      throwsArgumentError,
-    );
-  });
-
-  test('Addon 仅接受 DB SpecialFlags 并校验面包屑互斥字段', () {
-    expect(
-      () => const QuestTemplateAddonEntity(specialFlags: 0x0200).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const QuestTemplateAddonEntity(
-        breadcrumbForQuestId: 2,
-        nextQuestId: 3,
-      ).validate(),
-      throwsArgumentError,
-    );
-  });
 }

@@ -3,16 +3,16 @@ import 'package:foxy/entity/player_create_info_skill_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_skill_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'player_create_info_skill_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PlayerCreateInfoSkillEntity, flags: {'classMask', 'raceMask'})
 class PlayerCreateInfoSkillCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        PlayerCreateInfoSkillValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PlayerCreateInfoSkillCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoSkillRepository>();
 
   final parentKey = signal<PlayerCreateInfoKey?>(null);
@@ -24,12 +24,6 @@ class PlayerCreateInfoSkillCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final raceMaskController = registerController(FlagFieldController());
-  late final classMaskController = registerController(FlagFieldController());
-  late final skillController = registerController(IntFieldController());
-  late final rankController = registerController(IntFieldController());
-  late final commentController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -110,7 +104,6 @@ class PlayerCreateInfoSkillCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validatePlayerCreateInfoSkillFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -160,23 +153,6 @@ class PlayerCreateInfoSkillCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  PlayerCreateInfoSkillEntity _collectCandidate() =>
-      PlayerCreateInfoSkillEntity(
-        raceMask: raceMaskController.collect(),
-        classMask: classMaskController.collect(),
-        skill: skillController.collect(),
-        rank: rankController.collect(),
-        comment: commentController.collect(),
-      );
-
-  void _applyCandidate(PlayerCreateInfoSkillEntity entity) {
-    raceMaskController.init(entity.raceMask);
-    classMaskController.init(entity.classMask);
-    skillController.init(entity.skill);
-    rankController.init(entity.rank);
-    commentController.init(entity.comment);
   }
 
   Future<void> _refresh() async {

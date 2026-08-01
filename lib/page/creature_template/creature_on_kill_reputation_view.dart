@@ -97,7 +97,7 @@ class _CreatureOnKillReputationViewState
                       child: FoxyFormItem(
                         label: '编号',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.creatureIdController,
+                          controller: viewModel.creatureIDController,
                           placeholder: 'creature_id',
                         ),
                       ),

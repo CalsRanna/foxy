@@ -202,7 +202,7 @@ class _CreatureTemplateResistanceViewState
           FoxyFormItem(
             label: '生物ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              controller: viewModel.creatureIDController,
               placeholder: 'CreatureID',
             ),
           ),

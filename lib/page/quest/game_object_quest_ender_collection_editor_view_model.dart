@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/game_object_quest_relation_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'game_object_quest_ender_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GameObjectQuestEnderEntity)
 class GameObjectQuestEnderCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        GameObjectQuestRelationValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GameObjectQuestEnderCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<GameObjectQuestEnderRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,9 +23,6 @@ class GameObjectQuestEnderCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final questController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -98,7 +95,6 @@ class GameObjectQuestEnderCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateGameObjectQuestEnderFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -148,18 +144,6 @@ class GameObjectQuestEnderCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  GameObjectQuestEnderEntity _collectCandidate() {
-    return GameObjectQuestEnderEntity(
-      id: idController.collect(),
-      quest: questController.collect(),
-    );
-  }
-
-  void _applyCandidate(GameObjectQuestEnderEntity model) {
-    idController.init(model.id);
-    questController.init(model.quest);
   }
 
   Future<void> _refresh() async {

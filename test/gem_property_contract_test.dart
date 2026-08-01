@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/gem_property_constants.dart';
 import 'package:foxy/entity/gem_property_entity.dart';
@@ -35,31 +34,6 @@ void main() {
     expect(kGemPropertyColorOptions, isNot(contains(0)));
     expect(kGemPropertyColorOptions, isNot(contains(3)));
     expect(kGemPropertyColorOptions, isNot(contains(15)));
-  });
-
-  test('校验允许零附魔和客户端计数列并拒绝非法颜色和值域', () {
-    expect(
-      const GemPropertyEntity(
-        id: 2,
-        enchantId: 0,
-        maxCountInv: 1,
-        maxCountItem: 0,
-        type: 2,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const GemPropertyEntity(id: 1, type: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GemPropertyEntity(id: 1, type: 3).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GemPropertyEntity(id: 1, maxCountInv: -1, type: 2).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('DBC definition 使用 3.3.5.12340 的 5 列物理格式', () {

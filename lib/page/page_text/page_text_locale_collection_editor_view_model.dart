@@ -4,16 +4,16 @@ import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 import 'package:foxy/repository/page_text_locale_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/page_text_locale_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'page_text_locale_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PageTextLocaleEntity, selects: {'locale': 'zhCN'})
 class PageTextLocaleCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        PageTextLocaleValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PageTextLocaleCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<PageTextLocaleRepository>();
 
   final parentKey = signal<int?>(null);
@@ -25,13 +25,6 @@ class PageTextLocaleCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final localeController = registerController(
-    SelectFieldController<String>(fallback: 'zhCN'),
-  );
-  late final textController = registerController(StringFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -112,7 +105,6 @@ class PageTextLocaleCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validatePageTextLocaleFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -162,22 +154,6 @@ class PageTextLocaleCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  PageTextLocaleEntity _collectCandidate() {
-    return PageTextLocaleEntity(
-      id: idController.collect(),
-      locale: localeController.collect(),
-      text: textController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(PageTextLocaleEntity candidate) {
-    idController.init(candidate.id);
-    localeController.init(candidate.locale);
-    textController.init(candidate.text);
-    verifiedBuildController.init(candidate.verifiedBuild);
   }
 
   Future<void> _refresh() async {

@@ -3,16 +3,16 @@ import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_spell_custom_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'player_create_info_spell_custom_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PlayerCreateInfoSpellCustomEntity, flags: {'classMask', 'raceMask'})
 class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        PlayerCreateInfoSpellCustomValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PlayerCreateInfoSpellCustomCollectionEditorViewModelMixin {
   final _repository = GetIt.instance
       .get<PlayerCreateInfoSpellCustomRepository>();
 
@@ -25,11 +25,6 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final racemaskController = registerController(FlagFieldController());
-  late final classmaskController = registerController(FlagFieldController());
-  late final spellController = registerController(IntFieldController());
-  late final noteController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -110,7 +105,6 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validatePlayerCreateInfoSpellCustomFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -163,21 +157,6 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  PlayerCreateInfoSpellCustomEntity _collectCandidate() =>
-      PlayerCreateInfoSpellCustomEntity(
-        raceMask: racemaskController.collect(),
-        classMask: classmaskController.collect(),
-        spell: spellController.collect(),
-        note: noteController.collect(),
-      );
-
-  void _applyCandidate(PlayerCreateInfoSpellCustomEntity item) {
-    racemaskController.init(item.raceMask);
-    classmaskController.init(item.classMask);
-    spellController.init(item.spell);
-    noteController.init(item.note);
   }
 
   Future<void> _refresh() async {

@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/glyph_property_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/glyph_property_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'glyph_property_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GlyphPropertyEntity, selects: {'glyphSlotFlags': 0})
 class GlyphPropertyDetailViewModel
     with
-        ViewModelValidationMixin,
-        GlyphPropertyValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GlyphPropertyDetailViewModelMixin {
   final _repository = GetIt.instance.get<GlyphPropertyRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,16 +22,6 @@ class GlyphPropertyDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  /// Basic
-  late final idController = registerController(IntFieldController());
-
-  /// Property
-  late final spellIdController = registerController(IntFieldController());
-  late final glyphSlotFlagsController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final spellIconIdController = registerController(IntFieldController());
 
   /// 从所有 Controller 收集数据构建 GlyphProperty
 
@@ -69,7 +59,6 @@ class GlyphPropertyDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateGlyphPropertyFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -88,25 +77,6 @@ class GlyphPropertyDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  GlyphPropertyEntity _collectCandidate() {
-    return GlyphPropertyEntity(
-      id: idController.collect(),
-      spellId: spellIdController.collect(),
-      glyphSlotFlags: glyphSlotFlagsController.collect(),
-      spellIconId: spellIconIdController.collect(),
-    );
-  }
-
-  void _applyCandidate(GlyphPropertyEntity glyphProperty) {
-    /// Basic
-    idController.init(glyphProperty.id);
-
-    /// Property
-    spellIdController.init(glyphProperty.spellId);
-    glyphSlotFlagsController.init(glyphProperty.glyphSlotFlags);
-    spellIconIdController.init(glyphProperty.spellIconId);
   }
 
   void _logActivity(ActivityActionType action, GlyphPropertyEntity t) {

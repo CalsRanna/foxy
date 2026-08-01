@@ -109,7 +109,7 @@ void main() {
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
       repository.failUpdates = true;
-      viewModel.creatureIdController.init(11);
+      viewModel.creatureIDController.init(11);
       viewModel.idController.init(3);
 
       await expectLater(viewModel.persist(), throwsA(isA<StateError>()));

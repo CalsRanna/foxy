@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/repository/spell_area_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_area_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'spell_area_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellAreaEntity, selects: {'autocast': 0, 'gender': 2}, flags: {'questEndStatus', 'questStartStatus', 'racemask'})
 class SpellAreaCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        SpellAreaValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _SpellAreaCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellAreaRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,25 +23,6 @@ class SpellAreaCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final spellIdController = registerController(IntFieldController());
-  late final areaController = registerController(IntFieldController());
-  late final questStartController = registerController(IntFieldController());
-  late final questEndController = registerController(IntFieldController());
-  late final auraSpellController = registerController(IntFieldController());
-  late final racemaskController = registerController(FlagFieldController());
-  late final genderController = registerController(
-    SelectFieldController<int>(fallback: 2),
-  );
-  late final autocastController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final questStartStatusController = registerController(
-    FlagFieldController(),
-  );
-  late final questEndStatusController = registerController(
-    FlagFieldController(),
-  );
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -114,7 +95,6 @@ class SpellAreaCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateSpellAreaFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -164,32 +144,6 @@ class SpellAreaCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  SpellAreaEntity _collectCandidate() => SpellAreaEntity(
-    spell: spellIdController.collect(),
-    area: areaController.collect(),
-    questStart: questStartController.collect(),
-    questEnd: questEndController.collect(),
-    auraSpell: auraSpellController.collect(),
-    racemask: racemaskController.collect(),
-    gender: genderController.collect(),
-    autocast: autocastController.collect(),
-    questStartStatus: questStartStatusController.collect(),
-    questEndStatus: questEndStatusController.collect(),
-  );
-
-  void _applyCandidate(SpellAreaEntity data) {
-    spellIdController.init(data.spell);
-    areaController.init(data.area);
-    questStartController.init(data.questStart);
-    questEndController.init(data.questEnd);
-    auraSpellController.init(data.auraSpell);
-    racemaskController.init(data.racemask);
-    genderController.init(data.gender);
-    autocastController.init(data.autocast);
-    questStartStatusController.init(data.questStartStatus);
-    questEndStatusController.init(data.questEndStatus);
   }
 
   Future<void> _refresh() async {

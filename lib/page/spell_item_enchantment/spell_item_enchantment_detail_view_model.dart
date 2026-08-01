@@ -5,15 +5,11 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/spell_item_enchantment_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_item_enchantment_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class SpellItemEnchantmentDetailViewModel
     with
-        ViewModelValidationMixin,
-        SpellItemEnchantmentValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<SpellItemEnchantmentRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
@@ -122,7 +118,6 @@ class SpellItemEnchantmentDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateSpellItemEnchantmentFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create

@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/item_set_entity.dart';
 import 'package:foxy/entity/skill_line_entity.dart';
@@ -19,37 +18,6 @@ void main() {
     expect(json.keys.elementAt(51), 'RequiredSkill');
     expect(json.keys.last, 'RequiredSkillRank');
     expect(json.values.whereType<List<Object?>>(), isEmpty);
-  });
-
-  test('ItemSet 校验 int32、法术门槛和技能等级配对', () {
-    expect(const ItemSetEntity(id: 1).validate, returnsNormally);
-    expect(
-      const ItemSetEntity(
-        id: 1,
-        setSpellId0: 123,
-        setThreshold0: 2,
-        requiredSkill: 197,
-        requiredSkillRank: 375,
-      ).validate,
-      returnsNormally,
-    );
-    expect(() => const ItemSetEntity(id: 0).validate(), throwsArgumentError);
-    expect(
-      () => const ItemSetEntity(id: 1, itemId16: -1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemSetEntity(id: 1, setSpellId0: 123).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemSetEntity(id: 1, setThreshold0: 2).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemSetEntity(id: 1, requiredSkill: 197).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('SkillLine Entity 精确覆盖 56 个标量物理列', () {

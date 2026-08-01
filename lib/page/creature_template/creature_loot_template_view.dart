@@ -217,7 +217,7 @@ class _CreatureLootTemplateViewState extends State<CreatureLootTemplateView> {
           FoxyFormItem(
             label: '掉落模板 ID',
             child: FoxyNumberInput<int>(
-              controller: viewModel.creatureIdController,
+              controller: viewModel.entryController,
               placeholder: 'Entry',
             ),
           ),

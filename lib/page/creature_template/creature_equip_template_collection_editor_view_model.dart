@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_equip_template_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_equip_template_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureEquipTemplateEntity)
 class CreatureEquipTemplateCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureEquipTemplateValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureEquipTemplateCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureEquipTemplateRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,13 +23,6 @@ class CreatureEquipTemplateCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final idController = registerController(IntFieldController());
-  late final itemID1Controller = registerController(IntFieldController());
-  late final itemID2Controller = registerController(IntFieldController());
-  late final itemID3Controller = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -102,7 +95,6 @@ class CreatureEquipTemplateCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateCreatureEquipTemplateFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -174,26 +166,6 @@ class CreatureEquipTemplateCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  CreatureEquipTemplateEntity _collectCandidate() {
-    return CreatureEquipTemplateEntity(
-      creatureID: creatureIdController.collect(),
-      id: idController.collect(),
-      itemID1: itemID1Controller.collect(),
-      itemID2: itemID2Controller.collect(),
-      itemID3: itemID3Controller.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(CreatureEquipTemplateEntity equip) {
-    creatureIdController.init(equip.creatureID);
-    idController.init(equip.id);
-    itemID1Controller.init(equip.itemID1);
-    itemID2Controller.init(equip.itemID2);
-    itemID3Controller.init(equip.itemID3);
-    verifiedBuildController.init(equip.verifiedBuild);
   }
 
   Future<void> _refresh() async {

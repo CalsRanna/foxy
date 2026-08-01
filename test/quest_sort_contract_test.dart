@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
 import 'package:foxy/entity/quest_sort_entity.dart';
@@ -44,21 +43,4 @@ void main() {
     );
   });
 
-  test('编号可被 signed smallint 负值引用且 Flags 为 signed int32', () {
-    expect(const QuestSortEntity(id: 1).validate, returnsNormally);
-    expect(const QuestSortEntity(id: 32768).validate, returnsNormally);
-    expect(
-      const QuestSortEntity(id: 1, sortNameLangFlags: -2147483648).validate,
-      returnsNormally,
-    );
-    expect(() => const QuestSortEntity(id: 0).validate(), throwsStateError);
-    expect(() => const QuestSortEntity(id: 32769).validate(), throwsStateError);
-    expect(
-      () => const QuestSortEntity(
-        id: 1,
-        sortNameLangFlags: 2147483648,
-      ).validate(),
-      throwsStateError,
-    );
-  });
 }

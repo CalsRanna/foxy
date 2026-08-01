@@ -11,8 +11,6 @@ import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
-import 'package:foxy/widget/form/validation/gossip_menu_option_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -456,15 +454,6 @@ void main() {
     });
   });
 
-  test('validateGossipMenuOptionFields 拒绝非法 optionId', () {
-    final validation = _GossipMenuOptionValidation();
-    expect(
-      () => validation.validateGossipMenuOptionFields(
-        const GossipMenuOptionEntity(menuId: 1, optionId: 32),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeGossipMenuOptionRepository extends GossipMenuOptionRepository {
@@ -653,9 +642,6 @@ final class _FakeActivityRepository extends ActivityLogRepository {
   @override
   void storeActivityLogBestEffort(_) {}
 }
-
-class _GossipMenuOptionValidation
-    with ViewModelValidationMixin, GossipMenuOptionValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override

@@ -45,7 +45,7 @@ class PlayerCreateInfoView extends StatelessWidget {
                     child: FoxyFormItem(
                       label: '职业',
                       child: FoxyShadSelect<int>(
-                        controller: viewModel.playerClassController,
+                        controller: viewModel.classController,
                         options: kPlayerClassOptions,
                         placeholder: const Text('class'),
                       ),

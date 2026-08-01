@@ -2,16 +2,16 @@ import 'package:foxy/entity/quest_template_addon_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/quest_template_addon_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/quest_template_addon_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'quest_template_addon_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: QuestTemplateAddonEntity, flags: {'allowableClasses', 'specialFlags'})
 class QuestTemplateAddonSingleEditorViewModel
     with
-        ViewModelValidationMixin,
-        QuestTemplateAddonValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _QuestTemplateAddonSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<QuestTemplateAddonRepository>();
 
   final parentKey = signal<int?>(null);
@@ -20,49 +20,6 @@ class QuestTemplateAddonSingleEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final maxLevelController = registerController(IntFieldController());
-  late final allowableClassesController = registerController(
-    FlagFieldController(),
-  );
-  late final sourceSpellIdController = registerController(IntFieldController());
-  late final prevQuestIdController = registerController(IntFieldController());
-  late final nextQuestIdController = registerController(IntFieldController());
-  late final exclusiveGroupController = registerController(
-    IntFieldController(),
-  );
-  late final breadcrumbForQuestIdController = registerController(
-    IntFieldController(),
-  );
-  late final rewardMailTemplateIdController = registerController(
-    IntFieldController(),
-  );
-  late final rewardMailDelayController = registerController(
-    IntFieldController(),
-  );
-  late final requiredSkillIdController = registerController(
-    IntFieldController(),
-  );
-  late final requiredSkillPointsController = registerController(
-    IntFieldController(),
-  );
-  late final requiredMinRepFactionController = registerController(
-    IntFieldController(),
-  );
-  late final requiredMaxRepFactionController = registerController(
-    IntFieldController(),
-  );
-  late final requiredMinRepValueController = registerController(
-    IntFieldController(),
-  );
-  late final requiredMaxRepValueController = registerController(
-    IntFieldController(),
-  );
-  late final providedItemCountController = registerController(
-    IntFieldController(),
-  );
-  late final specialFlagsController = registerController(FlagFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -85,7 +42,6 @@ class QuestTemplateAddonSingleEditorViewModel
     if (parentSnapshot == null) throw StateError('父记录尚未加载');
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
-    validateQuestTemplateAddonFields(candidate);
     final originalKey = editingKey.value;
     submitting.value = true;
     errorMessage.value = null;
@@ -140,50 +96,6 @@ class QuestTemplateAddonSingleEditorViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-QuestTemplateAddonEntity _collectCandidate() {
-    return QuestTemplateAddonEntity(
-      id: idController.collect(),
-      maxLevel: maxLevelController.collect(),
-      allowableClasses: allowableClassesController.collect(),
-      sourceSpellId: sourceSpellIdController.collect(),
-      prevQuestId: prevQuestIdController.collect(),
-      nextQuestId: nextQuestIdController.collect(),
-      exclusiveGroup: exclusiveGroupController.collect(),
-      breadcrumbForQuestId: breadcrumbForQuestIdController.collect(),
-      rewardMailTemplateId: rewardMailTemplateIdController.collect(),
-      rewardMailDelay: rewardMailDelayController.collect(),
-      requiredSkillId: requiredSkillIdController.collect(),
-      requiredSkillPoints: requiredSkillPointsController.collect(),
-      requiredMinRepFaction: requiredMinRepFactionController.collect(),
-      requiredMaxRepFaction: requiredMaxRepFactionController.collect(),
-      requiredMinRepValue: requiredMinRepValueController.collect(),
-      requiredMaxRepValue: requiredMaxRepValueController.collect(),
-      providedItemCount: providedItemCountController.collect(),
-      specialFlags: specialFlagsController.collect(),
-    );
-  }
-
-void _applyCandidate(QuestTemplateAddonEntity addon) {
-    idController.init(addon.id);
-    maxLevelController.init(addon.maxLevel);
-    allowableClassesController.init(addon.allowableClasses);
-    sourceSpellIdController.init(addon.sourceSpellId);
-    prevQuestIdController.init(addon.prevQuestId);
-    nextQuestIdController.init(addon.nextQuestId);
-    exclusiveGroupController.init(addon.exclusiveGroup);
-    breadcrumbForQuestIdController.init(addon.breadcrumbForQuestId);
-    rewardMailTemplateIdController.init(addon.rewardMailTemplateId);
-    rewardMailDelayController.init(addon.rewardMailDelay);
-    requiredSkillIdController.init(addon.requiredSkillId);
-    requiredSkillPointsController.init(addon.requiredSkillPoints);
-    requiredMinRepFactionController.init(addon.requiredMinRepFaction);
-    requiredMaxRepFactionController.init(addon.requiredMaxRepFaction);
-    requiredMinRepValueController.init(addon.requiredMinRepValue);
-    requiredMaxRepValueController.init(addon.requiredMaxRepValue);
-    providedItemCountController.init(addon.providedItemCount);
-    specialFlagsController.init(addon.specialFlags);
   }
 
   Future<void> _refresh() async {

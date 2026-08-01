@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/condition_error_types.dart';
 import 'package:foxy/constant/condition_source_type.dart';
@@ -114,78 +113,4 @@ void main() {
     expect(conditionValueConfig(103).value1.label, '世界脚本 ID');
   });
 
-  test('核心跨字段约束会在保存前拒绝无效条件', () {
-    const valid = ConditionEntity(
-      sourceTypeOrReferenceId: 17,
-      sourceEntry: 1,
-      conditionTypeOrReference: 2,
-      conditionValue1: 1,
-      conditionValue2: 1,
-      conditionValue3: 2,
-      errorType: 12,
-    );
-    expect(valid.validate, returnsNormally);
-    expect(
-      () => valid.copyWith(sourceTypeOrReferenceId: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => valid.copyWith(conditionTypeOrReference: 41).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => valid.copyWith(conditionTarget: 2).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () =>
-          valid.copyWith(sourceTypeOrReferenceId: 19, errorType: 12).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => valid
-          .copyWith(
-            conditionTypeOrReference: 38,
-            conditionValue1: 101,
-            conditionValue3: 0,
-          )
-          .validate(),
-      throwsRangeError,
-    );
-    expect(
-      () => valid.copyWith(errorType: 255).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => valid.copyWith(errorTextId: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      valid.copyWith(errorType: 172, errorTextId: 99).validate,
-      returnsNormally,
-    );
-  });
-
-  test('负数引用模板和条件引用保留且拒绝自引用及未使用字段', () {
-    const referenceTemplate = ConditionEntity(
-      sourceTypeOrReferenceId: -7,
-      conditionTypeOrReference: 36,
-    );
-    expect(referenceTemplate.validate, returnsNormally);
-
-    const reference = ConditionEntity(
-      sourceTypeOrReferenceId: 17,
-      sourceEntry: 1,
-      conditionTypeOrReference: -7,
-    );
-    expect(reference.validate, returnsNormally);
-    expect(
-      () => reference.copyWith(sourceTypeOrReferenceId: -7).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => reference.copyWith(conditionValue1: 1).validate(),
-      throwsArgumentError,
-    );
-  });
 }

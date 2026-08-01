@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/npc_vendor_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'npc_vendor_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: NpcVendorEntity)
 class NpcVendorCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        NpcVendorValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _NpcVendorCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<NpcVendorRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,14 +23,6 @@ class NpcVendorCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final slotController = registerController(IntFieldController());
-  late final itemController = registerController(IntFieldController());
-  late final maxcountController = registerController(IntFieldController());
-  late final incrtimeController = registerController(IntFieldController());
-  late final extendedCostController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -103,7 +95,6 @@ class NpcVendorCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateNpcVendorFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -153,28 +144,6 @@ class NpcVendorCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  NpcVendorEntity _collectCandidate() {
-    return NpcVendorEntity(
-      entry: creatureIdController.collect(),
-      slot: slotController.collect(),
-      item: itemController.collect(),
-      maxcount: maxcountController.collect(),
-      incrtime: incrtimeController.collect(),
-      extendedCost: extendedCostController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(NpcVendorEntity vendor) {
-    creatureIdController.init(vendor.entry);
-    slotController.init(vendor.slot);
-    itemController.init(vendor.item);
-    maxcountController.init(vendor.maxcount);
-    incrtimeController.init(vendor.incrtime);
-    extendedCostController.init(vendor.extendedCost);
-    verifiedBuildController.init(vendor.verifiedBuild);
   }
 
   Future<void> _refresh() async {

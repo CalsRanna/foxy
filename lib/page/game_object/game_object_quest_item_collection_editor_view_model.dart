@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/game_object_quest_item_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'game_object_quest_item_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GameObjectQuestItemEntity)
 class GameObjectQuestItemCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        GameObjectQuestItemValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GameObjectQuestItemCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<GameObjectQuestItemRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,11 +23,6 @@ class GameObjectQuestItemCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final gameObjectIdController = registerController(IntFieldController());
-  late final idxController = registerController(IntFieldController());
-  late final itemIdController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -100,7 +95,6 @@ class GameObjectQuestItemCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateGameObjectQuestItemFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -172,22 +166,6 @@ class GameObjectQuestItemCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  GameObjectQuestItemEntity _collectCandidate() {
-    return GameObjectQuestItemEntity(
-      gameObjectEntry: gameObjectIdController.collect(),
-      idx: idxController.collect(),
-      itemId: itemIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(GameObjectQuestItemEntity questItem) {
-    gameObjectIdController.init(questItem.gameObjectEntry);
-    idxController.init(questItem.idx);
-    itemIdController.init(questItem.itemId);
-    verifiedBuildController.init(questItem.verifiedBuild);
   }
 
   Future<void> _refresh() async {

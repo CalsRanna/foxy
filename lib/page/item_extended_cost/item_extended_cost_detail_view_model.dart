@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/item_extended_cost_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/item_extended_cost_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'item_extended_cost_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: ItemExtendedCostEntity, selects: {'arenaBracket': 0})
 class ItemExtendedCostDetailViewModel
     with
-        ViewModelValidationMixin,
-        ItemExtendedCostValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _ItemExtendedCostDetailViewModelMixin {
   final _repository = GetIt.instance.get<ItemExtendedCostRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,34 +22,6 @@ class ItemExtendedCostDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  /// Basic
-  late final idController = registerController(IntFieldController());
-  late final honorPointsController = registerController(IntFieldController());
-  late final arenaPointsController = registerController(IntFieldController());
-  late final arenaBracketController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final requiredArenaRatingController = registerController(
-    IntFieldController(),
-  );
-  late final itemPurchaseGroupController = registerController(
-    IntFieldController(),
-  );
-
-  /// ItemID
-  late final itemID0Controller = registerController(IntFieldController());
-  late final itemID1Controller = registerController(IntFieldController());
-  late final itemID2Controller = registerController(IntFieldController());
-  late final itemID3Controller = registerController(IntFieldController());
-  late final itemID4Controller = registerController(IntFieldController());
-
-  /// ItemCount
-  late final itemCount0Controller = registerController(IntFieldController());
-  late final itemCount1Controller = registerController(IntFieldController());
-  late final itemCount2Controller = registerController(IntFieldController());
-  late final itemCount3Controller = registerController(IntFieldController());
-  late final itemCount4Controller = registerController(IntFieldController());
 
   /// 从所有 Controller 收集数据构建 ItemExtendedCost
 
@@ -87,7 +59,6 @@ class ItemExtendedCostDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateItemExtendedCostFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -106,46 +77,6 @@ class ItemExtendedCostDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  ItemExtendedCostEntity _collectCandidate() {
-    return ItemExtendedCostEntity(
-      id: idController.collect(),
-      honorPoints: honorPointsController.collect(),
-      arenaPoints: arenaPointsController.collect(),
-      arenaBracket: arenaBracketController.collect(),
-      requiredArenaRating: requiredArenaRatingController.collect(),
-      itemPurchaseGroup: itemPurchaseGroupController.collect(),
-      itemID0: itemID0Controller.collect(),
-      itemID1: itemID1Controller.collect(),
-      itemID2: itemID2Controller.collect(),
-      itemID3: itemID3Controller.collect(),
-      itemID4: itemID4Controller.collect(),
-      itemCount0: itemCount0Controller.collect(),
-      itemCount1: itemCount1Controller.collect(),
-      itemCount2: itemCount2Controller.collect(),
-      itemCount3: itemCount3Controller.collect(),
-      itemCount4: itemCount4Controller.collect(),
-    );
-  }
-
-  void _applyCandidate(ItemExtendedCostEntity table) {
-    idController.init(table.id);
-    honorPointsController.init(table.honorPoints);
-    arenaPointsController.init(table.arenaPoints);
-    arenaBracketController.init(table.arenaBracket);
-    requiredArenaRatingController.init(table.requiredArenaRating);
-    itemPurchaseGroupController.init(table.itemPurchaseGroup);
-    itemID0Controller.init(table.itemID0);
-    itemID1Controller.init(table.itemID1);
-    itemID2Controller.init(table.itemID2);
-    itemID3Controller.init(table.itemID3);
-    itemID4Controller.init(table.itemID4);
-    itemCount0Controller.init(table.itemCount0);
-    itemCount1Controller.init(table.itemCount1);
-    itemCount2Controller.init(table.itemCount2);
-    itemCount3Controller.init(table.itemCount3);
-    itemCount4Controller.init(table.itemCount4);
   }
 
   void _logActivity(ActivityActionType action, ItemExtendedCostEntity t) {

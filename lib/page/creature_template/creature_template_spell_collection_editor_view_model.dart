@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_template_spell_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_template_spell_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureTemplateSpellEntity)
 class CreatureTemplateSpellCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureTemplateSpellValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureTemplateSpellCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureTemplateSpellRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,11 +23,6 @@ class CreatureTemplateSpellCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final indexController = registerController(IntFieldController());
-  late final spellController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -99,7 +94,6 @@ class CreatureTemplateSpellCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateCreatureTemplateSpellFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -171,22 +165,6 @@ class CreatureTemplateSpellCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  CreatureTemplateSpellEntity _collectCandidate() {
-    return CreatureTemplateSpellEntity(
-      creatureID: creatureIdController.collect(),
-      index: indexController.collect(),
-      spell: spellController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(CreatureTemplateSpellEntity spell) {
-    creatureIdController.init(spell.creatureID);
-    indexController.init(spell.index);
-    spellController.init(spell.spell);
-    verifiedBuildController.init(spell.verifiedBuild);
   }
 
   Future<void> _refresh() async {

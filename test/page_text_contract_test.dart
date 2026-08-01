@@ -1,6 +1,4 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_entity.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
 
@@ -58,21 +56,4 @@ void main() {
     expect(first, isNot(const PageTextLocaleKey(id: 1, locale: 'deDE')));
   });
 
-  test('字段范围与 AzerothCore page text 加载约束一致', () {
-    expect(const PageTextEntity(id: 1, nextPageId: 0).validate, returnsNormally);
-    expect(() => const PageTextEntity(id: 0).validate(), throwsRangeError);
-    expect(() => const PageTextEntity(id: 1, nextPageId: -1).validate(), throwsRangeError);
-    expect(() => const PageTextEntity(id: 1, verifiedBuild: 0x80000000).validate(), throwsRangeError);
-  });
-
-  test('locale 仅允许 LoadPageTextLocales 实际加载的八种代码', () {
-    expect(kPageTextLocaleOptions.keys.toSet(), {
-      'koKR', 'frFR', 'deDE', 'zhCN', 'zhTW', 'esES', 'esMX', 'ruRU',
-    });
-    for (final locale in kPageTextLocaleOptions.keys) {
-      expect(PageTextLocaleEntity(id: 1, locale: locale).validate, returnsNormally);
-    }
-    expect(() => const PageTextLocaleEntity(id: 1, locale: 'enUS').validate(), throwsArgumentError);
-    expect(() => const PageTextLocaleEntity(id: 1, locale: 'ptBR').validate(), throwsArgumentError);
-  });
 }

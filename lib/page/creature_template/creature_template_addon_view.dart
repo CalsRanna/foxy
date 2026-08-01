@@ -97,7 +97,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
                       child: FoxyFormItem(
                         label: '编号',
                         child: FoxyNumberInput<int>(
-                          controller: viewModel.creatureIdController,
+                          controller: viewModel.entryController,
                           placeholder: 'entry',
                         ),
                       ),

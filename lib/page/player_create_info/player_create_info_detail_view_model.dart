@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/player_create_info_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'player_create_info_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PlayerCreateInfoEntity, selects: {'class_': 0, 'race': 0})
 class PlayerCreateInfoDetailViewModel
     with
-        ViewModelValidationMixin,
-        PlayerCreateInfoValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PlayerCreateInfoDetailViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,21 +22,6 @@ class PlayerCreateInfoDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final raceController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final playerClassController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final mapController = registerController(IntFieldController());
-  late final zoneController = registerController(IntFieldController());
-  late final positionXController = registerController(DoubleFieldController());
-  late final positionYController = registerController(DoubleFieldController());
-  late final positionZController = registerController(DoubleFieldController());
-  late final orientationController = registerController(
-    DoubleFieldController(),
-  );
 
   Future<void> initSignals({PlayerCreateInfoKey? key}) async {
     loading.value = true;
@@ -71,7 +56,6 @@ class PlayerCreateInfoDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validatePlayerCreateInfoFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -90,30 +74,6 @@ class PlayerCreateInfoDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  PlayerCreateInfoEntity _collectCandidate() {
-    return PlayerCreateInfoEntity(
-      race: raceController.collect(),
-      class_: playerClassController.collect(),
-      map: mapController.collect(),
-      zone: zoneController.collect(),
-      positionX: positionXController.collect(),
-      positionY: positionYController.collect(),
-      positionZ: positionZController.collect(),
-      orientation: orientationController.collect(),
-    );
-  }
-
-  void _applyCandidate(PlayerCreateInfoEntity i) {
-    raceController.init(i.race);
-    playerClassController.init(i.class_);
-    mapController.init(i.map);
-    zoneController.init(i.zone);
-    positionXController.init(i.positionX);
-    positionYController.init(i.positionY);
-    positionZController.init(i.positionZ);
-    orientationController.init(i.orientation);
   }
 
   void _logActivity(ActivityActionType action, PlayerCreateInfoEntity t) {

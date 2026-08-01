@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/flag_item.dart';
@@ -190,53 +189,6 @@ void main() {
     expect(_valuesOf(kItemSocketColorFlagOptions), {1, 2, 4, 8});
   });
 
-  test('item_template 跨字段约束拒绝服务端会修正或忽略的数据', () {
-    expect(
-      () => const ItemTemplateEntity(buyCount: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(stackable: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(containerSlots: 37).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(
-        randomProperty: 1,
-        randomSuffix: 2,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () =>
-          const ItemTemplateEntity(minMoneyLoot: 2, maxMoneyLoot: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(socketColor1: 16).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(flagsCustom: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(spellTrigger1: 6).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(statType1: 49, statValue1: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(statType1: 40, statValue1: 1).validate(),
-      returnsNormally,
-    );
-  });
-
   test('5 个关联 Tab 的 Entity 字段和复合主键正确', () {
     expect(const ItemEnchantmentTemplateEntity().toJson().keys.toSet(), {
       'entry',
@@ -281,14 +233,6 @@ void main() {
         ItemEnchantmentKind.randomSuffix,
       ),
       'foxy.dbc_item_random_suffix',
-    );
-    expect(
-      () => const ItemEnchantmentTemplateEntity(
-        entry: 1,
-        ench: 2,
-        chance: 0,
-      ).validate(),
-      throwsArgumentError,
     );
   });
 

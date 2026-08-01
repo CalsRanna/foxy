@@ -5,15 +5,11 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/quest_sort_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/quest_sort_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class QuestSortDetailViewModel
     with
-        ViewModelValidationMixin,
-        QuestSortValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<QuestSortRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
@@ -63,7 +59,6 @@ class QuestSortDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateQuestSortFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create

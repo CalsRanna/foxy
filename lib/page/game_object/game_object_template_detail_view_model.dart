@@ -5,16 +5,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/game_object_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/game_object_template_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'game_object_template_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GameObjectTemplateEntity, groups: {'data0', 'data1', 'data10', 'data11', 'data12', 'data13', 'data14', 'data15', 'data16', 'data17', 'data18', 'data19', 'data2', 'data20', 'data21', 'data22', 'data23', 'data3', 'data4', 'data5', 'data6', 'data7', 'data8', 'data9'}, selects: {'type': 0})
 class GameObjectTemplateDetailViewModel
     with
-        ViewModelValidationMixin,
-        GameObjectTemplateValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GameObjectTemplateDetailViewModelMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -26,46 +26,6 @@ class GameObjectTemplateDetailViewModel
 
   /// 当前选中的 GameObject 类型，驱动 Data0..Data23 的编辑规格
   final selectedType = signal(0);
-
-  late final nameController = registerController(StringFieldController());
-  late final castBarCaptionController = registerController(
-    StringFieldController(),
-  );
-  late final iconNameController = registerController(StringFieldController());
-  late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final unk1Controller = registerController(StringFieldController());
-  late final aiNameController = registerController(StringFieldController());
-  late final scriptNameController = registerController(StringFieldController());
-  late final entryController = registerController(IntFieldController());
-  late final displayIdController = registerController(IntFieldController());
-  late final sizeController = registerController(DoubleFieldController());
-  late final data0Controller = registerController(IntFieldControllerGroup());
-  late final data1Controller = registerController(IntFieldControllerGroup());
-  late final data2Controller = registerController(IntFieldControllerGroup());
-  late final data3Controller = registerController(IntFieldControllerGroup());
-  late final data4Controller = registerController(IntFieldControllerGroup());
-  late final data5Controller = registerController(IntFieldControllerGroup());
-  late final data6Controller = registerController(IntFieldControllerGroup());
-  late final data7Controller = registerController(IntFieldControllerGroup());
-  late final data8Controller = registerController(IntFieldControllerGroup());
-  late final data9Controller = registerController(IntFieldControllerGroup());
-  late final data10Controller = registerController(IntFieldControllerGroup());
-  late final data11Controller = registerController(IntFieldControllerGroup());
-  late final data12Controller = registerController(IntFieldControllerGroup());
-  late final data13Controller = registerController(IntFieldControllerGroup());
-  late final data14Controller = registerController(IntFieldControllerGroup());
-  late final data15Controller = registerController(IntFieldControllerGroup());
-  late final data16Controller = registerController(IntFieldControllerGroup());
-  late final data17Controller = registerController(IntFieldControllerGroup());
-  late final data18Controller = registerController(IntFieldControllerGroup());
-  late final data19Controller = registerController(IntFieldControllerGroup());
-  late final data20Controller = registerController(IntFieldControllerGroup());
-  late final data21Controller = registerController(IntFieldControllerGroup());
-  late final data22Controller = registerController(IntFieldControllerGroup());
-  late final data23Controller = registerController(IntFieldControllerGroup());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   Future<void> initSignals({int? key}) async {
     loading.value = true;
@@ -101,7 +61,6 @@ class GameObjectTemplateDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateGameObjectTemplateFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -120,86 +79,6 @@ class GameObjectTemplateDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  GameObjectTemplateEntity _collectCandidate() {
-    return GameObjectTemplateEntity(
-      entry: entryController.collect(),
-      name: nameController.collect(),
-      castBarCaption: castBarCaptionController.collect(),
-      iconName: iconNameController.collect(),
-      type: typeController.collect(),
-      displayId: displayIdController.collect(),
-      size: sizeController.collect(),
-      unk1: unk1Controller.collect(),
-      data0: data0Controller.collect(),
-      data1: data1Controller.collect(),
-      data2: data2Controller.collect(),
-      data3: data3Controller.collect(),
-      data4: data4Controller.collect(),
-      data5: data5Controller.collect(),
-      data6: data6Controller.collect(),
-      data7: data7Controller.collect(),
-      data8: data8Controller.collect(),
-      data9: data9Controller.collect(),
-      data10: data10Controller.collect(),
-      data11: data11Controller.collect(),
-      data12: data12Controller.collect(),
-      data13: data13Controller.collect(),
-      data14: data14Controller.collect(),
-      data15: data15Controller.collect(),
-      data16: data16Controller.collect(),
-      data17: data17Controller.collect(),
-      data18: data18Controller.collect(),
-      data19: data19Controller.collect(),
-      data20: data20Controller.collect(),
-      data21: data21Controller.collect(),
-      data22: data22Controller.collect(),
-      data23: data23Controller.collect(),
-      aiName: aiNameController.collect(),
-      scriptName: scriptNameController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(GameObjectTemplateEntity template) {
-    entryController.init(template.entry);
-    nameController.init(template.name);
-    castBarCaptionController.init(template.castBarCaption);
-    iconNameController.init(template.iconName);
-    typeController.init(template.type);
-    displayIdController.init(template.displayId);
-    sizeController.init(template.size);
-    unk1Controller.init(template.unk1);
-    data0Controller.init(template.data0);
-    data1Controller.init(template.data1);
-    data2Controller.init(template.data2);
-    data3Controller.init(template.data3);
-    data4Controller.init(template.data4);
-    data5Controller.init(template.data5);
-    data6Controller.init(template.data6);
-    data7Controller.init(template.data7);
-    data8Controller.init(template.data8);
-    data9Controller.init(template.data9);
-    data10Controller.init(template.data10);
-    data11Controller.init(template.data11);
-    data12Controller.init(template.data12);
-    data13Controller.init(template.data13);
-    data14Controller.init(template.data14);
-    data15Controller.init(template.data15);
-    data16Controller.init(template.data16);
-    data17Controller.init(template.data17);
-    data18Controller.init(template.data18);
-    data19Controller.init(template.data19);
-    data20Controller.init(template.data20);
-    data21Controller.init(template.data21);
-    data22Controller.init(template.data22);
-    data23Controller.init(template.data23);
-    aiNameController.init(template.aiName);
-    scriptNameController.init(template.scriptName);
-    verifiedBuildController.init(template.verifiedBuild);
-    // 显式刷新一次编辑规格，不依赖 typeController 监听的回调顺序。
-    _refreshDataFieldEditors();
   }
 
   void _onTypeChanged() {

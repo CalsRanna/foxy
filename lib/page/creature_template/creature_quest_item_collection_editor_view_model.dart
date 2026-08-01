@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_quest_item_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_quest_item_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureQuestItemEntity)
 class CreatureQuestItemCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureQuestItemValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureQuestItemCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureQuestItemRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,11 +23,6 @@ class CreatureQuestItemCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final idxController = registerController(IntFieldController());
-  late final itemIdController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -99,7 +94,6 @@ class CreatureQuestItemCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateCreatureQuestItemFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -171,22 +165,6 @@ class CreatureQuestItemCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  CreatureQuestItemEntity _collectCandidate() {
-    return CreatureQuestItemEntity(
-      creatureEntry: creatureIdController.collect(),
-      idx: idxController.collect(),
-      itemId: itemIdController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(CreatureQuestItemEntity questItem) {
-    creatureIdController.init(questItem.creatureEntry);
-    idxController.init(questItem.idx);
-    itemIdController.init(questItem.itemId);
-    verifiedBuildController.init(questItem.verifiedBuild);
   }
 
   Future<void> _refresh() async {

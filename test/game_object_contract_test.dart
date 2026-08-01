@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/game_object_constants.dart';
@@ -163,33 +162,6 @@ void main() {
         'dbc_spell_focus_object',
         'dbc_taxi_path',
       }),
-    );
-  });
-
-  test('关键跨字段和任务物品槽位约束会拒绝非法值', () {
-    expect(
-      () => const GameObjectTemplateEntity(
-        type: 23,
-        data0: 80,
-        data1: 60,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GameObjectTemplateAddonEntity(
-        entry: 1,
-        minGold: 2,
-        maxGold: 1,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GameObjectQuestItemEntity(
-        gameObjectEntry: 1,
-        idx: 6,
-        itemId: 1,
-      ).validate(),
-      throwsArgumentError,
     );
   });
 

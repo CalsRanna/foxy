@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/npc_trainer_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'npc_trainer_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: NpcTrainerEntity)
 class NpcTrainerCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        NpcTrainerValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _NpcTrainerCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<NpcTrainerRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,17 +23,6 @@ class NpcTrainerCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final trainerIdController = registerController(IntFieldController());
-  late final spellIdController = registerController(IntFieldController());
-  late final moneyCostController = registerController(IntFieldController());
-  late final reqSkillLineController = registerController(IntFieldController());
-  late final reqSkillRankController = registerController(IntFieldController());
-  late final reqAbility1Controller = registerController(IntFieldController());
-  late final reqAbility2Controller = registerController(IntFieldController());
-  late final reqAbility3Controller = registerController(IntFieldController());
-  late final reqLevelController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -106,7 +95,6 @@ class NpcTrainerCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateNpcTrainerFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -156,34 +144,6 @@ class NpcTrainerCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  NpcTrainerEntity _collectCandidate() {
-    return NpcTrainerEntity(
-      trainerId: trainerIdController.collect(),
-      spellId: spellIdController.collect(),
-      moneyCost: moneyCostController.collect(),
-      reqSkillLine: reqSkillLineController.collect(),
-      reqSkillRank: reqSkillRankController.collect(),
-      reqAbility1: reqAbility1Controller.collect(),
-      reqAbility2: reqAbility2Controller.collect(),
-      reqAbility3: reqAbility3Controller.collect(),
-      reqLevel: reqLevelController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(NpcTrainerEntity trainer) {
-    trainerIdController.init(trainer.trainerId);
-    spellIdController.init(trainer.spellId);
-    moneyCostController.init(trainer.moneyCost);
-    reqSkillLineController.init(trainer.reqSkillLine);
-    reqSkillRankController.init(trainer.reqSkillRank);
-    reqAbility1Controller.init(trainer.reqAbility1);
-    reqAbility2Controller.init(trainer.reqAbility2);
-    reqAbility3Controller.init(trainer.reqAbility3);
-    reqLevelController.init(trainer.reqLevel);
-    verifiedBuildController.init(trainer.verifiedBuild);
   }
 
   Future<void> _refresh() async {

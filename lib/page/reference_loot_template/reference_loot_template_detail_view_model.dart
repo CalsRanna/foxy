@@ -3,45 +3,18 @@ import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/reference_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/reference_loot_template_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'reference_loot_template_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: ReferenceLootTemplateEntity)
 class ReferenceLootTemplateDetailViewModel
     with
-        ViewModelValidationMixin,
-        ReferenceLootTemplateValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _ReferenceLootTemplateDetailViewModelMixin {
   final _repository = GetIt.instance.get<ReferenceLootTemplateRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
-  ReferenceLootTemplateEntity _collectCandidate() {
-    return ReferenceLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
-
-  void _applyCandidate(ReferenceLootTemplateEntity candidate) {
-    entryController.init(candidate.entry);
-    itemController.init(candidate.item);
-    referenceController.init(candidate.reference);
-    chanceController.init(candidate.chance);
-    questRequiredController.init(candidate.questRequired ? 1 : 0);
-    lootModeController.init(candidate.lootMode);
-    groupIdController.init(candidate.groupId);
-    minCountController.init(candidate.minCount);
-    maxCountController.init(candidate.maxCount);
-    commentController.init(candidate.comment);
-  }
 
   void _logActivity(
     ActivityActionType action,
@@ -65,19 +38,6 @@ class ReferenceLootTemplateDetailViewModel
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
   final hasReference = signal(false);
-
-  late final entryController = registerController(IntFieldController());
-  late final itemController = registerController(IntFieldController());
-  late final referenceController = registerController(IntFieldController());
-  late final chanceController = registerController(DoubleFieldController());
-  late final questRequiredController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final lootModeController = registerController(FlagFieldController());
-  late final groupIdController = registerController(IntFieldController());
-  late final minCountController = registerController(IntFieldController());
-  late final maxCountController = registerController(IntFieldController());
-  late final commentController = registerController(StringFieldController());
 
   ReferenceLootTemplateDetailViewModel() {
     referenceController.addListener(_syncReferenceState);
@@ -107,7 +67,6 @@ class ReferenceLootTemplateDetailViewModel
   Future<void> persist() async {
     if (submitting.value) throw StateError('正在保存，请稍候');
     final candidate = _collectCandidate();
-    validateReferenceLootTemplateFields(candidate);
     final originalKey = persistedKey.value;
     submitting.value = true;
     errorMessage.value = null;

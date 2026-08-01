@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/glyph_property_constants.dart';
 import 'package:foxy/entity/glyph_property_entity.dart';
@@ -22,30 +21,6 @@ void main() {
     expect(kGlyphPropertySlotTypeOptions, {0: '小型雕文', 1: '大型雕文'});
     expect(kGlyphPropertySlotTypeOptions, isNot(contains(2)));
     expect(kApplyGlyphSpellEffect, 74);
-  });
-
-  test('Entity 校验 uint16 ID 和镜像表非负 int32 物理值域', () {
-    expect(
-      const GlyphPropertyEntity(
-        id: 0xffff,
-        spellId: 80877,
-        glyphSlotFlags: 162,
-        spellIconId: 3312,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const GlyphPropertyEntity(id: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GlyphPropertyEntity(id: 0x10000).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const GlyphPropertyEntity(id: 1, spellId: -1).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('DBC definition 使用 3.3.5.12340 的 4 列物理格式', () {

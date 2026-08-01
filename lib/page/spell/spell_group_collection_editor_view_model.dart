@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/spell_group_entity.dart';
 import 'package:foxy/repository/spell_group_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_group_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'spell_group_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellGroupEntity)
 class SpellGroupCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        SpellGroupValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _SpellGroupCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellGroupRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,9 +23,6 @@ class SpellGroupCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final spellIdController = registerController(IntFieldController());
-  late final groupIdController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -98,7 +95,6 @@ class SpellGroupCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateSpellGroupFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -170,18 +166,6 @@ class SpellGroupCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  SpellGroupEntity _collectCandidate() {
-    return SpellGroupEntity(
-      id: groupIdController.collect(),
-      spellId: spellIdController.collect(),
-    );
-  }
-
-  void _applyCandidate(SpellGroupEntity data) {
-    groupIdController.init(data.id);
-    spellIdController.init(data.spellId);
   }
 
   Future<void> _refresh() async {

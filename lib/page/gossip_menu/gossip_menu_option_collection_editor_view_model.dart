@@ -8,15 +8,11 @@ import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart'
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/gossip_menu_option_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
 class GossipMenuOptionCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        GossipMenuOptionValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
   final _localeRepository = GetIt.instance
@@ -155,7 +151,6 @@ class GossipMenuOptionCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateGossipMenuOptionFields(candidate);
     final originalKey = editingKey.value;
     final originalLocaleKey = localeEditingKey.value;
     final localeCandidate = _collectLocaleCandidate(

@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_rank_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'spell_rank_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellRankEntity)
 class SpellRankCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        SpellRankValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _SpellRankCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellRankRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,10 +23,6 @@ class SpellRankCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final firstSpellIdController = registerController(IntFieldController());
-  late final rankSpellIdController = registerController(IntFieldController());
-  late final rankController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -99,7 +95,6 @@ class SpellRankCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateSpellRankFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -149,20 +144,6 @@ class SpellRankCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  SpellRankEntity _collectCandidate() {
-    return SpellRankEntity(
-      firstSpellId: firstSpellIdController.collect(),
-      spellId: rankSpellIdController.collect(),
-      rank: rankController.collect(),
-    );
-  }
-
-  void _applyCandidate(SpellRankEntity data) {
-    firstSpellIdController.init(data.firstSpellId);
-    rankSpellIdController.init(data.spellId);
-    rankController.init(data.rank);
   }
 
   Future<void> _refresh() async {

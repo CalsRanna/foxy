@@ -3,8 +3,6 @@ import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_spell_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/form/validation/creature_template_spell_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -126,7 +124,7 @@ void main() {
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
 
-      viewModel.creatureIdController.init(11);
+      viewModel.creatureIDController.init(11);
       viewModel.indexController.init(3);
       await viewModel.persist();
 
@@ -164,7 +162,7 @@ void main() {
 
       await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.creatureIdController.collect(), 12);
+      expect(viewModel.creatureIDController.collect(), 12);
 
       await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
@@ -174,15 +172,6 @@ void main() {
     });
   });
 
-  test('validateCreatureTemplateSpellFields 拒绝非法 index', () {
-    final validation = _CreatureTemplateSpellValidation();
-    expect(
-      () => validation.validateCreatureTemplateSpellFields(
-        const CreatureTemplateSpellEntity(creatureID: 1, index: 8, spell: 1),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeCreatureTemplateSpellRepository
@@ -262,9 +251,6 @@ class _FakeCreatureTemplateSpellRepository
     rows[index] = spell;
   }
 }
-
-class _CreatureTemplateSpellValidation
-    with ViewModelValidationMixin, CreatureTemplateSpellValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override

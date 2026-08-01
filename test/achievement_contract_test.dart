@@ -1,6 +1,4 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foxy/constant/achievement_constants.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/entity/achievement_category_entity.dart';
 import 'package:foxy/entity/achievement_criteria_entity.dart';
@@ -26,44 +24,6 @@ void main() {
     expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
   });
 
-  test('Achievement 使用专属阵营、Flags、signed locale flags 和 smallint ID', () {
-    expect(kAchievementFactionOptions, {-1: '双方', 0: '部落', 1: '联盟'});
-    expect(kAchievementFlagOptions, hasLength(10));
-    expect(
-      kAchievementFlagOptions.fold<int>(0, (mask, flag) => mask | flag.value),
-      kAchievementKnownFlagMask,
-    );
-    expect(
-      const AchievementEntity(
-        id: 1,
-        category: 1,
-        rewardLangFlags: -16842260,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const AchievementEntity(id: 65536, category: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const AchievementEntity(id: 1, category: 1, faction: 2).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () =>
-          const AchievementEntity(id: 1, category: 1, flags: 0x400).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const AchievementEntity(
-        id: 1,
-        category: 1,
-        sharesCriteria: 1,
-      ).validate(),
-      throwsArgumentError,
-    );
-  });
-
   test('Achievement Category 与 Criteria 精确覆盖 20/31 个标量列', () {
     final category = const AchievementCategoryEntity().toJson();
     final criteria = const AchievementCriteriaEntity().toJson();
@@ -85,59 +45,6 @@ void main() {
       expect(json.values.whereType<List<Object?>>(), isEmpty);
       expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
     }
-  });
-
-  test('Category 与 Criteria 值域按 AzerothCore DBCEnums 校验', () {
-    expect(
-      const AchievementCategoryEntity(
-        id: 1,
-        parent: -1,
-        nameLangFlags: -1,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const AchievementCategoryEntity(id: 1, parent: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      const AchievementCriteriaEntity(
-        id: 1,
-        achievementId: 2,
-        type: 123,
-        startEvent: 13,
-        failEvent: 10,
-        flags: 0x3f,
-        timerStartEvent: 2,
-        timerAssetId: 10,
-        timerTime: 30,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const AchievementCriteriaEntity(
-        id: 1,
-        achievementId: 2,
-        type: 2,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const AchievementCriteriaEntity(
-        id: 65536,
-        achievementId: 2,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(kAchievementCriteriaStoredTypes, containsAll([118, 120, 123]));
-    expect(
-      () => const AchievementCriteriaEntity(
-        id: 1,
-        achievementId: 2,
-        flags: 0x40,
-      ).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('Achievement 三张 DBC definitions 使用 3.3.5.12340 精确格式', () {

@@ -2,16 +2,16 @@ import 'package:foxy/entity/spell_custom_attr_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/spell_custom_attr_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_custom_attr_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'spell_custom_attr_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellCustomAttrEntity, flags: {'attributes'})
 class SpellCustomAttrSingleEditorViewModel
     with
-        ViewModelValidationMixin,
-        SpellCustomAttrValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _SpellCustomAttrSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
 
   final parentKey = signal<int?>(null);
@@ -20,9 +20,6 @@ class SpellCustomAttrSingleEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final spellIdController = registerController(IntFieldController());
-  late final attributesController = registerController(FlagFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -45,7 +42,6 @@ class SpellCustomAttrSingleEditorViewModel
     if (parentSnapshot == null) throw StateError('父记录尚未加载');
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
-    validateSpellCustomAttrFields(candidate);
     final originalKey = editingKey.value;
     submitting.value = true;
     errorMessage.value = null;
@@ -100,18 +96,6 @@ class SpellCustomAttrSingleEditorViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-SpellCustomAttrEntity _collectCandidate() {
-    return SpellCustomAttrEntity(
-      spellId: spellIdController.collect(),
-      attributes: attributesController.collect(),
-    );
-  }
-
-void _applyCandidate(SpellCustomAttrEntity data) {
-    spellIdController.init(data.spellId);
-    attributesController.init(data.attributes);
   }
 
   Future<void> _refresh() async {

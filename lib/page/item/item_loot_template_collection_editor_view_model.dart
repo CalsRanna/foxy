@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/repository/item_loot_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/item_loot_template_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'item_loot_template_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: ItemLootTemplateEntity, flags: {'lootMode'})
 class ItemLootTemplateCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        ItemLootTemplateValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _ItemLootTemplateCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<ItemLootTemplateRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,19 +23,6 @@ class ItemLootTemplateCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final entryController = registerController(IntFieldController());
-  late final itemController = registerController(IntFieldController());
-  late final referenceController = registerController(IntFieldController());
-  late final chanceController = registerController(DoubleFieldController());
-  late final questRequiredController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final lootModeController = registerController(FlagFieldController());
-  late final groupIdController = registerController(IntFieldController());
-  late final minCountController = registerController(IntFieldController());
-  late final maxCountController = registerController(IntFieldController());
-  late final commentController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -107,7 +94,6 @@ class ItemLootTemplateCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateItemLootTemplateFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -179,34 +165,6 @@ class ItemLootTemplateCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  ItemLootTemplateEntity _collectCandidate() {
-    return ItemLootTemplateEntity(
-      entry: entryController.collect(),
-      item: itemController.collect(),
-      reference: referenceController.collect(),
-      chance: chanceController.collect(),
-      questRequired: questRequiredController.collect() == 1,
-      lootMode: lootModeController.collect(),
-      groupId: groupIdController.collect(),
-      minCount: minCountController.collect(),
-      maxCount: maxCountController.collect(),
-      comment: commentController.collect(),
-    );
-  }
-
-  void _applyCandidate(ItemLootTemplateEntity loot) {
-    entryController.init(loot.entry);
-    itemController.init(loot.item);
-    referenceController.init(loot.reference);
-    chanceController.init(loot.chance);
-    questRequiredController.init(loot.questRequired ? 1 : 0);
-    lootModeController.init(loot.lootMode);
-    groupIdController.init(loot.groupId);
-    minCountController.init(loot.minCount);
-    maxCountController.init(loot.maxCount);
-    commentController.init(loot.comment);
   }
 
   Future<void> _refresh() async {

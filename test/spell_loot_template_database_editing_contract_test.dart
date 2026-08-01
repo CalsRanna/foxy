@@ -109,7 +109,7 @@ void main() {
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = SpellLootTemplateKey(entry: 10, item: 20);
       expect(viewModel.editingKey.value, oldKey);
-      viewModel.spellIdController.init(11);
+      viewModel.entryController.init(11);
       viewModel.itemController.init(21);
       repository.failUpdates = true;
 
@@ -137,7 +137,7 @@ void main() {
       expect(viewModel.selectedKey.value, isNull);
       await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.spellIdController.collect(), 12);
+      expect(viewModel.entryController.collect(), 12);
     });
   });
 

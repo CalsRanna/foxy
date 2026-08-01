@@ -186,7 +186,7 @@ class _PlayerCreateInfoSpellCustomViewState
                   child: FoxyFormItem(
                     label: '种族掩码',
                     child: FoxyFlagPicker(
-                      controller: viewModel.racemaskController,
+                      controller: viewModel.raceMaskController,
                       flags: kPlayerCreateRaceMaskFlags,
                       title: '种族掩码',
                     ),
@@ -196,7 +196,7 @@ class _PlayerCreateInfoSpellCustomViewState
                   child: FoxyFormItem(
                     label: '职业掩码',
                     child: FoxyFlagPicker(
-                      controller: viewModel.classmaskController,
+                      controller: viewModel.classMaskController,
                       flags: kPlayerCreateClassMaskFlags,
                       title: '职业掩码',
                     ),

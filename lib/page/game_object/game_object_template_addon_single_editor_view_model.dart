@@ -2,16 +2,16 @@ import 'package:foxy/entity/game_object_template_addon_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/game_object_template_addon_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/game_object_template_addon_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'game_object_template_addon_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GameObjectTemplateAddonEntity, flags: {'flags'})
 class GameObjectTemplateAddonSingleEditorViewModel
     with
-        ViewModelValidationMixin,
-        GameObjectTemplateAddonValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GameObjectTemplateAddonSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<GameObjectTemplateAddonRepository>();
 
   final parentKey = signal<int?>(null);
@@ -20,16 +20,6 @@ class GameObjectTemplateAddonSingleEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final factionController = registerController(IntFieldController());
-  late final flagsController = registerController(FlagFieldController());
-  late final gameObjectIdController = registerController(IntFieldController());
-  late final minGoldController = registerController(IntFieldController());
-  late final maxGoldController = registerController(IntFieldController());
-  late final artkit0Controller = registerController(IntFieldController());
-  late final artkit1Controller = registerController(IntFieldController());
-  late final artkit2Controller = registerController(IntFieldController());
-  late final artkit3Controller = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -52,7 +42,6 @@ class GameObjectTemplateAddonSingleEditorViewModel
     if (parentSnapshot == null) throw StateError('父记录尚未加载');
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
-    validateGameObjectTemplateAddonFields(candidate);
     final originalKey = editingKey.value;
     submitting.value = true;
     errorMessage.value = null;
@@ -107,32 +96,6 @@ class GameObjectTemplateAddonSingleEditorViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-GameObjectTemplateAddonEntity _collectCandidate() {
-    return GameObjectTemplateAddonEntity(
-      entry: gameObjectIdController.collect(),
-      faction: factionController.collect(),
-      flags: flagsController.collect(),
-      minGold: minGoldController.collect(),
-      maxGold: maxGoldController.collect(),
-      artkit0: artkit0Controller.collect(),
-      artkit1: artkit1Controller.collect(),
-      artkit2: artkit2Controller.collect(),
-      artkit3: artkit3Controller.collect(),
-    );
-  }
-
-void _applyCandidate(GameObjectTemplateAddonEntity data) {
-    gameObjectIdController.init(data.entry);
-    factionController.init(data.faction);
-    flagsController.init(data.flags);
-    minGoldController.init(data.minGold);
-    maxGoldController.init(data.maxGold);
-    artkit0Controller.init(data.artkit0);
-    artkit1Controller.init(data.artkit1);
-    artkit2Controller.init(data.artkit2);
-    artkit3Controller.init(data.artkit3);
   }
 
   Future<void> _refresh() async {

@@ -13,11 +13,17 @@ class FoxyDetailViewModel {
   /// 表单对应的 Full Entity 类型。
   final Type entity;
 
-  /// 例外:字段名 → `SelectFieldController<int>` 的 fallback。
-  final Map<String, int> selects;
+  /// 例外:controller 名 → `SelectFieldController` 的 fallback(int 或 String)。
+  final Map<String, Object> selects;
 
-  /// 例外:字段名 → `FlagFieldController`。
+  /// 例外:controller 名 → `FlagFieldController`。
   final Set<String> flags;
+
+  /// 例外:controller 名 → `IntFieldControllerGroup`(动态字段编辑)。
+  final Set<String> groups;
+
+  /// 例外:controller 名 → `NullableStringFieldController`(nullable String)。
+  final Set<String> nullable;
 
   /// 不进表单的字段(不生成 controller,也不出现在 collect/apply)。
   final Set<String> exclude;
@@ -26,6 +32,8 @@ class FoxyDetailViewModel {
     required this.entity,
     this.selects = const {},
     this.flags = const {},
+    this.groups = const {},
+    this.nullable = const {},
     this.exclude = const {},
   });
 }

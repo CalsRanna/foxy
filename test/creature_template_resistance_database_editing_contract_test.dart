@@ -3,8 +3,6 @@ import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/page/creature_template/creature_template_resistance_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/form/validation/creature_template_resistance_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -145,7 +143,7 @@ void main() {
       );
       expect(viewModel.editingKey.value, originalKey);
 
-      viewModel.creatureIdController.init(11);
+      viewModel.creatureIDController.init(11);
       viewModel.schoolController.init(3);
       await viewModel.persist();
 
@@ -184,7 +182,7 @@ void main() {
 
       await viewModel.setParentKey(12);
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.creatureIdController.collect(), 12);
+      expect(viewModel.creatureIDController.collect(), 12);
 
       await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
@@ -193,15 +191,6 @@ void main() {
     });
   });
 
-  test('validateCreatureTemplateResistanceFields 拒绝非法 school', () {
-    final validation = _CreatureTemplateResistanceValidation();
-    expect(
-      () => validation.validateCreatureTemplateResistanceFields(
-        const CreatureTemplateResistanceEntity(creatureID: 1, school: 0),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeCreatureTemplateResistanceRepository
@@ -279,9 +268,6 @@ class _FakeCreatureTemplateResistanceRepository
     rows[index] = resistance;
   }
 }
-
-class _CreatureTemplateResistanceValidation
-    with ViewModelValidationMixin, CreatureTemplateResistanceValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override

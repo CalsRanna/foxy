@@ -2,16 +2,16 @@ import 'package:foxy/entity/creature_template_addon_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_template_addon_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_template_addon_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureTemplateAddonEntity, selects: {'visibilityDistanceType': 0})
 class CreatureTemplateAddonSingleEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureTemplateAddonValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureTemplateAddonSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
 
   final parentKey = signal<int?>(null);
@@ -20,17 +20,6 @@ class CreatureTemplateAddonSingleEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final pathIdController = registerController(IntFieldController());
-  late final mountController = registerController(IntFieldController());
-  late final emoteController = registerController(IntFieldController());
-  late final bytes1Controller = registerController(IntFieldController());
-  late final bytes2Controller = registerController(IntFieldController());
-  late final visibilityDistanceTypeController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final aurasController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -59,7 +48,6 @@ class CreatureTemplateAddonSingleEditorViewModel
     if (parentSnapshot == null) throw StateError('父记录尚未加载');
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
-    validateCreatureTemplateAddonFields(candidate);
     final originalKey = editingKey.value;
     submitting.value = true;
     errorMessage.value = null;
@@ -114,30 +102,6 @@ class CreatureTemplateAddonSingleEditorViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-CreatureTemplateAddonEntity _collectCandidate() {
-    return CreatureTemplateAddonEntity(
-      entry: creatureIdController.collect(),
-      pathId: pathIdController.collect(),
-      mount: mountController.collect(),
-      emote: emoteController.collect(),
-      bytes1: bytes1Controller.collect(),
-      bytes2: bytes2Controller.collect(),
-      visibilityDistanceType: visibilityDistanceTypeController.collect(),
-      auras: normalizeCreatureTemplateAddonAuras(aurasController.collect()),
-    );
-  }
-
-void _applyCandidate(CreatureTemplateAddonEntity data) {
-    creatureIdController.init(data.entry);
-    pathIdController.init(data.pathId);
-    mountController.init(data.mount);
-    emoteController.init(data.emote);
-    bytes1Controller.init(data.bytes1);
-    bytes2Controller.init(data.bytes2);
-    visibilityDistanceTypeController.init(data.visibilityDistanceType);
-    aurasController.init(data.auras);
   }
 
   Future<void> _refresh() async {

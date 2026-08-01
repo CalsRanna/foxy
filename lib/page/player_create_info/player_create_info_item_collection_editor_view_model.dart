@@ -3,16 +3,16 @@ import 'package:foxy/entity/player_create_info_item_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_item_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'player_create_info_item_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PlayerCreateInfoItemEntity, selects: {'class_': 0, 'race': 0})
 class PlayerCreateInfoItemCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        PlayerCreateInfoItemValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PlayerCreateInfoItemCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoItemRepository>();
 
   final parentKey = signal<PlayerCreateInfoKey?>(null);
@@ -24,16 +24,6 @@ class PlayerCreateInfoItemCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final raceController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final classController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final itemIdController = registerController(IntFieldController());
-  late final amountController = registerController(IntFieldController());
-  late final noteController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -111,7 +101,6 @@ class PlayerCreateInfoItemCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validatePlayerCreateInfoItemFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -161,22 +150,6 @@ class PlayerCreateInfoItemCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  PlayerCreateInfoItemEntity _collectCandidate() => PlayerCreateInfoItemEntity(
-    race: raceController.collect(),
-    class_: classController.collect(),
-    itemId: itemIdController.collect(),
-    amount: amountController.collect(),
-    note: noteController.collect(),
-  );
-
-  void _applyCandidate(PlayerCreateInfoItemEntity item) {
-    raceController.init(item.race);
-    classController.init(item.class_);
-    itemIdController.init(item.itemId);
-    amountController.init(item.amount);
-    noteController.init(item.note);
   }
 
   Future<void> _refresh() async {

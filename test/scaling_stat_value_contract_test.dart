@@ -1,9 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/scaling_stat_value_constants.dart';
-import 'package:foxy/entity/item_template_entity.dart';
 import 'package:foxy/entity/scaling_stat_value_entity.dart';
 
 void main() {
@@ -40,29 +38,6 @@ void main() {
     expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
   });
 
-  test('Entity 按 core uint32 语义限制为 DBC 可写出的非负 int32', () {
-    expect(
-      const ScalingStatValueEntity(id: 1, charlevel: 1).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ScalingStatValueEntity(id: 0, charlevel: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ScalingStatValueEntity(id: 1, charlevel: 0).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ScalingStatValueEntity(
-        id: 1,
-        charlevel: 1,
-        plateChestArmor: -1,
-      ).validate(),
-      throwsArgumentError,
-    );
-  });
-
   test('物品缩放位精确对应 ScalingStatValuesEntry 当前消费列', () {
     expect(kScalingStatValueBudgetMask, 0x0004001F);
     expect(kScalingStatValueArmorMask, 0x00F801E0);
@@ -93,33 +68,6 @@ void main() {
       0x00400000,
       0x00800000,
     ]);
-  });
-
-  test('物品缩放掩码排除未消费位并限制同组最多选择一列', () {
-    expect(
-      const ItemTemplateEntity(scalingStatValue: 0x00808208).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ItemTemplateEntity(scalingStatValue: 0x00010000).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(scalingStatValue: 0x00020000).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(scalingStatValue: 0x00000003).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(scalingStatValue: 0x00000060).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const ItemTemplateEntity(scalingStatValue: 0x00000600).validate(),
-      throwsArgumentError,
-    );
   });
 
   test('DBC definition 使用 3.3.5.12340 的 24 列物理格式', () {

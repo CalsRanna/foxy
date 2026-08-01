@@ -3,16 +3,16 @@ import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/repository/player_create_info_cast_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/player_create_info_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'player_create_info_cast_spell_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: PlayerCreateInfoCastSpellEntity, nullable: {'note'}, flags: {'classMask', 'raceMask'})
 class PlayerCreateInfoCastSpellCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        PlayerCreateInfoCastSpellValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _PlayerCreateInfoCastSpellCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<PlayerCreateInfoCastSpellRepository>();
 
   final parentKey = signal<PlayerCreateInfoKey?>(null);
@@ -24,13 +24,6 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final raceMaskController = registerController(FlagFieldController());
-  late final classMaskController = registerController(FlagFieldController());
-  late final spellController = registerController(IntFieldController());
-  late final noteController = registerController(
-    NullableStringFieldController(),
-  );
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -105,7 +98,6 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validatePlayerCreateInfoCastSpellFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -158,21 +150,6 @@ class PlayerCreateInfoCastSpellCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  PlayerCreateInfoCastSpellEntity _collectCandidate() =>
-      PlayerCreateInfoCastSpellEntity(
-        raceMask: raceMaskController.collect(),
-        classMask: classMaskController.collect(),
-        spell: spellController.collect(),
-        note: noteController.collect(),
-      );
-
-  void _applyCandidate(PlayerCreateInfoCastSpellEntity entity) {
-    raceMaskController.init(entity.raceMask);
-    classMaskController.init(entity.classMask);
-    spellController.init(entity.spell);
-    noteController.init(entity.note);
   }
 
   Future<void> _refresh() async {

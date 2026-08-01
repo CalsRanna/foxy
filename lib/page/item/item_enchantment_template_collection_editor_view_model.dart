@@ -4,16 +4,16 @@ import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
 import 'package:foxy/repository/item_enchantment_template_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/item_enchantment_template_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'item_enchantment_template_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: ItemEnchantmentTemplateEntity)
 class ItemEnchantmentTemplateCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        ItemEnchantmentTemplateValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _ItemEnchantmentTemplateCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
 
   final parentKey = signal<ItemEnchantmentTemplateParentKey?>(null);
@@ -25,10 +25,6 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final entryController = registerController(IntFieldController());
-  late final enchController = registerController(IntFieldController());
-  late final chanceController = registerController(DoubleFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -101,7 +97,6 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateItemEnchantmentTemplateFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -151,19 +146,6 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  ItemEnchantmentTemplateEntity _collectCandidate() =>
-      ItemEnchantmentTemplateEntity(
-        entry: entryController.collect(),
-        ench: enchController.collect(),
-        chance: chanceController.collect(),
-      );
-
-  void _applyCandidate(ItemEnchantmentTemplateEntity model) {
-    entryController.init(model.entry);
-    enchController.init(model.ench);
-    chanceController.init(model.chance);
   }
 
   Future<void> _refresh() async {

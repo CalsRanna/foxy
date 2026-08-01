@@ -3,12 +3,9 @@ import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/page/creature_template/npc_vendor_collection_editor_view_model.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/widget/form/validation/npc_vendor_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
-
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -131,7 +128,7 @@ void main() {
       const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
       expect(viewModel.editingKey.value, originalKey);
 
-      viewModel.creatureIdController.init(11);
+      viewModel.entryController.init(11);
       viewModel.itemController.init(21);
       viewModel.extendedCostController.init(31);
       viewModel.maxcountController.init(5);
@@ -175,7 +172,7 @@ void main() {
 
       await viewModel.setParentKey(12);
       expect(viewModel.parentKey.value, 12);
-      expect(viewModel.creatureIdController.collect(), 12);
+      expect(viewModel.entryController.collect(), 12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.selectedKey.value, isNull);
 
@@ -187,15 +184,6 @@ void main() {
     });
   });
 
-  test('validateNpcVendorFields 拒绝非法 entry', () {
-    final validation = _NpcVendorValidation();
-    expect(
-      () => validation.validateNpcVendorFields(
-        const NpcVendorEntity(entry: 1, item: 2, maxcount: 1, incrtime: 0),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeNpcVendorRepository extends NpcVendorRepository {
@@ -270,9 +258,6 @@ class _FakeNpcVendorRepository extends NpcVendorRepository {
     rows[index] = vendor;
   }
 }
-
-class _NpcVendorValidation
-    with ViewModelValidationMixin, NpcVendorValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override

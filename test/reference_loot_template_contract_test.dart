@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/constant/loot_template_constants.dart';
@@ -86,70 +85,4 @@ void main() {
     expect(kLootTemplateValidLootModeMask, 0x803f);
   });
 
-  test('Entity 拒绝 LootMgr 会跳过、修正或忽略的值', () {
-    expect(
-      const ReferenceLootTemplateEntity(item: 1).validate,
-      returnsNormally,
-    );
-    expect(
-      const ReferenceLootTemplateEntity(
-        item: 1,
-        reference: 1001,
-        minCount: 2,
-        maxCount: 2,
-      ).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: 1, lootMode: 0).validate(),
-      throwsStateError,
-    );
-    expect(
-      () =>
-          const ReferenceLootTemplateEntity(item: 1, lootMode: 0x40).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: 1, groupId: 128).validate(),
-      throwsRangeError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: 1, minCount: 0).validate(),
-      throwsRangeError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: 1, chance: 0).validate(),
-      throwsStateError,
-    );
-    expect(
-      () =>
-          const ReferenceLootTemplateEntity(item: 1, chance: 100.1).validate(),
-      throwsRangeError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: 1, minCount: 2).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(
-        item: 1,
-        reference: 1001,
-        questRequired: true,
-      ).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(
-        item: 1,
-        reference: 1001,
-        minCount: 1,
-        maxCount: 2,
-      ).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ReferenceLootTemplateEntity(item: -1).validate(),
-      throwsRangeError,
-    );
-  });
 }

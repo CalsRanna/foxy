@@ -1,3 +1,5 @@
+import 'package:foxy/constant/condition_source_type.dart';
+import 'package:foxy/constant/condition_type.dart';
 import 'package:foxy/constant/condition_value_config.dart';
 import 'package:foxy/constant/integer_field_spec.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
@@ -6,8 +8,6 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/condition_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/condition_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
@@ -16,8 +16,6 @@ const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'
 
 class ConditionDetailViewModel
     with
-        ViewModelValidationMixin,
-        ConditionValidationMixin,
         FieldControllerMixin {
   final _repository = GetIt.instance.get<ConditionRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
@@ -129,7 +127,9 @@ class ConditionDetailViewModel
     errorMessage.value = null;
     try {
       final data = _collectCandidate();
-      validateConditionFields(data);
+      // 来源/条件类型为 0 时既不是合法普通类型也不是合法引用，写库会
+      // 导致 core 无法加载该条件（_collectCandidate 已校验负数引用为正）。
+      _requireWriteableType(data);
       final originalKey = persistedKey.value;
       final newKey = ConditionKey.fromEntity(data);
       final isCreate = originalKey == null;
@@ -248,6 +248,32 @@ class ConditionDetailViewModel
       throw ArgumentError.value(id, field, '引用 ID 必须为正数');
     }
     return id;
+  }
+
+  /// 引用模板（物理负值）必须满足 core 的引用约束：不设置来源组、来源
+  /// 条目等字段；普通类型必须存在于 core 加载表（引用 ID 为正已由
+  /// _collectCandidate 保证）。
+  void _requireWriteableType(ConditionEntity condition) {
+    final source = condition.sourceTypeOrReferenceId;
+    if (source >= 0) {
+      if (!kConditionSourceTypeLabels.containsKey(source)) {
+        throw ArgumentError.value(
+          source,
+          'SourceTypeOrReferenceId',
+          '当前 3.3.5a core 不加载该来源类型',
+        );
+      }
+    } else if (condition.sourceGroup != 0 || condition.sourceEntry != 0) {
+      throw ArgumentError('引用模板不能设置 SourceGroup 或 SourceEntry');
+    }
+    final type = condition.conditionTypeOrReference;
+    if (type >= 0 && !kConditionTypeLabels.containsKey(type)) {
+      throw ArgumentError.value(
+        type,
+        'ConditionTypeOrReference',
+        '当前 3.3.5a core 不加载该条件类型',
+      );
+    }
   }
 
   void _refreshSourceEditors() {

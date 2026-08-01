@@ -124,7 +124,7 @@ class CreatureTemplateView extends StatelessWidget {
     final regenerateHealthInput = FoxyFormItem(
       label: '自动回复生命',
       child: FoxyShadSelect<int>(
-        controller: viewModel.regenerateHealthController,
+        controller: viewModel.regenHealthController,
         options: kBooleanOptions,
         placeholder: const Text('RegenHealth'),
       ),
@@ -221,7 +221,7 @@ class CreatureTemplateView extends StatelessWidget {
     final typeFlagInput = FoxyFormItem(
       label: '生物类型标志',
       child: FoxyFlagPicker(
-        controller: viewModel.typeFlagController,
+        controller: viewModel.typeFlagsController,
         flags: kCreatureTypeFlagOptions,
         title: '生物类型标志',
         placeholder: 'type_flags',
@@ -230,7 +230,7 @@ class CreatureTemplateView extends StatelessWidget {
     final dynamicFlagInput = FoxyFormItem(
       label: '动态状态标志',
       child: FoxyFlagPicker(
-        controller: viewModel.dynamicFlagController,
+        controller: viewModel.dynamicFlagsController,
         flags: kDynamicFlagOptions,
         title: '动态状态标志',
         placeholder: 'dynamicflags',
@@ -239,7 +239,7 @@ class CreatureTemplateView extends StatelessWidget {
     final extraFlagInput = FoxyFormItem(
       label: '服务端标志',
       child: FoxyFlagPicker(
-        controller: viewModel.extraFlagController,
+        controller: viewModel.flagsExtraController,
         flags: kFlagsExtraOptions,
         title: '服务端额外标志',
         placeholder: 'flags_extra',
@@ -248,7 +248,7 @@ class CreatureTemplateView extends StatelessWidget {
     final unitFlagInput = FoxyFormItem(
       label: '单位标志',
       child: FoxyFlagPicker(
-        controller: viewModel.unitFlagController,
+        controller: viewModel.unitFlagsController,
         flags: kUnitFlagOptions,
         title: '单位标志',
         placeholder: 'unit_flags',
@@ -257,7 +257,7 @@ class CreatureTemplateView extends StatelessWidget {
     final unitFlag2Input = FoxyFormItem(
       label: '单位标志 2',
       child: FoxyFlagPicker(
-        controller: viewModel.unitFlag2Controller,
+        controller: viewModel.unitFlags2Controller,
         flags: kUnitFlag2Options,
         title: '单位标志 2',
         placeholder: 'unit_flags2',

@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_template_resistance_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_template_resistance_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureTemplateResistanceEntity, selects: {'school': 0})
 class CreatureTemplateResistanceCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureTemplateResistanceValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureTemplateResistanceCollectionEditorViewModelMixin {
   final _repository = GetIt.instance
       .get<CreatureTemplateResistanceRepository>();
 
@@ -24,13 +24,6 @@ class CreatureTemplateResistanceCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final schoolController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final resistanceController = registerController(IntFieldController());
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -104,7 +97,6 @@ class CreatureTemplateResistanceCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateCreatureTemplateResistanceFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -179,22 +171,6 @@ class CreatureTemplateResistanceCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  CreatureTemplateResistanceEntity _collectCandidate() {
-    return CreatureTemplateResistanceEntity(
-      creatureID: creatureIdController.collect(),
-      school: schoolController.collect(),
-      resistance: resistanceController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-  void _applyCandidate(CreatureTemplateResistanceEntity resistance) {
-    creatureIdController.init(resistance.creatureID);
-    schoolController.init(resistance.school);
-    resistanceController.init(resistance.resistance);
-    verifiedBuildController.init(resistance.verifiedBuild);
   }
 
   Future<void> _refresh() async {

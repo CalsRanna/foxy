@@ -200,7 +200,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
                 child: FoxyFormItem(
                   label: '编号',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.spellIdController,
+                    controller: viewModel.entryController,
                     placeholder: 'Entry',
                   ),
                 ),

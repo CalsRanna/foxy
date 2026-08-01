@@ -4,8 +4,12 @@ import 'package:foxy/repository/spell_bonus_data_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
-class SpellBonusDataSingleEditorViewModel with FieldControllerMixin {
+part 'spell_bonus_data_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellBonusDataEntity)
+class SpellBonusDataSingleEditorViewModel with FieldControllerMixin, _SpellBonusDataSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellBonusDataRepository>();
 
   final parentKey = signal<int?>(null);
@@ -14,15 +18,6 @@ class SpellBonusDataSingleEditorViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final spellIdController = registerController(IntFieldController());
-  late final directBonusController = registerController(
-    DoubleFieldController(),
-  );
-  late final dotBonusController = registerController(DoubleFieldController());
-  late final apBonusController = registerController(DoubleFieldController());
-  late final apDotBonusController = registerController(DoubleFieldController());
-  late final commentsController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -99,26 +94,6 @@ class SpellBonusDataSingleEditorViewModel with FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
-
-SpellBonusDataEntity _collectCandidate() {
-    return SpellBonusDataEntity(
-      entry: spellIdController.collect(),
-      directBonus: directBonusController.collect(),
-      dotBonus: dotBonusController.collect(),
-      apBonus: apBonusController.collect(),
-      apDotBonus: apDotBonusController.collect(),
-      comments: commentsController.collect(),
-    );
-  }
-
-void _applyCandidate(SpellBonusDataEntity data) {
-    spellIdController.init(data.entry);
-    directBonusController.init(data.directBonus);
-    dotBonusController.init(data.dotBonus);
-    apBonusController.init(data.apBonus);
-    apDotBonusController.init(data.apDotBonus);
-    commentsController.init(data.comments);
   }
 
   Future<void> _refresh() async {

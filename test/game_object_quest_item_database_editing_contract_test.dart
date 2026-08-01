@@ -111,7 +111,7 @@ void main() {
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestItemKey(gameObjectEntry: 10, idx: 2);
       expect(viewModel.editingKey.value, oldKey);
-      viewModel.gameObjectIdController.init(11);
+      viewModel.gameObjectEntryController.init(11);
       viewModel.idxController.init(3);
       repository.failUpdates = true;
 
@@ -139,7 +139,7 @@ void main() {
       expect(viewModel.selectedKey.value, isNull);
       await viewModel.create();
       expect(viewModel.editingKey.value, isNull);
-      expect(viewModel.gameObjectIdController.collect(), 12);
+      expect(viewModel.gameObjectEntryController.collect(), 12);
     });
   });
 

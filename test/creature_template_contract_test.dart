@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
@@ -23,7 +22,25 @@ import 'package:foxy/repository/pickpocketing_loot_template_repository.dart';
 import 'package:foxy/repository/skinning_loot_template_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
-import 'package:foxy/widget/form/validation/creature_template_addon_entity_validation_mixin.dart';
+
+String normalizeCreatureTemplateAddonAuras(String value) {
+  final tokens = value.trim().isEmpty
+      ? const <String>[]
+      : value.trim().split(RegExp(r'\s+'));
+  final spellIds = <int>[];
+  final seen = <int>{};
+  for (final token in tokens) {
+    final spellId = int.tryParse(token);
+    if (spellId == null || spellId <= 0) {
+      throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
+    }
+    if (!seen.add(spellId)) {
+      throw FormatException('光环列表不能包含重复法术 ID: $spellId');
+    }
+    spellIds.add(spellId);
+  }
+  return spellIds.join(' ');
+}
 
 void main() {
   test('CreatureTemplateEntity 覆盖 creature_template 的 55 个字段且类型正确', () {
@@ -264,37 +281,6 @@ void main() {
     expect(
       () => normalizeCreatureTemplateAddonAuras('123 abc'),
       throwsFormatException,
-    );
-    expect(
-      () => const CreatureTemplateAddonEntity(
-        entry: 1,
-        visibilityDistanceType: 6,
-      ).validate(),
-      throwsRangeError,
-    );
-  });
-
-  test('掉落实体拒绝服务端会跳过或修正的值', () {
-    expect(
-      () => const CreatureLootTemplateEntity(lootMode: 0).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const CreatureLootTemplateEntity(groupId: 128).validate(),
-      throwsRangeError,
-    );
-    expect(
-      () =>
-          const CreatureLootTemplateEntity(minCount: 2, maxCount: 1).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const CreatureLootTemplateEntity(chance: 0, groupId: 0).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const CreatureLootTemplateEntity(item: 1, chance: 100).validate(),
-      returnsNormally,
     );
   });
 

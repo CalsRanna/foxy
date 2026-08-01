@@ -97,7 +97,7 @@ class _GameObjectTemplateAddonViewState
                       label: '编号',
                       child: FoxyNumberInput<int>(
                         placeholder: 'entry',
-                        controller: viewModel.gameObjectIdController,
+                        controller: viewModel.entryController,
                       ),
                     ),
                   ),

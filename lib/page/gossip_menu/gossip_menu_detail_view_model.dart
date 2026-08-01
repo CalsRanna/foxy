@@ -8,8 +8,12 @@ import 'package:foxy/use_case/gossip_menu/create_gossip_menu_use_case.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
-class GossipMenuDetailViewModel with FieldControllerMixin {
+part 'gossip_menu_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GossipMenuEntity)
+class GossipMenuDetailViewModel with FieldControllerMixin, _GossipMenuDetailViewModelMixin {
   final _repository = GetIt.instance.get<GossipMenuRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
   final _npcTextRepository = GetIt.instance.get<NpcTextRepository>();
@@ -20,9 +24,6 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final menuIdController = registerController(IntFieldController());
-  late final textIdController = registerController(IntFieldController());
 
   int? _reservedTextId;
 
@@ -90,18 +91,6 @@ class GossipMenuDetailViewModel with FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
-
-  GossipMenuEntity _collectCandidate() {
-    return GossipMenuEntity(
-      menuId: menuIdController.collect(),
-      textId: textIdController.collect(),
-    );
-  }
-
-  void _applyCandidate(GossipMenuEntity candidate) {
-    menuIdController.init(candidate.menuId);
-    textIdController.init(candidate.textId);
   }
 
   void _logActivity(ActivityActionType action, GossipMenuEntity t) {

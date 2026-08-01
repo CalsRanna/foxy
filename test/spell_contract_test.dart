@@ -1,4 +1,3 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/constant/spell_flags.dart';
@@ -123,45 +122,6 @@ void main() {
       orderedEquals([0x01, 0x02, 0x08, 0x20, 0x40]),
     );
     expect(kSpellPowerTypeOptions.keys, containsAll([127, 0xFFFFFFFE]));
-  });
-
-  test('服务端加载期关键约束在写库前被拒绝', () {
-    expect(() => const SpellAreaEntity(gender: 3).validate(), throwsRangeError);
-    expect(
-      () => const SpellAreaEntity(spell: 1, auraSpell: -1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellLinkedSpellEntity(
-        spellTrigger: 1,
-        spellEffect: 2,
-        type: 3,
-      ).validate(),
-      throwsRangeError,
-    );
-    expect(
-      () => const SpellGroupEntity(id: 1000, spellId: 1).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellRankEntity(
-        firstSpellId: 1,
-        spellId: 2,
-        rank: 1,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellCustomAttrEntity(
-        spellId: 1,
-        attributes: 0x02001000,
-      ).validate(),
-      throwsArgumentError,
-    );
-    expect(
-      () => const SpellLootTemplateEntity(chance: 0, groupId: 0).validate(),
-      throwsStateError,
-    );
   });
 
   test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {

@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, experimental_member_use
 
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -92,12 +93,16 @@ final class FormReader {
 
     final selects = _readSelects(annotation);
     final flags = _readStringSet(annotation, 'flags');
+    final groups = _readStringSet(annotation, 'groups');
+    final nullable = _readStringSet(annotation, 'nullable');
     final exclude = _readStringSet(annotation, 'exclude');
     _validateDistinctExceptions(
       className,
       entityClassName,
       selects.keys.toSet(),
       flags,
+      groups,
+      nullable,
       exclude,
       element,
     );
@@ -109,7 +114,7 @@ final class FormReader {
       }
       constructorFieldNames.add(parameter.name!);
     }
-    for (final name in {...selects.keys, ...flags, ...exclude}) {
+    for (final name in {...selects.keys, ...flags, ...groups, ...nullable, ...exclude}) {
       if (!constructorFieldNames.contains(name)) {
         _fail(
           '$entityClassName 没有名为 $name 的字段。',
@@ -126,7 +131,7 @@ final class FormReader {
       }
       final name = parameter.name!;
       if (exclude.contains(name)) continue;
-      fields.add(_readField(className, entityClassName, name, parameter, selects, flags, element));
+      fields.add(_readField(className, entityClassName, name, parameter, selects, flags, groups, nullable, element));
     }
 
     final mixinName = '_${className}Mixin';
@@ -188,25 +193,60 @@ final class FormReader {
     String entityClassName,
     String name,
     FormalParameterElement parameter,
-    Map<String, int> selects,
+    Map<String, Object> selects,
     Set<String> flags,
+    Set<String> groups,
+    Set<String> nullable,
     Element element,
   ) {
     final type = parameter.type.getDisplayString();
-    if (type.endsWith('?')) {
+    final isNullable = type.endsWith('?');
+    if (isNullable && !nullable.contains(name)) {
       _fail(
-        '$entityClassName.$name 是 nullable($type)，暂不支持生成 controller。',
+        '$entityClassName.$name 是 nullable($type)，必须显式标注 nullable。',
         element,
-        '用 exclude 排除该字段，或等待 nullable 支持。',
+        '把该字段加入 @FoxyDetailViewModel 的 nullable 集合。',
+      );
+    }
+    if (groups.contains(name)) {
+      if (type != 'int') {
+        _fail(
+          '$entityClassName.$name 标注为 groups 但类型是 $type。',
+          element,
+          'groups 只支持 int 字段。',
+        );
+      }
+      return FormFieldModel(
+        dartName: name,
+        dartType: type,
+        kind: FormFieldKind.group,
+      );
+    }
+    if (nullable.contains(name)) {
+      if (type != 'String?') {
+        _fail(
+          '$entityClassName.$name 标注为 nullable 但类型是 $type。',
+          element,
+          'nullable 只支持 String? 字段。',
+        );
+      }
+      return FormFieldModel(
+        dartName: name,
+        dartType: type,
+        kind: FormFieldKind.nullable,
       );
     }
     final selectFallback = selects[name];
     if (selectFallback != null) {
-      if (type != 'int') {
+      final supported = selectFallback is int
+          ? type == 'int'
+          : selectFallback is String && type == 'String';
+      if (!supported) {
         _fail(
-          '$entityClassName.$name 标注为 selects 但类型是 $type。',
+          '$entityClassName.$name 标注为 selects 但类型是 $type'
+          '($selectFallback)。',
           element,
-          'selects 只支持 int 字段。',
+          'selects 的 fallback 类型必须与字段类型一致(int/String)。',
         );
       }
       return FormFieldModel(
@@ -244,14 +284,22 @@ final class FormReader {
     );
   }
 
-  Map<String, int> _readSelects(ConstantReader annotation) {
+  Map<String, Object> _readSelects(ConstantReader annotation) {
     final reader = annotation.read('selects');
     if (reader.isNull) return const {};
     final map = reader.mapValue;
     return {
       for (final entry in map.entries)
-        entry.key!.toStringValue()! : entry.value!.toIntValue()!,
+        entry.key!.toStringValue()! : _readSelectValue(entry.value!),
     };
+  }
+
+  Object _readSelectValue(DartObject value) {
+    final intValue = value.toIntValue();
+    if (intValue != null) return intValue;
+    final stringValue = value.toStringValue();
+    if (stringValue != null) return stringValue;
+    throw StateError('selects 只支持 int 或 String fallback');
   }
 
   Set<String> _readStringSet(ConstantReader annotation, String name) {
@@ -267,12 +315,16 @@ final class FormReader {
     String entityClassName,
     Set<String> selects,
     Set<String> flags,
+    Set<String> groups,
+    Set<String> nullable,
     Set<String> exclude,
     Element element,
   ) {
     final conflicts = <String, Set<String>>{
       'selects': selects,
       'flags': flags,
+      'groups': groups,
+      'nullable': nullable,
       'exclude': exclude,
     };
     for (final entry in conflicts.entries) {

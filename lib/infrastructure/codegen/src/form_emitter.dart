@@ -1,3 +1,4 @@
+import 'dart_literal.dart';
 import 'form_model.dart';
 
 final class FormEmitter {
@@ -17,13 +18,21 @@ final class FormEmitter {
     return buffer.toString();
   }
 
+  /// controller 标识:`class_` → `class`(保留字转义),其余原样。
+  String controllerName(FormFieldModel field) {
+    final name = field.dartName;
+    return name.endsWith('_') ? name.substring(0, name.length - 1) : name;
+  }
+
   /// 与手写风格对齐:`SelectFieldController` 一族用换行形式,
   /// 其余单行。
   String _controllerDeclaration(FormFieldModel field) {
+    final controller = controllerName(field);
     final expression = switch ((field.kind, field.dartType)) {
-      (FormFieldKind.select, _) => 'SelectFieldController<int>'
-          '(fallback: ${field.selectFallback})',
+      (FormFieldKind.select, _) => _selectExpression(field),
       (FormFieldKind.flag, _) => 'FlagFieldController()',
+      (FormFieldKind.group, _) => 'IntFieldControllerGroup()',
+      (FormFieldKind.nullable, _) => 'NullableStringFieldController()',
       (FormFieldKind.plain, 'int') => 'IntFieldController()',
       (FormFieldKind.plain, 'double') => 'DoubleFieldController()',
       (FormFieldKind.plain, 'String') => 'StringFieldController()',
@@ -33,12 +42,22 @@ final class FormEmitter {
         ),
     };
     if (expression.startsWith('SelectFieldController')) {
-      return '  late final ${field.dartName}Controller = registerController(\n'
+      return '  late final ${controller}Controller = registerController(\n'
           '    $expression,\n'
           '  );';
     }
-    return '  late final ${field.dartName}Controller = '
+    return '  late final ${controller}Controller = '
         'registerController($expression);';
+  }
+
+  /// `SelectFieldController` 表达式:fallback 类型决定泛型与字面量。
+  String _selectExpression(FormFieldModel field) {
+    final fallback = field.selectFallback;
+    if (fallback is String) {
+      return 'SelectFieldController<String>'
+          '(fallback: ${dartStringLiteral(fallback)})';
+    }
+    return 'SelectFieldController<int>(fallback: $fallback)';
   }
 
   void _emitCollect(StringBuffer buffer, FormGenerationModel model) {
@@ -48,9 +67,10 @@ final class FormEmitter {
       )
       ..writeln('    return ${model.entityClassName}(');
     for (final field in model.fields) {
+      final controller = controllerName(field);
       final collect = field.kind == FormFieldKind.plain && field.dartType == 'bool'
-          ? '${field.dartName}Controller.collect() == 1'
-          : '${field.dartName}Controller.collect()';
+          ? '${controller}Controller.collect() == 1'
+          : '${controller}Controller.collect()';
       buffer.writeln('      ${field.dartName}: $collect,');
     }
     buffer
@@ -64,12 +84,21 @@ final class FormEmitter {
       '  void _applyCandidate(${model.entityClassName} $parameter) {',
     );
     for (final field in model.fields) {
+      final controller = controllerName(field);
       final init = field.kind == FormFieldKind.plain && field.dartType == 'bool'
-          ? '${field.dartName}Controller.init($parameter.${field.dartName} ? 1 : 0)'
-          : '${field.dartName}Controller.init($parameter.${field.dartName})';
+          ? '${controller}Controller.init($parameter.${field.dartName} ? 1 : 0)'
+          : '${controller}Controller.init($parameter.${field.dartName})';
       buffer.writeln('    $init;');
     }
-    buffer.writeln('  }');
+    // 加载实体后的语义钩子(如联动刷新编辑规格),手写侧覆写。
+    buffer
+      ..writeln('    _afterApplyCandidate($parameter);')
+      ..writeln('  }')
+      ..writeln()
+      ..writeln(
+        '  void _afterApplyCandidate(${model.entityClassName} $parameter) {}',
+      )
+      ..writeln();
   }
 
   /// `TalentEntity` → `talent`(与 Repository 的实体参数命名一致)。

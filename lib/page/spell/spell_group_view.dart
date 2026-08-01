@@ -192,7 +192,7 @@ class _SpellGroupViewState extends State<SpellGroupView> {
                 child: FoxyFormItem(
                   label: '技能组',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.groupIdController,
+                    controller: viewModel.idController,
                     placeholder: 'id',
                   ),
                 ),

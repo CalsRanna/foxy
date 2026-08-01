@@ -2,16 +2,16 @@ import 'dart:math';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/repository/spell_linked_spell_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/spell_linked_spell_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'spell_linked_spell_collection_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: SpellLinkedSpellEntity, selects: {'type': 0})
 class SpellLinkedSpellCollectionEditorViewModel
     with
-        ViewModelValidationMixin,
-        SpellLinkedSpellValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _SpellLinkedSpellCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellLinkedSpellRepository>();
 
   final parentKey = signal<int?>(null);
@@ -23,13 +23,6 @@ class SpellLinkedSpellCollectionEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final spellTriggerController = registerController(IntFieldController());
-  late final spellEffectController = registerController(IntFieldController());
-  late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final commentController = registerController(StringFieldController());
 
   int _refreshToken = 0;
   int _interactionToken = 0;
@@ -102,7 +95,6 @@ class SpellLinkedSpellCollectionEditorViewModel
     final parent = parentKey.value;
     if (parent == null) throw StateError('父记录尚未加载');
     final candidate = _collectCandidate();
-    validateSpellLinkedSpellFields(candidate);
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
     submitting.value = true;
@@ -174,26 +166,6 @@ class SpellLinkedSpellCollectionEditorViewModel
     _interactionToken++;
     this.page.value = page;
     await _refresh();
-  }
-
-  SpellLinkedSpellEntity _collectCandidate() {
-    final trigger = spellTriggerController.collect();
-    if (trigger.abs() != parentKey.value) {
-      throw ArgumentError('触发法术绝对值必须等于当前法术ID');
-    }
-    return SpellLinkedSpellEntity(
-      spellTrigger: trigger,
-      spellEffect: spellEffectController.collect(),
-      type: typeController.collect(),
-      comment: commentController.collect(),
-    );
-  }
-
-  void _applyCandidate(SpellLinkedSpellEntity data) {
-    spellTriggerController.init(data.spellTrigger);
-    spellEffectController.init(data.spellEffect);
-    typeController.init(data.type);
-    commentController.init(data.comment);
   }
 
   Future<void> _refresh() async {

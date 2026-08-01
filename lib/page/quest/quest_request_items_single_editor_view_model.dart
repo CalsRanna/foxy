@@ -4,8 +4,12 @@ import 'package:foxy/repository/quest_request_items_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
-class QuestRequestItemsSingleEditorViewModel with FieldControllerMixin {
+part 'quest_request_items_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: QuestRequestItemsEntity)
+class QuestRequestItemsSingleEditorViewModel with FieldControllerMixin, _QuestRequestItemsSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
 
   final parentKey = signal<int?>(null);
@@ -14,18 +18,6 @@ class QuestRequestItemsSingleEditorViewModel with FieldControllerMixin {
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final idController = registerController(IntFieldController());
-  late final emoteOnCompleteController = registerController(
-    IntFieldController(),
-  );
-  late final emoteOnIncompleteController = registerController(
-    IntFieldController(),
-  );
-  late final completionTextController = registerController(
-    StringFieldController(),
-  );
-  late final verifiedBuildController = registerController(IntFieldController());
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -102,24 +94,6 @@ class QuestRequestItemsSingleEditorViewModel with FieldControllerMixin {
     } finally {
       submitting.value = false;
     }
-  }
-
-QuestRequestItemsEntity _collectCandidate() {
-    return QuestRequestItemsEntity(
-      id: idController.collect(),
-      emoteOnComplete: emoteOnCompleteController.collect(),
-      emoteOnIncomplete: emoteOnIncompleteController.collect(),
-      completionText: completionTextController.collect(),
-      verifiedBuild: verifiedBuildController.collect(),
-    );
-  }
-
-void _applyCandidate(QuestRequestItemsEntity model) {
-    idController.init(model.id);
-    emoteOnCompleteController.init(model.emoteOnComplete);
-    emoteOnIncompleteController.init(model.emoteOnIncomplete);
-    completionTextController.init(model.completionText);
-    verifiedBuildController.init(model.verifiedBuild);
   }
 
   Future<void> _refresh() async {

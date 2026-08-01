@@ -197,7 +197,7 @@ class _SpellAreaViewState extends State<SpellAreaView> {
                 child: FoxyFormItem(
                   label: '法术ID',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.spellIdController,
+                    controller: viewModel.spellController,
                     placeholder: 'spell',
                   ),
                 ),

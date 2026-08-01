@@ -196,7 +196,7 @@ class _GameObjectLootTemplateViewState
                 child: FoxyFormItem(
                   label: '游戏对象编号',
                   child: FoxyNumberInput<int>(
-                    controller: viewModel.gameObjectIdController,
+                    controller: viewModel.entryController,
                     placeholder: 'Entry',
                   ),
                 ),

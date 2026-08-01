@@ -3,11 +3,17 @@ enum FormFieldKind {
   /// 按字段 Dart 类型推断(Int/Double/String/Bool)。
   plain,
 
-  /// `SelectFieldController<int>`。
+  /// `SelectFieldController`。
   select,
 
   /// `FlagFieldController`。
   flag,
+
+  /// `IntFieldControllerGroup`(动态字段编辑)。
+  group,
+
+  /// `NullableStringFieldController`。
+  nullable,
 }
 
 final class FormGenerationModel {
@@ -32,12 +38,14 @@ final class FormGenerationModel {
 }
 
 final class FormFieldModel {
+  /// entity 字段名(collect/apply 的命名参数名;也是 controller 名的来源)。
   final String dartName;
+
   final String dartType;
   final FormFieldKind kind;
 
-  /// `kind == select` 时的 fallback 值。
-  final int? selectFallback;
+  /// `kind == select` 时的 fallback 值(int 或 String)。
+  final Object? selectFallback;
 
   const FormFieldModel({
     required this.dartName,

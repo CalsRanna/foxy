@@ -94,7 +94,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
                         child: FoxyFormItem(
                           label: '编号',
                           child: FoxyNumberInput<int>(
-                            controller: viewModel.spellIdController,
+                            controller: viewModel.entryController,
                             placeholder: 'entry',
                           ),
                         ),

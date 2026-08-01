@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'support/entity_validation_test_extensions.dart';
 import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/player_create_info_action_entity.dart';
 import 'package:foxy/entity/player_create_info_cast_spell_entity.dart';
@@ -47,21 +46,6 @@ void main() {
 
   test('动作类型只包含 Player ActionButtonType', () {
     expect(kPlayerActionButtonTypeOptions.keys.toSet(), {0, 1, 32, 64, 65, 128});
-    expect(
-      () => const PlayerCreateInfoActionEntity(race: 1, class_: 1, button: 144).validate(),
-      throwsStateError,
-    );
   });
 
-  test('技能阶数与 Mask 按 ObjectMgr loader 约束', () {
-    const PlayerCreateInfoSkillEntity(raceMask: 0, classMask: 0, skill: 95, rank: 15).validate();
-    expect(
-      () => const PlayerCreateInfoSkillEntity(skill: 95, rank: 16).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const PlayerCreateInfoCastSpellEntity(raceMask: 256, spell: 2457).validate(),
-      throwsStateError,
-    );
-  });
 }

@@ -2,16 +2,16 @@ import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/creature_on_kill_reputation_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'creature_on_kill_reputation_single_editor_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: CreatureOnKillReputationEntity, selects: {'maxStanding1': 0, 'maxStanding2': 0, 'teamDependent': 0})
 class CreatureOnKillReputationSingleEditorViewModel
     with
-        ViewModelValidationMixin,
-        CreatureOnKillReputationValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _CreatureOnKillReputationSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureOnKillReputationRepository>();
 
   final parentKey = signal<int?>(null);
@@ -20,35 +20,6 @@ class CreatureOnKillReputationSingleEditorViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  late final creatureIdController = registerController(IntFieldController());
-  late final rewOnKillRepFaction1Controller = registerController(
-    IntFieldController(),
-  );
-  late final rewOnKillRepFaction2Controller = registerController(
-    IntFieldController(),
-  );
-  late final maxStanding1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final maxStanding2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final isTeamAward1Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final isTeamAward2Controller = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
-  late final rewOnKillRepValue1Controller = registerController(
-    DoubleFieldController(),
-  );
-  late final rewOnKillRepValue2Controller = registerController(
-    DoubleFieldController(),
-  );
-  late final teamDependentController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
 
   int _refreshToken = 0;
   int _parentToken = 0;
@@ -71,7 +42,6 @@ class CreatureOnKillReputationSingleEditorViewModel
     if (parentSnapshot == null) throw StateError('父记录尚未加载');
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
-    validateCreatureOnKillReputationFields(candidate);
     final originalKey = editingKey.value;
     submitting.value = true;
     errorMessage.value = null;
@@ -129,34 +99,6 @@ class CreatureOnKillReputationSingleEditorViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-CreatureOnKillReputationEntity _collectCandidate() {
-    return CreatureOnKillReputationEntity(
-      creatureID: creatureIdController.collect(),
-      rewOnKillRepFaction1: rewOnKillRepFaction1Controller.collect(),
-      rewOnKillRepFaction2: rewOnKillRepFaction2Controller.collect(),
-      maxStanding1: maxStanding1Controller.collect(),
-      maxStanding2: maxStanding2Controller.collect(),
-      isTeamAward1: isTeamAward1Controller.collect() == 1,
-      isTeamAward2: isTeamAward2Controller.collect() == 1,
-      rewOnKillRepValue1: rewOnKillRepValue1Controller.collect(),
-      rewOnKillRepValue2: rewOnKillRepValue2Controller.collect(),
-      teamDependent: teamDependentController.collect(),
-    );
-  }
-
-void _applyCandidate(CreatureOnKillReputationEntity data) {
-    creatureIdController.init(data.creatureID);
-    rewOnKillRepFaction1Controller.init(data.rewOnKillRepFaction1);
-    rewOnKillRepFaction2Controller.init(data.rewOnKillRepFaction2);
-    maxStanding1Controller.init(data.maxStanding1);
-    maxStanding2Controller.init(data.maxStanding2);
-    isTeamAward1Controller.init(data.isTeamAward1 ? 1 : 0);
-    isTeamAward2Controller.init(data.isTeamAward2 ? 1 : 0);
-    rewOnKillRepValue1Controller.init(data.rewOnKillRepValue1);
-    rewOnKillRepValue2Controller.init(data.rewOnKillRepValue2);
-    teamDependentController.init(data.teamDependent);
   }
 
   Future<void> _refresh() async {

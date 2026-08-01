@@ -83,5 +83,8 @@ mixin _TalentDetailViewModelMixin on FieldControllerMixin {
     requiredSpellIdController.init(talent.requiredSpellId);
     categoryMask0Controller.init(talent.categoryMask0);
     categoryMask1Controller.init(talent.categoryMask1);
+    _afterApplyCandidate(talent);
   }
+
+  void _afterApplyCandidate(TalentEntity talent) {}
 }

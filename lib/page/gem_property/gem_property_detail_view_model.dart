@@ -4,16 +4,16 @@ import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/gem_property_repository.dart';
 import 'package:foxy/widget/form/field_controller.dart';
-import 'package:foxy/widget/form/validation/gem_property_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
 
+part 'gem_property_detail_view_model.g.dart';
+
+@FoxyDetailViewModel(entity: GemPropertyEntity, selects: {'type': 0})
 class GemPropertyDetailViewModel
     with
-        ViewModelValidationMixin,
-        GemPropertyValidationMixin,
-        FieldControllerMixin {
+        FieldControllerMixin, _GemPropertyDetailViewModelMixin {
   final _repository = GetIt.instance.get<GemPropertyRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -22,17 +22,6 @@ class GemPropertyDetailViewModel
   final loading = signal(false);
   final submitting = signal(false);
   final errorMessage = signal<String?>(null);
-
-  /// Basic
-  late final idController = registerController(IntFieldController());
-
-  /// Property
-  late final enchantIdController = registerController(IntFieldController());
-  late final maxCountInvController = registerController(IntFieldController());
-  late final maxCountItemController = registerController(IntFieldController());
-  late final typeController = registerController(
-    SelectFieldController<int>(fallback: 0),
-  );
 
   /// 从所有 Controller 收集数据构建 GemProperty
 
@@ -70,7 +59,6 @@ class GemPropertyDetailViewModel
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      validateGemPropertyFields(candidate);
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -89,24 +77,6 @@ class GemPropertyDetailViewModel
     } finally {
       submitting.value = false;
     }
-  }
-
-  GemPropertyEntity _collectCandidate() {
-    return GemPropertyEntity(
-      id: idController.collect(),
-      enchantId: enchantIdController.collect(),
-      maxCountInv: maxCountInvController.collect(),
-      maxCountItem: maxCountItemController.collect(),
-      type: typeController.collect(),
-    );
-  }
-
-  void _applyCandidate(GemPropertyEntity gemProperty) {
-    idController.init(gemProperty.id);
-    enchantIdController.init(gemProperty.enchantId);
-    maxCountInvController.init(gemProperty.maxCountInv);
-    maxCountItemController.init(gemProperty.maxCountItem);
-    typeController.init(gemProperty.type);
   }
 
   void _logActivity(ActivityActionType action, GemPropertyEntity t) {

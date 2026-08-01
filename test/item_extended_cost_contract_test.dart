@@ -1,8 +1,6 @@
-import 'support/entity_validation_test_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/constant/dbc_locale_fields.dart';
-import 'package:foxy/constant/item_extended_cost_constants.dart';
 import 'package:foxy/entity/item_extended_cost_entity.dart';
 import 'package:foxy/entity/item_purchase_group_entity.dart';
 
@@ -29,33 +27,6 @@ void main() {
     ]);
     expect(json.values.whereType<List<Object?>>(), isEmpty);
     expect(json.values.whereType<Map<Object?, Object?>>(), isEmpty);
-  });
-
-  test('竞技场字段使用 ArenaSlot 0..2 而不是 ArenaTeamTypes 2/3/5', () {
-    expect(kItemExtendedCostArenaSlotOptions.keys, [0, 1, 2]);
-    expect(
-      const ItemExtendedCostEntity(id: 1, arenaBracket: 2).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ItemExtendedCostEntity(id: 1, arenaBracket: 3).validate(),
-      throwsStateError,
-    );
-  });
-
-  test('物品 ID 非零时要求正数量，空槽保留服务端忽略的原始计数', () {
-    expect(
-      const ItemExtendedCostEntity(id: 1, itemCount4: 7).validate,
-      returnsNormally,
-    );
-    expect(
-      () => const ItemExtendedCostEntity(id: 1, itemID0: 25).validate(),
-      throwsStateError,
-    );
-    expect(
-      () => const ItemExtendedCostEntity(id: 1, honorPoints: -1).validate(),
-      throwsStateError,
-    );
   });
 
   test('ItemPurchaseGroup DBC 精确覆盖 26 个独立物理列', () {

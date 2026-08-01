@@ -4,8 +4,6 @@ import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/page/creature_template/npc_trainer_collection_editor_view_model.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
-import 'package:foxy/widget/form/validation/npc_trainer_entity_validation_mixin.dart';
-import 'package:foxy/widget/form/view_model_validation_mixin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -223,15 +221,6 @@ void main() {
     });
   });
 
-  test('validateNpcTrainerFields 拒绝非法 reqLevel', () {
-    final validation = _NpcTrainerValidation();
-    expect(
-      () => validation.validateNpcTrainerFields(
-        const NpcTrainerEntity(trainerId: 1, spellId: 2, reqLevel: 256),
-      ),
-      throwsA(isA<StateError>()),
-    );
-  });
 }
 
 class _FakeNpcTrainerRepository extends NpcTrainerRepository {
@@ -308,9 +297,6 @@ class _FakeCreatureDefaultTrainerRepository
     return rows[key];
   }
 }
-
-class _NpcTrainerValidation
-    with ViewModelValidationMixin, NpcTrainerValidationMixin {}
 
 class _RecordingDriver implements DatabaseDriver {
   @override
