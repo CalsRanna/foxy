@@ -7,7 +7,7 @@ Foxy 是一个面向 [AzerothCore](https://www.azerothcore.org/) 3.3.5a 的桌�
 ## 功能概览
 
 - 编辑 AzerothCore world 数据：
-  - 生物与生物关联数据
+  - 生物与生物关联数据（掉落、训练师、商人、任务关系等）
   - 物品与掉落模板
   - 任务及任务关系
   - 游戏对象
@@ -16,12 +16,13 @@ Foxy 是一个面向 [AzerothCore](https://www.azerothcore.org/) 3.3.5a 的桌�
   - 玩家出生数据等
 - 编辑 3.3.5a DBC 数据：
   - 法术、天赋、成就、货币、物品集合等
-  - DBC 本地化字段
+  - DBC 本地化字段（16 语言槽位）
   - DBC 文件批量导入、导出与进度反馈
 - 支持基础表与 `*_locale` 本地化表联合展示
 - 支持列表筛选、分页、实体选择器及复合主键编辑
-- 记录创建、修改、删除等操作活动
+- 记录创建、修改、删除、复制等操作活动
 - 保存窗口尺寸和本地连接配置
+- 从魔兽客户端 MPQ 提取游戏图标并渲染
 
 ## 技术栈
 
@@ -31,7 +32,9 @@ Foxy 是一个面向 [AzerothCore](https://www.azerothcore.org/) 3.3.5a 的桌�
 - GetIt
 - AutoRoute
 - Laconic / Laconic MySQL
-- MySQL
+- [warcrafty](https://pub.dev/packages/warcrafty)（DBC 与 MPQ 二进制解析）
+- 自研注解代码生成器（基于 `build_runner` / `source_gen`）
+- 自研 `custom_lint` 插件（架构约束检查）
 
 具体依赖版本以 [`pubspec.yaml`](pubspec.yaml) 和 [`pubspec.lock`](pubspec.lock) 为准。
 
@@ -112,21 +115,59 @@ dbc_path: /path/to/dbc
 
 ## DBC 导入与导出
 
-DBC 功能面向客户端版本 `3.3.5.12340` / 3.3.5a。表、文件名及物理字段定义位于 [`lib/constant/dbc_definitions.dart`](lib/constant/dbc_definitions.dart)。
+DBC 功能面向客户端版本 `3.3.5.12340` / 3.3.5a。表、文件名及物理字段定义位于 [`lib/constant/dbc_definitions.dart`](lib/constant/dbc_definitions.dart)，二进制结构以 warcrafty 包的 schema 为准。
 
-- 导入：从选定目录扫描 `.dbc` 文件，并将数据写入 `foxy.dbc_*` 表。
-- 导出：从已注册的 `foxy.dbc_*` 表生成 DBC 文件。
+- 导入：从选定目录扫描 `.dbc` 文件，在后台 isolate 中解析，经 staging 表校验后原子替换 `foxy.dbc_*` 正式表。
+- 导出：从已注册的 `foxy.dbc_*` 表生成 DBC 文件，写入临时文件后回读校验再原子替换。
 - 文件名匹配不区分大小写。
 - 导入前请备份已有 DBC 镜像数据。
 
 游戏物品和法术图标不随应用内置。在设置页「游戏图标」中填写魔兽客户端目录后，应用扫描 `Data/` 根目录与 `Data/<语言>/` 下**全部 MPQ 归档**（含自定义 patch 包），提取图标（BLP 原始格式）到运行时当前目录的 `data/icon/`（与 `config.yaml` 位置一致），列表页直接渲染。未提取（如 DBC 引用了客户端不存在的资源）时显示占位符。
+
+## 代码生成
+
+项目大量代码由自研注解代码生成器产出。生成器位于 [`lib/infrastructure/codegen/`](lib/infrastructure/codegen/)，通过 `build_runner` 在构建期把注解展开为 `.g.dart` 文件（纳入版本控制，**请勿手工修改**）。
+
+### 生成器
+
+[`build.yaml`](build.yaml) 注册了三个 builder：
+
+| Builder           | 作用域                              | 生成内容                                       |
+| ----------------- | ----------------------------------- | ---------------------------------------------- |
+| `foxy_entity`     | `lib/entity/**_entity.dart`         | Full Entity 值语义 mixin、Brief 实体、复合 Key |
+| `foxy_repository` | `lib/repository/**_repository.dart` | 标准 CRUD 方法、物理键查询、Filter 查询输入    |
+| `foxy_view_model` | `lib/view_model/**_view_model.dart` | 列表 ViewModel 样板、表单 controller 与收集    |
+
+### 注解一览
+
+| 注解                                                                            | 目标             | 作用                                                                                       |
+| ------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------ |
+| `@FoxyFullEntity(table:)`                                                       | Entity class     | 声明 Full Entity，生成 `fromJson` / `copyWith` / `toJson` / `==` / `hashCode` / `toString` |
+| `@FoxyFullField(column, key:)`                                                  | Entity 字段      | 映射物理列；`key: true` 标记物理主键                                                       |
+| `@FoxyBriefEntity`                                                              | Entity class     | 同时生成只读 `Brief<Name>Entity`（值语义，无写 API）                                       |
+| `@FoxyBriefField()`                                                             | Entity 字段      | 把该物理字段纳入 Brief 投影                                                                |
+| `@FoxyBriefField.text/integer/decimal/boolean(name)`                            | Entity class     | 声明 Brief 投影补充字段（由查询 alias 提供）                                               |
+| `@FoxyRepository(Entity)`                                                       | Repository class | 生成 `get` / `store` / `update` / `destroy` 与 `_whereKey`                                 |
+| `@FoxyFilter.text/integer/decimal/boolean(name)`                                | Repository class | 生成该仓库的 `<Name>Filter` 查询输入                                                       |
+| `@FoxyListViewModel(entity:, repository:)`                                      | List ViewModel   | 生成列表状态、筛选 controller 与 search/reset/paginate/copy/destroy/刷新                   |
+| `@FoxyDetailViewModel(entity:, selects:, flags:, groups:, nullable:, exclude:)` | Detail ViewModel | 生成表单 controller 与 `_applyCandidate` / `_collectCandidate`                             |
+
+典型用法：Entity 声明字段与物理列的对应关系（单一事实来源），Repository 声明表名与筛选字段，Detail ViewModel 只声明表单例外（select/flag/group/nullable/exclude），列表筛选字段直接从 Repository 的 `@FoxyFilter` 读取。生成器在构建期校验文件名、`part` 声明、mixin 混入、字段类型、命名约定等约束，违规即构建失败，而不是留到运行时。
+
+### 重新生成
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+修改 Entity 字段、Repository 方法签名或 ViewModel 注解后需要重新生成。生成产物已入库，提交时包含对应 `.g.dart` diff。
 
 ## 开发
 
 ### 常用命令
 
 ```bash
-# 静态检查
+# 静态检查（含 custom_lint 规则）
 flutter analyze
 
 # 全部测试
@@ -138,11 +179,11 @@ flutter test test/<name>_test.dart
 # 按名称运行单个测试
 flutter test test/<name>_test.dart --plain-name '<exact test name>'
 
+# 代码生成器套件（flutter test 下会被跳过，需要 dart test）
+dart test test/infrastructure/codegen
+
 # 格式化本次修改的 Dart 文件
 dart format <changed .dart files>
-
-# 路由代码生成
-dart run build_runner build --delete-conflicting-outputs
 
 # 构建桌面应用
 flutter build macos
@@ -150,7 +191,7 @@ flutter build windows
 flutter build linux
 ```
 
-`lib/router/router.gr.dart` 由 AutoRoute 生成并纳入版本控制，请勿手工修改。
+不要对全仓库执行全局格式化（见下文「已知开发环境注意事项」）。
 
 ### 项目结构
 
@@ -158,19 +199,20 @@ flutter build linux
 lib/
 ├── constant/        # AzerothCore/DBC 枚举、Flags、Schema 与选项
 ├── database/        # 数据库连接与 Foxy migrations
-├── entity/          # 完整实体、Brief 实体、筛选条件与复合 Key
+├── entity/          # Full/Brief 实体、Key、筛选输入（注解驱动生成）
 ├── event/           # 应用事件总线
 ├── infrastructure/  # 配置、DBC、日志、偏好、窗口、代码生成及工具
 ├── lint/            # custom_lint 插件与规则
-├── page/            # 按功能组织的 Page / View / ViewModel
-├── repository/      # Laconic 查询与持久化层
+├── page/            # 按功能组织的 Page / View（路由页与纯视图）
+├── repository/      # Laconic 查询与持久化层（CRUD 由注解生成）
 ├── router/          # AutoRoute 配置和导航门面
 ├── use_case/        # 跨 Repository、事务及长流程的具体用户用例
+├── view_model/      # 全部 ViewModel（列表/详情/编辑器样板由注解生成）
 ├── widget/          # 表单、表格、Picker、Dialog 等共享组件
 ├── di.dart          # GetIt 依赖注册
 └── main.dart        # 应用入口
 
-test/                # 单元、Widget、数据库编辑及代码生成行为测试
+test/                # 单元、Widget、契约及代码生成行为测试
 asset/image/         # Flutter asset 图片
 linux|macos|windows/ # 桌面平台工程
 ```
@@ -181,8 +223,8 @@ linux|macos|windows/ # 桌面平台工程
 
 项目使用代码生成和 custom_lint 保证架构约束，不再依赖手工编写的源码级契约测试：
 
-- **代码生成** (`lib/infrastructure/codegen/`)：从注解生成 Entity 样板代码（`fromJson`/`toJson`/`copyWith`/`==`）和 Repository CRUD 方法，构建期即可发现字段类型、文件命名等问题。
-- **Lint 规则** (`lib/lint/`)：通过 `custom_lint` 在 `flutter analyze` 中检查 Entity 字段类型、Repository 方法签名、View 布局参数等 7 条约束。
+- **代码生成**（[`lib/infrastructure/codegen/`](lib/infrastructure/codegen/)）：从注解生成 Entity 样板代码、Repository CRUD 方法、Filter 查询输入和 ViewModel 表单样板，构建期即可发现字段类型、文件命名、约定混入等问题。
+- **Lint 规则**（[`lib/lint/`](lib/lint/)）：通过 `custom_lint` 在 `flutter analyze` 中检查 Entity 字段类型、Repository 方法签名、View 布局参数等 7 条约束，详见 [`AGENTS.md`](AGENTS.md)。
 
 ### 数据编辑约定
 
@@ -227,6 +269,7 @@ flutter test test/dbc_mysql_integration_test.dart
 ## 已知开发环境注意事项
 
 - `test/dbc_sync_util_test.dart` 中“同一定义匹配多个文件”测试需要同一目录同时存在仅大小写不同的文件名。在默认大小写不敏感的 macOS 文件系统上，这两个文件无法共存，因此该测试可能进入 MySQL 连接分支并失败。
+- 全仓库 `dart format` 检查有 161 个手写文件与当前格式化器存在风格差异（参数展开形式），仅格式化本次修改的文件即可，不要全局格式化。
 - 部分 Widget 测试会故意触发并记录错误堆栈，以验证错误提示行为；应以测试命令最终状态为准。
 
 ## 许可证
