@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/setting/directory_setting_row.dart';
 import 'package:foxy/page/setting/icon_extract_dialog.dart';
 import 'package:foxy/page/setting/setting_dialog_shell.dart';
+import 'package:foxy/page/setting/update_dialog.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
+import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class SettingPage extends StatefulWidget {
@@ -96,6 +99,7 @@ class _SettingPageState extends State<SettingPage> {
   final importViewModel = GetIt.instance.get<DbcImportWorkflowViewModel>();
   final exportViewModel = GetIt.instance.get<DbcExportWorkflowViewModel>();
   final iconViewModel = GetIt.instance.get<IconExtractWorkflowViewModel>();
+  final updateViewModel = GetIt.instance.get<UpdateViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +135,8 @@ class _SettingPageState extends State<SettingPage> {
                 _buildDbcSection(),
                 const SizedBox(height: 24),
                 _buildIconSection(),
+                const SizedBox(height: 24),
+                _buildUpdateSection(),
               ],
             ),
           ),
@@ -205,6 +211,46 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
+  Widget _buildUpdateSection() {
+    return Watch((_) {
+      final version = updateViewModel.currentVersion.value;
+      return _SettingSection(
+        title: '关于与更新',
+        children: [
+          _SettingItem(
+            title: '检查更新',
+            description: version == null
+                ? '检查 Foxy 是否有新版本'
+                : '当前版本 $version，检查 Foxy 是否有新版本',
+            trailing: ShadButton(
+              size: ShadButtonSize.sm,
+              onPressed: _showUpdateDialog,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [Icon(LucideIcons.refreshCw, size: 15), Text('检查更新')],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          _SettingItem(
+            title: '项目主页',
+            description: '访问 GitHub 仓库，查看更新记录、文档与反馈问题',
+            trailing: ShadButton.outline(
+              size: ShadButtonSize.sm,
+              onPressed: _openProjectPage,
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 6,
+                children: [Icon(LucideIcons.externalLink, size: 15), Text('打开')],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
   @override
   void dispose() {
     exportViewModel.dispose();
@@ -215,6 +261,7 @@ class _SettingPageState extends State<SettingPage> {
   void initState() {
     super.initState();
     setupViewModel.prepare();
+    updateViewModel.prepare();
   }
 
   void _showExportDialog() {
@@ -239,5 +286,25 @@ class _SettingPageState extends State<SettingPage> {
       barrierDismissible: false,
       builder: (context) => DbcImportDialog(vm: importViewModel),
     );
+  }
+
+  /// 先触发手动检查(信号同步进入「检查中」),再打开随状态实时刷新的对话框。
+  void _showUpdateDialog() {
+    updateViewModel.checkManually();
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => UpdateDialog(vm: updateViewModel),
+    );
+  }
+
+  Future<void> _openProjectPage() async {
+    final ok = await launchUrl(
+      Uri.parse('https://github.com/CalsRanna/foxy'),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!ok) {
+      DialogUtil.instance.error('无法打开项目主页');
+    }
   }
 }

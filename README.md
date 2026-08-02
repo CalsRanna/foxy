@@ -130,6 +130,28 @@ client_dir: D:\Simulators\AzerothCore\client        # 客户端根目录(图标�
 icons_extracted: true                                # 图标是否已提取
 ```
 
+### 发布与自动更新
+
+Foxy 以便携 zip 方式分发(直接解压 Release 文件夹即可运行),上线后应用内支持自动更新:
+
+- **更新检查**:每次启动自动检查一次(24 小时内不重复),也可在「设置 → 关于与更新 → 检查更新」手动检查;
+- **版本策略**:仅推送正式版本;tag 带预发布后缀(如 `v1.1.0-beta`)时 CI 会照常构建发布,但清单标记为预发布,用户端自动跳过;
+- **更新流程**:下载新版本 zip → SHA-256 校验 → 重启后由 `foxy_updater.exe` 完成文件替换并重新启动;
+- **保留数据**:更新只替换程序文件,`config.yaml` 与 `data/icon/`(已提取的图标缓存)原样保留。
+
+发布新版本(tag 之后全部由 CI 接管):
+
+1. 手动编辑 `pubspec.yaml` 的 `version`(如 `1.1.0+630`)与 `CHANGELOG.md` 的 `## v1.1.0` 段,commit 并 push;
+2. 打 tag 并推送(唯一一条本地命令):
+
+   ```bash
+   git tag v1.1.0 && git push origin v1.1.0
+   ```
+
+3. CI(`.github/workflows/release.yml`,tag `v*` 触发)自动完成:analyze + test 门禁 → 构建 → 编译更新辅助程序 → 打包 zip → 生成 `latest.yaml`(YAML 更新清单,含 SHA-256 与更新说明,保留最近 3 版)→ 发布 GitHub Release。
+
+应用固定从 `https://github.com/CalsRanna/foxy/releases/latest/download/latest.yaml` 获取更新信息,每次发布必须携带同名 `latest.yaml` 附件(CI 已自动完成)。
+
 ### 测试
 
 ```bash
@@ -161,6 +183,7 @@ lib/
 │   ├── config/                # config.yaml 读写
 │   ├── logging/               # 活动日志服务
 │   ├── preferences/           # SharedPreferences 封装、locale 查询偏好
+│   ├── update/                # 自动更新(清单/下载校验/文件交换,辅助程序见 tool/updater/)
 │   └── window/                # 无边框窗口初始化
 ├── event/                     # 事件总线
 ├── widget/                    # 通用组件(虚拟化表格、选择器、表单、对话框等)

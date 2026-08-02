@@ -1,0 +1,103 @@
+name: Release Windows
+
+# 发布流程(唯一触发方式:推送 tag,如 `git tag v1.1.0 && git push origin v1.1.0`):
+# 1. 发布前手动改 pubspec.yaml 的 version 与 CHANGELOG.md 的 `## vX.Y.Z` 段并提交;
+# 2. 推送 tag 后本 workflow 自动:analyze + test 门禁 → 构建 Release 目录 →
+#    编译更新辅助程序 → 打成 zip → 生成 latest.yaml(含 SHA-256 与更新说明,
+#    releases 数组保留最近 3 版)→ 发布 GitHub Release。
+#
+# 应用更新入口固定为 `releases/latest/download/latest.yaml`,附件必须同名。
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+  release-windows:
+    needs: check
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $version = $tag.TrimStart('v')
+          Write-Output "tag=$tag" >> $env:GITHUB_OUTPUT
+          Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Build updater helper
+        run: >-
+          dart compile exe tool/updater/updater_main.dart
+          -o build/windows/x64/runner/Release/foxy_updater.exe
+
+      - name: Package zip
+        shell: pwsh
+        run: >-
+          Compress-Archive
+          -Path build/windows/x64/runner/Release/*
+          -DestinationPath foxy-${{ steps.version.outputs.version }}.zip
+          -CompressionLevel Optimal
+
+      - name: Fetch previous manifest (for release history)
+        shell: pwsh
+        run: |
+          if (curl -sfL -o existing.yaml `
+              "https://github.com/CalsRanna/foxy/releases/latest/download/latest.yaml") {
+            Write-Output "fetched previous manifest"
+          } else {
+            Write-Output "no previous manifest (first release)"
+          }
+
+      - name: Generate update manifest
+        shell: pwsh
+        run: >-
+          dart run tool/release/make_update_manifest.dart
+          --zip foxy-${{ steps.version.outputs.version }}.zip
+          --tag ${{ steps.version.outputs.tag }}
+          --out latest.yaml
+          --notes-out release_notes.md
+          --existing existing.yaml
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: >-
+          gh release create ${{ steps.version.outputs.tag }}
+          foxy-${{ steps.version.outputs.version }}.zip latest.yaml
+          --title "Foxy ${{ steps.version.outputs.version }}"
+          --notes-file release_notes.md

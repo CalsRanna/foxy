@@ -46,3 +46,8 @@ app.*.map.json
 
 data/
 config.yaml
+
+# 发布产物
+foxy-*.zip
+update.json
+release_notes.md

@@ -34,6 +34,11 @@ dependencies:
   custom_lint_builder: ^0.8.1
   analyzer: ^8.1.1
 
+  http: ^1.6.0
+  archive: ^4.0.9
+  crypto: ^3.0.7
+  pub_semver: ^2.2.0
+
   build: any
   source_gen: any
 dev_dependencies:

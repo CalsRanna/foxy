@@ -6,10 +6,12 @@ import 'package:foxy/page/dashboard/component/introduction.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
 import 'package:foxy/page/dashboard/component/version.dart';
 import 'package:foxy/page/dashboard/component/welcome.dart';
+import 'package:foxy/page/setting/update_dialog.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/router/router_menu.dart';
 import 'package:foxy/view_model/dashboard_read_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
+import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_header.dart';
 import 'package:get_it/get_it.dart';
@@ -101,6 +103,19 @@ class _DashboardPageRoute extends State<DashboardPage> {
       if (!mounted) return;
       DialogUtil.instance.error('加载仪表板数据失败：${foxyErrorMessage(error)}');
     }
+    _checkForUpdate();
+  }
+
+  /// 启动静默更新检查(24h 节流):发现新版本时弹更新对话框。
+  Future<void> _checkForUpdate() async {
+    final updateViewModel = GetIt.instance.get<UpdateViewModel>();
+    final found = await updateViewModel.checkSilently();
+    if (!mounted || !found) return;
+    showFoxyDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => UpdateDialog(vm: updateViewModel),
+    );
   }
 
   void _navigateToMenu(RouterMenu menu) {

@@ -234,6 +234,7 @@ import 'package:foxy/view_model/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/view_model/scaling_stat_value_list_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
 import 'package:foxy/view_model/skinning_loot_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/update_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_list_view_model.dart';
 import 'package:foxy/view_model/spell_area_linked_list_view_model.dart';
@@ -268,6 +269,7 @@ class DI {
     _instance.registerSingleton(DbcImportWorkflowViewModel());
     _instance.registerSingleton(IconExtractWorkflowViewModel());
     _instance.registerSingleton(SetupStatusViewModel());
+    _instance.registerSingleton(UpdateViewModel());
   }
 
   static void _registerInfrastructure() {

@@ -67,6 +67,32 @@ final class DatabaseNotConnectedException extends FoxyException {
   const DatabaseNotConnectedException(super.message);
 }
 
+/// 更新流程失败:检查、下载、校验或解压阶段的任何失败。
+final class UpdateException extends FoxyException {
+  const UpdateException(this.code, super.message);
+
+  /// 失败类别,用于文案映射与诊断。
+  final UpdateErrorKind code;
+}
+
+/// 更新失败类别。
+enum UpdateErrorKind {
+  /// 网络请求失败(超时、连接失败、非 200 响应)。
+  network,
+
+  /// 清单内容无效(字段缺失、格式错误、版本不可解析)。
+  invalidManifest,
+
+  /// 下载文件校验失败(SHA-256 或大小不符)。
+  verification,
+
+  /// 解压或写盘失败。
+  fileSystem,
+
+  /// 更新被用户取消。
+  canceled,
+}
+
 /// 异常 → 面向用户的中文文案。UI 展示错误的唯一入口。
 ///
 /// 新增 [FoxyException] 子类时必须同步补充映射;未知/驱动异常原样
@@ -82,6 +108,13 @@ String foxyErrorMessage(Object error) => switch (error) {
   ValidationException() => '输入不合法，请检查后重试',
   CopyNotSupportedException() => '该操作不支持自动复制，请新增记录',
   DatabaseNotConnectedException() => '数据库未连接，请先连接数据库',
+  UpdateException(:final code) => switch (code) {
+    UpdateErrorKind.network => '无法连接更新服务器，请检查网络后重试',
+    UpdateErrorKind.invalidManifest => '更新信息无效，请稍后重试',
+    UpdateErrorKind.verification => '更新文件校验失败，请重试',
+    UpdateErrorKind.fileSystem => '更新文件写入失败，请检查磁盘空间后重试',
+    UpdateErrorKind.canceled => '更新已取消',
+  },
   // 内部编解码/参数错误与不变量违背:语义正确的 Dart 核心类型。
   ArgumentError() => '输入或参数不合法，请检查后重试',
   StateError() => '内部状态异常，请重试',
