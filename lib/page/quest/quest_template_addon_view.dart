@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/quest_flags.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/quest_template_addon_single_editor_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -285,7 +286,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 
@@ -300,7 +301,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

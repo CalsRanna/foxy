@@ -1,5 +1,6 @@
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/dbc/import_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -90,7 +91,7 @@ class DbcImportWorkflowViewModel {
       }
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '检查 DBC 导入状态失败: $error';
+      errorMessage.value = '检查 DBC 导入状态失败: ${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
     }
   }
@@ -114,7 +115,7 @@ class DbcImportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载 DBC 配置失败: $error';
+      errorMessage.value = '加载 DBC 配置失败: ${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -145,8 +146,8 @@ class DbcImportWorkflowViewModel {
     if (_isActive || _useCase.isRunning) return;
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
-      final error = StateError('请先选择 DBC 文件目录。');
-      errorMessage.value = error.message;
+      final error = ValidationException('select the DBC file directory first');
+      errorMessage.value = foxyErrorMessage(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -184,7 +185,7 @@ class DbcImportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导入出错：$error';
+      errorMessage.value = '导入出错：${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

@@ -33,7 +33,9 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     final source = await getProspectingLootTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'prospecting_loot_template record not found',
+      );
     }
     final blank = await createProspectingLootTemplate(source.entry);
     final copied = source.copyWith(entry: blank.entry, item: blank.item);
@@ -70,7 +72,9 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'prospecting_loot_template record not found',
+      );
     }
   }
 
@@ -116,7 +120,9 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
       await laconic.table('prospecting_loot_template').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in prospecting_loot_template',
+        );
       }
       rethrow;
     }
@@ -136,12 +142,16 @@ mixin _ProspectingLootTemplateRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in prospecting_loot_template',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'prospecting_loot_template record not found',
+      );
     }
   }
 

@@ -22,7 +22,7 @@ class QuestInfoRepository
   Future<int> copyQuestInfo(int key) async {
     final source = await getQuestInfo(key);
     if (source == null) {
-      throw StateError('原任务信息不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeQuestInfo(copied);
@@ -53,7 +53,9 @@ class QuestInfoRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 65535) {
-      throw StateError('任务信息编号已超出 QuestInfoID 可引用范围');
+      throw IdExhaustedException(
+        'quest info ID exceeds the QuestInfoID referenceable range',
+      );
     }
     return id;
   }

@@ -33,7 +33,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
   ) async {
     final source = await getSkinningLootTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('skinning_loot_template record not found');
     }
     final blank = await createSkinningLootTemplate(source.entry);
     final copied = source.copyWith(entry: blank.entry, item: blank.item);
@@ -68,7 +68,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('skinning_loot_template record not found');
     }
   }
 
@@ -116,7 +116,7 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
       await laconic.table('skinning_loot_template').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in skinning_loot_template');
       }
       rethrow;
     }
@@ -136,12 +136,12 @@ mixin _SkinningLootTemplateRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in skinning_loot_template');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('skinning_loot_template record not found');
     }
   }
 

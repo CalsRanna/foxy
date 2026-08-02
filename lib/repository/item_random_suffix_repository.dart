@@ -24,7 +24,7 @@ class ItemRandomSuffixRepository
   Future<int> copyItemRandomSuffix(int key) async {
     final source = await getItemRandomSuffix(key);
     if (source == null) {
-      throw StateError('原随机后缀不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemRandomSuffix(copied);

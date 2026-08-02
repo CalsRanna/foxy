@@ -28,7 +28,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
   Future<int> copyQuestTemplate(int key) async {
     final source = await getQuestTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_template record not found');
     }
     final blank = await createQuestTemplate();
     final copied = source.copyWith(id: blank.id);
@@ -53,7 +53,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_template record not found');
     }
   }
 
@@ -96,7 +96,9 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
 
   Future<void> storeQuestTemplate(QuestTemplateEntity questTemplate) async {
     if (questTemplate.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(questTemplate);
     final json = prepareWriteJson(questTemplate.toJson());
@@ -104,7 +106,7 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
       await laconic.table('quest_template').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in quest_template');
       }
       rethrow;
     }
@@ -124,12 +126,12 @@ mixin _QuestTemplateRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in quest_template');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_template record not found');
     }
   }
 

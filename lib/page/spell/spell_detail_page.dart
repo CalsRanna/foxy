@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/spell/spell_area_view.dart';
 import 'package:foxy/page/spell/spell_bonus_data_view.dart';
 import 'package:foxy/page/spell/spell_custom_attr_view.dart';
@@ -109,7 +110,7 @@ class _SpellDetailPageState extends State<SpellDetailPage> {
       await viewModel.initSignals(key: widget.spellKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/constant/spell_enums.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/entity/spell_area_entity.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
@@ -11,7 +12,6 @@ import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/repository/spell_rank_repository.dart';
 
 void main() {
-
   test('关联表默认值与 core base SQL 一致', () {
     const area = SpellAreaEntity();
     expect(area.gender, 2);
@@ -49,11 +49,11 @@ void main() {
   test('父键型关联记录禁止通过 MAX+1 复制出无效引用', () async {
     await expectLater(
       SpellBonusDataRepository().copySpellBonusData(1),
-      throwsA(isA<UnsupportedError>()),
+      throwsA(isA<CopyNotSupportedException>()),
     );
     await expectLater(
       SpellCustomAttrRepository().copySpellCustomAttr(1),
-      throwsA(isA<UnsupportedError>()),
+      throwsA(isA<CopyNotSupportedException>()),
     );
     await expectLater(
       SpellAreaRepository().copySpellArea(
@@ -66,19 +66,19 @@ void main() {
           gender: 2,
         ),
       ),
-      throwsA(isA<UnsupportedError>()),
+      throwsA(isA<CopyNotSupportedException>()),
     );
     await expectLater(
       SpellRankRepository().copySpellRank(
         const SpellRankKey(firstSpellId: 1, rank: 1),
       ),
-      throwsA(isA<UnsupportedError>()),
+      throwsA(isA<CopyNotSupportedException>()),
     );
     await expectLater(
       SpellLootTemplateRepository().copySpellLootTemplate(
         const SpellLootTemplateKey(entry: 1, item: 1),
       ),
-      throwsA(isA<UnsupportedError>()),
+      throwsA(isA<CopyNotSupportedException>()),
     );
   });
 }

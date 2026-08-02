@@ -31,7 +31,7 @@ class ReferenceLootTemplateDetailViewModel
 
   @override
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final candidate = _collectCandidate();
     final originalKey = persistedKey.value;
     submitting.value = true;
@@ -49,7 +49,7 @@ class ReferenceLootTemplateDetailViewModel
       persistedKey.value = ReferenceLootTemplateKey.fromEntity(candidate);
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;

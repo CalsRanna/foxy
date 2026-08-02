@@ -16,7 +16,7 @@ class ItemExtendedCostRepository
   Future<int> copyItemExtendedCost(int key) async {
     final source = await getItemExtendedCost(key);
     if (source == null) {
-      throw StateError('原扩展价格不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeItemExtendedCost(copied);
@@ -31,7 +31,7 @@ class ItemExtendedCostRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 2147483647) {
-      throw StateError('扩展价格编号已超出 signed int32 范围');
+      throw IdExhaustedException('extended cost ID exceeds signed int32 range');
     }
     return id;
   }

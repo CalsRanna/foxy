@@ -11,7 +11,7 @@ BlpImage decodeBlp(Uint8List bytes) {
       bytes[1] != 0x4C ||
       bytes[2] != 0x50 ||
       bytes[3] != 0x32) {
-    throw const BlpFormatException('不是有效的 BLP2 文件');
+    throw const BlpFormatException('not a valid BLP2 file');
   }
   final bd = ByteData.sublistView(bytes);
   final type = bd.getUint32(4, Endian.little);
@@ -24,13 +24,13 @@ BlpImage decodeBlp(Uint8List bytes) {
   final mip0Size = bd.getUint32(20 + 64, Endian.little);
 
   if (type != 1) {
-    throw BlpFormatException('不支持的 BLP 类型（$type，JPEG 变体）');
+    throw BlpFormatException('unsupported BLP type ($type, JPEG variant)');
   }
   if (width == 0 || height == 0) {
-    throw const BlpFormatException('无效的图片尺寸');
+    throw const BlpFormatException('invalid image dimensions');
   }
   if (mip0Offset + mip0Size > bytes.length) {
-    throw const BlpFormatException('mip0 数据越界');
+    throw const BlpFormatException('mip0 data out of bounds');
   }
 
   final rgba = Uint8List(width * height * 4);
@@ -45,7 +45,7 @@ BlpImage decodeBlp(Uint8List bytes) {
       // 未压缩 BGRA。
       final expected = width * height * 4;
       if (src.length < expected) {
-        throw const BlpFormatException('未压缩数据不足');
+        throw const BlpFormatException('insufficient uncompressed data');
       }
       for (var i = 0; i < width * height; i++) {
         rgba[i * 4] = src[i * 4 + 2];
@@ -54,7 +54,7 @@ BlpImage decodeBlp(Uint8List bytes) {
         rgba[i * 4 + 3] = src[i * 4 + 3];
       }
     default:
-      throw BlpFormatException('不支持的编码方式（$encoding）');
+      throw BlpFormatException('unsupported encoding ($encoding)');
   }
   return BlpImage(width: width, height: height, rgba: rgba);
 }
@@ -69,7 +69,7 @@ void _decodeDxt(Uint8List src, int w, int h, int mode, Uint8List dst) {
   for (var by = 0; by < blocksY; by++) {
     for (var bx = 0; bx < blocksX; bx++) {
       if (p + blockBytes > src.length) {
-        throw const BlpFormatException('DXT 数据不足');
+        throw const BlpFormatException('insufficient DXT data');
       }
       var alphaBase = -1;
       final colorBase = mode == 1 ? p : p + 8;
@@ -165,5 +165,9 @@ final class BlpImage {
   final int height;
   final Uint8List rgba;
 
-  const BlpImage({required this.width, required this.height, required this.rgba});
+  const BlpImage({
+    required this.width,
+    required this.height,
+    required this.rgba,
+  });
 }

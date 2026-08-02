@@ -38,7 +38,7 @@ class DbcLocaleFieldCodec {
   ) {
     if (values.length != DbcLocale.values.length) {
       throw ArgumentError(
-        '期望 ${DbcLocale.values.length} 个语言值，实际 ${values.length}',
+        'expected ${DbcLocale.values.length} locale values, got ${values.length}',
       );
     }
 
@@ -50,11 +50,11 @@ class DbcLocaleFieldCodec {
       final expected = DbcLocale.values[i];
       if (item.locale.index != expected.index) {
         throw ArgumentError(
-          '语言顺序非法：索引 $i 期望 ${expected.code}，实际 ${item.locale.code}',
+          'invalid locale order: index $i expected ${expected.code}, got ${item.locale.code}',
         );
       }
       if (!seen.add(item.locale.index)) {
-        throw ArgumentError('重复语言槽位: ${item.locale.code}');
+        throw ArgumentError('duplicate locale slot: ${item.locale.code}');
       }
       map[field.columnFor(item.locale)] = item.value;
     }

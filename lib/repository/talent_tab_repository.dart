@@ -21,7 +21,7 @@ class TalentTabRepository
   Future<int> copyTalentTab(int key) async {
     final source = await getTalentTab(key);
     if (source == null) {
-      throw StateError('原天赋页不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeTalentTab(copied);
@@ -79,7 +79,7 @@ class TalentTabRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('TalentTab ID 已超出 DBC int32 范围');
+      throw IdExhaustedException('TalentTab ID exceeds DBC int32 range');
     }
     return id;
   }

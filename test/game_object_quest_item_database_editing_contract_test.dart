@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_item_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/game_object_quest_item_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/game_object_quest_item_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -64,11 +66,11 @@ void main() {
         key,
         const GameObjectQuestItemEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       missingRepository.destroyGameObjectQuestItem(key),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final queries = <LaconicQuery>[];
@@ -142,7 +144,6 @@ void main() {
       expect(viewModel.gameObjectEntryController.collect(), 12);
     });
   });
-
 }
 
 class _FakeRepository extends GameObjectQuestItemRepository {

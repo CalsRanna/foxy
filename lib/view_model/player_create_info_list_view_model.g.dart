@@ -26,7 +26,7 @@ mixin _PlayerCreateInfoListViewModelMixin
   int _refreshToken = 0;
 
   Future<void> copy(PlayerCreateInfoKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -34,7 +34,7 @@ mixin _PlayerCreateInfoListViewModelMixin
       _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -42,7 +42,7 @@ mixin _PlayerCreateInfoListViewModelMixin
   }
 
   Future<void> destroy(PlayerCreateInfoKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -51,7 +51,7 @@ mixin _PlayerCreateInfoListViewModelMixin
       normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -116,7 +116,7 @@ mixin _PlayerCreateInfoListViewModelMixin
     } catch (error) {
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
-      errorMessage.value = '刷新列表失败: $error';
+      errorMessage.value = '刷新列表失败: ${foxyErrorMessage(error)}';
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/game_object_loot_template_collection_editor_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -286,7 +287,9 @@ class _GameObjectLootTemplateViewState
                       await viewModel.persist();
                     } catch (error) {
                       if (!mounted) return;
-                      DialogUtil.instance.error('保存失败：$error');
+                      DialogUtil.instance.error(
+                        '保存失败：${foxyErrorMessage(error)}',
+                      );
                       return;
                     }
                     if (!dialogContext.mounted) return;
@@ -319,7 +322,7 @@ class _GameObjectLootTemplateViewState
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
+      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -339,7 +342,7 @@ class _GameObjectLootTemplateViewState
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
       return false;
     }
   }
@@ -349,7 +352,7 @@ class _GameObjectLootTemplateViewState
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
+      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
       return;
     }
     if (!mounted) return;

@@ -4,6 +4,11 @@ import 'package:foxy/infrastructure/util/format_util.dart';
 import 'package:foxy/infrastructure/util/parse_util.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+// 导出给生成 part:view model 的 .g.dart 是 part of 父库,不能自己 import,
+// 生成代码里的 FoxyException/foxyErrorMessage 靠本文件的 import 作用域解析
+// (AGENTS.md 约定所有生成 VM 的 shell 都混入 FieldControllerMixin)。
+export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+
 /// 浮点字段：空串视为 0.0，非法输入抛 [FormatException]。
 class DoubleFieldController extends NumberFieldController<double> {
   @override

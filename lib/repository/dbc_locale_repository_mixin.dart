@@ -32,7 +32,9 @@ mixin DbcLocaleRepositoryMixin on RepositoryMixin {
         .limit(1)
         .get();
     if (results.isEmpty) {
-      throw StateError('DBC 记录不存在: $dbcLocaleTableName ID=$id');
+      throw RecordNotFoundException(
+        'DBC record not found: $dbcLocaleTableName ID=$id',
+      );
     }
     return DbcLocaleFieldCodec.decode(field, results.first.toMap());
   }
@@ -56,8 +58,8 @@ mixin DbcLocaleRepositoryMixin on RepositoryMixin {
     final expected = _unqualifiedDbcTableName;
     if (field.tableName != expected && field.tableName != dbcLocaleTableName) {
       throw ArgumentError(
-        '字段 ${field.columnPrefix} 属于表 ${field.tableName}，'
-        '与当前 Repository 表 $dbcLocaleTableName 不匹配',
+        'field ${field.columnPrefix} belongs to table ${field.tableName}, '
+        'which does not match the current repository table $dbcLocaleTableName',
       );
     }
   }
@@ -68,7 +70,9 @@ mixin DbcLocaleRepositoryMixin on RepositoryMixin {
         .where('ID', id)
         .count();
     if (count == 0) {
-      throw StateError('DBC 记录不存在，无法保存本地化: $dbcLocaleTableName ID=$id');
+      throw RecordNotFoundException(
+        'DBC record not found, cannot save locale: $dbcLocaleTableName ID=$id',
+      );
     }
   }
 }

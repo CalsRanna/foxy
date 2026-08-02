@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -682,7 +683,7 @@ class CreatureTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

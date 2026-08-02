@@ -1,3 +1,5 @@
+import 'package:source_gen/source_gen.dart';
+
 import 'dart_literal.dart';
 import 'entity_model.dart';
 
@@ -101,7 +103,8 @@ final class EntityEmitter {
   /// → == → toString。
   String emitKey(EntityGenerationModel model) {
     final fields = model.keyFields;
-    final buffer = StringBuffer()..writeln('final class ${model.keyClassName} {');
+    final buffer = StringBuffer()
+      ..writeln('final class ${model.keyClassName} {');
     for (final field in fields) {
       buffer.writeln('  final ${field.dartType} ${field.dartName};');
     }
@@ -309,7 +312,9 @@ final class EntityEmitter {
         "json[$key] == null ? "
             "${dartLiteral(field.constructorDefaultValue, asType: 'bool')} : "
             "(json[$key] as num).toInt() == 1",
-      _ => throw StateError('Unsupported field type ${field.dartType}'),
+      _ => throw InvalidGenerationSourceError(
+        'Unsupported field type ${field.dartType}',
+      ),
     };
   }
 

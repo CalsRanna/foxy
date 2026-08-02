@@ -6,6 +6,7 @@ import 'package:foxy/entity/item_template_locale_entity.dart';
 import 'package:foxy/entity/quest_offer_reward_locale_entity.dart';
 import 'package:foxy/entity/quest_request_items_locale_entity.dart';
 import 'package:foxy/entity/quest_template_locale_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/achievement_category_repository.dart';
 import 'package:foxy/repository/achievement_criteria_repository.dart';
 import 'package:foxy/repository/achievement_repository.dart';
@@ -69,7 +70,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getCreatureTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -121,7 +122,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getGameObjectTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -175,7 +176,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getGameObjectTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -225,7 +226,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getItemTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -272,7 +273,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getItemTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -332,7 +333,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getQuestTemplateLocale(originalKey);
         if (existing == null) {
-          throw StateError('原任务模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -385,7 +386,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getQuestOfferRewardLocale(originalKey);
         if (existing == null) {
-          throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -432,7 +433,7 @@ class FoxyLocalePickerDelegates {
         );
         final existing = await repo.getQuestRequestItemsLocale(originalKey);
         if (existing == null) {
-          throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         updates[originalKey] = existing.copyWith(
           locale: d['locale'] ?? '',
@@ -707,13 +708,15 @@ class FoxyLocalePickerDelegates {
       repo.countCreatureTemplateLocales(entry: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('生物模板本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getCreatureTemplateLocale(brief.key);
         if (locale == null) {
-          throw StateError('原生物模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted({
           'locale': locale.locale,
@@ -735,13 +738,15 @@ class FoxyLocalePickerDelegates {
       repo.countGameObjectTemplateLocales(entry: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('游戏对象模板本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getGameObjectTemplateLocale(brief.key);
         if (locale == null) {
-          throw StateError('原游戏对象模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted(valuesOf(locale));
       }),
@@ -758,13 +763,15 @@ class FoxyLocalePickerDelegates {
       repo.countItemTemplateLocales(id: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('物品本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getItemTemplateLocale(brief.key);
         if (locale == null) {
-          throw StateError('原物品本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted(valuesOf(locale));
       }),
@@ -780,13 +787,15 @@ class FoxyLocalePickerDelegates {
       repo.countQuestOfferRewardLocales(id: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('任务奖励本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getQuestOfferRewardLocale(brief.key);
         if (locale == null) {
-          throw StateError('原任务奖励本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted({
           'locale': locale.locale,
@@ -805,13 +814,15 @@ class FoxyLocalePickerDelegates {
       repo.countQuestRequestItemsLocales(id: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('任务物品本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getQuestRequestItemsLocale(brief.key);
         if (locale == null) {
-          throw StateError('原任务物品本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted({
           'locale': locale.locale,
@@ -830,13 +841,15 @@ class FoxyLocalePickerDelegates {
       repo.countQuestTemplateLocales(id: entry),
     ).wait;
     if (briefs.length != count) {
-      throw StateError('任务模板本地化数量超过当前编辑器分页范围');
+      throw ValidationException(
+        'locale count exceeds the current editor page range',
+      );
     }
     return Future.wait(
       briefs.map((brief) async {
         final locale = await repo.getQuestTemplateLocale(brief.key);
         if (locale == null) {
-          throw StateError('原任务模板本地化记录不存在，可能已被其他操作修改或删除');
+          throw RecordNotFoundException('record not found');
         }
         return DatabaseLocaleRow.persisted({
           'locale': locale.locale,

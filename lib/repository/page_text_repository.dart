@@ -19,7 +19,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   Future<int> copyPageText(int key) async {
     final source = await getPageText(key);
     if (source == null) {
-      throw StateError('原页面文本不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final nextId = await _getNextId();
     final copied = source.copyWith(id: nextId);
@@ -124,7 +124,7 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > kPageTextMaxUnsignedInt) {
-      throw StateError('page_text 已无可用 uint32 ID');
+      throw IdExhaustedException('no free uint32 ID left in page_text');
     }
     return id;
   }
@@ -135,11 +135,13 @@ class PageTextRepository with RepositoryMixin, _PageTextRepositoryMixin {
     final visited = <int>{id};
     while (current != 0) {
       if (!visited.add(current)) {
-        throw StateError('NextPageID 形成循环引用');
+        throw ValidationException('NextPageID forms a circular reference');
       }
       final page = await getPageText(current);
       if (page == null) {
-        throw StateError('NextPageID 引用的页面文本 $current 不存在');
+        throw RecordNotFoundException(
+          'page text $current referenced by NextPageID does not exist',
+        );
       }
       current = page.nextPageId;
     }

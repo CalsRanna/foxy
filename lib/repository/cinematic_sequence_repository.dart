@@ -15,7 +15,7 @@ class CinematicSequenceRepository
   Future<int> copyCinematicSequence(int key) async {
     final source = await getCinematicSequence(key);
     if (source == null) {
-      throw StateError('原过场动画序列不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = CinematicSequenceEntity.fromJson({
       ...source.toJson(),

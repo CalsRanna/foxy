@@ -14,7 +14,7 @@ class CreatureTemplateAddonRepository
   Future<int> copyCreatureTemplateAddon(int key) async {
     final source = await getCreatureTemplateAddon(key);
     if (source == null) {
-      throw StateError('原生物模板附加数据不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(
       entry: await nextMaxPlusOne(_table, 'entry'),

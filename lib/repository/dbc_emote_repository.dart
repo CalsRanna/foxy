@@ -15,7 +15,7 @@ class DbcEmoteRepository with RepositoryMixin, _DbcEmoteRepositoryMixin {
   Future<int> copyDbcEmote(int key) async {
     final source = await getDbcEmote(key);
     if (source == null) {
-      throw StateError('原表情不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = DbcEmoteEntity.fromJson({
       ...source.toJson(),

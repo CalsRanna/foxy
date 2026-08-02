@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
@@ -45,9 +46,8 @@ void main() {
   });
 
   test('完整提取流程：真实 MPQ → 进度 → 成功', () async {
-    final dataDir = Directory(
-      p.join(clientRoot.path, 'Data', 'zhCN'),
-    )..createSync(recursive: true);
+    final dataDir = Directory(p.join(clientRoot.path, 'Data', 'zhCN'))
+      ..createSync(recursive: true);
     _createFakeClientMpq(dataDir.path);
 
     final vm = buildVm();
@@ -56,16 +56,16 @@ void main() {
     final startFuture = vm.start();
 
     // start 不阻塞：轮询等待完成。
-    await _waitFor(
-      () => vm.status.value == WorkflowStatus.succeeded,
-    );
+    await _waitFor(() => vm.status.value == WorkflowStatus.succeeded);
     await startFuture;
     expect(vm.result.value!.extracted, 2);
     expect(vm.result.value!.skipped, 0);
-    expect(
-      File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(),
-      [1, 2, 3, 4],
-    );
+    expect(File(p.join(outputDir.path, 'inv_foo.blp')).readAsBytesSync(), [
+      1,
+      2,
+      3,
+      4,
+    ]);
     expect(
       File(p.join(outputDir.path, 'ui-glyph-rune-1.blp')).readAsBytesSync(),
       [5, 6, 7, 8],
@@ -78,9 +78,9 @@ void main() {
   test('未选择目录时 start 失败并提示', () async {
     final vm = buildVm();
     await vm.prepare();
-    await expectLater(vm.start(), throwsA(isA<StateError>()));
+    await expectLater(vm.start(), throwsA(isA<ValidationException>()));
     expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, contains('客户端目录'));
+    expect(vm.errorMessage.value, contains('输入不合法'));
   });
 
   test('目录不存在 start 抛异常并标记失败', () async {
@@ -89,7 +89,7 @@ void main() {
     vm.setPath(p.join(tempDir.path, '不存在'));
     await expectLater(vm.start(), throwsA(isA<FileSystemException>()));
     expect(vm.status.value, WorkflowStatus.failed);
-    expect(vm.errorMessage.value, contains('客户端目录不存在'));
+    expect(vm.errorMessage.value, contains('文件系统错误'));
   });
 
   test('非客户端目录 start 返回失败结果并提示', () async {

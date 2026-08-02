@@ -5,7 +5,7 @@ double parseDoubleField(String text, {String field = ''}) {
   final v = double.tryParse(s);
   if (v == null) {
     final label = field.isEmpty ? '数值' : field;
-    throw FormatException('「$label」不是有效数字：$text');
+    throw FormatException('invalid number for "$label": $text');
   }
   return v;
 }
@@ -20,7 +20,7 @@ int parseIntField(String text, {String field = ''}) {
   final v = int.tryParse(s);
   if (v == null) {
     final label = field.isEmpty ? '数值' : field;
-    throw FormatException('「$label」不是有效整数：$text');
+    throw FormatException('invalid integer for "$label": $text');
   }
   return v;
 }

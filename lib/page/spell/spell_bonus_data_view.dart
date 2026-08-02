@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_bonus_data_single_editor_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -156,7 +157,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 
@@ -171,7 +172,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

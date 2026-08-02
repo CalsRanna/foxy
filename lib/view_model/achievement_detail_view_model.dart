@@ -8,9 +8,7 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class AchievementDetailViewModel
-    with
-        FieldControllerMixin {
+class AchievementDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<AchievementRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -282,13 +280,13 @@ class AchievementDetailViewModel
       }
       final result = await _repository.getAchievement(key);
       if (result == null) {
-        throw StateError('原成就不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -297,7 +295,7 @@ class AchievementDetailViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -315,7 +313,7 @@ class AchievementDetailViewModel
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;

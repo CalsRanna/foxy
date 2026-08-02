@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_on_kill_reputation_single_editor_view_model.dart';
@@ -57,11 +58,11 @@ void main() {
           key,
           const CreatureOnKillReputationEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         repository.destroyCreatureOnKillReputation(key),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
   });
@@ -115,7 +116,6 @@ void main() {
       expect(viewModel.editingKey.value, 12);
     });
   });
-
 }
 
 class _FakeRepository extends CreatureOnKillReputationRepository {

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/spell_item_enchantment/spell_item_enchantment_view.dart';
 import 'package:foxy/view_model/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -71,7 +72,7 @@ class _SpellItemEnchantmentDetailPageState
       await viewModel.initSignals(key: widget.spellItemEnchantmentKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

@@ -15,7 +15,7 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   Future<int> copyGemProperty(int key) async {
     final source = await getGemProperty(key);
     if (source == null) {
-      throw StateError('原宝石属性不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeGemProperty(copied);
@@ -30,7 +30,7 @@ class GemPropertyRepository with RepositoryMixin, _GemPropertyRepositoryMixin {
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('GemProperties ID 已超出 DBC int32 范围');
+      throw IdExhaustedException('GemProperties ID exceeds DBC int32 range');
     }
     return id;
   }

@@ -14,7 +14,7 @@ class TaxiPathRepository with RepositoryMixin, _TaxiPathRepositoryMixin {
   Future<int> copyTaxiPath(int key) async {
     final source = await getTaxiPath(key);
     if (source == null) {
-      throw StateError('原飞行路径不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = TaxiPathEntity.fromJson({
       ...source.toJson(),

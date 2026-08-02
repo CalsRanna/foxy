@@ -22,7 +22,7 @@ class ItemSetRepository
   Future<int> copyItemSet(int key) async {
     final source = await getItemSet(key);
     if (source == null) {
-      throw StateError('原套装不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeItemSet(copied);
@@ -50,7 +50,9 @@ class ItemSetRepository
 
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
-    if (id > 0x7FFFFFFF) throw StateError('ItemSet.dbc 已无可用 int32 ID');
+    if (id > 0x7FFFFFFF) {
+      throw IdExhaustedException('no free int32 ID left in ItemSet.dbc');
+    }
     return id;
   }
 }

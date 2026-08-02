@@ -19,7 +19,9 @@ class PlayerCreateInfoSpellCustomRepository
   Future<PlayerCreateInfoSpellCustomKey> copyPlayerCreateInfoSpellCustom(
     PlayerCreateInfoSpellCustomKey key,
   ) async {
-    throw UnsupportedError('法术 ID 是复合主键的一部分，请新增并选择有效法术。');
+    throw CopyNotSupportedException(
+      'spell ID is part of a composite primary key; add a new record and select a valid spell',
+    );
   }
 
   @override

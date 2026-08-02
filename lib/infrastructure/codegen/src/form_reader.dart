@@ -385,7 +385,9 @@ final class FormReader {
     if (intValue != null) return intValue;
     final stringValue = value.toStringValue();
     if (stringValue != null) return stringValue;
-    throw StateError('selects 只支持 int 或 String fallback');
+    throw InvalidGenerationSourceError(
+      'selects only supports int or String fallback',
+    );
   }
 
   Set<String> _readStringSet(ConstantReader annotation, String name) {

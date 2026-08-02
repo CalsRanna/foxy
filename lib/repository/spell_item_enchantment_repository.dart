@@ -25,7 +25,7 @@ class SpellItemEnchantmentRepository
   Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
-      throw StateError('原法术附魔不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeSpellItemEnchantment(copied);
@@ -57,7 +57,9 @@ class SpellItemEnchantmentRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('SpellItemEnchantment ID 已超出 DBC int32 范围');
+      throw IdExhaustedException(
+        'SpellItemEnchantment ID exceeds DBC int32 range',
+      );
     }
     return id;
   }

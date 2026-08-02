@@ -1,3 +1,4 @@
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
@@ -9,7 +10,9 @@ class Database {
 
   Laconic get laconic {
     if (_laconic == null) {
-      throw Exception('数据库未连接，请先调用 Database.instance.connect()');
+      throw DatabaseNotConnectedException(
+        'database not connected; call Database.instance.connect() first',
+      );
     }
     return _laconic!;
   }

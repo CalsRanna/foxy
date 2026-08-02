@@ -16,7 +16,7 @@ class ItemVisualEffectRepository
   Future<int> copyItemVisualEffect(int key) async {
     final source = await getItemVisualEffect(key);
     if (source == null) {
-      throw StateError('原物品视觉效果不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeItemVisualEffect(copied);

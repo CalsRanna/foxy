@@ -4,6 +4,8 @@
 /// 统一放在这里，避免各自维护一套转义规则。
 library;
 
+import 'package:source_gen/source_gen.dart';
+
 /// 把常量 [value] 写成 Dart 字面量。
 ///
 /// [asType] 为目标字段类型：`'double'` 时整数常量补成 `1.0` 形式，
@@ -18,7 +20,9 @@ String dartLiteral(Object? value, {String? asType}) {
     // `1e-7`、`1e+21` 本身就是合法 double 字面量，只有纯整数形式需要补小数点。
     return RegExp(r'^-?\d+$').hasMatch(text) ? '$text.0' : text;
   }
-  throw StateError('Unsupported literal $value (${value.runtimeType})');
+  throw InvalidGenerationSourceError(
+    'Unsupported literal $value (${value.runtimeType})',
+  );
 }
 
 /// 把 [value] 写成单引号 Dart 字符串字面量（含引号）。

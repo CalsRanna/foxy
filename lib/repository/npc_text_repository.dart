@@ -15,7 +15,7 @@ class NpcTextRepository with RepositoryMixin, _NpcTextRepositoryMixin {
   Future<int> copyNpcText(int key) async {
     final source = await getNpcText(key);
     if (source == null) {
-      throw StateError('原 NPC 文本不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final json = source.toJson();
     json['ID'] = await nextMaxPlusOne(_table, 'ID');

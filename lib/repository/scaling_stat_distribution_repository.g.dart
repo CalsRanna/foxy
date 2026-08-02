@@ -24,7 +24,9 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
   Future<int> copyScalingStatDistribution(int key) async {
     final source = await getScalingStatDistribution(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_scaling_stat_distribution record not found',
+      );
     }
     final blank = await createScalingStatDistribution();
     final copied = source.copyWith(id: blank.id);
@@ -54,7 +56,9 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_scaling_stat_distribution record not found',
+      );
     }
   }
 
@@ -123,7 +127,9 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
     ScalingStatDistributionEntity scalingStatDistribution,
   ) async {
     if (scalingStatDistribution.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(scalingStatDistribution);
     final json = prepareWriteJson(scalingStatDistribution.toJson());
@@ -131,7 +137,9 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_scaling_stat_distribution').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_scaling_stat_distribution',
+        );
       }
       rethrow;
     }
@@ -151,12 +159,16 @@ mixin _ScalingStatDistributionRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_scaling_stat_distribution',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_scaling_stat_distribution record not found',
+      );
     }
   }
 

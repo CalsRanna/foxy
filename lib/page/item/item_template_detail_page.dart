@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
 import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
 import 'package:foxy/page/item/item_loot_template_view.dart';
@@ -117,7 +118,7 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       await viewModel.initSignals(key: widget.itemTemplateKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

@@ -24,7 +24,7 @@ class EmoteTextDataRepository
   Future<int> copyEmoteTextData(int key) async {
     final source = await getEmoteTextData(key);
     if (source == null) {
-      throw StateError('原表情文本内容不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = EmoteTextDataEntity.fromJson({
       ...source.toJson(),

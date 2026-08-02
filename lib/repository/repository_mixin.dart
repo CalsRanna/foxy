@@ -3,6 +3,10 @@ import 'package:foxy/infrastructure/preferences/locale_query_settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 
+// 导出给生成 part:仓储的 .g.dart 是 part of 父库,不能自己 import,
+// 生成代码里的 FoxyException 抛掷点靠本文件的 import 作用域解析。
+export 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
+
 mixin RepositoryMixin {
   final kPageSize = 50;
   Laconic get laconic => Database.instance.laconic;

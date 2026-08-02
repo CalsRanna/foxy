@@ -14,7 +14,8 @@ part 'item_enchantment_template_collection_editor_view_model.g.dart';
 @FoxyDetailViewModel(entity: ItemEnchantmentTemplateEntity)
 class ItemEnchantmentTemplateCollectionEditorViewModel
     with
-        FieldControllerMixin, _ItemEnchantmentTemplateCollectionEditorViewModelMixin {
+        FieldControllerMixin,
+        _ItemEnchantmentTemplateCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<ItemEnchantmentTemplateRepository>();
 
   final parentKey = signal<ItemEnchantmentTemplateParentKey?>(null);
@@ -44,13 +45,17 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
   }
 
   Future<void> create() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
-      final candidate = await _repository.createItemEnchantmentTemplate(parent.entry);
+      final candidate = await _repository.createItemEnchantmentTemplate(
+        parent.entry,
+      );
       if (token != _interactionToken || parentKey.value != parent) return;
       editingKey.value = null;
       selectedKey.value = null;
@@ -59,15 +64,17 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     }
   }
 
   Future<void> destroy(ItemEnchantmentTemplateKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -79,7 +86,7 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -89,9 +96,11 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
   void dispose() => disposeControllers();
 
   Future<void> edit(ItemEnchantmentTemplateKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -101,7 +110,7 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
       final candidate = await _repository.getItemEnchantmentTemplate(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       _applyCandidate(candidate);
     } catch (error) {
@@ -109,15 +118,16 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
         return;
       }
       editingKey.value = null;
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
     }
   }
 
-  Future<void> initSignals({required ItemEnchantmentTemplateParentKey parentKey}) =>
-      setParentKey(parentKey);
+  Future<void> initSignals({
+    required ItemEnchantmentTemplateParentKey parentKey,
+  }) => setParentKey(parentKey);
 
   Future<void> paginate(int page) async {
     _interactionToken++;
@@ -126,9 +136,11 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
@@ -146,7 +158,7 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -172,11 +184,18 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
     loading.value = true;
     errorMessage.value = null;
     try {
-      final count = await _repository.countItemEnchantmentTemplatesByEntry(parent.entry, kind: parent.kind);
+      final count = await _repository.countItemEnchantmentTemplatesByEntry(
+        parent.entry,
+        kind: parent.kind,
+      );
       if (token != _refreshToken) return;
       final lastPage = max(1, (count / _repository.kPageSize).ceil());
       final nextPage = min(currentPage, lastPage);
-      final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(parent.entry, kind: parent.kind, page: nextPage);
+      final data = await _repository.getBriefItemEnchantmentTemplatesByEntry(
+        parent.entry,
+        kind: parent.kind,
+        page: nextPage,
+      );
       if (token != _refreshToken) return;
       page.value = nextPage;
       items.value = data;
@@ -184,7 +203,7 @@ class ItemEnchantmentTemplateCollectionEditorViewModel
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

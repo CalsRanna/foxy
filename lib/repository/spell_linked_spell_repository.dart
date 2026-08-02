@@ -17,7 +17,7 @@ class SpellLinkedSpellRepository
   ) async {
     final source = await getSpellLinkedSpell(key);
     if (source == null) {
-      throw StateError('原链接法术不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final availableTypes = {0, 1, 2}..remove(key.type);
     for (final type in List<int>.from(availableTypes)) {
@@ -31,7 +31,9 @@ class SpellLinkedSpellRepository
       }
     }
     if (availableTypes.isEmpty) {
-      throw StateError('该触发法术与效果法术已使用全部链接类型');
+      throw ValidationException(
+        'all link types are already used between the trigger and effect spells',
+      );
     }
     final copied = source.copyWith(type: availableTypes.first);
     await storeSpellLinkedSpell(copied);

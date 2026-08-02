@@ -31,7 +31,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
   Future<int> copyGameObjectTemplate(int key) async {
     final source = await getGameObjectTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_template record not found');
     }
     final blank = await createGameObjectTemplate();
     final copied = source.copyWith(entry: blank.entry);
@@ -58,7 +58,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_template record not found');
     }
   }
 
@@ -103,7 +103,9 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
     GameObjectTemplateEntity gameObjectTemplate,
   ) async {
     if (gameObjectTemplate.entry <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(gameObjectTemplate);
     final json = prepareWriteJson(gameObjectTemplate.toJson());
@@ -111,7 +113,7 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
       await laconic.table('gameobject_template').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in gameobject_template');
       }
       rethrow;
     }
@@ -131,12 +133,12 @@ mixin _GameObjectTemplateRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in gameobject_template');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_template record not found');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_ender_entity.dart';
 import 'package:foxy/entity/creature_quest_starter_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
 import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
@@ -70,11 +71,11 @@ void main() {
         starterKey,
         const CreatureQuestStarterEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       starterMissing.destroyCreatureQuestStarter(starterKey),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final enderMissing = _TestEnderRepository(
@@ -86,11 +87,11 @@ void main() {
         enderKey,
         const CreatureQuestEnderEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       enderMissing.destroyCreatureQuestEnder(enderKey),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final queries = <LaconicQuery>[];

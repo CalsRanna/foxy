@@ -32,7 +32,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_char_titles record not found');
     }
   }
 
@@ -58,7 +58,9 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
 
   Future<void> storeCharTitle(CharTitleEntity charTitle) async {
     if (charTitle.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(charTitle);
     final json = prepareWriteJson(charTitle.toJson());
@@ -66,7 +68,7 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
       await laconic.table('foxy.dbc_char_titles').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_char_titles');
       }
       rethrow;
     }
@@ -86,12 +88,12 @@ mixin _CharTitleRepositoryMixin on RepositoryMixin, DbcLocaleRepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_char_titles');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_char_titles record not found');
     }
   }
 

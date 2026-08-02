@@ -8,7 +8,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
   ) async {
     final source = await getPlayerCreateInfoItem(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('playercreateinfo_item record not found');
     }
     final blank = await createPlayerCreateInfoItem(source.race, source.class_);
     final copied = source.copyWith(
@@ -50,7 +50,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('playercreateinfo_item record not found');
     }
   }
 
@@ -96,7 +96,7 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
       await laconic.table('playercreateinfo_item').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in playercreateinfo_item');
       }
       rethrow;
     }
@@ -116,12 +116,12 @@ mixin _PlayerCreateInfoItemRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in playercreateinfo_item');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('playercreateinfo_item record not found');
     }
   }
 

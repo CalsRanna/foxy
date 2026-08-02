@@ -10,7 +10,7 @@ mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_template_locale record not found');
     }
   }
 
@@ -34,7 +34,7 @@ mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
       await laconic.table('quest_template_locale').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in quest_template_locale');
       }
       rethrow;
     }
@@ -54,12 +54,12 @@ mixin _QuestTemplateLocaleRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in quest_template_locale');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_template_locale record not found');
     }
   }
 

@@ -15,7 +15,9 @@ class PlayerCreateInfoActionRepository
   Future<PlayerCreateInfoActionKey> copyPlayerCreateInfoAction(
     PlayerCreateInfoActionKey key,
   ) async {
-    throw UnsupportedError('动作按钮编号必须在 0..143 内明确选择，请新增记录。');
+    throw CopyNotSupportedException(
+      'action button index must be explicitly selected within 0..143; add a new record',
+    );
   }
 
   @override

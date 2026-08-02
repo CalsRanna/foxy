@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/quest_enums.dart';
 import 'package:foxy/constant/quest_flags.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/quest/area_table_or_quest_sort_selector.dart';
 import 'package:foxy/page/quest/quest_objective_target_picker.dart';
 import 'package:foxy/router/router_facade.dart';
@@ -1281,7 +1282,7 @@ class QuestTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

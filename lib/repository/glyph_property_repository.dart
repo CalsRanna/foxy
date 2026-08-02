@@ -16,7 +16,7 @@ class GlyphPropertyRepository
   Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);
     if (source == null) {
-      throw StateError('原雕文属性不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeGlyphProperty(copied);
@@ -31,7 +31,9 @@ class GlyphPropertyRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0xffff) {
-      throw StateError('GlyphProperties ID 已超出角色数据和客户端协议的 uint16 范围');
+      throw IdExhaustedException(
+        'GlyphProperties ID exceeds the uint16 range of character data and client protocol',
+      );
     }
     return id;
   }

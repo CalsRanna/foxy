@@ -24,7 +24,9 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
   Future<int> copyGlyphProperty(int key) async {
     final source = await getGlyphProperty(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_glyph_properties record not found',
+      );
     }
     final blank = await createGlyphProperty();
     final copied = source.copyWith(id: blank.id);
@@ -52,7 +54,9 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_glyph_properties record not found',
+      );
     }
   }
 
@@ -93,7 +97,9 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
 
   Future<void> storeGlyphProperty(GlyphPropertyEntity glyphProperty) async {
     if (glyphProperty.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(glyphProperty);
     final json = prepareWriteJson(glyphProperty.toJson());
@@ -101,7 +107,9 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_glyph_properties').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_glyph_properties',
+        );
       }
       rethrow;
     }
@@ -121,12 +129,16 @@ mixin _GlyphPropertyRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_glyph_properties',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_glyph_properties record not found',
+      );
     }
   }
 

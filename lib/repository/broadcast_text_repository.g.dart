@@ -32,7 +32,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('broadcast_text record not found');
     }
   }
 
@@ -47,7 +47,9 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
 
   Future<void> storeBroadcastText(BroadcastTextEntity broadcastText) async {
     if (broadcastText.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(broadcastText);
     final json = prepareWriteJson(broadcastText.toJson());
@@ -55,7 +57,7 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
       await laconic.table('broadcast_text').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in broadcast_text');
       }
       rethrow;
     }
@@ -75,12 +77,12 @@ mixin _BroadcastTextRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in broadcast_text');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('broadcast_text record not found');
     }
   }
 

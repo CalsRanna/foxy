@@ -17,7 +17,7 @@ class ScalingStatValueRepository
   Future<int> copyScalingStatValue(int key) async {
     final source = await getScalingStatValue(key);
     if (source == null) {
-      throw StateError('原缩放属性值不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(
       id: await _getNextId(),
@@ -87,7 +87,9 @@ class ScalingStatValueRepository
   Future<int> _getNextCharlevel() async {
     final charlevel = await nextMaxPlusOne(_table, 'Charlevel');
     if (charlevel > 0x7fffffff) {
-      throw StateError('ScalingStatValues Charlevel 已超出 DBC int32 范围');
+      throw IdExhaustedException(
+        'ScalingStatValues Charlevel exceeds DBC int32 range',
+      );
     }
     return charlevel;
   }
@@ -95,7 +97,9 @@ class ScalingStatValueRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('ScalingStatValues ID 已超出 DBC int32 范围');
+      throw IdExhaustedException(
+        'ScalingStatValues ID exceeds DBC int32 range',
+      );
     }
     return id;
   }
@@ -110,7 +114,9 @@ class ScalingStatValueRepository
     }
     final duplicates = await builder.count();
     if (duplicates > 0) {
-      throw StateError('Charlevel ${value.charlevel} 已存在');
+      throw DuplicateKeyException(
+        'Charlevel ${value.charlevel} already exists',
+      );
     }
   }
 }

@@ -17,7 +17,9 @@ final class ListEmitter {
     buffer
       ..writeln()
       ..writeln('  Future<void> destroy(${model.keyParameter}) async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
@@ -26,7 +28,7 @@ final class ListEmitter {
       ..writeln('      normalizePageAfterDelete(total.value - 1);')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -100,7 +102,9 @@ final class ListEmitter {
       ..writeln('    } catch (error) {')
       ..writeln('      if (token != _refreshToken) return;')
       ..writeln("      LoggerUtil.instance.e('刷新列表失败: \$error');")
-      ..writeln("      errorMessage.value = '刷新列表失败: \$error';")
+      ..writeln(
+        "      errorMessage.value = '刷新列表失败: \${foxyErrorMessage(error)}';",
+      )
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')
       ..writeln('    }')
@@ -142,7 +146,9 @@ final class ListEmitter {
   void _emitCopy(StringBuffer buffer, ListGenerationModel model) {
     buffer
       ..writeln('  Future<void> copy(${model.keyParameter}) async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
@@ -150,7 +156,7 @@ final class ListEmitter {
       ..writeln('      _logActivity(ActivityActionType.copy, key);')
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')

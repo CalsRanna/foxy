@@ -15,7 +15,9 @@ class PlayerCreateInfoItemRepository
   Future<PlayerCreateInfoItemKey> copyPlayerCreateInfoItem(
     PlayerCreateInfoItemKey key,
   ) async {
-    throw UnsupportedError('物品 ID 是复合主键的一部分，请新增并选择有效物品。');
+    throw CopyNotSupportedException(
+      'item ID is part of a composite primary key; add a new record and select a valid item',
+    );
   }
 
   @override

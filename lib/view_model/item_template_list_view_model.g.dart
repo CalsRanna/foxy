@@ -30,7 +30,7 @@ mixin _ItemTemplateListViewModelMixin
   int _refreshToken = 0;
 
   Future<void> copy(int key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -38,7 +38,7 @@ mixin _ItemTemplateListViewModelMixin
       _logActivity(ActivityActionType.copy, key);
       await _refresh();
     } catch (error) {
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -46,7 +46,7 @@ mixin _ItemTemplateListViewModelMixin
   }
 
   Future<void> destroy(int key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -55,7 +55,7 @@ mixin _ItemTemplateListViewModelMixin
       normalizePageAfterDelete(total.value - 1);
       await _refresh();
     } catch (error) {
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -119,7 +119,7 @@ mixin _ItemTemplateListViewModelMixin
     } catch (error) {
       if (token != _refreshToken) return;
       LoggerUtil.instance.e('刷新列表失败: $error');
-      errorMessage.value = '刷新列表失败: $error';
+      errorMessage.value = '刷新列表失败: ${foxyErrorMessage(error)}';
     } finally {
       if (token == _refreshToken) loading.value = false;
     }

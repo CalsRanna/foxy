@@ -18,7 +18,7 @@ class GameObjectQuestItemRepository
   ) async {
     final source = await getGameObjectQuestItem(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createGameObjectQuestItem(source.gameObjectEntry);
     final candidate = source.copyWith(idx: blank.idx);
@@ -95,6 +95,8 @@ class GameObjectQuestItemRepository
     for (var idx = 0; idx < 6; idx++) {
       if (!occupied.contains(idx)) return idx;
     }
-    throw StateError('该游戏对象的 6 个任务物品槽位已全部占用');
+    throw ValidationException(
+      'all 6 quest item slots of this game object are occupied',
+    );
   }
 }

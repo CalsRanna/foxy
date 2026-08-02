@@ -1,12 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_default_trainer_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
 import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -105,22 +107,22 @@ void main() {
           trainerKey,
           const NpcTrainerEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         trainerRepository.destroyNpcTrainer(trainerKey),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         relationRepository.updateCreatureDefaultTrainer(
           relationKey,
           const CreatureDefaultTrainerEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         relationRepository.destroyCreatureDefaultTrainer(relationKey),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
 
@@ -220,7 +222,6 @@ void main() {
       expect(repository.storeCount, 1);
     });
   });
-
 }
 
 class _FakeCreatureDefaultTrainerRepository

@@ -1,6 +1,7 @@
 import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/dbc/export_dbc_use_case.dart';
 import 'package:get_it/get_it.dart';
@@ -121,7 +122,7 @@ class DbcExportWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '读取 DBC 表统计失败：$error';
+      errorMessage.value = '读取 DBC 表统计失败：${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -168,14 +169,18 @@ class DbcExportWorkflowViewModel {
     final selected = selectedExportableItems;
     final directory = outputDirectory.value?.trim();
     if (selected.isEmpty) {
-      final error = StateError('请至少选择一张可导出的 DBC 表');
-      errorMessage.value = error.message;
+      final error = ValidationException(
+        'select at least one DBC table to export',
+      );
+      errorMessage.value = foxyErrorMessage(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
     if (directory == null || directory.isEmpty) {
-      final error = StateError('请先选择 DBC 输出目录');
-      errorMessage.value = error.message;
+      final error = ValidationException(
+        'select the DBC output directory first',
+      );
+      errorMessage.value = foxyErrorMessage(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -214,7 +219,7 @@ class DbcExportWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '导出出错：$error';
+      errorMessage.value = '导出出错：${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

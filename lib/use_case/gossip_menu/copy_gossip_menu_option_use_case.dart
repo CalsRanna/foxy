@@ -1,6 +1,7 @@
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_repository.dart';
@@ -26,7 +27,7 @@ final class CopyGossipMenuOptionUseCase {
     await _transaction.execute(() async {
       final source = await _optionRepository.getGossipMenuOption(sourceKey);
       if (source == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       final blank = await _optionRepository.createGossipMenuOption(
         source.menuId,

@@ -34,7 +34,10 @@ class DbcExportUtil {
   }) async {
     final directory = Directory(outputDirectory);
     if (!await directory.exists()) {
-      throw FileSystemException('输出目录不存在', outputDirectory);
+      throw FileSystemException(
+        'output directory does not exist',
+        outputDirectory,
+      );
     }
 
     final records = <List<dynamic>>[];

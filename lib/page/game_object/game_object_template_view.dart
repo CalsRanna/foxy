@@ -317,7 +317,7 @@ class GameObjectTemplateView extends StatelessWidget {
       // sealed spec 保证 reference 分支必然携带真实引用；none 只可能来自
       // 配置错误，直接暴露而非静默渲染。
       GameObjectDataReference.none => throw ArgumentError(
-        '$reference 不是有效引用规格',
+        '$reference is not a valid reference spec',
       ),
     };
   }
@@ -340,7 +340,7 @@ class GameObjectTemplateView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

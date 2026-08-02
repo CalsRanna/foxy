@@ -16,7 +16,7 @@ class ItemDisplayInfoRepository
   Future<int> copyItemDisplayInfo(int key) async {
     final source = await getItemDisplayInfo(key);
     if (source == null) {
-      throw StateError('原物品显示信息不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = ItemDisplayInfoEntity.fromJson({
       ...source.toJson(),

@@ -19,7 +19,7 @@ class GossipMenuOptionRepository
   ) async {
     final original = await getGossipMenuOption(key);
     if (original == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createGossipMenuOption(original.menuId);
     final candidate = original.copyWith(optionId: blank.optionId);
@@ -94,6 +94,6 @@ class GossipMenuOptionRepository
     for (var optionId = 0; optionId < 32; optionId++) {
       if (!used.contains(optionId)) return optionId;
     }
-    throw StateError('每个对话菜单最多支持 32 个选项');
+    throw ValidationException('a gossip menu supports at most 32 options');
   }
 }

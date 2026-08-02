@@ -21,7 +21,7 @@ class CharTitleRepository
   Future<int> copyCharTitle(int key) async {
     final source = await getCharTitle(key);
     if (source == null) {
-      throw StateError('原角色称号不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = CharTitleEntity.fromJson({
       ...source.toJson(),

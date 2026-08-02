@@ -18,7 +18,7 @@ class CreatureEquipTemplateRepository
   ) async {
     final source = await getCreatureEquipTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createCreatureEquipTemplate(source.creatureID);
     final candidate = source.copyWith(id: blank.id);

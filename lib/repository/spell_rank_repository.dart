@@ -12,7 +12,9 @@ class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
 
   @override
   Future<SpellRankKey> copySpellRank(SpellRankKey key) async {
-    throw UnsupportedError('法术等级记录不能自动复制，请新增记录并选择有效法术。');
+    throw CopyNotSupportedException(
+      'spell rank records cannot be auto-copied; add a new record and select a valid spell',
+    );
   }
 
   @override

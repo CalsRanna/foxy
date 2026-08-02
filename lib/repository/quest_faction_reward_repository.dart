@@ -26,6 +26,8 @@ class QuestFactionRewardRepository
     if (await getQuestFactionReward(2) == null) {
       return 2;
     }
-    throw StateError('任务声望固定记录 1 和 2 已存在，不能继续新增');
+    throw DuplicateKeyException(
+      'fixed quest faction reward records 1 and 2 already exist',
+    );
   }
 }

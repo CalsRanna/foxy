@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/page_text/page_text_locale_view.dart';
 import 'package:foxy/page/page_text/page_text_view.dart';
 import 'package:foxy/view_model/page_text_detail_view_model.dart';
@@ -66,7 +67,7 @@ class _PageTextDetailPageState extends State<PageTextDetailPage> {
       await viewModel.initSignals(key: widget.pageTextKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

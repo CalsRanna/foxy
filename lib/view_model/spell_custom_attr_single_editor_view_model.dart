@@ -10,8 +10,7 @@ part 'spell_custom_attr_single_editor_view_model.g.dart';
 
 @FoxyDetailViewModel(entity: SpellCustomAttrEntity, flags: {'attributes'})
 class SpellCustomAttrSingleEditorViewModel
-    with
-        FieldControllerMixin, _SpellCustomAttrSingleEditorViewModelMixin {
+    with FieldControllerMixin, _SpellCustomAttrSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<SpellCustomAttrRepository>();
 
   final parentKey = signal<int?>(null);
@@ -25,7 +24,7 @@ class SpellCustomAttrSingleEditorViewModel
   int _parentToken = 0;
 
   Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final key = editingKey.value;
     if (key == null) return;
     final parentSnapshot = parentKey.value;
@@ -34,18 +33,16 @@ class SpellCustomAttrSingleEditorViewModel
     errorMessage.value = null;
     try {
       await _repository.destroySpellCustomAttr(key);
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       editingKey.value = null;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -61,9 +58,11 @@ class SpellCustomAttrSingleEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parentSnapshot = parentKey.value;
-    if (parentSnapshot == null) throw StateError('父记录尚未加载');
+    if (parentSnapshot == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
@@ -75,19 +74,17 @@ class SpellCustomAttrSingleEditorViewModel
       } else {
         await _repository.updateSpellCustomAttr(originalKey, candidate);
       }
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       entity.value = candidate;
       editingKey.value = candidate.spellId;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -123,7 +120,7 @@ class SpellCustomAttrSingleEditorViewModel
       _applyCandidate(candidate);
     } catch (error, stackTrace) {
       if (token != _refreshToken) return;
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/page_text_constants.dart';
 import 'package:foxy/entity/page_text_locale_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/page_text_locale_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -149,7 +150,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       _showEditor();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
+      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -167,7 +168,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
+      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -178,7 +179,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       _showEditor();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -190,7 +191,7 @@ class _PageTextLocaleViewState extends State<PageTextLocaleView> {
       DialogUtil.instance.success('保存成功');
     } catch (error) {
       if (!dialogContext.mounted) return;
-      DialogUtil.instance.error('保存失败：$error');
+      DialogUtil.instance.error('保存失败：${foxyErrorMessage(error)}');
     }
   }
 

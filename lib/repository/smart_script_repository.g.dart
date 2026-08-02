@@ -31,7 +31,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
   Future<SmartScriptKey> copySmartScript(SmartScriptKey key) async {
     final source = await getSmartScript(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('smart_scripts record not found');
     }
     final blank = await createSmartScript();
     final copied = source.copyWith(
@@ -64,7 +64,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('smart_scripts record not found');
     }
   }
 
@@ -123,7 +123,7 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
       await laconic.table('smart_scripts').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in smart_scripts');
       }
       rethrow;
     }
@@ -143,12 +143,12 @@ mixin _SmartScriptRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in smart_scripts');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('smart_scripts record not found');
     }
   }
 

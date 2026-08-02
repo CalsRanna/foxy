@@ -24,7 +24,7 @@ class MailTemplateRepository
   Future<int> copyMailTemplate(int key) async {
     final source = await getMailTemplate(key);
     if (source == null) {
-      throw StateError('原邮件模板不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = MailTemplateEntity.fromJson({
       ...source.toJson(),

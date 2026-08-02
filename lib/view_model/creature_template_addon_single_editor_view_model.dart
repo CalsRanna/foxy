@@ -8,10 +8,14 @@ import 'package:signals/signals.dart';
 
 part 'creature_template_addon_single_editor_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: CreatureTemplateAddonEntity, selects: {'visibilityDistanceType': 0})
+@FoxyDetailViewModel(
+  entity: CreatureTemplateAddonEntity,
+  selects: {'visibilityDistanceType': 0},
+)
 class CreatureTemplateAddonSingleEditorViewModel
     with
-        FieldControllerMixin, _CreatureTemplateAddonSingleEditorViewModelMixin {
+        FieldControllerMixin,
+        _CreatureTemplateAddonSingleEditorViewModelMixin {
   final _repository = GetIt.instance.get<CreatureTemplateAddonRepository>();
 
   final parentKey = signal<int?>(null);
@@ -24,7 +28,7 @@ class CreatureTemplateAddonSingleEditorViewModel
   int _refreshToken = 0;
   int _parentToken = 0;
   Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final key = editingKey.value;
     if (key == null) return;
     final parentSnapshot = parentKey.value;
@@ -33,18 +37,16 @@ class CreatureTemplateAddonSingleEditorViewModel
     errorMessage.value = null;
     try {
       await _repository.destroyCreatureTemplateAddon(key);
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       editingKey.value = null;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -68,9 +70,11 @@ class CreatureTemplateAddonSingleEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parentSnapshot = parentKey.value;
-    if (parentSnapshot == null) throw StateError('父记录尚未加载');
+    if (parentSnapshot == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
@@ -82,19 +86,17 @@ class CreatureTemplateAddonSingleEditorViewModel
       } else {
         await _repository.updateCreatureTemplateAddon(originalKey, candidate);
       }
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
       entity.value = candidate;
       editingKey.value = candidate.entry;
       await _refresh();
     } catch (error) {
-      if (parentToken != _parentToken ||
-          parentKey.value != parentSnapshot) {
+      if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -133,7 +135,7 @@ class CreatureTemplateAddonSingleEditorViewModel
       _applyCandidate(candidate);
     } catch (error, stackTrace) {
       if (token != _refreshToken) return;
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/event/activity_logged_event.dart';
 import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:foxy/repository/version_repository.dart';
@@ -80,7 +81,7 @@ class DashboardReadViewModel {
       featureCount.value = featureTotal;
       activityCount.value = activityTotal;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

@@ -12,7 +12,9 @@ class SpellAreaRepository with RepositoryMixin, _SpellAreaRepositoryMixin {
 
   @override
   Future<SpellAreaKey> copySpellArea(SpellAreaKey key) async {
-    throw UnsupportedError('法术区域记录不能自动复制，请新增记录并选择有效区域。');
+    throw CopyNotSupportedException(
+      'spell area records cannot be auto-copied; add a new record and select a valid area',
+    );
   }
 
   @override

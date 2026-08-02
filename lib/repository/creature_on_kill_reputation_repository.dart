@@ -15,7 +15,7 @@ class CreatureOnKillReputationRepository
   Future<int> copyCreatureOnKillReputation(int sourceKey) async {
     final source = await getCreatureOnKillReputation(sourceKey);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final candidate = source.copyWith(
       creatureID: await nextMaxPlusOne(_table, 'creature_id'),

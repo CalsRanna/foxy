@@ -101,7 +101,7 @@ class DbcLocaleFieldDefinition {
   }) {
     final definition = dbcDefinitionByTable[tableName];
     if (definition == null) {
-      throw ArgumentError('未知 DBC 表: $tableName');
+      throw ArgumentError('unknown DBC table: $tableName');
     }
     final schema = definition.schema;
     for (final locale in DbcLocale.values) {
@@ -109,12 +109,12 @@ class DbcLocaleFieldDefinition {
       final field = schema.getFieldByName(column);
       if (field == null) {
         throw ArgumentError(
-          'Schema ${schema.name} 缺少本地化列 $column（前缀 $columnPrefix）',
+          'Schema ${schema.name} is missing locale column $column (prefix $columnPrefix)',
         );
       }
       if (!field.type.isString) {
         throw ArgumentError(
-          'Schema ${schema.name} 列 $column 类型为 ${field.type}，期望 string',
+          'Schema ${schema.name} column $column has type ${field.type}, expected string',
         );
       }
     }

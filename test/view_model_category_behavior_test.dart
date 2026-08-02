@@ -7,6 +7,7 @@ import 'package:foxy/entity/feature_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
@@ -55,7 +56,10 @@ void main() {
       final first = viewModel.destroy(_conditionKey);
       await repository.destroyStarted.future;
       expect(viewModel.submitting.value, isTrue);
-      await expectLater(viewModel.destroy(_conditionKey), throwsStateError);
+      await expectLater(
+        viewModel.destroy(_conditionKey),
+        throwsA(isA<BusyException>()),
+      );
       repository.releaseDestroy.complete();
       await first;
       expect(viewModel.submitting.value, isFalse);
@@ -102,11 +106,11 @@ void main() {
       configUtil: configUtil,
     );
 
-    await expectLater(viewModel.start(), throwsStateError);
+    await expectLater(viewModel.start(), throwsA(isA<ValidationException>()));
     expect(viewModel.status.value, WorkflowStatus.failed);
-    expect(viewModel.errorMessage.value, contains('选择 DBC 文件目录'));
+    expect(viewModel.errorMessage.value, contains('输入不合法'));
 
-    await expectLater(viewModel.retry(), throwsStateError);
+    await expectLater(viewModel.retry(), throwsA(isA<ValidationException>()));
     expect(viewModel.status.value, WorkflowStatus.failed);
     viewModel.reset();
     expect(viewModel.status.value, WorkflowStatus.idle);

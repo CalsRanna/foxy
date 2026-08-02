@@ -16,7 +16,7 @@ class CreatureImmunityRepository
   Future<int> copyCreatureImmunity(int key) async {
     final source = await getCreatureImmunity(key);
     if (source == null) {
-      throw StateError('原生物免疫配置不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = CreatureImmunityEntity.fromJson({
       ...source.toJson(),

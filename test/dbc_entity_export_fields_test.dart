@@ -174,7 +174,7 @@ Map<String, dynamic> _emptyEntityJson(String tableName) {
     'dbc_vehicle' => const VehicleEntity().toJson(),
     'dbc_zone_intro_music_table' => const ZoneIntroMusicEntity().toJson(),
     'dbc_zone_music' => const ZoneMusicEntity().toJson(),
-    _ => throw StateError('未覆盖的导出表: $tableName'),
+    _ => throw StateError('uncovered export table: $tableName'),
   };
 }
 
@@ -264,7 +264,7 @@ Map<String, dynamic> _roundTrip(String tableName, Map<String, dynamic> row) {
     'dbc_vehicle' => VehicleEntity.fromJson(row).toJson(),
     'dbc_zone_intro_music_table' => ZoneIntroMusicEntity.fromJson(row).toJson(),
     'dbc_zone_music' => ZoneMusicEntity.fromJson(row).toJson(),
-    _ => throw StateError('未覆盖的导出表: $tableName'),
+    _ => throw StateError('uncovered export table: $tableName'),
   };
 }
 

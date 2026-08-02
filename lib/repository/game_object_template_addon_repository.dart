@@ -12,7 +12,9 @@ class GameObjectTemplateAddonRepository
   static const _table = 'gameobject_template_addon';
 
   Future<void> copyGameObjectTemplateAddon(int key) {
-    throw UnsupportedError('附加数据与游戏对象模板是一对一关系，不能独立复制');
+    throw CopyNotSupportedException(
+      'addon data has a one-to-one relationship with game object templates and cannot be copied independently',
+    );
   }
 
   Future<int> countGameObjectTemplateAddons() {

@@ -19,7 +19,7 @@ class ItemTemplateRepository
   Future<int> copyItemTemplate(int key) async {
     final source = await getItemTemplate(key);
     if (source == null) {
-      throw StateError('原物品模板不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(
       entry: await nextMaxPlusOne(_table, 'entry'),

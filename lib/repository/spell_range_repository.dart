@@ -21,7 +21,7 @@ class SpellRangeRepository
   Future<int> copySpellRange(int key) async {
     final source = await getSpellRange(key);
     if (source == null) {
-      throw StateError('原法术射程不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = SpellRangeEntity.fromJson({
       ...source.toJson(),

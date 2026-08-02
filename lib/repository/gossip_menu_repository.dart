@@ -16,7 +16,7 @@ class GossipMenuRepository with RepositoryMixin, _GossipMenuRepositoryMixin {
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
     final source = await getGossipMenu(key);
     if (source == null) {
-      throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(menuId: await getNextMenuId());
     await storeGossipMenu(copied);

@@ -47,13 +47,13 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
       }
       final result = await _repository.getPlayerCreateInfo(key);
       if (result == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -62,7 +62,7 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -80,7 +80,7 @@ mixin _PlayerCreateInfoDetailViewModelMixin on FieldControllerMixin {
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;

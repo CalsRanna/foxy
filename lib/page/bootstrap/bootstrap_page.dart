@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/bootstrap/bootstrap_simulator_form.dart';
 import 'package:foxy/page/bootstrap/bootstrap_window_header.dart';
 import 'package:foxy/router/router.gr.dart';
@@ -109,7 +110,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       await viewModel.start();
       final result = viewModel.result.value;
       if (result == null) {
-        throw StateError('数据库启动流程结束但未返回结果');
+        throw StateError('database bootstrap flow ended without a result');
       }
 
       GetIt.instance.get<FoxyStateViewModel>().setLocaleSettings(
@@ -137,7 +138,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       }
       if (!mounted) return;
       DialogUtil.instance.error(
-        viewModel.errorMessage.value ?? error.toString(),
+        viewModel.errorMessage.value ?? foxyErrorMessage(error),
       );
     }
   }

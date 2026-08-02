@@ -32,7 +32,9 @@ mixin _SpellItemEnchantmentRepositoryMixin
   Future<int> copySpellItemEnchantment(int key) async {
     final source = await getSpellItemEnchantment(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_spell_item_enchantment record not found',
+      );
     }
     final blank = await createSpellItemEnchantment();
     final copied = source.copyWith(id: blank.id);
@@ -62,7 +64,9 @@ mixin _SpellItemEnchantmentRepositoryMixin
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_spell_item_enchantment record not found',
+      );
     }
   }
 
@@ -122,7 +126,9 @@ mixin _SpellItemEnchantmentRepositoryMixin
     SpellItemEnchantmentEntity spellItemEnchantment,
   ) async {
     if (spellItemEnchantment.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(spellItemEnchantment);
     final json = prepareWriteJson(spellItemEnchantment.toJson());
@@ -130,7 +136,9 @@ mixin _SpellItemEnchantmentRepositoryMixin
       await laconic.table('foxy.dbc_spell_item_enchantment').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_spell_item_enchantment',
+        );
       }
       rethrow;
     }
@@ -150,12 +158,16 @@ mixin _SpellItemEnchantmentRepositoryMixin
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_spell_item_enchantment',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_spell_item_enchantment record not found',
+      );
     }
   }
 

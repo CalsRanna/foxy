@@ -16,7 +16,7 @@ class ZoneIntroMusicRepository
   Future<int> copyZoneIntroMusic(int key) async {
     final source = await getZoneIntroMusic(key);
     if (source == null) {
-      throw StateError('原区域进入音乐不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeZoneIntroMusic(copied);

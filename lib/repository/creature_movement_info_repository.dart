@@ -15,7 +15,7 @@ class CreatureMovementInfoRepository
   Future<int> copyCreatureMovementInfo(int key) async {
     final source = await getCreatureMovementInfo(key);
     if (source == null) {
-      throw StateError('原生物移动信息不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeCreatureMovementInfo(copied);

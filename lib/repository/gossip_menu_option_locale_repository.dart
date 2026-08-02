@@ -33,7 +33,9 @@ class GossipMenuOptionLocaleRepository
       await laconic.table(_table).insert(jsons);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('复制后的本地化主键已存在，无法保存');
+        throw DuplicateKeyException(
+          'the copied locale primary key already exists',
+        );
       }
       rethrow;
     }

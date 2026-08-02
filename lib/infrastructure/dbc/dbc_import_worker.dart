@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/constant/dbc_definitions.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 import 'package:path/path.dart' as p;
@@ -168,7 +169,9 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
         );
         final storedRows = await connection.table(staging).count();
         if (storedRows != importedRows) {
-          throw StateError('导入行数不一致：解析 $importedRows 行，写入 $storedRows 行');
+          throw ValidationException(
+            'row count mismatch: parsed $importedRows rows, wrote $storedRows rows',
+          );
         }
         final idRows = await connection.select(
           'SELECT COUNT(*) AS total_rows, '
@@ -177,7 +180,7 @@ Future<void> runDbcImportWorker(DbcImportWorkerArgs args) async {
         if (idRows.isEmpty ||
             _asInt(idRows.first['total_rows']) !=
                 _asInt(idRows.first['distinct_ids'])) {
-          throw StateError('导入数据包含重复 ID');
+          throw DuplicateKeyException('import data contains duplicate IDs');
         }
 
         _throwIfCancelled(cancelled);
@@ -267,7 +270,7 @@ Future<void> _createTable(
       .map((field) => '`${field.name}` ${field.sqlType}')
       .join(',\n  ');
   if (columns.isEmpty) {
-    throw StateError('$table 没有可导入字段');
+    throw ValidationException('$table has no importable fields');
   }
   await laconic.statement(
     'CREATE TABLE $table (\n  $columns\n) '
@@ -336,8 +339,9 @@ Future<int> _importFile(
     final row = _recordSql(record, file.fields);
     final rowBytes = utf8.encode(row).length + (rows.isEmpty ? 0 : 1);
     if (rows.isEmpty && prefixBytes + rowBytes > maxBatchBytes) {
-      throw StateError(
-        '${file.name}.dbc 第 ${record.index + 1} 条记录超过 1 MiB 导入批次上限',
+      throw ValidationException(
+        '${file.name}.dbc record ${record.index + 1} exceeds the 1 MiB '
+        'import batch limit',
       );
     }
     if (rows.isNotEmpty && batchBytes + rowBytes > maxBatchBytes) {
@@ -379,7 +383,7 @@ String _recordSql(dynamic record, List<_FieldDef> fields) {
 Future<List<_FileDef>> _scanDirectory(String directory) async {
   final dir = Directory(directory);
   if (!await dir.exists()) {
-    throw FileSystemException('目录不存在', directory);
+    throw FileSystemException('directory does not exist', directory);
   }
 
   final matched = <String, _FileDef>{};
@@ -390,7 +394,9 @@ Future<List<_FileDef>> _scanDirectory(String directory) async {
     final definition = dbcDefinitionByFileName[fileName.toLowerCase()];
     if (definition == null) continue;
     if (matched.containsKey(definition.tableName)) {
-      throw StateError('目录中存在多个 ${definition.fileName} 匹配文件');
+      throw ValidationException(
+        'multiple files match ${definition.fileName} in the directory',
+      );
     }
     matched[definition.tableName] = (
       name: definition.schema.name,

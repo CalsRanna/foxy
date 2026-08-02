@@ -35,7 +35,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_light record not found');
     }
   }
 
@@ -50,7 +50,9 @@ mixin _LightRepositoryMixin on RepositoryMixin {
 
   Future<void> storeLight(LightEntity light) async {
     if (light.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(light);
     final json = prepareWriteJson(light.toJson());
@@ -58,7 +60,7 @@ mixin _LightRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_light').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_light');
       }
       rethrow;
     }
@@ -75,12 +77,12 @@ mixin _LightRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_light');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_light record not found');
     }
   }
 

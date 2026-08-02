@@ -24,7 +24,7 @@ class SpellFocusObjectRepository
   Future<int> copySpellFocusObject(int key) async {
     final source = await getSpellFocusObject(key);
     if (source == null) {
-      throw StateError('原法术焦点不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = SpellFocusObjectEntity.fromJson({
       ...source.toJson(),

@@ -1,3 +1,5 @@
+import 'package:source_gen/source_gen.dart';
+
 import 'dart_literal.dart';
 import 'form_model.dart';
 
@@ -89,13 +91,13 @@ final class FormEmitter {
         '      final result = await _repository.get${model.baseName}(key);',
       )
       ..writeln('      if (result == null) {')
-      ..writeln("        throw StateError('原记录不存在，可能已被其他操作修改或删除');")
+      ..writeln("        throw RecordNotFoundException('record not found');")
       ..writeln('      }')
       ..writeln('      entity.value = result;')
       ..writeln('      _applyCandidate(result);')
       ..writeln('      persistedKey.value = key;')
       ..writeln('    } catch (error, stackTrace) {')
-      ..writeln('      errorMessage.value = error.toString();')
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln(
         "      LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);",
       )
@@ -112,7 +114,9 @@ final class FormEmitter {
         : '${model.baseName}Key.fromEntity(candidate)';
     buffer
       ..writeln('  Future<void> persist() async {')
-      ..writeln("    if (submitting.value) throw StateError('正在保存，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
@@ -133,7 +137,7 @@ final class FormEmitter {
       ..writeln('      entity.value = candidate;')
       ..writeln('      _logActivity(action, candidate);')
       ..writeln('    } catch (error) {')
-      ..writeln('      errorMessage.value = error.toString();')
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -162,7 +166,7 @@ final class FormEmitter {
       (FormFieldKind.plain, 'String') => 'StringFieldController()',
       (FormFieldKind.plain, 'bool') =>
         'SelectFieldController<int>(fallback: 0)',
-      _ => throw StateError(
+      _ => throw InvalidGenerationSourceError(
         'Unsupported field ${field.dartName}: ${field.dartType}',
       ),
     };

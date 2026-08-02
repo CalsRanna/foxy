@@ -32,7 +32,9 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_zone_intro_music_table record not found',
+      );
     }
   }
 
@@ -47,7 +49,9 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
 
   Future<void> storeZoneIntroMusic(ZoneIntroMusicEntity zoneIntroMusic) async {
     if (zoneIntroMusic.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(zoneIntroMusic);
     final json = prepareWriteJson(zoneIntroMusic.toJson());
@@ -55,7 +59,9 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_zone_intro_music_table').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_zone_intro_music_table',
+        );
       }
       rethrow;
     }
@@ -75,12 +81,16 @@ mixin _ZoneIntroMusicRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_zone_intro_music_table',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_zone_intro_music_table record not found',
+      );
     }
   }
 

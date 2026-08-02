@@ -16,7 +16,7 @@ class GameObjectArtKitRepository
   Future<int> copyGameObjectArtKit(int key) async {
     final source = await getGameObjectArtKit(key);
     if (source == null) {
-      throw StateError('原游戏物体美术套件不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = GameObjectArtKitEntity.fromJson({
       ...source.toJson(),

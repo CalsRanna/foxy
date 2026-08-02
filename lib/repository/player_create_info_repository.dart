@@ -17,7 +17,9 @@ class PlayerCreateInfoRepository
 
   @override
   Future<PlayerCreateInfoKey> copyPlayerCreateInfo(PlayerCreateInfoKey key) {
-    throw UnsupportedError('出生信息使用种族/职业语义主键，请新增有效组合。');
+    throw CopyNotSupportedException(
+      'player create info uses race/class semantic keys; add a valid combination',
+    );
   }
 
   @override

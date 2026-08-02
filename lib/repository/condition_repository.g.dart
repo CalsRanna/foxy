@@ -42,7 +42,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
   Future<ConditionKey> copyCondition(ConditionKey key) async {
     final source = await getCondition(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('conditions record not found');
     }
     final blank = await createCondition();
     final copied = source.copyWith(
@@ -93,7 +93,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('conditions record not found');
     }
   }
 
@@ -167,7 +167,7 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
       await laconic.table('conditions').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in conditions');
       }
       rethrow;
     }
@@ -187,12 +187,12 @@ mixin _ConditionRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in conditions');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('conditions record not found');
     }
   }
 

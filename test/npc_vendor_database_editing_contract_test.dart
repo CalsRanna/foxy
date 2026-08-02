@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/npc_vendor_collection_editor_view_model.dart';
@@ -80,11 +81,11 @@ void main() {
 
       await expectLater(
         repository.updateNpcVendor(key, const NpcVendorEntity()),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         repository.destroyNpcVendor(key),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
 
@@ -183,7 +184,6 @@ void main() {
       expect(repository.storeCount, 1);
     });
   });
-
 }
 
 class _FakeNpcVendorRepository extends NpcVendorRepository {

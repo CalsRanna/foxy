@@ -3,6 +3,7 @@ import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/entity/gossip_menu_option_locale_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/database_transaction.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/gossip_menu_option_locale_repository.dart';
@@ -54,7 +55,6 @@ void main() {
         ),
       );
     });
-
   });
 
   group('GossipMenuOption repositories write contract', () {
@@ -136,22 +136,22 @@ void main() {
           baseKey,
           const GossipMenuOptionEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         baseRepository.destroyGossipMenuOption(baseKey),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         localeRepository.updateGossipMenuOptionLocale(
           localeKey,
           const GossipMenuOptionLocaleEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         localeRepository.destroyGossipMenuOptionLocale(localeKey),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
 
@@ -364,7 +364,7 @@ void main() {
 
       await expectLater(
         useCase.execute(const GossipMenuOptionKey(menuId: 99, optionId: 1)),
-        throwsStateError,
+        throwsA(isA<RecordNotFoundException>()),
       );
 
       expect(baseRepository.rows, hasLength(1));
@@ -418,7 +418,6 @@ void main() {
       );
     });
   });
-
 }
 
 final class _FakeActivityRepository extends ActivityLogRepository {

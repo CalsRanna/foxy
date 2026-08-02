@@ -16,7 +16,7 @@ class CreatureModelDataRepository
   Future<int> copyCreatureModelData(int key) async {
     final source = await getCreatureModelData(key);
     if (source == null) {
-      throw StateError('原生物模型数据不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = CreatureModelDataEntity.fromJson({
       ...source.toJson(),

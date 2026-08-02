@@ -118,7 +118,9 @@ final class RepositoryEmitter {
       )
       ..writeln('    final source = await get${model.baseName}(key);')
       ..writeln('    if (source == null) {')
-      ..writeln("      throw StateError('原记录不存在，可能已被其他操作修改或删除');")
+      ..writeln(
+        "      throw RecordNotFoundException('${model.table} record not found');",
+      )
       ..writeln('    }')
       ..writeln(
         '    final blank = await create${model.baseName}('
@@ -220,7 +222,9 @@ final class RepositoryEmitter {
         'laconic.table(${_table(model)}), key).delete();',
       )
       ..writeln('    if (deletedRows == 0) {')
-      ..writeln("      throw StateError('原记录不存在，可能已被其他操作修改或删除');")
+      ..writeln(
+        "      throw RecordNotFoundException('${model.table} record not found');",
+      )
       ..writeln('    }')
       ..writeln('  }')
       ..writeln();
@@ -334,7 +338,10 @@ final class RepositoryEmitter {
         ..writeln(
           '    if ($parameter.${model.keyFields.single.dartName} <= 0) {',
         )
-        ..writeln("      throw StateError('主键必须在新建时显式分配');")
+        ..writeln(
+          "      throw InvalidPrimaryKeyException("
+          "'primary key must be assigned before store');",
+        )
         ..writeln('    }');
     }
     buffer
@@ -344,7 +351,9 @@ final class RepositoryEmitter {
       ..writeln('      await laconic.table(${_table(model)}).insert([json]);')
       ..writeln('    } catch (error) {')
       ..writeln('      if (MysqlErrorUtil.isDuplicateEntry(error)) {')
-      ..writeln("        throw StateError('相同主键的记录已存在');")
+      ..writeln(
+        "        throw DuplicateKeyException('duplicate key in ${model.table}');",
+      )
       ..writeln('      }')
       ..writeln('      rethrow;')
       ..writeln('    }')
@@ -369,14 +378,18 @@ final class RepositoryEmitter {
       ..writeln('      ).update(json);')
       ..writeln('    } catch (error) {')
       ..writeln('      if (MysqlErrorUtil.isDuplicateEntry(error)) {')
-      ..writeln("        throw StateError('修改后的主键已存在');")
+      ..writeln(
+        "        throw DuplicateKeyException('duplicate key in ${model.table}');",
+      )
       ..writeln('      }')
       ..writeln('      rethrow;')
       ..writeln('    }')
       // 「未命中」是业务结果而不是驱动异常，必须留在 try 之外，
       // 否则会被上面的 duplicate-entry 翻译分支重新检查一遍。
       ..writeln('    if (matchedRows == 0) {')
-      ..writeln("      throw StateError('原记录不存在，可能已被其他操作修改或删除');")
+      ..writeln(
+        "      throw RecordNotFoundException('${model.table} record not found');",
+      )
       ..writeln('    }')
       ..writeln('  }')
       ..writeln();

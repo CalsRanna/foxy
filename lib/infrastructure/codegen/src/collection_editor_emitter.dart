@@ -58,21 +58,29 @@ final class CollectionEditorEmitter {
       ..writeln('  int _interactionToken = 0;')
       ..writeln()
       ..writeln('  Future<void> copy(${model.keyType} key) async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln("    if (parent == null) throw StateError('父记录尚未加载');")
+      ..writeln(
+        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
+      )
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
       ..writeln('      await _repository.copy${model.baseName}(key);')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) return;')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) return;',
+      )
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) {')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) {',
+      )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -80,44 +88,60 @@ final class CollectionEditorEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> create() async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln("    if (parent == null) throw StateError('父记录尚未加载');")
+      ..writeln(
+        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
+      )
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
       ..writeln(
         '      final candidate = await _repository.create${model.baseName}(parent);',
       )
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) return;')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) return;',
+      )
       ..writeln('      editingKey.value = null;')
       ..writeln('      selectedKey.value = null;')
       ..writeln('      _applyCandidate(candidate);')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) {')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) {',
+      )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    }')
       ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> destroy(${model.keyType} key) async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln("    if (parent == null) throw StateError('父记录尚未加载');")
+      ..writeln(
+        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
+      )
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    submitting.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
       ..writeln('      await _repository.destroy${model.baseName}(key);')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) return;')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) return;',
+      )
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) {')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) {',
+      )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -127,27 +151,37 @@ final class CollectionEditorEmitter {
       ..writeln('  void dispose() => disposeControllers();')
       ..writeln()
       ..writeln('  Future<void> edit(${model.keyType} key) async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln("    if (parent == null) throw StateError('父记录尚未加载');")
+      ..writeln(
+        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
+      )
       ..writeln('    final token = ++_interactionToken;')
       ..writeln('    editingKey.value = key;')
       ..writeln('    selectedKey.value = key;')
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      final candidate = await _repository.get${model.baseName}(key);')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) return;')
+      ..writeln(
+        '      final candidate = await _repository.get${model.baseName}(key);',
+      )
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) return;',
+      )
       ..writeln('      if (candidate == null) {')
-      ..writeln("        throw StateError('原记录不存在，可能已被其他操作修改或删除');")
+      ..writeln("        throw RecordNotFoundException('record not found');")
       ..writeln('      }')
       ..writeln('      _applyCandidate(candidate);')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) {')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) {',
+      )
       ..writeln('        return;')
       ..writeln('      }')
       ..writeln('      editingKey.value = null;')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      if (token == _interactionToken) loading.value = false;')
@@ -166,9 +200,13 @@ final class CollectionEditorEmitter {
       ..writeln('  }')
       ..writeln()
       ..writeln('  Future<void> persist() async {')
-      ..writeln("    if (submitting.value) throw StateError('正在提交，请稍候');")
+      ..writeln(
+        "    if (submitting.value) throw BusyException('operation already in progress');",
+      )
       ..writeln('    final parent = parentKey.value;')
-      ..writeln("    if (parent == null) throw StateError('父记录尚未加载');")
+      ..writeln(
+        "    if (parent == null) throw ParentNotLoadedException('parent record not loaded');",
+      )
       ..writeln('    final candidate = _collectCandidate();')
       ..writeln('    final originalKey = editingKey.value;')
       ..writeln('    final token = ++_interactionToken;')
@@ -178,16 +216,22 @@ final class CollectionEditorEmitter {
       ..writeln('      if (originalKey == null) {')
       ..writeln('        await _repository.store${model.baseName}(candidate);')
       ..writeln('      } else {')
-      ..writeln('        await _repository.update${model.baseName}('
-          'originalKey, candidate);')
+      ..writeln(
+        '        await _repository.update${model.baseName}('
+        'originalKey, candidate);',
+      )
       ..writeln('      }')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) return;')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) return;',
+      )
       ..writeln('      await _refresh();')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token != _interactionToken || parentKey.value != parent) {')
+      ..writeln(
+        '      if (token != _interactionToken || parentKey.value != parent) {',
+      )
       ..writeln('        return;')
       ..writeln('      }')
-      ..writeln("      errorMessage.value = '\$error';")
+      ..writeln('      errorMessage.value = foxyErrorMessage(error);')
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      submitting.value = false;')
@@ -218,9 +262,13 @@ final class CollectionEditorEmitter {
       ..writeln('    loading.value = true;')
       ..writeln('    errorMessage.value = null;')
       ..writeln('    try {')
-      ..writeln('      final count = await _repository.count${pluralize(model.baseName)}(parent);')
+      ..writeln(
+        '      final count = await _repository.count${pluralize(model.baseName)}(parent);',
+      )
       ..writeln('      if (token != _refreshToken) return;')
-      ..writeln('      final lastPage = max(1, (count / _repository.kPageSize).ceil());')
+      ..writeln(
+        '      final lastPage = max(1, (count / _repository.kPageSize).ceil());',
+      )
       ..writeln('      final nextPage = min(currentPage, lastPage);')
       ..writeln(
         '      final data = await _repository.getBrief${pluralize(model.baseName)}('
@@ -233,7 +281,10 @@ final class CollectionEditorEmitter {
       ..writeln('      editingKey.value = null;')
       ..writeln('      selectedKey.value = null;')
       ..writeln('    } catch (error) {')
-      ..writeln('      if (token == _refreshToken) errorMessage.value = \'\$error\';')
+      ..writeln(
+        '      if (token == _refreshToken) errorMessage.value = '
+        'foxyErrorMessage(error);',
+      )
       ..writeln('      rethrow;')
       ..writeln('    } finally {')
       ..writeln('      if (token == _refreshToken) loading.value = false;')

@@ -33,7 +33,9 @@ mixin _SpellFocusObjectRepositoryMixin
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_spell_focus_object record not found',
+      );
     }
   }
 
@@ -61,7 +63,9 @@ mixin _SpellFocusObjectRepositoryMixin
     SpellFocusObjectEntity spellFocusObject,
   ) async {
     if (spellFocusObject.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(spellFocusObject);
     final json = prepareWriteJson(spellFocusObject.toJson());
@@ -69,7 +73,9 @@ mixin _SpellFocusObjectRepositoryMixin
       await laconic.table('foxy.dbc_spell_focus_object').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_spell_focus_object',
+        );
       }
       rethrow;
     }
@@ -89,12 +95,16 @@ mixin _SpellFocusObjectRepositoryMixin
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_spell_focus_object',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_spell_focus_object record not found',
+      );
     }
   }
 

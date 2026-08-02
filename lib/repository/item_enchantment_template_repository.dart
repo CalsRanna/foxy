@@ -17,7 +17,9 @@ class ItemEnchantmentTemplateRepository
   Future<void> copyItemEnchantmentTemplate(
     ItemEnchantmentTemplateKey key,
   ) async {
-    throw UnsupportedError('附魔 ID 是复合主键的一部分，请新增并选择有效附魔。');
+    throw CopyNotSupportedException(
+      'enchant ID is part of a composite primary key; add a new record and select a valid enchant',
+    );
   }
 
   Future<int> countItemEnchantmentGroups({

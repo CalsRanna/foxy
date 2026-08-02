@@ -21,7 +21,7 @@ class MapInfoRepository
   Future<int> copyMapInfo(int key) async {
     final source = await getMapInfo(key);
     if (source == null) {
-      throw StateError('原地图信息不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = MapInfoEntity.fromJson({
       ...source.toJson(),

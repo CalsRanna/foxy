@@ -28,7 +28,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_item_visuals record not found');
     }
   }
 
@@ -43,7 +43,9 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
 
   Future<void> storeItemVisuals(ItemVisualsEntity itemVisuals) async {
     if (itemVisuals.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(itemVisuals);
     final json = prepareWriteJson(itemVisuals.toJson());
@@ -51,7 +53,7 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_item_visuals').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_item_visuals');
       }
       rethrow;
     }
@@ -71,12 +73,12 @@ mixin _ItemVisualsRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_item_visuals');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_item_visuals record not found');
     }
   }
 

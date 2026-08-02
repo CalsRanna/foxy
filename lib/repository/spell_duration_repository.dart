@@ -15,7 +15,7 @@ class SpellDurationRepository
   Future<int> copySpellDuration(int key) async {
     final source = await getSpellDuration(key);
     if (source == null) {
-      throw StateError('原法术持续时间不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeSpellDuration(copied);

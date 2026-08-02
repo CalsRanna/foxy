@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_quest_item_repository.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
 void main() {
   test('CreatureQuestItemKey 和 Brief 完整覆盖两列主键', () {
     const entity = CreatureQuestItemEntity(creatureEntry: 10, idx: 2);
@@ -51,11 +53,11 @@ void main() {
         key,
         const CreatureQuestItemEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       missingRepository.destroyCreatureQuestItem(key),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final queries = <LaconicQuery>[];
@@ -70,7 +72,6 @@ void main() {
       [50, 50],
     );
   });
-
 }
 
 class _RecordingDriver implements DatabaseDriver {

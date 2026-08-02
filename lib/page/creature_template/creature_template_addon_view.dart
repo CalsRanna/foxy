@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_addon_single_editor_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -180,7 +181,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 
@@ -195,7 +196,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
       if (!mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }

@@ -28,7 +28,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_taxi_path record not found');
     }
   }
 
@@ -43,7 +43,9 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
 
   Future<void> storeTaxiPath(TaxiPathEntity taxiPath) async {
     if (taxiPath.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(taxiPath);
     final json = prepareWriteJson(taxiPath.toJson());
@@ -51,7 +53,7 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_taxi_path').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_taxi_path');
       }
       rethrow;
     }
@@ -68,12 +70,12 @@ mixin _TaxiPathRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_taxi_path');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_taxi_path record not found');
     }
   }
 

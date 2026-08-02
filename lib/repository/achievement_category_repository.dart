@@ -24,7 +24,7 @@ class AchievementCategoryRepository
   Future<int> copyAchievementCategory(int key) async {
     final source = await getAchievementCategory(key);
     if (source == null) {
-      throw StateError('原成就分类不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeAchievementCategory(copied);
@@ -81,7 +81,9 @@ class AchievementCategoryRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('Achievement_Category.dbc 已无可用 int32 ID');
+      throw IdExhaustedException(
+        'no free int32 ID left in Achievement_Category.dbc',
+      );
     }
     return id;
   }

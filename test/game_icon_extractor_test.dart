@@ -53,14 +53,9 @@ void main() {
     });
 
     test('非客户端目录返回 null', () {
+      expect(GameIconExtractor.findLocaleDataDir(tempDir.path), isNull);
       expect(
-        GameIconExtractor.findLocaleDataDir(tempDir.path),
-        isNull,
-      );
-      expect(
-        GameIconExtractor.findLocaleDataDir(
-          p.join(clientRoot.path, '不存在'),
-        ),
+        GameIconExtractor.findLocaleDataDir(p.join(clientRoot.path, '不存在')),
         isNull,
       );
     });
@@ -83,16 +78,13 @@ void main() {
         dataDir.path,
         'zhCN',
       );
-      expect(
-        chain.map(p.basename).toList(),
-        [
-          'locale-zhCN.MPQ', // 1 locale 基础
-          'patch-zhCN.MPQ', // 3 locale patch
-          'patch-zhCN-2.MPQ',
-          'patch-Z.MPQ', // 4 自定义
-          'zzz_custom.MPQ',
-        ],
-      );
+      expect(chain.map(p.basename).toList(), [
+        'locale-zhCN.MPQ', // 1 locale 基础
+        'patch-zhCN.MPQ', // 3 locale patch
+        'patch-zhCN-2.MPQ',
+        'patch-Z.MPQ', // 4 自定义
+        'zzz_custom.MPQ',
+      ]);
     });
 
     test('根目录官方大包最低优先级，且被 locale 覆盖', () {
@@ -111,10 +103,12 @@ void main() {
         p.join(dataDir.path, 'zhCN'),
         'zhCN',
       );
-      expect(
-        chain.map(p.basename).toList(),
-        ['common.MPQ', 'patch.MPQ', 'patch-2.MPQ', 'locale-zhCN.MPQ'],
-      );
+      expect(chain.map(p.basename).toList(), [
+        'common.MPQ',
+        'patch.MPQ',
+        'patch-2.MPQ',
+        'locale-zhCN.MPQ',
+      ]);
     });
 
     test('根目录自定义 MPQ 最高优先级', () {
@@ -130,10 +124,10 @@ void main() {
         p.join(dataDir.path, 'zhCN'),
         'zhCN',
       );
-      expect(
-        chain.map(p.basename).toList(),
-        ['locale-zhCN.MPQ', 'custom-icons.MPQ'],
-      );
+      expect(chain.map(p.basename).toList(), [
+        'locale-zhCN.MPQ',
+        'custom-icons.MPQ',
+      ]);
     });
   });
 
@@ -142,21 +136,15 @@ void main() {
       _buildFakeClient(
         clientRoot,
         archives: {
-          'locale-zhCN.MPQ': {
-            r'Interface\Icons\INV_Foo.blp': content(1),
-          },
+          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
           'patch-zhCN.MPQ': {
             r'Interface\Icons\Inv_Foo.blp': content(2), // 大小写不同
           },
         },
       );
       final result = _extractor(clientRoot, outputDir, {
-        'locale-zhCN.MPQ': {
-          r'Interface\Icons\INV_Foo.blp': content(1),
-        },
-        'patch-zhCN.MPQ': {
-          r'Interface\Icons\Inv_Foo.blp': content(2),
-        },
+        'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
+        'patch-zhCN.MPQ': {r'Interface\Icons\Inv_Foo.blp': content(2)},
       }).extract();
 
       expect(result.success, isTrue);
@@ -186,7 +174,10 @@ void main() {
       expect(result.success, isTrue);
       expect(result.extracted, 2);
       // DBC 里的 .tga 残留路径归一到同一纯名
-      expect(GameIconPaths.normalizeIconName(r'Interface\Icons\INV_Shoulder_94.tga'), 'inv_shoulder_94');
+      expect(
+        GameIconPaths.normalizeIconName(r'Interface\Icons\INV_Shoulder_94.tga'),
+        'inv_shoulder_94',
+      );
       expect(
         File(p.join(outputDir.path, 'inv_shoulder_94.blp')).existsSync(),
         isTrue,
@@ -201,15 +192,11 @@ void main() {
       _buildFakeClient(
         clientRoot,
         archives: {
-          'locale-zhCN.MPQ': {
-            r'Interface\Icons\INV_Foo.blp': content(1),
-          },
+          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
         },
       );
       final extractor = _extractor(clientRoot, outputDir, {
-        'locale-zhCN.MPQ': {
-          r'Interface\Icons\INV_Foo.blp': content(1),
-        },
+        'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
       });
       File(p.join(outputDir.path, 'inv_foo.blp')).writeAsBytesSync(content(9));
 
@@ -227,18 +214,12 @@ void main() {
       _buildFakeClient(
         clientRoot,
         archives: {
-          'locale-zhCN.MPQ': {
-            r'Interface\Icons\INV_Foo.blp': content(1),
-          },
-          'patch-zhCN.MPQ': {
-            r'Interface\Icons\INV_Bar.blp': content(2),
-          },
+          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
+          'patch-zhCN.MPQ': {r'Interface\Icons\INV_Bar.blp': content(2)},
         },
       );
       final result = _extractor(clientRoot, outputDir, {
-        'locale-zhCN.MPQ': {
-          r'Interface\Icons\INV_Foo.blp': content(1),
-        },
+        'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
         // patch-zhCN.MPQ 缺失 → openSource 抛错
       }).extract();
 
@@ -267,9 +248,7 @@ void main() {
           r'Interface\Icons\INV_Bbb.blp': content(2),
           r'Interface\Icons\INV_Ccc.blp': content(3),
         },
-      }).extract(
-        isCancelled: () => cancelledAfter-- <= 0,
-      );
+      }).extract(isCancelled: () => cancelledAfter-- <= 0);
 
       expect(result.cancelled, isTrue);
       expect(result.extracted, 1);
@@ -284,9 +263,7 @@ void main() {
       _buildFakeClient(
         clientRoot,
         archives: {
-          'locale-zhCN.MPQ': {
-            r'Interface\Icons\INV_Foo.blp': content(1),
-          },
+          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
         },
       );
       // 根目录自定义 patch（自定义客户端最常见形态）
@@ -300,9 +277,7 @@ void main() {
       File(p.join(dataDir.path, 'zzz_custom.MPQ')).writeAsBytesSync([0]);
       final result = _extractor(clientRoot, outputDir, {
         ...{
-          'locale-zhCN.MPQ': {
-            r'Interface\Icons\INV_Foo.blp': content(1),
-          },
+          'locale-zhCN.MPQ': {r'Interface\Icons\INV_Foo.blp': content(1)},
         },
         ...customArchives,
       }).extract();
@@ -357,7 +332,7 @@ GameIconExtractor _extractor(
       final files = archives[name];
       if (files == null) {
         // 模拟真实环境下归档损坏/无法打开。
-        throw StateError('无法打开归档: $name');
+        throw StateError('cannot open archive: $name');
       }
       final source = _FakeMpqSource(files);
       created?[name] = source;
@@ -390,7 +365,7 @@ final class _FakeMpqSource implements GameMpqSource {
     extractCalls++;
     final data = _files[name];
     if (data == null) {
-      throw StateError('不存在: $name');
+      throw StateError('not found: $name');
     }
     return Uint8List.fromList(data);
   }

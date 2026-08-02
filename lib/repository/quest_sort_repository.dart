@@ -22,7 +22,7 @@ class QuestSortRepository
   Future<int> copyQuestSort(int key) async {
     final source = await getQuestSort(key);
     if (source == null) {
-      throw StateError('原任务排序不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeQuestSort(copied);
@@ -53,7 +53,9 @@ class QuestSortRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 32768) {
-      throw StateError('任务排序编号已超出 QuestSortID 可引用范围');
+      throw IdExhaustedException(
+        'quest sort ID exceeds the QuestSortID referenceable range',
+      );
     }
     return id;
   }

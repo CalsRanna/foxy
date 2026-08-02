@@ -12,7 +12,9 @@ class SpellBonusDataRepository
   static const _table = 'spell_bonus_data';
 
   Future<void> copySpellBonusData(int key) async {
-    throw UnsupportedError('法术加成记录不能自动复制，请为有效法术新增记录。');
+    throw CopyNotSupportedException(
+      'spell bonus data cannot be auto-copied; add a new record for a valid spell',
+    );
   }
 
   Future<int> countSpellBonusDatas() {

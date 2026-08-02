@@ -39,13 +39,13 @@ class GossipMenuDetailViewModel
       }
       final existing = await _repository.getGossipMenu(key);
       if (existing == null) {
-        throw StateError('原对话菜单不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = existing;
       _applyCandidate(existing);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -55,13 +55,15 @@ class GossipMenuDetailViewModel
 
   @override
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      if (candidate.menuId <= 0) throw StateError('请输入有效的 MenuID');
-      if (candidate.textId <= 0) throw StateError('请选择有效的 NPC 文本');
+      if (candidate.menuId <= 0) throw ValidationException('invalid MenuID');
+      if (candidate.textId <= 0) {
+        throw ValidationException('invalid NPC text selection');
+      }
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -82,7 +84,7 @@ class GossipMenuDetailViewModel
         _logActivity(action, candidate);
       }
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;

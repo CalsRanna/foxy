@@ -70,13 +70,13 @@ class GameObjectTemplateDetailViewModel
       }
       final result = await _repository.getGameObjectTemplate(key);
       if (result == null) {
-        throw StateError('原游戏对象模板不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {

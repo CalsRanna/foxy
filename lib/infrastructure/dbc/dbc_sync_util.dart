@@ -7,6 +7,7 @@ import 'package:foxy/database/database.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_import_worker.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
@@ -81,7 +82,9 @@ class DbcSyncUtil {
           result.state == DbcTableState.incompatible,
     );
     if (errors.isNotEmpty) {
-      throw StateError('检查 DBC 表失败: ${errors.first.message}');
+      throw ValidationException(
+        'DBC table check failed: ${errors.first.message}',
+      );
     }
     return results
         .where(
@@ -349,7 +352,10 @@ class DbcSyncUtil {
 
     try {
       if (!await Directory(outputDirectory).exists()) {
-        throw FileSystemException('输出目录不存在', outputDirectory);
+        throw FileSystemException(
+          'output directory does not exist',
+          outputDirectory,
+        );
       }
 
       for (var index = 0; index < definitions.length; index++) {

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/reference_loot_template/reference_loot_template_view.dart';
 import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -67,7 +68,7 @@ class _ReferenceLootTemplateDetailPageState
       await viewModel.initSignals(key: widget.referenceLootTemplateKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

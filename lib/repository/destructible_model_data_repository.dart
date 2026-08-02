@@ -15,7 +15,7 @@ class DestructibleModelDataRepository
   Future<int> copyDestructibleModelData(int key) async {
     final source = await getDestructibleModelData(key);
     if (source == null) {
-      throw StateError('原可破坏模型数据不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = DestructibleModelDataEntity.fromJson({
       ...source.toJson(),

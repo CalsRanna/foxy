@@ -20,7 +20,7 @@ class CreatureTemplateSpellRepository
   ) async {
     final source = await getCreatureTemplateSpell(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createCreatureTemplateSpell(source.creatureID);
     final candidate = source.copyWith(index: blank.index);
@@ -91,6 +91,8 @@ class CreatureTemplateSpellRepository
     for (var index = minIndex; index <= maxIndex; index++) {
       if (!used.contains(index)) return index;
     }
-    throw StateError('生物技能槽已满，只允许 $minIndex-$maxIndex');
+    throw ValidationException(
+      'creature skill slots are full; only $minIndex-$maxIndex are allowed',
+    );
   }
 }

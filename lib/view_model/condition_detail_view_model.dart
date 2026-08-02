@@ -14,9 +14,7 @@ import 'package:signals/signals.dart';
 /// 来源/条件两列的「普通类型 | 引用模板」模式选项。
 const kConditionModeOptions = <int, String>{0: '普通类型', 1: '引用模板'};
 
-class ConditionDetailViewModel
-    with
-        FieldControllerMixin {
+class ConditionDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<ConditionRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -118,13 +116,13 @@ class ConditionDetailViewModel
       }
       final result = await _repository.getCondition(key);
       if (result == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -133,7 +131,7 @@ class ConditionDetailViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -156,7 +154,7 @@ class ConditionDetailViewModel
         data,
       );
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -334,11 +332,13 @@ class ConditionDetailViewModel
         throw ArgumentError.value(
           source,
           'SourceTypeOrReferenceId',
-          '当前 3.3.5a core 不加载该来源类型',
+          'current 3.3.5a core does not load this source type',
         );
       }
     } else if (condition.sourceGroup != 0 || condition.sourceEntry != 0) {
-      throw ArgumentError('引用模板不能设置 SourceGroup 或 SourceEntry');
+      throw ArgumentError(
+        'reference template cannot set SourceGroup or SourceEntry',
+      );
     }
     final type = condition.conditionTypeOrReference;
     if (type >= 0 && !kConditionTypeLabels.containsKey(type)) {
@@ -361,7 +361,7 @@ class ConditionDetailViewModel
 
   static int _positiveReferenceId(int id, String field) {
     if (id <= 0) {
-      throw ArgumentError.value(id, field, '引用 ID 必须为正数');
+      throw ArgumentError.value(id, field, 'reference ID must be positive');
     }
     return id;
   }

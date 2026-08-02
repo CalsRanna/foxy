@@ -28,7 +28,7 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
   Future<int> copyEmoteText(int key) async {
     final source = await getEmoteText(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_emotes_text record not found');
     }
     final blank = await createEmoteText();
     final copied = source.copyWith(id: blank.id);
@@ -53,7 +53,7 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_emotes_text record not found');
     }
   }
 
@@ -93,7 +93,9 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
 
   Future<void> storeEmoteText(EmoteTextEntity emoteText) async {
     if (emoteText.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(emoteText);
     final json = prepareWriteJson(emoteText.toJson());
@@ -101,7 +103,7 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_emotes_text').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_emotes_text');
       }
       rethrow;
     }
@@ -121,12 +123,12 @@ mixin _EmoteTextRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_emotes_text');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_emotes_text record not found');
     }
   }
 

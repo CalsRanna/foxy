@@ -10,10 +10,14 @@ import 'package:signals/signals.dart';
 
 part 'player_create_info_spell_custom_collection_editor_view_model.g.dart';
 
-@FoxyDetailViewModel(entity: PlayerCreateInfoSpellCustomEntity, flags: {'classMask', 'raceMask'})
+@FoxyDetailViewModel(
+  entity: PlayerCreateInfoSpellCustomEntity,
+  flags: {'classMask', 'raceMask'},
+)
 class PlayerCreateInfoSpellCustomCollectionEditorViewModel
     with
-        FieldControllerMixin, _PlayerCreateInfoSpellCustomCollectionEditorViewModelMixin {
+        FieldControllerMixin,
+        _PlayerCreateInfoSpellCustomCollectionEditorViewModelMixin {
   final _repository = GetIt.instance
       .get<PlayerCreateInfoSpellCustomRepository>();
 
@@ -31,9 +35,11 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
   int _interactionToken = 0;
 
   Future<void> create() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -49,15 +55,17 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     }
   }
 
   Future<void> destroy(PlayerCreateInfoSpellCustomKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -69,7 +77,7 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -79,9 +87,11 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
   void dispose() => disposeControllers();
 
   Future<void> edit(PlayerCreateInfoSpellCustomKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -91,7 +101,7 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       final candidate = await _repository.getPlayerCreateInfoSpellCustom(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       _applyCandidate(candidate);
     } catch (error) {
@@ -99,7 +109,7 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
         return;
       }
       editingKey.value = null;
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -116,9 +126,11 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
@@ -139,7 +151,7 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -189,7 +201,7 @@ class PlayerCreateInfoSpellCustomCollectionEditorViewModel
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

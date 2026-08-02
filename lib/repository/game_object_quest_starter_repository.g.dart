@@ -8,7 +8,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
   ) async {
     final source = await getGameObjectQuestStarter(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_queststarter record not found');
     }
     final blank = await createGameObjectQuestStarter(source.quest);
     final copied = source.copyWith(id: blank.id, quest: blank.quest);
@@ -45,7 +45,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_queststarter record not found');
     }
   }
 
@@ -85,7 +85,7 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
       await laconic.table('gameobject_queststarter').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in gameobject_queststarter');
       }
       rethrow;
     }
@@ -105,12 +105,12 @@ mixin _GameObjectQuestStarterRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in gameobject_queststarter');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gameobject_queststarter record not found');
     }
   }
 

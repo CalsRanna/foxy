@@ -20,7 +20,7 @@ class DisenchantLootTemplateRepository
   ) async {
     final source = await getDisenchantLootTemplate(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(item: await getNextItemId(source.entry));
     await storeDisenchantLootTemplate(copied);

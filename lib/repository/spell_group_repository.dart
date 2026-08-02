@@ -14,7 +14,7 @@ class SpellGroupRepository with RepositoryMixin, _SpellGroupRepositoryMixin {
   Future<SpellGroupKey> copySpellGroup(SpellGroupKey key) async {
     final source = await getSpellGroup(key);
     if (source == null) {
-      throw StateError('原法术组记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'id'));
     await storeSpellGroup(copied);

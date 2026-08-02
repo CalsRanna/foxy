@@ -10,7 +10,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_request_items record not found');
     }
   }
 
@@ -27,7 +27,9 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
     QuestRequestItemsEntity questRequestItems,
   ) async {
     if (questRequestItems.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(questRequestItems);
     final json = prepareWriteJson(questRequestItems.toJson());
@@ -35,7 +37,7 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
       await laconic.table('quest_request_items').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in quest_request_items');
       }
       rethrow;
     }
@@ -55,12 +57,12 @@ mixin _QuestRequestItemsRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in quest_request_items');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('quest_request_items record not found');
     }
   }
 

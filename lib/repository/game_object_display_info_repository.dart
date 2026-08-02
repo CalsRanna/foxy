@@ -16,7 +16,7 @@ class GameObjectDisplayInfoRepository
   Future<int> copyGameObjectDisplayInfo(int key) async {
     final source = await getGameObjectDisplayInfo(key);
     if (source == null) {
-      throw StateError('原游戏物体显示信息不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = GameObjectDisplayInfoEntity.fromJson({
       ...source.toJson(),

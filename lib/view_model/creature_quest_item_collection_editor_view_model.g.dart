@@ -51,9 +51,10 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
   int _interactionToken = 0;
 
   Future<void> copy(CreatureQuestItemKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null)
+      throw ParentNotLoadedException('parent record not loaded');
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -65,7 +66,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -73,9 +74,10 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
   }
 
   Future<void> create() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null)
+      throw ParentNotLoadedException('parent record not loaded');
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -88,15 +90,16 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     }
   }
 
   Future<void> destroy(CreatureQuestItemKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null)
+      throw ParentNotLoadedException('parent record not loaded');
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -108,7 +111,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -118,9 +121,10 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
   void dispose() => disposeControllers();
 
   Future<void> edit(CreatureQuestItemKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null)
+      throw ParentNotLoadedException('parent record not loaded');
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -130,7 +134,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       final candidate = await _repository.getCreatureQuestItem(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       _applyCandidate(candidate);
     } catch (error) {
@@ -138,7 +142,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
         return;
       }
       editingKey.value = null;
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -154,9 +158,10 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null)
+      throw ParentNotLoadedException('parent record not loaded');
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
@@ -174,7 +179,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -215,7 +220,7 @@ mixin _CreatureQuestItemCollectionEditorViewModelMixin on FieldControllerMixin {
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

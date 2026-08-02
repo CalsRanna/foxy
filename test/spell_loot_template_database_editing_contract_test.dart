@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/spell_loot_template_collection_editor_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -68,11 +70,11 @@ void main() {
         key,
         const SpellLootTemplateEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       missingRepository.destroySpellLootTemplate(key),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final queries = <LaconicQuery>[];
@@ -140,7 +142,6 @@ void main() {
       expect(viewModel.entryController.collect(), 12);
     });
   });
-
 }
 
 class _FakeRepository extends SpellLootTemplateRepository {

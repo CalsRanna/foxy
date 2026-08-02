@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/quest/creature_quest_ender_view.dart';
 import 'package:foxy/page/quest/creature_quest_starter_view.dart';
 import 'package:foxy/page/quest/game_object_quest_ender_view.dart';
@@ -117,7 +118,7 @@ class _QuestTemplateDetailPageState extends State<QuestTemplateDetailPage> {
       await viewModel.initSignals(key: widget.questTemplateKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

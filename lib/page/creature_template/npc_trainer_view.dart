@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
 import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
@@ -173,7 +174,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
                         await viewModel.persist();
                       } catch (error) {
                         if (!mounted) return;
-                        DialogUtil.instance.error('保存失败：$error');
+                        DialogUtil.instance.error(
+                          '保存失败：${foxyErrorMessage(error)}',
+                        );
                         return;
                       }
                       if (!dialogContext.mounted) return;
@@ -294,7 +297,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
+      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -303,7 +306,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
       return false;
     }
   }
@@ -319,7 +322,9 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       await viewModel.setParentKey(trainerId);
     } catch (error) {
       if (!mounted) return;
-      ShadSonner.of(context).show(ShadToast(description: Text('$error')));
+      ShadSonner.of(
+        context,
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 
@@ -329,7 +334,7 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
+      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
       return;
     }
     if (!mounted) return;

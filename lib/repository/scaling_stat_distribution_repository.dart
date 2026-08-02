@@ -16,7 +16,7 @@ class ScalingStatDistributionRepository
   Future<int> copyScalingStatDistribution(int key) async {
     final source = await getScalingStatDistribution(key);
     if (source == null) {
-      throw StateError('原属性缩放分布不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeScalingStatDistribution(copied);
@@ -31,7 +31,9 @@ class ScalingStatDistributionRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 32767) {
-      throw StateError('ScalingStatDistribution ID 已超出物品模板可引用范围');
+      throw IdExhaustedException(
+        'ScalingStatDistribution ID exceeds the range referenceable by item templates',
+      );
     }
     return id;
   }

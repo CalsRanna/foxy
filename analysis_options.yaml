@@ -13,6 +13,7 @@ custom_lint:
     - viewmodel_no_router_facade: true
     - no_flex_in_view: true
     - no_readonly_in_view: true
+    - no_chinese_throw: true
 
 linter:
   rules: {}

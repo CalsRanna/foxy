@@ -16,7 +16,7 @@ class SoundProviderPreferencesRepository
   Future<int> copySoundProviderPreference(int key) async {
     final source = await getSoundProviderPreferences(key);
     if (source == null) {
-      throw StateError('原声音提供器偏好不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = SoundProviderPreferencesEntity.fromJson({
       ...source.toJson(),

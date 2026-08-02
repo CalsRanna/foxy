@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extract_worker.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_paths.dart';
@@ -37,11 +38,9 @@ final class ExtractGameIconsUseCase {
 
   Completer<GameIconExtractionResult>? _activeCompleter;
 
-  ExtractGameIconsUseCase({
-    required ConfigUtil configUtil,
-    String? outputDir,
-  }) : _configUtil = configUtil,
-       outputDir = outputDir ?? GameIconPaths.iconDir;
+  ExtractGameIconsUseCase({required ConfigUtil configUtil, String? outputDir})
+    : _configUtil = configUtil,
+      outputDir = outputDir ?? GameIconPaths.iconDir;
 
   bool get isRunning => _executing;
 
@@ -63,15 +62,19 @@ final class ExtractGameIconsUseCase {
 
   Future<GameIconExtractionResult> execute(ExtractGameIconsInput input) async {
     if (_executing) {
-      throw StateError('已有图标提取任务正在运行');
+      throw BusyException('an icon extraction task is already running');
     }
 
     final clientDir = input.clientDir.trim();
     if (clientDir.isEmpty) {
-      throw ArgumentError.value(clientDir, 'clientDir', '请先选择客户端目录');
+      throw ArgumentError.value(
+        clientDir,
+        'clientDir',
+        'select the client directory first',
+      );
     }
     if (!await Directory(clientDir).exists()) {
-      throw FileSystemException('客户端目录不存在', clientDir);
+      throw FileSystemException('client directory does not exist', clientDir);
     }
 
     final cancelGeneration = _cancelGeneration;

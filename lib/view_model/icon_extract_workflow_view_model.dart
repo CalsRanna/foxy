@@ -1,4 +1,5 @@
 import 'package:foxy/infrastructure/config/config_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/game_asset/game_icon_extractor.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/use_case/game_asset/extract_game_icons_use_case.dart';
@@ -57,7 +58,7 @@ class IconExtractWorkflowViewModel {
       status.value = WorkflowStatus.idle;
     } catch (error) {
       if (token != _attemptToken) return;
-      errorMessage.value = '加载客户端配置失败: $error';
+      errorMessage.value = '加载客户端配置失败: ${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }
@@ -88,8 +89,8 @@ class IconExtractWorkflowViewModel {
     if (_isActive || _useCase.isRunning) return;
     final directory = path.value?.trim();
     if (directory == null || directory.isEmpty) {
-      final error = StateError('请先选择客户端目录。');
-      errorMessage.value = error.message;
+      final error = ValidationException('select the client directory first');
+      errorMessage.value = foxyErrorMessage(error);
       status.value = WorkflowStatus.failed;
       throw error;
     }
@@ -127,7 +128,7 @@ class IconExtractWorkflowViewModel {
       progress.value = null;
       progressLabel.value = '';
       progressDetail.value = '';
-      errorMessage.value = '提取出错：$error';
+      errorMessage.value = '提取出错：${foxyErrorMessage(error)}';
       status.value = WorkflowStatus.failed;
       rethrow;
     }

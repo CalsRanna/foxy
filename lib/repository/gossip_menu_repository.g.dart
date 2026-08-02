@@ -31,7 +31,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
   Future<GossipMenuKey> copyGossipMenu(GossipMenuKey key) async {
     final source = await getGossipMenu(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gossip_menu record not found');
     }
     final blank = await createGossipMenu();
     final copied = source.copyWith(menuId: blank.menuId, textId: blank.textId);
@@ -57,7 +57,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gossip_menu record not found');
     }
   }
 
@@ -101,7 +101,7 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
       await laconic.table('gossip_menu').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in gossip_menu');
       }
       rethrow;
     }
@@ -121,12 +121,12 @@ mixin _GossipMenuRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in gossip_menu');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('gossip_menu record not found');
     }
   }
 

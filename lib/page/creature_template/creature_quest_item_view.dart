@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/creature_quest_item_collection_editor_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
@@ -120,7 +121,9 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
                       await viewModel.persist();
                     } catch (error) {
                       if (!mounted) return;
-                      DialogUtil.instance.error('保存失败：$error');
+                      DialogUtil.instance.error(
+                        '保存失败：${foxyErrorMessage(error)}',
+                      );
                       return;
                     }
                     if (!dialogContext.mounted) return;
@@ -247,7 +250,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       DialogUtil.instance.success('复制成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('复制失败：$error');
+      DialogUtil.instance.error('复制失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -265,7 +268,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       DialogUtil.instance.success('删除成功');
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('删除失败：$error');
+      DialogUtil.instance.error('删除失败：${foxyErrorMessage(error)}');
     }
   }
 
@@ -274,7 +277,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       await viewModel.edit(key);
       return true;
     } catch (error) {
-      if (mounted) DialogUtil.instance.error('加载失败：$error');
+      if (mounted) DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
       return false;
     }
   }
@@ -285,7 +288,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
       await viewModel.create();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('创建失败：$error');
+      DialogUtil.instance.error('创建失败：${foxyErrorMessage(error)}');
       return;
     }
     if (!mounted) return;

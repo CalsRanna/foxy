@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
 import 'package:foxy/view_model/creature_template_spell_collection_editor_view_model.dart';
@@ -77,11 +78,11 @@ void main() {
           key,
           const CreatureTemplateSpellEntity(),
         ),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         repository.destroyCreatureTemplateSpell(key),
-        throwsA(isA<StateError>()),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
 
@@ -171,7 +172,6 @@ void main() {
       expect(repository.storeCount, 1);
     });
   });
-
 }
 
 class _FakeCreatureTemplateSpellRepository

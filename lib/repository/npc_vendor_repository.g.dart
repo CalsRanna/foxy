@@ -6,7 +6,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
   Future<NpcVendorKey> copyNpcVendor(NpcVendorKey key) async {
     final source = await getNpcVendor(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('npc_vendor record not found');
     }
     final blank = await createNpcVendor(source.entry);
     final copied = source.copyWith(
@@ -45,7 +45,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('npc_vendor record not found');
     }
   }
 
@@ -90,7 +90,7 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
       await laconic.table('npc_vendor').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in npc_vendor');
       }
       rethrow;
     }
@@ -110,12 +110,12 @@ mixin _NpcVendorRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in npc_vendor');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('npc_vendor record not found');
     }
   }
 

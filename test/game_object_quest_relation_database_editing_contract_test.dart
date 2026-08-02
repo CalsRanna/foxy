@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/entity/game_object_quest_starter_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
 import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
@@ -91,11 +92,11 @@ void main() {
         starterKey,
         const GameObjectQuestStarterEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       starterMissing.destroyGameObjectQuestStarter(starterKey),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final enderMissing = _TestEnderRepository(
@@ -107,11 +108,11 @@ void main() {
         enderKey,
         const GameObjectQuestEnderEntity(),
       ),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       enderMissing.destroyGameObjectQuestEnder(enderKey),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
 
     final starterQueries = <LaconicQuery>[];
@@ -200,7 +201,6 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
     });
   });
-
 }
 
 class _FakeEnderRepository extends GameObjectQuestEnderRepository {

@@ -12,8 +12,7 @@ part 'page_text_locale_collection_editor_view_model.g.dart';
 
 @FoxyDetailViewModel(entity: PageTextLocaleEntity, selects: {'locale': 'zhCN'})
 class PageTextLocaleCollectionEditorViewModel
-    with
-        FieldControllerMixin, _PageTextLocaleCollectionEditorViewModelMixin {
+    with FieldControllerMixin, _PageTextLocaleCollectionEditorViewModelMixin {
   final _repository = GetIt.instance.get<PageTextLocaleRepository>();
 
   final parentKey = signal<int?>(null);
@@ -30,9 +29,11 @@ class PageTextLocaleCollectionEditorViewModel
   int _interactionToken = 0;
 
   Future<void> create() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -41,7 +42,9 @@ class PageTextLocaleCollectionEditorViewModel
         (locale) => !usedLocales.contains(locale),
       );
       if (availableLocales.isEmpty) {
-        throw StateError('所有支持的本地化语言均已存在');
+        throw ValidationException(
+          'all supported locale languages already exist',
+        );
       }
       final candidate = await _repository.createPageTextLocale(
         id: parent,
@@ -55,15 +58,17 @@ class PageTextLocaleCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     }
   }
 
   Future<void> destroy(PageTextLocaleKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -75,7 +80,7 @@ class PageTextLocaleCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -85,9 +90,11 @@ class PageTextLocaleCollectionEditorViewModel
   void dispose() => disposeControllers();
 
   Future<void> edit(PageTextLocaleKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -97,7 +104,7 @@ class PageTextLocaleCollectionEditorViewModel
       final candidate = await _repository.getPageTextLocale(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
-        throw StateError('原本地化记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       _applyCandidate(candidate);
     } catch (error) {
@@ -105,7 +112,7 @@ class PageTextLocaleCollectionEditorViewModel
         return;
       }
       editingKey.value = null;
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -121,9 +128,11 @@ class PageTextLocaleCollectionEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final token = ++_interactionToken;
@@ -141,7 +150,7 @@ class PageTextLocaleCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -181,7 +190,7 @@ class PageTextLocaleCollectionEditorViewModel
       editingKey.value = null;
       selectedKey.value = null;
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

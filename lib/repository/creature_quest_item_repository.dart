@@ -18,7 +18,7 @@ class CreatureQuestItemRepository
   ) async {
     final source = await getCreatureQuestItem(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createCreatureQuestItem(source.creatureEntry);
     final candidate = source.copyWith(idx: blank.idx);

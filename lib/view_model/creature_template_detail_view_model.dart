@@ -42,12 +42,14 @@ class CreatureTemplateDetailViewModel
   /// 退出页面
   @override
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
       final candidate = _collectCandidate();
-      if (candidate.entry <= 0) throw StateError('请输入有效的生物模板 entry');
+      if (candidate.entry <= 0) {
+        throw ValidationException('invalid creature template entry');
+      }
       final originalKey = persistedKey.value;
       final action = originalKey == null
           ? ActivityActionType.create
@@ -61,7 +63,7 @@ class CreatureTemplateDetailViewModel
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;

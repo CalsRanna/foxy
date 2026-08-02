@@ -12,6 +12,7 @@ import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/creature_template/creature_template_detail_page.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
@@ -254,14 +255,14 @@ void main() {
         5,
         6,
       }),
-      throwsStateError,
+      throwsA(isA<ValidationException>()),
     );
     expect(CreatureTemplateSpellRepository.nextAvailableIndex({0, 1, 3}), 2);
     expect(
       () => CreatureTemplateSpellRepository.nextAvailableIndex({
         for (var index = 0; index <= 7; index++) index,
       }),
-      throwsStateError,
+      throwsA(isA<ValidationException>()),
     );
   });
 
@@ -285,10 +286,14 @@ String normalizeCreatureTemplateAddonAuras(String value) {
   for (final token in tokens) {
     final spellId = int.tryParse(token);
     if (spellId == null || spellId <= 0) {
-      throw FormatException('光环列表只能包含以空格分隔的正整数法术 ID');
+      throw FormatException(
+        'aura list must contain space-separated positive spell IDs',
+      );
     }
     if (!seen.add(spellId)) {
-      throw FormatException('光环列表不能包含重复法术 ID: $spellId');
+      throw FormatException(
+        'aura list cannot contain duplicate spell IDs: $spellId',
+      );
     }
     spellIds.add(spellId);
   }

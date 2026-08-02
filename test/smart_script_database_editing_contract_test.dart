@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/smart_script_entity.dart';
 import 'package:foxy/event/event_bus.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/smart_script_repository.dart';
@@ -82,11 +83,11 @@ void main() {
     const key = SmartScriptKey(entryOrGuid: 10, sourceType: 0, id: 2, link: 3);
     await expectLater(
       repository.updateSmartScript(key, const SmartScriptEntity()),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
     await expectLater(
       repository.destroySmartScript(key),
-      throwsA(isA<StateError>()),
+      throwsA(isA<RecordNotFoundException>()),
     );
   });
 
@@ -167,7 +168,6 @@ void main() {
       expect(viewModel.persistedKey.value?.id, 1);
     });
   });
-
 }
 
 class _FakeActivityLogRepository extends ActivityLogRepository {

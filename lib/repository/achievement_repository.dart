@@ -25,7 +25,7 @@ class AchievementRepository
   Future<int> copyAchievement(int key) async {
     final source = await getAchievement(key);
     if (source == null) {
-      throw StateError('原成就不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await _getNextId());
     await storeAchievement(copied);
@@ -54,7 +54,9 @@ class AchievementRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0xffff) {
-      throw StateError('Achievement.dbc 已无可用 smallint unsigned ID');
+      throw IdExhaustedException(
+        'no free smallint unsigned ID left in Achievement.dbc',
+      );
     }
     return id;
   }

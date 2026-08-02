@@ -214,7 +214,7 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
   int _parentToken = 0;
 
   Future<void> destroy() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final key = editingKey.value;
     if (key == null) return;
     final parentSnapshot = parentKey.value;
@@ -235,7 +235,7 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
       if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -249,13 +249,17 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parentSnapshot = parentKey.value;
-    if (parentSnapshot == null) throw StateError('父记录尚未加载');
+    if (parentSnapshot == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final parentToken = _parentToken;
     final candidate = _collectCandidate();
     if (candidate.id <= 0) {
-      throw StateError('请先保存对话菜单并选择有效文本');
+      throw ValidationException(
+        'save the gossip menu and select a valid text first',
+      );
     }
     final locale = _collectLocale(candidate.id);
     final localeCandidate = _localeHasText(locale) ? locale : null;
@@ -283,7 +287,7 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
       if (parentToken != _parentToken || parentKey.value != parentSnapshot) {
         return;
       }
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -573,7 +577,7 @@ class NpcTextSingleEditorViewModel with FieldControllerMixin {
       _applyLocale(locale ?? NpcTextLocaleEntity(id: parentSnapshot));
     } catch (error, stackTrace) {
       if (token != _refreshToken) return;
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e(
         '加载 NPC 文本失败',
         error: error,

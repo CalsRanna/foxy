@@ -1895,7 +1895,7 @@ class SpellView extends StatelessWidget {
       if (!context.mounted) return;
       ShadSonner.of(
         context,
-      ).show(ShadToast(description: Text(error.toString())));
+      ).show(ShadToast(description: Text(foxyErrorMessage(error))));
     }
   }
 }
@@ -1995,6 +1995,7 @@ class _MiscValueInputState extends State<_MiscValueInput> {
       _flagController!.addListener(_onFlagChanged);
     }
   }
+
   void _onFlagChanged() {
     final flag = _flagController;
     if (flag == null) return;

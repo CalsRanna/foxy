@@ -19,7 +19,9 @@ class PlayerCreateInfoSkillRepository
   Future<PlayerCreateInfoSkillKey> copyPlayerCreateInfoSkill(
     PlayerCreateInfoSkillKey key,
   ) async {
-    throw UnsupportedError('技能 ID 是复合主键的一部分，请新增记录。');
+    throw CopyNotSupportedException(
+      'skill ID is part of a composite primary key; add a new record',
+    );
   }
 
   @override

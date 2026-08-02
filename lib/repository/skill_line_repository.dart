@@ -15,7 +15,7 @@ class SkillLineRepository with RepositoryMixin, _SkillLineRepositoryMixin {
   Future<int> copySkillLine(int key) async {
     final source = await getSkillLine(key);
     if (source == null) {
-      throw StateError('原技能线不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = SkillLineEntity.fromJson({
       ...source.toJson(),

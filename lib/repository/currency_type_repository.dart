@@ -100,7 +100,7 @@ class CurrencyTypeRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 0x7fffffff) {
-      throw StateError('CurrencyTypes ID 已超出 DBC int32 范围');
+      throw IdExhaustedException('CurrencyTypes ID exceeds DBC int32 range');
     }
     return id;
   }

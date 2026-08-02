@@ -15,7 +15,7 @@ class LightRepository with RepositoryMixin, _LightRepositoryMixin {
   Future<int> copyLight(int key) async {
     final source = await getLight(key);
     if (source == null) {
-      throw StateError('原光照不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = LightEntity.fromJson({
       ...source.toJson(),

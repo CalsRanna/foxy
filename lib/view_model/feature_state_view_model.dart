@@ -1,4 +1,5 @@
 import 'package:foxy/entity/feature_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/feature_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
@@ -42,7 +43,7 @@ class FeatureStateViewModel {
     try {
       allFeatures.value = await _repository.getFeatures();
     } catch (error) {
-      errorMessage.value = '加载功能模块失败: $error';
+      errorMessage.value = '加载功能模块失败: ${foxyErrorMessage(error)}';
       rethrow;
     } finally {
       loading.value = false;
@@ -59,7 +60,7 @@ class FeatureStateViewModel {
     final features = allFeatures.value;
     final index = features.indexWhere((feature) => feature.id == id);
     if (index == -1) {
-      throw StateError('功能模块不存在: $id');
+      throw RecordNotFoundException('feature module not found: $id');
     }
 
     final feature = features[index];
@@ -71,7 +72,7 @@ class FeatureStateViewModel {
       nextFeatures[index] = feature.copyWith(isFavorite: nextValue);
       allFeatures.value = nextFeatures;
     } catch (error) {
-      errorMessage.value = '更新收藏状态失败: $error';
+      errorMessage.value = '更新收藏状态失败: ${foxyErrorMessage(error)}';
       rethrow;
     }
   }
@@ -80,7 +81,7 @@ class FeatureStateViewModel {
     final features = allFeatures.value;
     final index = features.indexWhere((feature) => feature.id == id);
     if (index == -1) {
-      throw StateError('功能模块不存在: $id');
+      throw RecordNotFoundException('feature module not found: $id');
     }
 
     final feature = features[index];
@@ -92,7 +93,7 @@ class FeatureStateViewModel {
       nextFeatures[index] = feature.copyWith(isPinned: nextValue);
       allFeatures.value = nextFeatures;
     } catch (error) {
-      errorMessage.value = '更新固定状态失败: $error';
+      errorMessage.value = '更新固定状态失败: ${foxyErrorMessage(error)}';
       rethrow;
     }
   }

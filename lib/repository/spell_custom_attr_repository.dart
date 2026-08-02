@@ -12,7 +12,9 @@ class SpellCustomAttrRepository
   static const _table = 'spell_custom_attr';
 
   Future<void> copySpellCustomAttr(int key) async {
-    throw UnsupportedError('法术自定义属性记录不能自动复制，请为有效法术新增记录。');
+    throw CopyNotSupportedException(
+      'spell custom attribute records cannot be auto-copied; add a new record for a valid spell',
+    );
   }
 
   Future<int> countSpellCustomAttrs() {

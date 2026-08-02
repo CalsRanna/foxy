@@ -2,6 +2,7 @@ import 'package:foxy/constant/dbc_definitions.dart';
 import 'package:foxy/infrastructure/dbc/dbc_export_registry.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 
 final class DbcExportTable {
   final DbcDefinition definition;
@@ -47,14 +48,14 @@ final class ExportDbcUseCase {
       throw ArgumentError.value(
         outputDirectory,
         'outputDirectory',
-        '请先选择 DBC 输出目录',
+        'select the DBC output directory first',
       );
     }
     if (input.definitions.isEmpty) {
-      throw StateError('请至少选择一张可导出的 DBC 表');
+      throw ValidationException('select at least one DBC table to export');
     }
     if (_dbcSyncUtil.isRunning) {
-      throw StateError('已有 DBC 任务正在运行');
+      throw BusyException('another DBC task is already running');
     }
 
     DbcSyncResult? result;
@@ -68,7 +69,8 @@ final class ExportDbcUseCase {
         result = progress;
       }
     }
-    return result ?? (throw StateError('DBC 导出任务结束但未返回结果'));
+    return result ??
+        (throw StateError('DBC export task ended without a result'));
   }
 
   Future<List<DbcExportTable>> loadTables() async {

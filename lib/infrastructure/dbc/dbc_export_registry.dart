@@ -117,7 +117,7 @@ class DbcExportRegistry {
     final delegate = _delegates[tableName];
     if (delegate == null) {
       return DbcExportCountResult.failure(
-        StateError('未注册的 DBC 导出表: $tableName'),
+        StateError('unregistered DBC export table: $tableName'),
       );
     }
     try {
@@ -130,7 +130,7 @@ class DbcExportRegistry {
   Future<List<Map<String, dynamic>>> loadRows(String tableName) async {
     final delegate = _delegates[tableName];
     if (delegate == null) {
-      throw StateError('未注册的 DBC 导出表: $tableName');
+      throw StateError('unregistered DBC export table: $tableName');
     }
     return delegate.loadRows();
   }

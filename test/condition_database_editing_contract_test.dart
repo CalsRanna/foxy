@@ -3,6 +3,7 @@ import 'package:foxy/entity/activity_log_entity.dart';
 import 'package:foxy/entity/condition_entity.dart';
 import 'package:foxy/event/event_bus.dart';
 import 'package:foxy/infrastructure/database/mysql_error_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/infrastructure/logging/activity_log_service.dart';
 import 'package:foxy/repository/activity_log_repository.dart';
 import 'package:foxy/repository/condition_repository.dart';
@@ -153,23 +154,11 @@ void main() {
 
       await expectLater(
         repository.updateCondition(key, _condition()),
-        throwsA(
-          isA<StateError>().having(
-            (error) => error.message,
-            'message',
-            contains('原记录不存在'),
-          ),
-        ),
+        throwsA(isA<RecordNotFoundException>()),
       );
       await expectLater(
         repository.destroyCondition(key),
-        throwsA(
-          isA<StateError>().having(
-            (error) => error.message,
-            'message',
-            contains('原记录不存在'),
-          ),
-        ),
+        throwsA(isA<RecordNotFoundException>()),
       );
     });
 
@@ -203,13 +192,7 @@ void main() {
       );
       await expectLater(
         repository.updateCondition(key, _condition()),
-        throwsA(
-          isA<StateError>().having(
-            (error) => error.message,
-            'message',
-            contains('修改后的主键已存在'),
-          ),
-        ),
+        throwsA(isA<DuplicateKeyException>()),
       );
     });
 

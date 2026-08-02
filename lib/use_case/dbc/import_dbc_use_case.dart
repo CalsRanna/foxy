@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:foxy/infrastructure/config/config_util.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_progress.dart';
 import 'package:foxy/infrastructure/dbc/dbc_sync_util.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
 
 final class ImportDbcInput {
@@ -46,15 +47,19 @@ final class ImportDbcUseCase {
 
   Future<DbcSyncResult> execute(ImportDbcInput input) async {
     if (_executing || _dbcSyncUtil.isRunning) {
-      throw StateError('已有 DBC 任务正在运行');
+      throw BusyException('another DBC task is already running');
     }
 
     final directory = input.directory.trim();
     if (directory.isEmpty) {
-      throw ArgumentError.value(directory, 'directory', '请先选择 DBC 文件目录');
+      throw ArgumentError.value(
+        directory,
+        'directory',
+        'select the DBC file directory first',
+      );
     }
     if (!await Directory(directory).exists()) {
-      throw FileSystemException('DBC 目录不存在', directory);
+      throw FileSystemException('DBC directory does not exist', directory);
     }
 
     final cancelGeneration = _cancelGeneration;
@@ -89,7 +94,8 @@ final class ImportDbcUseCase {
           result = progress;
         }
       }
-      return result ?? (throw StateError('DBC 导入任务结束但未返回结果'));
+      return result ??
+          (throw StateError('DBC import task ended without a result'));
     } finally {
       _executing = false;
     }

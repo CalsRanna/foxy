@@ -17,7 +17,7 @@ class PointOfInterestRepository
   Future<int> copyPointOfInterest(int key) async {
     final source = await getPointOfInterest(key);
     if (source == null) {
-      throw StateError('原兴趣点不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storePointOfInterest(copied);

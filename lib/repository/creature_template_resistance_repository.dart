@@ -20,7 +20,7 @@ class CreatureTemplateResistanceRepository
   ) async {
     final source = await getCreatureTemplateResistance(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final blank = await createCreatureTemplateResistance(source.creatureID);
     final candidate = source.copyWith(school: blank.school);
@@ -79,6 +79,8 @@ class CreatureTemplateResistanceRepository
     for (var school = minSchool; school <= maxSchool; school++) {
       if (!used.contains(school)) return school;
     }
-    throw StateError('生物抗性学校已满，只允许 $minSchool-$maxSchool');
+    throw ValidationException(
+      'creature resistance schools are full; only $minSchool-$maxSchool are allowed',
+    );
   }
 }

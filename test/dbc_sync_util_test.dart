@@ -30,7 +30,10 @@ void main() {
     final results = events.whereType<DbcSyncResult>().toList();
     expect(results, hasLength(1));
     expect(results.single.success, isFalse);
-    expect(results.single.errors.single.message, contains('目录不存在'));
+    expect(
+      results.single.errors.single.message,
+      contains('directory does not exist'),
+    );
     expect(util.isRunning, isFalse);
     expect(util.operation, isNull);
   });

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/dashboard/component/frequent_module.dart';
 import 'package:foxy/page/dashboard/component/introduction.dart';
 import 'package:foxy/page/dashboard/component/trend.dart';
@@ -98,7 +99,7 @@ class _DashboardPageRoute extends State<DashboardPage> {
       await viewModel.initSignals();
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载仪表板数据失败：$error');
+      DialogUtil.instance.error('加载仪表板数据失败：${foxyErrorMessage(error)}');
     }
   }
 

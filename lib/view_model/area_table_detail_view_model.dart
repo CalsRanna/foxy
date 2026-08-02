@@ -8,9 +8,7 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class AreaTableDetailViewModel
-    with
-        FieldControllerMixin {
+class AreaTableDetailViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<AreaTableRepository>();
   final _activityLogService = GetIt.instance.get<ActivityLogService>();
 
@@ -103,13 +101,13 @@ class AreaTableDetailViewModel
       }
       final result = await _repository.getAreaTable(key);
       if (result == null) {
-        throw StateError('原区域不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       entity.value = result;
       _applyCandidate(result);
       persistedKey.value = key;
     } catch (error, stackTrace) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       LoggerUtil.instance.e('加载详情失败', error: error, stackTrace: stackTrace);
       rethrow;
     } finally {
@@ -119,7 +117,7 @@ class AreaTableDetailViewModel
 
   /// 退出页面
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在保存，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     submitting.value = true;
     errorMessage.value = null;
     try {
@@ -139,7 +137,7 @@ class AreaTableDetailViewModel
       entity.value = candidate;
       _logActivity(action, candidate);
     } catch (error) {
-      errorMessage.value = error.toString();
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -216,13 +214,17 @@ class AreaTableDetailViewModel
   }) async {
     if (value.parentAreaId > 0 &&
         await _repository.getAreaTable(value.parentAreaId) == null) {
-      throw StateError('父级区域 ${value.parentAreaId} 不存在');
+      throw RecordNotFoundException(
+        'parent area ${value.parentAreaId} does not exist',
+      );
     }
     if (!await _repository.isAreaBitAvailable(
       value.areaBit,
       excludingKey: originalKey,
     )) {
-      throw StateError('探索位索引 ${value.areaBit} 已被其他区域使用');
+      throw DuplicateKeyException(
+        'exploration bit index ${value.areaBit} is already used by another area',
+      );
     }
   }
 }

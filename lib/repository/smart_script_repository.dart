@@ -17,7 +17,7 @@ class SmartScriptRepository with RepositoryMixin, _SmartScriptRepositoryMixin {
   Future<SmartScriptKey> copySmartScript(SmartScriptKey key) async {
     final script = await getSmartScript(key);
     if (script == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final nextId = await nextMaxPlusOne(
       _table,

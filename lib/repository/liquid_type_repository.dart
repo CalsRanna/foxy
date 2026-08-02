@@ -15,7 +15,7 @@ class LiquidTypeRepository with RepositoryMixin, _LiquidTypeRepositoryMixin {
   Future<int> copyLiquidType(int key) async {
     final source = await getLiquidType(key);
     if (source == null) {
-      throw StateError('原液体类型不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = LiquidTypeEntity.fromJson({
       ...source.toJson(),

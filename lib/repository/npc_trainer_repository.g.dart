@@ -6,7 +6,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
   Future<NpcTrainerKey> copyNpcTrainer(NpcTrainerKey key) async {
     final source = await getNpcTrainer(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('trainer_spell record not found');
     }
     final blank = await createNpcTrainer(source.trainerId);
     final copied = source.copyWith(
@@ -42,7 +42,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('trainer_spell record not found');
     }
   }
 
@@ -83,7 +83,7 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
       await laconic.table('trainer_spell').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in trainer_spell');
       }
       rethrow;
     }
@@ -103,12 +103,12 @@ mixin _NpcTrainerRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in trainer_spell');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('trainer_spell record not found');
     }
   }
 

@@ -11,9 +11,7 @@ import 'package:foxy/widget/form/field_controller.dart';
 import 'package:get_it/get_it.dart';
 import 'package:signals/signals.dart';
 
-class GossipMenuOptionCollectionEditorViewModel
-    with
-        FieldControllerMixin {
+class GossipMenuOptionCollectionEditorViewModel with FieldControllerMixin {
   final _repository = GetIt.instance.get<GossipMenuOptionRepository>();
   final _localeRepository = GetIt.instance
       .get<GossipMenuOptionLocaleRepository>();
@@ -73,9 +71,11 @@ class GossipMenuOptionCollectionEditorViewModel
   void cancel() => _clearEditingState();
 
   Future<void> copy(GossipMenuOptionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -87,7 +87,7 @@ class GossipMenuOptionCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -95,9 +95,11 @@ class GossipMenuOptionCollectionEditorViewModel
   }
 
   Future<void> create() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     errorMessage.value = null;
     try {
@@ -113,15 +115,17 @@ class GossipMenuOptionCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     }
   }
 
   Future<void> destroy(GossipMenuOptionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     submitting.value = true;
     errorMessage.value = null;
@@ -133,7 +137,7 @@ class GossipMenuOptionCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -143,9 +147,11 @@ class GossipMenuOptionCollectionEditorViewModel
   void dispose() => disposeControllers();
 
   Future<void> edit(GossipMenuOptionKey key) async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final token = ++_interactionToken;
     editingKey.value = key;
     selectedKey.value = key;
@@ -155,7 +161,7 @@ class GossipMenuOptionCollectionEditorViewModel
       final candidate = await _repository.getGossipMenuOption(key);
       if (token != _interactionToken || parentKey.value != parent) return;
       if (candidate == null) {
-        throw StateError('原记录不存在，可能已被其他操作修改或删除');
+        throw RecordNotFoundException('record not found');
       }
       final localeKey = GossipMenuOptionLocaleKey(
         menuId: key.menuId,
@@ -175,7 +181,7 @@ class GossipMenuOptionCollectionEditorViewModel
         return;
       }
       _clearEditingState();
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _interactionToken) loading.value = false;
@@ -191,9 +197,11 @@ class GossipMenuOptionCollectionEditorViewModel
   }
 
   Future<void> persist() async {
-    if (submitting.value) throw StateError('正在提交，请稍候');
+    if (submitting.value) throw BusyException('operation already in progress');
     final parent = parentKey.value;
-    if (parent == null) throw StateError('父记录尚未加载');
+    if (parent == null) {
+      throw ParentNotLoadedException('parent record not loaded');
+    }
     final candidate = _collectCandidate();
     final originalKey = editingKey.value;
     final originalLocaleKey = localeEditingKey.value;
@@ -218,7 +226,7 @@ class GossipMenuOptionCollectionEditorViewModel
       if (token != _interactionToken || parentKey.value != parent) {
         return;
       }
-      errorMessage.value = '$error';
+      errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       submitting.value = false;
@@ -320,7 +328,7 @@ class GossipMenuOptionCollectionEditorViewModel
       total.value = count;
       _clearEditingState();
     } catch (error) {
-      if (token == _refreshToken) errorMessage.value = '$error';
+      if (token == _refreshToken) errorMessage.value = foxyErrorMessage(error);
       rethrow;
     } finally {
       if (token == _refreshToken) loading.value = false;

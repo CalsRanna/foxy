@@ -8,6 +8,7 @@ import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/entity/reference_loot_template_entity.dart';
 import 'package:foxy/entity/skinning_loot_template_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_loot_template_repository.dart';
 import 'package:foxy/repository/disenchant_loot_template_repository.dart';
 import 'package:foxy/repository/game_object_loot_template_repository.dart';
@@ -224,17 +225,17 @@ void main() {
             spec.key,
             _candidateFor(spec.table),
           ),
-          throwsA(isA<StateError>()),
+          throwsA(isA<RecordNotFoundException>()),
           reason: '${spec.table} update',
         );
         await expectLater(
           _destroyLootTemplate(spec.repository, spec.table, spec.key),
-          throwsA(isA<StateError>()),
+          throwsA(isA<RecordNotFoundException>()),
           reason: '${spec.table} delete',
         );
         await expectLater(
           _copyLootTemplate(spec.repository, spec.table, spec.key),
-          throwsA(isA<StateError>()),
+          throwsA(isA<RecordNotFoundException>()),
           reason: '${spec.table} copy',
         );
       }

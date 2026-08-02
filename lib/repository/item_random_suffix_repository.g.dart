@@ -33,7 +33,9 @@ mixin _ItemRandomSuffixRepositoryMixin
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_item_random_suffix record not found',
+      );
     }
   }
 
@@ -61,7 +63,9 @@ mixin _ItemRandomSuffixRepositoryMixin
     ItemRandomSuffixEntity itemRandomSuffix,
   ) async {
     if (itemRandomSuffix.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(itemRandomSuffix);
     final json = prepareWriteJson(itemRandomSuffix.toJson());
@@ -69,7 +73,9 @@ mixin _ItemRandomSuffixRepositoryMixin
       await laconic.table('foxy.dbc_item_random_suffix').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_item_random_suffix',
+        );
       }
       rethrow;
     }
@@ -89,12 +95,16 @@ mixin _ItemRandomSuffixRepositoryMixin
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException(
+          'duplicate key in foxy.dbc_item_random_suffix',
+        );
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException(
+        'foxy.dbc_item_random_suffix record not found',
+      );
     }
   }
 

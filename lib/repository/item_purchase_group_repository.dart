@@ -24,7 +24,7 @@ class ItemPurchaseGroupRepository
   Future<int> copyItemPurchaseGroup(int key) async {
     final source = await getItemPurchaseGroup(key);
     if (source == null) {
-      throw StateError('原物品购买组不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final candidate = source.copyWith(id: await _getNextId());
     await storeItemPurchaseGroup(candidate);
@@ -81,7 +81,9 @@ class ItemPurchaseGroupRepository
   Future<int> _getNextId() async {
     final id = await nextMaxPlusOne(_table, 'ID');
     if (id > 2147483647) {
-      throw StateError('物品购买组编号已超出 signed int32 范围');
+      throw IdExhaustedException(
+        'item purchase group ID exceeds signed int32 range',
+      );
     }
     return id;
   }

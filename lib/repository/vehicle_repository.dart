@@ -14,7 +14,7 @@ class VehicleRepository with RepositoryMixin, _VehicleRepositoryMixin {
   Future<int> copyVehicle(int key) async {
     final source = await getVehicle(key);
     if (source == null) {
-      throw StateError('原载具不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = source.copyWith(id: await nextMaxPlusOne(_table, 'ID'));
     await storeVehicle(copied);

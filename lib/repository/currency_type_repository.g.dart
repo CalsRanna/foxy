@@ -28,7 +28,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
   Future<int> copyCurrencyType(int key) async {
     final source = await getCurrencyType(key);
     if (source == null) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_currency_types record not found');
     }
     final blank = await createCurrencyType();
     final copied = source.copyWith(id: blank.id);
@@ -56,7 +56,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
       key,
     ).delete();
     if (deletedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_currency_types record not found');
     }
   }
 
@@ -97,7 +97,9 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
 
   Future<void> storeCurrencyType(CurrencyTypeEntity currencyType) async {
     if (currencyType.id <= 0) {
-      throw StateError('主键必须在新建时显式分配');
+      throw InvalidPrimaryKeyException(
+        'primary key must be assigned before store',
+      );
     }
     await _beforeStore(currencyType);
     final json = prepareWriteJson(currencyType.toJson());
@@ -105,7 +107,7 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
       await laconic.table('foxy.dbc_currency_types').insert([json]);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('相同主键的记录已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_currency_types');
       }
       rethrow;
     }
@@ -125,12 +127,12 @@ mixin _CurrencyTypeRepositoryMixin on RepositoryMixin {
       ).update(json);
     } catch (error) {
       if (MysqlErrorUtil.isDuplicateEntry(error)) {
-        throw StateError('修改后的主键已存在');
+        throw DuplicateKeyException('duplicate key in foxy.dbc_currency_types');
       }
       rethrow;
     }
     if (matchedRows == 0) {
-      throw StateError('原记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('foxy.dbc_currency_types record not found');
     }
   }
 

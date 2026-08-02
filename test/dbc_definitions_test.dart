@@ -103,7 +103,7 @@ void main() {
         isA<StateError>().having(
           (error) => error.message,
           'message',
-          contains('未注册的 DBC 导出表'),
+          contains('unregistered DBC export table'),
         ),
       ),
     );
@@ -111,6 +111,6 @@ void main() {
     final count = await registry.countRows('dbc_not_registered_table');
     expect(count.success, isFalse);
     expect(count.error, isA<StateError>());
-    expect(count.error.toString(), contains('未注册的 DBC 导出表'));
+    expect(count.error.toString(), contains('unregistered DBC export table'));
   });
 }

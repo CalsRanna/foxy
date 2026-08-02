@@ -18,7 +18,7 @@ class DbcFactionTemplateRepository
   Future<int> copyDbcFactionTemplate(int key) async {
     final source = await getDbcFactionTemplate(key);
     if (source == null) {
-      throw StateError('原阵营模板不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
     final copied = DbcFactionTemplateEntity.fromJson({
       ...source.toJson(),

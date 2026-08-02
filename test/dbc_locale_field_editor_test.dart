@@ -232,7 +232,7 @@ void main() {
   testWidgets('加载失败时不打开弹窗并返回 null', (tester) async {
     final delegate = DbcLocaleFieldEditorDelegate(
       field: DbcLocaleFields.spellName,
-      onLoad: (entry) async => throw StateError('DBC 记录不存在'),
+      onLoad: (entry) async => throw StateError('DBC record not found'),
       onSave: (entry, values) async {},
     );
 
@@ -258,7 +258,7 @@ void main() {
       field: DbcLocaleFields.spellName,
       onLoad: (entry) async => DbcLocaleFieldCodec.empty(),
       onSave: (entry, values) async {
-        throw StateError('DBC 记录不存在，无法保存本地化');
+        throw StateError('DBC record not found, cannot save locale');
       },
     );
 

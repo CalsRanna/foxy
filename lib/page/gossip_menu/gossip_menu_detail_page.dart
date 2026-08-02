@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/gossip_menu_entity.dart';
+import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_option_view.dart';
 import 'package:foxy/page/gossip_menu/gossip_menu_view.dart';
 import 'package:foxy/page/gossip_menu/npc_text_view.dart';
@@ -74,7 +75,7 @@ class _GossipMenuDetailPageState extends State<GossipMenuDetailPage> {
       await viewModel.initSignals(key: widget.gossipMenuKey);
     } catch (error) {
       if (!mounted) return;
-      DialogUtil.instance.error('加载失败：$error');
+      DialogUtil.instance.error('加载失败：${foxyErrorMessage(error)}');
     }
   }
 }

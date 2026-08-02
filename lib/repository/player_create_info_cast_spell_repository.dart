@@ -8,7 +8,9 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
   Future<void> copyPlayerCreateInfoCastSpell(
     PlayerCreateInfoCastSpellKey key,
   ) async {
-    throw UnsupportedError('登录施法表没有数据库主键，请新增唯一组合。');
+    throw CopyNotSupportedException(
+      'login cast spell table has no database primary key; add a unique combination',
+    );
   }
 
   Future<int> countPlayerCreateInfoCastSpells(int race, int playerClass) {
@@ -43,7 +45,7 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
       key.note,
     ]);
     if (deletedRows == 0) {
-      throw StateError('原登录施法记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
   }
 
@@ -116,7 +118,7 @@ class PlayerCreateInfoCastSpellRepository with RepositoryMixin {
       originalKey.note,
     ]);
     if (matchedRows == 0) {
-      throw StateError('原登录施法记录不存在，可能已被其他操作修改或删除');
+      throw RecordNotFoundException('record not found');
     }
   }
 }
