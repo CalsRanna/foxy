@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/infrastructure/preferences/shared_preferences_util.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowInitializer with WindowListener {
-  static const _defaultWidth = 1000.0;
-  static const _defaultHeight = 750.0;
+  static const _defaultWidth = 1296.0;
+  static const _defaultHeight = 783.0;
 
   static WindowInitializer? _instance;
 
@@ -30,6 +31,7 @@ class WindowInitializer with WindowListener {
     await windowManager.ensureInitialized();
 
     final savedSize = await _getSavedWindowSize();
+    LoggerUtil.instance.d(savedSize);
     final options = WindowOptions(
       backgroundColor: Colors.transparent,
       center: true,

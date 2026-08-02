@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 import 'package:yaml_edit/yaml_edit.dart';
@@ -10,6 +11,7 @@ class ConfigUtil {
   String get configPath => p.join(Directory.current.path, 'config.yaml');
 
   Future<Map<String, dynamic>> load() async {
+    LoggerUtil.instance.d(configPath);
     final file = File(configPath);
     if (!await file.exists()) return {};
     final content = await file.readAsString();
