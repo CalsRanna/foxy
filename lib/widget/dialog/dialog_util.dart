@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:foxy/router/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+/// 对话框统一最大宽度（全项目一致）。
+const kFoxyDialogMaxWidth = 720.0;
+
+/// 对话框最大高度 = 屏高 × 此比例。
+const kFoxyDialogMaxHeightRatio = 0.8;
+
+/// 统一对话框约束：maxWidth 固定 [kFoxyDialogMaxWidth]，maxHeight 按屏幕比例。
+///
+/// 所有业务对话框的 [ShadDialog.constraints] 都应使用本函数，
+/// 保证宽度、最大高度全项目一致。
+BoxConstraints foxyDialogConstraints(BuildContext context) {
+  return BoxConstraints(
+    maxWidth: kFoxyDialogMaxWidth,
+    maxHeight: MediaQuery.of(context).size.height * kFoxyDialogMaxHeightRatio,
+  );
+}
+
 /// Foxy 对话框入口，封装 [showShadDialog] 并固定项目默认行为。
 ///
 /// ## 与 [showShadDialog] 的差异

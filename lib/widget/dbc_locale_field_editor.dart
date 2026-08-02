@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/dbc_locale.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// DBC 单字段本地化编辑器：固定 16 行「语言编号 + 当前字段」。
@@ -76,14 +77,13 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
-    final multiline = widget.field.multiline;
     return ShadDialog(
       title: Text(widget.title),
       description: Text('编号: ${widget.entry}'),
-      constraints: BoxConstraints(
-        maxWidth: multiline ? 800 : 640,
-        maxHeight: 560,
-      ),
+      scrollable: false,
+      titlePinned: true,
+      descriptionPinned: true,
+      constraints: foxyDialogConstraints(context),
       actions: [
         ShadButton.outline(
           onPressed: _saving ? null : () => Navigator.of(context).pop(),
@@ -97,26 +97,7 @@ class _DbcLocaleFieldEditorState extends State<DbcLocaleFieldEditor> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_errorMessage != null) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.destructive.withValues(alpha: 0.4),
-                ),
-              ),
-              child: Text(
-                _errorMessage!,
-                style: theme.textTheme.small.copyWith(
-                  color: theme.colorScheme.destructive,
-                ),
-              ),
-            ),
-          ],
+          FoxyInlineError(message: _errorMessage),
           _buildHeader(theme),
           Flexible(child: _buildTable(theme)),
         ],

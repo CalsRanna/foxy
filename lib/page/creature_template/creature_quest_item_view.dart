@@ -27,8 +27,7 @@ class CreatureQuestItemView extends StatefulWidget {
 }
 
 class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
-  final viewModel = GetIt.instance
-      .get<CreatureQuestItemLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<CreatureQuestItemLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {

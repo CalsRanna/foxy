@@ -117,6 +117,11 @@ void main() {
       onSave: (entry, values) async {},
     );
 
+    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    tester.view.physicalSize = const Size(1200, 1100);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
     await tester.pumpWidget(
       _wrap(
         FoxyLocalePicker(
@@ -200,6 +205,11 @@ void main() {
       onLoad: (entry) async => initial,
       onSave: (entry, values) async {},
     );
+
+    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    tester.view.physicalSize = const Size(1200, 1100);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
       _wrap(
@@ -307,6 +317,11 @@ void main() {
     );
 
     final controller = StringFieldController()..init('主框草稿');
+
+    // 16 行固定编辑器需全量可见,放大视口使 0.8 屏高度容纳所有行
+    tester.view.physicalSize = const Size(1200, 1100);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
 
     await tester.pumpWidget(
       _wrap(

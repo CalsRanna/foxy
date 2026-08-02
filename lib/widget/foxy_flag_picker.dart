@@ -62,12 +62,11 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final tableMaxHeight = screenHeight * 0.6;
     final flags = widget.flags;
 
     return ShadDialog(
-      constraints: BoxConstraints(maxWidth: 720),
+      scrollable: false,
+      constraints: foxyDialogConstraints(context),
       title: Text(widget.title),
       description: Text('当前值: $_displayValue  |  已选: $_selectedCount 项'),
       actions: [
@@ -86,12 +85,13 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
           child: Text('确定'),
         ),
       ],
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: tableMaxHeight),
+      child: Flexible(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final maxWidth = constraints.maxWidth;
-            var width = maxWidth - 280;
+            // 弹性列宽算法:固定列 120+160,剩余宽度给名称列。
+            const fixedWidthSum = 120.0 + 160.0;
+            var flexWidth = constraints.maxWidth - fixedWidthSum;
+            if (flexWidth < 0) flexWidth = 0;
             return ShadTable(
               columnCount: 3,
               rowCount: flags.length,
@@ -108,7 +108,7 @@ class _FlagPickerDialogState extends State<_FlagPickerDialog> {
                 return switch (column) {
                   0 => FixedTableSpanExtent(120),
                   1 => FixedTableSpanExtent(160),
-                  2 => FixedTableSpanExtent(width),
+                  2 => FixedTableSpanExtent(flexWidth),
                   _ => null,
                 };
               },

@@ -26,8 +26,7 @@ class PageTextLocaleView extends StatefulWidget {
 }
 
 class _PageTextLocaleViewState extends State<PageTextLocaleView> {
-  final viewModel = GetIt.instance
-      .get<PageTextLocaleLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<PageTextLocaleLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {

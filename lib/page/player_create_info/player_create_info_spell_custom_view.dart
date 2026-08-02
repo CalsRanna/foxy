@@ -6,6 +6,7 @@ import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/view_model/player_create_info_spell_custom_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
@@ -81,6 +82,8 @@ class _PlayerCreateInfoSpellCustomViewState
       );
     }
   }
+
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -195,11 +198,14 @@ class _PlayerCreateInfoSpellCustomViewState
       context: context,
       builder: (dialogContext) => ShadDialog(
         title: Text(isEditing ? '编辑自定义法术' : '新增自定义法术'),
-        constraints: const BoxConstraints(maxWidth: 960),
+        titlePinned: true,
+        descriptionPinned: true,
+        constraints: foxyDialogConstraints(dialogContext),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 16,
           children: [
+            FoxyInlineError(message: _errorMessage),
             Row(
               spacing: 8,
               children: [
@@ -260,8 +266,9 @@ class _PlayerCreateInfoSpellCustomViewState
                         await viewModel.persist();
                       } catch (error) {
                         if (!mounted) return;
-                        DialogUtil.instance.error(
-                          '保存失败：${foxyErrorMessage(error)}',
+                        setState(
+                          () =>
+                              _errorMessage = '保存失败：${foxyErrorMessage(error)}',
                         );
                         return;
                       }

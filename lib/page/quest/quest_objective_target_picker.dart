@@ -65,7 +65,7 @@ class _TargetDialogState extends State<_TargetDialog>
   Widget build(BuildContext context) {
     return ShadDialog(
       title: const Text('任务目标'),
-      constraints: const BoxConstraints(maxWidth: 560),
+      constraints: foxyDialogConstraints(context),
       actions: [
         ShadButton.outline(
           onPressed: () => Navigator.of(context).pop(),

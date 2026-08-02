@@ -26,8 +26,7 @@ class SpellLinkedSpellView extends StatefulWidget {
 }
 
 class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
-  final viewModel = GetIt.instance
-      .get<SpellLinkedSpellLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<SpellLinkedSpellLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {

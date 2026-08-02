@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:foxy/page/workflow/workflow_status.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
+import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:signals/signals_flutter.dart';
 
-const _kDialogWidth = 640.0;
+const _kDialogWidth = kFoxyDialogMaxWidth;
 
 // ─── 公共壳 ───────────────────────────────────────────────────────────────
 
@@ -211,7 +212,8 @@ class SettingDialogShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShadDialog(
       closeIcon: const SizedBox.shrink(),
-      constraints: const BoxConstraints(maxWidth: _kDialogWidth),
+      titlePinned: true,
+      constraints: foxyDialogConstraints(context),
       title: title,
       actions: actions,
       child: child,
@@ -222,6 +224,7 @@ class SettingDialogShell extends StatelessWidget {
 class _DbcExportDialogState extends State<DbcExportDialog> {
   final _dirController = StringFieldController();
   final _searchController = StringFieldController();
+
   /// 以下状态用 signal：Watch 直接订阅，避免父级 setState 重建 Watch
   /// 触发 signals_flutter 的 didUpdateWidget→recompute 链路破坏订阅。
   final _outputDir = signal<String?>(null);
@@ -354,7 +357,10 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              settingDialogMutedHint(context, '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。'),
+              settingDialogMutedHint(
+                context,
+                '将数据库中的 DBC 表写出为 .dbc 文件。空表会自动跳过。',
+              ),
               Text(
                 '输出目录',
                 style: theme.textTheme.small.copyWith(
@@ -484,9 +490,7 @@ class _DbcExportDialogState extends State<DbcExportDialog> {
                       child: items.isEmpty
                           ? Center(
                               child: Text(
-                                _query.value.isEmpty
-                                    ? '没有可导出的表'
-                                    : '没有匹配的表',
+                                _query.value.isEmpty ? '没有可导出的表' : '没有匹配的表',
                                 style: theme.textTheme.muted,
                               ),
                             )

@@ -26,8 +26,7 @@ class SpellLootTemplateView extends StatefulWidget {
 }
 
 class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
-  final viewModel = GetIt.instance
-      .get<SpellLootTemplateLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<SpellLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {

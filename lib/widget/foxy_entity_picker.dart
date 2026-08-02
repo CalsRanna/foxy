@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_input_readonly.dart';
 import 'package:foxy/widget/foxy_pagination.dart';
@@ -93,6 +94,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   List<T> _items = [];
   int _total = 0;
   int? _selectedId;
+  String? _errorMessage;
 
   List<String> get _filterValues =>
       _filterControllers.map((c) => c.text).toList();
@@ -101,6 +103,7 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
   Widget build(BuildContext context) {
     return ShadDialog(
       title: Text(widget.delegate.title),
+      scrollable: false,
       actions: [
         FoxyPagination(
           page: _page,
@@ -125,8 +128,16 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       ],
       actionsMainAxisAlignment: MainAxisAlignment.spaceBetween,
       actionsMainAxisSize: MainAxisSize.max,
-      constraints: const BoxConstraints(maxWidth: 720),
-      child: Column(spacing: 8, children: [_buildFilter(), _buildTable()]),
+      constraints: foxyDialogConstraints(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 8,
+        children: [
+          FoxyInlineError(message: _errorMessage),
+          _buildFilter(),
+          Flexible(child: _buildTable()),
+        ],
+      ),
     );
   }
 
@@ -189,8 +200,6 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
 
   Widget _buildTable() {
     final theme = ShadTheme.of(context);
-    final screenHeight = MediaQuery.of(context).size.height;
-    final tableMaxHeight = screenHeight * 0.5;
     final columns = widget.delegate.columns;
     final flexCount = columns.where((c) => c.width == null).length;
     final fixedWidthSum = columns
@@ -198,73 +207,67 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
         .fold<double>(0, (sum, c) => sum + c.width!);
 
     if (_items.isEmpty && widget.delegate.emptyText != null) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: tableMaxHeight),
-        child: Center(child: Text(widget.delegate.emptyText!)),
-      );
+      return Center(child: Text(widget.delegate.emptyText!));
     }
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: tableMaxHeight),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          var flexWidth = flexCount > 0
-              ? (constraints.maxWidth - fixedWidthSum) / flexCount
-              : 0.0;
-          if (flexWidth < 0) flexWidth = 0;
-          return FoxyShadTable(
-            queryVersion: _queryVersion,
-            columnCount: columns.length,
-            rowCount: _items.length,
-            pinnedRowCount: 1,
-            header: (context, column) =>
-                ShadTableCell.header(child: Text(columns[column].header)),
-            columnSpanExtent: (column) {
-              final w = columns[column].width;
-              return FixedTableSpanExtent(w ?? flexWidth);
-            },
-            rowSpanBackgroundDecoration: (row) {
-              final dataRow = row - 1;
-              if (dataRow < 0 || dataRow >= _items.length) return null;
-              if (widget.delegate.idOf(_items[dataRow]) == _selectedId) {
-                return TableSpanDecoration(color: theme.colorScheme.accent);
-              }
-              return null;
-            },
-            onRowTap: (row) {
-              if (row >= 0 && row < _items.length) {
-                setState(() => _selectedId = widget.delegate.idOf(_items[row]));
-              }
-            },
-            onRowDoubleTap: (row) {
-              if (row >= 0 && row < _items.length) {
-                Navigator.of(context).pop(widget.delegate.idOf(_items[row]));
-              }
-            },
-            builder: (context, vicinity) {
-              if (vicinity.row < 0 || vicinity.row >= _items.length) {
-                return ShadTableCell(child: SizedBox());
-              }
-              final item = _items[vicinity.row];
-              final col = columns[vicinity.column];
-              final isFlex = col.width == null;
-              Widget cellWidget;
-              if (col.cell != null) {
-                cellWidget = col.cell!(item);
-              } else if (isFlex) {
-                cellWidget = Text(
-                  col.text!(item),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                );
-              } else {
-                cellWidget = Text(col.text!(item));
-              }
-              return ShadTableCell(child: cellWidget);
-            },
-          );
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        var flexWidth = flexCount > 0
+            ? (constraints.maxWidth - fixedWidthSum) / flexCount
+            : 0.0;
+        if (flexWidth < 0) flexWidth = 0;
+        return FoxyShadTable(
+          queryVersion: _queryVersion,
+          columnCount: columns.length,
+          rowCount: _items.length,
+          pinnedRowCount: 1,
+          header: (context, column) =>
+              ShadTableCell.header(child: Text(columns[column].header)),
+          columnSpanExtent: (column) {
+            final w = columns[column].width;
+            return FixedTableSpanExtent(w ?? flexWidth);
+          },
+          rowSpanBackgroundDecoration: (row) {
+            final dataRow = row - 1;
+            if (dataRow < 0 || dataRow >= _items.length) return null;
+            if (widget.delegate.idOf(_items[dataRow]) == _selectedId) {
+              return TableSpanDecoration(color: theme.colorScheme.accent);
+            }
+            return null;
+          },
+          onRowTap: (row) {
+            if (row >= 0 && row < _items.length) {
+              setState(() => _selectedId = widget.delegate.idOf(_items[row]));
+            }
+          },
+          onRowDoubleTap: (row) {
+            if (row >= 0 && row < _items.length) {
+              Navigator.of(context).pop(widget.delegate.idOf(_items[row]));
+            }
+          },
+          builder: (context, vicinity) {
+            if (vicinity.row < 0 || vicinity.row >= _items.length) {
+              return ShadTableCell(child: SizedBox());
+            }
+            final item = _items[vicinity.row];
+            final col = columns[vicinity.column];
+            final isFlex = col.width == null;
+            Widget cellWidget;
+            if (col.cell != null) {
+              cellWidget = col.cell!(item);
+            } else if (isFlex) {
+              cellWidget = Text(
+                col.text!(item),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            } else {
+              cellWidget = Text(col.text!(item));
+            }
+            return ShadTableCell(child: cellWidget);
+          },
+        );
+      },
     );
   }
 
@@ -301,7 +304,8 @@ class _EntityPickerDialogState<T> extends State<_EntityPickerDialog<T>> {
       });
     } catch (e) {
       LoggerUtil.instance.e('${widget.delegate.errorLabel}: $e');
-      DialogUtil.instance.error('${widget.delegate.errorLabel}: $e');
+      if (!mounted) return;
+      setState(() => _errorMessage = '${widget.delegate.errorLabel}: $e');
     }
   }
 }

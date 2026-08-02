@@ -32,8 +32,7 @@ class ItemLootTemplateView extends StatefulWidget {
 }
 
 class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
-  final viewModel = GetIt.instance
-      .get<ItemLootTemplateLinkedListViewModel>();
+  final viewModel = GetIt.instance.get<ItemLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {

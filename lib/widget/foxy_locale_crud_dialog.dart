@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/logging/logger_util.dart';
 import 'package:foxy/widget/database_locale_changes.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
+import 'package:foxy/widget/dialog/foxy_inline_error.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 /// 兼容旧名称。
@@ -98,7 +99,10 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
     return ShadDialog(
       title: Text(widget.title),
       description: Text('编号: ${widget.entry}'),
-      constraints: const BoxConstraints(maxWidth: 720),
+      scrollable: false,
+      titlePinned: true,
+      descriptionPinned: true,
+      constraints: foxyDialogConstraints(context),
       actions: [
         ShadButton.outline(onPressed: _addRow, child: const Text('添加')),
         const Spacer(),
@@ -114,26 +118,7 @@ class _DatabaseLocaleEditorState extends State<DatabaseLocaleEditor> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (_errorMessage != null) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.destructive.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: theme.colorScheme.destructive.withValues(alpha: 0.4),
-                ),
-              ),
-              child: Text(
-                _errorMessage!,
-                style: theme.textTheme.small.copyWith(
-                  color: theme.colorScheme.destructive,
-                ),
-              ),
-            ),
-          ],
+          FoxyInlineError(message: _errorMessage),
           _buildHeader(theme),
           Flexible(child: _buildTable()),
         ],
