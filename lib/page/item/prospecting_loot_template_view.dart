@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/prospecting_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/prospecting_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/prospecting_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -23,9 +23,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 选矿掉落Tab
 class ProspectingLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const ProspectingLootTemplateView({super.key, required this.parentKey});
+  const ProspectingLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<ProspectingLootTemplateView> createState() =>
@@ -35,7 +35,7 @@ class ProspectingLootTemplateView extends StatefulWidget {
 class _ProspectingLootTemplateViewState
     extends State<ProspectingLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<ProspectingLootTemplateCollectionEditorViewModel>();
+      .get<ProspectingLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _ProspectingLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

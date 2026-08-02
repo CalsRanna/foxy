@@ -11,7 +11,7 @@ import 'package:foxy/repository/gossip_menu_option_repository.dart';
 import 'package:foxy/use_case/gossip_menu/copy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/destroy_gossip_menu_option_use_case.dart';
 import 'package:foxy/use_case/gossip_menu/save_gossip_menu_option_use_case.dart';
-import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -240,9 +240,9 @@ void main() {
     });
 
     test('编辑后 base 与 locale 分别用各自旧 key 更新', () async {
-      final viewModel = GossipMenuOptionCollectionEditorViewModel();
+      final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentKey(10);
+      await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
       const baseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
       const localeKey = GossipMenuOptionLocaleKey(
@@ -268,9 +268,9 @@ void main() {
     });
 
     test('locale 失败后回滚并保留旧 base/locale key，重试仍定位原记录', () async {
-      final viewModel = GossipMenuOptionCollectionEditorViewModel();
+      final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentKey(10);
+      await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
       const oldBaseKey = GossipMenuOptionKey(menuId: 10, optionId: 2);
       const oldLocaleKey = GossipMenuOptionLocaleKey(
@@ -297,9 +297,9 @@ void main() {
     });
 
     test('清空 locale 字段时使用原 locale key 删除，不使用已改 base key', () async {
-      final viewModel = GossipMenuOptionCollectionEditorViewModel();
+      final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentKey(10);
+      await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
       const oldLocaleKey = GossipMenuOptionLocaleKey(
         menuId: 10,
@@ -318,13 +318,13 @@ void main() {
     });
 
     test('父范围变化和新建都会清空 persisted row identity', () async {
-      final viewModel = GossipMenuOptionCollectionEditorViewModel();
+      final viewModel = GossipMenuOptionLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.setParentKey(10);
+      await viewModel.setLinkKey(10);
       await viewModel.edit(viewModel.items.value.single.key);
       expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setParentKey(12);
+      await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.localeEditingKey.value, isNull);
 

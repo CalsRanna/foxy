@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_area_repository.g.dart';
 
-@FoxyRepository(SpellAreaEntity, parentKey: ['spell'])
+@FoxyRepository(SpellAreaEntity, linkKey: ['spell'])
 class SpellAreaRepository with RepositoryMixin, _SpellAreaRepositoryMixin {
   static const _table = 'spell_area';
 

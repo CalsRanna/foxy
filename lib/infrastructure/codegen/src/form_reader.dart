@@ -20,7 +20,7 @@ const _fullFieldChecker = TypeChecker.fromUrl(
 ///
 /// `bool` 没有专用 controller,库中一致做法是
 /// `SelectFieldController<int>(fallback: 0)` + `collect() == 1` 转换,
-/// 见 pickpocketing_loot_template_collection_editor_view_model.dart。
+/// 见 pickpocketing_loot_template_linked_list_view_model.dart。
 const _supportedPlainTypes = {'int', 'double', 'String', 'bool'};
 
 final class FormReader {

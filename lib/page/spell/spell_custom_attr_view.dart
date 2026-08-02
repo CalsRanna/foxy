@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/spell_flags.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/spell_custom_attr_single_editor_view_model.dart';
+import 'package:foxy/view_model/spell_custom_attr_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
@@ -21,7 +21,7 @@ class SpellCustomAttrView extends StatefulWidget {
 }
 
 class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
-  final viewModel = GetIt.instance.get<SpellCustomAttrSingleEditorViewModel>();
+  final viewModel = GetIt.instance.get<SpellCustomAttrLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ class _SpellCustomAttrViewState extends State<SpellCustomAttrView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.spellId);
+      await viewModel.initSignals(linkKey: widget.spellId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

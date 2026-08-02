@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/game_object_constants.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/game_object_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -26,7 +26,7 @@ class GameObjectTemplateAddonView extends StatefulWidget {
 class _GameObjectTemplateAddonViewState
     extends State<GameObjectTemplateAddonView> {
   final viewModel = GetIt.instance
-      .get<GameObjectTemplateAddonSingleEditorViewModel>();
+      .get<GameObjectTemplateAddonLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ class _GameObjectTemplateAddonViewState
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.gameObjectId);
+      await viewModel.initSignals(linkKey: widget.gameObjectId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

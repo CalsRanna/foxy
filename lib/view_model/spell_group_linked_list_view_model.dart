@@ -1,0 +1,17 @@
+import 'dart:math';
+
+import 'package:foxy/entity/spell_group_entity.dart';
+import 'package:foxy/infrastructure/codegen/form_annotations.dart';
+import 'package:foxy/repository/spell_group_repository.dart';
+import 'package:foxy/widget/form/field_controller.dart';
+import 'package:get_it/get_it.dart';
+import 'package:signals/signals.dart';
+
+part 'spell_group_linked_list_view_model.g.dart';
+
+@FoxyLinkedListViewModel(
+  entity: SpellGroupEntity,
+  repository: SpellGroupRepository,
+)
+class SpellGroupLinkedListViewModel
+    with FieldControllerMixin, _SpellGroupLinkedListViewModelMixin {}

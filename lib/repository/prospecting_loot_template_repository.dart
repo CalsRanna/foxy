@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'prospecting_loot_template_repository.g.dart';
 
-@FoxyRepository(ProspectingLootTemplateEntity, parentKey: ['entry'])
+@FoxyRepository(ProspectingLootTemplateEntity, linkKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class ProspectingLootTemplateRepository

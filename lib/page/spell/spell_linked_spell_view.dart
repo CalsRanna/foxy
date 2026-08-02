@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/spell_enums.dart';
 import 'package:foxy/entity/spell_linked_spell_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/spell_linked_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_linked_spell_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -27,7 +27,7 @@ class SpellLinkedSpellView extends StatefulWidget {
 
 class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   final viewModel = GetIt.instance
-      .get<SpellLinkedSpellCollectionEditorViewModel>();
+      .get<SpellLinkedSpellLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   void didUpdateWidget(covariant SpellLinkedSpellView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spellId != widget.spellId) {
-      viewModel.setParentKey(widget.spellId);
+      viewModel.setLinkKey(widget.spellId);
     }
   }
 
@@ -53,7 +53,7 @@ class _SpellLinkedSpellViewState extends State<SpellLinkedSpellView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.spellId);
+    viewModel.initSignals(linkKey: widget.spellId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

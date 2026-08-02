@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/spell_bonus_data_single_editor_view_model.dart';
+import 'package:foxy/view_model/spell_bonus_data_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
 import 'package:foxy/widget/foxy_number_input.dart';
 import 'package:foxy/widget/foxy_string_input.dart';
@@ -20,7 +20,7 @@ class SpellBonusDataView extends StatefulWidget {
 }
 
 class _SpellBonusDataViewState extends State<SpellBonusDataView> {
-  final viewModel = GetIt.instance.get<SpellBonusDataSingleEditorViewModel>();
+  final viewModel = GetIt.instance.get<SpellBonusDataLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class _SpellBonusDataViewState extends State<SpellBonusDataView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.spellId);
+      await viewModel.initSignals(linkKey: widget.spellId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

@@ -112,22 +112,22 @@ final class RepositoryReader {
         '${baseName[0].toLowerCase()}${baseName.substring(1)}';
 
     // 查询层(create/copy/getBrief/count/_applyFilter)为两类仓库生成:
-    // 有列表页的主表仓库,以及声明 parentKey 的子表仓库(父详情页 Tab)。
+    // 有列表页的主表仓库,以及声明 linkKey 的子表仓库(详情页 Tab)。
     final listViewModelPresent = await buildStep.canRead(
       AssetId(
         buildStep.inputId.package,
         'lib/view_model/${toSnakeCase(baseName)}_list_view_model.dart',
       ),
     );
-    final declaredParentKeys = <String>[];
-    final parentKeyReader = annotation.peek('parentKey');
-    if (parentKeyReader != null && !parentKeyReader.isNull) {
-      for (final value in parentKeyReader.listValue) {
-        declaredParentKeys.add(value.toStringValue()!);
+    final declaredLinkKeys = <String>[];
+    final linkKeyReader = annotation.peek('linkKey');
+    if (linkKeyReader != null && !linkKeyReader.isNull) {
+      for (final value in linkKeyReader.listValue) {
+        declaredLinkKeys.add(value.toStringValue()!);
       }
     }
     final queryLayerEnabled =
-        listViewModelPresent || declaredParentKeys.isNotEmpty;
+        listViewModelPresent || declaredLinkKeys.isNotEmpty;
 
     final keyFields = <RepositoryKeyFieldModel>[];
     final briefProjectionColumns = <String>[];
@@ -172,8 +172,8 @@ final class RepositoryReader {
         '在至少一个 @FoxyFullField 上设置 key: true。',
       );
     }
-    final parentKeyFields = <RepositoryKeyFieldModel>[];
-    for (final declared in declaredParentKeys) {
+    final linkKeyFields = <RepositoryKeyFieldModel>[];
+    for (final declared in declaredLinkKeys) {
       RepositoryKeyFieldModel? matched;
       for (final field in keyFields) {
         if (field.dartName == declared) {
@@ -183,13 +183,13 @@ final class RepositoryReader {
       }
       if (matched == null) {
         _fail(
-          '$repositoryClassName 的 parentKey: \'$declared\' '
+          '$repositoryClassName 的 linkKey: \'$declared\' '
               '不是 $entityClassName 的 key 字段。',
           element,
-          'parentKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
+          'linkKey 必须是实体上 @FoxyFullField(key: true) 的字段名。',
         );
       }
-      parentKeyFields.add(matched);
+      linkKeyFields.add(matched);
     }
     if (queryLayerEnabled) {
       final briefAnnotations = _briefEntityChecker
@@ -216,7 +216,7 @@ final class RepositoryReader {
       element,
       baseName,
       fieldColumnByName,
-      // 子表仓库(声明 parentKey)不生成 _applyFilter,筛选字段允许
+      // 子表仓库(声明 linkKey)不生成 _applyFilter,筛选字段允许
       // 无法推断列名(Filter 类仍生成,仅作查询输入对象)。
       listViewModelPresent,
     );
@@ -267,7 +267,7 @@ final class RepositoryReader {
       localeHelpersEnabled: localeHelpersEnabled,
       mixinName: mixinName,
       briefProjectionColumns: List.unmodifiable(briefProjectionColumns),
-      parentKeyFields: List.unmodifiable(parentKeyFields),
+      linkKeyFields: List.unmodifiable(linkKeyFields),
       queryLayerEnabled: queryLayerEnabled,
       repositoryClassName: repositoryClassName,
       table: table,

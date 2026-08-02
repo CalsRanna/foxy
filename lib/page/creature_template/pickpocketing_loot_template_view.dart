@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/pickpocketing_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/pickpocketing_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/pickpocketing_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -23,9 +23,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 偷窃掉落Tab
 class PickpocketingLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const PickpocketingLootTemplateView({super.key, required this.parentKey});
+  const PickpocketingLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<PickpocketingLootTemplateView> createState() =>
@@ -35,7 +35,7 @@ class PickpocketingLootTemplateView extends StatefulWidget {
 class _PickpocketingLootTemplateViewState
     extends State<PickpocketingLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<PickpocketingLootTemplateCollectionEditorViewModel>();
+      .get<PickpocketingLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _PickpocketingLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   /// 对话框表单（垂直布局）

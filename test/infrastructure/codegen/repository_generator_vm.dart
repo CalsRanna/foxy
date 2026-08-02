@@ -172,7 +172,7 @@ void main() {
     expect(logs.any((log) => log.contains('无法推断物理列')), isTrue);
   });
 
-  test('声明 parentKey 时生成父键形态(count/getBrief/create/copy)', () async {
+  test('声明 linkKey 时生成父键形态(count/getBrief/create/copy)', () async {
     await testBuilder(
       foxyRepositoryBuilder(BuilderOptions.empty),
       {
@@ -214,10 +214,10 @@ void main() {
     );
   });
 
-  test('parentKey 指向非 key 字段时拒绝生成', () async {
+  test('linkKey 指向非 key 字段时拒绝生成', () async {
     final repository = childRepositorySource.replaceFirst(
-      "parentKey: ['parentId']",
-      "parentKey: ['note']",
+      "linkKey: ['parentId']",
+      "linkKey: ['note']",
     );
     final logs = <String>[];
     await testBuilder(
@@ -514,14 +514,14 @@ class ChildRecordEntity {
 }
 ''';
 
-/// 声明 parentKey 的子表仓库。
+/// 声明 linkKey 的子表仓库。
 const childRepositorySource = r'''
 import 'package:foxy/entity/child_record_entity.dart';
 import 'package:foxy/infrastructure/codegen/repository_annotations.dart';
 
 part 'child_record_repository.g.dart';
 
-@FoxyRepository(ChildRecordEntity, parentKey: ['parentId'])
+@FoxyRepository(ChildRecordEntity, linkKey: ['parentId'])
 class ChildRecordRepository with _ChildRecordRepositoryMixin {
   static const _table = 'foxy.child';
 }

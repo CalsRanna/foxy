@@ -150,3 +150,9 @@ dart run build_runner build --delete-conflicting-outputs  # 重新生成并审�
 - **Collection editor 骨架(Phase C2)**:新注解 `@FoxyCollectionEditorViewModel(entity:, repository:)`(复用 FormEmitter 的 controller 样板),生成全套编辑器骨架(信号/token/copy/create/destroy/edit/paginate/persist/setParentKey/_refresh)。26 个单父键 editor 迁移;6 个保持手写(5 个 player_create_info 双父键用复合父类型 + item_enchantment_template 自定义父类型 + page_text_locale 手写查询层 + gossip_menu_option 用 use case 的 persist 为 @override)。
 - **locale helper 生成(Phase E)**:仓库混入 `DbcLocaleRepositoryMixin` 且声明 `dbcLocaleTableName` 时,生成 mixin `on` 子句扩宽为 `RepositoryMixin, DbcLocaleRepositoryMixin` 并生成 `get*Locales`/`save*Locales` 委托。21 个生成仓库迁移;3 个纯手写仓库(item_bag_family/item_limit_category/totem_category)保留手写。
 - 验证:`dart test test/infrastructure/codegen` 43 个、`flutter analyze` 无告警、`flutter test` 375 个全绿。
+
+## 关联词汇重命名 + Linked Detail 生成器(2026-08-02)
+
+- **词汇改名**:`parentKey`/`setParentKey` → `linkKey`/`setLinkKey`(信号、注解参数、`@FoxyRepository(linkKey:)`、`ParentNotLoadedException` → `LinkNotLoadedException`,消息"父记录尚未加载" → "关联记录尚未加载");`CollectionEditorViewModel` → `LinkedListViewModel`、`SingleEditorViewModel` → `LinkedDetailViewModel`(类名+文件名全量改名,含 `ItemEnchantmentTemplateParentKey` → `ItemEnchantmentTemplateLinkKey`)。29 个仓库、32 个 linked list VM、8 个 linked detail VM、页面调用点、di.dart、契约测试全部同步。
+- **Linked Detail 生成器(Phase C3)**:新注解 `@FoxyLinkedDetailViewModel(entity:, repository:, ...)` 生成一对一关联表单骨架(linkKey/editingKey/entity 信号、`_refreshToken`/`_linkToken`、destroy/dispose/initSignals/setLinkKey/persist、`_refresh` get-or-create),controller 复用 FormEmitter。要求实体恰好一个物理 Key(关联键即主键),复合键报错保持手写。8 个单行编辑器迁移;`npc_text` 保持纯手写(use cases + locale 仓库)且是唯一例外。
+- 验证:`dart test test/infrastructure/codegen` 45 个、`flutter analyze` 无告警、`flutter test` 375 个全绿。

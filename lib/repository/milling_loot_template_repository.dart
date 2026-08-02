@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'milling_loot_template_repository.g.dart';
 
-@FoxyRepository(MillingLootTemplateEntity, parentKey: ['entry'])
+@FoxyRepository(MillingLootTemplateEntity, linkKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class MillingLootTemplateRepository

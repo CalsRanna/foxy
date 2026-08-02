@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'disenchant_loot_template_repository.g.dart';
 
-@FoxyRepository(DisenchantLootTemplateEntity, parentKey: ['entry'])
+@FoxyRepository(DisenchantLootTemplateEntity, linkKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class DisenchantLootTemplateRepository

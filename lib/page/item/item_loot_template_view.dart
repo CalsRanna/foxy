@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/item_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/item_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/item_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -23,9 +23,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 物品掉落Tab
 class ItemLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const ItemLootTemplateView({super.key, required this.parentKey});
+  const ItemLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<ItemLootTemplateView> createState() => _ItemLootTemplateViewState();
@@ -33,7 +33,7 @@ class ItemLootTemplateView extends StatefulWidget {
 
 class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<ItemLootTemplateCollectionEditorViewModel>();
+      .get<ItemLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class _ItemLootTemplateViewState extends State<ItemLootTemplateView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

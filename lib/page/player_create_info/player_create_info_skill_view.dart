@@ -3,7 +3,7 @@ import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_skill_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/player_create_info_skill_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_skill_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -32,7 +32,7 @@ class PlayerCreateInfoSkillView extends StatefulWidget {
 
 class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
   final viewModel = GetIt.instance
-      .get<PlayerCreateInfoSkillCollectionEditorViewModel>();
+      .get<PlayerCreateInfoSkillLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) => Watch(
@@ -72,7 +72,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
       final race = widget.race;
       final playerClass = widget.playerClass;
       if (race == null || playerClass == null) return;
-      viewModel.setParentKey(
+      viewModel.setLinkKey(
         PlayerCreateInfoKey(race: race, class_: playerClass),
       );
     }
@@ -91,7 +91,7 @@ class _PlayerCreateInfoSkillViewState extends State<PlayerCreateInfoSkillView> {
     final playerClass = widget.playerClass;
     if (race == null || playerClass == null) return;
     viewModel.initSignals(
-      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
+      linkKey: PlayerCreateInfoKey(race: race, class_: playerClass),
     );
   }
 

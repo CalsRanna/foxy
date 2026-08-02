@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
+import 'package:foxy/entity/item_enchantment_template_link_key.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/page/item/disenchant_loot_template_view.dart';
 import 'package:foxy/page/item/item_enchantment_template_view.dart';
@@ -37,12 +37,12 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
       final enchantmentParentKey = template == null
           ? null
           : template.randomProperty != 0
-          ? ItemEnchantmentTemplateParentKey(
+          ? ItemEnchantmentTemplateLinkKey(
               entry: template.randomProperty,
               kind: ItemEnchantmentKind.randomProperty,
             )
           : template.randomSuffix != 0
-          ? ItemEnchantmentTemplateParentKey(
+          ? ItemEnchantmentTemplateLinkKey(
               entry: template.randomSuffix,
               kind: ItemEnchantmentKind.randomSuffix,
             )
@@ -75,23 +75,23 @@ class _ItemTemplateDetailPageState extends State<ItemTemplateDetailPage> {
               ItemTemplateView(viewModel: viewModel),
               ItemEnchantmentTemplateView(
                 key: ValueKey('enchantment-$enchantmentParentKey'),
-                parentKey: enchantmentParentKey,
+                linkKey: enchantmentParentKey,
               ),
               ItemLootTemplateView(
                 key: ValueKey('loot-$entry'),
-                parentKey: entry,
+                linkKey: entry,
               ),
               DisenchantLootTemplateView(
                 key: ValueKey('disenchant-${template?.disenchantId ?? 0}'),
-                parentKey: template?.disenchantId ?? 0,
+                linkKey: template?.disenchantId ?? 0,
               ),
               ProspectingLootTemplateView(
                 key: ValueKey('prospecting-$entry'),
-                parentKey: entry,
+                linkKey: entry,
               ),
               MillingLootTemplateView(
                 key: ValueKey('milling-$entry'),
-                parentKey: entry,
+                linkKey: entry,
               ),
             ],
             disabledIndexes: key == null ? const {1, 2, 3, 4, 5} : const {},

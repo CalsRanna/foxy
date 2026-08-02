@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_linked_spell_repository.g.dart';
 
-@FoxyRepository(SpellLinkedSpellEntity, parentKey: ['spellTrigger'])
+@FoxyRepository(SpellLinkedSpellEntity, linkKey: ['spellTrigger'])
 class SpellLinkedSpellRepository
     with RepositoryMixin, _SpellLinkedSpellRepositoryMixin {
   static const _table = 'spell_linked_spell';

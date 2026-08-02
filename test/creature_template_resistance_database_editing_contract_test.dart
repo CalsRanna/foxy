@@ -3,7 +3,7 @@ import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_template_resistance_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_template_resistance_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -134,9 +134,9 @@ void main() {
     });
 
     test('编辑 Brief 后按旧 key 更新，candidate 可移出父范围', () async {
-      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
+      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = CreatureTemplateResistanceKey(
@@ -158,9 +158,9 @@ void main() {
     });
 
     test('保存失败保留旧 editingKey，重试仍使用同一旧 key', () async {
-      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
+      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
@@ -176,13 +176,13 @@ void main() {
     });
 
     test('切换父范围和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateResistanceCollectionEditorViewModel();
+      final viewModel = CreatureTemplateResistanceLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentKey(12);
+      await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIDController.collect(), 12);
 

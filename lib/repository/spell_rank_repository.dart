@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_rank_repository.g.dart';
 
-@FoxyRepository(SpellRankEntity, parentKey: ['firstSpellId'])
+@FoxyRepository(SpellRankEntity, linkKey: ['firstSpellId'])
 class SpellRankRepository with RepositoryMixin, _SpellRankRepositoryMixin {
   static const _table = 'spell_ranks';
 

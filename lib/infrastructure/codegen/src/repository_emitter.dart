@@ -110,7 +110,7 @@ final class RepositoryEmitter {
   }
 
   void _emitCopy(StringBuffer buffer, RepositoryGenerationModel model) {
-    final parents = model.parentKeyFields;
+    final links = model.linkKeyFields;
     buffer
       ..writeln(
         '  Future<${model.keyType}> copy${model.baseName}'
@@ -124,7 +124,7 @@ final class RepositoryEmitter {
       ..writeln('    }')
       ..writeln(
         '    final blank = await create${model.baseName}('
-        '${parents.isEmpty ? '' : parents.map((p) => 'source.${p.dartName}').join(', ')});',
+        '${links.isEmpty ? '' : links.map((p) => 'source.${p.dartName}').join(', ')});',
       )
       ..writeln('    final copied = source.copyWith(');
     for (final field in model.keyFields) {
@@ -141,8 +141,8 @@ final class RepositoryEmitter {
   }
 
   void _emitCount(StringBuffer buffer, RepositoryGenerationModel model) {
-    final parents = model.parentKeyFields;
-    if (parents.isEmpty) {
+    final links = model.linkKeyFields;
+    if (links.isEmpty) {
       buffer
         ..writeln(
           '  Future<int> count${pluralize(model.baseName)}'
@@ -159,10 +159,10 @@ final class RepositoryEmitter {
     buffer
       ..writeln(
         '  Future<int> count${pluralize(model.baseName)}'
-        '(${_parentParams(parents)}) async {',
+        '(${_linkParams(links)}) async {',
       )
       ..writeln(
-        '    return laconic.table(${_table(model)})${_parentWheres(parents)}'
+        '    return laconic.table(${_table(model)})${_linkWheres(links)}'
         '.count();',
       )
       ..writeln('  }')
@@ -170,8 +170,8 @@ final class RepositoryEmitter {
   }
 
   void _emitCreate(StringBuffer buffer, RepositoryGenerationModel model) {
-    final parents = model.parentKeyFields;
-    if (parents.isEmpty) {
+    final links = model.linkKeyFields;
+    if (links.isEmpty) {
       buffer.writeln(
         '  Future<${model.entityClassName}> create${model.baseName}() async {',
       );
@@ -188,21 +188,21 @@ final class RepositoryEmitter {
         ..writeln();
       return;
     }
-    final parentNames = parents.map((p) => p.dartName).toList();
+    final linkNames = links.map((p) => p.dartName).toList();
     buffer.writeln(
       '  Future<${model.entityClassName}> create${model.baseName}'
-      '(${_parentParams(parents)}) async {',
+      '(${_linkParams(links)}) async {',
     );
     buffer.writeln('    return ${model.entityClassName}(');
-    for (final parent in parents) {
-      buffer.writeln('      ${parent.dartName}: ${parent.dartName},');
+    for (final link in links) {
+      buffer.writeln('      ${link.dartName}: ${link.dartName},');
     }
     for (final field in model.keyFields) {
-      if (parentNames.contains(field.dartName)) continue;
+      if (linkNames.contains(field.dartName)) continue;
       buffer.writeln(
         '      ${field.dartName}: await nextMaxPlusOne('
         '${_table(model)}, ${_column(field.columnName)}, '
-        'where: {${_parentWhereMap(parents)}}),',
+        'where: {${_linkWhereMap(links)}}),',
       );
     }
     buffer
@@ -268,8 +268,8 @@ final class RepositoryEmitter {
   }
 
   void _emitGetBrief(StringBuffer buffer, RepositoryGenerationModel model) {
-    final parents = model.parentKeyFields;
-    if (parents.isEmpty) {
+    final links = model.linkKeyFields;
+    if (links.isEmpty) {
       buffer
         ..writeln(
           '  Future<List<${model.briefEntityClassName}>> '
@@ -302,7 +302,7 @@ final class RepositoryEmitter {
       ..writeln(
         '  Future<List<${model.briefEntityClassName}>> '
         'getBrief${pluralize(model.baseName)}('
-        '${_parentParams(parents)}, {',
+        '${_linkParams(links)}, {',
       )
       ..writeln('    int page = 1,')
       ..writeln('  }) async {')
@@ -313,7 +313,7 @@ final class RepositoryEmitter {
     }
     buffer
       ..writeln('    ]);')
-      ..writeln('    builder = builder${_parentWheres(parents)};')
+      ..writeln('    builder = builder${_linkWheres(links)};')
       ..writeln('    builder = builder${_orderByClause(model)};')
       ..writeln('    builder = builder.limit(kPageSize).offset(offset);')
       ..writeln('    final results = await builder.get();')
@@ -434,18 +434,18 @@ final class RepositoryEmitter {
       ..writeln();
   }
 
-  /// 父键参数列表:`int race, int class_`(空列表返回空串)。
-  String _parentParams(List<RepositoryKeyFieldModel> parents) =>
-      parents.map((p) => '${p.dartType} ${p.dartName}').join(', ');
+  /// 关联键参数列表:`int race, int class_`(空列表返回空串)。
+  String _linkParams(List<RepositoryKeyFieldModel> links) =>
+      links.map((p) => '${p.dartType} ${p.dartName}').join(', ');
 
-  /// 父键 where 链:`where('`race`', race).where('`class`', class_)`。
-  String _parentWheres(List<RepositoryKeyFieldModel> parents) => parents
+  /// 关联键 where 链:`where('`race`', race).where('`class`', class_)`。
+  String _linkWheres(List<RepositoryKeyFieldModel> links) => links
       .map((p) => '.where(${_column(p.columnName)}, ${p.dartName})')
       .join();
 
-  /// 父键 where 映射字面量:`'`race`': race, '`class`': class_`。
-  String _parentWhereMap(List<RepositoryKeyFieldModel> parents) =>
-      parents.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
+  /// 关联键 where 映射字面量:`'`race`': race, '`class`': class_`。
+  String _linkWhereMap(List<RepositoryKeyFieldModel> links) =>
+      links.map((p) => "'${p.columnName}': ${p.dartName}").join(', ');
 
   /// `.orderBy('`ID`')` 或复合 key 的链式 `.orderBy(...).orderBy(...)`。
   String _orderByClause(RepositoryGenerationModel model) {

@@ -3,7 +3,7 @@ import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/npc_vendor_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/npc_vendor_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_vendor_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -121,9 +121,9 @@ void main() {
     });
 
     test('选中 Brief 后使用旧 key 更新，多列键变化后清空范围状态', () async {
-      final viewModel = NpcVendorCollectionEditorViewModel();
+      final viewModel = NpcVendorLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcVendorKey(entry: 10, item: 20, extendedCost: 30);
@@ -146,9 +146,9 @@ void main() {
     });
 
     test('保存失败保留 editingKey，修正后仍可按旧 key 重试', () async {
-      final viewModel = NpcVendorCollectionEditorViewModel();
+      final viewModel = NpcVendorLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
@@ -164,15 +164,15 @@ void main() {
     });
 
     test('新建和父范围切换都会清空子行身份', () async {
-      final viewModel = NpcVendorCollectionEditorViewModel();
+      final viewModel = NpcVendorLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       expect(viewModel.editingKey.value, isNotNull);
 
-      await viewModel.setParentKey(12);
-      expect(viewModel.parentKey.value, 12);
+      await viewModel.setLinkKey(12);
+      expect(viewModel.linkKey.value, 12);
       expect(viewModel.entryController.collect(), 12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.selectedKey.value, isNull);

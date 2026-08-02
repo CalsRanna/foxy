@@ -3,7 +3,7 @@ import 'package:foxy/entity/creature_on_kill_reputation_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_on_kill_reputation_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_on_kill_reputation_single_editor_view_model.dart';
+import 'package:foxy/view_model/creature_on_kill_reputation_linked_detail_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -83,9 +83,9 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('key 修改失败保留旧 key，成功后按当前父范围重新判定身份', () async {
-      final viewModel = CreatureOnKillReputationSingleEditorViewModel();
+      final viewModel = CreatureOnKillReputationLinkedDetailViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       const oldKey = 10;
       expect(viewModel.editingKey.value, oldKey);
       viewModel.creatureIDController.init(11);
@@ -100,14 +100,14 @@ void main() {
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIDController.collect(), 10);
 
-      await viewModel.setParentKey(11);
+      await viewModel.setLinkKey(11);
       expect(viewModel.editingKey.value, 11);
     });
 
     test('没有当前父行时执行 create，成功后切换为 persisted key', () async {
-      final viewModel = CreatureOnKillReputationSingleEditorViewModel();
+      final viewModel = CreatureOnKillReputationLinkedDetailViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 12);
+      await viewModel.initSignals(linkKey: 12);
       expect(viewModel.editingKey.value, isNull);
 
       await viewModel.persist();

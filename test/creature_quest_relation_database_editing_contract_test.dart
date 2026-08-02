@@ -4,8 +4,8 @@ import 'package:foxy/entity/creature_quest_starter_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_quest_ender_repository.dart';
 import 'package:foxy/repository/creature_quest_starter_repository.dart';
-import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_ender_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_quest_starter_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -116,9 +116,9 @@ void main() {
       GetIt.instance.registerSingleton<CreatureQuestStarterRepository>(
         repository,
       );
-      final viewModel = CreatureQuestStarterCollectionEditorViewModel();
+      final viewModel = CreatureQuestStarterLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 20);
+      await viewModel.initSignals(linkKey: 20);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureQuestStarterKey(id: 10, quest: 20);
@@ -141,9 +141,9 @@ void main() {
       GetIt.instance.registerSingleton<CreatureQuestEnderRepository>(
         repository,
       );
-      final viewModel = CreatureQuestEnderCollectionEditorViewModel();
+      final viewModel = CreatureQuestEnderLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 20);
+      await viewModel.initSignals(linkKey: 20);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureQuestEnderKey(id: 10, quest: 20);

@@ -4,7 +4,7 @@ import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_default_trainer_repository.dart';
 import 'package:foxy/repository/npc_trainer_repository.dart';
-import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -164,9 +164,9 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('修改联合键仍用旧 key，成功后清空当前范围编辑状态', () async {
-      final viewModel = NpcTrainerCollectionEditorViewModel();
+      final viewModel = NpcTrainerLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 100);
+      await viewModel.initSignals(linkKey: 100);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
@@ -185,9 +185,9 @@ void main() {
     });
 
     test('保存失败保留 editingKey，修正后仍按旧 key 重试', () async {
-      final viewModel = NpcTrainerCollectionEditorViewModel();
+      final viewModel = NpcTrainerLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 100);
+      await viewModel.initSignals(linkKey: 100);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = NpcTrainerKey(trainerId: 100, spellId: 20);
@@ -203,14 +203,14 @@ void main() {
     });
 
     test('父范围切换和新建都清空旧行身份', () async {
-      final viewModel = NpcTrainerCollectionEditorViewModel();
+      final viewModel = NpcTrainerLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 100);
+      await viewModel.initSignals(linkKey: 100);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentKey(200);
-      expect(viewModel.parentKey.value, 200);
+      await viewModel.setLinkKey(200);
+      expect(viewModel.linkKey.value, 200);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.selectedKey.value, isNull);
 

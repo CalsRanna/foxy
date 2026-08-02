@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/creature_equip_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -29,7 +29,7 @@ class CreatureEquipTemplateView extends StatefulWidget {
 
 class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   final viewModel = GetIt.instance
-      .get<CreatureEquipTemplateCollectionEditorViewModel>();
+      .get<CreatureEquipTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   void didUpdateWidget(covariant CreatureEquipTemplateView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentKey(widget.creatureId);
+      viewModel.setLinkKey(widget.creatureId);
     }
   }
 
@@ -55,7 +55,7 @@ class _CreatureEquipTemplateViewState extends State<CreatureEquipTemplateView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.creatureId);
+    viewModel.initSignals(linkKey: widget.creatureId);
   }
 
   /// 对话框表单（垂直布局）

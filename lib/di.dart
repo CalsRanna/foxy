@@ -154,32 +154,32 @@ import 'package:foxy/view_model/area_table_list_view_model.dart';
 import 'package:foxy/view_model/bootstrap_workflow_view_model.dart';
 import 'package:foxy/view_model/condition_detail_view_model.dart';
 import 'package:foxy/view_model/condition_list_view_model.dart';
-import 'package:foxy/view_model/creature_equip_template_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_loot_template_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_on_kill_reputation_single_editor_view_model.dart';
-import 'package:foxy/view_model/creature_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_quest_item_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_quest_starter_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_loot_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_on_kill_reputation_linked_detail_view_model.dart';
+import 'package:foxy/view_model/creature_quest_ender_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_quest_item_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_quest_starter_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/view_model/creature_template_detail_view_model.dart';
 import 'package:foxy/view_model/creature_template_list_view_model.dart';
-import 'package:foxy/view_model/creature_template_resistance_collection_editor_view_model.dart';
-import 'package:foxy/view_model/creature_template_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';
+import 'package:foxy/view_model/creature_template_spell_linked_list_view_model.dart';
 import 'package:foxy/view_model/currency_type_detail_view_model.dart';
 import 'package:foxy/view_model/currency_type_list_view_model.dart';
 import 'package:foxy/view_model/dashboard_read_view_model.dart';
 import 'package:foxy/view_model/dbc_export_workflow_view_model.dart';
 import 'package:foxy/view_model/dbc_import_workflow_view_model.dart';
-import 'package:foxy/view_model/disenchant_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/disenchant_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/emote_text_detail_view_model.dart';
 import 'package:foxy/view_model/emote_text_list_view_model.dart';
 import 'package:foxy/view_model/feature_state_view_model.dart';
 import 'package:foxy/view_model/foxy_state_view_model.dart';
-import 'package:foxy/view_model/game_object_loot_template_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_quest_item_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_quest_starter_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_loot_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_ender_linked_list_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_item_linked_list_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_starter_linked_list_view_model.dart';
+import 'package:foxy/view_model/game_object_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/view_model/game_object_template_detail_view_model.dart';
 import 'package:foxy/view_model/game_object_template_list_view_model.dart';
 import 'package:foxy/view_model/gem_property_detail_view_model.dart';
@@ -188,42 +188,42 @@ import 'package:foxy/view_model/glyph_property_detail_view_model.dart';
 import 'package:foxy/view_model/glyph_property_list_view_model.dart';
 import 'package:foxy/view_model/gossip_menu_detail_view_model.dart';
 import 'package:foxy/view_model/gossip_menu_list_view_model.dart';
-import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
 import 'package:foxy/view_model/icon_extract_workflow_view_model.dart';
-import 'package:foxy/view_model/item_enchantment_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/item_enchantment_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/item_extended_cost_detail_view_model.dart';
 import 'package:foxy/view_model/item_extended_cost_list_view_model.dart';
-import 'package:foxy/view_model/item_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/item_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/item_set_detail_view_model.dart';
 import 'package:foxy/view_model/item_set_list_view_model.dart';
 import 'package:foxy/view_model/item_template_detail_view_model.dart';
 import 'package:foxy/view_model/item_template_list_view_model.dart';
-import 'package:foxy/view_model/milling_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/milling_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/more_read_view_model.dart';
-import 'package:foxy/view_model/npc_text_single_editor_view_model.dart';
-import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
-import 'package:foxy/view_model/npc_vendor_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_text_linked_detail_view_model.dart';
+import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
+import 'package:foxy/view_model/npc_vendor_linked_list_view_model.dart';
 import 'package:foxy/view_model/page_text_detail_view_model.dart';
 import 'package:foxy/view_model/page_text_list_view_model.dart';
-import 'package:foxy/view_model/page_text_locale_collection_editor_view_model.dart';
-import 'package:foxy/view_model/pickpocketing_loot_template_collection_editor_view_model.dart';
-import 'package:foxy/view_model/player_create_info_action_collection_editor_view_model.dart';
-import 'package:foxy/view_model/player_create_info_cast_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/page_text_locale_linked_list_view_model.dart';
+import 'package:foxy/view_model/pickpocketing_loot_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/player_create_info_action_linked_list_view_model.dart';
+import 'package:foxy/view_model/player_create_info_cast_spell_linked_list_view_model.dart';
 import 'package:foxy/view_model/player_create_info_detail_view_model.dart';
-import 'package:foxy/view_model/player_create_info_item_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_item_linked_list_view_model.dart';
 import 'package:foxy/view_model/player_create_info_list_view_model.dart';
-import 'package:foxy/view_model/player_create_info_skill_collection_editor_view_model.dart';
-import 'package:foxy/view_model/player_create_info_spell_custom_collection_editor_view_model.dart';
-import 'package:foxy/view_model/prospecting_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_skill_linked_list_view_model.dart';
+import 'package:foxy/view_model/player_create_info_spell_custom_linked_list_view_model.dart';
+import 'package:foxy/view_model/prospecting_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/quest_faction_reward_detail_view_model.dart';
 import 'package:foxy/view_model/quest_faction_reward_list_view_model.dart';
 import 'package:foxy/view_model/quest_info_detail_view_model.dart';
 import 'package:foxy/view_model/quest_info_list_view_model.dart';
-import 'package:foxy/view_model/quest_offer_reward_single_editor_view_model.dart';
-import 'package:foxy/view_model/quest_request_items_single_editor_view_model.dart';
+import 'package:foxy/view_model/quest_offer_reward_linked_detail_view_model.dart';
+import 'package:foxy/view_model/quest_request_items_linked_detail_view_model.dart';
 import 'package:foxy/view_model/quest_sort_detail_view_model.dart';
 import 'package:foxy/view_model/quest_sort_list_view_model.dart';
-import 'package:foxy/view_model/quest_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/quest_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/view_model/quest_template_detail_view_model.dart';
 import 'package:foxy/view_model/quest_template_list_view_model.dart';
 import 'package:foxy/view_model/reference_loot_template_detail_view_model.dart';
@@ -233,20 +233,20 @@ import 'package:foxy/view_model/scaling_stat_distribution_list_view_model.dart';
 import 'package:foxy/view_model/scaling_stat_value_detail_view_model.dart';
 import 'package:foxy/view_model/scaling_stat_value_list_view_model.dart';
 import 'package:foxy/view_model/setup_status_view_model.dart';
-import 'package:foxy/view_model/skinning_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/skinning_loot_template_linked_list_view_model.dart';
 import 'package:foxy/view_model/smart_script_detail_view_model.dart';
 import 'package:foxy/view_model/smart_script_list_view_model.dart';
-import 'package:foxy/view_model/spell_area_collection_editor_view_model.dart';
-import 'package:foxy/view_model/spell_bonus_data_single_editor_view_model.dart';
-import 'package:foxy/view_model/spell_custom_attr_single_editor_view_model.dart';
+import 'package:foxy/view_model/spell_area_linked_list_view_model.dart';
+import 'package:foxy/view_model/spell_bonus_data_linked_detail_view_model.dart';
+import 'package:foxy/view_model/spell_custom_attr_linked_detail_view_model.dart';
 import 'package:foxy/view_model/spell_detail_view_model.dart';
-import 'package:foxy/view_model/spell_group_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_group_linked_list_view_model.dart';
 import 'package:foxy/view_model/spell_item_enchantment_detail_view_model.dart';
 import 'package:foxy/view_model/spell_item_enchantment_list_view_model.dart';
-import 'package:foxy/view_model/spell_linked_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_linked_spell_linked_list_view_model.dart';
 import 'package:foxy/view_model/spell_list_view_model.dart';
-import 'package:foxy/view_model/spell_loot_template_collection_editor_view_model.dart';
-import 'package:foxy/view_model/spell_rank_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_loot_template_linked_list_view_model.dart';
+import 'package:foxy/view_model/spell_rank_linked_list_view_model.dart';
 import 'package:foxy/view_model/talent_detail_view_model.dart';
 import 'package:foxy/view_model/talent_list_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -291,123 +291,123 @@ class DI {
     _instance.registerFactory(() => CreatureTemplateListViewModel());
     _instance.registerFactory(() => CreatureTemplateDetailViewModel());
     _instance.registerFactory(
-      () => CreatureTemplateAddonSingleEditorViewModel(),
+      () => CreatureTemplateAddonLinkedDetailViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureOnKillReputationSingleEditorViewModel(),
+      () => CreatureOnKillReputationLinkedDetailViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureEquipTemplateCollectionEditorViewModel(),
+      () => CreatureEquipTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureQuestItemCollectionEditorViewModel(),
+      () => CreatureQuestItemLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureTemplateResistanceCollectionEditorViewModel(),
+      () => CreatureTemplateResistanceLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureTemplateSpellCollectionEditorViewModel(),
+      () => CreatureTemplateSpellLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureLootTemplateCollectionEditorViewModel(),
+      () => CreatureLootTemplateLinkedListViewModel(),
     );
-    _instance.registerFactory(() => NpcTrainerCollectionEditorViewModel());
-    _instance.registerFactory(() => NpcVendorCollectionEditorViewModel());
+    _instance.registerFactory(() => NpcTrainerLinkedListViewModel());
+    _instance.registerFactory(() => NpcVendorLinkedListViewModel());
     _instance.registerFactory(
-      () => PickpocketingLootTemplateCollectionEditorViewModel(),
+      () => PickpocketingLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => SkinningLootTemplateCollectionEditorViewModel(),
+      () => SkinningLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(() => GameObjectTemplateListViewModel());
     _instance.registerFactory(() => GameObjectTemplateDetailViewModel());
     _instance.registerFactory(
-      () => GameObjectTemplateAddonSingleEditorViewModel(),
+      () => GameObjectTemplateAddonLinkedDetailViewModel(),
     );
     _instance.registerFactory(
-      () => GameObjectQuestItemCollectionEditorViewModel(),
+      () => GameObjectQuestItemLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => GameObjectLootTemplateCollectionEditorViewModel(),
+      () => GameObjectLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(() => ItemTemplateListViewModel());
     _instance.registerFactory(() => ItemTemplateDetailViewModel());
     _instance.registerFactory(
-      () => ItemLootTemplateCollectionEditorViewModel(),
+      () => ItemLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => DisenchantLootTemplateCollectionEditorViewModel(),
+      () => DisenchantLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => ProspectingLootTemplateCollectionEditorViewModel(),
+      () => ProspectingLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => MillingLootTemplateCollectionEditorViewModel(),
+      () => MillingLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => ItemEnchantmentTemplateCollectionEditorViewModel(),
+      () => ItemEnchantmentTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(() => GossipMenuListViewModel());
     _instance.registerFactory(() => QuestTemplateListViewModel());
     _instance.registerFactory(() => QuestTemplateDetailViewModel());
-    _instance.registerFactory(() => QuestTemplateAddonSingleEditorViewModel());
-    _instance.registerFactory(() => QuestRequestItemsSingleEditorViewModel());
-    _instance.registerFactory(() => QuestOfferRewardSingleEditorViewModel());
+    _instance.registerFactory(() => QuestTemplateAddonLinkedDetailViewModel());
+    _instance.registerFactory(() => QuestRequestItemsLinkedDetailViewModel());
+    _instance.registerFactory(() => QuestOfferRewardLinkedDetailViewModel());
     _instance.registerFactory(
-      () => CreatureQuestStarterCollectionEditorViewModel(),
+      () => CreatureQuestStarterLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => CreatureQuestEnderCollectionEditorViewModel(),
+      () => CreatureQuestEnderLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => GameObjectQuestStarterCollectionEditorViewModel(),
+      () => GameObjectQuestStarterLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => GameObjectQuestEnderCollectionEditorViewModel(),
+      () => GameObjectQuestEnderLinkedListViewModel(),
     );
     _instance.registerFactory(() => GossipMenuDetailViewModel());
-    _instance.registerFactory(() => NpcTextSingleEditorViewModel());
+    _instance.registerFactory(() => NpcTextLinkedDetailViewModel());
     _instance.registerFactory(
-      () => GossipMenuOptionCollectionEditorViewModel(),
+      () => GossipMenuOptionLinkedListViewModel(),
     );
     _instance.registerFactory(() => SmartScriptListViewModel());
     _instance.registerFactory(() => SmartScriptDetailViewModel());
     _instance.registerFactory(() => SpellListViewModel());
     _instance.registerFactory(() => SpellDetailViewModel());
-    _instance.registerFactory(() => SpellBonusDataSingleEditorViewModel());
-    _instance.registerFactory(() => SpellCustomAttrSingleEditorViewModel());
-    _instance.registerFactory(() => SpellAreaCollectionEditorViewModel());
-    _instance.registerFactory(() => SpellGroupCollectionEditorViewModel());
+    _instance.registerFactory(() => SpellBonusDataLinkedDetailViewModel());
+    _instance.registerFactory(() => SpellCustomAttrLinkedDetailViewModel());
+    _instance.registerFactory(() => SpellAreaLinkedListViewModel());
+    _instance.registerFactory(() => SpellGroupLinkedListViewModel());
     _instance.registerFactory(
-      () => SpellLinkedSpellCollectionEditorViewModel(),
+      () => SpellLinkedSpellLinkedListViewModel(),
     );
-    _instance.registerFactory(() => SpellRankCollectionEditorViewModel());
+    _instance.registerFactory(() => SpellRankLinkedListViewModel());
     _instance.registerFactory(
-      () => SpellLootTemplateCollectionEditorViewModel(),
+      () => SpellLootTemplateLinkedListViewModel(),
     );
     _instance.registerFactory(() => ReferenceLootTemplateListViewModel());
     _instance.registerFactory(() => ReferenceLootTemplateDetailViewModel());
     _instance.registerFactory(() => PageTextListViewModel());
     _instance.registerFactory(() => PageTextDetailViewModel());
-    _instance.registerFactory(() => PageTextLocaleCollectionEditorViewModel());
+    _instance.registerFactory(() => PageTextLocaleLinkedListViewModel());
     _instance.registerFactory(() => ConditionListViewModel());
     _instance.registerFactory(() => ConditionDetailViewModel());
     _instance.registerFactory(() => PlayerCreateInfoListViewModel());
     _instance.registerFactory(() => PlayerCreateInfoDetailViewModel());
     _instance.registerFactory(
-      () => PlayerCreateInfoActionCollectionEditorViewModel(),
+      () => PlayerCreateInfoActionLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => PlayerCreateInfoCastSpellCollectionEditorViewModel(),
+      () => PlayerCreateInfoCastSpellLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => PlayerCreateInfoItemCollectionEditorViewModel(),
+      () => PlayerCreateInfoItemLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => PlayerCreateInfoSpellCustomCollectionEditorViewModel(),
+      () => PlayerCreateInfoSpellCustomLinkedListViewModel(),
     );
     _instance.registerFactory(
-      () => PlayerCreateInfoSkillCollectionEditorViewModel(),
+      () => PlayerCreateInfoSkillLinkedListViewModel(),
     );
     _instance.registerFactory(() => AreaTableListViewModel());
     _instance.registerFactory(() => AreaTableDetailViewModel());

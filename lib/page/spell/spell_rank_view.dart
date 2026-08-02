@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/spell_rank_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/spell_rank_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_rank_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -25,7 +25,7 @@ class SpellRankView extends StatefulWidget {
 }
 
 class _SpellRankViewState extends State<SpellRankView> {
-  final viewModel = GetIt.instance.get<SpellRankCollectionEditorViewModel>();
+  final viewModel = GetIt.instance.get<SpellRankLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _SpellRankViewState extends State<SpellRankView> {
   void didUpdateWidget(covariant SpellRankView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spellId != widget.spellId) {
-      viewModel.setParentKey(widget.spellId);
+      viewModel.setLinkKey(widget.spellId);
     }
   }
 
@@ -51,7 +51,7 @@ class _SpellRankViewState extends State<SpellRankView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.spellId);
+    viewModel.initSignals(linkKey: widget.spellId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

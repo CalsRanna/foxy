@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/npc_vendor_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/npc_vendor_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_vendor_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -27,7 +27,7 @@ class NpcVendorView extends StatefulWidget {
 }
 
 class _NpcVendorViewState extends State<NpcVendorView> {
-  final viewModel = GetIt.instance.get<NpcVendorCollectionEditorViewModel>();
+  final viewModel = GetIt.instance.get<NpcVendorLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   void didUpdateWidget(covariant NpcVendorView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentKey(widget.creatureId);
+      viewModel.setLinkKey(widget.creatureId);
     }
   }
 
@@ -51,7 +51,7 @@ class _NpcVendorViewState extends State<NpcVendorView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.creatureId);
+    viewModel.initSignals(linkKey: widget.creatureId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/disenchant_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/disenchant_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/disenchant_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -23,9 +23,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 分解掉落Tab
 class DisenchantLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const DisenchantLootTemplateView({super.key, required this.parentKey});
+  const DisenchantLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<DisenchantLootTemplateView> createState() =>
@@ -35,7 +35,7 @@ class DisenchantLootTemplateView extends StatefulWidget {
 class _DisenchantLootTemplateViewState
     extends State<DisenchantLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<DisenchantLootTemplateCollectionEditorViewModel>();
+      .get<DisenchantLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class _DisenchantLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

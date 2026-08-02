@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_equip_template_repository.g.dart';
 
-@FoxyRepository(CreatureEquipTemplateEntity, parentKey: ['creatureID'])
+@FoxyRepository(CreatureEquipTemplateEntity, linkKey: ['creatureID'])
 class CreatureEquipTemplateRepository
     with RepositoryMixin, _CreatureEquipTemplateRepositoryMixin {
   static const _table = 'creature_equip_template';

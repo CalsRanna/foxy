@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/creature_template_resistance_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/creature_template_resistance_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_resistance_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -29,7 +29,7 @@ class CreatureTemplateResistanceView extends StatefulWidget {
 class _CreatureTemplateResistanceViewState
     extends State<CreatureTemplateResistanceView> {
   final viewModel = GetIt.instance
-      .get<CreatureTemplateResistanceCollectionEditorViewModel>();
+      .get<CreatureTemplateResistanceLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _CreatureTemplateResistanceViewState
   void didUpdateWidget(covariant CreatureTemplateResistanceView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentKey(widget.creatureId);
+      viewModel.setLinkKey(widget.creatureId);
     }
   }
 
@@ -55,7 +55,7 @@ class _CreatureTemplateResistanceViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.creatureId);
+    viewModel.initSignals(linkKey: widget.creatureId);
   }
 
   /// 对话框表单（垂直布局）

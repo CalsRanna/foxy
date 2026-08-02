@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'player_create_info_item_repository.g.dart';
 
-@FoxyRepository(PlayerCreateInfoItemEntity, parentKey: ['race', 'class_'])
+@FoxyRepository(PlayerCreateInfoItemEntity, linkKey: ['race', 'class_'])
 class PlayerCreateInfoItemRepository
     with RepositoryMixin, _PlayerCreateInfoItemRepositoryMixin {
   static const _table = 'playercreateinfo_item';

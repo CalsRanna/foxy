@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/game_object_quest_ender_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_ender_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -24,7 +24,7 @@ class GameObjectQuestEnderView extends StatefulWidget {
 
 class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   final viewModel = GetIt.instance
-      .get<GameObjectQuestEnderCollectionEditorViewModel>();
+      .get<GameObjectQuestEnderLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   void didUpdateWidget(covariant GameObjectQuestEnderView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.questId != widget.questId) {
-      viewModel.setParentKey(widget.questId);
+      viewModel.setLinkKey(widget.questId);
     }
   }
 
@@ -50,7 +50,7 @@ class _GameObjectQuestEnderViewState extends State<GameObjectQuestEnderView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.questId);
+    viewModel.initSignals(linkKey: widget.questId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

@@ -3,7 +3,7 @@ import 'package:foxy/constant/item_flags.dart';
 import 'package:foxy/constant/quest_flags.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/quest_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/quest_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_flag_picker.dart';
@@ -24,7 +24,7 @@ class QuestTemplateAddonView extends StatefulWidget {
 
 class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
   final viewModel = GetIt.instance
-      .get<QuestTemplateAddonSingleEditorViewModel>();
+      .get<QuestTemplateAddonLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -281,7 +281,7 @@ class _QuestTemplateAddonViewState extends State<QuestTemplateAddonView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.questId);
+      await viewModel.initSignals(linkKey: widget.questId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

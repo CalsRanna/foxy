@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'spell_loot_template_repository.g.dart';
 
-@FoxyRepository(SpellLootTemplateEntity, parentKey: ['entry'])
+@FoxyRepository(SpellLootTemplateEntity, linkKey: ['entry'])
 class SpellLootTemplateRepository
     with RepositoryMixin, _SpellLootTemplateRepositoryMixin {
   static const _table = 'spell_loot_template';

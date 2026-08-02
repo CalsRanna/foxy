@@ -34,11 +34,11 @@ enum FoxyFilterType { boolean, decimal, integer, text }
 final class FoxyRepository {
   final Type entity;
 
-  /// 父键字段(实体 dart 名列表)。声明后查询层生成父键形态:
-  /// `getBrief*`/`count*`/`create*` 以父键为首个位置参数,列表只查
-  /// 该父记录的子集合(如「生物详情页的掉落 Tab」)。多数子表一个
-  /// 父键;player_create_info 系列按 (race, class) 两个父键。
-  final List<String> parentKey;
+  /// 关联键字段(实体 dart 名列表)。声明后查询层生成关联键形态:
+  /// `getBrief*`/`count*`/`create*` 以关联键为首个位置参数,列表只查
+  /// 该关联值下的子集合(如「生物详情页的掉落 Tab」)。多数子表一个
+  /// 关联键;player_create_info 系列按 (race, class) 两个关联键。
+  final List<String> linkKey;
 
-  const FoxyRepository(this.entity, {this.parentKey = const []});
+  const FoxyRepository(this.entity, {this.linkKey = const []});
 }

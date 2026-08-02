@@ -4,8 +4,8 @@ import 'package:foxy/entity/game_object_quest_starter_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/game_object_quest_ender_repository.dart';
 import 'package:foxy/repository/game_object_quest_starter_repository.dart';
-import 'package:foxy/view_model/game_object_quest_ender_collection_editor_view_model.dart';
-import 'package:foxy/view_model/game_object_quest_starter_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_ender_linked_list_view_model.dart';
+import 'package:foxy/view_model/game_object_quest_starter_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -152,9 +152,9 @@ void main() {
       GetIt.instance.registerSingleton<GameObjectQuestStarterRepository>(
         repository,
       );
-      final viewModel = GameObjectQuestStarterCollectionEditorViewModel();
+      final viewModel = GameObjectQuestStarterLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 20);
+      await viewModel.initSignals(linkKey: 20);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestStarterKey(id: 10, quest: 20);
@@ -180,9 +180,9 @@ void main() {
       GetIt.instance.registerSingleton<GameObjectQuestEnderRepository>(
         repository,
       );
-      final viewModel = GameObjectQuestEnderCollectionEditorViewModel();
+      final viewModel = GameObjectQuestEnderLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 20);
+      await viewModel.initSignals(linkKey: 20);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = GameObjectQuestEnderKey(id: 10, quest: 20);

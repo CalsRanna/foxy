@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'game_object_quest_item_repository.g.dart';
 
-@FoxyRepository(GameObjectQuestItemEntity, parentKey: ['gameObjectEntry'])
+@FoxyRepository(GameObjectQuestItemEntity, linkKey: ['gameObjectEntry'])
 class GameObjectQuestItemRepository
     with RepositoryMixin, _GameObjectQuestItemRepositoryMixin {
   static const _table = 'gameobject_questitem';

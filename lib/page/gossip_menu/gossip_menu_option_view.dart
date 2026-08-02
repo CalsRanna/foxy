@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/entity/gossip_menu_option_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/gossip_menu_option_collection_editor_view_model.dart';
+import 'package:foxy/view_model/gossip_menu_option_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -32,7 +32,7 @@ class GossipMenuOptionView extends StatefulWidget {
 
 class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   final viewModel = GetIt.instance
-      .get<GossipMenuOptionCollectionEditorViewModel>();
+      .get<GossipMenuOptionLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   void didUpdateWidget(covariant GossipMenuOptionView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.menuId != widget.menuId) {
-      viewModel.setParentKey(widget.menuId);
+      viewModel.setLinkKey(widget.menuId);
     }
   }
 
@@ -62,7 +62,7 @@ class _GossipMenuOptionViewState extends State<GossipMenuOptionView> {
   void initState() {
     super.initState();
     if (widget.menuId != 0) {
-      viewModel.initSignals(parentKey: widget.menuId);
+      viewModel.initSignals(linkKey: widget.menuId);
     }
   }
 

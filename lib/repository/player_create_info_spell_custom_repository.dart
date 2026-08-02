@@ -9,7 +9,7 @@ part 'player_create_info_spell_custom_repository.g.dart';
 
 @FoxyRepository(
   PlayerCreateInfoSpellCustomEntity,
-  parentKey: ['raceMask', 'classMask'],
+  linkKey: ['raceMask', 'classMask'],
 )
 class PlayerCreateInfoSpellCustomRepository
     with RepositoryMixin, _PlayerCreateInfoSpellCustomRepositoryMixin {

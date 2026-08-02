@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'creature_quest_starter_repository.g.dart';
 
-@FoxyRepository(CreatureQuestStarterEntity, parentKey: ['quest'])
+@FoxyRepository(CreatureQuestStarterEntity, linkKey: ['quest'])
 class CreatureQuestStarterRepository
     with RepositoryMixin, _CreatureQuestStarterRepositoryMixin {
   static const _table = 'creature_queststarter';

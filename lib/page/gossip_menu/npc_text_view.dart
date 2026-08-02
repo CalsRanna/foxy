@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/constant/gossip_menu_option_constants.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/npc_text_single_editor_view_model.dart';
+import 'package:foxy/view_model/npc_text_linked_detail_view_model.dart';
 import 'package:foxy/widget/form/field_controller.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -24,7 +24,7 @@ class NpcTextView extends StatefulWidget {
 }
 
 class _NpcTextViewState extends State<NpcTextView> {
-  final viewModel = GetIt.instance.get<NpcTextSingleEditorViewModel>();
+  final viewModel = GetIt.instance.get<NpcTextLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +379,7 @@ class _NpcTextViewState extends State<NpcTextView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.textId);
+      await viewModel.initSignals(linkKey: widget.textId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

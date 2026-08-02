@@ -3,7 +3,7 @@ import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/spell_loot_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/spell_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_loot_template_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -104,9 +104,9 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('修改两列 key 仍按旧 key 更新，失败时保留并可重试', () async {
-      final viewModel = SpellLootTemplateCollectionEditorViewModel();
+      final viewModel = SpellLootTemplateLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = SpellLootTemplateKey(entry: 10, item: 20);
@@ -128,13 +128,13 @@ void main() {
     });
 
     test('切换父范围和新建都会清空旧行身份', () async {
-      final viewModel = SpellLootTemplateCollectionEditorViewModel();
+      final viewModel = SpellLootTemplateLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentKey(12);
+      await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.selectedKey.value, isNull);
       await viewModel.create();

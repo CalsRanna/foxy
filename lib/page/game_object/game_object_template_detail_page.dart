@@ -66,7 +66,7 @@ class _GameObjectTemplateDetailPageState
               ),
               GameObjectLootTemplateView(
                 key: ValueKey('loot-$entry'),
-                parentKey: entry ?? 0,
+                linkKey: entry ?? 0,
               ),
             ],
             disabledIndexes: key == null ? const {1, 2, 3} : const {},

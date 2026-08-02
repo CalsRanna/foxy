@@ -3,7 +3,7 @@ import 'package:foxy/constant/player_create_info_constants.dart';
 import 'package:foxy/entity/player_create_info_entity.dart';
 import 'package:foxy/entity/player_create_info_spell_custom_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/player_create_info_spell_custom_collection_editor_view_model.dart';
+import 'package:foxy/view_model/player_create_info_spell_custom_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -36,7 +36,7 @@ class PlayerCreateInfoSpellCustomView extends StatefulWidget {
 class _PlayerCreateInfoSpellCustomViewState
     extends State<PlayerCreateInfoSpellCustomView> {
   final viewModel = GetIt.instance
-      .get<PlayerCreateInfoSpellCustomCollectionEditorViewModel>();
+      .get<PlayerCreateInfoSpellCustomLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) => Watch(
@@ -76,7 +76,7 @@ class _PlayerCreateInfoSpellCustomViewState
       final race = widget.race;
       final playerClass = widget.playerClass;
       if (race == null || playerClass == null) return;
-      viewModel.setParentKey(
+      viewModel.setLinkKey(
         PlayerCreateInfoKey(race: race, class_: playerClass),
       );
     }
@@ -95,7 +95,7 @@ class _PlayerCreateInfoSpellCustomViewState
     final playerClass = widget.playerClass;
     if (race == null || playerClass == null) return;
     viewModel.initSignals(
-      parentKey: PlayerCreateInfoKey(race: race, class_: playerClass),
+      linkKey: PlayerCreateInfoKey(race: race, class_: playerClass),
     );
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/game_object_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/game_object_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/game_object_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
@@ -18,9 +18,9 @@ import 'package:signals/signals_flutter.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class GameObjectLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const GameObjectLootTemplateView({super.key, required this.parentKey});
+  const GameObjectLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<GameObjectLootTemplateView> createState() =>
@@ -30,7 +30,7 @@ class GameObjectLootTemplateView extends StatefulWidget {
 class _GameObjectLootTemplateViewState
     extends State<GameObjectLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<GameObjectLootTemplateCollectionEditorViewModel>();
+      .get<GameObjectLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _GameObjectLootTemplateViewState
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   Widget _buildContent(BuildContext context) {

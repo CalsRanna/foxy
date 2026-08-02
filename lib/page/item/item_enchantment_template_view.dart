@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/item_enchantment_template_entity.dart';
-import 'package:foxy/entity/item_enchantment_template_parent_key.dart';
+import 'package:foxy/entity/item_enchantment_template_link_key.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/item_enchantment_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/item_enchantment_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -18,9 +18,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 物品附魔Tab
 class ItemEnchantmentTemplateView extends StatefulWidget {
-  final ItemEnchantmentTemplateParentKey? parentKey;
+  final ItemEnchantmentTemplateLinkKey? linkKey;
 
-  const ItemEnchantmentTemplateView({super.key, required this.parentKey});
+  const ItemEnchantmentTemplateView({super.key, required this.linkKey});
 
   @override
   State<ItemEnchantmentTemplateView> createState() =>
@@ -30,7 +30,7 @@ class ItemEnchantmentTemplateView extends StatefulWidget {
 class _ItemEnchantmentTemplateViewState
     extends State<ItemEnchantmentTemplateView> {
   final viewModel = GetIt.instance
-      .get<ItemEnchantmentTemplateCollectionEditorViewModel>();
+      .get<ItemEnchantmentTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +42,12 @@ class _ItemEnchantmentTemplateViewState
   @override
   void didUpdateWidget(covariant ItemEnchantmentTemplateView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.parentKey != widget.parentKey) {
-      final parentKey = widget.parentKey;
-      if (parentKey == null) {
-        viewModel.clearParent();
+    if (oldWidget.linkKey != widget.linkKey) {
+      final linkKey = widget.linkKey;
+      if (linkKey == null) {
+        viewModel.clearLink();
       } else {
-        viewModel.setParentKey(parentKey);
+        viewModel.setLinkKey(linkKey);
       }
     }
   }
@@ -61,8 +61,8 @@ class _ItemEnchantmentTemplateViewState
   @override
   void initState() {
     super.initState();
-    final parentKey = widget.parentKey;
-    if (parentKey != null) viewModel.initSignals(parentKey: parentKey);
+    final linkKey = widget.linkKey;
+    if (linkKey != null) viewModel.initSignals(linkKey: linkKey);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {
@@ -86,7 +86,7 @@ class _ItemEnchantmentTemplateViewState
             label: '附魔ID',
             child: FoxyEntityPicker(
               delegate:
-                  viewModel.parentKey.value?.kind ==
+                  viewModel.linkKey.value?.kind ==
                       ItemEnchantmentKind.randomProperty
                   ? FoxyEntityPickerDelegates.itemRandomProperties
                   : FoxyEntityPickerDelegates.itemRandomSuffix,

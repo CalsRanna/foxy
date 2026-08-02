@@ -6,7 +6,7 @@ import 'package:laconic/laconic.dart';
 
 part 'skinning_loot_template_repository.g.dart';
 
-@FoxyRepository(SkinningLootTemplateEntity, parentKey: ['entry'])
+@FoxyRepository(SkinningLootTemplateEntity, linkKey: ['entry'])
 @FoxyFilter.text('entry')
 @FoxyFilter.text('name')
 class SkinningLootTemplateRepository

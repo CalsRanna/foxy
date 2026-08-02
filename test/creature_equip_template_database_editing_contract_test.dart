@@ -3,7 +3,7 @@ import 'package:foxy/entity/creature_equip_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_equip_template_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_equip_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_equip_template_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -104,9 +104,9 @@ void main() {
     tearDown(() async => GetIt.instance.reset());
 
     test('键变化用旧 key 更新，失败时保留旧 key 供重试', () async {
-      final viewModel = CreatureEquipTemplateCollectionEditorViewModel();
+      final viewModel = CreatureEquipTemplateLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const oldKey = CreatureEquipTemplateKey(creatureID: 10, id: 2);
@@ -127,13 +127,13 @@ void main() {
     });
 
     test('父范围变化和新建清空 editingKey 并使用显式预分配 ID', () async {
-      final viewModel = CreatureEquipTemplateCollectionEditorViewModel();
+      final viewModel = CreatureEquipTemplateLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentKey(12);
+      await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
       await viewModel.create();
       expect(viewModel.idController.collect(), 1);

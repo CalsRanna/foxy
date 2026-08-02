@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/quest_offer_reward_single_editor_view_model.dart';
+import 'package:foxy/view_model/quest_offer_reward_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -23,7 +23,7 @@ class QuestOfferRewardView extends StatefulWidget {
 }
 
 class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
-  final viewModel = GetIt.instance.get<QuestOfferRewardSingleEditorViewModel>();
+  final viewModel = GetIt.instance.get<QuestOfferRewardLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _QuestOfferRewardViewState extends State<QuestOfferRewardView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.questId);
+      await viewModel.initSignals(linkKey: widget.questId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

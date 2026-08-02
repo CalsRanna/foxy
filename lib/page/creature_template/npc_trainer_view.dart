@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/entity/npc_trainer_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/use_case/creature_template/resolve_npc_trainer_parent_use_case.dart';
-import 'package:foxy/view_model/npc_trainer_collection_editor_view_model.dart';
+import 'package:foxy/view_model/npc_trainer_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -27,7 +27,7 @@ class NpcTrainerView extends StatefulWidget {
 }
 
 class _NpcTrainerViewState extends State<NpcTrainerView> {
-  final viewModel = GetIt.instance.get<NpcTrainerCollectionEditorViewModel>();
+  final viewModel = GetIt.instance.get<NpcTrainerLinkedListViewModel>();
   final _resolveParent = GetIt.instance.get<ResolveNpcTrainerParentUseCase>();
 
   @override
@@ -316,10 +316,10 @@ class _NpcTrainerViewState extends State<NpcTrainerView> {
       final trainerId = await _resolveParent.execute(creatureId);
       if (!mounted) return;
       if (trainerId == null) {
-        viewModel.clearParent();
+        viewModel.clearLink();
         return;
       }
-      await viewModel.setParentKey(trainerId);
+      await viewModel.setLinkKey(trainerId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

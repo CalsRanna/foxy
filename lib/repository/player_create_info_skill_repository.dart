@@ -9,7 +9,7 @@ part 'player_create_info_skill_repository.g.dart';
 
 @FoxyRepository(
   PlayerCreateInfoSkillEntity,
-  parentKey: ['raceMask', 'classMask'],
+  linkKey: ['raceMask', 'classMask'],
 )
 class PlayerCreateInfoSkillRepository
     with RepositoryMixin, _PlayerCreateInfoSkillRepositoryMixin {

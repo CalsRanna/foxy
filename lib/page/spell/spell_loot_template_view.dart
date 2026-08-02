@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/entity/spell_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/spell_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/spell_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -27,7 +27,7 @@ class SpellLootTemplateView extends StatefulWidget {
 
 class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<SpellLootTemplateCollectionEditorViewModel>();
+      .get<SpellLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   void didUpdateWidget(covariant SpellLootTemplateView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.spellId != widget.spellId) {
-      viewModel.setParentKey(widget.spellId);
+      viewModel.setLinkKey(widget.spellId);
     }
   }
 
@@ -53,7 +53,7 @@ class _SpellLootTemplateViewState extends State<SpellLootTemplateView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.spellId);
+    viewModel.initSignals(linkKey: widget.spellId);
   }
 
   Widget _buildDialogForm(BuildContext dialogContext) {

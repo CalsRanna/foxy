@@ -16,8 +16,8 @@ final class RepositoryGenerationModel {
   /// `DbcLocaleRepositoryMixin` 并声明 `dbcLocaleTableName`)。
   final bool localeHelpersEnabled;
 
-  /// 父键字段列表(声明 `parentKey:` 的子表仓库);空 = 主表形态。
-  final List<RepositoryKeyFieldModel> parentKeyFields;
+  /// 关联键字段列表(声明 `linkKey:` 的子表仓库);空 = 主表形态。
+  final List<RepositoryKeyFieldModel> linkKeyFields;
   final bool queryLayerEnabled;
   final String repositoryClassName;
   final String table;
@@ -31,7 +31,7 @@ final class RepositoryGenerationModel {
     required this.localeHelpersEnabled,
     required this.mixinName,
     required this.briefProjectionColumns,
-    required this.parentKeyFields,
+    required this.linkKeyFields,
     required this.queryLayerEnabled,
     required this.repositoryClassName,
     required this.table,

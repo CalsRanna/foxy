@@ -1,0 +1,160 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'quest_request_items_linked_detail_view_model.dart';
+
+mixin _QuestRequestItemsLinkedDetailViewModelMixin on FieldControllerMixin {
+  final _repository = GetIt.instance.get<QuestRequestItemsRepository>();
+
+  final linkKey = signal<int?>(null);
+
+  final editingKey = signal<int?>(null);
+
+  final entity = signal<QuestRequestItemsEntity?>(null);
+
+  final loading = signal(false);
+
+  final submitting = signal(false);
+
+  final errorMessage = signal<String?>(null);
+
+  late final idController = registerController(IntFieldController());
+  late final emoteOnCompleteController = registerController(
+    IntFieldController(),
+  );
+  late final emoteOnIncompleteController = registerController(
+    IntFieldController(),
+  );
+  late final completionTextController = registerController(
+    StringFieldController(),
+  );
+  late final verifiedBuildController = registerController(IntFieldController());
+
+  void _afterApplyCandidate(QuestRequestItemsEntity questRequestItems) {}
+
+  void _applyCandidate(QuestRequestItemsEntity questRequestItems) {
+    idController.init(questRequestItems.id);
+    emoteOnCompleteController.init(questRequestItems.emoteOnComplete);
+    emoteOnIncompleteController.init(questRequestItems.emoteOnIncomplete);
+    completionTextController.init(questRequestItems.completionText);
+    verifiedBuildController.init(questRequestItems.verifiedBuild);
+    _afterApplyCandidate(questRequestItems);
+  }
+
+  QuestRequestItemsEntity _collectCandidate() {
+    return QuestRequestItemsEntity(
+      id: idController.collect(),
+      emoteOnComplete: emoteOnCompleteController.collect(),
+      emoteOnIncomplete: emoteOnIncompleteController.collect(),
+      completionText: completionTextController.collect(),
+      verifiedBuild: verifiedBuildController.collect(),
+    );
+  }
+
+  int _refreshToken = 0;
+  int _linkToken = 0;
+
+  Future<void> destroy() async {
+    if (submitting.value) throw BusyException('operation already in progress');
+    final key = editingKey.value;
+    if (key == null) return;
+    final linkSnapshot = linkKey.value;
+    final linkToken = _linkToken;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      await _repository.destroyQuestRequestItems(key);
+      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
+        return;
+      }
+      editingKey.value = null;
+      await _refresh();
+    } catch (error) {
+      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
+        return;
+      }
+      errorMessage.value = foxyErrorMessage(error);
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  void dispose() {
+    disposeControllers();
+  }
+
+  Future<void> initSignals({required int linkKey}) {
+    return setLinkKey(linkKey);
+  }
+
+  Future<void> persist() async {
+    if (submitting.value) throw BusyException('operation already in progress');
+    final linkSnapshot = linkKey.value;
+    if (linkSnapshot == null) {
+      throw LinkNotLoadedException('link record not loaded');
+    }
+    final linkToken = _linkToken;
+    final candidate = _collectCandidate();
+    final originalKey = editingKey.value;
+    submitting.value = true;
+    errorMessage.value = null;
+    try {
+      if (originalKey == null) {
+        await _repository.storeQuestRequestItems(candidate);
+      } else {
+        await _repository.updateQuestRequestItems(originalKey, candidate);
+      }
+      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
+        return;
+      }
+      entity.value = candidate;
+      editingKey.value = candidate.id;
+      await _refresh();
+    } catch (error) {
+      if (linkToken != _linkToken || linkKey.value != linkSnapshot) {
+        return;
+      }
+      errorMessage.value = foxyErrorMessage(error);
+      rethrow;
+    } finally {
+      submitting.value = false;
+    }
+  }
+
+  Future<void> setLinkKey(int linkKey) async {
+    if (this.linkKey.value == linkKey && entity.value != null) return;
+    _linkToken++;
+    this.linkKey.value = linkKey;
+    editingKey.value = null;
+    await _refresh();
+  }
+
+  Future<void> _refresh() async {
+    final token = ++_refreshToken;
+    final linkSnapshot = linkKey.value;
+    if (linkSnapshot == null) {
+      entity.value = null;
+      editingKey.value = null;
+      return;
+    }
+    loading.value = true;
+    errorMessage.value = null;
+    try {
+      final existing = await _repository.getQuestRequestItems(linkSnapshot);
+      if (token != _refreshToken) return;
+      final candidate =
+          existing ?? await _repository.createQuestRequestItems(linkSnapshot);
+      if (token != _refreshToken) return;
+      entity.value = candidate;
+      editingKey.value = existing == null ? null : linkSnapshot;
+      _applyCandidate(candidate);
+    } catch (error, stackTrace) {
+      if (token != _refreshToken) return;
+      errorMessage.value = foxyErrorMessage(error);
+      LoggerUtil.instance.e('加载单行编辑器失败', error: error, stackTrace: stackTrace);
+      rethrow;
+    } finally {
+      if (token == _refreshToken) loading.value = false;
+    }
+  }
+}

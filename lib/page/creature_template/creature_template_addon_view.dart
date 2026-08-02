@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_template_addon_single_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_addon_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -26,7 +26,7 @@ class CreatureTemplateAddonView extends StatefulWidget {
 
 class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
   final viewModel = GetIt.instance
-      .get<CreatureTemplateAddonSingleEditorViewModel>();
+      .get<CreatureTemplateAddonLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class _CreatureTemplateAddonViewState extends State<CreatureTemplateAddonView> {
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.creatureId);
+      await viewModel.initSignals(linkKey: widget.creatureId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

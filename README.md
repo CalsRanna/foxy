@@ -147,15 +147,16 @@ DBC 功能面向客户端版本 `3.3.5.12340` / 3.3.5a。表、文件名及物�
 | `@FoxyBriefEntity`                                                              | Entity class     | 同时生成只读 `Brief<Name>Entity`（值语义，无写 API）                                       |
 | `@FoxyBriefField()`                                                             | Entity 字段      | 把该物理字段纳入 Brief 投影                                                                |
 | `@FoxyBriefField.text/integer/decimal/boolean(name)`                            | Entity class     | 声明 Brief 投影补充字段（由查询 alias 提供）                                               |
-| `@FoxyRepository(Entity, parentKey:)`                                           | Repository class | 生成 CRUD + 查询层；`parentKey` 声明子表(父详情页 Tab),列表/新建按父键过滤 |
+| `@FoxyRepository(Entity, linkKey:)`                                           | Repository class | 生成 CRUD + 查询层；`linkKey` 声明子表(详情页 Tab),列表/新建按关联键过滤 |
 | `@FoxyFilter.text/integer/decimal/boolean(name, column:)`                       | Repository class | 生成该仓库的 `<Name>Filter` 查询输入；`column` 显式指定物理列（无法按字段名推断时必填）   |
 | `@FoxyListViewModel(entity:, repository:)`                                      | List ViewModel   | 生成列表状态、筛选 controller 与 search/reset/paginate/copy/destroy/刷新                   |
 | `@FoxyDetailViewModel(entity:, selects:, flags:, groups:, nullable:, exclude:, repository:)` | Detail ViewModel | 生成表单 controller + 行为骨架(信号 / initSignals / persist / dispose / `_logActivity` 钩子) |
-| `@FoxyCollectionEditorViewModel(entity:, repository:, ...)`                        | Collection Editor ViewModel | 生成子表行编辑器全套骨架(父键子集信号 / 分页 / 竞态 token / CRUD / persist / setParentKey) |
+| `@FoxyLinkedListViewModel(entity:, repository:, ...)`                        | Linked List ViewModel | 生成子表行编辑器全套骨架(关联键子集信号 / 分页 / 竞态 token / CRUD / persist / setLinkKey) |
+| `@FoxyLinkedDetailViewModel(entity:, repository:, ...)`                        | Linked Detail ViewModel | 生成一对一关联表单骨架(关联键/编辑键/entity 信号 / get-or-create / persist / setLinkKey) |
 
 典型用法：Entity 声明字段与物理列的对应关系（单一事实来源），Repository 声明表名与筛选字段，Detail ViewModel 只声明表单例外（select/flag/group/nullable/exclude），列表筛选字段直接从 Repository 的 `@FoxyFilter` 读取。生成器在构建期校验文件名、`part` 声明、mixin 混入、字段类型、命名约定等约束，违规即构建失败，而不是留到运行时。
 
-查询层（`create` / `copy` / `getBrief*` / `count*` / `get*` / `_applyFilter`）按命名约定全量生成，手写方法同签名时自动成为 `@override`（类成员优先于 mixin 成员）——带 join / LIKE / 上限校验等特殊逻辑的仓库保留手写版本即可。列表查询方法名固定为 `getBrief<Base>s` / `count<Base>s` / `copy<Base>` / `destroy<Base>`（辅音 + y 结尾按 y → ies 复数化，如 `GemProperty` → `GemProperties`）。子表仓库声明 `@FoxyRepository(..., parentKey: ['field'])` 后生成父键形态查询（列表只查该父记录的子集合，如「生物详情页的掉落 Tab」）；Detail/Collection Editor ViewModel 声明 `repository:` 后生成行为骨架，模块特殊逻辑经 `@override` 保留。
+查询层（`create` / `copy` / `getBrief*` / `count*` / `get*` / `_applyFilter`）按命名约定全量生成，手写方法同签名时自动成为 `@override`（类成员优先于 mixin 成员）——带 join / LIKE / 上限校验等特殊逻辑的仓库保留手写版本即可。列表查询方法名固定为 `getBrief<Base>s` / `count<Base>s` / `copy<Base>` / `destroy<Base>`（辅音 + y 结尾按 y → ies 复数化，如 `GemProperty` → `GemProperties`）。子表仓库声明 `@FoxyRepository(..., linkKey: ['field'])` 后生成关联键形态查询（列表只查该关联值下的子集合，如「生物详情页的掉落 Tab」）；Detail/Linked List/Linked Detail ViewModel 声明 `repository:` 后生成行为骨架，模块特殊逻辑经 `@override` 保留。
 
 ### 重新生成
 
@@ -242,8 +243,8 @@ linux|macos|windows/ # 桌面平台工程
 ### ViewModel 与 UseCase 边界
 
 ViewModel 按交互状态机分为七类，并通过类名和文件名后缀声明类别：
-`ListViewModel`、`DetailViewModel`、`CollectionEditorViewModel`、
-`SingleEditorViewModel`、`ReadViewModel`、`WorkflowViewModel` 和
+`ListViewModel`、`DetailViewModel`、`LinkedListViewModel`、
+`LinkedDetailViewModel`、`ReadViewModel`、`WorkflowViewModel` 和
 `StateViewModel`。ViewModel 只持有可渲染状态、typed controller、明确的
 `persistedKey`/`editingKey` 以及异步刷新保护；不接收 `BuildContext`，不显示
 Dialog/Toast，不导航，也不直接访问数据库事务。

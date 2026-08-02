@@ -3,7 +3,7 @@ import 'package:foxy/entity/creature_template_spell_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/repository/creature_template_spell_repository.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_template_spell_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_template_spell_linked_list_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:laconic/laconic.dart';
 import 'package:laconic_mysql/laconic_mysql.dart';
@@ -118,9 +118,9 @@ void main() {
     });
 
     test('修改两列 candidate key 仍按完整旧 key 更新并清空范围状态', () async {
-      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
+      final viewModel = CreatureTemplateSpellLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       const originalKey = CreatureTemplateSpellKey(creatureID: 10, index: 2);
@@ -137,9 +137,9 @@ void main() {
     });
 
     test('保存失败保留旧 editingKey 供修正后重试', () async {
-      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
+      final viewModel = CreatureTemplateSpellLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
       final originalKey = viewModel.editingKey.value;
@@ -155,13 +155,13 @@ void main() {
     });
 
     test('父范围变化和新建会清空 editingKey', () async {
-      final viewModel = CreatureTemplateSpellCollectionEditorViewModel();
+      final viewModel = CreatureTemplateSpellLinkedListViewModel();
       addTearDown(viewModel.dispose);
-      await viewModel.initSignals(parentKey: 10);
+      await viewModel.initSignals(linkKey: 10);
       viewModel.selectedKey.value = viewModel.items.value[0].key;
       await viewModel.edit(viewModel.selectedKey.value!);
 
-      await viewModel.setParentKey(12);
+      await viewModel.setLinkKey(12);
       expect(viewModel.editingKey.value, isNull);
       expect(viewModel.creatureIDController.collect(), 12);
 

@@ -112,15 +112,15 @@ class _CreatureTemplateDetailPageState
               ),
               CreatureLootTemplateView(
                 key: ValueKey('loot-${template?.lootId ?? 0}'),
-                parentKey: template?.lootId ?? 0,
+                linkKey: template?.lootId ?? 0,
               ),
               PickpocketingLootTemplateView(
                 key: ValueKey('pickpocket-${template?.pickpocketLoot ?? 0}'),
-                parentKey: template?.pickpocketLoot ?? 0,
+                linkKey: template?.pickpocketLoot ?? 0,
               ),
               SkinningLootTemplateView(
                 key: ValueKey('skinning-${template?.skinLoot ?? 0}'),
-                parentKey: template?.skinLoot ?? 0,
+                linkKey: template?.skinLoot ?? 0,
               ),
             ],
             disabledIndexes: creatureTemplateDisabledTabIndexes(

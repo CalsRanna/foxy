@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxy/entity/creature_quest_item_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/creature_quest_item_collection_editor_view_model.dart';
+import 'package:foxy/view_model/creature_quest_item_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -28,7 +28,7 @@ class CreatureQuestItemView extends StatefulWidget {
 
 class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   final viewModel = GetIt.instance
-      .get<CreatureQuestItemCollectionEditorViewModel>();
+      .get<CreatureQuestItemLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   void didUpdateWidget(covariant CreatureQuestItemView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.creatureId != widget.creatureId) {
-      viewModel.setParentKey(widget.creatureId);
+      viewModel.setLinkKey(widget.creatureId);
     }
   }
 
@@ -54,7 +54,7 @@ class _CreatureQuestItemViewState extends State<CreatureQuestItemView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.creatureId);
+    viewModel.initSignals(linkKey: widget.creatureId);
   }
 
   /// 对话框表单（垂直布局）

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
 import 'package:foxy/router/router_facade.dart';
-import 'package:foxy/view_model/creature_on_kill_reputation_single_editor_view_model.dart';
+import 'package:foxy/view_model/creature_on_kill_reputation_linked_detail_view_model.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
 import 'package:foxy/widget/foxy_entity_picker_delegates.dart';
 import 'package:foxy/widget/foxy_form_item.dart';
@@ -26,7 +26,7 @@ class CreatureOnKillReputationView extends StatefulWidget {
 class _CreatureOnKillReputationViewState
     extends State<CreatureOnKillReputationView> {
   final viewModel = GetIt.instance
-      .get<CreatureOnKillReputationSingleEditorViewModel>();
+      .get<CreatureOnKillReputationLinkedDetailViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +220,7 @@ class _CreatureOnKillReputationViewState
 
   Future<void> _initialize() async {
     try {
-      await viewModel.initSignals(parentKey: widget.creatureId);
+      await viewModel.initSignals(linkKey: widget.creatureId);
     } catch (error) {
       if (!mounted) return;
       ShadSonner.of(

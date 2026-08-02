@@ -42,9 +42,9 @@ final class BusyException extends FoxyException {
   const BusyException(super.message);
 }
 
-/// 父记录尚未加载(子表编辑器在父键就绪前被调用)。
-final class ParentNotLoadedException extends FoxyException {
-  const ParentNotLoadedException(super.message);
+/// 关联记录尚未加载(关联编辑器在关联键就绪前被调用)。
+final class LinkNotLoadedException extends FoxyException {
+  const LinkNotLoadedException(super.message);
 }
 
 /// DBC/自增 ID 已耗尽或超出可引用范围。
@@ -77,7 +77,7 @@ String foxyErrorMessage(Object error) => switch (error) {
   DuplicateKeyException() => '相同主键的记录已存在',
   InvalidPrimaryKeyException() => '主键必须在新建时显式分配',
   BusyException() => '操作正在执行，请稍候',
-  ParentNotLoadedException() => '父记录尚未加载',
+  LinkNotLoadedException() => '关联记录尚未加载',
   IdExhaustedException() => '记录 ID 已用尽，无法继续新增',
   ValidationException() => '输入不合法，请检查后重试',
   CopyNotSupportedException() => '该操作不支持自动复制，请新增记录',

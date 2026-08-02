@@ -3,7 +3,7 @@ import 'package:foxy/constant/creature_enums.dart';
 import 'package:foxy/constant/creature_flags.dart';
 import 'package:foxy/entity/skinning_loot_template_entity.dart';
 import 'package:foxy/infrastructure/errors/foxy_exceptions.dart';
-import 'package:foxy/view_model/skinning_loot_template_collection_editor_view_model.dart';
+import 'package:foxy/view_model/skinning_loot_template_linked_list_view_model.dart';
 import 'package:foxy/widget/context_menu.dart';
 import 'package:foxy/widget/dialog/dialog_util.dart';
 import 'package:foxy/widget/foxy_entity_picker.dart';
@@ -23,9 +23,9 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 /// 剥皮掉落Tab
 class SkinningLootTemplateView extends StatefulWidget {
-  final int parentKey;
+  final int linkKey;
 
-  const SkinningLootTemplateView({super.key, required this.parentKey});
+  const SkinningLootTemplateView({super.key, required this.linkKey});
 
   @override
   State<SkinningLootTemplateView> createState() =>
@@ -34,7 +34,7 @@ class SkinningLootTemplateView extends StatefulWidget {
 
 class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   final viewModel = GetIt.instance
-      .get<SkinningLootTemplateCollectionEditorViewModel>();
+      .get<SkinningLootTemplateLinkedListViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _SkinningLootTemplateViewState extends State<SkinningLootTemplateView> {
   @override
   void initState() {
     super.initState();
-    viewModel.initSignals(parentKey: widget.parentKey);
+    viewModel.initSignals(linkKey: widget.linkKey);
   }
 
   /// 对话框表单（垂直布局）
